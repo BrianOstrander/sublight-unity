@@ -1,5 +1,4 @@
-using UnityEngine;
-using LunraGames.SpaceFarm;
+using PlayerPrefs = LunraGames.PlayerPrefsExtensions;
 
 namespace LunraGames.SpaceFarm
 {
@@ -16,39 +15,26 @@ namespace LunraGames.SpaceFarm
 
 		public static bool AutoApplyShaderGlobals
 		{
-			get { return GetBool(Keys.AutoApplyShaderGlobals, true); }
-			set { SetBool(Keys.AutoApplyShaderGlobals, value); }
+			get { return PlayerPrefs.GetBool(Keys.AutoApplyShaderGlobals, true); }
+			set { PlayerPrefs.SetBool(Keys.AutoApplyShaderGlobals, value); }
 		}
 
 		public static bool WindInEditMode
 		{
-			get { return GetBool(Keys.WindInEditMode, false); }
-			set { SetBool(Keys.WindInEditMode, value); }
+			get { return PlayerPrefs.GetBool(Keys.WindInEditMode, false); }
+			set { PlayerPrefs.SetBool(Keys.WindInEditMode, value); }
 		}
 
 		public static bool AutoApplySkybox
 		{
-			get { return GetBool(Keys.AutoApplySkybox, false); }
-			set { SetBool(Keys.AutoApplySkybox, value); }
+			get { return PlayerPrefs.GetBool(Keys.AutoApplySkybox, false); }
+			set { PlayerPrefs.SetBool(Keys.AutoApplySkybox, value); }
 		}
 
 		public static bool ApplyXButtonStyleInEditMode
 		{
-			get { return GetBool(Keys.ApplyXButtonStyleInEditMode, true); }
-			set { SetBool(Keys.ApplyXButtonStyleInEditMode, value); }
+			get { return PlayerPrefs.GetBool(Keys.ApplyXButtonStyleInEditMode, true); }
+			set { PlayerPrefs.SetBool(Keys.ApplyXButtonStyleInEditMode, value); }
 		}
-
-		// TODO: This should be somewhere else... if it doesn't exist in a LG plugin already.
-		#region Utility
-		static bool GetBool(string key, bool defaultValue)
-		{
-			return PlayerPrefs.GetInt(key, defaultValue ? 1 : 0) == 1;
-		}
-
-		static void SetBool(string key, bool value)
-		{
-			PlayerPrefs.SetInt(key, value ? 1 : 0);
-		}
-		#endregion
 	}
 }
