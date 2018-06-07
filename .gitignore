@@ -17,3 +17,5 @@ bin
 *.DS_Store
 *.mdb
 *.mdb.meta
+Local.meta
+Assets/Local
