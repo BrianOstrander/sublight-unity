@@ -9,18 +9,18 @@ using LunraGames;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class ReticleView : View, IReticleView
+	public class CursorView : View, ICursorView
 	{
 		struct StateEntry
 		{
-			public ReticleStates State;
-			public ReticleBlock Block;
+			public CursorStates State;
+			public CursorBlock Block;
 			public int? PlayCount;
 			public Action Done;
 
-			public StateEntry(ReticleBlock block, int? playCount, Action done)
+			public StateEntry(CursorBlock block, int? playCount, Action done)
 			{
-				State = block == null ? ReticleStates.Unknown : block.State;
+				State = block == null ? CursorStates.Unknown : block.State;
 				Block = block;
 				PlayCount = playCount;
 				Done = done;
@@ -34,9 +34,9 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		float animationDurationDefault;
 		[SerializeField]
-		Transform reticlesRoot;
-		[SerializeField, FormerlySerializedAs("Reticles")]
-		ReticleBlock[] reticles = new ReticleBlock[0];
+		Transform cursorsRoot;
+		[SerializeField]
+		CursorBlock[] cursors = new CursorBlock[0];
 
 		float animationProgress;
 		float transitionProgress;
@@ -56,7 +56,7 @@ namespace LunraGames.SpaceFarm.Views
 		/// <param name="state">State.</param>
 		/// <param name="playCount">Play count.</param>
 		/// <param name="done">Done.</param>
-		public void Push(ReticleStates state, int? playCount = null, bool reset = false, Action done = null)
+		public void Push(CursorStates state, int? playCount = null, bool reset = false, Action done = null)
 		{
 			if (1 == stateStack.Count && reset && stateStack[0].State == state)
 			{
@@ -69,9 +69,9 @@ namespace LunraGames.SpaceFarm.Views
 			}
 
 			var block = GetEntry(state, playCount, done);
-			if (block.State == ReticleStates.Unknown) 
+			if (block.State == CursorStates.Unknown) 
 			{
-				Debug.LogError("No ReticleBlock for state "+state+" found");
+				Debug.LogError("No CursorBlock for state "+state+" found");
 				return;
 			}
 			stateStack.Add(block);
@@ -96,14 +96,14 @@ namespace LunraGames.SpaceFarm.Views
 			}
 		}
 
-		void ToggleBlock(ReticleBlock block, bool value)
+		void ToggleBlock(CursorBlock block, bool value)
 		{
 			foreach (var blockObject in block.Objects) blockObject.SetActive(value);
 		}
 
-		StateEntry GetEntry(ReticleStates state, int? playCount, Action done)
+		StateEntry GetEntry(CursorStates state, int? playCount, Action done)
 		{
-			return new StateEntry(reticles.FirstOrDefault(r => r.State == state), playCount, done);
+			return new StateEntry(cursors.FirstOrDefault(r => r.State == state), playCount, done);
 		}
 
 		public override void Reset()
@@ -114,22 +114,23 @@ namespace LunraGames.SpaceFarm.Views
 			//Rotation = Quaternion.identity;
 			Pop(true);
 
-			foreach (var block in reticles) ToggleBlock(block, false);
+			foreach (var block in cursors) ToggleBlock(block, false);
 		}
 
-		void SetDilation(RangeResult range, Color color, ReticleBlock target)
+		void SetDilation(RangeResult range, Color color, CursorBlock target)
 		{
 			color = color * this.color;
-			foreach (var reticle in target.Reticles)
+			foreach (var cursor in target.Cursors)
 			{
-				reticle.material.SetColor(ShaderConstants.Reticle.Color, color);
+				cursor.material.SetColor(ShaderConstants.Cursor.Color, color);
 			}
 		}
 
 		void LateUpdate()
 		{
-			//reticlesRoot.position = Position;
-			//reticlesRoot.rotation = Rotation;
+			// TODO: Delete these?
+			//cursorsRoot.position = Position;
+			//cursorsRoot.rotation = Rotation;
 
 			if (stateStack.Count == 0) return;
 
@@ -215,47 +216,9 @@ namespace LunraGames.SpaceFarm.Views
 			var color = current.Animation.Gradient.Evaluate(scalar);
 			SetDilation(dilation, color, current);
 		}
-
-		//void OnTransition(float delta)
-		//{
-		//	loops = 0;
-		//	transitionProgress = Mathf.Min(TransitionDuration, transitionProgress + delta);
-		//	transitioning = !Mathf.Approximately(TransitionDuration, transitionProgress);
-		//	if (!transitioning)
-		//	{
-		//		transitionProgress = 0f;
-		//		animationProgress = 0f;
-		//		return;
-		//	}
-		//	var currentRange = current.Animation.Dilation.Evaluate(0f);
-		//	var minDelta = currentRange.Min - lastRange.Min;
-		//	var maxDelta = currentRange.Max - lastRange.Max;
-		//	var transitionScalar = transitionProgress / transitionDuration;
-
-		//	var result = new RangeResult(
-		//		lastRange.Min + (minDelta * transitionScalar),
-		//		lastRange.Max + (maxDelta * transitionScalar),
-		//		0f
-		//	);
-
-		//	SetDilation(result, current);
-		//}
-
-		//void OnAnimate(float delta)
-		//{
-		//	var newProgress = animationProgress + delta;
-		//	if (AnimationDuration <= newProgress) loops++;
-		//	animationProgress = newProgress % AnimationDuration;
-		//	var animationScalar = animationProgress / AnimationDuration;
-		//	var currentResult = current.Animation.Dilation.Evaluate(animationScalar);
-		//	SetDilation(currentResult, current, currentResult);
-
-		//	if (nextState != ReticleStates.Unknown && nextState != current.State) SetState(nextState);
-		//}
-
 	}
 
-	public enum ReticleStates
+	public enum CursorStates
 	{
 		Unknown,
 		Idle,
@@ -263,19 +226,19 @@ namespace LunraGames.SpaceFarm.Views
 		Click
 	}
 
-	public interface IReticleView : IView
+	public interface ICursorView : IView
 	{
 		//Vector3 Position { set; }
 		//Quaternion Rotation { set; }
-		void Push(ReticleStates state, int? playCount = null, bool reset = false, Action done = null);
+		void Push(CursorStates state, int? playCount = null, bool reset = false, Action done = null);
 	}
 
 	[Serializable]
-	public class ReticleBlock
+	public class CursorBlock
 	{
-		public ReticleStates State;
+		public CursorStates State;
 		public GameObject[] Objects = new GameObject[0];
-		public MeshRenderer[] Reticles = new MeshRenderer[0];
-		public ReticleAnimation Animation;
+		public MeshRenderer[] Cursors = new MeshRenderer[0];
+		public CursorAnimation Animation;
 	}
 }

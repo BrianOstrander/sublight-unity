@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LunraGames.SpaceFarm
 {
-	public class ReticleAnimation : ScriptableObject
+	public class CursorAnimation : ScriptableObject
 	{
 		public bool PlayAtLeastOnce;
 		public bool OverrideTransitionDuration;

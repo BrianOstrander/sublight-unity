@@ -16,10 +16,10 @@ namespace LunraGames.SpaceFarm
 			public const string WindIntensity = "_WindIntensity";
 		}
 
-		public static class Reticle
+		public static class Cursor
 		{
 			/// <summary>
-			/// The color of the reticle.
+			/// The color of the cursor.
 			/// </summary>
 			public const string Color = "_Color";
 		}

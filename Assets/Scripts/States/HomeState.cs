@@ -22,7 +22,7 @@ namespace LunraGames.SpaceFarm
 		protected override void Idle()
 		{
 			//App.SM.PushBlocking(InitializeCamera);
-			//new ReticlePresenter().Show();
+			//new CursorPresenter().Show();
 		}
 
 		//void InitializeCamera(Action done)

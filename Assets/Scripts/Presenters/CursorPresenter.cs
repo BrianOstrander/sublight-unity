@@ -5,11 +5,11 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class ReticlePresenter : Presenter<IReticleView>
+	public class CursorPresenter : Presenter<ICursorView>
 	{
 		DateTime latestClick;
 
-		public ReticlePresenter()
+		public CursorPresenter()
 		{
 			//App.Callbacks.PointerOrientation += OnOrientation;
 			App.Callbacks.Highlight += OnHighlight;
@@ -30,7 +30,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.Visible) return;
 			View.Reset();
 			View.Shown += done;
-			View.Push(ReticleStates.Idle);
+			View.Push(CursorStates.Idle);
 			ShowView(instant: true);
 		}
 
@@ -49,10 +49,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			{
 				case Highlight.States.Change:
 				case Highlight.States.Begin:
-					View.Push(ReticleStates.Highlight);
+					View.Push(CursorStates.Highlight);
 					break;
 				default:
-					View.Push(ReticleStates.Idle);
+					View.Push(CursorStates.Idle);
 					break;
 			}
 		}
@@ -61,7 +61,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			var now = DateTime.Now;
 			latestClick = now;
-			View.Push(ReticleStates.Click, 1, true, () => OnClickEnd(now));
+			View.Push(CursorStates.Click, 1, true, () => OnClickEnd(now));
 		}
 
 		void OnClickEnd(DateTime time)
