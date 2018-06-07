@@ -5,7 +5,7 @@ using UnityEngine;
 namespace LunraGames.SpaceFarm
 {
 	[ExecuteInEditMode]
-	public class Skybox : MonoBehaviour
+	public class SceneSkybox : MonoBehaviour
 	{
 		[SerializeField]
 		Material skybox;
@@ -20,7 +20,7 @@ namespace LunraGames.SpaceFarm
 #if UNITY_EDITOR
 		void Update()
 		{
-			//if (DevPrefs.AutoApplySkybox) Apply();	
+			if (DevPrefs.AutoApplySkybox) Apply();	
 		}
 #endif
 
