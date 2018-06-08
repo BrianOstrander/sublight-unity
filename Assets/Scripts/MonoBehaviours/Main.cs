@@ -13,32 +13,22 @@ namespace LunraGames.SpaceFarm
 	/// </remarks>
 	public class Main : MonoBehaviour 
 	{
-		
-		[SerializeField]
-		DefaultViews defaultViews;
+
 		[SerializeField]
 		GameObject audioRoot;
 		[SerializeField]
+		Transform canvasRoot;
+		[SerializeField]
+		DefaultViews defaultViews;
+		[SerializeField]
 		DefaultShaderGlobals defaultShaderGlobals;
 
-		[SerializeField]
-		private bool enableSXRHighSpeedSensor;
-
-		[SerializeField]
-		private bool cVMode;
-		
-		App app;	
+		App app;
 		
 		void Awake() 
 		{
-			app = new App(this, defaultShaderGlobals, defaultViews.Prefabs, audioRoot, cVMode);
+			app = new App(this, defaultShaderGlobals, defaultViews.Prefabs, audioRoot, canvasRoot);
 			DontDestroyOnLoad(gameObject);
-#if UNITY_ANDROID
-			if (!Application.isEditor)
-			{
-				GVRConfiguration.Instance.SetFRMode(enableSXRHighSpeedSensor);
-			}
-#endif
 			app.Awake();
 		}
 

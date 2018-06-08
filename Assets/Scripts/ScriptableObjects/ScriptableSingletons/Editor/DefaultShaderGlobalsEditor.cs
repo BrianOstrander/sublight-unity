@@ -1,13 +1,13 @@
 using UnityEditor;
-
 using UnityEngine;
+using LunraGamesEditor.Singletonnes;
 
 namespace LunraGames.SpaceFarm
 {
 	[CustomEditor(typeof(DefaultShaderGlobals), true)]
-	public class DefaultShaderGlobalsEditor : Editor
+	public class DefaultShaderGlobalsEditor : ScriptableSingletonEditor
 	{
-		public override void OnInspectorGUI()
+		protected override void OnInspectorGUIExtended()
 		{
 			var typedTarget = target as DefaultShaderGlobals;
 

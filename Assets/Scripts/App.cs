@@ -15,11 +15,6 @@ namespace LunraGames.SpaceFarm
 		static App instance;
 
 		Main main;
-		private bool cvMode;
-		public static bool CVMode
-		{
-			get { return instance.cvMode; }
-		}
 		public static Main Main { get { return instance.main; } }
 
 		CallbackService callbackService;
@@ -55,13 +50,16 @@ namespace LunraGames.SpaceFarm
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
-		public App(Main main, DefaultShaderGlobals shaderGlobals, List<GameObject> defaultViews, GameObject audioRoot, bool _cvMode)
+		Transform canvasRoot;
+		public static Transform CanvasRoot { get { return instance.canvasRoot; } }
+
+		public App(Main main, DefaultShaderGlobals shaderGlobals, List<GameObject> defaultViews, GameObject audioRoot, Transform canvasRoot)
 		{
 			instance = this;
-			cvMode = _cvMode;
 			this.main = main;
 			this.defaultViews = defaultViews;
 			this.shaderGlobals = shaderGlobals;
+			this.canvasRoot = canvasRoot;
 			callbackService = new CallbackService();
 			heartbeat = new Heartbeat();
 			modelMediator = new ModelMediator();
@@ -79,9 +77,8 @@ namespace LunraGames.SpaceFarm
 				inputService = new EditorInputService();
 				backendService = new EditorBackendService();
 			}
-			else if (Application.platform == RuntimePlatform.OSXPlayer)
+			else if (Application.platform == RuntimePlatform.WebGLPlayer)
 			{
-				// Desktop
 				logService = new WebGlLogService();
 				inputService = new WebGlInputService();
 				backendService = new WebGlBackendService();
@@ -104,6 +101,7 @@ namespace LunraGames.SpaceFarm
 		{
 			var payload = new InitializePayload();
 			payload.DefaultViews = defaultViews;
+			payload.ShaderGlobals = shaderGlobals;
 			stateMachine.RequestState(payload);
 		}
 

@@ -21,13 +21,26 @@ namespace LunraGames.SpaceFarm
 
 		protected override void Idle()
 		{
-			//App.SM.PushBlocking(InitializeCamera);
+			App.SM.PushBlocking(InitializeCamera);
+			App.SM.PushBlocking(InitializeInput);
+			App.SM.PushBlocking(InitializeMenu);
 			//new CursorPresenter().Show();
 		}
 
-		//void InitializeCamera(Action done)
-		//{
-		//	new CameraPresenter(new CameraModel()).Show(done);
-		//}
+		void InitializeCamera(Action done)
+		{
+			new CameraPresenter().Show(done);
+		}
+
+		void InitializeInput(Action done)
+		{
+			App.Input.SetEnabled(true);
+			done();
+		}
+
+		void InitializeMenu(Action done)
+		{
+			new HomeMenuPresenter().Show(done);
+		}
 	}
 }

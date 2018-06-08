@@ -10,6 +10,7 @@ namespace LunraGames.SpaceFarm
 	public class InitializePayload : IStatePayload
 	{
 		public List<GameObject> DefaultViews = new List<GameObject>();
+		public DefaultShaderGlobals ShaderGlobals;
 	}
 
 	public class InitializeState : State<InitializePayload>
@@ -20,7 +21,7 @@ namespace LunraGames.SpaceFarm
 			get 
 			{
 				var scenes = new List<string> (new string[] {
-					//"SomeScene", "AnotherScene"
+					"Home"
 				});
 				return scenes.ToArray();
 			}
@@ -34,11 +35,11 @@ namespace LunraGames.SpaceFarm
 
 		protected override void Begin()
 		{
+			Payload.ShaderGlobals.Apply();
 			App.SM.PushBlocking(InitializeViews);
 			App.SM.PushBlocking(InitializeModels);
 			App.SM.PushBlocking(InitializePresenters);
 			App.SM.PushBlocking(InitializeScenes);
-			App.SM.PushBlocking(InitializeInput);
 		}
 
 		protected override void Idle()
@@ -120,12 +121,6 @@ namespace LunraGames.SpaceFarm
 
 			App.Callbacks.SceneLoad -= OnSceneInitialized;
 			initializeSceneCallback();
-		}
-
-		void InitializeInput(Action callback)
-		{
-			App.Input.SetEnabled(true);
-			callback();
 		}
 
 		void AssignTag(ref Transform existing, string tag)
