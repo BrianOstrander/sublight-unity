@@ -7,7 +7,14 @@ namespace LunraGames.SpaceFarm
 	public class CallbackService
 	{
 		#region Events
+		/// <summary>
+		/// A scene loaded.
+		/// </summary>
 		public Action<Scene, LoadSceneMode> SceneLoad = ActionExtensions.GetEmpty<Scene, LoadSceneMode>();
+		/// <summary>
+		/// A scene unloaded.
+		/// </summary>
+		public Action<Scene> SceneUnload = ActionExtensions.GetEmpty<Scene>();
 		/// <summary>
 		/// The state changed.
 		/// </summary>
@@ -58,6 +65,7 @@ namespace LunraGames.SpaceFarm
 		public CallbackService()
 		{
 			SceneManager.sceneLoaded += (scene, loadMode) => SceneLoad(scene, loadMode);
+			SceneManager.sceneUnloaded += scene => SceneUnload(scene);
 			CameraOrientation += orientation => LastCameraOrientation = orientation;
 			PointerOrientation += orientation => LastPointerOrientation = orientation;
 			Highlight += highlight => LastHighlight = highlight;

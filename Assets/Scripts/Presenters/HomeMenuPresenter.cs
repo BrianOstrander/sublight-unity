@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 using LunraGames.SpaceFarm.Views;
 
@@ -9,12 +8,14 @@ namespace LunraGames.SpaceFarm.Presenters
 	{
 		public HomeMenuPresenter()
 		{
-			
+			App.Callbacks.StateChange += OnStateChange;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
+
+			App.Callbacks.StateChange -= OnStateChange;
 		}
 
 		public void Show(Action done)
@@ -29,7 +30,13 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnStartClick()
 		{
-			Debug.Log("Start clicked!");
+			var payload = new GamePayload();
+			App.SM.RequestState(payload);
+		}
+
+		void OnStateChange(StateChange state)
+		{
+			if (state.Event == StateMachine.Events.End) CloseView();
 		}
 		#endregion
 

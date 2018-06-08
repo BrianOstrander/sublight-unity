@@ -12,7 +12,8 @@ namespace LunraGames.SpaceFarm
 		{
 			Unknown,
 			Initialize,
-			Home
+			Home,
+			Game
 		}
 
 		public enum Events

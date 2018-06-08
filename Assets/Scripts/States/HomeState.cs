@@ -1,12 +1,8 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
 
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using LunraGames.SpaceFarm.Presenters;
-using LunraGames.SpaceFarm.Models;
-using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm
 {
@@ -19,6 +15,9 @@ namespace LunraGames.SpaceFarm
 	{
 		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
+		Action unloadSceneCallback = ActionExtensions.Empty;
+
+		#region Idle
 		protected override void Idle()
 		{
 			App.SM.PushBlocking(InitializeCamera);
@@ -42,5 +41,28 @@ namespace LunraGames.SpaceFarm
 		{
 			new HomeMenuPresenter().Show(done);
 		}
+		#endregion
+
+		#region End
+		protected override void End()
+		{
+			App.Input.SetEnabled(false);
+			App.SM.PushBlocking(UnloadScene);
+		}
+
+		void UnloadScene(Action done)
+		{
+			App.Log("Unloading Scene");
+			unloadSceneCallback = done;
+			App.Callbacks.SceneUnload += OnSceneUnloaded;
+			SceneManager.UnloadSceneAsync(SceneConstants.Home);
+		}
+
+		void OnSceneUnloaded(Scene scene)
+		{
+			App.Callbacks.SceneUnload -= OnSceneUnloaded;
+			unloadSceneCallback();
+		}
+  		#endregion
 	}
 }

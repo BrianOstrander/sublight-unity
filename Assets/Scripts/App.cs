@@ -68,7 +68,8 @@ namespace LunraGames.SpaceFarm
 			audioService = new AudioService(audioRoot);
 			stateMachine = new StateMachine(
 				new InitializeState(),
-				new HomeState()
+				new HomeState(),
+				new GameState()
 			);
 
 			if (Application.isEditor)
