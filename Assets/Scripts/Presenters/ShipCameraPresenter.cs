@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 
 using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class CameraPresenter : Presenter<ICameraView>
+	public class ShipCameraPresenter : Presenter<IShipCameraView>
 	{
-		public CameraPresenter()
+		public ShipCameraPresenter()
 		{
 			App.Callbacks.StateChange += OnStateChange;
 		}
@@ -27,7 +27,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-
 		void OnStateChange(StateChange state)
 		{
 			if (state.Event == StateMachine.Events.End) CloseView(true);

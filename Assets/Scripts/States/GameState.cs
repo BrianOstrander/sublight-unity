@@ -78,7 +78,7 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeCamera(Action done)
 		{
-			new CameraPresenter().Show(done);
+			new ShipCameraPresenter().Show(done);
 		}
 
 		void InitializeInput(Action done)
