@@ -15,7 +15,7 @@ namespace LunraGames.SpaceFarm
 	{
 		public bool IsEnabled { get; private set; }
 		Quaternion offset = Quaternion.identity;
-		DateTime primaryDownTime;
+		DateTime clickDownTime;
 
 		/// <summary>
 		/// The maximum distance that a user's finger can traverse before a click is ignored.
@@ -51,14 +51,14 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		protected virtual void OnUpdate(float delta)
 		{
-			var primaryDown = IsPrimaryDown();
-			var primaryHeldDown = IsPrimaryHeldDown();
-			var primaryUp = IsPrimaryUp();
-			var anyInteraction = primaryDown || primaryHeldDown || primaryUp;
+			var clickDown = IsClickDown();
+			var clickHeldDown = IsClickHeldDown();
+			var clickUp = IsClickUp();
+			var anyInteraction = clickDown || clickHeldDown || clickUp;
 
-			if (primaryDown) primaryDownTime = DateTime.Now;
-			var primaryDownDuration = DateTime.Now - primaryDownTime;
-			var primaryClick = primaryUp && primaryDownDuration.TotalSeconds < GetPrimaryClickDuration() && ((beginGesture - lastGesture).sqrMagnitude < MaximumClickDistance);
+			if (clickDown) clickDownTime = DateTime.Now;
+			var clickDownDuration = DateTime.Now - clickDownTime;
+			var clickClick = clickUp && clickDownDuration.TotalSeconds < GetClickDuration() && ((beginGesture - lastGesture).sqrMagnitude < MaximumClickDistance);
 			var gesturingBegan = GetGestureBegan();
 			var gesturingEnded = GetGestureEnded();
 
@@ -72,14 +72,14 @@ namespace LunraGames.SpaceFarm
 			{
 				beginGesture = currentGesture;
 				beginGestureNormal = currentGestureNormal;
-				App.Callbacks.BeginGesture(new Gesture(currentGestureNormal));
+				App.Callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
 			}
 
 			// TODO: Delete this?
 			//var gestureNormalDelta = currentGestureNormal - beginGestureNormal;
 
-			if (gesturingEnded) App.Callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false));
-			App.Callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing()));
+			if (gesturingEnded) App.Callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
+			App.Callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
 
 			lastGesture = currentGesture;
 
@@ -105,15 +105,15 @@ namespace LunraGames.SpaceFarm
 				if (!highlighted.Contains(raycast.gameObject)) ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
 
 				if (!anyInteraction) continue;
-				if (primaryDown)
+				if (clickDown)
 				{
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler) != null;
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.beginDragHandler) != null;
 					dragging.Add(raycast.gameObject);
 				}
-				if (primaryUp)
+				if (clickUp)
 				{
-					if (SendClickEvents() && primaryClick && !wasClicked)
+					if (SendClickEvents() && clickClick && !wasClicked)
 					{
 						wasClicked |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
 						wasTriggered |= wasClicked;
@@ -124,7 +124,7 @@ namespace LunraGames.SpaceFarm
 				}
 			}
 
-			if (primaryUp)
+			if (clickUp)
 			{
 				foreach (var drag in dragging)
 				{
@@ -153,7 +153,7 @@ namespace LunraGames.SpaceFarm
 
 			highlighted = stillHighlighted;
 
-			if (primaryClick) App.Callbacks.Click(new Click(beginGestureNormal, currentGestureNormal, !wasTriggered));
+			if (clickClick) App.Callbacks.Click(new Click(beginGestureNormal, currentGestureNormal, !wasTriggered));
 
 
 			// Camera
@@ -166,13 +166,14 @@ namespace LunraGames.SpaceFarm
 		#endregion
 
 		/// <summary>
-		/// Gets the maximum duration of the primary click, holding down the primary input longer will not be a click.
+		/// Gets the maximum duration of the click, holding down the input longer will not be a click.
 		/// </summary>
-		/// <returns>The primary click duration.</returns>
-		protected virtual float GetPrimaryClickDuration() { return 0.7f; }
-		protected virtual bool IsPrimaryDown() { return false; }
-		protected virtual bool IsPrimaryHeldDown() { return false; }
-		protected virtual bool IsPrimaryUp() { return false; }
+		/// <returns>The click duration.</returns>
+		protected virtual float GetClickDuration() { return 0.7f; }
+		protected virtual bool IsClickDown() { return false; }
+		protected virtual bool IsClickHeldDown() { return false; }
+		protected virtual bool IsClickUp() { return false; }
+		protected virtual bool IsSecondaryClickInteraction() { return false; }
 		/// <summary>
 		/// Determines if click events should be executed by this InputService.
 		/// </summary>

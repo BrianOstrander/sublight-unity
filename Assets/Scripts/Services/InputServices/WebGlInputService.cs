@@ -55,34 +55,39 @@ namespace LunraGames.SpaceFarm
 
 		}
 
-		protected override bool IsPrimaryUp()
+		protected override bool IsClickUp()
 		{
-			return Input.GetMouseButtonUp(0);
+			return Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1);
 		}
 
-		protected override bool IsPrimaryDown()
+		protected override bool IsSecondaryClickInteraction()
 		{
-			return Input.GetMouseButtonDown(0);
+			return Input.GetMouseButton(1) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonUp(1);
 		}
 
-		protected override bool IsPrimaryHeldDown()
+		protected override bool IsClickDown()
 		{
-			return Input.GetMouseButton(0);
+			return Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1);
+		}
+
+		protected override bool IsClickHeldDown()
+		{
+			return Input.GetMouseButton(0) || Input.GetMouseButton(1);
 		}
 
 		protected override bool GetGestureBegan()
 		{
-			return Input.GetMouseButtonDown(0);
+			return Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1);
 		}
 
 		protected override bool IsGesturing()
 		{
-			return Input.GetMouseButton(0);
+			return Input.GetMouseButton(0) || Input.GetMouseButton(1);
 		}
 
 		protected override bool GetGestureEnded()
 		{
-			return Input.GetMouseButtonUp(0);
+			return Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1);
 		}
 
 		protected override Vector2 GetGesture()

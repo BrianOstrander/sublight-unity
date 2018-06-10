@@ -16,11 +16,12 @@ namespace LunraGames.SpaceFarm
 			var dragView = view as IDragView;
 			var gesture = App.Callbacks.LastGesture;
 
-			if (lastGesture.IsGesturing == gesture.IsGesturing && !lastGesture.IsGesturing)
+			if ((gesture.IsSecondary) || (lastGesture.IsGesturing == gesture.IsGesturing && !lastGesture.IsGesturing))
 			{
 				lastGesture = gesture;
 				return;
 			}
+			App.Log(gesture.IsSecondary);
 			if (lastGesture.IsGesturing && !gesture.IsGesturing)
 			{
 				var newPos = dragView.DragRoot.position;
