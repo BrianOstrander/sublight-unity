@@ -74,9 +74,11 @@ namespace LunraGames.SpaceFarm
 
 			if (Application.isEditor)
 			{
+#if UNITY_EDITOR
 				logService = new EditorLogService();
 				inputService = new EditorInputService();
 				backendService = new EditorBackendService();
+#endif
 			}
 			else if (Application.platform == RuntimePlatform.WebGLPlayer)
 			{

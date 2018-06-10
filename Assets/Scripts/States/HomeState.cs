@@ -52,7 +52,6 @@ namespace LunraGames.SpaceFarm
 
 		void UnloadScene(Action done)
 		{
-			App.Log("Unloading Scene");
 			unloadSceneCallback = done;
 			App.Callbacks.SceneUnload += OnSceneUnloaded;
 			SceneManager.UnloadSceneAsync(SceneConstants.Home);

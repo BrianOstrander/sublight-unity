@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+
 using UnityEditor;
 using UnityEngine;
 
@@ -37,12 +38,28 @@ namespace LunraGames.SpaceFarm
 			DevPrefs.ApplyXButtonStyleInEditMode = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
 			#endregion
 
+			#region Logging
+			GUILayout.Label("Logging", EditorStyles.boldLabel);
+			GUILayout.BeginHorizontal();
+			{
+				foreach (var logType in Enum.GetValues(typeof(LogTypes)).Cast<LogTypes>())
+				{
+					EditorLogService.SetLogActive(logType, GUILayout.Toggle(EditorLogService.GetLogActive(logType), logType.ToString(), "Button"));
+				}
+			}
+			GUILayout.EndHorizontal();
+			#endregion
+
 			Space();
 
 			if (this is ILocalDeveloperSettingsWindow)
 			{
 				GUILayout.Label("Local developer settings", EditorStyles.boldLabel);
-				try { (this as ILocalDeveloperSettingsWindow).OnLocalGUI(); }
+				try 
+				{
+					var localWindow = (this as ILocalDeveloperSettingsWindow);
+					localWindow.OnLocalGUI(); 
+				}
 				catch (Exception e)
 				{
 					GUILayout.BeginHorizontal();

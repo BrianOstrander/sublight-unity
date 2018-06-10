@@ -45,7 +45,6 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeScenes(Action callback)
 		{
-			App.Log("Loading Scenes");
 			initializeSceneCallback = callback;
 			App.Callbacks.SceneLoad += OnSceneInitialized;
 			foreach (var scene in Scenes) SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
@@ -55,14 +54,14 @@ namespace LunraGames.SpaceFarm
 		{
 			if (!Scenes.Contains(scene.name)) return;
 
-			App.Log("Loaded Scene: " + scene.name);
+			App.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
 
 			loadedScenes.Add(scene.name);
 			SceneManager.SetActiveScene(scene);
 
 			if (Scenes.Length != loadedScenes.Count) return;
 
-			App.Log("All Scenes Loaded");
+			App.Log("All Scenes Loaded", LogTypes.Initialization);
 
 			var missingTags = checkedTags.Where(t => !foundTags.Contains(t));
 			if (0 < missingTags.Count())

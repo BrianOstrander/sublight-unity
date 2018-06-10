@@ -1,4 +1,6 @@
-using PlayerPrefs = LunraGames.PlayerPrefsExtensions;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace LunraGames.SpaceFarm
 {
@@ -6,35 +8,51 @@ namespace LunraGames.SpaceFarm
 	{
 		static class Keys
 		{
-			const string Prefix = "LG_SF_";
-			public const string AutoApplyShaderGlobals = Prefix + "AutoApplyShaderGlobals";
-			public const string WindInEditMode = Prefix + "WindInEditMode";
-			public const string AutoApplySkybox = Prefix + "AutoApplySkybox";
-			public const string ApplyXButtonStyleInEditMode = Prefix + "ApplyXButtonStyleInEditMode";
+			public const string AutoApplyShaderGlobals = ProjectConstants.PrefsPrefix + "AutoApplyShaderGlobals";
+			public const string WindInEditMode = ProjectConstants.PrefsPrefix + "WindInEditMode";
+			public const string AutoApplySkybox = ProjectConstants.PrefsPrefix + "AutoApplySkybox";
+			public const string ApplyXButtonStyleInEditMode = ProjectConstants.PrefsPrefix + "ApplyXButtonStyleInEditMode";
 		}
 
 		public static bool AutoApplyShaderGlobals
 		{
-			get { return PlayerPrefs.GetBool(Keys.AutoApplyShaderGlobals, true); }
-			set { PlayerPrefs.SetBool(Keys.AutoApplyShaderGlobals, value); }
+#if UNITY_EDITOR
+			get { return EditorPrefs.GetBool(Keys.AutoApplyShaderGlobals, true); }
+			set { EditorPrefs.SetBool(Keys.AutoApplyShaderGlobals, value); }
+#else
+			get; set;
+#endif
 		}
 
 		public static bool WindInEditMode
 		{
-			get { return PlayerPrefs.GetBool(Keys.WindInEditMode, false); }
-			set { PlayerPrefs.SetBool(Keys.WindInEditMode, value); }
+#if UNITY_EDITOR
+			get { return EditorPrefs.GetBool(Keys.WindInEditMode, false); }
+			set { EditorPrefs.SetBool(Keys.WindInEditMode, value); }
+#else
+			get; set;
+#endif
 		}
 
 		public static bool AutoApplySkybox
 		{
-			get { return PlayerPrefs.GetBool(Keys.AutoApplySkybox, false); }
-			set { PlayerPrefs.SetBool(Keys.AutoApplySkybox, value); }
+#if UNITY_EDITOR
+			get { return EditorPrefs.GetBool(Keys.AutoApplySkybox, false); }
+			set { EditorPrefs.SetBool(Keys.AutoApplySkybox, value); }
+#else
+			get; set;
+#endif
 		}
 
 		public static bool ApplyXButtonStyleInEditMode
 		{
-			get { return PlayerPrefs.GetBool(Keys.ApplyXButtonStyleInEditMode, true); }
-			set { PlayerPrefs.SetBool(Keys.ApplyXButtonStyleInEditMode, value); }
+#if UNITY_EDITOR
+			get { return EditorPrefs.GetBool(Keys.ApplyXButtonStyleInEditMode, true); }
+			set { EditorPrefs.SetBool(Keys.ApplyXButtonStyleInEditMode, value); }
+#else
+			get; set;
+#endif
 		}
+
 	}
 }
