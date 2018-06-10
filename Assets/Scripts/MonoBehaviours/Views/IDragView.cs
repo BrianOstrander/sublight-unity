@@ -6,5 +6,7 @@ namespace LunraGames.SpaceFarm.Views
 	{
 		Transform DragRoot { get; }
 		Transform DragForward { get; }
+		Transform DragAxisRoot { get; }
+		Vector3 DragAxis { get; set; }
 	}
 }

@@ -157,8 +157,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animations:
   - {fileID: 11400000, guid: c2e85a8b8aadf47628473e013d90abb1, type: 2}
+  - {fileID: 11400000, guid: d24a5dc776e684da7ad92bd7956e7a3e, type: 2}
   dragRoot: {fileID: 4372052734227234}
   dragForward: {fileID: 4279675967937224}
+  dragAxisRoot: {fileID: 4279675967937224}
 --- !u!124 &124480509724829584
 Behaviour:
   m_ObjectHideFlags: 1

@@ -84,9 +84,6 @@ namespace LunraGames.SpaceFarm
 			lastGesture = currentGesture;
 
 			var screenPos = GetScreenPosition();
-			var rawRotation = GetPointerRawRotation();
-
-			var rotation = GetPointerRotation(rawRotation, offset);
 
 			var pointerData = new PointerEventData(EventSystem.current);
 			pointerData.position = screenPos;
@@ -161,7 +158,8 @@ namespace LunraGames.SpaceFarm
 			var cameraRotation = GetCameraRotation();
 			App.Callbacks.CameraOrientation(new CameraOrientation(cameraPosition, cameraRotation));
 
-			App.Callbacks.PointerOrientation(new PointerOrientation(cameraPosition, rawRotation, rotation, screenPos));
+			var pointerRotation = GetPointerRotation();
+			App.Callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
 		}
 		#endregion
 
@@ -189,8 +187,7 @@ namespace LunraGames.SpaceFarm
 		protected virtual Vector2 GetGesture() { return Vector2.zero; }
 		protected virtual Vector2 GetGestureDelta(bool gestureBegan, bool gestureEnded, Vector2 gesture, Vector2 lastGesture) { return gestureBegan || gestureEnded ? Vector2.zero : gesture - lastGesture; }
 		protected virtual Vector2 GetScreenPosition() { return Vector2.zero; }
-		protected virtual Quaternion GetPointerRawRotation() { return Quaternion.identity; }
-		protected virtual Quaternion GetPointerRotation(Quaternion rotation, Quaternion offset) { return Quaternion.Inverse(offset) * rotation; }
+		protected virtual Quaternion GetPointerRotation() { return Quaternion.identity; }
 		// TODO: Remove hack.
 		protected virtual Vector3 GetCameraPosition() { return new Vector3(0f, 0f, 0f); }
 		protected virtual Quaternion GetCameraRotation() { return Quaternion.identity; }

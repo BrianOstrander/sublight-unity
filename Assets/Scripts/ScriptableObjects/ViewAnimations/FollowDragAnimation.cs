@@ -21,7 +21,7 @@ namespace LunraGames.SpaceFarm
 				lastGesture = gesture;
 				return;
 			}
-			App.Log(gesture.IsSecondary);
+
 			if (lastGesture.IsGesturing && !gesture.IsGesturing)
 			{
 				var newPos = dragView.DragRoot.position;
