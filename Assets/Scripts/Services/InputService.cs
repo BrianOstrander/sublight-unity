@@ -14,7 +14,6 @@ namespace LunraGames.SpaceFarm
 	public class InputService : IInputService
 	{
 		public bool IsEnabled { get; private set; }
-		Quaternion offset = Quaternion.identity;
 		DateTime clickDownTime;
 
 		/// <summary>
@@ -152,7 +151,6 @@ namespace LunraGames.SpaceFarm
 
 			if (clickClick) App.Callbacks.Click(new Click(beginGestureNormal, currentGestureNormal, !wasTriggered));
 
-
 			// Camera
 			var cameraPosition = GetCameraPosition();
 			var cameraRotation = GetCameraRotation();
@@ -188,7 +186,6 @@ namespace LunraGames.SpaceFarm
 		protected virtual Vector2 GetGestureDelta(bool gestureBegan, bool gestureEnded, Vector2 gesture, Vector2 lastGesture) { return gestureBegan || gestureEnded ? Vector2.zero : gesture - lastGesture; }
 		protected virtual Vector2 GetScreenPosition() { return Vector2.zero; }
 		protected virtual Quaternion GetPointerRotation() { return Quaternion.identity; }
-		// TODO: Remove hack.
 		protected virtual Vector3 GetCameraPosition() { return new Vector3(0f, 0f, 0f); }
 		protected virtual Quaternion GetCameraRotation() { return Quaternion.identity; }
 	}
