@@ -4,7 +4,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class CameraPresenter : Presenter<ICameraView>
+	public class CameraPresenter : Presenter<IDragView>
 	{
 		public CameraPresenter()
 		{

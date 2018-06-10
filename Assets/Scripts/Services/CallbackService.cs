@@ -60,6 +60,7 @@ namespace LunraGames.SpaceFarm
 		public CameraOrientation LastCameraOrientation;
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
+		public Gesture LastGesture;
 		#endregion
 
 		public CallbackService()
@@ -69,6 +70,7 @@ namespace LunraGames.SpaceFarm
 			CameraOrientation += orientation => LastCameraOrientation = orientation;
 			PointerOrientation += orientation => LastPointerOrientation = orientation;
 			Highlight += highlight => LastHighlight = highlight;
+			CurrentGesture += gesture => LastGesture = gesture;
 		}
 	}
 }

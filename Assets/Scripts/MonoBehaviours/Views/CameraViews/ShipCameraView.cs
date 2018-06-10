@@ -4,42 +4,20 @@ namespace LunraGames.SpaceFarm.Views
 {
 	public class ShipCameraView : View, IShipCameraView
 	{
-		public Vector3 Position
-		{
-			set { transform.localPosition = value; }
-			private get { return transform.localPosition; }
-		}
+		[SerializeField]
+		Transform dragRoot;
+		[SerializeField]
+		Transform dragForward;
 
-		public Quaternion Rotation
-		{
-			set { transform.localRotation = value; }
-			private get { return transform.localRotation; }
-		}
+		public Transform DragRoot { get { return dragRoot; } }
 
-		Vector3? dragStart;
+		public Transform DragForward { get { return dragForward; } }
 
 		public override void Reset()
 		{
 			base.Reset();
-
-			Position = Vector3.zero;
-			Rotation = Quaternion.identity;
-		}
-
-		public void Drag(Vector2 screenDelta, bool isDone = false)
-		{
-			if (!dragStart.HasValue) dragStart = Position;
-
-		}
-
-		void OnDrawGizmos()
-		{
-			Gizmos.DrawRay(Position, Rotation * Vector3.forward);
 		}
 	}
 
-	public interface IShipCameraView : ICameraView
-	{
-		void Drag(Vector2 screenDelta, bool isDone = false);
-	}
+	public interface IShipCameraView : IDragView {}
 }

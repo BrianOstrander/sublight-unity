@@ -6,14 +6,9 @@ namespace LunraGames.SpaceFarm.Presenters
 {
 	public class ShipCameraPresenter : Presenter<IShipCameraView>
 	{
-		bool isDragging;
-
 		public ShipCameraPresenter()
 		{
 			App.Callbacks.StateChange += OnStateChange;
-			App.Callbacks.BeginGesture += OnBeginGesture;
-			App.Callbacks.CurrentGesture += OnCurrentGesture;
-			App.Callbacks.EndGesture += OnEndGesture;
 		}
 
 		protected override void UnBind()
@@ -21,9 +16,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Callbacks.StateChange -= OnStateChange;
-			App.Callbacks.BeginGesture -= OnBeginGesture;
-			App.Callbacks.CurrentGesture -= OnCurrentGesture;
-			App.Callbacks.EndGesture -= OnEndGesture;
 		}
 
 		public void Show(Action done)
@@ -38,22 +30,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnStateChange(StateChange state)
 		{
 			if (state.Event == StateMachine.Events.End) CloseView(true);
-		}
-
-		void OnBeginGesture(Gesture gesture)
-		{
-			isDragging = true;
-		}
-
-		void OnCurrentGesture(Gesture gesture)
-		{
-			if (!isDragging) return;
-			App.Log(gesture.Delta);
-		}
-
-		void OnEndGesture(Gesture gesture)
-		{
-			isDragging = false;
 		}
 		#endregion
 	}
