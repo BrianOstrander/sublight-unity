@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 using LunraGames.SpaceFarm.Presenters;
 using LunraGames.SpaceFarm.Models;
-using LunraGames.SpaceFarm.Views;
+using LunraGames.NumberDemon;
 
 namespace LunraGames.SpaceFarm
 {
@@ -30,17 +30,21 @@ namespace LunraGames.SpaceFarm
 				return scenes.ToArray();
 			}
 		}
+
 		List<string> loadedScenes = new List<string>();
 		List<string> checkedTags = new List<string>();
 		List<string> foundTags = new List<string>();
 		Action initializeSceneCallback = ActionExtensions.Empty;
 
-		#region Idle
-		protected override void Idle()
+		GameModel game;
+
+		#region Begin
+		protected override void Begin()
 		{
 			App.SM.PushBlocking(InitializeScenes);
 			App.SM.PushBlocking(InitializeCamera);
 			App.SM.PushBlocking(InitializeInput);
+			App.SM.PushBlocking(InitializeGame);
 		}
 
 		void InitializeScenes(Action callback)
@@ -85,6 +89,22 @@ namespace LunraGames.SpaceFarm
 			App.Input.SetEnabled(true);
 			done();
 		}
+
+		void InitializeGame(Action done)
+		{
+			game = new GameModel();
+			game.GameplayCanvas.Value = App.CanvasRoot;
+			game.Seed.Value = DemonUtility.NextInteger;
+
+			// TODO: Figure out where to assign these.
+			var speed = new SpeedPresenter(game);
+			speed.Show();
+
+			done();
+		}
+		#endregion
+
+		#region Idle
 		#endregion
 	}
 }
