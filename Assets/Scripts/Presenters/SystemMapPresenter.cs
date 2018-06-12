@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
@@ -11,7 +10,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		GameModel gameModel;
 		SystemModel model;
 
-		bool isHighlighted;
 		bool isTravelable;
 
 		public SystemMapPresenter(GameModel gameModel, SystemModel model)
@@ -54,7 +52,6 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnHighlight(bool highlighted)
 		{
-			isHighlighted = highlighted;
 			var state = SystemHighlight.States.End;
 			if (highlighted)
 			{

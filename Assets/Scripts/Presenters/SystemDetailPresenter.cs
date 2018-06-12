@@ -46,7 +46,6 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnSystemHighlight(SystemHighlight highlight)
 		{
-			App.Log(highlight.State + " : " + highlight.System.Seed.Value);
 			nextHighlight = highlight;
 			switch (highlight.State)
 			{
@@ -58,29 +57,6 @@ namespace LunraGames.SpaceFarm.Presenters
 					Show(highlight.System);
 					break;
 			}
-			//var previousHighlight = nextHighlight;
-			//nextHighlight = highlight;
-			//if (highlight == previousHighlight) { App.Log("highlights same"); return; }
-			//if (highlight.System == previousHighlight.System)
-			//{
-			//	switch(highlight.State)
-			//	{
-			//		case SystemHighlight.States.End:
-			//		case SystemHighlight.States.Change:
-			//			if (View.TransitionState == TransitionStates.Shown) CloseView(true);
-			//			break;
-			//		case SystemHighlight.States.Begin:
-			//			Show(highlight.System);
-			//			break;
-			//	}
-
-
-			//	App.Log("lol here");
-			//	return;
-			//}
-			//if (View.TransitionState == TransitionStates.Shown) CloseView(true);
-			//else Show(highlight.System);
-
 		}
 
 		void OnClose()
