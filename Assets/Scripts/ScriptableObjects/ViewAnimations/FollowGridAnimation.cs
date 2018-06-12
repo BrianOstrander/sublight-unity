@@ -9,7 +9,7 @@ namespace LunraGames.SpaceFarm
 		{
 			if (!(view is IGridTransform)) return;
 			var gridView = view as IGridTransform;
-			gridView.Root.position = App.UniverseService.GridToWorld(gridView.UniversePosition);
+			gridView.Root.position = App.UniverseService.UniverseToUnity(gridView.UniversePosition);
 		}
 
 		public override void OnIdle(IView view) { SetPosition(view); }

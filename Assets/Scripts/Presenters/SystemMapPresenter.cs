@@ -43,7 +43,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnHighlight(bool highlighted)
 		{
-			App.Log("lol highlighted");
+			
 		}
 
 		void OnClick()

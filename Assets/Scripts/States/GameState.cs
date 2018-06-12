@@ -98,11 +98,18 @@ namespace LunraGames.SpaceFarm
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
 			game.FocusedSector.Changed += OnFocusedSector;
-			game.Ship.Value = new ShipModel();
+
+			var ship = new ShipModel();
+			ship.Position.Value = game.Universe.Value.Sectors.Value.First().Systems.Value.First().Position;
+
+			ship.TravelRadius.Value = new TravelRadius(0.05f, 0.06f, 0.07f);
+
+			game.Ship.Value = ship;
 
 			// TODO: Figure out where to assign these.
 			new SpeedPresenter(game).Show();
 			new ShipMapPresenter(game).Show();
+			new ShipRadiusPresenter(game).Show();
 
 			done();
 		}

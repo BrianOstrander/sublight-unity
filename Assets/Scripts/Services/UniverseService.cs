@@ -11,16 +11,23 @@ namespace LunraGames.SpaceFarm
 {
 	public class UniverseService
 	{
-		public UniversePosition WorldToGrid(Vector3 world)
+		const float UnityToUniverseScalar = 0.01f;
+		const float UniverseToUnityScalar = 100f;
+
+		public float UnityToUniverseDistance(float unityDistance) { return unityDistance * UniverseToUnityScalar; }
+
+		public float UniverseToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
+
+		public UniversePosition UnityToUniverse(Vector3 unityPosition)
 		{
 			// TODO: Actually make this functional.
-			return new UniversePosition(Vector3.zero, world * 0.01f);
+			return new UniversePosition(Vector3.zero, unityPosition * UnityToUniverseScalar);
 		}
 
-		public Vector3 GridToWorld(UniversePosition universePosition)
+		public Vector3 UniverseToUnity(UniversePosition universePosition)
 		{
 			// TODO: Actually make this functional.
-			return universePosition.System * 100f;
+			return universePosition.System * UniverseToUnityScalar;
 		}
 
 		public UniverseModel CreateUniverse(int seed)
