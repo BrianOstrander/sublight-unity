@@ -1,16 +1,18 @@
-using UnityEngine;
 using System;
+
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace LunraGames.SpaceFarm 
 {
 	
 	public enum TransitionStates
 	{
-		UNKNOWN,
-		SHOWN,
-		SHOWING,
-		CLOSED,
-		CLOSING
+		Unknown = 0,
+		Shown = 10,
+		Showing = 20,
+		Closed = 30,
+		Closing = 40
 	}
 
 	public interface IView : IMonoBehaviour
@@ -28,16 +30,44 @@ namespace LunraGames.SpaceFarm
 		TransitionStates TransitionState { get; }
 
 		bool Visible { get; }
+		/// <summary>
+		/// Called when view is prepared. Add events using += for predictable behaviour.
+		/// </summary>
+		/// <value>The prepare.</value>
 		Action Prepare { get; set; }
+		/// <summary>
+		/// Called when view is showing, with a scalar progress. Add events using += for predictable behaviour.
+		/// </summary>
+		/// <value>The showing.</value>
 		Action<float> Showing { get; set; }
+		/// <summary>
+		/// Called when view is shown. Add events using += for predictable behaviour.
+		/// </summary>
+		/// <value>The shown.</value>
 		Action Shown { get; set; }
+		/// <summary>
+		/// Called when view is idle, with a delta in seconds since the last call. Add events using += for predictable behaviour.
+		/// </summary>
+		/// <value>The idle.</value>
 		Action<float> Idle { get; set; }
+		/// <summary>
+		/// Called on view late idle, with a delta in seconds since the lats call. Add events using += for predictable behaviour.
+		/// </summary>
+		/// <value>The late idle.</value>
 		Action<float> LateIdle { get; set; }
+		/// <summary>
+		/// Called when view is closing, with a scalar progress. Add events using += for predictable behaviour.
+		/// </summary>
+		/// <value>The closing.</value>
 		Action<float> Closing { get; set; }
+		/// <summary>
+		/// Called when view is closed. Add events using += for predictable behaviour.
+		/// </summary>
+		/// <value>The closed.</value>
 		Action Closed { get; set; }
 		void Reset();
 
-		string InstanceName { get; set; }	
+		string InstanceName { get; set; }
 	}
 
 	public abstract class View : MonoBehaviour, IView
@@ -57,14 +87,15 @@ namespace LunraGames.SpaceFarm
 
 		float opacity = 1f;
 		public virtual float Opacity { get { return opacity; } set { opacity = Mathf.Max(0f, Mathf.Min(1f, value)); } }
-		bool _interactable = true;
-		public virtual bool Interactable { get { return _interactable; } set { _interactable = value; } }
-		[SerializeField]
-		ViewAnimation[] _animations;
+		bool interactable = true;
+		public virtual bool Interactable { get { return interactable; } set { interactable = value; } }
+		[SerializeField, FormerlySerializedAs("_animations")]
+		ViewAnimation[] animations;
 
-		public virtual ViewAnimation[] ViewAnimations { get { return _animations; } }
+		public virtual ViewAnimation[] ViewAnimations { get { return animations; } }
 
-		public string InstanceName {
+		public string InstanceName 
+		{
 			get { return gameObject.name; }
 			set { gameObject.name = value; }
 		}
@@ -79,7 +110,7 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual void OnPrepare()
 		{
-			TransitionState = TransitionStates.SHOWING;
+			TransitionState = TransitionStates.Showing;
 
 			Root.SetParent(Parent, true);
 			Root.localPosition = Vector3.zero;
@@ -92,14 +123,15 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual void OnShowing(float scalar) 
 		{
-			TransitionState = TransitionStates.SHOWING;
+			TransitionState = TransitionStates.Showing;
 			foreach (var anim in ViewAnimations) anim.OnShowing(this, scalar);
 		}
 
 		protected virtual void OnShown() 
 		{
-			TransitionState = TransitionStates.SHOWN;
+			TransitionState = TransitionStates.Shown;
 			foreach (var anim in ViewAnimations) anim.OnShown(this);
+			// TODO: Remove these? I think this is all taken care of...
 			//App.Heartbeat.Update += OnUpdate;
 			//App.Heartbeat.LateUpdate += OnLateUpdate;
 		}
@@ -116,19 +148,20 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual void OnClosing(float scalar) 
 		{
+			// TODO: Remove these? I think this is all taken care of...
 			// Is this the first time coming through here...
-			if (TransitionState != TransitionStates.CLOSING)
+			if (TransitionState != TransitionStates.Closing)
 			{
 				//App.Heartbeat.Update -= OnUpdate;
 				//App.Heartbeat.LateUpdate -= OnLateUpdate;
 			}
-			TransitionState = TransitionStates.CLOSING;
+			TransitionState = TransitionStates.Closing;
 			foreach (var anim in ViewAnimations) anim.OnClosing(this, scalar);
 		}
 
 		protected virtual void OnClosed() 
 		{
-			TransitionState = TransitionStates.CLOSED;
+			TransitionState = TransitionStates.Closed;
 			foreach (var anim in ViewAnimations) anim.OnClosed(this);
 		}
 

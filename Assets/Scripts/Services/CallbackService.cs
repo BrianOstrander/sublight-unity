@@ -58,6 +58,10 @@ namespace LunraGames.SpaceFarm
 		/// The day time delta.
 		/// </summary>
 		public Action<DayTimeDelta> DayTimeDelta = ActionExtensions.GetEmpty<DayTimeDelta>();
+		/// <summary>
+		/// System highlight changed.
+		/// </summary>
+		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>(); 
 		#endregion
 
 		#region Caching
@@ -66,6 +70,7 @@ namespace LunraGames.SpaceFarm
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
 		public DayTimeDelta LastDayTimeDelta;
+		public SystemHighlight LastSystemHighlight;
 		#endregion
 
 		public CallbackService()
@@ -77,6 +82,7 @@ namespace LunraGames.SpaceFarm
 			Highlight += highlight => LastHighlight = highlight;
 			CurrentGesture += gesture => LastGesture = gesture;
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
+			SystemHighlight += highlight => LastSystemHighlight = highlight;
 		}
 	}
 }

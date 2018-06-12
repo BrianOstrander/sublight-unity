@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using SelectionState = LunraGames.SpaceFarm.XButton.SelectionState;
-using LunraGames;
 
 namespace LunraGames.SpaceFarm
 {

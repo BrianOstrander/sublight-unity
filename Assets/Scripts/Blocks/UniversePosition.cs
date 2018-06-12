@@ -37,14 +37,14 @@ namespace LunraGames.SpaceFarm
 			return obj.GetType() == GetType() && Equals((UniversePosition)obj);
 		}
 
-		public static bool operator ==(UniversePosition obj1, UniversePosition obj2)
+		public static bool operator ==(UniversePosition obj0, UniversePosition obj1)
 		{
-			if (ReferenceEquals(obj1, obj2)) return true;
+			if (ReferenceEquals(obj0, obj1)) return true;
+			if (ReferenceEquals(obj0, null)) return false;
 			if (ReferenceEquals(obj1, null)) return false;
-			if (ReferenceEquals(obj2, null)) return false;
-			return obj1.Equals(obj2);
+			return obj0.Equals(obj1);
 		}
 
-		public static bool operator !=(UniversePosition obj1, UniversePosition obj2) { return !(obj1 == obj2); }
+		public static bool operator !=(UniversePosition obj0, UniversePosition obj1) { return !(obj0 == obj1); }
 	}
 }
