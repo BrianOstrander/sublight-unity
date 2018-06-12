@@ -8,9 +8,13 @@
 		public readonly ModelProperty<UniversePosition> Position = new ModelProperty<UniversePosition>();
 
 		/// <summary>
-		/// Basically the speed of the ship, expressed in universe units per year.
+		/// Basically the speed of the ship, expressed in universe units per day.
 		/// </summary>
 		public readonly ModelProperty<float> Speed = new ModelProperty<float>();
+		/// <summary>
+		/// The ration consumption rate in rations per day.
+		/// </summary>
+		public readonly ModelProperty<float> RationConsumption = new ModelProperty<float>();
 		/// <summary>
 		/// The years worth of rations on board.
 		/// </summary>

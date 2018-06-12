@@ -100,9 +100,11 @@ namespace LunraGames.SpaceFarm
 			game.FocusedSector.Changed += OnFocusedSector;
 
 			var ship = new ShipModel();
-			ship.Position.Value = game.Universe.Value.Sectors.Value.First().Systems.Value.First().Position;
-			ship.Speed.Value = 0.01f;
-			ship.Rations.Value = 5f;
+			ship.CurrentSystem.Value = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
+			ship.Position.Value = ship.CurrentSystem.Value.Position;
+			ship.Speed.Value = 0.001f;
+			ship.RationConsumption.Value = 0.02f;
+			ship.Rations.Value = 1f;
 
 			game.Ship.Value = ship;
 

@@ -4,14 +4,29 @@ namespace LunraGames.SpaceFarm
 {
 	public struct DayTime
 	{
-		public const float TimeInDay = 60f;
+		public const float DaysInYear = 365;
+		public const float TimeInDay = 4f;
 
 		public static DayTime Zero { get { return new DayTime(); } }
 
 		public int Day;
 		public float Time;
 
+		/// <summary>
+		/// Gets the total time.
+		/// </summary>
+		/// <value>The total time.</value>
 		public float TotalTime { get { return (Day * TimeInDay) + Time; } }
+		/// <summary>
+		/// Gets the total time represented by this DayTime where a Day is equal to 1.0
+		/// </summary>
+		/// <value>The day normal.</value>
+		public float DayNormal { get { return TotalTime / TimeInDay; } }
+		/// <summary>
+		/// Gets the years.
+		/// </summary>
+		/// <value>The years.</value>
+		public float Years { get { return Day / DaysInYear; } }
 
 		public DayTime(float time)
 		{
@@ -44,7 +59,7 @@ namespace LunraGames.SpaceFarm
 			time += result.Time;
 			var newTime = time % TimeInDay;
 			var dayTime = time - newTime;
-			result.Day = day + Mathf.FloorToInt(dayTime / TimeInDay);
+			result.Day += day + Mathf.FloorToInt(dayTime / TimeInDay);
 			result.Time = newTime;
 			return result;
 		}
@@ -71,7 +86,11 @@ namespace LunraGames.SpaceFarm
 			var min = Min(dayTime0, dayTime1);
 			var day = max.Day - min.Day;
 			var time = max.Time - min.Time;
-			if (time < 0f) time = TimeInDay + time;
+			if (time < 0f)
+			{
+				time = TimeInDay + time;
+				day--;
+			}
 			return new DayTime(day, time);
 		}
 	}
