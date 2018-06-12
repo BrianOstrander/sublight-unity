@@ -7,6 +7,7 @@ namespace LunraGames.SpaceFarm.Views
 	public abstract class SystemMapView : View, ISystemMapView
 	{
 		public abstract SystemTypes SystemType { get; }
+		public abstract Color TravelColor { set; }
 		public UniversePosition UniversePosition { set; get; }
 		public Action<bool> Highlight { set; private get; }
 		public Action Click { set; private get; }
@@ -15,6 +16,7 @@ namespace LunraGames.SpaceFarm.Views
 		{
 			base.Reset();
 
+			TravelColor = Color.white;
 			UniversePosition = UniversePosition.Zero;
 			Highlight = ActionExtensions.GetEmpty<bool>();
 			Click = ActionExtensions.Empty;
@@ -30,6 +32,7 @@ namespace LunraGames.SpaceFarm.Views
 	public interface ISystemMapView : IGridTransform
 	{
 		SystemTypes SystemType { get; }
+		Color TravelColor { set; }
 		Action<bool> Highlight { set; }
 		Action Click { set; }
 	}

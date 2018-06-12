@@ -156,8 +156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7bab460cb74d4c8f8026e927227a831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animations:
+  animations:
   - {fileID: 11400000, guid: 32855131da3974f59ba97dd26e0cfd7c, type: 2}
+  meshRenderer: {fileID: 23689719416270442}
 --- !u!114 &114212955890811514
 MonoBehaviour:
   m_ObjectHideFlags: 1

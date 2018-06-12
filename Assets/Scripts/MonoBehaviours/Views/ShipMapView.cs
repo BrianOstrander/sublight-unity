@@ -1,7 +1,5 @@
 ﻿using System;
 
-using UnityEngine;
-
 namespace LunraGames.SpaceFarm.Views
 {
 	public class ShipMapView : View, IShipMapView

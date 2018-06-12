@@ -14,8 +14,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 
 			App.Callbacks.StateChange += OnStateChange;
-			model.Ship.Value.Position.Changed += OnShipPosition;
-			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
+			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 		}
 
 		protected override void UnBind()
@@ -23,8 +22,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Callbacks.StateChange -= OnStateChange;
-			model.Ship.Value.Position.Changed -= OnShipPosition;
-			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
+			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 		}
 
 		public void Show(Action done = null)
@@ -43,14 +41,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (state.Event == StateMachine.Events.End) CloseView(true);
 		}
 
-		void OnShipPosition(UniversePosition position)
+		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange)
 		{
-			View.UniversePosition = position;
-		}
-
-		void OnTravelRadius(TravelRadius travelRadius)
-		{
-			View.TravelRadius = travelRadius;
+			View.UniversePosition = travelRadiusChange.Origin;
+			View.TravelRadius = travelRadiusChange.TravelRadius;
 		}
 		#endregion
 	}

@@ -60,6 +60,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnShipPosition(UniversePosition position)
 		{
 			View.UniversePosition = position;
+			OnUpdateTravelRadius();
 		}
 
 		void OnSpeed(float speed) { OnUpdateTravelRadius(); }
@@ -70,8 +71,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnUpdateTravelRadius()
 		{
-			var rationDistance = (model.Ship.Value.Rations / model.Ship.Value.RationConsumption) * model.Ship.Value.Speed;
-			model.Ship.Value.TravelRadius.Value = new TravelRadius(rationDistance * 0.8f, rationDistance * 0.9f, rationDistance);
+			var ship = model.Ship.Value;
+			var change = new TravelRadiusChange(ship.Position, ship.Speed, ship.RationConsumption, ship.Rations);
+			ship.TravelRadius.Value = change.TravelRadius;
+			App.Callbacks.TravelRadiusChange(change);
 		}
 		#endregion
 	}

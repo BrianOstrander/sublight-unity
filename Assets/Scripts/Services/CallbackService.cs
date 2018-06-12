@@ -61,7 +61,11 @@ namespace LunraGames.SpaceFarm
 		/// <summary>
 		/// System highlight changed.
 		/// </summary>
-		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>(); 
+		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>();
+		/// <summary>
+		/// Called when any details pertaining to the travel radius change.
+		/// </summary>
+		public Action<TravelRadiusChange> TravelRadiusChange = ActionExtensions.GetEmpty<TravelRadiusChange>();
 		#endregion
 
 		#region Caching
@@ -71,6 +75,7 @@ namespace LunraGames.SpaceFarm
 		public Gesture LastGesture;
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
+		public TravelRadiusChange LastTravelRadiusChange;
 		#endregion
 
 		public CallbackService()
@@ -83,6 +88,7 @@ namespace LunraGames.SpaceFarm
 			CurrentGesture += gesture => LastGesture = gesture;
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
 			SystemHighlight += highlight => LastSystemHighlight = highlight;
+			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
 		}
 	}
 }

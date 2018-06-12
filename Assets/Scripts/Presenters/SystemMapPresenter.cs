@@ -1,5 +1,7 @@
 ﻿using System;
 
+using UnityEngine;
+
 using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
 
@@ -18,18 +20,16 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 			SetView(App.V.Get<ISystemMapView>(v => v.SystemType == model.SystemType));
 
-			gameModel.Ship.Value.Position.Changed += OnShipPosition;
-			gameModel.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 			App.Callbacks.StateChange += OnStateChange;
+			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
 
-			gameModel.Ship.Value.Position.Changed -= OnShipPosition;
-			gameModel.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 			App.Callbacks.StateChange -= OnStateChange;
+			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 		}
 
 		public void Show(Action done = null)
@@ -39,7 +39,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.UniversePosition = model.Position;
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
-			OnCheckTravelable();
+			OnTravelRadiusChange(App.Callbacks.LastTravelRadiusChange);
+			OnTravelColor();
 			if (done != null) View.Shown += done;
 			ShowView(instant: true);
 		}
@@ -87,14 +88,16 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
-		void OnShipPosition(UniversePosition position) { OnCheckTravelable(); }
-
-		void OnTravelRadius(TravelRadius travelRadius) { OnCheckTravelable(); }
-
-		void OnCheckTravelable()
+		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange)
 		{
-			var distance = App.UniverseService.UniverseDistance(model.Position, gameModel.Ship.Value.Position);
-			isTravelable = distance < gameModel.Ship.Value.TravelRadius.Value.MaximumRadius;
+			var distance = App.UniverseService.UniverseDistance(model.Position, travelRadiusChange.Origin);
+			isTravelable = distance < travelRadiusChange.TravelRadius.MaximumRadius;
+			if (View.Visible) OnTravelColor();
+		}
+
+		void OnTravelColor()
+		{
+			View.TravelColor = isTravelable ? Color.white : Color.red;
 		}
 		#endregion
 	}

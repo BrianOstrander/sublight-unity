@@ -99,12 +99,21 @@ namespace LunraGames.SpaceFarm
 			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
 			game.FocusedSector.Changed += OnFocusedSector;
 
+			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
+			var startPosition = startSystem.Position;
+			var rations = 1f;
+			var speed = 0.001f;
+			var rationConsumption = 0.02f;
+			var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
+
+			App.Callbacks.TravelRadiusChange(travelRadiusChange);
+
 			var ship = new ShipModel();
-			ship.CurrentSystem.Value = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
-			ship.Position.Value = ship.CurrentSystem.Value.Position;
-			ship.Speed.Value = 0.001f;
-			ship.RationConsumption.Value = 0.02f;
-			ship.Rations.Value = 1f;
+			ship.CurrentSystem.Value = startSystem;
+			ship.Position.Value = startPosition;
+			ship.Speed.Value = travelRadiusChange.Speed;
+			ship.RationConsumption.Value = travelRadiusChange.RationConsumption;
+			ship.Rations.Value = travelRadiusChange.Rations;
 
 			game.Ship.Value = ship;
 
