@@ -27,6 +27,16 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		/// <value>The years.</value>
 		public float Years { get { return Day / DaysInYear; } }
+		/// <summary>
+		/// Gets the DayTime value floored to the nearest day.
+		/// </summary>
+		/// <value>The day floor.</value>
+		public int DayFloor { get { return Day; } }
+		/// <summary>
+		/// Gets the DayTime value ceiling to the nearest day.
+		/// </summary>
+		/// <value>The day ceiling.</value>
+		public int DayCeiling { get { return Mathf.Approximately(0f, Time) ? Day : Day + 1; } }
 
 		public DayTime(float time)
 		{

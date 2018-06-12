@@ -30,15 +30,33 @@ namespace LunraGames.SpaceFarm
 			return universePosition.System * UniverseToUnityScalar;
 		}
 
+		/// <summary>
+		/// Calculates the distance in universe units between two points.
+		/// </summary>
+		/// <returns>The distance.</returns>
+		/// <param name="universePosition0">Universe position0.</param>
+		/// <param name="universePosition1">Universe position1.</param>
 		public float UniverseDistance(UniversePosition universePosition0, UniversePosition universePosition1)
 		{
 			if (universePosition0.Sector == universePosition1.Sector)
 			{
 				return Vector3.Distance(universePosition0.System, universePosition1.System);
 			}
-			var adjusted0 = universePosition0.Sector+ universePosition0.System;
+			var adjusted0 = universePosition0.Sector + universePosition0.System;
 			var adjusted1 = universePosition1.Sector + universePosition1.System;
 			return Vector3.Distance(adjusted0, adjusted1);
+		}
+
+		/// <summary>
+		/// Calculates the travel time between two points, when supplied with a speed in universe units per day.
+		/// </summary>
+		/// <returns>The time.</returns>
+		/// <param name="universePosition0">Universe position0.</param>
+		/// <param name="universePosition1">Universe position1.</param>
+		/// <param name="speed">Speed in universe units per day.</param>
+		public DayTime TravelTime(UniversePosition universePosition0, UniversePosition universePosition1, float speed)
+		{
+			return new DayTime(UniverseDistance(universePosition0, universePosition1) / speed);
 		}
 
 		public UniverseModel CreateUniverse(int seed)

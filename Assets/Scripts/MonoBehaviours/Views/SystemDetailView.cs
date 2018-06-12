@@ -8,9 +8,11 @@ namespace LunraGames.SpaceFarm.Views
 	{
 		[SerializeField]
 		TextMeshProUGUI nameLabel;
+		[SerializeField]
+		TextMeshProUGUI travelTimeLabel;
 
 		public string Name { set { nameLabel.text = value ?? string.Empty; } }
-
+		public int DayTravelTime { set { travelTimeLabel.text = value + " days"; } }
 		public RectTransform CanvasTransform { get { return transform as RectTransform; } }
 
 		public override void Reset()
@@ -18,6 +20,7 @@ namespace LunraGames.SpaceFarm.Views
 			base.Reset();
 
 			Name = string.Empty;
+			DayTravelTime = 0;
 		}
 
 		#region Events
@@ -27,5 +30,6 @@ namespace LunraGames.SpaceFarm.Views
 	public interface ISystemDetailView : ICanvasView
 	{
 		string Name { set; }
+		int DayTravelTime { set; }
 	}
 }
