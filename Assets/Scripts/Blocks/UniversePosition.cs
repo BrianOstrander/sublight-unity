@@ -4,7 +4,11 @@ using UnityEngine;
 
 namespace LunraGames.SpaceFarm
 {
+#pragma warning disable CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
+#pragma warning disable CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 	public struct UniversePosition : IEquatable<UniversePosition>
+#pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
+#pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
 		public static UniversePosition Zero { get { return new UniversePosition(Vector3.zero, Vector3.zero); } }
 

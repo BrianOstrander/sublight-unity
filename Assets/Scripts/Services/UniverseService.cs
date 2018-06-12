@@ -30,6 +30,17 @@ namespace LunraGames.SpaceFarm
 			return universePosition.System * UniverseToUnityScalar;
 		}
 
+		public float UniverseDistance(UniversePosition universePosition0, UniversePosition universePosition1)
+		{
+			if (universePosition0.Sector == universePosition1.Sector)
+			{
+				return Vector3.Distance(universePosition0.System, universePosition1.System);
+			}
+			var adjusted0 = universePosition0.Sector+ universePosition0.System;
+			var adjusted1 = universePosition1.Sector + universePosition1.System;
+			return Vector3.Distance(adjusted0, adjusted1);
+		}
+
 		public UniverseModel CreateUniverse(int seed)
 		{
 			var universeModel = new UniverseModel();

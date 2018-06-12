@@ -11,6 +11,8 @@ namespace LunraGames.SpaceFarm.Presenters
 	{
 		GameModel model;
 
+		DayTime lastDayTime;
+
 		public SpeedPresenter(GameModel model)
 		{
 			this.model = model;
@@ -47,22 +49,15 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnUpdate(float delta)
 		{
 			delta *= model.Speed;
-			var newDayTime = model.DayTime.Value;
-			if (newDayTime.Time + delta < DayTime.TimeInDay) newDayTime.Time += delta;
-			else
-			{
-				var totalTime = newDayTime.Time + delta;
-				var newTime = totalTime % DayTime.TimeInDay;
-				var dayTime = totalTime - newTime;
-				newDayTime.Day += Mathf.FloorToInt(dayTime / DayTime.TimeInDay);
-				newDayTime.Time = newTime;
-			}
+			var newDayTime = model.DayTime.Value.Add(0, delta);
 			model.DayTime.Value = newDayTime;
 		}
 
 		void OnDayTime(DayTime current)
 		{
 			View.Current = current;
+			App.Callbacks.DayTimeDelta(new DayTimeDelta(current, lastDayTime));
+			lastDayTime = current;
 		}
 
 		void OnClick(float speed)

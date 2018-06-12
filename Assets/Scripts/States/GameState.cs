@@ -101,8 +101,8 @@ namespace LunraGames.SpaceFarm
 
 			var ship = new ShipModel();
 			ship.Position.Value = game.Universe.Value.Sectors.Value.First().Systems.Value.First().Position;
-
-			ship.TravelRadius.Value = new TravelRadius(0.05f, 0.06f, 0.07f);
+			ship.Speed.Value = 0.01f;
+			ship.Rations.Value = 5f;
 
 			game.Ship.Value = ship;
 
@@ -132,11 +132,10 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		void OnFocusedSector(UniversePosition universePosition)
 		{
-			App.Log("lol focused: " + universePosition);
 			var sector = game.Universe.Value.GetSector(universePosition);
 			foreach (var system in sector.Systems.Value)
 			{
-				var systemPresenter = new SystemMapPresenter(system);
+				var systemPresenter = new SystemMapPresenter(game, system);
 				systemPresenter.Show();
 			}
 		}

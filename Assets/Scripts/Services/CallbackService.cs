@@ -54,6 +54,10 @@ namespace LunraGames.SpaceFarm
 		/// The screen position is the point at which the pointer terminates, this is dependent on an arbitrary distance.
 		/// </remarks>
 		public Action<PointerOrientation> PointerOrientation = ActionExtensions.GetEmpty<PointerOrientation>();
+		/// <summary>
+		/// The day time delta.
+		/// </summary>
+		public Action<DayTimeDelta> DayTimeDelta = ActionExtensions.GetEmpty<DayTimeDelta>();
 		#endregion
 
 		#region Caching
@@ -61,6 +65,7 @@ namespace LunraGames.SpaceFarm
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
+		public DayTimeDelta LastDayTimeDelta;
 		#endregion
 
 		public CallbackService()
@@ -71,6 +76,7 @@ namespace LunraGames.SpaceFarm
 			PointerOrientation += orientation => LastPointerOrientation = orientation;
 			Highlight += highlight => LastHighlight = highlight;
 			CurrentGesture += gesture => LastGesture = gesture;
+			DayTimeDelta += delta => LastDayTimeDelta = delta;
 		}
 	}
 }

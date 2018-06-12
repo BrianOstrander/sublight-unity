@@ -7,13 +7,19 @@ namespace LunraGames.SpaceFarm.Presenters
 {
 	public class SystemMapPresenter : Presenter<ISystemMapView>
 	{
+		GameModel gameModel;
 		SystemModel model;
 
-		public SystemMapPresenter(SystemModel model)
+		bool isTravelable;
+
+		public SystemMapPresenter(GameModel gameModel, SystemModel model)
 		{
+			this.gameModel = gameModel;
 			this.model = model;
 			SetView(App.V.Get<ISystemMapView>(v => v.SystemType == model.SystemType));
 
+			gameModel.Ship.Value.Position.Changed += OnShipPosition;
+			gameModel.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 			App.Callbacks.StateChange += OnStateChange;
 		}
 
@@ -21,6 +27,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
+			gameModel.Ship.Value.Position.Changed -= OnShipPosition;
+			gameModel.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 			App.Callbacks.StateChange -= OnStateChange;
 		}
 
@@ -31,6 +39,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.UniversePosition = model.Position;
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
+			OnCheckTravelable();
 			if (done != null) View.Shown += done;
 			ShowView(instant: true);
 		}
@@ -48,7 +57,20 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnClick()
 		{
-			
+			if (!isTravelable)
+			{
+				App.Log("Too far to travel here");
+			}
+		}
+
+		void OnShipPosition(UniversePosition position) { OnCheckTravelable(); }
+
+		void OnTravelRadius(TravelRadius travelRadius) { OnCheckTravelable(); }
+
+		void OnCheckTravelable()
+		{
+			var distance = App.UniverseService.UniverseDistance(model.Position, gameModel.Ship.Value.Position);
+			isTravelable = distance < gameModel.Ship.Value.TravelRadius.Value.MaximumRadius;
 		}
 		#endregion
 	}
