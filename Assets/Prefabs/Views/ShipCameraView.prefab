@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 20137445838963008}
   - component: {fileID: 124480509724829584}
   - component: {fileID: 81037570468383744}
+  - component: {fileID: 114835710990304208}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -161,6 +162,21 @@ MonoBehaviour:
   dragRoot: {fileID: 4372052734227234}
   dragForward: {fileID: 4279675967937224}
   dragAxisRoot: {fileID: 4279675967937224}
+--- !u!114 &114835710990304208
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1282594770728536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -768656878, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!124 &124480509724829584
 Behaviour:
   m_ObjectHideFlags: 1

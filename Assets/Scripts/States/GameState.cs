@@ -95,16 +95,44 @@ namespace LunraGames.SpaceFarm
 			game = new GameModel();
 			game.GameplayCanvas.Value = App.CanvasRoot;
 			game.Seed.Value = DemonUtility.NextInteger;
+			game.Universe.Value = App.UniverseService.CreateUniverse(1);
+			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
+			game.FocusedSector.Changed += OnFocusedSector;
+			game.Ship.Value = new ShipModel();
 
 			// TODO: Figure out where to assign these.
-			var speed = new SpeedPresenter(game);
-			speed.Show();
+			new SpeedPresenter(game).Show();
+			new ShipMapPresenter(game).Show();
 
 			done();
 		}
 		#endregion
 
 		#region Idle
+		protected override void Idle()
+		{
+			game.FocusedSector.Value = UniversePosition.Zero;
+		}
+		#endregion
+
+		#region End
+		protected override void End()
+		{
+			game.FocusedSector.Changed -= OnFocusedSector;
+		}
+		#endregion
+
+		#region Events
+		void OnFocusedSector(UniversePosition universePosition)
+		{
+			App.Log("lol focused: " + universePosition);
+			var sector = game.Universe.Value.GetSector(universePosition);
+			foreach (var system in sector.Systems.Value)
+			{
+				var systemPresenter = new SystemMapPresenter(system);
+				systemPresenter.Show();
+			}
+		}
 		#endregion
 	}
 }

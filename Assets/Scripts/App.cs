@@ -47,6 +47,9 @@ namespace LunraGames.SpaceFarm
 		IBackendService backendService;
 		public static IBackendService BackendService { get { return instance.backendService; } }
 
+		UniverseService universeService;
+		public static UniverseService UniverseService { get { return instance.universeService; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -71,6 +74,7 @@ namespace LunraGames.SpaceFarm
 				new HomeState(),
 				new GameState()
 			);
+			universeService = new UniverseService();
 
 			if (Application.isEditor)
 			{

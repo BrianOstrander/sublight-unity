@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Linq;
+
 using UnityEngine;
-using Random = System.Random;
 
 namespace LunraGames.NumberDemon
 {
@@ -12,49 +13,74 @@ namespace LunraGames.NumberDemon
 		const uint UintHalfValue = (uint.MaxValue / 2u) + 1u;
 		const ulong UlongHalfValue = (ulong.MaxValue / 2uL) + 1uL;
 
+		#region CantorPairs
 		/// <summary>
-		/// Given a unique pair of integers and their order, return a unique integer. When at least one value is above 1,073,741,824, they roll over. They roll under somewhere too, but I'm too lazy to check.
+		/// Cantor pairs the provided values. If you have a large seed value, 
+		/// supply it last since that seems to reduce duplicates.
 		/// </summary>
-		/// <returns>Returns a unique integer for the given pair.</returns>
-		/// <param name="value0">Value0.</param>
-		/// <param name="value1">Value1.</param>
-		public static int CantorPair(int value0, int value1)
+		/// <remarks>
+		/// Given a unique pair of integers and their order, return a unique 
+		/// integer. When pairing two integers and at least one value is above 
+		/// 1,073,741,824, they roll over. They roll under somewhere too, but 
+		/// I'm too lazy to check.
+		/// </remarks>
+		/// <returns>The unique seed of these values.</returns>
+		/// <param name="values">Values.</param>
+		public static int CantorPairs(params int[] values)
 		{
-			return ToInt(CantorPair(ToUint(value0), ToUint(value1)));
+			var uValues = new uint[values.Length];
+			for (var i = 0; i < values.Length; i++) uValues[i] = ToUint(values[i]);
+			return ToInt(CantorPairs(uValues));
 		}
 
 		/// <summary>
-		/// Given a unique pair of unsigned integers and their order, return a unique unsigned integer. High or low values roll over or under, have fun finding out which ones!
+		/// Cantor pairs the provided values. If you have a large seed value, 
+		/// supply it last since that seems to reduce duplicates.
 		/// </summary>
-		/// <returns>Returns a unique unsigned integer for the given pair.</returns>
-		/// <param name="value0">Value0.</param>
-		/// <param name="value1">Value1.</param>
-		public static uint CantorPair(uint value0, uint value1)
+		/// <returns>The unique seed of these values.</returns>
+		/// <param name="values">Values.</param>
+		public static uint CantorPairs(params uint[] values)
 		{
-			return (((value0 + value1) * (value0 + value1 + 1u)) / 2u) + value1;
+			if (values.Length == 0) return 0;
+			if (values.Length == 1) return values.First();
+
+			var last = values.Last();
+			values = values.Take(values.Length - 1).ToArray();
+
+			return ((CantorPairs(values) + last) * (CantorPairs(values) + last + 1) / 2) + last;
 		}
 
 		/// <summary>
-		/// Given a unique pair of longs and their order, return a unique long. High or low values roll over or under, have fun finding out which ones!
+		/// Cantor pairs the provided values. If you have a large seed value, 
+		/// supply it last since that seems to reduce duplicates.
 		/// </summary>
-		/// <returns>Returns a unique number for the given pair.</returns>
-		/// <param name="value0">Value0.</param>
-		/// <param name="value1">Value1.</param>
-		public static long CantorPair(long value0, long value1)
+		/// <returns>The unique seed of these values.</returns>
+		/// <param name="values">Values.</param>
+		public static long CantorPairs(params long[] values)
 		{
-			return ToLong(CantorPair(ToUlong(value0), ToUlong(value1)));
+			var uValues = new ulong[values.Length];
+			for (var i = 0; i < values.Length; i++) uValues[i] = ToUlong(values[i]);
+			return ToLong(CantorPairs(uValues));
 		}
 
 		/// <summary>
-		/// Given a unique pair of unsigned longs and their order, return a unique unsigned long. High or low values roll over or under, have fun finding out which ones!
+		/// Cantor pairs the provided values. If you have a large seed value, 
+		/// supply it last since that seems to reduce duplicates.
 		/// </summary>
-		/// <returns>Returns a unique unsigned long for the given pair.</returns>
-		/// <param name="value0">Value0.</param>
-		/// <param name="value1">Value1.</param>
-		public static ulong CantorPair(ulong value0, ulong value1)
+		/// <returns>The unique seed of these values.</returns>
+		/// <param name="values">Values.</param>
+		public static ulong CantorPairs(params ulong[] values)
 		{
-			return (((value0 + value1) * (value0 + value1 + 1uL)) / 2uL) + value1;
+			if (values.Length == 0) return 0;
+			if (values.Length == 1) return values.First();
+
+			var last = values.Last();
+			values = values.Take(values.Length - 1).ToArray();
+
+			return ((CantorPairs(values) + last) * (CantorPairs(values) + last + 1uL) / 2uL) + last;
 		}
+
+		#endregion
 
 		/// <summary>
 		/// Takes an integer and maps it to an unsigned integer, where int.MinValue == 0u.
@@ -64,7 +90,7 @@ namespace LunraGames.NumberDemon
 		public static uint ToUint(int value)
 		{
 			if (value < 0) return UintHalfValue - ((uint)Math.Abs((long)value));
-			else return UintHalfValue + (uint)value;
+			return UintHalfValue + (uint)value;
 		}
 
 		/// <summary>
@@ -75,7 +101,7 @@ namespace LunraGames.NumberDemon
 		public static int ToInt(uint value)
 		{
 			if (value < UintHalfValue) return 0 - (int)(UintHalfValue - value);
-			else return (int)(value - UintHalfValue);
+			return (int)(value - UintHalfValue);
 		}
 
 		/// <summary>
@@ -88,9 +114,9 @@ namespace LunraGames.NumberDemon
 			if (value < 0L) 
 			{
 				if (value == long.MinValue) return 0uL;
-				else return UlongHalfValue - ((ulong)Math.Abs(value));
+				return UlongHalfValue - ((ulong)Math.Abs(value));
 			}
-			else return UlongHalfValue + (ulong)value;
+			return UlongHalfValue + (ulong)value;
 		}
 
 		/// <summary>
@@ -101,7 +127,7 @@ namespace LunraGames.NumberDemon
 		public static long ToLong(ulong value)
 		{
 			if (value < UlongHalfValue) return 0L - (long)(UlongHalfValue - value);
-			else return (long)(value - UlongHalfValue);
+			return (long)(value - UlongHalfValue);
 		}
 
 		public static int NextInteger { get { return Generator.NextInteger; } }
