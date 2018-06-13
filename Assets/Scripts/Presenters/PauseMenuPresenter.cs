@@ -6,6 +6,7 @@ namespace LunraGames.SpaceFarm.Presenters
 	public class PauseMenuPresenter : Presenter<IPauseMenuView>
 	{
 		GameModel model;
+		SpeedChange lastSpeedChange;
 
 		public PauseMenuPresenter(GameModel model)
 		{
@@ -25,6 +26,9 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.Visible) return;
 			View.Reset();
+			lastSpeedChange = App.Callbacks.LastSpeedChange;
+			App.Callbacks.SpeedChange(SpeedChange.PauseRequest);
+			View.Closed += OnClosed;
 			View.BackClick = OnBackClick;
 			View.MainMenuClick = OnMainMenuClick;
 			ShowView(model.GameplayCanvas, true);
@@ -35,8 +39,9 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			switch(View.TransitionState)
 			{
+				case TransitionStates.Unknown:
 				case TransitionStates.Closed:
-					ShowView();
+					Show();
 					break;
 				case TransitionStates.Shown:
 					CloseView(true);
@@ -53,6 +58,13 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			var payload = new HomePayload();
 			App.SM.RequestState(payload);
+		}
+
+		void OnClosed()
+		{
+			if (App.SM.CurrentEvent == StateMachine.Events.End) return;
+
+			App.Callbacks.SpeedChange(lastSpeedChange.Duplicate(SpeedChange.States.Request));
 		}
 		#endregion
 

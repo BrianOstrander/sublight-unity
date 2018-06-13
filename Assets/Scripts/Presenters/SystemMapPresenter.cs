@@ -20,7 +20,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 			SetView(App.V.Get<ISystemMapView>(v => v.SystemType == model.SystemType));
 
-			App.Callbacks.StateChange += OnStateChange;
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 		}
 
@@ -28,7 +27,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
-			App.Callbacks.StateChange -= OnStateChange;
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 		}
 
@@ -46,11 +44,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnStateChange(StateChange state)
-		{
-			if (state.Event == StateMachine.Events.End) CloseView(true);
-		}
-
 		void OnHighlight(bool highlighted)
 		{
 			var state = SystemHighlight.States.End;

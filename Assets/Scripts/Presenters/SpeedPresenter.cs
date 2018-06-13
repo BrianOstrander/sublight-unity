@@ -18,7 +18,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 
 			model.DayTime.Changed += OnDayTime;
-			App.Callbacks.StateChange += OnStateChange;
 			App.Callbacks.SpeedChange += OnSpeedChange;
 			App.Heartbeat.Update += OnUpdate;
 		}
@@ -28,7 +27,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			model.DayTime.Changed -= OnDayTime;
-			App.Callbacks.StateChange -= OnStateChange;
 			App.Callbacks.SpeedChange -= OnSpeedChange;
 			App.Heartbeat.Update -= OnUpdate;
 		}
@@ -43,11 +41,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnStateChange(StateChange state)
-		{
-			if (state.Event == StateMachine.Events.End) CloseView(true);
-		}
-
 		void OnUpdate(float delta)
 		{
 			if (Mathf.Approximately(0f, model.Speed)) return;

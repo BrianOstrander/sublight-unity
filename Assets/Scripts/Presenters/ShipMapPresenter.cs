@@ -17,7 +17,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 			ship = model.Ship;
 
-			App.Callbacks.StateChange += OnStateChange;
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
 			App.Callbacks.TravelProgress += OnTravelProgress;
 			model.Ship.Value.Position.Changed += OnShipPosition;
@@ -30,7 +29,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
-			App.Callbacks.StateChange -= OnStateChange;
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
 			App.Callbacks.TravelProgress -= OnTravelProgress;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
@@ -50,11 +48,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnStateChange(StateChange state)
-		{
-			if (state.Event == StateMachine.Events.End) CloseView(true);
-		}
-
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
 			var rationsConsumed = model.Ship.Value.Rations.Value - (delta.Delta.DayNormal * model.Ship.Value.RationConsumption);

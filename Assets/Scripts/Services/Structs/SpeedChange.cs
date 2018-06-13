@@ -32,5 +32,10 @@ namespace LunraGames.SpaceFarm
 				Speed
 			);
 		}
+
+		public override string ToString()
+		{
+			return "State: " + State + ", Speed: " + Speed;
+		}
 	}
 }

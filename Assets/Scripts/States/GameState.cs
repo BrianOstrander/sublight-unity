@@ -25,8 +25,7 @@ namespace LunraGames.SpaceFarm
 
 	public class GameState : State<GamePayload>
 	{
-		/// Reminder: Keep local variables in the payload so it's easy to reset 
-		/// states upon transition.
+		// Reminder: Keep variables in payload for easy reset of states!
 
 		public override StateMachine.States HandledState { get { return StateMachine.States.Game; } }
 
@@ -35,7 +34,7 @@ namespace LunraGames.SpaceFarm
 			get
 			{
 				var scenes = new List<string>(new string[] {
-					"Game"
+					SceneConstants.Game
 				});
 				return scenes.ToArray();
 			}
@@ -144,15 +143,16 @@ namespace LunraGames.SpaceFarm
 			//
 			// --- Create Presenters --- 
 			//
-			// Presenters automatically register themselves when they bind, so 
-			// there's no reason to keep their references.
+			// There may be some warnings from creating these without assigning,
+			// but you can safely ignore those warnings since they register
+			// themselves with the PresenterMediator.
 
-			// TODO: Figure out where to assign these.
 			new SpeedPresenter(game).Show();
 			new ShipMapPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new SystemDetailPresenter(game);
 			new SystemLinePresenter(game);
+			new PauseMenuPresenter(game);
 
 			done();
 		}
@@ -185,7 +185,7 @@ namespace LunraGames.SpaceFarm
 		{
 			Payload.UnloadSceneCallback = done;
 			App.Callbacks.SceneUnload += OnSceneUnloaded;
-			SceneManager.UnloadSceneAsync(SceneConstants.Home);
+			SceneManager.UnloadSceneAsync(SceneConstants.Game);
 		}
 
 		void OnSceneUnloaded(Scene scene)
