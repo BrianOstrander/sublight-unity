@@ -1,5 +1,8 @@
 ﻿namespace LunraGames.SpaceFarm
 {
+	/// <summary>
+	/// Travel radius, expressed in universe units.
+	/// </summary>
 	public struct TravelRadius
 	{
 		public static TravelRadius Zero { get { return new TravelRadius(0f, 0f, 0f); } }

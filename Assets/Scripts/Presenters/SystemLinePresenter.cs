@@ -1,15 +1,19 @@
-﻿using LunraGames.SpaceFarm.Models;
+﻿using System;
+
+using UnityEngine;
+
+using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class SystemDetailPresenter : Presenter<ISystemDetailView>
+	public class SystemLinePresenter : Presenter<ISystemLineView>
 	{
-		GameModel gameModel;
-
 		SystemHighlight nextHighlight;
 
-		public SystemDetailPresenter(GameModel gameModel)
+		GameModel gameModel;
+
+		public SystemLinePresenter(GameModel gameModel)
 		{
 			this.gameModel = gameModel;
 
@@ -25,15 +29,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
 		}
 
-		public void Show(SystemModel model)
+		public void Show()
 		{
 			if (View.Visible) return;
 			View.Reset();
 			View.Closed += OnClose;
-			View.Name = model.Seed.Value.ToString();
-			View.DayTravelTime = UniversePosition.TravelTime(model.Position, gameModel.Ship.Value.Position, gameModel.Ship.Value.Speed).DayCeiling;
-
-			ShowView(gameModel.GameplayCanvas, true);
+			ShowView(instant: true);
 		}
 
 		#region Events
@@ -46,6 +47,28 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
+		void OnDetails(SystemModel origin, SystemModel destination, TravelRadius travelRadius)
+		{
+			var distance = UniversePosition.Distance(origin.Position, destination.Position);
+
+			var safeStart = 0f;
+			var safeEnd = Mathf.Min(distance, travelRadius.SafeRadius);
+			var dangerStart = safeEnd;
+			var dangerEnd = Mathf.Min(distance, travelRadius.DangerRadius);
+			var maxStart = dangerEnd;
+			var maxEnd = Mathf.Min(distance, travelRadius.MaximumRadius);
+
+
+
+			//var normal = total.normalized;
+
+		}
+
+		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange)
+		{
+			
+		}
+
 		void OnSystemHighlight(SystemHighlight highlight)
 		{
 			nextHighlight = highlight;
@@ -56,7 +79,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (View.TransitionState == TransitionStates.Shown) CloseView(true);
 					break;
 				case SystemHighlight.States.Begin:
-					Show(highlight.System);
+					//Show( highlight.System);
 					break;
 			}
 		}
@@ -67,7 +90,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			{
 				case SystemHighlight.States.Begin:
 				case SystemHighlight.States.Change:
-					Show(nextHighlight.System);
+					//Show(nextHighlight.System);
 					break;
 			}
 		}

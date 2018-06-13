@@ -90,7 +90,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange)
 		{
-			var distance = App.UniverseService.UniverseDistance(model.Position, travelRadiusChange.Origin);
+			var distance = UniversePosition.Distance(model.Position, travelRadiusChange.Origin);
 			isTravelable = distance < travelRadiusChange.TravelRadius.MaximumRadius;
 			if (View.Visible) OnTravelColor();
 		}
