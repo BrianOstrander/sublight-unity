@@ -1,9 +1,4 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
-
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using LunraGames.SpaceFarm.Presenters;
 
@@ -11,13 +6,7 @@ namespace LunraGames.SpaceFarm
 {
 	public class HomePayload : IStatePayload 
 	{
-		public List<string> LoadedScenes = new List<string>();
-		public List<string> CheckedTags = new List<string>();
-		public List<string> FoundTags = new List<string>();
-		public Action InitializeSceneCallback = ActionExtensions.Empty;
-
-		public Action UnloadSceneCallback = ActionExtensions.Empty;
-
+		
 	}
 
 	public class HomeState : State<HomePayload>
@@ -26,68 +15,17 @@ namespace LunraGames.SpaceFarm
 
 		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
-		static string[] Scenes
-		{
-			get
-			{
-				var scenes = new List<string>(new string[] {
-					SceneConstants.Home
-				});
-				return scenes.ToArray();
-			}
-		}
+		static string[] Scenes { get { return new string[] { SceneConstants.Home }; } }
 
 		#region Begin
 		protected override void Begin()
 		{
-			App.SM.PushBlocking(InitializeScenes);
+			App.SM.PushBlocking(LoadScenes);
 		}
 
-		void InitializeScenes(Action callback)
+		void LoadScenes(Action done)
 		{
-			App.Log("Loading Scenes", LogTypes.Initialization);
-			Payload.InitializeSceneCallback = callback;
-			App.Callbacks.SceneLoad += OnSceneInitialized;
-			foreach (var scene in Scenes) SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
-		}
-
-		void OnSceneInitialized(Scene scene, LoadSceneMode loadMode)
-		{
-			if (!Scenes.Contains(scene.name)) return;
-
-			App.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
-
-			Payload.LoadedScenes.Add(scene.name);
-			SceneManager.SetActiveScene(scene);
-
-			if (Scenes.Length != Payload.LoadedScenes.Count) return;
-
-			App.Log("All Scenes Loaded", LogTypes.Initialization);
-
-			var missingTags = Payload.CheckedTags.Where(t => !Payload.FoundTags.Contains(t));
-			if (0 < missingTags.Count())
-			{
-				var tagWarning = "Missing Tags:";
-				foreach (var tag in missingTags) tagWarning += "\n\t" + tag;
-				Debug.LogError(tagWarning);
-			}
-
-			App.Callbacks.SceneLoad -= OnSceneInitialized;
-			Payload.InitializeSceneCallback();
-		}
-
-		void AssignTag(ref Transform existing, string tag)
-		{
-			if (existing != null) return;
-
-			if (!Payload.CheckedTags.Contains(tag)) Payload.CheckedTags.Add(tag);
-			var tagObject = GameObject.FindWithTag(tag);
-
-			if (tagObject == null) return;
-
-			existing = tagObject.transform;
-			if (!Payload.FoundTags.Contains(tag)) Payload.FoundTags.Add(tag);
-
+			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
 		}
   		#endregion
 
@@ -122,7 +60,12 @@ namespace LunraGames.SpaceFarm
 		{
 			App.Input.SetEnabled(false);
 			App.SM.PushBlocking(UnBind);
-			App.SM.PushBlocking(UnloadScene);
+			App.SM.PushBlocking(UnLoadScenes);
+		}
+
+		void UnLoadScenes(Action done)
+		{
+			App.SceneService.Request(SceneRequest.UnLoad(result => done(), Scenes));
 		}
 
 		void UnBind(Action done)
@@ -130,19 +73,6 @@ namespace LunraGames.SpaceFarm
 			// All presenters will have their views closed and unbinded. Events
 			// will also be unbinded.
 			App.P.UnRegisterAll(done);
-		}
-
-		void UnloadScene(Action done)
-		{
-			Payload.UnloadSceneCallback = done;
-			App.Callbacks.SceneUnload += OnSceneUnloaded;
-			SceneManager.UnloadSceneAsync(SceneConstants.Home);
-		}
-
-		void OnSceneUnloaded(Scene scene)
-		{
-			App.Callbacks.SceneUnload -= OnSceneUnloaded;
-			Payload.UnloadSceneCallback();
 		}
   		#endregion
 	}

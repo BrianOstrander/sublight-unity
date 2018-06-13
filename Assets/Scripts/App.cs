@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 using LunraGames.SpaceFarm.Presenters;
 using LunraGames.SpaceFarm;
 
-namespace LunraGames.SpaceFarm 
+namespace LunraGames.SpaceFarm
 {
 	public class App
 	{
@@ -47,6 +47,9 @@ namespace LunraGames.SpaceFarm
 		IBackendService backendService;
 		public static IBackendService BackendService { get { return instance.backendService; } }
 
+		SceneService sceneService;
+		public static SceneService SceneService { get { return instance.sceneService; } }
+
 		UniverseService universeService;
 		public static UniverseService UniverseService { get { return instance.universeService; } }
 
@@ -75,6 +78,7 @@ namespace LunraGames.SpaceFarm
 				new HomeState(),
 				new GameState()
 			);
+			sceneService = new SceneService();
 			universeService = new UniverseService();
 
 			if (Application.isEditor)
