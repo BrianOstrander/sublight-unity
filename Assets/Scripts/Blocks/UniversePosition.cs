@@ -15,7 +15,7 @@ namespace LunraGames.SpaceFarm
 		const float UnityToUniverseScalar = 0.01f;
 		const float UniverseToUnityScalar = 100f;
 
-		public static float UnityToUniverseDistance(float unityDistance) { return unityDistance * UniverseToUnityScalar; }
+		public static float UnityToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
 
 		public static float UniverseToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
 
@@ -61,6 +61,11 @@ namespace LunraGames.SpaceFarm
 		}
 
 		public static UniversePosition Zero { get { return new UniversePosition(Vector3.zero, Vector3.zero); } }
+
+		public UniversePosition(Vector3 system)
+		{
+			Adjust(Vector3.zero, system, out Sector, out System);
+		}
 
 		public UniversePosition(Vector3 sector, Vector3 system)
 		{

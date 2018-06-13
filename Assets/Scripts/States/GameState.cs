@@ -122,6 +122,7 @@ namespace LunraGames.SpaceFarm
 			new ShipMapPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new SystemDetailPresenter(game);
+			new SystemLinePresenter(game);
 
 			done();
 		}

@@ -33,6 +33,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.Visible) return;
 			View.Reset();
+			OnDetails();
 			View.Closed += OnClose;
 			ShowView(instant: true);
 		}
@@ -47,26 +48,47 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
-		void OnDetails(SystemModel origin, SystemModel destination, TravelRadius travelRadius)
+		void OnDetails()
 		{
+			var origin = gameModel.Ship.Value.CurrentSystem.Value;
+			var destination = nextHighlight.System;
+			var travelRadius = App.Callbacks.LastTravelRadiusChange.TravelRadius;
+
 			var distance = UniversePosition.Distance(origin.Position, destination.Position);
 
-			var safeStart = 0f;
 			var safeEnd = Mathf.Min(distance, travelRadius.SafeRadius);
-			var dangerStart = safeEnd;
 			var dangerEnd = Mathf.Min(distance, travelRadius.DangerRadius);
-			var maxStart = dangerEnd;
 			var maxEnd = Mathf.Min(distance, travelRadius.MaximumRadius);
+			var remainderEnd = distance;
 
+			var unityOrigin = UniversePosition.ToUnity(origin.Position);
 
+			var normal = (UniversePosition.ToUnity(destination.Position) - unityOrigin).normalized;
 
-			//var normal = total.normalized;
+			LineSegment? safeSegment = null;
+			LineSegment? dangerSegment = null;
+			LineSegment? maxSegment = null;
+			LineSegment? remainderSegment = null;
 
-		}
+			if (0f < safeEnd)
+			{
+				safeSegment = new LineSegment(origin.Position, origin.Position + new UniversePosition(normal * safeEnd));
+			}
+			if (safeEnd < dangerEnd)
+			{
+				dangerSegment = new LineSegment(origin.Position + new UniversePosition(normal * safeEnd), origin.Position + new UniversePosition(normal * dangerEnd));
+			}
+			if (dangerEnd < maxEnd)
+			{
+				maxSegment = new LineSegment(origin.Position + new UniversePosition(normal * dangerEnd), origin.Position + new UniversePosition(normal * maxEnd));
+			}
+			if (maxEnd < remainderEnd)
+			{
+				remainderSegment= new LineSegment(origin.Position + new UniversePosition(normal * maxEnd), origin.Position + new UniversePosition(normal * remainderEnd));
+			}
 
-		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange)
-		{
-			
+			View.SetSegments(safeSegment, dangerSegment, maxSegment, remainderSegment);
+
 		}
 
 		void OnSystemHighlight(SystemHighlight highlight)
@@ -79,7 +101,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (View.TransitionState == TransitionStates.Shown) CloseView(true);
 					break;
 				case SystemHighlight.States.Begin:
-					//Show( highlight.System);
+					Show();
 					break;
 			}
 		}
@@ -90,7 +112,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			{
 				case SystemHighlight.States.Begin:
 				case SystemHighlight.States.Change:
-					//Show(nextHighlight.System);
+					Show();
 					break;
 			}
 		}
