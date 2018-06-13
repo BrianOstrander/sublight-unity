@@ -80,6 +80,8 @@ namespace LunraGames.SpaceFarm
 		public readonly Vector3 Sector;
 		public readonly Vector3 System;
 
+		public Vector3 Normalized { get { return ToUnity(this).normalized; } }
+
 		public bool Equals(UniversePosition other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -115,6 +117,13 @@ namespace LunraGames.SpaceFarm
 		{
 			var sector = obj0.Sector + obj1.Sector;
 			var system = obj0.System + obj1.System;
+			return new UniversePosition(sector, system);
+		}
+
+		public static UniversePosition operator -(UniversePosition obj0, UniversePosition obj1)
+		{
+			var sector = obj0.Sector - obj1.Sector;
+			var system = obj0.System - obj1.System;
 			return new UniversePosition(sector, system);
 		}
 

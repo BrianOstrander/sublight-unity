@@ -66,6 +66,10 @@ namespace LunraGames.SpaceFarm
 		/// Called when any details pertaining to the travel radius change.
 		/// </summary>
 		public Action<TravelRadiusChange> TravelRadiusChange = ActionExtensions.GetEmpty<TravelRadiusChange>();
+		/// <summary>
+		/// The travel progress.
+		/// </summary>
+		public Action<TravelProgress> TravelProgress = ActionExtensions.GetEmpty<TravelProgress>();
 		#endregion
 
 		#region Caching
@@ -76,6 +80,7 @@ namespace LunraGames.SpaceFarm
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
 		public TravelRadiusChange LastTravelRadiusChange;
+		public TravelProgress LastTravelProgress;
 		#endregion
 
 		public CallbackService()
@@ -89,6 +94,7 @@ namespace LunraGames.SpaceFarm
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
 			SystemHighlight += highlight => LastSystemHighlight = highlight;
 			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
+			TravelProgress += travelProgress => LastTravelProgress = travelProgress;
 		}
 	}
 }

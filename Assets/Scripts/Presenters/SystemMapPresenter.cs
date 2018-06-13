@@ -82,7 +82,21 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnClick()
 		{
-			if (!isTravelable)
+			if (isTravelable)
+			{
+				
+				var travel = new TravelProgress(
+					TravelProgress.States.Request,
+					gameModel.Ship.Value.CurrentSystem.Value.Position,
+					gameModel.Ship.Value.CurrentSystem,
+					model,
+					App.Callbacks.LastDayTimeDelta.Current,
+					UniversePosition.TravelTime(gameModel.Ship.Value.CurrentSystem.Value.Position.Value, model.Position.Value, gameModel.Ship.Value.Speed.Value),
+					0f
+				);
+				App.Callbacks.TravelProgress(travel);
+			}
+			else
 			{
 				App.Log("Too far to travel here");
 			}
