@@ -194,11 +194,11 @@ namespace LunraGames.SpaceFarm
 			if (!IsActive()) return;
 			if (!IsInteractable())
 			{
-				if (Sounds.PressedSound != null) App.P.Audio.PlayClip(Sounds.DisabledSound);
+				if (Sounds.PressedSound != null) App.Audio.PlayClip(Sounds.DisabledSound);
 				return;
 			}
 			StopHighlightSound();
-			if (Sounds.PressedSound != null) App.P.Audio.PlayClip(Sounds.PressedSound);
+			if (Sounds.PressedSound != null) App.Audio.PlayClip(Sounds.PressedSound);
 			if (onClick != null) onClick.Invoke();
 			dragging = false;
 		}
@@ -211,7 +211,7 @@ namespace LunraGames.SpaceFarm
 
 			if (State == SelectionState.Pressed) return;
 
-			if (Sounds.EnteredSound != null) App.P.Audio.PlayClip(Sounds.EnteredSound);
+			if (Sounds.EnteredSound != null) App.Audio.PlayClip(Sounds.EnteredSound);
 			State = SelectionState.Highlighted;
 			HighlightSoundBegin();
 			if (onEnter != null) onEnter.Invoke();

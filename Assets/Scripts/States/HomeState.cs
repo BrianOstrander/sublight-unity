@@ -47,6 +47,7 @@ namespace LunraGames.SpaceFarm
 		protected override void End()
 		{
 			App.Input.SetEnabled(false);
+			App.SM.PushBlocking(UnBind);
 			App.SM.PushBlocking(UnloadScene);
 		}
 
@@ -61,6 +62,11 @@ namespace LunraGames.SpaceFarm
 		{
 			App.Callbacks.SceneUnload -= OnSceneUnloaded;
 			unloadSceneCallback();
+		}
+
+		void UnBind(Action done)
+		{
+			App.P.UnRegisterAll(done);
 		}
   		#endregion
 	}

@@ -136,6 +136,7 @@ namespace LunraGames.SpaceFarm
 			new SystemDetailPresenter(game);
 			new SystemLinePresenter(game);
 
+
 			done();
 		}
 		#endregion
@@ -163,6 +164,11 @@ namespace LunraGames.SpaceFarm
 				var systemPresenter = new SystemMapPresenter(game, system);
 				systemPresenter.Show();
 			}
+		}
+
+		void OnRations(float rations)
+		{
+			
 		}
 		#endregion
 	}
