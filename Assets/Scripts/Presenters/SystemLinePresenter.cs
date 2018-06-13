@@ -18,7 +18,9 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.gameModel = gameModel;
 
 			App.Callbacks.StateChange += OnStateChange;
+			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
+			App.Callbacks.TravelProgress += OnTravelProgress;
 		}
 
 		protected override void UnBind()
@@ -26,7 +28,9 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Callbacks.StateChange -= OnStateChange;
+			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
+			App.Callbacks.TravelProgress -= OnTravelProgress;
 		}
 
 		public void Show()
@@ -46,6 +50,12 @@ namespace LunraGames.SpaceFarm.Presenters
 				nextHighlight = SystemHighlight.None;
 				CloseView(true);
 			}
+		}
+
+		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange) 
+		{
+			if (!View.Visible) return;
+			OnDetails(); 
 		}
 
 		void OnDetails()
@@ -104,6 +114,11 @@ namespace LunraGames.SpaceFarm.Presenters
 					Show();
 					break;
 			}
+		}
+
+		void OnTravelProgress(TravelProgress travelProgress)
+		{
+			if (View.Visible && travelProgress.State == TravelProgress.States.Request) CloseView(true);
 		}
 
 		void OnClose()
