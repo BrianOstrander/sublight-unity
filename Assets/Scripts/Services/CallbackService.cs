@@ -54,6 +54,26 @@ namespace LunraGames.SpaceFarm
 		/// The screen position is the point at which the pointer terminates, this is dependent on an arbitrary distance.
 		/// </remarks>
 		public Action<PointerOrientation> PointerOrientation = ActionExtensions.GetEmpty<PointerOrientation>();
+		/// <summary>
+		/// The day time delta.
+		/// </summary>
+		public Action<DayTimeDelta> DayTimeDelta = ActionExtensions.GetEmpty<DayTimeDelta>();
+		/// <summary>
+		/// System highlight changed.
+		/// </summary>
+		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>();
+		/// <summary>
+		/// Called when any details pertaining to the travel radius change.
+		/// </summary>
+		public Action<TravelRadiusChange> TravelRadiusChange = ActionExtensions.GetEmpty<TravelRadiusChange>();
+		/// <summary>
+		/// The travel progress.
+		/// </summary>
+		public Action<TravelProgress> TravelProgress = ActionExtensions.GetEmpty<TravelProgress>();
+		/// <summary>
+		/// The speed change.
+		/// </summary>
+		public Action<SpeedChange> SpeedChange = ActionExtensions.GetEmpty<SpeedChange>();
 		#endregion
 
 		#region Caching
@@ -61,6 +81,11 @@ namespace LunraGames.SpaceFarm
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
+		public DayTimeDelta LastDayTimeDelta;
+		public SystemHighlight LastSystemHighlight;
+		public TravelRadiusChange LastTravelRadiusChange;
+		public TravelProgress LastTravelProgress;
+		public SpeedChange LastSpeedChange;
 		#endregion
 
 		public CallbackService()
@@ -71,6 +96,11 @@ namespace LunraGames.SpaceFarm
 			PointerOrientation += orientation => LastPointerOrientation = orientation;
 			Highlight += highlight => LastHighlight = highlight;
 			CurrentGesture += gesture => LastGesture = gesture;
+			DayTimeDelta += delta => LastDayTimeDelta = delta;
+			SystemHighlight += highlight => LastSystemHighlight = highlight;
+			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
+			TravelProgress += travelProgress => LastTravelProgress = travelProgress;
+			SpeedChange += speedChange => LastSpeedChange = speedChange;
 		}
 	}
 }

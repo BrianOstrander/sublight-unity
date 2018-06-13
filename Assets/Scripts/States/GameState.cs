@@ -98,11 +98,43 @@ namespace LunraGames.SpaceFarm
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
 			game.FocusedSector.Changed += OnFocusedSector;
-			game.Ship.Value = new ShipModel();
+
+			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
+			var startPosition = startSystem.Position;
+			var rations = 0.25f;
+			var speed = 0.001f;
+			var rationConsumption = 0.02f;
+			var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
+
+			App.Callbacks.TravelRadiusChange(travelRadiusChange);
+
+			var travelProgress = new TravelProgress(
+				TravelProgress.States.Complete,
+				startSystem.Position.Value,
+				startSystem,
+				startSystem,
+				DayTime.Zero,
+				DayTime.Zero,
+				1f
+			);
+
+			App.Callbacks.TravelProgress(travelProgress);
+
+			var ship = new ShipModel();
+			ship.CurrentSystem.Value = startSystem;
+			ship.Position.Value = startPosition;
+			ship.Speed.Value = travelRadiusChange.Speed;
+			ship.RationConsumption.Value = travelRadiusChange.RationConsumption;
+			ship.Rations.Value = travelRadiusChange.Rations;
+
+			game.Ship.Value = ship;
 
 			// TODO: Figure out where to assign these.
 			new SpeedPresenter(game).Show();
 			new ShipMapPresenter(game).Show();
+			new ShipRadiusPresenter(game).Show();
+			new SystemDetailPresenter(game);
+			new SystemLinePresenter(game);
 
 			done();
 		}
@@ -125,11 +157,10 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		void OnFocusedSector(UniversePosition universePosition)
 		{
-			App.Log("lol focused: " + universePosition);
 			var sector = game.Universe.Value.GetSector(universePosition);
 			foreach (var system in sector.Systems.Value)
 			{
-				var systemPresenter = new SystemMapPresenter(system);
+				var systemPresenter = new SystemMapPresenter(game, system);
 				systemPresenter.Show();
 			}
 		}

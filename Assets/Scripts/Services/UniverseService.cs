@@ -11,18 +11,6 @@ namespace LunraGames.SpaceFarm
 {
 	public class UniverseService
 	{
-		public UniversePosition WorldToGrid(Vector3 world)
-		{
-			// TODO: Actually make this functional.
-			return new UniversePosition(Vector3.zero, world * 0.01f);
-		}
-
-		public Vector3 GridToWorld(UniversePosition universePosition)
-		{
-			// TODO: Actually make this functional.
-			return universePosition.System * 100f;
-		}
-
 		public UniverseModel CreateUniverse(int seed)
 		{
 			var universeModel = new UniverseModel();

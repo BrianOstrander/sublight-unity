@@ -11,12 +11,15 @@ namespace LunraGames.SpaceFarm.Presenters
 	{
 		GameModel model;
 
+		DayTime lastDayTime;
+
 		public SpeedPresenter(GameModel model)
 		{
 			this.model = model;
 
 			model.DayTime.Changed += OnDayTime;
 			App.Callbacks.StateChange += OnStateChange;
+			App.Callbacks.SpeedChange += OnSpeedChange;
 			App.Heartbeat.Update += OnUpdate;
 		}
 
@@ -26,6 +29,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.DayTime.Changed -= OnDayTime;
 			App.Callbacks.StateChange -= OnStateChange;
+			App.Callbacks.SpeedChange -= OnSpeedChange;
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
@@ -46,28 +50,33 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnUpdate(float delta)
 		{
+			if (Mathf.Approximately(0f, model.Speed)) return;
 			delta *= model.Speed;
-			var newDayTime = model.DayTime.Value;
-			if (newDayTime.Time + delta < DayTime.TimeInDay) newDayTime.Time += delta;
-			else
-			{
-				var totalTime = newDayTime.Time + delta;
-				var newTime = totalTime % DayTime.TimeInDay;
-				var dayTime = totalTime - newTime;
-				newDayTime.Day += Mathf.FloorToInt(dayTime / DayTime.TimeInDay);
-				newDayTime.Time = newTime;
-			}
+			var newDayTime = model.DayTime.Value.Add(0, delta);
 			model.DayTime.Value = newDayTime;
 		}
 
 		void OnDayTime(DayTime current)
 		{
 			View.Current = current;
+			App.Callbacks.DayTimeDelta(new DayTimeDelta(current, lastDayTime));
+			lastDayTime = current;
+		}
+
+		void OnSpeedChange(SpeedChange speedChange)
+		{
+			switch(speedChange.State)
+			{
+				case SpeedChange.States.Request:
+					model.Speed.Value = speedChange.Speed;
+					App.Callbacks.SpeedChange(speedChange.Duplicate(SpeedChange.States.Complete));
+					break;
+			}
 		}
 
 		void OnClick(float speed)
 		{
-			model.Speed.Value = speed;
+			App.Callbacks.SpeedChange(new SpeedChange(SpeedChange.States.Request, speed));
 		}
 		#endregion
 	}

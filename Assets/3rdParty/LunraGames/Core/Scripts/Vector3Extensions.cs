@@ -28,5 +28,12 @@ namespace LunraGames
 		{
 			return new Vector3(vector3.x, 0f, vector3.z).normalized;
 		}
+
+		public static Vector3[] Add(this Vector3[] vector3s, Vector3 addition)
+		{
+			var result = new Vector3[vector3s.Length];
+			for (var i = 0; i < vector3s.Length; i++) result[i] = vector3s[i] + addition;
+			return result;
+		}
 	}
 }

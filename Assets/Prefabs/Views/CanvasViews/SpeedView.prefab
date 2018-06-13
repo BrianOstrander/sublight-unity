@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 222006148983458494}
   - component: {fileID: 114484084276639816}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cdd6ec03741e460595ba9ccc5321a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animations:
+  animations:
   - {fileID: 11400000, guid: 40bdb7dce45294d61a290d13dedbbb52, type: 2}
   dayTimeLabel: {fileID: 114497156202585166}
 --- !u!114 &114095194096163876

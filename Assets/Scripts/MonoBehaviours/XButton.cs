@@ -2,9 +2,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using UnityEngine.Serialization;
-using System;
-using LunraGames.SpaceFarm;
 
 namespace LunraGames.SpaceFarm
 {

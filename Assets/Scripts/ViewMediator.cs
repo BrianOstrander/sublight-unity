@@ -200,15 +200,15 @@ namespace LunraGames.SpaceFarm
 		{
 			foreach (var view in _views.ToList())
 			{
-				if (view.TransitionState == TransitionStates.SHOWN) 
+				if (view.TransitionState == TransitionStates.Shown) 
 				{
 					view.Idle (delta);
 					continue;
 				}
 
 				var unmodifiedView = view;
-				if (unmodifiedView.TransitionState == TransitionStates.SHOWING) Showing(unmodifiedView);
-				else if (unmodifiedView.TransitionState == TransitionStates.CLOSING) Closing(unmodifiedView);
+				if (unmodifiedView.TransitionState == TransitionStates.Showing) Showing(unmodifiedView);
+				else if (unmodifiedView.TransitionState == TransitionStates.Closing) Closing(unmodifiedView);
 				else
 				{
 					var error = "The view " + (unmodifiedView == null ? "null" : unmodifiedView.gameObject.name) + " with state " + unmodifiedView.TransitionState + " is still on the waldo, this should not be possible";
@@ -222,7 +222,7 @@ namespace LunraGames.SpaceFarm
 		{
 			foreach (var view in _views.ToList())
 			{
-				if (view.TransitionState == TransitionStates.SHOWN) view.LateIdle(delta);
+				if (view.TransitionState == TransitionStates.Shown) view.LateIdle(delta);
 			}
 		}
 
@@ -260,10 +260,10 @@ namespace LunraGames.SpaceFarm
 
 			switch (view.TransitionState)
 			{
-				case TransitionStates.CLOSED:
+				case TransitionStates.Closed:
 					return;
 
-				case TransitionStates.UNKNOWN:
+				case TransitionStates.Unknown:
 					Debug.LogWarning("Can't close a view with an unknown state", view.gameObject);
 					return;
 			}
