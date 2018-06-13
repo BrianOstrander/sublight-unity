@@ -9,8 +9,10 @@ namespace LunraGames.SpaceFarm
 
 		public static DayTime Zero { get { return new DayTime(); } }
 
-		public int Day;
-		public float Time;
+		public static DayTime FromDayNormal(float dayNormal) { return new DayTime(dayNormal * TimeInDay); }
+
+		public readonly int Day;
+		public readonly float Time;
 
 		/// <summary>
 		/// Gets the total time.
@@ -65,13 +67,14 @@ namespace LunraGames.SpaceFarm
 		/// <param name="time">Time.</param>
 		public DayTime Add(int day, float time)
 		{
-			var result = new DayTime(Day, Time);
-			time += result.Time;
+			var dayResult = Day;
+			var timeResult = Time;
+			time += timeResult;
 			var newTime = time % TimeInDay;
 			var dayTime = time - newTime;
-			result.Day += day + Mathf.FloorToInt(dayTime / TimeInDay);
-			result.Time = newTime;
-			return result;
+			dayResult += day + Mathf.FloorToInt(dayTime / TimeInDay);
+			timeResult = newTime;
+			return new DayTime(dayResult, timeResult);
 		}
 
 		public static DayTime Max(DayTime dayTime0, DayTime dayTime1)
@@ -102,6 +105,16 @@ namespace LunraGames.SpaceFarm
 				day--;
 			}
 			return new DayTime(day, time);
+		}
+
+		public static DayTime operator +(DayTime obj0, DayTime obj1)
+		{
+			return obj0.Add(obj1.Day, obj1.Time);
+		}
+
+		public override string ToString()
+		{
+			return "TotalTime: " + TotalTime;
 		}
 	}
 }

@@ -68,6 +68,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				var elapsed = DayTime.DayTimeElapsed(lastTravel.StartTime, delta.Current).TotalTime;
 				var progress = Mathf.Min(1f, elapsed / total);
 				var distance = UniversePosition.Distance(lastTravel.Destination.Position.Value, lastTravel.Origin.Position.Value);
+
 				var normal = (lastTravel.Destination.Position.Value - lastTravel.Origin.Position.Value).Normalized;
 
 				var doneTraveling = Mathf.Approximately(1f, progress);
@@ -100,10 +101,11 @@ namespace LunraGames.SpaceFarm.Presenters
 					App.Callbacks.TravelProgress(travelProgress.Duplicate(TravelProgress.States.Active));
 					break;
 				case TravelProgress.States.Complete:
-					ship.LastSystem.Value = travelProgress.Origin;
+					ship.LastSystem.Value = null;
 					ship.NextSystem.Value = null;
 					ship.CurrentSystem.Value = travelProgress.Destination;
 					ship.Position.Value = travelProgress.Position;
+					App.Callbacks.SpeedChange(SpeedChange.PauseRequest);
 					break;
 				case TravelProgress.States.Active:
 					ship.Position.Value = travelProgress.Position;

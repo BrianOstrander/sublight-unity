@@ -31,7 +31,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		public void Show()
 		{
-			if (View.Visible) return;
+			if (View.Visible || App.Callbacks.LastTravelProgress.State != TravelProgress.States.Complete) return;
 			View.Reset();
 			OnDetails();
 			View.Closed += OnClose;

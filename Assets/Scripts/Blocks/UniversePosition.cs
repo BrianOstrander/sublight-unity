@@ -28,7 +28,7 @@ namespace LunraGames.SpaceFarm
 		public static Vector3 ToUnity(UniversePosition universePosition)
 		{
 			// TODO: Actually make this functional.
-			return universePosition.System * UniverseToUnityScalar;
+			return (universePosition.Sector + universePosition.System) * UniverseToUnityScalar;
 		}
 
 		/// <summary>

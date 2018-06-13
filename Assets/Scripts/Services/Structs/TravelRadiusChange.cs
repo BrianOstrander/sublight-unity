@@ -21,7 +21,7 @@ namespace LunraGames.SpaceFarm
 			Speed = speed;
 			RationConsumption = rationConsumption;
 			Rations = rations;
-			RationDuration = new DayTime(rations / rationConsumption);
+			RationDuration = DayTime.FromDayNormal(rations / rationConsumption);
 			var rationDistance = RationDuration.TotalTime * speed;
 			// TODO: Find a better place for handling this weird range stuff?
 			TravelRadius = new TravelRadius(rationDistance * 0.8f, rationDistance * 0.9f, rationDistance);

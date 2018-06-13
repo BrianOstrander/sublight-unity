@@ -1,5 +1,7 @@
 ﻿using System;
 
+using UnityEngine;
+
 using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
 
@@ -17,6 +19,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.DayTime.Changed += OnDayTime;
 			App.Callbacks.StateChange += OnStateChange;
+			App.Callbacks.SpeedChange += OnSpeedChange;
 			App.Heartbeat.Update += OnUpdate;
 		}
 
@@ -26,6 +29,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.DayTime.Changed -= OnDayTime;
 			App.Callbacks.StateChange -= OnStateChange;
+			App.Callbacks.SpeedChange -= OnSpeedChange;
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
@@ -46,6 +50,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnUpdate(float delta)
 		{
+			if (Mathf.Approximately(0f, model.Speed)) return;
 			delta *= model.Speed;
 			var newDayTime = model.DayTime.Value.Add(0, delta);
 			model.DayTime.Value = newDayTime;
@@ -58,9 +63,20 @@ namespace LunraGames.SpaceFarm.Presenters
 			lastDayTime = current;
 		}
 
+		void OnSpeedChange(SpeedChange speedChange)
+		{
+			switch(speedChange.State)
+			{
+				case SpeedChange.States.Request:
+					model.Speed.Value = speedChange.Speed;
+					App.Callbacks.SpeedChange(speedChange.Duplicate(SpeedChange.States.Complete));
+					break;
+			}
+		}
+
 		void OnClick(float speed)
 		{
-			model.Speed.Value = speed;
+			App.Callbacks.SpeedChange(new SpeedChange(SpeedChange.States.Request, speed));
 		}
 		#endregion
 	}

@@ -101,12 +101,24 @@ namespace LunraGames.SpaceFarm
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
 			var startPosition = startSystem.Position;
-			var rations = 1f;
+			var rations = 0.25f;
 			var speed = 0.001f;
 			var rationConsumption = 0.02f;
 			var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
 
 			App.Callbacks.TravelRadiusChange(travelRadiusChange);
+
+			var travelProgress = new TravelProgress(
+				TravelProgress.States.Complete,
+				startSystem.Position.Value,
+				startSystem,
+				startSystem,
+				DayTime.Zero,
+				DayTime.Zero,
+				1f
+			);
+
+			App.Callbacks.TravelProgress(travelProgress);
 
 			var ship = new ShipModel();
 			ship.CurrentSystem.Value = startSystem;
