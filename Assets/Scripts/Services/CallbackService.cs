@@ -8,6 +8,10 @@ namespace LunraGames.SpaceFarm
 	{
 		#region Events
 		/// <summary>
+		/// When the escape key is released.
+		/// </summary>
+		public Action Escape = ActionExtensions.Empty;
+		/// <summary>
 		/// A scene loaded.
 		/// </summary>
 		public Action<Scene, LoadSceneMode> SceneLoad = ActionExtensions.GetEmpty<Scene, LoadSceneMode>();

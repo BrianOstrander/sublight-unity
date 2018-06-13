@@ -50,6 +50,8 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		protected virtual void OnUpdate(float delta)
 		{
+			if (IsEscapeUp()) App.Callbacks.Escape();
+
 			var clickDown = IsClickDown();
 			var clickHeldDown = IsClickHeldDown();
 			var clickUp = IsClickUp();
@@ -160,7 +162,7 @@ namespace LunraGames.SpaceFarm
 			App.Callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
 		}
 		#endregion
-
+		protected virtual bool IsEscapeUp() { return false; }
 		/// <summary>
 		/// Gets the maximum duration of the click, holding down the input longer will not be a click.
 		/// </summary>

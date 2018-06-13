@@ -53,6 +53,7 @@ namespace LunraGames.SpaceFarm
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
+		// TODO: Should this be here?
 		Transform canvasRoot;
 		public static Transform CanvasRoot { get { return instance.canvasRoot; } }
 

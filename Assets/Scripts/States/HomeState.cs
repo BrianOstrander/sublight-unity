@@ -8,14 +8,15 @@ namespace LunraGames.SpaceFarm
 {
 	public class HomePayload : IStatePayload 
 	{
-		//public float SomeVariable;
+		public Action UnloadSceneCallback = ActionExtensions.Empty;
 	}
 
 	public class HomeState : State<HomePayload>
 	{
-		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
+		/// Reminder: Keep local variables in the payload so it's easy to reset 
+		/// states upon transition.
 
-		Action unloadSceneCallback = ActionExtensions.Empty;
+		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
 		#region Idle
 		protected override void Idle()
@@ -51,9 +52,14 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(UnloadScene);
 		}
 
+		void UnBind(Action done)
+		{
+			App.P.UnRegisterAll(done);
+		}
+
 		void UnloadScene(Action done)
 		{
-			unloadSceneCallback = done;
+			Payload.UnloadSceneCallback = done;
 			App.Callbacks.SceneUnload += OnSceneUnloaded;
 			SceneManager.UnloadSceneAsync(SceneConstants.Home);
 		}
@@ -61,12 +67,7 @@ namespace LunraGames.SpaceFarm
 		void OnSceneUnloaded(Scene scene)
 		{
 			App.Callbacks.SceneUnload -= OnSceneUnloaded;
-			unloadSceneCallback();
-		}
-
-		void UnBind(Action done)
-		{
-			App.P.UnRegisterAll(done);
+			Payload.UnloadSceneCallback();
 		}
   		#endregion
 	}

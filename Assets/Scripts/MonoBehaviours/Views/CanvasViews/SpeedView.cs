@@ -6,15 +6,13 @@ using TMPro;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class SpeedView : View, ISpeedView
+	public class SpeedView : CanvasView, ISpeedView
 	{
 		[SerializeField]
 		TextMeshProUGUI dayTimeLabel;
 
 		public DayTime Current { set { dayTimeLabel.text = value.Day + ":" + value.Time.ToString("F0"); } }
 		public Action<float> Click { set; private get; }
-
-		public RectTransform CanvasTransform { get { return transform as RectTransform; } }
 
 		public override void Reset()
 		{
