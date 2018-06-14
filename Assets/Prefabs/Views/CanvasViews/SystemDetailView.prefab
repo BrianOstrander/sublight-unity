@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 222182253879877782}
   - component: {fileID: 114552891173486750}
   m_Layer: 5
-  m_Name: Label
+  m_Name: TravelTimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

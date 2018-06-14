@@ -13,7 +13,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.gameModel = gameModel;
 
-			App.Callbacks.StateChange += OnStateChange;
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
 		}
 
@@ -21,7 +20,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
-			App.Callbacks.StateChange -= OnStateChange;
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
 		}
 
@@ -29,7 +27,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.Visible) return;
 			View.Reset();
-			View.Closed += OnClose;
+			View.Closed += OnClosed;
 			View.Name = model.Seed.Value.ToString();
 			View.DayTravelTime = UniversePosition.TravelTime(model.Position, gameModel.Ship.Value.Position, gameModel.Ship.Value.Speed).DayCeiling;
 
@@ -37,15 +35,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnStateChange(StateChange state)
-		{
-			if (state.Event == StateMachine.Events.End)
-			{
-				nextHighlight = SystemHighlight.None;
-				CloseView(true);
-			}
-		}
-
 		void OnSystemHighlight(SystemHighlight highlight)
 		{
 			nextHighlight = highlight;
@@ -61,8 +50,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
-		void OnClose()
+		void OnClosed()
 		{
+			if (App.SM.CurrentEvent == StateMachine.Events.End) return;
+
 			switch (nextHighlight.State)
 			{
 				case SystemHighlight.States.Begin:

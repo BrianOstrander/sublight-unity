@@ -2,8 +2,6 @@ using System;
 
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Views;
-
 namespace LunraGames.SpaceFarm
 {
 	/// <summary>
@@ -27,7 +25,13 @@ namespace LunraGames.SpaceFarm
 
 		public Presenter(V view)
 		{
+			Register();
 			SetView (view);
+		}
+
+		protected void Register()
+		{
+			App.P.Register(this, () => View.TransitionState, CloseView, UnBind);
 		}
 
 		protected void SetView(V view)

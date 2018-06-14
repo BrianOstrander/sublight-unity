@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using LunraGames.SpaceFarm.Presenters;
 using LunraGames.SpaceFarm.Models;
@@ -13,70 +11,29 @@ namespace LunraGames.SpaceFarm
 {
 	public class GamePayload : IStatePayload
 	{
-		//public float SomeVariable;
+		public GameModel Game;
 	}
 
 	public class GameState : State<GamePayload>
 	{
+		// Reminder: Keep variables in payload for easy reset of states!
+
 		public override StateMachine.States HandledState { get { return StateMachine.States.Game; } }
 
-		static string[] Scenes
-		{
-			get
-			{
-				var scenes = new List<string>(new string[] {
-					"Game"
-				});
-				return scenes.ToArray();
-			}
-		}
-
-		List<string> loadedScenes = new List<string>();
-		List<string> checkedTags = new List<string>();
-		List<string> foundTags = new List<string>();
-		Action initializeSceneCallback = ActionExtensions.Empty;
-
-		GameModel game;
+		static string[] Scenes { get { return new string[] { SceneConstants.Game }; } }
 
 		#region Begin
 		protected override void Begin()
 		{
-			App.SM.PushBlocking(InitializeScenes);
+			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeCamera);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeGame);
 		}
 
-		void InitializeScenes(Action callback)
+		void LoadScenes(Action done)
 		{
-			initializeSceneCallback = callback;
-			App.Callbacks.SceneLoad += OnSceneInitialized;
-			foreach (var scene in Scenes) SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
-		}
-
-		void OnSceneInitialized(Scene scene, LoadSceneMode loadMode)
-		{
-			if (!Scenes.Contains(scene.name)) return;
-
-			App.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
-
-			loadedScenes.Add(scene.name);
-			SceneManager.SetActiveScene(scene);
-
-			if (Scenes.Length != loadedScenes.Count) return;
-
-			App.Log("All Scenes Loaded", LogTypes.Initialization);
-
-			var missingTags = checkedTags.Where(t => !foundTags.Contains(t));
-			if (0 < missingTags.Count())
-			{
-				var tagWarning = "Missing Tags:";
-				foreach (var tag in missingTags) tagWarning += "\n\t" + tag;
-				Debug.LogError(tagWarning);
-			}
-
-			App.Callbacks.SceneLoad -= OnSceneInitialized;
-			initializeSceneCallback();
+			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
 		void InitializeCamera(Action done)
@@ -92,7 +49,11 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeGame(Action done)
 		{
-			game = new GameModel();
+			//
+			// --- Define Models --- 
+			//
+			Payload.Game = new GameModel();
+			var game = Payload.Game;
 			game.GameplayCanvas.Value = App.CanvasRoot;
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
@@ -106,8 +67,6 @@ namespace LunraGames.SpaceFarm
 			var rationConsumption = 0.02f;
 			var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
 
-			App.Callbacks.TravelRadiusChange(travelRadiusChange);
-
 			var travelProgress = new TravelProgress(
 				TravelProgress.States.Complete,
 				startSystem.Position.Value,
@@ -118,8 +77,6 @@ namespace LunraGames.SpaceFarm
 				1f
 			);
 
-			App.Callbacks.TravelProgress(travelProgress);
-
 			var ship = new ShipModel();
 			ship.CurrentSystem.Value = startSystem;
 			ship.Position.Value = startPosition;
@@ -129,12 +86,29 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value = ship;
 
-			// TODO: Figure out where to assign these.
+			//
+			// --- Initial Callbacks --- 
+			//
+			// We do this so basic important values are cached in the 
+			// CallbackService.
+
+			App.Callbacks.TravelRadiusChange(travelRadiusChange);
+			App.Callbacks.TravelProgress(travelProgress);
+
+			//
+			// --- Create Presenters --- 
+			//
+			// There may be some warnings from creating these without assigning,
+			// but you can safely ignore those warnings since they register
+			// themselves with the PresenterMediator.
+
 			new SpeedPresenter(game).Show();
 			new ShipMapPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new SystemDetailPresenter(game);
 			new SystemLinePresenter(game);
+			new PauseMenuPresenter(game);
+			new GameLostPresenter(game);
 
 			done();
 		}
@@ -143,24 +117,39 @@ namespace LunraGames.SpaceFarm
 		#region Idle
 		protected override void Idle()
 		{
-			game.FocusedSector.Value = UniversePosition.Zero;
+			Payload.Game.FocusedSector.Value = UniversePosition.Zero;
 		}
 		#endregion
 
 		#region End
 		protected override void End()
 		{
-			game.FocusedSector.Changed -= OnFocusedSector;
+			App.Input.SetEnabled(false);
+			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
+			App.SM.PushBlocking(UnBind);
+			App.SM.PushBlocking(UnLoadScenes);
+		}
+
+		void UnBind(Action done)
+		{
+			// All presenters will have their views closed and unbinded. Events
+			// will also be unbinded.
+			App.P.UnRegisterAll(done);
+		}
+
+		void UnLoadScenes(Action done)
+		{
+			App.SceneService.Request(SceneRequest.UnLoad(result => done(), Scenes));
 		}
 		#endregion
 
 		#region Events
 		void OnFocusedSector(UniversePosition universePosition)
 		{
-			var sector = game.Universe.Value.GetSector(universePosition);
+			var sector = Payload.Game.Universe.Value.GetSector(universePosition);
 			foreach (var system in sector.Systems.Value)
 			{
-				var systemPresenter = new SystemMapPresenter(game, system);
+				var systemPresenter = new SystemMapPresenter(Payload.Game, system);
 				systemPresenter.Show();
 			}
 		}

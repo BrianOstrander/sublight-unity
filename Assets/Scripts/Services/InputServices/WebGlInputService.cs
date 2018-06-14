@@ -44,6 +44,11 @@ namespace LunraGames.SpaceFarm
 			return Camera.main.transform.position;
 		}
 
+		protected override bool IsEscapeUp()
+		{
+			return Input.GetKeyUp(KeyCode.Escape);
+		}
+
 		protected override bool IsClickUp()
 		{
 			return Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1);

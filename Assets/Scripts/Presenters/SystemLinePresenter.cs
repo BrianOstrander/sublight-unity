@@ -17,7 +17,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.gameModel = gameModel;
 
-			App.Callbacks.StateChange += OnStateChange;
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
 			App.Callbacks.TravelProgress += OnTravelProgress;
@@ -27,7 +26,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
-			App.Callbacks.StateChange -= OnStateChange;
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
 			App.Callbacks.TravelProgress -= OnTravelProgress;
@@ -38,20 +36,11 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.Visible || App.Callbacks.LastTravelProgress.State != TravelProgress.States.Complete) return;
 			View.Reset();
 			OnDetails();
-			View.Closed += OnClose;
+			View.Closed += OnClosed;
 			ShowView(instant: true);
 		}
 
 		#region Events
-		void OnStateChange(StateChange state)
-		{
-			if (state.Event == StateMachine.Events.End)
-			{
-				nextHighlight = SystemHighlight.None;
-				CloseView(true);
-			}
-		}
-
 		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange) 
 		{
 			if (!View.Visible) return;
@@ -121,8 +110,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.Visible && travelProgress.State == TravelProgress.States.Request) CloseView(true);
 		}
 
-		void OnClose()
+		void OnClosed()
 		{
+			if (App.SM.CurrentEvent == StateMachine.Events.End) return;
+
 			switch (nextHighlight.State)
 			{
 				case SystemHighlight.States.Begin:

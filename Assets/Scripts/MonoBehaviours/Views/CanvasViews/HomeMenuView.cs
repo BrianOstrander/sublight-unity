@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class HomeMenuView : View, IHomeMenuView
+	public class HomeMenuView : CanvasView, IHomeMenuView
 	{
 		public Action StartClick { set; private get; }
 
@@ -18,7 +18,7 @@ namespace LunraGames.SpaceFarm.Views
 		#endregion
 	}
 
-	public interface IHomeMenuView : IView
+	public interface IHomeMenuView : ICanvasView
 	{
 		Action StartClick { set;  }
 	}

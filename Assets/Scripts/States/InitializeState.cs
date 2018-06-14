@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace LunraGames.SpaceFarm
 {
@@ -11,27 +9,15 @@ namespace LunraGames.SpaceFarm
 	{
 		public List<GameObject> DefaultViews = new List<GameObject>();
 		public DefaultShaderGlobals ShaderGlobals;
+
+		public HomePayload homePayload = new HomePayload();
 	}
 
 	public class InitializeState : State<InitializePayload>
 	{
+		// Reminder: Keep variables in payload for easy reset of states!
+
 		public override StateMachine.States HandledState { get { return StateMachine.States.Initialize; } }
-
-		static string[] Scenes {
-			get 
-			{
-				var scenes = new List<string> (new string[] {
-					"Home"
-				});
-				return scenes.ToArray();
-			}
-		}
-
-		List<string> loadedScenes = new List<string>();
-		List<string> checkedTags = new List<string>();
-		List<string> foundTags = new List<string>();
-		Action initializeSceneCallback = ActionExtensions.Empty;
-		HomePayload homePayload = new HomePayload();
 
 		protected override void Begin()
 		{
@@ -39,12 +25,11 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(InitializeViews);
 			App.SM.PushBlocking(InitializeModels);
 			App.SM.PushBlocking(InitializePresenters);
-			App.SM.PushBlocking(InitializeScenes);
 		}
 
 		protected override void Idle()
 		{
-			App.SM.RequestState(homePayload);
+			App.SM.RequestState(Payload.homePayload);
 		}
 
 		#region Mediators
@@ -89,52 +74,5 @@ namespace LunraGames.SpaceFarm
 			);
 		}
 		#endregion
-
-		void InitializeScenes(Action callback)
-		{
-			App.Log("Loading Scenes", LogTypes.Initialization);
-			initializeSceneCallback = callback;
-			App.Callbacks.SceneLoad += OnSceneInitialized;
-			foreach (var scene in Scenes) SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
-		}
-
-		void OnSceneInitialized(Scene scene, LoadSceneMode loadMode)
-		{
-			if (!Scenes.Contains(scene.name)) return;
-
-			App.Log("Loaded Scene: "+scene.name, LogTypes.Initialization);
-
-			loadedScenes.Add(scene.name);
-			SceneManager.SetActiveScene(scene);
-
-			if (Scenes.Length != loadedScenes.Count) return;
-
-			App.Log("All Scenes Loaded", LogTypes.Initialization);
-
-			var missingTags = checkedTags.Where(t => !foundTags.Contains(t));
-			if (0 < missingTags.Count())
-			{
-				var tagWarning = "Missing Tags:";
-				foreach (var tag in missingTags) tagWarning += "\n\t" + tag;
-				Debug.LogError(tagWarning);
-			}
-
-			App.Callbacks.SceneLoad -= OnSceneInitialized;
-			initializeSceneCallback();
-		}
-
-		void AssignTag(ref Transform existing, string tag)
-		{
-			if (existing != null) return;
-
-			if (!checkedTags.Contains(tag)) checkedTags.Add(tag);
-			var tagObject = GameObject.FindWithTag(tag);
-
-			if (tagObject == null) return;
-
-			existing = tagObject.transform;
-			if (!foundTags.Contains(tag)) foundTags.Add(tag);
-
-		}
 	}
 }

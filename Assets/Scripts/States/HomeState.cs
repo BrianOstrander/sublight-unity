@@ -1,21 +1,33 @@
 using System;
 
-using UnityEngine.SceneManagement;
-
 using LunraGames.SpaceFarm.Presenters;
 
 namespace LunraGames.SpaceFarm
 {
 	public class HomePayload : IStatePayload 
 	{
-		//public float SomeVariable;
+		
 	}
 
 	public class HomeState : State<HomePayload>
 	{
+		// Reminder: Keep variables in payload for easy reset of states!
+
 		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
-		Action unloadSceneCallback = ActionExtensions.Empty;
+		static string[] Scenes { get { return new string[] { SceneConstants.Home }; } }
+
+		#region Begin
+		protected override void Begin()
+		{
+			App.SM.PushBlocking(LoadScenes);
+		}
+
+		void LoadScenes(Action done)
+		{
+			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
+		}
+  		#endregion
 
 		#region Idle
 		protected override void Idle()
@@ -47,20 +59,20 @@ namespace LunraGames.SpaceFarm
 		protected override void End()
 		{
 			App.Input.SetEnabled(false);
-			App.SM.PushBlocking(UnloadScene);
+			App.SM.PushBlocking(UnBind);
+			App.SM.PushBlocking(UnLoadScenes);
 		}
 
-		void UnloadScene(Action done)
+		void UnLoadScenes(Action done)
 		{
-			unloadSceneCallback = done;
-			App.Callbacks.SceneUnload += OnSceneUnloaded;
-			SceneManager.UnloadSceneAsync(SceneConstants.Home);
+			App.SceneService.Request(SceneRequest.UnLoad(result => done(), Scenes));
 		}
 
-		void OnSceneUnloaded(Scene scene)
+		void UnBind(Action done)
 		{
-			App.Callbacks.SceneUnload -= OnSceneUnloaded;
-			unloadSceneCallback();
+			// All presenters will have their views closed and unbinded. Events
+			// will also be unbinded.
+			App.P.UnRegisterAll(done);
 		}
   		#endregion
 	}

@@ -4,7 +4,7 @@ using TMPro;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class SystemDetailView : View, ISystemDetailView
+	public class SystemDetailView : CanvasView, ISystemDetailView
 	{
 		[SerializeField]
 		TextMeshProUGUI nameLabel;
@@ -13,7 +13,6 @@ namespace LunraGames.SpaceFarm.Views
 
 		public string Name { set { nameLabel.text = value ?? string.Empty; } }
 		public int DayTravelTime { set { travelTimeLabel.text = value + " days"; } }
-		public RectTransform CanvasTransform { get { return transform as RectTransform; } }
 
 		public override void Reset()
 		{

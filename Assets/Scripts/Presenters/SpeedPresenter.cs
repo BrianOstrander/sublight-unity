@@ -18,8 +18,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 
 			model.DayTime.Changed += OnDayTime;
-			App.Callbacks.StateChange += OnStateChange;
-			App.Callbacks.SpeedChange += OnSpeedChange;
+			App.Callbacks.SpeedRequest += OnSpeedChange;
 			App.Heartbeat.Update += OnUpdate;
 		}
 
@@ -28,8 +27,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			model.DayTime.Changed -= OnDayTime;
-			App.Callbacks.StateChange -= OnStateChange;
-			App.Callbacks.SpeedChange -= OnSpeedChange;
+			App.Callbacks.SpeedRequest -= OnSpeedChange;
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
@@ -43,11 +41,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnStateChange(StateChange state)
-		{
-			if (state.Event == StateMachine.Events.End) CloseView(true);
-		}
-
 		void OnUpdate(float delta)
 		{
 			if (Mathf.Approximately(0f, model.Speed)) return;
@@ -63,20 +56,20 @@ namespace LunraGames.SpaceFarm.Presenters
 			lastDayTime = current;
 		}
 
-		void OnSpeedChange(SpeedChange speedChange)
+		void OnSpeedChange(SpeedRequest speedChange)
 		{
 			switch(speedChange.State)
 			{
-				case SpeedChange.States.Request:
+				case SpeedRequest.States.Request:
 					model.Speed.Value = speedChange.Speed;
-					App.Callbacks.SpeedChange(speedChange.Duplicate(SpeedChange.States.Complete));
+					App.Callbacks.SpeedRequest(speedChange.Duplicate(SpeedRequest.States.Complete));
 					break;
 			}
 		}
 
 		void OnClick(float speed)
 		{
-			App.Callbacks.SpeedChange(new SpeedChange(SpeedChange.States.Request, speed));
+			App.Callbacks.SpeedRequest(new SpeedRequest(SpeedRequest.States.Request, speed));
 		}
 		#endregion
 	}
