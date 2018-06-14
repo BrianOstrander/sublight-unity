@@ -98,7 +98,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					ship.NextSystem.Value = null;
 					ship.CurrentSystem.Value = travelProgress.Destination;
 					ship.Position.Value = travelProgress.Position;
-					App.Callbacks.SpeedChange(SpeedChange.PauseRequest);
+					App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 					break;
 				case TravelProgress.States.Active:
 					ship.Position.Value = travelProgress.Position;

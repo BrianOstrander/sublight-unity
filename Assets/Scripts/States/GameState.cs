@@ -108,6 +108,7 @@ namespace LunraGames.SpaceFarm
 			new SystemDetailPresenter(game);
 			new SystemLinePresenter(game);
 			new PauseMenuPresenter(game);
+			new GameLostPresenter(game);
 
 			done();
 		}
@@ -151,11 +152,6 @@ namespace LunraGames.SpaceFarm
 				var systemPresenter = new SystemMapPresenter(Payload.Game, system);
 				systemPresenter.Show();
 			}
-		}
-
-		void OnRations(float rations)
-		{
-			
 		}
 		#endregion
 	}

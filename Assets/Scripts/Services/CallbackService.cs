@@ -77,7 +77,7 @@ namespace LunraGames.SpaceFarm
 		/// <summary>
 		/// The speed change.
 		/// </summary>
-		public Action<SpeedChange> SpeedChange = ActionExtensions.GetEmpty<SpeedChange>();
+		public Action<SpeedRequest> SpeedRequest = ActionExtensions.GetEmpty<SpeedRequest>();
 		#endregion
 
 		#region Caching
@@ -89,7 +89,7 @@ namespace LunraGames.SpaceFarm
 		public SystemHighlight LastSystemHighlight;
 		public TravelRadiusChange LastTravelRadiusChange;
 		public TravelProgress LastTravelProgress;
-		public SpeedChange LastSpeedChange;
+		public SpeedRequest LastSpeedRequest;
 		#endregion
 
 		public CallbackService()
@@ -104,7 +104,7 @@ namespace LunraGames.SpaceFarm
 			SystemHighlight += highlight => LastSystemHighlight = highlight;
 			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
 			TravelProgress += travelProgress => LastTravelProgress = travelProgress;
-			SpeedChange += speedChange => LastSpeedChange = speedChange;
+			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
 		}
 	}
 }
