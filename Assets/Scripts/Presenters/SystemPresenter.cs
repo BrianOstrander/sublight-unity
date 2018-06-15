@@ -7,18 +7,18 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class SystemMapPresenter : Presenter<ISystemMapView>
+	public class SystemPresenter : Presenter<ISystemView>
 	{
 		GameModel gameModel;
 		SystemModel model;
 
 		bool isTravelable;
 
-		public SystemMapPresenter(GameModel gameModel, SystemModel model)
+		public SystemPresenter(GameModel gameModel, SystemModel model)
 		{
 			this.gameModel = gameModel;
 			this.model = model;
-			SetView(App.V.Get<ISystemMapView>(v => v.SystemType == model.SystemType));
+			SetView(App.V.Get<ISystemView>(v => v.SystemType == model.SystemType));
 
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 		}

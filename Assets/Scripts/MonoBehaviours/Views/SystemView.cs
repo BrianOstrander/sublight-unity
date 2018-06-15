@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public abstract class SystemMapView : View, ISystemMapView
+	public abstract class SystemView : View, ISystemView
 	{
 		public abstract SystemTypes SystemType { get; }
 		public abstract Color TravelColor { set; }
@@ -29,7 +29,7 @@ namespace LunraGames.SpaceFarm.Views
 		#endregion
 	}
 
-	public interface ISystemMapView : IGridTransform
+	public interface ISystemView : IGridTransform
 	{
 		SystemTypes SystemType { get; }
 		Color TravelColor { set; }

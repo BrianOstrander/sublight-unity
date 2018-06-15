@@ -7,12 +7,12 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class ShipMapPresenter : Presenter<IShipMapView>
+	public class ShipSystemPresenter : Presenter<IShipSystemView>
 	{
 		GameModel model;
 		ShipModel ship;
 
-		public ShipMapPresenter(GameModel model)
+		public ShipSystemPresenter(GameModel model)
 		{
 			this.model = model;
 			ship = model.Ship;

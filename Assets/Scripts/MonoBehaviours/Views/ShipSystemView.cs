@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class ShipMapView : View, IShipMapView
+	public class ShipSystemView : View, IShipSystemView
 	{
 		public UniversePosition UniversePosition { set; get; }
 		public Action<bool> Highlight { set; private get; }
@@ -24,7 +24,7 @@ namespace LunraGames.SpaceFarm.Views
 		#endregion
 	}
 
-	public interface IShipMapView : IGridTransform
+	public interface IShipSystemView : IGridTransform
 	{
 		Action<bool> Highlight { set; }
 		Action Click { set; }

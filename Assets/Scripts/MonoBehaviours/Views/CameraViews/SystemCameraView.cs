@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class ShipCameraView : View, IShipCameraView
+	public class SystemCameraView : View, ISystemCameraView
 	{
 		[SerializeField]
 		Transform dragRoot;
@@ -16,11 +16,36 @@ namespace LunraGames.SpaceFarm.Views
 		public Transform DragAxisRoot { get { return dragAxisRoot; } }
 		public Vector3 DragAxis { get; set; }
 
+		public Vector3 LookingAt
+		{
+			get
+			{
+				return Vector3.zero;
+			}
+			set
+			{
+				
+			}
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
 		}
+
+		//void SetLookingAt(Vector3 position)
+		//{
+			
+		//}
+
+		//Vector3 GetLookingAt()
+		//{
+			
+		//}
 	}
 
-	public interface IShipCameraView : IDragView {}
+	public interface ISystemCameraView : IDragView 
+	{
+		Vector3 LookingAt { get; set; }
+	}
 }

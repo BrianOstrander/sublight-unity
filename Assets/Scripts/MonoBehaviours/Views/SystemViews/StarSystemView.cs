@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class StarMapView : SystemMapView
+	public class StarSystemView : SystemView
 	{
 		[SerializeField]
 		MeshRenderer meshRenderer;

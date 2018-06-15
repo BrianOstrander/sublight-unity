@@ -78,6 +78,10 @@ namespace LunraGames.SpaceFarm
 		/// The speed change.
 		/// </summary>
 		public Action<SpeedRequest> SpeedRequest = ActionExtensions.GetEmpty<SpeedRequest>();
+		/// <summary>
+		/// Requests a camera change of position or reports a change in the cameras position.
+		/// </summary>
+		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
 		#endregion
 
 		#region Caching
