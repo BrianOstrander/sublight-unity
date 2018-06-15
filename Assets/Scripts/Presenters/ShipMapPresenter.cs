@@ -18,7 +18,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship = model.Ship;
 
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
-			App.Callbacks.TravelProgress += OnTravelProgress;
+			App.Callbacks.TravelRequest += OnTravelRequest;
 			model.Ship.Value.Position.Changed += OnShipPosition;
 			model.Ship.Value.Speed.Changed += OnSpeed;
 			model.Ship.Value.Rations.Changed += OnRations;
@@ -30,7 +30,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
-			App.Callbacks.TravelProgress -= OnTravelProgress;
+			App.Callbacks.TravelRequest -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 			model.Ship.Value.Speed.Changed -= OnSpeed;
 			model.Ship.Value.Rations.Changed -= OnRations;
@@ -53,8 +53,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			var rationsConsumed = model.Ship.Value.Rations.Value - (delta.Delta.DayNormal * model.Ship.Value.RationConsumption);
 			model.Ship.Value.Rations.Value = Mathf.Max(0f, rationsConsumed);
 
-			var lastTravel = App.Callbacks.LastTravelProgress;
-			if (lastTravel.State == TravelProgress.States.Active)
+			var lastTravel = App.Callbacks.LastTravelRequest;
+			if (lastTravel.State == TravelRequest.States.Active)
 			{
 				// We're traveling!
 				var total = lastTravel.Duration.TotalTime;
@@ -68,8 +68,8 @@ namespace LunraGames.SpaceFarm.Presenters
 
 				var newPos = doneTraveling ? lastTravel.Destination.Position.Value : lastTravel.Origin.Position.Value + new UniversePosition(progress * distance * normal);
 
-				var travel = new TravelProgress(
-					doneTraveling ? TravelProgress.States.Complete : TravelProgress.States.Active,
+				var travel = new TravelRequest(
+					doneTraveling ? TravelRequest.States.Complete : TravelRequest.States.Active,
 					newPos,
 					lastTravel.Origin,
 					lastTravel.Destination,
@@ -77,31 +77,31 @@ namespace LunraGames.SpaceFarm.Presenters
 					lastTravel.EndTime,
 					progress
 				);
-				App.Callbacks.TravelProgress(travel);
+				App.Callbacks.TravelRequest(travel);
 			}
 		}
 
-		void OnTravelProgress(TravelProgress travelProgress)
+		void OnTravelRequest(TravelRequest travelRequest)
 		{
-			switch (travelProgress.State)
+			switch (travelRequest.State)
 			{
-				case TravelProgress.States.Request:
+				case TravelRequest.States.Request:
 					// TODO: Validation? Eh...
-					ship.LastSystem.Value = travelProgress.Origin;
-					ship.NextSystem.Value = travelProgress.Destination;
+					ship.LastSystem.Value = travelRequest.Origin;
+					ship.NextSystem.Value = travelRequest.Destination;
 					ship.CurrentSystem.Value = null;
-					ship.Position.Value = travelProgress.Origin.Position;
-					App.Callbacks.TravelProgress(travelProgress.Duplicate(TravelProgress.States.Active));
+					ship.Position.Value = travelRequest.Origin.Position;
+					App.Callbacks.TravelRequest(travelRequest.Duplicate(TravelRequest.States.Active));
 					break;
-				case TravelProgress.States.Complete:
+				case TravelRequest.States.Complete:
 					ship.LastSystem.Value = null;
 					ship.NextSystem.Value = null;
-					ship.CurrentSystem.Value = travelProgress.Destination;
-					ship.Position.Value = travelProgress.Position;
+					ship.CurrentSystem.Value = travelRequest.Destination;
+					ship.Position.Value = travelRequest.Position;
 					App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 					break;
-				case TravelProgress.States.Active:
-					ship.Position.Value = travelProgress.Position;
+				case TravelRequest.States.Active:
+					ship.Position.Value = travelRequest.Position;
 					break;
 			}
 		}

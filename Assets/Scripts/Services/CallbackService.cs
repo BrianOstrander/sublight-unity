@@ -73,7 +73,7 @@ namespace LunraGames.SpaceFarm
 		/// <summary>
 		/// The travel progress.
 		/// </summary>
-		public Action<TravelProgress> TravelProgress = ActionExtensions.GetEmpty<TravelProgress>();
+		public Action<TravelRequest> TravelRequest = ActionExtensions.GetEmpty<TravelRequest>();
 		/// <summary>
 		/// The speed change.
 		/// </summary>
@@ -88,7 +88,7 @@ namespace LunraGames.SpaceFarm
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
 		public TravelRadiusChange LastTravelRadiusChange;
-		public TravelProgress LastTravelProgress;
+		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
 		#endregion
 
@@ -103,7 +103,7 @@ namespace LunraGames.SpaceFarm
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
 			SystemHighlight += highlight => LastSystemHighlight = highlight;
 			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
-			TravelProgress += travelProgress => LastTravelProgress = travelProgress;
+			TravelRequest += travelRequest => LastTravelRequest = travelRequest;
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
 		}
 	}

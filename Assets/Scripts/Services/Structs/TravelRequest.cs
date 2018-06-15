@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm
 {
-	public struct TravelProgress
+	public struct TravelRequest
 	{
 		public enum States
 		{
@@ -21,7 +21,7 @@ namespace LunraGames.SpaceFarm
 		public DayTime Duration;
 		public float Progress;
 
-		public TravelProgress(
+		public TravelRequest(
 			States state,
 			UniversePosition position,
 			SystemModel origin,
@@ -41,9 +41,9 @@ namespace LunraGames.SpaceFarm
 			Duration = DayTime.DayTimeElapsed(startTime, endTime);
 		}
 
-		public TravelProgress Duplicate(States state = States.Unknown)
+		public TravelRequest Duplicate(States state = States.Unknown)
 		{
-			return new TravelProgress(
+			return new TravelRequest(
 				state == States.Unknown ? State : state,
 				Position,
 				Origin,

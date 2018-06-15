@@ -19,7 +19,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
-			App.Callbacks.TravelProgress += OnTravelProgress;
+			App.Callbacks.TravelRequest += OnTravelRequest;
 		}
 
 		protected override void UnBind()
@@ -28,12 +28,12 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
-			App.Callbacks.TravelProgress -= OnTravelProgress;
+			App.Callbacks.TravelRequest -= OnTravelRequest;
 		}
 
 		public void Show()
 		{
-			if (View.Visible || App.Callbacks.LastTravelProgress.State != TravelProgress.States.Complete) return;
+			if (View.Visible || App.Callbacks.LastTravelRequest.State != TravelRequest.States.Complete) return;
 			View.Reset();
 			OnDetails();
 			View.Closed += OnClosed;
@@ -105,9 +105,9 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
-		void OnTravelProgress(TravelProgress travelProgress)
+		void OnTravelRequest(TravelRequest travelRequest)
 		{
-			if (View.Visible && travelProgress.State == TravelProgress.States.Request) CloseView(true);
+			if (View.Visible && travelRequest.State == TravelRequest.States.Request) CloseView(true);
 		}
 
 		void OnClosed()

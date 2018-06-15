@@ -75,13 +75,13 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnClick()
 		{
-			if (App.Callbacks.LastTravelProgress.State != TravelProgress.States.Complete) return;
+			if (App.Callbacks.LastTravelRequest.State != TravelRequest.States.Complete) return;
 			if (isTravelable)
 			{
 				var travelTime = UniversePosition.TravelTime(gameModel.Ship.Value.CurrentSystem.Value.Position.Value, model.Position.Value, gameModel.Ship.Value.Speed.Value);
 
-				var travel = new TravelProgress(
-					TravelProgress.States.Request,
+				var travel = new TravelRequest(
+					TravelRequest.States.Request,
 					gameModel.Ship.Value.CurrentSystem.Value.Position,
 					gameModel.Ship.Value.CurrentSystem,
 					model,
@@ -89,7 +89,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					App.Callbacks.LastDayTimeDelta.Current + travelTime,
 					0f
 				);
-				App.Callbacks.TravelProgress(travel);
+				App.Callbacks.TravelRequest(travel);
 			}
 			else
 			{

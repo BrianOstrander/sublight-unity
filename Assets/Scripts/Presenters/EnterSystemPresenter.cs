@@ -13,14 +13,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			App.Callbacks.TravelProgress += OnTravelProgress;
+			App.Callbacks.TravelRequest += OnTravelRequest;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
 
-			App.Callbacks.TravelProgress -= OnTravelProgress;
+			App.Callbacks.TravelRequest -= OnTravelRequest;
 		}
 
 		void Show(SystemModel destination)
@@ -34,12 +34,12 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnTravelProgress(TravelProgress travelProgress)
+		void OnTravelRequest(TravelRequest travelRequest)
 		{
-			switch(travelProgress.State)
+			switch(travelRequest.State)
 			{
-				case TravelProgress.States.Complete:
-					if (!travelProgress.Destination.Visited) Show(travelProgress.Destination);
+				case TravelRequest.States.Complete:
+					if (!travelRequest.Destination.Visited) Show(travelRequest.Destination);
 					break;
 			}
 		}

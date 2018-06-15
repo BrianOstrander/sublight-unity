@@ -68,8 +68,8 @@ namespace LunraGames.SpaceFarm
 			var rationConsumption = 0.02f;
 			var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
 
-			var travelProgress = new TravelProgress(
-				TravelProgress.States.Complete,
+			var travelRequest = new TravelRequest(
+				TravelRequest.States.Complete,
 				startSystem.Position.Value,
 				startSystem,
 				startSystem,
@@ -94,7 +94,7 @@ namespace LunraGames.SpaceFarm
 			// CallbackService.
 
 			App.Callbacks.TravelRadiusChange(travelRadiusChange);
-			App.Callbacks.TravelProgress(travelProgress);
+			App.Callbacks.TravelRequest(travelRequest);
 
 			//
 			// --- Create Presenters --- 
