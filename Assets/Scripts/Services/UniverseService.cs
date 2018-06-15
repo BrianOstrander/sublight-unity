@@ -100,6 +100,9 @@ namespace LunraGames.SpaceFarm
 			system.Visited.Value = false;
 			system.Position.Value = position;
 
+			system.Name.Value = seed.ToString();
+			system.Rations.Value = 0.2f;
+
 			switch (systemType)
 			{
 				case SystemTypes.Star: PopulateSystem(system as StarModel); break;

@@ -18,8 +18,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnStartClick()
 		{
-			var payload = new GamePayload();
-			App.SM.RequestState(payload);
+			switch (View.TransitionState)
+			{
+				case TransitionStates.Shown:
+					CloseView(true);
+					var payload = new GamePayload();
+					App.SM.RequestState(payload);
+					break;
+			}
 		}
 		#endregion
 

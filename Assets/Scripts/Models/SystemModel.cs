@@ -11,6 +11,8 @@
 		#endregion
 
 		#region Derived
+		public readonly ModelProperty<string> Name = new ModelProperty<string>();
+		public readonly ModelProperty<float> Rations = new ModelProperty<float>();
   		#endregion
 	}
 }

@@ -61,6 +61,7 @@ namespace LunraGames.SpaceFarm
 			game.FocusedSector.Changed += OnFocusedSector;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
+			startSystem.Visited.Value = true;
 			var startPosition = startSystem.Position;
 			var rations = 0.25f;
 			var speed = 0.001f;
@@ -109,6 +110,7 @@ namespace LunraGames.SpaceFarm
 			new SystemLinePresenter(game);
 			new PauseMenuPresenter(game);
 			new GameLostPresenter(game);
+			new EnterSystemPresenter(game);
 
 			done();
 		}
