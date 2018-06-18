@@ -38,7 +38,7 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeCamera(Action done)
 		{
-			new ShipCameraPresenter().Show(done);
+			new SystemCameraPresenter().Show(done);
 		}
 
 		void InitializeInput(Action done)
@@ -104,7 +104,7 @@ namespace LunraGames.SpaceFarm
 			// themselves with the PresenterMediator.
 
 			new SpeedPresenter(game).Show();
-			new ShipMapPresenter(game).Show();
+			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new SystemDetailPresenter(game);
 			new SystemLinePresenter(game);
@@ -120,6 +120,8 @@ namespace LunraGames.SpaceFarm
 		protected override void Idle()
 		{
 			Payload.Game.FocusedSector.Value = UniversePosition.Zero;
+
+			App.Callbacks.SystemCameraRequest(SystemCameraRequest.RequestInstant(Payload.Game.Ship.Value.Position));
 		}
 		#endregion
 
@@ -151,7 +153,7 @@ namespace LunraGames.SpaceFarm
 			var sector = Payload.Game.Universe.Value.GetSector(universePosition);
 			foreach (var system in sector.Systems.Value)
 			{
-				var systemPresenter = new SystemMapPresenter(Payload.Game, system);
+				var systemPresenter = new SystemPresenter(Payload.Game, system);
 				systemPresenter.Show();
 			}
 		}

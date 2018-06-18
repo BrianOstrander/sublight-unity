@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 4134740322558014}
   - component: {fileID: 114126093320307530}
   m_Layer: 0
-  m_Name: StarMapView
+  m_Name: StarSystemView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

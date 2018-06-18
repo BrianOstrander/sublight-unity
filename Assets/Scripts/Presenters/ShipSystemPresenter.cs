@@ -7,12 +7,12 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class ShipMapPresenter : Presenter<IShipMapView>
+	public class ShipSystemPresenter : Presenter<IShipSystemView>
 	{
 		GameModel model;
 		ShipModel ship;
 
-		public ShipMapPresenter(GameModel model)
+		public ShipSystemPresenter(GameModel model)
 		{
 			this.model = model;
 			ship = model.Ship;
@@ -57,9 +57,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (lastTravel.State == TravelRequest.States.Active)
 			{
 				// We're traveling!
-				var total = lastTravel.Duration.TotalTime;
-				var elapsed = DayTime.DayTimeElapsed(lastTravel.StartTime, delta.Current).TotalTime;
-				var progress = Mathf.Min(1f, elapsed / total);
+				var progress = lastTravel.GetProgress(delta.Current);
 				var distance = UniversePosition.Distance(lastTravel.Destination.Position.Value, lastTravel.Origin.Position.Value);
 
 				var normal = (lastTravel.Destination.Position.Value - lastTravel.Origin.Position.Value).Normalized;

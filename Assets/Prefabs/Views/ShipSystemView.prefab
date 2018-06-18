@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4769669672779622}
   - component: {fileID: 114953732343120916}
   m_Layer: 0
-  m_Name: ShipMapView
+  m_Name: ShipSystemView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -274,5 +274,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4efd8d161ab4a8d9effdda72cfc4cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animations:
+  animations:
   - {fileID: 11400000, guid: 32855131da3974f59ba97dd26e0cfd7c, type: 2}
