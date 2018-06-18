@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 4551565309227542}
   - component: {fileID: 114327165471737940}
   m_Layer: 0
-  m_Name: SystemLineView
+  m_Name: LineSystemView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

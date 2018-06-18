@@ -3,11 +3,11 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class SystemDestructionOriginPresenter : Presenter<ISystemDestructionOriginView>
+	public class DestructionSystemPresenter : Presenter<ISystemDestructionView>
 	{
 		GameModel gameModel;
 
-		public SystemDestructionOriginPresenter(GameModel gameModel)
+		public DestructionSystemPresenter(GameModel gameModel)
 		{
 			this.gameModel = gameModel;
 
@@ -32,12 +32,12 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnHighlight(bool highlighted)
 		{
-			// TODO: Highlight logic
+			App.Log("Highlight", LogTypes.ToDo);
 		}
 
 		void OnClick()
 		{
-			// TODO: Click logic
+			App.Log("Click", LogTypes.ToDo);
 		}
 		#endregion
 	}

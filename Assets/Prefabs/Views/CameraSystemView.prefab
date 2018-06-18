@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4954808290460184}
   - component: {fileID: 114709390681755508}
   m_Layer: 0
-  m_Name: SystemCameraView
+  m_Name: CameraSystemView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

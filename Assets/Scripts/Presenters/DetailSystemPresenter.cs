@@ -3,13 +3,13 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class SystemDetailPresenter : Presenter<ISystemDetailView>
+	public class DetailSystemPresenter : Presenter<IDetailSystemView>
 	{
 		GameModel gameModel;
 
 		SystemHighlight nextHighlight;
 
-		public SystemDetailPresenter(GameModel gameModel)
+		public DetailSystemPresenter(GameModel gameModel)
 		{
 			this.gameModel = gameModel;
 

@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class SystemCameraView : View, ISystemCameraView
+	public class CameraSystemView : View, ICameraSystemView
 	{
 		[SerializeField]
 		Transform dragRoot;
@@ -54,7 +54,7 @@ namespace LunraGames.SpaceFarm.Views
 		}
 	}
 
-	public interface ISystemCameraView : IDragView 
+	public interface ICameraSystemView : IDragView 
 	{
 		Vector3 LookingAt { get; set; }
 	}

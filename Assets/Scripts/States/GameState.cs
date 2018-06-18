@@ -38,7 +38,7 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeCamera(Action done)
 		{
-			new SystemCameraPresenter().Show(done);
+			new CameraSystemPresenter().Show(done);
 		}
 
 		void InitializeInput(Action done)
@@ -102,8 +102,11 @@ namespace LunraGames.SpaceFarm
 			// We do this so basic important values are cached in the 
 			// CallbackService.
 
+			App.Callbacks.DayTimeDelta(new DayTimeDelta(DayTime.Zero, DayTime.Zero));
+			App.Callbacks.SystemHighlight(SystemHighlight.None);
 			App.Callbacks.TravelRadiusChange(travelRadiusChange);
 			App.Callbacks.TravelRequest(travelRequest);
+			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
 			//
 			// --- Create Presenters --- 
@@ -115,9 +118,9 @@ namespace LunraGames.SpaceFarm
 			new SpeedPresenter(game).Show();
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
-			new SystemDestructionOriginPresenter(game).Show();
-			new SystemDetailPresenter(game);
-			new SystemLinePresenter(game);
+			new DestructionOriginSystemPresenter(game).Show();
+			new DetailSystemPresenter(game);
+			new LineSystemPresenter(game);
 			new PauseMenuPresenter(game);
 			new GameLostPresenter(game);
 			new EnterSystemPresenter(game);

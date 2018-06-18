@@ -6,11 +6,11 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class SystemCameraPresenter : Presenter<ISystemCameraView>
+	public class CameraSystemPresenter : Presenter<ICameraSystemView>
 	{
 		SystemCameraRequest lastRequest;
 
-		public SystemCameraPresenter()
+		public CameraSystemPresenter()
 		{
 			App.Heartbeat.Update += OnUpdate;
 			App.Callbacks.SystemCameraRequest += OnSystemCameraRequest;

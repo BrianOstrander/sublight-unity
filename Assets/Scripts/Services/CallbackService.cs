@@ -84,11 +84,14 @@ namespace LunraGames.SpaceFarm
 		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
 		#endregion
 
-		#region Caching
+		#region Genaral Caching
 		public CameraOrientation LastCameraOrientation;
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
+		#endregion
+
+		#region Game Caching
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
 		public TravelRadiusChange LastTravelRadiusChange;
