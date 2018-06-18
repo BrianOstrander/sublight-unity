@@ -20,11 +20,14 @@ namespace LunraGames.SpaceFarm.Views
 		{
 			get
 			{
-				return Vector3.zero;
+				var plane = new Plane(Vector3.up, Root.position);
+				var dist = 0f;
+				plane.Raycast(new Ray(DragForward.position, DragForward.forward), out dist);
+				return DragForward.position + (DragForward.forward * dist);
 			}
 			set
 			{
-				
+				Root.position = value + (Root.position - LookingAt);
 			}
 		}
 
@@ -42,6 +45,13 @@ namespace LunraGames.SpaceFarm.Views
 		//{
 			
 		//}
+
+		void OnDrawGizmos()
+		{
+			if (!Application.isPlaying) return;
+			Gizmos.color = Color.magenta;
+			Gizmos.DrawRay(LookingAt, Vector3.up);
+		}
 	}
 
 	public interface ISystemCameraView : IDragView 

@@ -1,4 +1,8 @@
-﻿namespace LunraGames.SpaceFarm
+﻿using System;
+
+using UnityEngine;
+
+namespace LunraGames.SpaceFarm
 {
 	public struct SystemCameraRequest
 	{
@@ -10,77 +14,98 @@
 			Complete = 30
 		}
 
+		/// <summary>
+		/// The state of the current request.
+		/// </summary>
+		/// <remarks>
+		/// No finaly "Active" is sent, only a "Complete", so the final camera
+		/// update is processed on that "Complete".
+		/// </remarks>
 		public States State;
-		public UniversePosition FocusPosition;
-		public UniversePosition FocusOrigin;
-		public UniversePosition FocusDestination;
-		public DayTime StartTime;
-		public DayTime EndTime;
-		public DayTime Duration;
+		public UniversePosition Position;
+		public UniversePosition Origin;
+		public UniversePosition Destination;
+		public DateTime StartTime;
+		public DateTime EndTime;
+		public TimeSpan Duration;
+		/// <summary>
+		/// Progress of the camera request, from 0.0 to 1.0.
+		/// </summary>
+		/// <remarks>
+		/// While not used in the actual camera logic, this is kept as a useful
+		/// hook for other listeners.
+		/// </remarks>
 		public float Progress;
 		public bool Instant;
 
 		public static SystemCameraRequest Request(
-			UniversePosition focusPosition,
-			UniversePosition focusOrigin,
-			UniversePosition focusDestination,
-			DayTime startTime,
-			DayTime endTime
+			UniversePosition position,
+			UniversePosition origin,
+			UniversePosition destination,
+			DateTime startTime,
+			DateTime endTime
 		)
 		{
 			return new SystemCameraRequest(
 				States.Request,
-				focusPosition,
-				focusOrigin,
-				focusDestination,
+				position,
+				origin,
+				destination,
 				startTime,
 				endTime,
 				0f,
 				false);
 		}
 
-		public static SystemCameraRequest RequestInstant(UniversePosition focusPosition)
+		public static SystemCameraRequest RequestInstant(UniversePosition position)
 		{
 			return new SystemCameraRequest(
 				States.Request,
-				focusPosition,
-				focusPosition,
-				focusPosition,
-				DayTime.Zero,
-				DayTime.Zero,
+				position,
+				position,
+				position,
+				DateTime.MinValue,
+				DateTime.MinValue,
 				0f,
 				true);
 		}
 
-		SystemCameraRequest(
+		public SystemCameraRequest(
 			States state,
-			UniversePosition focusPosition,
-			UniversePosition focusOrigin,
-			UniversePosition focusDestination,
-			DayTime startTime,
-			DayTime endTime,
+			UniversePosition position,
+			UniversePosition origin,
+			UniversePosition destination,
+			DateTime startTime,
+			DateTime endTime,
 			float progress,
 			bool instant)
 		{
 			State = state;
-			FocusPosition = focusPosition;
-			FocusOrigin = focusOrigin;
-			FocusDestination = focusDestination;
+			Position = position;
+			Origin = origin;
+			Destination = destination;
 			StartTime = startTime;
 			EndTime = endTime;
 			Progress = progress;
 			Instant = instant;
 
-			Duration = DayTime.DayTimeElapsed(startTime, endTime);
+			Duration = endTime - startTime;
+		}
+
+		public float GetProgress(DateTime current)
+		{
+			var total = (float)Duration.TotalSeconds;
+			var elapsed = (float)(current - StartTime).TotalSeconds;
+			return Mathf.Min(1f, elapsed / total);
 		}
 
 		public SystemCameraRequest Duplicate(States state = States.Unknown)
 		{
 			return new SystemCameraRequest(
 				state == States.Unknown ? State : state,
-				FocusPosition,
-				FocusOrigin,
-				FocusDestination,
+				Position,
+				Origin,
+				Destination,
 				StartTime,
 				EndTime,
 				Progress,

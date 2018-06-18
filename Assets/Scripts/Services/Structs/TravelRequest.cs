@@ -1,4 +1,6 @@
-﻿using LunraGames.SpaceFarm.Models;
+﻿using UnityEngine;
+
+using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm
 {
@@ -12,6 +14,13 @@ namespace LunraGames.SpaceFarm
 			Complete = 30
 		}
 
+		/// <summary>
+		/// The state of the current request.
+		/// </summary>
+		/// <remarks>
+		/// No finaly "Active" is sent, only a "Complete", so the final travel
+		/// update is processed on that "Complete".
+		/// </remarks>
 		public States State;
 		public UniversePosition Position;
 		public SystemModel Origin;
@@ -19,6 +28,13 @@ namespace LunraGames.SpaceFarm
 		public DayTime StartTime;
 		public DayTime EndTime;
 		public DayTime Duration;
+		/// <summary>
+		/// Progress of the travel request, from 0.0 to 1.0.
+		/// </summary>
+		/// <remarks>
+		/// While not used in the actual travel logic, this is kept as a useful
+		/// hook for other listeners.
+		/// </remarks>
 		public float Progress;
 
 		public TravelRequest(
@@ -39,6 +55,13 @@ namespace LunraGames.SpaceFarm
 			Progress = progress;
 
 			Duration = DayTime.DayTimeElapsed(startTime, endTime);
+		}
+
+		public float GetProgress(DayTime current)
+		{
+			var total = Duration.TotalTime;
+			var elapsed = DayTime.DayTimeElapsed(StartTime, current).TotalTime;
+			return Mathf.Min(1f, elapsed / total);
 		}
 
 		public TravelRequest Duplicate(States state = States.Unknown)

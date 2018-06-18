@@ -57,9 +57,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (lastTravel.State == TravelRequest.States.Active)
 			{
 				// We're traveling!
-				var total = lastTravel.Duration.TotalTime;
-				var elapsed = DayTime.DayTimeElapsed(lastTravel.StartTime, delta.Current).TotalTime;
-				var progress = Mathf.Min(1f, elapsed / total);
+				var progress = lastTravel.GetProgress(delta.Current);
 				var distance = UniversePosition.Distance(lastTravel.Destination.Position.Value, lastTravel.Origin.Position.Value);
 
 				var normal = (lastTravel.Destination.Position.Value - lastTravel.Origin.Position.Value).Normalized;
