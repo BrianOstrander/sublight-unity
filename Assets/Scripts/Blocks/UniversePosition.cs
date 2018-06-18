@@ -15,9 +15,9 @@ namespace LunraGames.SpaceFarm
 		const float UnityToUniverseScalar = 0.05f;
 		const float UniverseToUnityScalar = 50f;
 
-		public static float UnityToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
+		public static float ToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
 
-		public static float UniverseToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
+		public static float ToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
 
 		public static UniversePosition ToUniverse(Vector3 unityPosition)
 		{

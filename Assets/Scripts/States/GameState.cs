@@ -59,6 +59,7 @@ namespace LunraGames.SpaceFarm
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
 			game.FocusedSector.Changed += OnFocusedSector;
+			game.DestructionSpeed.Value = 0.01f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
 			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
@@ -119,6 +120,7 @@ namespace LunraGames.SpaceFarm
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new DestructionOriginSystemPresenter(game).Show();
+			new DestructionSystemPresenter(game).Show();
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
 			new PauseMenuPresenter(game);

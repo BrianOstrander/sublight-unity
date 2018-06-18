@@ -5,11 +5,11 @@ namespace LunraGames.SpaceFarm.Presenters
 {
 	public class DestructionOriginSystemPresenter : Presenter<ISystemDestructionOriginView>
 	{
-		GameModel gameModel;
+		GameModel model;
 
-		public DestructionOriginSystemPresenter(GameModel gameModel)
+		public DestructionOriginSystemPresenter(GameModel model)
 		{
-			this.gameModel = gameModel;
+			this.model = model;
 
 		}
 

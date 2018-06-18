@@ -1,10 +1,14 @@
 ﻿using System;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using UnityEngine;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class SystemDestructionView : View, ISystemDestructionView
+	public class DestructionSystemView : View, IDestructionSystemView
 	{
 		public float Radius { set; private get; }
 		public UniversePosition UniversePosition { set; get; }
@@ -30,11 +34,14 @@ namespace LunraGames.SpaceFarm.Views
 		void OnDrawGizmos()
 		{
 			if (!Application.isPlaying) return;
-
+#if UNITY_EDITOR
+			Handles.color = Color.cyan;
+			Handles.DrawWireDisc(transform.position, Vector3.up, UniversePosition.ToUnityDistance(Radius));
+#endif
 		}
 	}
 
-	public interface ISystemDestructionView : IGridTransform
+	public interface IDestructionSystemView : IGridTransform
 	{
 		float Radius { set; }
 		Action<bool> Highlight { set; }
