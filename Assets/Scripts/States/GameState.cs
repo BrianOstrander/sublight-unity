@@ -115,6 +115,7 @@ namespace LunraGames.SpaceFarm
 			new SpeedPresenter(game).Show();
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
+			new SystemDestructionOriginPresenter(game).Show();
 			new SystemDetailPresenter(game);
 			new SystemLinePresenter(game);
 			new PauseMenuPresenter(game);
