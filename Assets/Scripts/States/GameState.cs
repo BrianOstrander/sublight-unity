@@ -61,10 +61,19 @@ namespace LunraGames.SpaceFarm
 			game.FocusedSector.Changed += OnFocusedSector;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
+			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
+			foreach (var system in game.Universe.Value.Sectors.Value.First().Systems.Value)
+			{
+				var distance = UniversePosition.Distance(UniversePosition.Zero, system.Position);
+				if (lastDistance < distance) continue;
+				lastDistance = distance;
+				startSystem = system;
+			}
+
 			startSystem.Visited.Value = true;
 			var startPosition = startSystem.Position;
-			var rations = 0.25f;
-			var speed = 0.001f;
+			var rations = 0.3f;
+			var speed = 0.003f;
 			var rationConsumption = 0.02f;
 			var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
 
