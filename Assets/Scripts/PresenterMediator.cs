@@ -27,11 +27,22 @@ namespace LunraGames.SpaceFarm
 			public Action UnBind;
 		}
 
+		List<IPresenter> globalExceptions = new List<IPresenter>();
 		List<RegistrationEntry> registrations = new List<RegistrationEntry>();
 
 		public void Initialize(Action<RequestStatus> done) 
 		{
 			done(RequestStatus.Success);
+		}
+
+		public void AddGlobals(params IPresenter[] globals)
+		{
+			foreach (var global in globals.Where(g => !globalExceptions.Contains(g))) globalExceptions.Add(global);
+		}
+
+		public void RemoveGlobals(params IPresenter[] globals)
+		{
+			foreach (var global in globals) globalExceptions.RemoveAll(g => g == global);
 		}
 
 		public void Register(IPresenter presenter, Func<TransitionStates> getState, Action<bool> closeView, Action unBind)
@@ -59,7 +70,8 @@ namespace LunraGames.SpaceFarm
 		public void UnRegisterAll(Action done = null, params IPresenter[] exceptions)
 		{
 			var waitingToClose = new List<RegistrationEntry>();
-			foreach (var entry in registrations.Where(e => !exceptions.Contains(e.Presenter)).ToList())
+			var allExceptions = globalExceptions.Union(exceptions);
+			foreach (var entry in registrations.Where(e => !allExceptions.Contains(e.Presenter)).ToList())
 			{
 				registrations.Remove(entry);
 				switch(entry.GetState())

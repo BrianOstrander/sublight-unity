@@ -59,6 +59,10 @@ namespace LunraGames.SpaceFarm
 		/// </remarks>
 		public Action<PointerOrientation> PointerOrientation = ActionExtensions.GetEmpty<PointerOrientation>();
 		/// <summary>
+		/// Called when a dialog is requested to be open or when one is closed.
+		/// </summary>
+		public Action<DialogRequest> DialogRequest = ActionExtensions.GetEmpty<DialogRequest>();
+		/// <summary>
 		/// The day time delta.
 		/// </summary>
 		public Action<DayTimeDelta> DayTimeDelta = ActionExtensions.GetEmpty<DayTimeDelta>();

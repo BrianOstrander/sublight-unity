@@ -51,6 +51,7 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeMenu(Action done)
 		{
+			App.P.AddGlobals(new DialogPresenter());
 			new HomeMenuPresenter().Show(done);
 		}
 		#endregion
