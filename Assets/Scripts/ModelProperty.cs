@@ -6,7 +6,10 @@ namespace LunraGames.SpaceFarm
 	public class ModelProperty<T>
 	{
 		T currentValue;
+
+		[NonSerialized]
 		public Action<T> Changed = value => {};
+
 		public T Value 
 		{ 
 			get { return currentValue; }

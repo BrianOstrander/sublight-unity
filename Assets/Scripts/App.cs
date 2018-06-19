@@ -53,6 +53,9 @@ namespace LunraGames.SpaceFarm
 		UniverseService universeService;
 		public static UniverseService UniverseService { get { return instance.universeService; } }
 
+		ISaveLoadService saveLoadService;
+		public static ISaveLoadService SaveLoadService { get { return instance.saveLoadService; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -106,6 +109,7 @@ namespace LunraGames.SpaceFarm
 				logService = new EditorLogService();
 				inputService = new EditorInputService();
 				backendService = new EditorBackendService();
+				saveLoadService = new EditorSaveLoadService();
 #endif
 			}
 			else if (Application.platform == RuntimePlatform.WebGLPlayer)
@@ -113,6 +117,7 @@ namespace LunraGames.SpaceFarm
 				logService = new WebGlLogService();
 				inputService = new WebGlInputService();
 				backendService = new WebGlBackendService();
+				saveLoadService = new WebGlSaveLoadService();
 			}
 			else
 			{
