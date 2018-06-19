@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace LunraGames.SpaceFarm.Models
+﻿namespace LunraGames.SpaceFarm.Models
 {
 	public class GameModel : Model
 	{

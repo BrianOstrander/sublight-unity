@@ -56,6 +56,9 @@ namespace LunraGames.SpaceFarm
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
+		BuildPreferences buildPreferences;
+		public static BuildPreferences BuildPreferences { get { return instance.buildPreferences; } }
+
 		// TODO: Should this be here?
 		Transform canvasRoot;
 		public static Transform CanvasRoot { get { return instance.canvasRoot; } }
@@ -68,6 +71,7 @@ namespace LunraGames.SpaceFarm
 			Main main, 
 			DefaultShaderGlobals shaderGlobals, 
 			List<GameObject> defaultViews, 
+			BuildPreferences buildPreferences,
 			GameObject audioRoot, 
 			Transform canvasRoot,
 			Transform gameCanvasRoot,
@@ -78,6 +82,7 @@ namespace LunraGames.SpaceFarm
 			this.main = main;
 			this.defaultViews = defaultViews;
 			this.shaderGlobals = shaderGlobals;
+			this.buildPreferences = buildPreferences;
 			this.canvasRoot = canvasRoot;
 			this.gameCanvasRoot = gameCanvasRoot;
 			this.overlayCanvasRoot = overlayCanvasRoot;

@@ -28,11 +28,23 @@ namespace LunraGames.SpaceFarm
 
 			#region Editor Globals
 			GUILayout.Label("Globals", EditorStyles.boldLabel);
-			if (DefaultShaderGlobals.Instance == null) EditorGUILayout.HelpBox("The scriptable object for default shader globals cannot be found", MessageType.Error);
-			else
+
+			GUILayout.BeginHorizontal();
 			{
-				if (GUILayout.Button("See all shader globals")) Selection.activeObject = DefaultShaderGlobals.Instance;
+				if (BuildPreferences.Instance == null) EditorGUILayout.HelpBox("The scriptable object for build preferences cannot be found", MessageType.Error);
+				else
+				{
+					if (GUILayout.Button("See build preferences")) Selection.activeObject = BuildPreferences.Instance;
+				}
+
+				if (DefaultShaderGlobals.Instance == null) EditorGUILayout.HelpBox("The scriptable object for default shader globals cannot be found", MessageType.Error);
+				else
+				{
+					if (GUILayout.Button("See all shader globals")) Selection.activeObject = DefaultShaderGlobals.Instance;
+				}
 			}
+			GUILayout.EndHorizontal();
+
 			DevPrefs.WindInEditMode = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
 			DevPrefs.AutoApplySkybox = GUILayout.Toggle(DevPrefs.AutoApplySkybox, "Auto Apply Skybox");
 			DevPrefs.ApplyXButtonStyleInEditMode = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
