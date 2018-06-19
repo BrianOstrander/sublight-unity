@@ -137,6 +137,11 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.FocusedSector.Value = UniversePosition.Zero;
 
 			App.Callbacks.SystemCameraRequest(SystemCameraRequest.RequestInstant(Payload.Game.Ship.Value.Position));
+
+			if (!DevPrefs.SkipExplanation)
+			{
+				App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation, Strings.ExplanationTitle));
+			}
 		}
 		#endregion
 

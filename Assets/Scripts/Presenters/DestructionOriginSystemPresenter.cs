@@ -32,12 +32,12 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnHighlight(bool highlighted)
 		{
-			App.Log("Highlight", LogTypes.ToDo);
+			//App.Log("Highlight", LogTypes.ToDo);
 		}
 
 		void OnClick()
 		{
-			App.Log("Click", LogTypes.ToDo);
+			App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.HomeInfo, Strings.HomeInfoTitle));
 		}
 		#endregion
 	}

@@ -17,7 +17,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
-			Debug.Log("unbinding lol");
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 		}
 

@@ -12,6 +12,7 @@ namespace LunraGames.SpaceFarm
 			public const string WindInEditMode = ProjectConstants.PrefsPrefix + "WindInEditMode";
 			public const string AutoApplySkybox = ProjectConstants.PrefsPrefix + "AutoApplySkybox";
 			public const string ApplyXButtonStyleInEditMode = ProjectConstants.PrefsPrefix + "ApplyXButtonStyleInEditMode";
+			public const string SkipExplanation = ProjectConstants.PrefsPrefix + "SkipExplanation";
 		}
 
 		public static bool AutoApplyShaderGlobals
@@ -49,6 +50,16 @@ namespace LunraGames.SpaceFarm
 #if UNITY_EDITOR
 			get { return EditorPrefs.GetBool(Keys.ApplyXButtonStyleInEditMode, true); }
 			set { EditorPrefs.SetBool(Keys.ApplyXButtonStyleInEditMode, value); }
+#else
+			get; set;
+#endif
+		}
+
+		public static bool SkipExplanation
+		{
+#if UNITY_EDITOR
+			get { return EditorPrefs.GetBool(Keys.SkipExplanation, false); }
+			set { EditorPrefs.SetBool(Keys.SkipExplanation, value); }
 #else
 			get; set;
 #endif

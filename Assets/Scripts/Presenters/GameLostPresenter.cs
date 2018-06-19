@@ -39,14 +39,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (!Mathf.Approximately(0f, rations)) return;
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
-			Show("Out of rations");
+			Show(Strings.OutOfRations);
 		}
 
 		void OnDestructionRadius(float radius)
 		{
 			if (radius < UniversePosition.Distance(UniversePosition.Zero, model.Ship.Value.Position)) return;
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
-			Show("Destroyed by void");
+			Show(Strings.DestroyedByVoid);
 		}
 
 		void OnMainMenuClick()

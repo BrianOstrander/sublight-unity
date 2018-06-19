@@ -61,7 +61,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			CloseView(true);
 			App.Callbacks.DialogRequest(
 				DialogRequest.CancelConfirm(
-					"Are you sure you want to go back to the main menu?",
+					Strings.ConfirmToMainMenu,
 					done: OnMainMenuConfirm
 				)
 			);

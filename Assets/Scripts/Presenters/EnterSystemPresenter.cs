@@ -27,8 +27,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.Visible) return;
 			View.Reset();
-			View.Title = "Arrived in "+ destination.Name.Value;
-			View.Details = "Aquired " + destination.Rations.Value + " rations";
+			View.Title = Strings.ArrivedIn(destination.Name.Value);
+			View.Details = Strings.ArrivedDetails(destination.Rations.Value);
 			View.OkayClick = () => OnOkayClick(destination);
 			ShowView(model.GameplayCanvas, true);
 		}
