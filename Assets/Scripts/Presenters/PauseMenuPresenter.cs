@@ -1,64 +1,63 @@
 ﻿using LunraGames.SpaceFarm.Views;
-using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
 	public class PauseMenuPresenter : Presenter<IPauseMenuView>
 	{
-		GameModel model;
 		SpeedRequest lastSpeedChange;
 
-		public PauseMenuPresenter(GameModel model)
+		public PauseMenuPresenter(bool pushEscapable = true)
 		{
-			this.model = model;
-
-			App.Callbacks.Escape += OnEscape;
+			if (pushEscapable) App.Callbacks.PushEscape(new EscapeEntry(ShowFromGame, true, true));
 		}
 
-		protected override void UnBind()
-		{
-			base.UnBind();
-
-			App.Callbacks.Escape -= OnEscape;
-		}
-
-		void Show()
+		void Show(bool cacheSpeed = true)
 		{
 			if (View.Visible) return;
-			View.Reset();
-			lastSpeedChange = App.Callbacks.LastSpeedRequest;
+
+			if (cacheSpeed) lastSpeedChange = App.Callbacks.LastSpeedRequest;
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
-			View.Closed += OnClosed;
+
+			View.Reset();
 			View.BackClick = OnBackClick;
 			View.MainMenuClick = OnMainMenuClick;
-			ShowView(model.GameplayCanvas, true);
+			ShowView(App.OverlayCanvasRoot);
 		}
 
 		#region Events
-		void OnEscape()
+		void ShowFromGame()
 		{
-			switch(View.TransitionState)
-			{
-				case TransitionStates.Unknown:
-				case TransitionStates.Closed:
-					Show();
-					break;
-				case TransitionStates.Shown:
-					CloseView(true);
-					break;
-			}
+			Show();
+			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(CloseToGame, false, false));
+		}
+
+		void ShowFromDialog()
+		{
+			Show(false);
+			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(CloseToGame, false, false));
+		}
+
+		void CloseToGame()
+		{
+			View.Closed += () => App.Callbacks.PushEscape(new EscapeEntry(ShowFromGame, true, true));
+			View.Closed += () => App.Callbacks.SpeedRequest(lastSpeedChange.Duplicate(SpeedRequest.States.Request));
+			CloseView();
 		}
 
 		void OnBackClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
-			CloseView(true);
+			App.Callbacks.PopEscape();
+			App.Callbacks.ShadeRequest(ShadeRequest.UnShade);
+			App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.UnObscure);
+			CloseToGame();
 		}
 
 		void OnMainMenuClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
-			CloseView(true);
+			App.Callbacks.PopEscape();
+			CloseView();
 			App.Callbacks.DialogRequest(
 				DialogRequest.CancelConfirm(
 					Strings.ConfirmToMainMenu,
@@ -76,16 +75,9 @@ namespace LunraGames.SpaceFarm.Presenters
 					App.SM.RequestState(payload);
 					break;
 				default:
-					Show();
+					ShowFromDialog();
 					break;
 			}
-		}
-
-		void OnClosed()
-		{
-			if (App.SM.CurrentEvent == StateMachine.Events.End) return;
-
-			App.Callbacks.SpeedRequest(lastSpeedChange.Duplicate(SpeedRequest.States.Request));
 		}
 		#endregion
 

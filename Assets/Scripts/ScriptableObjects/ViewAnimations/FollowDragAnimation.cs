@@ -12,7 +12,7 @@ namespace LunraGames.SpaceFarm
 		 
 		public override void OnIdle(IView view)
 		{
-			if (!(view is IDragView)) return;
+			if (!(view is IDragView) || App.Callbacks.LastObscureCameraRequest.IsObscured) return;
 			var dragView = view as IDragView;
 			var gesture = App.Callbacks.LastGesture;
 

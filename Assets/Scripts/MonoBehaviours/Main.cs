@@ -19,6 +19,10 @@ namespace LunraGames.SpaceFarm
 		[SerializeField]
 		Transform canvasRoot;
 		[SerializeField]
+		Transform gameCanvasRoot;
+		[SerializeField]
+		Transform overlayCanvasRoot;
+		[SerializeField]
 		DefaultViews defaultViews;
 		[SerializeField]
 		DefaultShaderGlobals defaultShaderGlobals;
@@ -27,7 +31,15 @@ namespace LunraGames.SpaceFarm
 		
 		void Awake() 
 		{
-			app = new App(this, defaultShaderGlobals, defaultViews.Prefabs, audioRoot, canvasRoot);
+			app = new App(
+				this, 
+				defaultShaderGlobals, 
+				defaultViews.Prefabs, 
+				audioRoot, 
+				canvasRoot,
+				gameCanvasRoot,
+				overlayCanvasRoot
+			);
 			DontDestroyOnLoad(gameObject);
 			app.Awake();
 		}

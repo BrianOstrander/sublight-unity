@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-using LunraGames.SpaceFarm.Views;
+﻿using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
@@ -8,6 +6,8 @@ namespace LunraGames.SpaceFarm.Presenters
 	public class EnterSystemPresenter : Presenter<IEnterSystemView>
 	{
 		GameModel model;
+		bool hasPoppedEscape;
+		SystemModel destination;
 
 		public EnterSystemPresenter(GameModel model)
 		{
@@ -23,14 +23,22 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.TravelRequest -= OnTravelRequest;
 		}
 
-		void Show(SystemModel destination)
+		void Show()
 		{
 			if (View.Visible) return;
+
+			App.Callbacks.ShadeRequest(ShadeRequest.Shade);
+			App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.Obscure);
+			hasPoppedEscape = false;
+
 			View.Reset();
+
+			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(OnEscape, false, false));
+
 			View.Title = Strings.ArrivedIn(destination.Name.Value);
 			View.Details = Strings.ArrivedDetails(destination.Rations.Value);
-			View.OkayClick = () => OnOkayClick(destination);
-			ShowView(model.GameplayCanvas, true);
+			View.OkayClick = OnOkayClick;
+			ShowView(App.OverlayCanvasRoot);
 		}
 
 		#region Events
@@ -39,21 +47,43 @@ namespace LunraGames.SpaceFarm.Presenters
 			switch(travelRequest.State)
 			{
 				case TravelRequest.States.Complete:
-					if (!travelRequest.Destination.Visited) Show(travelRequest.Destination);
+					if (!travelRequest.Destination.Visited)
+					{
+						destination = travelRequest.Destination;
+						Show();
+					}
 					break;
 			}
 		}
 
-		void OnOkayClick(SystemModel destination)
+		void OnEscape()
+		{
+			hasPoppedEscape = true;
+			OnClose();
+		}
+
+		void OnOkayClick()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			OnClose();
+		}
+
+		void OnClose()
+		{
+			if (!hasPoppedEscape)
+			{
+				App.Callbacks.PopEscape();
+				App.Callbacks.ShadeRequest(ShadeRequest.UnShade);
+				App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.UnObscure);
+			}
+			View.Closed += OnClosed;
+			CloseView();
+		}
+
+		void OnClosed()
 		{
 			destination.Visited.Value = true;
 			model.Ship.Value.Rations.Value += destination.Rations;
-			switch(View.TransitionState)
-			{
-				case TransitionStates.Shown:
-					CloseView(true);
-					break;
-			}
 		}
 		#endregion
 

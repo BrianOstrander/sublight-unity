@@ -31,7 +31,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Name = model.Name;
 			View.DayTravelTime = UniversePosition.TravelTime(model.Position, gameModel.Ship.Value.Position, gameModel.Ship.Value.Speed).DayCeiling;
 
-			ShowView(gameModel.GameplayCanvas, true);
+			ShowView(App.GameCanvasRoot, true);
 		}
 
 		#region Events

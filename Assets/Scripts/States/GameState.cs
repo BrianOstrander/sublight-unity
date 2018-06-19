@@ -54,7 +54,6 @@ namespace LunraGames.SpaceFarm
 			//
 			Payload.Game = new GameModel();
 			var game = Payload.Game;
-			game.GameplayCanvas.Value = App.CanvasRoot;
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
@@ -119,11 +118,11 @@ namespace LunraGames.SpaceFarm
 			new SpeedPresenter(game).Show();
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
-			new DestructionOriginSystemPresenter(game).Show();
+			new DestructionOriginSystemPresenter().Show();
 			new DestructionSystemPresenter(game).Show();
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
-			new PauseMenuPresenter(game);
+			new PauseMenuPresenter();
 			new GameLostPresenter(game);
 			new EnterSystemPresenter(game);
 
@@ -149,7 +148,10 @@ namespace LunraGames.SpaceFarm
 		protected override void End()
 		{
 			App.Input.SetEnabled(false);
+
 			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
+			App.Callbacks.ClearEscapables();
+
 			App.SM.PushBlocking(UnBind);
 			App.SM.PushBlocking(UnLoadScenes);
 		}

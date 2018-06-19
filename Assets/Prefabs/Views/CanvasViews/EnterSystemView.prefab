@@ -781,6 +781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animations:
   - {fileID: 11400000, guid: 40bdb7dce45294d61a290d13dedbbb52, type: 2}
+  - {fileID: 11400000, guid: 66213b714e30548d49a42207813ca2bf, type: 2}
   titleLabel: {fileID: 114337418701677726}
   detailsLabel: {fileID: 114426868692652008}
 --- !u!114 &114887314345677946

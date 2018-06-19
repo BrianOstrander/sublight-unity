@@ -12,7 +12,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 			View.StartClick = OnStartClick;
 			View.Shown += done;
-			ShowView(App.CanvasRoot, true);
+			ShowView(App.GameCanvasRoot, true);
 		}
 
 		#region Events

@@ -59,14 +59,28 @@ namespace LunraGames.SpaceFarm
 		// TODO: Should this be here?
 		Transform canvasRoot;
 		public static Transform CanvasRoot { get { return instance.canvasRoot; } }
+		Transform gameCanvasRoot;
+		public static Transform GameCanvasRoot { get { return instance.gameCanvasRoot; } }
+		Transform overlayCanvasRoot;
+		public static Transform OverlayCanvasRoot { get { return instance.overlayCanvasRoot; } }
 
-		public App(Main main, DefaultShaderGlobals shaderGlobals, List<GameObject> defaultViews, GameObject audioRoot, Transform canvasRoot)
+		public App(
+			Main main, 
+			DefaultShaderGlobals shaderGlobals, 
+			List<GameObject> defaultViews, 
+			GameObject audioRoot, 
+			Transform canvasRoot,
+			Transform gameCanvasRoot,
+			Transform overlayCanvasRoot
+		)
 		{
 			instance = this;
 			this.main = main;
 			this.defaultViews = defaultViews;
 			this.shaderGlobals = shaderGlobals;
 			this.canvasRoot = canvasRoot;
+			this.gameCanvasRoot = gameCanvasRoot;
+			this.overlayCanvasRoot = overlayCanvasRoot;
 			callbackService = new CallbackService();
 			heartbeat = new Heartbeat();
 			modelMediator = new ModelMediator();

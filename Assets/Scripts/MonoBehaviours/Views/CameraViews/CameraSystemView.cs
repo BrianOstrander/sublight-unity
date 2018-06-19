@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace LunraGames.SpaceFarm.Views
 {
 	public class CameraSystemView : View, ICameraSystemView
 	{
+		[SerializeField]
+		BaseRaycaster raycaster;
 		[SerializeField]
 		Transform dragRoot;
 		[SerializeField]
@@ -11,6 +14,7 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		Transform dragAxisRoot;
 
+		public bool Raycasting { set { raycaster.enabled = value; } }
 		public Transform DragRoot { get { return dragRoot; } }
 		public Transform DragForward { get { return dragForward; } }
 		public Transform DragAxisRoot { get { return dragAxisRoot; } }
@@ -34,17 +38,9 @@ namespace LunraGames.SpaceFarm.Views
 		public override void Reset()
 		{
 			base.Reset();
+
+			Raycasting = true;
 		}
-
-		//void SetLookingAt(Vector3 position)
-		//{
-			
-		//}
-
-		//Vector3 GetLookingAt()
-		//{
-			
-		//}
 
 		void OnDrawGizmos()
 		{
@@ -56,6 +52,7 @@ namespace LunraGames.SpaceFarm.Views
 
 	public interface ICameraSystemView : IDragView 
 	{
+		bool Raycasting { set; }
 		Vector3 LookingAt { get; set; }
 	}
 }

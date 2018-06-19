@@ -5,10 +5,6 @@ namespace LunraGames.SpaceFarm.Models
 	public class GameModel : Model
 	{
 		/// <summary>
-		/// The gameplay canvas all UI elements are parented to.
-		/// </summary>
-		public readonly ModelProperty<Transform> GameplayCanvas = new ModelProperty<Transform>();
-		/// <summary>
 		/// The game seed.
 		/// </summary>
 		public readonly ModelProperty<int> Seed = new ModelProperty<int>();

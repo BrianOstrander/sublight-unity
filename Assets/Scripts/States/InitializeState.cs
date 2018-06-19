@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using LunraGames.SpaceFarm.Presenters;
+
 namespace LunraGames.SpaceFarm
 {
 	public class InitializePayload : IStatePayload
@@ -29,6 +31,8 @@ namespace LunraGames.SpaceFarm
 
 		protected override void Idle()
 		{
+			App.P.AddGlobals(new DialogPresenter());
+			App.P.AddGlobals(new ShadePresenter());
 			App.SM.RequestState(Payload.homePayload);
 		}
 

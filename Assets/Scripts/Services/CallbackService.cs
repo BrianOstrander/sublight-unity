@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine.SceneManagement;
 
@@ -28,7 +29,8 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		public Action<Highlight> Highlight = ActionExtensions.GetEmpty<Highlight>();
 		/// <summary>
-		/// Called when any interactable elemnts are added to the world, and false when all are removed.
+		/// Called when any interactable elemnts are added to the world, and 
+		/// false when all are removed.
 		/// </summary>
 		public Action<bool> Interaction = ActionExtensions.GetEmpty<bool>();
 		/// <summary>
@@ -52,12 +54,22 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		public Action<Click> Click = ActionExtensions.GetEmpty<Click>();
 		/// <summary>
-		/// The pointer orientation, (world position, rotation, forward, screen position)
+		/// The pointer orientation, (world position, rotation, forward, screen 
+		/// position)
 		/// </summary>
 		/// <remarks>
-		/// The screen position is the point at which the pointer terminates, this is dependent on an arbitrary distance.
+		/// The screen position is the point at which the pointer terminates, 
+		/// this is dependent on an arbitrary distance.
 		/// </remarks>
 		public Action<PointerOrientation> PointerOrientation = ActionExtensions.GetEmpty<PointerOrientation>();
+		/// <summary>
+		/// Obscures the raycasting on cameras.
+		/// </summary>
+		public Action<ObscureCameraRequest> ObscureCameraRequest = ActionExtensions.GetEmpty<ObscureCameraRequest>();
+		/// <summary>
+		/// Requests the shade presenter to shade or unshade the interface.
+		/// </summary>
+		public Action<ShadeRequest> ShadeRequest = ActionExtensions.GetEmpty<ShadeRequest>();
 		/// <summary>
 		/// Called when a dialog is requested to be open or when one is closed.
 		/// </summary>
@@ -83,7 +95,8 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		public Action<SpeedRequest> SpeedRequest = ActionExtensions.GetEmpty<SpeedRequest>();
 		/// <summary>
-		/// Requests a camera change of position or reports a change in the cameras position.
+		/// Requests a camera change of position or reports a change in the 
+		/// camera's position.
 		/// </summary>
 		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
 		#endregion
@@ -93,6 +106,8 @@ namespace LunraGames.SpaceFarm
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
+		public ObscureCameraRequest LastObscureCameraRequest;
+		public ShadeRequest LastShadeRequest;
 		#endregion
 
 		#region Game Caching
@@ -102,6 +117,8 @@ namespace LunraGames.SpaceFarm
 		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
 		#endregion
+
+		Stack<EscapeEntry> escapes = new Stack<EscapeEntry>();
 
 		public CallbackService()
 		{
@@ -116,6 +133,48 @@ namespace LunraGames.SpaceFarm
 			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
 			TravelRequest += travelRequest => LastTravelRequest = travelRequest;
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
+			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
+			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
+
+			Escape += OnEscape;
+		}
+
+		#region Internal Events
+		void OnEscape()
+		{
+			if (0 < escapes.Count && escapes.Peek().Enabled())
+			{
+				var escape = escapes.Pop();
+				if (escape.IsShaded.HasValue)
+				{
+					if (escape.IsShaded.Value) ShadeRequest(SpaceFarm.ShadeRequest.Shade);
+					else ShadeRequest(SpaceFarm.ShadeRequest.UnShade);
+				}
+				if (escape.IsObscured.HasValue)
+				{
+					if (escape.IsShaded.Value) ObscureCameraRequest(SpaceFarm.ObscureCameraRequest.Obscure);
+					else ObscureCameraRequest(SpaceFarm.ObscureCameraRequest.UnObscure);
+				}
+				escape.Escape();
+			}
+		}
+  		#endregion
+
+		public void PushEscape(EscapeEntry escape)
+		{
+			escapes.Push(escape);
+		}
+
+		public void PopEscape()
+		{
+			escapes.Pop();
+		}
+
+		public void ClearEscapables()
+		{
+			ShadeRequest(SpaceFarm.ShadeRequest.UnShade);
+			ObscureCameraRequest(SpaceFarm.ObscureCameraRequest.UnObscure);
+			escapes.Clear();
 		}
 	}
 }

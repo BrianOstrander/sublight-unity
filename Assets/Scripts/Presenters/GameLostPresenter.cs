@@ -8,6 +8,7 @@ namespace LunraGames.SpaceFarm.Presenters
 	public class GameLostPresenter : Presenter<IGameLostView>
 	{
 		GameModel model;
+		bool hasPoppedEscape;
 
 		public GameLostPresenter(GameModel model)
 		{
@@ -28,13 +29,27 @@ namespace LunraGames.SpaceFarm.Presenters
 		void Show(string reason)
 		{
 			if (View.Visible) return;
+
+			App.Callbacks.ShadeRequest(ShadeRequest.Shade);
+			App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.Obscure);
+			hasPoppedEscape = false;
+
 			View.Reset();
+
+			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(OnEscape));
+
 			View.Reason = reason;
 			View.MainMenuClick = OnMainMenuClick;
-			ShowView(model.GameplayCanvas, true);
+			ShowView(App.OverlayCanvasRoot, true);
 		}
 
 		#region Events
+		void OnEscape()
+		{
+			hasPoppedEscape = true;
+			OnClose();
+		}
+
 		void OnRations(float rations)
 		{
 			if (!Mathf.Approximately(0f, rations)) return;
@@ -54,11 +69,27 @@ namespace LunraGames.SpaceFarm.Presenters
 			switch(View.TransitionState)
 			{
 				case TransitionStates.Shown:
-					CloseView(true);
-					var payload = new HomePayload();
-					App.SM.RequestState(payload);
+					OnClose();
 					break;
 			}
+		}
+
+		void OnClose()
+		{
+			if (!hasPoppedEscape)
+			{
+				App.Callbacks.PopEscape();
+				App.Callbacks.ShadeRequest(ShadeRequest.UnShade);
+				App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.UnObscure);
+			}
+			View.Closed += OnClosed;
+			CloseView();
+		}
+
+		void OnClosed()
+		{
+			var payload = new HomePayload();
+			App.SM.RequestState(payload);
 		}
 		#endregion
 

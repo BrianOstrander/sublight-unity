@@ -13,6 +13,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		public CameraSystemPresenter()
 		{
 			App.Heartbeat.Update += OnUpdate;
+			App.Callbacks.ObscureCameraRequest += OnObscureCameraRequest;
 			App.Callbacks.SystemCameraRequest += OnSystemCameraRequest;
 		}
 
@@ -21,6 +22,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Heartbeat.Update -= OnUpdate;
+			App.Callbacks.ObscureCameraRequest -= OnObscureCameraRequest;
 			App.Callbacks.SystemCameraRequest -= OnSystemCameraRequest;
 		}
 
@@ -57,6 +59,17 @@ namespace LunraGames.SpaceFarm.Presenters
 				lastRequest.Instant
 			);
 			App.Callbacks.SystemCameraRequest(request);
+		}
+
+		void OnObscureCameraRequest(ObscureCameraRequest request)
+		{
+			switch(request.State)
+			{
+				case ObscureCameraRequest.States.Request:
+					View.Raycasting = !request.IsObscured;
+					App.Callbacks.ObscureCameraRequest(request.Duplicate(ObscureCameraRequest.States.Complete));
+					break;
+			}
 		}
 
 		void OnSystemCameraRequest(SystemCameraRequest request)
