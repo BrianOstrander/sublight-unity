@@ -79,7 +79,7 @@ namespace LunraGames.SpaceFarm
 				new GameState()
 			);
 			sceneService = new SceneService();
-			universeService = new UniverseService();
+			universeService = new FudgedUniverseService();
 
 			if (Application.isEditor)
 			{

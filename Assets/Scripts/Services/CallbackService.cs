@@ -59,6 +59,10 @@ namespace LunraGames.SpaceFarm
 		/// </remarks>
 		public Action<PointerOrientation> PointerOrientation = ActionExtensions.GetEmpty<PointerOrientation>();
 		/// <summary>
+		/// Called when a dialog is requested to be open or when one is closed.
+		/// </summary>
+		public Action<DialogRequest> DialogRequest = ActionExtensions.GetEmpty<DialogRequest>();
+		/// <summary>
 		/// The day time delta.
 		/// </summary>
 		public Action<DayTimeDelta> DayTimeDelta = ActionExtensions.GetEmpty<DayTimeDelta>();
@@ -84,11 +88,14 @@ namespace LunraGames.SpaceFarm
 		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
 		#endregion
 
-		#region Caching
+		#region Genaral Caching
 		public CameraOrientation LastCameraOrientation;
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
+		#endregion
+
+		#region Game Caching
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
 		public TravelRadiusChange LastTravelRadiusChange;

@@ -38,6 +38,11 @@ namespace LunraGames.SpaceFarm
 			DevPrefs.ApplyXButtonStyleInEditMode = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
 			#endregion
 
+			#region Interface
+			GUILayout.Label("Interface", EditorStyles.boldLabel);
+			DevPrefs.SkipExplanation = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
+   			#endregion
+
 			#region Logging
 			GUILayout.Label("Logging", EditorStyles.boldLabel);
 			GUILayout.BeginHorizontal();

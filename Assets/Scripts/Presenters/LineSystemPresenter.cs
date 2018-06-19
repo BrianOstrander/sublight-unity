@@ -1,19 +1,17 @@
-﻿using System;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class SystemLinePresenter : Presenter<ISystemLineView>
+	public class LineSystemPresenter : Presenter<ILineSystemView>
 	{
 		SystemHighlight nextHighlight;
 
 		GameModel gameModel;
 
-		public SystemLinePresenter(GameModel gameModel)
+		public LineSystemPresenter(GameModel gameModel)
 		{
 			this.gameModel = gameModel;
 

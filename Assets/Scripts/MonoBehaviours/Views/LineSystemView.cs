@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class SystemLineView : View, ISystemLineView
+	public class LineSystemView : View, ILineSystemView
 	{
 		[SerializeField]
 		Vector3 offset;
@@ -44,7 +44,7 @@ namespace LunraGames.SpaceFarm.Views
 		#endregion
 	}
 
-	public interface ISystemLineView : IGridTransform
+	public interface ILineSystemView : IGridTransform
 	{
 		void SetSegments(LineSegment? safe = null, LineSegment? danger = null, LineSegment? max = null, LineSegment? remainder = null);
 	}

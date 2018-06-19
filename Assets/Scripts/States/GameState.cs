@@ -38,7 +38,7 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeCamera(Action done)
 		{
-			new SystemCameraPresenter().Show(done);
+			new CameraSystemPresenter().Show(done);
 		}
 
 		void InitializeInput(Action done)
@@ -59,12 +59,22 @@ namespace LunraGames.SpaceFarm
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
 			game.FocusedSector.Changed += OnFocusedSector;
+			game.DestructionSpeed.Value = 0.01f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
+			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
+			foreach (var system in game.Universe.Value.Sectors.Value.First().Systems.Value)
+			{
+				var distance = UniversePosition.Distance(UniversePosition.Zero, system.Position);
+				if (lastDistance < distance) continue;
+				lastDistance = distance;
+				startSystem = system;
+			}
+
 			startSystem.Visited.Value = true;
 			var startPosition = startSystem.Position;
-			var rations = 0.25f;
-			var speed = 0.001f;
+			var rations = 0.3f;
+			var speed = 0.003f;
 			var rationConsumption = 0.02f;
 			var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
 
@@ -93,8 +103,11 @@ namespace LunraGames.SpaceFarm
 			// We do this so basic important values are cached in the 
 			// CallbackService.
 
+			App.Callbacks.DayTimeDelta(new DayTimeDelta(DayTime.Zero, DayTime.Zero));
+			App.Callbacks.SystemHighlight(SystemHighlight.None);
 			App.Callbacks.TravelRadiusChange(travelRadiusChange);
 			App.Callbacks.TravelRequest(travelRequest);
+			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
 			//
 			// --- Create Presenters --- 
@@ -106,8 +119,10 @@ namespace LunraGames.SpaceFarm
 			new SpeedPresenter(game).Show();
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
-			new SystemDetailPresenter(game);
-			new SystemLinePresenter(game);
+			new DestructionOriginSystemPresenter(game).Show();
+			new DestructionSystemPresenter(game).Show();
+			new DetailSystemPresenter(game);
+			new LineSystemPresenter(game);
 			new PauseMenuPresenter(game);
 			new GameLostPresenter(game);
 			new EnterSystemPresenter(game);
@@ -122,6 +137,11 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.FocusedSector.Value = UniversePosition.Zero;
 
 			App.Callbacks.SystemCameraRequest(SystemCameraRequest.RequestInstant(Payload.Game.Ship.Value.Position));
+
+			if (!DevPrefs.SkipExplanation)
+			{
+				App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation, Strings.ExplanationTitle));
+			}
 		}
 		#endregion
 

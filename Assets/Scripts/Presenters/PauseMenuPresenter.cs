@@ -51,22 +51,32 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnBackClick()
 		{
-			switch (View.TransitionState)
-			{
-				case TransitionStates.Shown:
-					CloseView(true);
-					break;
-			}
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView(true);
 		}
 
 		void OnMainMenuClick()
 		{
-			switch (View.TransitionState)
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView(true);
+			App.Callbacks.DialogRequest(
+				DialogRequest.CancelConfirm(
+					Strings.ConfirmToMainMenu,
+					done: OnMainMenuConfirm
+				)
+			);
+		}
+
+		void OnMainMenuConfirm(RequestStatus status)
+		{
+			switch (status)
 			{
-				case TransitionStates.Shown:
-					CloseView(true);
+				case RequestStatus.Success:
 					var payload = new HomePayload();
 					App.SM.RequestState(payload);
+					break;
+				default:
+					Show();
 					break;
 			}
 		}

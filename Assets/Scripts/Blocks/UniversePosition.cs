@@ -12,12 +12,12 @@ namespace LunraGames.SpaceFarm
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-		const float UnityToUniverseScalar = 0.01f;
-		const float UniverseToUnityScalar = 100f;
+		const float UnityToUniverseScalar = 0.05f;
+		const float UniverseToUnityScalar = 50f;
 
-		public static float UnityToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
+		public static float ToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
 
-		public static float UniverseToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
+		public static float ToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
 
 		public static UniversePosition ToUniverse(Vector3 unityPosition)
 		{

@@ -41,11 +41,11 @@ namespace LunraGames.SpaceFarm.Views
 			if (!Application.isPlaying) return;
 #if UNITY_EDITOR
 			Handles.color = Color.green;
-			Handles.DrawWireDisc(transform.position, Vector3.up, UniversePosition.UniverseToUnityDistance(TravelRadius.SafeRadius));
+			Handles.DrawWireDisc(transform.position, Vector3.up, UniversePosition.ToUnityDistance(TravelRadius.SafeRadius));
 			Handles.color = Color.yellow;
-			Handles.DrawWireDisc(transform.position, Vector3.up, UniversePosition.UniverseToUnityDistance(TravelRadius.DangerRadius));
+			Handles.DrawWireDisc(transform.position, Vector3.up, UniversePosition.ToUnityDistance(TravelRadius.DangerRadius));
 			Handles.color = Color.red;
-			Handles.DrawWireDisc(transform.position, Vector3.up, UniversePosition.UniverseToUnityDistance(TravelRadius.MaximumRadius));
+			Handles.DrawWireDisc(transform.position, Vector3.up, UniversePosition.ToUnityDistance(TravelRadius.MaximumRadius));
 #endif
 		}
 	}

@@ -4,7 +4,7 @@ using TMPro;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class SystemDetailView : CanvasView, ISystemDetailView
+	public class DetailSystemView : CanvasView, IDetailSystemView
 	{
 		[SerializeField]
 		TextMeshProUGUI nameLabel;
@@ -26,7 +26,7 @@ namespace LunraGames.SpaceFarm.Views
 		#endregion
 	}
 
-	public interface ISystemDetailView : ICanvasView
+	public interface IDetailSystemView : ICanvasView
 	{
 		string Name { set; }
 		int DayTravelTime { set; }
