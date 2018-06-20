@@ -66,8 +66,15 @@ namespace LunraGames.SpaceFarm
 		protected override void OnLoad<M>(SaveModel model, Action<SaveLoadRequest<M>> done)
 		{
 			var result = Serialization.DeserializeJson<M>(File.ReadAllText(model.Path));
-			if (result == null) done(SaveLoadRequest<M>.Failure(model, null, "Null result"));
-			else done(SaveLoadRequest<M>.Success(model, result));
+			if (result == null)
+			{
+				done(SaveLoadRequest<M>.Failure(model, null, "Null result"));
+				return;
+			}
+
+			result.SupportedVersion.Value = model.SupportedVersion;
+			result.Path.Value = model.Path;
+			done(SaveLoadRequest<M>.Success(model, result));
 		}
 
 		protected override void OnSave<M>(M model, Action<SaveLoadRequest<M>> done = null)
@@ -87,6 +94,9 @@ namespace LunraGames.SpaceFarm
 					if (Path.GetExtension(file) != Extension) continue;
 					var result = Serialization.DeserializeJson<SaveModel>(File.ReadAllText(file));
 					if (result == null) continue;
+
+					result.SupportedVersion.Value = IsSupportedVersion(result.SaveType, result.Version);
+					result.Path.Value = file;
 					results.Add(result);
 				}
 				catch (Exception exception)

@@ -26,9 +26,18 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 
 			var entries = new List<LabelButtonBlock>();
+			var index = 0;
 			foreach (var save in saves)
 			{
-				entries.Add(new LabelButtonBlock(save.SaveType+": "+save.Meta, () => OnLoadGameClick(save)));
+				var text = "Save Game #" + index;
+				Action click = () => OnLoadGameClick(save);
+				if (!save.SupportedVersion)
+				{
+					text += " <obsolete>";
+					click = OnClickObsoleteGame;
+				}
+				entries.Add(new LabelButtonBlock(text, click));
+				index++;
 			}
 
 			View.LoadEntries = entries.ToArray();
@@ -47,6 +56,11 @@ namespace LunraGames.SpaceFarm.Presenters
 					OnNewGame();
 					break;
 			}
+		}
+
+		void OnClickObsoleteGame()
+		{
+			App.Callbacks.DialogRequest(DialogRequest.Alert("This save file is no longer supported."));
 		}
 
 		void OnLoadGameClick(SaveModel model)

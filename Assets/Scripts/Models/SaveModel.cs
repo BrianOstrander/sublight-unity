@@ -6,8 +6,9 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public class SaveModel : Model
 	{
-		[JsonProperty] bool supportedVersion;
-		[JsonProperty] string path;
+		bool supportedVersion;
+		string path;
+
 		[JsonProperty] int version;
 		[JsonProperty] string meta;
 		[JsonProperty] DateTime created;
