@@ -33,13 +33,16 @@ namespace LunraGames.SpaceFarm.Presenters
 		public void Show(Action done = null)
 		{
 			if (View.Visible) return;
+
 			View.Reset();
+
 			View.UniversePosition = model.Position;
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
 			OnTravelRadiusChange(App.Callbacks.LastTravelRadiusChange);
 			OnTravelColor();
 			if (done != null) View.Shown += done;
+
 			ShowView(instant: true);
 		}
 

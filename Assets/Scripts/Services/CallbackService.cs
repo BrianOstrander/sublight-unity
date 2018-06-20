@@ -99,6 +99,10 @@ namespace LunraGames.SpaceFarm
 		/// camera's position.
 		/// </summary>
 		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
+		/// <summary>
+		/// Requests or reports saving.
+		/// </summary>
+		public Action<SaveRequest> SaveRequest = ActionExtensions.GetEmpty<SaveRequest>();
 		#endregion
 
 		#region Genaral Caching
@@ -167,7 +171,7 @@ namespace LunraGames.SpaceFarm
 
 		public void PopEscape()
 		{
-			escapes.Pop();
+			if (0 < escapes.Count) escapes.Pop();
 		}
 
 		public void ClearEscapables()

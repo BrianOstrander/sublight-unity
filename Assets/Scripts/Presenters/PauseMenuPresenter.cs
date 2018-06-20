@@ -5,10 +5,20 @@ namespace LunraGames.SpaceFarm.Presenters
 	public class PauseMenuPresenter : Presenter<IPauseMenuView>
 	{
 		SpeedRequest lastSpeedChange;
+		bool waitingForSave;
 
 		public PauseMenuPresenter(bool pushEscapable = true)
 		{
 			if (pushEscapable) App.Callbacks.PushEscape(new EscapeEntry(ShowFromGame, true, true));
+
+			App.Callbacks.SaveRequest += OnSaveRequest;
+		}
+
+		protected override void UnBind()
+		{
+			base.UnBind();
+
+			App.Callbacks.SaveRequest -= OnSaveRequest;
 		}
 
 		void Show(bool cacheSpeed = true)
@@ -19,7 +29,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
 			View.Reset();
+
+			View.CanSave = App.Callbacks.LastTravelRequest.State == TravelRequest.States.Complete;
 			View.BackClick = OnBackClick;
+			View.SaveClick = OnSaveClick;
 			View.MainMenuClick = OnMainMenuClick;
 			ShowView(App.OverlayCanvasRoot);
 		}
@@ -51,6 +64,28 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.ShadeRequest(ShadeRequest.UnShade);
 			App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.UnObscure);
 			CloseToGame();
+		}
+
+		void OnSaveClick()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			App.Callbacks.PopEscape();
+			View.Interactable = false;
+			waitingForSave = true;
+			App.Callbacks.SaveRequest(SaveRequest.Save());
+		}
+
+		void OnSaveRequest(SaveRequest request)
+		{
+			if (!waitingForSave) return;
+
+			switch(request.State)
+			{
+				case SaveRequest.States.Complete:
+					waitingForSave = false;
+					OnBackClick();
+					break;
+			}
 		}
 
 		void OnMainMenuClick()

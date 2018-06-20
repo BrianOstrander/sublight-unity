@@ -4,13 +4,18 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public class SystemModel : Model
 	{
-		public virtual SystemTypes SystemType { get { return SystemTypes.Unknown; } }
-
 		[JsonProperty] int seed;
 		[JsonProperty] bool visited;
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] string name;
 		[JsonProperty] float rations;
+
+		/// <summary>
+		/// Gets the type of the system.
+		/// </summary>
+		/// <value>The type of the save.</value>
+		[JsonProperty]
+		public SystemTypes SystemType { get; protected set; }
 
 		#region Assigned
 		[JsonIgnore]

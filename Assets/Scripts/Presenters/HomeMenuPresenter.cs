@@ -45,15 +45,12 @@ namespace LunraGames.SpaceFarm.Presenters
 				case TransitionStates.Shown:
 					CloseView(true);
 					OnNewGame();
-					//var payload = new GamePayload();
-					//App.SM.RequestState(payload);
 					break;
 			}
 		}
 
 		void OnLoadGameClick(SaveModel model)
 		{
-			Debug.Log("Loading " + model.Meta);
 			App.SaveLoadService.Load<GameSaveModel>(model, OnLoadedGame);
 		}
 
@@ -75,7 +72,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			var game = gameSave.Game.Value;
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
-			game.FocusedSector.Value = new UniversePosition(Vector3.negativeInfinity, Vector3.negativeInfinity);
+			game.FocusedSector.Value = UniversePosition.Zero;
 			game.DestructionSpeed.Value = 0.01f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
@@ -93,17 +90,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			var rations = 0.3f;
 			var speed = 0.003f;
 			var rationConsumption = 0.02f;
-			//var travelRadiusChange = new TravelRadiusChange(startPosition, speed, rationConsumption, rations);
-
-			//var travelRequest = new TravelRequest(
-			//	TravelRequest.States.Complete,
-			//	startSystem.Position.Value,
-			//	startSystem,
-			//	startSystem,
-			//	DayTime.Zero,
-			//	DayTime.Zero,
-			//	1f
-			//);
 
 			var ship = new ShipModel();
 			ship.CurrentSystem.Value = startSystem.Position;

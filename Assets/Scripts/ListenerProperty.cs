@@ -22,10 +22,12 @@ namespace LunraGames.SpaceFarm
 			}
 		}
 
-		public ListenerProperty(Action<T> set, Func<T> get)
+		public ListenerProperty(Action<T> set, Func<T> get, params Action<T>[] listeners)
 		{
 			this.set = set;
 			this.get = get;
+
+			foreach (var listener in listeners) Changed += listener;
 		}
 
 		/// <summary>
