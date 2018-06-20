@@ -53,8 +53,14 @@ namespace LunraGames.SpaceFarm
 		UniverseService universeService;
 		public static UniverseService UniverseService { get { return instance.universeService; } }
 
+		ISaveLoadService saveLoadService;
+		public static ISaveLoadService SaveLoadService { get { return instance.saveLoadService; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
+
+		BuildPreferences buildPreferences;
+		public static BuildPreferences BuildPreferences { get { return instance.buildPreferences; } }
 
 		// TODO: Should this be here?
 		Transform canvasRoot;
@@ -68,6 +74,7 @@ namespace LunraGames.SpaceFarm
 			Main main, 
 			DefaultShaderGlobals shaderGlobals, 
 			List<GameObject> defaultViews, 
+			BuildPreferences buildPreferences,
 			GameObject audioRoot, 
 			Transform canvasRoot,
 			Transform gameCanvasRoot,
@@ -78,6 +85,7 @@ namespace LunraGames.SpaceFarm
 			this.main = main;
 			this.defaultViews = defaultViews;
 			this.shaderGlobals = shaderGlobals;
+			this.buildPreferences = buildPreferences;
 			this.canvasRoot = canvasRoot;
 			this.gameCanvasRoot = gameCanvasRoot;
 			this.overlayCanvasRoot = overlayCanvasRoot;
@@ -101,6 +109,7 @@ namespace LunraGames.SpaceFarm
 				logService = new EditorLogService();
 				inputService = new EditorInputService();
 				backendService = new EditorBackendService();
+				saveLoadService = new EditorSaveLoadService();
 #endif
 			}
 			else if (Application.platform == RuntimePlatform.WebGLPlayer)
@@ -108,6 +117,7 @@ namespace LunraGames.SpaceFarm
 				logService = new WebGlLogService();
 				inputService = new WebGlInputService();
 				backendService = new WebGlBackendService();
+				saveLoadService = new WebGlSaveLoadService();
 			}
 			else
 			{

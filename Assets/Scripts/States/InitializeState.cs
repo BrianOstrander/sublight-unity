@@ -24,6 +24,7 @@ namespace LunraGames.SpaceFarm
 		protected override void Begin()
 		{
 			Payload.ShaderGlobals.Apply();
+			App.SM.PushBlocking(InitializeSaveLoadService);
 			App.SM.PushBlocking(InitializeViews);
 			App.SM.PushBlocking(InitializeModels);
 			App.SM.PushBlocking(InitializePresenters);
@@ -36,8 +37,21 @@ namespace LunraGames.SpaceFarm
 			App.SM.RequestState(Payload.homePayload);
 		}
 
+		void InitializeSaveLoadService(Action done)
+		{
+			App.SaveLoadService.Initialize(
+				status =>
+				{
+					if (status == RequestStatus.Success) App.Log("SaveLoadService Initialized", LogTypes.Initialization);
+					else App.Restart("Initializing SaveLoadService failed with status " + status);
+
+					done();
+				}
+			);
+		}
+
 		#region Mediators
-		void InitializeViews(Action callback)
+		void InitializeViews(Action done)
 		{
 			App.V.Initialize(
 				Payload.DefaultViews,
@@ -47,12 +61,12 @@ namespace LunraGames.SpaceFarm
 					if (status == RequestStatus.Success) App.Log("ViewMediator Initialized", LogTypes.Initialization);
 					else App.Restart("Initializing ViewMediator failed with status " + status);
 
-					callback();
+					done();
 				}
 			);
 		}
 
-		void InitializeModels(Action callback)
+		void InitializeModels(Action done)
 		{
 			App.M.Initialize(
 				status =>
@@ -60,12 +74,12 @@ namespace LunraGames.SpaceFarm
 					if (status == RequestStatus.Success) App.Log("ModelMediator Initialized", LogTypes.Initialization);
 					else App.Restart("Initializing ModelMediator failed with status " + status);
 
-					callback();
+					done();
 				}
 			);
 		}
 
-		void InitializePresenters(Action callback)
+		void InitializePresenters(Action done)
 		{
 			App.P.Initialize(
 				status =>
@@ -73,7 +87,7 @@ namespace LunraGames.SpaceFarm
 					if (status == RequestStatus.Success) App.Log("PresenterMediator Initialized", LogTypes.Initialization);
 					else App.Restart("Initializing PresenterMediator failed with status " + status);
 
-					callback();
+					done();
 				}
 			);
 		}

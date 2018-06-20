@@ -1,5 +1,4 @@
 using UnityEngine;
-using LunraGames.SpaceFarm;
 
 namespace LunraGames.SpaceFarm 
 {
@@ -26,6 +25,8 @@ namespace LunraGames.SpaceFarm
 		DefaultViews defaultViews;
 		[SerializeField]
 		DefaultShaderGlobals defaultShaderGlobals;
+		[SerializeField]
+		BuildPreferences buildPreferences;
 
 		App app;
 		
@@ -35,6 +36,7 @@ namespace LunraGames.SpaceFarm
 				this, 
 				defaultShaderGlobals, 
 				defaultViews.Prefabs, 
+				buildPreferences,
 				audioRoot, 
 				canvasRoot,
 				gameCanvasRoot,

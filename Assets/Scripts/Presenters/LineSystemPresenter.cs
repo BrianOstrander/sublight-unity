@@ -51,14 +51,14 @@ namespace LunraGames.SpaceFarm.Presenters
 			var destination = nextHighlight.System;
 			var travelRadius = App.Callbacks.LastTravelRadiusChange.TravelRadius;
 
-			var distance = UniversePosition.Distance(origin.Position, destination.Position);
+			var distance = UniversePosition.Distance(origin, destination.Position);
 
 			var safeEnd = Mathf.Min(distance, travelRadius.SafeRadius);
 			var dangerEnd = Mathf.Min(distance, travelRadius.DangerRadius);
 			var maxEnd = Mathf.Min(distance, travelRadius.MaximumRadius);
 			var remainderEnd = distance;
 
-			var unityOrigin = UniversePosition.ToUnity(origin.Position);
+			var unityOrigin = UniversePosition.ToUnity(origin);
 
 			var normal = (UniversePosition.ToUnity(destination.Position) - unityOrigin).normalized;
 
@@ -69,19 +69,19 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			if (0f < safeEnd)
 			{
-				safeSegment = new LineSegment(origin.Position, origin.Position + new UniversePosition(normal * safeEnd));
+				safeSegment = new LineSegment(origin, origin + new UniversePosition(normal * safeEnd));
 			}
 			if (safeEnd < dangerEnd)
 			{
-				dangerSegment = new LineSegment(origin.Position + new UniversePosition(normal * safeEnd), origin.Position + new UniversePosition(normal * dangerEnd));
+				dangerSegment = new LineSegment(origin + new UniversePosition(normal * safeEnd), origin + new UniversePosition(normal * dangerEnd));
 			}
 			if (dangerEnd < maxEnd)
 			{
-				maxSegment = new LineSegment(origin.Position + new UniversePosition(normal * dangerEnd), origin.Position + new UniversePosition(normal * maxEnd));
+				maxSegment = new LineSegment(origin + new UniversePosition(normal * dangerEnd), origin + new UniversePosition(normal * maxEnd));
 			}
 			if (maxEnd < remainderEnd)
 			{
-				remainderSegment= new LineSegment(origin.Position + new UniversePosition(normal * maxEnd), origin.Position + new UniversePosition(normal * remainderEnd));
+				remainderSegment= new LineSegment(origin + new UniversePosition(normal * maxEnd), origin + new UniversePosition(normal * remainderEnd));
 			}
 
 			View.SetSegments(safeSegment, dangerSegment, maxSegment, remainderSegment);

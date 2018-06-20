@@ -351,6 +351,7 @@ MonoBehaviour:
   defaultViews: {fileID: 11400000, guid: d3f15df6a34654b06854f33884ad5cef, type: 2}
   defaultShaderGlobals: {fileID: 11400000, guid: b6db82ba0c7724a9498676bb914c1111,
     type: 2}
+  buildPreferences: {fileID: 11400000, guid: c018ffcd3da584560abc8a2e6c674ce4, type: 2}
 --- !u!4 &2051072388
 Transform:
   m_ObjectHideFlags: 0

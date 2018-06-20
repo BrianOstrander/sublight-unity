@@ -1,12 +1,13 @@
 using System;
 
+using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Presenters;
 
 namespace LunraGames.SpaceFarm
 {
 	public class HomePayload : IStatePayload 
 	{
-		
+		public SaveModel[] Saves = new SaveModel[0];
 	}
 
 	public class HomeState : State<HomePayload>
@@ -34,6 +35,7 @@ namespace LunraGames.SpaceFarm
 		{
 			App.SM.PushBlocking(InitializeCamera);
 			App.SM.PushBlocking(InitializeInput);
+			App.SM.PushBlocking(InitializeLoadSaves);
 			App.SM.PushBlocking(InitializeMenu);
 			//new CursorPresenter().Show();
 		}
@@ -49,9 +51,24 @@ namespace LunraGames.SpaceFarm
 			done();
 		}
 
+		void InitializeLoadSaves(Action done)
+		{
+			App.SaveLoadService.List<GameSaveModel>(result => OnInitializeLoadSaves(result, done));
+		}
+
+		void OnInitializeLoadSaves(SaveLoadArrayRequest<SaveModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				// TODO: Error logic.
+			}
+			else Payload.Saves = result.Models;
+			done();
+		}
+
 		void InitializeMenu(Action done)
 		{
-			new HomeMenuPresenter().Show(done);
+			new HomeMenuPresenter(Payload.Saves).Show(done);
 		}
 		#endregion
 

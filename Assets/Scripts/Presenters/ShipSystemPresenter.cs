@@ -58,13 +58,13 @@ namespace LunraGames.SpaceFarm.Presenters
 			{
 				// We're traveling!
 				var progress = lastTravel.GetProgress(delta.Current);
-				var distance = UniversePosition.Distance(lastTravel.Destination.Position.Value, lastTravel.Origin.Position.Value);
+				var distance = UniversePosition.Distance(lastTravel.Destination, lastTravel.Origin);
 
-				var normal = (lastTravel.Destination.Position.Value - lastTravel.Origin.Position.Value).Normalized;
+				var normal = (lastTravel.Destination - lastTravel.Origin).Normalized;
 
 				var doneTraveling = Mathf.Approximately(1f, progress);
 
-				var newPos = doneTraveling ? lastTravel.Destination.Position.Value : lastTravel.Origin.Position.Value + new UniversePosition(progress * distance * normal);
+				var newPos = doneTraveling ? lastTravel.Destination : lastTravel.Origin + new UniversePosition(progress * distance * normal);
 
 				var travel = new TravelRequest(
 					doneTraveling ? TravelRequest.States.Complete : TravelRequest.States.Active,
@@ -87,13 +87,13 @@ namespace LunraGames.SpaceFarm.Presenters
 					// TODO: Validation? Eh...
 					ship.LastSystem.Value = travelRequest.Origin;
 					ship.NextSystem.Value = travelRequest.Destination;
-					ship.CurrentSystem.Value = null;
-					ship.Position.Value = travelRequest.Origin.Position;
+					ship.CurrentSystem.Value = UniversePosition.Zero;
+					ship.Position.Value = travelRequest.Origin;
 					App.Callbacks.TravelRequest(travelRequest.Duplicate(TravelRequest.States.Active));
 					break;
 				case TravelRequest.States.Complete:
-					ship.LastSystem.Value = null;
-					ship.NextSystem.Value = null;
+					ship.LastSystem.Value = UniversePosition.Zero;
+					ship.NextSystem.Value = UniversePosition.Zero;
 					ship.CurrentSystem.Value = travelRequest.Destination;
 					ship.Position.Value = travelRequest.Position;
 					App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
