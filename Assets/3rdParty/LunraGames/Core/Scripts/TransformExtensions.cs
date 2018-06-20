@@ -7,9 +7,17 @@ namespace LunraGames
 {
 	public static class TransformExtensions
 	{
-		public static void ClearChildren(this Transform transform)
+		public static void ClearChildren(this Transform transform, Func<Transform, bool> condition = null)
 		{
-			for (var i = 0; i < transform.childCount; i++) Object.Destroy(transform.GetChild(i).gameObject);
+			transform.ClearChildren<Transform>(condition);
+		}
+
+		public static void ClearChildren<T>(this Transform transform, Func<T, bool> condition = null) where T : Component
+		{
+			foreach (var child in transform.GetChildren(condition))
+			{
+				Object.Destroy(child.gameObject);
+			}
 		}
 
 		public static void SetChildrenActive(this Transform transform, bool active) {

@@ -11,6 +11,7 @@ namespace LunraGames.SpaceFarm
 {
 	public class DesktopSaveLoadService : SaveLoadService
 	{
+		const string Extension = ".json";
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
 
 		protected override Dictionary<SaveTypes, int> MinimumSupportedSaves
@@ -55,7 +56,7 @@ namespace LunraGames.SpaceFarm
 
 		protected override string GetUniquePath(SaveTypes saveType)
 		{
-			var path = Path.Combine(GetPath(saveType), Guid.NewGuid().ToString());
+			var path = Path.Combine(GetPath(saveType), Guid.NewGuid().ToString() + Extension);
 
 			// TODO: Check that path doesn't exist.
 
@@ -74,5 +75,28 @@ namespace LunraGames.SpaceFarm
 			File.WriteAllText(model.Path, Serialization.Serialize(model));
 			done(SaveLoadRequest<M>.Success(model, model));
 		}
+
+		protected override void OnList<M>(Action<SaveLoadArrayRequest<SaveModel>> done)
+		{
+			var path = GetPath(ToEnum(typeof(M)));
+			var results = new List<SaveModel>();
+			foreach (var file in Directory.GetFiles(path))
+			{
+				try
+				{
+					if (Path.GetExtension(file) != Extension) continue;
+					var result = Serialization.DeserializeJson<SaveModel>(File.ReadAllText(file));
+					if (result == null) continue;
+					results.Add(result);
+				}
+				catch (Exception exception)
+				{
+					Debug.LogException(exception);
+				}
+			}
+			var array = results.ToArray();
+			done(SaveLoadArrayRequest<SaveModel>.Success(array, array));
+		}
+
 	}
 }

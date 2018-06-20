@@ -129,7 +129,6 @@ namespace LunraGames.SpaceFarm
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
 
-			system.Sector.Value = sector;
 			system.Seed.Value = seed;
 			system.Visited.Value = false;
 			system.Position.Value = position;

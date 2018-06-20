@@ -46,10 +46,50 @@ namespace LunraGames.SpaceFarm
 			Error = error;
 		}
 	}
+
+	public struct SaveLoadArrayRequest<M> where M : SaveModel
+	{
+		public RequestStatus Status { get; private set; }
+		public SaveModel[] Models { get; private set; }
+		public M[] TypedModels { get; private set; }
+		public string Error { get; private set; }
+
+		public static SaveLoadArrayRequest<M> Success(SaveModel[] models, M[] typedModels)
+		{
+			return new SaveLoadArrayRequest<M>(
+				RequestStatus.Success,
+				models,
+				typedModels
+			);
+		}
+
+		public static SaveLoadArrayRequest<M> Failure(SaveModel[] models, M[] typedModels, string error)
+		{
+			return new SaveLoadArrayRequest<M>(
+				RequestStatus.Failure,
+				models,
+				typedModels,
+				error
+			);
+		}
+
+		SaveLoadArrayRequest(
+			RequestStatus status,
+			SaveModel[] models,
+			M[] typedModels,
+			string error = null
+		)
+		{
+			Status = status;
+			Models = models;
+			TypedModels = typedModels;
+			Error = error;
+		}
+	}
 	
 	public abstract class SaveLoadService : ISaveLoadService
 	{
-		Type ToType(SaveTypes saveType)
+		protected Type ToType(SaveTypes saveType)
 		{
 			switch(saveType)
 			{
@@ -58,7 +98,7 @@ namespace LunraGames.SpaceFarm
 			}
 		}
 
-		SaveTypes ToEnum(Type type)
+		protected SaveTypes ToEnum(Type type)
 		{
 			if (type == typeof(GameSaveModel)) return SaveTypes.Game;
 
@@ -77,12 +117,12 @@ namespace LunraGames.SpaceFarm
 			return MinimumSupportedSaves[type] <= version;
 		}
 
-		public M Create<M>(string name = null) where M : SaveModel, new()
+		public M Create<M>(string meta = null) where M : SaveModel, new()
 		{
 			var result = new M();
 			result.SupportedVersion.Value = true;
 			result.Version.Value = App.BuildPreferences.Info.Version;
-			result.Meta.Value = name;
+			result.Meta.Value = meta;
 			result.Path.Value = GetUniquePath(result.SaveType);
 			result.Created.Value = DateTime.MinValue;
 			result.Modified.Value = DateTime.MinValue;
@@ -185,6 +225,24 @@ namespace LunraGames.SpaceFarm
 
 		protected abstract void OnSave<M>(M model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 
+		public void List<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel
+		{
+			if (done == null) throw new ArgumentNullException("done");
+
+			try { OnList<M>(done); }
+			catch (Exception exception)
+			{
+				Debug.LogException(exception);
+				done(SaveLoadArrayRequest<SaveModel>.Failure(
+					null,
+					null,
+					exception.Message
+				));
+			}
+		}
+
+		protected abstract void OnList<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel;
+
 		void OnUnhandledError<M>(SaveLoadRequest<M> result) where M : SaveModel
 		{
 			Debug.LogError("Unhandled error: " + result.Error);
@@ -194,8 +252,9 @@ namespace LunraGames.SpaceFarm
 	public interface ISaveLoadService
 	{
 		void Initialize(Action<RequestStatus> done);
-		M Create<M>(string name = null) where M : SaveModel, new();
+		M Create<M>(string meta = null) where M : SaveModel, new();
 		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null) where M : SaveModel;
 		void Load<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
+		void List<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel;
 	}
 }

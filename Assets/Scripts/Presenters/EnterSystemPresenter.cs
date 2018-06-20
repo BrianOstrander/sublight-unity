@@ -1,4 +1,6 @@
-﻿using LunraGames.SpaceFarm.Views;
+﻿using UnityEngine;
+
+using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
@@ -47,9 +49,11 @@ namespace LunraGames.SpaceFarm.Presenters
 			switch(travelRequest.State)
 			{
 				case TravelRequest.States.Complete:
-					if (!travelRequest.Destination.Visited)
+					var travelDestination = model.Universe.Value.GetSystem(travelRequest.Destination);
+					if (travelDestination == null) Debug.LogError("Travel destination null, may cause strange side effects.");
+					else if (!travelDestination.Visited)
 					{
-						destination = travelRequest.Destination;
+						destination = travelDestination;
 						Show();
 					}
 					break;

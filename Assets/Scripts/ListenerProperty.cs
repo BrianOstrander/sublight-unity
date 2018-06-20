@@ -1,29 +1,31 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
-	public class ModelProperty<T>
+	public class ListenerProperty<T>
 	{
-		T currentValue;
+		Action<T> set;
+		Func<T> get;
 
-		[NonSerialized]
-		public Action<T> Changed = value => {};
+		public Action<T> Changed = value => { };
 
-		public T Value 
-		{ 
-			get { return currentValue; }
-			set 
+		public T Value
+		{
+			get { return get(); }
+			set
 			{
-				if (EqualityComparer<T>.Default.Equals(currentValue, value)) return;
-				currentValue = value;
+				if (EqualityComparer<T>.Default.Equals(get(), value)) return;
+				set(value);
 				Changed(value);
 			}
 		}
 
-		public ModelProperty(T value = default(T))
+		public ListenerProperty(Action<T> set, Func<T> get)
 		{
-			currentValue = value;
+			this.set = set;
+			this.get = get;
 		}
 
 		/// <summary>
@@ -34,7 +36,7 @@ namespace LunraGames.SpaceFarm
 		/// </remarks>
 		/// <returns>The implicit.</returns>
 		/// <param name="p">P.</param>
-		public static implicit operator T(ModelProperty<T> p)
+		public static implicit operator T(ListenerProperty<T> p)
 		{
 			return p.Value;
 		}

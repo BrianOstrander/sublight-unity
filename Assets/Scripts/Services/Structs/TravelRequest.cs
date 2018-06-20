@@ -23,8 +23,8 @@ namespace LunraGames.SpaceFarm
 		/// </remarks>
 		public States State;
 		public UniversePosition Position;
-		public SystemModel Origin;
-		public SystemModel Destination;
+		public UniversePosition Origin;
+		public UniversePosition Destination;
 		public DayTime StartTime;
 		public DayTime EndTime;
 		public DayTime Duration;
@@ -40,8 +40,8 @@ namespace LunraGames.SpaceFarm
 		public TravelRequest(
 			States state,
 			UniversePosition position,
-			SystemModel origin,
-			SystemModel destination,
+			UniversePosition origin,
+			UniversePosition destination,
 			DayTime startTime,
 			DayTime endTime,
 			float progress)

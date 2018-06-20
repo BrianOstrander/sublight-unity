@@ -40,7 +40,6 @@ namespace LunraGames.SpaceFarm
 		public SectorModel CreateSector(UniverseModel universe, UniversePosition position)
 		{
 			var sector = new SectorModel();
-			sector.Universe.Value = universe;
 			sector.Position.Value = position;
 			sector.Visited.Value = false;
 			sector.Systems.Value = new SystemModel[0];

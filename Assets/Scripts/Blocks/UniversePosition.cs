@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-using LunraGames;
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
@@ -80,7 +80,12 @@ namespace LunraGames.SpaceFarm
 		public readonly Vector3 Sector;
 		public readonly Vector3 System;
 
+		[JsonIgnore]
 		public Vector3 Normalized { get { return ToUnity(this).normalized; } }
+		[JsonIgnore]
+		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, System); } }
+		[JsonIgnore]
+		public UniversePosition SystemZero { get { return new UniversePosition(Sector, Vector3.zero); } }
 
 		public bool Equals(UniversePosition other)
 		{

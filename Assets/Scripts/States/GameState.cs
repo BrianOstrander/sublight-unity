@@ -3,14 +3,15 @@ using System.Linq;
 
 using UnityEngine;
 
+using LunraGames.NumberDemon;
 using LunraGames.SpaceFarm.Presenters;
 using LunraGames.SpaceFarm.Models;
-using LunraGames.NumberDemon;
 
 namespace LunraGames.SpaceFarm
 {
 	public class GamePayload : IStatePayload
 	{
+		public GameSaveModel GameSave;
 		public GameModel Game;
 	}
 
@@ -52,7 +53,10 @@ namespace LunraGames.SpaceFarm
 			//
 			// --- Define Models --- 
 			//
-			Payload.Game = new GameModel();
+
+			Payload.GameSave = App.SaveLoadService.Create<GameSaveModel>();
+			Payload.GameSave.Game.Value = new GameModel();
+			Payload.Game = Payload.GameSave.Game;
 			var game = Payload.Game;
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
@@ -79,16 +83,16 @@ namespace LunraGames.SpaceFarm
 
 			var travelRequest = new TravelRequest(
 				TravelRequest.States.Complete,
-				startSystem.Position.Value,
-				startSystem,
-				startSystem,
+				startSystem.Position,
+				startSystem.Position,
+				startSystem.Position,
 				DayTime.Zero,
 				DayTime.Zero,
 				1f
 			);
 
 			var ship = new ShipModel();
-			ship.CurrentSystem.Value = startSystem;
+			ship.CurrentSystem.Value = startSystem.Position;
 			ship.Position.Value = startPosition;
 			ship.Speed.Value = travelRadiusChange.Speed;
 			ship.RationConsumption.Value = travelRadiusChange.RationConsumption;
@@ -128,6 +132,11 @@ namespace LunraGames.SpaceFarm
 
 			done();
 		}
+
+		//void InitializeSave(Action done)
+		//{
+			
+		//}
 		#endregion
 
 		#region Idle

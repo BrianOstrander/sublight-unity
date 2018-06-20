@@ -1,4 +1,6 @@
-﻿namespace LunraGames.SpaceFarm.Models
+﻿using Newtonsoft.Json;
+
+namespace LunraGames.SpaceFarm.Models
 {
 	public interface IModelDuplicatable<M> : IModel
 		where M : IModel
@@ -10,6 +12,7 @@
 	public abstract class ModelDuplicatable<M> : Model, IModelDuplicatable<M>
 		where M : IModelDuplicatable<M>, new()
 	{
+		[JsonIgnore]
 		public virtual M Duplicate
 		{
 			get
@@ -20,6 +23,7 @@
 			}
 		}
 
+		[JsonIgnore]
 		public IModel RawDuplicate { get { return Duplicate; } }
 	}
 }
