@@ -23,13 +23,15 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 		}
 
-		public void Show(Action done = null)
+		public void Show()
 		{
 			if (View.Visible) return;
+
 			View.Reset();
+
 			View.UniversePosition = model.Ship.Value.Position;
 			View.TravelRadius = model.Ship.Value.TravelRadius;
-			if (done != null) View.Shown += done;
+
 			ShowView(instant: true);
 		}
 

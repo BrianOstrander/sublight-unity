@@ -100,6 +100,16 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			game.Ship.Value = ship;
 
+			game.TravelRequest.Value = new TravelRequest(
+				TravelRequest.States.Complete,
+				startSystem.Position,
+				startSystem.Position,
+				startSystem.Position,
+				DayTime.Zero,
+				DayTime.Zero,
+				1f
+			);
+
 			App.SaveLoadService.Save(gameSave, OnSaveGame);
 		}
 

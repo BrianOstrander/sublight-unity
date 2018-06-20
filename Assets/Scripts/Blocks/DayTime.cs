@@ -1,7 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+
+using Newtonsoft.Json;
+
+using UnityEngine;
 
 namespace LunraGames.SpaceFarm
 {
+	[Serializable]
 	public struct DayTime
 	{
 		public const float DaysInYear = 365;
@@ -11,33 +16,38 @@ namespace LunraGames.SpaceFarm
 
 		public static DayTime FromDayNormal(float dayNormal) { return new DayTime(dayNormal * TimeInDay); }
 
-		public readonly int Day;
-		public readonly float Time;
+		[JsonProperty] public readonly int Day;
+		[JsonProperty] public readonly float Time;
 
 		/// <summary>
 		/// Gets the total time.
 		/// </summary>
 		/// <value>The total time.</value>
+		[JsonIgnore]
 		public float TotalTime { get { return (Day * TimeInDay) + Time; } }
 		/// <summary>
 		/// Gets the total time represented by this DayTime where a Day is equal to 1.0
 		/// </summary>
 		/// <value>The day normal.</value>
+		[JsonIgnore]
 		public float DayNormal { get { return TotalTime / TimeInDay; } }
 		/// <summary>
 		/// Gets the years.
 		/// </summary>
 		/// <value>The years.</value>
+		[JsonIgnore]
 		public float Years { get { return Day / DaysInYear; } }
 		/// <summary>
 		/// Gets the DayTime value floored to the nearest day.
 		/// </summary>
 		/// <value>The day floor.</value>
+		[JsonIgnore]
 		public int DayFloor { get { return Day; } }
 		/// <summary>
 		/// Gets the DayTime value ceiling to the nearest day.
 		/// </summary>
 		/// <value>The day ceiling.</value>
+		[JsonIgnore]
 		public int DayCeiling { get { return Mathf.Approximately(0f, Time) ? Day : Day + 1; } }
 
 		public DayTime(float time)

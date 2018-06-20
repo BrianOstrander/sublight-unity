@@ -30,7 +30,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 		}
 
-		public void Show(Action done = null)
+		public void Show()
 		{
 			if (View.Visible) return;
 
@@ -41,7 +41,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Click = OnClick;
 			OnTravelRadiusChange(App.Callbacks.LastTravelRadiusChange);
 			OnTravelColor();
-			if (done != null) View.Shown += done;
 
 			ShowView(instant: true);
 		}

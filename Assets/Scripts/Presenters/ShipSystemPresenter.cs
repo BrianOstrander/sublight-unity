@@ -37,13 +37,15 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.Ship.Value.RationConsumption.Changed -= OnRationConsumption;
 		}
 
-		public void Show(Action done = null)
+		public void Show()
 		{
 			if (View.Visible) return;
+
 			View.Reset();
+
 			View.UniversePosition = model.Ship.Value.Position;
 			OnUpdateTravelRadius();
-			if (done != null) View.Shown += done;
+
 			ShowView(instant: true);
 		}
 

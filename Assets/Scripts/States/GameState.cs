@@ -29,6 +29,7 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeCamera);
 			App.SM.PushBlocking(InitializeInput);
+			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(InitializeGame);
 		}
 
@@ -48,6 +49,13 @@ namespace LunraGames.SpaceFarm
 			done();
 		}
 
+		void InitializeCallbacks(Action done)
+		{
+			App.Callbacks.SaveRequest += OnSaveRequest;
+			App.Callbacks.TravelRequest += OnTravelRequest;
+			done();
+		}
+
 		void InitializeGame(Action done)
 		{
 			//
@@ -61,24 +69,13 @@ namespace LunraGames.SpaceFarm
 			game.FocusedSector.Changed += OnFocusedSector;
 
 			var ship = game.Ship.Value;
-			var startSystem = ship.CurrentSystem.Value;
 
-			var travelRadiusChange = new TravelRadiusChange(startSystem, ship.Speed, ship.RationConsumption, ship.Rations);
+			var travelRadiusChange = new TravelRadiusChange(ship.Position, ship.Speed, ship.RationConsumption, ship.Rations);
 
-			var travelRequest = new TravelRequest(
-				TravelRequest.States.Complete,
-				startSystem,
-				startSystem,
-				startSystem,
-				DayTime.Zero,
-				DayTime.Zero,
-				1f
-			);
-
-			App.Callbacks.DayTimeDelta(new DayTimeDelta(DayTime.Zero, DayTime.Zero));
+			App.Callbacks.DayTimeDelta(new DayTimeDelta(game.DayTime, game.DayTime));
 			App.Callbacks.SystemHighlight(SystemHighlight.None);
 			App.Callbacks.TravelRadiusChange(travelRadiusChange);
-			App.Callbacks.TravelRequest(travelRequest);
+			App.Callbacks.TravelRequest(game.TravelRequest);
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
 			//
@@ -106,8 +103,6 @@ namespace LunraGames.SpaceFarm
 		#region Idle
 		protected override void Idle()
 		{
-			App.Callbacks.SaveRequest += OnSaveRequest;
-
 			var focusedSector = Payload.Game.Ship.Value.Position.Value.SystemZero;
 			var wasFocused = Payload.Game.FocusedSector.Value == focusedSector;
 			Payload.Game.FocusedSector.Value = focusedSector;
@@ -128,6 +123,7 @@ namespace LunraGames.SpaceFarm
 			App.Input.SetEnabled(false);
 
 			App.Callbacks.SaveRequest -= OnSaveRequest;
+			App.Callbacks.TravelRequest -= OnTravelRequest;
 			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
 			App.Callbacks.ClearEscapables();
 
@@ -157,6 +153,11 @@ namespace LunraGames.SpaceFarm
 				var systemPresenter = new SystemPresenter(Payload.Game, system);
 				systemPresenter.Show();
 			}
+		}
+
+		void OnTravelRequest(TravelRequest request)
+		{
+			Payload.Game.TravelRequest.Value = request;
 		}
 
 		void OnSaveRequest(SaveRequest request)

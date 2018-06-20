@@ -11,8 +11,6 @@ namespace LunraGames.SpaceFarm.Presenters
 	{
 		GameModel model;
 
-		DayTime lastDayTime;
-
 		public SpeedPresenter(GameModel model)
 		{
 			this.model = model;
@@ -31,12 +29,15 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
-		public void Show(Action done = null)
+		public void Show()
 		{
 			if (View.Visible) return;
+
 			View.Reset();
+
 			View.Click = OnClick;
-			if (done != null) View.Shown += done;
+			View.Current = model.DayTime;
+
 			ShowView(App.GameCanvasRoot, true);
 		}
 
@@ -52,8 +53,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnDayTime(DayTime current)
 		{
 			View.Current = current;
-			App.Callbacks.DayTimeDelta(new DayTimeDelta(current, lastDayTime));
-			lastDayTime = current;
+			App.Callbacks.DayTimeDelta(new DayTimeDelta(current, App.Callbacks.LastDayTimeDelta.Current));
 		}
 
 		void OnSpeedChange(SpeedRequest speedChange)

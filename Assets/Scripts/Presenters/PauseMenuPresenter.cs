@@ -30,7 +30,6 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			View.CanSave = App.Callbacks.LastTravelRequest.State == TravelRequest.States.Complete;
 			View.BackClick = OnBackClick;
 			View.SaveClick = OnSaveClick;
 			View.MainMenuClick = OnMainMenuClick;
