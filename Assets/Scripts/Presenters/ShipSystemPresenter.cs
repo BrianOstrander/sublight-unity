@@ -91,6 +91,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					ship.NextSystem.Value = travelRequest.Destination;
 					ship.CurrentSystem.Value = UniversePosition.Zero;
 					ship.Position.Value = travelRequest.Origin;
+					if (Mathf.Approximately(App.Callbacks.LastSpeedRequest.Speed, 0f)) App.Callbacks.SpeedRequest(SpeedRequest.PlayRequest);
 					App.Callbacks.TravelRequest(travelRequest.Duplicate(TravelRequest.States.Active));
 					break;
 				case TravelRequest.States.Complete:

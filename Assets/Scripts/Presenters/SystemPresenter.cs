@@ -1,6 +1,4 @@
-﻿using System;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
