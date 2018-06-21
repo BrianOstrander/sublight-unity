@@ -51,7 +51,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224923329376796670}
   - component: {fileID: 222665807297473884}
-  - component: {fileID: 114918182402317164}
+  - component: {fileID: 114605652740700082}
   m_Layer: 5
   m_Name: TravelTimeLabel
   m_TagString: Untagged
@@ -68,7 +68,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224869504452099226}
   - component: {fileID: 222748509365548572}
-  - component: {fileID: 114331044769474870}
+  - component: {fileID: 114443541023177382}
   m_Layer: 5
   m_Name: NameLabel
   m_TagString: Untagged
@@ -102,7 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224122868516530716}
   - component: {fileID: 222182253879877782}
-  - component: {fileID: 114552891173486750}
+  - component: {fileID: 114709741336573242}
   m_Layer: 5
   m_Name: TravelTimeText
   m_TagString: Untagged
@@ -137,7 +137,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114331044769474870
+--- !u!114 &114443541023177382
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1695525464147308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1453722849, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -158,8 +158,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: NameLabel
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_pageToDisplay: 1
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
-    textComponent: {fileID: 114331044769474870}
+    textComponent: {fileID: 114443541023177382}
     characterCount: 9
     spriteCount: 0
     spaceCount: 0
@@ -250,15 +250,15 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114552891173486750
+--- !u!114 &114605652740700082
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1993431610153938}
+  m_GameObject: {fileID: 1651400695925828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1453722849, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -269,10 +269,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Travel Time
+  m_text: 000 Days
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 516
+  m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -336,8 +336,8 @@ MonoBehaviour:
   m_pageToDisplay: 1
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
-    textComponent: {fileID: 114552891173486750}
-    characterCount: 11
+    textComponent: {fileID: 114605652740700082}
+    characterCount: 8
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -363,15 +363,15 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114918182402317164
+--- !u!114 &114709741336573242
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1651400695925828}
+  m_GameObject: {fileID: 1993431610153938}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1453722849, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -382,10 +382,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 0000 units
+  m_text: 'Travel Time:'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -416,7 +416,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 513
+  m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -449,8 +449,8 @@ MonoBehaviour:
   m_pageToDisplay: 1
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
-    textComponent: {fileID: 114918182402317164}
-    characterCount: 10
+    textComponent: {fileID: 114709741336573242}
+    characterCount: 12
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
@@ -489,8 +489,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animations:
   - {fileID: 11400000, guid: 40bdb7dce45294d61a290d13dedbbb52, type: 2}
-  nameLabel: {fileID: 114331044769474870}
-  travelTimeLabel: {fileID: 114918182402317164}
+  nameLabel: {fileID: 114443541023177382}
+  travelTimeLabel: {fileID: 114605652740700082}
 --- !u!222 &222182253879877782
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -530,8 +530,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -61.600037, y: 50.37}
-  m_SizeDelta: {x: 123.2, y: 27.56}
+  m_AnchoredPosition: {x: -57.799988, y: 50.37}
+  m_SizeDelta: {x: 130.8, y: 27.56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224544347864625780
 RectTransform:
@@ -607,8 +607,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 90.8}
-  m_SizeDelta: {x: 246.4, y: 53.3}
+  m_AnchoredPosition: {x: 0, y: 91.44}
+  m_SizeDelta: {x: 246.4, y: 51.92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224923329376796670
 RectTransform:
@@ -625,6 +625,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 66.05, y: 50.369995}
-  m_SizeDelta: {x: 114.3, y: 27.56}
+  m_AnchoredPosition: {x: 65.88, y: 50.369995}
+  m_SizeDelta: {x: 114.64, y: 27.56}
   m_Pivot: {x: 0.5, y: 0.5}
