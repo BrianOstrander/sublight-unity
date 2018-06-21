@@ -4,10 +4,10 @@ namespace LunraGames.SpaceFarm
 {
 	public struct EscapeEntry
 	{
-		public Action Escape;
-		public bool? IsShaded;
-		public bool? IsObscured;
-		public Func<bool> Enabled;
+		public readonly Action Escape;
+		public readonly bool? IsShaded;
+		public readonly bool? IsObscured;
+		public readonly Func<bool> Enabled;
 
 		public EscapeEntry(
 			Action escape, 

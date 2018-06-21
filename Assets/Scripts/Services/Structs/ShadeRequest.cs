@@ -12,8 +12,8 @@
 		public static ShadeRequest Shade { get { return new ShadeRequest(States.Request, true); } }
 		public static ShadeRequest UnShade { get { return new ShadeRequest(States.Request, false); } }
 
-		public States State;
-		public bool IsShaded;
+		public readonly States State;
+		public readonly bool IsShaded;
 
 		public ShadeRequest(States state, bool isShaded)
 		{

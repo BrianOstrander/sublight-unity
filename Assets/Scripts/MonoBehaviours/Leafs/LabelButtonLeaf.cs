@@ -2,7 +2,7 @@
 
 using TMPro;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SpaceFarm.Views
 {
 	public class LabelButtonLeaf : MonoBehaviour
 	{

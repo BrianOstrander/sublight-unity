@@ -4,12 +4,12 @@ namespace LunraGames.SpaceFarm
 {
 	public struct TravelRadiusChange
 	{
-		public UniversePosition Origin;
-		public float Speed;
-		public float RationConsumption;
-		public float Rations;
-		public DayTime RationDuration;
-		public TravelRadius TravelRadius;
+		public readonly UniversePosition Origin;
+		public readonly float Speed;
+		public readonly float RationConsumption;
+		public readonly float Rations;
+		public readonly DayTime RationDuration;
+		public readonly TravelRadius TravelRadius;
 
 		public TravelRadiusChange(
 			UniversePosition origin, 

@@ -110,17 +110,17 @@ namespace LunraGames.SpaceFarm
 			);
 		}
 
-		public States State;
-		public DialogTypes DialogType;
-		public string Title;
-		public string Message;
-		public string CancelText;
-		public string FailureText;
-		public string SuccessText;
-		public Action Cancel;
-		public Action Failure;
-		public Action Success;
-		public Action<RequestStatus> Done;
+		public readonly States State;
+		public readonly DialogTypes DialogType;
+		public readonly string Title;
+		public readonly string Message;
+		public readonly string CancelText;
+		public readonly string FailureText;
+		public readonly string SuccessText;
+		public readonly Action Cancel;
+		public readonly Action Failure;
+		public readonly Action Success;
+		public readonly Action<RequestStatus> Done;
 
 		DialogRequest(
 			States state,

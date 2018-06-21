@@ -12,9 +12,9 @@ namespace LunraGames.SpaceFarm
 			End
 		}
 
-		public States State { get; private set; }
-		public GameObject[] GameObjects { get; private set; }
-		public string Tooltip { get; private set; }
+		public readonly States State;
+		public readonly GameObject[] GameObjects;
+		public readonly string Tooltip;
 
 		public Highlight(States state, GameObject[] gameObjects = null, string tooltip = null)
 		{

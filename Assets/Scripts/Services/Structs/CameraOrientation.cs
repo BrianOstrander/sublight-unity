@@ -4,9 +4,9 @@ namespace LunraGames.SpaceFarm
 {
 	public struct CameraOrientation
 	{
-		public Vector3 Position { get; private set; }
-		public Quaternion Rotation { get; private set; }
-		public Vector3 Forward { get; private set; }
+		public readonly Vector3 Position;
+		public readonly Quaternion Rotation;
+		public readonly Vector3 Forward;
 
 		public CameraOrientation(Vector3 position, Quaternion rotation)
 		{

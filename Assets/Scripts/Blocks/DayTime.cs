@@ -16,9 +16,28 @@ namespace LunraGames.SpaceFarm
 
 		public static DayTime FromDayNormal(float dayNormal) { return new DayTime(dayNormal * TimeInDay); }
 
+		/// <summary>
+		/// The Day component of this DayTime.
+		/// </summary>
 		[JsonProperty] public readonly int Day;
+		/// <summary>
+		/// The Time component of this DayTime.
+		/// </summary>
 		[JsonProperty] public readonly float Time;
 
+		/// <summary>
+		/// The Year component of this DayTime.
+		/// </summary>
+		/// <value>The years.</value>
+		[JsonIgnore]
+		public int Year { get { return Mathf.FloorToInt(TotalYears); } }
+
+		/// <summary>
+		/// Gets the Time component of this DayTime normalized between 0 and 1.
+		/// </summary>
+		/// <value>The normal time.</value>
+		[JsonIgnore]
+		public float NormalTime { get { return Time / TimeInDay; } }
 		/// <summary>
 		/// Gets the total time.
 		/// </summary>
@@ -26,29 +45,17 @@ namespace LunraGames.SpaceFarm
 		[JsonIgnore]
 		public float TotalTime { get { return (Day * TimeInDay) + Time; } }
 		/// <summary>
-		/// Gets the total time represented by this DayTime where a Day is equal to 1.0
+		/// Gets the total time represented by this DayTime where a Day is equal to 1.0.
 		/// </summary>
 		/// <value>The day normal.</value>
 		[JsonIgnore]
-		public float DayNormal { get { return TotalTime / TimeInDay; } }
+		public float TotalDays { get { return TotalTime / TimeInDay; } }
 		/// <summary>
 		/// Gets the years.
 		/// </summary>
 		/// <value>The years.</value>
 		[JsonIgnore]
-		public float Years { get { return Day / DaysInYear; } }
-		/// <summary>
-		/// Gets the DayTime value floored to the nearest day.
-		/// </summary>
-		/// <value>The day floor.</value>
-		[JsonIgnore]
-		public int DayFloor { get { return Day; } }
-		/// <summary>
-		/// Gets the DayTime value ceiling to the nearest day.
-		/// </summary>
-		/// <value>The day ceiling.</value>
-		[JsonIgnore]
-		public int DayCeiling { get { return Mathf.Approximately(0f, Time) ? Day : Day + 1; } }
+		public float TotalYears { get { return TotalDays / DaysInYear; } }
 
 		public DayTime(float time)
 		{
@@ -120,6 +127,14 @@ namespace LunraGames.SpaceFarm
 		public static DayTime operator +(DayTime obj0, DayTime obj1)
 		{
 			return obj0.Add(obj1.Day, obj1.Time);
+		}
+
+		public string ToDayTimeString()
+		{
+			var totalHours = NormalTime * 24f;
+			var hours = Mathf.Floor(totalHours);
+			var minutes = Mathf.Floor(60f * (totalHours - hours));
+			return "Year " + Year + " Day " + Day + ", " + hours.ToString("N0").PadLeft(2, '0') + ":" + minutes.ToString("N0").PadLeft(2, '0');
 		}
 
 		public override string ToString()

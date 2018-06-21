@@ -4,12 +4,12 @@ namespace LunraGames.SpaceFarm
 {
 	public struct Gesture
 	{
-		public bool IsGesturing { get; private set; }
-		public bool IsSecondary { get; private set;  }
-		public Vector2 Begin { get; private set; }
-		public Vector2 Current { get; private set; }
-		public Vector2 End { get; private set; }
-		public Vector2 Delta { get; private set; }
+		public readonly bool IsGesturing;
+		public readonly bool IsSecondary;
+		public readonly Vector2 Begin;
+		public readonly Vector2 Current;
+		public readonly Vector2 End;
+		public readonly Vector2 Delta;
 
 		public Gesture(Vector2 begin, bool isSecondary)
 		{

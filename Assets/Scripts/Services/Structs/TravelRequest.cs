@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-using LunraGames.SpaceFarm.Models;
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
@@ -21,13 +21,13 @@ namespace LunraGames.SpaceFarm
 		/// No finaly "Active" is sent, only a "Complete", so the final travel
 		/// update is processed on that "Complete".
 		/// </remarks>
-		public States State;
-		public UniversePosition Position;
-		public UniversePosition Origin;
-		public UniversePosition Destination;
-		public DayTime StartTime;
-		public DayTime EndTime;
-		public DayTime Duration;
+		[JsonProperty] public readonly States State;
+		[JsonProperty] public readonly UniversePosition Position;
+		[JsonProperty] public readonly UniversePosition Origin;
+		[JsonProperty] public readonly UniversePosition Destination;
+		[JsonProperty] public readonly DayTime StartTime;
+		[JsonProperty] public readonly DayTime EndTime;
+		[JsonProperty] public readonly DayTime Duration;
 		/// <summary>
 		/// Progress of the travel request, from 0.0 to 1.0.
 		/// </summary>
@@ -35,7 +35,7 @@ namespace LunraGames.SpaceFarm
 		/// While not used in the actual travel logic, this is kept as a useful
 		/// hook for other listeners.
 		/// </remarks>
-		public float Progress;
+		[JsonProperty] public readonly float Progress;
 
 		public TravelRequest(
 			States state,

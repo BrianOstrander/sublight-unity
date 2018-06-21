@@ -35,8 +35,9 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			View.Click = OnClick;
 			View.Current = model.DayTime;
+			View.Click = OnClick;
+			View.SelectedSpeed = App.Callbacks.LastSpeedRequest.Index;
 
 			ShowView(App.GameCanvasRoot, true);
 		}
@@ -62,14 +63,25 @@ namespace LunraGames.SpaceFarm.Presenters
 			{
 				case SpeedRequest.States.Request:
 					model.Speed.Value = speedChange.Speed;
+					if (View.TransitionState == TransitionStates.Shown) View.SelectedSpeed = speedChange.Index;
 					App.Callbacks.SpeedRequest(speedChange.Duplicate(SpeedRequest.States.Complete));
 					break;
 			}
 		}
 
-		void OnClick(float speed)
+		void OnClick(int index)
 		{
-			App.Callbacks.SpeedRequest(new SpeedRequest(SpeedRequest.States.Request, speed));
+			var request = SpeedRequest.PauseRequest;
+			switch(index)
+			{
+				case 0: break;
+				case 1: request = SpeedRequest.PlayRequest; break;
+				case 2: request = SpeedRequest.FastRequest; break;
+				case 3: request = SpeedRequest.FastFastRequest; break;
+				default: Debug.LogWarning("Unknown speed index: " + index); break;
+			}
+			View.SelectedSpeed = index;
+			App.Callbacks.SpeedRequest(request);
 		}
 		#endregion
 	}

@@ -18,8 +18,8 @@ namespace LunraGames.SpaceFarm
 
 		public static SystemHighlight None { get { return new SystemHighlight(States.End, null); } }
 
-		public States State { get; private set; }
-		public SystemModel System { get; private set; }
+		public readonly States State;
+		public readonly SystemModel System;
 
 		public SystemHighlight(States state, SystemModel system)
 		{

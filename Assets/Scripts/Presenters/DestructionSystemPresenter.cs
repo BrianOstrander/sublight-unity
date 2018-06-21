@@ -37,7 +37,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
-			model.DestructionRadius.Value += delta.Delta.DayNormal * model.DestructionSpeed;
+			model.DestructionRadius.Value += delta.Delta.TotalDays * model.DestructionSpeed;
 		}
 
 		void OnDestructionRadius(float radius)

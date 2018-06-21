@@ -21,13 +21,13 @@ namespace LunraGames.SpaceFarm
 		/// No finaly "Active" is sent, only a "Complete", so the final camera
 		/// update is processed on that "Complete".
 		/// </remarks>
-		public States State;
-		public UniversePosition Position;
-		public UniversePosition Origin;
-		public UniversePosition Destination;
-		public DateTime StartTime;
-		public DateTime EndTime;
-		public TimeSpan Duration;
+		public readonly States State;
+		public readonly UniversePosition Position;
+		public readonly UniversePosition Origin;
+		public readonly UniversePosition Destination;
+		public readonly DateTime StartTime;
+		public readonly DateTime EndTime;
+		public readonly TimeSpan Duration;
 		/// <summary>
 		/// Progress of the camera request, from 0.0 to 1.0.
 		/// </summary>
@@ -35,8 +35,8 @@ namespace LunraGames.SpaceFarm
 		/// While not used in the actual camera logic, this is kept as a useful
 		/// hook for other listeners.
 		/// </remarks>
-		public float Progress;
-		public bool Instant;
+		public readonly float Progress;
+		public readonly bool Instant;
 
 		public static SystemCameraRequest Request(
 			UniversePosition position,

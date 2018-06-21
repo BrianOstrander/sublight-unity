@@ -12,8 +12,8 @@
 		public static ObscureCameraRequest Obscure { get { return new ObscureCameraRequest(States.Request, true); } }
 		public static ObscureCameraRequest UnObscure { get { return new ObscureCameraRequest(States.Request, false); } }
 
-		public States State;
-		public bool IsObscured;
+		public readonly States State;
+		public readonly bool IsObscured;
 
 		public ObscureCameraRequest(States state, bool isObscured)
 		{

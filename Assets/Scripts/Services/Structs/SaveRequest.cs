@@ -13,7 +13,7 @@ namespace LunraGames.SpaceFarm
 
 		public static SaveRequest Save() { return new SaveRequest(States.Request); }
 
-		public States State;
+		public readonly States State;
 
 		public SaveRequest(States state)
 		{

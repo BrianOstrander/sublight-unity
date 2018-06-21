@@ -1,5 +1,6 @@
 ﻿using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
+using UnityEngine;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
@@ -29,7 +30,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 			View.Closed += OnClosed;
 			View.Name = model.Name;
-			View.DayTravelTime = UniversePosition.TravelTime(model.Position, gameModel.Ship.Value.Position, gameModel.Ship.Value.Speed).DayCeiling;
+			View.DayTravelTime = Mathf.Min(1, UniversePosition.TravelTime(model.Position, gameModel.Ship.Value.Position, gameModel.Ship.Value.Speed).Day);
 
 			ShowView(App.GameCanvasRoot, true);
 		}

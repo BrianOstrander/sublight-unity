@@ -77,10 +77,8 @@ namespace LunraGames.SpaceFarm
 			Adjust(new Vector3(sectorX, sectorY, sectorZ), new Vector3(systemX, systemY, systemZ), out Sector, out System);
 		}
 
-		[JsonProperty]
-		public readonly Vector3 Sector;
-		[JsonProperty]
-		public readonly Vector3 System;
+		[JsonProperty] public readonly Vector3 Sector;
+		[JsonProperty] public readonly Vector3 System;
 
 		[JsonIgnore]
 		public Vector3 Normalized { get { return ToUnity(this).normalized; } }

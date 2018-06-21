@@ -4,11 +4,11 @@ namespace LunraGames.SpaceFarm
 {
 	public struct Click
 	{
-		public Vector2 Begin { get; private set; }
-		public Vector2 Current { get; private set; }
-		public Vector2 End { get; private set; }
-		public Vector2 Delta { get; private set; }
-		public bool ClickedNothing { get; private set; }
+		public readonly Vector2 Begin;
+		public readonly Vector2 Current;
+		public readonly Vector2 End;
+		public readonly Vector2 Delta;
+		public readonly bool ClickedNothing;
 
 		public Click(Vector2 begin, Vector2 end, bool clickedNothing)
 		{

@@ -4,10 +4,10 @@ namespace LunraGames.SpaceFarm
 {
 	public struct PointerOrientation
 	{
-		public Vector3 Position { get; private set; }
-		public Quaternion Rotation { get; private set; }
-		public Vector3 Forward { get; private set; }
-		public Vector2 ScreenPosition { get; private set; }
+		public readonly Vector3 Position;
+		public readonly Quaternion Rotation;
+		public readonly Vector3 Forward;
+		public readonly Vector2 ScreenPosition;
 
 		public PointerOrientation(Vector3 position, Quaternion rotation, Vector2 screenPosition)
 		{

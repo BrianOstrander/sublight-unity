@@ -1,4 +1,4 @@
-﻿using LunraGames.SpaceFarm.Models;
+﻿using UnityEngine;
 
 namespace LunraGames.SpaceFarm
 {
@@ -11,13 +11,18 @@ namespace LunraGames.SpaceFarm
 			Complete = 20
 		}
 
-		public static SpeedRequest PauseRequest { get { return new SpeedRequest(States.Request, 0f); } }
-		public static SpeedRequest PlayRequest { get { return new SpeedRequest(States.Request, 1f); } }
-		public static SpeedRequest FastRequest { get { return new SpeedRequest(States.Request, 2f); } }
-		public static SpeedRequest FastFastRequest { get { return new SpeedRequest(States.Request, 4f); } }
+		public const float PauseSpeed = 0f;
+		public const float PlaySpeed = 1f;
+		public const float FastSpeed = 2f;
+		public const float FastFastSpeed = 4f;
 
-		public States State;
-		public float Speed;
+		public static SpeedRequest PauseRequest { get { return new SpeedRequest(States.Request, PauseSpeed); } }
+		public static SpeedRequest PlayRequest { get { return new SpeedRequest(States.Request, PlaySpeed); } }
+		public static SpeedRequest FastRequest { get { return new SpeedRequest(States.Request, FastSpeed); } }
+		public static SpeedRequest FastFastRequest { get { return new SpeedRequest(States.Request, FastFastSpeed); } }
+
+		public readonly States State;
+		public readonly float Speed;
 
 		public SpeedRequest(States state, float speed)
 		{
@@ -31,6 +36,19 @@ namespace LunraGames.SpaceFarm
 				state == States.Unknown ? State : state,
 				Speed
 			);
+		}
+
+		public int Index
+		{
+			get
+			{
+				if (Mathf.Approximately(Speed, PauseSpeed)) return 0;
+				if (Mathf.Approximately(Speed, PlaySpeed)) return 1;
+				if (Mathf.Approximately(Speed, FastSpeed)) return 2;
+				if (Mathf.Approximately(Speed, FastFastSpeed)) return 3;
+				Debug.LogWarning("Unknown speed: " + Speed);
+				return 0;
+			}
 		}
 
 		public override string ToString()
