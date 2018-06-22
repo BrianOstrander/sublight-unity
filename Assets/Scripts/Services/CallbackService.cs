@@ -109,6 +109,8 @@ namespace LunraGames.SpaceFarm
 		public Action<VoidRenderTexture> VoidRenderTexture = ActionExtensions.GetEmpty<VoidRenderTexture>();
 		#endregion
 
+		// TODO: Think about moving these to state...
+
 		#region Genaral Caching
 		public CameraOrientation LastCameraOrientation;
 		public PointerOrientation LastPointerOrientation;

@@ -11,6 +11,10 @@ namespace LunraGames.SpaceFarm.Views
 	public class DestructionSystemView : View, IDestructionSystemView
 	{
 		[SerializeField]
+		Vector3 rimQuadRotation;
+		[SerializeField]
+		Transform rimRoot;
+		[SerializeField]
 		Transform rimQuad;
 		[SerializeField]
 		Renderer voidRender;
@@ -22,7 +26,7 @@ namespace LunraGames.SpaceFarm.Views
 			set
 			{
 				radius = value;
-				rimQuad.localScale = Vector3.one * UniversePosition.ToUnityDistance(radius) * 2f;
+				rimRoot.localScale = Vector3.one * UniversePosition.ToUnityDistance(radius) * 2f;
 			}
 		}
 		public UniversePosition UniversePosition { set; get; }
@@ -44,6 +48,13 @@ namespace LunraGames.SpaceFarm.Views
 			UniversePosition = UniversePosition.Zero;
 			Highlight = ActionExtensions.GetEmpty<bool>();
 			Click = ActionExtensions.Empty;
+		}
+
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+			rimQuad.Rotate(rimQuadRotation * delta);
 		}
 
 		#region Events

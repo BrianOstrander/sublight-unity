@@ -11,6 +11,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		SystemModel model;
 
 		bool isTravelable;
+		bool isDestroyed;
 
 		public SystemPresenter(GameModel gameModel, SystemModel model)
 		{
@@ -19,6 +20,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			SetView(App.V.Get<ISystemView>(v => v.SystemType == model.SystemType));
 
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
+			gameModel.DestructionRadius.Changed += OnDestructionRadius;
 		}
 
 		protected override void UnBind()
@@ -26,6 +28,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
+			gameModel.DestructionRadius.Changed -= OnDestructionRadius;
 		}
 
 		public void Show()
@@ -38,7 +41,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
 			OnTravelRadiusChange(App.Callbacks.LastTravelRadiusChange);
-			OnTravelColor();
+			OnSystemState();
 
 			ShowView(instant: true);
 		}
@@ -101,12 +104,21 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			var distance = UniversePosition.Distance(model.Position, travelRadiusChange.Origin);
 			isTravelable = distance < travelRadiusChange.TravelRadius.MaximumRadius;
-			if (View.Visible) OnTravelColor();
+			if (View.Visible) OnSystemState();
 		}
 
-		void OnTravelColor()
+		void OnDestructionRadius(float radius)
 		{
-			View.TravelColor = isTravelable ? Color.white : Color.red;
+			isDestroyed = UniversePosition.Distance(UniversePosition.Zero, model.Position) < radius;
+			if (View.Visible) OnSystemState();
+		}
+
+		void OnSystemState()
+		{
+			if (isDestroyed) View.SystemState = SystemStates.Destroyed;
+			else if (gameModel.Ship.Value.Position.Value == model.Position.Value) View.SystemState = SystemStates.Current;
+			else if (isTravelable) View.SystemState = SystemStates.InRange;
+			else View.SystemState = SystemStates.OutOfRange;
 		}
 		#endregion
 	}
