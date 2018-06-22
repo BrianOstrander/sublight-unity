@@ -10,10 +10,31 @@ namespace LunraGames.SpaceFarm.Views
 {
 	public class DestructionSystemView : View, IDestructionSystemView
 	{
-		public float Radius { set; private get; }
+		[SerializeField]
+		Transform rimQuad;
+		[SerializeField]
+		Renderer voidRender;
+
+		float radius;
+		public float Radius 
+		{
+			private get { return radius; }
+			set
+			{
+				radius = value;
+				rimQuad.localScale = Vector3.one * UniversePosition.ToUnityDistance(radius) * 2f;
+			}
+		}
 		public UniversePosition UniversePosition { set; get; }
 		public Action<bool> Highlight { set; private get; }
 		public Action Click { set; private get; }
+		public Texture VoidTexture
+		{
+			set
+			{
+				voidRender.material.SetTexture(ShaderConstants.VoidRim.VoidInterior, value);
+			}
+		}
 
 		public override void Reset()
 		{
@@ -46,5 +67,6 @@ namespace LunraGames.SpaceFarm.Views
 		float Radius { set; }
 		Action<bool> Highlight { set; }
 		Action Click { set; }
+		Texture VoidTexture { set; }
 	}
 }

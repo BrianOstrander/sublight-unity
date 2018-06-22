@@ -30,7 +30,11 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.Visible) return;
 			View.Reset();
+
+			App.Callbacks.VoidRenderTexture(new VoidRenderTexture(View.VoidTexture));
+
 			View.Shown += done;
+
 			ShowView(instant: true);
 		}
 

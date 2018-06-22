@@ -13,7 +13,10 @@ namespace LunraGames.SpaceFarm.Views
 		Transform dragForward;
 		[SerializeField]
 		Transform dragAxisRoot;
+		[SerializeField]
+		Camera voidCamera;
 
+		public RenderTexture VoidTexture { get; private set; }
 		public bool Raycasting { set { raycaster.enabled = value; } }
 		public Transform DragRoot { get { return dragRoot; } }
 		public Transform DragForward { get { return dragForward; } }
@@ -40,6 +43,8 @@ namespace LunraGames.SpaceFarm.Views
 			base.Reset();
 
 			Raycasting = true;
+
+			voidCamera.targetTexture = VoidTexture = new RenderTexture(Screen.width, Screen.height, 16);
 		}
 
 		void OnDrawGizmos()
@@ -52,6 +57,7 @@ namespace LunraGames.SpaceFarm.Views
 
 	public interface ICameraSystemView : IDragView 
 	{
+		RenderTexture VoidTexture { get; }
 		bool Raycasting { set; }
 		Vector3 LookingAt { get; set; }
 	}

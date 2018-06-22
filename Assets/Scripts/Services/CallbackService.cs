@@ -103,6 +103,10 @@ namespace LunraGames.SpaceFarm
 		/// Requests or reports saving.
 		/// </summary>
 		public Action<SaveRequest> SaveRequest = ActionExtensions.GetEmpty<SaveRequest>();
+		/// <summary>
+		/// Called when the void's render texture is updated.
+		/// </summary>
+		public Action<VoidRenderTexture> VoidRenderTexture = ActionExtensions.GetEmpty<VoidRenderTexture>();
 		#endregion
 
 		#region Genaral Caching
@@ -120,6 +124,7 @@ namespace LunraGames.SpaceFarm
 		public TravelRadiusChange LastTravelRadiusChange;
 		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
+		public VoidRenderTexture LastVoidRenderTexture;
 		#endregion
 
 		Stack<EscapeEntry> escapes = new Stack<EscapeEntry>();
@@ -139,6 +144,7 @@ namespace LunraGames.SpaceFarm
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
 			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
 			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
+			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
 
 			Escape += OnEscape;
 		}

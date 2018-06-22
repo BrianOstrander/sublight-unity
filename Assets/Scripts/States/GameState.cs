@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 
 using UnityEngine;
 
-using LunraGames.NumberDemon;
 using LunraGames.SpaceFarm.Presenters;
 using LunraGames.SpaceFarm.Models;
 

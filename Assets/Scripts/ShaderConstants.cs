@@ -24,6 +24,18 @@ namespace LunraGames.SpaceFarm
 			public const string Color = "_Color";
 		}
 
+		public static class VoidRim
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "graphs/VoidRim";
+			/// <summary>
+			/// The texture that's splated in screen space of the void.
+			/// </summary>
+			public const string VoidInterior = "Texture_E1313884";
+		}
+
 		/*
 		public static class SomeShader
 		{

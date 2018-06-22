@@ -12,6 +12,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 
 			model.DestructionRadius.Changed += OnDestructionRadius;
+			App.Callbacks.VoidRenderTexture += OnVoidRenderTexture;
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
 		}
 
@@ -20,6 +21,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			model.DestructionRadius.Changed -= OnDestructionRadius;
+			App.Callbacks.VoidRenderTexture -= OnVoidRenderTexture;
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
 		}
 
@@ -31,6 +33,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Radius = model.DestructionRadius;
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
+			View.VoidTexture = App.Callbacks.LastVoidRenderTexture.Texture;
 			ShowView(instant: true);
 		}
 
@@ -38,6 +41,12 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
 			model.DestructionRadius.Value += delta.Delta.TotalDays * model.DestructionSpeed;
+		}
+
+		void OnVoidRenderTexture(VoidRenderTexture voidRenderTexture)
+		{
+			if (!View.Visible) return;
+			View.VoidTexture = voidRenderTexture.Texture;
 		}
 
 		void OnDestructionRadius(float radius)
