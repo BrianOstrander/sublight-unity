@@ -222,10 +222,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78e86677f45a461fab6a7ca0e4257c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animations:
-  - {fileID: 11400000, guid: d24a5dc776e684da7ad92bd7956e7a3e, type: 2}
+  animations: []
   raycaster: {fileID: 114835710990304208}
-  dragScalar: 16
+  dragMoveScalar: 16
+  dragRotateScalar: 64
   dragRoot: {fileID: 4372052734227234}
   dragForward: {fileID: 4374039099017764}
   dragAxisRoot: {fileID: 4374039099017764}

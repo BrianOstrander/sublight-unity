@@ -4,7 +4,20 @@ namespace LunraGames.SpaceFarm.Views
 {
 	public interface IDragView : IView
 	{
-		float DragScalar { get; }
+		/// <summary>
+		/// The multiplier for dragging around the camera.
+		/// </summary>
+		/// <value>The drag move scalar.</value>
+		float DragMoveScalar { get; } // TODO: Move this to some preferences thing the player can edit.
+		/// <summary>
+		/// The multiplier for drag rotating around the camera.
+		/// </summary>
+		/// <remarks>
+		/// This should probably not be stored on the view, but a general 
+		/// preferences object...
+		/// </remarks>
+		/// <value>The drag move scalar.</value>
+		float DragRotateScalar { get; } // TODO: Move this to some preferences thing the player can edit.
 		/// <summary>
 		/// Typically equivelent to the root of the View.
 		/// </summary>

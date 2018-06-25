@@ -9,7 +9,8 @@ namespace LunraGames.SpaceFarm.Presenters
 	public class CameraSystemPresenter : Presenter<ICameraSystemView>
 	{
 		CameraSystemRequest lastMoveRequest;
-		Gesture lastGesture;
+		Gesture lastMoveGesture;
+		Gesture lastRotateGesture;
 
 		public CameraSystemPresenter()
 		{
@@ -43,7 +44,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnUpdate(float delta)
 		{
 			if (lastMoveRequest.State == CameraSystemRequest.States.Active) OnMoveRequest();
-			else if (!App.Callbacks.LastObscureCameraRequest.IsObscured) OnDragMove();
+			else if (!App.Callbacks.LastObscureCameraRequest.IsObscured) OnDrag();
 		}
 
 		void OnMoveRequest()
@@ -70,27 +71,27 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.CameraSystemRequest(request);
 		}
 
-		void OnDragMove()
+		void OnDrag()
 		{
-			// Drag logic
+			OnDragMove(App.Callbacks.LastGesture);
+			OnDragRotate(App.Callbacks.LastGesture);
+		}
 
-			if (App.Callbacks.LastObscureCameraRequest.IsObscured) return;
-
-			var gesture = App.Callbacks.LastGesture;
-
-			if ((gesture.IsSecondary) || (lastGesture.IsGesturing == gesture.IsGesturing && !lastGesture.IsGesturing))
+		void OnDragMove(Gesture gesture)
+		{
+			if ((gesture.IsSecondary) || (lastMoveGesture.IsGesturing == gesture.IsGesturing && !lastMoveGesture.IsGesturing))
 			{
-				lastGesture = gesture;
+				lastMoveGesture = gesture;
 				return;
 			}
 
-			if (lastGesture.IsGesturing && !gesture.IsGesturing)
+			if (lastMoveGesture.IsGesturing && !gesture.IsGesturing)
 			{
 				var newPos = View.DragRoot.position;
 				View.Root.position = newPos;
 				View.DragRoot.localPosition = Vector3.zero;
 
-				lastGesture = gesture;
+				lastMoveGesture = gesture;
 				return;
 			}
 
@@ -98,9 +99,44 @@ namespace LunraGames.SpaceFarm.Presenters
 			var planeRight = View.DragForward.right.FlattenY() * gesture.Delta.x * -1f;
 			var planeCombined = planeForward + planeRight;
 
-			View.DragRoot.localPosition = planeCombined * View.DragScalar;
+			View.DragRoot.localPosition = planeCombined * View.DragMoveScalar;
 
-			lastGesture = gesture;
+			lastMoveGesture = gesture;
+		}
+
+		void OnDragRotate(Gesture gesture)
+		{
+			var camera = App.Callbacks.LastCameraOrientation;
+
+			if ((!gesture.IsSecondary) || (lastRotateGesture.IsGesturing == gesture.IsGesturing && !lastRotateGesture.IsGesturing))
+			{
+				lastRotateGesture = gesture;
+				return;
+			}
+
+			if (!lastRotateGesture.IsGesturing && gesture.IsGesturing)
+			{
+				// We're starting
+				var plane = new Plane(Vector3.up, View.Root.position);
+				var dist = 0f;
+				plane.Raycast(new Ray(camera.Position, camera.Forward), out dist);
+				View.DragAxis = camera.Position + (camera.Forward * dist);
+				lastRotateGesture = gesture;
+			}
+			else if (lastRotateGesture.IsGesturing && !gesture.IsGesturing)
+			{
+				// We're ending
+				var newPos = View.DragRoot.position;
+				View.Root.position = newPos;
+				View.DragRoot.localPosition = Vector3.zero;
+
+				lastRotateGesture = gesture;
+				return;
+			}
+
+			View.DragRoot.RotateAround(View.DragAxis, Vector3.up, (gesture.Delta.x - lastRotateGesture.Delta.x) * View.DragRotateScalar);
+
+			lastRotateGesture = gesture;
 		}
 
 		void OnObscureCameraRequest(ObscureCameraRequest request)

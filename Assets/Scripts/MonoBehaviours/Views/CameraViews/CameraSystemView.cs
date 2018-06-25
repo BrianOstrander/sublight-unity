@@ -8,7 +8,9 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		BaseRaycaster raycaster;
 		[SerializeField]
-		float dragScalar;
+		float dragMoveScalar;
+		[SerializeField]
+		float dragRotateScalar;
 		[SerializeField]
 		Transform dragRoot;
 		[SerializeField]
@@ -20,7 +22,8 @@ namespace LunraGames.SpaceFarm.Views
 
 		public RenderTexture VoidTexture { get; private set; }
 		public bool Raycasting { set { raycaster.enabled = value; } }
-		public float DragScalar { get { return dragScalar; } }
+		public float DragMoveScalar { get { return dragMoveScalar; } }
+		public float DragRotateScalar { get { return dragRotateScalar; } }
 		public Transform DragRoot { get { return dragRoot; } }
 		public Transform DragForward { get { return dragForward; } }
 		public Transform DragAxisRoot { get { return dragAxisRoot; } }
