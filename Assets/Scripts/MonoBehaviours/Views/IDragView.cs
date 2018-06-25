@@ -4,6 +4,7 @@ namespace LunraGames.SpaceFarm.Views
 {
 	public interface IDragView : IView
 	{
+		float DragScalar { get; }
 		/// <summary>
 		/// Typically equivelent to the root of the View.
 		/// </summary>
