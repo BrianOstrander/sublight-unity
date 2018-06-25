@@ -23,7 +23,7 @@ namespace LunraGames.SpaceFarm.Views
 		public Transform DragAxisRoot { get { return dragAxisRoot; } }
 		public Vector3 DragAxis { get; set; }
 
-		public Vector3 LookingAt
+		public Vector3 UnityPosition
 		{
 			get
 			{
@@ -34,7 +34,7 @@ namespace LunraGames.SpaceFarm.Views
 			}
 			set
 			{
-				Root.position = value + (Root.position - LookingAt);
+				Root.position = value + (Root.position - UnityPosition);
 			}
 		}
 
@@ -51,14 +51,14 @@ namespace LunraGames.SpaceFarm.Views
 		{
 			if (!Application.isPlaying) return;
 			Gizmos.color = Color.magenta;
-			Gizmos.DrawRay(LookingAt, Vector3.up);
+			Gizmos.DrawRay(UnityPosition, Vector3.up);
 		}
 	}
 
-	public interface ICameraSystemView : IDragView 
+	public interface ICameraSystemView : IDragView
 	{
 		RenderTexture VoidTexture { get; }
 		bool Raycasting { set; }
-		Vector3 LookingAt { get; set; }
+		Vector3 UnityPosition { get; set; }
 	}
 }

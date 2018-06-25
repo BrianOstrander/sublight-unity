@@ -1,9 +1,16 @@
 ﻿using System;
 
+using UnityEngine;
+
 namespace LunraGames.SpaceFarm.Views
 {
 	public class ShipSystemView : View, IShipSystemView
 	{
+		public Vector3 UnityPosition
+		{
+			set { Root.position = value; }
+			get { return Root.position; }
+		}
 		public UniversePosition UniversePosition { set; get; }
 		public Action<bool> Highlight { set; private get; }
 		public Action Click { set; private get; }
@@ -12,6 +19,7 @@ namespace LunraGames.SpaceFarm.Views
 		{
 			base.Reset();
 
+			UnityPosition = Vector3.zero;
 			UniversePosition = UniversePosition.Zero;
 			Highlight = ActionExtensions.GetEmpty<bool>();
 			Click = ActionExtensions.Empty;

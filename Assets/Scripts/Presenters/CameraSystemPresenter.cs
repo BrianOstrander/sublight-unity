@@ -104,7 +104,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnApplyRequest(CameraSystemRequest request)
 		{
-			View.LookingAt = UniversePosition.ToUnity(request.Position);
+			View.UnityPosition = UniversePosition.ToUnity(request.Position);
 		}
   		#endregion
 	}

@@ -29,6 +29,11 @@ namespace LunraGames.SpaceFarm.Views
 				rimRoot.localScale = Vector3.one * UniversePosition.ToUnityDistance(radius) * 2f;
 			}
 		}
+		public Vector3 UnityPosition
+		{
+			set { Root.position = value; }
+			get { return Root.position; }
+		}
 		public UniversePosition UniversePosition { set; get; }
 		public Action<bool> Highlight { set; private get; }
 		public Action Click { set; private get; }
@@ -45,6 +50,7 @@ namespace LunraGames.SpaceFarm.Views
 			base.Reset();
 
 			Radius = 0f;
+			UnityPosition = Vector3.zero;
 			UniversePosition = UniversePosition.Zero;
 			Highlight = ActionExtensions.GetEmpty<bool>();
 			Click = ActionExtensions.Empty;
