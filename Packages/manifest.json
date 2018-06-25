@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "com.unity.textmeshpro": "1.2.3",
+    "com.unity.shadergraph": "1.1.9-preview",
+    "com.unity.render-pipelines.core": "1.1.10-preview",
+    "com.unity.render-pipelines.lightweight": "1.1.10-preview"
+  }
+}
