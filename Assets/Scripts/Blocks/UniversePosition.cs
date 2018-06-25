@@ -12,7 +12,7 @@ namespace LunraGames.SpaceFarm
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-		const float UnityToUniverseScalar = 0.05f;
+		const float UnityToUniverseScalar = 0.02f;
 		const float UniverseToUnityScalar = 50f;
 
 		public static float ToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
@@ -86,6 +86,16 @@ namespace LunraGames.SpaceFarm
 		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, System); } }
 		[JsonIgnore]
 		public UniversePosition SystemZero { get { return new UniversePosition(Sector, Vector3.zero); } }
+
+		public bool SectorEquals(UniversePosition other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+
+			return Mathf.Approximately(Sector.x, other.Sector.x) &&
+						Mathf.Approximately(Sector.y, other.Sector.y) &&
+						Mathf.Approximately(Sector.z, other.Sector.z);
+		}
 
 		public bool Equals(UniversePosition other)
 		{

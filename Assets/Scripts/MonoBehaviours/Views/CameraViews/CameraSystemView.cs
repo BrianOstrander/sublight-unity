@@ -44,8 +44,6 @@ namespace LunraGames.SpaceFarm.Views
 			}
 		}
 
-		public UniversePosition UniversePosition { get; set; }
-
 		public override void Reset()
 		{
 			base.Reset();
@@ -63,9 +61,10 @@ namespace LunraGames.SpaceFarm.Views
 		}
 	}
 
-	public interface ICameraSystemView : IDragView, IGridTransform
+	public interface ICameraSystemView : IDragView
 	{
 		RenderTexture VoidTexture { get; }
 		bool Raycasting { set; }
+		Vector3 UnityPosition { get; set; }
 	}
 }

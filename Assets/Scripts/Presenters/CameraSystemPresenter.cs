@@ -3,17 +3,23 @@
 using UnityEngine;
 
 using LunraGames.SpaceFarm.Views;
+using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
 	public class CameraSystemPresenter : Presenter<ICameraSystemView>
 	{
+		GameModel game;
+
 		CameraSystemRequest lastMoveRequest;
+
 		Gesture lastMoveGesture;
 		Gesture lastRotateGesture;
 
-		public CameraSystemPresenter()
+		public CameraSystemPresenter(GameModel game)
 		{
+			this.game = game;
+
 			App.Heartbeat.Update += OnUpdate;
 			App.Callbacks.ObscureCameraRequest += OnObscureCameraRequest;
 			App.Callbacks.CameraSystemRequest += OnSystemCameraRequest;
@@ -28,14 +34,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.CameraSystemRequest -= OnSystemCameraRequest;
 		}
 
-		public void Show(Action done)
+		public void Show()
 		{
 			if (View.Visible) return;
 			View.Reset();
 
 			App.Callbacks.VoidRenderTexture(new VoidRenderTexture(View.VoidTexture));
-
-			View.Shown += done;
 
 			ShowView(instant: true);
 		}
@@ -87,11 +91,20 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			if (lastMoveGesture.IsGesturing && !gesture.IsGesturing)
 			{
+				// We're ending.
 				var newPos = View.DragRoot.position;
 				View.Root.position = newPos;
 				View.DragRoot.localPosition = Vector3.zero;
-
 				lastMoveGesture = gesture;
+
+				var endMovePosition = UniversePosition.ToUniverse(View.UnityPosition);
+
+				if (!game.FocusedSector.Value.SectorEquals(endMovePosition))
+				{
+					// Camera is now focused in a new sector.
+					game.FocusedSector.Value = endMovePosition.SystemZero; 
+				}
+
 				return;
 			}
 
@@ -116,7 +129,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			if (!lastRotateGesture.IsGesturing && gesture.IsGesturing)
 			{
-				// We're starting
+				// We're starting.
 				var plane = new Plane(Vector3.up, View.Root.position);
 				var dist = 0f;
 				plane.Raycast(new Ray(camera.Position, camera.Forward), out dist);
@@ -125,7 +138,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 			else if (lastRotateGesture.IsGesturing && !gesture.IsGesturing)
 			{
-				// We're ending
+				// We're ending.
 				var newPos = View.DragRoot.position;
 				View.Root.position = newPos;
 				View.DragRoot.localPosition = Vector3.zero;

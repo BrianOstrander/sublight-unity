@@ -25,7 +25,6 @@ namespace LunraGames.SpaceFarm
 		protected override void Begin()
 		{
 			App.SM.PushBlocking(LoadScenes);
-			App.SM.PushBlocking(InitializeCamera);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(InitializeGame);
@@ -34,11 +33,6 @@ namespace LunraGames.SpaceFarm
 		void LoadScenes(Action done)
 		{
 			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
-		}
-
-		void InitializeCamera(Action done)
-		{
-			new CameraSystemPresenter().Show(done);
 		}
 
 		void InitializeInput(Action done)
@@ -83,11 +77,13 @@ namespace LunraGames.SpaceFarm
 			// but you can safely ignore those warnings since they register
 			// themselves with the PresenterMediator.
 
+			new CameraSystemPresenter(game).Show();
 			new SpeedPresenter(game).Show();
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new DestructionOriginSystemPresenter().Show();
 			new DestructionSystemPresenter(game).Show();
+
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
 			new PauseMenuPresenter();
@@ -145,6 +141,7 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		void OnFocusedSector(UniversePosition universePosition)
 		{
+			Debug.Log("lol focused: "+universePosition);
 			var sector = Payload.Game.Universe.Value.GetSector(universePosition);
 			foreach (var system in sector.Systems.Value)
 			{
