@@ -8,13 +8,13 @@ namespace LunraGames.SpaceFarm.Presenters
 {
 	public class CameraSystemPresenter : Presenter<ICameraSystemView>
 	{
-		SystemCameraRequest lastRequest;
+		CameraSystemRequest lastRequest;
 
 		public CameraSystemPresenter()
 		{
 			App.Heartbeat.Update += OnUpdate;
 			App.Callbacks.ObscureCameraRequest += OnObscureCameraRequest;
-			App.Callbacks.SystemCameraRequest += OnSystemCameraRequest;
+			App.Callbacks.CameraSystemRequest += OnSystemCameraRequest;
 		}
 
 		protected override void UnBind()
@@ -23,7 +23,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			App.Heartbeat.Update -= OnUpdate;
 			App.Callbacks.ObscureCameraRequest -= OnObscureCameraRequest;
-			App.Callbacks.SystemCameraRequest -= OnSystemCameraRequest;
+			App.Callbacks.CameraSystemRequest -= OnSystemCameraRequest;
 		}
 
 		public void Show(Action done)
@@ -41,7 +41,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnUpdate(float delta)
 		{
-			if (lastRequest.State != SystemCameraRequest.States.Active) return;
+			if (lastRequest.State != CameraSystemRequest.States.Active) return;
 
 			var progress = lastRequest.GetProgress(DateTime.Now);
 			var distance = UniversePosition.Distance(lastRequest.Destination, lastRequest.Origin);
@@ -52,8 +52,8 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			var newPos = doneFocusing ? lastRequest.Destination : lastRequest.Origin + new UniversePosition(progress * distance * normal);
 
-			var request = new SystemCameraRequest(
-				doneFocusing ? SystemCameraRequest.States.Complete : SystemCameraRequest.States.Active,
+			var request = new CameraSystemRequest(
+				doneFocusing ? CameraSystemRequest.States.Complete : CameraSystemRequest.States.Active,
 				newPos,
 				lastRequest.Origin,
 				lastRequest.Destination,
@@ -62,7 +62,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				progress,
 				lastRequest.Instant
 			);
-			App.Callbacks.SystemCameraRequest(request);
+			App.Callbacks.CameraSystemRequest(request);
 		}
 
 		void OnObscureCameraRequest(ObscureCameraRequest request)
@@ -76,33 +76,33 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
-		void OnSystemCameraRequest(SystemCameraRequest request)
+		void OnSystemCameraRequest(CameraSystemRequest request)
 		{
 			switch(request.State)
 			{
-				case SystemCameraRequest.States.Request:
-					if (lastRequest.State == SystemCameraRequest.States.Active)
+				case CameraSystemRequest.States.Request:
+					if (lastRequest.State == CameraSystemRequest.States.Active)
 					{
 						Debug.LogWarning("Processing a new SystemCameraRequest before the current one is finished is not supported.");
 						return;
 					}
 					if (request.Instant)
 					{
-						App.Callbacks.SystemCameraRequest(lastRequest = request.Duplicate(SystemCameraRequest.States.Complete));
+						App.Callbacks.CameraSystemRequest(lastRequest = request.Duplicate(CameraSystemRequest.States.Complete));
 						return;
 					}
-					App.Callbacks.SystemCameraRequest(lastRequest = request.Duplicate(SystemCameraRequest.States.Active));
+					App.Callbacks.CameraSystemRequest(lastRequest = request.Duplicate(CameraSystemRequest.States.Active));
 					break;
-				case SystemCameraRequest.States.Active:
+				case CameraSystemRequest.States.Active:
 					OnApplyRequest(lastRequest = request);
 					break;
-				case SystemCameraRequest.States.Complete:
+				case CameraSystemRequest.States.Complete:
 					OnApplyRequest(lastRequest = request);
 					break;
 			}
 		}
 
-		void OnApplyRequest(SystemCameraRequest request)
+		void OnApplyRequest(CameraSystemRequest request)
 		{
 			View.LookingAt = UniversePosition.ToUnity(request.Position);
 		}

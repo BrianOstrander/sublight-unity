@@ -98,7 +98,7 @@ namespace LunraGames.SpaceFarm
 		/// Requests a camera change of position or reports a change in the 
 		/// camera's position.
 		/// </summary>
-		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
+		public Action<CameraSystemRequest> CameraSystemRequest = ActionExtensions.GetEmpty<CameraSystemRequest>();
 		/// <summary>
 		/// Requests or reports saving.
 		/// </summary>

@@ -106,7 +106,7 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.FocusedSector.Value = focusedSector;
 			if (wasFocused) OnFocusedSector(focusedSector);
 
-			App.Callbacks.SystemCameraRequest(SystemCameraRequest.RequestInstant(Payload.Game.Ship.Value.Position));
+			App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(Payload.Game.Ship.Value.Position));
 
 			if (!DevPrefs.SkipExplanation)
 			{
