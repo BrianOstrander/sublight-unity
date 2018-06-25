@@ -21,15 +21,15 @@ namespace LunraGames.SpaceFarm
 
 	public class BuildPreferences : ScriptableSingleton<BuildPreferences>
 	{
-		[Header("Global")]
-		[SerializeField]
-		int version;
+		//[Header("Global")]
+		//[SerializeField]
+		//int version;
 
 		public IBuildInfo Info
 		{
 			get
 			{
-				return new BuildInfo(version);
+				return new BuildInfo(int.Parse(Application.version));
 			}
 		}
 	}
