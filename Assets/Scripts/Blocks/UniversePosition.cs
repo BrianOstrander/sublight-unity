@@ -21,13 +21,11 @@ namespace LunraGames.SpaceFarm
 
 		public static UniversePosition ToUniverse(Vector3 unityPosition)
 		{
-			// TODO: Actually make this functional.
 			return new UniversePosition(Vector3.zero, unityPosition * UnityToUniverseScalar);
 		}
 
 		public static Vector3 ToUnity(UniversePosition universePosition)
 		{
-			// TODO: Actually make this functional.
 			return (universePosition.Sector + universePosition.System) * UniverseToUnityScalar;
 		}
 
@@ -86,6 +84,9 @@ namespace LunraGames.SpaceFarm
 		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, System); } }
 		[JsonIgnore]
 		public UniversePosition SystemZero { get { return new UniversePosition(Sector, Vector3.zero); } }
+
+		public UniversePosition NewSector(Vector3 sector) { return new UniversePosition(sector, System); }
+		public UniversePosition NewSystem(Vector3 system) { return new UniversePosition(Sector, system); }
 
 		public bool SectorEquals(UniversePosition other)
 		{

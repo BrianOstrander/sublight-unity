@@ -36,7 +36,8 @@ namespace LunraGames.SpaceFarm.Views
 				var plane = new Plane(Vector3.up, Root.position);
 				var dist = 0f;
 				plane.Raycast(new Ray(DragForward.position, DragForward.forward), out dist);
-				return DragForward.position + (DragForward.forward * dist);
+				// NewY is used since sometimes this was returning very slightly negative values.
+				return (DragForward.position + (DragForward.forward * dist)).NewY(0f);
 			}
 			set
 			{

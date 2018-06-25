@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Models
 {
-	public class GameModel : Model
+	public class GameModel : SaveModel
 	{
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
@@ -61,6 +61,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		public GameModel()
 		{
+			SaveType = SaveTypes.Game;
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
 			Speed = new ListenerProperty<float>(value => speed = value, () => speed);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -9,8 +10,9 @@ namespace LunraGames.SpaceFarm
 {
 	public class GamePayload : IStatePayload
 	{
-		public GameSaveModel GameSave;
 		public GameModel Game;
+
+		public List<UniversePosition> FocusedSectors = new List<UniversePosition>();
 	}
 
 	public class GameState : State<GamePayload>
@@ -141,6 +143,9 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		void OnFocusedSector(UniversePosition universePosition)
 		{
+			if (Payload.FocusedSectors.Contains(universePosition)) return;
+			Payload.FocusedSectors.Add(universePosition);
+
 			Debug.Log("lol focused: "+universePosition);
 			var sector = Payload.Game.Universe.Value.GetSector(universePosition);
 			foreach (var system in sector.Systems.Value)
@@ -160,12 +165,12 @@ namespace LunraGames.SpaceFarm
 			switch(request.State)
 			{
 				case SaveRequest.States.Request:
-					App.SaveLoadService.Save(Payload.GameSave, OnSave);
+					App.SaveLoadService.Save(Payload.Game, OnSave);
 					break;
 			}
 		}
 
-		void OnSave(SaveLoadRequest<GameSaveModel> request)
+		void OnSave(SaveLoadRequest<GameModel> request)
 		{
 			if (request.Status != RequestStatus.Success) Debug.LogError("Error saving: " + request.Error);
 			App.Callbacks.SaveRequest(new SaveRequest(SaveRequest.States.Complete));
