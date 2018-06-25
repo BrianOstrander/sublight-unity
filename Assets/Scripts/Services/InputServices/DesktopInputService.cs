@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm
 {
-	public class WebGlInputService : InputService
+	public class DesktopInputService : InputService
 	{
 		protected override Vector2 GetScreenPosition()
 		{

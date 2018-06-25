@@ -1,4 +1,4 @@
 namespace LunraGames.SpaceFarm
 {
-	public class EditorInputService : WebGlInputService {}
+	public class EditorInputService : DesktopInputService {}
 }

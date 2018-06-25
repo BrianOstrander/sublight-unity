@@ -112,12 +112,12 @@ namespace LunraGames.SpaceFarm
 				saveLoadService = new EditorSaveLoadService();
 #endif
 			}
-			else if (Application.platform == RuntimePlatform.WebGLPlayer)
+			else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.WindowsPlayer)
 			{
-				logService = new WebGlLogService();
-				inputService = new WebGlInputService();
-				backendService = new WebGlBackendService();
-				saveLoadService = new WebGlSaveLoadService();
+				logService = new DesktopLogService();
+				inputService = new DesktopInputService();
+				backendService = new DesktopBackendService();
+				saveLoadService = new DesktopSaveLoadService();
 			}
 			else
 			{
