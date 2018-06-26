@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using LunraGames.SpaceFarm.Views;
+﻿using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm
 {
@@ -12,7 +11,6 @@ namespace LunraGames.SpaceFarm
 			gridView.UnityPosition = UniversePosition.ToUnity(gridView.UniversePosition);
 		}
 
-		public override void OnIdle(IView view) { SetPosition(view); }
-
+		public override void OnLateIdle(IView view) { SetPosition(view); }
 	}
 }

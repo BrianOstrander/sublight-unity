@@ -66,6 +66,7 @@ namespace LunraGames.SpaceFarm
 
 			var travelRadiusChange = new TravelRadiusChange(ship.Position, ship.Speed, ship.RationConsumption, ship.Rations);
 
+			//UniversePosition
 			App.Callbacks.DayTimeDelta(new DayTimeDelta(game.DayTime, game.DayTime));
 			App.Callbacks.SystemHighlight(SystemHighlight.None);
 			App.Callbacks.TravelRadiusChange(travelRadiusChange);
@@ -143,16 +144,18 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		void OnFocusedSector(UniversePosition universePosition)
 		{
+			App.Callbacks.UniversePositionRequest(UniversePositionRequest.Request(universePosition.SystemZero));
+
 			if (Payload.FocusedSectors.Contains(universePosition)) return;
 			Payload.FocusedSectors.Add(universePosition);
 
-			Debug.Log("lol focused: "+universePosition);
 			var sector = Payload.Game.Universe.Value.GetSector(universePosition);
 			foreach (var system in sector.Systems.Value)
 			{
 				var systemPresenter = new SystemPresenter(Payload.Game, system);
 				systemPresenter.Show();
 			}
+
 		}
 
 		void OnTravelRequest(TravelRequest request)

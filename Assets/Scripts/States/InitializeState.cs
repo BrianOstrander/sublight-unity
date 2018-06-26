@@ -31,6 +31,7 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(InitializeModels);
 			App.SM.PushBlocking(InitializePresenters);
 			App.SM.PushBlocking(InitializePreferences);
+			App.SM.PushBlocking(InitializeListeners);
 		}
 
 		protected override void Idle()
@@ -164,6 +165,12 @@ namespace LunraGames.SpaceFarm
 
 			App.Log("Saved preferences to " + result.Model.Path, LogTypes.Initialization);
 			App.SetPreferences(result.TypedModel);
+			done();
+		}
+
+		void InitializeListeners(Action done)
+		{
+			App.Callbacks.UniversePositionRequest += UniversePosition.OnUniversePositionRequest;
 			done();
 		}
 	}

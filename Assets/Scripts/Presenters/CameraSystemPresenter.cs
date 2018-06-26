@@ -16,11 +16,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		Gesture lastMoveGesture;
 		Gesture lastRotateGesture;
 
+		UniversePosition lastUniversePosition;
+
 		public CameraSystemPresenter(GameModel game)
 		{
 			this.game = game;
 
 			App.Heartbeat.Update += OnUpdate;
+			App.Callbacks.UniversePositionRequest += OnUniversePositionRequest;
 			App.Callbacks.ObscureCameraRequest += OnObscureCameraRequest;
 			App.Callbacks.CameraSystemRequest += OnSystemCameraRequest;
 		}
@@ -30,6 +33,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Heartbeat.Update -= OnUpdate;
+			App.Callbacks.UniversePositionRequest -= OnUniversePositionRequest;
 			App.Callbacks.ObscureCameraRequest -= OnObscureCameraRequest;
 			App.Callbacks.CameraSystemRequest -= OnSystemCameraRequest;
 		}
@@ -102,6 +106,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				if (!game.FocusedSector.Value.SectorEquals(endMovePosition))
 				{
 					// Camera is now focused in a new sector.
+					lastUniversePosition = endMovePosition;
 					game.FocusedSector.Value = endMovePosition.SystemZero; 
 				}
 
@@ -150,6 +155,16 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.DragRoot.RotateAround(View.DragAxis, Vector3.up, (gesture.Delta.x - lastRotateGesture.Delta.x) * View.DragRotateScalar);
 
 			lastRotateGesture = gesture;
+		}
+
+		void OnUniversePositionRequest(UniversePositionRequest request)
+		{
+			switch(request.State)
+			{
+				case UniversePositionRequest.States.Complete:
+					View.UnityPosition = UniversePosition.ToUnity(lastUniversePosition);
+					break;
+			}
 		}
 
 		void OnObscureCameraRequest(ObscureCameraRequest request)

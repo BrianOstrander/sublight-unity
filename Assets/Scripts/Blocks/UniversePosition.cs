@@ -14,6 +14,28 @@ namespace LunraGames.SpaceFarm
 	{
 		const float UnityToUniverseScalar = 0.02f;
 		const float UniverseToUnityScalar = 50f;
+		/// <summary>
+		/// The current sector offset of all unity units.
+		/// </summary>
+		static UniversePosition CurrentOffset = Zero;
+
+		/// <summary>
+		/// Updates the sector offset upon request.
+		/// </summary>
+		/// <remarks>
+		/// Should be added as a listener in the initialize state.
+		/// </remarks>
+		/// <param name="request">Request.</param>
+		public static void OnUniversePositionRequest(UniversePositionRequest request)
+		{
+			switch(request.State)
+			{
+				case UniversePositionRequest.States.Request:
+					CurrentOffset = request.Position;
+					App.Callbacks.UniversePositionRequest(request.Duplicate(UniversePositionRequest.States.Complete));
+					break;
+			}
+		}
 
 		public static float ToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
 
@@ -21,12 +43,12 @@ namespace LunraGames.SpaceFarm
 
 		public static UniversePosition ToUniverse(Vector3 unityPosition)
 		{
-			return new UniversePosition(Vector3.zero, unityPosition * UnityToUniverseScalar);
+			return new UniversePosition(CurrentOffset.Sector, unityPosition * UnityToUniverseScalar);
 		}
 
 		public static Vector3 ToUnity(UniversePosition universePosition)
 		{
-			return (universePosition.Sector + universePosition.System) * UniverseToUnityScalar;
+			return ((universePosition.Sector - CurrentOffset.Sector) + universePosition.System) * UniverseToUnityScalar;
 		}
 
 		/// <summary>
@@ -79,7 +101,7 @@ namespace LunraGames.SpaceFarm
 		[JsonProperty] public readonly Vector3 System;
 
 		[JsonIgnore]
-		public Vector3 Normalized { get { return ToUnity(this).normalized; } }
+		public Vector3 Normalized { get { return ToUnity(this + CurrentOffset).normalized; } }
 		[JsonIgnore]
 		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, System); } }
 		[JsonIgnore]

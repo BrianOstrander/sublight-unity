@@ -107,6 +107,10 @@ namespace LunraGames.SpaceFarm
 		/// Called when the void's render texture is updated.
 		/// </summary>
 		public Action<VoidRenderTexture> VoidRenderTexture = ActionExtensions.GetEmpty<VoidRenderTexture>();
+		/// <summary>
+		/// Called every time the offset of the universe is updated.
+		/// </summary>
+		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state...
@@ -127,6 +131,7 @@ namespace LunraGames.SpaceFarm
 		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
 		public VoidRenderTexture LastVoidRenderTexture;
+		public UniversePositionRequest LastUniversePositionRequest;
 		#endregion
 
 		Stack<EscapeEntry> escapes = new Stack<EscapeEntry>();
@@ -147,6 +152,7 @@ namespace LunraGames.SpaceFarm
 			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
 			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
 			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
+			UniversePositionRequest += request => LastUniversePositionRequest = request;
 
 			Escape += OnEscape;
 		}
