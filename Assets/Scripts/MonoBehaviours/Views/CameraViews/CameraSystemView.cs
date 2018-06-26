@@ -59,6 +59,9 @@ namespace LunraGames.SpaceFarm.Views
 			if (!Application.isPlaying) return;
 			Gizmos.color = Color.magenta;
 			Gizmos.DrawRay(UnityPosition, Vector3.up);
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine(UnityPosition, DragForward.position);
+			Gizmos.DrawWireCube(DragForward.position, Vector3.one);
 		}
 	}
 

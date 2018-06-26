@@ -5,21 +5,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-using LunraGames.SpaceFarm.Views;
-
 namespace LunraGames.SpaceFarm
 {
 	public class ViewMediator
 	{
-		int _interactionCount;
+		int interactionCount;
 		public int InteractionCount
 		{
-			get { return _interactionCount; }
+			get { return interactionCount; }
 			set
 			{
 				var count = Mathf.Max(0, value);
-				var oldCount = _interactionCount;
-				_interactionCount = count;
+				var oldCount = interactionCount;
+				interactionCount = count;
 #if UNITY_EDITOR
 				if (UnityEngine.Application.isPlaying)
 #endif
@@ -32,17 +30,29 @@ namespace LunraGames.SpaceFarm
 				}
 			}
 		}
-		List<IView> _pool = new List<IView>();
-		List<GameObject> _defaultViews = new List<GameObject>();
-		List<IView> _views = new List<IView>();
+		List<IView> pool = new List<IView>();
+		List<GameObject> defaultViews = new List<GameObject>();
+		List<IView> views = new List<IView>();
 		Transform storage;
 
 		public void Initialize(List<GameObject> defaultViews, Transform viewStorage, Action<RequestStatus> done)
 		{
-			_pool = new List<IView>();
-			_defaultViews = defaultViews;
+			pool = new List<IView>();
+			this.defaultViews = defaultViews;
 			storage = viewStorage;
-			foreach (var prefab in defaultViews) Pool(Create(prefab));
+			foreach (var prefab in defaultViews)
+			{
+				var prefabView = prefab.GetComponent<IView>();
+				if (prefabView == null)
+				{
+					Debug.LogError("View prefab \"" + prefab.name + "\" has no root IView component.");
+					continue;
+				}
+				for (var i = 0; i < Mathf.Max(prefabView.PoolSize, 1); i++)
+				{
+					Pool(Create(prefab));
+				}
+			}
 			App.Heartbeat.Update += Update;
 			App.Heartbeat.LateUpdate += LateUpdate;
 
@@ -77,7 +87,7 @@ namespace LunraGames.SpaceFarm
 		public IView Get(Type type, Func<IView, bool> predicate = null)
 		{
 			IView existing = null;
-			foreach (var view in _pool)
+			foreach (var view in pool)
 			{
 				if (!type.IsAssignableFrom(view.GetType())) continue;
 				if (predicate != null)
@@ -98,7 +108,7 @@ namespace LunraGames.SpaceFarm
 
 			if (existing != null)
 			{
-				_pool.Remove(existing);
+				pool.Remove(existing);
 				return existing;
 			}
 			return Create(type, predicate);
@@ -107,7 +117,7 @@ namespace LunraGames.SpaceFarm
 		IView Create(Type type, Func<IView, bool> predicate = null)
 		{
 			GameObject prefab = null;
-			foreach (var view in _defaultViews)
+			foreach (var view in defaultViews)
 			{
 				var component = view.GetComponent(type);
 				if (component == null) continue;
@@ -157,13 +167,13 @@ namespace LunraGames.SpaceFarm
 				Debug.LogError("Can't pool a null view");
 				return;
 			}
-			if (_pool.Contains(view))
+			if (pool.Contains(view))
 			{
 				Debug.LogError("Pool already contains the view " + view.gameObject.name);
 				return;
 			}
 			if (view.Visible) Debug.LogError("Pooling a visible view, this shouldn't happen, and may cause unintended side effects");
-			_pool.Add(view);
+			pool.Add(view);
 		}
 
 		void Closing(IView view)
@@ -175,7 +185,7 @@ namespace LunraGames.SpaceFarm
 			view.Closing(scalar);
 			if (Mathf.Approximately(1f, scalar))
 			{
-				_views.Remove(view);
+				views.Remove(view);
 
 				view.Parent = null;
 				DisableAndCacheView(view);
@@ -198,7 +208,7 @@ namespace LunraGames.SpaceFarm
 
 		void Update(float delta)
 		{
-			foreach (var view in _views.ToList())
+			foreach (var view in views.ToList())
 			{
 				if (view.TransitionState == TransitionStates.Shown) 
 				{
@@ -213,14 +223,14 @@ namespace LunraGames.SpaceFarm
 				{
 					var error = "The view " + (unmodifiedView == null ? "null" : unmodifiedView.gameObject.name) + " with state " + unmodifiedView.TransitionState + " is still on the waldo, this should not be possible";
 					Debug.LogError(error);
-					_views.Remove(unmodifiedView);
+					views.Remove(unmodifiedView);
 				}
 			}
 		}
 
 		void LateUpdate(float delta)
 		{
-			foreach (var view in _views.ToList())
+			foreach (var view in views.ToList())
 			{
 				if (view.TransitionState == TransitionStates.Shown) view.LateIdle(delta);
 			}
@@ -248,7 +258,7 @@ namespace LunraGames.SpaceFarm
 			view.Parent = parent;
 			view.Progress = instant ? view.ShowDuration : 0f;
 
-			_views.Add(view);
+			views.Add(view);
 			view.Prepare();
 			// Call showing here since we want instantanious shows to actually be instantanious.
 			Showing(view);

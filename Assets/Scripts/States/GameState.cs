@@ -151,13 +151,11 @@ namespace LunraGames.SpaceFarm
 			var minZ = position.Sector.z - App.Preferences.SectorUnloadRadius;
 			var maxZ = position.Sector.z + App.Preferences.SectorUnloadRadius;
 
-			for (var x = minX; x < maxX; x++)
+			for (var x = minX; x <= maxX; x++)
 			{
-				for (var z = minZ; z < maxZ; z++)
+				for (var z = minZ; z <= maxZ; z++)
 				{
-					var current = new UniversePosition(new Vector3(x, 0f, z), Vector3.zero);
-					if (App.Preferences.SectorUnloadRadius < UniversePosition.Distance(position, current)) continue;
-					newSectors.Add(current);
+					newSectors.Add(new UniversePosition(new Vector3(x, 0f, z), Vector3.zero));
 				}
 			}
 

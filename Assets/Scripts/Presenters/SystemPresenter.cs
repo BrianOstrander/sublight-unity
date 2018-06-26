@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using System.Linq;
 
 using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
@@ -21,7 +21,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 			gameModel.DestructionRadius.Changed += OnDestructionRadius;
-			gameModel.FocusedSector.Changed += OnFocusedSector;
+			gameModel.FocusedSectors.Changed += OnFocusedSectors;
 		}
 
 		protected override void UnBind()
@@ -30,7 +30,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 			gameModel.DestructionRadius.Changed -= OnDestructionRadius;
-			gameModel.FocusedSector.Changed -= OnFocusedSector;
+			gameModel.FocusedSectors.Changed -= OnFocusedSectors;
 		}
 
 		public void Show()
@@ -123,15 +123,13 @@ namespace LunraGames.SpaceFarm.Presenters
 			else View.SystemState = SystemStates.OutOfRange;
 		}
 
-		void OnFocusedSector(UniversePosition position)
+		void OnFocusedSectors(UniversePosition[] positions)
 		{
-			if (App.Preferences.SectorUnloadRadius < UniversePosition.Distance(model.Position, position))
+			if (!positions.Contains(model.Position.Value.SystemZero))
 			{
 				CloseView(true);
 				UnBind();
-				return;
 			}
-			// TODO: Add LOD stuff here.
 		}
 		#endregion
 	}

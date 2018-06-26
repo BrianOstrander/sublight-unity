@@ -26,6 +26,7 @@ namespace LunraGames.SpaceFarm
 
 		float Opacity { get; set; }
 		bool Interactable { get; set; }
+		int PoolSize { get; }
 
 		TransitionStates TransitionState { get; }
 
@@ -65,6 +66,7 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		/// <value>The closed.</value>
 		Action Closed { get; set; }
+
 		void Reset();
 
 		string InstanceName { get; set; }
@@ -89,9 +91,11 @@ namespace LunraGames.SpaceFarm
 		public virtual float Opacity { get { return opacity; } set { opacity = Mathf.Max(0f, Mathf.Min(1f, value)); } }
 		bool interactable = true;
 		public virtual bool Interactable { get { return interactable; } set { interactable = value; } }
+		[SerializeField, Tooltip("Size of initial pool, entering \"0\" uses ViewMediator defaults.")]
+		int poolSize;
+		public virtual int PoolSize { get { return poolSize; } }
 		[SerializeField, FormerlySerializedAs("_animations")]
 		ViewAnimation[] animations;
-
 		public virtual ViewAnimation[] ViewAnimations { get { return animations; } }
 
 		public string InstanceName 
