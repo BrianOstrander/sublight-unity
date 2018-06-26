@@ -65,10 +65,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnLoadGameClick(SaveModel model)
 		{
-			App.SaveLoadService.Load<GameSaveModel>(model, OnLoadedGame);
+			App.SaveLoadService.Load<GameModel>(model, OnLoadedGame);
 		}
 
-		void OnLoadedGame(SaveLoadRequest<GameSaveModel> result)
+		void OnLoadedGame(SaveLoadRequest<GameModel> result)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -81,12 +81,11 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnNewGame()
 		{
-			var gameSave = App.SaveLoadService.Create<GameSaveModel>();
-			gameSave.Game.Value = new GameModel();
-			var game = gameSave.Game.Value;
+			var game = App.SaveLoadService.Create<GameModel>();
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = UniversePosition.Zero;
+			game.FocusedSectors.Value = new UniversePosition[0];
 			game.DestructionSpeed.Value = 0.01f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
@@ -124,10 +123,10 @@ namespace LunraGames.SpaceFarm.Presenters
 				1f
 			);
 
-			App.SaveLoadService.Save(gameSave, OnSaveGame);
+			App.SaveLoadService.Save(game, OnSaveGame);
 		}
 
-		void OnSaveGame(SaveLoadRequest<GameSaveModel> result)
+		void OnSaveGame(SaveLoadRequest<GameModel> result)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -138,11 +137,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			OnStartGame(result.TypedModel);
 		}
 
-		void OnStartGame(GameSaveModel model)
+		void OnStartGame(GameModel model)
 		{
 			var payload = new GamePayload();
-			payload.GameSave = model;
-			payload.Game = model.Game;
+			payload.Game = model;
 			App.SM.RequestState(payload);
 		}
 		#endregion

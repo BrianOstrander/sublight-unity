@@ -20,7 +20,8 @@ namespace LunraGames.SpaceFarm
 			{
 				return new Dictionary<SaveTypes, int>
 				{
-					{ SaveTypes.Game, 0 }
+					{ SaveTypes.Game, 0 },
+					{ SaveTypes.Preferences, 0 }
 				};
 			}
 		}
@@ -50,6 +51,7 @@ namespace LunraGames.SpaceFarm
 			switch (saveType)
 			{
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
+				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}

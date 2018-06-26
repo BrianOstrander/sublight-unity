@@ -98,7 +98,7 @@ namespace LunraGames.SpaceFarm
 		/// Requests a camera change of position or reports a change in the 
 		/// camera's position.
 		/// </summary>
-		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
+		public Action<CameraSystemRequest> CameraSystemRequest = ActionExtensions.GetEmpty<CameraSystemRequest>();
 		/// <summary>
 		/// Requests or reports saving.
 		/// </summary>
@@ -107,9 +107,13 @@ namespace LunraGames.SpaceFarm
 		/// Called when the void's render texture is updated.
 		/// </summary>
 		public Action<VoidRenderTexture> VoidRenderTexture = ActionExtensions.GetEmpty<VoidRenderTexture>();
+		/// <summary>
+		/// Called every time the offset of the universe is updated.
+		/// </summary>
+		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
 		#endregion
 
-		// TODO: Think about moving these to state...
+		// TODO: Think about moving these to state or GameModel...
 
 		#region Genaral Caching
 		public CameraOrientation LastCameraOrientation;
@@ -127,6 +131,7 @@ namespace LunraGames.SpaceFarm
 		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
 		public VoidRenderTexture LastVoidRenderTexture;
+		public UniversePositionRequest LastUniversePositionRequest;
 		#endregion
 
 		Stack<EscapeEntry> escapes = new Stack<EscapeEntry>();
@@ -147,6 +152,7 @@ namespace LunraGames.SpaceFarm
 			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
 			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
 			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
+			UniversePositionRequest += request => LastUniversePositionRequest = request;
 
 			Escape += OnEscape;
 		}

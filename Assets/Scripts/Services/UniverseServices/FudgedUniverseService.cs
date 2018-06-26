@@ -114,7 +114,7 @@ namespace LunraGames.SpaceFarm
 			var systems = new SystemModel[positions.Length];
 			for (var i = 0; i < positions.Length; i++)
 			{
-				systems[i] = CreateSystem(types[i], sector, seeds[i], new UniversePosition(Vector3.zero, positions[i]));
+				systems[i] = CreateSystem(types[i], sector, seeds[i], sector.Position.Value.NewSystem(positions[i]));
 			}
 			sector.Systems.Value = systems;
 		}

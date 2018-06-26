@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LunraGames.SpaceFarm
 {
-	public struct SystemCameraRequest
+	public struct CameraSystemRequest
 	{
 		public enum States
 		{
@@ -38,7 +38,7 @@ namespace LunraGames.SpaceFarm
 		public readonly float Progress;
 		public readonly bool Instant;
 
-		public static SystemCameraRequest Request(
+		public static CameraSystemRequest Request(
 			UniversePosition position,
 			UniversePosition origin,
 			UniversePosition destination,
@@ -46,7 +46,7 @@ namespace LunraGames.SpaceFarm
 			DateTime endTime
 		)
 		{
-			return new SystemCameraRequest(
+			return new CameraSystemRequest(
 				States.Request,
 				position,
 				origin,
@@ -57,9 +57,9 @@ namespace LunraGames.SpaceFarm
 				false);
 		}
 
-		public static SystemCameraRequest RequestInstant(UniversePosition position)
+		public static CameraSystemRequest RequestInstant(UniversePosition position)
 		{
-			return new SystemCameraRequest(
+			return new CameraSystemRequest(
 				States.Request,
 				position,
 				position,
@@ -70,7 +70,7 @@ namespace LunraGames.SpaceFarm
 				true);
 		}
 
-		public SystemCameraRequest(
+		public CameraSystemRequest(
 			States state,
 			UniversePosition position,
 			UniversePosition origin,
@@ -99,9 +99,9 @@ namespace LunraGames.SpaceFarm
 			return Mathf.Min(1f, elapsed / total);
 		}
 
-		public SystemCameraRequest Duplicate(States state = States.Unknown)
+		public CameraSystemRequest Duplicate(States state = States.Unknown)
 		{
-			return new SystemCameraRequest(
+			return new CameraSystemRequest(
 				state == States.Unknown ? State : state,
 				Position,
 				Origin,

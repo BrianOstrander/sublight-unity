@@ -1,14 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
-	public class GameModel : Model
+	public class GameModel : SaveModel
 	{
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
 		[JsonProperty] float speed;
 		[JsonProperty] UniverseModel universe;
 		[JsonProperty] UniversePosition focusedSector;
+		[JsonProperty] UniversePosition[] focusedSectors;
 		[JsonProperty] ShipModel ship;
 		[JsonProperty] float destructionSpeed;
 		[JsonProperty] float destructionRadius;
@@ -41,6 +44,11 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> FocusedSector;
 		/// <summary>
+		/// Positions of all loaded sectors.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
+		/// <summary>
 		/// The game ship.
 		/// </summary>
 		[JsonIgnore]
@@ -61,11 +69,13 @@ namespace LunraGames.SpaceFarm.Models
 
 		public GameModel()
 		{
+			SaveType = SaveTypes.Game;
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
 			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
 			Universe = new ListenerProperty<UniverseModel>(value => universe = value, () => universe);
 			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
+			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
 			DestructionRadius = new ListenerProperty<float>(value => destructionRadius = value, () => destructionRadius);

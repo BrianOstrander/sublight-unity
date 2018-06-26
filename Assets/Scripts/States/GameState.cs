@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -9,7 +11,6 @@ namespace LunraGames.SpaceFarm
 {
 	public class GamePayload : IStatePayload
 	{
-		public GameSaveModel GameSave;
 		public GameModel Game;
 	}
 
@@ -25,7 +26,6 @@ namespace LunraGames.SpaceFarm
 		protected override void Begin()
 		{
 			App.SM.PushBlocking(LoadScenes);
-			App.SM.PushBlocking(InitializeCamera);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(InitializeGame);
@@ -34,11 +34,6 @@ namespace LunraGames.SpaceFarm
 		void LoadScenes(Action done)
 		{
 			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
-		}
-
-		void InitializeCamera(Action done)
-		{
-			new CameraSystemPresenter().Show(done);
 		}
 
 		void InitializeInput(Action done)
@@ -70,6 +65,7 @@ namespace LunraGames.SpaceFarm
 
 			var travelRadiusChange = new TravelRadiusChange(ship.Position, ship.Speed, ship.RationConsumption, ship.Rations);
 
+			//UniversePosition
 			App.Callbacks.DayTimeDelta(new DayTimeDelta(game.DayTime, game.DayTime));
 			App.Callbacks.SystemHighlight(SystemHighlight.None);
 			App.Callbacks.TravelRadiusChange(travelRadiusChange);
@@ -83,11 +79,13 @@ namespace LunraGames.SpaceFarm
 			// but you can safely ignore those warnings since they register
 			// themselves with the PresenterMediator.
 
+			new CameraSystemPresenter(game).Show();
 			new SpeedPresenter(game).Show();
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new DestructionOriginSystemPresenter().Show();
 			new DestructionSystemPresenter(game).Show();
+
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
 			new PauseMenuPresenter();
@@ -106,7 +104,7 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.FocusedSector.Value = focusedSector;
 			if (wasFocused) OnFocusedSector(focusedSector);
 
-			App.Callbacks.SystemCameraRequest(SystemCameraRequest.RequestInstant(Payload.Game.Ship.Value.Position));
+			App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(Payload.Game.Ship.Value.Position));
 
 			if (!DevPrefs.SkipExplanation)
 			{
@@ -143,13 +141,34 @@ namespace LunraGames.SpaceFarm
 		#endregion
 
 		#region Events
-		void OnFocusedSector(UniversePosition universePosition)
+		void OnFocusedSector(UniversePosition position)
 		{
-			var sector = Payload.Game.Universe.Value.GetSector(universePosition);
-			foreach (var system in sector.Systems.Value)
+			var oldSectors = Payload.Game.FocusedSectors.Value.ToList();
+			var newSectors = new List<UniversePosition>();
+
+			var minX = position.Sector.x - App.Preferences.SectorUnloadRadius;
+			var maxX = position.Sector.x + App.Preferences.SectorUnloadRadius;
+			var minZ = position.Sector.z - App.Preferences.SectorUnloadRadius;
+			var maxZ = position.Sector.z + App.Preferences.SectorUnloadRadius;
+
+			for (var x = minX; x <= maxX; x++)
 			{
-				var systemPresenter = new SystemPresenter(Payload.Game, system);
-				systemPresenter.Show();
+				for (var z = minZ; z <= maxZ; z++)
+				{
+					newSectors.Add(new UniversePosition(new Vector3(x, 0f, z), Vector3.zero));
+				}
+			}
+
+			App.Callbacks.UniversePositionRequest(UniversePositionRequest.Request(position));
+			Payload.Game.FocusedSectors.Value = newSectors.ToArray();
+
+			foreach (var sectorPosition in newSectors.Where(s => !oldSectors.Contains(s)))
+			{
+				var sector = Payload.Game.Universe.Value.GetSector(sectorPosition);
+				foreach (var system in sector.Systems.Value)
+				{
+					new SystemPresenter(Payload.Game, system).Show();
+				}
 			}
 		}
 
@@ -163,12 +182,12 @@ namespace LunraGames.SpaceFarm
 			switch(request.State)
 			{
 				case SaveRequest.States.Request:
-					App.SaveLoadService.Save(Payload.GameSave, OnSave);
+					App.SaveLoadService.Save(Payload.Game, OnSave);
 					break;
 			}
 		}
 
-		void OnSave(SaveLoadRequest<GameSaveModel> request)
+		void OnSave(SaveLoadRequest<GameModel> request)
 		{
 			if (request.Status != RequestStatus.Success) Debug.LogError("Error saving: " + request.Error);
 			App.Callbacks.SaveRequest(new SaveRequest(SaveRequest.States.Complete));

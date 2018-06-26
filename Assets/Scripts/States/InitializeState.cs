@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 using LunraGames.SpaceFarm.Presenters;
+using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm
 {
@@ -28,6 +30,8 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(InitializeViews);
 			App.SM.PushBlocking(InitializeModels);
 			App.SM.PushBlocking(InitializePresenters);
+			App.SM.PushBlocking(InitializePreferences);
+			App.SM.PushBlocking(InitializeListeners);
 		}
 
 		protected override void Idle()
@@ -92,5 +96,82 @@ namespace LunraGames.SpaceFarm
 			);
 		}
 		#endregion
+
+		void InitializePreferences(Action done)
+		{
+			App.SaveLoadService.List<PreferencesModel>(result => OnListPreferences(result, done));
+		}
+
+		void OnListPreferences(SaveLoadArrayRequest<SaveModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				App.Restart("Listing preferences failed with status" + result.Status);
+				return;
+			}
+
+			if (result.Length == 0)
+			{
+				App.Log("No existing preferences, generating defaults", LogTypes.Initialization);
+				App.SaveLoadService.Save(
+					App.SaveLoadService.Create<PreferencesModel>(), 
+					saveResult => OnSavedPreferences(saveResult, done)
+				);
+			}
+			else
+			{
+				var toLoad = result.TypedModels.Where(p => p.SupportedVersion.Value).OrderBy(p => p.Version.Value).LastOrDefault();
+				if (toLoad == null)
+				{
+					App.Log("No supported preferences, generating defaults", LogTypes.Initialization);
+					App.SaveLoadService.Save(
+						App.SaveLoadService.Create<PreferencesModel>(),
+						saveResult => OnSavedPreferences(saveResult, done)
+					);
+				}
+				else
+				{
+					App.Log("Loading existing preferences", LogTypes.Initialization);
+					App.SaveLoadService.Load<PreferencesModel>(
+						toLoad,
+						loadResult => OnLoadPreferences(loadResult, done)
+					);
+				}
+			}
+		}
+
+		void OnLoadPreferences(SaveLoadRequest<PreferencesModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				App.Restart("Loading preferences failed with status" + result.Status);
+				return;
+			}
+
+			App.Log("Loaded preferences from "+result.Model.Path, LogTypes.Initialization);
+			App.SaveLoadService.Save(
+				result.TypedModel,
+				saveResult => OnSavedPreferences(saveResult, done)
+			);
+		}
+
+		void OnSavedPreferences(SaveLoadRequest<PreferencesModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				App.Restart("Saving preferences failed with status" + result.Status);
+				return;
+			}
+
+			App.Log("Saved preferences to " + result.Model.Path, LogTypes.Initialization);
+			App.SetPreferences(result.TypedModel);
+			done();
+		}
+
+		void InitializeListeners(Action done)
+		{
+			App.Callbacks.UniversePositionRequest += UniversePosition.OnUniversePositionRequest;
+			done();
+		}
 	}
 }

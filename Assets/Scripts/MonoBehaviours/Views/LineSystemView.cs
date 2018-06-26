@@ -17,6 +17,11 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		LineRenderer remainderSegment;
 
+		public Vector3 UnityPosition
+		{
+			set { Root.position = value; }
+			get { return Root.position; }
+		}
 		public UniversePosition UniversePosition { set; get; }
 
 		public void SetSegments(LineSegment? safe = null, LineSegment? danger = null, LineSegment? max = null, LineSegment? remainder = null)
@@ -36,6 +41,7 @@ namespace LunraGames.SpaceFarm.Views
 		{
 			base.Reset();
 
+			UnityPosition = Vector3.zero;
 			UniversePosition = UniversePosition.Zero;
 			SetSegments();
 		}
