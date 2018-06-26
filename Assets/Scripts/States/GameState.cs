@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -11,8 +12,6 @@ namespace LunraGames.SpaceFarm
 	public class GamePayload : IStatePayload
 	{
 		public GameModel Game;
-
-		public List<UniversePosition> FocusedSectors = new List<UniversePosition>();
 	}
 
 	public class GameState : State<GamePayload>
@@ -142,20 +141,37 @@ namespace LunraGames.SpaceFarm
 		#endregion
 
 		#region Events
-		void OnFocusedSector(UniversePosition universePosition)
+		void OnFocusedSector(UniversePosition position)
 		{
-			App.Callbacks.UniversePositionRequest(UniversePositionRequest.Request(universePosition.SystemZero));
+			var oldSectors = Payload.Game.FocusedSectors.Value.ToList();
+			var newSectors = new List<UniversePosition>();
 
-			if (Payload.FocusedSectors.Contains(universePosition)) return;
-			Payload.FocusedSectors.Add(universePosition);
+			var minX = position.Sector.x - App.Preferences.SectorUnloadRadius;
+			var maxX = position.Sector.x + App.Preferences.SectorUnloadRadius;
+			var minZ = position.Sector.z - App.Preferences.SectorUnloadRadius;
+			var maxZ = position.Sector.z + App.Preferences.SectorUnloadRadius;
 
-			var sector = Payload.Game.Universe.Value.GetSector(universePosition);
-			foreach (var system in sector.Systems.Value)
+			for (var x = minX; x < maxX; x++)
 			{
-				var systemPresenter = new SystemPresenter(Payload.Game, system);
-				systemPresenter.Show();
+				for (var z = minZ; z < maxZ; z++)
+				{
+					var current = new UniversePosition(new Vector3(x, 0f, z), Vector3.zero);
+					if (App.Preferences.SectorUnloadRadius < UniversePosition.Distance(position, current)) continue;
+					newSectors.Add(current);
+				}
 			}
 
+			App.Callbacks.UniversePositionRequest(UniversePositionRequest.Request(position));
+			Payload.Game.FocusedSectors.Value = newSectors.ToArray();
+
+			foreach (var sectorPosition in newSectors.Where(s => !oldSectors.Contains(s)))
+			{
+				var sector = Payload.Game.Universe.Value.GetSector(sectorPosition);
+				foreach (var system in sector.Systems.Value)
+				{
+					new SystemPresenter(Payload.Game, system).Show();
+				}
+			}
 		}
 
 		void OnTravelRequest(TravelRequest request)

@@ -21,6 +21,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 			gameModel.DestructionRadius.Changed += OnDestructionRadius;
+			gameModel.FocusedSector.Changed += OnFocusedSector;
 		}
 
 		protected override void UnBind()
@@ -29,6 +30,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 			gameModel.DestructionRadius.Changed -= OnDestructionRadius;
+			gameModel.FocusedSector.Changed -= OnFocusedSector;
 		}
 
 		public void Show()
@@ -119,6 +121,17 @@ namespace LunraGames.SpaceFarm.Presenters
 			else if (gameModel.Ship.Value.Position.Value == model.Position.Value) View.SystemState = SystemStates.Current;
 			else if (isTravelable) View.SystemState = SystemStates.InRange;
 			else View.SystemState = SystemStates.OutOfRange;
+		}
+
+		void OnFocusedSector(UniversePosition position)
+		{
+			if (App.Preferences.SectorUnloadRadius < UniversePosition.Distance(model.Position, position))
+			{
+				CloseView(true);
+				UnBind();
+				return;
+			}
+			// TODO: Add LOD stuff here.
 		}
 		#endregion
 	}

@@ -113,7 +113,7 @@ namespace LunraGames.SpaceFarm
 		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
 		#endregion
 
-		// TODO: Think about moving these to state...
+		// TODO: Think about moving these to state or GameModel...
 
 		#region Genaral Caching
 		public CameraOrientation LastCameraOrientation;

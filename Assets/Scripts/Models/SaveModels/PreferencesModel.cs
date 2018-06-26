@@ -6,7 +6,7 @@ namespace LunraGames.SpaceFarm.Models
 	{
 		[JsonProperty] float cameraSystemDragMoveScalar = 16f;
 		[JsonProperty] float cameraSystemDragRotateScalar = 64f;
-		[JsonProperty] float sectorUnloadRadius = 3f;
+		[JsonProperty] float sectorUnloadRadius = 2f;
 
 		/// <summary>
 		/// The scalar applied to dragging around the camera in the system area.
