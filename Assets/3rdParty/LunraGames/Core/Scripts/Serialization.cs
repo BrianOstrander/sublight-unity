@@ -39,7 +39,9 @@ namespace LunraGames
 					_SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
 					foreach (var converter in Converters) _SerializerSettings.Converters.Add(converter);
 					foreach (var converter in AddedConverters) _SerializerSettings.Converters.Add(converter);
+#if PROP_JSON
 					_SerializerSettings.Converters.Remove(_SerializerSettings.Converters.First(c => c.GetType() == typeof(VectorConverter)));
+#endif
 				}
 				return _SerializerSettings;
 			}
@@ -53,7 +55,8 @@ namespace LunraGames
 		/// <value>The verbose serializer settings.</value>
 		static JsonSerializerSettings VerboseSerializerSettings {
 			get {
-				if (_VerboseSerializerSettings == null) {
+				if (_VerboseSerializerSettings == null)
+				{
 					_VerboseSerializerSettings = new JsonSerializerSettings();
 					_VerboseSerializerSettings.TypeNameHandling = TypeNameHandling.All;
 					_VerboseSerializerSettings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
@@ -61,7 +64,9 @@ namespace LunraGames
 					_VerboseSerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
 					foreach (var converter in Converters) _VerboseSerializerSettings.Converters.Add(converter);
 					foreach (var converter in AddedConverters) _VerboseSerializerSettings.Converters.Add(converter);
+#if PROP_JSON
 					_VerboseSerializerSettings.Converters.Remove(_VerboseSerializerSettings.Converters.First(c => c.GetType() == typeof(VectorConverter)));
+#endif
 				}
 				return _VerboseSerializerSettings;
 			}
