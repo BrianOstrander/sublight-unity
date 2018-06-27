@@ -13,12 +13,15 @@ namespace LunraGames.SpaceFarm.Presenters
 		bool isTravelable;
 		bool isDestroyed;
 
+		bool updatedThisFrame;
+
 		public SystemPresenter(GameModel gameModel, SystemModel model)
 		{
 			this.gameModel = gameModel;
 			this.model = model;
 			SetView(App.V.Get<ISystemView>(v => v.SystemType == model.SystemType));
 
+			App.Heartbeat.Update += OnUpdate;
 			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
 			gameModel.DestructionRadius.Changed += OnDestructionRadius;
 			gameModel.FocusedSectors.Changed += OnFocusedSectors;
@@ -28,6 +31,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
+			App.Heartbeat.Update -= OnUpdate;
 			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
 			gameModel.DestructionRadius.Changed -= OnDestructionRadius;
 			gameModel.FocusedSectors.Changed -= OnFocusedSectors;
@@ -49,6 +53,11 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
+		void OnUpdate(float delta)
+		{
+			updatedThisFrame = false;
+		}
+
 		void OnHighlight(bool highlighted)
 		{
 			var state = SystemHighlight.States.End;
@@ -117,6 +126,8 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnSystemState()
 		{
+			if (updatedThisFrame) return;
+			// TODO: Add more efficient checking of state to rule out unnecesary updates.
 			if (isDestroyed) View.SystemState = SystemStates.Destroyed;
 			else if (gameModel.Ship.Value.Position.Value == model.Position.Value) View.SystemState = SystemStates.Current;
 			else if (isTravelable) View.SystemState = SystemStates.InRange;

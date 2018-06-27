@@ -81,16 +81,19 @@ namespace LunraGames.SpaceFarm
 
 			new CameraSystemPresenter(game).Show();
 			new SpeedPresenter(game).Show();
+			new EndDistancePresenter(game).Show();
 			new ShipSystemPresenter(game).Show();
 			new ShipRadiusPresenter(game).Show();
 			new DestructionOriginSystemPresenter().Show();
 			new DestructionSystemPresenter(game).Show();
+			new EndDirectionSystemPresenter(game).Show();
 
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);
 			new EnterSystemPresenter(game);
+			new EndSystemPresenter(game);
 
 			done();
 		}

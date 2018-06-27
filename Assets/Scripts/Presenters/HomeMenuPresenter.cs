@@ -123,6 +123,14 @@ namespace LunraGames.SpaceFarm.Presenters
 				1f
 			);
 
+			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
+			game.EndSystem.Value = endSector.Systems.Value.First().Position;
+
+			// Uncomment this to make the game easy.
+			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
+
+
+
 			App.SaveLoadService.Save(game, OnSaveGame);
 		}
 

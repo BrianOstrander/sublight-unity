@@ -49,6 +49,9 @@ namespace LunraGames.SpaceFarm.Presenters
 			switch(travelRequest.State)
 			{
 				case TravelRequest.States.Complete:
+					// Don't pop up on end system.
+					if (travelRequest.Destination == model.EndSystem.Value) return;
+
 					var travelDestination = model.Universe.Value.GetSystem(travelRequest.Destination);
 					if (travelDestination == null) Debug.LogError("Travel destination null, may cause strange side effects.");
 					else if (!travelDestination.Visited)

@@ -14,6 +14,8 @@ namespace LunraGames.SpaceFarm
 	{
 		const float UnityToUniverseScalar = 0.02f;
 		const float UniverseToUnityScalar = 50f;
+		const float UniverseToLightYearScalar = 25f;
+
 		/// <summary>
 		/// The current sector offset of all unity units.
 		/// </summary>
@@ -40,6 +42,8 @@ namespace LunraGames.SpaceFarm
 		public static float ToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
 
 		public static float ToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
+
+		public static float ToLightYearDistance(float universeDistance) { return universeDistance * UniverseToLightYearScalar; }
 
 		public static UniversePosition ToUniverse(Vector3 unityPosition)
 		{
