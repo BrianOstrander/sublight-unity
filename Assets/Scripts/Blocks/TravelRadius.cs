@@ -7,6 +7,10 @@
 	{
 		public static TravelRadius Zero { get { return new TravelRadius(0f, 0f, 0f); } }
 
+		public readonly float SafeRadius;
+		public readonly float DangerRadius;
+		public readonly float MaximumRadius;
+
 		public TravelRadius(float safeRadius, float dangerRadius, float maximumRadius)
 		{
 			SafeRadius = safeRadius;
@@ -14,8 +18,5 @@
 			MaximumRadius = maximumRadius;
 		}
 
-		public float SafeRadius;
-		public float DangerRadius;
-		public float MaximumRadius;
 	}
 }

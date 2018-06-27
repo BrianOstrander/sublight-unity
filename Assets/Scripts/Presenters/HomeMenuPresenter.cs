@@ -99,8 +99,11 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 
 			startSystem.Visited.Value = true;
+
 			var startPosition = startSystem.Position;
 			var rations = 0.3f;
+			var fuel = 10f;
+			var fuelConsumption = 2f;
 			var speed = 0.003f;
 			var rationConsumption = 0.02f;
 
@@ -110,6 +113,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Speed.Value = speed;
 			ship.RationConsumption.Value = rationConsumption;
 			ship.Rations.Value = rations;
+			ship.Fuel.Value = fuel;
+			ship.FuelConsumption.Value = fuelConsumption;
 
 			game.Ship.Value = ship;
 

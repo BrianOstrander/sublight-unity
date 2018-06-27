@@ -1,6 +1,6 @@
 using System;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames
 {
 	public static class ActionExtensions
 	{

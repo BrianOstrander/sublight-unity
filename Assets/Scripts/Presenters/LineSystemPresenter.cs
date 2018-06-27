@@ -9,13 +9,13 @@ namespace LunraGames.SpaceFarm.Presenters
 	{
 		SystemHighlight nextHighlight;
 
-		GameModel gameModel;
+		GameModel model;
 
-		public LineSystemPresenter(GameModel gameModel)
+		public LineSystemPresenter(GameModel model)
 		{
-			this.gameModel = gameModel;
+			this.model = model;
 
-			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
+			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
 			App.Callbacks.TravelRequest += OnTravelRequest;
 		}
@@ -24,7 +24,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
-			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
+			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
 			App.Callbacks.TravelRequest -= OnTravelRequest;
 		}
@@ -39,7 +39,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange) 
+		void OnTravelRadius(TravelRadius travelRadius) 
 		{
 			if (!View.Visible) return;
 			OnDetails(); 
@@ -47,9 +47,9 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnDetails()
 		{
-			var origin = gameModel.Ship.Value.CurrentSystem.Value;
+			var origin = model.Ship.Value.CurrentSystem.Value;
 			var destination = nextHighlight.System;
-			var travelRadius = App.Callbacks.LastTravelRadiusChange.TravelRadius;
+			var travelRadius = model.Ship.Value.TravelRadius.Value;
 
 			var distance = UniversePosition.Distance(origin, destination.Position);
 

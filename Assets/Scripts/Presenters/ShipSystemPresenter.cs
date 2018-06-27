@@ -20,9 +20,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
 			App.Callbacks.TravelRequest += OnTravelRequest;
 			model.Ship.Value.Position.Changed += OnShipPosition;
-			model.Ship.Value.Speed.Changed += OnSpeed;
-			model.Ship.Value.Rations.Changed += OnRations;
-			model.Ship.Value.RationConsumption.Changed += OnRationConsumption;
 		}
 
 		protected override void UnBind()
@@ -32,9 +29,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
 			App.Callbacks.TravelRequest -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
-			model.Ship.Value.Speed.Changed -= OnSpeed;
-			model.Ship.Value.Rations.Changed -= OnRations;
-			model.Ship.Value.RationConsumption.Changed -= OnRationConsumption;
 		}
 
 		public void Show()
@@ -44,7 +38,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 
 			View.UniversePosition = model.Ship.Value.Position;
-			OnUpdateTravelRadius();
 
 			ShowView(instant: true);
 		}
@@ -110,20 +103,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnShipPosition(UniversePosition position)
 		{
 			View.UniversePosition = position;
-			OnUpdateTravelRadius();
-		}
-
-		void OnSpeed(float speed) { OnUpdateTravelRadius(); }
-
-		void OnRations(float rations) { OnUpdateTravelRadius(); }
-
-		void OnRationConsumption(float rationConsumption) { OnUpdateTravelRadius(); }
-
-		void OnUpdateTravelRadius()
-		{
-			var change = new TravelRadiusChange(ship.Position, ship.Speed, ship.RationConsumption, ship.Rations);
-			ship.TravelRadius.Value = change.TravelRadius;
-			App.Callbacks.TravelRadiusChange(change);
 		}
 		#endregion
 	}

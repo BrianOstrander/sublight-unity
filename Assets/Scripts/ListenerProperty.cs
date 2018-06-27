@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
@@ -9,7 +8,7 @@ namespace LunraGames.SpaceFarm
 		Action<T> set;
 		Func<T> get;
 
-		public Action<T> Changed = value => { };
+		public Action<T> Changed = ActionExtensions.GetEmpty<T>();
 
 		public T Value
 		{
