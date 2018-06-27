@@ -47,6 +47,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
 			OnTravelRadius(model.Ship.Value.TravelRadius);
+			OnDestructionRadius(model.DestructionRadius);
 			OnSystemState();
 
 			ShowView(instant: true);
