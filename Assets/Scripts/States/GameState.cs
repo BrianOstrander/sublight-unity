@@ -84,6 +84,7 @@ namespace LunraGames.SpaceFarm
 			new DestructionOriginSystemPresenter().Show();
 			new DestructionSystemPresenter(game).Show();
 			new EndDirectionSystemPresenter(game).Show();
+			new FuelSliderPresenter(game).Show();
 
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);

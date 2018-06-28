@@ -102,6 +102,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					system.Position,
 					App.Callbacks.LastDayTimeDelta.Current,
 					App.Callbacks.LastDayTimeDelta.Current + travelTime,
+					model.Ship.Value.FuelConsumption,
 					0f
 				);
 				App.Callbacks.TravelRequest(travel);

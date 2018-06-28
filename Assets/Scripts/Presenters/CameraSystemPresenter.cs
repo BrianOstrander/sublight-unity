@@ -81,6 +81,12 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnDrag()
 		{
+			//switch(App.Callbacks.LastHighlight.State)
+			//{
+			//	case Highlight.States.Begin:
+			//	case Highlight.States.Change:
+			//		return;
+			//}
 			OnDragMove(App.Callbacks.LastGesture);
 			OnDragRotate(App.Callbacks.LastGesture);
 		}

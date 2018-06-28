@@ -10,6 +10,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		GameModel model;
 		bool hasPoppedEscape;
 		SystemModel destination;
+		float fuelConsumed;
 
 		public EnterSystemPresenter(GameModel model)
 		{
@@ -53,10 +54,14 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (travelRequest.Destination == model.EndSystem.Value) return;
 
 					var travelDestination = model.Universe.Value.GetSystem(travelRequest.Destination);
-					if (travelDestination == null) Debug.LogError("Travel destination null, may cause strange side effects.");
-					else if (!travelDestination.Visited)
+					var remainingFuel = (model.Ship.Value.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
+					// Don't pop up if out of fuel.
+					if (remainingFuel < 1f) return;
+
+					if (!travelDestination.Visited)
 					{
 						destination = travelDestination;
+						fuelConsumed = travelRequest.FuelConsumed;
 						Show();
 					}
 					break;
@@ -91,6 +96,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			destination.Visited.Value = true;
 			model.Ship.Value.Rations.Value += destination.Rations;
+			model.Ship.Value.Fuel.Value += destination.Fuel - fuelConsumed;
 		}
 		#endregion
 

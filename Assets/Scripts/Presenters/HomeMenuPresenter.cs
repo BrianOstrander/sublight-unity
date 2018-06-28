@@ -102,7 +102,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			var startPosition = startSystem.Position;
 			var rations = 0.3f;
 			var fuel = 10f;
-			var fuelConsumption = 2f;
+			var fuelConsumption = 1f;
 			var speed = 0.003f;
 			var rationConsumption = 0.02f;
 
@@ -124,6 +124,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				startSystem.Position,
 				DayTime.Zero,
 				DayTime.Zero,
+				0f,
 				1f
 			);
 

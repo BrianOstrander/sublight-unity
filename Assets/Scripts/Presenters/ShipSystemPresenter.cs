@@ -68,6 +68,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					lastTravel.Destination,
 					lastTravel.StartTime,
 					lastTravel.EndTime,
+					lastTravel.FuelConsumed,
 					progress
 				);
 				App.Callbacks.TravelRequest(travel);
