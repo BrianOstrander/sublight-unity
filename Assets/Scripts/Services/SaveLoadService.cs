@@ -110,6 +110,11 @@ namespace LunraGames.SpaceFarm
 
 		public abstract void Initialize(Action<RequestStatus> done);
 
+        /// <summary>
+        /// Gets the minimum supported saves by SaveTypes, -1 means it only 
+        /// supports saves equal to the current version.
+        /// </summary>
+        /// <value>The minimum supported saves.</value>
 		protected abstract Dictionary<SaveTypes, int> MinimumSupportedSaves { get; }
 
 		protected abstract string GetUniquePath(SaveTypes saveType);
@@ -117,7 +122,11 @@ namespace LunraGames.SpaceFarm
 		protected bool IsSupportedVersion(SaveTypes type, int version)
 		{
 			if (!MinimumSupportedSaves.ContainsKey(type)) return false;
-			return MinimumSupportedSaves[type] <= version;
+            var min = MinimumSupportedSaves[type];
+            // If min is -1, then it means we can only load saves that equal 
+            // this version.
+            if (min < 0) min = App.BuildPreferences.Info.Version;
+			return min <= version;
 		}
 
 		public M Create<M>(string meta = null) where M : SaveModel, new()

@@ -20,8 +20,8 @@ namespace LunraGames.SpaceFarm
 			{
 				return new Dictionary<SaveTypes, int>
 				{
-					{ SaveTypes.Game, 0 },
-					{ SaveTypes.Preferences, 0 }
+					{ SaveTypes.Game, -1 },
+					{ SaveTypes.Preferences, -1 }
 				};
 			}
 		}
