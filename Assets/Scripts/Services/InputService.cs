@@ -126,8 +126,7 @@ namespace LunraGames.SpaceFarm
 				}
                 if (clickHeldDown)
                 {
-					// TODO: Drag logic here!
-                    
+					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler) != null;
                 }
 			}
 
