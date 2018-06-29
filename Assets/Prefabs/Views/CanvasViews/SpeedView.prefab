@@ -323,6 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cdd6ec03741e460595ba9ccc5321a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolSize: 0
   animations:
   - {fileID: 11400000, guid: 40bdb7dce45294d61a290d13dedbbb52, type: 2}
   dayTimeLabel: {fileID: 114812130137056578}

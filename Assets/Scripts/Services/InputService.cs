@@ -91,6 +91,7 @@ namespace LunraGames.SpaceFarm
 
 			var raycasts = new List<RaycastResult>();
 			if (EventSystem.current != null) EventSystem.current.RaycastAll(pointerData, raycasts);
+			// TODO: Does this need to be a list?
 			var stillHighlighted = new List<GameObject>();
 			var wasTriggered = false;
 			var wasClicked = false;
@@ -98,11 +99,16 @@ namespace LunraGames.SpaceFarm
 
 			foreach (var raycast in raycasts)
 			{
-				stillHighlighted.Add(raycast.gameObject);
+				if (wasTriggered) break;
 
-				if (!highlighted.Contains(raycast.gameObject)) ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
+				if (stillHighlighted.Count == 0)
+				{
+					stillHighlighted.Add(raycast.gameObject);
 
-				if (!anyInteraction) continue;
+					if (!highlighted.Contains(raycast.gameObject)) ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
+				}
+
+				if (!anyInteraction) break;
 				if (clickDown)
 				{
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler) != null;
@@ -120,6 +126,7 @@ namespace LunraGames.SpaceFarm
 
 					expiredDrags.Add(raycast.gameObject);
 				}
+				// TODO: Drag logic here!
 			}
 
 			if (clickUp)

@@ -8,6 +8,7 @@
 		public const string Explanation = "Every communication channel is set ablaze with frantic messages from sol: Earth has been destroyed. A wave of destruction is spreading out into the universe, destroying everything in its path. Avoid the wave of destruction at all costs!";
 
 		public const string OutOfRations = "Out of rations.";
+		public const string OutOfFuel = "Not enough fuel in this system to continue.";
 		public const string DestroyedByVoid = "Destroyed by void.";
 
 		public const string WonInfoTitle = "You Won";

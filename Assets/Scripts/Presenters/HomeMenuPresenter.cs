@@ -85,7 +85,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = UniversePosition.Zero;
-			game.FocusedSectors.Value = new UniversePosition[0];
 			game.DestructionSpeed.Value = 0.01f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
@@ -99,8 +98,11 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 
 			startSystem.Visited.Value = true;
+
 			var startPosition = startSystem.Position;
 			var rations = 0.3f;
+			var fuel = 1f;
+			var fuelConsumption = 1f;
 			var speed = 0.003f;
 			var rationConsumption = 0.02f;
 
@@ -110,6 +112,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Speed.Value = speed;
 			ship.RationConsumption.Value = rationConsumption;
 			ship.Rations.Value = rations;
+			ship.Fuel.Value = fuel;
+			ship.FuelConsumption.Value = fuelConsumption;
 
 			game.Ship.Value = ship;
 
@@ -120,6 +124,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				startSystem.Position,
 				DayTime.Zero,
 				DayTime.Zero,
+				0f,
 				1f
 			);
 

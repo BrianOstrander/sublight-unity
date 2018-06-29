@@ -6,13 +6,13 @@ namespace LunraGames.SpaceFarm.Presenters
 {
 	public class DetailSystemPresenter : Presenter<IDetailSystemView>
 	{
-		GameModel gameModel;
+		GameModel model;
 
 		SystemHighlight nextHighlight;
 
-		public DetailSystemPresenter(GameModel gameModel)
+		public DetailSystemPresenter(GameModel model)
 		{
-			this.gameModel = gameModel;
+			this.model = model;
 
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
 		}
@@ -24,13 +24,13 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
 		}
 
-		public void Show(SystemModel model)
+		public void Show(SystemModel system)
 		{
 			if (View.Visible) return;
 			View.Reset();
 			View.Closed += OnClosed;
-			View.Name = model.Name;
-			View.DayTravelTime = Mathf.Min(1, UniversePosition.TravelTime(model.Position, gameModel.Ship.Value.Position, gameModel.Ship.Value.Speed).Day);
+			View.Name = system.Name;
+			View.DayTravelTime = Mathf.Min(1, UniversePosition.TravelTime(system.Position, model.Ship.Value.Position, model.Ship.Value.SpeedTotal).Day);
 
 			ShowView(App.GameCanvasRoot, true);
 		}

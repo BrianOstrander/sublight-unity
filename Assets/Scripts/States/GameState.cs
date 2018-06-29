@@ -63,12 +63,9 @@ namespace LunraGames.SpaceFarm
 
 			var ship = game.Ship.Value;
 
-			var travelRadiusChange = new TravelRadiusChange(ship.Position, ship.Speed, ship.RationConsumption, ship.Rations);
-
 			//UniversePosition
 			App.Callbacks.DayTimeDelta(new DayTimeDelta(game.DayTime, game.DayTime));
 			App.Callbacks.SystemHighlight(SystemHighlight.None);
-			App.Callbacks.TravelRadiusChange(travelRadiusChange);
 			App.Callbacks.TravelRequest(game.TravelRequest);
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
@@ -87,6 +84,7 @@ namespace LunraGames.SpaceFarm
 			new DestructionOriginSystemPresenter().Show();
 			new DestructionSystemPresenter(game).Show();
 			new EndDirectionSystemPresenter(game).Show();
+			new FuelSliderPresenter(game).Show();
 
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);

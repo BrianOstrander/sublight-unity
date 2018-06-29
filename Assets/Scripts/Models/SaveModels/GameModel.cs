@@ -6,13 +6,13 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public class GameModel : SaveModel
 	{
+		#region Serialized
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
 		[JsonProperty] float speed;
 		[JsonProperty] UniverseModel universe;
 		[JsonProperty] UniversePosition endSystem;
 		[JsonProperty] UniversePosition focusedSector;
-		[JsonProperty] UniversePosition[] focusedSectors;
 		[JsonProperty] ShipModel ship;
 		[JsonProperty] float destructionSpeed;
 		[JsonProperty] float destructionRadius;
@@ -50,11 +50,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> FocusedSector;
 		/// <summary>
-		/// Positions of all loaded sectors.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
-		/// <summary>
 		/// The game ship.
 		/// </summary>
 		[JsonIgnore]
@@ -72,6 +67,17 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<float> DestructionRadius;
 		[JsonIgnore]
 		public readonly ListenerProperty<TravelRequest> TravelRequest;
+		#endregion
+  		
+		#region NonSerialized
+		UniversePosition[] focusedSectors = new UniversePosition[0];
+
+		/// <summary>
+		/// Positions of all loaded sectors.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
+		#endregion
 
 		public GameModel()
 		{

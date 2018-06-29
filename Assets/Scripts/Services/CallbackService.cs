@@ -83,10 +83,6 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>();
 		/// <summary>
-		/// Called when any details pertaining to the travel radius change.
-		/// </summary>
-		public Action<TravelRadiusChange> TravelRadiusChange = ActionExtensions.GetEmpty<TravelRadiusChange>();
-		/// <summary>
 		/// The travel progress.
 		/// </summary>
 		public Action<TravelRequest> TravelRequest = ActionExtensions.GetEmpty<TravelRequest>();
@@ -127,7 +123,6 @@ namespace LunraGames.SpaceFarm
 		#region Game Caching
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
-		public TravelRadiusChange LastTravelRadiusChange;
 		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
 		public VoidRenderTexture LastVoidRenderTexture;
@@ -146,7 +141,6 @@ namespace LunraGames.SpaceFarm
 			CurrentGesture += gesture => LastGesture = gesture;
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
 			SystemHighlight += highlight => LastSystemHighlight = highlight;
-			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
 			TravelRequest += travelRequest => LastTravelRequest = travelRequest;
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
 			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
