@@ -24,16 +24,15 @@ namespace LunraGames.SpaceFarm.Views
 			{
 				fuel = value;
 				fuelConsumptionSlider.maxValue = fuel;
-				fuelLabel.text = fuel.ToString("F0");
-				SetFuelConsumptionLabel(value);
+				fuelLabel.text = fuel.ToString("F2");
 			}
 			private get { return fuel; }
 		}
 		public float FuelConsumption
 		{
 			set 
-			{ 
-				fuelConsumptionSlider.value = Mathf.Max(1f, value); 
+			{
+                fuelConsumptionSlider.value = value;
 				SetFuelConsumptionLabel(value);
 			}
 		}
@@ -50,7 +49,7 @@ namespace LunraGames.SpaceFarm.Views
 
 		void SetFuelConsumptionLabel(float value)
 		{
-			fuelConsumptionLabel.text = value.ToString("F0");
+			fuelConsumptionLabel.text = value.ToString("F2");
 		}
 
 		#region Events

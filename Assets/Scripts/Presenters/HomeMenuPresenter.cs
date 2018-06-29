@@ -101,7 +101,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			var startPosition = startSystem.Position;
 			var rations = 0.3f;
-			var fuel = 10f;
+			var fuel = 1f;
 			var fuelConsumption = 1f;
 			var speed = 0.003f;
 			var rationConsumption = 0.02f;

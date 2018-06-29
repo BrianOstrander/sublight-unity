@@ -135,7 +135,7 @@ namespace LunraGames.SpaceFarm
 
 			system.Name.Value = seed.ToString();
 			system.Rations.Value = 0.2f;
-			system.Fuel.Value = 0f;
+			system.Fuel.Value = 2f;
 
 			switch (systemType)
 			{
