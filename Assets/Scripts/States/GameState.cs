@@ -109,9 +109,14 @@ namespace LunraGames.SpaceFarm
 
 			if (!DevPrefs.SkipExplanation)
 			{
-				App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation, Strings.ExplanationTitle));
+                App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation0, Strings.ExplanationTitle0, OnExplanation));
 			}
 		}
+
+        void OnExplanation()
+        {
+            App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation1, Strings.ExplanationTitle1));
+        }
 		#endregion
 
 		#region End

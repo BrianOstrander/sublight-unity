@@ -123,6 +123,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnClosed(RequestStatus status)
 		{
 			App.Callbacks.SpeedRequest(lastSpeedChange.Duplicate(SpeedRequest.States.Request));
+            App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Complete));
 			switch(status)
 			{
 				case RequestStatus.Cancel: 
@@ -136,7 +137,6 @@ namespace LunraGames.SpaceFarm.Presenters
 					break;
 			}
 			lastRequest.Done(status);
-			App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Complete));
 		}
 		#endregion
 
