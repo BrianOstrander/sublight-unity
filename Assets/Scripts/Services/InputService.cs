@@ -94,7 +94,6 @@ namespace LunraGames.SpaceFarm
 			// TODO: Does this need to be a list?
 			var stillHighlighted = new List<GameObject>();
 			var wasTriggered = false;
-			var wasClicked = false;
 			var expiredDrags = new List<GameObject>();
 
 			foreach (var raycast in raycasts)
@@ -117,16 +116,19 @@ namespace LunraGames.SpaceFarm
 				}
 				if (clickUp)
 				{
-					if (SendClickEvents() && clickClick && !wasClicked)
+					if (clickClick)
 					{
-						wasClicked |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
-						wasTriggered |= wasClicked;
+                        wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
 					}
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler) != null;
 
 					expiredDrags.Add(raycast.gameObject);
 				}
-				// TODO: Drag logic here!
+                if (clickHeldDown)
+                {
+					// TODO: Drag logic here!
+                    
+                }
 			}
 
 			if (clickUp)
@@ -179,14 +181,6 @@ namespace LunraGames.SpaceFarm
 		protected virtual bool IsClickHeldDown() { return false; }
 		protected virtual bool IsClickUp() { return false; }
 		protected virtual bool IsSecondaryClickInteraction() { return false; }
-		/// <summary>
-		/// Determines if click events should be executed by this InputService.
-		/// </summary>
-		/// <remarks>
-		/// For some platforms, like desktop, we can let the base input module do its job and set this to false.
-		/// </remarks>
-		/// <returns><c>true</c>, if click events was sent, <c>false</c> otherwise.</returns>
-		protected virtual bool SendClickEvents() { return true; }
 		protected virtual float GetGestureSensitivity() { return 1f; }
 		protected virtual bool GetGestureBegan() { return false; }
 		protected virtual bool IsGesturing() { return false; }
