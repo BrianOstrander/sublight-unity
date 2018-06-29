@@ -8,6 +8,11 @@ namespace LunraGames.SpaceFarm.Views
 {
 	public class ShipRadiusView : View, IShipRadiusView
 	{
+		public Vector3 UnityPosition
+		{
+			set { Root.position = value; }
+			get { return Root.position; }
+		}
 		public UniversePosition UniversePosition { set; get; }
 
 		TravelRadius travelRadius;
@@ -25,6 +30,7 @@ namespace LunraGames.SpaceFarm.Views
 		{
 			base.Reset();
 
+			UnityPosition = Vector3.zero;
 			UniversePosition = UniversePosition.Zero;
 			TravelRadius = TravelRadius.Zero;
 		}

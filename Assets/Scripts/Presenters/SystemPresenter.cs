@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using System.Linq;
 
 using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
@@ -7,28 +7,34 @@ namespace LunraGames.SpaceFarm.Presenters
 {
 	public class SystemPresenter : Presenter<ISystemView>
 	{
-		GameModel gameModel;
-		SystemModel model;
+		GameModel model;
+		SystemModel system;
 
 		bool isTravelable;
 		bool isDestroyed;
 
-		public SystemPresenter(GameModel gameModel, SystemModel model)
-		{
-			this.gameModel = gameModel;
-			this.model = model;
-			SetView(App.V.Get<ISystemView>(v => v.SystemType == model.SystemType));
+		bool updatedThisFrame;
 
-			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
-			gameModel.DestructionRadius.Changed += OnDestructionRadius;
+		public SystemPresenter(GameModel model, SystemModel system)
+		{
+			this.model = model;
+			this.system = system;
+			SetView(App.V.Get<ISystemView>(v => v.SystemType == system.SystemType));
+
+			App.Heartbeat.Update += OnUpdate;
+			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
+			model.DestructionRadius.Changed += OnDestructionRadius;
+			model.FocusedSectors.Changed += OnFocusedSectors;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
 
-			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
-			gameModel.DestructionRadius.Changed -= OnDestructionRadius;
+			App.Heartbeat.Update -= OnUpdate;
+			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
+			model.DestructionRadius.Changed -= OnDestructionRadius;
+			model.FocusedSectors.Changed -= OnFocusedSectors;
 		}
 
 		public void Show()
@@ -37,16 +43,22 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			View.UniversePosition = model.Position;
+			View.UniversePosition = system.Position;
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
-			OnTravelRadiusChange(App.Callbacks.LastTravelRadiusChange);
+			OnTravelRadius(model.Ship.Value.TravelRadius);
+			OnDestructionRadius(model.DestructionRadius);
 			OnSystemState();
 
 			ShowView(instant: true);
 		}
 
 		#region Events
+		void OnUpdate(float delta)
+		{
+			updatedThisFrame = false;
+		}
+
 		void OnHighlight(bool highlighted)
 		{
 			var state = SystemHighlight.States.End;
@@ -69,11 +81,11 @@ namespace LunraGames.SpaceFarm.Presenters
 				switch (App.Callbacks.LastSystemHighlight.State)
 				{
 					case SystemHighlight.States.Change:
-						if (App.Callbacks.LastSystemHighlight.System != model) return;
+						if (App.Callbacks.LastSystemHighlight.System != system) return;
 						break;
 				}
 			}
-			App.Callbacks.SystemHighlight(new SystemHighlight(state, model));
+			App.Callbacks.SystemHighlight(new SystemHighlight(state, system));
 		}
 
 		void OnClick()
@@ -81,15 +93,16 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (App.Callbacks.LastTravelRequest.State != TravelRequest.States.Complete) return;
 			if (isTravelable)
 			{
-				var travelTime = UniversePosition.TravelTime(gameModel.Ship.Value.CurrentSystem.Value, model.Position.Value, gameModel.Ship.Value.Speed.Value);
+				var travelTime = UniversePosition.TravelTime(model.Ship.Value.CurrentSystem.Value, system.Position.Value, model.Ship.Value.SpeedTotal.Value);
 
 				var travel = new TravelRequest(
 					TravelRequest.States.Request,
-					gameModel.Ship.Value.CurrentSystem,
-					gameModel.Ship.Value.CurrentSystem,
-					model.Position,
+					model.Ship.Value.CurrentSystem,
+					model.Ship.Value.CurrentSystem,
+					system.Position,
 					App.Callbacks.LastDayTimeDelta.Current,
 					App.Callbacks.LastDayTimeDelta.Current + travelTime,
+					model.Ship.Value.FuelConsumption,
 					0f
 				);
 				App.Callbacks.TravelRequest(travel);
@@ -100,25 +113,36 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
-		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange)
+		void OnTravelRadius(TravelRadius travelRadius)
 		{
-			var distance = UniversePosition.Distance(model.Position, travelRadiusChange.Origin);
-			isTravelable = distance < travelRadiusChange.TravelRadius.MaximumRadius;
+			var distance = UniversePosition.Distance(system.Position, model.Ship.Value.Position);
+			isTravelable = distance < travelRadius.MaximumRadius;
 			if (View.Visible) OnSystemState();
 		}
 
 		void OnDestructionRadius(float radius)
 		{
-			isDestroyed = UniversePosition.Distance(UniversePosition.Zero, model.Position) < radius;
+			isDestroyed = UniversePosition.Distance(UniversePosition.Zero, system.Position) < radius;
 			if (View.Visible) OnSystemState();
 		}
 
 		void OnSystemState()
 		{
+			if (updatedThisFrame) return;
+			// TODO: Add more efficient checking of state to rule out unnecesary updates.
 			if (isDestroyed) View.SystemState = SystemStates.Destroyed;
-			else if (gameModel.Ship.Value.Position.Value == model.Position.Value) View.SystemState = SystemStates.Current;
+			else if (model.Ship.Value.Position.Value == system.Position.Value) View.SystemState = SystemStates.Current;
 			else if (isTravelable) View.SystemState = SystemStates.InRange;
 			else View.SystemState = SystemStates.OutOfRange;
+		}
+
+		void OnFocusedSectors(UniversePosition[] positions)
+		{
+			if (!positions.Contains(system.Position.Value.SystemZero))
+			{
+				CloseView(true);
+				UnBind();
+			}
 		}
 		#endregion
 	}

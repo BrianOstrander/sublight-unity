@@ -83,10 +83,6 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>();
 		/// <summary>
-		/// Called when any details pertaining to the travel radius change.
-		/// </summary>
-		public Action<TravelRadiusChange> TravelRadiusChange = ActionExtensions.GetEmpty<TravelRadiusChange>();
-		/// <summary>
 		/// The travel progress.
 		/// </summary>
 		public Action<TravelRequest> TravelRequest = ActionExtensions.GetEmpty<TravelRequest>();
@@ -98,7 +94,7 @@ namespace LunraGames.SpaceFarm
 		/// Requests a camera change of position or reports a change in the 
 		/// camera's position.
 		/// </summary>
-		public Action<SystemCameraRequest> SystemCameraRequest = ActionExtensions.GetEmpty<SystemCameraRequest>();
+		public Action<CameraSystemRequest> CameraSystemRequest = ActionExtensions.GetEmpty<CameraSystemRequest>();
 		/// <summary>
 		/// Requests or reports saving.
 		/// </summary>
@@ -107,9 +103,13 @@ namespace LunraGames.SpaceFarm
 		/// Called when the void's render texture is updated.
 		/// </summary>
 		public Action<VoidRenderTexture> VoidRenderTexture = ActionExtensions.GetEmpty<VoidRenderTexture>();
+		/// <summary>
+		/// Called every time the offset of the universe is updated.
+		/// </summary>
+		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
 		#endregion
 
-		// TODO: Think about moving these to state...
+		// TODO: Think about moving these to state or GameModel...
 
 		#region Genaral Caching
 		public CameraOrientation LastCameraOrientation;
@@ -123,10 +123,10 @@ namespace LunraGames.SpaceFarm
 		#region Game Caching
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
-		public TravelRadiusChange LastTravelRadiusChange;
 		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
 		public VoidRenderTexture LastVoidRenderTexture;
+		public UniversePositionRequest LastUniversePositionRequest;
 		#endregion
 
 		Stack<EscapeEntry> escapes = new Stack<EscapeEntry>();
@@ -141,12 +141,12 @@ namespace LunraGames.SpaceFarm
 			CurrentGesture += gesture => LastGesture = gesture;
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
 			SystemHighlight += highlight => LastSystemHighlight = highlight;
-			TravelRadiusChange += travelRadiusChange => LastTravelRadiusChange = travelRadiusChange;
 			TravelRequest += travelRequest => LastTravelRequest = travelRequest;
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
 			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
 			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
 			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
+			UniversePositionRequest += request => LastUniversePositionRequest = request;
 
 			Escape += OnEscape;
 		}

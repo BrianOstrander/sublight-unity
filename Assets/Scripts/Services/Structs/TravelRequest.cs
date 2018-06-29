@@ -28,6 +28,7 @@ namespace LunraGames.SpaceFarm
 		[JsonProperty] public readonly DayTime StartTime;
 		[JsonProperty] public readonly DayTime EndTime;
 		[JsonProperty] public readonly DayTime Duration;
+		[JsonProperty] public readonly float FuelConsumed;
 		/// <summary>
 		/// Progress of the travel request, from 0.0 to 1.0.
 		/// </summary>
@@ -44,6 +45,7 @@ namespace LunraGames.SpaceFarm
 			UniversePosition destination,
 			DayTime startTime,
 			DayTime endTime,
+			float fuelConsumed,
 			float progress)
 		{
 			State = state;
@@ -52,6 +54,7 @@ namespace LunraGames.SpaceFarm
 			Destination = destination;
 			StartTime = startTime;
 			EndTime = endTime;
+			FuelConsumed = fuelConsumed;
 			Progress = progress;
 
 			Duration = DayTime.DayTimeElapsed(startTime, endTime);
@@ -73,6 +76,7 @@ namespace LunraGames.SpaceFarm
 				Destination,
 				StartTime,
 				EndTime,
+				FuelConsumed,
 				Progress
 			);
 		}

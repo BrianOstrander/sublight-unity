@@ -53,7 +53,7 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeLoadSaves(Action done)
 		{
-			App.SaveLoadService.List<GameSaveModel>(result => OnInitializeLoadSaves(result, done));
+			App.SaveLoadService.List<GameModel>(result => OnInitializeLoadSaves(result, done));
 		}
 
 		void OnInitializeLoadSaves(SaveLoadArrayRequest<SaveModel> result, Action done)

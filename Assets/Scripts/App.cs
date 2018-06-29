@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-using LunraGames.SpaceFarm.Presenters;
-using LunraGames.SpaceFarm;
+using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm
 {
@@ -70,6 +68,17 @@ namespace LunraGames.SpaceFarm
 		Transform overlayCanvasRoot;
 		public static Transform OverlayCanvasRoot { get { return instance.overlayCanvasRoot; } }
 
+		PreferencesModel preferences;
+		/// <summary>
+		/// Gets the current preferences.
+		/// </summary>
+		/// <remarks>
+		/// Feel free to hook onto the Changed listeners for this model, they're
+		/// preserved when saving.
+		/// </remarks>
+		/// <value>The preferences.</value>
+		public static PreferencesModel Preferences { get { return instance.preferences; } }
+
 		public App(
 			Main main, 
 			DefaultShaderGlobals shaderGlobals, 
@@ -130,6 +139,15 @@ namespace LunraGames.SpaceFarm
 			Debug.LogError(message);
 			throw new NotImplementedException();
 		}
+
+		#region Global setters
+		/// <summary>
+		/// Used to set the initial preferences. Should only be set once from
+		/// the initialize state.
+		/// </summary>
+		/// <param name="preferences">Preferences.</param>
+		public static void SetPreferences(PreferencesModel preferences) { instance.preferences = preferences; }
+		#endregion
 
 		#region MonoBehaviour events
 

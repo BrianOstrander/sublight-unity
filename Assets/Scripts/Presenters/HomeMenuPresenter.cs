@@ -65,10 +65,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnLoadGameClick(SaveModel model)
 		{
-			App.SaveLoadService.Load<GameSaveModel>(model, OnLoadedGame);
+			App.SaveLoadService.Load<GameModel>(model, OnLoadedGame);
 		}
 
-		void OnLoadedGame(SaveLoadRequest<GameSaveModel> result)
+		void OnLoadedGame(SaveLoadRequest<GameModel> result)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -81,9 +81,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnNewGame()
 		{
-			var gameSave = App.SaveLoadService.Create<GameSaveModel>();
-			gameSave.Game.Value = new GameModel();
-			var game = gameSave.Game.Value;
+			var game = App.SaveLoadService.Create<GameModel>();
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = UniversePosition.Zero;
@@ -100,8 +98,11 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 
 			startSystem.Visited.Value = true;
+
 			var startPosition = startSystem.Position;
 			var rations = 0.3f;
+			var fuel = 1f;
+			var fuelConsumption = 1f;
 			var speed = 0.003f;
 			var rationConsumption = 0.02f;
 
@@ -111,6 +112,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Speed.Value = speed;
 			ship.RationConsumption.Value = rationConsumption;
 			ship.Rations.Value = rations;
+			ship.Fuel.Value = fuel;
+			ship.FuelConsumption.Value = fuelConsumption;
 
 			game.Ship.Value = ship;
 
@@ -121,13 +124,22 @@ namespace LunraGames.SpaceFarm.Presenters
 				startSystem.Position,
 				DayTime.Zero,
 				DayTime.Zero,
+				0f,
 				1f
 			);
 
-			App.SaveLoadService.Save(gameSave, OnSaveGame);
+			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
+			game.EndSystem.Value = endSector.Systems.Value.First().Position;
+
+			// Uncomment this to make the game easy.
+			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
+
+
+
+			App.SaveLoadService.Save(game, OnSaveGame);
 		}
 
-		void OnSaveGame(SaveLoadRequest<GameSaveModel> result)
+		void OnSaveGame(SaveLoadRequest<GameModel> result)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -138,11 +150,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			OnStartGame(result.TypedModel);
 		}
 
-		void OnStartGame(GameSaveModel model)
+		void OnStartGame(GameModel model)
 		{
 			var payload = new GamePayload();
-			payload.GameSave = model;
-			payload.Game = model.Game;
+			payload.Game = model;
 			App.SM.RequestState(payload);
 		}
 		#endregion

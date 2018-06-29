@@ -12,23 +12,47 @@ namespace LunraGames.SpaceFarm
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-		const float UnityToUniverseScalar = 0.05f;
+		const float UnityToUniverseScalar = 0.02f;
 		const float UniverseToUnityScalar = 50f;
+		const float UniverseToLightYearScalar = 25f;
+
+		/// <summary>
+		/// The current sector offset of all unity units.
+		/// </summary>
+		static UniversePosition CurrentOffset = Zero;
+
+		/// <summary>
+		/// Updates the sector offset upon request.
+		/// </summary>
+		/// <remarks>
+		/// Should be added as a listener in the initialize state.
+		/// </remarks>
+		/// <param name="request">Request.</param>
+		public static void OnUniversePositionRequest(UniversePositionRequest request)
+		{
+			switch(request.State)
+			{
+				case UniversePositionRequest.States.Request:
+					CurrentOffset = request.Position;
+					App.Callbacks.UniversePositionRequest(request.Duplicate(UniversePositionRequest.States.Complete));
+					break;
+			}
+		}
 
 		public static float ToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
 
 		public static float ToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
 
+		public static float ToLightYearDistance(float universeDistance) { return universeDistance * UniverseToLightYearScalar; }
+
 		public static UniversePosition ToUniverse(Vector3 unityPosition)
 		{
-			// TODO: Actually make this functional.
-			return new UniversePosition(Vector3.zero, unityPosition * UnityToUniverseScalar);
+			return new UniversePosition(CurrentOffset.Sector, unityPosition * UnityToUniverseScalar);
 		}
 
 		public static Vector3 ToUnity(UniversePosition universePosition)
 		{
-			// TODO: Actually make this functional.
-			return (universePosition.Sector + universePosition.System) * UniverseToUnityScalar;
+			return ((universePosition.Sector - CurrentOffset.Sector) + universePosition.System) * UniverseToUnityScalar;
 		}
 
 		/// <summary>
@@ -81,11 +105,24 @@ namespace LunraGames.SpaceFarm
 		[JsonProperty] public readonly Vector3 System;
 
 		[JsonIgnore]
-		public Vector3 Normalized { get { return ToUnity(this).normalized; } }
+		public Vector3 Normalized { get { return ToUnity(this + CurrentOffset).normalized; } }
 		[JsonIgnore]
 		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, System); } }
 		[JsonIgnore]
 		public UniversePosition SystemZero { get { return new UniversePosition(Sector, Vector3.zero); } }
+
+		public UniversePosition NewSector(Vector3 sector) { return new UniversePosition(sector, System); }
+		public UniversePosition NewSystem(Vector3 system) { return new UniversePosition(Sector, system); }
+
+		public bool SectorEquals(UniversePosition other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+
+			return Mathf.Approximately(Sector.x, other.Sector.x) &&
+						Mathf.Approximately(Sector.y, other.Sector.y) &&
+						Mathf.Approximately(Sector.z, other.Sector.z);
+		}
 
 		public bool Equals(UniversePosition other)
 		{

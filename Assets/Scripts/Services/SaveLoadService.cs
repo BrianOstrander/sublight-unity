@@ -53,6 +53,7 @@ namespace LunraGames.SpaceFarm
 		public SaveModel[] Models { get; private set; }
 		public M[] TypedModels { get; private set; }
 		public string Error { get; private set; }
+		public int Length { get { return Models.Length; } }
 
 		public static SaveLoadArrayRequest<M> Success(SaveModel[] models, M[] typedModels)
 		{
@@ -93,20 +94,27 @@ namespace LunraGames.SpaceFarm
 		{
 			switch(saveType)
 			{
-				case SaveTypes.Game: return typeof(GameSaveModel);
+				case SaveTypes.Game: return typeof(GameModel);
+				case SaveTypes.Preferences: return typeof(PreferencesModel);
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
 
 		protected SaveTypes ToEnum(Type type)
 		{
-			if (type == typeof(GameSaveModel)) return SaveTypes.Game;
+			if (type == typeof(GameModel)) return SaveTypes.Game;
+			if (type == typeof(PreferencesModel)) return SaveTypes.Preferences;
 
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 
 		public abstract void Initialize(Action<RequestStatus> done);
 
+        /// <summary>
+        /// Gets the minimum supported saves by SaveTypes, -1 means it only 
+        /// supports saves equal to the current version.
+        /// </summary>
+        /// <value>The minimum supported saves.</value>
 		protected abstract Dictionary<SaveTypes, int> MinimumSupportedSaves { get; }
 
 		protected abstract string GetUniquePath(SaveTypes saveType);
@@ -114,7 +122,11 @@ namespace LunraGames.SpaceFarm
 		protected bool IsSupportedVersion(SaveTypes type, int version)
 		{
 			if (!MinimumSupportedSaves.ContainsKey(type)) return false;
-			return MinimumSupportedSaves[type] <= version;
+            var min = MinimumSupportedSaves[type];
+            // If min is -1, then it means we can only load saves that equal 
+            // this version.
+            if (min < 0) min = App.BuildPreferences.Info.Version;
+			return min <= version;
 		}
 
 		public M Create<M>(string meta = null) where M : SaveModel, new()
@@ -204,15 +216,18 @@ namespace LunraGames.SpaceFarm
 
 			var wasCreated = model.Created.Value;
 			var wasModified = model.Modified.Value;
+			var wasVersion = model.Version.Value;
 
 			model.Modified.Value = DateTime.Now;
 			if (model.Created == DateTime.MinValue) model.Created.Value = model.Modified.Value;
+			model.Version.Value = App.BuildPreferences.Info.Version;
 
 			try { OnSave(model, done); }
 			catch (Exception exception)
 			{
 				model.Modified.Value = wasModified;
 				model.Created.Value = wasCreated;
+				model.Version.Value = wasVersion;
 
 				Debug.LogException(exception);
 				done(SaveLoadRequest<M>.Failure(

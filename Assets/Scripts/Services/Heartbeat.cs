@@ -18,6 +18,14 @@ namespace LunraGames.SpaceFarm
 			LateUpdate(delta);
 		}
 
+		public void Wait(Action done, float seconds)
+		{
+			if (done == null) throw new ArgumentNullException("done");
+			if (seconds < 0f) throw new ArgumentOutOfRangeException("seconds", "Cannot be less than zero.");
+			var endtime = DateTime.Now.AddSeconds(seconds);
+			Wait(done, () => endtime < DateTime.Now);
+		}
+
 		public void Wait(Action done, Func<bool> condition)
 		{
 			if (done == null) throw new ArgumentNullException("done");

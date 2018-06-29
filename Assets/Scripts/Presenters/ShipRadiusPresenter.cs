@@ -13,14 +13,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			App.Callbacks.TravelRadiusChange += OnTravelRadiusChange;
+			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
 
-			App.Callbacks.TravelRadiusChange -= OnTravelRadiusChange;
+			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 		}
 
 		public void Show()
@@ -36,10 +36,10 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
-		void OnTravelRadiusChange(TravelRadiusChange travelRadiusChange)
+		void OnTravelRadius(TravelRadius travelRadius)
 		{
-			View.UniversePosition = travelRadiusChange.Origin;
-			View.TravelRadius = travelRadiusChange.TravelRadius;
+			View.UniversePosition = model.Ship.Value.Position;
+			View.TravelRadius = travelRadius;
 		}
 		#endregion
 	}
