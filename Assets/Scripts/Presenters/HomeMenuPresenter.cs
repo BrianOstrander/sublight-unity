@@ -103,7 +103,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			var rations = 0.3f;
 			var fuel = 1f;
 			var fuelConsumption = 1f;
-			var speed = 0.003f;
+			var speed = 0.012f;
 			var rationConsumption = 0.02f;
 
 			var ship = new ShipModel();

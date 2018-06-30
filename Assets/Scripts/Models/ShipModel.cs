@@ -116,7 +116,7 @@ namespace LunraGames.SpaceFarm.Models
 			float fuelConsumption
 		)
 		{
-			var rationDuration = DayTime.FromDayNormal(rations / rationConsumption);
+			var rationDuration = new DayTime(rations / rationConsumption);
 			var rationDistance = rationDuration.TotalTime * DeriveSpeedTotal(speed, fuelConsumption);
 			// TODO: Find a better place for handling this weird range stuff?
 			// Maybe not... this might be the correct place for it...

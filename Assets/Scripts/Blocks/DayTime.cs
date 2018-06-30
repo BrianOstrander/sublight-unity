@@ -9,12 +9,14 @@ namespace LunraGames.SpaceFarm
 	[Serializable]
 	public struct DayTime
 	{
-		public const float DaysInYear = 365;
-		public const float TimeInDay = 4f;
+        //const float UnityToUniverseScalar = 0.02f;
+        //const float UniverseToUnityScalar = 50f;
+        //const float UniverseToLightYearScalar = 25f;
+
+		const float DaysInYear = 365f;
+		const float TimeInDay = 1f;
 
 		public static DayTime Zero { get { return new DayTime(); } }
-
-		public static DayTime FromDayNormal(float dayNormal) { return new DayTime(dayNormal * TimeInDay); }
 
 		/// <summary>
 		/// The Day component of this DayTime.
@@ -36,26 +38,28 @@ namespace LunraGames.SpaceFarm
 		/// Gets the Time component of this DayTime normalized between 0 and 1.
 		/// </summary>
 		/// <value>The normal time.</value>
+        // TODO: Remove, time IS normalized.
 		[JsonIgnore]
-		public float NormalTime { get { return Time / TimeInDay; } }
+		public float NormalTime { get { return Time; } }
 		/// <summary>
 		/// Gets the total time.
 		/// </summary>
 		/// <value>The total time.</value>
-		[JsonIgnore]
-		public float TotalTime { get { return (Day * TimeInDay) + Time; } }
+        [JsonIgnore]
+		public float TotalTime { get { return Day + Time; } }
 		/// <summary>
 		/// Gets the total time represented by this DayTime where a Day is equal to 1.0.
 		/// </summary>
 		/// <value>The day normal.</value>
+        // TODO: Remove, TotalTime already serves this functionality.
 		[JsonIgnore]
-		public float TotalDays { get { return TotalTime / TimeInDay; } }
+        public float TotalDays { get { return Day + Time; } }
 		/// <summary>
 		/// Gets the years.
 		/// </summary>
 		/// <value>The years.</value>
 		[JsonIgnore]
-		public float TotalYears { get { return TotalDays / DaysInYear; } }
+        public float TotalYears { get { return TotalTime / DaysInYear; } }
 
 		public DayTime(float time)
 		{
