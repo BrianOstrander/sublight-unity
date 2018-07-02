@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
@@ -14,9 +12,11 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] UniversePosition endSystem;
 		[JsonProperty] UniversePosition focusedSector;
 		[JsonProperty] ShipModel ship;
+		[JsonProperty] float destructionSpeedIncrement;
 		[JsonProperty] float destructionSpeed;
 		[JsonProperty] float destructionRadius;
 		[JsonProperty] TravelRequest travelRequest;
+		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
 
 		/// <summary>
 		/// The game seed.
@@ -55,6 +55,11 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<ShipModel> Ship;
 		/// <summary>
+		/// The destruction speed increments.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> DestructionSpeedIncrement;
+		/// <summary>
 		/// The speed at which the destruction expands, in universe units per
 		/// day.
 		/// </summary>
@@ -67,6 +72,8 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<float> DestructionRadius;
 		[JsonIgnore]
 		public readonly ListenerProperty<TravelRequest> TravelRequest;
+		[JsonIgnore]
+		public readonly ListenerProperty<DestructionSpeedDelta[]> DestructionSpeedDeltas;
 		#endregion
   		
 		#region NonSerialized
@@ -90,9 +97,11 @@ namespace LunraGames.SpaceFarm.Models
 			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
 			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
+			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
 			DestructionRadius = new ListenerProperty<float>(value => destructionRadius = value, () => destructionRadius);
 			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
+			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 		}
 	}
 }

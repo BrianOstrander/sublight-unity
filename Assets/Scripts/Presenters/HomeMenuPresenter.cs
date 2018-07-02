@@ -85,7 +85,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = App.UniverseService.CreateUniverse(1);
 			game.FocusedSector.Value = UniversePosition.Zero;
-			game.DestructionSpeed.Value = 0.01f;
+			game.DestructionSpeed.Value = 0.005f;
+			game.DestructionSpeedIncrement.Value = 0.005f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
 			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);

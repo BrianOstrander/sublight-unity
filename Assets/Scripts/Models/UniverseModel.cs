@@ -7,7 +7,7 @@ namespace LunraGames.SpaceFarm.Models
 	public class UniverseModel : Model
 	{
 		[JsonProperty] int seed;
-		[JsonProperty] SectorModel[] sectors;
+		[JsonProperty] SectorModel[] sectors = new SectorModel[0];
 
 		#region Assigned
 		[JsonIgnore]

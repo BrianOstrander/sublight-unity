@@ -11,7 +11,7 @@
 		{
 			Current = current;
 			Previous = previous;
-			Delta = DayTime.DayTimeElapsed(current, previous);
+			Delta = DayTime.Elapsed(current, previous);
 		}
 	}
 }

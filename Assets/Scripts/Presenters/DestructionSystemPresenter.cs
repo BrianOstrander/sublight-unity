@@ -40,7 +40,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
-			model.DestructionRadius.Value += delta.Delta.TotalDays * model.DestructionSpeed;
+			model.DestructionRadius.Value += delta.Delta.TotalTime * model.DestructionSpeed;
 		}
 
 		void OnVoidRenderTexture(VoidRenderTexture voidRenderTexture)

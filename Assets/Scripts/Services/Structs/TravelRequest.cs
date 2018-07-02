@@ -57,13 +57,13 @@ namespace LunraGames.SpaceFarm
 			FuelConsumed = fuelConsumed;
 			Progress = progress;
 
-			Duration = DayTime.DayTimeElapsed(startTime, endTime);
+			Duration = DayTime.Elapsed(startTime, endTime);
 		}
 
 		public float GetProgress(DayTime current)
 		{
 			var total = Duration.TotalTime;
-			var elapsed = DayTime.DayTimeElapsed(StartTime, current).TotalTime;
+			var elapsed = DayTime.Elapsed(StartTime, current).TotalTime;
 			return Mathf.Min(1f, elapsed / total);
 		}
 

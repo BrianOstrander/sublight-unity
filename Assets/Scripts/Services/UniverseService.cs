@@ -19,7 +19,6 @@ namespace LunraGames.SpaceFarm
 		{
 			var universeModel = new UniverseModel();
 			universeModel.Seed.Value = seed;
-			universeModel.Sectors.Value = new SectorModel[0];
 
 			PopulateUniverse(universeModel, InitialSectors);
 
