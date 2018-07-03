@@ -49,7 +49,7 @@ namespace LunraGames.SpaceFarm
 
 		public abstract void PopulateSector(SectorModel sector);
 		public abstract SystemModel CreateSystem(SystemTypes systemType, SectorModel sector, int seed, UniversePosition position);
-		public abstract void PopulateSystem(StarModel starModel);
+		public abstract void PopulateSystem(StarSystemModel starModel);
 	}
 
 	public interface IUniverseService
@@ -96,6 +96,6 @@ namespace LunraGames.SpaceFarm
 		/// Populates a star system.
 		/// </summary>
 		/// <param name="starModel">Star model.</param>
-		void PopulateSystem(StarModel starModel);
+		void PopulateSystem(StarSystemModel starModel);
 	}
 }

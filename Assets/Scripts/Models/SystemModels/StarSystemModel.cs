@@ -1,8 +1,8 @@
 ﻿namespace LunraGames.SpaceFarm.Models
 {
-	public class StarModel : SystemModel
+	public class StarSystemModel : SystemModel
 	{
-		public StarModel()
+		public StarSystemModel()
 		{
 			SystemType = SystemTypes.Star;
 		}

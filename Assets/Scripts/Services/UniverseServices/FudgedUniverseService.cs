@@ -125,7 +125,7 @@ namespace LunraGames.SpaceFarm
 
 			switch (systemType)
 			{
-				case SystemTypes.Star: system = new StarModel(); break;
+				case SystemTypes.Star: system = new StarSystemModel(); break;
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
 
@@ -159,14 +159,14 @@ namespace LunraGames.SpaceFarm
 
 			switch (systemType)
 			{
-				case SystemTypes.Star: PopulateSystem(system as StarModel); break;
+				case SystemTypes.Star: PopulateSystem(system as StarSystemModel); break;
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
 
 			return system;
 		}
 
-		public override void PopulateSystem(StarModel starModel)
+		public override void PopulateSystem(StarSystemModel starModel)
 		{
 			// TODO: Populate star specific info
 		}
