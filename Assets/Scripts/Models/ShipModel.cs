@@ -14,6 +14,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float rations;
 		[JsonProperty] float fuel;
 		[JsonProperty] float fuelConsumption;
+		[JsonProperty] float resourceDetection;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> LastSystem;
@@ -50,6 +51,11 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> FuelConsumption;
+		/// <summary>
+		/// The likelyhood of detecting resources in a system.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> ResourceDetection;
 		#endregion
 
 		#region Derived Values
@@ -81,6 +87,7 @@ namespace LunraGames.SpaceFarm.Models
 			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
 			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
 			FuelConsumption = new ListenerProperty<float>(value => fuelConsumption = value, () => fuelConsumption);
+			ResourceDetection = new ListenerProperty<float>(value => resourceDetection = value, () => resourceDetection);
 
 			// Derived Values
 

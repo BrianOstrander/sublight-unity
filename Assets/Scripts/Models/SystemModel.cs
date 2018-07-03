@@ -8,7 +8,9 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] bool visited;
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] string name;
+		[JsonProperty] float rationsDetection;
 		[JsonProperty] float rations;
+		[JsonProperty] float fuelDetection;
 		[JsonProperty] float fuel;
 
 		/// <summary>
@@ -34,6 +36,10 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<float> Rations;
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> RationsDetection;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> FuelDetection;
 		#endregion
 
 		public SystemModel()
@@ -45,6 +51,8 @@ namespace LunraGames.SpaceFarm.Models
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
 			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
+			RationsDetection = new ListenerProperty<float>(value => rationsDetection = value, () => rationsDetection);
+			FuelDetection = new ListenerProperty<float>(value => fuelDetection = value, () => fuelDetection);
 		}
 	}
 }

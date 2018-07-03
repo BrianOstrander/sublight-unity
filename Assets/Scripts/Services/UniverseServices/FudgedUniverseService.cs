@@ -154,6 +154,9 @@ namespace LunraGames.SpaceFarm
 					break;
 			}
 
+			system.RationsDetection.Value = random.NextFloat;
+			system.FuelDetection.Value = random.NextFloat;
+
 			switch (systemType)
 			{
 				case SystemTypes.Star: PopulateSystem(system as StarModel); break;

@@ -106,6 +106,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			var fuelConsumption = 1f;
 			var speed = 0.012f;
 			var rationConsumption = 0.02f;
+			var resourceDetection = 0.5f;
 
 			var ship = new ShipModel();
 			ship.CurrentSystem.Value = startSystem.Position;
@@ -115,6 +116,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Rations.Value = rations;
 			ship.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
+			ship.ResourceDetection.Value = resourceDetection;
 
 			game.Ship.Value = ship;
 
