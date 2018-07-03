@@ -52,7 +52,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (shipDetection < systemDetection)
 			{
 				text = "[UNKNOWN]";
-				color = Color.white;
+				color = Color.yellow;
 				return;
 			}
 			if (Mathf.Approximately(0f, amount))
