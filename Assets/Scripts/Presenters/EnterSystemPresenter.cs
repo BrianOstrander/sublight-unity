@@ -39,7 +39,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(OnEscape, false, false));
 
 			View.Title = Strings.ArrivedIn(destination.Name.Value);
-			View.Details = Strings.ArrivedDetails(destination.Rations.Value);
+			View.Details = Strings.ArrivedDetails(destination.Rations.Value, destination.Fuel.Value);
 			View.OkayClick = OnOkayClick;
 			ShowView(App.OverlayCanvasRoot);
 		}

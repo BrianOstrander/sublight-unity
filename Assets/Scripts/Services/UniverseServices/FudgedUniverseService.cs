@@ -129,13 +129,30 @@ namespace LunraGames.SpaceFarm
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
 
+			var random = new Demon(seed);
+
 			system.Seed.Value = seed;
 			system.Visited.Value = false;
 			system.Position.Value = position;
 
 			system.Name.Value = seed.ToString();
-			system.Rations.Value = 0.2f;
-			system.Fuel.Value = 2f;
+
+			switch(random.GetNextInteger(max: 3))
+			{
+				case 0:
+					// Just rations
+					system.Rations.Value = random.GetNextFloat(0.1f, 0.75f);
+					break;
+				case 1:
+					// Just fuel
+					system.Fuel.Value = random.GetNextInteger(2, 5);
+					break;
+				case 2:
+					// Fuel and Rations
+					system.Rations.Value = random.GetNextFloat(0.1f, 0.75f);
+					system.Fuel.Value = random.GetNextInteger(2, 5);
+					break;
+			}
 
 			switch (systemType)
 			{

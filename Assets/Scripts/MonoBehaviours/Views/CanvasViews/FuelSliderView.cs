@@ -10,6 +10,8 @@ namespace LunraGames.SpaceFarm.Views
 	public class FuelSliderView : CanvasView, IFuelSliderView
 	{
 		[SerializeField]
+		TextMeshProUGUI rationsLabel;
+		[SerializeField]
 		TextMeshProUGUI fuelLabel;
 		[SerializeField]
 		TextMeshProUGUI fuelConsumptionLabel;
@@ -28,20 +30,25 @@ namespace LunraGames.SpaceFarm.Views
 			}
 			private get { return fuel; }
 		}
+
 		public float FuelConsumption
 		{
 			set 
 			{
-                fuelConsumptionSlider.value = value;
+				fuelConsumptionSlider.value = value;
 				SetFuelConsumptionLabel(value);
 			}
 		}
+
 		public Action<float> FuelConsumptionUpdate { set; private get; }
+
+		public float Rations { set { rationsLabel.text = value.ToString("F2"); } }
 
 		public override void Reset()
 		{
 			base.Reset();
 
+			Rations = 0f;
 			FuelConsumptionUpdate = ActionExtensions.GetEmpty<float>();
 			Fuel = 0f;
 			FuelConsumption = 0f;
@@ -63,6 +70,7 @@ namespace LunraGames.SpaceFarm.Views
 
 	public interface IFuelSliderView : ICanvasView
 	{
+		float Rations { set; }
 		float Fuel { set; }
 		float FuelConsumption { set; }
 		Action<float> FuelConsumptionUpdate { set; }

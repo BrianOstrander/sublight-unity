@@ -13,6 +13,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.Ship.Value.Fuel.Changed += OnFuel;
 			model.Ship.Value.FuelConsumption.Changed += OnFuelConsumption;
+			model.Ship.Value.Rations.Changed += OnRations;
 		}
 
 		protected override void UnBind()
@@ -21,6 +22,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.Ship.Value.Fuel.Changed -= OnFuel;
 			model.Ship.Value.FuelConsumption.Changed -= OnFuelConsumption;
+			model.Ship.Value.Rations.Changed -= OnRations;
 		}
 
 		public void Show()
@@ -29,6 +31,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
+			View.Rations = model.Ship.Value.Rations;
 			View.Fuel = model.Ship.Value.Fuel;
 			View.FuelConsumption = model.Ship.Value.FuelConsumption;
 			View.FuelConsumptionUpdate = OnFuelConsumptionUpdate;
@@ -37,6 +40,12 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
+		void OnRations(float rations)
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			View.Rations = rations;
+		}
+
 		void OnFuel(float fuel)
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
