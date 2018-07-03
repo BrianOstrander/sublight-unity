@@ -16,7 +16,7 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		StateEntry[] stateEntries;
 
-		public override SystemTypes SystemType { get { return SystemTypes.Star; } }
+		public override SystemTypes SystemType { get { return SystemTypes.Celestial; } }
 		public override SystemStates SystemState
 		{
 			set

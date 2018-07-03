@@ -13,7 +13,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] bool visited;
 		[JsonProperty] UniversePosition position;
 
-		[JsonProperty] StarSystemModel[] stars = new StarSystemModel[0];
+		[JsonProperty] CelestialSystemModel[] celestials = new CelestialSystemModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;
@@ -46,14 +46,14 @@ namespace LunraGames.SpaceFarm.Models
 		#region Events
 		void OnSetSystems(SystemModel[] newSystems)
 		{
-			var starList = new List<StarSystemModel>();
+			var celestialList = new List<CelestialSystemModel>();
 
 			foreach (var system in newSystems)
 			{
 				switch(system.SystemType)
 				{
-					case SystemTypes.Star:
-						starList.Add(system as StarSystemModel);
+					case SystemTypes.Celestial:
+						celestialList.Add(system as CelestialSystemModel);
 						break;
 					default:
 						Debug.LogError("Unrecognized SystemType: " + system.SystemType);
@@ -61,13 +61,12 @@ namespace LunraGames.SpaceFarm.Models
 				}
 			}
 
-			stars = starList.ToArray();
+			celestials = celestialList.ToArray();
 		}
 
 		SystemModel[] OnGetSystems()
 		{
-			//return stars.Concat(stars).ToArray();
-			return stars.ToArray();
+			return celestials.ToArray();
 		}
 		#endregion
 	}

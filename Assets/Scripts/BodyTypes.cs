@@ -2,8 +2,8 @@
 {
 	public enum BodyTypes
 	{
-		Unknown,
-		Star,
-		Terrestrial
+		Unknown = 0,
+		Star = 10,
+		Terrestrial = 20
 	}
 }

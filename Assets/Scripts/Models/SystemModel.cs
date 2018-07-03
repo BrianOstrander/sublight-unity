@@ -69,6 +69,7 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			var starList = new List<StarBodyModel>();
 			var terrestrialList = new List<TerrestrialBodyModel>();
+
 			foreach (var body in newBodies)
 			{
 				switch (body.BodyType)
@@ -85,6 +86,7 @@ namespace LunraGames.SpaceFarm.Models
 				}
 			}
 
+			stars = starList.ToArray();
 			terrestrials = terrestrialList.ToArray();
 		}
 
