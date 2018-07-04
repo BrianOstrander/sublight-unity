@@ -73,9 +73,16 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			App.Callbacks.FocusRequest(
-				new BodyFocusRequest(destination.Position, body.BodyId)
-			);
+			model.Ship.Value.Rations.Value += body.Rations - body.RationsAcquired;
+			model.Ship.Value.Fuel.Value += body.Fuel - body.FuelAcquired;
+
+			body.RationsAcquired.Value = body.Rations;
+			body.FuelAcquired.Value = body.Fuel;
+
+			App.Log("Focus on body", LogTypes.ToDo);
+			//App.Callbacks.FocusRequest(
+			//	new BodyFocusRequest(destination.Position, body.BodyId)
+			//);
 		}
 
 		void OnDoneClick()

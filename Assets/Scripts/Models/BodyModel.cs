@@ -11,6 +11,8 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string encounterId;
 		[JsonProperty] float rations;
 		[JsonProperty] float fuel;
+		[JsonProperty] float rationsAcquired;
+		[JsonProperty] float fuelAcquired;
 		[JsonProperty] BodyStatus status;
 
 		/// <summary>
@@ -35,6 +37,10 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
 		[JsonIgnore]
+		public readonly ListenerProperty<float> RationsAcquired;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> FuelAcquired;
+		[JsonIgnore]
 		public readonly ListenerProperty<BodyStatus> Status;
 
 		public BodyModel()
@@ -46,6 +52,8 @@ namespace LunraGames.SpaceFarm.Models
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
 			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
+			RationsAcquired = new ListenerProperty<float>(value => rationsAcquired = value, () => rationsAcquired);
+			FuelAcquired = new ListenerProperty<float>(value => fuelAcquired = value, () => fuelAcquired);
 			Status = new ListenerProperty<BodyStatus>(value => status = value, () => status);
 		}
 	}

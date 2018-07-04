@@ -96,10 +96,9 @@ namespace LunraGames.SpaceFarm
 			var wasTriggered = false;
 			var expiredDrags = new List<GameObject>();
 
+			// TODO: This probably doesn't need to be a foreach loop.
 			foreach (var raycast in raycasts)
 			{
-				if (wasTriggered) break;
-
 				if (stillHighlighted.Count == 0)
 				{
 					stillHighlighted.Add(raycast.gameObject);
@@ -118,16 +117,17 @@ namespace LunraGames.SpaceFarm
 				{
 					if (clickClick)
 					{
-                        wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
+						wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
 					}
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler) != null;
 
 					expiredDrags.Add(raycast.gameObject);
 				}
-                if (clickHeldDown)
-                {
+				if (clickHeldDown)
+				{
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler) != null;
-                }
+				}
+				break;
 			}
 
 			if (clickUp)
