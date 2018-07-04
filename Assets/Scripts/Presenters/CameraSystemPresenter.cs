@@ -23,6 +23,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.game = game;
 
 			App.Heartbeat.Update += OnUpdate;
+			App.Callbacks.FocusRequest += OnFocus;
 			App.Callbacks.UniversePositionRequest += OnUniversePositionRequest;
 			App.Callbacks.ObscureCameraRequest += OnObscureCameraRequest;
 			App.Callbacks.CameraSystemRequest += OnSystemCameraRequest;
@@ -33,6 +34,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Heartbeat.Update -= OnUpdate;
+			App.Callbacks.FocusRequest -= OnFocus;
 			App.Callbacks.UniversePositionRequest -= OnUniversePositionRequest;
 			App.Callbacks.ObscureCameraRequest -= OnObscureCameraRequest;
 			App.Callbacks.CameraSystemRequest -= OnSystemCameraRequest;
@@ -53,6 +55,27 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (lastMoveRequest.State == CameraSystemRequest.States.Active) OnMoveRequest();
 			else if (!App.Callbacks.LastObscureCameraRequest.IsObscured) OnDrag();
+		}
+
+		void OnFocus(FocusRequest focus)
+		{
+			switch (focus.Focus)
+			{
+				case FocusRequest.Focuses.SystemBodies:
+					break;
+				case FocusRequest.Focuses.Systems:
+					if (focus.State == FocusRequest.States.Complete)
+					{
+						var systemFocus = focus as SystemsFocusRequest;
+						Show();
+						App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(systemFocus.CameraFocus));
+					}
+					break;
+				default:
+					if (View.TransitionState == TransitionStates.Shown) CloseView();
+					break;
+			}
+
 		}
 
 		void OnMoveRequest()

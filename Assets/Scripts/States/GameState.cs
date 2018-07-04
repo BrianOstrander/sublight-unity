@@ -79,7 +79,9 @@ namespace LunraGames.SpaceFarm
 			// but you can safely ignore those warnings since they register
 			// themselves with the PresenterMediator.
 
-			new CameraSystemPresenter(game).Show();
+
+			// System presenters
+			new CameraSystemPresenter(game);
 
 			Payload.Focuses.Add(
 				FocusRequest.Focuses.Systems,
@@ -96,12 +98,15 @@ namespace LunraGames.SpaceFarm
 					new EndSystemPresenter(game)
 				}
 			);
-
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
+
+			// System Bodies presenters
+			new SystemBodyListPresenter(game);
+
+			// Global presenters
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);
-			new SystemBodyListPresenter(game);
 
 			done();
 		}
@@ -121,8 +126,6 @@ namespace LunraGames.SpaceFarm
 					Payload.Game.Ship.Value.Position
 				)
 			);
-
-			//App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(Payload.Game.Ship.Value.Position));
 
 			if (!DevPrefs.SkipExplanation)
 			{
@@ -192,7 +195,6 @@ namespace LunraGames.SpaceFarm
 				case FocusRequest.Focuses.Systems:
 					var systemFocus = focus as SystemsFocusRequest;
 					Payload.Game.FocusedSector.Value = systemFocus.FocusedSector;
-					App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(systemFocus.CameraFocus));
 					break;
 			}
 		}

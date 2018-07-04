@@ -22,6 +22,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			SetView(App.V.Get<ISystemView>(v => v.SystemType == system.SystemType));
 
 			App.Heartbeat.Update += OnUpdate;
+			App.Callbacks.FocusRequest += OnFocus;
 			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 			model.DestructionRadius.Changed += OnDestructionRadius;
 			model.FocusedSectors.Changed += OnFocusedSectors;
@@ -32,6 +33,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Heartbeat.Update -= OnUpdate;
+			App.Callbacks.FocusRequest -= OnFocus;
 			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 			model.DestructionRadius.Changed -= OnDestructionRadius;
 			model.FocusedSectors.Changed -= OnFocusedSectors;
@@ -57,6 +59,20 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnUpdate(float delta)
 		{
 			updatedThisFrame = false;
+		}
+
+		void OnFocus(FocusRequest focus)
+		{
+			switch(focus.Focus)
+			{
+				case FocusRequest.Focuses.Systems:
+					if (focus.State == FocusRequest.States.Complete) Show();
+					break;
+				default:
+					if (View.TransitionState == TransitionStates.Shown) CloseView();
+					break;
+			}
+			
 		}
 
 		void OnHighlight(bool highlighted)
@@ -117,13 +133,13 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			var distance = UniversePosition.Distance(system.Position, model.Ship.Value.Position);
 			isTravelable = distance < travelRadius.MaximumRadius;
-			if (View.Visible) OnSystemState();
+			if (View.TransitionState == TransitionStates.Shown) OnSystemState();
 		}
 
 		void OnDestructionRadius(float radius)
 		{
 			isDestroyed = UniversePosition.Distance(UniversePosition.Zero, system.Position) < radius;
-			if (View.Visible) OnSystemState();
+			if (View.TransitionState == TransitionStates.Shown) OnSystemState();
 		}
 
 		void OnSystemState()
