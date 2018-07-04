@@ -1,13 +1,11 @@
-﻿using System;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class ShipSystemPresenter : Presenter<IShipSystemView>
+	public class ShipSystemPresenter : Presenter<IShipSystemView>, IPresenterCloseShow
 	{
 		GameModel model;
 		ShipModel ship;
@@ -18,7 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship = model.Ship;
 
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			model.TravelRequest.Changed += OnTravelRequest;
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
 
@@ -27,7 +25,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			model.TravelRequest.Changed -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
 
@@ -42,13 +40,19 @@ namespace LunraGames.SpaceFarm.Presenters
 			ShowView(instant: true);
 		}
 
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
+		}
+
 		#region Events
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
 			var rationsConsumed = model.Ship.Value.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
 			model.Ship.Value.Rations.Value = Mathf.Max(0f, rationsConsumed);
 
-			var lastTravel = App.Callbacks.LastTravelRequest;
+			var lastTravel = model.TravelRequest.Value;
 			if (lastTravel.State == TravelRequest.States.Active)
 			{
 				// We're traveling!
@@ -71,7 +75,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					lastTravel.FuelConsumed,
 					progress
 				);
-				App.Callbacks.TravelRequest(travel);
+				model.TravelRequest.Value = travel;
 			}
 		}
 
@@ -86,7 +90,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					ship.CurrentSystem.Value = UniversePosition.Zero;
 					ship.Position.Value = travelRequest.Origin;
 					if (Mathf.Approximately(App.Callbacks.LastSpeedRequest.Speed, 0f)) App.Callbacks.SpeedRequest(SpeedRequest.PlayRequest);
-					App.Callbacks.TravelRequest(travelRequest.Duplicate(TravelRequest.States.Active));
+					model.TravelRequest.Value = travelRequest.Duplicate(TravelRequest.States.Active);
 					break;
 				case TravelRequest.States.Complete:
 					ship.LastSystem.Value = UniversePosition.Zero;
@@ -103,7 +107,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnShipPosition(UniversePosition position)
 		{
-			View.UniversePosition = position;
+			if (View.TransitionState == TransitionStates.Shown) View.UniversePosition = position;
 		}
 		#endregion
 	}

@@ -131,6 +131,14 @@ namespace LunraGames.SpaceFarm.Presenters
 				1f
 			);
 
+			// Setting the request to Complete for consistency, since that's how
+			// the game will normally be opened from a save.
+			game.FocusRequest.Value = new SystemsFocusRequest(
+				startSystem.Position.Value.SystemZero,
+				startSystem.Position,
+				FocusRequest.States.Complete
+			);
+
 			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
 			game.EndSystem.Value = endSector.Systems.Value.First().Position;
 

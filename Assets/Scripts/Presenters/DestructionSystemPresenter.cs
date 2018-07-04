@@ -3,7 +3,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class DestructionSystemPresenter : Presenter<IDestructionSystemView>
+	public class DestructionSystemPresenter : Presenter<IDestructionSystemView>, IPresenterCloseShow
 	{
 		GameModel model;
 
@@ -35,6 +35,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Click = OnClick;
 			View.VoidTexture = App.Callbacks.LastVoidRenderTexture.Texture;
 			ShowView(instant: true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

@@ -80,5 +80,10 @@ namespace LunraGames.SpaceFarm
 				Progress
 			);
 		}
+
+		public override string ToString()
+		{
+			return "TravelRequest - State: " + State;
+		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -105,9 +106,9 @@ namespace LunraGames.SpaceFarm
 			var types = new SystemTypes[positions.Length];
 			var seeds = new int[positions.Length];
 
-			for (var i = 0; i < positions.Length; i++) 
+			for (var i = 0; i < positions.Length; i++)
 			{
-				types[i] = SystemTypes.Star;
+				types[i] = SystemTypes.Celestial;
 				seeds[i] = demon.NextInteger;
 			}
 
@@ -125,7 +126,7 @@ namespace LunraGames.SpaceFarm
 
 			switch (systemType)
 			{
-				case SystemTypes.Star: system = new StarModel(); break;
+				case SystemTypes.Celestial: system = new CelestialSystemModel(); break;
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
 
@@ -137,7 +138,7 @@ namespace LunraGames.SpaceFarm
 
 			system.Name.Value = seed.ToString();
 
-			switch(random.GetNextInteger(max: 3))
+			switch (random.GetNextInteger(max: 3))
 			{
 				case 0:
 					// Just rations
@@ -159,16 +160,85 @@ namespace LunraGames.SpaceFarm
 
 			switch (systemType)
 			{
-				case SystemTypes.Star: PopulateSystem(system as StarModel); break;
+				case SystemTypes.Celestial: PopulateSystem(system as CelestialSystemModel); break;
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
 
 			return system;
 		}
 
-		public override void PopulateSystem(StarModel starModel)
+		public override void PopulateSystem(CelestialSystemModel celestialModel)
 		{
-			// TODO: Populate star specific info
+			var random = new Demon(celestialModel.Seed + 1);
+			var bodies = new List<BodyModel>();
+
+			var rationsRemaining = celestialModel.Rations.Value;
+			var fuelRemaining = celestialModel.Fuel.Value;
+
+			var star = new StarBodyModel();
+			bodies.Add(star);
+			star.Seed.Value = random.NextInteger;
+			star.BodyId.Value = 0;
+			star.ParentId.Value = -1;
+			star.Name.Value = "Star: "+star.Seed.Value.ToString();
+			star.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
+			star.Fuel.Value = GetFraction(ref fuelRemaining, random.NextFloat);
+
+			var bodyCount = 0;
+
+			for (var i = 0; i < random.GetNextInteger(0, 3); i++)
+			{
+				BodyModel generic;
+				var seed = random.NextInteger;
+				var bodyId = (bodyCount += 1);
+				var parentId = -1;
+				var name = string.Empty;
+				var rations = GetFraction(ref rationsRemaining, random.NextFloat);
+				var fuel = GetFraction(ref fuelRemaining, random.NextFloat);
+				var status = BodyStatus.UnVisited;
+
+				switch (random.GetNextInteger(0, 2))
+				{
+					case 0:
+						// star
+						var starModel = new StarBodyModel();
+						generic = starModel;
+
+						name = "Star: " + seed.ToString();
+						break;
+					case 1:
+						// terrestrial
+						var terrestrialModel = new TerrestrialBodyModel();
+						terrestrialModel.ParentId.Value = star.BodyId;
+						generic = terrestrialModel;
+
+						name = "Terrestrial: " + seed.ToString();
+						break;
+					default: throw new ArgumentException("Random body out of range.");
+				}
+
+				generic.Seed.Value = seed;
+				generic.BodyId.Value = bodyId;
+				generic.ParentId.Value = parentId;
+				generic.Name.Value = name;
+				generic.Rations.Value = rations;
+				generic.Fuel.Value = fuel;
+				generic.Status.Value = status;
+
+				bodies.Add(generic);
+			}
+
+			star.Rations.Value += rationsRemaining;
+			star.Fuel.Value += fuelRemaining;
+
+			celestialModel.Bodies.Value = bodies.ToArray();
 		}
+
+		#region Utility
+		float GetFraction(ref float remaining, float normal)
+		{
+			return remaining - (remaining = remaining * normal);
+		}
+		#endregion
 	}
 }

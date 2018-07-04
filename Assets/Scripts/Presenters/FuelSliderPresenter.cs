@@ -3,7 +3,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class FuelSliderPresenter : Presenter<IFuelSliderView>
+	public class FuelSliderPresenter : Presenter<IFuelSliderView>, IPresenterCloseShow
 	{
 		GameModel model;
 
@@ -31,12 +31,24 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
+			// Turn this back up to one, since it's annoying every time fuel runs out.
+			if (1f <= model.Ship.Value.Fuel && model.Ship.Value.FuelConsumption < 1f)
+			{
+				model.Ship.Value.FuelConsumption.Value = 1f;
+			}
+
 			View.Rations = model.Ship.Value.Rations;
 			View.Fuel = model.Ship.Value.Fuel;
 			View.FuelConsumption = model.Ship.Value.FuelConsumption;
 			View.FuelConsumptionUpdate = OnFuelConsumptionUpdate;
 
 			ShowView(App.GameCanvasRoot, true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

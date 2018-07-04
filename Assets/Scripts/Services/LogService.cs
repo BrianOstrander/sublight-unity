@@ -60,7 +60,7 @@ namespace LunraGames.SpaceFarm
 				logs.Add(new LogEntry(message, logType, context));
 			}
 
-			Debug.Log(message, context);
+			Debug.Log(logType + ": " + message, context);
 		}
 
 	}

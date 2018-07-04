@@ -1,5 +1,9 @@
 ﻿using Newtonsoft.Json;
 
+using UnityEngine;
+
+using Focuses = LunraGames.SpaceFarm.FocusRequest.Focuses;
+
 namespace LunraGames.SpaceFarm.Models
 {
 	public class GameModel : SaveModel
@@ -17,6 +21,11 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float destructionRadius;
 		[JsonProperty] TravelRequest travelRequest;
 		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
+
+		[JsonProperty] GalaxyFocusRequest galaxyFocus;
+		[JsonProperty] SystemBodiesFocusRequest systemBodiesFocus;
+		[JsonProperty] SystemsFocusRequest systemsFocus;
+		[JsonProperty] BodyFocusRequest bodyFocus;
 
 		/// <summary>
 		/// The game seed.
@@ -74,8 +83,11 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<TravelRequest> TravelRequest;
 		[JsonIgnore]
 		public readonly ListenerProperty<DestructionSpeedDelta[]> DestructionSpeedDeltas;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<FocusRequest> FocusRequest;
 		#endregion
-  		
+
 		#region NonSerialized
 		UniversePosition[] focusedSectors = new UniversePosition[0];
 
@@ -102,6 +114,46 @@ namespace LunraGames.SpaceFarm.Models
 			DestructionRadius = new ListenerProperty<float>(value => destructionRadius = value, () => destructionRadius);
 			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
+
+			FocusRequest = new ListenerProperty<FocusRequest>(OnSetFocus, OnGetFocus);
 		}
+
+		#region Events
+		void OnSetFocus(FocusRequest focus)
+		{
+			galaxyFocus = null;
+			systemBodiesFocus = null;
+			systemsFocus = null;
+			bodyFocus = null;
+
+			switch (focus.Focus)
+			{
+				case Focuses.Galaxy:
+					galaxyFocus = focus as GalaxyFocusRequest;
+					break;
+				case Focuses.SystemBodies:
+					systemBodiesFocus = focus as SystemBodiesFocusRequest;
+					break;
+				case Focuses.Systems:
+					systemsFocus = focus as SystemsFocusRequest;
+					break;
+				case Focuses.Body:
+					bodyFocus = focus as BodyFocusRequest;
+					break;
+				default:
+					Debug.LogError("Unrecognized Focus: " + focus.Focus);
+					break;
+			}
+		}
+
+		FocusRequest OnGetFocus()
+		{
+			if (galaxyFocus != null) return galaxyFocus;
+			if (systemBodiesFocus != null) return systemBodiesFocus;
+			if (systemsFocus != null) return systemsFocus;
+			if (bodyFocus != null) return bodyFocus;
+			return null;
+		}
+		#endregion
 	}
 }

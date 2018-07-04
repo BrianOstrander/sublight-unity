@@ -13,16 +13,14 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] bool visited;
 		[JsonProperty] UniversePosition position;
 
-		[JsonProperty] StarModel[] stars = new StarModel[0];
+		[JsonProperty] CelestialSystemModel[] celestials = new CelestialSystemModel[0];
 
-		#region Assigned
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> Visited;
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> Position;
-		#endregion
 
 		#region Derived
 		[JsonIgnore]
@@ -34,6 +32,7 @@ namespace LunraGames.SpaceFarm.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			Visited = new ListenerProperty<bool>(value => visited = value, () => visited);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
+
 			Systems = new ListenerProperty<SystemModel[]>(OnSetSystems, OnGetSystems);
 		}
 
@@ -42,19 +41,24 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			return Systems.Value.FirstOrDefault(s => s.Position.Value == position);
 		}
+
+		public BodyModel GetBody(UniversePosition position, int id)
+		{
+			return GetSystem(position).GetBody(id);
+		}
 		#endregion
 
 		#region Events
 		void OnSetSystems(SystemModel[] newSystems)
 		{
-			var starList = new List<StarModel>();
+			var celestialList = new List<CelestialSystemModel>();
 
 			foreach (var system in newSystems)
 			{
 				switch(system.SystemType)
 				{
-					case SystemTypes.Star:
-						starList.Add(system as StarModel);
+					case SystemTypes.Celestial:
+						celestialList.Add(system as CelestialSystemModel);
 						break;
 					default:
 						Debug.LogError("Unrecognized SystemType: " + system.SystemType);
@@ -62,13 +66,12 @@ namespace LunraGames.SpaceFarm.Models
 				}
 			}
 
-			stars = starList.ToArray();
+			celestials = celestialList.ToArray();
 		}
 
 		SystemModel[] OnGetSystems()
 		{
-			//return stars.Concat(stars).ToArray();
-			return stars.ToArray();
+			return celestials.ToArray();
 		}
 		#endregion
 	}

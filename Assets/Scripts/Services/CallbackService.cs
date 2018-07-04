@@ -83,10 +83,6 @@ namespace LunraGames.SpaceFarm
 		/// </summary>
 		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>();
 		/// <summary>
-		/// The travel progress.
-		/// </summary>
-		public Action<TravelRequest> TravelRequest = ActionExtensions.GetEmpty<TravelRequest>();
-		/// <summary>
 		/// The speed change.
 		/// </summary>
 		public Action<SpeedRequest> SpeedRequest = ActionExtensions.GetEmpty<SpeedRequest>();
@@ -107,6 +103,10 @@ namespace LunraGames.SpaceFarm
 		/// Called every time the offset of the universe is updated.
 		/// </summary>
 		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
+		/// <summary>
+		/// The focus of the game, can be cast to retrieve more information.
+		/// </summary>
+		public Action<FocusRequest> FocusRequest = ActionExtensions.GetEmpty<FocusRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...
@@ -123,7 +123,6 @@ namespace LunraGames.SpaceFarm
 		#region Game Caching
 		public DayTimeDelta LastDayTimeDelta;
 		public SystemHighlight LastSystemHighlight;
-		public TravelRequest LastTravelRequest;
 		public SpeedRequest LastSpeedRequest;
 		public VoidRenderTexture LastVoidRenderTexture;
 		public UniversePositionRequest LastUniversePositionRequest;
@@ -141,7 +140,6 @@ namespace LunraGames.SpaceFarm
 			CurrentGesture += gesture => LastGesture = gesture;
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
 			SystemHighlight += highlight => LastSystemHighlight = highlight;
-			TravelRequest += travelRequest => LastTravelRequest = travelRequest;
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
 			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
 			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;

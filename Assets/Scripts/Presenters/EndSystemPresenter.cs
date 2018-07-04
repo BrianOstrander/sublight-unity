@@ -5,7 +5,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class EndSystemPresenter : Presenter<IEndSystemView>
+	public class EndSystemPresenter : Presenter<IEndSystemView>, IPresenterCloseShow
 	{
 		GameModel model;
 		SystemModel system;
@@ -16,7 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			system = model.Universe.Value.GetSystem(model.EndSystem);
 
 			model.FocusedSectors.Changed += OnFocusedSectors;
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			model.TravelRequest.Changed += OnTravelRequest;
 		}
 
 		protected override void UnBind()
@@ -24,7 +24,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			model.FocusedSectors.Changed -= OnFocusedSectors;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			model.TravelRequest.Changed -= OnTravelRequest;
 		}
 
 		public void Show()
@@ -34,6 +34,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.UniversePosition = system.Position;
 			View.Click = OnClick;
 			ShowView(instant: true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

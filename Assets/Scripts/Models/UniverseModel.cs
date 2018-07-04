@@ -9,15 +9,10 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] int seed;
 		[JsonProperty] SectorModel[] sectors = new SectorModel[0];
 
-		#region Assigned
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;
-		#endregion
-
-		#region Derived
 		[JsonIgnore]
 		public readonly ListenerProperty<SectorModel[]> Sectors;
-		#endregion
 
 		public UniverseModel()
 		{
@@ -42,6 +37,11 @@ namespace LunraGames.SpaceFarm.Models
 		public SystemModel GetSystem(UniversePosition position)
 		{
 			return GetSector(position).GetSystem(position);
+		}
+
+		public BodyModel GetBody(UniversePosition position, int id)
+		{
+			return GetSystem(position).GetBody(id);
 		}
   		#endregion
 	}

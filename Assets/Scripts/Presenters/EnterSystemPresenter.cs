@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-using LunraGames.SpaceFarm.Views;
+﻿using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
@@ -16,14 +14,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			model.TravelRequest.Changed += OnTravelRequest;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
 
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			model.TravelRequest.Changed -= OnTravelRequest;
 		}
 
 		void Show()
