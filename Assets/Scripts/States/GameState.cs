@@ -102,6 +102,7 @@ namespace LunraGames.SpaceFarm
 			new LineSystemPresenter(game);
 
 			// System Bodies presenters
+			new CameraSystemBodiesPresenter(game);
 			new SystemBodyListPresenter(game);
 
 			// Body presenters
@@ -119,16 +120,11 @@ namespace LunraGames.SpaceFarm
 		protected override void Idle()
 		{
 			var focusedSector = Payload.Game.Ship.Value.Position.Value.SystemZero;
-			var wasFocused = Payload.Game.FocusedSector.Value == focusedSector;
+			var wasSectorFocused = Payload.Game.FocusedSector.Value == focusedSector;
 			Payload.Game.FocusedSector.Value = focusedSector;
-			if (wasFocused) OnFocusedSector(focusedSector);
+			if (wasSectorFocused) OnFocusedSector(focusedSector);
 
-			App.Callbacks.FocusRequest(
-				new SystemsFocusRequest(
-					focusedSector,
-					Payload.Game.Ship.Value.Position
-				)
-			);
+			App.Callbacks.FocusRequest(Payload.Game.FocusRequest.Value.Duplicate(FocusRequest.States.Request));
 
 			if (!DevPrefs.SkipExplanation)
 			{
@@ -173,6 +169,9 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		void OnFocus(FocusRequest focus)
 		{
+			Debug.Log("am I called? "+ focus);
+			Payload.Game.FocusRequest.Value = focus;
+
 			switch(focus.State)
 			{
 				case FocusRequest.States.Request:
@@ -251,7 +250,7 @@ namespace LunraGames.SpaceFarm
 						travelDestination.Visited.Value = true;
 						App.Callbacks.FocusRequest(
 							new SystemBodiesFocusRequest(
-								travelDestination
+								travelDestination.Position
 							)
 						);
 					}

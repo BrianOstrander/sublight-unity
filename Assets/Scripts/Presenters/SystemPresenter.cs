@@ -106,7 +106,28 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnClick()
 		{
-			if (App.Callbacks.LastTravelRequest.State != TravelRequest.States.Complete) return;
+			var travelRequest = App.Callbacks.LastTravelRequest;
+
+			switch(travelRequest.State)
+			{
+				case TravelRequest.States.Complete:
+					if (system.Position == travelRequest.Destination) OnClickToBodies();
+					else OnClickToTravel();
+					break;
+			}
+		}
+
+		void OnClickToBodies()
+		{
+			App.Callbacks.FocusRequest(
+				new SystemBodiesFocusRequest(
+					system.Position
+				)
+			);
+		}
+
+		void OnClickToTravel()
+		{
 			if (isTravelable)
 			{
 				var travelTime = UniversePosition.TravelTime(model.Ship.Value.CurrentSystem.Value, system.Position.Value, model.Ship.Value.SpeedTotal.Value);

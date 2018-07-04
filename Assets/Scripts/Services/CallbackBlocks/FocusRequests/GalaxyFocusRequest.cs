@@ -2,7 +2,9 @@
 {
 	public class GalaxyFocusRequest : FocusRequest
 	{
-		public GalaxyFocusRequest(States state = States.Request) : base(Focuses.Galaxy, state) { }
+		public override Focuses Focus { get { return Focuses.Galaxy; } }
+
+		public GalaxyFocusRequest(States state = States.Request) : base(state) { }
 
 		public override FocusRequest Duplicate(States state = States.Unknown)
 		{

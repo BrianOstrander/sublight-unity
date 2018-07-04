@@ -1,15 +1,19 @@
-﻿namespace LunraGames.SpaceFarm
+﻿using Newtonsoft.Json;
+
+namespace LunraGames.SpaceFarm
 {
 	public class SystemsFocusRequest : FocusRequest
 	{
-		public readonly UniversePosition FocusedSector;
-		public readonly UniversePosition CameraFocus;
+		public override Focuses Focus { get { return Focuses.Systems; } }
+
+		[JsonProperty] public readonly UniversePosition FocusedSector;
+		[JsonProperty] public readonly UniversePosition CameraFocus;
 
 		public SystemsFocusRequest(
 			UniversePosition focusedSector, 
 			UniversePosition cameraFocus,
 			States state = States.Request
-		) : base(Focuses.Systems, state) 
+		) : base(state) 
 		{
 			FocusedSector = focusedSector;
 			CameraFocus = cameraFocus;

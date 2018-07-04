@@ -1,4 +1,6 @@
-﻿namespace LunraGames.SpaceFarm
+﻿using Newtonsoft.Json;
+
+namespace LunraGames.SpaceFarm
 {
 	public abstract class FocusRequest
 	{
@@ -19,12 +21,12 @@
 			Complete = 30
 		}
 
-		public Focuses Focus { get; protected set; }
-		public readonly States State;
+		public abstract Focuses Focus { get; }
 
-		protected FocusRequest(Focuses focus, States state)
+		[JsonProperty] public readonly States State;
+
+		protected FocusRequest(States state)
 		{
-			Focus = focus;
 			State = state;
 		}
 
@@ -32,7 +34,7 @@
 
 		public override string ToString()
 		{
-			return "State: " + State;
+			return "Focus: " + Focus + "." + State;
 		}
 	}
 }

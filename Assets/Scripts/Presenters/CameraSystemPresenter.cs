@@ -61,13 +61,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			switch (focus.Focus)
 			{
-				// Remove these breaks to customize when this camera closes and such.
-				case FocusRequest.Focuses.Body:
-					break;
-				case FocusRequest.Focuses.SystemBodies:
-					break;
 				case FocusRequest.Focuses.Systems:
-					if (focus.State == FocusRequest.States.Complete)
+					if (focus.State == FocusRequest.States.Active)
 					{
 						var systemFocus = focus as SystemsFocusRequest;
 						Show();
@@ -75,10 +70,12 @@ namespace LunraGames.SpaceFarm.Presenters
 					}
 					break;
 				default:
-					if (View.TransitionState == TransitionStates.Shown) CloseView();
+					if (focus.State == FocusRequest.States.Active)
+					{
+						if (View.TransitionState == TransitionStates.Shown) CloseView();
+					}
 					break;
 			}
-
 		}
 
 		void OnMoveRequest()

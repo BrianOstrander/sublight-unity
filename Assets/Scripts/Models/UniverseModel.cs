@@ -38,6 +38,11 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			return GetSector(position).GetSystem(position);
 		}
+
+		public BodyModel GetBody(UniversePosition position, int id)
+		{
+			return GetSystem(position).GetBody(id);
+		}
   		#endregion
 	}
 }

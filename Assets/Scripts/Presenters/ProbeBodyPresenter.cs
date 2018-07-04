@@ -43,8 +43,8 @@ namespace LunraGames.SpaceFarm.Presenters
 					// We only show UI elements once the focus is complete.
 					if (focus.State != FocusRequest.States.Complete) return;
 					var bodyFocus = focus as BodyFocusRequest;
-					system = bodyFocus.System;
-					body = bodyFocus.Body;
+					system = model.Universe.Value.GetSystem(bodyFocus.System);
+					body = system.GetBody(bodyFocus.Body);
 					Show();
 					break;
 				default:
@@ -59,7 +59,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			App.Callbacks.FocusRequest(
-				new SystemBodiesFocusRequest(system)
+				new SystemBodiesFocusRequest(system.Position)
 			);
 		}
 		#endregion

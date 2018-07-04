@@ -30,8 +30,6 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(OnDoneClick, false, false));
-
 			View.Title = Strings.ArrivedIn(destination.Name.Value);
 
 			var bodies = new List<LabelButtonBlock>();
@@ -50,7 +48,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.BodyEntries = bodies.ToArray();
 
 			View.DoneClick = OnDoneClick;
-			ShowView(App.CanvasRoot);
+			ShowView(App.GameCanvasRoot);
 		}
 
 		#region Events
@@ -62,7 +60,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					// We only show UI elements once the focus is complete.
 					if (focus.State != FocusRequest.States.Complete) return;
 					var systemBodiesFocus = focus as SystemBodiesFocusRequest;
-					destination = systemBodiesFocus.System;
+					destination = model.Universe.Value.GetSystem(systemBodiesFocus.System);
 					Show();
 					break;
 				default:
@@ -76,14 +74,13 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			App.Callbacks.FocusRequest(
-				new BodyFocusRequest(destination, body)
+				new BodyFocusRequest(destination.Position, body.BodyId)
 			);
 		}
 
 		void OnDoneClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
-			App.Callbacks.PopEscape();
 			App.Callbacks.FocusRequest(
 				new SystemsFocusRequest(
 					destination.Position.Value.SystemZero,

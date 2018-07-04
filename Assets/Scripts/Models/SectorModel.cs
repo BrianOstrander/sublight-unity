@@ -41,6 +41,11 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			return Systems.Value.FirstOrDefault(s => s.Position.Value == position);
 		}
+
+		public BodyModel GetBody(UniversePosition position, int id)
+		{
+			return GetSystem(position).GetBody(id);
+		}
 		#endregion
 
 		#region Events

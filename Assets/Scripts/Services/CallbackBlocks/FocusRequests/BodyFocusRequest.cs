@@ -1,17 +1,19 @@
-﻿using LunraGames.SpaceFarm.Models;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
 	public class BodyFocusRequest : FocusRequest
 	{
-		public readonly SystemModel System;
-		public readonly BodyModel Body;
+		public override Focuses Focus { get { return Focuses.Body; } }
+
+		[JsonProperty] public readonly UniversePosition System;
+		[JsonProperty] public readonly int Body;
 
 		public BodyFocusRequest(
-			SystemModel system,
-			BodyModel body,
+			UniversePosition system,
+			int body,
 			States state = States.Request
-		) : base(Focuses.Body, state) 
+		) : base(state) 
 		{
 			System = system;
 			Body = body;

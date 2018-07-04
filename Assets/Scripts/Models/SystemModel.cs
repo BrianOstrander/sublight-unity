@@ -64,6 +64,13 @@ namespace LunraGames.SpaceFarm.Models
 			Bodies = new ListenerProperty<BodyModel[]>(OnSetBodies, OnGetBodies);
 		}
 
+		#region Utility
+		public BodyModel GetBody(int id)
+		{
+			return Bodies.Value.FirstOrDefault(b => b.BodyId.Value == id);
+		}
+		#endregion
+
 		#region Events
 		void OnSetBodies(BodyModel[] newBodies)
 		{
