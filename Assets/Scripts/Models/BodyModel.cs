@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Models
 {
-	public class BodyModel : Model
+	public abstract class BodyModel : Model
 	{
 		[JsonProperty] int seed;
 		[JsonProperty] int bodyId;
@@ -16,11 +16,11 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] BodyStatus status;
 
 		/// <summary>
-		/// Gets or sets the type of the body.
+		/// Gets the type of the body.
 		/// </summary>
 		/// <value>The type of the body.</value>
-		[JsonProperty]
-		public BodyTypes BodyType { get; protected set; }
+		[JsonIgnore]
+		public abstract BodyTypes BodyType { get; }
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;

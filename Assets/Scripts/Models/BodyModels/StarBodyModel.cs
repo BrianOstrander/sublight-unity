@@ -2,9 +2,6 @@
 {
 	public class StarBodyModel : BodyModel
 	{
-		public StarBodyModel()
-		{
-			BodyType = BodyTypes.Star;
-		}
+		public override BodyTypes BodyType { get { return BodyTypes.Star; } }
 	}
 }
