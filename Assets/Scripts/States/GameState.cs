@@ -12,6 +12,8 @@ namespace LunraGames.SpaceFarm
 	public class GamePayload : IStatePayload
 	{
 		public GameModel Game;
+
+		public Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]> Focuses = new Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]>();
 	}
 
 	public class GameState : State<GamePayload>
@@ -46,6 +48,7 @@ namespace LunraGames.SpaceFarm
 		{
 			App.Callbacks.SaveRequest += OnSaveRequest;
 			App.Callbacks.TravelRequest += OnTravelRequest;
+			App.Callbacks.FocusRequest += OnFocus;
 			done();
 		}
 
@@ -77,22 +80,28 @@ namespace LunraGames.SpaceFarm
 			// themselves with the PresenterMediator.
 
 			new CameraSystemPresenter(game).Show();
-			new SpeedPresenter(game).Show();
-			new EndDistancePresenter(game).Show();
-			new ShipSystemPresenter(game).Show();
-			new ShipRadiusPresenter(game).Show();
-			new DestructionOriginSystemPresenter().Show();
-			new DestructionSystemPresenter(game).Show();
-			new EndDirectionSystemPresenter(game).Show();
-			new FuelSliderPresenter(game).Show();
-			new DestructionSpeedPresenter(game).Show();
+
+			Payload.Focuses.Add(
+				FocusRequest.Focuses.Systems,
+				new IPresenterCloseShow[] {
+					new ShipRadiusPresenter(game),
+					new DestructionOriginSystemPresenter(),
+					new DestructionSystemPresenter(game),
+					new EndDirectionSystemPresenter(game),
+					new FuelSliderPresenter(game),
+					new DestructionSpeedPresenter(game),
+					new SpeedPresenter(game),
+					new EndDistancePresenter(game),
+					new ShipSystemPresenter(game),
+					new EndSystemPresenter(game)
+				}
+			);
 
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);
-			new EnterSystemPresenter(game);
-			new EndSystemPresenter(game);
+			new SystemBodyListPresenter(game);
 
 			done();
 		}
@@ -106,7 +115,14 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.FocusedSector.Value = focusedSector;
 			if (wasFocused) OnFocusedSector(focusedSector);
 
-			App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(Payload.Game.Ship.Value.Position));
+			App.Callbacks.FocusRequest(
+				new SystemsFocusRequest(
+					focusedSector,
+					Payload.Game.Ship.Value.Position
+				)
+			);
+
+			//App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(Payload.Game.Ship.Value.Position));
 
 			if (!DevPrefs.SkipExplanation)
 			{
@@ -127,6 +143,7 @@ namespace LunraGames.SpaceFarm
 
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 			App.Callbacks.TravelRequest -= OnTravelRequest;
+			App.Callbacks.FocusRequest -= OnFocus;
 			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
 			App.Callbacks.ClearEscapables();
 
@@ -148,6 +165,38 @@ namespace LunraGames.SpaceFarm
 		#endregion
 
 		#region Events
+		void OnFocus(FocusRequest focus)
+		{
+			switch(focus.State)
+			{
+				case FocusRequest.States.Request:
+					App.Callbacks.FocusRequest(focus.Duplicate(FocusRequest.States.Active));
+					return;
+				case FocusRequest.States.Active:
+					App.Callbacks.FocusRequest(focus.Duplicate(FocusRequest.States.Complete));
+					return;
+			}
+
+			foreach (var key in Payload.Focuses.Keys)
+			{
+				var isShowing = key == focus.Focus;
+				foreach (var value in Payload.Focuses[key])
+				{
+					if (isShowing) value.Show();
+					else value.Close();
+				}
+			}
+
+			switch(focus.Focus)
+			{
+				case FocusRequest.Focuses.Systems:
+					var systemFocus = focus as SystemsFocusRequest;
+					Payload.Game.FocusedSector.Value = systemFocus.FocusedSector;
+					App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(systemFocus.CameraFocus));
+					break;
+			}
+		}
+
 		void OnFocusedSector(UniversePosition position)
 		{
 			var oldSectors = Payload.Game.FocusedSectors.Value.ToList();
@@ -182,6 +231,27 @@ namespace LunraGames.SpaceFarm
 		void OnTravelRequest(TravelRequest request)
 		{
 			Payload.Game.TravelRequest.Value = request;
+
+			switch (request.State)
+			{
+				case TravelRequest.States.Complete:
+					// Don't focus on end system.
+					if (request.Destination == Payload.Game.EndSystem.Value) return;
+
+					var travelDestination = Payload.Game.Universe.Value.GetSystem(request.Destination);
+					Payload.Game.Ship.Value.Fuel.Value -= request.FuelConsumed;
+
+					if (!travelDestination.Visited)
+					{
+						travelDestination.Visited.Value = true;
+						App.Callbacks.FocusRequest(
+							new SystemBodiesFocusRequest(
+								travelDestination
+							)
+						);
+					}
+					break;
+			}
 		}
 
 		void OnSaveRequest(SaveRequest request)

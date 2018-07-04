@@ -7,7 +7,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class EndDistancePresenter : Presenter<IEndDistanceView>
+	public class EndDistancePresenter : Presenter<IEndDistanceView>, IPresenterCloseShow
 	{
 		GameModel model;
 
@@ -33,6 +33,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			SetDistance(model.Ship.Value.Position);
 
 			ShowView(App.GameCanvasRoot, true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		void SetDistance(UniversePosition position)

@@ -107,6 +107,10 @@ namespace LunraGames.SpaceFarm
 		/// Called every time the offset of the universe is updated.
 		/// </summary>
 		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
+		/// <summary>
+		/// The focus of the game, can be cast to retrieve more information.
+		/// </summary>
+		public Action<FocusRequest> FocusRequest = ActionExtensions.GetEmpty<FocusRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

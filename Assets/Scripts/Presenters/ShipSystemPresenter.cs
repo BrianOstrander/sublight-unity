@@ -1,13 +1,11 @@
-﻿using System;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class ShipSystemPresenter : Presenter<IShipSystemView>
+	public class ShipSystemPresenter : Presenter<IShipSystemView>, IPresenterCloseShow
 	{
 		GameModel model;
 		ShipModel ship;
@@ -40,6 +38,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.UniversePosition = model.Ship.Value.Position;
 
 			ShowView(instant: true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events
@@ -103,7 +107,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnShipPosition(UniversePosition position)
 		{
-			View.UniversePosition = position;
+			if (View.TransitionState == TransitionStates.Shown) View.UniversePosition = position;
 		}
 		#endregion
 	}

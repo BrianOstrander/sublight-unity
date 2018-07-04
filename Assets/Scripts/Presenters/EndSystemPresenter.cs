@@ -5,7 +5,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class EndSystemPresenter : Presenter<IEndSystemView>
+	public class EndSystemPresenter : Presenter<IEndSystemView>, IPresenterCloseShow
 	{
 		GameModel model;
 		SystemModel system;
@@ -34,6 +34,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.UniversePosition = system.Position;
 			View.Click = OnClick;
 			ShowView(instant: true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

@@ -9,7 +9,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class DestructionSpeedPresenter : Presenter<IDestructionSpeedView>
+	public class DestructionSpeedPresenter : Presenter<IDestructionSpeedView>, IPresenterCloseShow
 	{
 		// TODO: These should be somewhere else...
 		const float TimeInUnit = 1f;
@@ -48,6 +48,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			lastUpdated = model.DayTime;
 
 			ShowView(App.GameCanvasRoot, true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

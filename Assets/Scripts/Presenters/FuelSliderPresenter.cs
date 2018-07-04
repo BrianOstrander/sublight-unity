@@ -3,7 +3,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class FuelSliderPresenter : Presenter<IFuelSliderView>
+	public class FuelSliderPresenter : Presenter<IFuelSliderView>, IPresenterCloseShow
 	{
 		GameModel model;
 
@@ -37,6 +37,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.FuelConsumptionUpdate = OnFuelConsumptionUpdate;
 
 			ShowView(App.GameCanvasRoot, true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

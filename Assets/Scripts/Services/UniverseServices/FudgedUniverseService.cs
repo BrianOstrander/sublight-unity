@@ -195,6 +195,7 @@ namespace LunraGames.SpaceFarm
 				var name = string.Empty;
 				var rations = GetFraction(ref rationsRemaining, random.NextFloat);
 				var fuel = GetFraction(ref fuelRemaining, random.NextFloat);
+				var status = BodyStatus.UnVisited;
 
 				switch (random.GetNextInteger(0, 2))
 				{
@@ -222,6 +223,7 @@ namespace LunraGames.SpaceFarm
 				generic.Name.Value = name;
 				generic.Rations.Value = rations;
 				generic.Fuel.Value = fuel;
+				generic.Status.Value = status;
 
 				bodies.Add(generic);
 			}

@@ -1,0 +1,38 @@
+﻿namespace LunraGames.SpaceFarm
+{
+	public abstract class FocusRequest
+	{
+		public enum Focuses
+		{
+			Unknown = 0,
+			Galaxy = 10,
+			Systems = 20,
+			SystemBodies = 30,
+			Body = 40
+		}
+		
+		public enum States
+		{
+			Unknown = 0,
+			Request = 10,
+			Active = 20,
+			Complete = 30
+		}
+
+		public Focuses Focus { get; protected set; }
+		public readonly States State;
+
+		protected FocusRequest(Focuses focus, States state)
+		{
+			Focus = focus;
+			State = state;
+		}
+
+		public abstract FocusRequest Duplicate(States state = States.Unknown);
+
+		public override string ToString()
+		{
+			return "State: " + State;
+		}
+	}
+}
