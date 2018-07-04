@@ -4,7 +4,7 @@ namespace LunraGames.SpaceFarm
 {
 	public class SystemBodiesFocusRequest : FocusRequest
 	{
-		public SystemModel System;
+		public readonly SystemModel System;
 
 		public SystemBodiesFocusRequest(
 			SystemModel system,

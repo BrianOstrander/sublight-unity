@@ -61,6 +61,9 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			switch (focus.Focus)
 			{
+				// Remove these breaks to customize when this camera closes and such.
+				case FocusRequest.Focuses.Body:
+					break;
 				case FocusRequest.Focuses.SystemBodies:
 					break;
 				case FocusRequest.Focuses.Systems:

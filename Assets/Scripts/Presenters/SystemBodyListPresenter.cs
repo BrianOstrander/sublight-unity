@@ -50,7 +50,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.BodyEntries = bodies.ToArray();
 
 			View.DoneClick = OnDoneClick;
-			ShowView(App.OverlayCanvasRoot);
+			ShowView(App.CanvasRoot);
 		}
 
 		#region Events
@@ -75,8 +75,9 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			// TODO: probe logic
-			App.Log("Focus Body", LogTypes.ToDo);
+			App.Callbacks.FocusRequest(
+				new BodyFocusRequest(destination, body)
+			);
 		}
 
 		void OnDoneClick()

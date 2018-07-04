@@ -6,61 +6,61 @@ namespace LunraGames.SpaceFarm.Presenters
 	public class ProbeBodyPresenter : Presenter<IProbeBodyView>
 	{
 		GameModel model;
-		bool hasPoppedEscape;
+		SystemModel system;
+		BodyModel body;
 
 		public ProbeBodyPresenter(GameModel model)
 		{
 			this.model = model;
+
+			App.Callbacks.FocusRequest += OnFocus;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
+
+			App.Callbacks.FocusRequest -= OnFocus;
 		}
 
 		public void Show()
 		{
 			if (View.Visible) return;
 
-			App.Callbacks.ShadeRequest(ShadeRequest.Shade);
-			App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.Obscure);
-			hasPoppedEscape = false;
-
 			View.Reset();
 
-			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(OnEscape, false, false));
+			View.BackClick = OnBackClick;
 
-			ShowView(App.OverlayCanvasRoot);
+			ShowView(App.CanvasRoot);
 		}
 
 		#region Events
-		void OnEscape()
+		void OnFocus(FocusRequest focus)
 		{
-			hasPoppedEscape = true;
-			OnClose();
+			switch (focus.Focus)
+			{
+				case FocusRequest.Focuses.Body:
+					// We only show UI elements once the focus is complete.
+					if (focus.State != FocusRequest.States.Complete) return;
+					var bodyFocus = focus as BodyFocusRequest;
+					system = bodyFocus.System;
+					body = bodyFocus.Body;
+					Show();
+					break;
+				default:
+					if (View.TransitionState == TransitionStates.Shown) CloseView();
+					break;
+			}
 		}
+
 
 		void OnBackClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
-			OnClose();
-		}
 
-		void OnClose()
-		{
-			if (!hasPoppedEscape)
-			{
-				App.Callbacks.PopEscape();
-				App.Callbacks.ShadeRequest(ShadeRequest.UnShade);
-				App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.UnObscure);
-			}
-			View.Closed += OnClosed;
-			CloseView();
-		}
-
-		void OnClosed()
-		{
-			// TODO: Remove this?
+			App.Callbacks.FocusRequest(
+				new SystemBodiesFocusRequest(system)
+			);
 		}
 		#endregion
 
