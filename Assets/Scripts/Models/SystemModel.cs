@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
-	public class SystemModel : Model
+	public abstract class SystemModel : Model
 	{
 		[JsonProperty] int seed;
 		[JsonProperty] bool visited;
@@ -25,8 +25,8 @@ namespace LunraGames.SpaceFarm.Models
 		/// Gets the type of the system.
 		/// </summary>
 		/// <value>The type of the system.</value>
-		[JsonProperty]
-		public SystemTypes SystemType { get; protected set; }
+		[JsonIgnore]
+		public abstract SystemTypes SystemType { get; }
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;

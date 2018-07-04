@@ -21,6 +21,7 @@ namespace LunraGames.SpaceFarm
 			Complete = 30
 		}
 
+		[JsonIgnore]
 		public abstract Focuses Focus { get; }
 
 		[JsonProperty] public readonly States State;

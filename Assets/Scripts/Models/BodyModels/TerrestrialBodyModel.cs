@@ -2,9 +2,6 @@
 {
 	public class TerrestrialBodyModel : BodyModel
 	{
-		public TerrestrialBodyModel()
-		{
-			BodyType = BodyTypes.Terrestrial;
-		}
+		public override BodyTypes BodyType { get { return BodyTypes.Terrestrial; } }
 	}
 }

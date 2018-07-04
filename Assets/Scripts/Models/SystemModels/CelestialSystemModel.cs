@@ -2,9 +2,6 @@
 {
 	public class CelestialSystemModel : SystemModel
 	{
-		public CelestialSystemModel()
-		{
-			SystemType = SystemTypes.Celestial;
-		}
+		public override SystemTypes SystemType { get { return SystemTypes.Celestial; } }
 	}
 }
