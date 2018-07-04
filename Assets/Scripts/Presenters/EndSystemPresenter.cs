@@ -16,7 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			system = model.Universe.Value.GetSystem(model.EndSystem);
 
 			model.FocusedSectors.Changed += OnFocusedSectors;
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			model.TravelRequest.Changed += OnTravelRequest;
 		}
 
 		protected override void UnBind()
@@ -24,7 +24,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			model.FocusedSectors.Changed -= OnFocusedSectors;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			model.TravelRequest.Changed -= OnTravelRequest;
 		}
 
 		public void Show()

@@ -17,7 +17,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			model.TravelRequest.Changed += OnTravelRequest;
 		}
 
 		protected override void UnBind()
@@ -26,12 +26,12 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			model.TravelRequest.Changed -= OnTravelRequest;
 		}
 
 		public void Show()
 		{
-			if (View.Visible || App.Callbacks.LastTravelRequest.State != TravelRequest.States.Complete) return;
+			if (View.Visible || model.TravelRequest.Value.State != TravelRequest.States.Complete) return;
 			View.Reset();
 			OnDetails();
 			View.Closed += OnClosed;

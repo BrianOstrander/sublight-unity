@@ -16,7 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship = model.Ship;
 
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			model.TravelRequest.Changed += OnTravelRequest;
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
 
@@ -25,7 +25,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			model.TravelRequest.Changed -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
 
@@ -52,7 +52,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			var rationsConsumed = model.Ship.Value.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
 			model.Ship.Value.Rations.Value = Mathf.Max(0f, rationsConsumed);
 
-			var lastTravel = App.Callbacks.LastTravelRequest;
+			var lastTravel = model.TravelRequest.Value;
 			if (lastTravel.State == TravelRequest.States.Active)
 			{
 				// We're traveling!
@@ -75,7 +75,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					lastTravel.FuelConsumed,
 					progress
 				);
-				App.Callbacks.TravelRequest(travel);
+				model.TravelRequest.Value = travel;
 			}
 		}
 
@@ -90,7 +90,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					ship.CurrentSystem.Value = UniversePosition.Zero;
 					ship.Position.Value = travelRequest.Origin;
 					if (Mathf.Approximately(App.Callbacks.LastSpeedRequest.Speed, 0f)) App.Callbacks.SpeedRequest(SpeedRequest.PlayRequest);
-					App.Callbacks.TravelRequest(travelRequest.Duplicate(TravelRequest.States.Active));
+					model.TravelRequest.Value = travelRequest.Duplicate(TravelRequest.States.Active);
 					break;
 				case TravelRequest.States.Complete:
 					ship.LastSystem.Value = UniversePosition.Zero;

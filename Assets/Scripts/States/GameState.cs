@@ -47,7 +47,7 @@ namespace LunraGames.SpaceFarm
 		void InitializeCallbacks(Action done)
 		{
 			App.Callbacks.SaveRequest += OnSaveRequest;
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			Payload.Game.TravelRequest.Changed += OnTravelRequest;
 			App.Callbacks.FocusRequest += OnFocus;
 			done();
 		}
@@ -69,7 +69,6 @@ namespace LunraGames.SpaceFarm
 			//UniversePosition
 			App.Callbacks.DayTimeDelta(new DayTimeDelta(game.DayTime, game.DayTime));
 			App.Callbacks.SystemHighlight(SystemHighlight.None);
-			App.Callbacks.TravelRequest(game.TravelRequest);
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
 			//
@@ -144,7 +143,7 @@ namespace LunraGames.SpaceFarm
 			App.Input.SetEnabled(false);
 
 			App.Callbacks.SaveRequest -= OnSaveRequest;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			Payload.Game.TravelRequest.Changed -= OnTravelRequest;
 			App.Callbacks.FocusRequest -= OnFocus;
 			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
 			App.Callbacks.ClearEscapables();
@@ -169,7 +168,6 @@ namespace LunraGames.SpaceFarm
 		#region Events
 		void OnFocus(FocusRequest focus)
 		{
-			Debug.Log("am I called? "+ focus);
 			Payload.Game.FocusRequest.Value = focus;
 
 			switch(focus.State)

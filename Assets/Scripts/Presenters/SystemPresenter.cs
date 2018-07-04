@@ -106,7 +106,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnClick()
 		{
-			var travelRequest = App.Callbacks.LastTravelRequest;
+			var travelRequest = model.TravelRequest.Value;
 
 			switch(travelRequest.State)
 			{
@@ -142,7 +142,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					model.Ship.Value.FuelConsumption,
 					0f
 				);
-				App.Callbacks.TravelRequest(travel);
+				model.TravelRequest.Value = travel;
 			}
 			else
 			{
