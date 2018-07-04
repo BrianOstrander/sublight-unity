@@ -31,6 +31,12 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
+			// Turn this back up to one, since it's annoying every time fuel runs out.
+			if (1f <= model.Ship.Value.Fuel && model.Ship.Value.FuelConsumption < 1f)
+			{
+				model.Ship.Value.FuelConsumption.Value = 1f;
+			}
+
 			View.Rations = model.Ship.Value.Rations;
 			View.Fuel = model.Ship.Value.Fuel;
 			View.FuelConsumption = model.Ship.Value.FuelConsumption;
