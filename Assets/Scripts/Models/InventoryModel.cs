@@ -6,6 +6,7 @@ namespace LunraGames.SpaceFarm.Models
 	{
 		[JsonProperty] string inventoryId;
 		[JsonProperty] string name;
+		[JsonProperty] string description;
 
 		/// <summary>
 		/// Gets the type of the inventory item.
@@ -18,11 +19,14 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<string> InventoryId;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
+		[JsonIgnore]
+		public readonly ListenerProperty<string> Description;
 
 		public InventoryModel()
 		{
 			InventoryId = new ListenerProperty<string>(value => inventoryId = value, () => inventoryId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
+			Description = new ListenerProperty<string>(value => description = value, () => description);
 		}
 	}
 }

@@ -7,7 +7,7 @@ using TMPro;
 
 namespace LunraGames.SpaceFarm.Views
 {
-	public class ProbeBodyView : CanvasView, IProbeBodyView
+	public class BodyProbeListView : CanvasView, IBodyProbeListView
 	{
 		[SerializeField]
 		TextMeshProUGUI titleLabel;
@@ -55,7 +55,7 @@ namespace LunraGames.SpaceFarm.Views
 		#endregion
 	}
 
-	public interface IProbeBodyView : ICanvasView
+	public interface IBodyProbeListView : ICanvasView
 	{
 		string Title { set; }
 		float Rations { set; }

@@ -145,14 +145,20 @@ namespace LunraGames.SpaceFarm.Presenters
 			// Probe generation, eventually will be done somewhere else...
 			var multiProbe = new OrbitalProbeInventoryModel();
 			multiProbe.Name.Value = "MultiProbe";
+			multiProbe.Description.Value = "A multi probe, neat!";
+			multiProbe.InventoryId.Value = "1";
 			multiProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star, BodyTypes.Terrestrial };
 
 			var terrestrialProbe = new OrbitalProbeInventoryModel();
 			terrestrialProbe.Name.Value = "TerrestrialProbe";
+			terrestrialProbe.Description.Value = "Time to hit the surface";
+			terrestrialProbe.InventoryId.Value = "2";
 			terrestrialProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Terrestrial };
 
 			var starProbe = new OrbitalProbeInventoryModel();
 			starProbe.Name.Value = "StarProbe";
+			starProbe.Description.Value = "Stars are cool";
+			starProbe.InventoryId.Value = "3";
 			starProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star };
 
 			game.Ship.Value.Inventory.Value = new InventoryModel[] { multiProbe, terrestrialProbe, starProbe };
