@@ -14,6 +14,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float rationsAcquired;
 		[JsonProperty] float fuelAcquired;
 		[JsonProperty] BodyStatus status;
+		[JsonProperty] string probeId;
 
 		/// <summary>
 		/// Gets the type of the body.
@@ -42,6 +43,8 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<float> FuelAcquired;
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyStatus> Status;
+		[JsonIgnore]
+		public readonly ListenerProperty<string> ProbeId;
 
 		public BodyModel()
 		{
@@ -55,6 +58,12 @@ namespace LunraGames.SpaceFarm.Models
 			RationsAcquired = new ListenerProperty<float>(value => rationsAcquired = value, () => rationsAcquired);
 			FuelAcquired = new ListenerProperty<float>(value => fuelAcquired = value, () => fuelAcquired);
 			Status = new ListenerProperty<BodyStatus>(value => status = value, () => status);
+			ProbeId = new ListenerProperty<string>(value => probeId = value, () => probeId);
 		}
+
+		#region Utility
+		[JsonIgnore]
+		public bool HasEncounter { get { return !string.IsNullOrEmpty(EncounterId); } }
+		#endregion
 	}
 }

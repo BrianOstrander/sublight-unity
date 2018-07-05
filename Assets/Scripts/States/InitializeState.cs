@@ -36,6 +36,8 @@ namespace LunraGames.SpaceFarm
 
 		protected override void Idle()
 		{
+			App.Callbacks.PlayState(PlayState.Playing);
+
 			App.P.AddGlobals(new DialogPresenter());
 			App.P.AddGlobals(new ShadePresenter());
 			App.SM.RequestState(Payload.homePayload);

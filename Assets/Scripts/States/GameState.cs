@@ -78,7 +78,6 @@ namespace LunraGames.SpaceFarm
 			// but you can safely ignore those warnings since they register
 			// themselves with the PresenterMediator.
 
-
 			// System presenters
 			new CameraSystemPresenter(game);
 
@@ -108,6 +107,7 @@ namespace LunraGames.SpaceFarm
 			new CameraBodyPresenter(game);
 			new BodyProbeListPresenter(game);
 			new BodyProbeDetailPresenter(game);
+			new BodyProbingPresenter(game);
 
 			// Global presenters
 			new PauseMenuPresenter();

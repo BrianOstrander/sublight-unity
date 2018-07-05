@@ -3,10 +3,9 @@
 	public enum BodyStatus
 	{
 		Unknown = 0,
-		UnVisited = 10,
-		Visited = 20,
-		Probed = 30,
-		AnomalyFound = 40,
-		AnomalyExplored = 50
+		NotProbed = 10,
+		EncounterNotFound = 20,
+		EncounterFound = 30,
+		EncounterExplored = 40
 	}
 }

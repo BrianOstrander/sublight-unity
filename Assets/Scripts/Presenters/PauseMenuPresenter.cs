@@ -24,6 +24,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		void Show(bool cacheSpeed = true)
 		{
 			if (View.Visible) return;
+			if (App.Callbacks.LastPlayState.State != PlayState.States.Paused) App.Callbacks.PlayState(PlayState.Paused);
 
 			if (cacheSpeed) lastSpeedChange = App.Callbacks.LastSpeedRequest;
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
@@ -51,6 +52,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void CloseToGame()
 		{
+			View.Closed += () => App.Callbacks.PlayState(PlayState.Playing);
 			View.Closed += () => App.Callbacks.PushEscape(new EscapeEntry(ShowFromGame, true, true));
 			View.Closed += () => App.Callbacks.SpeedRequest(lastSpeedChange.Duplicate(SpeedRequest.States.Request));
 			CloseView();
@@ -105,6 +107,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			switch (status)
 			{
 				case RequestStatus.Success:
+					if (App.Callbacks.LastPlayState.State != PlayState.States.Playing) App.Callbacks.PlayState(PlayState.Playing);
 					var payload = new HomePayload();
 					App.SM.RequestState(payload);
 					break;

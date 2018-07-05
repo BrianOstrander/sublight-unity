@@ -107,6 +107,11 @@ namespace LunraGames.SpaceFarm
 		/// The focus of the game, can be cast to retrieve more information.
 		/// </summary>
 		public Action<FocusRequest> FocusRequest = ActionExtensions.GetEmpty<FocusRequest>();
+		/// <summary>
+		/// The state of game. Dialogs and similar UI will pause the game. This 
+		/// is separate from pausing the ingame time.
+		/// </summary>
+		public Action<PlayState> PlayState = ActionExtensions.GetEmpty<PlayState>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...
@@ -118,6 +123,7 @@ namespace LunraGames.SpaceFarm
 		public Gesture LastGesture;
 		public ObscureCameraRequest LastObscureCameraRequest;
 		public ShadeRequest LastShadeRequest;
+		public PlayState LastPlayState;
 		#endregion
 
 		#region Game Caching
@@ -145,6 +151,7 @@ namespace LunraGames.SpaceFarm
 			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
 			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
 			UniversePositionRequest += request => LastUniversePositionRequest = request;
+			PlayState += state => LastPlayState = state;
 
 			Escape += OnEscape;
 		}

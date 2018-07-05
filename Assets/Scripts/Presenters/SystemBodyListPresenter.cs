@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using UnityEngine;
+
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
@@ -36,12 +38,6 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			foreach (var body in destination.Bodies.Value)
 			{
-				switch(body.Status.Value)
-				{
-					case BodyStatus.UnVisited:
-						body.Status.Value = BodyStatus.Visited;
-						break;
-				}
 				bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body)));
 			}
 
@@ -73,9 +69,28 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			App.Callbacks.FocusRequest(
-				BodyFocusRequest.ProbeList(destination.Position, body.BodyId)
-			);
+			switch(body.Status.Value)
+			{
+				case BodyStatus.NotProbed:
+					App.Callbacks.FocusRequest(
+						BodyFocusRequest.ProbeList(destination.Position, body.BodyId)
+					);
+					break;
+				case BodyStatus.EncounterNotFound:
+					App.Callbacks.FocusRequest(
+						BodyFocusRequest.Probing(destination.Position, body.BodyId, body.ProbeId)
+					);
+					break;
+				case BodyStatus.EncounterFound:
+					Debug.Log("Lol encounter found logic here");
+					break;
+				case BodyStatus.EncounterExplored:
+					Debug.Log("lol encounter explored logic here");
+					break;
+				default:
+					Debug.LogError("Unhandled BodyStatus: " + body.Status.Value);
+					break;
+			}
 		}
 
 		void OnDoneClick()

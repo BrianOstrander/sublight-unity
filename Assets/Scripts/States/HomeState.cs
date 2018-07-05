@@ -37,7 +37,6 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeLoadSaves);
 			App.SM.PushBlocking(InitializeMenu);
-			//new CursorPresenter().Show();
 		}
 
 		void InitializeCamera(Action done)
