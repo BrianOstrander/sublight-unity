@@ -142,10 +142,23 @@ namespace LunraGames.SpaceFarm.Presenters
 			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
 			game.EndSystem.Value = endSector.Systems.Value.First().Position;
 
+			// Probe generation, eventually will be done somewhere else...
+			var multiProbe = new OrbitalProbeInventoryModel();
+			multiProbe.Name.Value = "MultiProbe";
+			multiProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star, BodyTypes.Terrestrial };
+
+			var terrestrialProbe = new OrbitalProbeInventoryModel();
+			terrestrialProbe.Name.Value = "TerrestrialProbe";
+			terrestrialProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Terrestrial };
+
+			var starProbe = new OrbitalProbeInventoryModel();
+			starProbe.Name.Value = "StarProbe";
+			starProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star };
+
+			game.Ship.Value.Inventory.Value = new InventoryModel[] { multiProbe, terrestrialProbe, starProbe };
+
 			// Uncomment this to make the game easy.
 			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
-
-
 
 			App.SaveLoadService.Save(game, OnSaveGame);
 		}

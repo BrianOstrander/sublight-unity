@@ -1,4 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using System.Collections.Generic;
+
+using UnityEngine;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
@@ -15,6 +20,9 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float fuel;
 		[JsonProperty] float fuelConsumption;
 		[JsonProperty] float resourceDetection;
+
+		[JsonProperty] OrbitalProbeInventoryModel[] orbitalProbes = new OrbitalProbeInventoryModel[0];
+		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> LastSystem;
@@ -72,6 +80,9 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly DerivedProperty<float, float, float> SpeedTotal;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<InventoryModel[]> Inventory;
 		#endregion
 
 		public ShipModel()
@@ -108,6 +119,8 @@ namespace LunraGames.SpaceFarm.Models
 				Speed,
 				FuelConsumption
 			);
+
+			Inventory = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 		}
 
 		#region Events
@@ -129,8 +142,37 @@ namespace LunraGames.SpaceFarm.Models
 			// Maybe not... this might be the correct place for it...
 			return new TravelRadius(rationDistance * 0.8f, rationDistance * 0.9f, rationDistance);
 		}
-		//float GetTotalSpeed() { return Speed.Value * FuelConsumption.Value; }
-		//void SetTotalSpeed(float totalSpeed) { Speed.Value}
-  		#endregion
+
+		void OnSetInventory(InventoryModel[] newInventory)
+		{
+			var orbitalProbeList = new List<OrbitalProbeInventoryModel>();
+			var orbitalCrewList = new List<OrbitalCrewInventoryModel>();
+
+			foreach (var inventory in newInventory)
+			{
+				switch (inventory.InventoryType)
+				{
+					case InventoryTypes.OrbitalProbe:
+						orbitalProbeList.Add(inventory as OrbitalProbeInventoryModel);
+						break;
+					case InventoryTypes.OrbitalCrew:
+						orbitalCrewList.Add(inventory as OrbitalCrewInventoryModel);
+						break;
+					default:
+						Debug.LogError("Unrecognized InventoryType: " + inventory.InventoryType);
+						break;
+				}
+			}
+
+			orbitalProbes = orbitalProbeList.ToArray();
+			orbitalCrews = orbitalCrewList.ToArray();
+		}
+
+		InventoryModel[] OnGetInventory()
+		{
+			return orbitalProbes.Cast<InventoryModel>().Concat(orbitalCrews)
+													   .ToArray();
+		}
+		#endregion
 	}
 }
