@@ -130,6 +130,17 @@ namespace LunraGames.SpaceFarm.Models
 			if (predicate == null) return Inventory.Value.OfType<T>().ToArray();
 			return Inventory.Value.OfType<T>().Where(predicate).ToArray();
 		}
+
+		public T GetInventoryFirstOrDefault<T>(string inventoryId) where T : InventoryModel
+		{
+			return GetInventoryFirstOrDefault<T>(i => i.InventoryId == inventoryId);
+		}
+
+		public T GetInventoryFirstOrDefault<T>(Func<T, bool> predicate = null) where T : InventoryModel
+		{
+			if (predicate == null) return Inventory.Value.OfType<T>().FirstOrDefault();
+			return Inventory.Value.OfType<T>().Where(predicate).FirstOrDefault();
+		}
 		#endregion
 
 		#region Events

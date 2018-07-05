@@ -1,7 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
+	[Serializable]
 	public abstract class FocusRequest
 	{
 		public enum Focuses

@@ -90,7 +90,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			// Temp End
 
 			App.Callbacks.FocusRequest(
-				new BodyFocusRequest(destination.Position, body.BodyId)
+				BodyFocusRequest.ProbeList(destination.Position, body.BodyId)
 			);
 		}
 

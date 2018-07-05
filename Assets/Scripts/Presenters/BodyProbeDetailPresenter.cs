@@ -5,13 +5,14 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class BodyProbeListPresenter : Presenter<IBodyProbeListView>
+	public class BodyProbeDetailPresenter : Presenter<IBodyProbeDetailView>
 	{
 		GameModel model;
 		SystemModel system;
 		BodyModel body;
+		ProbeInventoryModel probe;
 
-		public BodyProbeListPresenter(GameModel model)
+		public BodyProbeDetailPresenter(GameModel model)
 		{
 			this.model = model;
 
@@ -31,17 +32,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			View.Rations = body.Rations - body.RationsAcquired;
-			View.Fuel= body.Fuel - body.FuelAcquired;
+			View.Title = probe.Name;
+			View.Description = probe.Description;
 			View.BackClick = OnBackClick;
-
-			var buttons = new List<LabelButtonBlock>();
-			foreach (var probe in model.Ship.Value.GetInventory<ProbeInventoryModel>())
-			{
-				if (!probe.IsExplorable(body)) continue;
-				buttons.Add(new LabelButtonBlock(probe.Name, () => OnProbeClick(probe)));
-			}
-			View.ProbeEntries = buttons.ToArray();
+			View.LaunchClick = OnLaunchClick;
 
 			ShowView(App.GameCanvasRoot);
 		}
@@ -56,9 +50,10 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (focus.State != FocusRequest.States.Complete) return;
 					var bodyFocus = focus as BodyFocusRequest;
 					// We also only show up if our view is specified
-					if (bodyFocus.View != BodyFocusRequest.Views.ProbeList) goto default;
+					if (bodyFocus.View != BodyFocusRequest.Views.ProbeDetail) goto default;
 					system = model.Universe.Value.GetSystem(bodyFocus.System);
 					body = system.GetBody(bodyFocus.Body);
+					probe = model.Ship.Value.GetInventoryFirstOrDefault<ProbeInventoryModel>(bodyFocus.Probe);
 					Show();
 					break;
 				default:
@@ -67,15 +62,9 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
-		void OnProbeClick(ProbeInventoryModel probe)
+		void OnLaunchClick()
 		{
-			App.Callbacks.FocusRequest(
-				BodyFocusRequest.ProbeDetail(
-					system.Position, 
-					body.BodyId,
-					probe.InventoryId
-				)
-			);
+			UnityEngine.Debug.Log("launchin' " + probe.Name);
 		}
 
 		void OnBackClick()
@@ -83,7 +72,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			App.Callbacks.FocusRequest(
-				new SystemBodiesFocusRequest(system.Position)
+				BodyFocusRequest.ProbeList(system.Position, body.BodyId)
 			);
 		}
 		#endregion
