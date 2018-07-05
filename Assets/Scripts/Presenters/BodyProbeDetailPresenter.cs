@@ -65,6 +65,19 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnLaunchClick()
 		{
 			UnityEngine.Debug.Log("launchin' " + probe.Name);
+			// Temp Begin
+			var rationsAdded = body.Rations - body.RationsAcquired;
+			var fuelAdded = body.Fuel - body.FuelAcquired;
+			model.Ship.Value.Rations.Value += rationsAdded;
+			model.Ship.Value.Fuel.Value += fuelAdded;
+
+			body.RationsAcquired.Value = body.Rations;
+			body.FuelAcquired.Value = body.Fuel;
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.Alert("Acquired " + Strings.Rations(rationsAdded) + " rations and " + Strings.Fuel(fuelAdded) + " fuel")
+			);
+			// Temp End
 		}
 
 		void OnBackClick()
