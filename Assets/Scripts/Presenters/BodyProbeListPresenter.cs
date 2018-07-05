@@ -1,4 +1,6 @@
-﻿using LunraGames.SpaceFarm.Views;
+﻿using System.Collections.Generic;
+
+using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
@@ -29,7 +31,17 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
+			View.Rations = body.Rations - body.RationsAcquired;
+			View.Fuel= body.Fuel - body.FuelAcquired;
 			View.BackClick = OnBackClick;
+
+			var buttons = new List<LabelButtonBlock>();
+			foreach (var probe in model.Ship.Value.GetInventory<ProbeInventoryModel>())
+			{
+				if (!probe.IsExplorable(body)) continue;
+				buttons.Add(new LabelButtonBlock(probe.Name, () => OnProbeClick(probe)));
+			}
+			View.ProbeEntries = buttons.ToArray();
 
 			ShowView(App.CanvasRoot);
 		}
@@ -53,6 +65,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
+		void OnProbeClick(ProbeInventoryModel probe)
+		{
+			UnityEngine.Debug.Log("probin' with: "+probe.Name);
+		}
 
 		void OnBackClick()
 		{

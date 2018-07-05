@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
-	public abstract class CrewInventoryModel : InventoryModel
+	public abstract class CrewInventoryModel : InventoryModel, IExplorableInventoryModel
 	{
 		[JsonProperty] BodyTypes[] supportedBodies = new BodyTypes[0];
 
@@ -12,6 +14,11 @@ namespace LunraGames.SpaceFarm.Models
 		protected CrewInventoryModel()
 		{
 			SupportedBodies = new ListenerProperty<BodyTypes[]>(value => supportedBodies = value, () => supportedBodies);
+		}
+
+		public bool IsExplorable(BodyModel body)
+		{
+			return SupportedBodies.Value.Contains(body.BodyType);
 		}
 	}
 }

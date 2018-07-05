@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -122,6 +123,14 @@ namespace LunraGames.SpaceFarm.Models
 
 			Inventory = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 		}
+
+		#region Utility
+		public T[] GetInventory<T>(Func<T, bool> predicate = null) where T : InventoryModel
+		{
+			if (predicate == null) return Inventory.Value.OfType<T>().ToArray();
+			return Inventory.Value.OfType<T>().Where(predicate).ToArray();
+		}
+		#endregion
 
 		#region Events
 		float DeriveSpeedTotal(float speed, float fuelConsumption)
