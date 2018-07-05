@@ -3,11 +3,11 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class CameraSystemBodiesPresenter : Presenter<ICameraSystemBodiesView>
+	public class CameraBodyPresenter : Presenter<ICameraBodyView>
 	{
 		GameModel game;
 
-		public CameraSystemBodiesPresenter(GameModel game)
+		public CameraBodyPresenter(GameModel game)
 		{
 			this.game = game;
 
@@ -35,7 +35,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			switch (focus.Focus)
 			{
-				case FocusRequest.Focuses.SystemBodies:
+				case FocusRequest.Focuses.Body:
 					if (focus.State == FocusRequest.States.Active) Show();
 					break;
 				default:

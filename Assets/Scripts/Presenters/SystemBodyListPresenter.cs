@@ -74,6 +74,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			// Temp Begin
+			/*
 			var rationsAdded = body.Rations - body.RationsAcquired;
 			var fuelAdded = body.Fuel - body.FuelAcquired;
 			model.Ship.Value.Rations.Value += rationsAdded;
@@ -85,12 +86,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DialogRequest(
 				DialogRequest.Alert("Acquired " + Strings.Rations(rationsAdded) + " rations and " + Strings.Fuel(fuelAdded) + " fuel")
 			);
+			*/
 			// Temp End
 
-			App.Log("Focus on body", LogTypes.ToDo);
-			//App.Callbacks.FocusRequest(
-			//	new BodyFocusRequest(destination.Position, body.BodyId)
-			//);
+			App.Callbacks.FocusRequest(
+				new BodyFocusRequest(destination.Position, body.BodyId)
+			);
 		}
 
 		void OnDoneClick()
