@@ -106,7 +106,7 @@ namespace LunraGames.SpaceFarm
 
 			// Body presenters
 			new CameraBodyPresenter(game);
-			new ProbeBodyPresenter(game);
+			new BodyProbeListPresenter(game);
 
 			// Global presenters
 			new PauseMenuPresenter();

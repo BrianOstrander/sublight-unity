@@ -3,13 +3,13 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class ProbeBodyPresenter : Presenter<IProbeBodyView>
+	public class BodyProbeListPresenter : Presenter<IBodyProbeListView>
 	{
 		GameModel model;
 		SystemModel system;
 		BodyModel body;
 
-		public ProbeBodyPresenter(GameModel model)
+		public BodyProbeListPresenter(GameModel model)
 		{
 			this.model = model;
 
