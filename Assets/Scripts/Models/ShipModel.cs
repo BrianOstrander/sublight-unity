@@ -131,9 +131,9 @@ namespace LunraGames.SpaceFarm.Models
 			return Inventory.Value.OfType<T>().Where(predicate).ToArray();
 		}
 
-		public T GetInventoryFirstOrDefault<T>(string inventoryId) where T : InventoryModel
+		public T GetInventoryFirstOrDefault<T>(string instanceId) where T : InventoryModel
 		{
-			return GetInventoryFirstOrDefault<T>(i => i.InventoryId == inventoryId);
+			return GetInventoryFirstOrDefault<T>(i => i.InstanceId == instanceId);
 		}
 
 		public T GetInventoryFirstOrDefault<T>(Func<T, bool> predicate = null) where T : InventoryModel

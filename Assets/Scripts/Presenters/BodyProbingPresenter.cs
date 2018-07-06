@@ -72,7 +72,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			probingRemaining = null;
 
-			body.ProbeId.Value = probe.InventoryId;
+			body.ProbeId.Value = probe.InstanceId;
 
 			if (body.HasEncounter)
 			{

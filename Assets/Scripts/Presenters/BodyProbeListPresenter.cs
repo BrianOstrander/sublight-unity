@@ -73,7 +73,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				BodyFocusRequest.ProbeDetail(
 					system.Position, 
 					body.BodyId,
-					probe.InventoryId
+					probe.InstanceId
 				)
 			);
 		}
