@@ -47,7 +47,7 @@ namespace LunraGames.SpaceFarm.Models
 		public T GetInventoryFirstOrDefault<T>(Func<T, bool> predicate = null) where T : InventoryModel
 		{
 			if (predicate == null) return All.Value.OfType<T>().FirstOrDefault();
-			return All.Value.OfType<T>().Where(predicate).FirstOrDefault();
+			return All.Value.OfType<T>().FirstOrDefault(predicate);
 		}
 		#endregion
 
