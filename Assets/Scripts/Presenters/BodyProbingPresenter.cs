@@ -100,7 +100,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (bodyFocus.View != BodyFocusRequest.Views.Probing) goto default;
 					system = model.Universe.Value.GetSystem(bodyFocus.System);
 					body = system.GetBody(bodyFocus.Body);
-					probe = model.Ship.Value.GetInventoryFirstOrDefault<ProbeInventoryModel>(bodyFocus.Probe);
+					probe = model.Ship.Value.Inventory.GetInventoryFirstOrDefault<ProbeInventoryModel>(bodyFocus.Probe);
 					Show();
 					break;
 				default:
@@ -116,7 +116,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			// Temp Begin
 			var added = body.ResourcesCurrent;
 
-			model.Ship.Value.Resources.Add(added);
+			model.Ship.Value.Inventory.Resources.Add(added);
 
 			body.ResourcesAcquired.Add(added);
 

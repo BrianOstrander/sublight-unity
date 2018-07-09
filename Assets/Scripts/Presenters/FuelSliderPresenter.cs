@@ -11,18 +11,18 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			model.Ship.Value.Resources.Fuel.Changed += OnFuel;
+			model.Ship.Value.Inventory.Resources.Fuel.Changed += OnFuel;
 			model.Ship.Value.FuelConsumption.Changed += OnFuelConsumption;
-			model.Ship.Value.Resources.Rations.Changed += OnRations;
+			model.Ship.Value.Inventory.Resources.Rations.Changed += OnRations;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
 
-			model.Ship.Value.Resources.Fuel.Changed -= OnFuel;
+			model.Ship.Value.Inventory.Resources.Fuel.Changed -= OnFuel;
 			model.Ship.Value.FuelConsumption.Changed -= OnFuelConsumption;
-			model.Ship.Value.Resources.Rations.Changed -= OnRations;
+			model.Ship.Value.Inventory.Resources.Rations.Changed -= OnRations;
 		}
 
 		public void Show()
@@ -32,13 +32,13 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 
 			// Turn this back up to one, since it's annoying every time fuel runs out.
-			if (1f <= model.Ship.Value.Resources.Fuel && model.Ship.Value.FuelConsumption < 1f)
+			if (1f <= model.Ship.Value.Inventory.Resources.Fuel && model.Ship.Value.FuelConsumption < 1f)
 			{
 				model.Ship.Value.FuelConsumption.Value = 1f;
 			}
 
-			View.Rations = model.Ship.Value.Resources.Rations;
-			View.Fuel = model.Ship.Value.Resources.Fuel;
+			View.Rations = model.Ship.Value.Inventory.Resources.Rations;
+			View.Fuel = model.Ship.Value.Inventory.Resources.Fuel;
 			View.FuelConsumption = model.Ship.Value.FuelConsumption;
 			View.FuelConsumptionUpdate = OnFuelConsumptionUpdate;
 

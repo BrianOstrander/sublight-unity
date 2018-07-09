@@ -11,20 +11,15 @@ namespace LunraGames.SpaceFarm.Models
 	public class ShipModel : Model
 	{
 		#region Assigned Values
+		[JsonProperty] InventoryListModel inventory = new InventoryListModel();
 		[JsonProperty] UniversePosition lastSystem;
 		[JsonProperty] UniversePosition nextSystem;
 		[JsonProperty] UniversePosition currentSystem;
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] float speed;
 		[JsonProperty] float rationConsumption;
-		[JsonProperty] float rations;
-		[JsonProperty] float fuel;
 		[JsonProperty] float fuelConsumption;
 		[JsonProperty] float resourceDetection;
-
-		[JsonProperty] OrbitalProbeInventoryModel[] orbitalProbes = new OrbitalProbeInventoryModel[0];
-		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
-		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
 
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> LastSystem;
@@ -71,14 +66,11 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly DerivedProperty<float, float, float> SpeedTotal;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<InventoryModel[]> Inventory;
 		#endregion
 
 		#region Shortcuts
 		[JsonIgnore]
-		public ResourceInventoryModel Resources { get { return resources; } }
+		public InventoryListModel Inventory { get { return inventory; } }
 		#endregion
 
 		public ShipModel()
@@ -102,7 +94,7 @@ namespace LunraGames.SpaceFarm.Models
 				DeriveTravelRadius,
 				Speed,
 				RationConsumption,
-				resources.Rations,
+				Inventory.Resources.Rations,
 				FuelConsumption
 			);
 
@@ -113,28 +105,7 @@ namespace LunraGames.SpaceFarm.Models
 				Speed,
 				FuelConsumption
 			);
-
-			Inventory = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 		}
-
-		#region Utility
-		public T[] GetInventory<T>(Func<T, bool> predicate = null) where T : InventoryModel
-		{
-			if (predicate == null) return Inventory.Value.OfType<T>().ToArray();
-			return Inventory.Value.OfType<T>().Where(predicate).ToArray();
-		}
-
-		public T GetInventoryFirstOrDefault<T>(string instanceId) where T : InventoryModel
-		{
-			return GetInventoryFirstOrDefault<T>(i => i.InstanceId == instanceId);
-		}
-
-		public T GetInventoryFirstOrDefault<T>(Func<T, bool> predicate = null) where T : InventoryModel
-		{
-			if (predicate == null) return Inventory.Value.OfType<T>().FirstOrDefault();
-			return Inventory.Value.OfType<T>().Where(predicate).FirstOrDefault();
-		}
-		#endregion
 
 		#region Events
 		float DeriveSpeedTotal(float speed, float fuelConsumption)
@@ -154,41 +125,6 @@ namespace LunraGames.SpaceFarm.Models
 			// TODO: Find a better place for handling this weird range stuff?
 			// Maybe not... this might be the correct place for it...
 			return new TravelRadius(rationDistance * 0.8f, rationDistance * 0.9f, rationDistance);
-		}
-
-		void OnSetInventory(InventoryModel[] newInventory)
-		{
-			var orbitalProbeList = new List<OrbitalProbeInventoryModel>();
-			var orbitalCrewList = new List<OrbitalCrewInventoryModel>();
-
-			foreach (var inventory in newInventory)
-			{
-				switch (inventory.InventoryType)
-				{
-					case InventoryTypes.OrbitalProbe:
-						orbitalProbeList.Add(inventory as OrbitalProbeInventoryModel);
-						break;
-					case InventoryTypes.OrbitalCrew:
-						orbitalCrewList.Add(inventory as OrbitalCrewInventoryModel);
-						break;
-					case InventoryTypes.Resources:
-						resources = inventory as ResourceInventoryModel;
-						break;
-					default:
-						Debug.LogError("Unrecognized InventoryType: " + inventory.InventoryType);
-						break;
-				}
-			}
-
-			orbitalProbes = orbitalProbeList.ToArray();
-			orbitalCrews = orbitalCrewList.ToArray();
-		}
-
-		InventoryModel[] OnGetInventory()
-		{
-			return orbitalProbes.Cast<InventoryModel>().Concat(orbitalCrews)
-													   .Append(Resources)
-													   .ToArray();
 		}
 		#endregion
 	}

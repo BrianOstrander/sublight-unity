@@ -1,8 +1,11 @@
-﻿using LunraGames.SpaceFarm.Views;
+﻿using System;
+
+using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
+	[Obsolete]
 	public class EnterSystemPresenter : Presenter<IEnterSystemView>
 	{
 		GameModel model;
@@ -52,7 +55,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (travelRequest.Destination == model.EndSystem.Value) return;
 
 					var travelDestination = model.Universe.Value.GetSystem(travelRequest.Destination);
-					var remainingFuel = (model.Ship.Value.Resources.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
+					var remainingFuel = (model.Ship.Value.Inventory.Resources.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
 					// Don't pop up if out of fuel.
 					if (remainingFuel < 1f) return;
 
@@ -93,8 +96,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnClosed()
 		{
 			destination.Visited.Value = true;
-			model.Ship.Value.Resources.Rations.Value += destination.Rations;
-			model.Ship.Value.Resources.Fuel.Value += destination.Fuel - fuelConsumed;
+			model.Ship.Value.Inventory.Resources.Rations.Value += destination.Rations;
+			model.Ship.Value.Inventory.Resources.Fuel.Value += destination.Fuel - fuelConsumed;
 		}
 		#endregion
 
