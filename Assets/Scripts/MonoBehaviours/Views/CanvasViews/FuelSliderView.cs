@@ -25,7 +25,7 @@ namespace LunraGames.SpaceFarm.Views
 			set 
 			{
 				fuel = value;
-				fuelConsumptionSlider.maxValue = fuel;
+				fuelConsumptionSlider.maxValue = Mathf.Floor(fuel);
 				fuelLabel.text = fuel.ToString("F2");
 			}
 			private get { return fuel; }

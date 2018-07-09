@@ -38,7 +38,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.BackClick = OnBackClick;
 
 			var buttons = new List<LabelButtonBlock>();
-			foreach (var probe in model.Ship.Value.GetInventory<ProbeInventoryModel>())
+			foreach (var probe in model.Ship.Value.Inventory.GetInventory<ProbeInventoryModel>())
 			{
 				if (!probe.IsExplorable(body)) continue;
 				buttons.Add(new LabelButtonBlock(probe.Name, () => OnProbeClick(probe)));

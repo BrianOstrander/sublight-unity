@@ -113,8 +113,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Position.Value = startPosition;
 			ship.Speed.Value = speed;
 			ship.RationConsumption.Value = rationConsumption;
-			ship.Resources.Rations.Value = rations;
-			ship.Resources.Fuel.Value = fuel;
+			ship.Inventory.Resources.Rations.Value = rations;
+			ship.Inventory.Resources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
 			ship.ResourceDetection.Value = resourceDetection;
 
@@ -164,7 +164,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			starProbe.InstanceId.Value = "C";
 			starProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star };
 
-			game.Ship.Value.Inventory.Value = new InventoryModel[] { multiProbe, terrestrialProbe, starProbe };
+			game.Ship.Value.Inventory.All.Value = new InventoryModel[] { multiProbe, terrestrialProbe, starProbe };
 
 			// Uncomment this to make the game easy.
 			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
