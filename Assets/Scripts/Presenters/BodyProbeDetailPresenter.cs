@@ -63,7 +63,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnLaunchClick()
 		{
 			App.Callbacks.FocusRequest(
-				BodyFocusRequest.Probing(system.Position, body.BodyId, probe.InventoryId)
+				BodyFocusRequest.Probing(system.Position, body.BodyId, probe.InstanceId)
 			);
 		}
 

@@ -9,12 +9,11 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] int parentId;
 		[JsonProperty] string name;
 		[JsonProperty] string encounterId;
-		[JsonProperty] float rations;
-		[JsonProperty] float fuel;
-		[JsonProperty] float rationsAcquired;
-		[JsonProperty] float fuelAcquired;
 		[JsonProperty] BodyStatus status;
 		[JsonProperty] string probeId;
+
+		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel resourcesAcquired = new ResourceInventoryModel();
 
 		/// <summary>
 		/// Gets the type of the body.
@@ -34,17 +33,24 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncounterId;
 		[JsonIgnore]
-		public readonly ListenerProperty<float> Rations;
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Fuel;
-		[JsonIgnore]
-		public readonly ListenerProperty<float> RationsAcquired;
-		[JsonIgnore]
-		public readonly ListenerProperty<float> FuelAcquired;
-		[JsonIgnore]
 		public readonly ListenerProperty<BodyStatus> Status;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> ProbeId;
+
+		[JsonIgnore]
+		public ResourceInventoryModel Resources { get { return resources; } }
+		[JsonIgnore]
+		public ResourceInventoryModel ResourcesAcquired { get { return resourcesAcquired; } }
+		[JsonIgnore]
+		public ResourceInventoryModel ResourcesCurrent
+		{
+			get
+			{
+				var current = ResourceInventoryModel.Zero;
+				Resources.SubtractOut(ResourcesAcquired, current);
+				return current;
+			}
+		}
 
 		public BodyModel()
 		{
@@ -53,10 +59,6 @@ namespace LunraGames.SpaceFarm.Models
 			ParentId = new ListenerProperty<int>(value => parentId = value, () => parentId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
-			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
-			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
-			RationsAcquired = new ListenerProperty<float>(value => rationsAcquired = value, () => rationsAcquired);
-			FuelAcquired = new ListenerProperty<float>(value => fuelAcquired = value, () => fuelAcquired);
 			Status = new ListenerProperty<BodyStatus>(value => status = value, () => status);
 			ProbeId = new ListenerProperty<string>(value => probeId = value, () => probeId);
 		}

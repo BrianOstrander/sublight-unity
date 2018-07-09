@@ -181,8 +181,8 @@ namespace LunraGames.SpaceFarm
 			star.BodyId.Value = 0;
 			star.ParentId.Value = -1;
 			star.Name.Value = "Star: "+star.Seed.Value.ToString();
-			star.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
-			star.Fuel.Value = GetFraction(ref fuelRemaining, random.NextFloat);
+			star.Resources.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
+			star.Resources.Fuel.Value = GetFraction(ref fuelRemaining, random.NextFloat);
 			star.Status.Value = BodyStatus.NotProbed;
 
 			var bodyCount = 0;
@@ -222,15 +222,15 @@ namespace LunraGames.SpaceFarm
 				generic.BodyId.Value = bodyId;
 				generic.ParentId.Value = parentId;
 				generic.Name.Value = name;
-				generic.Rations.Value = rations;
-				generic.Fuel.Value = fuel;
+				generic.Resources.Rations.Value = rations;
+				generic.Resources.Fuel.Value = fuel;
 				generic.Status.Value = status;
 
 				bodies.Add(generic);
 			}
 
-			star.Rations.Value += rationsRemaining;
-			star.Fuel.Value += fuelRemaining;
+			star.Resources.Rations.Value += rationsRemaining;
+			star.Resources.Fuel.Value += fuelRemaining;
 
 			celestialModel.Bodies.Value = bodies.ToArray();
 		}

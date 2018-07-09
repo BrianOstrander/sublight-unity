@@ -3,7 +3,8 @@
 	public enum InventoryTypes
 	{
 		Unknown = 0,
-		OrbitalProbe = 10,
-		OrbitalCrew = 20
+		Resources = 10,
+		OrbitalProbe = 20,
+		OrbitalCrew = 30
 	}
 }

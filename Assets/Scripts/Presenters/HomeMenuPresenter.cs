@@ -113,8 +113,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Position.Value = startPosition;
 			ship.Speed.Value = speed;
 			ship.RationConsumption.Value = rationConsumption;
-			ship.Rations.Value = rations;
-			ship.Fuel.Value = fuel;
+			ship.Resources.Rations.Value = rations;
+			ship.Resources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
 			ship.ResourceDetection.Value = resourceDetection;
 
@@ -147,18 +147,21 @@ namespace LunraGames.SpaceFarm.Presenters
 			multiProbe.Name.Value = "MultiProbe";
 			multiProbe.Description.Value = "A multi probe, neat!";
 			multiProbe.InventoryId.Value = "1";
+			multiProbe.InstanceId.Value = "A";
 			multiProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star, BodyTypes.Terrestrial };
 
 			var terrestrialProbe = new OrbitalProbeInventoryModel();
 			terrestrialProbe.Name.Value = "TerrestrialProbe";
 			terrestrialProbe.Description.Value = "Time to hit the surface";
 			terrestrialProbe.InventoryId.Value = "2";
+			terrestrialProbe.InstanceId.Value = "B";
 			terrestrialProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Terrestrial };
 
 			var starProbe = new OrbitalProbeInventoryModel();
 			starProbe.Name.Value = "StarProbe";
 			starProbe.Description.Value = "Stars are cool";
 			starProbe.InventoryId.Value = "3";
+			starProbe.InstanceId.Value = "C";
 			starProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star };
 
 			game.Ship.Value.Inventory.Value = new InventoryModel[] { multiProbe, terrestrialProbe, starProbe };

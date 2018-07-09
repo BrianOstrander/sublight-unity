@@ -52,7 +52,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (travelRequest.Destination == model.EndSystem.Value) return;
 
 					var travelDestination = model.Universe.Value.GetSystem(travelRequest.Destination);
-					var remainingFuel = (model.Ship.Value.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
+					var remainingFuel = (model.Ship.Value.Resources.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
 					// Don't pop up if out of fuel.
 					if (remainingFuel < 1f) return;
 
@@ -93,8 +93,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnClosed()
 		{
 			destination.Visited.Value = true;
-			model.Ship.Value.Rations.Value += destination.Rations;
-			model.Ship.Value.Fuel.Value += destination.Fuel - fuelConsumed;
+			model.Ship.Value.Resources.Rations.Value += destination.Rations;
+			model.Ship.Value.Resources.Fuel.Value += destination.Fuel - fuelConsumed;
 		}
 		#endregion
 

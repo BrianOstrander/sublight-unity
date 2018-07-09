@@ -31,8 +31,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			View.Rations = body.Rations - body.RationsAcquired;
-			View.Fuel= body.Fuel - body.FuelAcquired;
+			var current = body.ResourcesCurrent;
+
+			View.Rations = current.Rations;
+			View.Fuel = current.Fuel;
 			View.BackClick = OnBackClick;
 
 			var buttons = new List<LabelButtonBlock>();
@@ -73,7 +75,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				BodyFocusRequest.ProbeDetail(
 					system.Position, 
 					body.BodyId,
-					probe.InventoryId
+					probe.InstanceId
 				)
 			);
 		}

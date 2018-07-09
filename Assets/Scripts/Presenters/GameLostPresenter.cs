@@ -14,7 +14,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			model.Ship.Value.Rations.Changed += OnRations;
+			model.Ship.Value.Resources.Rations.Changed += OnRations;
 			model.DestructionRadius.Changed += OnDestructionRadius;
 		}
 
@@ -22,7 +22,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			base.UnBind();
 
-			model.Ship.Value.Rations.Changed -= OnRations;
+			model.Ship.Value.Resources.Rations.Changed -= OnRations;
 			model.DestructionRadius.Changed -= OnDestructionRadius;
 		}
 
