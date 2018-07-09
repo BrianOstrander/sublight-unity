@@ -114,17 +114,15 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			// Temp Begin
-			var rationsAdded = body.Rations - body.RationsAcquired;
-			var fuelAdded = body.Fuel - body.FuelAcquired;
-			model.Ship.Value.Resources.Rations.Value += rationsAdded;
-			model.Ship.Value.Resources.Fuel.Value += fuelAdded;
+			var added = body.ResourcesCurrent;
 
-			body.RationsAcquired.Value = body.Rations;
-			body.FuelAcquired.Value = body.Fuel;
+			model.Ship.Value.Resources.Add(added);
+
+			body.ResourcesAcquired.Add(added);
 
 			App.Callbacks.DialogRequest(
 				DialogRequest.Alert(
-					"Acquired " + Strings.Rations(rationsAdded) + " rations and " + Strings.Fuel(fuelAdded) + " fuel", 
+					"Acquired " + Strings.Rations(added.Rations) + " rations and " + Strings.Fuel(added.Fuel) + " fuel", 
 					done: OnAlertClosed
 				)
 			);

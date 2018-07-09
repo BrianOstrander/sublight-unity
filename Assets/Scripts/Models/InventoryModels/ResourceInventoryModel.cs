@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 
 using UnityEngine;
 
@@ -49,8 +49,28 @@ namespace LunraGames.SpaceFarm.Models
 			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
 		}
 
+		/// <summary>
+		/// Add the other resources to this one, and returns the remainder if
+		/// any values are negative.
+		/// </summary>
+		/// <returns>The add.</returns>
+		/// <param name="other">Other.</param>
 		public ResourceInventoryModel Add(ResourceInventoryModel other)
 		{
+			return AddOut(other, this);
+		}
+
+		/// <summary>
+		/// Add the other resources to this one, but assign the result to the
+		/// specified object. Returns any negative values.
+		/// </summary>
+		/// <returns>The out.</returns>
+		/// <param name="other">Other.</param>
+		/// <param name="assigned">Assigned.</param>
+		public ResourceInventoryModel AddOut(ResourceInventoryModel other, ResourceInventoryModel assigned)
+		{
+			if (assigned == null) throw new ArgumentNullException("assigned");
+
 			var remainder = Zero;
 
 			var newRations = Rations.Value + other.Rations.Value;
@@ -59,15 +79,43 @@ namespace LunraGames.SpaceFarm.Models
 			if (newRations < 0f) remainder.Rations.Value = Mathf.Abs(newRations);
 			if (newFuel < 0f) remainder.Fuel.Value = Mathf.Abs(newFuel);
 
-			Rations.Value = Mathf.Max(0f, newRations);
-			Fuel.Value = Mathf.Max(0f, newFuel);
+			assigned.Rations.Value = Mathf.Max(0f, newRations);
+			assigned.Fuel.Value = Mathf.Max(0f, newFuel);
 
 			return remainder;
 		}
 
+		/// <summary>
+		/// Subtract the other resource to this one, and returns the remainder
+		/// if any values are negative.
+		/// </summary>
+		/// <returns>The subtract.</returns>
+		/// <param name="other">Other.</param>
 		public ResourceInventoryModel Subtract(ResourceInventoryModel other)
 		{
-			return Add(other.Inverse());
+			return SubtractOut(other, this);
+		}
+
+		/// <summary>
+		/// Subtract the other resources to this one, but assign the result to the
+		/// specified object. Returns any negative values.
+		/// </summary>
+		/// <returns>The out.</returns>
+		/// <param name="other">Other.</param>
+		/// <param name="assigned">Assigned.</param>
+		public ResourceInventoryModel SubtractOut(ResourceInventoryModel other, ResourceInventoryModel assigned)
+		{
+			return AddOut(other.Inverse(), assigned);
+		}
+
+		/// <summary>
+		/// Assign the values of other to this.
+		/// </summary>
+		/// <param name="other">Other.</param>
+		public void Assign(ResourceInventoryModel other)
+		{
+			Rations.Value = other.Rations.Value;
+			Fuel.Value = other.Fuel.Value;
 		}
 
 		public ResourceInventoryModel Inverse()
