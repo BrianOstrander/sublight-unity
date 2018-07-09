@@ -24,6 +24,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		[JsonProperty] OrbitalProbeInventoryModel[] orbitalProbes = new OrbitalProbeInventoryModel[0];
 		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
+		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
 
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> LastSystem;
@@ -44,17 +45,6 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> RationConsumption;
-		/// <summary>
-		/// The years worth of rations on board, assuming a person uses 1 ration
-		/// a year.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Rations;
-		/// <summary>
-		/// The fuel onboard, multiplies speed.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Fuel;
 		/// <summary>
 		/// The fuel consumed per trip, multiplies speed.
 		/// </summary>
@@ -86,6 +76,11 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<InventoryModel[]> Inventory;
 		#endregion
 
+		#region Shortcuts
+		[JsonIgnore]
+		public ResourceInventoryModel Resources { get { return resources; } }
+		#endregion
+
 		public ShipModel()
 		{
 			// Assigned Values
@@ -96,8 +91,6 @@ namespace LunraGames.SpaceFarm.Models
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
 			RationConsumption = new ListenerProperty<float>(value => rationConsumption = value, () => rationConsumption);
-			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
-			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
 			FuelConsumption = new ListenerProperty<float>(value => fuelConsumption = value, () => fuelConsumption);
 			ResourceDetection = new ListenerProperty<float>(value => resourceDetection = value, () => resourceDetection);
 
@@ -109,7 +102,7 @@ namespace LunraGames.SpaceFarm.Models
 				DeriveTravelRadius,
 				Speed,
 				RationConsumption,
-				Rations,
+				resources.Rations,
 				FuelConsumption
 			);
 
@@ -178,6 +171,9 @@ namespace LunraGames.SpaceFarm.Models
 					case InventoryTypes.OrbitalCrew:
 						orbitalCrewList.Add(inventory as OrbitalCrewInventoryModel);
 						break;
+					case InventoryTypes.Resources:
+						resources = inventory as ResourceInventoryModel;
+						break;
 					default:
 						Debug.LogError("Unrecognized InventoryType: " + inventory.InventoryType);
 						break;
@@ -191,6 +187,7 @@ namespace LunraGames.SpaceFarm.Models
 		InventoryModel[] OnGetInventory()
 		{
 			return orbitalProbes.Cast<InventoryModel>().Concat(orbitalCrews)
+													   .Append(Resources)
 													   .ToArray();
 		}
 		#endregion

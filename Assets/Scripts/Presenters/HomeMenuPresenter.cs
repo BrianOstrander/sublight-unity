@@ -113,8 +113,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Position.Value = startPosition;
 			ship.Speed.Value = speed;
 			ship.RationConsumption.Value = rationConsumption;
-			ship.Rations.Value = rations;
-			ship.Fuel.Value = fuel;
+			ship.Resources.Rations.Value = rations;
+			ship.Resources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
 			ship.ResourceDetection.Value = resourceDetection;
 

@@ -116,8 +116,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			// Temp Begin
 			var rationsAdded = body.Rations - body.RationsAcquired;
 			var fuelAdded = body.Fuel - body.FuelAcquired;
-			model.Ship.Value.Rations.Value += rationsAdded;
-			model.Ship.Value.Fuel.Value += fuelAdded;
+			model.Ship.Value.Resources.Rations.Value += rationsAdded;
+			model.Ship.Value.Resources.Fuel.Value += fuelAdded;
 
 			body.RationsAcquired.Value = body.Rations;
 			body.FuelAcquired.Value = body.Fuel;

@@ -25,7 +25,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
 
-		public override InventoryTypes InventoryType { get { return InventoryTypes.Resource; } }
+		public override InventoryTypes InventoryType { get { return InventoryTypes.Resources; } }
 
 		[JsonIgnore]
 		public bool IsZero
