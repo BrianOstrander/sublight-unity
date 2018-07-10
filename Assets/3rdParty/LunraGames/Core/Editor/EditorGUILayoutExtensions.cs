@@ -72,6 +72,14 @@ namespace LunraGamesEditor
 			GUI.color = ColorStack.Pop();
 		}
 
+		public static bool XButton()
+		{
+			PushColor(Color.red);
+			var clicked = GUILayout.Button("x", GUILayout.Width(20f));
+			PopColor();
+			return clicked;
+		}
+
 		public static string[] StringArray(string name, string[] values, string defaultValue = null)
 		{
 			if (values == null) throw new ArgumentNullException("values");
@@ -97,9 +105,7 @@ namespace LunraGamesEditor
 						GUILayout.Space(16f);
 						GUILayout.Label("[ "+i+" ]", GUILayout.Width(32f));
 						values[i] = GUILayout.TextField(values[i]);
-						PushColor(Color.red);
-						if (GUILayout.Button("X", GUILayout.Width(18f))) deletedIndex = i;
-						PopColor();
+						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();
 				}

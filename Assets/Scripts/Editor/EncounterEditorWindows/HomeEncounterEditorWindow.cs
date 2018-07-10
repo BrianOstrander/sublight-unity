@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 
 using UnityEditor;
 using UnityEngine;
@@ -22,8 +23,10 @@ namespace LunraGames.SpaceFarm
 		}
 
 		EditorPrefsFloat homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
+		EditorPrefsFloat homeCrewLogsScroll = new EditorPrefsFloat(KeyPrefix + "CrewLogsScroll");
 		EditorPrefsString homeSelectedEncounterPath = new EditorPrefsString(KeyPrefix + "HomeSelectedEncounter");
 		EditorPrefsEnum<HomeStates> homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
+		EditorPrefsInt homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
 
 		RequestStatus encounterListStatus;
 		SaveModel[] encounterList = new SaveModel[0];
@@ -41,7 +44,7 @@ namespace LunraGames.SpaceFarm
 		void OnHome()
 		{
 			OnCheckStatus();
-			switch(homeState.Value)
+			switch (homeState.Value)
 			{
 				case HomeStates.Browsing:
 					OnHomeBrowsing();
@@ -57,7 +60,7 @@ namespace LunraGames.SpaceFarm
 
 		void OnCheckStatus()
 		{
-			switch(encounterListStatus)
+			switch (encounterListStatus)
 			{
 				case RequestStatus.Cancel:
 					LoadEncounterList();
@@ -67,7 +70,7 @@ namespace LunraGames.SpaceFarm
 			}
 			if (string.IsNullOrEmpty(homeSelectedEncounterPath.Value)) return;
 
-			switch(selectedEncounterStatus)
+			switch (selectedEncounterStatus)
 			{
 				case RequestStatus.Cancel:
 					LoadSelectedEncounter(encounterList.FirstOrDefault(m => m.Path == homeSelectedEncounterPath.Value));
@@ -132,11 +135,16 @@ namespace LunraGames.SpaceFarm
 				GUILayout.BeginVertical();
 				{
 					EditorGUILayout.HelpBox("Select an encounter to edit.", MessageType.Info);
-					EditorGUILayout.HelpBox("Select an encounter to edit.", MessageType.Info);
 				}
 				GUILayout.EndVertical();
 				return;
 			}
+
+			string[] names =
+			{
+				"General",
+				"Crew Logs"
+			};
 
 			GUILayout.BeginVertical();
 			{
@@ -149,44 +157,172 @@ namespace LunraGames.SpaceFarm
 					GUI.enabled = true;
 				}
 				GUILayout.EndHorizontal();
+				homeSelectedToolbar.Value = GUILayout.Toolbar(Mathf.Min(homeSelectedToolbar, names.Length - 1), names);
 
+				switch(homeSelectedToolbar.Value)
+				{
+					case 0:
+						OnHomeSelectedBasics(model);
+						break;
+					case 1:
+						OnHomeSelectedCrewLogs(model);
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
+						break;
+				}
+			}
+			GUILayout.EndVertical();
+		}
+
+		void OnHomeSelectedBasics(EncounterInfoModel model)
+		{
+			EditorGUI.BeginChangeCheck();
+			{
+				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
+				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
+				model.Meta.Value = model.Name;
+				model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
+				model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
+					"Completed Encounters Required",
+					model.CompletedEncountersRequired.Value,
+					"- Encounter Id -"
+				);
+				model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
+					"Valid Systems",
+					model.ValidSystems.Value,
+					"- Select a SystemType -"
+				);
+				model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
+					"Valid Bodies",
+					model.ValidBodies.Value,
+					"- Select a BodyType -"
+				);
+				model.ValidProbes.Value = EditorGUILayoutExtensions.EnumArray(
+					"Valid Probes",
+					model.ValidProbes.Value,
+					"- Select a ProbeType -",
+					options: InventoryValidator.Probes
+				);
+				model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
+					"Valid Crews",
+					model.ValidCrews.Value,
+					"- Select a CrewType -",
+					options: InventoryValidator.Crews
+				);
+			}
+			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+		}
+
+		void OnHomeSelectedCrewLogs(EncounterInfoModel model)
+		{
+			homeCrewLogsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeCrewLogsScroll), false, true).y;
+			{
 				EditorGUI.BeginChangeCheck();
 				{
-					model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
-					model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
-					model.Meta.Value = model.Name;
-					model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
-					model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
-						"Completed Encounters Required",
-						model.CompletedEncountersRequired.Value,
-						"- Encounter Id -"
-					);
-					model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Systems",
-						model.ValidSystems.Value,
-						"- Select a SystemType -"
-					);
-					model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Bodies",
-						model.ValidBodies.Value,
-						"- Select a BodyType -"
-					);
-					model.ValidProbes.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Probes",
-						model.ValidProbes.Value,
-						"- Select a ProbeType -",
-						options: InventoryValidator.Probes
-					);
-					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Crews",
-						model.ValidCrews.Value,
-						"- Select a CrewType -",
-						options: InventoryValidator.Crews
-					);
+					GUILayout.BeginHorizontal();
+					{
+						GUILayout.Label("Append New Log");
+						var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
+						switch(result)
+						{
+							case EncounterLogTypes.Unknown:
+								break;
+							case EncounterLogTypes.Text:
+								var textResult = new TextEncounterLogModel();
+								textResult.LogId.Value = Guid.NewGuid().ToString();
+								textResult.InstanceId.Value = Guid.NewGuid().ToString();
+								textResult.Beginning.Value = model.Logs.All.Value.Count() == 0;
+								model.Logs.All.Value = model.Logs.All.Value.Append(textResult).ToArray();
+								break;
+							default:
+								Debug.LogError("Unrecognized EncounterLogType:" + result);
+								break;
+						}
+					}
+					GUILayout.EndHorizontal();
+
+					var deleted = string.Empty;
+					var beginning = string.Empty;
+
+					foreach (var log in model.Logs.All.Value)
+					{
+						if (OnLogBegin(model, log, ref beginning)) deleted = log.LogId;
+						switch(log.LogType)
+						{
+							case EncounterLogTypes.Text:
+								OnTextLog(model, log as TextEncounterLogModel);
+								break;
+							default:
+								EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + log.LogType, MessageType.Error);
+								break;
+						}
+						OnLogEnd(model, log);
+					}
+					if (!string.IsNullOrEmpty(deleted))
+					{
+						model.Logs.All.Value = model.Logs.All.Value.Where(l => l.LogId != deleted).ToArray();
+					}
+					if (!string.IsNullOrEmpty(beginning))
+					{
+						foreach (var logs in model.Logs.All.Value)
+						{
+							logs.Beginning.Value = logs.LogId.Value == beginning;
+						}
+					}
 				}
 				selectedEncounterModified |= EditorGUI.EndChangeCheck();
-
 			}
+			GUILayout.EndScrollView();
+		}
+
+		bool OnLogBegin(EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning)
+		{
+			var deleted = false;
+			GUILayout.BeginVertical(EditorStyles.helpBox);
+			GUILayout.BeginHorizontal();
+			{
+				var header = model.LogType + " Log Id:";
+				GUILayout.Label(header, GUILayout.Width(header.Length * 5.5f));
+				EditorGUILayout.SelectableLabel(model.LogId);
+				if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+				{
+					beginning = model.LogId;
+				}
+				deleted = EditorGUILayoutExtensions.XButton();
+			}
+			GUILayout.EndHorizontal();
+			return deleted;
+		}
+
+		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
+		{
+			model.Text.Value = GUILayout.TextArea(model.Text.Value);
+			OnLinearLog(infoModel, model);
+		}
+
+		void OnLinearLog(EncounterInfoModel infoModel, LinearEncounterLogModel model)
+		{
+			var options = infoModel.Logs.All.Value.Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value).Prepend("- Select Next Log -").ToArray();
+			var index = 0;
+			if (!string.IsNullOrEmpty(model.NextLogId.Value))
+			{
+				for (var i = 0; i < options.Length; i++)
+				{
+					if (options[i] == model.NextLogId.Value)
+					{
+						index = i;
+						break;
+					}
+				}
+			}
+			index = EditorGUILayout.Popup(index, options);
+			if (index == 0) model.NextLogId.Value = null;
+			else model.NextLogId.Value = options[index];
+		}
+
+		void OnLogEnd(EncounterInfoModel infoModel, EncounterLogModel model)
+		{
 			GUILayout.EndVertical();
 		}
 
@@ -259,6 +395,18 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 			encounterList = result.Models;
+
+			if (selectedEncounter == null) return;
+			if (encounterList.FirstOrDefault(e => e.Path.Value == selectedEncounter.Path.Value) != null) return;
+			OnDeselectEncounter();
+		}
+
+		void OnDeselectEncounter()
+		{
+			homeState.Value = HomeStates.Browsing;
+			selectedEncounterStatus = RequestStatus.Failure;
+			selectedEncounter = null;
+			selectedEncounterModified = false;
 		}
 
 		void OnDrawEncounterInfo(SaveModel info)

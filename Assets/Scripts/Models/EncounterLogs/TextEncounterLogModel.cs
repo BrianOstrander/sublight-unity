@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Models
 {
-	public class TextEncounterLogModel : EncounterLogModel
+	public class TextEncounterLogModel : LinearEncounterLogModel
 	{
 		[JsonProperty] string text;
 
