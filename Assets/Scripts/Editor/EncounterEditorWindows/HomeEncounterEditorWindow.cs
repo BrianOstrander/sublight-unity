@@ -156,6 +156,33 @@ namespace LunraGames.SpaceFarm
 					model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 					model.Meta.Value = model.Name;
 					model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
+					model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
+						"Completed Encounters Required",
+						model.CompletedEncountersRequired.Value,
+						"- Encounter Id -"
+					);
+					model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Systems",
+						model.ValidSystems.Value,
+						"- Select a SystemType -"
+					);
+					model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Bodies",
+						model.ValidBodies.Value,
+						"- Select a BodyType -"
+					);
+					model.ValidProbes.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Probes",
+						model.ValidProbes.Value,
+						"- Select a ProbeType -",
+						options: InventoryValidator.Probes
+					);
+					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Crews",
+						model.ValidCrews.Value,
+						"- Select a CrewType -",
+						options: InventoryValidator.Crews
+					);
 				}
 				selectedEncounterModified |= EditorGUI.EndChangeCheck();
 

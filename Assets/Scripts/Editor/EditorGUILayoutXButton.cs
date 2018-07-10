@@ -1,12 +1,9 @@
 using UnityEngine;
 using UnityEditor;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace LunraGames.SpaceFarm
 {
-	public class EditorGUILayoutExtensions {
+	public static class EditorGUILayoutXButton {
 
 		public static XButtonSoundBlock SoundBlockField(XButtonSoundBlock block) {
 			GUILayout.BeginVertical();
