@@ -38,6 +38,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		public EncounterInfoModel()
 		{
+			SaveType = SaveTypes.EncounterInfo;
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);

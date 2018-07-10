@@ -90,12 +90,15 @@ namespace LunraGames.SpaceFarm
 	
 	public abstract class SaveLoadService : ISaveLoadService
 	{
+		protected IBuildInfo BuildInfo { get; set; }
+
 		protected Type ToType(SaveTypes saveType)
 		{
 			switch(saveType)
 			{
 				case SaveTypes.Game: return typeof(GameModel);
 				case SaveTypes.Preferences: return typeof(PreferencesModel);
+				case SaveTypes.EncounterInfo: return typeof(EncounterInfoModel);
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -104,11 +107,12 @@ namespace LunraGames.SpaceFarm
 		{
 			if (type == typeof(GameModel)) return SaveTypes.Game;
 			if (type == typeof(PreferencesModel)) return SaveTypes.Preferences;
+			if (type == typeof(EncounterInfoModel)) return SaveTypes.EncounterInfo;
 
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 
-		public abstract void Initialize(Action<RequestStatus> done);
+		public abstract void Initialize(IBuildInfo info, Action<RequestStatus> done);
 
         /// <summary>
         /// Gets the minimum supported saves by SaveTypes, -1 means it only 
@@ -116,6 +120,11 @@ namespace LunraGames.SpaceFarm
         /// </summary>
         /// <value>The minimum supported saves.</value>
 		protected abstract Dictionary<SaveTypes, int> MinimumSupportedSaves { get; }
+		/// <summary>
+		/// Can these models be saved, or are they readonly.
+		/// </summary>
+		/// <value>Can save if true.</value>
+		protected abstract Dictionary<SaveTypes, bool> CanSave { get; }
 
 		protected abstract string GetUniquePath(SaveTypes saveType);
 
@@ -125,7 +134,7 @@ namespace LunraGames.SpaceFarm
             var min = MinimumSupportedSaves[type];
             // If min is -1, then it means we can only load saves that equal 
             // this version.
-            if (min < 0) min = App.BuildPreferences.Info.Version;
+            if (min < 0) min = BuildInfo.Version;
 			return min <= version;
 		}
 
@@ -133,7 +142,7 @@ namespace LunraGames.SpaceFarm
 		{
 			var result = new M();
 			result.SupportedVersion.Value = true;
-			result.Version.Value = App.BuildPreferences.Info.Version;
+			result.Version.Value = BuildInfo.Version;
 			result.Meta.Value = meta;
 			result.Path.Value = GetUniquePath(result.SaveType);
 			result.Created.Value = DateTime.MinValue;
@@ -184,6 +193,16 @@ namespace LunraGames.SpaceFarm
 			if (model == null) throw new ArgumentNullException("model");
 			done = done ?? OnUnhandledError;
 
+			if (!CanSave.ContainsKey(model.SaveType) || !CanSave[model.SaveType])
+			{
+				done(SaveLoadRequest<M>.Failure(
+					model,
+					model,
+					"Cannot save a " + model.SaveType + " on this platform."
+				));
+				return;
+			}
+
 			if (ToEnum(typeof(M)) != model.SaveType) 
 			{
 				done(SaveLoadRequest<M>.Failure(
@@ -220,7 +239,7 @@ namespace LunraGames.SpaceFarm
 
 			model.Modified.Value = DateTime.Now;
 			if (model.Created == DateTime.MinValue) model.Created.Value = model.Modified.Value;
-			model.Version.Value = App.BuildPreferences.Info.Version;
+			model.Version.Value = BuildInfo.Version;
 
 			try { OnSave(model, done); }
 			catch (Exception exception)
@@ -266,7 +285,7 @@ namespace LunraGames.SpaceFarm
 
 	public interface ISaveLoadService
 	{
-		void Initialize(Action<RequestStatus> done);
+		void Initialize(IBuildInfo info, Action<RequestStatus> done);
 		M Create<M>(string meta = null) where M : SaveModel, new();
 		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null) where M : SaveModel;
 		void Load<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;

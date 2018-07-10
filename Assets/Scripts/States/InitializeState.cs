@@ -46,6 +46,7 @@ namespace LunraGames.SpaceFarm
 		void InitializeSaveLoadService(Action done)
 		{
 			App.SaveLoadService.Initialize(
+				App.BuildPreferences.Info,
 				status =>
 				{
 					if (status == RequestStatus.Success) App.Log("SaveLoadService Initialized", LogTypes.Initialization);

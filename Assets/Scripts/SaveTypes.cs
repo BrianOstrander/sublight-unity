@@ -4,6 +4,7 @@
 	{
 		Unknown = 0,
 		Game = 10,
-		Preferences = 20
+		Preferences = 20,
+		EncounterInfo = 30
 	}
 }

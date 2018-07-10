@@ -13,6 +13,7 @@ namespace LunraGames.SpaceFarm
 	{
 		const string Extension = ".json";
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
+		static string InternalPath { get { return Path.Combine(Application.streamingAssetsPath, "internal"); } }
 
 		protected override Dictionary<SaveTypes, int> MinimumSupportedSaves
 		{
@@ -21,14 +22,28 @@ namespace LunraGames.SpaceFarm
 				return new Dictionary<SaveTypes, int>
 				{
 					{ SaveTypes.Game, -1 },
-					{ SaveTypes.Preferences, -1 }
+					{ SaveTypes.Preferences, -1 },
+					{ SaveTypes.EncounterInfo, 0 }
 				};
 			}
 		}
 
-
-		public override void Initialize(Action<RequestStatus> done)
+		protected override Dictionary<SaveTypes, bool> CanSave
 		{
+			get
+			{
+				return new Dictionary<SaveTypes, bool>
+				{
+					{ SaveTypes.Game, true },
+					{ SaveTypes.Preferences, true },
+					{ SaveTypes.EncounterInfo, false }
+				};
+			}
+		}
+
+		public override void Initialize(IBuildInfo info, Action<RequestStatus> done)
+		{
+			BuildInfo = info;
 			try
 			{
 				foreach (var curr in Enum.GetValues(typeof(SaveTypes)).Cast<SaveTypes>())
@@ -52,6 +67,7 @@ namespace LunraGames.SpaceFarm
 			{
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
+				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
