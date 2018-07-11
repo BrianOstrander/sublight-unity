@@ -244,10 +244,11 @@ namespace LunraGames.SpaceFarm
 
 					var deleted = string.Empty;
 					var beginning = string.Empty;
+					var ending = string.Empty;
 
 					foreach (var log in model.Logs.All.Value)
 					{
-						if (OnLogBegin(model, log, ref beginning)) deleted = log.LogId;
+						if (OnLogBegin(model, log, ref beginning, ref ending)) deleted = log.LogId;
 						switch(log.LogType)
 						{
 							case EncounterLogTypes.Text:
@@ -270,13 +271,20 @@ namespace LunraGames.SpaceFarm
 							logs.Beginning.Value = logs.LogId.Value == beginning;
 						}
 					}
+					if (!string.IsNullOrEmpty(ending))
+					{
+						foreach (var logs in model.Logs.All.Value)
+						{
+							logs.Ending.Value = logs.LogId.Value == ending;
+						}
+					}
 				}
 				selectedEncounterModified |= EditorGUI.EndChangeCheck();
 			}
 			GUILayout.EndScrollView();
 		}
 
-		bool OnLogBegin(EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning)
+		bool OnLogBegin(EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning, ref string ending)
 		{
 			var deleted = false;
 			GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -288,6 +296,10 @@ namespace LunraGames.SpaceFarm
 				if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
 				{
 					beginning = model.LogId;
+				}
+				if (EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f)) && !model.Ending.Value)
+				{
+					ending = model.LogId;
 				}
 				deleted = EditorGUILayoutExtensions.XButton();
 			}
@@ -316,7 +328,12 @@ namespace LunraGames.SpaceFarm
 					}
 				}
 			}
-			index = EditorGUILayout.Popup(index, options);
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("Next Log: ", GUILayout.Width(55f));
+				index = EditorGUILayout.Popup(index, options);
+			}
+			GUILayout.EndHorizontal();
 			if (index == 0) model.NextLogId.Value = null;
 			else model.NextLogId.Value = options[index];
 		}
