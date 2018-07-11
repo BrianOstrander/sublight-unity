@@ -188,7 +188,7 @@ namespace LunraGames.SpaceFarm
 
 		protected abstract void OnLoad<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 
-		public void Save<M>(M model, Action<SaveLoadRequest<M>> done = null) where M : SaveModel
+		public void Save<M>(M model, Action<SaveLoadRequest<M>> done = null, bool updateModified = true) where M : SaveModel
 		{
 			if (model == null) throw new ArgumentNullException("model");
 			done = done ?? OnUnhandledError;
@@ -237,8 +237,12 @@ namespace LunraGames.SpaceFarm
 			var wasModified = model.Modified.Value;
 			var wasVersion = model.Version.Value;
 
-			model.Modified.Value = DateTime.Now;
-			if (model.Created == DateTime.MinValue) model.Created.Value = model.Modified.Value;
+			if (updateModified || model.Created == DateTime.MinValue)
+			{
+				model.Modified.Value = DateTime.Now;
+				if (model.Created == DateTime.MinValue) model.Created.Value = model.Modified.Value;
+			}
+
 			model.Version.Value = BuildInfo.Version;
 
 			try { OnSave(model, done); }
@@ -287,7 +291,7 @@ namespace LunraGames.SpaceFarm
 	{
 		void Initialize(IBuildInfo info, Action<RequestStatus> done);
 		M Create<M>(string meta = null) where M : SaveModel, new();
-		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null) where M : SaveModel;
+		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null, bool updateModified = true) where M : SaveModel;
 		void Load<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 		void List<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel;
 	}

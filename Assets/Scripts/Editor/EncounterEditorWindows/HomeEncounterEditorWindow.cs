@@ -308,7 +308,7 @@ namespace LunraGames.SpaceFarm
 
 		void SaveSelectedEncounter(EncounterInfoModel model)
 		{
-			SaveLoadService.Save(model, OnSaveSelectedEncounter);
+			SaveLoadService.Save(model, OnSaveSelectedEncounter, false);
 		}
 
 		void OnSaveSelectedEncounter(SaveLoadRequest<EncounterInfoModel> result)

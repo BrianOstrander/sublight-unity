@@ -14,5 +14,7 @@ namespace LunraGames.SpaceFarm
 				return dict;
 			}
 		}
+
+		public EditorSaveLoadService(bool readableSaves = false) : base(readableSaves) {}
 	}
 }

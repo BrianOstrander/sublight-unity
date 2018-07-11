@@ -26,7 +26,7 @@ namespace LunraGames.SpaceFarm
 			{
 				if (editorSaveLoadService == null)
 				{
-					editorSaveLoadService = new EditorSaveLoadService();
+					editorSaveLoadService = new EditorSaveLoadService(true);
 					editorSaveLoadService.Initialize(BuildPreferences.Instance.Info, OnSaveLoadInitialized);
 				}
 				return editorSaveLoadService;

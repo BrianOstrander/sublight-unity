@@ -7,6 +7,8 @@ using UnityEngine;
 
 using LunraGames.SpaceFarm.Models;
 
+using Newtonsoft.Json;
+
 namespace LunraGames.SpaceFarm
 {
 	public class DesktopSaveLoadService : SaveLoadService
@@ -14,6 +16,8 @@ namespace LunraGames.SpaceFarm
 		const string Extension = ".json";
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
 		static string InternalPath { get { return Path.Combine(Application.streamingAssetsPath, "internal"); } }
+
+		bool readableSaves;
 
 		protected override Dictionary<SaveTypes, int> MinimumSupportedSaves
 		{
@@ -39,6 +43,11 @@ namespace LunraGames.SpaceFarm
 					{ SaveTypes.EncounterInfo, false }
 				};
 			}
+		}
+
+		public DesktopSaveLoadService(bool readableSaves = false)
+		{
+			this.readableSaves = readableSaves;
 		}
 
 		public override void Initialize(IBuildInfo info, Action<RequestStatus> done)
@@ -97,7 +106,7 @@ namespace LunraGames.SpaceFarm
 
 		protected override void OnSave<M>(M model, Action<SaveLoadRequest<M>> done = null)
 		{
-			File.WriteAllText(model.Path, Serialization.Serialize(model));
+			File.WriteAllText(model.Path, Serialization.Serialize(model, formatting: readableSaves ? Formatting.Indented : Formatting.None));
 			done(SaveLoadRequest<M>.Success(model, model));
 		}
 
