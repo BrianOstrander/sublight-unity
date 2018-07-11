@@ -45,14 +45,14 @@ namespace LunraGames.SpaceFarm
 			}
 			GUILayout.EndHorizontal();
 
-			DevPrefs.WindInEditMode = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
-			DevPrefs.AutoApplySkybox = GUILayout.Toggle(DevPrefs.AutoApplySkybox, "Auto Apply Skybox");
-			DevPrefs.ApplyXButtonStyleInEditMode = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
+			DevPrefs.WindInEditMode.Value = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
+			DevPrefs.AutoApplySkybox.Value = GUILayout.Toggle(DevPrefs.AutoApplySkybox, "Auto Apply Skybox");
+			DevPrefs.ApplyXButtonStyleInEditMode.Value = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
 			#endregion
 
 			#region Interface
 			GUILayout.Label("Interface", EditorStyles.boldLabel);
-			DevPrefs.SkipExplanation = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
+			DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
    			#endregion
 
 			#region Logging

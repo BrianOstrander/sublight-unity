@@ -43,7 +43,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 
 			View.Title = infoModel.Name;
-
+			View.DoneClick = OnDoneClick;
 			View.Shown += OnShown;
 
 			ShowView(App.GameCanvasRoot);
@@ -59,38 +59,15 @@ namespace LunraGames.SpaceFarm.Presenters
 				return;
 			}
 			nextLogDelay = 0f;
-			/*
-			var nextLog = beginning;
-			// TODO: This is probably dangerous and prone to loops and infinite
-			// problems, but oh well!
-			while (nextLog != null)
-			{
-				Func<GameModel, EncounterLogModel, IEntryEncounterLogPresenter> handler;
-				if (LogHandlers.TryGetValue(nextLog.LogType, out handler))
-				{
-					var current = handler(model, nextLog);
-					current.Show(View.EntryArea);
-					entries.Add(current);
-					var nextLogId = nextLog.NextLog;
-					if (string.IsNullOrEmpty(nextLogId))
-					{
-						Debug.Log("Handle null next logs here!");
-						break;
-					}
-					nextLog = infoModel.Logs.GetLogFirstOrDefault(nextLogId);
-					if (nextLog == null)
-					{
-						Debug.LogError("Next log could not be found.");
-						break;
-					}
-				}
-				else
-				{
-					Debug.LogError("Unhandled LogType: " + nextLog.LogType);
-					break;
-				}
-			}
-			*/
+		}
+
+		void OnDoneClick()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+
+			//App.Callbacks.FocusRequest(
+			//	new SystemBodiesFocusRequest(system.Position)
+			//);
 		}
 
 		void OnUpdate(float delta)
@@ -104,6 +81,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			OnShowLog(nextLog);
 		}
+
 		void OnShowLog(EncounterLogModel logModel)
 		{
 			nextLog = null;
@@ -117,7 +95,11 @@ namespace LunraGames.SpaceFarm.Presenters
 				entries.Add(current);
 
 				// TODO: Unlock done button when end is reached.
-				if (logModel.Ending.Value) return;
+				if (logModel.Ending.Value)
+				{
+					View.DoneEnabled = true;
+					return;
+				}
 
 				var nextLogId = logModel.NextLog;
 				if (string.IsNullOrEmpty(nextLogId))
