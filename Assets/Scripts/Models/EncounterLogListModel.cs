@@ -32,15 +32,29 @@ namespace LunraGames.SpaceFarm.Models
 			return All.Value.OfType<T>().Where(predicate).ToArray();
 		}
 
-		public T GetLogFirstOrDefault<T>(string instanceId) where T : EncounterLogModel
+		public EncounterLogModel GetLogFirstOrDefault(string logId)
 		{
-			return GetLogFirstOrDefault<T>(i => i.InstanceId == instanceId);
+			return GetLogFirstOrDefault<EncounterLogModel>(logId);
+		}
+
+		public T GetLogFirstOrDefault<T>(string logId) where T : EncounterLogModel
+		{
+			return GetLogFirstOrDefault<T>(i => i.LogId == logId);
 		}
 
 		public T GetLogFirstOrDefault<T>(Func<T, bool> predicate = null) where T : EncounterLogModel
 		{
 			if (predicate == null) return All.Value.OfType<T>().FirstOrDefault();
 			return All.Value.OfType<T>().FirstOrDefault(predicate);
+		}
+
+		[JsonIgnore]
+		public EncounterLogModel Beginning
+		{
+			get
+			{
+				return GetLogFirstOrDefault<EncounterLogModel>(l => l.Beginning);
+			}
 		}
 		#endregion
 

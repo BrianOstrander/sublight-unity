@@ -7,7 +7,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] bool beginning;
 		[JsonProperty] bool ending;
 		[JsonProperty] string logId;
-		[JsonProperty] string instanceId;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> Beginning;
@@ -15,10 +14,10 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<bool> Ending;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> LogId;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> InstanceId;
 
+		[JsonIgnore]
 		public abstract EncounterLogTypes LogType { get; }
+		[JsonIgnore]
 		public abstract string NextLog { get; }
 
 		public EncounterLogModel()
@@ -26,7 +25,6 @@ namespace LunraGames.SpaceFarm.Models
 			Beginning = new ListenerProperty<bool>(value => beginning = value, () => beginning);
 			Ending = new ListenerProperty<bool>(value => ending = value, () => ending);
 			LogId = new ListenerProperty<string>(value => logId = value, () => logId);
-			InstanceId = new ListenerProperty<string>(value => instanceId = value, () => instanceId);
 		}
 	}
 }

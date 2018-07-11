@@ -41,7 +41,7 @@ namespace LunraGames.SpaceFarm
 				Debug.LogError("Unable to get an instance of a view for " + GetType());
 				return;
 			}
-
+			// TODO: Is the cast below necessary?
 			View = view as V;
 			View.Reset();
 		}

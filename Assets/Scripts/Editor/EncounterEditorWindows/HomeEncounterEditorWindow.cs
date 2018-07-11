@@ -142,7 +142,8 @@ namespace LunraGames.SpaceFarm
 			string[] names =
 			{
 				"General",
-				"Crew Logs"
+				"Crew Logs",
+				"Preview"
 			};
 
 			GUILayout.BeginVertical();
@@ -161,10 +162,13 @@ namespace LunraGames.SpaceFarm
 				switch(homeSelectedToolbar.Value)
 				{
 					case 0:
-						OnHomeSelectedBasics(model);
+						OnHomeSelectedGeneral(model);
 						break;
 					case 1:
 						OnHomeSelectedCrewLogs(model);
+						break;
+					case 2:
+						OnHomeSelectedPreview(model);
 						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
@@ -174,7 +178,7 @@ namespace LunraGames.SpaceFarm
 			GUILayout.EndVertical();
 		}
 
-		void OnHomeSelectedBasics(EncounterInfoModel model)
+		void OnHomeSelectedGeneral(EncounterInfoModel model)
 		{
 			EditorGUI.BeginChangeCheck();
 			{
@@ -230,7 +234,6 @@ namespace LunraGames.SpaceFarm
 							case EncounterLogTypes.Text:
 								var textResult = new TextEncounterLogModel();
 								textResult.LogId.Value = Guid.NewGuid().ToString();
-								textResult.InstanceId.Value = Guid.NewGuid().ToString();
 								textResult.Beginning.Value = model.Logs.All.Value.Count() == 0;
 								model.Logs.All.Value = model.Logs.All.Value.Append(textResult).ToArray();
 								break;

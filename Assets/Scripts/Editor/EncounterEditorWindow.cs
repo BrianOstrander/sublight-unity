@@ -57,6 +57,7 @@ namespace LunraGames.SpaceFarm
 			{
 				try
 				{
+					/*
 					if (Application.isPlaying)
 					{
 						GUILayout.FlexibleSpace();
@@ -70,7 +71,7 @@ namespace LunraGames.SpaceFarm
 						GUILayout.FlexibleSpace();
 						return;
 					}
-
+					*/
 					switch (currentState.Value)
 					{
 						case States.Home:
