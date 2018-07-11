@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 
+using LunraGamesEditor;
+
 using UnityEditor;
 using UnityEngine;
 
@@ -52,8 +54,17 @@ namespace LunraGames.SpaceFarm
 
 			#region Interface
 			GUILayout.Label("Interface", EditorStyles.boldLabel);
-			DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
-   			#endregion
+			GUILayout.BeginHorizontal();
+			{
+				DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
+				DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
+			}
+			GUILayout.EndHorizontal();
+			var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
+			if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
+			DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");
+			if (isWiping) EditorGUILayoutExtensions.PopColor();
+			#endregion
 
 			#region Logging
 			GUILayout.Label("Logging", EditorStyles.boldLabel);

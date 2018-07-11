@@ -54,6 +54,9 @@ namespace LunraGames.SpaceFarm
 		ISaveLoadService saveLoadService;
 		public static ISaveLoadService SaveLoadService { get { return instance.saveLoadService; } }
 
+		GameService gameService;
+		public static GameService GameService { get { return instance.gameService; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -111,6 +114,7 @@ namespace LunraGames.SpaceFarm
 			);
 			sceneService = new SceneService();
 			universeService = new FudgedUniverseService();
+			gameService = new GameService();
 
 			if (Application.isEditor)
 			{
