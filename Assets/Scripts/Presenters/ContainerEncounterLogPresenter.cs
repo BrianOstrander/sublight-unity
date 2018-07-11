@@ -18,16 +18,22 @@ namespace LunraGames.SpaceFarm.Presenters
 		EncounterInfoModel infoModel;
 		List<IEntryEncounterLogPresenter> entries = new List<IEntryEncounterLogPresenter>();
 
+		EncounterLogModel nextLog;
+		float? nextLogDelay;
+
 		public ContainerEncounterLogPresenter(GameModel model, EncounterInfoModel infoModel)
 		{
 			this.model = model;
 			this.infoModel = infoModel;
+
+			App.Heartbeat.Update += OnUpdate;
 		}
 
 		protected override void UnBind()
 		{
 			base.UnBind();
 
+			App.Heartbeat.Update -= OnUpdate;
 		}
 
 		public void Show()
@@ -46,12 +52,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnShown()
 		{
-			var beginning = infoModel.Logs.Beginning;
-			if (beginning == null)
+			nextLog = infoModel.Logs.Beginning;
+			if (nextLog == null)
 			{
 				Debug.LogError("No beginning found for encounter " + infoModel.EncounterId.Value);
 				return;
 			}
+			nextLogDelay = 0f;
+			/*
 			var nextLog = beginning;
 			// TODO: This is probably dangerous and prone to loops and infinite
 			// problems, but oh well!
@@ -82,6 +90,55 @@ namespace LunraGames.SpaceFarm.Presenters
 					break;
 				}
 			}
+			*/
+		}
+
+		void OnUpdate(float delta)
+		{
+			if (!nextLogDelay.HasValue) return;
+			if (View.TransitionState != TransitionStates.Shown) return;
+			if (App.Callbacks.LastPlayState.State != PlayState.States.Playing) return;
+
+			nextLogDelay = Mathf.Max(0f, nextLogDelay.Value - delta);
+			if (!Mathf.Approximately(0f, nextLogDelay.Value)) return;
+
+			OnShowLog(nextLog);
+		}
+		void OnShowLog(EncounterLogModel logModel)
+		{
+			nextLog = null;
+			nextLogDelay = null;
+			
+			Func<GameModel, EncounterLogModel, IEntryEncounterLogPresenter> handler;
+			if (LogHandlers.TryGetValue(logModel.LogType, out handler))
+			{
+				var current = handler(model, logModel);
+				current.Show(View.EntryArea, OnShownLog);
+				entries.Add(current);
+
+				// TODO: Unlock done button when end is reached.
+				if (logModel.Ending.Value) return;
+
+				var nextLogId = logModel.NextLog;
+				if (string.IsNullOrEmpty(nextLogId))
+				{
+					Debug.Log("Handle null next logs here!");
+					return;
+				}
+				nextLog = infoModel.Logs.GetLogFirstOrDefault(nextLogId);
+				if (nextLog == null)
+				{
+					Debug.LogError("Next log could not be found.");
+					return;
+				}
+				nextLogDelay = logModel.TotalDuration;
+			}
+			else Debug.LogError("Unhandled LogType: " + logModel.LogType);
+		}
+
+		void OnShownLog()
+		{
+			View.Scroll = 0f;
 		}
 		#endregion
 	}

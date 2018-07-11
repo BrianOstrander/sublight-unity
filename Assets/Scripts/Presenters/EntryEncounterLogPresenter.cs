@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
@@ -18,11 +20,13 @@ namespace LunraGames.SpaceFarm.Presenters
 			LogModel = logModel;
 		}
 
-		public void Show(Transform root)
+		public void Show(Transform root, Action done = null)
 		{
 			if (View.Visible) return;
 
 			View.Reset();
+
+			if (done != null) View.Shown += done;
 
 			OnShow();
 
@@ -34,6 +38,6 @@ namespace LunraGames.SpaceFarm.Presenters
 
 	public interface IEntryEncounterLogPresenter : IPresenter 
 	{
-		void Show(Transform root);
+		void Show(Transform root, Action done = null);
 	}
 }

@@ -11,19 +11,6 @@ namespace LunraGames.SpaceFarm
 {
 	public partial class EncounterEditorWindow
 	{
-		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
-		{
-			switch (model.LogType)
-			{
-				case EncounterLogTypes.Text:
-					OnTextLog(infoModel, model as TextEncounterLogModel);
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
-					break;
-			}
-		}
-
 		bool OnLogBegin(EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning, ref string ending)
 		{
 			var deleted = false;
@@ -44,7 +31,36 @@ namespace LunraGames.SpaceFarm
 				deleted = EditorGUILayoutExtensions.XButton();
 			}
 			GUILayout.EndHorizontal();
+
+			OnLogDuration(infoModel, model);
+
 			return deleted;
+		}
+
+		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
+		{
+			switch (model.LogType)
+			{
+				case EncounterLogTypes.Text:
+					OnTextLog(infoModel, model as TextEncounterLogModel);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
+					break;
+			}
+		}
+
+		void OnLogDuration(EncounterInfoModel infoModel, EncounterLogModel model)
+		{
+			EditorGUILayoutExtensions.PushEnabled(model.EditableDuration);
+
+			if (model.EditableDuration)
+			{
+				model.Duration.Value = EditorGUILayout.FloatField("Duration", model.Duration);
+			}
+			else EditorGUILayout.FloatField("Duration", model.TotalDuration);
+
+			EditorGUILayoutExtensions.PopEnabled();
 		}
 
 		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)

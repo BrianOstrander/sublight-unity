@@ -13,6 +13,7 @@ namespace LunraGamesEditor
 	public static class EditorGUILayoutExtensions
 	{
 		static Stack<Color> ColorStack = new Stack<Color>();
+		static Stack<bool> EnabledStack = new Stack<bool>();
 
 		/// <summary>
 		/// Renames the first enum entry, useful for adding a "Select X" option.
@@ -70,6 +71,18 @@ namespace LunraGamesEditor
 		{
 			if (ColorStack.Count == 0) return;
 			GUI.color = ColorStack.Pop();
+		}
+
+		public static void PushEnabled(bool enabled)
+		{
+			EnabledStack.Push(GUI.enabled);
+			GUI.enabled &= enabled;
+		}
+
+		public static void PopEnabled()
+		{
+			if (EnabledStack.Count == 0) return;
+			GUI.enabled = EnabledStack.Pop();
 		}
 
 		public static bool XButton()

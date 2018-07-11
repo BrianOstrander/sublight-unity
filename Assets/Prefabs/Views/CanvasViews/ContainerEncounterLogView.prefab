@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 224388477122144334}
   - component: {fileID: 114607516628893464}
   m_Layer: 5
-  m_Name: Scroll View
+  m_Name: ScrollView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 114983266205481724}
   - component: {fileID: 114594111699478340}
   m_Layer: 5
-  m_Name: Scrollbar Vertical
+  m_Name: ScrollbarVertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -583,6 +583,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 40bdb7dce45294d61a290d13dedbbb52, type: 2}
   titleLabel: {fileID: 114263860171197730}
   entryArea: {fileID: 224077514317813932}
+  scrollbar: {fileID: 114594111699478340}
 --- !u!114 &114594111699478340
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -621,8 +622,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114904906828836046}
   m_HandleRect: {fileID: 224795191950869154}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.52205074
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -654,7 +655,7 @@ MonoBehaviour:
   m_HorizontalScrollbarVisibility: 2
   m_VerticalScrollbarVisibility: 2
   m_HorizontalScrollbarSpacing: -3
-  m_VerticalScrollbarSpacing: -3
+  m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
