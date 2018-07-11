@@ -135,5 +135,10 @@ namespace LunraGames.SpaceFarm
 			done(SaveLoadArrayRequest<SaveModel>.Success(array, array));
 		}
 
+		protected override void OnDelete<M>(M model, Action<SaveLoadRequest<M>> done)
+		{
+			File.Delete(model.Path);
+			done(SaveLoadRequest<M>.Success(model, model));
+		}
 	}
 }

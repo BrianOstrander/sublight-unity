@@ -281,6 +281,25 @@ namespace LunraGames.SpaceFarm
 
 		protected abstract void OnList<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel;
 
+		public void Delete<M>(M model, Action<SaveLoadRequest<M>> done) where M : SaveModel
+		{
+			if (model == null) throw new ArgumentNullException("model");
+			done = done ?? OnUnhandledError;
+
+			try { OnDelete(model, done); }
+			catch (Exception exception)
+			{
+				Debug.LogException(exception);
+				done(SaveLoadRequest<M>.Failure(
+					model,
+					null,
+					exception.Message
+				));
+			}
+		}
+
+		protected abstract void OnDelete<M>(M model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
+
 		void OnUnhandledError<M>(SaveLoadRequest<M> result) where M : SaveModel
 		{
 			Debug.LogError("Unhandled error: " + result.Error);
@@ -294,5 +313,6 @@ namespace LunraGames.SpaceFarm
 		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null, bool updateModified = true) where M : SaveModel;
 		void Load<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 		void List<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel;
+		void Delete<M>(M model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 	}
 }

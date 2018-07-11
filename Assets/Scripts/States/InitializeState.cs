@@ -32,6 +32,8 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(InitializePresenters);
 			App.SM.PushBlocking(InitializePreferences);
 			App.SM.PushBlocking(InitializeListeners);
+
+			if (DevPrefs.WipeGameSavesOnStart) App.SM.PushBlocking(WipeGameSaves);
 		}
 
 		protected override void Idle()
@@ -40,7 +42,9 @@ namespace LunraGames.SpaceFarm
 
 			App.P.AddGlobals(new DialogPresenter());
 			App.P.AddGlobals(new ShadePresenter());
-			App.SM.RequestState(Payload.homePayload);
+
+			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
+			else App.SM.RequestState(Payload.homePayload);
 		}
 
 		void InitializeSaveLoadService(Action done)
@@ -175,6 +179,36 @@ namespace LunraGames.SpaceFarm
 		{
 			App.Callbacks.UniversePositionRequest += UniversePosition.OnUniversePositionRequest;
 			done();
+		}
+
+		void WipeGameSaves(Action done)
+		{
+			App.SaveLoadService.List<GameModel>(result => OnWipeGameSavesLoad(result, done));
+		}
+
+		void OnWipeGameSavesLoad(SaveLoadArrayRequest<SaveModel> result, Action done)
+		{
+			OnWipeGameSavesDelete(RequestStatus.Success, default(SaveLoadRequest<SaveModel>), result.Models.ToList(), done);
+		}
+
+		void OnWipeGameSavesDelete(RequestStatus status, SaveLoadRequest<SaveModel> result, List<SaveModel> remaining, Action done)
+		{
+			if (remaining.Count == 0)
+			{
+				done();
+				return;
+			}
+			if (status != RequestStatus.Success) Debug.LogError("Unable to delete, returned error: " + result.Error);
+			var current = remaining[0];
+			remaining.RemoveAt(0);
+			App.SaveLoadService.Delete(current, deleteResult => OnWipeGameSavesDelete(deleteResult.Status, deleteResult, remaining, done));
+		}
+
+		void OnAutoNewGame(RequestStatus result, GameModel model)
+		{
+			var payload = new GamePayload();
+			payload.Game = model;
+			App.SM.RequestState(payload);
 		}
 	}
 }
