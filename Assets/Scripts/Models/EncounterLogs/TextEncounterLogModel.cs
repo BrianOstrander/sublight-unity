@@ -4,16 +4,20 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public class TextEncounterLogModel : LinearEncounterLogModel
 	{
-		[JsonProperty] string text;
+		[JsonProperty] string header;
+		[JsonProperty] string message;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<string> Text;
+		public readonly ListenerProperty<string> Header;
+		[JsonIgnore]
+		public readonly ListenerProperty<string> Message;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Text; } }
 
 		public TextEncounterLogModel()
 		{
-			Text = new ListenerProperty<string>(value => text = value, () => text);
+			Header = new ListenerProperty<string>(value => header = value, () => header);
+			Message = new ListenerProperty<string>(value => message = value, () => message);
 		}
 	}
 }

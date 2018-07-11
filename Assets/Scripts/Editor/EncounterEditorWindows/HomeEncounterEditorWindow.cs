@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
 
 using UnityEditor;
 using UnityEngine;
@@ -249,15 +248,7 @@ namespace LunraGames.SpaceFarm
 					foreach (var log in model.Logs.All.Value)
 					{
 						if (OnLogBegin(model, log, ref beginning, ref ending)) deleted = log.LogId;
-						switch(log.LogType)
-						{
-							case EncounterLogTypes.Text:
-								OnTextLog(model, log as TextEncounterLogModel);
-								break;
-							default:
-								EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + log.LogType, MessageType.Error);
-								break;
-						}
+						OnLog(model, log);
 						OnLogEnd(model, log);
 					}
 					if (!string.IsNullOrEmpty(deleted))
@@ -282,65 +273,6 @@ namespace LunraGames.SpaceFarm
 				selectedEncounterModified |= EditorGUI.EndChangeCheck();
 			}
 			GUILayout.EndScrollView();
-		}
-
-		bool OnLogBegin(EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning, ref string ending)
-		{
-			var deleted = false;
-			GUILayout.BeginVertical(EditorStyles.helpBox);
-			GUILayout.BeginHorizontal();
-			{
-				var header = model.LogType + " Log Id:";
-				GUILayout.Label(header, GUILayout.Width(header.Length * 5.5f));
-				EditorGUILayout.SelectableLabel(model.LogId);
-				if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
-				{
-					beginning = model.LogId;
-				}
-				if (EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f)) && !model.Ending.Value)
-				{
-					ending = model.LogId;
-				}
-				deleted = EditorGUILayoutExtensions.XButton();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
-		}
-
-		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
-		{
-			model.Text.Value = GUILayout.TextArea(model.Text.Value);
-			OnLinearLog(infoModel, model);
-		}
-
-		void OnLinearLog(EncounterInfoModel infoModel, LinearEncounterLogModel model)
-		{
-			var options = infoModel.Logs.All.Value.Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value).Prepend("- Select Next Log -").ToArray();
-			var index = 0;
-			if (!string.IsNullOrEmpty(model.NextLogId.Value))
-			{
-				for (var i = 0; i < options.Length; i++)
-				{
-					if (options[i] == model.NextLogId.Value)
-					{
-						index = i;
-						break;
-					}
-				}
-			}
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("Next Log: ", GUILayout.Width(55f));
-				index = EditorGUILayout.Popup(index, options);
-			}
-			GUILayout.EndHorizontal();
-			if (index == 0) model.NextLogId.Value = null;
-			else model.NextLogId.Value = options[index];
-		}
-
-		void OnLogEnd(EncounterInfoModel infoModel, EncounterLogModel model)
-		{
-			GUILayout.EndVertical();
 		}
 
 		void NewEncounter()
