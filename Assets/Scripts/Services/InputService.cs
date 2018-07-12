@@ -13,6 +13,9 @@ namespace LunraGames.SpaceFarm
 
 	public class InputService : IInputService
 	{
+		Heartbeat heartbeat;
+		CallbackService callbacks;
+
 		public bool IsEnabled { get; private set; }
 		DateTime clickDownTime;
 
@@ -30,6 +33,15 @@ namespace LunraGames.SpaceFarm
 
 		Vector2 lastGesture;
 
+		public InputService(Heartbeat heartbeat, CallbackService callbacks)
+		{
+			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
+
+			this.heartbeat = heartbeat;
+			this.callbacks = callbacks;
+		}
+
 		public void SetEnabled(bool isEnabled)
 		{
 			if (isEnabled == IsEnabled) return;
@@ -40,17 +52,18 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual void OnEnabled()
 		{
-			App.Heartbeat.Update += OnUpdate;
+			heartbeat.Update += OnUpdate;
 		}
 
 		protected virtual void OnDisabled()
 		{
-			App.Heartbeat.Update -= OnUpdate;
+			heartbeat.Update -= OnUpdate;
 		}
+
 		#region Events
 		protected virtual void OnUpdate(float delta)
 		{
-			if (IsEscapeUp()) App.Callbacks.Escape();
+			if (IsEscapeUp()) callbacks.Escape();
 
 			var clickDown = IsClickDown();
 			var clickHeldDown = IsClickHeldDown();
@@ -73,14 +86,14 @@ namespace LunraGames.SpaceFarm
 			{
 				beginGesture = currentGesture;
 				beginGestureNormal = currentGestureNormal;
-				App.Callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
+				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
 			}
 
 			// TODO: Delete this?
 			//var gestureNormalDelta = currentGestureNormal - beginGestureNormal;
 
-			if (gesturingEnded) App.Callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
-			App.Callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
+			if (gesturingEnded) callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
+			callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
 
 			lastGesture = currentGesture;
 
@@ -154,20 +167,20 @@ namespace LunraGames.SpaceFarm
 				if (stillHighlighted.Count == 0) highlightState = Highlight.States.End;
 				else if (highlighted.Count == 0) highlightState = Highlight.States.Begin;
 				else highlightState = Highlight.States.Change;
-				App.Callbacks.Highlight(new Highlight(highlightState));
+				callbacks.Highlight(new Highlight(highlightState));
 			}
 
 			highlighted = stillHighlighted;
 
-			if (clickClick) App.Callbacks.Click(new Click(beginGestureNormal, currentGestureNormal, !wasTriggered));
+			if (clickClick) callbacks.Click(new Click(beginGestureNormal, currentGestureNormal, !wasTriggered));
 
 			// Camera
 			var cameraPosition = GetCameraPosition();
 			var cameraRotation = GetCameraRotation();
-			App.Callbacks.CameraOrientation(new CameraOrientation(cameraPosition, cameraRotation));
+			callbacks.CameraOrientation(new CameraOrientation(cameraPosition, cameraRotation));
 
 			var pointerRotation = GetPointerRotation();
-			App.Callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
+			callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
 		}
 		#endregion
 		protected virtual bool IsEscapeUp() { return false; }

@@ -65,7 +65,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnLoadGameClick(SaveModel model)
 		{
-			App.SaveLoadService.Load<GameModel>(model, OnLoadedGame);
+			App.M.Load<GameModel>(model, OnLoadedGame);
 		}
 
 		void OnLoadedGame(SaveLoadRequest<GameModel> result)
@@ -76,7 +76,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error));
 				return;
 			}
-			App.SaveLoadService.Save(result.TypedModel, OnSaveGame);
+			App.M.Save(result.TypedModel, OnSaveGame);
 		}
 
 		void OnNewGame()

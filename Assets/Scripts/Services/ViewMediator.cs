@@ -9,6 +9,8 @@ namespace LunraGames.SpaceFarm
 {
 	public class ViewMediator
 	{
+		Heartbeat heartbeat;
+
 		int interactionCount;
 		public int InteractionCount
 		{
@@ -35,6 +37,13 @@ namespace LunraGames.SpaceFarm
 		List<IView> views = new List<IView>();
 		Transform storage;
 
+		public ViewMediator(Heartbeat heartbeat)
+		{
+			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+
+			this.heartbeat = heartbeat;
+		}
+
 		public void Initialize(List<GameObject> defaultViews, Transform viewStorage, Action<RequestStatus> done)
 		{
 			pool = new List<IView>();
@@ -53,8 +62,8 @@ namespace LunraGames.SpaceFarm
 					Pool(Create(prefab));
 				}
 			}
-			App.Heartbeat.Update += Update;
-			App.Heartbeat.LateUpdate += LateUpdate;
+			heartbeat.Update += Update;
+			heartbeat.LateUpdate += LateUpdate;
 
 			done(RequestStatus.Success);
 		}

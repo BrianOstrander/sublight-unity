@@ -30,6 +30,7 @@ namespace LunraGames.SpaceFarm
 		/// <param name="request">Request.</param>
 		public static void OnUniversePositionRequest(UniversePositionRequest request)
 		{
+			// TODO: Should this stuff be here???
 			switch(request.State)
 			{
 				case UniversePositionRequest.States.Request:

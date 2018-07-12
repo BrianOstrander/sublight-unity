@@ -35,7 +35,7 @@ namespace LunraGames.SpaceFarm
 
 		void LoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
 		void InitializeInput(Action done)
@@ -109,6 +109,10 @@ namespace LunraGames.SpaceFarm
 			new BodyProbeDetailPresenter(game);
 			new BodyProbingPresenter(game);
 
+			// Encounter presenters
+			new CameraEncounterPresenter(game);
+			new ContainerEncounterLogPresenter(game);
+
 			// Global presenters
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);
@@ -163,7 +167,7 @@ namespace LunraGames.SpaceFarm
 
 		void UnLoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.UnLoad(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes));
 		}
 		#endregion
 
@@ -263,7 +267,7 @@ namespace LunraGames.SpaceFarm
 			switch(request.State)
 			{
 				case SaveRequest.States.Request:
-					App.SaveLoadService.Save(Payload.Game, OnSave);
+					App.M.Save(Payload.Game, OnSave);
 					break;
 			}
 		}

@@ -49,6 +49,8 @@ namespace LunraGames.SpaceFarm
 			{
 				if (GUILayout.Button("Show"))
 				{
+					Debug.Log("todo: call encounter focus event");
+					/*
 					if (encounterPreviewPresenter == null)
 					{
 						encounterPreviewPresenter = new ContainerEncounterLogPresenter(new GameModel(), model);
@@ -61,6 +63,7 @@ namespace LunraGames.SpaceFarm
 						encounterPreviewPresenterId = model.EncounterId;
 					}
 					encounterPreviewPresenter.Show();
+					*/
 				}
 			}
 			GUILayout.EndHorizontal();

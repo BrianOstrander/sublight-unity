@@ -5,6 +5,7 @@
 		Unknown = 0,
 		Game = 10,
 		Preferences = 20,
-		EncounterInfo = 30
+		EncounterInfo = 30,
+		InteractedEncounterInfoList = 40
 	}
 }

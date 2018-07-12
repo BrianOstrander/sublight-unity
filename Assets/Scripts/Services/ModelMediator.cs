@@ -51,25 +51,22 @@ namespace LunraGames.SpaceFarm
 	{
 		public RequestStatus Status { get; private set; }
 		public SaveModel[] Models { get; private set; }
-		public M[] TypedModels { get; private set; }
 		public string Error { get; private set; }
 		public int Length { get { return Models.Length; } }
 
-		public static SaveLoadArrayRequest<M> Success(SaveModel[] models, M[] typedModels)
+		public static SaveLoadArrayRequest<M> Success(SaveModel[] models)
 		{
 			return new SaveLoadArrayRequest<M>(
 				RequestStatus.Success,
-				models,
-				typedModels
+				models
 			);
 		}
 
-		public static SaveLoadArrayRequest<M> Failure(SaveModel[] models, M[] typedModels, string error)
+		public static SaveLoadArrayRequest<M> Failure(string error)
 		{
 			return new SaveLoadArrayRequest<M>(
 				RequestStatus.Failure,
-				models,
-				typedModels,
+				null,
 				error
 			);
 		}
@@ -77,18 +74,16 @@ namespace LunraGames.SpaceFarm
 		SaveLoadArrayRequest(
 			RequestStatus status,
 			SaveModel[] models,
-			M[] typedModels,
 			string error = null
 		)
 		{
 			Status = status;
 			Models = models;
-			TypedModels = typedModels;
 			Error = error;
 		}
 	}
 	
-	public abstract class SaveLoadService : ISaveLoadService
+	public abstract class ModelMediator : IModelMediator
 	{
 		protected IBuildInfo BuildInfo { get; set; }
 
@@ -99,6 +94,7 @@ namespace LunraGames.SpaceFarm
 				case SaveTypes.Game: return typeof(GameModel);
 				case SaveTypes.Preferences: return typeof(PreferencesModel);
 				case SaveTypes.EncounterInfo: return typeof(EncounterInfoModel);
+				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -108,6 +104,7 @@ namespace LunraGames.SpaceFarm
 			if (type == typeof(GameModel)) return SaveTypes.Game;
 			if (type == typeof(PreferencesModel)) return SaveTypes.Preferences;
 			if (type == typeof(EncounterInfoModel)) return SaveTypes.EncounterInfo;
+			if (type == typeof(InteractedEncounterInfoListModel)) return SaveTypes.InteractedEncounterInfoList;
 
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
@@ -272,8 +269,6 @@ namespace LunraGames.SpaceFarm
 			{
 				Debug.LogException(exception);
 				done(SaveLoadArrayRequest<SaveModel>.Failure(
-					null,
-					null,
 					exception.Message
 				));
 			}
@@ -306,7 +301,7 @@ namespace LunraGames.SpaceFarm
 		}
 	}
 
-	public interface ISaveLoadService
+	public interface IModelMediator
 	{
 		void Initialize(IBuildInfo info, Action<RequestStatus> done);
 		M Create<M>(string meta = null) where M : SaveModel, new();

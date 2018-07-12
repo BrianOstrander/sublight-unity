@@ -10,13 +10,25 @@ namespace LunraGames.SpaceFarm
 {
 	public class GameService
 	{
+		IModelMediator saveLoadService;
+		IUniverseService universeService;
+
+		public GameService(IModelMediator saveLoadService, IUniverseService universeService)
+		{
+			if (saveLoadService == null) throw new ArgumentNullException("saveLoadService");
+			if (universeService == null) throw new ArgumentNullException("universeService");
+
+			this.saveLoadService = saveLoadService;
+			this.universeService = universeService;
+		}
+
 		public void CreateGame(Action<RequestStatus, GameModel> done)
 		{
 			if (done == null) throw new ArgumentNullException("done");
 
-			var game = App.SaveLoadService.Create<GameModel>();
+			var game = saveLoadService.Create<GameModel>();
 			game.Seed.Value = DemonUtility.NextInteger;
-			game.Universe.Value = App.UniverseService.CreateUniverse(1);
+			game.Universe.Value = universeService.CreateUniverse(1);
 			game.FocusedSector.Value = UniversePosition.Zero;
 			game.DestructionSpeed.Value = 0.005f;
 			game.DestructionSpeedIncrement.Value = 0.005f;
@@ -102,7 +114,7 @@ namespace LunraGames.SpaceFarm
 			// Uncomment this to make the game easy.
 			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
 
-			App.SaveLoadService.Save(game, result => OnSaveGame(result, done));
+			saveLoadService.Save(game, result => OnSaveGame(result, done));
 		}
 
 		void OnSaveGame(SaveLoadRequest<GameModel> result, Action<RequestStatus, GameModel> done)

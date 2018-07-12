@@ -27,8 +27,17 @@ namespace LunraGames.SpaceFarm
 			public Action UnBind;
 		}
 
+		Heartbeat heartbeat;
+
 		List<IPresenter> globalExceptions = new List<IPresenter>();
 		List<RegistrationEntry> registrations = new List<RegistrationEntry>();
+
+		public PresenterMediator(Heartbeat heartbeat)
+		{
+			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+
+			this.heartbeat = heartbeat;
+		}
 
 		public void Initialize(Action<RequestStatus> done) 
 		{
@@ -62,7 +71,7 @@ namespace LunraGames.SpaceFarm
 					break;
 				default:
 					entry.CloseView(true);
-					App.Heartbeat.Wait(() => OnUnRegisterClosed(done, entry), () => entry.GetState() == TransitionStates.Closed);
+					heartbeat.Wait(() => OnUnRegisterClosed(done, entry), () => entry.GetState() == TransitionStates.Closed);
 					break;
 			}
 		}
@@ -87,7 +96,7 @@ namespace LunraGames.SpaceFarm
 				}
 			}
 
-			App.Heartbeat.Wait(() => OnUnRegisterClosed(done, waitingToClose.ToArray()), () => waitingToClose.TrueForAll(e => e.GetState() == TransitionStates.Closed));
+			heartbeat.Wait(() => OnUnRegisterClosed(done, waitingToClose.ToArray()), () => waitingToClose.TrueForAll(e => e.GetState() == TransitionStates.Closed));
 		}
 
 		void OnUnRegisterClosed(Action done, params RegistrationEntry[] remaining)

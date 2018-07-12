@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
-	public class DesktopSaveLoadService : SaveLoadService
+	public class DesktopSaveLoadService : ModelMediator
 	{
 		const string Extension = ".json";
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
@@ -27,7 +27,8 @@ namespace LunraGames.SpaceFarm
 				{
 					{ SaveTypes.Game, -1 },
 					{ SaveTypes.Preferences, -1 },
-					{ SaveTypes.EncounterInfo, 0 }
+					{ SaveTypes.EncounterInfo, 0 },
+					{ SaveTypes.InteractedEncounterInfoList, -1 }
 				};
 			}
 		}
@@ -40,7 +41,8 @@ namespace LunraGames.SpaceFarm
 				{
 					{ SaveTypes.Game, true },
 					{ SaveTypes.Preferences, true },
-					{ SaveTypes.EncounterInfo, false }
+					{ SaveTypes.EncounterInfo, false },
+					{ SaveTypes.InteractedEncounterInfoList, true }
 				};
 			}
 		}
@@ -77,6 +79,8 @@ namespace LunraGames.SpaceFarm
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
+				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
+
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -132,7 +136,7 @@ namespace LunraGames.SpaceFarm
 				}
 			}
 			var array = results.ToArray();
-			done(SaveLoadArrayRequest<SaveModel>.Success(array, array));
+			done(SaveLoadArrayRequest<SaveModel>.Success(array));
 		}
 
 		protected override void OnDelete<M>(M model, Action<SaveLoadRequest<M>> done)

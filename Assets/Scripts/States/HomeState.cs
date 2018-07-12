@@ -26,7 +26,7 @@ namespace LunraGames.SpaceFarm
 
 		void LoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
   		#endregion
 
@@ -52,13 +52,14 @@ namespace LunraGames.SpaceFarm
 
 		void InitializeLoadSaves(Action done)
 		{
-			App.SaveLoadService.List<GameModel>(result => OnInitializeLoadSaves(result, done));
+			App.M.List<GameModel>(result => OnInitializeLoadSaves(result, done));
 		}
 
 		void OnInitializeLoadSaves(SaveLoadArrayRequest<SaveModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
+				UnityEngine.Debug.LogError("Unable to load a list of saved games");
 				// TODO: Error logic.
 			}
 			else Payload.Saves = result.Models;
@@ -84,7 +85,7 @@ namespace LunraGames.SpaceFarm
 
 		void UnLoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.UnLoad(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes));
 		}
 
 		void UnBind(Action done)

@@ -16,15 +16,17 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		GameModel model;
 		EncounterInfoModel infoModel;
-		List<IEntryEncounterLogPresenter> entries = new List<IEntryEncounterLogPresenter>();
+		SystemModel system;
+		BodyModel body;
+		CrewInventoryModel crew;
+		List<IEntryEncounterLogPresenter> entries;
 
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
 
-		public ContainerEncounterLogPresenter(GameModel model, EncounterInfoModel infoModel)
+		public ContainerEncounterLogPresenter(GameModel model)
 		{
 			this.model = model;
-			this.infoModel = infoModel;
 
 			App.Heartbeat.Update += OnUpdate;
 		}
@@ -50,6 +52,30 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
+		void OnFocus(FocusRequest focus)
+		{
+			switch (focus.Focus)
+			{
+				case FocusRequest.Focuses.Encounter:
+					// We only show UI elements once the focus is complete.
+					if (focus.State != FocusRequest.States.Complete) return;
+					var encounterFocus = focus as EncounterFocusRequest;
+					//infoModel = encounterFocus.EncounterId
+					system = model.Universe.Value.GetSystem(encounterFocus.System);
+					body = system.GetBody(encounterFocus.Body);
+					crew = model.Ship.Value.Inventory.GetInventoryFirstOrDefault<CrewInventoryModel>(encounterFocus.Crew);
+					entries = new List<IEntryEncounterLogPresenter>();
+					Show();
+					break;
+				default:
+					if (focus.State == FocusRequest.States.Active)
+					{
+						if (View.TransitionState == TransitionStates.Shown) CloseView();
+					}
+					break;
+			}
+		}
+
 		void OnShown()
 		{
 			nextLog = infoModel.Logs.Beginning;

@@ -4,6 +4,8 @@ namespace LunraGames.SpaceFarm
 {
 	public class DesktopInputService : InputService
 	{
+		public DesktopInputService(Heartbeat heartbeat, CallbackService callbacks) : base(heartbeat, callbacks) {}
+
 		protected override Vector2 GetScreenPosition()
 		{
 			if (Camera.main == null)

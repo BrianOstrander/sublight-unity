@@ -21,8 +21,8 @@ namespace LunraGames.SpaceFarm
 		Heartbeat heartbeat;
 		public static Heartbeat Heartbeat { get { return instance.heartbeat; } }
 
-		ModelMediator modelMediator;
-		public static ModelMediator M { get { return instance.modelMediator; } }
+		IModelMediator modelMediator;
+		public static IModelMediator M { get { return instance.modelMediator; } }
 
 		PresenterMediator presenterMediator;
 		public static PresenterMediator P { get { return instance.presenterMediator; } }
@@ -36,26 +36,23 @@ namespace LunraGames.SpaceFarm
 		StateMachine stateMachine;
 		public static StateMachine SM { get { return instance.stateMachine; } }
 
-		ILogService logService;
-		public static ILogService Logging { get { return instance.logService; } }
+		ILogService logging;
+		public static ILogService Logging { get { return instance.logging; } }
 
-		IInputService inputService;
-		public static IInputService Input { get { return instance.inputService; } }
+		IInputService input;
+		public static IInputService Input { get { return instance.input; } }
 
-		IBackendService backendService;
-		public static IBackendService BackendService { get { return instance.backendService; } }
+		SceneService scenes;
+		public static SceneService Scenes { get { return instance.scenes; } }
 
-		SceneService sceneService;
-		public static SceneService SceneService { get { return instance.sceneService; } }
-
-		UniverseService universeService;
-		public static UniverseService UniverseService { get { return instance.universeService; } }
-
-		ISaveLoadService saveLoadService;
-		public static ISaveLoadService SaveLoadService { get { return instance.saveLoadService; } }
+		IUniverseService universe;
+		public static IUniverseService Universe { get { return instance.universe; } }
 
 		GameService gameService;
 		public static GameService GameService { get { return instance.gameService; } }
+
+		EncounterService encounters;
+		public static EncounterService Encounters { get { return instance.encounters; } }
 
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
@@ -103,39 +100,39 @@ namespace LunraGames.SpaceFarm
 			this.overlayCanvasRoot = overlayCanvasRoot;
 			callbackService = new CallbackService();
 			heartbeat = new Heartbeat();
-			modelMediator = new ModelMediator();
-			presenterMediator = new PresenterMediator();
-			viewMediator = new ViewMediator();
+			presenterMediator = new PresenterMediator(Heartbeat);
+			viewMediator = new ViewMediator(Heartbeat);
 			audioService = new AudioService(audioRoot);
 			stateMachine = new StateMachine(
+				Heartbeat,
 				new InitializeState(),
 				new HomeState(),
 				new GameState()
 			);
-			sceneService = new SceneService();
-			universeService = new FudgedUniverseService();
-			gameService = new GameService();
+			universe = new FudgedUniverseService();
 
 			if (Application.isEditor)
 			{
 #if UNITY_EDITOR
-				logService = new EditorLogService();
-				inputService = new EditorInputService();
-				backendService = new EditorBackendService();
-				saveLoadService = new EditorSaveLoadService();
+				logging = new EditorLogService();
+				input = new EditorInputService(Heartbeat, Callbacks);
+				modelMediator = new EditorSaveLoadService();
 #endif
 			}
 			else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.WindowsPlayer)
 			{
-				logService = new DesktopLogService();
-				inputService = new DesktopInputService();
-				backendService = new DesktopBackendService();
-				saveLoadService = new DesktopSaveLoadService();
+				logging = new DesktopLogService();
+				input = new DesktopInputService(Heartbeat, Callbacks);
+				modelMediator = new DesktopSaveLoadService();
 			}
 			else
 			{
 				throw new Exception("Unknown platform");
 			}
+
+			encounters = new EncounterService(modelMediator, logging);
+			scenes = new SceneService(Logging, Callbacks);
+			gameService = new GameService(M, Universe);
 		}
 
 		public static void Restart(string message)
@@ -196,7 +193,7 @@ namespace LunraGames.SpaceFarm
 		/// <param name="onlyOnce">If set to <c>true</c> only once.</param>
 		public static void Log(object message, LogTypes logType = LogTypes.Uncatagorized, Object context = null, bool onlyOnce = false)
 		{
-			if (instance != null && instance.logService != null) Logging.Log(message, logType, context, onlyOnce);
+			if (instance != null && instance.logging != null) Logging.Log(message, logType, context, onlyOnce);
 		}
 
 		#endregion

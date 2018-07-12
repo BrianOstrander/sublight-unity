@@ -8,7 +8,7 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm
 {
-	public abstract class UniverseService
+	public abstract class UniverseService : IUniverseService
 	{
 		// TODO: Populate more than just the initial sector;
 		readonly static UniversePosition[] InitialSectors = {
