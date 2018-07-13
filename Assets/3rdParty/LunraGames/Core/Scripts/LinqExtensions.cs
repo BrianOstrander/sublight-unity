@@ -55,5 +55,11 @@ namespace LunraGames
 			foreach (var entry in entries) yield return entry;
 			if (!start) yield return element;
 		}
+
+		public static bool ContainsOrIsEmpty<T>(this IEnumerable<T> entries, T element)
+		{
+			if (entries.Count() == 0) return true;
+			return entries.Contains(element);
+		}
 	}
 }

@@ -21,11 +21,14 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float destructionRadius;
 		[JsonProperty] TravelRequest travelRequest;
 		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
+		
+		[JsonProperty] string[] encountersSeen = new string[0];
 
 		[JsonProperty] GalaxyFocusRequest galaxyFocus;
 		[JsonProperty] SystemBodiesFocusRequest systemBodiesFocus;
 		[JsonProperty] SystemsFocusRequest systemsFocus;
 		[JsonProperty] BodyFocusRequest bodyFocus;
+		[JsonProperty] EncounterFocusRequest encounterFocus;
 
 		/// <summary>
 		/// The game seed.
@@ -86,6 +89,12 @@ namespace LunraGames.SpaceFarm.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<FocusRequest> FocusRequest;
+
+		/// <summary>
+		/// The encounters seen, completed or otherwise.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<string[]> EncountersSeen;
 		#endregion
 
 		#region NonSerialized
@@ -115,6 +124,8 @@ namespace LunraGames.SpaceFarm.Models
 			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 
+			EncountersSeen = new ListenerProperty<string[]>(value => encountersSeen = value, () => encountersSeen);
+			
 			FocusRequest = new ListenerProperty<FocusRequest>(OnSetFocus, OnGetFocus);
 		}
 
@@ -125,6 +136,7 @@ namespace LunraGames.SpaceFarm.Models
 			systemBodiesFocus = null;
 			systemsFocus = null;
 			bodyFocus = null;
+			encounterFocus = null;
 
 			switch (focus.Focus)
 			{
@@ -140,6 +152,9 @@ namespace LunraGames.SpaceFarm.Models
 				case Focuses.Body:
 					bodyFocus = focus as BodyFocusRequest;
 					break;
+				case Focuses.Encounter:
+					encounterFocus = focus as EncounterFocusRequest;
+					break;
 				default:
 					Debug.LogError("Unrecognized Focus: " + focus.Focus);
 					break;
@@ -152,6 +167,8 @@ namespace LunraGames.SpaceFarm.Models
 			if (systemBodiesFocus != null) return systemBodiesFocus;
 			if (systemsFocus != null) return systemsFocus;
 			if (bodyFocus != null) return bodyFocus;
+			if (encounterFocus != null) return encounterFocus;
+
 			return null;
 		}
 		#endregion

@@ -153,5 +153,26 @@ namespace LunraGames.SpaceFarm
 
 			return target;
 		}
+
+		public void AssignBestEncounters(GameModel model, SystemModel system)
+		{
+			foreach (var body in system.Bodies.Value)
+			{
+				// TODO: Check if old encounters are still valid here?
+				if (body.HasEncounter) continue;
+				// Required checks
+				var remaining = encounters.Where(
+					e => !model.EncountersSeen.Value.Contains(e.EncounterId) && 
+					e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType) &&
+					e.ValidBodies.Value.ContainsOrIsEmpty(body.BodyType)
+				);
+
+				var chosen = remaining.FirstOrDefault();
+				if (chosen == null) continue;
+
+				model.EncountersSeen.Value = model.EncountersSeen.Value.Append(chosen.EncounterId).ToArray();
+				body.EncounterId.Value = chosen.EncounterId;
+			}
+		}
 	}
 }
