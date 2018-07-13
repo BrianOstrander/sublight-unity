@@ -32,10 +32,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.FocusRequest += OnFocus;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Heartbeat.Update -= OnUpdate;
 			App.Callbacks.FocusRequest -= OnFocus;
 		}
@@ -104,6 +102,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnDoneClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
+
+
 
 			App.Callbacks.FocusRequest(
 				new SystemBodiesFocusRequest(system.Position)

@@ -29,10 +29,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.CameraSystemRequest += OnSystemCameraRequest;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Heartbeat.Update -= OnUpdate;
 			App.Callbacks.FocusRequest -= OnFocus;
 			App.Callbacks.UniversePositionRequest -= OnUniversePositionRequest;

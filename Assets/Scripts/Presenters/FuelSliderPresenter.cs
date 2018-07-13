@@ -16,10 +16,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.Ship.Value.Inventory.Resources.Rations.Changed += OnRations;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.Ship.Value.Inventory.Resources.Fuel.Changed -= OnFuel;
 			model.Ship.Value.FuelConsumption.Changed -= OnFuelConsumption;
 			model.Ship.Value.Inventory.Resources.Rations.Changed -= OnRations;

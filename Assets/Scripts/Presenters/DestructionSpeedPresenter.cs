@@ -26,10 +26,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.DestructionSpeed.Changed += OnDestructionSpeed;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.DayTime.Changed -= OnDayTime;
 			model.DestructionSpeed.Changed -= OnDestructionSpeed;
 		}

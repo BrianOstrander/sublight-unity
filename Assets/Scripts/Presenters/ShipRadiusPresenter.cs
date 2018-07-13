@@ -16,10 +16,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 		}
 

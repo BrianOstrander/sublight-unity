@@ -19,10 +19,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.TravelRequest.Changed += OnTravelRequest;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.FocusedSectors.Changed -= OnFocusedSectors;
 			model.TravelRequest.Changed -= OnTravelRequest;
 		}

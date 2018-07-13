@@ -17,10 +17,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
 		}
 

@@ -20,10 +20,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Heartbeat.Update += OnUpdate;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.DayTime.Changed -= OnDayTime;
 			App.Callbacks.SpeedRequest -= OnSpeedChange;
 			App.Heartbeat.Update -= OnUpdate;

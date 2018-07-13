@@ -21,6 +21,8 @@ namespace LunraGames.SpaceFarm
 		/// <value>The view interface type.</value>
 		public Type ViewInterface { get { return typeof(V); } }
 
+		public bool UnBinded { private set; get; }
+
 		public Presenter() : this(App.V.Get<V>()) {}
 
 		public Presenter(V view)
@@ -48,10 +50,15 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual Transform DefaultAnchor { get { return null; } }
 
-		protected virtual void UnBind()
+		void UnBind()
 		{
+			if (UnBinded) return;
+			UnBinded = true;
 			App.V.Pool(View);
+			OnUnBind();
 		}
+
+		protected virtual void OnUnBind() {}
 
 		protected virtual void ShowView(Transform parent = null, bool instant = false)
 		{

@@ -14,10 +14,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.SaveRequest += OnSaveRequest;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 		}
 
