@@ -5,7 +5,9 @@
   "validSystems": [],
   "validBodies": [],
   "validProbes": [],
-  "validCrews": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
   "logs": {
     "textLogs": [
       {

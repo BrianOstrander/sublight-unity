@@ -36,12 +36,25 @@ namespace LunraGames.SpaceFarm.Presenters
 			var current = body.ResourcesCurrent;
 
 			View.Title = body.Name;
-			View.Description = encounter == null ? "No encounter" : "Encounter: " + encounter.EncounterId.Value;
 			View.Rations = current.Rations;
 			View.Fuel = current.Fuel;
-			View.LaunchEnabled = encounter == null ? false : model.Ship.Value.Inventory.GetTypes().AnyIntersectOrEmpty(encounter.ValidCrews.Value);
 			View.BackClick = OnBackClick;
-			View.LaunchClick = OnLaunchClick;
+
+
+			if (encounter == null) View.Description = "No encounter";
+			else
+			{
+				var buttons = new List<LabelButtonBlock>();
+				foreach (var crew in model.Ship.Value.Inventory.GetInventory<CrewInventoryModel>())
+				{
+					if (!crew.IsExplorable(body)) continue;
+					buttons.Add(new LabelButtonBlock(crew.Name, () => OnCrewClick(crew)));
+				}
+				View.CrewEntries = buttons.ToArray();
+				
+				if (0 < buttons.Count()) View.Description = "Encounter: " + encounter.EncounterId.Value;
+				else View.Description = "Encounter: " + encounter.EncounterId.Value + "\nNo crewed craft capable of exploring this encounter.";
+			}
 
 			ShowView(App.GameCanvasRoot);
 		}
@@ -67,6 +80,18 @@ namespace LunraGames.SpaceFarm.Presenters
 					break;
 			}
 		}
+		
+		void OnCrewClick(CrewInventoryModel crew)
+		{
+			App.Callbacks.FocusRequest(
+				EncounterFocusRequest.Encounter(
+					encounter.EncounterId,
+					system.Position,
+					body.BodyId,
+					crew.InventoryId
+				)
+			);
+		}
 
 		void OnBackClick()
 		{
@@ -75,16 +100,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.FocusRequest(
 				new SystemBodiesFocusRequest(system.Position)
 			);
-		}
-
-		void OnLaunchClick()
-		{
-			if (View.TransitionState != TransitionStates.Shown) return;
-
-			UnityEngine.Debug.Log("lol launch click here");
-			//App.Callbacks.FocusRequest(
-			//	new SystemBodiesFocusRequest(system.Position)
-			//);
 		}
 		#endregion
 

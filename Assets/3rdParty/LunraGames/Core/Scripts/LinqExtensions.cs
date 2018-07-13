@@ -61,21 +61,5 @@ namespace LunraGames
 			if (entries.Count() == 0) return true;
 			return entries.Contains(element);
 		}
-
-		/// <summary>
-		/// Checks if there are any intersections of entries and otherEntries.
-		/// </summary>
-		/// <returns><c>true</c>, if any of elements of entries intersects 
-		/// otherEntries, or if otherEntries is empty. <c>false</c> otherwise or
-		/// if entries is empty.</returns>
-		/// <param name="entries">Entries.</param>
-		/// <param name="otherEntries">Other entries.</param>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public static bool AnyIntersectOrEmpty<T>(this IEnumerable<T> entries, IEnumerable<T> otherEntries)
-		{
-			if (entries.Count() == 0) return false;
-			if (otherEntries.Count() == 0) return true;
-			return entries.Intersect(otherEntries).Any();
-		}
 	}
 }
