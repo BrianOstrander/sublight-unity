@@ -50,7 +50,6 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual void UnBind()
 		{
-			if (View.TransitionState == TransitionStates.Closed) return;
 			App.V.Pool(View);
 		}
 

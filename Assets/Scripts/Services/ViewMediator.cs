@@ -288,6 +288,7 @@ namespace LunraGames.SpaceFarm
 			}
 
 			view.Progress = instant ? view.CloseDuration : 0f;
+			view.PrepareClose();
 			Closing(view);
 		}
 	}

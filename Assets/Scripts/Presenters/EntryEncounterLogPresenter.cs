@@ -33,11 +33,19 @@ namespace LunraGames.SpaceFarm.Presenters
 			ShowView(root);
 		}
 
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+
+			CloseView(true);
+		}
+
 		protected virtual void OnShow() {}
 	}
 
 	public interface IEntryEncounterLogPresenter : IPresenter 
 	{
 		void Show(Transform root, Action done = null);
+		void Close();
 	}
 }

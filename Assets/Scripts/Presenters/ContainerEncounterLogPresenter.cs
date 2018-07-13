@@ -19,7 +19,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		SystemModel system;
 		BodyModel body;
 		CrewInventoryModel crew;
-		List<IEntryEncounterLogPresenter> entries;
+		List<IEntryEncounterLogPresenter> entries = new List<IEntryEncounterLogPresenter>();
 
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
@@ -29,6 +29,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			this.model = model;
 
 			App.Heartbeat.Update += OnUpdate;
+			App.Callbacks.FocusRequest += OnFocus;
 		}
 
 		protected override void UnBind()
@@ -36,6 +37,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			base.UnBind();
 
 			App.Heartbeat.Update -= OnUpdate;
+			App.Callbacks.FocusRequest -= OnFocus;
 		}
 
 		public void Show()
@@ -47,6 +49,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Title = infoModel.Name;
 			View.DoneClick = OnDoneClick;
 			View.Shown += OnShown;
+			View.PrepareClose += OnPrepareClose;
 
 			ShowView(App.GameCanvasRoot);
 		}
@@ -60,11 +63,11 @@ namespace LunraGames.SpaceFarm.Presenters
 					// We only show UI elements once the focus is complete.
 					if (focus.State != FocusRequest.States.Complete) return;
 					var encounterFocus = focus as EncounterFocusRequest;
-					//infoModel = encounterFocus.EncounterId
+					infoModel = App.Encounters.GetEncounter(encounterFocus.EncounterId);
 					system = model.Universe.Value.GetSystem(encounterFocus.System);
 					body = system.GetBody(encounterFocus.Body);
 					crew = model.Ship.Value.Inventory.GetInventoryFirstOrDefault<CrewInventoryModel>(encounterFocus.Crew);
-					entries = new List<IEntryEncounterLogPresenter>();
+					entries.Clear();
 					Show();
 					break;
 				default:
@@ -87,13 +90,24 @@ namespace LunraGames.SpaceFarm.Presenters
 			nextLogDelay = 0f;
 		}
 
+		void OnPrepareClose()
+		{
+			// TODO: Make this nicer and not need to close instantly???
+			foreach (var entry in entries)
+			{
+				entry.Close();
+				App.P.UnRegister(entry);
+			}
+			entries.Clear();
+		}
+
 		void OnDoneClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			//App.Callbacks.FocusRequest(
-			//	new SystemBodiesFocusRequest(system.Position)
-			//);
+			App.Callbacks.FocusRequest(
+				new SystemBodiesFocusRequest(system.Position)
+			);
 		}
 
 		void OnUpdate(float delta)
