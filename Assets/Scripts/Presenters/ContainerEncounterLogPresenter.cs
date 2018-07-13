@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		};
 
 		GameModel model;
-		EncounterInfoModel infoModel;
+		EncounterInfoModel encounter;
 		SystemModel system;
 		BodyModel body;
 		CrewInventoryModel crew;
@@ -44,7 +45,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			View.Title = infoModel.Name;
+			View.Title = encounter.Name;
 			View.DoneClick = OnDoneClick;
 			View.Shown += OnShown;
 			View.PrepareClose += OnPrepareClose;
@@ -61,7 +62,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					// We only show UI elements once the focus is complete.
 					if (focus.State != FocusRequest.States.Complete) return;
 					var encounterFocus = focus as EncounterFocusRequest;
-					infoModel = App.Encounters.GetEncounter(encounterFocus.EncounterId);
+					encounter = App.Encounters.GetEncounter(encounterFocus.EncounterId);
 					system = model.Universe.Value.GetSystem(encounterFocus.System);
 					body = system.GetBody(encounterFocus.Body);
 					crew = model.Ship.Value.Inventory.GetInventoryFirstOrDefault<CrewInventoryModel>(encounterFocus.Crew);
@@ -79,10 +80,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnShown()
 		{
-			nextLog = infoModel.Logs.Beginning;
+			nextLog = encounter.Logs.Beginning;
 			if (nextLog == null)
 			{
-				Debug.LogError("No beginning found for encounter " + infoModel.EncounterId.Value);
+				Debug.LogError("No beginning found for encounter " + encounter.EncounterId.Value);
 				return;
 			}
 			nextLogDelay = 0f;
@@ -103,7 +104,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-
+			model.EncountersCompleted.Value = model.EncountersCompleted.Value.Append(encounter.EncounterId).ToArray();
 
 			App.Callbacks.FocusRequest(
 				new SystemBodiesFocusRequest(system.Position)
@@ -147,7 +148,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					Debug.Log("Handle null next logs here!");
 					return;
 				}
-				nextLog = infoModel.Logs.GetLogFirstOrDefault(nextLogId);
+				nextLog = encounter.Logs.GetLogFirstOrDefault(nextLogId);
 				if (nextLog == null)
 				{
 					Debug.LogError("Next log could not be found.");

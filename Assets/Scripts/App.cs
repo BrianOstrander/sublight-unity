@@ -12,6 +12,8 @@ namespace LunraGames.SpaceFarm
 	{
 		static App instance;
 
+		public static bool HasInstance { get { return instance != null; } }
+
 		Main main;
 		public static Main Main { get { return instance.main; } }
 

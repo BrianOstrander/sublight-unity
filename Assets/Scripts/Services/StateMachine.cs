@@ -116,6 +116,8 @@ namespace LunraGames.SpaceFarm
 
 		public bool Is(States isState, Events isEvent) { return isState == CurrentState && isEvent == CurrentEvent; }
 
+		public IState CurrentHandler { get { return currentState; } }
+
 		public StateMachine(Heartbeat heartbeat, params IState[] states)
 		{
 			stateEntries = states;
