@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -69,6 +70,25 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
+			App.Callbacks.FocusRequest(
+				BodyFocusRequest.BodyHook(destination.Position, body.BodyId)
+			);
+
+			/*
+			if (body.HasEncounter)
+			{
+				if (model.EncountersCompleted.Value.Contains(body.EncounterId)) Debug.Log("done encounter logic here");
+				else 
+				{
+					App.Callbacks.FocusRequest(
+						BodyFocusRequest.BodyHook(destination.Position, body.BodyId) 
+					);
+				}
+			}
+			else Debug.Log("no encounter logic here");
+			*/
+
+			/*
 			switch(body.Status.Value)
 			{
 				case BodyStatus.NotProbed:
@@ -91,6 +111,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					Debug.LogError("Unhandled BodyStatus: " + body.Status.Value);
 					break;
 			}
+			*/
 		}
 
 		void OnDoneClick()

@@ -9,7 +9,8 @@ namespace LunraGames.SpaceFarm
 			Unknown = 0,
 			ProbeList = 10,
 			ProbeDetail = 20,
-			Probing = 30
+			Probing = 30,
+			BodyHook = 40
 		}
 
 		public static BodyFocusRequest ProbeList(
@@ -39,6 +40,15 @@ namespace LunraGames.SpaceFarm
 		)
 		{
 			return new BodyFocusRequest(Views.Probing, system, body, probe, state);
+		}
+
+		public static BodyFocusRequest BodyHook(
+			UniversePosition system,
+			int body,
+			States state = States.Request
+		)
+		{
+			return new BodyFocusRequest(Views.BodyHook, system, body, state: state);
 		}
 
 		public override Focuses Focus { get { return Focuses.Body; } }

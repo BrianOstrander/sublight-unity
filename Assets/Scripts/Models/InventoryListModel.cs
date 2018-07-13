@@ -49,6 +49,11 @@ namespace LunraGames.SpaceFarm.Models
 			if (predicate == null) return All.Value.OfType<T>().FirstOrDefault();
 			return All.Value.OfType<T>().FirstOrDefault(predicate);
 		}
+
+		public InventoryTypes[] GetTypes()
+		{
+			return All.Value.Select(i => i.InventoryType).Distinct().ToArray();
+		}
 		#endregion
 
 		#region Events

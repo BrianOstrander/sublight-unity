@@ -23,6 +23,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
 		
 		[JsonProperty] string[] encountersSeen = new string[0];
+		[JsonProperty] string[] encountersCompleted = new string[0];
 
 		[JsonProperty] GalaxyFocusRequest galaxyFocus;
 		[JsonProperty] SystemBodiesFocusRequest systemBodiesFocus;
@@ -95,6 +96,11 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string[]> EncountersSeen;
+		/// <summary>
+		/// The encounters completed.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<string[]> EncountersCompleted;
 		#endregion
 
 		#region NonSerialized
@@ -125,6 +131,7 @@ namespace LunraGames.SpaceFarm.Models
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 
 			EncountersSeen = new ListenerProperty<string[]>(value => encountersSeen = value, () => encountersSeen);
+			EncountersCompleted = new ListenerProperty<string[]>(value => encountersCompleted = value, () => encountersCompleted);
 			
 			FocusRequest = new ListenerProperty<FocusRequest>(OnSetFocus, OnGetFocus);
 		}

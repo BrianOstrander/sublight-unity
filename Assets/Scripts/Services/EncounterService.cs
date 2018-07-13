@@ -154,25 +154,32 @@ namespace LunraGames.SpaceFarm
 			return target;
 		}
 
-		public void AssignBestEncounters(GameModel model, SystemModel system)
+		public EncounterInfoModel AssignBestEncounter(GameModel model, SystemModel system, BodyModel body)
 		{
-			foreach (var body in system.Bodies.Value)
-			{
-				// TODO: Check if old encounters are still valid here?
-				if (body.HasEncounter) continue;
-				// Required checks
-				var remaining = encounters.Where(
-					e => !model.EncountersSeen.Value.Contains(e.EncounterId) && 
-					e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType) &&
-					e.ValidBodies.Value.ContainsOrIsEmpty(body.BodyType)
-				);
+			// TODO: Check if old encounters are still valid here?
+			if (body.HasEncounter) return GetEncounter(body.EncounterId);
+			// Required checks
+			var remaining = encounters.Where(
+				e => !model.EncountersSeen.Value.Contains(e.EncounterId) &&
+				e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType) &&
+				e.ValidBodies.Value.ContainsOrIsEmpty(body.BodyType)
+			);
 
-				var chosen = remaining.FirstOrDefault();
-				if (chosen == null) continue;
+			var chosen = remaining.FirstOrDefault();
+			if (chosen == null) return null;
 
-				model.EncountersSeen.Value = model.EncountersSeen.Value.Append(chosen.EncounterId).ToArray();
-				body.EncounterId.Value = chosen.EncounterId;
-			}
+			model.EncountersSeen.Value = model.EncountersSeen.Value.Append(chosen.EncounterId).ToArray();
+			body.EncounterId.Value = chosen.EncounterId;
+
+			return chosen;
+		}
+
+		/// <summary>
+		/// Gets cached encounters.
+		/// </summary>
+		public EncounterInfoModel GetEncounter(string encounterId)
+		{
+			return encounters.FirstOrDefault(e => e.EncounterId.Value == encounterId);
 		}
 	}
 }
