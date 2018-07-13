@@ -47,6 +47,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Title = encounter.Name;
 			View.DoneClick = OnDoneClick;
+			View.NextClick = OnNextClick;
 			View.Shown += OnShown;
 			View.PrepareClose += OnPrepareClose;
 
@@ -111,13 +112,19 @@ namespace LunraGames.SpaceFarm.Presenters
 			);
 		}
 
+		void OnNextClick()
+		{
+			if (nextLogDelay.HasValue) nextLogDelay = 0f;
+		}
+
 		void OnUpdate(float delta)
 		{
 			if (!nextLogDelay.HasValue) return;
 			if (View.TransitionState != TransitionStates.Shown) return;
 			if (App.Callbacks.LastPlayState.State != PlayState.States.Playing) return;
 
-			nextLogDelay = Mathf.Max(0f, nextLogDelay.Value - delta);
+			if (App.Preferences.EncounterLogsAutoNext.Value) nextLogDelay = Mathf.Max(0f, nextLogDelay.Value - delta);
+
 			if (!Mathf.Approximately(0f, nextLogDelay.Value)) return;
 
 			OnShowLog(nextLog);
@@ -139,6 +146,7 @@ namespace LunraGames.SpaceFarm.Presenters
 				if (logModel.Ending.Value)
 				{
 					View.DoneEnabled = true;
+					View.NextEnabled = false;
 					return;
 				}
 
@@ -154,6 +162,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					Debug.LogError("Next log could not be found.");
 					return;
 				}
+				View.NextEnabled = true;
 				nextLogDelay = logModel.TotalDuration;
 			}
 			else Debug.LogError("Unhandled LogType: " + logModel.LogType);

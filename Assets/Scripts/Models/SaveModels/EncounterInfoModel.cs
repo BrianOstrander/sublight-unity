@@ -7,6 +7,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string encounterId;
 		[JsonProperty] string name;
 		[JsonProperty] string description;
+		[JsonProperty] string hook;
 		[JsonProperty] string[] completedEncountersRequired = new string[0];
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
@@ -14,12 +15,27 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
+		/// <summary>
+		/// The encounter identifier.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncounterId;
+		/// <summary>
+		/// The name of this encounter, will be seen by the player and listed as
+		/// the meta data.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
+		/// <summary>
+		/// An internal description of this encounter, only for editor use.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Description;
+		/// <summary>
+		/// The hook that appears when entering a system. Seen by the player.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<string> Hook;
 		[JsonIgnore]
 		public readonly ListenerProperty<string[]> CompletedEncountersRequired;
 		[JsonIgnore]
@@ -42,6 +58,7 @@ namespace LunraGames.SpaceFarm.Models
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
+			Hook = new ListenerProperty<string>(value => hook = value, () => hook);
 			CompletedEncountersRequired = new ListenerProperty<string[]>(value => completedEncountersRequired = value, () => completedEncountersRequired);
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);

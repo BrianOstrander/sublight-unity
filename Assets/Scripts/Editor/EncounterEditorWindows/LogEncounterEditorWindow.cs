@@ -37,12 +37,12 @@ namespace LunraGames.SpaceFarm
 			return deleted;
 		}
 
-		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
+		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model, EncounterLogModel nextModel)
 		{
 			switch (model.LogType)
 			{
 				case EncounterLogTypes.Text:
-					OnTextLog(infoModel, model as TextEncounterLogModel);
+					OnTextLog(infoModel, model as TextEncounterLogModel, nextModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -63,18 +63,20 @@ namespace LunraGames.SpaceFarm
 			EditorGUILayoutExtensions.PopEnabled();
 		}
 
-		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
+		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model, EncounterLogModel nextModel)
 		{
 			GUILayout.Label("Header");
 			model.Header.Value = GUILayout.TextArea(model.Header.Value);
 			GUILayout.Label("Message");
 			model.Message.Value = GUILayout.TextArea(model.Message.Value);
-			OnLinearLog(infoModel, model);
+			OnLinearLog(infoModel, model, nextModel);
 		}
 
-		void OnLinearLog(EncounterInfoModel infoModel, LinearEncounterLogModel model)
+		void OnLinearLog(EncounterInfoModel infoModel, LinearEncounterLogModel model, EncounterLogModel nextModel)
 		{
+			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
 			var options = infoModel.Logs.All.Value.Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value).Prepend("- Select Next Log -").ToArray();
+			var optionNames = options.Select(l => l == nextId ? (l + " <- Next") : l).ToArray();
 			var index = 0;
 			if (!string.IsNullOrEmpty(model.NextLogId.Value))
 			{
@@ -90,7 +92,7 @@ namespace LunraGames.SpaceFarm
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label("Next Log: ", GUILayout.Width(55f));
-				index = EditorGUILayout.Popup(index, options);
+				index = EditorGUILayout.Popup(index, optionNames);
 			}
 			GUILayout.EndHorizontal();
 			if (index == 0) model.NextLogId.Value = null;

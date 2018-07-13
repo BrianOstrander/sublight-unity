@@ -186,6 +186,10 @@ namespace LunraGames.SpaceFarm
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				model.Meta.Value = model.Name;
 				model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
+
+				GUILayout.Label("Hook");
+				model.Hook.Value = GUILayout.TextArea(model.Hook.Value);
+
 				model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
 					"Completed Encounters Required",
 					model.CompletedEncountersRequired.Value,
@@ -248,11 +252,14 @@ namespace LunraGames.SpaceFarm
 					var beginning = string.Empty;
 					var ending = string.Empty;
 
-					foreach (var log in model.Logs.All.Value)
+					for (var i = 0; i < model.Logs.All.Value.Length; i++)
 					{
+						var log = model.Logs.All.Value[i];
+						var nextLog = (i + 1 < model.Logs.All.Value.Length) ? model.Logs.All.Value[i + 1] : null;
 						if (OnLogBegin(model, log, ref beginning, ref ending)) deleted = log.LogId;
-						OnLog(model, log);
+						OnLog(model, log, nextLog);
 						OnLogEnd(model, log);
+						
 					}
 					if (!string.IsNullOrEmpty(deleted))
 					{

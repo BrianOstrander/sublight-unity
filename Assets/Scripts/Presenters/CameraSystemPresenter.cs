@@ -51,6 +51,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnUpdate(float delta)
 		{
+			if (View.TransitionState != TransitionStates.Shown) return;
 			if (lastMoveRequest.State == CameraSystemRequest.States.Active) OnMoveRequest();
 			else if (!App.Callbacks.LastObscureCameraRequest.IsObscured) OnDrag();
 		}
