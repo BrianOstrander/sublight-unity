@@ -160,15 +160,23 @@ namespace LunraGames.SpaceFarm
 			if (body.HasEncounter) return GetEncounter(body.EncounterId);
 			// Required checks
 			var remaining = encounters.Where(
-				e => !model.EncountersSeen.Value.Contains(e.EncounterId) &&
-				e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType) &&
-				e.ValidBodies.Value.ContainsOrIsEmpty(body.BodyType)
+				e =>
+				{
+					switch(model.GetEncounterStatus(e.EncounterId).State)
+					{
+						case EncounterStatus.States.Completed:
+						case EncounterStatus.States.Seen:
+							return false;
+					}
+					return e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType) &&
+						e.ValidBodies.Value.ContainsOrIsEmpty(body.BodyType);
+				}
 			);
 
 			var chosen = remaining.FirstOrDefault();
 			if (chosen == null) return null;
 
-			model.EncountersSeen.Value = model.EncountersSeen.Value.Append(chosen.EncounterId).ToArray();
+			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
 			body.EncounterId.Value = chosen.EncounterId;
 
 			return chosen;

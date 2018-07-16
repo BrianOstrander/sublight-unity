@@ -105,7 +105,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			model.EncountersCompleted.Value = model.EncountersCompleted.Value.Append(encounter.EncounterId).ToArray();
+			model.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
 
 			App.Callbacks.FocusRequest(
 				new SystemBodiesFocusRequest(system.Position)

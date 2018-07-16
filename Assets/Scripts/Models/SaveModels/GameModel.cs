@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Linq;
+
+using Newtonsoft.Json;
 
 using UnityEngine;
 
@@ -21,9 +24,8 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float destructionRadius;
 		[JsonProperty] TravelRequest travelRequest;
 		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
-		
-		[JsonProperty] string[] encountersSeen = new string[0];
-		[JsonProperty] string[] encountersCompleted = new string[0];
+
+		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
 
 		[JsonProperty] GalaxyFocusRequest galaxyFocus;
 		[JsonProperty] SystemBodiesFocusRequest systemBodiesFocus;
@@ -95,12 +97,7 @@ namespace LunraGames.SpaceFarm.Models
 		/// The encounters seen, completed or otherwise.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<string[]> EncountersSeen;
-		/// <summary>
-		/// The encounters completed.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<string[]> EncountersCompleted;
+		public readonly ListenerProperty<EncounterStatus[]> EncounterStatuses;
 		#endregion
 
 		#region NonSerialized
@@ -130,9 +127,8 @@ namespace LunraGames.SpaceFarm.Models
 			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 
-			EncountersSeen = new ListenerProperty<string[]>(value => encountersSeen = value, () => encountersSeen);
-			EncountersCompleted = new ListenerProperty<string[]>(value => encountersCompleted = value, () => encountersCompleted);
-			
+			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
+
 			FocusRequest = new ListenerProperty<FocusRequest>(OnSetFocus, OnGetFocus);
 		}
 
@@ -177,6 +173,23 @@ namespace LunraGames.SpaceFarm.Models
 			if (encounterFocus != null) return encounterFocus;
 
 			return null;
+		}
+		#endregion
+
+		#region Utility
+		public void SetEncounterStatus(EncounterStatus status)
+		{
+			if (status.EncounterId == null)
+			{
+				Debug.LogError("Cannot update the status of an encounter with a null id, update ignored.");
+				return;
+			}
+			EncounterStatuses.Value = EncounterStatuses.Value.Where(e => e.EncounterId != status.EncounterId).Append(status).ToArray();
+		}
+
+		public EncounterStatus GetEncounterStatus(string encounterId)
+		{
+			return EncounterStatuses.Value.FirstOrDefault(e => e.EncounterId == encounterId);
 		}
 		#endregion
 	}
