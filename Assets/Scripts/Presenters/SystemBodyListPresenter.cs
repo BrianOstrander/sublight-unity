@@ -68,53 +68,50 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			App.Callbacks.FocusRequest(
-				BodyFocusRequest.BodyHook(destination.Position, body.BodyId)
-			);
+			var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
+			if (encounter != null) body.EncounterId.Value = encounter.EncounterId;
 
-			/*
-			if (body.HasEncounter)
+			switch(model.GetEncounterStatus(body.EncounterId).State)
 			{
-				if (model.EncountersCompleted.Value.Contains(body.EncounterId)) Debug.Log("done encounter logic here");
-				else 
-				{
-					App.Callbacks.FocusRequest(
-						BodyFocusRequest.BodyHook(destination.Position, body.BodyId) 
-					);
-				}
-			}
-			else Debug.Log("no encounter logic here");
-			*/
-
-			/*
-			switch(body.Status.Value)
-			{
-				case BodyStatus.NotProbed:
-					App.Callbacks.FocusRequest(
-						BodyFocusRequest.ProbeList(destination.Position, body.BodyId)
-					);
-					break;
-				case BodyStatus.EncounterNotFound:
-					App.Callbacks.FocusRequest(
-						BodyFocusRequest.Probing(destination.Position, body.BodyId, body.ProbeId)
-					);
-					break;
-				case BodyStatus.EncounterFound:
-					Debug.Log("Lol encounter found logic here");
-					break;
-				case BodyStatus.EncounterExplored:
-					Debug.Log("lol encounter explored logic here");
-					break;
+				case EncounterStatus.States.Unknown:
+					App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no anomalies."));
+					return;
+				case EncounterStatus.States.Completed:
+					App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
+					return;
 				default:
-					Debug.LogError("Unhandled BodyStatus: " + body.Status.Value);
+					App.Callbacks.FocusRequest(
+						BodyFocusRequest.BodyHook(destination.Position, body.BodyId)
+					);
 					break;
 			}
-			*/
 		}
 
 		void OnDoneClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
+
+			// Temp Begin
+			foreach (var body in destination.Bodies.Value)
+			{
+				var added = body.ResourcesCurrent;
+				
+				model.Ship.Value.Inventory.Resources.Add(added);
+				
+				body.ResourcesAcquired.Add(added);
+				
+				App.Callbacks.DialogRequest(
+					DialogRequest.Alert(
+						"Acquired " + Strings.Rations(added.Rations) + " rations and " + Strings.Fuel(added.Fuel) + " fuel",
+						done: OnAlertClosed
+					)
+				);
+			}
+			// Temp End
+		}
+
+		void OnAlertClosed()
+		{
 			App.Callbacks.FocusRequest(
 				new SystemsFocusRequest(
 					destination.Position.Value.SystemZero,
