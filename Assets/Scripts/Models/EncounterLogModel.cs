@@ -4,11 +4,18 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public abstract class EncounterLogModel : Model
 	{
+		[JsonProperty] int index;
 		[JsonProperty] bool beginning;
 		[JsonProperty] bool ending;
 		[JsonProperty] string logId;
 		[JsonProperty] float duration;
 
+		/// <summary>
+		/// The order these appear in the editor, not used in game for anything
+		/// meaningful.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<int> Index;
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> Beginning;
 		[JsonIgnore]
@@ -30,6 +37,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		public EncounterLogModel()
 		{
+			Index = new ListenerProperty<int>(value => index = value, () => index);
 			Beginning = new ListenerProperty<bool>(value => beginning = value, () => beginning);
 			Ending = new ListenerProperty<bool>(value => ending = value, () => ending);
 			LogId = new ListenerProperty<string>(value => logId = value, () => logId);

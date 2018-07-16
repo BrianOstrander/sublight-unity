@@ -182,6 +182,7 @@ namespace LunraGames.SpaceFarm
 		{
 			EditorGUI.BeginChangeCheck();
 			{
+				model.Hidden.Value = EditorGUILayout.Toggle("Hidden", model.Hidden.Value);
 				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				model.Meta.Value = model.Name;
@@ -231,15 +232,26 @@ namespace LunraGames.SpaceFarm
 					{
 						GUILayout.Label("Append New Log");
 						var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
+						var guid = Guid.NewGuid().ToString();
+						var isBeginning = model.Logs.All.Value.Length == 0;
+						var nextIndex = model.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
 						switch(result)
 						{
 							case EncounterLogTypes.Unknown:
 								break;
 							case EncounterLogTypes.Text:
 								var textResult = new TextEncounterLogModel();
-								textResult.LogId.Value = Guid.NewGuid().ToString();
-								textResult.Beginning.Value = model.Logs.All.Value.Count() == 0;
+								textResult.Index.Value = nextIndex;
+								textResult.LogId.Value = guid;
+								textResult.Beginning.Value = isBeginning;
 								model.Logs.All.Value = model.Logs.All.Value.Append(textResult).ToArray();
+								break;
+							case EncounterLogTypes.KeyValue:
+								var keyValueResult = new KeyValueEncounterLogModel();
+								keyValueResult.Index.Value = nextIndex;
+								keyValueResult.LogId.Value = guid;
+								keyValueResult.Beginning.Value = isBeginning;
+								model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
 								break;
 							default:
 								Debug.LogError("Unrecognized EncounterLogType:" + result);
@@ -252,10 +264,12 @@ namespace LunraGames.SpaceFarm
 					var beginning = string.Empty;
 					var ending = string.Empty;
 
-					for (var i = 0; i < model.Logs.All.Value.Length; i++)
+					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
+
+					for (var i = 0; i < sorted.Count; i++)
 					{
-						var log = model.Logs.All.Value[i];
-						var nextLog = (i + 1 < model.Logs.All.Value.Length) ? model.Logs.All.Value[i + 1] : null;
+						var log = sorted[i];
+						var nextLog = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
 						if (OnLogBegin(model, log, ref beginning, ref ending)) deleted = log.LogId;
 						OnLog(model, log, nextLog);
 						OnLogEnd(model, log);

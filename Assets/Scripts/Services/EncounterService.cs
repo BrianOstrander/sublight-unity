@@ -162,6 +162,7 @@ namespace LunraGames.SpaceFarm
 			var remaining = encounters.Where(
 				e =>
 				{
+					if (e.Hidden.Value) return false;
 					switch(model.GetEncounterStatus(e.EncounterId).State)
 					{
 						case EncounterStatus.States.Completed:

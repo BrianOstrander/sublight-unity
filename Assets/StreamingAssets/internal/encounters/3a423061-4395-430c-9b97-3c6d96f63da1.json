@@ -1,4 +1,5 @@
 {
+  "hidden": true,
   "encounterId": "52223162-311a-47d9-b444-8d8f21f42a48",
   "name": "Coronal Base 55",
   "hook": "Spectrograph picking up distortions in low stellar orbit... w-band emissions correspond to a large metal structure, looks artificial.",
@@ -61,7 +62,8 @@
         "logId": "b8797f1d-d5c5-4092-a6df-a4de6725a6ed",
         "duration": 1.0
       }
-    ]
+    ],
+    "keyValueLogs": []
   },
   "version": 2,
   "meta": "Coronal Base 55",

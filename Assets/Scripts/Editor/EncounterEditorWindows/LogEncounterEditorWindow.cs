@@ -44,6 +44,9 @@ namespace LunraGames.SpaceFarm
 				case EncounterLogTypes.Text:
 					OnTextLog(infoModel, model as TextEncounterLogModel, nextModel);
 					break;
+				case EncounterLogTypes.KeyValue:
+					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel, nextModel);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
 					break;
@@ -69,6 +72,12 @@ namespace LunraGames.SpaceFarm
 			model.Header.Value = GUILayout.TextArea(model.Header.Value);
 			GUILayout.Label("Message");
 			model.Message.Value = GUILayout.TextArea(model.Message.Value);
+			OnLinearLog(infoModel, model, nextModel);
+		}
+
+		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model, EncounterLogModel nextModel)
+		{
+			GUILayout.Label("todo...");
 			OnLinearLog(infoModel, model, nextModel);
 		}
 

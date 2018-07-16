@@ -124,7 +124,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (App.Callbacks.LastPlayState.State != PlayState.States.Playing) return;
 
 			if (App.Preferences.EncounterLogsAutoNext.Value) nextLogDelay = Mathf.Max(0f, nextLogDelay.Value - delta);
-
+				
 			if (!Mathf.Approximately(0f, nextLogDelay.Value)) return;
 
 			OnShowLog(nextLog);
@@ -134,7 +134,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			nextLog = null;
 			nextLogDelay = null;
-			
+
+			if (EncounterLogValidator.Presented.Contains(logModel.LogType)) OnPresentedLog(logModel);
+			else if (EncounterLogValidator.Logic.Contains(logModel.LogType)) OnLogicLog(logModel);
+			else Debug.LogError("Unhandled LogType: " + logModel.LogType);
+		}
+
+		void OnPresentedLog(EncounterLogModel logModel)
+		{
 			Func<GameModel, EncounterLogModel, IEntryEncounterLogPresenter> handler;
 			if (LogHandlers.TryGetValue(logModel.LogType, out handler))
 			{
@@ -142,30 +149,42 @@ namespace LunraGames.SpaceFarm.Presenters
 				current.Show(View.EntryArea, OnShownLog);
 				entries.Add(current);
 
-				// TODO: Unlock done button when end is reached.
-				if (logModel.Ending.Value)
-				{
-					View.DoneEnabled = true;
-					View.NextEnabled = false;
-					return;
-				}
-
-				var nextLogId = logModel.NextLog;
-				if (string.IsNullOrEmpty(nextLogId))
-				{
-					Debug.Log("Handle null next logs here!");
-					return;
-				}
-				nextLog = encounter.Logs.GetLogFirstOrDefault(nextLogId);
-				if (nextLog == null)
-				{
-					Debug.LogError("Next log could not be found.");
-					return;
-				}
-				View.NextEnabled = true;
-				nextLogDelay = logModel.TotalDuration;
+				OnHandledLog(logModel);
 			}
 			else Debug.LogError("Unhandled LogType: " + logModel.LogType);
+		}
+
+		void OnLogicLog(EncounterLogModel logModel)
+		{
+			Debug.Log("todo some logic here");
+
+			OnHandledLog(logModel);
+		}
+
+		void OnHandledLog(EncounterLogModel logModel)
+		{
+			// TODO: Unlock done button when end is reached.
+			if (logModel.Ending.Value)
+			{
+				View.DoneEnabled = true;
+				View.NextEnabled = false;
+				return;
+			}
+
+			var nextLogId = logModel.NextLog;
+			if (string.IsNullOrEmpty(nextLogId))
+			{
+				Debug.Log("Handle null next logs here!");
+				return;
+			}
+			nextLog = encounter.Logs.GetLogFirstOrDefault(nextLogId);
+			if (nextLog == null)
+			{
+				Debug.LogError("Next log could not be found.");
+				return;
+			}
+			View.NextEnabled = true;
+			nextLogDelay = logModel.TotalDuration;
 		}
 
 		void OnShownLog()

@@ -31,6 +31,16 @@ namespace LunraGames
 			return entries.DefaultIfEmpty(fallback).FirstOrDefault();
 		}
 
+		public static T LastOrFallback<T>(this IEnumerable<T> entries, Func<T, bool> predicate, T fallback = default(T))
+		{
+			return entries.DefaultIfEmpty(fallback).LastOrDefault(predicate);
+		}
+
+		public static T LastOrFallback<T>(this IEnumerable<T> entries, T fallback = default(T))
+		{
+			return entries.DefaultIfEmpty(fallback).LastOrDefault();
+		}
+
 		public static T Random<T>(this IEnumerable<T> entries, T fallback = default(T))
 		{
 			if (entries == null || entries.Count() == 0) return fallback;

@@ -1,0 +1,43 @@
+{
+  "encounterId": "0e079ac0-cb17-4203-9b33-2fda53a0f365",
+  "name": "KV Test",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [],
+  "validProbes": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "0",
+        "message": "Something",
+        "nextLogId": "20220082-511c-420b-8df4-d3db0416c50d",
+        "beginning": true,
+        "logId": "9299fdef-a6a6-4697-a830-d2d274674630",
+        "duration": 0.25
+      },
+      {
+        "header": "1",
+        "message": "Done",
+        "index": 2,
+        "ending": true,
+        "logId": "9f62a876-2603-48f7-ab50-de36c8a7f2d0",
+        "duration": 0.25
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "nextLogId": "9f62a876-2603-48f7-ab50-de36c8a7f2d0",
+        "index": 1,
+        "logId": "20220082-511c-420b-8df4-d3db0416c50d"
+      }
+    ]
+  },
+  "version": 2,
+  "meta": "KV Test",
+  "created": "2018-07-16T12:38:36.83934-07:00",
+  "modified": "2018-07-16T12:38:36.83934-07:00",
+  "SaveType": "EncounterInfo"
+}

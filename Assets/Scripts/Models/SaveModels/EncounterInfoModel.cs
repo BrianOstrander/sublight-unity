@@ -4,6 +4,7 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public class EncounterInfoModel : SaveModel
 	{
+		[JsonProperty] bool hidden;
 		[JsonProperty] string encounterId;
 		[JsonProperty] string name;
 		[JsonProperty] string description;
@@ -15,6 +16,11 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
+		/// <summary>
+		/// If true, this encounter info will never show up in game.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> Hidden;
 		/// <summary>
 		/// The encounter identifier.
 		/// </summary>
@@ -55,6 +61,7 @@ namespace LunraGames.SpaceFarm.Models
 		public EncounterInfoModel()
 		{
 			SaveType = SaveTypes.EncounterInfo;
+			Hidden = new ListenerProperty<bool>(value => hidden = value, () => hidden);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);

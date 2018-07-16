@@ -12,6 +12,7 @@ namespace LunraGames.SpaceFarm.Models
 	{
 		#region Assigned Values
 		[JsonProperty] TextEncounterLogModel[] textLogs = new TextEncounterLogModel[0];
+		[JsonProperty] KeyValueEncounterLogModel[] keyValueLogs = new KeyValueEncounterLogModel[0];
 		#endregion
 
 		#region Derived Values
@@ -62,6 +63,7 @@ namespace LunraGames.SpaceFarm.Models
 		void OnSetLogs(EncounterLogModel[] newLogs)
 		{
 			var textList = new List<TextEncounterLogModel>();
+			var keyValueList = new List<KeyValueEncounterLogModel>();
 
 			foreach (var log in newLogs)
 			{
@@ -70,6 +72,9 @@ namespace LunraGames.SpaceFarm.Models
 					case EncounterLogTypes.Text:
 						textList.Add(log as TextEncounterLogModel);
 						break;
+					case EncounterLogTypes.KeyValue:
+						keyValueList.Add(log as KeyValueEncounterLogModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized EncounterLogType: " + log.LogType);
 						break;
@@ -77,11 +82,13 @@ namespace LunraGames.SpaceFarm.Models
 			}
 
 			textLogs = textList.ToArray();
+			keyValueLogs = keyValueList.ToArray();
 		}
 
 		EncounterLogModel[] OnGetLogs()
 		{
-			return textLogs.Cast<EncounterLogModel>().ToArray();
+			return textLogs.Cast<EncounterLogModel>().Concat(keyValueLogs)
+													 .ToArray();
 		}
 		#endregion
 	}
