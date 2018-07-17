@@ -33,6 +33,8 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] BodyFocusRequest bodyFocus;
 		[JsonProperty] EncounterFocusRequest encounterFocus;
 
+		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
+
 		/// <summary>
 		/// The game seed.
 		/// </summary>
@@ -191,6 +193,9 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			return EncounterStatuses.Value.FirstOrDefault(e => e.EncounterId == encounterId);
 		}
+
+		[JsonIgnore]
+		public KeyValueListModel KeyValues { get { return keyValues; } }
 		#endregion
 	}
 }
