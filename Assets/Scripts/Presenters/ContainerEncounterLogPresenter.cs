@@ -20,6 +20,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		SystemModel system;
 		BodyModel body;
 		CrewInventoryModel crew;
+		KeyValueListener keyValues;
 		List<IEntryEncounterLogPresenter> entries = new List<IEntryEncounterLogPresenter>();
 
 		EncounterLogModel nextLog;
@@ -67,6 +68,8 @@ namespace LunraGames.SpaceFarm.Presenters
 					system = model.Universe.Value.GetSystem(encounterFocus.System);
 					body = system.GetBody(encounterFocus.Body);
 					crew = model.Ship.Value.Inventory.GetInventoryFirstOrDefault<CrewInventoryModel>(encounterFocus.Crew);
+					keyValues = new KeyValueListener(KeyValueTargets.Encounter, encounterFocus.KeyValues, App.KeyValues);
+					keyValues.Register();
 					entries.Clear();
 					Show();
 					break;
@@ -106,6 +109,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			model.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
+			keyValues.UnRegister();
 
 			App.Callbacks.FocusRequest(
 				new SystemBodiesFocusRequest(system.Position)
