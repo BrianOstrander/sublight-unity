@@ -59,6 +59,9 @@ namespace LunraGames.SpaceFarm
 		KeyValueService keyValues;
 		public static KeyValueService KeyValues { get { return instance.keyValues; } }
 
+		GlobalKeyValueService globalKeyValues;
+		public static GlobalKeyValueService GlobalKeyValues { get { return instance.globalKeyValues; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -139,6 +142,7 @@ namespace LunraGames.SpaceFarm
 			scenes = new SceneService(Logging, Callbacks);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
+			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
 		}
 
 		public static void Restart(string message)

@@ -32,6 +32,7 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(InitializePreferences);
 			App.SM.PushBlocking(InitializeEncounters);
 			App.SM.PushBlocking(InitializeListeners);
+			App.SM.PushBlocking(InitializeGlobalKeyValues);
 
 			if (DevPrefs.WipeGameSavesOnStart) App.SM.PushBlocking(WipeGameSaves);
 		}
@@ -181,6 +182,19 @@ namespace LunraGames.SpaceFarm
 		{
 			App.Callbacks.UniversePositionRequest += UniversePosition.OnUniversePositionRequest;
 			done();
+		}
+
+		void InitializeGlobalKeyValues(Action done)
+		{
+			App.GlobalKeyValues.Initialize(
+				status =>
+				{
+					if (status == RequestStatus.Success) App.Log("Global KVs Initialized", LogTypes.Initialization);
+					else App.Restart("Initializing Global KVs failed with status " + status);
+					// TODO: Should this be called if a restart happens?
+					done();
+				}
+			);
 		}
 
 		void WipeGameSaves(Action done)

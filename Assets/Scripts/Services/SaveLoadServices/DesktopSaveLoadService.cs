@@ -28,7 +28,8 @@ namespace LunraGames.SpaceFarm
 					{ SaveTypes.Game, -1 },
 					{ SaveTypes.Preferences, -1 },
 					{ SaveTypes.EncounterInfo, 0 },
-					{ SaveTypes.InteractedEncounterInfoList, -1 }
+					{ SaveTypes.InteractedEncounterInfoList, -1 },
+					{ SaveTypes.GlobalKeyValues, -1 }
 				};
 			}
 		}
@@ -42,7 +43,8 @@ namespace LunraGames.SpaceFarm
 					{ SaveTypes.Game, true },
 					{ SaveTypes.Preferences, true },
 					{ SaveTypes.EncounterInfo, false },
-					{ SaveTypes.InteractedEncounterInfoList, true }
+					{ SaveTypes.InteractedEncounterInfoList, true },
+					{ SaveTypes.GlobalKeyValues, true }
 				};
 			}
 		}
@@ -80,6 +82,7 @@ namespace LunraGames.SpaceFarm
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
+				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
 
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}

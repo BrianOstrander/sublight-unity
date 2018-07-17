@@ -6,6 +6,7 @@
 		Game = 10,
 		Preferences = 20,
 		EncounterInfo = 30,
-		InteractedEncounterInfoList = 40
+		InteractedEncounterInfoList = 40,
+		GlobalKeyValues = 50
 	}
 }
