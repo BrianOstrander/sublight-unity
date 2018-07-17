@@ -14,6 +14,7 @@ namespace LunraGames.SpaceFarm
 		public GameModel Game;
 
 		public Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]> Focuses = new Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]>();
+		public KeyValueListener KeyValueListener;
 	}
 
 	public class GameState : State<GamePayload>
@@ -50,13 +51,8 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.TravelRequest.Changed += OnTravelRequest;
 			App.Callbacks.FocusRequest += OnFocus;
 
-			App.KeyValues.RegisterGet(KeyValueTargets.Game, OnGetBoolean);
-			App.KeyValues.RegisterGet(KeyValueTargets.Game, OnGetInteger);
-			App.KeyValues.RegisterGet(KeyValueTargets.Game, OnGetString);
-
-			App.KeyValues.RegisterSet(KeyValueTargets.Game, OnSetBoolean);
-			App.KeyValues.RegisterSet(KeyValueTargets.Game, OnSetInteger);
-			App.KeyValues.RegisterSet(KeyValueTargets.Game, OnSetString);
+			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues);
+			Payload.KeyValueListener.Register();
 
 			done();
 		}
@@ -167,13 +163,7 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
 			App.Callbacks.ClearEscapables();
 
-			App.KeyValues.UnRegisterGet(KeyValueTargets.Game, OnGetBoolean);
-			App.KeyValues.UnRegisterGet(KeyValueTargets.Game, OnGetInteger);
-			App.KeyValues.UnRegisterGet(KeyValueTargets.Game, OnGetString);
-
-			App.KeyValues.UnRegisterSet(KeyValueTargets.Game, OnSetBoolean);
-			App.KeyValues.UnRegisterSet(KeyValueTargets.Game, OnSetInteger);
-			App.KeyValues.UnRegisterSet(KeyValueTargets.Game, OnSetString);
+			Payload.KeyValueListener.UnRegister();
 
 			App.SM.PushBlocking(UnBind);
 			App.SM.PushBlocking(UnLoadScenes);
@@ -297,43 +287,6 @@ namespace LunraGames.SpaceFarm
 		{
 			if (request.Status != RequestStatus.Success) Debug.LogError("Error saving: " + request.Error);
 			App.Callbacks.SaveRequest(new SaveRequest(SaveRequest.States.Complete));
-		}
-		#endregion
-
-		#region Game Key Values
-		KeyValueResult<T> Result<T>(string key, T value) where T : IConvertible
-		{
-			return new KeyValueResult<T>(KeyValueTargets.Game, key, value);
-		}
-
-		void OnGetBoolean(KeyValueRequest request, Action<KeyValueResult<bool>> done)
-		{
-			done(Result(request.Key, Payload.Game.KeyValues.GetBoolean(request.Key)));
-		}
-
-		void OnGetInteger(KeyValueRequest request, Action<KeyValueResult<int>> done)
-		{
-			done(Result(request.Key, Payload.Game.KeyValues.GetInteger(request.Key)));
-		}
-
-		void OnGetString(KeyValueRequest request, Action<KeyValueResult<string>> done)
-		{
-			done(Result(request.Key, Payload.Game.KeyValues.GetString(request.Key)));
-		}
-
-		void OnSetBoolean(KeyValueRequest request, Action<KeyValueResult<bool>> done)
-		{
-			done(Result(request.Key, Payload.Game.KeyValues.SetBoolean(request.Key, request.BooleanValue)));
-		}
-
-		void OnSetInteger(KeyValueRequest request, Action<KeyValueResult<int>> done)
-		{
-			done(Result(request.Key, Payload.Game.KeyValues.SetInteger(request.Key, request.IntegerValue)));
-		}
-
-		void OnSetString(KeyValueRequest request, Action<KeyValueResult<string>> done)
-		{
-			done(Result(request.Key, Payload.Game.KeyValues.SetString(request.Key, request.StringValue)));
 		}
 		#endregion
 	}

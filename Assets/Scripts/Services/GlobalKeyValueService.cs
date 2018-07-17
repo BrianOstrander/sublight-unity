@@ -9,17 +9,13 @@ namespace LunraGames.SpaceFarm
 {
 	public class GlobalKeyValueService
 	{
-		static KeyValueResult<T> Result<T>(string key, T value) where T : IConvertible
-		{
-			return new KeyValueResult<T>(KeyValueTargets.Global, key, value);
-		}
-
 		CallbackService callbacks;
 		IModelMediator modelMediator;
 		KeyValueService keyValues;
 		ILogService logger;
 
 		GlobalKeyValuesModel globalKeyValues;
+		KeyValueListener keyValueListener;
 		bool currentlySaving;
 
 		public GlobalKeyValueService(CallbackService callbacks, IModelMediator modelMediator, KeyValueService keyValues, ILogService logger)
@@ -109,49 +105,14 @@ namespace LunraGames.SpaceFarm
 			callbacks.StateChange += OnStateChange;
 			callbacks.SaveRequest += OnSaveRequest;
 
-			keyValues.RegisterGet(KeyValueTargets.Global, OnGetBoolean);
-			keyValues.RegisterGet(KeyValueTargets.Global, OnGetInteger);
-			keyValues.RegisterGet(KeyValueTargets.Global, OnGetString);
-
-			keyValues.RegisterSet(KeyValueTargets.Global, OnSetBoolean);
-			keyValues.RegisterSet(KeyValueTargets.Global, OnSetInteger);
-			keyValues.RegisterSet(KeyValueTargets.Global, OnSetString);
+			keyValueListener = new KeyValueListener(KeyValueTargets.Global, globalKeyValues.KeyValues, keyValues);
+			keyValueListener.Register();
 
 			done(RequestStatus.Success);
 		}
 		#endregion
 
 		#region Events
-		void OnGetBoolean(KeyValueRequest request, Action<KeyValueResult<bool>> done)
-		{
-			done(Result(request.Key, globalKeyValues.KeyValues.GetBoolean(request.Key)));
-		}
-
-		void OnGetInteger(KeyValueRequest request, Action<KeyValueResult<int>> done)
-		{
-			done(Result(request.Key, globalKeyValues.KeyValues.GetInteger(request.Key)));
-		}
-
-		void OnGetString(KeyValueRequest request, Action<KeyValueResult<string>> done)
-		{
-			done(Result(request.Key, globalKeyValues.KeyValues.GetString(request.Key)));
-		}
-
-		void OnSetBoolean(KeyValueRequest request, Action<KeyValueResult<bool>> done)
-		{
-			done(Result(request.Key, globalKeyValues.KeyValues.SetBoolean(request.Key, request.BooleanValue)));
-		}
-
-		void OnSetInteger(KeyValueRequest request, Action<KeyValueResult<int>> done)
-		{
-			done(Result(request.Key, globalKeyValues.KeyValues.SetInteger(request.Key, request.IntegerValue)));
-		}
-
-		void OnSetString(KeyValueRequest request, Action<KeyValueResult<string>> done)
-		{
-			done(Result(request.Key, globalKeyValues.KeyValues.SetString(request.Key, request.StringValue)));
-		}
-
 		void OnStateChange(StateChange stateChange)
 		{
 			if (stateChange.State == StateMachine.States.Home && stateChange.Event == StateMachine.Events.Begin) OnTrySave();
