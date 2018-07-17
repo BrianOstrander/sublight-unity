@@ -13,25 +13,32 @@
       {
         "header": "0",
         "message": "Something",
-        "nextLogId": "20220082-511c-420b-8df4-d3db0416c50d",
+        "nextLogId": "88555402-9614-471b-9682-c6ae43032463",
         "beginning": true,
         "logId": "9299fdef-a6a6-4697-a830-d2d274674630",
         "duration": 0.25
       },
       {
         "header": "1",
-        "message": "Done",
+        "message": "end!",
         "index": 2,
         "ending": true,
-        "logId": "9f62a876-2603-48f7-ab50-de36c8a7f2d0",
-        "duration": 0.25
+        "logId": "f6a9f42c-f93d-43a9-b97a-0b2bcb175c8c"
       }
     ],
     "keyValueLogs": [
       {
-        "nextLogId": "9f62a876-2603-48f7-ab50-de36c8a7f2d0",
+        "setStrings": [
+          {
+            "value": "this should be in encounter!",
+            "keyValueId": "51fd643c-8173-4f75-93bd-2842b91ed6c2",
+            "target": "Encounter",
+            "key": "test_kv"
+          }
+        ],
+        "nextLogId": "f6a9f42c-f93d-43a9-b97a-0b2bcb175c8c",
         "index": 1,
-        "logId": "20220082-511c-420b-8df4-d3db0416c50d"
+        "logId": "88555402-9614-471b-9682-c6ae43032463"
       }
     ]
   },

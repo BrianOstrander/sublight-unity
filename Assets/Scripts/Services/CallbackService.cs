@@ -112,6 +112,10 @@ namespace LunraGames.SpaceFarm
 		/// is separate from pausing the ingame time.
 		/// </summary>
 		public Action<PlayState> PlayState = ActionExtensions.GetEmpty<PlayState>();
+		/// <summary>
+		/// Any key value requests are handled through here.
+		/// </summary>
+		public Action<KeyValueRequest> KeyValueRequest = ActionExtensions.GetEmpty<KeyValueRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

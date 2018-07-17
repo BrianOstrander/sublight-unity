@@ -9,7 +9,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Value;
 
-		public override KeyValueEncounterLogTypes StateType { get { return KeyValueEncounterLogTypes.SetString; } }
+		public override KeyValueEncounterLogTypes KeyValueType { get { return KeyValueEncounterLogTypes.SetString; } }
 
 		public SetStringEntryEncounterLogModel()
 		{

@@ -1,6 +1,6 @@
 ﻿namespace LunraGames.SpaceFarm
 {
-	public enum KeyValueEncounterLogTargets
+	public enum KeyValueTargets
 	{
 		Unknown = 0,
 		Encounter = 10,

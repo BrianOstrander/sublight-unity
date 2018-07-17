@@ -4,20 +4,24 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public abstract class KeyValueEntryEncounterLogModel : Model
 	{
-		[JsonProperty] KeyValueEncounterLogTargets target;
+		[JsonProperty] string keyValueId;
+		[JsonProperty] KeyValueTargets target;
 		[JsonProperty] string key;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<KeyValueEncounterLogTargets> Target;
+		public readonly ListenerProperty<string> KeyValueId;
+		[JsonIgnore]
+		public readonly ListenerProperty<KeyValueTargets> Target;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Key;
 
 		[JsonIgnore]
-		public abstract KeyValueEncounterLogTypes StateType { get; }
+		public abstract KeyValueEncounterLogTypes KeyValueType { get; }
 
 		public KeyValueEntryEncounterLogModel()
 		{
-			Target = new ListenerProperty<KeyValueEncounterLogTargets>(value => target = value, () => target);
+			KeyValueId = new ListenerProperty<string>(value => keyValueId = value, () => keyValueId);
+			Target = new ListenerProperty<KeyValueTargets>(value => target = value, () => target);
 			Key = new ListenerProperty<string>(value => key = value, () => key);
 		}
 	}

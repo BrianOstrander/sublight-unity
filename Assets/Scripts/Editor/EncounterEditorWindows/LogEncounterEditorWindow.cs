@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using UnityEditor;
 using UnityEngine;
@@ -17,9 +19,9 @@ namespace LunraGames.SpaceFarm
 			GUILayout.BeginVertical(EditorStyles.helpBox);
 			GUILayout.BeginHorizontal();
 			{
-				var header = model.LogType + " Log Id:";
-				GUILayout.Label(header, GUILayout.Width(header.Length * 5.5f));
-				EditorGUILayout.SelectableLabel(model.LogId);
+				var header = model.LogType + ".LogId:";
+				GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.SelectableLabel(model.LogId, EditorStyles.boldLabel);
 				if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
 				{
 					beginning = model.LogId;
@@ -77,8 +79,126 @@ namespace LunraGames.SpaceFarm
 
 		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model, EncounterLogModel nextModel)
 		{
-			GUILayout.Label("todo...");
+			var targets = Enum.GetValues(typeof(KeyValueTargets)).Cast<KeyValueTargets>().ToList();
+			var kvTypes = Enum.GetValues(typeof(KeyValueEncounterLogTypes)).Cast<KeyValueEncounterLogTypes>().ToList();
+
+			var labels = new List<string>(new string[] { "- Select Key Value -" });
+			var onSelections = new Dictionary<int, Action>();
+			var index = 1;
+
+			foreach (var target in targets)
+			{
+				if (target == KeyValueTargets.Unknown) continue;
+				labels.Add("--- " + target + " ---");
+				index++;
+
+				foreach (var kvType in kvTypes)
+				{
+					if (kvType == KeyValueEncounterLogTypes.Unknown) continue;
+					labels.Add(target+"."+kvType);
+					onSelections.Add(
+						index,
+						() => OnKeyValueLogSpawn(infoModel, model, target, kvType)
+					);
+					index++;
+				}
+			}
+
+			var selection = 0;
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("Append New Key Value: ", GUILayout.Width(128f));
+				selection = EditorGUILayout.Popup(selection, labels.ToArray());
+			}
+			GUILayout.EndHorizontal();
+			Action onSelection;
+			if (onSelections.TryGetValue(selection, out onSelection)) onSelection();
+
+			var deleted = string.Empty;
+
+			foreach (var kv in model.KeyValues.Value)
+			{
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				if (OnKeyValueLogHeader(infoModel, model, kv)) deleted = kv.KeyValueId.Value;
+				switch (kv.KeyValueType)
+				{
+					case KeyValueEncounterLogTypes.SetString:
+						OnKeyValueLogSetString(infoModel, model, kv as SetStringEntryEncounterLogModel);
+						break;
+					default:
+						Debug.LogError("Unrecognized KeyValueType: " + kv.KeyValueType);
+						break;
+				}
+				GUILayout.EndVertical();
+			}
+
+			if (!string.IsNullOrEmpty(deleted))
+			{
+				model.KeyValues.Value = model.KeyValues.Value.Where(kv => kv.KeyValueId != deleted).ToArray();
+			}
+
 			OnLinearLog(infoModel, model, nextModel);
+		}
+
+		bool OnKeyValueLogHeader(
+			EncounterInfoModel infoModel,
+			KeyValueEncounterLogModel model,
+			KeyValueEntryEncounterLogModel keyValue
+		)
+		{
+			var deleted = false;
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label(keyValue.KeyValueType + ":", GUILayout.ExpandWidth(false));
+				keyValue.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", keyValue.Target.Value);
+				deleted = EditorGUILayoutExtensions.XButton();
+			}
+			GUILayout.EndHorizontal();
+			return deleted;
+		}
+
+		void OnKeyValueLogSetString(
+			EncounterInfoModel infoModel,
+			KeyValueEncounterLogModel model,
+			SetStringEntryEncounterLogModel keyValue
+		)
+		{
+			keyValue.Key.Value = EditorGUILayout.TextField("Key", keyValue.Key.Value);
+
+			var isField = string.IsNullOrEmpty(keyValue.Value.Value) || keyValue.Value.Value.Length < 32;
+			if (isField)
+			{
+				EditorStyles.textField.wordWrap = true;
+				keyValue.Value.Value = EditorGUILayout.TextField("Value", keyValue.Value.Value);
+			}
+			else
+			{
+				GUILayout.Label("Value");
+				EditorStyles.textArea.wordWrap = true;
+				keyValue.Value.Value = EditorGUILayout.TextArea(keyValue.Value.Value);
+			}
+		}
+
+		void OnKeyValueLogSpawn(
+			EncounterInfoModel infoModel,
+			KeyValueEncounterLogModel model,
+			KeyValueTargets target,
+			KeyValueEncounterLogTypes kvType
+		)
+		{
+			var guid = Guid.NewGuid().ToString();
+			switch(kvType)
+			{
+				case KeyValueEncounterLogTypes.SetString:
+					var setString = new SetStringEntryEncounterLogModel();
+					setString.KeyValueId.Value = guid;
+					setString.Target.Value = target;
+					model.KeyValues.Value = model.KeyValues.Value.Append(setString).ToArray();
+					break;
+				default:
+					Debug.LogError("Unrecognized KeyValueEncoutnerLogType: " + kvType);
+					break;
+			}
 		}
 
 		void OnLinearLog(EncounterInfoModel infoModel, LinearEncounterLogModel model, EncounterLogModel nextModel)

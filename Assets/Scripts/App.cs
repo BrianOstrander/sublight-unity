@@ -56,6 +56,9 @@ namespace LunraGames.SpaceFarm
 		EncounterService encounters;
 		public static EncounterService Encounters { get { return instance.encounters; } }
 
+		KeyValueService keyValues;
+		public static KeyValueService KeyValues { get { return instance.keyValues; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -135,6 +138,7 @@ namespace LunraGames.SpaceFarm
 			encounters = new EncounterService(modelMediator, logging);
 			scenes = new SceneService(Logging, Callbacks);
 			gameService = new GameService(M, Universe);
+			keyValues = new KeyValueService(Callbacks);
 		}
 
 		public static void Restart(string message)

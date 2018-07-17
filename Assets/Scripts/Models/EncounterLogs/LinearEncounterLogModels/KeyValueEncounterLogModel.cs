@@ -9,7 +9,7 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public class KeyValueEncounterLogModel : LinearEncounterLogModel
 	{
-		[JsonProperty] SetStringEntryEncounterLogModel[] setStrings;
+		[JsonProperty] SetStringEntryEncounterLogModel[] setStrings = new SetStringEntryEncounterLogModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<KeyValueEntryEncounterLogModel[]> KeyValues;
@@ -30,13 +30,13 @@ namespace LunraGames.SpaceFarm.Models
 
 			foreach (var kv in keyValues)
 			{
-				switch (kv.StateType)
+				switch (kv.KeyValueType)
 				{
 					case KeyValueEncounterLogTypes.SetString:
 						setStringsList.Add(kv as SetStringEntryEncounterLogModel);
 						break;
 					default:
-						Debug.LogError("Unrecognized KeyValueEncounterLogType: " + kv.StateType);
+						Debug.LogError("Unrecognized KeyValueEncounterLogType: " + kv.KeyValueType);
 						break;
 				}
 			}
