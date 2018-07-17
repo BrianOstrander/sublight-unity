@@ -13,10 +13,13 @@ namespace LunraGames.SpaceFarm
 {
 	public partial class EncounterEditorWindow
 	{
-		bool OnLogBegin(EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning, ref string ending)
+		bool OnLogBegin(int count, EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning, ref string ending)
 		{
 			var deleted = false;
+			var isAlternate = count % 2 == 0;
+			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.gray);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
+			if (isAlternate) EditorGUILayoutExtensions.PopColor();
 			GUILayout.BeginHorizontal();
 			{
 				var header = model.LogType + ".LogId:";
@@ -115,22 +118,37 @@ namespace LunraGames.SpaceFarm
 			if (onSelections.TryGetValue(selection, out onSelection)) onSelection();
 
 			var deleted = string.Empty;
+			var isAlternate = false;
 
-			foreach (var kv in model.KeyValues.Value)
+			GUILayout.BeginHorizontal();
 			{
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				if (OnKeyValueLogHeader(infoModel, model, kv)) deleted = kv.KeyValueId.Value;
-				switch (kv.KeyValueType)
+				GUILayout.Space(16f);
+				GUILayout.BeginVertical();
 				{
-					case KeyValueEncounterLogTypes.SetString:
-						OnKeyValueLogSetString(infoModel, model, kv as SetStringEntryEncounterLogModel);
-						break;
-					default:
-						Debug.LogError("Unrecognized KeyValueType: " + kv.KeyValueType);
-						break;
+					foreach (var kv in model.KeyValues.Value)
+					{
+						isAlternate = !isAlternate;
+
+						if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey.NewV(0.5f));
+						GUILayout.BeginVertical(EditorStyles.helpBox);
+						if (isAlternate) EditorGUILayoutExtensions.PopColor();
+
+						if (OnKeyValueLogHeader(infoModel, model, kv)) deleted = kv.KeyValueId.Value;
+						switch (kv.KeyValueType)
+						{
+							case KeyValueEncounterLogTypes.SetString:
+								OnKeyValueLogSetString(infoModel, model, kv as SetStringEntryEncounterLogModel);
+								break;
+							default:
+								Debug.LogError("Unrecognized KeyValueType: " + kv.KeyValueType);
+								break;
+						}
+						GUILayout.EndVertical();
+					}
 				}
 				GUILayout.EndVertical();
 			}
+			GUILayout.EndHorizontal();
 
 			if (!string.IsNullOrEmpty(deleted))
 			{

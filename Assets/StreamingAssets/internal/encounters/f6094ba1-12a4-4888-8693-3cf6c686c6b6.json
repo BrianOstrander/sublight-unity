@@ -40,6 +40,18 @@
             "keyValueId": "beaedb33-cf31-49a0-9519-6abe3800bf92",
             "target": "Game",
             "key": "some_game_val"
+          },
+          {
+            "value": "whooo hoo",
+            "keyValueId": "86f42d40-74d2-4135-9ff1-a41d7d878274",
+            "target": "Global",
+            "key": "some_other_global"
+          },
+          {
+            "value": "wheee heeee",
+            "keyValueId": "61f77147-d73b-4b28-902b-9ebe151b2c25",
+            "target": "Global",
+            "key": "another_global"
           }
         ],
         "nextLogId": "af7e55d0-ea83-4c93-b6c4-d9f64d7c41fc",

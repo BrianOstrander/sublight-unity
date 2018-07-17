@@ -270,7 +270,7 @@ namespace LunraGames.SpaceFarm
 					{
 						var log = sorted[i];
 						var nextLog = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
-						if (OnLogBegin(model, log, ref beginning, ref ending)) deleted = log.LogId;
+						if (OnLogBegin(i, model, log, ref beginning, ref ending)) deleted = log.LogId;
 						OnLog(model, log, nextLog);
 						OnLogEnd(model, log);
 						
