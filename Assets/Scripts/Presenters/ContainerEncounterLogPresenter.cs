@@ -141,7 +141,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			if (EncounterLogValidator.Presented.Contains(logModel.LogType)) OnPresentedLog(logModel);
 			else if (EncounterLogValidator.Logic.Contains(logModel.LogType)) OnLogicLog(logModel);
-			else Debug.LogError("Unhandled LogType: " + logModel.LogType);
+			else Debug.LogError("Unrecognized LogType: " + logModel.LogType);
 		}
 
 		void OnPresentedLog(EncounterLogModel logModel)
@@ -155,14 +155,39 @@ namespace LunraGames.SpaceFarm.Presenters
 
 				OnHandledLog(logModel);
 			}
-			else Debug.LogError("Unhandled LogType: " + logModel.LogType);
+			else Debug.LogError("Unrecognized LogType: " + logModel.LogType);
 		}
 
 		void OnLogicLog(EncounterLogModel logModel)
 		{
-			Debug.Log("todo some logic here");
+			switch(logModel.LogType)
+			{
+				case EncounterLogTypes.KeyValue:
+					OnKeyValueLog(logModel as KeyValueEncounterLogModel);
+					break;
+				default:
+					Debug.LogError("Unrecognized Logic LogType: " + logModel.LogType);
+					break;
+			}
 
 			OnHandledLog(logModel);
+		}
+
+		void OnKeyValueLog(KeyValueEncounterLogModel logModel)
+		{
+			foreach (var entry in logModel.KeyValues.Value)
+			{
+				switch(entry.KeyValueType)
+				{
+					case KeyValueEncounterLogTypes.SetString:
+						var setString = entry as SetStringEntryEncounterLogModel;
+						App.Callbacks.KeyValueRequest(KeyValueRequest.Set(entry.Target.Value, entry.Key.Value, setString.Value.Value));
+						break;
+					default:
+						Debug.LogError("Unrecognized KeyValueType: " + entry.KeyValueType);
+						break;
+				}
+			}
 		}
 
 		void OnHandledLog(EncounterLogModel logModel)
