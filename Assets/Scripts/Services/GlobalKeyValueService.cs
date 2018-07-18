@@ -20,6 +20,11 @@ namespace LunraGames.SpaceFarm
 
 		public GlobalKeyValueService(CallbackService callbacks, IModelMediator modelMediator, KeyValueService keyValues, ILogService logger)
 		{
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
+			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
+			if (keyValues == null) throw new ArgumentNullException("keyValues");
+			if (logger == null) throw new ArgumentNullException("logger");
+
 			this.callbacks = callbacks;
 			this.modelMediator = modelMediator;
 			this.keyValues = keyValues;

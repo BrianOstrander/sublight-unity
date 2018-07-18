@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
@@ -13,6 +15,18 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			SaveType = SaveTypes.InteractedEncounterInfoList;
 			Encounters = new ListenerProperty<InteractedEncounterInfoModel[]>(value => encounters = value, () => encounters);
+		}
+
+		public InteractedEncounterInfoModel GetEncounter(string encounter)
+		{
+			var result = Encounters.Value.FirstOrDefault(e => e.EncounterId.Value == encounter);
+			if (result == null)
+			{
+				result = new InteractedEncounterInfoModel();
+				result.EncounterId.Value = encounter;
+				Encounters.Value = Encounters.Value.Append(result).ToArray();
+			}
+			return result;
 		}
 	}
 }

@@ -120,6 +120,8 @@ namespace LunraGames.SpaceFarm
 
 		public StateMachine(Heartbeat heartbeat, params IState[] states)
 		{
+			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+
 			stateEntries = states;
 			heartbeat.Update += Update;
 		}

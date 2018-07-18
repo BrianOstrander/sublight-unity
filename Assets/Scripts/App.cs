@@ -138,7 +138,7 @@ namespace LunraGames.SpaceFarm
 				throw new Exception("Unknown platform");
 			}
 
-			encounters = new EncounterService(modelMediator, logging);
+			encounters = new EncounterService(M, Logging, Callbacks);
 			scenes = new SceneService(Logging, Callbacks);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);

@@ -123,6 +123,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			finalReport.Summary.Value = summary;
 			model.AddFinalReport(finalReport);
 
+			App.Encounters.GetEncounterInteraction(encounter.EncounterId).TimesCompleted.Value++;
+
 			App.Callbacks.DialogRequest(DialogRequest.Alert(summary, "Crew Report", OnAlertDone));
 		}
 

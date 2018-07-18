@@ -1,3 +1,5 @@
+using System;
+
 using UnityEngine;
 
 namespace LunraGames.SpaceFarm
@@ -8,6 +10,8 @@ namespace LunraGames.SpaceFarm
 
 		public AudioService(GameObject audioRoot) 
 		{
+			if (audioRoot == null) throw new ArgumentNullException("audioRoot");
+
 			this.audioRoot = audioRoot;
 		}
 

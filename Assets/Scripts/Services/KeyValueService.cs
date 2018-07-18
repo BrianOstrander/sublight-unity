@@ -23,6 +23,8 @@ namespace LunraGames.SpaceFarm
 
 		public KeyValueService(CallbackService callbacks)
 		{
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
+
 			this.callbacks = callbacks;
 			callbacks.KeyValueRequest += OnKeyValueRequest;
 		}

@@ -7,24 +7,24 @@ namespace LunraGames.SpaceFarm.Models
 	public class InteractedEncounterInfoModel : Model
 	{
 		[JsonProperty] string encounterId;
-		[JsonProperty] int totalTimesSeen;
-		[JsonProperty] int uniqueEndingsSeen;
+		[JsonProperty] int timesSeen;
+		[JsonProperty] int timesCompleted;
 		[JsonProperty] DateTime lastSeen = DateTime.MinValue;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncounterId;
 		[JsonIgnore]
-		public readonly ListenerProperty<int> TotalTimesSeen;
+		public readonly ListenerProperty<int> TimesSeen;
 		[JsonIgnore]
-		public readonly ListenerProperty<int> UniqueEndingsSeen;
+		public readonly ListenerProperty<int> TimesCompleted;
 		[JsonIgnore]
 		public readonly ListenerProperty<DateTime> LastSeen;
 
 		public InteractedEncounterInfoModel()
 		{
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
-			TotalTimesSeen = new ListenerProperty<int>(value => totalTimesSeen = value, () => totalTimesSeen);
-			UniqueEndingsSeen = new ListenerProperty<int>(value => uniqueEndingsSeen = value, () => uniqueEndingsSeen);
+			TimesSeen = new ListenerProperty<int>(value => timesSeen = value, () => timesSeen);
+			TimesCompleted = new ListenerProperty<int>(value => timesCompleted = value, () => timesCompleted);
 			LastSeen = new ListenerProperty<DateTime>(value => lastSeen = value, () => lastSeen);
 		}
 	}

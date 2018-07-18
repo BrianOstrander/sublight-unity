@@ -12,22 +12,27 @@ namespace LunraGames.SpaceFarm
 	{
 		IModelMediator modelMediator;
 		ILogService logger;
+		CallbackService callbacks;
 
 		List<EncounterInfoModel> encounters = new List<EncounterInfoModel>();
 		InteractedEncounterInfoListModel interactedEncounters;
+		bool currentlySaving;
 
-		public EncounterService(IModelMediator modelMediator, ILogService logger)
+		public EncounterService(IModelMediator modelMediator, ILogService logger, CallbackService callbacks)
 		{
-			if (modelMediator == null) throw new ArgumentNullException("saveLoadService");
+			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
 			if (logger == null) throw new ArgumentNullException("logger");
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
 
 			this.modelMediator = modelMediator;
 			this.logger = logger;
+			this.callbacks = callbacks;
 		}
 
 		#region Initialization
 		public void Initialize(Action<RequestStatus> done)
 		{
+			currentlySaving = true;
 			modelMediator.List<EncounterInfoModel>(result => OnListEncounters(result, done));
 		}
 
@@ -131,7 +136,11 @@ namespace LunraGames.SpaceFarm
 			}
 
 			logger.Log("Saved interacted encounters to " + result.Model.Path, LogTypes.Initialization);
+
+			currentlySaving = false;
 			interactedEncounters = result.TypedModel;
+			callbacks.SaveRequest += OnSaveRequest;
+
 			done(RequestStatus.Success);
 		}
 		#endregion
@@ -144,8 +153,8 @@ namespace LunraGames.SpaceFarm
 
 			foreach (var encounter in allEncounters)
 			{
-				var entry = existingTargets.FirstOrDefault(t => t.EncounterId.Value == encounter.EncounterId.Value) ?? new InteractedEncounterInfoModel();
-				entry.EncounterId.Value = encounter.EncounterId;
+				var entry = existingTargets.FirstOrDefault(t => t.EncounterId.Value == encounter.EncounterId.Value);
+				if (entry == null) continue;
 				newTargets.Add(entry);
 			}
 
@@ -163,7 +172,7 @@ namespace LunraGames.SpaceFarm
 				e =>
 				{
 					if (e.Hidden.Value) return false;
-					switch(model.GetEncounterStatus(e.EncounterId).State)
+					switch (model.GetEncounterStatus(e.EncounterId).State)
 					{
 						case EncounterStatus.States.Completed:
 						case EncounterStatus.States.Seen:
@@ -180,15 +189,47 @@ namespace LunraGames.SpaceFarm
 			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
 			body.Encounter.Value = chosen.EncounterId;
 
+			var interaction = GetEncounterInteraction(chosen.EncounterId);
+			interaction.TimesSeen.Value++;
+			interaction.LastSeen.Value = DateTime.Now;
+
 			return chosen;
 		}
 
 		/// <summary>
 		/// Gets cached encounters.
 		/// </summary>
-		public EncounterInfoModel GetEncounter(string encounterId)
+		public EncounterInfoModel GetEncounter(string encounter)
 		{
-			return encounters.FirstOrDefault(e => e.EncounterId.Value == encounterId);
+			return encounters.FirstOrDefault(e => e.EncounterId.Value == encounter);
 		}
+
+		public InteractedEncounterInfoModel GetEncounterInteraction(string encounter)
+		{
+			return interactedEncounters.GetEncounter(encounter);
+		}
+
+		#region Events
+		void OnSaveRequest(SaveRequest request)
+		{
+			if (request.State == SaveRequest.States.Complete) OnTrySave();
+		}
+
+		void OnTrySave()
+		{
+			if (currentlySaving) return;
+			modelMediator.Save(interactedEncounters, OnTrySaved);
+		}
+
+		void OnTrySaved(SaveLoadRequest<InteractedEncounterInfoListModel> result)
+		{
+			currentlySaving = false;
+
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Trying to save interacted encounter info list failed with status " + result.Status + "\nError: " + result.Error);
+			}
+		}
+		#endregion
 	}
 }
