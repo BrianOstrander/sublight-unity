@@ -9,6 +9,7 @@ namespace LunraGames.SpaceFarm
 		public virtual void OnShown(IView view) {}
 		public virtual void OnIdle(IView view) {}
 		public virtual void OnLateIdle(IView view) {}
+		public virtual void OnPrepareClose(IView view) { }
 		public virtual void OnClosing(IView view, float scalar) {}
 		public virtual void OnClosed(IView view) {}
 	}

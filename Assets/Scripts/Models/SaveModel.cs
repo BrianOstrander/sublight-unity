@@ -1,5 +1,7 @@
 ﻿using System;
 
+using UnityEngine;
+
 using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
@@ -58,6 +60,18 @@ namespace LunraGames.SpaceFarm.Models
 		/// </remarks>
 		[JsonIgnore]
 		public readonly ListenerProperty<DateTime> Modified;
+
+		[JsonIgnore]
+		public bool IsInternal { get { return Path.Value.StartsWith(Application.dataPath); } }
+		[JsonIgnore]
+		public string InternalPath
+		{
+			get 
+			{
+				if (!IsInternal) return null;
+				return "Assets"+Path.Value.Substring(Application.dataPath.Length);
+			}
+		}
 
 		public SaveModel()
 		{

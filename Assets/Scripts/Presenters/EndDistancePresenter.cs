@@ -18,10 +18,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
 

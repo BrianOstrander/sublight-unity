@@ -1,0 +1,82 @@
+{
+  "hidden": true,
+  "encounterId": "0e079ac0-cb17-4203-9b33-2fda53a0f365",
+  "name": "KV Test",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [],
+  "validProbes": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "0",
+        "message": "Something",
+        "nextLogId": "88555402-9614-471b-9682-c6ae43032463",
+        "beginning": true,
+        "logId": "9299fdef-a6a6-4697-a830-d2d274674630",
+        "duration": 0.25
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [
+          {
+            "value": "this should be in encounter!",
+            "keyValueId": "51fd643c-8173-4f75-93bd-2842b91ed6c2",
+            "target": "Encounter",
+            "key": "some_encounter_val"
+          }
+        ],
+        "nextLogId": "8c4bf9df-d48d-4f0a-abfc-7f8ac4ffaa43",
+        "index": 1,
+        "logId": "88555402-9614-471b-9682-c6ae43032463"
+      },
+      {
+        "setStrings": [
+          {
+            "value": "this should be in game!",
+            "keyValueId": "beaedb33-cf31-49a0-9519-6abe3800bf92",
+            "target": "Game",
+            "key": "some_game_val"
+          },
+          {
+            "value": "whooo hoo",
+            "keyValueId": "86f42d40-74d2-4135-9ff1-a41d7d878274",
+            "target": "Global",
+            "key": "some_other_global"
+          },
+          {
+            "value": "wheee heeee",
+            "keyValueId": "61f77147-d73b-4b28-902b-9ebe151b2c25",
+            "target": "Global",
+            "key": "another_global"
+          }
+        ],
+        "nextLogId": "af7e55d0-ea83-4c93-b6c4-d9f64d7c41fc",
+        "index": 2,
+        "logId": "8c4bf9df-d48d-4f0a-abfc-7f8ac4ffaa43"
+      },
+      {
+        "setStrings": [
+          {
+            "value": "this should be in global!",
+            "keyValueId": "4f4d2114-d627-4543-a506-68a4925a0222",
+            "target": "Global",
+            "key": "some_global_val"
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "af7e55d0-ea83-4c93-b6c4-d9f64d7c41fc"
+      }
+    ]
+  },
+  "version": 2,
+  "meta": "KV Test",
+  "created": "2018-07-16T12:38:36.83934-07:00",
+  "modified": "2018-07-16T12:38:36.83934-07:00",
+  "SaveType": "EncounterInfo"
+}

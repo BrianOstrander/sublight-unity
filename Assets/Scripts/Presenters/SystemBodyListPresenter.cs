@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -19,10 +20,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.FocusRequest += OnFocus;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.FocusRequest -= OnFocus;
 		}
 
@@ -69,26 +68,23 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			switch(body.Status.Value)
+			var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
+			if (encounter != null) body.Encounter.Value = encounter.EncounterId;
+
+			switch(model.GetEncounterStatus(body.Encounter).State)
 			{
-				case BodyStatus.NotProbed:
-					App.Callbacks.FocusRequest(
-						BodyFocusRequest.ProbeList(destination.Position, body.BodyId)
-					);
-					break;
-				case BodyStatus.EncounterNotFound:
-					App.Callbacks.FocusRequest(
-						BodyFocusRequest.Probing(destination.Position, body.BodyId, body.ProbeId)
-					);
-					break;
-				case BodyStatus.EncounterFound:
-					Debug.Log("Lol encounter found logic here");
-					break;
-				case BodyStatus.EncounterExplored:
-					Debug.Log("lol encounter explored logic here");
-					break;
+				case EncounterStatus.States.Unknown:
+					App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no anomalies."));
+					return;
+				case EncounterStatus.States.Completed:
+					var finalReport = model.GetFinalReport(body.Encounter);
+					if (finalReport != null) App.Callbacks.DialogRequest(DialogRequest.Alert(finalReport.Summary, "Crew Report"));
+					else App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
+					return;
 				default:
-					Debug.LogError("Unhandled BodyStatus: " + body.Status.Value);
+					App.Callbacks.FocusRequest(
+						BodyFocusRequest.BodyHook(destination.Position, body.BodyId)
+					);
 					break;
 			}
 		}
@@ -96,6 +92,28 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnDoneClick()
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
+
+			// Temp Begin
+			foreach (var body in destination.Bodies.Value)
+			{
+				var added = body.ResourcesCurrent;
+				
+				model.Ship.Value.Inventory.Resources.Add(added);
+				
+				body.ResourcesAcquired.Add(added);
+				
+				App.Callbacks.DialogRequest(
+					DialogRequest.Alert(
+						"Acquired " + Strings.Rations(added.Rations) + " rations and " + Strings.Fuel(added.Fuel) + " fuel",
+						done: OnAlertClosed
+					)
+				);
+			}
+			// Temp End
+		}
+
+		void OnAlertClosed()
+		{
 			App.Callbacks.FocusRequest(
 				new SystemsFocusRequest(
 					destination.Position.Value.SystemZero,

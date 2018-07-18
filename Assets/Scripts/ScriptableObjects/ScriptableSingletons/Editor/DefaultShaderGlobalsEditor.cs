@@ -16,7 +16,7 @@ namespace LunraGames.SpaceFarm
 				GUI.enabled = !DevPrefs.AutoApplyShaderGlobals;
 				if (GUILayout.Button("Apply Now")) typedTarget.Apply();
 				GUI.enabled = true;
-				DevPrefs.AutoApplyShaderGlobals = GUILayout.Toggle(DevPrefs.AutoApplyShaderGlobals, "Auto Apply", "Button");
+				DevPrefs.AutoApplyShaderGlobals.Value = GUILayout.Toggle(DevPrefs.AutoApplyShaderGlobals, "Auto Apply", "Button");
 			}
 			GUILayout.EndHorizontal();
 

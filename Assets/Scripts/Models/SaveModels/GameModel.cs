@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Linq;
+
+using Newtonsoft.Json;
 
 using UnityEngine;
 
@@ -22,10 +25,17 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] TravelRequest travelRequest;
 		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
 
+		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
+
 		[JsonProperty] GalaxyFocusRequest galaxyFocus;
 		[JsonProperty] SystemBodiesFocusRequest systemBodiesFocus;
 		[JsonProperty] SystemsFocusRequest systemsFocus;
 		[JsonProperty] BodyFocusRequest bodyFocus;
+		[JsonProperty] EncounterFocusRequest encounterFocus;
+
+		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
+
+		[JsonProperty] FinalReportModel[] finalReports = new FinalReportModel[0];
 
 		/// <summary>
 		/// The game seed.
@@ -86,6 +96,12 @@ namespace LunraGames.SpaceFarm.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<FocusRequest> FocusRequest;
+
+		/// <summary>
+		/// The encounters seen, completed or otherwise.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<EncounterStatus[]> EncounterStatuses;
 		#endregion
 
 		#region NonSerialized
@@ -115,6 +131,8 @@ namespace LunraGames.SpaceFarm.Models
 			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 
+			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
+
 			FocusRequest = new ListenerProperty<FocusRequest>(OnSetFocus, OnGetFocus);
 		}
 
@@ -125,6 +143,7 @@ namespace LunraGames.SpaceFarm.Models
 			systemBodiesFocus = null;
 			systemsFocus = null;
 			bodyFocus = null;
+			encounterFocus = null;
 
 			switch (focus.Focus)
 			{
@@ -140,6 +159,9 @@ namespace LunraGames.SpaceFarm.Models
 				case Focuses.Body:
 					bodyFocus = focus as BodyFocusRequest;
 					break;
+				case Focuses.Encounter:
+					encounterFocus = focus as EncounterFocusRequest;
+					break;
 				default:
 					Debug.LogError("Unrecognized Focus: " + focus.Focus);
 					break;
@@ -152,7 +174,44 @@ namespace LunraGames.SpaceFarm.Models
 			if (systemBodiesFocus != null) return systemBodiesFocus;
 			if (systemsFocus != null) return systemsFocus;
 			if (bodyFocus != null) return bodyFocus;
+			if (encounterFocus != null) return encounterFocus;
+
 			return null;
+		}
+		#endregion
+
+		#region Utility
+		public void SetEncounterStatus(EncounterStatus status)
+		{
+			if (status.Encounter == null)
+			{
+				Debug.LogError("Cannot update the status of an encounter with a null id, update ignored.");
+				return;
+			}
+			EncounterStatuses.Value = EncounterStatuses.Value.Where(e => e.Encounter != status.Encounter).Append(status).ToArray();
+		}
+
+		public EncounterStatus GetEncounterStatus(string encounterId)
+		{
+			return EncounterStatuses.Value.FirstOrDefault(e => e.Encounter == encounterId);
+		}
+
+		[JsonIgnore]
+		public KeyValueListModel KeyValues { get { return keyValues; } }
+
+		public void AddFinalReport(FinalReportModel finalReport)
+		{
+			if (finalReports.FirstOrDefault(r => r.Encounter.Value == finalReport.Encounter.Value) != null)
+			{
+				Debug.LogError("A final report with EncounterId " + finalReport.Encounter.Value + " already exists.");
+				return;
+			}
+			finalReports = finalReports.Append(finalReport).ToArray();
+		}
+
+		public FinalReportModel GetFinalReport(string encounter)
+		{
+			return finalReports.FirstOrDefault(r => r.Encounter.Value == encounter);
 		}
 		#endregion
 	}

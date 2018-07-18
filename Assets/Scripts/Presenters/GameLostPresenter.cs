@@ -18,10 +18,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.DestructionRadius.Changed += OnDestructionRadius;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.Ship.Value.Inventory.Resources.Rations.Changed -= OnRations;
 			model.DestructionRadius.Changed -= OnDestructionRadius;
 		}

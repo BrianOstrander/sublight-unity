@@ -17,19 +17,20 @@ namespace LunraGamesEditor
 		/// </summary>
 		/// <param name="name">Name.</param>
 		/// <typeparam name="T">Type of the ScriptableObject.</typeparam>
-		public static void CreateObject<T>(string name)
+		public static T CreateObject<T>(string name)
 			where T : ScriptableObject
 		{
 			var directory = SelectionExtensions.Directory();
 			if (directory == null)
 			{
 				EditorUtilityExtensions.DialogInvalid(Strings.Dialogs.Messages.SelectValidDirectory);
-				return;
+				return null;
 			}
 
 			var config = ScriptableObject.CreateInstance<T>();
 			AssetDatabase.CreateAsset(config, Path.Combine(directory, name + ".asset"));
 			Selection.activeObject = config;
+			return config;
 		}
 	}
 }

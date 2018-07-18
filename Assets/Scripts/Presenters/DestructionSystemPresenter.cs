@@ -16,10 +16,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.DestructionRadius.Changed -= OnDestructionRadius;
 			App.Callbacks.VoidRenderTexture -= OnVoidRenderTexture;
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;

@@ -16,10 +16,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.Click += OnClick;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			//App.Callbacks.PointerOrientation -= OnOrientation;
 			App.Callbacks.Highlight -= OnHighlight;
 			App.Callbacks.Click -= OnClick;

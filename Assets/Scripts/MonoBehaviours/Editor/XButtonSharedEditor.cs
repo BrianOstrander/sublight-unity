@@ -14,7 +14,7 @@ namespace LunraGames.SpaceFarm
 				EditorGUILayout.HelpBox("Styles are not currently being applied in edit mode", MessageType.Warning);
 				if (GUILayout.Button("Enable Auto Apply", GUILayout.Height(38f)))
 				{
-					DevPrefs.ApplyXButtonStyleInEditMode = true;
+					DevPrefs.ApplyXButtonStyleInEditMode.Value = true;
 				}
 			}
 			GUILayout.EndHorizontal();

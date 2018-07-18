@@ -28,10 +28,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.FocusedSectors.Changed += OnFocusedSectors;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Heartbeat.Update -= OnUpdate;
 			App.Callbacks.FocusRequest -= OnFocus;
 			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
@@ -178,7 +176,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (!positions.Contains(system.Position.Value.SystemZero))
 			{
 				CloseView(true);
-				UnBind();
+				App.P.UnRegister(this);
 			}
 		}
 		#endregion

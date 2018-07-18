@@ -21,6 +21,8 @@ namespace LunraGames.SpaceFarm
 		/// <value>The view interface type.</value>
 		public Type ViewInterface { get { return typeof(V); } }
 
+		public bool UnBinded { private set; get; }
+
 		public Presenter() : this(App.V.Get<V>()) {}
 
 		public Presenter(V view)
@@ -41,18 +43,22 @@ namespace LunraGames.SpaceFarm
 				Debug.LogError("Unable to get an instance of a view for " + GetType());
 				return;
 			}
-
+			// TODO: Is the cast below necessary?
 			View = view as V;
 			View.Reset();
 		}
 
 		protected virtual Transform DefaultAnchor { get { return null; } }
 
-		protected virtual void UnBind()
+		void UnBind()
 		{
-			if (View.TransitionState == TransitionStates.Closed) return;
+			if (UnBinded) return;
+			UnBinded = true;
 			App.V.Pool(View);
+			OnUnBind();
 		}
+
+		protected virtual void OnUnBind() {}
 
 		protected virtual void ShowView(Transform parent = null, bool instant = false)
 		{

@@ -14,6 +14,7 @@ namespace LunraGames.SpaceFarm
 		public GameModel Game;
 
 		public Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]> Focuses = new Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]>();
+		public KeyValueListener KeyValueListener;
 	}
 
 	public class GameState : State<GamePayload>
@@ -35,7 +36,7 @@ namespace LunraGames.SpaceFarm
 
 		void LoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
 		void InitializeInput(Action done)
@@ -49,6 +50,10 @@ namespace LunraGames.SpaceFarm
 			App.Callbacks.SaveRequest += OnSaveRequest;
 			Payload.Game.TravelRequest.Changed += OnTravelRequest;
 			App.Callbacks.FocusRequest += OnFocus;
+
+			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues);
+			Payload.KeyValueListener.Register();
+
 			done();
 		}
 
@@ -105,9 +110,17 @@ namespace LunraGames.SpaceFarm
 
 			// Body presenters
 			new CameraBodyPresenter(game);
+			new BodyHookPresenter(game);
+
+			// TODO: Determine if these are obsolete...
 			new BodyProbeListPresenter(game);
 			new BodyProbeDetailPresenter(game);
 			new BodyProbingPresenter(game);
+			// ----------------------------------------
+
+			// Encounter presenters
+			new CameraEncounterPresenter(game);
+			new ContainerEncounterLogPresenter(game);
 
 			// Global presenters
 			new PauseMenuPresenter();
@@ -129,14 +142,14 @@ namespace LunraGames.SpaceFarm
 
 			if (!DevPrefs.SkipExplanation)
 			{
-                App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation0, Strings.ExplanationTitle0, OnExplanation));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation0, Strings.ExplanationTitle0, OnExplanation));
 			}
 		}
 
-        void OnExplanation()
-        {
-            App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation1, Strings.ExplanationTitle1));
-        }
+		void OnExplanation()
+		{
+			App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation1, Strings.ExplanationTitle1));
+		}
 		#endregion
 
 		#region End
@@ -149,6 +162,8 @@ namespace LunraGames.SpaceFarm
 			App.Callbacks.FocusRequest -= OnFocus;
 			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
 			App.Callbacks.ClearEscapables();
+
+			Payload.KeyValueListener.UnRegister();
 
 			App.SM.PushBlocking(UnBind);
 			App.SM.PushBlocking(UnLoadScenes);
@@ -163,7 +178,7 @@ namespace LunraGames.SpaceFarm
 
 		void UnLoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.UnLoad(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes));
 		}
 		#endregion
 
@@ -172,7 +187,7 @@ namespace LunraGames.SpaceFarm
 		{
 			Payload.Game.FocusRequest.Value = focus;
 
-			switch(focus.State)
+			switch (focus.State)
 			{
 				case FocusRequest.States.Request:
 					App.Callbacks.FocusRequest(focus.Duplicate(FocusRequest.States.Active));
@@ -192,7 +207,7 @@ namespace LunraGames.SpaceFarm
 				}
 			}
 
-			switch(focus.Focus)
+			switch (focus.Focus)
 			{
 				case FocusRequest.Focuses.Systems:
 					var systemFocus = focus as SystemsFocusRequest;
@@ -260,10 +275,10 @@ namespace LunraGames.SpaceFarm
 
 		void OnSaveRequest(SaveRequest request)
 		{
-			switch(request.State)
+			switch (request.State)
 			{
 				case SaveRequest.States.Request:
-					App.SaveLoadService.Save(Payload.Game, OnSave);
+					App.M.Save(Payload.Game, OnSave);
 					break;
 			}
 		}

@@ -60,7 +60,19 @@ namespace LunraGames.SpaceFarm
 
 	public class SceneService
 	{
+		ILogService logging;
+		CallbackService callbacks;
+
 		SceneRequest current;
+
+		public SceneService(ILogService logging, CallbackService callbacks)
+		{
+			if (logging == null) throw new ArgumentNullException("logging");
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
+
+			this.logging = logging;
+			this.callbacks = callbacks;
+		}
 
 		public void Request(SceneRequest request)
 		{
@@ -86,8 +98,8 @@ namespace LunraGames.SpaceFarm
 		#region Load Scenes
 		void LoadScenes()
 		{
-			App.Log("Loading Scenes", LogTypes.Initialization);
-			App.Callbacks.SceneLoad += OnSceneLoaded;
+			logging.Log("Loading Scenes", LogTypes.Initialization);
+			callbacks.SceneLoad += OnSceneLoaded;
 			foreach (var scene in current.Scenes) SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
 		}
 
@@ -95,14 +107,14 @@ namespace LunraGames.SpaceFarm
 		{
 			if (!current.Scenes.Contains(scene.name)) return;
 
-			App.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
+			logging.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
 
 			current.ProcessedScenes.Add(scene.name);
 			SceneManager.SetActiveScene(scene);
 
 			if (current.Scenes.Length != current.ProcessedScenes.Count) return;
 
-			App.Log("All Scenes Loaded", LogTypes.Initialization);
+			logging.Log("All Scenes Loaded", LogTypes.Initialization);
 
 			foreach (var tag in current.Tags)
 			{
@@ -123,7 +135,7 @@ namespace LunraGames.SpaceFarm
 				Debug.LogError(tagWarning);
 			}
 
-			App.Callbacks.SceneLoad -= OnSceneLoaded;
+			callbacks.SceneLoad -= OnSceneLoaded;
 			OnAllScenesProcessed();
 		}
 		#endregion
@@ -131,7 +143,7 @@ namespace LunraGames.SpaceFarm
 		#region UnLoad Scenes
 		void UnloadScene()
 		{
-			App.Callbacks.SceneUnload += OnSceneUnloaded;
+			callbacks.SceneUnload += OnSceneUnloaded;
 			foreach (var scene in current.Scenes) SceneManager.UnloadSceneAsync(scene);
 		}
 
@@ -139,15 +151,15 @@ namespace LunraGames.SpaceFarm
 		{
 			if (!current.Scenes.Contains(scene.name)) return;
 
-			App.Log("Unloaded Scene: " + scene.name, LogTypes.Initialization);
+			logging.Log("Unloaded Scene: " + scene.name, LogTypes.Initialization);
 
 			current.ProcessedScenes.Add(scene.name);
 
 			if (current.Scenes.Length != current.ProcessedScenes.Count) return;
 
-			App.Log("All Scenes Unloaded", LogTypes.Initialization);
+			logging.Log("All Scenes Unloaded", LogTypes.Initialization);
 
-			App.Callbacks.SceneUnload -= OnSceneUnloaded;
+			callbacks.SceneUnload -= OnSceneUnloaded;
 			OnAllScenesProcessed();
 		}
   		#endregion

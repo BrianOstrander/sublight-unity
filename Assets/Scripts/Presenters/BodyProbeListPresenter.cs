@@ -18,10 +18,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.FocusRequest += OnFocus;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.FocusRequest -= OnFocus;
 		}
 

@@ -7,6 +7,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float cameraSystemDragMoveScalar = 16f;
 		[JsonProperty] float cameraSystemDragRotateScalar = 64f;
 		[JsonProperty] float sectorUnloadRadius = 1f;
+		[JsonProperty] bool encounterLogsAutoNext;
 
 		/// <summary>
 		/// The scalar applied to dragging around the camera in the system area.
@@ -24,6 +25,11 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> SectorUnloadRadius;
+		/// <summary>
+		/// Do encounters logs automatically load the next one?
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> EncounterLogsAutoNext;
 
 		public PreferencesModel()
 		{
@@ -42,6 +48,11 @@ namespace LunraGames.SpaceFarm.Models
 			SectorUnloadRadius = new ListenerProperty<float>(
 				value => sectorUnloadRadius = value,
 				() => sectorUnloadRadius
+			);
+
+			EncounterLogsAutoNext = new ListenerProperty<bool>(
+				value => encounterLogsAutoNext = value,
+				() => encounterLogsAutoNext
 			);
 		}
 	}

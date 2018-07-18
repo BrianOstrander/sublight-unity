@@ -1,5 +1,8 @@
 using System;
+using System.IO;
 using System.Linq;
+
+using LunraGamesEditor;
 
 using UnityEditor;
 using UnityEngine;
@@ -45,15 +48,45 @@ namespace LunraGames.SpaceFarm
 			}
 			GUILayout.EndHorizontal();
 
-			DevPrefs.WindInEditMode = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
-			DevPrefs.AutoApplySkybox = GUILayout.Toggle(DevPrefs.AutoApplySkybox, "Auto Apply Skybox");
-			DevPrefs.ApplyXButtonStyleInEditMode = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
+			DevPrefs.WindInEditMode.Value = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
+			DevPrefs.AutoApplySkybox.Value = GUILayout.Toggle(DevPrefs.AutoApplySkybox, "Auto Apply Skybox");
+			DevPrefs.ApplyXButtonStyleInEditMode.Value = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
 			#endregion
 
-			#region Interface
-			GUILayout.Label("Interface", EditorStyles.boldLabel);
-			DevPrefs.SkipExplanation = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
-   			#endregion
+			#region Utility
+			GUILayout.Label("Utility", EditorStyles.boldLabel);
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.BeginVertical();
+				{
+					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
+					var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
+					if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
+					DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");
+					if (isWiping) EditorGUILayoutExtensions.PopColor();
+				}
+				GUILayout.EndVertical();
+				DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
+				GUILayout.FlexibleSpace();
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushEnabled(IsInGameState);
+				if (GUILayout.Button("Copy Game JSON to Clipboard"))
+				{
+					OnGameSaved(new SaveRequest(SaveRequest.States.Complete));
+				}
+				if (GUILayout.Button("Save Then Copy JSON to Clipboard"))
+				{
+					App.Callbacks.SaveRequest += OnGameSaved;
+					App.Callbacks.SaveRequest(SaveRequest.Save());
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+			GUILayout.EndHorizontal();
+			#endregion
 
 			#region Logging
 			GUILayout.Label("Logging", EditorStyles.boldLabel);
@@ -93,6 +126,32 @@ namespace LunraGames.SpaceFarm
 		void Space()
 		{
 			GUILayout.Space(16f);
+		}
+
+		void OnGameSaved(SaveRequest result)
+		{
+			if (result.State != SaveRequest.States.Complete) return;
+			App.Callbacks.SaveRequest -= OnGameSaved;
+			try
+			{
+				EditorGUIUtility.systemCopyBuffer = File.ReadAllText((App.SM.CurrentHandler as GameState).Payload.Game.Path);
+				Debug.Log("Game JSON Copied to Clipboard");
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e);
+			}
+		}
+
+		bool IsInGameState
+		{
+			get
+			{
+				return Application.isPlaying && 
+					App.HasInstance && 
+					App.SM != null && 
+					App.SM.Is(StateMachine.States.Game, StateMachine.Events.Idle);
+			}
 		}
 	}
 }

@@ -27,7 +27,7 @@ namespace LunraGames.SpaceFarm.Models
 			var sector = Sectors.Value.FirstOrDefault(s => s.Position.Value.SectorEquals(position));
 			if (sector != null) return sector;
 
-			sector = App.UniverseService.CreateSector(this, position);
+			sector = App.Universe.CreateSector(this, position);
 			var list = Sectors.Value.ToList();
 			list.Add(sector);
 			Sectors.Value = list.ToArray();

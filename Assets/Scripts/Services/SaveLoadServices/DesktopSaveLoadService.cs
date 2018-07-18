@@ -7,12 +7,17 @@ using UnityEngine;
 
 using LunraGames.SpaceFarm.Models;
 
+using Newtonsoft.Json;
+
 namespace LunraGames.SpaceFarm
 {
-	public class DesktopSaveLoadService : SaveLoadService
+	public class DesktopSaveLoadService : ModelMediator
 	{
 		const string Extension = ".json";
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
+		static string InternalPath { get { return Path.Combine(Application.streamingAssetsPath, "internal"); } }
+
+		bool readableSaves;
 
 		protected override Dictionary<SaveTypes, int> MinimumSupportedSaves
 		{
@@ -21,14 +26,37 @@ namespace LunraGames.SpaceFarm
 				return new Dictionary<SaveTypes, int>
 				{
 					{ SaveTypes.Game, -1 },
-					{ SaveTypes.Preferences, -1 }
+					{ SaveTypes.Preferences, -1 },
+					{ SaveTypes.EncounterInfo, 0 },
+					{ SaveTypes.InteractedEncounterInfoList, -1 },
+					{ SaveTypes.GlobalKeyValues, -1 }
 				};
 			}
 		}
 
-
-		public override void Initialize(Action<RequestStatus> done)
+		protected override Dictionary<SaveTypes, bool> CanSave
 		{
+			get
+			{
+				return new Dictionary<SaveTypes, bool>
+				{
+					{ SaveTypes.Game, true },
+					{ SaveTypes.Preferences, true },
+					{ SaveTypes.EncounterInfo, false },
+					{ SaveTypes.InteractedEncounterInfoList, true },
+					{ SaveTypes.GlobalKeyValues, true }
+				};
+			}
+		}
+
+		public DesktopSaveLoadService(bool readableSaves = false)
+		{
+			this.readableSaves = readableSaves;
+		}
+
+		public override void Initialize(IBuildInfo info, Action<RequestStatus> done)
+		{
+			BuildInfo = info;
 			try
 			{
 				foreach (var curr in Enum.GetValues(typeof(SaveTypes)).Cast<SaveTypes>())
@@ -52,6 +80,10 @@ namespace LunraGames.SpaceFarm
 			{
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
+				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
+				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
+				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
+
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -81,7 +113,7 @@ namespace LunraGames.SpaceFarm
 
 		protected override void OnSave<M>(M model, Action<SaveLoadRequest<M>> done = null)
 		{
-			File.WriteAllText(model.Path, Serialization.Serialize(model));
+			File.WriteAllText(model.Path, Serialization.Serialize(model, formatting: readableSaves ? Formatting.Indented : Formatting.None));
 			done(SaveLoadRequest<M>.Success(model, model));
 		}
 
@@ -107,8 +139,13 @@ namespace LunraGames.SpaceFarm
 				}
 			}
 			var array = results.ToArray();
-			done(SaveLoadArrayRequest<SaveModel>.Success(array, array));
+			done(SaveLoadArrayRequest<SaveModel>.Success(array));
 		}
 
+		protected override void OnDelete<M>(M model, Action<SaveLoadRequest<M>> done)
+		{
+			File.Delete(model.Path);
+			done(SaveLoadRequest<M>.Success(model, model));
+		}
 	}
 }

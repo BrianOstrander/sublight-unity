@@ -1,0 +1,61 @@
+{
+  "encounterId": "c98a359f-2764-4176-aea5-62ec8a6d0c34",
+  "name": "Crystalline Asteroid",
+  "hook": "Peaks in infrared emissions from the surface indicate something curious, and possibly artificial, is down there.",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [
+    "Terrestrial"
+  ],
+  "validProbes": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "W. Idlewild",
+        "message": "Reporting in mother, the anomaly is about to come over the horizon any minute now.",
+        "nextLogId": "2eb520e5-0e80-413d-a954-f2032dc8f3e5",
+        "beginning": true,
+        "logId": "e5df7935-22c1-4379-92a9-81e7c49ca553",
+        "duration": 1.0
+      },
+      {
+        "header": "D. Cortez",
+        "message": "Oh wow… beautiful, we see it now…",
+        "nextLogId": "6d9d6b71-6dbd-4e7b-bdd0-1c7d3f743122",
+        "index": 1,
+        "logId": "2eb520e5-0e80-413d-a954-f2032dc8f3e5",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "It’s some kind of crystalline asteroid… never seen anything like it. We’ll bring a sample back for study.",
+        "nextLogId": "42f07de3-f290-4fa1-9419-06bd7f5d66c3",
+        "index": 2,
+        "logId": "6d9d6b71-6dbd-4e7b-bdd0-1c7d3f743122"
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [
+          {
+            "value": "After analysis back onboard, it looks like the samples contained large quantities of water.",
+            "keyValueId": "cd75f2fc-b7ca-4e1f-88fe-97ffa18b07c6",
+            "target": "Encounter",
+            "key": "Summary"
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "42f07de3-f290-4fa1-9419-06bd7f5d66c3"
+      }
+    ]
+  },
+  "version": 2,
+  "meta": "Crystalline Asteroid",
+  "created": "2018-07-17T17:50:20.64022-07:00",
+  "modified": "2018-07-17T17:50:20.64022-07:00",
+  "SaveType": "EncounterInfo"
+}

@@ -26,12 +26,15 @@ namespace LunraGames.SpaceFarm
 		protected override void Begin()
 		{
 			Payload.ShaderGlobals.Apply();
-			App.SM.PushBlocking(InitializeSaveLoadService);
-			App.SM.PushBlocking(InitializeViews);
 			App.SM.PushBlocking(InitializeModels);
+			App.SM.PushBlocking(InitializeViews);
 			App.SM.PushBlocking(InitializePresenters);
 			App.SM.PushBlocking(InitializePreferences);
+			App.SM.PushBlocking(InitializeEncounters);
 			App.SM.PushBlocking(InitializeListeners);
+			App.SM.PushBlocking(InitializeGlobalKeyValues);
+
+			if (DevPrefs.WipeGameSavesOnStart) App.SM.PushBlocking(WipeGameSaves);
 		}
 
 		protected override void Idle()
@@ -40,23 +43,26 @@ namespace LunraGames.SpaceFarm
 
 			App.P.AddGlobals(new DialogPresenter());
 			App.P.AddGlobals(new ShadePresenter());
-			App.SM.RequestState(Payload.homePayload);
+
+			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
+			else App.SM.RequestState(Payload.homePayload);
 		}
 
-		void InitializeSaveLoadService(Action done)
+		#region Mediators
+		void InitializeModels(Action done)
 		{
-			App.SaveLoadService.Initialize(
+			App.M.Initialize(
+				App.BuildPreferences.Info,
 				status =>
 				{
-					if (status == RequestStatus.Success) App.Log("SaveLoadService Initialized", LogTypes.Initialization);
-					else App.Restart("Initializing SaveLoadService failed with status " + status);
-
+					if (status == RequestStatus.Success) App.Log("ModelMediator Initialized", LogTypes.Initialization);
+					else App.Restart("Initializing ModelMediator failed with status " + status);
+					// TODO: Should this be called if a restart happens?
 					done();
 				}
 			);
 		}
 
-		#region Mediators
 		void InitializeViews(Action done)
 		{
 			App.V.Initialize(
@@ -66,20 +72,7 @@ namespace LunraGames.SpaceFarm
 				{
 					if (status == RequestStatus.Success) App.Log("ViewMediator Initialized", LogTypes.Initialization);
 					else App.Restart("Initializing ViewMediator failed with status " + status);
-
-					done();
-				}
-			);
-		}
-
-		void InitializeModels(Action done)
-		{
-			App.M.Initialize(
-				status =>
-				{
-					if (status == RequestStatus.Success) App.Log("ModelMediator Initialized", LogTypes.Initialization);
-					else App.Restart("Initializing ModelMediator failed with status " + status);
-
+					// TODO: Should this be called if a restart happens?
 					done();
 				}
 			);
@@ -92,16 +85,17 @@ namespace LunraGames.SpaceFarm
 				{
 					if (status == RequestStatus.Success) App.Log("PresenterMediator Initialized", LogTypes.Initialization);
 					else App.Restart("Initializing PresenterMediator failed with status " + status);
-
+					// TODO: Should this be called if a restart happens?
 					done();
 				}
 			);
 		}
 		#endregion
 
+		#region Preferences
 		void InitializePreferences(Action done)
 		{
-			App.SaveLoadService.List<PreferencesModel>(result => OnListPreferences(result, done));
+			App.M.List<PreferencesModel>(result => OnListPreferences(result, done));
 		}
 
 		void OnListPreferences(SaveLoadArrayRequest<SaveModel> result, Action done)
@@ -115,26 +109,26 @@ namespace LunraGames.SpaceFarm
 			if (result.Length == 0)
 			{
 				App.Log("No existing preferences, generating defaults", LogTypes.Initialization);
-				App.SaveLoadService.Save(
-					App.SaveLoadService.Create<PreferencesModel>(), 
+				App.M.Save(
+					App.M.Create<PreferencesModel>(), 
 					saveResult => OnSavedPreferences(saveResult, done)
 				);
 			}
 			else
 			{
-				var toLoad = result.TypedModels.Where(p => p.SupportedVersion.Value).OrderBy(p => p.Version.Value).LastOrDefault();
+				var toLoad = result.Models.Where(p => p.SupportedVersion.Value).OrderBy(p => p.Version.Value).LastOrDefault();
 				if (toLoad == null)
 				{
 					App.Log("No supported preferences, generating defaults", LogTypes.Initialization);
-					App.SaveLoadService.Save(
-						App.SaveLoadService.Create<PreferencesModel>(),
+					App.M.Save(
+						App.M.Create<PreferencesModel>(),
 						saveResult => OnSavedPreferences(saveResult, done)
 					);
 				}
 				else
 				{
 					App.Log("Loading existing preferences", LogTypes.Initialization);
-					App.SaveLoadService.Load<PreferencesModel>(
+					App.M.Load<PreferencesModel>(
 						toLoad,
 						loadResult => OnLoadPreferences(loadResult, done)
 					);
@@ -151,7 +145,7 @@ namespace LunraGames.SpaceFarm
 			}
 
 			App.Log("Loaded preferences from "+result.Model.Path, LogTypes.Initialization);
-			App.SaveLoadService.Save(
+			App.M.Save(
 				result.TypedModel,
 				saveResult => OnSavedPreferences(saveResult, done)
 			);
@@ -169,11 +163,68 @@ namespace LunraGames.SpaceFarm
 			App.SetPreferences(result.TypedModel);
 			done();
 		}
+		#endregion
+
+		void InitializeEncounters(Action done)
+		{
+			App.Encounters.Initialize(
+				status =>
+				{
+					if (status == RequestStatus.Success) App.Log("Encounters Initialized", LogTypes.Initialization);
+					else App.Restart("Initializing Encounters failed with status " + status);
+					// TODO: Should this be called if a restart happens?
+					done();
+				}
+			);
+		}
 
 		void InitializeListeners(Action done)
 		{
 			App.Callbacks.UniversePositionRequest += UniversePosition.OnUniversePositionRequest;
 			done();
+		}
+
+		void InitializeGlobalKeyValues(Action done)
+		{
+			App.GlobalKeyValues.Initialize(
+				status =>
+				{
+					if (status == RequestStatus.Success) App.Log("Global KVs Initialized", LogTypes.Initialization);
+					else App.Restart("Initializing Global KVs failed with status " + status);
+					// TODO: Should this be called if a restart happens?
+					done();
+				}
+			);
+		}
+
+		void WipeGameSaves(Action done)
+		{
+			App.M.List<GameModel>(result => OnWipeGameSavesLoad(result, done));
+		}
+
+		void OnWipeGameSavesLoad(SaveLoadArrayRequest<SaveModel> result, Action done)
+		{
+			OnWipeGameSavesDelete(RequestStatus.Success, default(SaveLoadRequest<SaveModel>), result.Models.ToList(), done);
+		}
+
+		void OnWipeGameSavesDelete(RequestStatus status, SaveLoadRequest<SaveModel> result, List<SaveModel> remaining, Action done)
+		{
+			if (remaining.Count == 0)
+			{
+				done();
+				return;
+			}
+			if (status != RequestStatus.Success) Debug.LogError("Unable to delete, returned error: " + result.Error);
+			var current = remaining[0];
+			remaining.RemoveAt(0);
+			App.M.Delete(current, deleteResult => OnWipeGameSavesDelete(deleteResult.Status, deleteResult, remaining, done));
+		}
+
+		void OnAutoNewGame(RequestStatus result, GameModel model)
+		{
+			var payload = new GamePayload();
+			payload.Game = model;
+			App.SM.RequestState(payload);
 		}
 	}
 }

@@ -20,10 +20,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
 			model.TravelRequest.Changed -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
