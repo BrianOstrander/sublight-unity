@@ -42,8 +42,7 @@
         "message": "Heading back to mother now.",
         "nextLogId": "806054f3-6732-42ee-a6cf-5903d62fe047",
         "index": 3,
-        "logId": "d6852979-9d16-4cf3-ac9d-380a5cb269df",
-        "duration": 1.0
+        "logId": "d6852979-9d16-4cf3-ac9d-380a5cb269df"
       }
     ],
     "keyValueLogs": [
@@ -53,7 +52,7 @@
             "value": "Chemical analysis from of the plumes indicate they’re origin is from entirely natural volcanic activity.",
             "keyValueId": "887e5953-2475-4d63-8412-a39fe5aaf05f",
             "target": "Encounter",
-            "key": "final_report"
+            "key": "FinalReport"
           }
         ],
         "index": 4,

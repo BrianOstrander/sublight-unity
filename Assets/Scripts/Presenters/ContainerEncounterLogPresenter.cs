@@ -108,6 +108,18 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
+			CloseView();
+			App.Callbacks.KeyValueRequest(KeyValueRequest.Get(KeyValueTargets.Encounter, EncounterKeys.FinalReport, OnGetFinalReport));
+		}
+
+		void OnGetFinalReport(KeyValueResult<string> result)
+		{
+			var report = result.Status == RequestStatus.Success ? result.Value : "Nothing to report.";
+			App.Callbacks.DialogRequest(DialogRequest.Alert(report, "Crew Report", OnAlertDone));
+		}
+
+		void OnAlertDone()
+		{
 			model.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
 			keyValues.UnRegister();
 

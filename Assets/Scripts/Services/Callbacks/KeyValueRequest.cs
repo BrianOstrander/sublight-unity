@@ -75,6 +75,48 @@ namespace LunraGames.SpaceFarm
 			String = 30
 		}
 
+		public static KeyValueRequest Set<T>(KeyValueTargets target, T key, bool value, Action<KeyValueResult<bool>> done = null) 
+			where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
+			return Set(target, Enum.GetName(typeof(T), key), value, done);
+		}
+
+		public static KeyValueRequest Set<T>(KeyValueTargets target, T key, int value, Action<KeyValueResult<int>> done = null)
+			where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
+			return Set(target, Enum.GetName(typeof(T), key), value, done);
+		}
+
+		public static KeyValueRequest Set<T>(KeyValueTargets target, T key, string value, Action<KeyValueResult<string>> done = null)
+			where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
+			return Set(target, Enum.GetName(typeof(T), key), value, done);
+		}
+
+		public static KeyValueRequest Get<T>(KeyValueTargets target, T key, Action<KeyValueResult<bool>> done)
+			where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
+			return Get(target, Enum.GetName(typeof(T), key), done);
+		}
+
+		public static KeyValueRequest Get<T>(KeyValueTargets target, T key, Action<KeyValueResult<int>> done)
+			where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
+			return Get(target, Enum.GetName(typeof(T), key), done);
+		}
+
+		public static KeyValueRequest Get<T>(KeyValueTargets target, T key, Action<KeyValueResult<string>> done)
+			where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
+			return Get(target, Enum.GetName(typeof(T), key), done);
+		}
+
 		public static KeyValueRequest Set(KeyValueTargets target, string key, bool value, Action<KeyValueResult<bool>> done = null)
 		{
 			return new KeyValueRequest(target, key, States.SetRequest, ValueTypes.Boolean, booleanValue: value, booleanDone: done);

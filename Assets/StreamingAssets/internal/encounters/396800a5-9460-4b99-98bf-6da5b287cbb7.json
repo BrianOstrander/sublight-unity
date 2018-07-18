@@ -34,8 +34,7 @@
         "message": "It’s some kind of crystalline asteroid… never seen anything like it. We’ll bring a sample back for study.",
         "nextLogId": "42f07de3-f290-4fa1-9419-06bd7f5d66c3",
         "index": 2,
-        "logId": "6d9d6b71-6dbd-4e7b-bdd0-1c7d3f743122",
-        "duration": 1.0
+        "logId": "6d9d6b71-6dbd-4e7b-bdd0-1c7d3f743122"
       }
     ],
     "keyValueLogs": [
@@ -45,7 +44,7 @@
             "value": "After analysis back onboard, it looks like the samples contained large quantities of water.",
             "keyValueId": "cd75f2fc-b7ca-4e1f-88fe-97ffa18b07c6",
             "target": "Encounter",
-            "key": "final_report"
+            "key": "FinalReport"
           }
         ],
         "index": 3,
