@@ -26,6 +26,7 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<float> Fuel;
 
 		public override InventoryTypes InventoryType { get { return InventoryTypes.Resources; } }
+		public override bool SlotRequired { get { return false; } }
 
 		[JsonIgnore]
 		public bool IsZero
@@ -67,9 +68,9 @@ namespace LunraGames.SpaceFarm.Models
 		/// <returns>The out.</returns>
 		/// <param name="other">Other.</param>
 		/// <param name="assigned">Assigned.</param>
-		public ResourceInventoryModel AddOut(ResourceInventoryModel other, ResourceInventoryModel assigned)
+		public ResourceInventoryModel AddOut(ResourceInventoryModel other, ResourceInventoryModel assigned = null)
 		{
-			if (assigned == null) throw new ArgumentNullException("assigned");
+			if (assigned == null) assigned = Zero;
 
 			var remainder = Zero;
 
@@ -97,15 +98,54 @@ namespace LunraGames.SpaceFarm.Models
 		}
 
 		/// <summary>
-		/// Subtract the other resources to this one, but assign the result to the
-		/// specified object. Returns any negative values.
+		/// Subtract the other resources to this one, but assign the result to
+		/// the specified object. Returns any negative values.
 		/// </summary>
 		/// <returns>The out.</returns>
 		/// <param name="other">Other.</param>
 		/// <param name="assigned">Assigned.</param>
-		public ResourceInventoryModel SubtractOut(ResourceInventoryModel other, ResourceInventoryModel assigned)
+		public ResourceInventoryModel SubtractOut(ResourceInventoryModel other, ResourceInventoryModel assigned = null)
 		{
 			return AddOut(other.Inverse(), assigned);
+		}
+
+		/// <summary>
+		/// Clamp resources using the other as a maximum, and returns the
+		/// remainder if any at all.
+		/// </summary>
+		/// <returns>The clamp.</returns>
+		/// <param name="other">Other.</param>
+		public ResourceInventoryModel Clamp(ResourceInventoryModel other)
+		{
+			return ClampOut(other, this);
+		}
+
+		/// <summary>
+		/// Clamp resources using the other as a maximum, but assign the result
+		/// to the specified object. Returns a remainder, if any at all.
+		/// </summary>
+		/// <returns>The out.</returns>
+		/// <param name="other">Other.</param>
+		/// <param name="assigned">Assigned.</param>
+		public ResourceInventoryModel ClampOut(ResourceInventoryModel other, ResourceInventoryModel assigned = null)
+		{
+			if (assigned == null) assigned = Zero;
+
+			var remainder = Zero;
+
+			var otherRations = Mathf.Max(0f, other.Rations);
+			var otherFuel = Mathf.Max(0f, other.Fuel);
+
+			var newRations = Mathf.Clamp(Rations.Value, 0f, otherRations);
+			var newFuel = Mathf.Clamp(Fuel.Value, 0f, otherFuel);
+
+			if (newRations < Rations) remainder.Rations.Value = Rations - otherRations;
+			if (newFuel < Fuel) remainder.Fuel.Value = Fuel - otherFuel;
+
+			assigned.Rations.Value = newRations;
+			assigned.Fuel.Value = newFuel;
+
+			return remainder;
 		}
 
 		/// <summary>
