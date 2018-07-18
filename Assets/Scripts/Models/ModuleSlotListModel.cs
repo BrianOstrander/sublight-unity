@@ -13,6 +13,7 @@ namespace LunraGames.SpaceFarm.Models
 		#region Assigned Values
 		[JsonProperty] CrewModuleSlotModel[] crews = new CrewModuleSlotModel[0];
 		[JsonProperty] ResourceModuleSlotModel[] resources = new ResourceModuleSlotModel[0];
+		[JsonProperty] ResourceInventoryModel maximumResources = new ResourceInventoryModel();
 		#endregion
 
 		#region Derived Values
@@ -22,15 +23,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		#region Shortcuts
 		[JsonIgnore]
-		public ResourceInventoryModel MaximumResources
-		{
-			get
-			{
-				var total = ResourceInventoryModel.Zero;
-				foreach (var resource in resources) total.Add(resource.MaximumResources);
-				return total;
-			}
-		}
+		public ResourceInventoryModel MaximumResources { get { return maximumResources; } }
 		#endregion
 
 		public ModuleSlotListModel()
@@ -80,6 +73,7 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			var crewList = new List<CrewModuleSlotModel>();
 			var resourceList = new List<ResourceModuleSlotModel>();
+			var newMaxResources = ResourceInventoryModel.Zero;
 
 			foreach (var slot in newSlots)
 			{
@@ -89,7 +83,9 @@ namespace LunraGames.SpaceFarm.Models
 						crewList.Add(slot as CrewModuleSlotModel);
 						break;
 					case SlotTypes.Resource:
-						resourceList.Add(slot as ResourceModuleSlotModel);
+						var resourceSlot = slot as ResourceModuleSlotModel;
+						resourceList.Add(resourceSlot);
+						newMaxResources.Add(resourceSlot.MaximumResources);
 						break;
 					default:
 						Debug.LogError("Unrecognized SlotType: " + slot.SlotType);
@@ -99,6 +95,8 @@ namespace LunraGames.SpaceFarm.Models
 
 			crews = crewList.ToArray();
 			resources = resourceList.ToArray();
+			
+			maximumResources.Assign(newMaxResources);
 		}
 
 		ModuleSlotModel[] OnGetSlots()

@@ -14,7 +14,10 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] OrbitalProbeInventoryModel[] orbitalProbes = new OrbitalProbeInventoryModel[0];
 		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
 		[JsonProperty] ModuleInventoryModel[] modules = new ModuleInventoryModel[0];
+		[JsonProperty] ResourceInventoryModel maximumResources = new ResourceInventoryModel();
 		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel usableresources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel unUsableresources = new ResourceInventoryModel();
 		#endregion
 
 		#region Derived Values
@@ -23,39 +26,42 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Shortcuts
+		/// <summary>
+		/// Gets the maximum resources this inventory list can store. Assigning
+		/// values to this won't do anything, so don't do that...
+		/// </summary>
+		/// <value>The maximum resources.</value>
 		[JsonIgnore]
-		public ResourceInventoryModel MaximumResources
-		{
-			get
-			{
-				var result = ResourceInventoryModel.Zero;
-				foreach (var module in modules) result.Add(module.Slots.MaximumResources);
-				return result;
-			}
-		}
-
+		public ResourceInventoryModel MaximumResources { get { return maximumResources; } }
+		/// <summary>
+		/// The total resources contained by this inventory list, usable and
+		/// unusable.
+		/// </summary>
+		/// <value>The resources.</value>
 		[JsonIgnore]
 		public ResourceInventoryModel Resources { get { return resources; } }
-
+		/// <summary>
+		/// The total usable resources contained by this list. Assigning values
+		/// to this won't do anything, so don't do that...
+		/// </summary>
+		/// <value>The usable resources.</value>
 		[JsonIgnore]
-		public ResourceInventoryModel UsableResources
-		{
-			get
-			{
-				var result = ResourceInventoryModel.Zero;
-				Resources.ClampOut(MaximumResources, result);
-				return result;
-			}
-		}
-
+		public ResourceInventoryModel UsableResources { get { return usableresources; } }
+		/// <summary>
+		/// The total unusable resources contained by this list. Assigning
+		/// values to this won't do anything, so don't do that...
+		/// </summary>
+		/// <value>The unusable resources.</value>
 		[JsonIgnore]
-		public ResourceInventoryModel UnUsableResources { get { return Resources.ClampOut(MaximumResources); } }
+		public ResourceInventoryModel UnUsableResources { get { return unUsableresources; } }
 		#endregion
 
 		public InventoryListModel()
 		{
 			// Derived Values
 			All = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
+
+			resources.AnyChange += OnResources;
 		}
 
 		#region Utility
@@ -143,11 +149,20 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Events
+		void OnResources(ResourceInventoryModel model)
+		{
+			unUsableresources.Assign(resources.ClampOut(maximumResources, usableresources));
+		}
+
 		void OnSetInventory(InventoryModel[] newInventory)
 		{
+			var hasAssignedResources = false;
+
 			var orbitalProbeList = new List<OrbitalProbeInventoryModel>();
 			var orbitalCrewList = new List<OrbitalCrewInventoryModel>();
 			var moduleList = new List<ModuleInventoryModel>();
+			var newMaxResources = ResourceInventoryModel.Zero;
+			ResourceInventoryModel newResources = null;
 
 			foreach (var inventory in newInventory)
 			{
@@ -160,10 +175,18 @@ namespace LunraGames.SpaceFarm.Models
 						orbitalCrewList.Add(inventory as OrbitalCrewInventoryModel);
 						break;
 					case InventoryTypes.Resources:
-						resources = inventory as ResourceInventoryModel;
+						if (hasAssignedResources) 
+						{
+							Debug.LogError("Multiple resource models passed to OnSetInventory, ignoring additional ones.");
+							break;
+						}
+						hasAssignedResources = true;
+						newResources = inventory as ResourceInventoryModel;
 						break;
 					case InventoryTypes.Module:
-						moduleList.Add(inventory as ModuleInventoryModel);
+						var module = inventory as ModuleInventoryModel;
+						moduleList.Add(module);
+						if (module.IsUsable) newMaxResources.Add(module.Slots.MaximumResources);
 						break;
 					default:
 						Debug.LogError("Unrecognized InventoryType: " + inventory.InventoryType);
@@ -174,6 +197,9 @@ namespace LunraGames.SpaceFarm.Models
 			orbitalProbes = orbitalProbeList.ToArray();
 			orbitalCrews = orbitalCrewList.ToArray();
 			modules = moduleList.ToArray();
+			
+			maximumResources.Assign(newMaxResources);
+			if (newResources != null) resources.Assign(newResources);
 		}
 
 		InventoryModel[] OnGetInventory()

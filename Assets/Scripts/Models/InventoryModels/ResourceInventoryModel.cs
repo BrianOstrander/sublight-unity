@@ -24,6 +24,8 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
+		[JsonIgnore]
+		public Action<ResourceInventoryModel> AnyChange = ActionExtensions.GetEmpty<ResourceInventoryModel>();
 
 		public override InventoryTypes InventoryType { get { return InventoryTypes.Resources; } }
 		public override bool SlotRequired { get { return false; } }
@@ -46,8 +48,8 @@ namespace LunraGames.SpaceFarm.Models
 			rations = rationsValue;
 			fuel = fuelValue;
 
-			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
-			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
+			Rations = new ListenerProperty<float>(value => rations = value, () => rations, value => AnyChange(this));
+			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel, value => AnyChange(this));
 		}
 
 		/// <summary>
