@@ -8,7 +8,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] int bodyId;
 		[JsonProperty] int parentId;
 		[JsonProperty] string name;
-		[JsonProperty] string encounterId;
+		[JsonProperty] string encounter;
 		[JsonProperty] BodyStatus status;
 		[JsonProperty] string probeId;
 
@@ -31,7 +31,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
-		public readonly ListenerProperty<string> EncounterId;
+		public readonly ListenerProperty<string> Encounter;
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyStatus> Status;
 		[JsonIgnore]
@@ -58,14 +58,14 @@ namespace LunraGames.SpaceFarm.Models
 			BodyId = new ListenerProperty<int>(value => bodyId = value, () => bodyId);
 			ParentId = new ListenerProperty<int>(value => parentId = value, () => parentId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
-			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
+			Encounter = new ListenerProperty<string>(value => encounter = value, () => encounter);
 			Status = new ListenerProperty<BodyStatus>(value => status = value, () => status);
 			ProbeId = new ListenerProperty<string>(value => probeId = value, () => probeId);
 		}
 
 		#region Utility
 		[JsonIgnore]
-		public bool HasEncounter { get { return !string.IsNullOrEmpty(EncounterId); } }
+		public bool HasEncounter { get { return !string.IsNullOrEmpty(Encounter); } }
 		#endregion
 	}
 }

@@ -69,15 +69,17 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
-			if (encounter != null) body.EncounterId.Value = encounter.EncounterId;
+			if (encounter != null) body.Encounter.Value = encounter.EncounterId;
 
-			switch(model.GetEncounterStatus(body.EncounterId).State)
+			switch(model.GetEncounterStatus(body.Encounter).State)
 			{
 				case EncounterStatus.States.Unknown:
 					App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no anomalies."));
 					return;
 				case EncounterStatus.States.Completed:
-					App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
+					var finalReport = model.GetFinalReport(body.Encounter);
+					if (finalReport != null) App.Callbacks.DialogRequest(DialogRequest.Alert(finalReport.Summary, "Crew Report"));
+					else App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
 					return;
 				default:
 					App.Callbacks.FocusRequest(

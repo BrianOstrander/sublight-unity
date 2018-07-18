@@ -157,7 +157,7 @@ namespace LunraGames.SpaceFarm
 		public EncounterInfoModel AssignBestEncounter(GameModel model, SystemModel system, BodyModel body)
 		{
 			// TODO: Check if old encounters are still valid here?
-			if (body.HasEncounter) return GetEncounter(body.EncounterId);
+			if (body.HasEncounter) return GetEncounter(body.Encounter);
 			// Required checks
 			var remaining = encounters.Where(
 				e =>
@@ -178,7 +178,7 @@ namespace LunraGames.SpaceFarm
 			if (chosen == null) return null;
 
 			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
-			body.EncounterId.Value = chosen.EncounterId;
+			body.Encounter.Value = chosen.EncounterId;
 
 			return chosen;
 		}

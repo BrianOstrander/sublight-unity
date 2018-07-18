@@ -3,6 +3,6 @@
 	public enum EncounterKeys
 	{
 		Unknown = 0,
-		FinalReport = 10
+		Summary = 10
 	}
 }

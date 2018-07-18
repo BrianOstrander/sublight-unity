@@ -7,7 +7,7 @@ namespace LunraGames.SpaceFarm
 	public class EncounterFocusRequest : FocusRequest
 	{
 		public static EncounterFocusRequest Encounter(
-			string encounterId,
+			string encounter,
 			UniversePosition system,
 			int body,
 			string crew,
@@ -15,7 +15,7 @@ namespace LunraGames.SpaceFarm
 			States state = States.Request
 		)
 		{
-			return new EncounterFocusRequest(encounterId, system, body, crew, keyValues ?? new KeyValueListModel(), state);
+			return new EncounterFocusRequest(encounter, system, body, crew, keyValues ?? new KeyValueListModel(), state);
 		}
 
 		[JsonProperty] public readonly string EncounterId;

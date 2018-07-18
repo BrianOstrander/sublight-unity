@@ -35,6 +35,8 @@ namespace LunraGames.SpaceFarm.Models
 
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 
+		[JsonProperty] FinalReportModel[] finalReports = new FinalReportModel[0];
+
 		/// <summary>
 		/// The game seed.
 		/// </summary>
@@ -181,21 +183,36 @@ namespace LunraGames.SpaceFarm.Models
 		#region Utility
 		public void SetEncounterStatus(EncounterStatus status)
 		{
-			if (status.EncounterId == null)
+			if (status.Encounter == null)
 			{
 				Debug.LogError("Cannot update the status of an encounter with a null id, update ignored.");
 				return;
 			}
-			EncounterStatuses.Value = EncounterStatuses.Value.Where(e => e.EncounterId != status.EncounterId).Append(status).ToArray();
+			EncounterStatuses.Value = EncounterStatuses.Value.Where(e => e.Encounter != status.Encounter).Append(status).ToArray();
 		}
 
 		public EncounterStatus GetEncounterStatus(string encounterId)
 		{
-			return EncounterStatuses.Value.FirstOrDefault(e => e.EncounterId == encounterId);
+			return EncounterStatuses.Value.FirstOrDefault(e => e.Encounter == encounterId);
 		}
 
 		[JsonIgnore]
 		public KeyValueListModel KeyValues { get { return keyValues; } }
+
+		public void AddFinalReport(FinalReportModel finalReport)
+		{
+			if (finalReports.FirstOrDefault(r => r.Encounter.Value == finalReport.Encounter.Value) != null)
+			{
+				Debug.LogError("A final report with EncounterId " + finalReport.Encounter.Value + " already exists.");
+				return;
+			}
+			finalReports = finalReports.Append(finalReport).ToArray();
+		}
+
+		public FinalReportModel GetFinalReport(string encounter)
+		{
+			return finalReports.FirstOrDefault(r => r.Encounter.Value == encounter);
+		}
 		#endregion
 	}
 }

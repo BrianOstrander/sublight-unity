@@ -19,12 +19,12 @@ namespace LunraGames.SpaceFarm
 		public static EncounterStatus Seen(string encounterId) { return new EncounterStatus(encounterId, States.Seen); }
 		public static EncounterStatus Completed(string encounterId) { return new EncounterStatus(encounterId, States.Completed); }
 
-		[JsonProperty] public readonly string EncounterId;
+		[JsonProperty] public readonly string Encounter;
 		[JsonProperty] public readonly States State;
 
-		public EncounterStatus(string encounterId, States state)
+		public EncounterStatus(string encounter, States state)
 		{
-			EncounterId = encounterId;
+			Encounter = encounter;
 			State = state;
 		}
 	}

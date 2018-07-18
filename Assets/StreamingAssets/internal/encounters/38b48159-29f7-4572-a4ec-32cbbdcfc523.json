@@ -52,7 +52,7 @@
             "value": "Thermal cams failed to confirm any survivors of the crashed vessel. It looks like two sentry bots were dispatched after the crash, and have been slowly etching a ditch into the surface with their patrol. Given the depth of their tracks, we estimate they’ve been traveling in circles for several centuries… I’m sorry to say, any survivors must have died a long time ago.",
             "keyValueId": "b8aa1161-86ea-4b4f-aa75-6d155906d930",
             "target": "Encounter",
-            "key": "FinalReport"
+            "key": "Summary"
           }
         ],
         "index": 4,

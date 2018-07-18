@@ -44,7 +44,7 @@
             "value": "After analysis back onboard, it looks like the samples contained large quantities of water.",
             "keyValueId": "cd75f2fc-b7ca-4e1f-88fe-97ffa18b07c6",
             "target": "Encounter",
-            "key": "FinalReport"
+            "key": "Summary"
           }
         ],
         "index": 3,

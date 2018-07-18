@@ -52,7 +52,7 @@
             "value": "Chemical analysis from of the plumes indicate they’re origin is from entirely natural volcanic activity.",
             "keyValueId": "887e5953-2475-4d63-8412-a39fe5aaf05f",
             "target": "Encounter",
-            "key": "FinalReport"
+            "key": "Summary"
           }
         ],
         "index": 4,
