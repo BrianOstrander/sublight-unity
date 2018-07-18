@@ -110,19 +110,19 @@ namespace LunraGames.SpaceFarm
 			starProbe.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star };
 
 			// Crew generation, eventually will be done somewhere else...
-			//var multiCrew = new OrbitalCrewInventoryModel();
-			//multiCrew.Name.Value = "MultiCrewProbe";
-			//multiCrew.Description.Value = "A multi crew probe, neat!";
-			//multiCrew.InventoryId.Value = "10";
-			//multiCrew.InstanceId.Value = "A0";
-			//multiCrew.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star, BodyTypes.Terrestrial };
+			var multiCrew = new OrbitalCrewInventoryModel();
+			multiCrew.Name.Value = "MultiCrewProbe";
+			multiCrew.Description.Value = "A multi crew probe, neat!";
+			multiCrew.InventoryId.Value = "10";
+			multiCrew.InstanceId.Value = "A0";
+			multiCrew.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star, BodyTypes.Terrestrial };
 
-			//var terrestrialCrew = new OrbitalCrewInventoryModel();
-			//terrestrialCrew.Name.Value = "TerrestrialCrewProbe";
-			//terrestrialCrew.Description.Value = "Time to hit the surface, with a crew!";
-			//terrestrialCrew.InventoryId.Value = "20";
-			//terrestrialCrew.InstanceId.Value = "B0";
-			//terrestrialCrew.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Terrestrial };
+			var terrestrialCrew = new OrbitalCrewInventoryModel();
+			terrestrialCrew.Name.Value = "TerrestrialCrewProbe";
+			terrestrialCrew.Description.Value = "Time to hit the surface, with a crew!";
+			terrestrialCrew.InventoryId.Value = "20";
+			terrestrialCrew.InstanceId.Value = "B0";
+			terrestrialCrew.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Terrestrial };
 
 			var starCrew = new OrbitalCrewInventoryModel();
 			starCrew.Name.Value = "StarCrewProbe";
@@ -135,8 +135,8 @@ namespace LunraGames.SpaceFarm
 				multiProbe, 
 				terrestrialProbe, 
 				starProbe,
-				//multiCrew,
-				//terrestrialCrew,
+				multiCrew,
+				terrestrialCrew,
 				starCrew
 			};
 

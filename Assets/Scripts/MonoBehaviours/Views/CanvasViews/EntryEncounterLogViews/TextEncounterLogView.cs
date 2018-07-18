@@ -11,6 +11,7 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		TextMeshProUGUI messageLabel;
 
+		public Color HeaderColor { set { headerLabel.color = value; } }
 		public string Header { set { headerLabel.text = value ?? string.Empty; } }
 		public string Message { set { messageLabel.text = value ?? string.Empty; } }
 
@@ -18,6 +19,7 @@ namespace LunraGames.SpaceFarm.Views
 		{
 			base.Reset();
 
+			HeaderColor = Color.white;
 			Header = string.Empty;
 			Message = string.Empty;
 		}
@@ -25,6 +27,7 @@ namespace LunraGames.SpaceFarm.Views
 
 	public interface ITextEncounterLogView : IEntryEncounterLogView
 	{
+		Color HeaderColor { set; }
 		string Header { set; }
 		string Message { set; }
 	}
