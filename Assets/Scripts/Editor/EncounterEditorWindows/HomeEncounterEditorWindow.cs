@@ -190,76 +190,108 @@ namespace LunraGames.SpaceFarm
 
 				GUILayout.Label("Hook");
 				model.Hook.Value = GUILayout.TextArea(model.Hook.Value);
+				var alternateColor = Color.grey;
 
-				model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
-					"Completed Encounters Required",
-					model.CompletedEncountersRequired.Value,
-					"- Encounter Id -"
-				);
-				model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
-					"Valid Systems",
-					model.ValidSystems.Value,
-					"- Select a SystemType -"
-				);
-				model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
-					"Valid Bodies",
-					model.ValidBodies.Value,
-					"- Select a BodyType -"
-				);
-				model.ValidProbes.Value = EditorGUILayoutExtensions.EnumArray(
-					"Valid Probes",
-					model.ValidProbes.Value,
-					"- Select a ProbeType -",
-					options: InventoryValidator.Probes
-				);
-				model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
-					"Valid Crews",
-					model.ValidCrews.Value,
-					"- Select a CrewType -",
-					options: InventoryValidator.Crews
-				);
+				EditorGUILayoutExtensions.PushColor(alternateColor);
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				EditorGUILayoutExtensions.PopColor();
+				{
+					model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
+						"Completed Encounters Required",
+						model.CompletedEncountersRequired.Value,
+						"- Encounter Id -"
+					);
+				}
+				GUILayout.EndVertical();
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				{
+					model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Systems",
+						model.ValidSystems.Value,
+						"- Select a SystemType -"
+					);
+				}
+				GUILayout.EndVertical();
+				EditorGUILayoutExtensions.PushColor(alternateColor);
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				EditorGUILayoutExtensions.PopColor();
+				{
+					model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Bodies",
+						model.ValidBodies.Value,
+						"- Select a BodyType -"
+					);
+				}
+				GUILayout.EndVertical();
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				{
+					model.ValidProbes.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Probes",
+						model.ValidProbes.Value,
+						"- Select a ProbeType -",
+						options: InventoryValidator.Probes
+					);
+				}
+				GUILayout.EndVertical();
+				EditorGUILayoutExtensions.PushColor(alternateColor);
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				EditorGUILayoutExtensions.PopColor();
+				{
+					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
+						"Valid Crews",
+						model.ValidCrews.Value,
+						"- Select a CrewType -",
+						options: InventoryValidator.Crews
+					);
+				}
+				GUILayout.EndVertical();
 			}
 			selectedEncounterModified |= EditorGUI.EndChangeCheck();
 		}
 
 		void OnHomeSelectedCrewLogs(EncounterInfoModel model)
 		{
+			EditorGUI.BeginChangeCheck();
+			{
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count()+" |", GUILayout.ExpandWidth(false));
+					GUILayout.Label("Append New Log", GUILayout.ExpandWidth(false));
+					var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
+					var guid = Guid.NewGuid().ToString();
+					var isBeginning = model.Logs.All.Value.Length == 0;
+					var nextIndex = model.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
+					switch (result)
+					{
+						case EncounterLogTypes.Unknown:
+							break;
+						case EncounterLogTypes.Text:
+							var textResult = new TextEncounterLogModel();
+							textResult.Index.Value = nextIndex;
+							textResult.LogId.Value = guid;
+							textResult.Beginning.Value = isBeginning;
+							model.Logs.All.Value = model.Logs.All.Value.Append(textResult).ToArray();
+							break;
+						case EncounterLogTypes.KeyValue:
+							var keyValueResult = new KeyValueEncounterLogModel();
+							keyValueResult.Index.Value = nextIndex;
+							keyValueResult.LogId.Value = guid;
+							keyValueResult.Beginning.Value = isBeginning;
+							model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
+							break;
+						default:
+							Debug.LogError("Unrecognized EncounterLogType:" + result);
+							break;
+					}
+				}
+				GUILayout.EndHorizontal();
+			}
+			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+
 			homeCrewLogsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeCrewLogsScroll), false, true).y;
 			{
 				EditorGUI.BeginChangeCheck();
 				{
-					GUILayout.BeginHorizontal();
-					{
-						GUILayout.Label("Append New Log");
-						var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
-						var guid = Guid.NewGuid().ToString();
-						var isBeginning = model.Logs.All.Value.Length == 0;
-						var nextIndex = model.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
-						switch(result)
-						{
-							case EncounterLogTypes.Unknown:
-								break;
-							case EncounterLogTypes.Text:
-								var textResult = new TextEncounterLogModel();
-								textResult.Index.Value = nextIndex;
-								textResult.LogId.Value = guid;
-								textResult.Beginning.Value = isBeginning;
-								model.Logs.All.Value = model.Logs.All.Value.Append(textResult).ToArray();
-								break;
-							case EncounterLogTypes.KeyValue:
-								var keyValueResult = new KeyValueEncounterLogModel();
-								keyValueResult.Index.Value = nextIndex;
-								keyValueResult.LogId.Value = guid;
-								keyValueResult.Beginning.Value = isBeginning;
-								model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
-								break;
-							default:
-								Debug.LogError("Unrecognized EncounterLogType:" + result);
-								break;
-						}
-					}
-					GUILayout.EndHorizontal();
-
 					var deleted = string.Empty;
 					var beginning = string.Empty;
 					var ending = string.Empty;

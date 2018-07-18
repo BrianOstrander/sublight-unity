@@ -1,0 +1,134 @@
+{
+  "encounterId": "1942bd43-4110-4020-9c01-d2c7403ab10b",
+  "name": "Corona Blasted Ship",
+  "hook": "Thermal emission dips near the star’s equator indicate some kind of large vessel is in a tight orbit.",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [
+    "Star"
+  ],
+  "validProbes": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "D. Cortez",
+        "message": "We’re closing in now, our life support won’t handle much more than this, external temperatures are over 1,000 degrees.",
+        "nextLogId": "42a4a8d3-cd05-407a-9587-944cea2dc612",
+        "beginning": true,
+        "logId": "f49a6418-f047-4294-b022-b2c413c8b6b8",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "Yeah, let’s make this fast, I’m prepping the docking gantry now.",
+        "nextLogId": "b5691c3c-ca84-444c-aa58-c61178801723",
+        "index": 1,
+        "logId": "42a4a8d3-cd05-407a-9587-944cea2dc612",
+        "duration": 1.0
+      },
+      {
+        "header": "K. Robinson",
+        "message": "Closing the aft porthole, it’s getting too hot in here to take anymore readings. Best I can do is estimate it’s a ship 10 to 20 times the size of mother. Any other details have been blown out by all the sunlight we’re getting from the edge of the corona here.",
+        "nextLogId": "20d65b60-33b8-4d91-9e84-e97b4405f8c2",
+        "index": 2,
+        "logId": "b5691c3c-ca84-444c-aa58-c61178801723",
+        "duration": 1.0
+      },
+      {
+        "header": "D. Cortez",
+        "message": "Ok… we’re almost on top of it now, you ready down there on the gantry?",
+        "nextLogId": "cc4d6542-21b7-4b9c-b3a1-18602fb930a0",
+        "index": 3,
+        "logId": "20d65b60-33b8-4d91-9e84-e97b4405f8c2",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "Roger, opening outer gantry lock now… testing exterior door on the vessel… it’s locked.",
+        "nextLogId": "6c216038-520e-4d83-90eb-c00ea3ddceda",
+        "index": 4,
+        "logId": "cc4d6542-21b7-4b9c-b3a1-18602fb930a0",
+        "duration": 1.0
+      },
+      {
+        "header": "K. Robinson",
+        "message": "Give me a minute and I’ll be down there with the plasma torch.",
+        "nextLogId": "1638c993-90b0-4ecf-ae94-338cd0428f6e",
+        "index": 5,
+        "logId": "6c216038-520e-4d83-90eb-c00ea3ddceda",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "Ok, Robinson has the lock cut, but damn it’s hot. My suit’s coolant supply is already down to 10%. Ok push that open and lets peak inside.",
+        "nextLogId": "a0d24aba-49f7-4ce2-8761-d91daf205235",
+        "index": 6,
+        "logId": "1638c993-90b0-4ecf-ae94-338cd0428f6e",
+        "duration": 1.0
+      },
+      {
+        "header": "K. Robinson",
+        "message": "*static*",
+        "nextLogId": "ac45500d-9486-41dc-92ca-d9a9ce9e584e",
+        "index": 7,
+        "logId": "a0d24aba-49f7-4ce2-8761-d91daf205235",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "Get back! Come on!",
+        "nextLogId": "6ed939e6-2881-4b2c-85db-8d5e7055cfb9",
+        "index": 8,
+        "logId": "ac45500d-9486-41dc-92ca-d9a9ce9e584e",
+        "duration": 1.0
+      },
+      {
+        "header": "D. Cortez",
+        "message": "Hey gantry team, what’s going on down there? Report!",
+        "nextLogId": "a5ecf36b-bc48-4e9c-9f37-5003c2f82c4d",
+        "index": 9,
+        "logId": "6ed939e6-2881-4b2c-85db-8d5e7055cfb9",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "*heavy breathing*",
+        "nextLogId": "9015f29d-c656-4c58-95c4-4309a296b6fa",
+        "index": 10,
+        "logId": "a5ecf36b-bc48-4e9c-9f37-5003c2f82c4d",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "Closing lock now… mother, get medical ready on our return, Robinson has been hurt.",
+        "nextLogId": "880d654e-a029-4094-8201-fa71c76374ca",
+        "index": 11,
+        "logId": "9015f29d-c656-4c58-95c4-4309a296b6fa",
+        "duration": 1.0
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [
+          {
+            "value": "We should have been more careful… poor Robinson. Third degree burns across 50% of his body, he was barely alive when we got back to mother, shortly after he died. Turns out the vessel we were exploring had half its hull sheared off, so when we opened the outer door, we were looking right across the twisted superstructure and out to the full blast of the sun. Idlewild has some serious burns across his face, and it’s unclear if he’ll ever see again, but at least his environment suit wasn’t just a flimsy pressure bladder like Robinson’s. Any crew members wanting to say a few last words can do so at 1100 on the E deck airlock.  ",
+            "keyValueId": "b4255003-fefd-4f49-98c1-7c6fefa9af86",
+            "target": "Encounter",
+            "key": "final_report"
+          }
+        ],
+        "index": 12,
+        "ending": true,
+        "logId": "880d654e-a029-4094-8201-fa71c76374ca"
+      }
+    ]
+  },
+  "version": 2,
+  "meta": "Corona Blasted Ship",
+  "created": "2018-07-17T18:06:36.200808-07:00",
+  "modified": "2018-07-17T18:06:36.200808-07:00",
+  "SaveType": "EncounterInfo"
+}

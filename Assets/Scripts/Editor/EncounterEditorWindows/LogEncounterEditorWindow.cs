@@ -22,7 +22,7 @@ namespace LunraGames.SpaceFarm
 			if (isAlternate) EditorGUILayoutExtensions.PopColor();
 			GUILayout.BeginHorizontal();
 			{
-				var header = model.LogType + ".LogId:";
+				var header = "#"+(count + 1)+" | "+model.LogType + ".LogId:";
 				GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
 				EditorGUILayout.SelectableLabel(model.LogId, EditorStyles.boldLabel);
 				if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)

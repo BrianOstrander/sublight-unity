@@ -1,0 +1,70 @@
+{
+  "encounterId": "5b583f59-8ebf-4a28-a8f9-3c7eb44ad578",
+  "name": "Volcanic Plumes",
+  "hook": "Large plumes are visible, possibly from a subterranean factory.",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [
+    "Terrestrial"
+  ],
+  "validProbes": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "D. Cortez",
+        "message": "Heading through the plume now… molecular samplers extended.",
+        "nextLogId": "4d8a16a4-9bc3-4f58-a090-ee8cf4be1701",
+        "beginning": true,
+        "logId": "2df7992c-aa35-4a53-9d6d-770ac9fe7ace",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "Uh… the view screen is fogging up, we almost done down there?",
+        "nextLogId": "0ebcb102-b75a-4459-bbd9-5304a385e78f",
+        "index": 1,
+        "logId": "4d8a16a4-9bc3-4f58-a090-ee8cf4be1701",
+        "duration": 1.0
+      },
+      {
+        "header": "D. Cortez",
+        "message": "Okay, we’re full, pull up!",
+        "nextLogId": "d6852979-9d16-4cf3-ac9d-380a5cb269df",
+        "index": 2,
+        "logId": "0ebcb102-b75a-4459-bbd9-5304a385e78f",
+        "duration": 1.0
+      },
+      {
+        "header": "W. Idlewild",
+        "message": "Heading back to mother now.",
+        "nextLogId": "806054f3-6732-42ee-a6cf-5903d62fe047",
+        "index": 3,
+        "logId": "d6852979-9d16-4cf3-ac9d-380a5cb269df",
+        "duration": 1.0
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [
+          {
+            "value": "Chemical analysis from of the plumes indicate they’re origin is from entirely natural volcanic activity.",
+            "keyValueId": "887e5953-2475-4d63-8412-a39fe5aaf05f",
+            "target": "Encounter",
+            "key": "final_report"
+          }
+        ],
+        "index": 4,
+        "ending": true,
+        "logId": "806054f3-6732-42ee-a6cf-5903d62fe047"
+      }
+    ]
+  },
+  "version": 2,
+  "meta": "Volcanic Plumes",
+  "created": "2018-07-17T18:01:24.980291-07:00",
+  "modified": "2018-07-17T18:01:24.980291-07:00",
+  "SaveType": "EncounterInfo"
+}
