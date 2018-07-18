@@ -65,7 +65,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnLoadGameClick(SaveModel model)
 		{
-			App.SaveLoadService.Load<GameModel>(model, OnLoadedGame);
+			App.M.Load<GameModel>(model, OnLoadedGame);
 		}
 
 		void OnLoadedGame(SaveLoadRequest<GameModel> result)
@@ -76,67 +76,22 @@ namespace LunraGames.SpaceFarm.Presenters
 				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error));
 				return;
 			}
-			App.SaveLoadService.Save(result.TypedModel, OnSaveGame);
+			App.M.Save(result.TypedModel, OnSaveGame);
 		}
 
 		void OnNewGame()
 		{
-			var game = App.SaveLoadService.Create<GameModel>();
-			game.Seed.Value = DemonUtility.NextInteger;
-			game.Universe.Value = App.UniverseService.CreateUniverse(1);
-			game.FocusedSector.Value = UniversePosition.Zero;
-			game.DestructionSpeed.Value = 0.01f;
+			App.GameService.CreateGame(OnNewGameCreated);
+		}
 
-			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
-			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
-			foreach (var system in game.Universe.Value.Sectors.Value.First().Systems.Value)
+		void OnNewGameCreated(RequestStatus result, GameModel model)
+		{
+			if (result != RequestStatus.Success)
 			{
-				var distance = UniversePosition.Distance(UniversePosition.Zero, system.Position);
-				if (lastDistance < distance) continue;
-				lastDistance = distance;
-				startSystem = system;
+				App.Callbacks.DialogRequest(DialogRequest.Alert("Creating new game returned with result "+result));
+				return;
 			}
-
-			startSystem.Visited.Value = true;
-
-			var startPosition = startSystem.Position;
-			var rations = 0.3f;
-			var fuel = 1f;
-			var fuelConsumption = 1f;
-			var speed = 0.003f;
-			var rationConsumption = 0.02f;
-
-			var ship = new ShipModel();
-			ship.CurrentSystem.Value = startSystem.Position;
-			ship.Position.Value = startPosition;
-			ship.Speed.Value = speed;
-			ship.RationConsumption.Value = rationConsumption;
-			ship.Rations.Value = rations;
-			ship.Fuel.Value = fuel;
-			ship.FuelConsumption.Value = fuelConsumption;
-
-			game.Ship.Value = ship;
-
-			game.TravelRequest.Value = new TravelRequest(
-				TravelRequest.States.Complete,
-				startSystem.Position,
-				startSystem.Position,
-				startSystem.Position,
-				DayTime.Zero,
-				DayTime.Zero,
-				0f,
-				1f
-			);
-
-			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
-			game.EndSystem.Value = endSector.Systems.Value.First().Position;
-
-			// Uncomment this to make the game easy.
-			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
-
-
-
-			App.SaveLoadService.Save(game, OnSaveGame);
+			OnStartGame(model);
 		}
 
 		void OnSaveGame(SaveLoadRequest<GameModel> result)

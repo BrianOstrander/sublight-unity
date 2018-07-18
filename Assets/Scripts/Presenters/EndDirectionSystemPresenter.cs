@@ -3,7 +3,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class EndDirectionSystemPresenter : Presenter<IEndDirectionSystemView>
+	public class EndDirectionSystemPresenter : Presenter<IEndDirectionSystemView>, IPresenterCloseShow
 	{
 		GameModel model;
 		SystemModel system;
@@ -16,10 +16,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
 
@@ -31,6 +29,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.EndPosition = system.Position;
 
 			ShowView(instant: true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

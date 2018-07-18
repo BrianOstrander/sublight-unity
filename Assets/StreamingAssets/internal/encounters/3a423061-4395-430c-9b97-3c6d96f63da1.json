@@ -1,0 +1,73 @@
+{
+  "hidden": true,
+  "encounterId": "52223162-311a-47d9-b444-8d8f21f42a48",
+  "name": "Coronal Base 55",
+  "hook": "Spectrograph picking up distortions in low stellar orbit... w-band emissions correspond to a large metal structure, looks artificial.",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [],
+  "validProbes": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "Alpha Team - Wilhelm",
+        "message": "We’re coming in to dock now, looks like a large solar platform, hailing them now.",
+        "nextLogId": "19130d82-718c-45f4-8d5a-267fb1fc6871",
+        "beginning": true,
+        "logId": "ffad5800-9194-44cb-a6ed-0dba8e207af0",
+        "duration": 1.0
+      },
+      {
+        "header": "Alpha Team - Wilhelm",
+        "message": "No response, proceeding with emergency docking protocol.",
+        "nextLogId": "409a1f79-b4c6-4405-b681-5e5737f48a91",
+        "logId": "19130d82-718c-45f4-8d5a-267fb1fc6871",
+        "duration": 1.0
+      },
+      {
+        "header": "Alpha Team - Geralda",
+        "message": "Ok, team leader reporting in, we’ve cleared the hatch with some plasma torches. The inside still has an atmosphere… checks out as breathable, but there’s a fine dust coating the entire surface. Heading towards the computer control system now.",
+        "nextLogId": "c67b792e-3620-4b36-9314-f7f476d99da4",
+        "logId": "409a1f79-b4c6-4405-b681-5e5737f48a91",
+        "duration": 2.0
+      },
+      {
+        "header": "Alpha Team - Geralda",
+        "message": "<fast footsteps> Uh… beta team, we see some movement up ahead, looks like it went your way, deck 2 section 4.",
+        "nextLogId": "2271749a-ca52-4012-bf29-9492dace1a29",
+        "logId": "c67b792e-3620-4b36-9314-f7f476d99da4",
+        "duration": 2.0
+      },
+      {
+        "header": "Beta Team - Charlie",
+        "message": "Roger that, proceeding.",
+        "nextLogId": "e18fc9bf-25c3-4514-a699-e618ad55e6a6",
+        "logId": "2271749a-ca52-4012-bf29-9492dace1a29",
+        "duration": 1.0
+      },
+      {
+        "header": "Alpha Team - Geralda",
+        "message": "<coughs> It’s really dusty in here, we’re putting our respirators on, this dust is everywhere. Any update on that movement beta team?",
+        "nextLogId": "b8797f1d-d5c5-4092-a6df-a4de6725a6ed",
+        "logId": "e18fc9bf-25c3-4514-a699-e618ad55e6a6",
+        "duration": 1.0
+      },
+      {
+        "header": "TODO",
+        "message": "TODO: More logs!!!",
+        "ending": true,
+        "logId": "b8797f1d-d5c5-4092-a6df-a4de6725a6ed",
+        "duration": 1.0
+      }
+    ],
+    "keyValueLogs": []
+  },
+  "version": 2,
+  "meta": "Coronal Base 55",
+  "created": "2018-07-10T17:41:11.538825-07:00",
+  "modified": "2018-07-11T15:10:23.667842-07:00",
+  "SaveType": "EncounterInfo"
+}

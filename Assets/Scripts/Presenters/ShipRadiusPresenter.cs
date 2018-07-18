@@ -5,7 +5,7 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class ShipRadiusPresenter : Presenter<IShipRadiusView>
+	public class ShipRadiusPresenter : Presenter<IShipRadiusView>, IPresenterCloseShow
 	{
 		GameModel model;
 
@@ -16,10 +16,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			model.Ship.Value.TravelRadius.Changed += OnTravelRadius;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.Ship.Value.TravelRadius.Changed -= OnTravelRadius;
 		}
 
@@ -33,6 +31,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.TravelRadius = model.Ship.Value.TravelRadius;
 
 			ShowView(instant: true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

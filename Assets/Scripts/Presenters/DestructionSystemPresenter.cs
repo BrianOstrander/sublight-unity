@@ -3,7 +3,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class DestructionSystemPresenter : Presenter<IDestructionSystemView>
+	public class DestructionSystemPresenter : Presenter<IDestructionSystemView>, IPresenterCloseShow
 	{
 		GameModel model;
 
@@ -16,10 +16,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.DestructionRadius.Changed -= OnDestructionRadius;
 			App.Callbacks.VoidRenderTexture -= OnVoidRenderTexture;
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
@@ -37,10 +35,16 @@ namespace LunraGames.SpaceFarm.Presenters
 			ShowView(instant: true);
 		}
 
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
+		}
+
 		#region Events
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
-			model.DestructionRadius.Value += delta.Delta.TotalDays * model.DestructionSpeed;
+			model.DestructionRadius.Value += delta.Delta.TotalTime * model.DestructionSpeed;
 		}
 
 		void OnVoidRenderTexture(VoidRenderTexture voidRenderTexture)

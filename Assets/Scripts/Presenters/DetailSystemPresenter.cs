@@ -17,10 +17,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.SystemHighlight += OnSystemHighlight;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.SystemHighlight -= OnSystemHighlight;
 		}
 
@@ -32,7 +30,38 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Name = system.Name;
 			View.DayTravelTime = Mathf.Min(1, UniversePosition.TravelTime(system.Position, model.Ship.Value.Position, model.Ship.Value.SpeedTotal).Day);
 
+			var rationText = string.Empty;
+			var rationColor = Color.white;
+			GetResources(model.Ship.Value.ResourceDetection, system.RationsDetection, system.Rations, out rationText, out rationColor);
+			View.Rations = rationText;
+			View.RationsColor = rationColor;
+
+			var fuelText = string.Empty;
+			var fuelColor = Color.white;
+			GetResources(model.Ship.Value.ResourceDetection, system.FuelDetection, system.Fuel, out fuelText, out fuelColor);
+			View.Fuel = fuelText;
+			View.FuelColor = fuelColor;
+
 			ShowView(App.GameCanvasRoot, true);
+		}
+
+		void GetResources(float shipDetection, float systemDetection, float amount, out string text, out Color color)
+		{
+			if (shipDetection < systemDetection)
+			{
+				text = "[UNKNOWN]";
+				color = Color.yellow;
+				return;
+			}
+			if (Mathf.Approximately(0f, amount))
+			{
+				text = "[NONE]";
+				color = Color.red;
+				return;
+			}
+			text = "[DETECTED]";
+			color = Color.green;
+			return;
 		}
 
 		#region Events

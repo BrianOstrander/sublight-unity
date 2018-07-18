@@ -13,6 +13,9 @@ namespace LunraGames.SpaceFarm
 
 	public class InputService : IInputService
 	{
+		Heartbeat heartbeat;
+		CallbackService callbacks;
+
 		public bool IsEnabled { get; private set; }
 		DateTime clickDownTime;
 
@@ -30,6 +33,15 @@ namespace LunraGames.SpaceFarm
 
 		Vector2 lastGesture;
 
+		public InputService(Heartbeat heartbeat, CallbackService callbacks)
+		{
+			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
+
+			this.heartbeat = heartbeat;
+			this.callbacks = callbacks;
+		}
+
 		public void SetEnabled(bool isEnabled)
 		{
 			if (isEnabled == IsEnabled) return;
@@ -40,17 +52,18 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual void OnEnabled()
 		{
-			App.Heartbeat.Update += OnUpdate;
+			heartbeat.Update += OnUpdate;
 		}
 
 		protected virtual void OnDisabled()
 		{
-			App.Heartbeat.Update -= OnUpdate;
+			heartbeat.Update -= OnUpdate;
 		}
+
 		#region Events
 		protected virtual void OnUpdate(float delta)
 		{
-			if (IsEscapeUp()) App.Callbacks.Escape();
+			if (IsEscapeUp()) callbacks.Escape();
 
 			var clickDown = IsClickDown();
 			var clickHeldDown = IsClickHeldDown();
@@ -73,14 +86,14 @@ namespace LunraGames.SpaceFarm
 			{
 				beginGesture = currentGesture;
 				beginGestureNormal = currentGestureNormal;
-				App.Callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
+				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
 			}
 
 			// TODO: Delete this?
 			//var gestureNormalDelta = currentGestureNormal - beginGestureNormal;
 
-			if (gesturingEnded) App.Callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
-			App.Callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
+			if (gesturingEnded) callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
+			callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
 
 			lastGesture = currentGesture;
 
@@ -94,13 +107,11 @@ namespace LunraGames.SpaceFarm
 			// TODO: Does this need to be a list?
 			var stillHighlighted = new List<GameObject>();
 			var wasTriggered = false;
-			var wasClicked = false;
 			var expiredDrags = new List<GameObject>();
 
+			// TODO: This probably doesn't need to be a foreach loop.
 			foreach (var raycast in raycasts)
 			{
-				if (wasTriggered) break;
-
 				if (stillHighlighted.Count == 0)
 				{
 					stillHighlighted.Add(raycast.gameObject);
@@ -117,16 +128,19 @@ namespace LunraGames.SpaceFarm
 				}
 				if (clickUp)
 				{
-					if (SendClickEvents() && clickClick && !wasClicked)
+					if (clickClick)
 					{
-						wasClicked |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
-						wasTriggered |= wasClicked;
+						wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
 					}
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler) != null;
 
 					expiredDrags.Add(raycast.gameObject);
 				}
-				// TODO: Drag logic here!
+				if (clickHeldDown)
+				{
+					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler) != null;
+				}
+				break;
 			}
 
 			if (clickUp)
@@ -153,20 +167,20 @@ namespace LunraGames.SpaceFarm
 				if (stillHighlighted.Count == 0) highlightState = Highlight.States.End;
 				else if (highlighted.Count == 0) highlightState = Highlight.States.Begin;
 				else highlightState = Highlight.States.Change;
-				App.Callbacks.Highlight(new Highlight(highlightState));
+				callbacks.Highlight(new Highlight(highlightState));
 			}
 
 			highlighted = stillHighlighted;
 
-			if (clickClick) App.Callbacks.Click(new Click(beginGestureNormal, currentGestureNormal, !wasTriggered));
+			if (clickClick) callbacks.Click(new Click(beginGestureNormal, currentGestureNormal, !wasTriggered));
 
 			// Camera
 			var cameraPosition = GetCameraPosition();
 			var cameraRotation = GetCameraRotation();
-			App.Callbacks.CameraOrientation(new CameraOrientation(cameraPosition, cameraRotation));
+			callbacks.CameraOrientation(new CameraOrientation(cameraPosition, cameraRotation));
 
 			var pointerRotation = GetPointerRotation();
-			App.Callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
+			callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
 		}
 		#endregion
 		protected virtual bool IsEscapeUp() { return false; }
@@ -179,14 +193,6 @@ namespace LunraGames.SpaceFarm
 		protected virtual bool IsClickHeldDown() { return false; }
 		protected virtual bool IsClickUp() { return false; }
 		protected virtual bool IsSecondaryClickInteraction() { return false; }
-		/// <summary>
-		/// Determines if click events should be executed by this InputService.
-		/// </summary>
-		/// <remarks>
-		/// For some platforms, like desktop, we can let the base input module do its job and set this to false.
-		/// </remarks>
-		/// <returns><c>true</c>, if click events was sent, <c>false</c> otherwise.</returns>
-		protected virtual bool SendClickEvents() { return true; }
 		protected virtual float GetGestureSensitivity() { return 1f; }
 		protected virtual bool GetGestureBegan() { return false; }
 		protected virtual bool IsGesturing() { return false; }

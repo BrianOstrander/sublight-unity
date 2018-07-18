@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
+	[Obsolete]
 	public class EnterSystemPresenter : Presenter<IEnterSystemView>
 	{
 		GameModel model;
@@ -16,14 +17,12 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			model.TravelRequest.Changed += OnTravelRequest;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			model.TravelRequest.Changed -= OnTravelRequest;
 		}
 
 		void Show()
@@ -39,7 +38,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Shown += () => App.Callbacks.PushEscape(new EscapeEntry(OnEscape, false, false));
 
 			View.Title = Strings.ArrivedIn(destination.Name.Value);
-			View.Details = Strings.ArrivedDetails(destination.Rations.Value);
+			View.Details = Strings.ArrivedDetails(destination.Rations.Value, destination.Fuel.Value);
 			View.OkayClick = OnOkayClick;
 			ShowView(App.OverlayCanvasRoot);
 		}
@@ -54,7 +53,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (travelRequest.Destination == model.EndSystem.Value) return;
 
 					var travelDestination = model.Universe.Value.GetSystem(travelRequest.Destination);
-					var remainingFuel = (model.Ship.Value.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
+					var remainingFuel = (model.Ship.Value.Inventory.Resources.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
 					// Don't pop up if out of fuel.
 					if (remainingFuel < 1f) return;
 
@@ -95,8 +94,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnClosed()
 		{
 			destination.Visited.Value = true;
-			model.Ship.Value.Rations.Value += destination.Rations;
-			model.Ship.Value.Fuel.Value += destination.Fuel - fuelConsumed;
+			model.Ship.Value.Inventory.Resources.Rations.Value += destination.Rations;
+			model.Ship.Value.Inventory.Resources.Fuel.Value += destination.Fuel - fuelConsumed;
 		}
 		#endregion
 

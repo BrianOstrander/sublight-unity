@@ -13,6 +13,7 @@ namespace LunraGames.SpaceFarm
 	[Serializable]
 	public abstract class Model : IModel
 	{
+		// TODO: Figure out what this is supposed to mean and if it's actually needed...
 		[JsonProperty] string id;
 
 		[JsonIgnore]

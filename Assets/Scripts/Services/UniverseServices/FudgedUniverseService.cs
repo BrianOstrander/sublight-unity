@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -105,9 +106,9 @@ namespace LunraGames.SpaceFarm
 			var types = new SystemTypes[positions.Length];
 			var seeds = new int[positions.Length];
 
-			for (var i = 0; i < positions.Length; i++) 
+			for (var i = 0; i < positions.Length; i++)
 			{
-				types[i] = SystemTypes.Star;
+				types[i] = SystemTypes.Celestial;
 				seeds[i] = demon.NextInteger;
 			}
 
@@ -125,30 +126,120 @@ namespace LunraGames.SpaceFarm
 
 			switch (systemType)
 			{
-				case SystemTypes.Star: system = new StarModel(); break;
+				case SystemTypes.Celestial: system = new CelestialSystemModel(); break;
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
+
+			var random = new Demon(seed);
 
 			system.Seed.Value = seed;
 			system.Visited.Value = false;
 			system.Position.Value = position;
 
 			system.Name.Value = seed.ToString();
-			system.Rations.Value = 0.2f;
-			system.Fuel.Value = 2f;
+
+			switch (random.GetNextInteger(max: 3))
+			{
+				case 0:
+					// Just rations
+					system.Rations.Value = random.GetNextFloat(0.1f, 0.75f);
+					break;
+				case 1:
+					// Just fuel
+					system.Fuel.Value = random.GetNextInteger(2, 5);
+					break;
+				case 2:
+					// Fuel and Rations
+					system.Rations.Value = random.GetNextFloat(0.1f, 0.75f);
+					system.Fuel.Value = random.GetNextInteger(2, 5);
+					break;
+			}
+
+			system.RationsDetection.Value = random.NextFloat;
+			system.FuelDetection.Value = random.NextFloat;
 
 			switch (systemType)
 			{
-				case SystemTypes.Star: PopulateSystem(system as StarModel); break;
+				case SystemTypes.Celestial: PopulateSystem(system as CelestialSystemModel); break;
 				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
 			}
 
 			return system;
 		}
 
-		public override void PopulateSystem(StarModel starModel)
+		public override void PopulateSystem(CelestialSystemModel celestialModel)
 		{
-			// TODO: Populate star specific info
+			var random = new Demon(celestialModel.Seed + 1);
+			var bodies = new List<BodyModel>();
+
+			var rationsRemaining = celestialModel.Rations.Value;
+			var fuelRemaining = celestialModel.Fuel.Value;
+
+			var star = new StarBodyModel();
+			bodies.Add(star);
+			star.Seed.Value = random.NextInteger;
+			star.BodyId.Value = 0;
+			star.ParentId.Value = -1;
+			star.Name.Value = "Star: "+star.Seed.Value.ToString();
+			star.Resources.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
+			star.Resources.Fuel.Value = GetFraction(ref fuelRemaining, random.NextFloat);
+			star.Status.Value = BodyStatus.NotProbed;
+
+			var bodyCount = 0;
+
+			for (var i = 0; i < random.GetNextInteger(0, 3); i++)
+			{
+				BodyModel generic;
+				var seed = random.NextInteger;
+				var bodyId = (bodyCount += 1);
+				var parentId = -1;
+				var name = string.Empty;
+				var rations = GetFraction(ref rationsRemaining, random.NextFloat);
+				var fuel = GetFraction(ref fuelRemaining, random.NextFloat);
+				var status = BodyStatus.NotProbed;
+
+				switch (random.GetNextInteger(0, 2))
+				{
+					case 0:
+						// star
+						var starModel = new StarBodyModel();
+						generic = starModel;
+
+						name = "Star: " + seed.ToString();
+						break;
+					case 1:
+						// terrestrial
+						var terrestrialModel = new TerrestrialBodyModel();
+						terrestrialModel.ParentId.Value = star.BodyId;
+						generic = terrestrialModel;
+
+						name = "Terrestrial: " + seed.ToString();
+						break;
+					default: throw new ArgumentException("Random body out of range.");
+				}
+
+				generic.Seed.Value = seed;
+				generic.BodyId.Value = bodyId;
+				generic.ParentId.Value = parentId;
+				generic.Name.Value = name;
+				generic.Resources.Rations.Value = rations;
+				generic.Resources.Fuel.Value = fuel;
+				generic.Status.Value = status;
+
+				bodies.Add(generic);
+			}
+
+			star.Resources.Rations.Value += rationsRemaining;
+			star.Resources.Fuel.Value += fuelRemaining;
+
+			celestialModel.Bodies.Value = bodies.ToArray();
 		}
+
+		#region Utility
+		float GetFraction(ref float remaining, float normal)
+		{
+			return remaining - (remaining = remaining * normal);
+		}
+		#endregion
 	}
 }

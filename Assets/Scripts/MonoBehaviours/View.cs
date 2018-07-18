@@ -57,6 +57,11 @@ namespace LunraGames.SpaceFarm
 		/// <value>The late idle.</value>
 		Action<float> LateIdle { get; set; }
 		/// <summary>
+		/// Called when a view starts to close, only once at the beginning.
+		/// </summary>
+		/// <value>The prepare close.</value>
+		Action PrepareClose { get; set; }
+		/// <summary>
 		/// Called when view is closing, with a scalar progress. Add events using += for predictable behaviour.
 		/// </summary>
 		/// <value>The closing.</value>
@@ -109,6 +114,7 @@ namespace LunraGames.SpaceFarm
 		public Action Shown { get; set; }
 		public Action<float> Idle { get; set; }
 		public Action<float> LateIdle { get; set; }
+		public Action PrepareClose { get; set; }
 		public Action<float> Closing { get; set; }
 		public Action Closed { get; set; }
 
@@ -127,7 +133,6 @@ namespace LunraGames.SpaceFarm
 
 		protected virtual void OnShowing(float scalar) 
 		{
-			TransitionState = TransitionStates.Showing;
 			foreach (var anim in ViewAnimations) anim.OnShowing(this, scalar);
 		}
 
@@ -135,9 +140,6 @@ namespace LunraGames.SpaceFarm
 		{
 			TransitionState = TransitionStates.Shown;
 			foreach (var anim in ViewAnimations) anim.OnShown(this);
-			// TODO: Remove these? I think this is all taken care of...
-			//App.Heartbeat.Update += OnUpdate;
-			//App.Heartbeat.LateUpdate += OnLateUpdate;
 		}
 
 		protected virtual void OnIdle(float delta) 
@@ -150,16 +152,14 @@ namespace LunraGames.SpaceFarm
 			foreach (var anim in ViewAnimations) anim.OnLateIdle(this);
 		}
 
+		protected virtual void OnPrepareClose()
+		{
+			TransitionState = TransitionStates.Closing;
+			foreach (var anim in ViewAnimations) anim.OnPrepareClose(this);
+		}
+
 		protected virtual void OnClosing(float scalar) 
 		{
-			// TODO: Remove these? I think this is all taken care of...
-			// Is this the first time coming through here...
-			if (TransitionState != TransitionStates.Closing)
-			{
-				//App.Heartbeat.Update -= OnUpdate;
-				//App.Heartbeat.LateUpdate -= OnLateUpdate;
-			}
-			TransitionState = TransitionStates.Closing;
 			foreach (var anim in ViewAnimations) anim.OnClosing(this, scalar);
 		}
 
@@ -176,6 +176,7 @@ namespace LunraGames.SpaceFarm
 			Showing = OnShowing;
 			Idle = OnIdle;
 			LateIdle = OnLateIdle;
+			PrepareClose = OnPrepareClose;
 			Closing = OnClosing;
 			Closed = OnClosed;
 

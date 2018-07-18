@@ -7,7 +7,7 @@ using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class SpeedPresenter : Presenter<ISpeedView>
+	public class SpeedPresenter : Presenter<ISpeedView>, IPresenterCloseShow
 	{
 		GameModel model;
 
@@ -20,10 +20,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Heartbeat.Update += OnUpdate;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			model.DayTime.Changed -= OnDayTime;
 			App.Callbacks.SpeedRequest -= OnSpeedChange;
 			App.Heartbeat.Update -= OnUpdate;
@@ -42,6 +40,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			ShowView(App.GameCanvasRoot, true);
 		}
 
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
+		}
+
 		#region Events
 		void OnUpdate(float delta)
 		{
@@ -53,7 +57,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnDayTime(DayTime current)
 		{
-			View.Current = current;
+			if (View.TransitionState == TransitionStates.Shown) View.Current = current;
 			App.Callbacks.DayTimeDelta(new DayTimeDelta(current, App.Callbacks.LastDayTimeDelta.Current));
 		}
 

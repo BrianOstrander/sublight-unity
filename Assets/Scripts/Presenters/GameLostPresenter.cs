@@ -14,18 +14,14 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			model.Ship.Value.Rations.Changed += OnRations;
+			model.Ship.Value.Inventory.Resources.Rations.Changed += OnRations;
 			model.DestructionRadius.Changed += OnDestructionRadius;
-			App.Callbacks.TravelRequest += OnTravelRequest;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
-			model.Ship.Value.Rations.Changed -= OnRations;
+			model.Ship.Value.Inventory.Resources.Rations.Changed -= OnRations;
 			model.DestructionRadius.Changed -= OnDestructionRadius;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
 		}
 
 		void Show(string reason)
@@ -57,22 +53,6 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (!Mathf.Approximately(0f, rations)) return;
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 			Show(Strings.OutOfRations);
-		}
-
-		void OnTravelRequest(TravelRequest travelRequest)
-		{
-			switch (travelRequest.State)
-			{
-				case TravelRequest.States.Complete:
-					// Don't pop up on end system.
-					if (travelRequest.Destination == model.EndSystem.Value) return;
-					var travelDestination = model.Universe.Value.GetSystem(travelRequest.Destination);
-					var remainingFuel = (model.Ship.Value.Fuel - travelRequest.FuelConsumed) + travelDestination.Fuel;
-					// Don't pop up if there's going to be enough fuel in this system.
-					if (1f <= remainingFuel) return;
-					Show(Strings.OutOfFuel);
-					break;
-			}
 		}
 
 		void OnDestructionRadius(float radius)

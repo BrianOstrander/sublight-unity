@@ -2,7 +2,7 @@
 
 namespace LunraGames.SpaceFarm.Presenters
 {
-	public class DestructionOriginSystemPresenter : Presenter<ISystemDestructionOriginView>
+	public class DestructionOriginSystemPresenter : Presenter<ISystemDestructionOriginView>, IPresenterCloseShow
 	{
 		public void Show()
 		{
@@ -12,6 +12,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Highlight = OnHighlight;
 			View.Click = OnClick;
 			ShowView(instant: true);
+		}
+
+		public void Close()
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			CloseView();
 		}
 
 		#region Events

@@ -126,9 +126,9 @@ namespace LunraGames
 			}
 		}
 
-		public static string SerializeJson(object value, bool verbose = false)
+		public static string SerializeJson(object value, bool verbose = false, Formatting formatting = Formatting.None)
 		{
-			return value == null ? string.Empty : JsonConvert.SerializeObject(value, Formatting.None, verbose ? VerboseSerializerSettings : SerializerSettings);
+			return value == null ? string.Empty : JsonConvert.SerializeObject(value, formatting, verbose ? VerboseSerializerSettings : SerializerSettings);
 		}
 
 		/// <summary>
@@ -160,9 +160,9 @@ namespace LunraGames
 			}
 		}
 
-		public static string Serialize(this object target, bool verbose = false)
+		public static string Serialize(this object target, bool verbose = false, Formatting formatting = Formatting.None)
 		{
-			return SerializeJson(target, verbose);
+			return SerializeJson(target, verbose, formatting);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 {
 	public enum SystemTypes
 	{
-		Unknown,
-		Star
+		Unknown = 0,
+		Celestial = 10
 	}
 }

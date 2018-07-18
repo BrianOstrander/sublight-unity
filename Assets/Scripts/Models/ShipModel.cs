@@ -1,19 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+
+using UnityEngine;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
 	public class ShipModel : Model
 	{
 		#region Assigned Values
+		[JsonProperty] InventoryListModel inventory = new InventoryListModel();
 		[JsonProperty] UniversePosition lastSystem;
 		[JsonProperty] UniversePosition nextSystem;
 		[JsonProperty] UniversePosition currentSystem;
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] float speed;
 		[JsonProperty] float rationConsumption;
-		[JsonProperty] float rations;
-		[JsonProperty] float fuel;
 		[JsonProperty] float fuelConsumption;
+		[JsonProperty] float resourceDetection;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> LastSystem;
@@ -35,21 +41,15 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> RationConsumption;
 		/// <summary>
-		/// The years worth of rations on board, assuming a person uses 1 ration
-		/// a year.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Rations;
-		/// <summary>
-		/// The fuel onboard, multiplies speed.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Fuel;
-		/// <summary>
 		/// The fuel consumed per trip, multiplies speed.
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> FuelConsumption;
+		/// <summary>
+		/// The likelyhood of detecting resources in a system.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> ResourceDetection;
 		#endregion
 
 		#region Derived Values
@@ -68,6 +68,11 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly DerivedProperty<float, float, float> SpeedTotal;
 		#endregion
 
+		#region Shortcuts
+		[JsonIgnore]
+		public InventoryListModel Inventory { get { return inventory; } }
+		#endregion
+
 		public ShipModel()
 		{
 			// Assigned Values
@@ -78,9 +83,8 @@ namespace LunraGames.SpaceFarm.Models
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
 			RationConsumption = new ListenerProperty<float>(value => rationConsumption = value, () => rationConsumption);
-			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
-			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
 			FuelConsumption = new ListenerProperty<float>(value => fuelConsumption = value, () => fuelConsumption);
+			ResourceDetection = new ListenerProperty<float>(value => resourceDetection = value, () => resourceDetection);
 
 			// Derived Values
 
@@ -90,7 +94,7 @@ namespace LunraGames.SpaceFarm.Models
 				DeriveTravelRadius,
 				Speed,
 				RationConsumption,
-				Rations,
+				Inventory.Resources.Rations,
 				FuelConsumption
 			);
 
@@ -116,14 +120,12 @@ namespace LunraGames.SpaceFarm.Models
 			float fuelConsumption
 		)
 		{
-			var rationDuration = DayTime.FromDayNormal(rations / rationConsumption);
+			var rationDuration = new DayTime(rations / rationConsumption);
 			var rationDistance = rationDuration.TotalTime * DeriveSpeedTotal(speed, fuelConsumption);
 			// TODO: Find a better place for handling this weird range stuff?
 			// Maybe not... this might be the correct place for it...
 			return new TravelRadius(rationDistance * 0.8f, rationDistance * 0.9f, rationDistance);
 		}
-		//float GetTotalSpeed() { return Speed.Value * FuelConsumption.Value; }
-		//void SetTotalSpeed(float totalSpeed) { Speed.Value}
-  		#endregion
+		#endregion
 	}
 }

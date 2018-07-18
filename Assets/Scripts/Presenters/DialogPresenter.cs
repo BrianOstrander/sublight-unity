@@ -17,16 +17,15 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DialogRequest += OnDialogRequest;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 		}
 
 		public void Show()
 		{
 			if (View.Visible) return;
+			if (App.Callbacks.LastPlayState.State != PlayState.States.Paused) App.Callbacks.PlayState(PlayState.Paused);
 
 			wasShaded = App.Callbacks.LastShadeRequest.IsShaded;
 			wasObscured = App.Callbacks.LastObscureCameraRequest.IsObscured;
@@ -113,6 +112,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (!hasPoppedEscape) App.Callbacks.PopEscape();
 			if (!(wasShaded && wasObscured))
 			{
+				if (App.Callbacks.LastPlayState.State != PlayState.States.Playing) App.Callbacks.PlayState(PlayState.Playing);
 				App.Callbacks.ShadeRequest(ShadeRequest.UnShade);
 				App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.UnObscure);
 			}
@@ -123,7 +123,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnClosed(RequestStatus status)
 		{
 			App.Callbacks.SpeedRequest(lastSpeedChange.Duplicate(SpeedRequest.States.Request));
-            App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Complete));
+			App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Complete));
 			switch(status)
 			{
 				case RequestStatus.Cancel: 

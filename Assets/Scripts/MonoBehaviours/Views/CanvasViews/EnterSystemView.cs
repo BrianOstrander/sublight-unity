@@ -6,6 +6,7 @@ using TMPro;
 
 namespace LunraGames.SpaceFarm.Views
 {
+	[Obsolete]
 	public class EnterSystemView : CanvasView, IEnterSystemView
 	{
 		[SerializeField]

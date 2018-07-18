@@ -12,10 +12,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Heartbeat.LateUpdate += OnLateUpdate;
 		}
 
-		protected override void UnBind()
+		protected override void OnUnBind()
 		{
-			base.UnBind();
-
 			App.Callbacks.ShadeRequest -= OnShadeRequest;
 			App.Heartbeat.LateUpdate -= OnLateUpdate;
 		}

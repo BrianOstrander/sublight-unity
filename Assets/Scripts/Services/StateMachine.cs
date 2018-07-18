@@ -116,10 +116,14 @@ namespace LunraGames.SpaceFarm
 
 		public bool Is(States isState, Events isEvent) { return isState == CurrentState && isEvent == CurrentEvent; }
 
-		public StateMachine(params IState[] states)
+		public IState CurrentHandler { get { return currentState; } }
+
+		public StateMachine(Heartbeat heartbeat, params IState[] states)
 		{
+			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+
 			stateEntries = states;
-			App.Heartbeat.Update += Update;
+			heartbeat.Update += Update;
 		}
 
 		void Update(float delta)

@@ -24,6 +24,9 @@
 		public const string EndInfo = "Getting to the black hole is our only chance of escape!";
 
 		public static string ArrivedIn(string system) { return "Arrived in " + system; }
-		public static string ArrivedDetails(float rations) { return "Aquired " + rations + " rations"; }
+		public static string ArrivedDetails(float rations, float fuel) { return "Aquired " + rations.ToString("F1") + " rations and "+fuel.ToString("F1")+" fuel"; }
+
+		public static string Rations(float rations) { return rations.ToString("F2"); }
+		public static string Fuel(float fuel) { return fuel.ToString("F2"); }
 	}
 }

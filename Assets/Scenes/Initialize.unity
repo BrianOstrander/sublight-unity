@@ -90,7 +90,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -146,6 +146,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &780282913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 780282914}
+  m_Layer: 0
+  m_Name: AudioRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &780282914
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 780282913}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2051072388}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &818141377
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f48f1d3c71e264ff2aee98c0381e9c08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioRoot: {fileID: 0}
+  audioRoot: {fileID: 780282913}
   canvasRoot: {fileID: 818141378}
   gameCanvasRoot: {fileID: 1403439393}
   overlayCanvasRoot: {fileID: 409302590}
@@ -364,6 +392,7 @@ Transform:
   m_Children:
   - {fileID: 1699756871}
   - {fileID: 818141378}
+  - {fileID: 780282914}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

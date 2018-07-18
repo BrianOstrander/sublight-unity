@@ -12,6 +12,9 @@ namespace LunraGames.SpaceFarm
 	public class GamePayload : IStatePayload
 	{
 		public GameModel Game;
+
+		public Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]> Focuses = new Dictionary<FocusRequest.Focuses, IPresenterCloseShow[]>();
+		public KeyValueListener KeyValueListener;
 	}
 
 	public class GameState : State<GamePayload>
@@ -33,7 +36,7 @@ namespace LunraGames.SpaceFarm
 
 		void LoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.Load(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
 		void InitializeInput(Action done)
@@ -45,7 +48,12 @@ namespace LunraGames.SpaceFarm
 		void InitializeCallbacks(Action done)
 		{
 			App.Callbacks.SaveRequest += OnSaveRequest;
-			App.Callbacks.TravelRequest += OnTravelRequest;
+			Payload.Game.TravelRequest.Changed += OnTravelRequest;
+			App.Callbacks.FocusRequest += OnFocus;
+
+			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues);
+			Payload.KeyValueListener.Register();
+
 			done();
 		}
 
@@ -66,7 +74,6 @@ namespace LunraGames.SpaceFarm
 			//UniversePosition
 			App.Callbacks.DayTimeDelta(new DayTimeDelta(game.DayTime, game.DayTime));
 			App.Callbacks.SystemHighlight(SystemHighlight.None);
-			App.Callbacks.TravelRequest(game.TravelRequest);
 			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
 			//
@@ -76,22 +83,48 @@ namespace LunraGames.SpaceFarm
 			// but you can safely ignore those warnings since they register
 			// themselves with the PresenterMediator.
 
-			new CameraSystemPresenter(game).Show();
-			new SpeedPresenter(game).Show();
-			new EndDistancePresenter(game).Show();
-			new ShipSystemPresenter(game).Show();
-			new ShipRadiusPresenter(game).Show();
-			new DestructionOriginSystemPresenter().Show();
-			new DestructionSystemPresenter(game).Show();
-			new EndDirectionSystemPresenter(game).Show();
-			new FuelSliderPresenter(game).Show();
+			// System presenters
+			new CameraSystemPresenter(game);
 
+			Payload.Focuses.Add(
+				FocusRequest.Focuses.Systems,
+				new IPresenterCloseShow[] {
+					new ShipRadiusPresenter(game),
+					new DestructionOriginSystemPresenter(),
+					new DestructionSystemPresenter(game),
+					new EndDirectionSystemPresenter(game),
+					new FuelSliderPresenter(game),
+					new DestructionSpeedPresenter(game),
+					new SpeedPresenter(game),
+					new EndDistancePresenter(game),
+					new ShipSystemPresenter(game),
+					new EndSystemPresenter(game)
+				}
+			);
 			new DetailSystemPresenter(game);
 			new LineSystemPresenter(game);
+
+			// System Bodies presenters
+			new CameraSystemBodiesPresenter(game);
+			new SystemBodyListPresenter(game);
+
+			// Body presenters
+			new CameraBodyPresenter(game);
+			new BodyHookPresenter(game);
+
+			// TODO: Determine if these are obsolete...
+			new BodyProbeListPresenter(game);
+			new BodyProbeDetailPresenter(game);
+			new BodyProbingPresenter(game);
+			// ----------------------------------------
+
+			// Encounter presenters
+			new CameraEncounterPresenter(game);
+			new ContainerEncounterLogPresenter(game);
+
+			// Global presenters
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);
-			new EnterSystemPresenter(game);
-			new EndSystemPresenter(game);
 
 			done();
 		}
@@ -101,22 +134,22 @@ namespace LunraGames.SpaceFarm
 		protected override void Idle()
 		{
 			var focusedSector = Payload.Game.Ship.Value.Position.Value.SystemZero;
-			var wasFocused = Payload.Game.FocusedSector.Value == focusedSector;
+			var wasSectorFocused = Payload.Game.FocusedSector.Value == focusedSector;
 			Payload.Game.FocusedSector.Value = focusedSector;
-			if (wasFocused) OnFocusedSector(focusedSector);
+			if (wasSectorFocused) OnFocusedSector(focusedSector);
 
-			App.Callbacks.CameraSystemRequest(CameraSystemRequest.RequestInstant(Payload.Game.Ship.Value.Position));
+			App.Callbacks.FocusRequest(Payload.Game.FocusRequest.Value.Duplicate(FocusRequest.States.Request));
 
 			if (!DevPrefs.SkipExplanation)
 			{
-                App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation0, Strings.ExplanationTitle0, OnExplanation));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation0, Strings.ExplanationTitle0, OnExplanation));
 			}
 		}
 
-        void OnExplanation()
-        {
-            App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation1, Strings.ExplanationTitle1));
-        }
+		void OnExplanation()
+		{
+			App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation1, Strings.ExplanationTitle1));
+		}
 		#endregion
 
 		#region End
@@ -125,9 +158,12 @@ namespace LunraGames.SpaceFarm
 			App.Input.SetEnabled(false);
 
 			App.Callbacks.SaveRequest -= OnSaveRequest;
-			App.Callbacks.TravelRequest -= OnTravelRequest;
+			Payload.Game.TravelRequest.Changed -= OnTravelRequest;
+			App.Callbacks.FocusRequest -= OnFocus;
 			Payload.Game.FocusedSector.Changed -= OnFocusedSector;
 			App.Callbacks.ClearEscapables();
+
+			Payload.KeyValueListener.UnRegister();
 
 			App.SM.PushBlocking(UnBind);
 			App.SM.PushBlocking(UnLoadScenes);
@@ -142,11 +178,44 @@ namespace LunraGames.SpaceFarm
 
 		void UnLoadScenes(Action done)
 		{
-			App.SceneService.Request(SceneRequest.UnLoad(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes));
 		}
 		#endregion
 
 		#region Events
+		void OnFocus(FocusRequest focus)
+		{
+			Payload.Game.FocusRequest.Value = focus;
+
+			switch (focus.State)
+			{
+				case FocusRequest.States.Request:
+					App.Callbacks.FocusRequest(focus.Duplicate(FocusRequest.States.Active));
+					return;
+				case FocusRequest.States.Active:
+					App.Callbacks.FocusRequest(focus.Duplicate(FocusRequest.States.Complete));
+					return;
+			}
+
+			foreach (var key in Payload.Focuses.Keys)
+			{
+				var isShowing = key == focus.Focus;
+				foreach (var value in Payload.Focuses[key])
+				{
+					if (isShowing) value.Show();
+					else value.Close();
+				}
+			}
+
+			switch (focus.Focus)
+			{
+				case FocusRequest.Focuses.Systems:
+					var systemFocus = focus as SystemsFocusRequest;
+					Payload.Game.FocusedSector.Value = systemFocus.FocusedSector;
+					break;
+			}
+		}
+
 		void OnFocusedSector(UniversePosition position)
 		{
 			var oldSectors = Payload.Game.FocusedSectors.Value.ToList();
@@ -181,14 +250,35 @@ namespace LunraGames.SpaceFarm
 		void OnTravelRequest(TravelRequest request)
 		{
 			Payload.Game.TravelRequest.Value = request;
+
+			switch (request.State)
+			{
+				case TravelRequest.States.Complete:
+					// Don't focus on end system.
+					if (request.Destination == Payload.Game.EndSystem.Value) return;
+
+					var travelDestination = Payload.Game.Universe.Value.GetSystem(request.Destination);
+					Payload.Game.Ship.Value.Inventory.Resources.Fuel.Value -= request.FuelConsumed;
+
+					if (!travelDestination.Visited)
+					{
+						travelDestination.Visited.Value = true;
+						App.Callbacks.FocusRequest(
+							new SystemBodiesFocusRequest(
+								travelDestination.Position
+							)
+						);
+					}
+					break;
+			}
 		}
 
 		void OnSaveRequest(SaveRequest request)
 		{
-			switch(request.State)
+			switch (request.State)
 			{
 				case SaveRequest.States.Request:
-					App.SaveLoadService.Save(Payload.Game, OnSave);
+					App.M.Save(Payload.Game, OnSave);
 					break;
 			}
 		}
