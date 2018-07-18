@@ -49,9 +49,10 @@ namespace LunraGames.SpaceFarm.Presenters
 					buttons.Add(new LabelButtonBlock(crew.Name, () => OnCrewClick(crew)));
 				}
 				View.CrewEntries = buttons.ToArray();
-				
-				if (0 < buttons.Count()) View.Description = "Encounter: " + encounter.EncounterId.Value;
-				else View.Description = "Encounter: " + encounter.EncounterId.Value + "\nNo crewed craft capable of exploring this encounter.";
+
+				var description = encounter.Hook.Value;
+				if (buttons.Count() == 0) description += "\n\nNo crewed craft capable of exploring this encounter.";
+				View.Description = description;
 			}
 
 			ShowView(App.GameCanvasRoot);
