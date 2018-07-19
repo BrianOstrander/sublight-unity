@@ -139,7 +139,8 @@ namespace LunraGames.SpaceFarm.Models
 
 		/// <summary>
 		/// Gets the unusable inventory, entries that are not slotted but are
-		/// required to have one.
+		/// required to have one. A resource item is only included if it's not
+		/// zero.
 		/// </summary>
 		/// <returns>The unusable inventory.</returns>
 		/// <param name="predicate">Predicate.</param>
@@ -150,7 +151,8 @@ namespace LunraGames.SpaceFarm.Models
 
 		/// <summary>
 		/// Gets the unusable inventory, entries that are not slotted but are
-		/// required to have one.
+		/// required to have one. A resource item is only included if it's not
+		/// zero.
 		/// </summary>
 		/// <returns>The unusable inventory.</returns>
 		/// <param name="predicate">Predicate.</param>
@@ -267,6 +269,20 @@ namespace LunraGames.SpaceFarm.Models
 			}
 			All.Value = All.Value.Where(i => !removedIds.Contains(i.InstanceId)).ToArray();
 			if (!unUsedResources.IsZero) AllResources.Subtract(unUsedResources);
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:LunraGames.SpaceFarm.Models.InventoryListModel"/> has unused items or resources.
+		/// </summary>
+		/// <value><c>true</c> if has unused; otherwise, <c>false</c>.</value>
+		[JsonIgnore]
+		public bool HasUnused
+		{
+			get
+			{
+				if (!UnUsableResources.IsZero) return true;
+				return 0 < GetUnUsableInventory().Length;
+			}
 		}
 		#endregion
 

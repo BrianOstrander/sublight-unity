@@ -16,6 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship = model.Ship;
 
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
+			App.Callbacks.ClearInventoryRequest += OnClearInventory;
 			model.TravelRequest.Changed += OnTravelRequest;
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
@@ -23,6 +24,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		protected override void OnUnBind()
 		{
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
+			App.Callbacks.ClearInventoryRequest -= OnClearInventory;
 			model.TravelRequest.Changed -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
@@ -47,7 +49,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnClearInventory(ClearInventoryRequest request)
 		{
-			
+			ship.Inventory.ClearUnused();
 		}
 
 		void OnDayTimeDelta(DayTimeDelta delta)
