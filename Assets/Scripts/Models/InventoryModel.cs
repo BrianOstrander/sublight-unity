@@ -37,6 +37,11 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Description;
+		/// <summary>
+		/// The slot identifier, this is the SlotId of a ModuleSlotModel that
+		/// this model is slotted into. The ModuleSlotModel.ItemId should be
+		/// this item's InstanceId.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> SlotId;
 

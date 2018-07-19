@@ -170,6 +170,12 @@ namespace LunraGames.SpaceFarm.Models
 			return result;
 		}
 
+		public bool IsEqual(ResourceInventoryModel other)
+		{
+			return Mathf.Approximately(Rations, other.Rations)
+						&& Mathf.Approximately(Fuel, other.Fuel);
+		}
+
 		public override string ToString()
 		{
 			return "Resources:\n\tRations: \t" + Rations.Value + "\n\tFuel: \t" + Fuel.Value;

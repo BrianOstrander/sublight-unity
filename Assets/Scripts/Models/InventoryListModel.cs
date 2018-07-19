@@ -15,9 +15,14 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
 		[JsonProperty] ModuleInventoryModel[] modules = new ModuleInventoryModel[0];
 		[JsonProperty] ResourceInventoryModel maximumResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel allResources = new ResourceInventoryModel();
 		[JsonProperty] ResourceInventoryModel usableresources = new ResourceInventoryModel();
 		[JsonProperty] ResourceInventoryModel unUsableresources = new ResourceInventoryModel();
+
+		[JsonProperty] SlotEdge[] slotEdges = new SlotEdge[0];
+
+		[JsonIgnore]
+		public readonly ListenerProperty<SlotEdge[]> SlotEdges;
 		#endregion
 
 		#region Derived Values
@@ -39,7 +44,7 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		/// <value>The resources.</value>
 		[JsonIgnore]
-		public ResourceInventoryModel Resources { get { return resources; } }
+		public ResourceInventoryModel AllResources { get { return allResources; } }
 		/// <summary>
 		/// The total usable resources contained by this list. Assigning values
 		/// to this won't do anything, so don't do that...
@@ -60,20 +65,36 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			// Derived Values
 			All = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
+			SlotEdges = new ListenerProperty<SlotEdge[]>(value => slotEdges = value, () => slotEdges, OnSlotEdges);
 
-			resources.AnyChange += OnResources;
+			allResources.AnyChange += OnResources;
 		}
 
 		#region Utility
+		public InventoryModel[] GetInventory(Func<InventoryModel, bool> predicate = null)
+		{
+			return GetInventory<InventoryModel>(predicate);
+		}
+
 		public T[] GetInventory<T>(Func<T, bool> predicate = null) where T : InventoryModel
 		{
 			if (predicate == null) return All.Value.OfType<T>().ToArray();
 			return All.Value.OfType<T>().Where(predicate).ToArray();
 		}
 
+		public InventoryModel GetInventoryFirstOrDefault(string instanceId)
+		{
+			return GetInventoryFirstOrDefault<InventoryModel>(instanceId);
+		}
+
 		public T GetInventoryFirstOrDefault<T>(string instanceId) where T : InventoryModel
 		{
 			return GetInventoryFirstOrDefault<T>(i => i.InstanceId == instanceId);
+		}
+
+		public InventoryModel GetInventoryFirstOrDefault(Func<InventoryModel, bool> predicate = null)
+		{
+			return GetInventoryFirstOrDefault<InventoryModel>(predicate);
 		}
 
 		public T GetInventoryFirstOrDefault<T>(Func<T, bool> predicate = null) where T : InventoryModel
@@ -149,9 +170,20 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Events
+		void OnSlotEdges(SlotEdge[] edges)
+		{
+			var newMaxResources = ResourceInventoryModel.Zero;
+			foreach (var module in modules)
+			{
+				if (module.IsUsable) newMaxResources.Add(module.Slots.MaximumResources);
+			}
+			maximumResources.Assign(newMaxResources);
+			OnResources(allResources);
+		}
+
 		void OnResources(ResourceInventoryModel model)
 		{
-			unUsableresources.Assign(resources.ClampOut(maximumResources, usableresources));
+			unUsableresources.Assign(allResources.ClampOut(maximumResources, usableresources));
 		}
 
 		void OnSetInventory(InventoryModel[] newInventory)
@@ -163,9 +195,11 @@ namespace LunraGames.SpaceFarm.Models
 			var moduleList = new List<ModuleInventoryModel>();
 			var newMaxResources = ResourceInventoryModel.Zero;
 			ResourceInventoryModel newResources = null;
+			var slotEdgeList = new List<SlotEdge>();
 
 			foreach (var inventory in newInventory)
 			{
+				if (!string.IsNullOrEmpty(inventory.SlotId.Value)) slotEdgeList.Add(new SlotEdge(inventory.SlotId, inventory.InstanceId));
 				switch (inventory.InventoryType)
 				{
 					case InventoryTypes.OrbitalProbe:
@@ -197,16 +231,19 @@ namespace LunraGames.SpaceFarm.Models
 			orbitalProbes = orbitalProbeList.ToArray();
 			orbitalCrews = orbitalCrewList.ToArray();
 			modules = moduleList.ToArray();
-			
+
+			SlotEdges.Value = slotEdgeList.ToArray();
+
 			maximumResources.Assign(newMaxResources);
-			if (newResources != null) resources.Assign(newResources);
+			if (newResources != null) allResources.Assign(newResources);
+			else OnResources(allResources);
 		}
 
 		InventoryModel[] OnGetInventory()
 		{
 			return orbitalProbes.Cast<InventoryModel>().Concat(orbitalCrews)
 													   .Concat(modules)
-													   .Append(resources)
+													   .Append(allResources)
 													   .ToArray();
 		}
 		#endregion

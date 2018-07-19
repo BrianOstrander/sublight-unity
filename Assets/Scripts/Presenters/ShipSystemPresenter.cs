@@ -47,8 +47,8 @@ namespace LunraGames.SpaceFarm.Presenters
 		#region Events
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
-			var rationsConsumed = model.Ship.Value.Inventory.Resources.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
-			model.Ship.Value.Inventory.Resources.Rations.Value = Mathf.Max(0f, rationsConsumed);
+			var rationsConsumed = model.Ship.Value.Inventory.AllResources.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
+			model.Ship.Value.Inventory.AllResources.Rations.Value = Mathf.Max(0f, rationsConsumed);
 
 			var lastTravel = model.TravelRequest.Value;
 			if (lastTravel.State == TravelRequest.States.Active)

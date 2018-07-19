@@ -7,8 +7,16 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string slotId;
 		[JsonProperty] string itemId;
 
+		/// <summary>
+		/// The slot identifier, inventory items should specify this in their
+		/// SlotId to slot themselves here.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> SlotId;
+		/// <summary>
+		/// The item identifier, inventory items should specify their InstanceId
+		/// here when slotting themselves.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> ItemId;
 

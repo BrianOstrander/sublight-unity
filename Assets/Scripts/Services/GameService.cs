@@ -58,8 +58,8 @@ namespace LunraGames.SpaceFarm
 			ship.Position.Value = startPosition;
 			ship.Speed.Value = speed;
 			ship.RationConsumption.Value = rationConsumption;
-			ship.Inventory.Resources.Rations.Value = rations;
-			ship.Inventory.Resources.Fuel.Value = fuel;
+			ship.Inventory.AllResources.Rations.Value = rations;
+			ship.Inventory.AllResources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
 			ship.ResourceDetection.Value = resourceDetection;
 
@@ -90,6 +90,7 @@ namespace LunraGames.SpaceFarm
 			// Generating inventory, eventually will be done somewhere else...
 			var rootModule = new ModuleInventoryModel();
 			rootModule.Name.Value = "RootModule";
+			rootModule.InstanceId.Value = "rootid";
 			rootModule.IsRoot.Value = true;
 
 			var crewModule0 = new CrewModuleSlotModel();
@@ -102,6 +103,21 @@ namespace LunraGames.SpaceFarm
 			crewModule1.ValidInventoryTypes.Value = crewModule1.ValidInventoryTypes.Value.Append(InventoryTypes.OrbitalCrew).ToArray();
 			rootModule.Slots.All.Value = rootModule.Slots.All.Value.Append(crewModule1).ToArray();
 
+			var modulePlug = new ModuleModuleSlotModel();
+			modulePlug.SlotId.Value = "plug0";
+			rootModule.Slots.All.Value = rootModule.Slots.All.Value.Append(modulePlug).ToArray();
+
+			var resourceModule = new ModuleInventoryModel();
+			resourceModule.Name.Value = "SomeResourceModule";
+			resourceModule.InstanceId.Value = "recid";
+
+			var resourceMod = new ResourceModuleSlotModel();
+			resourceMod.SlotId.Value = "resourceMod0";
+			resourceMod.MaximumResources.Value = new ResourceInventoryModel(0.75f, 0.5f);
+			resourceModule.Slots.All.Value = resourceModule.Slots.All.Value.Append(resourceMod).ToArray();
+
+			SlotEdge.Connect(modulePlug, resourceModule, game.Ship.Value.Inventory);
+
 			// Crew generation, eventually will be done somewhere else...
 			var multiCrew = new OrbitalCrewInventoryModel();
 			multiCrew.Name.Value = "MultiCrewProbe";
@@ -109,8 +125,9 @@ namespace LunraGames.SpaceFarm
 			multiCrew.InventoryId.Value = "10";
 			multiCrew.InstanceId.Value = "A0";
 			multiCrew.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star, BodyTypes.Terrestrial };
-			multiCrew.SlotId.Value = crewModule0.SlotId;
-			crewModule0.ItemId.Value = multiCrew.InstanceId;
+			SlotEdge.Connect(crewModule0, multiCrew, game.Ship.Value.Inventory);
+			//multiCrew.SlotId.Value = crewModule0.SlotId;
+			//crewModule0.ItemId.Value = multiCrew.InstanceId;
 
 			var terrestrialCrew = new OrbitalCrewInventoryModel();
 			terrestrialCrew.Name.Value = "TerrestrialCrewProbe";
@@ -118,8 +135,9 @@ namespace LunraGames.SpaceFarm
 			terrestrialCrew.InventoryId.Value = "20";
 			terrestrialCrew.InstanceId.Value = "B0";
 			terrestrialCrew.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Terrestrial };
-			terrestrialCrew.SlotId.Value = crewModule1.SlotId;
-			crewModule1.ItemId.Value = terrestrialCrew.InstanceId;
+			SlotEdge.Connect(crewModule1, terrestrialCrew, game.Ship.Value.Inventory);
+			//terrestrialCrew.SlotId.Value = crewModule1.SlotId;
+			//crewModule1.ItemId.Value = terrestrialCrew.InstanceId;
 
 			var starCrew = new OrbitalCrewInventoryModel();
 			starCrew.Name.Value = "StarCrewProbe";
@@ -130,6 +148,7 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.All.Value = new InventoryModel[] {
 				rootModule,
+				resourceModule,
 				multiCrew,
 				terrestrialCrew,
 				starCrew

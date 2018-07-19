@@ -3,7 +3,8 @@
 	public enum SlotTypes
 	{
 		Unknown = 0,
-		Crew = 10,
-		Resource = 20
+		Module = 10,
+		Crew = 20,
+		Resource = 30
 	}
 }
