@@ -14,10 +14,13 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] OrbitalProbeInventoryModel[] orbitalProbes = new OrbitalProbeInventoryModel[0];
 		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
 		[JsonProperty] ModuleInventoryModel[] modules = new ModuleInventoryModel[0];
+		[JsonProperty] ResourceInventoryModel refillLogisticsResources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel maximumLogisticsResources = new ResourceInventoryModel();
 		[JsonProperty] ResourceInventoryModel maximumResources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel maximumRefillableLogisticsResources = new ResourceInventoryModel();
 		[JsonProperty] ResourceInventoryModel allResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel usableresources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel unUsableresources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel usableResources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel unUsableResources = new ResourceInventoryModel();
 
 		[JsonProperty] SlotEdge[] slotEdges = new SlotEdge[0];
 
@@ -31,6 +34,15 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Shortcuts
+		[JsonIgnore]
+		public ResourceInventoryModel RefillLogisticsResources { get { return refillLogisticsResources; } }
+		/// <summary>
+		/// Gets the logistics resources, the total resources never goes below
+		/// this amount.
+		/// </summary>
+		/// <value>The logistics resources.</value>
+		[JsonIgnore]
+		public ResourceInventoryModel MaximumLogisticsResources { get { return maximumLogisticsResources; } }
 		/// <summary>
 		/// Gets the maximum resources this inventory list can store. Assigning
 		/// values to this won't do anything, so don't do that...
@@ -38,6 +50,13 @@ namespace LunraGames.SpaceFarm.Models
 		/// <value>The maximum resources.</value>
 		[JsonIgnore]
 		public ResourceInventoryModel MaximumResources { get { return maximumResources; } }
+		/// <summary>
+		/// Gets the maximum refillable logistics resources, basically
+		/// MaximumLogisticsResources clamped by MaximumLogisticsResources.
+		/// </summary>
+		/// <value>The maximum refillable logistics resources.</value>
+		[JsonIgnore]
+		public ResourceInventoryModel MaximumRefillableLogisticsResources { get { return maximumRefillableLogisticsResources; } }
 		/// <summary>
 		/// The total resources contained by this inventory list, usable and
 		/// unusable.
@@ -51,14 +70,14 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		/// <value>The usable resources.</value>
 		[JsonIgnore]
-		public ResourceInventoryModel UsableResources { get { return usableresources; } }
+		public ResourceInventoryModel UsableResources { get { return usableResources; } }
 		/// <summary>
 		/// The total unusable resources contained by this list. Assigning
 		/// values to this won't do anything, so don't do that...
 		/// </summary>
 		/// <value>The unusable resources.</value>
 		[JsonIgnore]
-		public ResourceInventoryModel UnUsableResources { get { return unUsableresources; } }
+		public ResourceInventoryModel UnUsableResources { get { return unUsableResources; } }
 		#endregion
 
 		public InventoryListModel()
@@ -67,7 +86,7 @@ namespace LunraGames.SpaceFarm.Models
 			All = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 			SlotEdges = new ListenerProperty<SlotEdge[]>(value => slotEdges = value, () => slotEdges, OnSlotEdges);
 
-			allResources.AnyChange += OnResources;
+			AllResources.AnyChange += OnResources;
 		}
 
 		#region Utility
@@ -294,13 +313,13 @@ namespace LunraGames.SpaceFarm.Models
 			{
 				if (module.IsUsable) newMaxResources.Add(module.Slots.MaximumResources);
 			}
-			maximumResources.Assign(newMaxResources);
-			OnResources(allResources);
+			MaximumResources.Assign(newMaxResources);
+			OnResources(AllResources);
 		}
 
 		void OnResources(ResourceInventoryModel model)
 		{
-			unUsableresources.Assign(allResources.ClampOut(maximumResources, usableresources));
+			UnUsableResources.Assign(AllResources.ClampOut(MaximumResources, UsableResources));
 		}
 
 		void OnSetInventory(InventoryModel[] newInventory)
@@ -351,9 +370,9 @@ namespace LunraGames.SpaceFarm.Models
 
 			SlotEdges.Value = slotEdgeList.ToArray();
 
-			maximumResources.Assign(newMaxResources);
-			if (newResources != null) allResources.Assign(newResources);
-			else OnResources(allResources);
+			MaximumResources.Assign(newMaxResources);
+			if (newResources != null) AllResources.Assign(newResources);
+			else OnResources(AllResources);
 		}
 
 		InventoryModel[] OnGetInventory()
