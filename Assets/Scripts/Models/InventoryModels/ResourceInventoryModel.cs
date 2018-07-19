@@ -40,6 +40,9 @@ namespace LunraGames.SpaceFarm.Models
 			}
 		}
 
+		[JsonIgnore]
+		public ResourceInventoryModel Duplicate { get { return new ResourceInventoryModel(Rations, Fuel); } }
+
 		public ResourceInventoryModel(
 			float rationsValue = 0f,
 			float fuelValue = 0f
@@ -170,8 +173,11 @@ namespace LunraGames.SpaceFarm.Models
 			return result;
 		}
 
-		public bool IsEqual(ResourceInventoryModel other)
+		public bool ValuesEqual(ResourceInventoryModel other)
 		{
+			if (other == null) return false;
+			if (other == this) return true;
+
 			return Mathf.Approximately(Rations, other.Rations)
 						&& Mathf.Approximately(Fuel, other.Fuel);
 		}

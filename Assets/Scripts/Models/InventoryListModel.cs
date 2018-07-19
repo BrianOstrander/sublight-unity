@@ -167,6 +167,107 @@ namespace LunraGames.SpaceFarm.Models
 			return result;
 
 		}
+
+		public SlotEdge Connect(string slotId, string itemInstanceId)
+		{
+			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
+			if (string.IsNullOrEmpty(itemInstanceId)) throw new ArgumentNullException("itemInstanceId");
+
+			var slot = GetInventory<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).First(s => s.SlotId.Value == slotId);
+			var item = GetInventoryFirstOrDefault(itemInstanceId);
+			if (item == null) throw new ArgumentException("No item found with id: "+itemInstanceId, "itemInstanceId");
+			return Connect(slot, item);
+		}
+
+		public SlotEdge Connect(ModuleSlotModel slot, InventoryModel item)
+		{
+			if (slot == null) throw new ArgumentNullException("slot");
+			if (item == null) throw new ArgumentNullException("item");
+
+			var slotId = slot.SlotId.Value;
+			var itemId = item.InstanceId.Value;
+
+			var existing = SlotEdges.Value.FirstOrDefault(e => e.SlotId == slotId && e.ItemInstanceId == itemId);
+			if (!existing.IsEmpty) return existing;
+
+			var result = new SlotEdge(slotId, itemId);
+
+			var remaining = RemoveConnection(slotId, itemId);
+
+			slot.ItemId.Value = result.ItemInstanceId;
+			item.SlotId.Value = result.SlotId;
+			SlotEdges.Value = remaining.Append(result).ToArray();
+			return result;
+		}
+
+		public void Disconnect(SlotEdge edge)
+		{
+			Disconnect(edge.SlotId, edge.ItemInstanceId);
+		}
+
+		public void Disconnect(ModuleSlotModel slot)
+		{
+			Disconnect(slot.SlotId.Value, slot.ItemId.Value);
+		}
+
+		public void Disconnect(InventoryModel item)
+		{
+			Disconnect(item.SlotId.Value, item.InstanceId.Value);
+		}
+
+		public void Disconnect(string slotId, string itemInstanceId)
+		{
+			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
+			if (string.IsNullOrEmpty(itemInstanceId)) throw new ArgumentNullException("itemInstanceId");
+
+			var existing = SlotEdges.Value.FirstOrDefault(e => e.SlotId == slotId && e.ItemInstanceId == itemInstanceId);
+			if (existing.IsEmpty) return;
+
+			SlotEdges.Value = RemoveConnection(slotId, itemInstanceId).ToArray();
+		}
+
+		/// <summary>
+		/// Helper method to remove all references of a slot and item without
+		/// setting the list's SlotEdges.
+		/// </summary>
+		/// <returns>The remaining edges.</returns>
+		/// <param name="slotId">Slot identifier.</param>
+		/// <param name="itemInstanceId">Item identifier.</param>
+		IEnumerable<SlotEdge> RemoveConnection(string slotId, string itemInstanceId)
+		{
+			foreach (var itemWithSlot in All.Value)
+			{
+				if (itemWithSlot.SlotId.Value == slotId) itemWithSlot.SlotId.Value = null;
+				if (itemWithSlot.InventoryType == InventoryTypes.Module)
+				{
+					var module = itemWithSlot as ModuleInventoryModel;
+					foreach (var currSlot in module.Slots.All.Value.Where(s => s.ItemId.Value == itemInstanceId))
+					{
+						currSlot.ItemId.Value = null;
+					}
+				}
+			}
+			foreach (var slotWithItem in GetInventory(i => i.InventoryType == InventoryTypes.Module).Cast<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).Where(s => s.ItemId.Value == itemInstanceId))
+			{
+				slotWithItem.SlotId.Value = null;
+				slotWithItem.ItemId.Value = null;
+			}
+			return SlotEdges.Value.Where(e => e.SlotId != slotId && e.ItemInstanceId != itemInstanceId);
+		}
+
+		public void ClearUnused()
+		{
+			var unUsedResources = UnUsableResources.Duplicate;
+			var toRemove = GetUnUsableInventory(i => i.InventoryType != InventoryTypes.Resources);
+			var removedIds = new List<string>();
+			foreach (var unused in toRemove)
+			{
+				removedIds.Add(unused.InstanceId);
+				if (unused.IsSlotted) Disconnect(unused);
+			}
+			All.Value = All.Value.Where(i => !removedIds.Contains(i.InstanceId)).ToArray();
+			if (!unUsedResources.IsZero) AllResources.Subtract(unUsedResources);
+		}
 		#endregion
 
 		#region Events

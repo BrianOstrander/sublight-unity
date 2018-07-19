@@ -28,6 +28,12 @@ namespace LunraGames.SpaceFarm.Models
 		/// <value><c>true</c> if is slotted; otherwise, <c>false</c>.</value>
 		[JsonIgnore]
 		public virtual bool IsUsable { get { return !SlotRequired || !string.IsNullOrEmpty(SlotId); } }
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:LunraGames.SpaceFarm.Models.InventoryModel"/> is slotted in the inventory.
+		/// </summary>
+		/// <value><c>true</c> if is slotted; otherwise, <c>false</c>.</value>
+		[JsonIgnore]
+		public bool IsSlotted { get { return !string.IsNullOrEmpty(SlotId.Value); } }
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> InventoryId;

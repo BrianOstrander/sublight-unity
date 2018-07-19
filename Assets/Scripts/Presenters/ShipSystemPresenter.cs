@@ -45,6 +45,11 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
+		void OnClearInventory(ClearInventoryRequest request)
+		{
+			
+		}
+
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
 			var rationsConsumed = model.Ship.Value.Inventory.AllResources.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
