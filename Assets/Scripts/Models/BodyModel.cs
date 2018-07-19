@@ -9,8 +9,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] int parentId;
 		[JsonProperty] string name;
 		[JsonProperty] string encounter;
-		[JsonProperty] BodyStatus status;
-		[JsonProperty] string probeId;
 
 		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
 		[JsonProperty] ResourceInventoryModel resourcesAcquired = new ResourceInventoryModel();
@@ -32,10 +30,6 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Encounter;
-		[JsonIgnore]
-		public readonly ListenerProperty<BodyStatus> Status;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> ProbeId;
 
 		[JsonIgnore]
 		public ResourceInventoryModel Resources { get { return resources; } }
@@ -59,8 +53,6 @@ namespace LunraGames.SpaceFarm.Models
 			ParentId = new ListenerProperty<int>(value => parentId = value, () => parentId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Encounter = new ListenerProperty<string>(value => encounter = value, () => encounter);
-			Status = new ListenerProperty<BodyStatus>(value => status = value, () => status);
-			ProbeId = new ListenerProperty<string>(value => probeId = value, () => probeId);
 		}
 
 		#region Utility

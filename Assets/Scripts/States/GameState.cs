@@ -112,12 +112,6 @@ namespace LunraGames.SpaceFarm
 			new CameraBodyPresenter(game);
 			new BodyHookPresenter(game);
 
-			// TODO: Determine if these are obsolete...
-			new BodyProbeListPresenter(game);
-			new BodyProbeDetailPresenter(game);
-			new BodyProbingPresenter(game);
-			// ----------------------------------------
-
 			// Encounter presenters
 			new CameraEncounterPresenter(game);
 			new ContainerEncounterLogPresenter(game);

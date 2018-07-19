@@ -11,7 +11,6 @@ namespace LunraGames.SpaceFarm.Models
 	public class InventoryListModel : Model
 	{
 		#region Assigned Values
-		[JsonProperty] OrbitalProbeInventoryModel[] orbitalProbes = new OrbitalProbeInventoryModel[0];
 		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
 		[JsonProperty] ModuleInventoryModel[] modules = new ModuleInventoryModel[0];
 		[JsonProperty] ResourceInventoryModel refillLogisticsResources = new ResourceInventoryModel();
@@ -326,7 +325,6 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			var hasAssignedResources = false;
 
-			var orbitalProbeList = new List<OrbitalProbeInventoryModel>();
 			var orbitalCrewList = new List<OrbitalCrewInventoryModel>();
 			var moduleList = new List<ModuleInventoryModel>();
 			var newMaxResources = ResourceInventoryModel.Zero;
@@ -338,9 +336,6 @@ namespace LunraGames.SpaceFarm.Models
 				if (!string.IsNullOrEmpty(inventory.SlotId.Value)) slotEdgeList.Add(new SlotEdge(inventory.SlotId, inventory.InstanceId));
 				switch (inventory.InventoryType)
 				{
-					case InventoryTypes.OrbitalProbe:
-						orbitalProbeList.Add(inventory as OrbitalProbeInventoryModel);
-						break;
 					case InventoryTypes.OrbitalCrew:
 						orbitalCrewList.Add(inventory as OrbitalCrewInventoryModel);
 						break;
@@ -364,7 +359,6 @@ namespace LunraGames.SpaceFarm.Models
 				}
 			}
 
-			orbitalProbes = orbitalProbeList.ToArray();
 			orbitalCrews = orbitalCrewList.ToArray();
 			modules = moduleList.ToArray();
 
@@ -377,10 +371,9 @@ namespace LunraGames.SpaceFarm.Models
 
 		InventoryModel[] OnGetInventory()
 		{
-			return orbitalProbes.Cast<InventoryModel>().Concat(orbitalCrews)
-													   .Concat(modules)
-													   .Append(allResources)
-													   .ToArray();
+			return orbitalCrews.Cast<InventoryModel>().Concat(modules)
+													  .Append(allResources)
+													  .ToArray();
 		}
 		#endregion
 	}

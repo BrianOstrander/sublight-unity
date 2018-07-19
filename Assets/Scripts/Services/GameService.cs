@@ -120,15 +120,15 @@ namespace LunraGames.SpaceFarm
 
 			// Crew generation, eventually will be done somewhere else...
 			var multiCrew = new OrbitalCrewInventoryModel();
-			multiCrew.Name.Value = "MultiCrewProbe";
-			multiCrew.Description.Value = "A multi crew probe, neat!";
+			multiCrew.Name.Value = "MultiCrew";
+			multiCrew.Description.Value = "A multi crew, neat!";
 			multiCrew.InventoryId.Value = "10";
 			multiCrew.InstanceId.Value = "A0";
 			multiCrew.SupportedBodies.Value = new BodyTypes[] { BodyTypes.Star, BodyTypes.Terrestrial };
 			game.Ship.Value.Inventory.Connect(crewModule0, multiCrew);
 
 			var terrestrialCrew = new OrbitalCrewInventoryModel();
-			terrestrialCrew.Name.Value = "TerrestrialCrewProbe";
+			terrestrialCrew.Name.Value = "TerrestrialCrew";
 			terrestrialCrew.Description.Value = "Time to hit the surface, with a crew!";
 			terrestrialCrew.InventoryId.Value = "20";
 			terrestrialCrew.InstanceId.Value = "B0";
@@ -136,7 +136,7 @@ namespace LunraGames.SpaceFarm
 			game.Ship.Value.Inventory.Connect(crewModule1, terrestrialCrew);
 
 			var starCrew = new OrbitalCrewInventoryModel();
-			starCrew.Name.Value = "StarCrewProbe";
+			starCrew.Name.Value = "StarCrew";
 			starCrew.Description.Value = "Stars are cool, your crew won't be tho";
 			starCrew.InventoryId.Value = "30";
 			starCrew.InstanceId.Value = "C0";

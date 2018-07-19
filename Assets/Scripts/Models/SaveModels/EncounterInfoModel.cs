@@ -12,7 +12,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string[] completedEncountersRequired = new string[0];
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
-		[JsonProperty] InventoryTypes[] validProbes = new InventoryTypes[0];
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
@@ -49,8 +48,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyTypes[]> ValidBodies;
 		[JsonIgnore]
-		public readonly ListenerProperty<InventoryTypes[]> ValidProbes;
-		[JsonIgnore]
 		public readonly ListenerProperty<InventoryTypes[]> ValidCrews;
 
 		#region Shortcuts
@@ -69,7 +66,6 @@ namespace LunraGames.SpaceFarm.Models
 			CompletedEncountersRequired = new ListenerProperty<string[]>(value => completedEncountersRequired = value, () => completedEncountersRequired);
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
-			ValidProbes = new ListenerProperty<InventoryTypes[]>(value => validProbes = value, () => validProbes);
 			ValidCrews = new ListenerProperty<InventoryTypes[]>(value => validCrews = value, () => validCrews);
 		}
 	}
