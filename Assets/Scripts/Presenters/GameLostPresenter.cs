@@ -14,13 +14,13 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			model.Ship.Value.Inventory.Resources.Rations.Changed += OnRations;
+			model.Ship.Value.Inventory.AllResources.Rations.Changed += OnRations;
 			model.DestructionRadius.Changed += OnDestructionRadius;
 		}
 
 		protected override void OnUnBind()
 		{
-			model.Ship.Value.Inventory.Resources.Rations.Changed -= OnRations;
+			model.Ship.Value.Inventory.AllResources.Rations.Changed -= OnRations;
 			model.DestructionRadius.Changed -= OnDestructionRadius;
 		}
 

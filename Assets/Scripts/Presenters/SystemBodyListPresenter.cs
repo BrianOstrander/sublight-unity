@@ -98,7 +98,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			{
 				var added = body.ResourcesCurrent;
 				
-				model.Ship.Value.Inventory.Resources.Add(added);
+				model.Ship.Value.Inventory.AllResources.Add(added);
 				
 				body.ResourcesAcquired.Add(added);
 				

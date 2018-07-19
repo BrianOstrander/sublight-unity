@@ -16,6 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship = model.Ship;
 
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
+			App.Callbacks.ClearInventoryRequest += OnClearInventory;
 			model.TravelRequest.Changed += OnTravelRequest;
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
@@ -23,6 +24,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		protected override void OnUnBind()
 		{
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
+			App.Callbacks.ClearInventoryRequest -= OnClearInventory;
 			model.TravelRequest.Changed -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
@@ -45,10 +47,15 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
+		void OnClearInventory(ClearInventoryRequest request)
+		{
+			ship.Inventory.ClearUnused();
+		}
+
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
-			var rationsConsumed = model.Ship.Value.Inventory.Resources.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
-			model.Ship.Value.Inventory.Resources.Rations.Value = Mathf.Max(0f, rationsConsumed);
+			var rationsConsumed = model.Ship.Value.Inventory.AllResources.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
+			model.Ship.Value.Inventory.AllResources.Rations.Value = Mathf.Max(0f, rationsConsumed);
 
 			var lastTravel = model.TravelRequest.Value;
 			if (lastTravel.State == TravelRequest.States.Active)

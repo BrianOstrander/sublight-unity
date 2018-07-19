@@ -5,7 +5,8 @@
 		Unknown = 0,
 		Resources = 10,
 		OrbitalProbe = 20,
-		OrbitalCrew = 30
+		OrbitalCrew = 30,
+		Module = 40
 	}
 
 	public static class InventoryValidator

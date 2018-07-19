@@ -258,7 +258,7 @@ namespace LunraGames.SpaceFarm
 					if (request.Destination == Payload.Game.EndSystem.Value) return;
 
 					var travelDestination = Payload.Game.Universe.Value.GetSystem(request.Destination);
-					Payload.Game.Ship.Value.Inventory.Resources.Fuel.Value -= request.FuelConsumed;
+					Payload.Game.Ship.Value.Inventory.AllResources.Fuel.Value -= request.FuelConsumed;
 
 					if (!travelDestination.Visited)
 					{

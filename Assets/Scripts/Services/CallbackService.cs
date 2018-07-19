@@ -116,6 +116,11 @@ namespace LunraGames.SpaceFarm
 		/// Any key value requests are handled through here.
 		/// </summary>
 		public Action<KeyValueRequest> KeyValueRequest = ActionExtensions.GetEmpty<KeyValueRequest>();
+		/// <summary>
+		/// Called when the inventory should be cleared of unusable items and
+		/// resources.
+		/// </summary>
+		public Action<ClearInventoryRequest> ClearInventoryRequest = ActionExtensions.GetEmpty<ClearInventoryRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

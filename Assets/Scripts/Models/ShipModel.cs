@@ -94,7 +94,7 @@ namespace LunraGames.SpaceFarm.Models
 				DeriveTravelRadius,
 				Speed,
 				RationConsumption,
-				Inventory.Resources.Rations,
+				Inventory.UsableResources.Rations,
 				FuelConsumption
 			);
 
