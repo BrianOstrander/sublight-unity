@@ -56,26 +56,39 @@ namespace LunraGames.SpaceFarm.Models
 		}
 
 		/// <summary>
-		/// Add the other resources to this one, and returns the remainder if
-		/// any values are negative.
+		/// Add the other resources to this one.
 		/// </summary>
-		/// <returns>The add.</returns>
+		/// <returns>Itself.</returns>
 		/// <param name="other">Other.</param>
 		public ResourceInventoryModel Add(ResourceInventoryModel other)
 		{
-			return AddOut(other, this);
+			AddOut(other, this);
+			return this;
+		}
+
+		/// <summary>
+		/// Add the other resources to this one, and assign any remainders to
+		/// the out model.
+		/// </summary>
+		/// <returns>Itself.</returns>
+		/// <param name="other">Other.</param>
+		/// <param name="remainder">Remainder.</param>
+		public ResourceInventoryModel Add(ResourceInventoryModel other, out ResourceInventoryModel remainder)
+		{
+			remainder = AddOut(other, this);
+			return this;
 		}
 
 		/// <summary>
 		/// Add the other resources to this one, but assign the result to the
 		/// specified object. Returns any negative values.
 		/// </summary>
-		/// <returns>The out.</returns>
+		/// <returns>The remainder.</returns>
 		/// <param name="other">Other.</param>
 		/// <param name="assigned">Assigned.</param>
-		public ResourceInventoryModel AddOut(ResourceInventoryModel other, ResourceInventoryModel assigned = null)
+		ResourceInventoryModel AddOut(ResourceInventoryModel other, ResourceInventoryModel assigned)
 		{
-			if (assigned == null) assigned = Zero;
+			if (assigned == null) throw new ArgumentNullException("assigned");
 
 			var remainder = Zero;
 
@@ -92,24 +105,37 @@ namespace LunraGames.SpaceFarm.Models
 		}
 
 		/// <summary>
-		/// Subtract the other resource to this one, and returns the remainder
-		/// if any values are negative.
+		/// Subtract the other resource to this one.
 		/// </summary>
-		/// <returns>The subtract.</returns>
+		/// <returns>Itself.</returns>
 		/// <param name="other">Other.</param>
 		public ResourceInventoryModel Subtract(ResourceInventoryModel other)
 		{
-			return SubtractOut(other, this);
+			SubtractOut(other, this);
+			return this;
+		}
+
+		/// <summary>
+		/// Subtract the other resource from this one, and assign any
+		/// remainders to the out model.
+		/// </summary>
+		/// <returns>Itself.</returns>
+		/// <param name="other">Other.</param>
+		/// <param name="remainder">Remainder.</param>
+		public ResourceInventoryModel Subtract(ResourceInventoryModel other, out ResourceInventoryModel remainder)
+		{
+			remainder = SubtractOut(other, this);
+			return this;
 		}
 
 		/// <summary>
 		/// Subtract the other resources to this one, but assign the result to
 		/// the specified object. Returns any negative values.
 		/// </summary>
-		/// <returns>The out.</returns>
+		/// <returns>The remainder.</returns>
 		/// <param name="other">Other.</param>
 		/// <param name="assigned">Assigned.</param>
-		public ResourceInventoryModel SubtractOut(ResourceInventoryModel other, ResourceInventoryModel assigned = null)
+		ResourceInventoryModel SubtractOut(ResourceInventoryModel other, ResourceInventoryModel assigned)
 		{
 			return AddOut(other.Inverse(), assigned);
 		}
@@ -117,39 +143,46 @@ namespace LunraGames.SpaceFarm.Models
 		/// <summary>
 		/// Multiplies these resources by the specified value.
 		/// </summary>
+		/// <returns>Itself.</returns>
 		/// <param name="value">Value.</param>
-		public void Multiply(float value)
+		public ResourceInventoryModel Multiply(float value)
 		{
-			MultiplyOut(value, this);
+			Rations.Value *= value;
+			Fuel.Value *= value;
+
+			return this;
 		}
 
 		/// <summary>
-		/// Multiplies these resources by the specified value, but assigns the
-		/// reult to the provided model.
-		/// </summary>
-		/// <param name="value">Value.</param>
-		/// <param name="assigned">Assigned.</param>
-		public void MultiplyOut(float value, ResourceInventoryModel assigned)
-		{
-			if (assigned == null) throw new ArgumentNullException("assigned");
-
-			assigned.Rations.Value = Rations.Value * value;
-			assigned.Fuel.Value = Fuel.Value * value;
-		}
-
-		/// <summary>
-		/// Clamp resources using the other as a maximum, and returns the
-		/// remainder if any at all.
+		/// Clamp resources using the other as a maximum.
 		/// </summary>
 		/// <remarks>
 		/// Maximum values should be above zeros, or unexpected behaviour may
 		/// occur.
 		/// </remarks>
-		/// <returns>The clamp.</returns>
-		/// <param name="maximum">Other.</param>
+		/// <returns>Itself.</returns>
+		/// <param name="maximum">Maximum.</param>
 		public ResourceInventoryModel Clamp(ResourceInventoryModel maximum)
 		{
-			return ClampOut(maximum, this);
+			ClampOut(maximum, this);
+			return this;
+		}
+
+		/// <summary>
+		/// Clamp resources using the other as a maximum, and assigns any
+		/// difference to the out model.
+		/// </summary>
+		/// <remarks>
+		/// Maximum values should be above zeros, or unexpected behaviour may
+		/// occur.
+		/// </remarks>
+		/// <returns>Itself.</returns>
+		/// <param name="maximum">Maximum.</param>
+		/// <param name="difference">Difference.</param>
+		public ResourceInventoryModel Clamp(ResourceInventoryModel maximum, out ResourceInventoryModel difference)
+		{
+			difference = ClampOut(maximum, this);
+			return this;
 		}
 
 		/// <summary>
@@ -161,7 +194,7 @@ namespace LunraGames.SpaceFarm.Models
 		/// <returns>The out.</returns>
 		/// <param name="maximum">Other.</param>
 		/// <param name="assigned">Assigned.</param>
-		public ResourceInventoryModel ClampOut(ResourceInventoryModel maximum, ResourceInventoryModel assigned = null)
+		ResourceInventoryModel ClampOut(ResourceInventoryModel maximum, ResourceInventoryModel assigned = null)
 		{
 			if (assigned == null) assigned = Zero;
 
@@ -183,49 +216,51 @@ namespace LunraGames.SpaceFarm.Models
 		}
 
 		/// <summary>
-		/// Assigns the minimum values of this or the other model to itself and
-		/// returns the difference.
+		/// Assigns the minimum values of this or the other model to itself.
 		/// </summary>
-		/// <returns>The difference.</returns>
+		/// <returns>Itself.</returns>
 		/// <param name="other">Other.</param>
 		public ResourceInventoryModel Minimum(ResourceInventoryModel other)
 		{
-			return MinimumOut(other, this);
+			MinimumMaximumOut(other, true, this);
+			return this;
 		}
 
 		/// <summary>
-		/// Assigns the minimum values of this or the other model to the 
-		/// specified object and returns the difference.
+		/// Assigns the minimum values of this or the other model to itself and
+		/// assigns any differnce to the specified out model.
 		/// </summary>
-		/// <returns>The difference.</returns>
+		/// <returns>Itself.</returns>
 		/// <param name="other">Other.</param>
-		/// <param name="assigned">Assigned.</param>
-		public ResourceInventoryModel MinimumOut(ResourceInventoryModel other, ResourceInventoryModel assigned = null)
+		/// <param name="difference">Difference.</param>
+		public ResourceInventoryModel Minimum(ResourceInventoryModel other, out ResourceInventoryModel difference)
 		{
-			return MinimumMaximumOut(other, true, assigned);
+			difference = MinimumMaximumOut(other, true, this);
+			return this;
+		}
+
+		/// <summary>
+		/// Assigns the maximum values of this or the other model to itself.
+		/// </summary>
+		/// <returns>Itself.</returns>
+		/// <param name="other">Other.</param>
+		public ResourceInventoryModel Maximum(ResourceInventoryModel other)
+		{
+			MinimumMaximumOut(other, false, this);
+			return this;
 		}
 
 		/// <summary>
 		/// Assigns the maximum values of this or the other model to itself and
-		/// returns the difference.
+		/// assigns any difference to the specified out model.
 		/// </summary>
-		/// <returns>The difference.</returns>
+		/// <returns>Itself.</returns>
 		/// <param name="other">Other.</param>
-		public ResourceInventoryModel Maximum(ResourceInventoryModel other)
+		/// <param name="difference">Difference.</param>
+		public ResourceInventoryModel Maximum(ResourceInventoryModel other, out ResourceInventoryModel difference)
 		{
-			return MaximumOut(other, this);
-		}
-
-		/// <summary>
-		/// Assigns the maximum values of this or the other model to the
-		/// specified object and returns the difference.
-		/// </summary>
-		/// <returns>The difference.</returns>
-		/// <param name="other">Other.</param>
-		/// <param name="assigned">Assigned.</param>
-		public ResourceInventoryModel MaximumOut(ResourceInventoryModel other, ResourceInventoryModel assigned = null)
-		{
-			return MinimumMaximumOut(other, false, assigned);
+			difference = MinimumMaximumOut(other, false, this);
+			return this;
 		}
 
 		/// <summary>

@@ -36,15 +36,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public ResourceInventoryModel ResourcesAcquired { get { return resourcesAcquired; } }
 		[JsonIgnore]
-		public ResourceInventoryModel ResourcesCurrent
-		{
-			get
-			{
-				var current = ResourceInventoryModel.Zero;
-				Resources.SubtractOut(ResourcesAcquired, current);
-				return current;
-			}
-		}
+		public ResourceInventoryModel ResourcesCurrent { get { return Resources.Duplicate.Subtract(ResourcesAcquired); } }
 
 		public BodyModel()
 		{

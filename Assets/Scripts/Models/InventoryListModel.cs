@@ -318,7 +318,9 @@ namespace LunraGames.SpaceFarm.Models
 
 		void OnResources(ResourceInventoryModel model)
 		{
-			UnUsableResources.Assign(AllResources.ClampOut(MaximumResources, UsableResources));
+			ResourceInventoryModel newUnusableResources;
+			UsableResources.Assign(AllResources.Duplicate.Clamp(MaximumResources, out newUnusableResources));
+			UnUsableResources.Assign(newUnusableResources);
 		}
 
 		void OnSetInventory(InventoryModel[] newInventory)
