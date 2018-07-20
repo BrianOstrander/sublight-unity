@@ -13,9 +13,10 @@ namespace LunraGames.SpaceFarm
 {
 	public partial class EncounterEditorWindow
 	{
-		bool OnLogBegin(int count, EncounterInfoModel infoModel, EncounterLogModel model, ref string beginning, ref string ending)
+		bool OnLogBegin(int count, int maxCount, EncounterInfoModel infoModel, EncounterLogModel model, bool isMoving, out int indexDelta, ref string beginning, ref string ending)
 		{
 			var deleted = false;
+			indexDelta = 0;
 			var isAlternate = count % 2 == 0;
 			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.gray);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -25,15 +26,36 @@ namespace LunraGames.SpaceFarm
 				var header = "#"+(count + 1)+" | "+model.LogType + ".LogId:";
 				GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
 				EditorGUILayout.SelectableLabel(model.LogId, EditorStyles.boldLabel);
-				if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+				if (isMoving)
 				{
-					beginning = model.LogId;
+					GUILayout.Space(10f);
+					EditorGUILayoutExtensions.PushEnabled(0 < count);
+					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = -1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = 1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 				}
-				if (EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f)) && !model.Ending.Value)
+				else
 				{
-					ending = model.LogId;
+					if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+					{
+						beginning = model.LogId;
+					}
+					if (EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f)) && !model.Ending.Value)
+					{
+						ending = model.LogId;
+					}
 				}
+				EditorGUILayoutExtensions.PushEnabled(!isMoving);
 				deleted = EditorGUILayoutExtensions.XButton();
+				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
 
