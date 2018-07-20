@@ -183,7 +183,7 @@ namespace LunraGames.SpaceFarm
 				}
 			);
 
-			var chosen = remaining.FirstOrDefault();
+			var chosen = remaining.OrderByDescending(r => r.OrderWeight.Value).FirstOrDefault();
 			if (chosen == null) return null;
 
 			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));

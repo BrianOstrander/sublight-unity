@@ -7,7 +7,6 @@
   "validBodies": [
     "Terrestrial"
   ],
-  "validProbes": [],
   "validCrews": [
     "OrbitalCrew"
   ],
@@ -32,7 +31,7 @@
       {
         "header": "W. Idlewild",
         "message": "It’s some kind of crystalline asteroid… never seen anything like it. We’ll bring a sample back for study.",
-        "nextLogId": "42f07de3-f290-4fa1-9419-06bd7f5d66c3",
+        "nextLogId": "72c8b89a-4f23-43fb-a124-c9f3fa146b86",
         "index": 2,
         "logId": "6d9d6b71-6dbd-4e7b-bdd0-1c7d3f743122"
       }
@@ -42,18 +41,18 @@
         "setStrings": [
           {
             "value": "After analysis back onboard, it looks like the samples contained large quantities of water.",
-            "keyValueId": "cd75f2fc-b7ca-4e1f-88fe-97ffa18b07c6",
+            "operationId": "4b818158-684e-4cc1-a248-d6bc62c8cc34",
             "target": "Encounter",
             "key": "Summary"
           }
         ],
         "index": 3,
         "ending": true,
-        "logId": "42f07de3-f290-4fa1-9419-06bd7f5d66c3"
+        "logId": "72c8b89a-4f23-43fb-a124-c9f3fa146b86"
       }
     ]
   },
-  "version": 2,
+  "version": 3,
   "meta": "Crystalline Asteroid",
   "created": "2018-07-17T17:50:20.64022-07:00",
   "modified": "2018-07-17T17:50:20.64022-07:00",

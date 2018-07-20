@@ -182,7 +182,13 @@ namespace LunraGames.SpaceFarm
 		{
 			EditorGUI.BeginChangeCheck();
 			{
-				model.Hidden.Value = EditorGUILayout.Toggle("Hidden", model.Hidden.Value);
+				GUILayout.BeginHorizontal();
+				{
+					model.OrderWeight.Value = EditorGUILayout.FloatField("Order Weight", model.OrderWeight.Value, GUILayout.ExpandWidth(true));
+					GUILayout.Label("Hidden", GUILayout.ExpandWidth(false));
+					model.Hidden.Value = EditorGUILayout.Toggle(model.Hidden.Value, GUILayout.Width(14f));
+				}
+				GUILayout.EndHorizontal();
 				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				model.Meta.Value = model.Name;
@@ -266,6 +272,13 @@ namespace LunraGames.SpaceFarm
 							keyValueResult.LogId.Value = guid;
 							keyValueResult.Beginning.Value = isBeginning;
 							model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
+							break;
+						case EncounterLogTypes.Inventory:
+							var inventoryResult = new InventoryEncounterLogModel();
+							inventoryResult.Index.Value = nextIndex;
+							inventoryResult.LogId.Value = guid;
+							inventoryResult.Beginning.Value = isBeginning;
+							model.Logs.All.Value = model.Logs.All.Value.Append(inventoryResult).ToArray();
 							break;
 						default:
 							Debug.LogError("Unrecognized EncounterLogType:" + result);

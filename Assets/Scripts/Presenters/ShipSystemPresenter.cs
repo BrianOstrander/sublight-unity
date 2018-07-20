@@ -61,7 +61,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			var spaceInLogistics = ship.Inventory.MaximumRefillableLogisticsResources.Duplicate.Subtract(newResources);
 
-			newResources.Add(refillLogic.Clamp(spaceInLogistics)).Maximum(ResourceInventoryModel.Zero);
+			newResources.Add(refillLogic.Clamp(spaceInLogistics)).ClampNegatives();
 
 			ship.Inventory.AllResources.Assign(newResources);
 

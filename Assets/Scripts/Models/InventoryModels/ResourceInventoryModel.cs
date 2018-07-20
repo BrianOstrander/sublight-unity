@@ -244,6 +244,26 @@ namespace LunraGames.SpaceFarm.Models
 		}
 
 		/// <summary>
+		/// Keeps all values greater than or equal to zero, assigns zero to all
+		/// its other values.
+		/// </summary>
+		/// <returns>Itself.</returns>
+		public ResourceInventoryModel ClampNegatives()
+		{
+			return Maximum(Zero);
+		}
+
+		/// <summary>
+		/// Keeps all values greater than or equal to zero, assigns zero to all
+		/// its other values. Any difference is assigned to the specified model.
+		/// </summary>
+		/// <returns>Itself.</returns>
+		public ResourceInventoryModel ClampNegatives(out ResourceInventoryModel difference)
+		{
+			return Maximum(Zero, out difference);
+		}
+
+		/// <summary>
 		/// Assigns the maximum values of this or the other model to itself.
 		/// </summary>
 		/// <returns>Itself.</returns>

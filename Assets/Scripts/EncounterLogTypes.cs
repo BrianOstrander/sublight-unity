@@ -4,7 +4,8 @@
 	{
 		Unknown = 0,
 		Text = 10,
-		KeyValue = 20
+		KeyValue = 20,
+		Inventory = 30
 	}
 
 	public static class EncounterLogValidator
@@ -16,7 +17,8 @@
 
 		public static EncounterLogTypes[] Logic = {
 			EncounterLogTypes.Unknown,
-			EncounterLogTypes.KeyValue
+			EncounterLogTypes.KeyValue,
+			EncounterLogTypes.Inventory
 		};
 	}
 }

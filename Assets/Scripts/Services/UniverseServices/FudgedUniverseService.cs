@@ -138,6 +138,7 @@ namespace LunraGames.SpaceFarm
 
 			system.Name.Value = seed.ToString();
 
+			/*
 			switch (random.GetNextInteger(max: 3))
 			{
 				case 0:
@@ -154,6 +155,7 @@ namespace LunraGames.SpaceFarm
 					system.Fuel.Value = random.GetNextInteger(2, 5);
 					break;
 			}
+			*/
 
 			system.RationsDetection.Value = random.NextFloat;
 			system.FuelDetection.Value = random.NextFloat;
