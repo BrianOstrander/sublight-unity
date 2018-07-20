@@ -52,16 +52,17 @@ namespace LunraGames.SpaceFarm
 			var speed = 0.012f;
 			var rationConsumption = 0.02f;
 			var resourceDetection = 0.5f;
+			var maximumNavigationTime = 10f;
 
 			var ship = new ShipModel();
 			ship.CurrentSystem.Value = startSystem.Position;
 			ship.Position.Value = startPosition;
 			ship.Speed.Value = speed;
-			ship.RationConsumption.Value = rationConsumption;
 			ship.Inventory.AllResources.Rations.Value = rations;
 			ship.Inventory.AllResources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
 			ship.ResourceDetection.Value = resourceDetection;
+			ship.MaximumNavigationTime.Value = new DayTime(maximumNavigationTime);
 
 			game.Ship.Value = ship;
 
@@ -107,16 +108,33 @@ namespace LunraGames.SpaceFarm
 			modulePlug.SlotId.Value = "plug0";
 			rootModule.Slots.All.Value = rootModule.Slots.All.Value.Append(modulePlug).ToArray();
 
+			var modulePlug1 = new ModuleModuleSlotModel();
+			modulePlug1.SlotId.Value = "plug1";
+			rootModule.Slots.All.Value = rootModule.Slots.All.Value.Append(modulePlug1).ToArray();
+
 			var resourceModule = new ModuleInventoryModel();
 			resourceModule.Name.Value = "SomeResourceModule";
 			resourceModule.InstanceId.Value = "recid";
 
 			var resourceMod = new ResourceModuleSlotModel();
 			resourceMod.SlotId.Value = "resourceMod0";
-			resourceMod.MaximumResources.Value = new ResourceInventoryModel(1f, 2f);
+			resourceMod.MaximumResources.Assign(new ResourceInventoryModel(1f, 2f));
+			resourceMod.MaximumLogisticsResources.Assign(new ResourceInventoryModel(0.5f, 0.5f));
+			resourceMod.RefillLogisticsResources.Assign(new ResourceInventoryModel(0.1f, 0.1f));
 			resourceModule.Slots.All.Value = resourceModule.Slots.All.Value.Append(resourceMod).ToArray();
 
 			game.Ship.Value.Inventory.Connect(modulePlug, resourceModule);
+
+			var crewHabModule = new ModuleInventoryModel();
+			crewHabModule.Name.Value = "SomeCrewHabModule";
+			crewHabModule.InstanceId.Value = "crewhab";
+
+			var crewEatingMod = new ResourceModuleSlotModel();
+			crewEatingMod.SlotId.Value = "crewEatingMod0";
+			crewEatingMod.RefillResources.Assign(new ResourceInventoryModel(-rationConsumption, 0f));
+			crewHabModule.Slots.All.Value = crewHabModule.Slots.All.Value.Append(crewEatingMod).ToArray();
+
+			game.Ship.Value.Inventory.Connect(modulePlug1, crewHabModule);
 
 			// Crew generation, eventually will be done somewhere else...
 			var multiCrew = new OrbitalCrewInventoryModel();
@@ -145,6 +163,7 @@ namespace LunraGames.SpaceFarm
 			game.Ship.Value.Inventory.All.Value = new InventoryModel[] {
 				rootModule,
 				resourceModule,
+				crewHabModule,
 				multiCrew,
 				terrestrialCrew,
 				starCrew

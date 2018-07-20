@@ -14,7 +14,10 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] CrewModuleSlotModel[] crews = new CrewModuleSlotModel[0];
 		[JsonProperty] ResourceModuleSlotModel[] resources = new ResourceModuleSlotModel[0];
 		[JsonProperty] ModuleModuleSlotModel[] modules = new ModuleModuleSlotModel[0];
-		[JsonProperty] ResourceInventoryModel maximumResources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel refillResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel refillLogisticsResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel maximumLogisticsResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel maximumResources = ResourceInventoryModel.Zero;
 		#endregion
 
 		#region Derived Values
@@ -23,6 +26,30 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Shortcuts
+		/// <summary>
+		/// The amount of resources this module should create or consume when 
+		/// active, always.
+		/// </summary>
+		/// <value>Resources created or consumed per day.</value>
+		[JsonIgnore]
+		public ResourceInventoryModel RefillResources { get { return refillResources; } }
+		/// <summary>
+		/// The amount of resources this module should create when active and
+		/// logistics space is available. Should not be negative.
+		/// </summary>
+		/// <value>Resources created per day.</value>
+		[JsonIgnore]
+		public ResourceInventoryModel RefillLogisticsResources { get { return refillLogisticsResources; } }
+		/// <summary>
+		/// Gets amount this module increases the logistics maximum by.
+		/// </summary>
+		/// <value>The maximum logistics resources.</value>
+		[JsonIgnore]
+		public ResourceInventoryModel MaximumLogisticsResources { get { return maximumLogisticsResources; } }
+		/// <summary>
+		/// The amount this module increases the maximum storable resources by.
+		/// </summary>
+		/// <value>The maximum resources.</value>
 		[JsonIgnore]
 		public ResourceInventoryModel MaximumResources { get { return maximumResources; } }
 		#endregion
@@ -75,6 +102,10 @@ namespace LunraGames.SpaceFarm.Models
 			var crewList = new List<CrewModuleSlotModel>();
 			var resourceList = new List<ResourceModuleSlotModel>();
 			var modulesList = new List<ModuleModuleSlotModel>();
+
+			var newRefillResources = ResourceInventoryModel.Zero;
+			var newRefillLogicResources = ResourceInventoryModel.Zero;
+			var newMaxLogicResources = ResourceInventoryModel.Zero;
 			var newMaxResources = ResourceInventoryModel.Zero;
 
 			foreach (var slot in newSlots)
@@ -87,6 +118,9 @@ namespace LunraGames.SpaceFarm.Models
 					case SlotTypes.Resource:
 						var resourceSlot = slot as ResourceModuleSlotModel;
 						resourceList.Add(resourceSlot);
+						newRefillResources.Add(resourceSlot.RefillResources);
+						newRefillLogicResources.Add(resourceSlot.RefillLogisticsResources);
+						newMaxLogicResources.Add(resourceSlot.MaximumLogisticsResources);
 						newMaxResources.Add(resourceSlot.MaximumResources);
 						break;
 					case SlotTypes.Module:
@@ -102,7 +136,10 @@ namespace LunraGames.SpaceFarm.Models
 			resources = resourceList.ToArray();
 			modules = modulesList.ToArray();
 
-			maximumResources.Assign(newMaxResources);
+			RefillResources.Assign(newRefillResources);
+			RefillLogisticsResources.Assign(newRefillLogicResources.Maximum(ResourceInventoryModel.Zero));
+			MaximumLogisticsResources.Assign(newMaxLogicResources);
+			MaximumResources.Assign(newMaxResources);
 		}
 
 		ModuleSlotModel[] OnGetSlots()

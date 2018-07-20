@@ -54,12 +54,16 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
-			//var generated = ship.Inventory.RefillLogisticsResources.Duplicate;
-			//generated.Multiply(delta.Delta.TotalTime);
-			//generated.Add(ship.Inventory.AllResources);
+			var refill = ship.Inventory.RefillResources.Duplicate.Multiply(delta.Delta.TotalTime);
+			var refillLogic = ship.Inventory.RefillLogisticsResources.Duplicate.Multiply(delta.Delta.TotalTime);
 
-			//var rationsConsumed = model.Ship.Value.Inventory.AllResources.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
-			//model.Ship.Value.Inventory.AllResources.Rations.Value = Mathf.Max(0f, rationsConsumed);
+			var newResources = ship.Inventory.AllResources.Duplicate.Add(refill);
+
+			var spaceInLogistics = ship.Inventory.MaximumRefillableLogisticsResources.Duplicate.Subtract(newResources);
+
+			newResources.Add(refillLogic.Clamp(spaceInLogistics)).Maximum(ResourceInventoryModel.Zero);
+
+			ship.Inventory.AllResources.Assign(newResources);
 
 			var lastTravel = model.TravelRequest.Value;
 			if (lastTravel.State == TravelRequest.States.Active)
@@ -98,6 +102,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					ship.NextSystem.Value = travelRequest.Destination;
 					ship.CurrentSystem.Value = UniversePosition.Zero;
 					ship.Position.Value = travelRequest.Origin;
+					ship.Inventory.AllResources.Fuel.Value -= travelRequest.FuelConsumed;
 					if (Mathf.Approximately(App.Callbacks.LastSpeedRequest.Speed, 0f)) App.Callbacks.SpeedRequest(SpeedRequest.PlayRequest);
 					model.TravelRequest.Value = travelRequest.Duplicate(TravelRequest.States.Active);
 					break;

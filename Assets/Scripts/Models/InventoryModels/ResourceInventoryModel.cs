@@ -43,16 +43,20 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public ResourceInventoryModel Duplicate { get { return new ResourceInventoryModel(Rations, Fuel); } }
 
+		[JsonConstructor]
+		ResourceInventoryModel()
+		{
+			Rations = new ListenerProperty<float>(value => rations = value, () => rations, value => AnyChange(this));
+			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel, value => AnyChange(this));
+		}
+
 		public ResourceInventoryModel(
 			float rationsValue = 0f,
 			float fuelValue = 0f
-		)
+		) : this()
 		{
 			rations = rationsValue;
 			fuel = fuelValue;
-
-			Rations = new ListenerProperty<float>(value => rations = value, () => rations, value => AnyChange(this));
-			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel, value => AnyChange(this));
 		}
 
 		/// <summary>
@@ -98,8 +102,8 @@ namespace LunraGames.SpaceFarm.Models
 			if (newRations < 0f) remainder.Rations.Value = Mathf.Abs(newRations);
 			if (newFuel < 0f) remainder.Fuel.Value = Mathf.Abs(newFuel);
 
-			assigned.Rations.Value = Mathf.Max(0f, newRations);
-			assigned.Fuel.Value = Mathf.Max(0f, newFuel);
+			assigned.Rations.Value = newRations;
+			assigned.Fuel.Value = newFuel;
 
 			return remainder;
 		}

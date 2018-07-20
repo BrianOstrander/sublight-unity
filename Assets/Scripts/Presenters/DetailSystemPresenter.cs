@@ -28,7 +28,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 			View.Closed += OnClosed;
 			View.Name = system.Name;
-			View.DayTravelTime = Mathf.Min(1, UniversePosition.TravelTime(system.Position, model.Ship.Value.Position, model.Ship.Value.SpeedTotal).Day);
+			View.DayTravelTime = Mathf.Max(1, UniversePosition.TravelTime(system.Position, model.Ship.Value.Position, model.Ship.Value.SpeedTotal).Day);
 
 			var rationText = string.Empty;
 			var rationColor = Color.white;

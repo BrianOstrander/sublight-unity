@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 using UnityEngine;
 
@@ -13,13 +14,14 @@ namespace LunraGames.SpaceFarm.Models
 		#region Assigned Values
 		[JsonProperty] OrbitalCrewInventoryModel[] orbitalCrews = new OrbitalCrewInventoryModel[0];
 		[JsonProperty] ModuleInventoryModel[] modules = new ModuleInventoryModel[0];
-		[JsonProperty] ResourceInventoryModel refillLogisticsResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel maximumLogisticsResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel maximumResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel maximumRefillableLogisticsResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel allResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel usableResources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel unUsableResources = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel refillResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel refillLogisticsResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel maximumLogisticsResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel maximumResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel maximumRefillableLogisticsResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel allResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel usableResources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel unUsableResources = ResourceInventoryModel.Zero;
 
 		[JsonProperty] SlotEdge[] slotEdges = new SlotEdge[0];
 
@@ -33,6 +35,18 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Shortcuts
+		/// <summary>
+		/// The amount of resources this module should create or consume when 
+		/// active, always.
+		/// </summary>
+		/// <value>Resources created or consumed per day.</value>
+		[JsonIgnore]
+		public ResourceInventoryModel RefillResources { get { return refillResources; } }
+		/// <summary>
+		/// The amount of resources this ship should created when active, per
+		/// day. Should not be negative.
+		/// </summary>
+		/// <value>Resources created per day.</value>
 		[JsonIgnore]
 		public ResourceInventoryModel RefillLogisticsResources { get { return refillLogisticsResources; } }
 		/// <summary>
@@ -85,6 +99,18 @@ namespace LunraGames.SpaceFarm.Models
 			All = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 			SlotEdges = new ListenerProperty<SlotEdge[]>(value => slotEdges = value, () => slotEdges, OnSlotEdges);
 
+			AllResources.AnyChange += OnResources;
+		}
+
+		/// <summary>
+		/// Don't know why I need this but I do, without this, this very event
+		/// will not get binded, or it kind of will, but in the wrong context
+		/// and never get called? I dunno, very weird, don't think about it too
+		/// much.
+		/// </summary>
+		[OnDeserialized]
+		void OnInitialized(StreamingContext context)
+		{
 			AllResources.AnyChange += OnResources;
 		}
 
@@ -180,8 +206,7 @@ namespace LunraGames.SpaceFarm.Models
 			var result = GetInventory<T>(i => i.InventoryType != InventoryTypes.Resources && !i.IsUsable);
 			if (typeof(T) == typeof(InventoryModel) || typeof(T) == typeof(ResourceInventoryModel))
 			{
-				var unUsableResources = UnUsableResources;
-				if (!unUsableResources.IsZero) result = result.Append(unUsableResources as T).ToArray();
+				if (!UnUsableResources.IsZero) result = result.Append(UnUsableResources as T).ToArray();
 			}
 			if (predicate != null) result = result.Where(predicate).ToArray();
 			return result;
@@ -307,20 +332,36 @@ namespace LunraGames.SpaceFarm.Models
 		#region Events
 		void OnSlotEdges(SlotEdge[] edges)
 		{
+			var newRefillResources = ResourceInventoryModel.Zero;
+			var newRefillLogicResources = ResourceInventoryModel.Zero;
+			var newMaxLogicResources = ResourceInventoryModel.Zero;
 			var newMaxResources = ResourceInventoryModel.Zero;
+
 			foreach (var module in modules)
 			{
-				if (module.IsUsable) newMaxResources.Add(module.Slots.MaximumResources);
+				if (module.IsUsable)
+				{
+					newRefillResources.Add(module.Slots.RefillResources);
+					newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
+					newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
+					newMaxResources.Add(module.Slots.MaximumResources);
+				}
 			}
+
+			RefillResources.Assign(newRefillResources);
+			RefillLogisticsResources.Assign(newRefillLogicResources.Maximum(ResourceInventoryModel.Zero));
+			MaximumLogisticsResources.Assign(newMaxLogicResources);
 			MaximumResources.Assign(newMaxResources);
+			MaximumRefillableLogisticsResources.Assign(MaximumLogisticsResources.Duplicate.Clamp(MaximumResources));
+
 			OnResources(AllResources);
 		}
 
 		void OnResources(ResourceInventoryModel model)
 		{
-			ResourceInventoryModel newUnusableResources;
-			UsableResources.Assign(AllResources.Duplicate.Clamp(MaximumResources, out newUnusableResources));
-			UnUsableResources.Assign(newUnusableResources);
+			ResourceInventoryModel newUnUsableResources;
+			UsableResources.Assign(AllResources.Duplicate.Clamp(MaximumResources, out newUnUsableResources));
+			UnUsableResources.Assign(newUnUsableResources);
 		}
 
 		void OnSetInventory(InventoryModel[] newInventory)
@@ -329,9 +370,13 @@ namespace LunraGames.SpaceFarm.Models
 
 			var orbitalCrewList = new List<OrbitalCrewInventoryModel>();
 			var moduleList = new List<ModuleInventoryModel>();
-			var newMaxResources = ResourceInventoryModel.Zero;
 			ResourceInventoryModel newResources = null;
 			var slotEdgeList = new List<SlotEdge>();
+
+			var newRefillResources = ResourceInventoryModel.Zero;
+			var newRefillLogicResources = ResourceInventoryModel.Zero;
+			var newMaxLogicResources = ResourceInventoryModel.Zero;
+			var newMaxResources = ResourceInventoryModel.Zero;
 
 			foreach (var inventory in newInventory)
 			{
@@ -353,7 +398,13 @@ namespace LunraGames.SpaceFarm.Models
 					case InventoryTypes.Module:
 						var module = inventory as ModuleInventoryModel;
 						moduleList.Add(module);
-						if (module.IsUsable) newMaxResources.Add(module.Slots.MaximumResources);
+						if (module.IsUsable)
+						{
+							newRefillResources.Add(module.Slots.RefillResources);
+							newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
+							newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
+							newMaxResources.Add(module.Slots.MaximumResources);
+						}
 						break;
 					default:
 						Debug.LogError("Unrecognized InventoryType: " + inventory.InventoryType);
@@ -366,7 +417,11 @@ namespace LunraGames.SpaceFarm.Models
 
 			SlotEdges.Value = slotEdgeList.ToArray();
 
+			RefillResources.Assign(newRefillResources);
+			RefillLogisticsResources.Assign(newRefillLogicResources.Maximum(ResourceInventoryModel.Zero));
+			MaximumLogisticsResources.Assign(newMaxLogicResources);
 			MaximumResources.Assign(newMaxResources);
+
 			if (newResources != null) AllResources.Assign(newResources);
 			else OnResources(AllResources);
 		}

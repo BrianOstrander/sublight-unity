@@ -10,8 +10,8 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string name;
 		[JsonProperty] string encounter;
 
-		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel resourcesAcquired = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel resources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel resourcesAcquired = ResourceInventoryModel.Zero;
 
 		/// <summary>
 		/// Gets the type of the body.
