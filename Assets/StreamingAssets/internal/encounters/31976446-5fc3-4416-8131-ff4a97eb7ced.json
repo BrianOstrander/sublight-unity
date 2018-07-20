@@ -1,5 +1,6 @@
 {
   "orderWeight": 1.0,
+  "hidden": true,
   "encounterId": "dbedc427-ecbd-45d3-8937-8a7405dffaaf",
   "name": "Inventory Test",
   "hook": "A test for inventory",

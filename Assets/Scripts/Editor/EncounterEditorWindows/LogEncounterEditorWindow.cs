@@ -354,7 +354,7 @@ namespace LunraGames.SpaceFarm
 		void OnLinearLog(EncounterInfoModel infoModel, LinearEncounterLogModel model, EncounterLogModel nextModel)
 		{
 			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
-			var options = infoModel.Logs.All.Value.Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value).Prepend("- Select Next Log -").ToArray();
+			var options = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value).Prepend("- Select Next Log -").ToArray();
 			var optionNames = options.Select(l => l == nextId ? (l + " <- Next") : l).ToArray();
 			var index = 0;
 			if (!string.IsNullOrEmpty(model.NextLogId.Value))

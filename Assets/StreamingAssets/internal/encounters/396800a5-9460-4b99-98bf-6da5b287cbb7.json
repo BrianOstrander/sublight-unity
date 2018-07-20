@@ -1,7 +1,8 @@
 {
+  "orderWeight": 1.0,
   "encounterId": "c98a359f-2764-4176-aea5-62ec8a6d0c34",
   "name": "Crystalline Asteroid",
-  "hook": "Peaks in infrared emissions from the surface indicate something curious, and possibly artificial, is down there.",
+  "hook": "Peaks in infrared emissions from orbit indicate something curious, and possibly artificial, is in orbit.",
   "completedEncountersRequired": [],
   "validSystems": [],
   "validBodies": [
@@ -31,7 +32,7 @@
       {
         "header": "W. Idlewild",
         "message": "It’s some kind of crystalline asteroid… never seen anything like it. We’ll bring a sample back for study.",
-        "nextLogId": "72c8b89a-4f23-43fb-a124-c9f3fa146b86",
+        "nextLogId": "638055bd-eb26-483e-98d3-608b9d74314f",
         "index": 2,
         "logId": "6d9d6b71-6dbd-4e7b-bdd0-1c7d3f743122"
       }
@@ -46,12 +47,26 @@
             "key": "Summary"
           }
         ],
-        "index": 3,
+        "index": 4,
         "ending": true,
         "logId": "72c8b89a-4f23-43fb-a124-c9f3fa146b86"
       }
     ],
-    "inventoryLogs": []
+    "inventoryLogs": [
+      {
+        "addResources": [
+          {
+            "value": {
+              "rations": 1.0
+            },
+            "operationId": "d2a1bedb-26c2-4e78-b0c5-43a8c9dfa93e"
+          }
+        ],
+        "nextLogId": "72c8b89a-4f23-43fb-a124-c9f3fa146b86",
+        "index": 3,
+        "logId": "638055bd-eb26-483e-98d3-608b9d74314f"
+      }
+    ]
   },
   "version": 3,
   "meta": "Crystalline Asteroid",
