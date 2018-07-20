@@ -112,12 +112,6 @@ namespace LunraGames.SpaceFarm
 			new CameraBodyPresenter(game);
 			new BodyHookPresenter(game);
 
-			// TODO: Determine if these are obsolete...
-			new BodyProbeListPresenter(game);
-			new BodyProbeDetailPresenter(game);
-			new BodyProbingPresenter(game);
-			// ----------------------------------------
-
 			// Encounter presenters
 			new CameraEncounterPresenter(game);
 			new ContainerEncounterLogPresenter(game);
@@ -258,7 +252,6 @@ namespace LunraGames.SpaceFarm
 					if (request.Destination == Payload.Game.EndSystem.Value) return;
 
 					var travelDestination = Payload.Game.Universe.Value.GetSystem(request.Destination);
-					Payload.Game.Ship.Value.Inventory.AllResources.Fuel.Value -= request.FuelConsumed;
 
 					if (!travelDestination.Visited)
 					{

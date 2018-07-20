@@ -13,10 +13,6 @@ namespace LunraGames.SpaceFarm
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-        //const float UnityToUniverseScalar = 0.02f;
-        //const float UniverseToUnityScalar = 50f;
-        //const float UniverseToLightYearScalar = 25f;
-
 		const float DaysInYear = 365f;
 		const float TimeInDay = 1f;
 

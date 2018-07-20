@@ -94,21 +94,24 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			// Temp Begin
+			var totalResources = ResourceInventoryModel.Zero;
+
 			foreach (var body in destination.Bodies.Value)
 			{
 				var added = body.ResourcesCurrent;
-				
-				model.Ship.Value.Inventory.AllResources.Add(added);
-				
+				totalResources.Add(added);
 				body.ResourcesAcquired.Add(added);
 				
-				App.Callbacks.DialogRequest(
-					DialogRequest.Alert(
-						"Acquired " + Strings.Rations(added.Rations) + " rations and " + Strings.Fuel(added.Fuel) + " fuel",
-						done: OnAlertClosed
-					)
-				);
 			}
+
+			model.Ship.Value.Inventory.AllResources.Add(totalResources);
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.Alert(
+					"Acquired " + Strings.Rations(totalResources.Rations) + " rations and " + Strings.Fuel(totalResources.Fuel) + " fuel",
+					done: OnAlertClosed
+				)
+			);
 			// Temp End
 		}
 

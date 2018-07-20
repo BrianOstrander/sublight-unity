@@ -225,18 +225,6 @@ namespace LunraGames.SpaceFarm
 				GUILayout.EndVertical();
 				GUILayout.BeginVertical(EditorStyles.helpBox);
 				{
-					model.ValidProbes.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Probes",
-						model.ValidProbes.Value,
-						"- Select a ProbeType -",
-						options: InventoryValidator.Probes
-					);
-				}
-				GUILayout.EndVertical();
-				EditorGUILayoutExtensions.PushColor(alternateColor);
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				EditorGUILayoutExtensions.PopColor();
-				{
 					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
 						"Valid Crews",
 						model.ValidCrews.Value,

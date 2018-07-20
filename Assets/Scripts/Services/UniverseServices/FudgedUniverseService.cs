@@ -183,7 +183,6 @@ namespace LunraGames.SpaceFarm
 			star.Name.Value = "Star: "+star.Seed.Value.ToString();
 			star.Resources.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
 			star.Resources.Fuel.Value = GetFraction(ref fuelRemaining, random.NextFloat);
-			star.Status.Value = BodyStatus.NotProbed;
 
 			var bodyCount = 0;
 
@@ -196,7 +195,6 @@ namespace LunraGames.SpaceFarm
 				var name = string.Empty;
 				var rations = GetFraction(ref rationsRemaining, random.NextFloat);
 				var fuel = GetFraction(ref fuelRemaining, random.NextFloat);
-				var status = BodyStatus.NotProbed;
 
 				switch (random.GetNextInteger(0, 2))
 				{
@@ -224,7 +222,6 @@ namespace LunraGames.SpaceFarm
 				generic.Name.Value = name;
 				generic.Resources.Rations.Value = rations;
 				generic.Resources.Fuel.Value = fuel;
-				generic.Status.Value = status;
 
 				bodies.Add(generic);
 			}
