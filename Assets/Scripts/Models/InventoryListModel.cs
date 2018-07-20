@@ -349,7 +349,7 @@ namespace LunraGames.SpaceFarm.Models
 			}
 
 			RefillResources.Assign(newRefillResources);
-			RefillLogisticsResources.Assign(newRefillLogicResources.Maximum(ResourceInventoryModel.Zero));
+			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
 			MaximumLogisticsResources.Assign(newMaxLogicResources);
 			MaximumResources.Assign(newMaxResources);
 			MaximumRefillableLogisticsResources.Assign(MaximumLogisticsResources.Duplicate.Clamp(MaximumResources));
@@ -418,7 +418,7 @@ namespace LunraGames.SpaceFarm.Models
 			SlotEdges.Value = slotEdgeList.ToArray();
 
 			RefillResources.Assign(newRefillResources);
-			RefillLogisticsResources.Assign(newRefillLogicResources.Maximum(ResourceInventoryModel.Zero));
+			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
 			MaximumLogisticsResources.Assign(newMaxLogicResources);
 			MaximumResources.Assign(newMaxResources);
 

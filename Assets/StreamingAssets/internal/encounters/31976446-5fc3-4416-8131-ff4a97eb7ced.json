@@ -1,0 +1,38 @@
+{
+  "orderWeight": 1.0,
+  "hidden": true,
+  "encounterId": "dbedc427-ecbd-45d3-8937-8a7405dffaaf",
+  "name": "Inventory Test",
+  "hook": "A test for inventory",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [],
+    "keyValueLogs": [],
+    "inventoryLogs": [
+      {
+        "addResources": [
+          {
+            "value": {
+              "rations": 69.0,
+              "fuel": 69.0
+            },
+            "operationId": "af44f660-6644-4d3f-b8b4-35023735db51"
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "3e5b5c59-ae6b-4eb3-946d-47d02938fe12"
+      }
+    ]
+  },
+  "version": 3,
+  "meta": "Inventory Test",
+  "created": "2018-07-20T12:20:42.55884-07:00",
+  "modified": "2018-07-20T12:20:42.55884-07:00",
+  "SaveType": "EncounterInfo"
+}

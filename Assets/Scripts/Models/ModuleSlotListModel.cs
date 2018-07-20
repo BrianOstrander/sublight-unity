@@ -137,7 +137,7 @@ namespace LunraGames.SpaceFarm.Models
 			modules = modulesList.ToArray();
 
 			RefillResources.Assign(newRefillResources);
-			RefillLogisticsResources.Assign(newRefillLogicResources.Maximum(ResourceInventoryModel.Zero));
+			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
 			MaximumLogisticsResources.Assign(newMaxLogicResources);
 			MaximumResources.Assign(newMaxResources);
 		}

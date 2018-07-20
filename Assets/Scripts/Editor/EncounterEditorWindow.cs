@@ -50,6 +50,11 @@ namespace LunraGames.SpaceFarm
 			OnHomeEnable();
 		}
 
+		void OnDisable()
+		{
+			OnHomeDisable();
+		}
+
 		void OnGUI()
 		{
 			Exception innerException = null;

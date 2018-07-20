@@ -38,6 +38,18 @@ namespace LunraGames.SpaceFarm
 		{
 			encounterListStatus = RequestStatus.Cancel;
 			selectedEncounterStatus = RequestStatus.Cancel;
+
+			EditorApplication.modifierKeysChanged += OnHomeModifierKeysChanged;
+		}
+
+		void OnHomeDisable()
+		{
+			EditorApplication.modifierKeysChanged -= OnHomeModifierKeysChanged;
+		}
+
+		void OnHomeModifierKeysChanged()
+		{
+			Repaint();
 		}
 
 		void OnHome()
@@ -182,7 +194,13 @@ namespace LunraGames.SpaceFarm
 		{
 			EditorGUI.BeginChangeCheck();
 			{
-				model.Hidden.Value = EditorGUILayout.Toggle("Hidden", model.Hidden.Value);
+				GUILayout.BeginHorizontal();
+				{
+					model.OrderWeight.Value = EditorGUILayout.FloatField("Order Weight", model.OrderWeight.Value, GUILayout.ExpandWidth(true));
+					GUILayout.Label("Hidden", GUILayout.ExpandWidth(false));
+					model.Hidden.Value = EditorGUILayout.Toggle(model.Hidden.Value, GUILayout.Width(14f));
+				}
+				GUILayout.EndHorizontal();
 				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				model.Meta.Value = model.Name;
@@ -267,10 +285,18 @@ namespace LunraGames.SpaceFarm
 							keyValueResult.Beginning.Value = isBeginning;
 							model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
 							break;
+						case EncounterLogTypes.Inventory:
+							var inventoryResult = new InventoryEncounterLogModel();
+							inventoryResult.Index.Value = nextIndex;
+							inventoryResult.LogId.Value = guid;
+							inventoryResult.Beginning.Value = isBeginning;
+							model.Logs.All.Value = model.Logs.All.Value.Append(inventoryResult).ToArray();
+							break;
 						default:
 							Debug.LogError("Unrecognized EncounterLogType:" + result);
 							break;
 					}
+					GUILayout.Label("Hold 'Alt' to rearrange entries.", GUILayout.ExpandWidth(false));
 				}
 				GUILayout.EndHorizontal();
 			}
@@ -284,16 +310,32 @@ namespace LunraGames.SpaceFarm
 					var beginning = string.Empty;
 					var ending = string.Empty;
 
-					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
+					EncounterLogModel indexSwap0 = null;
+					EncounterLogModel indexSwap1 = null;
 
-					for (var i = 0; i < sorted.Count; i++)
+					var isMoving = Event.current.alt;
+
+					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
+					var sortedCount = sorted.Count;
+					EncounterLogModel lastLog = null;
+					for (var i = 0; i < sortedCount; i++)
 					{
 						var log = sorted[i];
 						var nextLog = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
-						if (OnLogBegin(i, model, log, ref beginning, ref ending)) deleted = log.LogId;
+						int currMoveDelta;
+
+						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning, ref ending)) deleted = log.LogId;
+
+						if (currMoveDelta != 0)
+						{
+							indexSwap0 = log;
+							indexSwap1 = currMoveDelta == 1 ? nextLog : lastLog;
+						}
+
 						OnLog(model, log, nextLog);
 						OnLogEnd(model, log);
-						
+
+						lastLog = log;
 					}
 					if (!string.IsNullOrEmpty(deleted))
 					{
@@ -312,6 +354,14 @@ namespace LunraGames.SpaceFarm
 						{
 							logs.Ending.Value = logs.LogId.Value == ending;
 						}
+					}
+					if (indexSwap0 != null && indexSwap1 != null)
+					{
+						var swap0 = indexSwap0.Index.Value;
+						var swap1 = indexSwap1.Index.Value;
+
+						indexSwap0.Index.Value = swap1;
+						indexSwap1.Index.Value = swap0;
 					}
 				}
 				selectedEncounterModified |= EditorGUI.EndChangeCheck();
