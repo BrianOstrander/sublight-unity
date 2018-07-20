@@ -118,8 +118,8 @@ namespace LunraGames.SpaceFarm
 
 			var resourceMod = new ResourceModuleSlotModel();
 			resourceMod.SlotId.Value = "resourceMod0";
-			resourceMod.MaximumResources.Assign(new ResourceInventoryModel(1f, 2f));
-			resourceMod.MaximumLogisticsResources.Assign(new ResourceInventoryModel(0.5f, 0.5f));
+			resourceMod.MaximumResources.Assign(new ResourceInventoryModel(2f, 2f));
+			resourceMod.MaximumLogisticsResources.Assign(new ResourceInventoryModel(1f, 1f));
 			resourceMod.RefillLogisticsResources.Assign(new ResourceInventoryModel(0.1f, 0.1f));
 			resourceModule.Slots.All.Value = resourceModule.Slots.All.Value.Append(resourceMod).ToArray();
 
