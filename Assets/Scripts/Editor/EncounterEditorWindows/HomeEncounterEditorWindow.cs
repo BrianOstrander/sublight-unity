@@ -297,7 +297,7 @@ namespace LunraGames.SpaceFarm
 							Debug.LogError("Unrecognized EncounterLogType:" + result);
 							break;
 					}
-					GUILayout.Label("Hold 'Alt' to rearrange entries.", GUILayout.ExpandWidth(false));
+					GUILayout.Label("Hold 'Ctrl' to rearrange entries.", GUILayout.ExpandWidth(false));
 				}
 				GUILayout.EndHorizontal();
 			}
@@ -314,7 +314,7 @@ namespace LunraGames.SpaceFarm
 					EncounterLogModel indexSwap0 = null;
 					EncounterLogModel indexSwap1 = null;
 
-					var isMoving = Event.current.alt;
+					var isMoving = Event.current.control;
 
 					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
 					var sortedCount = sorted.Count;

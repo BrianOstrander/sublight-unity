@@ -1,0 +1,83 @@
+{
+  "encounterId": "6a417bed-bd3a-43ba-a517-87c420477412",
+  "name": "Debris in orbit",
+  "hook": "A planet rich in organics has been found, perhaps we can top off our ration supply?",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [
+    "Terrestrial"
+  ],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "Y. Vex",
+        "message": "Okay, getting in low orbit now... looks like there's too much interference for our proximity sensors. Can we get someone to confirm our incoming trajectory is clear?",
+        "nextLogId": "957afa29-4770-4ace-8e83-68c611370f56",
+        "beginning": true,
+        "logId": "3432a2aa-d908-44ab-b421-9e143afb4b45",
+        "duration": 1.0
+      },
+      {
+        "header": "R. Baker",
+        "message": "Yeah I'm on it...",
+        "nextLogId": "94e07c07-f48c-4f8d-bc31-f7acd7a9a5ac",
+        "index": 1,
+        "logId": "957afa29-4770-4ace-8e83-68c611370f56",
+        "duration": 1.0
+      },
+      {
+        "header": "R. Baker",
+        "message": "Abort immediately, our path isn't remotely clear!",
+        "nextLogId": "1b60eb36-3571-48e3-9d98-c0479e728a0a",
+        "index": 2,
+        "logId": "94e07c07-f48c-4f8d-bc31-f7acd7a9a5ac",
+        "duration": 1.0
+      },
+      {
+        "header": "Y. Vex",
+        "message": "Ok, high G burn initiating... Sorry mother, you'll have to go out of your way to pick us up...",
+        "nextLogId": "cde7079a-ba67-4807-9ea1-e99f75a10105",
+        "index": 3,
+        "logId": "1b60eb36-3571-48e3-9d98-c0479e728a0a"
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [
+          {
+            "value": "Picking up the orbital team cost you an extra 0.2 fuel. It's worth it to have them back onboard.",
+            "operationId": "74480d55-751a-4393-85db-c5f77ce5a9ea",
+            "target": "Encounter",
+            "key": "Summary"
+          }
+        ],
+        "index": 5,
+        "ending": true,
+        "logId": "fd8776e3-179c-4a3f-85fb-6b7879b3957a"
+      }
+    ],
+    "inventoryLogs": [
+      {
+        "addResources": [
+          {
+            "value": {
+              "fuel": -0.2
+            },
+            "operationId": "d2a642a6-a4a2-4c5e-8c17-0f272f6143e4"
+          }
+        ],
+        "nextLogId": "fd8776e3-179c-4a3f-85fb-6b7879b3957a",
+        "index": 4,
+        "logId": "cde7079a-ba67-4807-9ea1-e99f75a10105"
+      }
+    ]
+  },
+  "version": 3,
+  "meta": "Debris in orbit",
+  "created": "2018-07-23T12:55:07.897785-07:00",
+  "modified": "2018-07-23T12:55:07.897785-07:00",
+  "SaveType": "EncounterInfo"
+}
