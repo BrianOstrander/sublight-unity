@@ -38,6 +38,18 @@ namespace LunraGames.SpaceFarm
 		{
 			encounterListStatus = RequestStatus.Cancel;
 			selectedEncounterStatus = RequestStatus.Cancel;
+
+			EditorApplication.modifierKeysChanged += OnHomeModifierKeysChanged;
+		}
+
+		void OnHomeDisable()
+		{
+			EditorApplication.modifierKeysChanged -= OnHomeModifierKeysChanged;
+		}
+
+		void OnHomeModifierKeysChanged()
+		{
+			Repaint();
 		}
 
 		void OnHome()
@@ -120,7 +132,8 @@ namespace LunraGames.SpaceFarm
 
 				homeLeftBarScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeLeftBarScroll), false, true).y;
 				{
-					foreach (var info in encounterList) OnDrawEncounterInfo(info);
+					var isAlternate = false;
+					foreach (var info in encounterList) OnDrawEncounterInfo(info, ref isAlternate);
 				}
 				GUILayout.EndScrollView();
 			}
@@ -182,7 +195,13 @@ namespace LunraGames.SpaceFarm
 		{
 			EditorGUI.BeginChangeCheck();
 			{
-				model.Hidden.Value = EditorGUILayout.Toggle("Hidden", model.Hidden.Value);
+				GUILayout.BeginHorizontal();
+				{
+					model.OrderWeight.Value = EditorGUILayout.FloatField("Order Weight", model.OrderWeight.Value, GUILayout.ExpandWidth(true));
+					GUILayout.Label("Hidden", GUILayout.ExpandWidth(false));
+					model.Hidden.Value = EditorGUILayout.Toggle(model.Hidden.Value, GUILayout.Width(14f));
+				}
+				GUILayout.EndHorizontal();
 				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				model.Meta.Value = model.Name;
@@ -224,18 +243,6 @@ namespace LunraGames.SpaceFarm
 				}
 				GUILayout.EndVertical();
 				GUILayout.BeginVertical(EditorStyles.helpBox);
-				{
-					model.ValidProbes.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Probes",
-						model.ValidProbes.Value,
-						"- Select a ProbeType -",
-						options: InventoryValidator.Probes
-					);
-				}
-				GUILayout.EndVertical();
-				EditorGUILayoutExtensions.PushColor(alternateColor);
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				EditorGUILayoutExtensions.PopColor();
 				{
 					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
 						"Valid Crews",
@@ -279,10 +286,18 @@ namespace LunraGames.SpaceFarm
 							keyValueResult.Beginning.Value = isBeginning;
 							model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
 							break;
+						case EncounterLogTypes.Inventory:
+							var inventoryResult = new InventoryEncounterLogModel();
+							inventoryResult.Index.Value = nextIndex;
+							inventoryResult.LogId.Value = guid;
+							inventoryResult.Beginning.Value = isBeginning;
+							model.Logs.All.Value = model.Logs.All.Value.Append(inventoryResult).ToArray();
+							break;
 						default:
 							Debug.LogError("Unrecognized EncounterLogType:" + result);
 							break;
 					}
+					GUILayout.Label("Hold 'Ctrl' to rearrange entries.", GUILayout.ExpandWidth(false));
 				}
 				GUILayout.EndHorizontal();
 			}
@@ -296,16 +311,32 @@ namespace LunraGames.SpaceFarm
 					var beginning = string.Empty;
 					var ending = string.Empty;
 
-					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
+					EncounterLogModel indexSwap0 = null;
+					EncounterLogModel indexSwap1 = null;
 
-					for (var i = 0; i < sorted.Count; i++)
+					var isMoving = Event.current.control;
+
+					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
+					var sortedCount = sorted.Count;
+					EncounterLogModel lastLog = null;
+					for (var i = 0; i < sortedCount; i++)
 					{
 						var log = sorted[i];
 						var nextLog = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
-						if (OnLogBegin(i, model, log, ref beginning, ref ending)) deleted = log.LogId;
+						int currMoveDelta;
+
+						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning, ref ending)) deleted = log.LogId;
+
+						if (currMoveDelta != 0)
+						{
+							indexSwap0 = log;
+							indexSwap1 = currMoveDelta == 1 ? nextLog : lastLog;
+						}
+
 						OnLog(model, log, nextLog);
 						OnLogEnd(model, log);
-						
+
+						lastLog = log;
 					}
 					if (!string.IsNullOrEmpty(deleted))
 					{
@@ -324,6 +355,14 @@ namespace LunraGames.SpaceFarm
 						{
 							logs.Ending.Value = logs.LogId.Value == ending;
 						}
+					}
+					if (indexSwap0 != null && indexSwap1 != null)
+					{
+						var swap0 = indexSwap0.Index.Value;
+						var swap1 = indexSwap1.Index.Value;
+
+						indexSwap0.Index.Value = swap1;
+						indexSwap1.Index.Value = swap0;
 					}
 				}
 				selectedEncounterModified |= EditorGUI.EndChangeCheck();
@@ -414,25 +453,44 @@ namespace LunraGames.SpaceFarm
 			selectedEncounterModified = false;
 		}
 
-		void OnDrawEncounterInfo(SaveModel info)
+		void OnDrawEncounterInfo(SaveModel info, ref bool isAlternate)
 		{
-			var infoPath = info.IsInternal ? info.InternalPath : info.Path;
-			var infoName = Path.GetFileName(infoPath);
-			GUILayout.Label(new GUIContent(infoName, infoPath));
-			EditorGUILayout.LabelField("Meta", string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta);
-			GUILayout.BeginHorizontal();
+			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey);
+			GUILayout.BeginVertical(EditorStyles.helpBox);
+			if (isAlternate) EditorGUILayoutExtensions.PopColor();
 			{
-				if (GUILayout.Button("Edit"))
+				var infoPath = info.IsInternal ? info.InternalPath : info.Path;
+				var infoName = Path.GetFileNameWithoutExtension(infoPath);
+				if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
+				else infoName += Path.GetExtension(infoPath);
+
+				GUILayout.BeginHorizontal();
 				{
-					LoadSelectedEncounter(info);
+					GUILayout.BeginVertical();
+					{
+						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta, "Name is set by Meta field."), EditorStyles.boldLabel);
+						GUILayout.Label(new GUIContent(infoName, infoPath));
+					}
+					GUILayout.EndVertical();
+
+					GUILayout.BeginVertical();
+					{
+						if (GUILayout.Button("Edit"))
+						{
+							LoadSelectedEncounter(info);
+						}
+						if (GUILayout.Button("Select In Project"))
+						{
+							EditorUtility.FocusProjectWindow();
+							Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(info.InternalPath);
+						}
+					}
+					GUILayout.EndVertical();
 				}
-				if (GUILayout.Button("Select In Project"))
-				{
-					EditorUtility.FocusProjectWindow();
-					Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(info.InternalPath);
-				}
+				GUILayout.EndHorizontal();
 			}
-			GUILayout.EndHorizontal();
+			GUILayout.EndVertical();
+			isAlternate = !isAlternate;
 		}
 
 		void OnLoadSelectedEncounter(SaveLoadRequest<EncounterInfoModel> result)

@@ -7,7 +7,6 @@
   "validBodies": [
     "Terrestrial"
   ],
-  "validProbes": [],
   "validCrews": [
     "OrbitalCrew"
   ],
@@ -40,7 +39,7 @@
       {
         "header": "W. Idlewild",
         "message": "Heading back to mother now.",
-        "nextLogId": "806054f3-6732-42ee-a6cf-5903d62fe047",
+        "nextLogId": "3ecae931-b043-47bd-af51-106cb20efd99",
         "index": 3,
         "logId": "d6852979-9d16-4cf3-ac9d-380a5cb269df"
       }
@@ -50,18 +49,18 @@
         "setStrings": [
           {
             "value": "Chemical analysis from of the plumes indicate they’re origin is from entirely natural volcanic activity.",
-            "keyValueId": "887e5953-2475-4d63-8412-a39fe5aaf05f",
+            "operationId": "b27e1749-1de8-4e6c-be9a-d45f704c7ffc",
             "target": "Encounter",
             "key": "Summary"
           }
         ],
         "index": 4,
         "ending": true,
-        "logId": "806054f3-6732-42ee-a6cf-5903d62fe047"
+        "logId": "3ecae931-b043-47bd-af51-106cb20efd99"
       }
     ]
   },
-  "version": 2,
+  "version": 3,
   "meta": "Volcanic Plumes",
   "created": "2018-07-17T18:01:24.980291-07:00",
   "modified": "2018-07-17T18:01:24.980291-07:00",

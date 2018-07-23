@@ -1,4 +1,6 @@
-﻿using LunraGames.SpaceFarm.Models;
+﻿using UnityEngine;
+
+using LunraGames.SpaceFarm.Models;
 using LunraGames.SpaceFarm.Views;
 
 namespace LunraGames.SpaceFarm.Presenters
@@ -11,16 +13,16 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			this.model = model;
 
-			model.Ship.Value.Inventory.Resources.Fuel.Changed += OnFuel;
+			model.Ship.Value.Inventory.UsableResources.Fuel.Changed += OnFuel;
 			model.Ship.Value.FuelConsumption.Changed += OnFuelConsumption;
-			model.Ship.Value.Inventory.Resources.Rations.Changed += OnRations;
+			model.Ship.Value.Inventory.UsableResources.Rations.Changed += OnRations;
 		}
 
 		protected override void OnUnBind()
 		{
-			model.Ship.Value.Inventory.Resources.Fuel.Changed -= OnFuel;
+			model.Ship.Value.Inventory.UsableResources.Fuel.Changed -= OnFuel;
 			model.Ship.Value.FuelConsumption.Changed -= OnFuelConsumption;
-			model.Ship.Value.Inventory.Resources.Rations.Changed -= OnRations;
+			model.Ship.Value.Inventory.UsableResources.Rations.Changed -= OnRations;
 		}
 
 		public void Show()
@@ -30,13 +32,14 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Reset();
 
 			// Turn this back up to one, since it's annoying every time fuel runs out.
-			if (1f <= model.Ship.Value.Inventory.Resources.Fuel && model.Ship.Value.FuelConsumption < 1f)
-			{
-				model.Ship.Value.FuelConsumption.Value = 1f;
-			}
+			//if (1f <= model.Ship.Value.Inventory.UsableResources.Fuel && model.Ship.Value.FuelConsumption < 1f)
+			//{
+			//	model.Ship.Value.FuelConsumption.Value = 1f;
+			//}
+			model.Ship.Value.FuelConsumption.Value = Mathf.Min(model.Ship.Value.Inventory.UsableResources.Fuel, model.Ship.Value.FuelConsumption);
 
-			View.Rations = model.Ship.Value.Inventory.Resources.Rations;
-			View.Fuel = model.Ship.Value.Inventory.Resources.Fuel;
+			View.Rations = model.Ship.Value.Inventory.UsableResources.Rations;
+			View.Fuel = model.Ship.Value.Inventory.UsableResources.Fuel;
 			View.FuelConsumption = model.Ship.Value.FuelConsumption;
 			View.FuelConsumptionUpdate = OnFuelConsumptionUpdate;
 

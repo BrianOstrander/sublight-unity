@@ -4,6 +4,7 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public class EncounterInfoModel : SaveModel
 	{
+		[JsonProperty] float orderWeight;
 		[JsonProperty] bool hidden;
 		[JsonProperty] string encounterId;
 		[JsonProperty] string name;
@@ -12,10 +13,15 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string[] completedEncountersRequired = new string[0];
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
-		[JsonProperty] InventoryTypes[] validProbes = new InventoryTypes[0];
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
+		/// <summary>
+		/// Used to bias the selection of this encounter. The higher the weight
+		/// the more likely it is to appear first.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> OrderWeight;
 		/// <summary>
 		/// If true, this encounter info will never show up in game.
 		/// </summary>
@@ -49,8 +55,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyTypes[]> ValidBodies;
 		[JsonIgnore]
-		public readonly ListenerProperty<InventoryTypes[]> ValidProbes;
-		[JsonIgnore]
 		public readonly ListenerProperty<InventoryTypes[]> ValidCrews;
 
 		#region Shortcuts
@@ -61,6 +65,7 @@ namespace LunraGames.SpaceFarm.Models
 		public EncounterInfoModel()
 		{
 			SaveType = SaveTypes.EncounterInfo;
+			OrderWeight = new ListenerProperty<float>(value => orderWeight = value, () => orderWeight);
 			Hidden = new ListenerProperty<bool>(value => hidden = value, () => hidden);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
@@ -69,7 +74,6 @@ namespace LunraGames.SpaceFarm.Models
 			CompletedEncountersRequired = new ListenerProperty<string[]>(value => completedEncountersRequired = value, () => completedEncountersRequired);
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
-			ValidProbes = new ListenerProperty<InventoryTypes[]>(value => validProbes = value, () => validProbes);
 			ValidCrews = new ListenerProperty<InventoryTypes[]>(value => validCrews = value, () => validCrews);
 		}
 	}

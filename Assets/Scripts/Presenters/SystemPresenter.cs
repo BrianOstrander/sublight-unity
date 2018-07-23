@@ -128,24 +128,48 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (isTravelable)
 			{
-				var travelTime = UniversePosition.TravelTime(model.Ship.Value.CurrentSystem.Value, system.Position.Value, model.Ship.Value.SpeedTotal.Value);
-
-				var travel = new TravelRequest(
-					TravelRequest.States.Request,
-					model.Ship.Value.CurrentSystem,
-					model.Ship.Value.CurrentSystem,
-					system.Position,
-					App.Callbacks.LastDayTimeDelta.Current,
-					App.Callbacks.LastDayTimeDelta.Current + travelTime,
-					model.Ship.Value.FuelConsumption,
-					0f
-				);
-				model.TravelRequest.Value = travel;
+				if (model.Ship.Value.Inventory.HasUnused)
+				{
+					App.Callbacks.DialogRequest(
+						DialogRequest.CancelConfirm(
+							"There are items or resources without slots, you'll lose them forever if you choose to continue.",
+							"Unused Items",
+							done: OnUnusedDialog
+						)
+					);
+				}
+				else OnInitiateTravel();
 			}
 			else
 			{
 				App.Log("Too far to travel here");
 			}
+		}
+
+		void OnUnusedDialog(RequestStatus status)
+		{
+			if (status != RequestStatus.Success) return;
+
+			App.Callbacks.ClearInventoryRequest(ClearInventoryRequest.Request());
+
+			OnInitiateTravel();
+		}
+
+		void OnInitiateTravel()
+		{
+			var travelTime = UniversePosition.TravelTime(model.Ship.Value.CurrentSystem.Value, system.Position.Value, model.Ship.Value.SpeedTotal.Value);
+
+			var travel = new TravelRequest(
+				TravelRequest.States.Request,
+				model.Ship.Value.CurrentSystem,
+				model.Ship.Value.CurrentSystem,
+				system.Position,
+				App.Callbacks.LastDayTimeDelta.Current,
+				App.Callbacks.LastDayTimeDelta.Current + travelTime,
+				model.Ship.Value.FuelConsumption,
+				0f
+			);
+			model.TravelRequest.Value = travel;
 		}
 
 		void OnTravelRadius(TravelRadius travelRadius)

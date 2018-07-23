@@ -136,8 +136,9 @@ namespace LunraGames.SpaceFarm
 			system.Visited.Value = false;
 			system.Position.Value = position;
 
-			system.Name.Value = seed.ToString();
+			system.Name.Value = "Star System - " + seed.ToString().Substring(0, 4);
 
+			/*
 			switch (random.GetNextInteger(max: 3))
 			{
 				case 0:
@@ -154,6 +155,7 @@ namespace LunraGames.SpaceFarm
 					system.Fuel.Value = random.GetNextInteger(2, 5);
 					break;
 			}
+			*/
 
 			system.RationsDetection.Value = random.NextFloat;
 			system.FuelDetection.Value = random.NextFloat;
@@ -180,12 +182,14 @@ namespace LunraGames.SpaceFarm
 			star.Seed.Value = random.NextInteger;
 			star.BodyId.Value = 0;
 			star.ParentId.Value = -1;
-			star.Name.Value = "Star: "+star.Seed.Value.ToString();
+			star.Name.Value = "Primary Star";
 			star.Resources.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
 			star.Resources.Fuel.Value = GetFraction(ref fuelRemaining, random.NextFloat);
-			star.Status.Value = BodyStatus.NotProbed;
 
 			var bodyCount = 0;
+
+			var companionStar = 0;
+			var terrestrial = 0;
 
 			for (var i = 0; i < random.GetNextInteger(0, 3); i++)
 			{
@@ -196,7 +200,6 @@ namespace LunraGames.SpaceFarm
 				var name = string.Empty;
 				var rations = GetFraction(ref rationsRemaining, random.NextFloat);
 				var fuel = GetFraction(ref fuelRemaining, random.NextFloat);
-				var status = BodyStatus.NotProbed;
 
 				switch (random.GetNextInteger(0, 2))
 				{
@@ -204,8 +207,7 @@ namespace LunraGames.SpaceFarm
 						// star
 						var starModel = new StarBodyModel();
 						generic = starModel;
-
-						name = "Star: " + seed.ToString();
+						name = "Companion Star " + Strings.GreekAlpha(companionStar++, true);
 						break;
 					case 1:
 						// terrestrial
@@ -213,7 +215,7 @@ namespace LunraGames.SpaceFarm
 						terrestrialModel.ParentId.Value = star.BodyId;
 						generic = terrestrialModel;
 
-						name = "Terrestrial: " + seed.ToString();
+						name = "Terrestrial " + Strings.GreekAlpha(terrestrial++, true);
 						break;
 					default: throw new ArgumentException("Random body out of range.");
 				}
@@ -224,7 +226,6 @@ namespace LunraGames.SpaceFarm
 				generic.Name.Value = name;
 				generic.Resources.Rations.Value = rations;
 				generic.Resources.Fuel.Value = fuel;
-				generic.Status.Value = status;
 
 				bodies.Add(generic);
 			}

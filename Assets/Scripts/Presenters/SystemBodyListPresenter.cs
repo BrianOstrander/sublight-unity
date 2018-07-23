@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
@@ -37,7 +34,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			foreach (var body in destination.Bodies.Value)
 			{
-				bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body)));
+				var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
+				if (encounter != null) body.Encounter.Value = encounter.EncounterId;
+
+				bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body), body.HasEncounter));
 			}
 
 			View.BodyEntries = bodies.ToArray();
@@ -68,9 +68,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
-			if (encounter != null) body.Encounter.Value = encounter.EncounterId;
-
 			switch(model.GetEncounterStatus(body.Encounter).State)
 			{
 				case EncounterStatus.States.Unknown:
@@ -94,21 +91,24 @@ namespace LunraGames.SpaceFarm.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			// Temp Begin
+			var totalResources = ResourceInventoryModel.Zero;
+
 			foreach (var body in destination.Bodies.Value)
 			{
 				var added = body.ResourcesCurrent;
-				
-				model.Ship.Value.Inventory.Resources.Add(added);
-				
+				totalResources.Add(added);
 				body.ResourcesAcquired.Add(added);
 				
-				App.Callbacks.DialogRequest(
-					DialogRequest.Alert(
-						"Acquired " + Strings.Rations(added.Rations) + " rations and " + Strings.Fuel(added.Fuel) + " fuel",
-						done: OnAlertClosed
-					)
-				);
 			}
+
+			model.Ship.Value.Inventory.AllResources.Add(totalResources);
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.Alert(
+					"Acquired " + Strings.Rations(totalResources.Rations) + " rations and " + Strings.Fuel(totalResources.Fuel) + " fuel",
+					done: OnAlertClosed
+				)
+			);
 			// Temp End
 		}
 

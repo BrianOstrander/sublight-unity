@@ -28,5 +28,39 @@
 
 		public static string Rations(float rations) { return rations.ToString("F2"); }
 		public static string Fuel(float fuel) { return fuel.ToString("F2"); }
+
+		public static string GreekAlpha(int index, bool uppercase = false)
+		{
+			var result = string.Empty;
+			switch(index)
+			{
+				case 0: result = "alpha"; break;
+				case 1: result = "beta"; break;
+				case 2: result = "gamma"; break;
+				case 3: result = "delta"; break;
+				case 4: result = "epsilon"; break;
+				case 5: result = "zeta"; break;
+				case 6: result = "eta"; break;
+				case 7: result = "theta"; break;
+				case 8: result = "iota"; break;
+				case 9: result = "kappa"; break;
+				case 10: result = "lambda"; break;
+				case 11: result = "mu"; break;
+				case 12: result = "nu"; break;
+				case 13: result = "xi"; break;
+				case 14: result = "omikron"; break;
+				case 15: result = "pi"; break;
+				case 16: result = "rho"; break;
+				case 17: result = "sigma"; break;
+				case 18: result = "tau"; break;
+				case 19: result = "upsilon"; break;
+				case 20: result = "phi"; break;
+				case 21: result = "chi"; break;
+				case 22: result = "psi"; break;
+				case 23: result = "omega"; break;
+				default: result = index.ToString(); break;
+			}
+			return uppercase ? char.ToUpper(result[0]) + result.Substring(1) : result;
+		}
 	}
 }

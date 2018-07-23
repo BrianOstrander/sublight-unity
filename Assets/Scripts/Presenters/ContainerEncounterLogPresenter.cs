@@ -187,6 +187,9 @@ namespace LunraGames.SpaceFarm.Presenters
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(logModel as KeyValueEncounterLogModel);
 					break;
+				case EncounterLogTypes.Inventory:
+					OnInventoryLog(logModel as InventoryEncounterLogModel);
+					break;
 				default:
 					Debug.LogError("Unrecognized Logic LogType: " + logModel.LogType);
 					break;
@@ -197,16 +200,34 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnKeyValueLog(KeyValueEncounterLogModel logModel)
 		{
-			foreach (var entry in logModel.KeyValues.Value)
+			foreach (var entry in logModel.Operations.Value)
 			{
-				switch(entry.KeyValueType)
+				switch(entry.Operation)
 				{
-					case KeyValueEncounterLogTypes.SetString:
-						var setString = entry as SetStringEntryEncounterLogModel;
+					case KeyValueOperations.SetString:
+						var setString = entry as SetStringOperationModel;
 						App.Callbacks.KeyValueRequest(KeyValueRequest.Set(entry.Target.Value, entry.Key.Value, setString.Value.Value));
 						break;
 					default:
-						Debug.LogError("Unrecognized KeyValueType: " + entry.KeyValueType);
+						Debug.LogError("Unrecognized KeyValueType: " + entry.Operation);
+						break;
+				}
+			}
+		}
+
+		void OnInventoryLog(InventoryEncounterLogModel logModel)
+		{
+			foreach (var entry in logModel.Operations.Value)
+			{
+				switch (entry.Operation)
+				{
+					case InventoryOperations.AddResource:
+						var addResource = entry as AddResourceOperationModel;
+						var currentResources = model.Ship.Value.Inventory.AllResources.Duplicate;
+						model.Ship.Value.Inventory.AllResources.Assign(currentResources.Add(addResource.Value).ClampNegatives());
+						break;
+					default:
+						Debug.LogError("Unrecognized InventoryOperation: " + entry.Operation);
 						break;
 				}
 			}

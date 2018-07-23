@@ -9,11 +9,9 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] int parentId;
 		[JsonProperty] string name;
 		[JsonProperty] string encounter;
-		[JsonProperty] BodyStatus status;
-		[JsonProperty] string probeId;
 
-		[JsonProperty] ResourceInventoryModel resources = new ResourceInventoryModel();
-		[JsonProperty] ResourceInventoryModel resourcesAcquired = new ResourceInventoryModel();
+		[JsonProperty] ResourceInventoryModel resources = ResourceInventoryModel.Zero;
+		[JsonProperty] ResourceInventoryModel resourcesAcquired = ResourceInventoryModel.Zero;
 
 		/// <summary>
 		/// Gets the type of the body.
@@ -32,25 +30,13 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Encounter;
-		[JsonIgnore]
-		public readonly ListenerProperty<BodyStatus> Status;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> ProbeId;
 
 		[JsonIgnore]
 		public ResourceInventoryModel Resources { get { return resources; } }
 		[JsonIgnore]
 		public ResourceInventoryModel ResourcesAcquired { get { return resourcesAcquired; } }
 		[JsonIgnore]
-		public ResourceInventoryModel ResourcesCurrent
-		{
-			get
-			{
-				var current = ResourceInventoryModel.Zero;
-				Resources.SubtractOut(ResourcesAcquired, current);
-				return current;
-			}
-		}
+		public ResourceInventoryModel ResourcesCurrent { get { return Resources.Duplicate.Subtract(ResourcesAcquired); } }
 
 		public BodyModel()
 		{
@@ -59,8 +45,6 @@ namespace LunraGames.SpaceFarm.Models
 			ParentId = new ListenerProperty<int>(value => parentId = value, () => parentId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Encounter = new ListenerProperty<string>(value => encounter = value, () => encounter);
-			Status = new ListenerProperty<BodyStatus>(value => status = value, () => status);
-			ProbeId = new ListenerProperty<string>(value => probeId = value, () => probeId);
 		}
 
 		#region Utility

@@ -16,6 +16,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship = model.Ship;
 
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
+			App.Callbacks.ClearInventoryRequest += OnClearInventory;
 			model.TravelRequest.Changed += OnTravelRequest;
 			model.Ship.Value.Position.Changed += OnShipPosition;
 		}
@@ -23,6 +24,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		protected override void OnUnBind()
 		{
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
+			App.Callbacks.ClearInventoryRequest -= OnClearInventory;
 			model.TravelRequest.Changed -= OnTravelRequest;
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
@@ -45,10 +47,23 @@ namespace LunraGames.SpaceFarm.Presenters
 		}
 
 		#region Events
+		void OnClearInventory(ClearInventoryRequest request)
+		{
+			ship.Inventory.ClearUnused();
+		}
+
 		void OnDayTimeDelta(DayTimeDelta delta)
 		{
-			var rationsConsumed = model.Ship.Value.Inventory.Resources.Rations.Value - (delta.Delta.TotalTime * model.Ship.Value.RationConsumption);
-			model.Ship.Value.Inventory.Resources.Rations.Value = Mathf.Max(0f, rationsConsumed);
+			var refill = ship.Inventory.RefillResources.Duplicate.Multiply(delta.Delta.TotalTime);
+			var refillLogic = ship.Inventory.RefillLogisticsResources.Duplicate.Multiply(delta.Delta.TotalTime);
+
+			var newResources = ship.Inventory.AllResources.Duplicate.Add(refill);
+
+			var spaceInLogistics = ship.Inventory.MaximumRefillableLogisticsResources.Duplicate.Subtract(newResources);
+
+			newResources.Add(refillLogic.Clamp(spaceInLogistics)).ClampNegatives();
+
+			ship.Inventory.AllResources.Assign(newResources);
 
 			var lastTravel = model.TravelRequest.Value;
 			if (lastTravel.State == TravelRequest.States.Active)
@@ -87,6 +102,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					ship.NextSystem.Value = travelRequest.Destination;
 					ship.CurrentSystem.Value = UniversePosition.Zero;
 					ship.Position.Value = travelRequest.Origin;
+					ship.Inventory.AllResources.Fuel.Value -= travelRequest.FuelConsumed;
 					if (Mathf.Approximately(App.Callbacks.LastSpeedRequest.Speed, 0f)) App.Callbacks.SpeedRequest(SpeedRequest.PlayRequest);
 					model.TravelRequest.Value = travelRequest.Duplicate(TravelRequest.States.Active);
 					break;
