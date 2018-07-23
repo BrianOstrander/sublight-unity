@@ -132,7 +132,8 @@ namespace LunraGames.SpaceFarm
 
 				homeLeftBarScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeLeftBarScroll), false, true).y;
 				{
-					foreach (var info in encounterList) OnDrawEncounterInfo(info);
+					var isAlternate = false;
+					foreach (var info in encounterList) OnDrawEncounterInfo(info, ref isAlternate);
 				}
 				GUILayout.EndScrollView();
 			}
@@ -452,25 +453,44 @@ namespace LunraGames.SpaceFarm
 			selectedEncounterModified = false;
 		}
 
-		void OnDrawEncounterInfo(SaveModel info)
+		void OnDrawEncounterInfo(SaveModel info, ref bool isAlternate)
 		{
-			var infoPath = info.IsInternal ? info.InternalPath : info.Path;
-			var infoName = Path.GetFileName(infoPath);
-			GUILayout.Label(new GUIContent(infoName, infoPath));
-			EditorGUILayout.LabelField("Meta", string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta);
-			GUILayout.BeginHorizontal();
+			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey);
+			GUILayout.BeginVertical(EditorStyles.helpBox);
+			if (isAlternate) EditorGUILayoutExtensions.PopColor();
 			{
-				if (GUILayout.Button("Edit"))
+				var infoPath = info.IsInternal ? info.InternalPath : info.Path;
+				var infoName = Path.GetFileNameWithoutExtension(infoPath);
+				if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
+				else infoName += Path.GetExtension(infoPath);
+
+				GUILayout.BeginHorizontal();
 				{
-					LoadSelectedEncounter(info);
+					GUILayout.BeginVertical();
+					{
+						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta, "Name is set by Meta field."), EditorStyles.boldLabel);
+						GUILayout.Label(new GUIContent(infoName, infoPath));
+					}
+					GUILayout.EndVertical();
+
+					GUILayout.BeginVertical();
+					{
+						if (GUILayout.Button("Edit"))
+						{
+							LoadSelectedEncounter(info);
+						}
+						if (GUILayout.Button("Select In Project"))
+						{
+							EditorUtility.FocusProjectWindow();
+							Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(info.InternalPath);
+						}
+					}
+					GUILayout.EndVertical();
 				}
-				if (GUILayout.Button("Select In Project"))
-				{
-					EditorUtility.FocusProjectWindow();
-					Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(info.InternalPath);
-				}
+				GUILayout.EndHorizontal();
 			}
-			GUILayout.EndHorizontal();
+			GUILayout.EndVertical();
+			isAlternate = !isAlternate;
 		}
 
 		void OnLoadSelectedEncounter(SaveLoadRequest<EncounterInfoModel> result)
