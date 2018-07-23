@@ -39,6 +39,7 @@ namespace LunraGames.SpaceFarm.Views
 				var instance = root.InstantiateChild(prefab, setActive: true);
 				instance.ButtonLabel.text = entry.Text ?? string.Empty;
 				instance.Button.OnClick.AddListener(new UnityAction(entry.Click ?? ActionExtensions.Empty));
+				instance.Button.interactable = entry.Interactable;
 			}
 		}
 

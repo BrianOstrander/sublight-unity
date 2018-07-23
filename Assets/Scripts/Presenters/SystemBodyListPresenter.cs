@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
@@ -37,7 +34,10 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			foreach (var body in destination.Bodies.Value)
 			{
-				bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body)));
+				var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
+				if (encounter != null) body.Encounter.Value = encounter.EncounterId;
+
+				bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body), body.HasEncounter));
 			}
 
 			View.BodyEntries = bodies.ToArray();
@@ -67,9 +67,6 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnBodyButtonClick(BodyModel body)
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
-
-			var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
-			if (encounter != null) body.Encounter.Value = encounter.EncounterId;
 
 			switch(model.GetEncounterStatus(body.Encounter).State)
 			{
