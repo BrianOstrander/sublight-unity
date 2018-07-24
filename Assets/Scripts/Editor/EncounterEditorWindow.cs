@@ -19,14 +19,14 @@ namespace LunraGames.SpaceFarm
 
 		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
 
-		EditorSaveLoadService editorSaveLoadService;
+		EditorModelMediator editorSaveLoadService;
 		IModelMediator SaveLoadService 
 		{
 			get 
 			{
 				if (editorSaveLoadService == null)
 				{
-					editorSaveLoadService = new EditorSaveLoadService(true);
+					editorSaveLoadService = new EditorModelMediator(true);
 					editorSaveLoadService.Initialize(BuildPreferences.Instance.Info, OnSaveLoadInitialized);
 				}
 				return editorSaveLoadService;

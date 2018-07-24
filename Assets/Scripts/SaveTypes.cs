@@ -7,6 +7,8 @@
 		Preferences = 20,
 		EncounterInfo = 30,
 		InteractedEncounterInfoList = 40,
-		GlobalKeyValues = 50
+		GlobalKeyValues = 50,
+		ModuleReference = 60,
+		OrbitalCrewReference = 70
 	}
 }

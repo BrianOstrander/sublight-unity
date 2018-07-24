@@ -96,6 +96,10 @@ namespace LunraGames.SpaceFarm
 				case SaveTypes.EncounterInfo: return typeof(EncounterInfoModel);
 				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				case SaveTypes.GlobalKeyValues: return typeof(GlobalKeyValuesModel);
+				// -- Inventory References
+				case SaveTypes.ModuleReference: return typeof(ModuleReferenceModel);
+				case SaveTypes.OrbitalCrewReference: return typeof(OrbitalCrewReferenceModel);
+				// --
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -107,7 +111,10 @@ namespace LunraGames.SpaceFarm
 			if (type == typeof(EncounterInfoModel)) return SaveTypes.EncounterInfo;
 			if (type == typeof(InteractedEncounterInfoListModel)) return SaveTypes.InteractedEncounterInfoList;
 			if (type == typeof(GlobalKeyValuesModel)) return SaveTypes.GlobalKeyValues;
-
+			// -- Inventory References
+			if (type == typeof(ModuleReferenceModel)) return SaveTypes.ModuleReference;
+			if (type == typeof(OrbitalCrewReferenceModel)) return SaveTypes.OrbitalCrewReference;
+			// --
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 

@@ -124,14 +124,14 @@ namespace LunraGames.SpaceFarm
 #if UNITY_EDITOR
 				logging = new EditorLogService();
 				input = new EditorInputService(Heartbeat, Callbacks);
-				modelMediator = new EditorSaveLoadService();
+				modelMediator = new DesktopModelMediator();
 #endif
 			}
 			else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.WindowsPlayer)
 			{
 				logging = new DesktopLogService();
 				input = new DesktopInputService(Heartbeat, Callbacks);
-				modelMediator = new DesktopSaveLoadService();
+				modelMediator = new DesktopModelMediator();
 			}
 			else
 			{
