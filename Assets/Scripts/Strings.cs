@@ -28,6 +28,7 @@
 
 		public static string Rations(float rations) { return rations.ToString("F2"); }
 		public static string Fuel(float fuel) { return fuel.ToString("F2"); }
+		public static string Speed(float speed) { return speed.ToString("F2"); }
 
 		public static string GreekAlpha(int index, bool uppercase = false)
 		{

@@ -65,6 +65,13 @@ namespace LunraGames.SpaceFarm.Views
 			SetFuelConsumptionLabel(value);
 			FuelConsumptionUpdate(value);
 		}
+
+		public void OnSlotsClick()
+		{
+			App.Callbacks.FocusRequest(
+				ShipFocusRequest.SlotEditor()
+			);
+		}
   		#endregion
 	}
 

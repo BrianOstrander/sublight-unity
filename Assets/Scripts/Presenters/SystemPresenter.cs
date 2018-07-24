@@ -157,7 +157,7 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnInitiateTravel()
 		{
-			var travelTime = UniversePosition.TravelTime(model.Ship.Value.CurrentSystem.Value, system.Position.Value, model.Ship.Value.SpeedTotal.Value);
+			var travelTime = UniversePosition.TravelTime(model.Ship.Value.CurrentSystem.Value, system.Position.Value, model.Ship.Value.CurrentSpeed.Value);
 
 			var travel = new TravelRequest(
 				TravelRequest.States.Request,

@@ -14,7 +14,8 @@ namespace LunraGames.SpaceFarm
 			Systems = 20,
 			SystemBodies = 30,
 			Body = 40,
-			Encounter = 50
+			Encounter = 50,
+			Ship = 60
 		}
 		
 		public enum States

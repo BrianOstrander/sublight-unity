@@ -32,6 +32,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] SystemsFocusRequest systemsFocus;
 		[JsonProperty] BodyFocusRequest bodyFocus;
 		[JsonProperty] EncounterFocusRequest encounterFocus;
+		[JsonProperty] ShipFocusRequest shipFocus;
 
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 
@@ -144,6 +145,7 @@ namespace LunraGames.SpaceFarm.Models
 			systemsFocus = null;
 			bodyFocus = null;
 			encounterFocus = null;
+			shipFocus = null;
 
 			switch (focus.Focus)
 			{
@@ -162,6 +164,9 @@ namespace LunraGames.SpaceFarm.Models
 				case Focuses.Encounter:
 					encounterFocus = focus as EncounterFocusRequest;
 					break;
+				case Focuses.Ship:
+					shipFocus = focus as ShipFocusRequest;
+					break;
 				default:
 					Debug.LogError("Unrecognized Focus: " + focus.Focus);
 					break;
@@ -175,6 +180,7 @@ namespace LunraGames.SpaceFarm.Models
 			if (systemsFocus != null) return systemsFocus;
 			if (bodyFocus != null) return bodyFocus;
 			if (encounterFocus != null) return encounterFocus;
+			if (shipFocus != null) return shipFocus;
 
 			return null;
 		}

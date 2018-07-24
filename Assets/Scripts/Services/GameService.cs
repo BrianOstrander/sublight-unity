@@ -113,7 +113,7 @@ namespace LunraGames.SpaceFarm
 			rootModule.Slots.All.Value = rootModule.Slots.All.Value.Append(modulePlug1).ToArray();
 
 			var resourceModule = new ModuleInventoryModel();
-			resourceModule.Name.Value = "SomeResourceModule";
+			resourceModule.Name.Value = "Basic Resource Module";
 			resourceModule.InstanceId.Value = "recid";
 
 			var resourceMod = new ResourceModuleSlotModel();
@@ -126,7 +126,7 @@ namespace LunraGames.SpaceFarm
 			game.Ship.Value.Inventory.Connect(modulePlug, resourceModule);
 
 			var crewHabModule = new ModuleInventoryModel();
-			crewHabModule.Name.Value = "SomeCrewHabModule";
+			crewHabModule.Name.Value = "Basic Crew Habitat";
 			crewHabModule.InstanceId.Value = "crewhab";
 
 			var crewEatingMod = new ResourceModuleSlotModel();
@@ -138,7 +138,7 @@ namespace LunraGames.SpaceFarm
 
 			// Crew generation, eventually will be done somewhere else...
 			var multiCrew = new OrbitalCrewInventoryModel();
-			multiCrew.Name.Value = "MultiCrew";
+			multiCrew.Name.Value = "Advanced Orbiter";
 			multiCrew.Description.Value = "A multi crew, neat!";
 			multiCrew.InventoryId.Value = "10";
 			multiCrew.InstanceId.Value = "A0";
@@ -146,7 +146,7 @@ namespace LunraGames.SpaceFarm
 			game.Ship.Value.Inventory.Connect(crewModule0, multiCrew);
 
 			var terrestrialCrew = new OrbitalCrewInventoryModel();
-			terrestrialCrew.Name.Value = "TerrestrialCrew";
+			terrestrialCrew.Name.Value = "Terrestrial Orbiter";
 			terrestrialCrew.Description.Value = "Time to hit the surface, with a crew!";
 			terrestrialCrew.InventoryId.Value = "20";
 			terrestrialCrew.InstanceId.Value = "B0";
@@ -154,7 +154,7 @@ namespace LunraGames.SpaceFarm
 			game.Ship.Value.Inventory.Connect(crewModule1, terrestrialCrew);
 
 			var starCrew = new OrbitalCrewInventoryModel();
-			starCrew.Name.Value = "StarCrew";
+			starCrew.Name.Value = "Stellar Orbiter";
 			starCrew.Description.Value = "Stars are cool, your crew won't be tho";
 			starCrew.InventoryId.Value = "30";
 			starCrew.InstanceId.Value = "C0";
