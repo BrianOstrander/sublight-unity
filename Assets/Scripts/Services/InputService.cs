@@ -33,6 +33,8 @@ namespace LunraGames.SpaceFarm
 
 		Vector2 lastGesture;
 
+		bool startedDragging;
+
 		public InputService(Heartbeat heartbeat, CallbackService callbacks)
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
@@ -95,6 +97,8 @@ namespace LunraGames.SpaceFarm
 			if (gesturingEnded) callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
 			callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
 
+			var gestureDeltaFromBegin = GetGestureDelta(gesturingBegan, gesturingEnded, beginGesture, lastGesture);
+
 			lastGesture = currentGesture;
 
 			var screenPos = GetScreenPosition();
@@ -136,8 +140,9 @@ namespace LunraGames.SpaceFarm
 
 					expiredDrags.Add(raycast.gameObject);
 				}
-				if (clickHeldDown)
+				if (clickHeldDown && (startedDragging || IsDragging(gestureDeltaFromBegin)))
 				{
+					startedDragging = true;
 					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler) != null;
 				}
 				break;
@@ -149,6 +154,7 @@ namespace LunraGames.SpaceFarm
 				{
 					ExecuteEvents.ExecuteHierarchy(drag, pointerData, ExecuteEvents.endDragHandler);
 				}
+				startedDragging = false;
 			}
 
 			foreach (var drag in expiredDrags) dragging.Remove(drag);
@@ -203,5 +209,6 @@ namespace LunraGames.SpaceFarm
 		protected virtual Quaternion GetPointerRotation() { return Quaternion.identity; }
 		protected virtual Vector3 GetCameraPosition() { return new Vector3(0f, 0f, 0f); }
 		protected virtual Quaternion GetCameraRotation() { return Quaternion.identity; }
+		protected virtual bool IsDragging(Vector2 gesture) { return 0.0001f < gesture.sqrMagnitude; }
 	}
 }

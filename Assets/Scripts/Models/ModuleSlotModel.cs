@@ -27,6 +27,8 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public bool IsFilled { get { return IsFillable && !string.IsNullOrEmpty(ItemId); } }
 
+		public abstract bool CanSlot(InventoryTypes inventoryType);
+
 		public ModuleSlotModel()
 		{
 			SlotId = new ListenerProperty<string>(value => slotId = value, () => slotId);

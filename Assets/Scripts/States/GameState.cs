@@ -116,6 +116,10 @@ namespace LunraGames.SpaceFarm
 			new CameraEncounterPresenter(game);
 			new ContainerEncounterLogPresenter(game);
 
+			// Ship presenters
+			new CameraShipPresenter(game);
+			new ShipSlotsPresenter(game);
+
 			// Global presenters
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);

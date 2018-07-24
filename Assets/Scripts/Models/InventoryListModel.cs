@@ -213,6 +213,13 @@ namespace LunraGames.SpaceFarm.Models
 
 		}
 
+		/// <summary>
+		/// Connect the specified slot and item. Will disconnect any other
+		/// connections they might already have.
+		/// </summary>
+		/// <returns>The connection.</returns>
+		/// <param name="slotId">Slot identifier.</param>
+		/// <param name="itemInstanceId">Item instance identifier.</param>
 		public SlotEdge Connect(string slotId, string itemInstanceId)
 		{
 			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
@@ -224,10 +231,19 @@ namespace LunraGames.SpaceFarm.Models
 			return Connect(slot, item);
 		}
 
+		/// <summary>
+		/// Connect the specified slot and item. Will disconnect any other
+		/// connections they might already have.
+		/// </summary>
+		/// <returns>The connection.</returns>
+		/// <param name="slot">Slot.</param>
+		/// <param name="item">Item.</param>
 		public SlotEdge Connect(ModuleSlotModel slot, InventoryModel item)
 		{
 			if (slot == null) throw new ArgumentNullException("slot");
 			if (item == null) throw new ArgumentNullException("item");
+			if (!slot.IsFillable) throw new ArgumentException("Specified slot cannot be filled.", "slot");
+			if (!slot.CanSlot(item.InventoryType)) throw new ArgumentException("Specified slot cannot be filled with item of InventoryType: " + item.InventoryType, "slot");
 
 			var slotId = slot.SlotId.Value;
 			var itemId = item.InstanceId.Value;
@@ -245,21 +261,46 @@ namespace LunraGames.SpaceFarm.Models
 			return result;
 		}
 
+		/// <summary>
+		/// Disconnects the specified connection.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="edge">Edge.</param>
 		public void Disconnect(SlotEdge edge)
 		{
 			Disconnect(edge.SlotId, edge.ItemInstanceId);
 		}
 
+		/// <summary>
+		/// Disconnects any items from this slot, if there is a connection at
+		/// all.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="slot">Slot.</param>
 		public void Disconnect(ModuleSlotModel slot)
 		{
 			Disconnect(slot.SlotId.Value, slot.ItemId.Value);
 		}
 
+		/// <summary>
+		/// Disconnects this item from any slots, if there's any connection at
+		/// all.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="item">Item.</param>
 		public void Disconnect(InventoryModel item)
 		{
 			Disconnect(item.SlotId.Value, item.InstanceId.Value);
 		}
 
+		/// <summary>
+		/// Disconnects any connection between the specified slot and item, if
+		/// there is any at all. If they're connected to anything else, those
+		/// connections are preserved.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="slotId">Slot identifier.</param>
+		/// <param name="itemInstanceId">Item instance identifier.</param>
 		public void Disconnect(string slotId, string itemInstanceId)
 		{
 			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
@@ -273,7 +314,9 @@ namespace LunraGames.SpaceFarm.Models
 
 		/// <summary>
 		/// Helper method to remove all references of a slot and item without
-		/// setting the list's SlotEdges.
+		/// setting the list's SlotEdges. The specified slot and item don't
+		/// neccesarily need to already be connected to each other, it just
+		/// makes them available to be connected to each other.
 		/// </summary>
 		/// <returns>The remaining edges.</returns>
 		/// <param name="slotId">Slot identifier.</param>
