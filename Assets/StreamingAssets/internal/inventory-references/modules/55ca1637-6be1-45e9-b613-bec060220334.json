@@ -1,0 +1,19 @@
+{
+  "reference": {
+    "slots": {
+      "crews": [],
+      "resources": [],
+      "modules": [],
+      "refillResources": {},
+      "refillLogisticsResources": {},
+      "maximumLogisticsResources": {},
+      "maximumResources": {}
+    },
+    "inventoryId": "2ee801e0-cfa7-4473-8bff-17c9b8b52f4e",
+    "name": ""
+  },
+  "version": 4,
+  "created": "2018-07-24T16:57:14.277098-07:00",
+  "modified": "2018-07-24T16:57:14.277098-07:00",
+  "SaveType": "ModuleReference"
+}

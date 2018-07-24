@@ -27,9 +27,17 @@ namespace LunraGames.SpaceFarm
 		EditorPrefsEnum<HomeStates> homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
 		EditorPrefsInt homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
 
+		// Unknown: Query in progress
+		// Cancel: Qued for Query
+		// Success: Loaded
+		// Failure: Deselected or failed to load
 		RequestStatus encounterListStatus;
 		SaveModel[] encounterList = new SaveModel[0];
 
+		// Unknown: Query in progress
+		// Cancel: Qued for Query
+		// Success: Loaded
+		// Failure: Deselected or failed to load
 		RequestStatus selectedEncounterStatus;
 		EncounterInfoModel selectedEncounter;
 		bool selectedEncounterModified;

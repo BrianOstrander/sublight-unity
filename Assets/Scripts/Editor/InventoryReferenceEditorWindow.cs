@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace LunraGames.SpaceFarm
 {
-	public partial class EncounterEditorWindow : EditorWindow
+	public partial class InventoryReferenceEditorWindow : EditorWindow
 	{
-		const string KeyPrefix = "LG_SF_EncounterEditor_";
+		const string KeyPrefix = "LG_SF_InventoryReferenceEditor_";
 
 		public enum States
 		{
@@ -20,9 +20,9 @@ namespace LunraGames.SpaceFarm
 		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
 
 		EditorModelMediator editorSaveLoadService;
-		IModelMediator SaveLoadService 
+		IModelMediator SaveLoadService
 		{
-			get 
+			get
 			{
 				if (editorSaveLoadService == null)
 				{
@@ -39,10 +39,10 @@ namespace LunraGames.SpaceFarm
 			Debug.LogError("Editor time save load service returned: " + status);
 		}
 
-		[MenuItem("Window/Space Farm/Encounter Editor")]
+		[MenuItem("Window/Space Farm/Inventory Reference Editor")]
 		static void Initialize()
 		{
-			GetWindow(typeof(EncounterEditorWindow), false, "Encounter Editor").Show();
+			GetWindow(typeof(InventoryReferenceEditorWindow), false, "Inventory Reference Editor").Show();
 		}
 
 		void OnEnable()
