@@ -41,6 +41,7 @@ namespace LunraGames.SpaceFarm.Views
 		}
 
 		public Action<float> FuelConsumptionUpdate { set; private get; }
+		public Action SlotsClick { set; private get; }
 
 		public float Rations { set { rationsLabel.text = value.ToString("F2"); } }
 
@@ -52,6 +53,7 @@ namespace LunraGames.SpaceFarm.Views
 			FuelConsumptionUpdate = ActionExtensions.GetEmpty<float>();
 			Fuel = 0f;
 			FuelConsumption = 0f;
+			SlotsClick = ActionExtensions.Empty;
 		}
 
 		void SetFuelConsumptionLabel(float value)
@@ -66,12 +68,7 @@ namespace LunraGames.SpaceFarm.Views
 			FuelConsumptionUpdate(value);
 		}
 
-		public void OnSlotsClick()
-		{
-			App.Callbacks.FocusRequest(
-				ShipFocusRequest.SlotEditor()
-			);
-		}
+		public void OnSlotsClick() { SlotsClick(); }
   		#endregion
 	}
 
@@ -81,5 +78,6 @@ namespace LunraGames.SpaceFarm.Views
 		float Fuel { set; }
 		float FuelConsumption { set; }
 		Action<float> FuelConsumptionUpdate { set; }
+		Action SlotsClick { set; }
 	}
 }

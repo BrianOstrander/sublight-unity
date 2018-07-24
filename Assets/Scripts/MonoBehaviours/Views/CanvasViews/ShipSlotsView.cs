@@ -23,6 +23,11 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		TextMeshProUGUI speedLabel;
 		[SerializeField]
+		TextMeshProUGUI looseRationsLabel;
+		[SerializeField]
+		TextMeshProUGUI looseFuelLabel;
+
+		[SerializeField]
 		TextMeshProUGUI rationGenerationLabel;
 		[SerializeField]
 		TextMeshProUGUI fuelGenerationLabel;
@@ -51,18 +56,21 @@ namespace LunraGames.SpaceFarm.Views
 		public string Title { set { titleLabel.text = value ?? string.Empty; } }
 		public string Description { set { descriptionLabel.text = value ?? string.Empty; } }
 
-		public float MaxRations { set { maxRationsLabel.text = Strings.Rations(value); } }
-		public float MaxFuel { set { maxFuelLabel.text = Strings.Fuel(value); } }
-		public float MaxSpeed { set { maxSpeedLabel.text = Strings.Speed(value); } }
+		public float MaxRations { set { SetLabel(maxRationsLabel, Strings.Rations(value), value, zero: Color.red); } }
+		public float MaxFuel { set { SetLabel(maxFuelLabel, Strings.Fuel(value), value, zero: Color.red); } }
+		public float MaxSpeed { set { SetLabel(maxSpeedLabel, Strings.Speed(value), value, zero: Color.red); } }
 
-		public float Speed { set { speedLabel.text = Strings.Speed(value); } }
+		public float Speed { set { SetLabel(speedLabel, Strings.Speed(value), value, zero: Color.red); } }
 
-		public float RationGeneration { set { rationGenerationLabel.text = Strings.Rations(value); } }
-		public float FuelGeneration { set { fuelGenerationLabel.text = Strings.Fuel(value); } }
-		public float RationGenerationCap { set { rationGenerationCapLabel.text = Strings.Rations(value); } }
-		public float FuelGenerationCap { set { fuelGenerationCapLabel.text = Strings.Fuel(value); } }
+		public float LooseRations { set { SetLabel(looseRationsLabel, Strings.Rations(value), value, aboveZero: Color.red); } }
+		public float LooseFuel { set { SetLabel(looseFuelLabel, Strings.Fuel(value), value, aboveZero: Color.red); } }
 
-		public float RationConsumption { set { rationConsumptionLabel.text = Strings.Rations(value); } }
+		public float RationGeneration { set { SetLabel(rationGenerationLabel, Strings.Rations(value), value, aboveZero: Color.green, zero: Color.red); } }
+		public float FuelGeneration { set { SetLabel(fuelGenerationLabel, Strings.Fuel(value), value, aboveZero: Color.green, zero: Color.red); } }
+		public float RationGenerationCap { set { SetLabel(rationGenerationCapLabel, Strings.Rations(value), value, zero: Color.red); } }
+		public float FuelGenerationCap { set { SetLabel(fuelGenerationCapLabel, Strings.Fuel(value), value, zero: Color.red); } }
+
+		public float RationConsumption { set { SetLabel(rationConsumptionLabel, Strings.Rations(value), value, belowZero: Color.red); } }
 
 		public ShipSlotBlock[] SlotEntries { set { SetEntries(slotEntryArea, slotEntryPrefab, value); } }
 		public ShipModuleBlock[] ModuleEntries { set { SetEntries(moduleEntryArea, moduleEntryPrefab, value); } }
@@ -82,6 +90,8 @@ namespace LunraGames.SpaceFarm.Views
 			MaxFuel = 0f;
 			MaxSpeed = 0f;
 			Speed = 0f;
+			LooseRations = 0f;
+			LooseFuel = 0f;
 			RationGeneration = 0f;
 			FuelGeneration = 0f;
 			RationGenerationCap = 0f;
@@ -92,6 +102,18 @@ namespace LunraGames.SpaceFarm.Views
 			ModuleEntries = null;
 
 			DoneClick = ActionExtensions.Empty;
+		}
+
+		void SetLabel(TextMeshProUGUI label, string text, float value, Color? belowZero = null, Color? aboveZero = null, Color? zero = null)
+		{
+			var belowZeroVal = belowZero.HasValue ? belowZero.Value : Color.white;
+			var aboveZeroVal = aboveZero.HasValue ? aboveZero.Value : Color.white;
+			var zeroVal = zero.HasValue ? zero.Value : Color.white;
+
+			label.text = text;
+			if (Mathf.Approximately(0f, value)) label.color = zeroVal;
+			else if (value < 0f) label.color = belowZeroVal;
+			else label.color = aboveZeroVal;
 		}
 
 		void SetEntries(GameObject root, ShipSlotLeaf prefab, params ShipSlotBlock[] entries)
@@ -158,6 +180,8 @@ namespace LunraGames.SpaceFarm.Views
 		float MaxFuel { set; }
 		float MaxSpeed { set; }
 		float Speed { set; }
+		float LooseRations { set; }
+		float LooseFuel { set; }
 		float RationGeneration { set; }
 		float FuelGeneration { set; }
 		float RationGenerationCap { set; }

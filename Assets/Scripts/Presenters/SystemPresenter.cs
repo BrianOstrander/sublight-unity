@@ -131,9 +131,11 @@ namespace LunraGames.SpaceFarm.Presenters
 				if (model.Ship.Value.Inventory.HasUnused)
 				{
 					App.Callbacks.DialogRequest(
-						DialogRequest.CancelConfirm(
+						DialogRequest.CancelDenyConfirm(
 							"There are items or resources without slots, you'll lose them forever if you choose to continue.",
 							"Unused Items",
+							denyText: "Show Me",
+							confirmText: "Continue",
 							done: OnUnusedDialog
 						)
 					);
@@ -148,7 +150,15 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnUnusedDialog(RequestStatus status)
 		{
-			if (status != RequestStatus.Success) return;
+			switch(status)
+			{
+				case RequestStatus.Cancel: return;
+				case RequestStatus.Failure:
+					App.Callbacks.FocusRequest(
+						ShipFocusRequest.SlotEditor()
+					);
+					return;
+			}
 
 			App.Callbacks.ClearInventoryRequest(ClearInventoryRequest.Request());
 

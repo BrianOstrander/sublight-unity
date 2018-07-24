@@ -26,6 +26,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Inventory.MaximumResources.Fuel.Changed += OnMaxFuel;
 			ship.MaximumSpeed.Changed += OnMaxSpeed;
 			ship.Speed.Changed += OnSpeed;
+			ship.Inventory.UnUsableResources.Rations.Changed += OnUnusedRations;
+			ship.Inventory.UnUsableResources.Fuel.Changed += OnUnusedFuel;
 			ship.Inventory.RefillLogisticsResources.Rations.Changed += OnRationGeneration;
 			ship.Inventory.RefillLogisticsResources.Fuel.Changed += OnFuelGeneration;
 			ship.Inventory.MaximumRefillableLogisticsResources.Rations.Changed += OnRationGenerationCap;
@@ -41,6 +43,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Inventory.MaximumResources.Fuel.Changed -= OnMaxFuel;
 			ship.MaximumSpeed.Changed -= OnMaxSpeed;
 			ship.Speed.Changed -= OnSpeed;
+			ship.Inventory.UnUsableResources.Rations.Changed -= OnUnusedRations;
+			ship.Inventory.UnUsableResources.Fuel.Changed -= OnUnusedFuel;
 			ship.Inventory.RefillLogisticsResources.Rations.Changed -= OnRationGeneration;
 			ship.Inventory.RefillLogisticsResources.Fuel.Changed -= OnFuelGeneration;
 			ship.Inventory.MaximumRefillableLogisticsResources.Rations.Changed -= OnRationGenerationCap;
@@ -63,6 +67,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.MaxFuel = ship.Inventory.MaximumResources.Fuel;
 			View.MaxSpeed = ship.MaximumSpeed;
 			View.Speed = ship.Speed;
+			View.LooseRations = ship.Inventory.UnUsableResources.Rations;
+			View.LooseFuel = ship.Inventory.UnUsableResources.Fuel;
 			View.RationGeneration = ship.Inventory.RefillLogisticsResources.Rations;
 			View.FuelGeneration = ship.Inventory.RefillLogisticsResources.Fuel;
 			View.RationGenerationCap = ship.Inventory.MaximumRefillableLogisticsResources.Rations;
@@ -229,6 +235,18 @@ namespace LunraGames.SpaceFarm.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 			View.Speed = value;
+		}
+
+		void OnUnusedRations(float value)
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			View.LooseRations = value;
+		}
+
+		void OnUnusedFuel(float value)
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+			View.LooseFuel = value;
 		}
 
 		void OnRationGeneration(float value)
