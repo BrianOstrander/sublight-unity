@@ -43,6 +43,11 @@ namespace LunraGames.SpaceFarm.Views
 		[SerializeField]
 		GameObject moduleEntryArea;
 
+		[SerializeField]
+		Color entryNormalColor = Color.white;
+		[SerializeField]
+		Color entrySelectedColor = Color.white;
+
 		public string Title { set { titleLabel.text = value ?? string.Empty; } }
 		public string Description { set { descriptionLabel.text = value ?? string.Empty; } }
 
@@ -98,6 +103,7 @@ namespace LunraGames.SpaceFarm.Views
 				var instance = root.InstantiateChild(prefab, setActive: true);
 				instance.SlotLabel.text = entry.SlotName ?? string.Empty;
 				instance.TypeLabel.text = entry.TypeName ?? string.Empty;
+				instance.Background.color = entry.IsSelected ? entrySelectedColor : entryNormalColor;
 				instance.ButtonLabel.text = entry.ItemName ?? string.Empty;
 				instance.Button.OnClick.AddListener(new UnityAction(entry.Click ?? ActionExtensions.Empty));
 			}
@@ -112,8 +118,30 @@ namespace LunraGames.SpaceFarm.Views
 				var instance = root.InstantiateChild(prefab, setActive: true);
 				instance.HeaderLabel.text = entry.Name ?? string.Empty;
 				instance.DescriptionLabel.text = entry.Description ?? string.Empty;
-				instance.ButtonLabel.text = entry.ButtonText ?? string.Empty;
-				instance.Button.OnClick.AddListener(new UnityAction(entry.Click ?? ActionExtensions.Empty));
+				instance.Background.color = entry.CurrentlySlotted ? entrySelectedColor : entryNormalColor;
+
+				if (entry.CurrentlySlotted)
+				{
+					instance.AssignedLabel.text = "[IN USE - CURRENT]";
+					instance.AssignedLabel.color = Color.green;
+				}
+				else if (entry.IsSlotted)
+				{
+					instance.AssignedLabel.text = "[IN USE - ELSEWHERE]";
+					instance.AssignedLabel.color = Color.yellow;
+				}
+				else
+				{
+					instance.AssignedLabel.text = "[AVAILABLE]";
+					instance.AssignedLabel.color = Color.white;
+				}
+
+				instance.AssignButtonLabel.text = entry.ButtonText ?? string.Empty;
+				instance.AssignButton.OnClick.AddListener(new UnityAction(entry.AssignClick ?? ActionExtensions.Empty));
+				instance.AssignButton.interactable = !entry.CurrentlySlotted;
+
+				instance.RemoveButton.OnClick.AddListener(new UnityAction(entry.RemoveClick ?? ActionExtensions.Empty));
+				instance.RemoveButton.interactable = entry.IsRemovable;
 			}
 		}
 

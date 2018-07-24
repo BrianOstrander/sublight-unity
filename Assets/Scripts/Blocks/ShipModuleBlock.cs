@@ -9,6 +9,8 @@ namespace LunraGames.SpaceFarm
 		public string ButtonText;
 		public bool IsSlotted;
 		public bool CurrentlySlotted;
-		public Action Click;
+		public Action AssignClick;
+		public bool IsRemovable;
+		public Action RemoveClick;
 	}
 }

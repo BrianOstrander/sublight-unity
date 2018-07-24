@@ -7,6 +7,7 @@ namespace LunraGames.SpaceFarm
 		public string SlotName;
 		public string TypeName;
 		public string ItemName;
+		public bool IsSelected;
 		public Action Click;
 	}
 }

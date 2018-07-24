@@ -57,6 +57,8 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.Title = "Modify Ship Modules";
 			View.Description = "Modules enhance your ship, change which one's you're using here.";
 
+			View.DoneClick = OnDoneClick;
+
 			View.MaxRations = ship.Inventory.MaximumResources.Rations;
 			View.MaxFuel = ship.Inventory.MaximumResources.Fuel;
 			View.MaxSpeed = ship.MaximumSpeed;
@@ -68,8 +70,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.RationConsumption = ship.Inventory.RefillResources.Rations;
 
 			selectedSlot = null;
-			OnUpdateSlots();
-			OnUpdateModules();
+			OnUpdateSlotsAndModules();
 
 			ShowView(App.GameCanvasRoot);
 		}
@@ -93,13 +94,18 @@ namespace LunraGames.SpaceFarm.Presenters
 			}
 		}
 
+		void OnUpdateSlotsAndModules()
+		{
+			OnUpdateSlots();
+			OnUpdateModules();
+		}
+
 		void OnUpdateSlots()
 		{
 			var slots = new List<ShipSlotBlock>();
 			foreach (var module in ship.Inventory.GetUsableInventory<ModuleInventoryModel>())
 			{
 				var slotIndex = 0;
-				//var currSlots = new List<ShipSlotBlock>();
 				foreach (var slot in module.Slots.All.Value)
 				{
 					if (!slot.IsFillable) continue;
@@ -123,6 +129,7 @@ namespace LunraGames.SpaceFarm.Presenters
 						SlotName = module.Name.Value + " - " + slotIndex,
 						TypeName = slotType,
 						ItemName = itemName,
+						IsSelected = selectedSlot != null && slot.SlotId.Value == selectedSlot.SlotId.Value,
 						Click = () => OnSlotClick(module, slot, item)
 					};
 					slots.Add(entry);
@@ -143,7 +150,16 @@ namespace LunraGames.SpaceFarm.Presenters
 			var modules = new List<ShipModuleBlock>();
 			foreach (var item in ship.Inventory.GetInventory(i => i.SlotRequired && selectedSlot.CanSlot(i.InventoryType)))
 			{
-				var buttonText = "todo";
+				if (item.InventoryType == InventoryTypes.Module)
+				{
+					var itemModule = item as ModuleInventoryModel;
+					if (itemModule.IsRoot.Value) continue;
+				}
+				var currentlySlotted = item.SlotId.Value == selectedSlot.SlotId.Value;
+				var buttonText = "Assign";
+
+				if (currentlySlotted) buttonText = "Already Assigned";
+				else if (item.IsSlotted) buttonText = "Reassign";
 
 				var entry = new ShipModuleBlock
 				{
@@ -151,8 +167,10 @@ namespace LunraGames.SpaceFarm.Presenters
 					Description = item.Description,
 					ButtonText = buttonText,
 					IsSlotted = item.IsSlotted,
-					CurrentlySlotted = item.SlotId.Value == selectedSlot.SlotId.Value,
-					Click = () => OnModuleClick(item)
+					CurrentlySlotted = currentlySlotted,
+					AssignClick = () => OnAssignModuleClick(item),
+					IsRemovable = currentlySlotted,
+					RemoveClick = () => OnRemoveModuleClick(item),
 				};
 				modules.Add(entry);
 			}
@@ -162,14 +180,19 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnSlotClick(ModuleInventoryModel module, ModuleSlotModel slot, InventoryModel item)
 		{
 			selectedSlot = slot;
-			OnUpdateModules();
-
-			Debug.Log("Clicked " + module.Name.Value + " slot " + slot.SlotId.Value + " - Filled: " + (item == null ? "NOTHING" : item.InstanceId.Value));
+			OnUpdateSlotsAndModules();
 		}
 
-		void OnModuleClick(InventoryModel item)
+		void OnAssignModuleClick(InventoryModel item)
 		{
-			Debug.Log("Clicked " + item.Name);
+			ship.Inventory.Connect(selectedSlot, item);
+			OnUpdateSlotsAndModules();
+		}
+
+		void OnRemoveModuleClick(InventoryModel item)
+		{
+			ship.Inventory.Disconnect(item);
+			OnUpdateSlotsAndModules();
 		}
 
 		void OnDoneClick()
