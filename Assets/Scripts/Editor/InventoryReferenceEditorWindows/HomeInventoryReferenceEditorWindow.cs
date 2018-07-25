@@ -209,7 +209,7 @@ namespace LunraGames.SpaceFarm
 								GUILayout.BeginVertical();
 								{
 									var isAlternate = false;
-									foreach (var reference in referenceLists[kv.Key]) OnDrawReferenceInfo(reference, ref isAlternate);
+									foreach (var reference in referenceLists[kv.Key]) OnDrawReferenceEntry(reference, ref isAlternate);
 								}
 								GUILayout.EndVertical();
 							}
@@ -222,9 +222,9 @@ namespace LunraGames.SpaceFarm
 			GUILayout.EndVertical();
 		}
 
-		void OnHomeRightPane(object model = null)
+		void OnHomeRightPane(object reference = null)
 		{
-			if (model == null)
+			if (reference == null)
 			{
 				GUILayout.BeginVertical();
 				{
@@ -233,19 +233,22 @@ namespace LunraGames.SpaceFarm
 				GUILayout.EndVertical();
 				return;
 			}
-
-			switch(homeSelectedSaveType.Value)
+			GUILayout.BeginVertical();
 			{
-				case SaveTypes.ModuleReference:
-					OnEditModule(model as ModuleReferenceModel);
-					break;
-				case SaveTypes.OrbitalCrewReference:
-					OnEditReference(model as OrbitalCrewReferenceModel);
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized SaveType: " + homeSelectedSaveType.Value, MessageType.Error);
-					break;
+				switch (homeSelectedSaveType.Value)
+				{
+					case SaveTypes.ModuleReference:
+						OnEditModule(reference as ModuleReferenceModel);
+						break;
+					case SaveTypes.OrbitalCrewReference:
+						OnEditReference(reference as OrbitalCrewReferenceModel);
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized SaveType: " + homeSelectedSaveType.Value, MessageType.Error);
+						break;
+				}
 			}
+			GUILayout.EndVertical();
 		}
 
 		void NewReference(SaveTypes referenceType)
@@ -268,9 +271,9 @@ namespace LunraGames.SpaceFarm
 			where S : InventoryReferenceModel<T>
 			where T : InventoryModel, new()
 		{
-			reference.Reference.Value = new T();
-			reference.Reference.Value.InventoryId.Value = Guid.NewGuid().ToString();
-			reference.Reference.Value.Name.Value = string.Empty;
+			reference.Model.Value = new T();
+			reference.Model.Value.InventoryId.Value = Guid.NewGuid().ToString();
+			reference.Model.Value.Name.Value = string.Empty;
 			SaveLoadService.Save(reference, OnNewReference);
 		}
 
@@ -293,34 +296,35 @@ namespace LunraGames.SpaceFarm
 			}
 		}
 
-		void LoadSelectedReference(SaveModel model)
+		void LoadSelectedReference(SaveModel reference)
 		{
-			if (model == null)
+			if (reference == null)
 			{
 				OnDeselectReference();
 				return;
 			}
-			homeSelectedSaveType.Value = model.SaveType;
-			homeSelectedPath.Value = model.Path;
+			homeSelectedSaveType.Value = reference.SaveType;
+			homeSelectedPath.Value = reference.Path;
 			selectedReferenceStatus = RequestStatus.Unknown;
 
-			switch(model.SaveType)
+			switch(reference.SaveType)
 			{
 				case SaveTypes.ModuleReference:
-					SaveLoadService.Load<ModuleReferenceModel>(model, OnLoadSelectedReference);
+					SaveLoadService.Load<ModuleReferenceModel>(reference, OnLoadSelectedReference);
 					break;
 				case SaveTypes.OrbitalCrewReference:
-					SaveLoadService.Load<OrbitalCrewReferenceModel>(model, OnLoadSelectedReference);
+					SaveLoadService.Load<OrbitalCrewReferenceModel>(reference, OnLoadSelectedReference);
 					break;
 				default:
-					Debug.LogError("Unrecognized SaveType: " + model.SaveType);
+					Debug.LogError("Unrecognized SaveType: " + reference.SaveType);
 					break;
 			}
 		}
 
-		void SaveSelectedReference<T>(T model, Action<SaveLoadRequest<T>> done) where T : SaveModel
+		void SaveSelectedReference<T>(T reference)
+			where T : SaveModel
  		{
-			SaveLoadService.Save(model, done, false);
+			SaveLoadService.Save(reference, OnSaveSelectedReference, false);
 		}
 
 		void OnSaveSelectedReference<T>(SaveLoadRequest<T> result) where T : SaveModel
@@ -382,13 +386,13 @@ namespace LunraGames.SpaceFarm
 			homeSelectedSaveType.Value = SaveTypes.Unknown;
 		}
 
-		void OnDrawReferenceInfo(SaveModel info, ref bool isAlternate)
+		void OnDrawReferenceEntry(SaveModel reference, ref bool isAlternate)
 		{
 			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
 			if (isAlternate) EditorGUILayoutExtensions.PopColor();
 			{
-				var infoPath = info.IsInternal ? info.InternalPath : info.Path;
+				var infoPath = reference.IsInternal ? reference.InternalPath : reference.Path;
 				var infoName = Path.GetFileNameWithoutExtension(infoPath);
 				if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
 				else infoName += Path.GetExtension(infoPath);
@@ -397,7 +401,7 @@ namespace LunraGames.SpaceFarm
 				{
 					GUILayout.BeginVertical();
 					{
-						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta, "Name is set by Meta field."), EditorStyles.boldLabel);
+						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(reference.Meta) ? "< No Meta >" : reference.Meta, "Name is set by Meta field."), EditorStyles.boldLabel);
 						GUILayout.Label(new GUIContent(infoName, infoPath));
 					}
 					GUILayout.EndVertical();
@@ -406,12 +410,12 @@ namespace LunraGames.SpaceFarm
 					{
 						if (GUILayout.Button("Edit"))
 						{
-							LoadSelectedReference(info);
+							LoadSelectedReference(reference);
 						}
 						if (GUILayout.Button("Select In Project"))
 						{
 							EditorUtility.FocusProjectWindow();
-							Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(info.InternalPath);
+							Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(reference.InternalPath);
 						}
 					}
 					GUILayout.EndVertical();

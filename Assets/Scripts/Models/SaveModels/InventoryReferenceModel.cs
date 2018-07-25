@@ -4,15 +4,15 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public abstract class InventoryReferenceModel<T> : SaveModel where T : InventoryModel
 	{
-		[JsonProperty] T reference;
+		[JsonProperty] T model;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<T> Reference;
+		public readonly ListenerProperty<T> Model;
 
 		public InventoryReferenceModel(SaveTypes saveType)
 		{
 			SaveType = saveType;
-			Reference = new ListenerProperty<T>(value => reference = value, () => reference);
+			Model = new ListenerProperty<T>(value => model = value, () => model);
 		}
 	}
 }

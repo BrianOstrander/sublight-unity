@@ -4,6 +4,7 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public abstract class InventoryModel : Model
 	{
+		[JsonProperty] bool hidden;
 		[JsonProperty] string inventoryId;
 		[JsonProperty] string instanceId;
 		[JsonProperty] string name;
@@ -36,6 +37,8 @@ namespace LunraGames.SpaceFarm.Models
 		public bool IsSlotted { get { return !string.IsNullOrEmpty(SlotId.Value); } }
 
 		[JsonIgnore]
+		public readonly ListenerProperty<bool> Hidden;
+		[JsonIgnore]
 		public readonly ListenerProperty<string> InventoryId;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> InstanceId;
@@ -53,6 +56,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		public InventoryModel()
 		{
+			Hidden = new ListenerProperty<bool>(value => hidden = value, () => hidden);
 			InventoryId = new ListenerProperty<string>(value => inventoryId = value, () => inventoryId);
 			InstanceId = new ListenerProperty<string>(value => instanceId = value, () => instanceId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);

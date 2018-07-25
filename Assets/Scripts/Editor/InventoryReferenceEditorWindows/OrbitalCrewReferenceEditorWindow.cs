@@ -6,9 +6,9 @@ namespace LunraGames.SpaceFarm
 {
 	public partial class InventoryReferenceEditorWindow
 	{
-		void OnEditReference(OrbitalCrewReferenceModel model)
+		void OnEditReference(OrbitalCrewReferenceModel reference)
 		{
-			GUILayout.Label("Editing orbital crew");
+			OnRefrenceHeader<OrbitalCrewReferenceModel, OrbitalCrewInventoryModel>(reference, "Orbital Crew");
 		}
 	}
 }

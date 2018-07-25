@@ -1,5 +1,5 @@
 {
-  "reference": {
+  "model": {
     "slots": {
       "crews": [],
       "resources": [],
@@ -9,11 +9,12 @@
       "maximumLogisticsResources": {},
       "maximumResources": {}
     },
-    "inventoryId": "2ee801e0-cfa7-4473-8bff-17c9b8b52f4e",
-    "name": ""
+    "inventoryId": "eccdddb4-553f-4f7a-be7e-b68799839bc8",
+    "name": "Basic Root"
   },
   "version": 4,
-  "created": "2018-07-24T16:57:14.277098-07:00",
-  "modified": "2018-07-24T16:57:14.277098-07:00",
+  "meta": "Basic Root",
+  "created": "2018-07-25T12:25:59.70448-07:00",
+  "modified": "2018-07-25T12:25:59.70448-07:00",
   "SaveType": "ModuleReference"
 }

@@ -6,9 +6,9 @@ namespace LunraGames.SpaceFarm
 {
 	public partial class InventoryReferenceEditorWindow
 	{
-		void OnEditModule(ModuleReferenceModel model)
+		void OnEditModule(ModuleReferenceModel reference)
 		{
-			GUILayout.Label("Editing module");
+			OnRefrenceHeader<ModuleReferenceModel, ModuleInventoryModel>(reference, "Module");
 		}
 	}
 }
