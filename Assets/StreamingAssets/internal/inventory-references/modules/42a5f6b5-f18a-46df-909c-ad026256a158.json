@@ -1,0 +1,34 @@
+{
+  "model": {
+    "slots": {
+      "crews": [
+        {
+          "validInventoryTypes": [
+            "OrbitalCrew"
+          ],
+          "slotId": "c6df5930-aa8e-4c56-ac1c-11a2edb9a628"
+        },
+        {
+          "validInventoryTypes": [
+            "OrbitalCrew"
+          ],
+          "index": 1,
+          "slotId": "7252139d-a9b9-418a-a589-5b58c7e8d75f"
+        }
+      ],
+      "resources": [],
+      "modules": [],
+      "refillResources": {},
+      "refillLogisticsResources": {},
+      "maximumLogisticsResources": {},
+      "maximumResources": {}
+    },
+    "inventoryId": "23c48a72-e35a-44d6-bd7e-29e600a76046",
+    "name": "Stock Orbiter Bay"
+  },
+  "version": 4,
+  "meta": "Stock Orbiter Bay",
+  "created": "2018-07-25T17:54:49.970021-07:00",
+  "modified": "2018-07-25T17:54:49.970021-07:00",
+  "SaveType": "ModuleReference"
+}

@@ -271,7 +271,7 @@ namespace LunraGames.SpaceFarm
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count()+" |", GUILayout.ExpandWidth(false));
-					GUILayout.Label("Append New Log", GUILayout.ExpandWidth(false));
+					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
 					var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
 					var guid = Guid.NewGuid().ToString();
 					var isBeginning = model.Logs.All.Value.Length == 0;

@@ -429,13 +429,11 @@ namespace LunraGames.SpaceFarm
 		void OnLoadSelectedReference(SaveLoadRequest<ModuleReferenceModel> result)
 		{
 			OnLoadSelectedReferenceUnTyped(result);
-			Debug.Log("todo: this!... if I need to?");
 		}
 
 		void OnLoadSelectedReference(SaveLoadRequest<OrbitalCrewReferenceModel> result)
 		{
 			OnLoadSelectedReferenceUnTyped(result);
-			Debug.Log("todo: this!... if I need to?");
 		}
 
 		void OnLoadSelectedReferenceUnTyped<T>(SaveLoadRequest<T> result) where T : SaveModel

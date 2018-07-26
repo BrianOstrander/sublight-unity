@@ -138,7 +138,7 @@ namespace LunraGames.SpaceFarm
 			var selection = 0;
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("Append New Key Value Operation: ", GUILayout.Width(128f));
+				GUILayout.Label("Append New Key Value Operation: ", GUILayout.ExpandWidth(false));
 				selection = EditorGUILayout.Popup(selection, labels.ToArray());
 			}
 			GUILayout.EndHorizontal();
@@ -256,7 +256,7 @@ namespace LunraGames.SpaceFarm
 			var selection = InventoryOperations.Unknown;
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("Append New Inventory Operation: ", GUILayout.Width(128f));
+				GUILayout.Label("Append New Inventory Operation: ", GUILayout.ExpandWidth(false));
 				selection = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", selection);
 			}
 			GUILayout.EndHorizontal();
@@ -313,7 +313,7 @@ namespace LunraGames.SpaceFarm
 			var deleted = false;
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(operation.Operation + ":", GUILayout.ExpandWidth(false));
+				GUILayout.Label(operation.Operation.ToString());
 				deleted = EditorGUILayoutExtensions.XButton();
 			}
 			GUILayout.EndHorizontal();
@@ -326,8 +326,7 @@ namespace LunraGames.SpaceFarm
 			AddResourceOperationModel operation
 		)
 		{
-			operation.Value.Rations.Value = EditorGUILayout.FloatField("Rations", operation.Value.Rations.Value);
-			operation.Value.Fuel.Value = EditorGUILayout.FloatField("Fuel", operation.Value.Fuel.Value);
+			EditorGUILayoutResource.Values(operation.Value);
 		}
 
 		void OnInventoryLogSpawn(

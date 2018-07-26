@@ -34,6 +34,8 @@ namespace LunraGames.SpaceFarm
 				model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
 			}
 			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+
+			GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(16f));
 		}
 	}
 }

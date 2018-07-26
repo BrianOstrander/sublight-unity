@@ -1,0 +1,15 @@
+{
+  "model": {
+    "supportedBodies": [
+      "Star"
+    ],
+    "inventoryId": "290702f5-d9a7-43e4-907f-23dfdb579eb9",
+    "name": "Stock Stellar Orbiter",
+    "description": ""
+  },
+  "version": 4,
+  "meta": "Stock Stellar Orbiter",
+  "created": "2018-07-25T18:06:34.304526-07:00",
+  "modified": "2018-07-25T18:06:34.304526-07:00",
+  "SaveType": "OrbitalCrewReference"
+}

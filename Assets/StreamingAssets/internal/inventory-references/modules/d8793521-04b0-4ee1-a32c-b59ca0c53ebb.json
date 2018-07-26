@@ -1,0 +1,31 @@
+{
+  "model": {
+    "slots": {
+      "crews": [],
+      "resources": [
+        {
+          "refillResources": {},
+          "refillLogisticsResources": {},
+          "maximumLogisticsResources": {},
+          "maximumResources": {
+            "rations": 2.0,
+            "fuel": 2.0
+          },
+          "slotId": "c59db7b2-ebaa-448a-b877-51e74e969fdf"
+        }
+      ],
+      "modules": [],
+      "refillResources": {},
+      "refillLogisticsResources": {},
+      "maximumLogisticsResources": {},
+      "maximumResources": {}
+    },
+    "inventoryId": "ba230c9e-33a9-4a26-ba2c-de25cc3a0b27",
+    "name": "Stock Storage"
+  },
+  "version": 4,
+  "meta": "Stock Storage",
+  "created": "2018-07-25T15:21:38.77725-07:00",
+  "modified": "2018-07-25T15:21:38.77725-07:00",
+  "SaveType": "ModuleReference"
+}

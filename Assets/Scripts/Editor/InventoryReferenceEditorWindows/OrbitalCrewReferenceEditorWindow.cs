@@ -9,6 +9,12 @@ namespace LunraGames.SpaceFarm
 		void OnEditReference(OrbitalCrewReferenceModel reference)
 		{
 			OnRefrenceHeader<OrbitalCrewReferenceModel, OrbitalCrewInventoryModel>(reference, "Orbital Crew");
+
+			var model = reference.Model.Value;
+
+			OnEditCrewShared(model);
+
+
 		}
 	}
 }
