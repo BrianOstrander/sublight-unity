@@ -14,7 +14,8 @@ namespace LunraGames.SpaceFarm
 		ILogService logger;
 		CallbackService callbacks;
 
-		List<InventoryReferenceModel<InventoryModel>> referenceList = new List<InventoryReferenceModel<InventoryModel>>();
+		InventoryReferenceListModel references = new InventoryReferenceListModel();
+
 		InteractedEncounterInfoListModel interactedEncounters;
 		bool currentlySaving;
 
@@ -41,7 +42,7 @@ namespace LunraGames.SpaceFarm
 		{
 			if (remainingTypes.Count == 0)
 			{
-				logger.Log("Loaded " + referenceList.Count + " references", LogTypes.Initialization);
+				logger.Log("Loaded " + references.All.Value.Length + " references", LogTypes.Initialization);
 				Debug.LogWarning("todo: move on to interacted references stuff!");
 				done(RequestStatus.Success);
 				return;
@@ -146,12 +147,12 @@ namespace LunraGames.SpaceFarm
 		
 		void OnLoadModule(SaveLoadRequest<ModuleReferenceModel> result)
 		{
-			Debug.LogWarning("Todo: this logic upon loading " + result.TypedModel.Model.Value.Name.Value);
+			references.All.Value = references.All.Value.Append(result.TypedModel).ToArray();
 		}
 
 		void OnLoadOrbitalCrew(SaveLoadRequest<OrbitalCrewReferenceModel> result)
 		{
-			Debug.LogWarning("Todo: this logic upon loading " + result.TypedModel.Model.Value.Name.Value);
+			references.All.Value = references.All.Value.Append(result.TypedModel).ToArray();
 		}
 
 		#endregion
