@@ -218,14 +218,14 @@ namespace LunraGames.SpaceFarm.Models
 		/// connections they might already have.
 		/// </summary>
 		/// <returns>The connection.</returns>
-		/// <param name="slotId">Slot identifier.</param>
+		/// <param name="parentSlotId">Slot identifier.</param>
 		/// <param name="itemInstanceId">Item instance identifier.</param>
-		public SlotEdge Connect(string slotId, string itemInstanceId)
+		public SlotEdge Connect(string parentSlotId, string itemInstanceId)
 		{
-			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
+			if (string.IsNullOrEmpty(parentSlotId)) throw new ArgumentNullException("slotId");
 			if (string.IsNullOrEmpty(itemInstanceId)) throw new ArgumentNullException("itemInstanceId");
 
-			var slot = GetInventory<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).First(s => s.SlotId.Value == slotId);
+			var slot = GetInventory<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).First(s => s.ParentSlotId.Value == parentSlotId);
 			var item = GetInventoryFirstOrDefault(itemInstanceId);
 			if (item == null) throw new ArgumentException("No item found with id: "+itemInstanceId, "itemInstanceId");
 			return Connect(slot, item);
@@ -245,18 +245,18 @@ namespace LunraGames.SpaceFarm.Models
 			if (!slot.IsFillable) throw new ArgumentException("Specified slot cannot be filled.", "slot");
 			if (!slot.CanSlot(item.InventoryType)) throw new ArgumentException("Specified slot cannot be filled with item of InventoryType: " + item.InventoryType, "slot");
 
-			var slotId = slot.SlotId.Value;
+			var parentSlotId = slot.ParentSlotId.Value;
 			var itemId = item.InstanceId.Value;
 
-			var existing = SlotEdges.Value.FirstOrDefault(e => e.SlotId == slotId && e.ItemInstanceId == itemId);
+			var existing = SlotEdges.Value.FirstOrDefault(e => e.ParentSlotId == parentSlotId && e.ItemInstanceId == itemId);
 			if (!existing.IsEmpty) return existing;
 
-			var result = new SlotEdge(slotId, itemId);
+			var result = new SlotEdge(parentSlotId, itemId);
 
-			var remaining = RemoveConnection(slotId, itemId);
+			var remaining = RemoveConnection(parentSlotId, itemId);
 
 			slot.ItemId.Value = result.ItemInstanceId;
-			item.SlotId.Value = result.SlotId;
+			item.ParentSlotId.Value = result.ParentSlotId;
 			SlotEdges.Value = remaining.Append(result).ToArray();
 			return result;
 		}
@@ -268,7 +268,7 @@ namespace LunraGames.SpaceFarm.Models
 		/// <param name="edge">Edge.</param>
 		public void Disconnect(SlotEdge edge)
 		{
-			Disconnect(edge.SlotId, edge.ItemInstanceId);
+			Disconnect(edge.ParentSlotId, edge.ItemInstanceId);
 		}
 
 		/// <summary>
@@ -279,7 +279,7 @@ namespace LunraGames.SpaceFarm.Models
 		/// <param name="slot">Slot.</param>
 		public void Disconnect(ModuleSlotModel slot)
 		{
-			Disconnect(slot.SlotId.Value, slot.ItemId.Value);
+			Disconnect(slot.ParentSlotId.Value, slot.ItemId.Value);
 		}
 
 		/// <summary>
@@ -290,7 +290,7 @@ namespace LunraGames.SpaceFarm.Models
 		/// <param name="item">Item.</param>
 		public void Disconnect(InventoryModel item)
 		{
-			Disconnect(item.SlotId.Value, item.InstanceId.Value);
+			Disconnect(item.ParentSlotId.Value, item.InstanceId.Value);
 		}
 
 		/// <summary>
@@ -299,17 +299,17 @@ namespace LunraGames.SpaceFarm.Models
 		/// connections are preserved.
 		/// </summary>
 		/// <returns>The disconnect.</returns>
-		/// <param name="slotId">Slot identifier.</param>
+		/// <param name="parentSlotId">Slot identifier.</param>
 		/// <param name="itemInstanceId">Item instance identifier.</param>
-		public void Disconnect(string slotId, string itemInstanceId)
+		public void Disconnect(string parentSlotId, string itemInstanceId)
 		{
-			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
+			if (string.IsNullOrEmpty(parentSlotId)) throw new ArgumentNullException("slotId");
 			if (string.IsNullOrEmpty(itemInstanceId)) throw new ArgumentNullException("itemInstanceId");
 
-			var existing = SlotEdges.Value.FirstOrDefault(e => e.SlotId == slotId && e.ItemInstanceId == itemInstanceId);
+			var existing = SlotEdges.Value.FirstOrDefault(e => e.ParentSlotId == parentSlotId && e.ItemInstanceId == itemInstanceId);
 			if (existing.IsEmpty) return;
 
-			SlotEdges.Value = RemoveConnection(slotId, itemInstanceId).ToArray();
+			SlotEdges.Value = RemoveConnection(parentSlotId, itemInstanceId).ToArray();
 		}
 
 		/// <summary>
@@ -319,13 +319,13 @@ namespace LunraGames.SpaceFarm.Models
 		/// makes them available to be connected to each other.
 		/// </summary>
 		/// <returns>The remaining edges.</returns>
-		/// <param name="slotId">Slot identifier.</param>
+		/// <param name="parentSlotId">Slot identifier.</param>
 		/// <param name="itemInstanceId">Item identifier.</param>
-		IEnumerable<SlotEdge> RemoveConnection(string slotId, string itemInstanceId)
+		IEnumerable<SlotEdge> RemoveConnection(string parentSlotId, string itemInstanceId)
 		{
 			foreach (var itemWithSlot in All.Value)
 			{
-				if (itemWithSlot.SlotId.Value == slotId) itemWithSlot.SlotId.Value = null;
+				if (itemWithSlot.ParentSlotId.Value == parentSlotId) itemWithSlot.ParentSlotId.Value = null;
 				if (itemWithSlot.InventoryType == InventoryTypes.Module)
 				{
 					var module = itemWithSlot as ModuleInventoryModel;
@@ -335,12 +335,7 @@ namespace LunraGames.SpaceFarm.Models
 					}
 				}
 			}
-			foreach (var slotWithItem in GetInventory(i => i.InventoryType == InventoryTypes.Module).Cast<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).Where(s => s.ItemId.Value == itemInstanceId))
-			{
-				slotWithItem.SlotId.Value = null;
-				slotWithItem.ItemId.Value = null;
-			}
-			return SlotEdges.Value.Where(e => e.SlotId != slotId && e.ItemInstanceId != itemInstanceId);
+			return SlotEdges.Value.Where(e => e.ParentSlotId != parentSlotId && e.ItemInstanceId != itemInstanceId);
 		}
 
 		public void ClearUnused()
@@ -423,7 +418,7 @@ namespace LunraGames.SpaceFarm.Models
 
 			foreach (var inventory in newInventory)
 			{
-				if (!string.IsNullOrEmpty(inventory.SlotId.Value)) slotEdgeList.Add(new SlotEdge(inventory.SlotId, inventory.InstanceId));
+				if (!string.IsNullOrEmpty(inventory.ParentSlotId.Value)) slotEdgeList.Add(new SlotEdge(inventory.ParentSlotId, inventory.InstanceId));
 				switch (inventory.InventoryType)
 				{
 					case InventoryTypes.OrbitalCrew:

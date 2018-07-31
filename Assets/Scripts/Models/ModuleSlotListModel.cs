@@ -11,6 +11,8 @@ namespace LunraGames.SpaceFarm.Models
 	public class ModuleSlotListModel : Model
 	{
 		#region Assigned Values
+		[JsonProperty] string parentId;
+
 		[JsonProperty] CrewModuleSlotModel[] crews = new CrewModuleSlotModel[0];
 		[JsonProperty] ResourceModuleSlotModel[] resources = new ResourceModuleSlotModel[0];
 		[JsonProperty] ModuleModuleSlotModel[] modules = new ModuleModuleSlotModel[0];
@@ -23,6 +25,8 @@ namespace LunraGames.SpaceFarm.Models
 		#region Derived Values
 		[JsonIgnore]
 		public readonly ListenerProperty<ModuleSlotModel[]> All;
+		[JsonIgnore]
+		public readonly ListenerProperty<string> ParentId;
 		#endregion
 
 		#region Shortcuts
@@ -56,6 +60,8 @@ namespace LunraGames.SpaceFarm.Models
 
 		public ModuleSlotListModel()
 		{
+			ParentId = new ListenerProperty<string>(OnSetParentId, OnGetParentId);
+
 			// Derived Values
 			All = new ListenerProperty<ModuleSlotModel[]>(OnSetSlots, OnGetSlots);
 		}
@@ -97,6 +103,16 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Events
+		void OnSetParentId(string newParentId)
+		{
+			parentId = newParentId;
+			var isNullOrEmpty = string.IsNullOrEmpty(parentId);
+			if (isNullOrEmpty) foreach (var slot in All.Value) slot.ParentSlotId.Value = null;
+			else foreach (var slot in All.Value) slot.ParentSlotId.Value = parentId + "_" + slot.SlotId.Value;
+		}
+
+		string OnGetParentId() { return parentId; }
+
 		void OnSetSlots(ModuleSlotModel[] newSlots)
 		{
 			var crewList = new List<CrewModuleSlotModel>();
@@ -108,8 +124,13 @@ namespace LunraGames.SpaceFarm.Models
 			var newMaxLogicResources = ResourceInventoryModel.Zero;
 			var newMaxResources = ResourceInventoryModel.Zero;
 
+			var isNullOrEmpty = string.IsNullOrEmpty(ParentId.Value);
+
 			foreach (var slot in newSlots)
 			{
+				if (isNullOrEmpty) slot.ParentSlotId.Value = null;
+				else slot.ParentSlotId.Value = ParentId.Value + "_" + slot.SlotId.Value;
+
 				switch (slot.SlotType)
 				{
 					case SlotTypes.Crew:

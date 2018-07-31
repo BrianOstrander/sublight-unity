@@ -10,21 +10,21 @@ namespace LunraGames.SpaceFarm
 	[Serializable]
 	public struct SlotEdge
 	{
-		[JsonProperty] public readonly string SlotId;
+		[JsonProperty] public readonly string ParentSlotId;
 		[JsonProperty] public readonly string ItemInstanceId;
 
 		[JsonIgnore]
-		public bool IsEmpty { get { return string.IsNullOrEmpty(SlotId) || string.IsNullOrEmpty(ItemInstanceId); } }
+		public bool IsEmpty { get { return string.IsNullOrEmpty(ParentSlotId) || string.IsNullOrEmpty(ItemInstanceId); } }
 
 		public SlotEdge(string slotId, string itemInstanceId)
 		{
-			SlotId = slotId;
+			ParentSlotId = slotId;
 			ItemInstanceId = itemInstanceId;
 		}
 
 		public override string ToString()
 		{
-			return "SlotEdge: SlotId: " + SlotId + " ItemInstanceId: " + ItemInstanceId;
+			return "SlotEdge: ParentSlotId: " + ParentSlotId + " ItemInstanceId: " + ItemInstanceId;
 		}
 	}
 }

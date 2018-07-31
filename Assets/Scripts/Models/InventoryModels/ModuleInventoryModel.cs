@@ -19,6 +19,15 @@ namespace LunraGames.SpaceFarm.Models
 		public ModuleInventoryModel()
 		{
 			IsRoot = new ListenerProperty<bool>(value => isRoot = value, () => isRoot);
+
+			InstanceId.Changed += OnInstanceId;
 		}
+
+		#region Events
+		void OnInstanceId(string newInstanceId)
+		{
+			slots.ParentId.Value = newInstanceId;
+		}
+		#endregion
 	}
 }
