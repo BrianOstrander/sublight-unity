@@ -18,6 +18,8 @@ namespace LunraGames.SpaceFarm
 	public partial class DeveloperSettingsWindow : EditorWindow
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 	{
+		const string KeyPrefix = "LG_SF_DeveloperSettings_";
+
 		[MenuItem("Window/Lunra Games/Development Settings")]
 		static void Initialize()
 		{

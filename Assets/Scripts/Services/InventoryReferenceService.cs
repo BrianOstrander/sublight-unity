@@ -8,6 +8,46 @@ using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm
 {
+	public struct InventoryReferenceRequest<M> where M : InventoryModel
+	{
+		public RequestStatus Status { get; private set; }
+		public IInventoryReferenceModel Reference { get; private set; }
+		public M Instance { get; private set; }
+		public string Error { get; private set; }
+
+		public static InventoryReferenceRequest<M> Success(IInventoryReferenceModel reference, M instance)
+		{
+			return new InventoryReferenceRequest<M>(
+				RequestStatus.Success,
+				reference,
+				instance
+			);
+		}
+
+		public static InventoryReferenceRequest<M> Failure(IInventoryReferenceModel reference, M instance, string error)
+		{
+			return new InventoryReferenceRequest<M>(
+				RequestStatus.Failure,
+				reference,
+				instance,
+				error
+			);
+		}
+
+		InventoryReferenceRequest(
+			RequestStatus status,
+			IInventoryReferenceModel reference,
+			M instance,
+			string error = null
+		)
+		{
+			Status = status;
+			Reference = reference;
+			Instance = instance;
+			Error = error;
+		}
+	}
+
 	public class InventoryReferenceService
 	{
 		IModelMediator modelMediator;
@@ -61,7 +101,7 @@ namespace LunraGames.SpaceFarm
 				ListReferences(remainingTypes, done);
 			};
 
-			switch(nextType)
+			switch (nextType)
 			{
 				case SaveTypes.ModuleReference:
 					modelMediator.List<ModuleReferenceModel>(result => OnListShared<ModuleReferenceModel>(result, null, OnLoadedShared, listDone));
@@ -70,14 +110,14 @@ namespace LunraGames.SpaceFarm
 					modelMediator.List<OrbitalCrewReferenceModel>(result => OnListShared<OrbitalCrewReferenceModel>(result, null, OnLoadedShared, listDone));
 					break;
 				default:
-					Debug.LogError("Unrecognized SaveType: "+nextType);
+					Debug.LogError("Unrecognized SaveType: " + nextType);
 					done(RequestStatus.Failure);
 					break;
 			}
 		}
 
 		void OnListShared<T>(
-			SaveLoadArrayRequest<SaveModel> result, 
+			SaveLoadArrayRequest<SaveModel> result,
 			List<SaveModel> remaining,
 			Action<SaveLoadRequest<T>> loadReference,
 			Action<RequestStatus, string> listDone
@@ -113,14 +153,14 @@ namespace LunraGames.SpaceFarm
 			};
 
 			modelMediator.Load<T>(
-				nextReference, 
+				nextReference,
 				loadReferenceResult => OnLoadShared(loadReferenceResult, loadDone, loadReference)
 			);
 		}
 
 		void OnLoadShared<T>(
-			SaveLoadRequest<T> result, 
-			Action<RequestStatus, string> loadDone, 
+			SaveLoadRequest<T> result,
+			Action<RequestStatus, string> loadDone,
 			Action<SaveLoadRequest<T>> onLoad
 		)
 			where T : SaveModel
@@ -243,7 +283,54 @@ namespace LunraGames.SpaceFarm
 		#endregion
 
 		#region Utility
+		public void GetInstance<M>(string inventoryId, Action<InventoryReferenceRequest<M>> done)
+			where M : InventoryModel
+		{
+			var reference = references.GetReferenceFirstOrDefault(inventoryId);
+			if (reference == null)
+			{
+				var error = "Unable to find a reference with InventoryId " + inventoryId;
+				Debug.LogError(error);
+				done(InventoryReferenceRequest<M>.Failure(null, null, error));
+				return;
+			}
 
+			switch(reference.RawModel.InventoryType)
+			{
+				case InventoryTypes.Module:
+					modelMediator.Load<ModuleReferenceModel>(reference as ModuleReferenceModel, result => OnGetInstanceLoaded(result, done));
+					break;
+				case InventoryTypes.OrbitalCrew:
+				default:
+					var error = "Unrecognized InventoryType: " + reference.RawModel.InventoryType;
+					Debug.LogError(error);
+					done(InventoryReferenceRequest<M>.Failure(null, null, error));
+					break;
+			}
+		}
+
+		void OnGetInstanceLoaded<R, M>(SaveLoadRequest<R> result, Action<InventoryReferenceRequest<M>> done)
+			where R : SaveModel, IInventoryReferenceModel
+			where M : InventoryModel
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(InventoryReferenceRequest<M>.Failure(null, null, result.Error));
+				return;
+			}
+
+			var reference = result.TypedModel;
+			reference.InitializeInstance();
+			var instance = reference.RawModel as M;
+
+			done(InventoryReferenceRequest<M>.Success(reference, instance));
+		}
+
+		public InteractedInventoryReferenceModel GetReferenceInteraction(string inventoryId)
+		{
+			return interactedReferences.GetReference(inventoryId);
+		}
 		#endregion
 
 		#region Events

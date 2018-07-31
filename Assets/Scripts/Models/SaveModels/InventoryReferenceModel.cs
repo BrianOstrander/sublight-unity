@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
@@ -7,6 +9,8 @@ namespace LunraGames.SpaceFarm.Models
 	{
 		[JsonProperty] T model;
 
+		[JsonIgnore]
+		bool isInitialized;
 		[JsonIgnore]
 		public readonly ListenerProperty<T> Model;
 		[JsonIgnore]
@@ -17,10 +21,24 @@ namespace LunraGames.SpaceFarm.Models
 			SaveType = saveType;
 			Model = new ListenerProperty<T>(value => model = value, () => model);
 		}
+
+		public void InitializeInstance()
+		{
+			if (isInitialized) return;
+			isInitialized = true;
+
+			Model.Value.InstanceId.Value = Guid.NewGuid().ToString();
+
+			OnInitializeInstance();
+		}
+
+		protected virtual void OnInitializeInstance() {}
 	}
 
 	public interface IInventoryReferenceModel
 	{
 		InventoryModel RawModel { get; }
+
+		void InitializeInstance();
 	}
 }
