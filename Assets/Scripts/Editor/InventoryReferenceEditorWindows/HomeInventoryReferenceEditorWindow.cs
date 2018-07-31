@@ -50,11 +50,12 @@ namespace LunraGames.SpaceFarm
 		void OnHomeEnable()
 		{
 			referenceListStatuses = new Dictionary<SaveTypes, RequestStatus>();
-			referenceLists = new Dictionary<SaveTypes, SaveModel[]>
+			referenceLists = new Dictionary<SaveTypes, SaveModel[]>();
+
+			foreach (var saveType in SaveTypeValidator.InventoryReferences.Where(t => t != SaveTypes.Unknown))
 			{
-				{ SaveTypes.ModuleReference, new SaveModel[0] },
-				{ SaveTypes.OrbitalCrewReference, new SaveModel[0] }
-			};
+				referenceLists.Add(saveType, new SaveModel[0]);
+			}
 
 			OnHomeSetReferenceListStatuses();
 			selectedReferenceStatus = RequestStatus.Cancel;
@@ -70,8 +71,11 @@ namespace LunraGames.SpaceFarm
 		void OnHomeSetReferenceListStatuses(RequestStatus status = RequestStatus.Cancel)
 		{
 			referenceListStatuses.Clear();
-			referenceListStatuses.Add(SaveTypes.ModuleReference, status);
-			referenceListStatuses.Add(SaveTypes.OrbitalCrewReference, status);
+
+			foreach (var saveType in SaveTypeValidator.InventoryReferences.Where(t => t != SaveTypes.Unknown))
+			{
+				referenceListStatuses.Add(saveType, status);
+			}
 		}
 
 		void OnHomeModifierKeysChanged()
@@ -158,11 +162,7 @@ namespace LunraGames.SpaceFarm
 			{
 				GUILayout.BeginHorizontal();
 				{
-					var newOptions = new SaveTypes[] {
-						SaveTypes.Unknown,
-						SaveTypes.ModuleReference,
-						SaveTypes.OrbitalCrewReference
-					};
+					var newOptions = SaveTypeValidator.InventoryReferences;
 
 					var newSelection = EditorGUILayoutExtensions.HelpfulEnumPopup("- Create New Inventory Reference -", SaveTypes.Unknown, newOptions);
 					if (newSelection != SaveTypes.Unknown) NewReference(newSelection);
