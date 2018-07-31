@@ -31,6 +31,7 @@ namespace LunraGames.SpaceFarm
 					{ SaveTypes.Preferences, -1 },
 					{ SaveTypes.EncounterInfo, 0 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
+					{ SaveTypes.InteractedInventoryReferenceList, -1 },
 					{ SaveTypes.GlobalKeyValues, -1 },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, 4 },
@@ -50,6 +51,7 @@ namespace LunraGames.SpaceFarm
 					{ SaveTypes.Preferences, true },
 					{ SaveTypes.EncounterInfo, false },
 					{ SaveTypes.InteractedEncounterInfoList, true },
+					{ SaveTypes.InteractedInventoryReferenceList, true },
 					{ SaveTypes.GlobalKeyValues, true },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, false },
@@ -94,8 +96,10 @@ namespace LunraGames.SpaceFarm
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
-				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
 				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
+				// -- Interacted
+				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
+				case SaveTypes.InteractedInventoryReferenceList: return Path.Combine(ParentPath, "interacted-references");
 				// -- Inventory References
 				case SaveTypes.ModuleReference: return InventoryReferencePath("modules");
 				case SaveTypes.OrbitalCrewReference: return InventoryReferencePath("orbital-crew");

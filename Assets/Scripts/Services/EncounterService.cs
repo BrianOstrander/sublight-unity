@@ -143,7 +143,6 @@ namespace LunraGames.SpaceFarm
 
 			done(RequestStatus.Success);
 		}
-		#endregion
 
 		InteractedEncounterInfoListModel UpdateInteractedEncounters(List<EncounterInfoModel> allEncounters, InteractedEncounterInfoListModel target)
 		{
@@ -162,7 +161,9 @@ namespace LunraGames.SpaceFarm
 
 			return target;
 		}
+		#endregion
 
+		#region Utility
 		public EncounterInfoModel AssignBestEncounter(GameModel model, SystemModel system, BodyModel body)
 		{
 			// TODO: Check if old encounters are still valid here?
@@ -208,6 +209,7 @@ namespace LunraGames.SpaceFarm
 		{
 			return interactedEncounters.GetEncounter(encounter);
 		}
+		#endregion
 
 		#region Events
 		void OnSaveRequest(SaveRequest request)

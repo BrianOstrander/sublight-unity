@@ -16,7 +16,7 @@ namespace LunraGames.SpaceFarm
 
 		InventoryReferenceListModel references = new InventoryReferenceListModel();
 
-		InteractedEncounterInfoListModel interactedEncounters;
+		InteractedInventoryReferenceListModel interactedReferences;
 		bool currentlySaving;
 
 		public InventoryReferenceService(IModelMediator modelMediator, ILogService logger, CallbackService callbacks)
@@ -42,9 +42,7 @@ namespace LunraGames.SpaceFarm
 		{
 			if (remainingTypes.Count == 0)
 			{
-				logger.Log("Loaded " + references.All.Value.Length + " references", LogTypes.Initialization);
-				Debug.LogWarning("todo: move on to interacted references stuff!");
-				done(RequestStatus.Success);
+				modelMediator.List<InteractedInventoryReferenceListModel>(interactableResult => OnListInteractedReferences(interactableResult, done));
 				return;
 			}
 
@@ -66,10 +64,10 @@ namespace LunraGames.SpaceFarm
 			switch(nextType)
 			{
 				case SaveTypes.ModuleReference:
-					modelMediator.List<ModuleReferenceModel>(result => OnListShared<ModuleReferenceModel>(result, null, OnLoadModule, listDone));
+					modelMediator.List<ModuleReferenceModel>(result => OnListShared<ModuleReferenceModel>(result, null, OnLoadedShared, listDone));
 					break;
 				case SaveTypes.OrbitalCrewReference:
-					modelMediator.List<OrbitalCrewReferenceModel>(result => OnListShared<OrbitalCrewReferenceModel>(result, null, OnLoadOrbitalCrew, listDone));
+					modelMediator.List<OrbitalCrewReferenceModel>(result => OnListShared<OrbitalCrewReferenceModel>(result, null, OnLoadedShared, listDone));
 					break;
 				default:
 					Debug.LogError("Unrecognized SaveType: "+nextType);
@@ -144,17 +142,131 @@ namespace LunraGames.SpaceFarm
 			}
 			else loadDone(result.Status, result.Error);
 		}
-		
-		void OnLoadModule(SaveLoadRequest<ModuleReferenceModel> result)
+
+		void OnLoadedShared<T>(SaveLoadRequest<T> result) where T : SaveModel
 		{
-			references.All.Value = references.All.Value.Append(result.TypedModel).ToArray();
+			references.All.Value = references.All.Value.Append(result.TypedModel as IInventoryReferenceModel).ToArray();
 		}
 
-		void OnLoadOrbitalCrew(SaveLoadRequest<OrbitalCrewReferenceModel> result)
+		void OnListInteractedReferences(SaveLoadArrayRequest<SaveModel> result, Action<RequestStatus> done)
 		{
-			references.All.Value = references.All.Value.Append(result.TypedModel).ToArray();
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Listing interacted references failed with status " + result.Status + " and error:\n" + result.Error);
+				done(result.Status);
+				return;
+			}
+
+			logger.Log("Loaded " + references.All.Value.Length + " references", LogTypes.Initialization);
+
+			if (result.Length == 0)
+			{
+				logger.Log("No existing interacted references, generating defaults", LogTypes.Initialization);
+				modelMediator.Save(
+					UpdateInteractedReferences(references.All.Value, modelMediator.Create<InteractedInventoryReferenceListModel>()),
+					saveResult => OnSavedInteractedReferences(saveResult, done)
+				);
+			}
+			else
+			{
+				var toLoad = result.Models.Where(p => p.SupportedVersion.Value).OrderBy(p => p.Version.Value).LastOrDefault();
+				if (toLoad == null)
+				{
+					logger.Log("No supported interacted references, generating defaults", LogTypes.Initialization);
+					modelMediator.Save(
+						UpdateInteractedReferences(references.All.Value, modelMediator.Create<InteractedInventoryReferenceListModel>()),
+						saveResult => OnSavedInteractedReferences(saveResult, done)
+					);
+				}
+				else
+				{
+					logger.Log("Loading existing interacted references", LogTypes.Initialization);
+					modelMediator.Load<InteractedInventoryReferenceListModel>(
+						toLoad,
+						loadResult => OnLoadInteractedReferences(loadResult, done)
+					);
+				}
+			}
 		}
 
+		void OnLoadInteractedReferences(SaveLoadRequest<InteractedInventoryReferenceListModel> result, Action<RequestStatus> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Loading interacted references failed with status " + result.Status + " and error:\n" + result.Error);
+				done(result.Status);
+				return;
+			}
+
+			logger.Log("Loaded interacted references from " + result.Model.Path, LogTypes.Initialization);
+			modelMediator.Save(
+				UpdateInteractedReferences(references.All.Value, result.TypedModel),
+				saveResult => OnSavedInteractedReferences(saveResult, done)
+			);
+		}
+
+		void OnSavedInteractedReferences(SaveLoadRequest<InteractedInventoryReferenceListModel> result, Action<RequestStatus> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Saving interacted references failed with status " + result.Status + " and error:\n" + result.Error);
+				done(result.Status);
+				return;
+			}
+
+			logger.Log("Saved interacted references to " + result.Model.Path, LogTypes.Initialization);
+
+			currentlySaving = false;
+			interactedReferences = result.TypedModel;
+			callbacks.SaveRequest += OnSaveRequest;
+
+			done(RequestStatus.Success);
+		}
+
+		InteractedInventoryReferenceListModel UpdateInteractedReferences(IInventoryReferenceModel[] allReferences, InteractedInventoryReferenceListModel target)
+		{
+			var allReferenceIds = allReferences.Select(e => e.RawModel.InventoryId.Value);
+			var existingTargets = target.References.Value.Where(e => allReferenceIds.Contains(e.InventoryId));
+			var newTargets = new List<InteractedInventoryReferenceModel>();
+
+			foreach (var reference in allReferences)
+			{
+				var entry = existingTargets.FirstOrDefault(t => t.InventoryId.Value == reference.RawModel.InventoryId.Value);
+				if (entry == null) continue;
+				newTargets.Add(entry);
+			}
+
+			target.References.Value = newTargets.ToArray();
+
+			return target;
+		}
+		#endregion
+
+		#region Utility
+
+		#endregion
+
+		#region Events
+		void OnSaveRequest(SaveRequest request)
+		{
+			if (request.State == SaveRequest.States.Complete) OnTrySave();
+		}
+
+		void OnTrySave()
+		{
+			if (currentlySaving) return;
+			modelMediator.Save(interactedReferences, OnTrySaved);
+		}
+
+		void OnTrySaved(SaveLoadRequest<InteractedInventoryReferenceListModel> result)
+		{
+			currentlySaving = false;
+
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Trying to save interacted references list failed with status " + result.Status + "\nError: " + result.Error);
+			}
+		}
 		#endregion
 	}
 }
