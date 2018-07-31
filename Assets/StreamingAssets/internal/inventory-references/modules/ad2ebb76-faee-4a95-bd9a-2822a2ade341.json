@@ -12,25 +12,25 @@
           "maximumLogisticsResources": {},
           "maximumResources": {},
           "index": 6,
-          "slotId": "7bbcc94e-cad9-45b9-a6f2-785157a37a60"
+          "slotId": "resource_0"
         }
       ],
       "modules": [
         {
           "index": 2,
-          "slotId": "670e16d7-42f9-4270-84b0-ab94afa37e93"
+          "slotId": "module_0"
         },
         {
           "index": 3,
-          "slotId": "5fb75f59-9857-4103-b6b8-9c6a9626c302"
+          "slotId": "module_1"
         },
         {
           "index": 4,
-          "slotId": "06df1cfe-029f-4a89-b42e-396b5129cf7d"
+          "slotId": "module_2"
         },
         {
           "index": 5,
-          "slotId": "059e9c08-b4b1-454f-ba7f-c83f15954c5c"
+          "slotId": "module_3"
         }
       ],
       "refillResources": {

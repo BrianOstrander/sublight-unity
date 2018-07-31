@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using UnityEditor;
 using UnityEngine;
@@ -6,7 +8,6 @@ using UnityEngine;
 using LunraGamesEditor;
 
 using LunraGames.SpaceFarm.Models;
-using System.Linq;
 
 namespace LunraGames.SpaceFarm
 {
@@ -74,16 +75,33 @@ namespace LunraGames.SpaceFarm
 
 					var isMoving = Event.current.control;
 
+					var existingSlotIds = new List<string>();
+					var duplicateSlotIds = new List<string>();
+
+					foreach (var slot in model.Slots.All.Value.Select(s => s.SlotId.Value))
+					{
+						if (string.IsNullOrEmpty(slot)) continue;
+						if (existingSlotIds.Contains(slot))
+						{
+							if (!duplicateSlotIds.Contains(slot)) duplicateSlotIds.Add(slot);
+						}
+						else existingSlotIds.Add(slot);
+					}
+
 					var sorted = model.Slots.All.Value.OrderBy(l => l.Index.Value).ToList();
 					var sortedCount = sorted.Count;
+
 					ModuleSlotModel lastSlot = null;
+
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var slot = sorted[i];
 						var nextSlot = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
 						int currMoveDelta;
 
-						if (OnSlotBegin(i, sortedCount, reference, slot, isMoving, out currMoveDelta)) deleted = slot.SlotId;
+						var isDuplicateSlotId = duplicateSlotIds.Contains(slot.SlotId.Value);
+
+						if (OnSlotBegin(i, sortedCount, reference, slot, isDuplicateSlotId, isMoving, out currMoveDelta)) deleted = slot.SlotId;
 
 						if (currMoveDelta != 0)
 						{
@@ -130,7 +148,7 @@ namespace LunraGames.SpaceFarm
 			return result;
 		}
 
-		bool OnSlotBegin(int count, int maxCount, ModuleReferenceModel reference, ModuleSlotModel slot, bool isMoving, out int indexDelta)
+		bool OnSlotBegin(int count, int maxCount, ModuleReferenceModel reference, ModuleSlotModel slot, bool isDuplicateSlotId, bool isMoving, out int indexDelta)
 		{
 			var deleted = false;
 			indexDelta = 0;
@@ -141,8 +159,14 @@ namespace LunraGames.SpaceFarm
 			GUILayout.BeginHorizontal();
 			{
 				var header = "#" + (count + 1) + " | " + slot.SlotType+ ".SlotId:";
-				GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.SelectableLabel(slot.SlotId, EditorStyles.boldLabel);
+				GUILayout.Label(header, EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+				GUILayout.BeginVertical();
+				{
+					GUILayout.Space(6f);
+					slot.SlotId.Value = GUILayout.TextField(slot.SlotId.Value);
+				}
+				GUILayout.EndVertical();
+
 				if (isMoving)
 				{
 					GUILayout.Space(10f);
@@ -159,12 +183,20 @@ namespace LunraGames.SpaceFarm
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
-				else GUILayout.Space(130f);
 				EditorGUILayoutExtensions.PushEnabled(!isMoving);
 				deleted = EditorGUILayoutExtensions.XButton();
 				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
+
+			if (string.IsNullOrEmpty(slot.SlotId.Value))
+			{
+				EditorGUILayout.HelpBox("The slot id cannot be null or empty.", MessageType.Error);
+			}
+			else if (isDuplicateSlotId)
+			{
+				EditorGUILayout.HelpBox("A slot with id \"" + slot.SlotId.Value + "\" already exists in this module.", MessageType.Error);
+			}
 
 			return deleted;
 		}

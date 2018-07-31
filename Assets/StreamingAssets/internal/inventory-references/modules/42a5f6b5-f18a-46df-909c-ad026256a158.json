@@ -6,14 +6,14 @@
           "validInventoryTypes": [
             "OrbitalCrew"
           ],
-          "slotId": "c6df5930-aa8e-4c56-ac1c-11a2edb9a628"
+          "slotId": "orbital_0"
         },
         {
           "validInventoryTypes": [
             "OrbitalCrew"
           ],
           "index": 1,
-          "slotId": "7252139d-a9b9-418a-a589-5b58c7e8d75f"
+          "slotId": "orbital_1"
         }
       ],
       "resources": [],

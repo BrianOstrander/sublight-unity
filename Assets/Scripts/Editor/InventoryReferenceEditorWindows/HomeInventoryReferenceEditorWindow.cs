@@ -388,9 +388,10 @@ namespace LunraGames.SpaceFarm
 
 		void OnDrawReferenceEntry(SaveModel reference, ref bool isAlternate)
 		{
-			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey);
+			var isSelected = homeSelectedPath.Value == reference.Path.Value;
+			if (isSelected || isAlternate) EditorGUILayoutExtensions.PushBackgroundColor(isSelected ? Color.blue : Color.grey);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (isAlternate) EditorGUILayoutExtensions.PopColor();
+			if (!isSelected && isAlternate) EditorGUILayoutExtensions.PopBackgroundColor();
 			{
 				var infoPath = reference.IsInternal ? reference.InternalPath : reference.Path;
 				var infoName = Path.GetFileNameWithoutExtension(infoPath);
@@ -423,6 +424,7 @@ namespace LunraGames.SpaceFarm
 				GUILayout.EndHorizontal();
 			}
 			GUILayout.EndVertical();
+			if (isSelected) EditorGUILayoutExtensions.PopBackgroundColor();
 			isAlternate = !isAlternate;
 		}
 

@@ -463,9 +463,10 @@ namespace LunraGames.SpaceFarm
 
 		void OnDrawEncounterInfo(SaveModel info, ref bool isAlternate)
 		{
-			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey);
+			var isSelected = homeSelectedEncounterPath.Value == info.Path.Value;
+			if (isSelected || isAlternate) EditorGUILayoutExtensions.PushBackgroundColor(isSelected ? Color.blue : Color.grey);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (isAlternate) EditorGUILayoutExtensions.PopColor();
+			if (!isSelected && isAlternate) EditorGUILayoutExtensions.PopBackgroundColor();
 			{
 				var infoPath = info.IsInternal ? info.InternalPath : info.Path;
 				var infoName = Path.GetFileNameWithoutExtension(infoPath);
@@ -498,6 +499,7 @@ namespace LunraGames.SpaceFarm
 				GUILayout.EndHorizontal();
 			}
 			GUILayout.EndVertical();
+			if (isSelected) EditorGUILayoutExtensions.PopBackgroundColor();
 			isAlternate = !isAlternate;
 		}
 

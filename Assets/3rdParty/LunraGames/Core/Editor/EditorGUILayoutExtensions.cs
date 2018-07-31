@@ -13,6 +13,7 @@ namespace LunraGamesEditor
 	public static class EditorGUILayoutExtensions
 	{
 		static Stack<Color> ColorStack = new Stack<Color>();
+		static Stack<Color> BackgroundColorStack = new Stack<Color>();
 		static Stack<bool> EnabledStack = new Stack<bool>();
 
 		/// <summary>
@@ -71,6 +72,18 @@ namespace LunraGamesEditor
 		{
 			if (ColorStack.Count == 0) return;
 			GUI.color = ColorStack.Pop();
+		}
+
+		public static void PushBackgroundColor(Color backgroundColor)
+		{
+			BackgroundColorStack.Push(GUI.backgroundColor);
+			GUI.backgroundColor = backgroundColor;
+		}
+
+		public static void PopBackgroundColor()
+		{
+			if (BackgroundColorStack.Count == 0) return;
+			GUI.backgroundColor = BackgroundColorStack.Pop();
 		}
 
 		public static void PushEnabled(bool enabled)
