@@ -12,6 +12,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		[JsonProperty] float rations;
 		[JsonProperty] float fuel;
+		[JsonProperty] float speed;
 
 		/// <summary>
 		/// The years worth of rations on board, assuming a person uses 1 ration
@@ -25,6 +26,8 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
 		[JsonIgnore]
+		public readonly ListenerProperty<float> Speed;
+		[JsonIgnore]
 		public Action<ResourceInventoryModel> AnyChange = ActionExtensions.GetEmpty<ResourceInventoryModel>();
 
 		public override InventoryTypes InventoryType { get { return InventoryTypes.Resources; } }
@@ -36,27 +39,31 @@ namespace LunraGames.SpaceFarm.Models
 			get
 			{
 				return Mathf.Approximately(0f, Rations.Value) &&
-							Mathf.Approximately(0f, Fuel.Value);
+							Mathf.Approximately(0f, Fuel.Value) &&
+							Mathf.Approximately(0f, Speed.Value);
 			}
 		}
 
 		[JsonIgnore]
-		public ResourceInventoryModel Duplicate { get { return new ResourceInventoryModel(Rations, Fuel); } }
+		public ResourceInventoryModel Duplicate { get { return new ResourceInventoryModel(Rations, Fuel, Speed); } }
 
 		[JsonConstructor]
 		ResourceInventoryModel()
 		{
 			Rations = new ListenerProperty<float>(value => rations = value, () => rations, value => AnyChange(this));
 			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel, value => AnyChange(this));
+			Speed = new ListenerProperty<float>(value => speed = value, () => speed, value => AnyChange(this));
 		}
 
 		public ResourceInventoryModel(
 			float rationsValue = 0f,
-			float fuelValue = 0f
+			float fuelValue = 0f,
+			float speedValue = 0f
 		) : this()
 		{
 			rations = rationsValue;
 			fuel = fuelValue;
+			speed = speedValue;
 		}
 
 		/// <summary>
@@ -98,12 +105,15 @@ namespace LunraGames.SpaceFarm.Models
 
 			var newRations = Rations.Value + other.Rations.Value;
 			var newFuel = Fuel.Value + other.Fuel.Value;
+			var newSpeed = Speed.Value + other.Speed.Value;
 
 			if (newRations < 0f) remainder.Rations.Value = Mathf.Abs(newRations);
 			if (newFuel < 0f) remainder.Fuel.Value = Mathf.Abs(newFuel);
+			if (newSpeed < 0f) remainder.Speed.Value = Mathf.Abs(newSpeed);
 
 			assigned.Rations.Value = newRations;
 			assigned.Fuel.Value = newFuel;
+			assigned.Speed.Value = newSpeed;
 
 			return remainder;
 		}
@@ -153,6 +163,7 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			Rations.Value *= value;
 			Fuel.Value *= value;
+			Speed.Value *= value;
 
 			return this;
 		}
@@ -206,15 +217,19 @@ namespace LunraGames.SpaceFarm.Models
 
 			var otherRations = Mathf.Max(0f, maximum.Rations);
 			var otherFuel = Mathf.Max(0f, maximum.Fuel);
+			var otherSpeed = Mathf.Max(0f, maximum.Speed);
 
 			var newRations = Mathf.Clamp(Rations.Value, 0f, otherRations);
 			var newFuel = Mathf.Clamp(Fuel.Value, 0f, otherFuel);
+			var newSpeed = Mathf.Clamp(Speed.Value, 0f, otherSpeed);
 
 			if (newRations < Rations) remainder.Rations.Value = Rations - otherRations;
 			if (newFuel < Fuel) remainder.Fuel.Value = Fuel - otherFuel;
+			if (newSpeed < Speed) remainder.Speed.Value = Speed - otherSpeed;
 
 			assigned.Rations.Value = newRations;
 			assigned.Fuel.Value = newFuel;
+			assigned.Speed.Value = newSpeed;
 
 			return remainder;
 		}
@@ -304,22 +319,27 @@ namespace LunraGames.SpaceFarm.Models
 
 			var minRations = Mathf.Min(Rations, other.Rations);
 			var minFuel = Mathf.Min(Fuel, other.Fuel);
+			var minSpeed = Mathf.Min(Speed, other.Speed);
 
 			var maxRations = Mathf.Max(Rations, other.Rations);
 			var maxFuel = Mathf.Max(Fuel, other.Fuel);
+			var maxSpeed = Mathf.Max(Speed, other.Speed);
 
 			difference.Rations.Value = maxRations - minRations;
 			difference.Fuel.Value = maxFuel - minFuel;
+			difference.Speed.Value = maxSpeed - minSpeed;
 
 			if (minimum)
 			{
 				assigned.Rations.Value = minRations;
 				assigned.Fuel.Value = minFuel;
+				assigned.Speed.Value = minSpeed;
 			}
 			else
 			{
 				assigned.Rations.Value = maxRations;
 				assigned.Fuel.Value = maxFuel;
+				assigned.Speed.Value = maxSpeed;
 			}
 
 			return difference;
@@ -333,6 +353,7 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			Rations.Value = other.Rations.Value;
 			Fuel.Value = other.Fuel.Value;
+			Speed.Value = other.Speed.Value;
 		}
 
 		public ResourceInventoryModel Inverse()
@@ -341,6 +362,7 @@ namespace LunraGames.SpaceFarm.Models
 
 			result.Rations.Value = -Rations.Value;
 			result.Fuel.Value = -Fuel.Value;
+			result.Speed.Value = -Speed.Value;
 
 			return result;
 		}
@@ -350,13 +372,14 @@ namespace LunraGames.SpaceFarm.Models
 			if (other == null) return false;
 			if (other == this) return true;
 
-			return Mathf.Approximately(Rations, other.Rations)
-						&& Mathf.Approximately(Fuel, other.Fuel);
+			return Mathf.Approximately(Rations, other.Rations) &&
+						Mathf.Approximately(Fuel, other.Fuel) &&
+				        Mathf.Approximately(Speed, other.Speed);
 		}
 
 		public override string ToString()
 		{
-			return "Resources:\n\tRations: \t" + Rations.Value + "\n\tFuel: \t" + Fuel.Value;
+			return "Resources:\n\tRations: \t" + Rations.Value + "\n\tFuel: \t" + Fuel.Value + "\n\tSpeed: \t"+Speed.Value;
 		}
 	}
 }
