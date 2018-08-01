@@ -19,8 +19,14 @@
       ],
       "modules": [],
       "refillResources": {},
-      "refillLogisticsResources": {},
-      "maximumLogisticsResources": {},
+      "refillLogisticsResources": {
+        "rations": 0.1,
+        "fuel": 0.1
+      },
+      "maximumLogisticsResources": {
+        "rations": 1.0,
+        "fuel": 1.0
+      },
       "maximumResources": {}
     },
     "inventoryId": "90a2c3b4-7b41-449f-b23f-86bc201a1729",

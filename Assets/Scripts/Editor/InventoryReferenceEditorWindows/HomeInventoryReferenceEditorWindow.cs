@@ -324,6 +324,7 @@ namespace LunraGames.SpaceFarm
 		void SaveSelectedReference<T>(T reference)
 			where T : SaveModel
  		{
+			if (beforeSave != null) beforeSave();
 			SaveLoadService.Save(reference, OnSaveSelectedReference, false);
 		}
 
@@ -384,6 +385,7 @@ namespace LunraGames.SpaceFarm
 			selectedReferenceModified = false;
 			homeSelectedPath.Value = null;
 			homeSelectedSaveType.Value = SaveTypes.Unknown;
+			beforeSave = null;
 		}
 
 		void OnDrawReferenceEntry(SaveModel reference, ref bool isAlternate)

@@ -33,6 +33,8 @@ namespace LunraGames.SpaceFarm
 			}
 		}
 
+		Action beforeSave;
+
 		void OnSaveLoadInitialized(RequestStatus status)
 		{
 			if (status == RequestStatus.Success) return;

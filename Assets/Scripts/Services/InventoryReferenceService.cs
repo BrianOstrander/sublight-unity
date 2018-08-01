@@ -301,6 +301,8 @@ namespace LunraGames.SpaceFarm
 					modelMediator.Load<ModuleReferenceModel>(reference as ModuleReferenceModel, result => OnGetInstanceLoaded(result, done));
 					break;
 				case InventoryTypes.OrbitalCrew:
+					modelMediator.Load<OrbitalCrewReferenceModel>(reference as OrbitalCrewReferenceModel, result => OnGetInstanceLoaded(result, done));
+					break;
 				default:
 					var error = "Unrecognized InventoryType: " + reference.RawModel.InventoryType;
 					Debug.LogError(error);

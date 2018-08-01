@@ -21,6 +21,9 @@ namespace LunraGames.SpaceFarm
 
 			var model = reference.Model.Value;
 
+			// We do this to force caching of resource info.
+			beforeSave = () => model.Slots.All.Value = model.Slots.All.Value;
+
 			EditorGUI.BeginChangeCheck();
 			{
 				model.IsRoot.Value = EditorGUILayout.Toggle("Is Root", model.IsRoot.Value);
@@ -163,7 +166,7 @@ namespace LunraGames.SpaceFarm
 				GUILayout.BeginVertical();
 				{
 					GUILayout.Space(6f);
-					slot.SlotId.Value = GUILayout.TextField(slot.SlotId.Value);
+					slot.SlotId.Value = EditorGUILayout.TextField(slot.SlotId.Value);
 				}
 				GUILayout.EndVertical();
 

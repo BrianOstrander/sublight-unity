@@ -11,17 +11,21 @@
             "rations": 2.0,
             "fuel": 2.0
           },
-          "slotId": "resource_0"
+          "slotId": "f8f054b1-4cd8-4aff-a139-ba625b3a66bb"
         }
       ],
       "modules": [],
       "refillResources": {},
       "refillLogisticsResources": {},
       "maximumLogisticsResources": {},
-      "maximumResources": {}
+      "maximumResources": {
+        "rations": 2.0,
+        "fuel": 2.0
+      }
     },
     "inventoryId": "ba230c9e-33a9-4a26-ba2c-de25cc3a0b27",
-    "name": "Stock Storage"
+    "name": "Stock Storage",
+    "description": ""
   },
   "version": 4,
   "meta": "Stock Storage",
