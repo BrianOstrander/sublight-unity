@@ -4,15 +4,28 @@ namespace LunraGames.SpaceFarm.Models
 {
 	public abstract class ModuleSlotModel : Model
 	{
+		[JsonProperty] int index;
 		[JsonProperty] string slotId;
+		[JsonProperty] string parentSlotId;
 		[JsonProperty] string itemId;
 
 		/// <summary>
-		/// The slot identifier, inventory items should specify this in their
-		/// SlotId to slot themselves here.
+		/// The order these appear in the editor, not used in game for anything
+		/// meaningful.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<int> Index;
+		/// <summary>
+		/// The slot identifier, the base id for this slot that is not unique.
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> SlotId;
+		/// <summary>
+		/// The parent slot identifier, inventory items should specify this in
+		/// their ParentSlotId to slot themselves here. This is unique.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<string> ParentSlotId;
 		/// <summary>
 		/// The item identifier, inventory items should specify their InstanceId
 		/// here when slotting themselves.
@@ -31,7 +44,9 @@ namespace LunraGames.SpaceFarm.Models
 
 		public ModuleSlotModel()
 		{
+			Index = new ListenerProperty<int>(value => index = value, () => index);
 			SlotId = new ListenerProperty<string>(value => slotId = value, () => slotId);
+			ParentSlotId = new ListenerProperty<string>(value => parentSlotId = value, () => parentSlotId);
 			ItemId = new ListenerProperty<string>(value => itemId = value, () => itemId);
 		}
 	}

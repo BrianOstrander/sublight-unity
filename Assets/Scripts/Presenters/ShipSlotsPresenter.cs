@@ -135,7 +135,7 @@ namespace LunraGames.SpaceFarm.Presenters
 						SlotName = module.Name.Value + " - " + slotIndex,
 						TypeName = slotType,
 						ItemName = itemName,
-						IsSelected = selectedSlot != null && slot.SlotId.Value == selectedSlot.SlotId.Value,
+						IsSelected = selectedSlot != null && slot.ParentSlotId.Value == selectedSlot.ParentSlotId.Value,
 						Click = () => OnSlotClick(module, slot, item)
 					};
 					slots.Add(entry);
@@ -161,7 +161,7 @@ namespace LunraGames.SpaceFarm.Presenters
 					var itemModule = item as ModuleInventoryModel;
 					if (itemModule.IsRoot.Value) continue;
 				}
-				var currentlySlotted = item.SlotId.Value == selectedSlot.SlotId.Value;
+				var currentlySlotted = item.ParentSlotId.Value == selectedSlot.ParentSlotId.Value;
 				var buttonText = "Assign";
 
 				if (currentlySlotted) buttonText = "Already Assigned";

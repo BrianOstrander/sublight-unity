@@ -1,0 +1,1 @@
+Git requires a file to save possibly empty folders, this is that file.

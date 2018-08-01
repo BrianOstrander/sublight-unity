@@ -27,9 +27,17 @@ namespace LunraGames.SpaceFarm
 		EditorPrefsEnum<HomeStates> homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
 		EditorPrefsInt homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
 
+		// Unknown: Query in progress
+		// Cancel: Qued for Query
+		// Success: Loaded
+		// Failure: Deselected or failed to load
 		RequestStatus encounterListStatus;
 		SaveModel[] encounterList = new SaveModel[0];
 
+		// Unknown: Query in progress
+		// Cancel: Qued for Query
+		// Success: Loaded
+		// Failure: Deselected or failed to load
 		RequestStatus selectedEncounterStatus;
 		EncounterInfoModel selectedEncounter;
 		bool selectedEncounterModified;
@@ -263,7 +271,7 @@ namespace LunraGames.SpaceFarm
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count()+" |", GUILayout.ExpandWidth(false));
-					GUILayout.Label("Append New Log", GUILayout.ExpandWidth(false));
+					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
 					var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
 					var guid = Guid.NewGuid().ToString();
 					var isBeginning = model.Logs.All.Value.Length == 0;
@@ -455,9 +463,10 @@ namespace LunraGames.SpaceFarm
 
 		void OnDrawEncounterInfo(SaveModel info, ref bool isAlternate)
 		{
-			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey);
+			var isSelected = homeSelectedEncounterPath.Value == info.Path.Value;
+			if (isSelected || isAlternate) EditorGUILayoutExtensions.PushBackgroundColor(isSelected ? Color.blue : Color.grey);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (isAlternate) EditorGUILayoutExtensions.PopColor();
+			if (!isSelected && isAlternate) EditorGUILayoutExtensions.PopBackgroundColor();
 			{
 				var infoPath = info.IsInternal ? info.InternalPath : info.Path;
 				var infoName = Path.GetFileNameWithoutExtension(infoPath);
@@ -490,6 +499,7 @@ namespace LunraGames.SpaceFarm
 				GUILayout.EndHorizontal();
 			}
 			GUILayout.EndVertical();
+			if (isSelected) EditorGUILayoutExtensions.PopBackgroundColor();
 			isAlternate = !isAlternate;
 		}
 

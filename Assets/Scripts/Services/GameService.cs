@@ -10,6 +10,17 @@ namespace LunraGames.SpaceFarm
 {
 	public class GameService
 	{
+		static class DefaultShip
+		{
+			public const string StockRoot = "eccdddb4-553f-4f7a-be7e-b68799839bc8";
+			public const string StockOrbiterBay = "23c48a72-e35a-44d6-bd7e-29e600a76046";
+			public const string StockStorage = "ba230c9e-33a9-4a26-ba2c-de25cc3a0b27";
+			public const string StockLogistics = "90a2c3b4-7b41-449f-b23f-86bc201a1729";
+			public const string StockTerrestrialOrbiter = "84af3d23-d1c6-4bfd-bec1-c17b11c15269";
+			public const string StockStellarOrbiter = "290702f5-d9a7-43e4-907f-23dfdb579eb9";
+			public const string StockMultiOrbiter = "3442e5dd-00ae-4a1a-bd1c-234e652901d7";
+		}
+
 		IModelMediator modelMediator;
 		IUniverseService universeService;
 
@@ -88,6 +99,9 @@ namespace LunraGames.SpaceFarm
 			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
 			game.EndSystem.Value = endSector.Systems.Value.First().Position;
 
+
+
+			/*
 			// Generating inventory, eventually will be done somewhere else...
 
 			// - Root
@@ -164,7 +178,142 @@ namespace LunraGames.SpaceFarm
 				orbitalShuttle1,
 				orbitalShuttle2
 			};
+			*/
 
+			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockRoot, instanceResult => OnStockRootLoaded(instanceResult, game, done));
+		}
+
+		void OnStockRootLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			game.Ship.Value.Inventory.All.Value = new InventoryModel[] { result.Instance };
+
+			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockOrbiterBay, instanceResult => OnStockOrbiterBayLoaded(instanceResult, game, done));
+		}
+
+		void OnStockOrbiterBayLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+
+			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockStorage, instanceResult => OnStockStorageLoaded(instanceResult, game, done));
+		}
+
+		void OnStockStorageLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+
+			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockLogistics, instanceResult => OnStockLogisticsLoaded(instanceResult, game, done));
+		}
+
+		void OnStockLogisticsLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+
+			App.InventoryReferences.GetInstance<OrbitalCrewInventoryModel>(DefaultShip.StockTerrestrialOrbiter, instanceResult => OnStockTerrestrialOrbiterLoaded(instanceResult, game, done));
+		}
+
+		void OnStockTerrestrialOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+
+			App.InventoryReferences.GetInstance<OrbitalCrewInventoryModel>(DefaultShip.StockStellarOrbiter, instanceResult => OnStockStellarOrbiterLoaded(instanceResult, game, done));
+		}
+
+		void OnStockStellarOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+
+			App.InventoryReferences.GetInstance<OrbitalCrewInventoryModel>(DefaultShip.StockMultiOrbiter, instanceResult => OnStockMultiOrbiterLoaded(instanceResult, game, done));
+		}
+
+		void OnStockMultiOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+
+			OnConnectShip(game, done);
+		}
+
+		void OnConnectShip(GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			var inventory = game.Ship.Value.Inventory;
+
+			var stockRoot = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockRoot);
+			var stockOrbiterBay = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockOrbiterBay);
+			var stockStorage = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockStorage);
+			var stockLogistics = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockLogistics);
+
+			var stockTerrestrialOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockTerrestrialOrbiter);
+			var stockStellarOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockStellarOrbiter);
+			var stockMultiOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockMultiOrbiter);
+
+			var rootModule0 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_0");
+			var rootModule1 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_1");
+			var rootModule2 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_2");
+			var rootModule3 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_3");
+
+			var orbitalBayOrbital0 = stockOrbiterBay.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("orbital_0");
+			var orbitalBayOrbital1 = stockOrbiterBay.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("orbital_1");
+
+			inventory.Connect(rootModule0, stockOrbiterBay);
+			inventory.Connect(rootModule1, stockStorage);
+			inventory.Connect(rootModule2, stockLogistics);
+
+			inventory.Connect(orbitalBayOrbital0, stockTerrestrialOrbiter);
+			inventory.Connect(orbitalBayOrbital1, stockStellarOrbiter);
+
+			OnShipReady(game, done);
+		}
+
+		void OnShipReady(GameModel game, Action<RequestStatus, GameModel> done)
+		{
 			// Uncomment this to make the game easy.
 			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
 

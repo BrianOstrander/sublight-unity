@@ -56,6 +56,9 @@ namespace LunraGames.SpaceFarm
 		EncounterService encounters;
 		public static EncounterService Encounters { get { return instance.encounters; } }
 
+		InventoryReferenceService inventoryReferences;
+		public static InventoryReferenceService InventoryReferences { get { return instance.inventoryReferences; } }
+
 		KeyValueService keyValues;
 		public static KeyValueService KeyValues { get { return instance.keyValues; } }
 
@@ -124,14 +127,14 @@ namespace LunraGames.SpaceFarm
 #if UNITY_EDITOR
 				logging = new EditorLogService();
 				input = new EditorInputService(Heartbeat, Callbacks);
-				modelMediator = new EditorSaveLoadService();
+				modelMediator = new DesktopModelMediator();
 #endif
 			}
 			else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.WindowsPlayer)
 			{
 				logging = new DesktopLogService();
 				input = new DesktopInputService(Heartbeat, Callbacks);
-				modelMediator = new DesktopSaveLoadService();
+				modelMediator = new DesktopModelMediator();
 			}
 			else
 			{
@@ -139,6 +142,7 @@ namespace LunraGames.SpaceFarm
 			}
 
 			encounters = new EncounterService(M, Logging, Callbacks);
+			inventoryReferences = new InventoryReferenceService(M, Logging, Callbacks);
 			scenes = new SceneService(Logging, Callbacks);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
@@ -147,8 +151,7 @@ namespace LunraGames.SpaceFarm
 
 		public static void Restart(string message)
 		{
-			Debug.LogError(message);
-			throw new NotImplementedException();
+			Debug.LogError("NO RESTART LOGIC DEFINED - TRIGGERED BY:\n" + message);
 		}
 
 		#region Global setters

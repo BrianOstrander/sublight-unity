@@ -1,0 +1,51 @@
+{
+  "model": {
+    "isRoot": true,
+    "slots": {
+      "crews": [],
+      "resources": [
+        {
+          "refillResources": {
+            "rations": -0.02
+          },
+          "refillLogisticsResources": {},
+          "maximumLogisticsResources": {},
+          "maximumResources": {},
+          "index": 6,
+          "slotId": "resource_0"
+        }
+      ],
+      "modules": [
+        {
+          "index": 2,
+          "slotId": "module_0"
+        },
+        {
+          "index": 3,
+          "slotId": "module_1"
+        },
+        {
+          "index": 4,
+          "slotId": "module_2"
+        },
+        {
+          "index": 5,
+          "slotId": "module_3"
+        }
+      ],
+      "refillResources": {
+        "rations": -0.02
+      },
+      "refillLogisticsResources": {},
+      "maximumLogisticsResources": {},
+      "maximumResources": {}
+    },
+    "inventoryId": "eccdddb4-553f-4f7a-be7e-b68799839bc8",
+    "name": "Stock Root"
+  },
+  "version": 4,
+  "meta": "Stock Root",
+  "created": "2018-07-25T12:25:59.70448-07:00",
+  "modified": "2018-07-25T12:25:59.70448-07:00",
+  "SaveType": "ModuleReference"
+}

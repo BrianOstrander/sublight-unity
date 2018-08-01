@@ -13,6 +13,7 @@ namespace LunraGamesEditor
 	public static class EditorGUILayoutExtensions
 	{
 		static Stack<Color> ColorStack = new Stack<Color>();
+		static Stack<Color> BackgroundColorStack = new Stack<Color>();
 		static Stack<bool> EnabledStack = new Stack<bool>();
 
 		/// <summary>
@@ -71,6 +72,18 @@ namespace LunraGamesEditor
 		{
 			if (ColorStack.Count == 0) return;
 			GUI.color = ColorStack.Pop();
+		}
+
+		public static void PushBackgroundColor(Color backgroundColor)
+		{
+			BackgroundColorStack.Push(GUI.backgroundColor);
+			GUI.backgroundColor = backgroundColor;
+		}
+
+		public static void PopBackgroundColor()
+		{
+			if (BackgroundColorStack.Count == 0) return;
+			GUI.backgroundColor = BackgroundColorStack.Pop();
 		}
 
 		public static void PushEnabled(bool enabled)
@@ -134,7 +147,24 @@ namespace LunraGamesEditor
 		}
 
 		public static T[] EnumArray<T>(
-			string name, 
+			string name,
+			T[] values,
+			string primaryReplacemnt = null,
+			T defaultValue = default(T),
+			T[] options = null
+		) where T : struct, IConvertible
+		{
+			return EnumArray(
+				new GUIContent(name),
+				values,
+				primaryReplacemnt,
+				defaultValue,
+				options
+			);
+		}
+
+		public static T[] EnumArray<T>(
+			GUIContent content, 
 			T[] values, 
 			string primaryReplacemnt = null, 
 			T defaultValue = default(T),
@@ -147,7 +177,7 @@ namespace LunraGamesEditor
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(name);
+				GUILayout.Label(content);
 				if (GUILayout.Button("Preappend", GUILayout.Width(90f))) values = values.Prepend(defaultValue).ToArray();
 				if (GUILayout.Button("Append", GUILayout.Width(90f))) values = values.Append(defaultValue).ToArray();
 			}
@@ -166,9 +196,7 @@ namespace LunraGamesEditor
 						GUILayout.Space(16f);
 						GUILayout.Label("[ " + i + " ]", GUILayout.Width(32f));
 						values[i] = HelpfulEnumPopup(primaryReplacemnt, values[i], options);
-						PushColor(Color.red);
-						if (GUILayout.Button("X", GUILayout.Width(18f))) deletedIndex = i;
-						PopColor();
+						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();
 				}
