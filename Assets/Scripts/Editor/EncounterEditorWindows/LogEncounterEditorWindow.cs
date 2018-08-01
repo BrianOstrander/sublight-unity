@@ -282,8 +282,11 @@ namespace LunraGames.SpaceFarm
 						if (OnInventoryLogHeader(infoModel, model, operation)) deleted = operation.OperationId.Value;
 						switch (operation.Operation)
 						{
-							case InventoryOperations.AddResource:
+							case InventoryOperations.AddResources:
 								OnInventoryLogAddResource(infoModel, model, operation as AddResourceOperationModel);
+								break;
+							case InventoryOperations.AddInstance:
+								OnInventoryLogAddInstance(infoModel, model, operation as AddInstanceOperationModel);
 								break;
 							default:
 								Debug.LogError("Unrecognized InventoryOperation: " + operation.Operation);
@@ -329,6 +332,15 @@ namespace LunraGames.SpaceFarm
 			EditorGUILayoutResource.Values(operation.Value);
 		}
 
+		void OnInventoryLogAddInstance(
+			EncounterInfoModel infoModel,
+			InventoryEncounterLogModel model,
+			AddInstanceOperationModel operation
+		)
+		{
+			operation.InventoryId.Value = EditorGUILayout.TextField("Inventory Id", operation.InventoryId);
+		}
+
 		void OnInventoryLogSpawn(
 			EncounterInfoModel infoModel,
 			InventoryEncounterLogModel model,
@@ -338,10 +350,15 @@ namespace LunraGames.SpaceFarm
 			var guid = Guid.NewGuid().ToString();
 			switch (operation)
 			{
-				case InventoryOperations.AddResource:
+				case InventoryOperations.AddResources:
 					var addResource = new AddResourceOperationModel();
 					addResource.OperationId.Value = guid;
 					model.Operations.Value = model.Operations.Value.Append(addResource).ToArray();
+					break;
+				case InventoryOperations.AddInstance:
+					var addInstance = new AddInstanceOperationModel();
+					addInstance.OperationId.Value = guid;
+					model.Operations.Value = model.Operations.Value.Append(addInstance).ToArray();
 					break;
 				default:
 					Debug.LogError("Unrecognized InventoryOperation: " + operation);

@@ -180,7 +180,7 @@ namespace LunraGames.SpaceFarm
 			};
 			*/
 
-			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockRoot, instanceResult => OnStockRootLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockRoot, instanceResult => OnStockRootLoaded(instanceResult, game, done));
 		}
 
 		void OnStockRootLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -192,9 +192,9 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.All.Value = new InventoryModel[] { result.Instance };
+			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockOrbiterBay, instanceResult => OnStockOrbiterBayLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockOrbiterBay, instanceResult => OnStockOrbiterBayLoaded(instanceResult, game, done));
 		}
 
 		void OnStockOrbiterBayLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -206,9 +206,9 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockStorage, instanceResult => OnStockStorageLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockStorage, instanceResult => OnStockStorageLoaded(instanceResult, game, done));
 		}
 
 		void OnStockStorageLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -220,9 +220,9 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.GetInstance<ModuleInventoryModel>(DefaultShip.StockLogistics, instanceResult => OnStockLogisticsLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockLogistics, instanceResult => OnStockLogisticsLoaded(instanceResult, game, done));
 		}
 
 		void OnStockLogisticsLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -234,9 +234,9 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.GetInstance<OrbitalCrewInventoryModel>(DefaultShip.StockTerrestrialOrbiter, instanceResult => OnStockTerrestrialOrbiterLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(DefaultShip.StockTerrestrialOrbiter, instanceResult => OnStockTerrestrialOrbiterLoaded(instanceResult, game, done));
 		}
 
 		void OnStockTerrestrialOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -248,9 +248,9 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.GetInstance<OrbitalCrewInventoryModel>(DefaultShip.StockStellarOrbiter, instanceResult => OnStockStellarOrbiterLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(DefaultShip.StockStellarOrbiter, instanceResult => OnStockStellarOrbiterLoaded(instanceResult, game, done));
 		}
 
 		void OnStockStellarOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -262,9 +262,9 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.GetInstance<OrbitalCrewInventoryModel>(DefaultShip.StockMultiOrbiter, instanceResult => OnStockMultiOrbiterLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(DefaultShip.StockMultiOrbiter, instanceResult => OnStockMultiOrbiterLoaded(instanceResult, game, done));
 		}
 
 		void OnStockMultiOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -276,7 +276,7 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.All.Value = game.Ship.Value.Inventory.All.Value.Append(result.Instance).ToArray();
+			game.Ship.Value.Inventory.Add(result.Instance);
 
 			OnConnectShip(game, done);
 		}

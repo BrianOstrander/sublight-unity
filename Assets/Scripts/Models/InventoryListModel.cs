@@ -365,6 +365,11 @@ namespace LunraGames.SpaceFarm.Models
 				return 0 < GetUnUsableInventory().Length;
 			}
 		}
+
+		public void Add(InventoryModel entry)
+		{
+			All.Value = All.Value.Append(entry).ToArray();
+		}
 		#endregion
 
 		#region Events

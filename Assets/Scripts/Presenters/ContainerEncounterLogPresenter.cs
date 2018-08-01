@@ -182,55 +182,127 @@ namespace LunraGames.SpaceFarm.Presenters
 
 		void OnLogicLog(EncounterLogModel logModel)
 		{
+			// Some logic may be halting, so we have a done action for them to
+			// call when they're finished.
+			Action done = () => OnHandledLog(logModel);
+
 			switch(logModel.LogType)
 			{
 				case EncounterLogTypes.KeyValue:
-					OnKeyValueLog(logModel as KeyValueEncounterLogModel);
+					OnKeyValueLog(logModel as KeyValueEncounterLogModel, done);
 					break;
 				case EncounterLogTypes.Inventory:
-					OnInventoryLog(logModel as InventoryEncounterLogModel);
+					OnInventoryLog(logModel as InventoryEncounterLogModel, done);
 					break;
 				default:
 					Debug.LogError("Unrecognized Logic LogType: " + logModel.LogType);
+					done();
 					break;
 			}
-
-			OnHandledLog(logModel);
 		}
 
-		void OnKeyValueLog(KeyValueEncounterLogModel logModel)
+		void OnKeyValueLog(KeyValueEncounterLogModel logModel, Action done)
 		{
+			var total = logModel.Operations.Value.Length;
+
+			if (total == 0)
+			{
+				done();
+				return;
+			}
+
+			var progress = 0;
+
 			foreach (var entry in logModel.Operations.Value)
 			{
 				switch(entry.Operation)
 				{
 					case KeyValueOperations.SetString:
 						var setString = entry as SetStringOperationModel;
-						App.Callbacks.KeyValueRequest(KeyValueRequest.Set(entry.Target.Value, entry.Key.Value, setString.Value.Value));
+						App.Callbacks.KeyValueRequest(
+							KeyValueRequest.Set(
+								entry.Target.Value,
+								entry.Key.Value,
+								setString.Value.Value,
+								result => OnKeyValueLogDone(result, total, ref progress, done)
+							)
+						);
 						break;
 					default:
 						Debug.LogError("Unrecognized KeyValueType: " + entry.Operation);
-						break;
+						done();
+						return;
 				}
 			}
 		}
 
-		void OnInventoryLog(InventoryEncounterLogModel logModel)
+		void OnKeyValueLogDone<T>(KeyValueResult<T> result, int total, ref int progress, Action done) where T : IConvertible
 		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Setting " + result.TargetKey + " = " + result.Value + " returned with status: " + result.Status + " and error:\n" + result.Error);
+				Debug.LogWarning("Continuing after this failure may result in unpredictable behaviour.");
+			}
+			progress++;
+			if (total == progress) done();
+		}
+
+		void OnInventoryLog(InventoryEncounterLogModel logModel, Action done)
+		{
+			var total = logModel.Operations.Value.Length;
+
+			if (total == 0)
+			{
+				done();
+				return;
+			}
+
+			var progress = 0;
+
 			foreach (var entry in logModel.Operations.Value)
 			{
 				switch (entry.Operation)
 				{
-					case InventoryOperations.AddResource:
+					case InventoryOperations.AddResources:
 						var addResource = entry as AddResourceOperationModel;
 						var currentResources = model.Ship.Value.Inventory.AllResources.Duplicate;
 						model.Ship.Value.Inventory.AllResources.Assign(currentResources.Add(addResource.Value).ClampNegatives());
+						OnInventoryLogDone(total, ref progress, done);
+						break;
+					case InventoryOperations.AddInstance:
+						var addInstance = entry as AddInstanceOperationModel;
+						App.InventoryReferences.CreateInstance(
+							addInstance.InventoryId,
+							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
+						);
 						break;
 					default:
 						Debug.LogError("Unrecognized InventoryOperation: " + entry.Operation);
-						break;
+						done();
+						return;
 				}
 			}
+		}
+
+		void OnInventoryLogCreateInstance(InventoryReferenceRequest<InventoryModel> result, int total, ref int progress, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Creating instance from reference returned with status: " + result.Status + " and error:\n" + result.Error);
+				Debug.LogWarning("Continuing after this failure may result in unpredictable behaviour.");
+			}
+			else
+			{
+				model.Ship.Value.Inventory.Add(result.Instance);
+			}
+
+			OnInventoryLogDone(total, ref progress, done);
+		}
+
+		void OnInventoryLogDone(int total, ref int progress, Action done)
+		{
+			progress++;
+			if (total == progress) done();
 		}
 
 		void OnHandledLog(EncounterLogModel logModel)

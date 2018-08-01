@@ -283,7 +283,12 @@ namespace LunraGames.SpaceFarm
 		#endregion
 
 		#region Utility
-		public void GetInstance<M>(string inventoryId, Action<InventoryReferenceRequest<M>> done)
+		public void CreateInstance(string inventoryId, Action<InventoryReferenceRequest<InventoryModel>> done)
+		{
+			CreateInstance<InventoryModel>(inventoryId, done);
+		}
+
+		public void CreateInstance<M>(string inventoryId, Action<InventoryReferenceRequest<M>> done)
 			where M : InventoryModel
 		{
 			var reference = references.GetReferenceFirstOrDefault(inventoryId);
@@ -298,10 +303,10 @@ namespace LunraGames.SpaceFarm
 			switch(reference.RawModel.InventoryType)
 			{
 				case InventoryTypes.Module:
-					modelMediator.Load<ModuleReferenceModel>(reference as ModuleReferenceModel, result => OnGetInstanceLoaded(result, done));
+					modelMediator.Load<ModuleReferenceModel>(reference as ModuleReferenceModel, result => OnCreateInstanceLoaded(result, done));
 					break;
 				case InventoryTypes.OrbitalCrew:
-					modelMediator.Load<OrbitalCrewReferenceModel>(reference as OrbitalCrewReferenceModel, result => OnGetInstanceLoaded(result, done));
+					modelMediator.Load<OrbitalCrewReferenceModel>(reference as OrbitalCrewReferenceModel, result => OnCreateInstanceLoaded(result, done));
 					break;
 				default:
 					var error = "Unrecognized InventoryType: " + reference.RawModel.InventoryType;
@@ -311,7 +316,7 @@ namespace LunraGames.SpaceFarm
 			}
 		}
 
-		void OnGetInstanceLoaded<R, M>(SaveLoadRequest<R> result, Action<InventoryReferenceRequest<M>> done)
+		void OnCreateInstanceLoaded<R, M>(SaveLoadRequest<R> result, Action<InventoryReferenceRequest<M>> done)
 			where R : SaveModel, IInventoryReferenceModel
 			where M : InventoryModel
 		{
