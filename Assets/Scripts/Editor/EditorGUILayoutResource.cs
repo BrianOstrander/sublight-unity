@@ -28,6 +28,7 @@ namespace LunraGames.SpaceFarm
 		{
 			model.Rations.Value = EditorGUILayout.FloatField("Rations", model.Rations.Value);
 			model.Fuel.Value = EditorGUILayout.FloatField("Fuel", model.Fuel.Value);
+			model.Speed.Value = EditorGUILayout.FloatField("Speed", model.Speed.Value);
 		}
 	}
 }

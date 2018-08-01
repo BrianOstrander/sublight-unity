@@ -11,7 +11,7 @@
           "refillLogisticsResources": {},
           "maximumLogisticsResources": {},
           "maximumResources": {},
-          "index": 6,
+          "index": 7,
           "slotId": "resource_0"
         }
       ],
@@ -31,6 +31,10 @@
         {
           "index": 5,
           "slotId": "module_3"
+        },
+        {
+          "index": 6,
+          "slotId": "module_4"
         }
       ],
       "refillResources": {
