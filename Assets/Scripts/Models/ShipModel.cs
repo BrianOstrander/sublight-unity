@@ -10,7 +10,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] UniversePosition nextSystem;
 		[JsonProperty] UniversePosition currentSystem;
 		[JsonProperty] UniversePosition position;
-		[JsonProperty] float speed;
 		[JsonProperty] DayTime maximumNavigationTime;
 		[JsonProperty] float fuelConsumption;
 		[JsonProperty] float resourceDetection;
@@ -24,11 +23,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> Position;
 
-		/// <summary>
-		/// Basically the speed of the ship, expressed in universe units per day.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Speed;
 		/// <summary>
 		/// The maximum length of a journey, in time.
 		/// </summary>
@@ -81,7 +75,6 @@ namespace LunraGames.SpaceFarm.Models
 			NextSystem = new ListenerProperty<UniversePosition>(value => nextSystem = value, () => nextSystem);
 			CurrentSystem = new ListenerProperty<UniversePosition>(value => currentSystem = value, () => currentSystem);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
-			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
 			MaximumNavigationTime = new ListenerProperty<DayTime>(value => maximumNavigationTime = value, () => maximumNavigationTime);
 			FuelConsumption = new ListenerProperty<float>(value => fuelConsumption = value, () => fuelConsumption);
 			ResourceDetection = new ListenerProperty<float>(value => resourceDetection = value, () => resourceDetection);
@@ -92,7 +85,7 @@ namespace LunraGames.SpaceFarm.Models
 				value => travelRadius = value, 
 				() => travelRadius,
 				DeriveTravelRadius,
-				Speed,
+				Inventory.MaximumResources.Speed,
 				MaximumNavigationTime,
 				Inventory.UsableResources.Rations,
 				FuelConsumption
@@ -102,7 +95,7 @@ namespace LunraGames.SpaceFarm.Models
 				value => currentSpeed = value,
 				() => currentSpeed,
 				DeriveCurrentSpeed,
-				Speed,
+				Inventory.MaximumResources.Speed,
 				FuelConsumption
 			);
 
@@ -110,7 +103,7 @@ namespace LunraGames.SpaceFarm.Models
 				value => maximumSpeed = value,
 				() => maximumSpeed,
 				DeriveMaximumSpeed,
-				Speed,
+				Inventory.MaximumResources.Speed,
 				Inventory.MaximumResources.Fuel
 			);
 		}

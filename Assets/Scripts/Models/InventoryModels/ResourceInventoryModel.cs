@@ -25,6 +25,9 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
+		/// <summary>
+		/// Basically the speed of the ship, expressed in universe units per day.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Speed;
 		[JsonIgnore]

@@ -60,7 +60,7 @@ namespace LunraGames.SpaceFarm
 			var rations = 0.3f;
 			var fuel = 1f;
 			var fuelConsumption = 1f;
-			var speed = 0.012f;
+			//var speed = 0.012f;
 			var rationConsumption = 0.02f;
 			var resourceDetection = 0.5f;
 			var maximumNavigationTime = 10f;
@@ -68,7 +68,6 @@ namespace LunraGames.SpaceFarm
 			var ship = new ShipModel();
 			ship.CurrentSystem.Value = startSystem.Position;
 			ship.Position.Value = startPosition;
-			ship.Speed.Value = speed;
 			ship.Inventory.AllResources.Rations.Value = rations;
 			ship.Inventory.AllResources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;

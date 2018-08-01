@@ -25,7 +25,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Inventory.MaximumResources.Rations.Changed += OnMaxRations;
 			ship.Inventory.MaximumResources.Fuel.Changed += OnMaxFuel;
 			ship.MaximumSpeed.Changed += OnMaxSpeed;
-			ship.Speed.Changed += OnSpeed;
+			ship.Inventory.MaximumResources.Speed.Changed += OnSpeed;
 			ship.Inventory.UnUsableResources.Rations.Changed += OnUnusedRations;
 			ship.Inventory.UnUsableResources.Fuel.Changed += OnUnusedFuel;
 			ship.Inventory.RefillLogisticsResources.Rations.Changed += OnRationGeneration;
@@ -42,7 +42,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			ship.Inventory.MaximumResources.Rations.Changed -= OnMaxRations;
 			ship.Inventory.MaximumResources.Fuel.Changed -= OnMaxFuel;
 			ship.MaximumSpeed.Changed -= OnMaxSpeed;
-			ship.Speed.Changed -= OnSpeed;
+			ship.Inventory.MaximumResources.Speed.Changed -= OnSpeed;
 			ship.Inventory.UnUsableResources.Rations.Changed -= OnUnusedRations;
 			ship.Inventory.UnUsableResources.Fuel.Changed -= OnUnusedFuel;
 			ship.Inventory.RefillLogisticsResources.Rations.Changed -= OnRationGeneration;
@@ -66,7 +66,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			View.MaxRations = ship.Inventory.MaximumResources.Rations;
 			View.MaxFuel = ship.Inventory.MaximumResources.Fuel;
 			View.MaxSpeed = ship.MaximumSpeed;
-			View.Speed = ship.Speed;
+			View.Speed = ship.Inventory.MaximumResources.Speed;
 			View.LooseRations = ship.Inventory.UnUsableResources.Rations;
 			View.LooseFuel = ship.Inventory.UnUsableResources.Fuel;
 			View.RationGeneration = ship.Inventory.RefillLogisticsResources.Rations;
