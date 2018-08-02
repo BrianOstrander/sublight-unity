@@ -1,4 +1,6 @@
-﻿using LunraGames.SpaceFarm.Models;
+﻿using UnityEngine;
+
+using LunraGames.SpaceFarm.Models;
 
 namespace LunraGames.SpaceFarm
 {
@@ -30,7 +32,7 @@ namespace LunraGames.SpaceFarm
 		{
 			return new InventoryReferenceContext(
 				model.DayTime,
-				0.1f // TODO: THIS SHOULD BE DYNAMIC FROM SHIP INVENTORY
+				Mathf.Clamp01(1f - model.Ship.Value.Inventory.MaximumResources.EstimateFailureRange.Value)
 			);
 		}
 

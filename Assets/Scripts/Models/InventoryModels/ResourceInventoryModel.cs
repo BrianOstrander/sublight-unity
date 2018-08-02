@@ -33,6 +33,11 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Speed;
+		/// <summary>
+		/// The estimate failure range modifier. This is a positive value that
+		/// can be subtracted from 1 to find the proper range. Higher values are
+		/// better.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> EstimateFailureRange;
 
