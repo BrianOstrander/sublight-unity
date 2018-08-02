@@ -18,7 +18,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
 			App.Callbacks.ClearInventoryRequest += OnClearInventory;
 			model.TravelRequest.Changed += OnTravelRequest;
-			model.Ship.Value.Position.Changed += OnShipPosition;
+
+			ship.Position.Changed += OnShipPosition;
+			ship.Inventory.NextEstimatedFailure.Changed += OnNextEstimatedFailure;
+			ship.Inventory.NextFailure.Changed += OnNextFailure;
 		}
 
 		protected override void OnUnBind()
@@ -26,7 +29,10 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
 			App.Callbacks.ClearInventoryRequest -= OnClearInventory;
 			model.TravelRequest.Changed -= OnTravelRequest;
-			model.Ship.Value.Position.Changed -= OnShipPosition;
+
+			ship.Position.Changed -= OnShipPosition;
+			ship.Inventory.NextEstimatedFailure.Changed -= OnNextEstimatedFailure;
+			ship.Inventory.NextFailure.Changed -= OnNextFailure;
 		}
 
 		public void Show()
@@ -90,6 +96,9 @@ namespace LunraGames.SpaceFarm.Presenters
 				);
 				model.TravelRequest.Value = travel;
 			}
+
+			// Module failure
+			ship.Inventory.CurrentDayTime.Value = delta.Current;
 		}
 
 		void OnTravelRequest(TravelRequest travelRequest)
@@ -122,6 +131,16 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnShipPosition(UniversePosition position)
 		{
 			if (View.TransitionState == TransitionStates.Shown) View.UniversePosition = position;
+		}
+
+		void OnNextEstimatedFailure(DayTime nextEstimatedFailure)
+		{
+			Debug.Log("The next estimated failure is " + nextEstimatedFailure);
+		}
+
+		void OnNextFailure(DayTime nextFailure)
+		{
+			Debug.Log("The next failure is " + nextFailure);
 		}
 		#endregion
 	}

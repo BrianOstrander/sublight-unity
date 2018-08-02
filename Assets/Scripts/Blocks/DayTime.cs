@@ -17,6 +17,7 @@ namespace LunraGames.SpaceFarm
 		const float TimeInDay = 1f;
 
 		public static DayTime Zero { get { return new DayTime(); } }
+		public static DayTime MaxValue { get { return new DayTime(int.MaxValue); } }
 
 		public static DayTime FromYear(float years)
 		{
@@ -63,6 +64,13 @@ namespace LunraGames.SpaceFarm
 		/// <value>The years.</value>
 		[JsonIgnore]
 		public float TotalYears { get { return TotalTime / DaysInYear; } }
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:LunraGames.SpaceFarm.DayTime"/> is zero.
+		/// </summary>
+		/// <value><c>true</c> if is zero; otherwise, <c>false</c>.</value>
+		[JsonIgnore]
+		public bool IsZero { get { return Day == 0 && Mathf.Approximately(0f, Time); } }
 
 		public DayTime(float time)
 		{
@@ -242,7 +250,7 @@ namespace LunraGames.SpaceFarm
 
 		public override string ToString()
 		{
-			return "TotalTime: " + TotalTime;
+			return "TotalYears: " + TotalYears;
 		}
 	}
 }

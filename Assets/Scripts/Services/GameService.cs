@@ -61,8 +61,6 @@ namespace LunraGames.SpaceFarm
 			var rations = 0.3f;
 			var fuel = 1f;
 			var fuelConsumption = 1f;
-			//var speed = 0.012f;
-			var rationConsumption = 0.02f;
 			var resourceDetection = 0.5f;
 			var maximumNavigationTime = 10f;
 
@@ -363,8 +361,12 @@ namespace LunraGames.SpaceFarm
 
 		void OnShipReady(GameModel game, Action<RequestStatus, GameModel> done)
 		{
-			// Uncomment this to make the game easy.
+			// Uncomment this to make the goal closer.
 			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
+
+			// Uncomment this to make the void never expand
+			game.DestructionSpeed.Value = 0f;
+			game.DestructionSpeedIncrement.Value = 0f;
 
 			modelMediator.Save(game, result => OnSaveGame(result, done));
 		}
