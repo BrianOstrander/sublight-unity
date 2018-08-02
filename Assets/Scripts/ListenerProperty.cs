@@ -5,6 +5,7 @@ namespace LunraGames.SpaceFarm
 {
 	public class ListenerProperty<T>
 	{
+		public string Name { get; private set; }
 		Action<T> set;
 		Func<T> get;
 
@@ -21,13 +22,16 @@ namespace LunraGames.SpaceFarm
 			}
 		}
 
-		public ListenerProperty(Action<T> set, Func<T> get, params Action<T>[] listeners)
+		public ListenerProperty(Action<T> set, Func<T> get, string name, params Action<T>[] listeners)
 		{
+			Name = name;
 			this.set = set;
 			this.get = get;
 
 			foreach (var listener in listeners) Changed += listener;
 		}
+
+		public ListenerProperty(Action<T> set, Func<T> get, params Action<T>[] listeners) : this (set, get, null, listeners) {}
 
 		/// <summary>
 		/// Converts the ModelProperty to the associated type.

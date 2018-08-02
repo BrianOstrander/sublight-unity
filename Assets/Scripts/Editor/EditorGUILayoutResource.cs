@@ -28,9 +28,10 @@ namespace LunraGames.SpaceFarm
 
 		public static void Values(ResourceInventoryModel model)
 		{
-			model.Rations.Value = EditorGUILayout.FloatField("Rations", model.Rations.Value);
-			model.Fuel.Value = EditorGUILayout.FloatField("Fuel", model.Fuel.Value);
-			model.Speed.Value = EditorGUILayout.FloatField("Speed", model.Speed.Value);
+			foreach (var value in model.Values)
+			{
+				value.Value = EditorGUILayout.FloatField(value.Name, value.Value);
+			}
 		}
 	}
 }

@@ -59,6 +59,9 @@ namespace LunraGames.SpaceFarm.Models
 		public override InventoryTypes InventoryType { get { return InventoryTypes.Module; } }
 		public override bool IsUsable { get { return base.IsUsable || IsRoot.Value; } }
 
+		public bool IsEstimatedFunctional(DayTime current) { return current < EstimatedFailureDate.Value; }
+		public bool IsFunctional(DayTime current) { return current < FailureDate.Value; }
+
 		public ModuleInventoryModel()
 		{
 			IsRoot = new ListenerProperty<bool>(value => isRoot = value, () => isRoot);
