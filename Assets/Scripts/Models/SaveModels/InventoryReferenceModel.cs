@@ -22,23 +22,23 @@ namespace LunraGames.SpaceFarm.Models
 			Model = new ListenerProperty<T>(value => model = value, () => model);
 		}
 
-		public void InitializeInstance()
+		public void InitializeInstance(InventoryReferenceContext context)
 		{
 			if (isInitialized) return;
 			isInitialized = true;
 
 			Model.Value.InstanceId.Value = Guid.NewGuid().ToString();
 
-			OnInitializeInstance();
+			OnInitializeInstance(context);
 		}
 
-		protected virtual void OnInitializeInstance() {}
+		protected virtual void OnInitializeInstance(InventoryReferenceContext context) {}
 	}
 
 	public interface IInventoryReferenceModel
 	{
 		InventoryModel RawModel { get; }
 
-		void InitializeInstance();
+		void InitializeInstance(InventoryReferenceContext context);
 	}
 }

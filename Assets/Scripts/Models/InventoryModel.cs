@@ -24,7 +24,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public virtual bool SlotRequired { get { return true; } }
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:LunraGames.SpaceFarm.Models.InventoryModel"/> is slotted.
+		/// Gets a value indicating whether this <see cref="T:LunraGames.SpaceFarm.Models.InventoryModel"/> is slotted or needs to be.
 		/// </summary>
 		/// <value><c>true</c> if is slotted; otherwise, <c>false</c>.</value>
 		[JsonIgnore]

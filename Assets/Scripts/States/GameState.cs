@@ -51,6 +51,7 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.TravelRequest.Changed += OnTravelRequest;
 			App.Callbacks.FocusRequest += OnFocus;
 
+
 			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues);
 			Payload.KeyValueListener.Register();
 

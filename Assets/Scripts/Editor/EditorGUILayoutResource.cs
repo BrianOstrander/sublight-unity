@@ -19,16 +19,19 @@ namespace LunraGames.SpaceFarm
 			if (color.HasValue) EditorGUILayoutExtensions.PushColor(color.Value);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
 			if (color.HasValue) EditorGUILayoutExtensions.PopColor();
-			GUILayout.Label(content, EditorStyles.boldLabel);
-			Values(model);
+			{
+				GUILayout.Label(content, EditorStyles.boldLabel);
+				Values(model);
+			}
 			GUILayout.EndVertical();
 		}
 
 		public static void Values(ResourceInventoryModel model)
 		{
-			model.Rations.Value = EditorGUILayout.FloatField("Rations", model.Rations.Value);
-			model.Fuel.Value = EditorGUILayout.FloatField("Fuel", model.Fuel.Value);
-			model.Speed.Value = EditorGUILayout.FloatField("Speed", model.Speed.Value);
+			foreach (var value in model.Values)
+			{
+				value.Value = EditorGUILayout.FloatField(value.Name, value.Value);
+			}
 		}
 	}
 }

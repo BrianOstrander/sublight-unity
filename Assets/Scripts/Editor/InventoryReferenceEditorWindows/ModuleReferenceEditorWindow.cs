@@ -27,6 +27,19 @@ namespace LunraGames.SpaceFarm
 			EditorGUI.BeginChangeCheck();
 			{
 				model.IsRoot.Value = EditorGUILayout.Toggle("Is Root", model.IsRoot.Value);
+				model.MinimumLifespan.Value = EditorGUILayoutDayTime.FieldYear(
+					new GUIContent("Minimum Lifespan", "The minimum duration of this module's lifespan."),
+					model.MinimumLifespan.Value
+				);
+				model.DeltaLifespan.Value = EditorGUILayoutDayTime.FieldYear(
+					new GUIContent("Delta Lifespan", "The maximum additional duration of this module's lifespan."),
+					model.DeltaLifespan.Value
+				);
+
+				model.CurveLifespan.Value = EditorGUILayoutAnimationCurve.Field(
+					new GUIContent("Curve Lifespan", "The probability range that's multiplied by the delta lifespan."),
+					model.CurveLifespan.Value
+				);
 			}
 			selectedReferenceModified |= EditorGUI.EndChangeCheck();
 

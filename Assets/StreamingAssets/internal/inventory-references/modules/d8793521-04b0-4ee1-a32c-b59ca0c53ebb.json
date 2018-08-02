@@ -1,5 +1,26 @@
 {
   "model": {
+    "minimumLifespan": {
+      "Day": 36500
+    },
+    "deltaLifespan": {
+      "Day": 18250
+    },
+    "curveLifespan": {
+      "keys": [
+        {
+          "outTangent": 1.0
+        },
+        {
+          "time": 1.0,
+          "value": 1.0,
+          "inTangent": 1.0
+        }
+      ],
+      "length": 2,
+      "preWrapMode": "ClampForever",
+      "postWrapMode": "ClampForever"
+    },
     "slots": {
       "crews": [],
       "resources": [

@@ -283,12 +283,12 @@ namespace LunraGames.SpaceFarm
 		#endregion
 
 		#region Utility
-		public void CreateInstance(string inventoryId, Action<InventoryReferenceRequest<InventoryModel>> done)
+		public void CreateInstance(string inventoryId, InventoryReferenceContext context, Action<InventoryReferenceRequest<InventoryModel>> done)
 		{
-			CreateInstance<InventoryModel>(inventoryId, done);
+			CreateInstance<InventoryModel>(inventoryId, context, done);
 		}
 
-		public void CreateInstance<M>(string inventoryId, Action<InventoryReferenceRequest<M>> done)
+		public void CreateInstance<M>(string inventoryId, InventoryReferenceContext context, Action<InventoryReferenceRequest<M>> done)
 			where M : InventoryModel
 		{
 			var reference = references.GetReferenceFirstOrDefault(inventoryId);
@@ -303,10 +303,10 @@ namespace LunraGames.SpaceFarm
 			switch(reference.RawModel.InventoryType)
 			{
 				case InventoryTypes.Module:
-					modelMediator.Load<ModuleReferenceModel>(reference as ModuleReferenceModel, result => OnCreateInstanceLoaded(result, done));
+					modelMediator.Load<ModuleReferenceModel>(reference as ModuleReferenceModel, result => OnCreateInstanceLoaded(result, context, done));
 					break;
 				case InventoryTypes.OrbitalCrew:
-					modelMediator.Load<OrbitalCrewReferenceModel>(reference as OrbitalCrewReferenceModel, result => OnCreateInstanceLoaded(result, done));
+					modelMediator.Load<OrbitalCrewReferenceModel>(reference as OrbitalCrewReferenceModel, result => OnCreateInstanceLoaded(result, context, done));
 					break;
 				default:
 					var error = "Unrecognized InventoryType: " + reference.RawModel.InventoryType;
@@ -316,7 +316,7 @@ namespace LunraGames.SpaceFarm
 			}
 		}
 
-		void OnCreateInstanceLoaded<R, M>(SaveLoadRequest<R> result, Action<InventoryReferenceRequest<M>> done)
+		void OnCreateInstanceLoaded<R, M>(SaveLoadRequest<R> result, InventoryReferenceContext context, Action<InventoryReferenceRequest<M>> done)
 			where R : SaveModel, IInventoryReferenceModel
 			where M : InventoryModel
 		{
@@ -328,7 +328,7 @@ namespace LunraGames.SpaceFarm
 			}
 
 			var reference = result.TypedModel;
-			reference.InitializeInstance();
+			reference.InitializeInstance(context);
 			var instance = reference.RawModel as M;
 
 			done(InventoryReferenceRequest<M>.Success(reference, instance));

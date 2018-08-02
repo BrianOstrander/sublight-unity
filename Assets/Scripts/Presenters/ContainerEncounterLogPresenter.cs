@@ -273,6 +273,7 @@ namespace LunraGames.SpaceFarm.Presenters
 						var addInstance = entry as AddInstanceOperationModel;
 						App.InventoryReferences.CreateInstance(
 							addInstance.InventoryId,
+							InventoryReferenceContext.Current(model),
 							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
 						);
 						break;

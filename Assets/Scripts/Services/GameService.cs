@@ -61,8 +61,6 @@ namespace LunraGames.SpaceFarm
 			var rations = 0.3f;
 			var fuel = 1f;
 			var fuelConsumption = 1f;
-			//var speed = 0.012f;
-			var rationConsumption = 0.02f;
 			var resourceDetection = 0.5f;
 			var maximumNavigationTime = 10f;
 
@@ -180,7 +178,11 @@ namespace LunraGames.SpaceFarm
 			};
 			*/
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockRoot, instanceResult => OnStockRootLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
+				DefaultShip.StockRoot,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockRootLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockRootLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -194,7 +196,11 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockOrbiterBay, instanceResult => OnStockOrbiterBayLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
+				DefaultShip.StockOrbiterBay,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockOrbiterBayLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockOrbiterBayLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -208,7 +214,11 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockStorage, instanceResult => OnStockStorageLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
+				DefaultShip.StockStorage,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockStorageLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockStorageLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -222,7 +232,11 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockLogistics, instanceResult => OnStockLogisticsLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
+				DefaultShip.StockLogistics,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockLogisticsLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockLogisticsLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -236,7 +250,11 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(DefaultShip.StockEngine, instanceResult => OnStockEngineLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
+				DefaultShip.StockEngine,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockEngineLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockEngineLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -250,7 +268,11 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(DefaultShip.StockTerrestrialOrbiter, instanceResult => OnStockTerrestrialOrbiterLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(
+				DefaultShip.StockTerrestrialOrbiter,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockTerrestrialOrbiterLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockTerrestrialOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -264,7 +286,11 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(DefaultShip.StockStellarOrbiter, instanceResult => OnStockStellarOrbiterLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(
+				DefaultShip.StockStellarOrbiter,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockStellarOrbiterLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockStellarOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -278,7 +304,11 @@ namespace LunraGames.SpaceFarm
 
 			game.Ship.Value.Inventory.Add(result.Instance);
 
-			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(DefaultShip.StockMultiOrbiter, instanceResult => OnStockMultiOrbiterLoaded(instanceResult, game, done));
+			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(
+				DefaultShip.StockMultiOrbiter,
+				InventoryReferenceContext.Default,
+				instanceResult => OnStockMultiOrbiterLoaded(instanceResult, game, done)
+			);
 		}
 
 		void OnStockMultiOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
@@ -331,8 +361,12 @@ namespace LunraGames.SpaceFarm
 
 		void OnShipReady(GameModel game, Action<RequestStatus, GameModel> done)
 		{
-			// Uncomment this to make the game easy.
+			// Uncomment this to make the goal closer.
 			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
+
+			// Uncomment this to make the void never expand
+			game.DestructionSpeed.Value = 0f;
+			game.DestructionSpeedIncrement.Value = 0f;
 
 			modelMediator.Save(game, result => OnSaveGame(result, done));
 		}

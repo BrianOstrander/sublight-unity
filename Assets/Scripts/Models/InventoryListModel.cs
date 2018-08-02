@@ -24,12 +24,38 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] ResourceInventoryModel unUsableResources = ResourceInventoryModel.Zero;
 
 		[JsonProperty] SlotEdge[] slotEdges = new SlotEdge[0];
+		[JsonProperty] DayTime currentDayTime;
+		[JsonProperty] DayTime nextEstimatedFailure;
+		[JsonProperty] DayTime nextFailure;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SlotEdge[]> SlotEdges;
+		[JsonIgnore]
+		public readonly ListenerProperty<DayTime> CurrentDayTime;
+		[JsonIgnore]
+		public readonly ListenerProperty<DayTime> NextEstimatedFailure;
+		[JsonIgnore]
+		public readonly ListenerProperty<DayTime> NextFailure;
 		#endregion
 
 		#region Derived Values
+		[JsonProperty] string[] functionalIdsCache = new string[0];
+		[JsonProperty] string[] estimatedFailureIdsCache = new string[0];
+		[JsonProperty] string[] failureIdsCache = new string[0];
+
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> functionalIdsCacheListener;
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> estimatedFailureIdsCacheListener;
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> failureIdsCacheListener;
+
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> FunctionalIds;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> EstimatedFailureIds;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> FailureIds;
 		[JsonIgnore]
 		public readonly ListenerProperty<InventoryModel[]> All;
 		#endregion
@@ -95,9 +121,27 @@ namespace LunraGames.SpaceFarm.Models
 
 		public InventoryListModel()
 		{
-			// Derived Values
 			All = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 			SlotEdges = new ListenerProperty<SlotEdge[]>(value => slotEdges = value, () => slotEdges, OnSlotEdges);
+			CurrentDayTime = new ListenerProperty<DayTime>(value => currentDayTime = value, () => currentDayTime, OnCurrentDayTime);
+			NextEstimatedFailure = new ListenerProperty<DayTime>(value => nextEstimatedFailure = value, () => nextEstimatedFailure);
+			NextFailure = new ListenerProperty<DayTime>(value => nextFailure = value, () => nextFailure);
+
+			FunctionalIds = new ReadonlyProperty<string[]>(
+				value => functionalIdsCache = value,
+				() => functionalIdsCache,
+				out functionalIdsCacheListener
+			);
+			EstimatedFailureIds = new ReadonlyProperty<string[]>(
+				value => estimatedFailureIdsCache = value,
+				() => estimatedFailureIdsCache,
+				out estimatedFailureIdsCacheListener
+			);
+			FailureIds = new ReadonlyProperty<string[]>(
+				value => failureIdsCache = value,
+				() => failureIdsCache,
+				out failureIdsCacheListener
+			);
 
 			AllResources.AnyChange += OnResources;
 		}
@@ -375,36 +419,7 @@ namespace LunraGames.SpaceFarm.Models
 		#region Events
 		void OnSlotEdges(SlotEdge[] edges)
 		{
-			var newRefillResources = ResourceInventoryModel.Zero;
-			var newRefillLogicResources = ResourceInventoryModel.Zero;
-			var newMaxLogicResources = ResourceInventoryModel.Zero;
-			var newMaxResources = ResourceInventoryModel.Zero;
-
-			foreach (var module in modules)
-			{
-				if (module.IsUsable)
-				{
-					newRefillResources.Add(module.Slots.RefillResources);
-					newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
-					newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
-					newMaxResources.Add(module.Slots.MaximumResources);
-				}
-			}
-
-			RefillResources.Assign(newRefillResources);
-			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
-			MaximumLogisticsResources.Assign(newMaxLogicResources);
-			MaximumResources.Assign(newMaxResources);
-			MaximumRefillableLogisticsResources.Assign(MaximumLogisticsResources.Duplicate.Clamp(MaximumResources));
-
-			OnResources(AllResources);
-		}
-
-		void OnResources(ResourceInventoryModel model)
-		{
-			ResourceInventoryModel newUnUsableResources;
-			UsableResources.Assign(AllResources.Duplicate.Clamp(MaximumResources, out newUnUsableResources));
-			UnUsableResources.Assign(newUnUsableResources);
+			OnCacheChanged();
 		}
 
 		void OnSetInventory(InventoryModel[] newInventory)
@@ -415,11 +430,6 @@ namespace LunraGames.SpaceFarm.Models
 			var moduleList = new List<ModuleInventoryModel>();
 			ResourceInventoryModel newResources = null;
 			var slotEdgeList = new List<SlotEdge>();
-
-			var newRefillResources = ResourceInventoryModel.Zero;
-			var newRefillLogicResources = ResourceInventoryModel.Zero;
-			var newMaxLogicResources = ResourceInventoryModel.Zero;
-			var newMaxResources = ResourceInventoryModel.Zero;
 
 			foreach (var inventory in newInventory)
 			{
@@ -441,13 +451,6 @@ namespace LunraGames.SpaceFarm.Models
 					case InventoryTypes.Module:
 						var module = inventory as ModuleInventoryModel;
 						moduleList.Add(module);
-						if (module.IsUsable)
-						{
-							newRefillResources.Add(module.Slots.RefillResources);
-							newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
-							newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
-							newMaxResources.Add(module.Slots.MaximumResources);
-						}
 						break;
 					default:
 						Debug.LogError("Unrecognized InventoryType: " + inventory.InventoryType);
@@ -460,13 +463,8 @@ namespace LunraGames.SpaceFarm.Models
 
 			SlotEdges.Value = slotEdgeList.ToArray();
 
-			RefillResources.Assign(newRefillResources);
-			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
-			MaximumLogisticsResources.Assign(newMaxLogicResources);
-			MaximumResources.Assign(newMaxResources);
-
 			if (newResources != null) AllResources.Assign(newResources);
-			else OnResources(AllResources);
+			OnCacheChanged();
 		}
 
 		InventoryModel[] OnGetInventory()
@@ -474,6 +472,82 @@ namespace LunraGames.SpaceFarm.Models
 			return orbitalCrews.Cast<InventoryModel>().Concat(modules)
 													  .Append(allResources)
 													  .ToArray();
+		}
+
+		void OnCurrentDayTime(DayTime newCurrentDayTime)
+		{
+			if (NextEstimatedFailure.Value < newCurrentDayTime || NextFailure.Value < newCurrentDayTime) OnCacheChanged();
+		}
+
+		void OnCacheChanged()
+		{
+			var newRefillResources = ResourceInventoryModel.Zero;
+			var newRefillLogicResources = ResourceInventoryModel.Zero;
+			var newMaxLogicResources = ResourceInventoryModel.Zero;
+			var newMaxResources = ResourceInventoryModel.Zero;
+
+			var lowestNextFailureEstimate = DayTime.MaxValue;
+			var lowestNextFailure = DayTime.MaxValue;
+
+			var newFunctionalCache = new List<string>();
+			var newEstimatedFailureCache = new List<string>();
+			var newFailureCache = new List<string>();
+
+			foreach (var module in modules)
+			{
+				if (!module.IsUsable) continue;
+				
+				if (module.IsFunctional(CurrentDayTime.Value))
+				{
+					// It's slotted and estimated functional or functional
+
+					if (module.IsEstimatedFunctional(CurrentDayTime.Value))
+					{
+						// Currently fully functional
+						newFunctionalCache.Add(module.InstanceId.Value);
+					}
+					else
+					{
+						// Currently estimated to fail
+						newEstimatedFailureCache.Add(module.InstanceId.Value);
+					}
+
+					newRefillResources.Add(module.Slots.RefillResources);
+					newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
+					newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
+					newMaxResources.Add(module.Slots.MaximumResources);
+
+					if (module.EstimatedFailureDate.Value < lowestNextFailureEstimate) lowestNextFailureEstimate = module.EstimatedFailureDate.Value;
+					if (module.FailureDate.Value < lowestNextFailure) lowestNextFailure = module.FailureDate.Value;
+				}
+				else
+				{
+					// It's slotted but has failed
+					newFailureCache.Add(module.InstanceId.Value);
+				}
+			}
+
+			if (!newFunctionalCache.IntersectEqual(FunctionalIds.Value)) functionalIdsCacheListener.Value = newFunctionalCache.ToArray();
+			if (!newEstimatedFailureCache.IntersectEqual(EstimatedFailureIds.Value)) estimatedFailureIdsCacheListener.Value = newEstimatedFailureCache.ToArray();
+			if (!newFailureCache.IntersectEqual(FailureIds.Value)) failureIdsCacheListener.Value = newFailureCache.ToArray();
+
+			RefillResources.Assign(newRefillResources);
+			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
+			MaximumLogisticsResources.Assign(newMaxLogicResources);
+			MaximumResources.Assign(newMaxResources);
+			MaximumRefillableLogisticsResources.Assign(MaximumLogisticsResources.Duplicate.Clamp(MaximumResources));
+
+			OnResources(AllResources);
+
+			NextEstimatedFailure.Value = lowestNextFailureEstimate;
+			NextFailure.Value = lowestNextFailure;
+		}
+
+		void OnResources(ResourceInventoryModel newAllResources)
+		{
+			ResourceInventoryModel newUnUsableResources;
+			UsableResources.Assign(AllResources.Duplicate.Clamp(MaximumResources, out newUnUsableResources));
+			UnUsableResources.Assign(newUnUsableResources);
 		}
 		#endregion
 	}
