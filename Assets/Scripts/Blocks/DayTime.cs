@@ -243,9 +243,10 @@ namespace LunraGames.SpaceFarm
 		public string ToDayTimeString()
 		{
 			var totalHours = Time * 24f;
+			var daysInYear = Day % DaysInYear;
 			var hours = Mathf.Floor(totalHours);
 			var minutes = Mathf.Floor(60f * (totalHours - hours));
-			return "Year " + Year + " Day " + Day + ", " + hours.ToString("N0").PadLeft(2, '0') + ":" + minutes.ToString("N0").PadLeft(2, '0');
+			return "Year " + Year + " Day " + daysInYear + ", " + hours.ToString("N0").PadLeft(2, '0') + ":" + minutes.ToString("N0").PadLeft(2, '0');
 		}
 
 		public override string ToString()

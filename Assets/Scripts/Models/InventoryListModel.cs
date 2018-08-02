@@ -39,6 +39,23 @@ namespace LunraGames.SpaceFarm.Models
 		#endregion
 
 		#region Derived Values
+		[JsonProperty] string[] functionalIdsCache = new string[0];
+		[JsonProperty] string[] estimatedFailureIdsCache = new string[0];
+		[JsonProperty] string[] failureIdsCache = new string[0];
+
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> functionalIdsCacheListener;
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> estimatedFailureIdsCacheListener;
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> failureIdsCacheListener;
+
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> FunctionalIds;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> EstimatedFailureIds;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> FailureIds;
 		[JsonIgnore]
 		public readonly ListenerProperty<InventoryModel[]> All;
 		#endregion
@@ -104,12 +121,27 @@ namespace LunraGames.SpaceFarm.Models
 
 		public InventoryListModel()
 		{
-			// Derived Values
 			All = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 			SlotEdges = new ListenerProperty<SlotEdge[]>(value => slotEdges = value, () => slotEdges, OnSlotEdges);
 			CurrentDayTime = new ListenerProperty<DayTime>(value => currentDayTime = value, () => currentDayTime, OnCurrentDayTime);
 			NextEstimatedFailure = new ListenerProperty<DayTime>(value => nextEstimatedFailure = value, () => nextEstimatedFailure);
 			NextFailure = new ListenerProperty<DayTime>(value => nextFailure = value, () => nextFailure);
+
+			FunctionalIds = new ReadonlyProperty<string[]>(
+				value => functionalIdsCache = value,
+				() => functionalIdsCache,
+				out functionalIdsCacheListener
+			);
+			EstimatedFailureIds = new ReadonlyProperty<string[]>(
+				value => estimatedFailureIdsCache = value,
+				() => estimatedFailureIdsCache,
+				out estimatedFailureIdsCacheListener
+			);
+			FailureIds = new ReadonlyProperty<string[]>(
+				value => failureIdsCache = value,
+				() => failureIdsCache,
+				out failureIdsCacheListener
+			);
 
 			AllResources.AnyChange += OnResources;
 		}
@@ -457,20 +489,47 @@ namespace LunraGames.SpaceFarm.Models
 			var lowestNextFailureEstimate = DayTime.MaxValue;
 			var lowestNextFailure = DayTime.MaxValue;
 
+			var newFunctionalCache = new List<string>();
+			var newEstimatedFailureCache = new List<string>();
+			var newFailureCache = new List<string>();
+
 			foreach (var module in modules)
 			{
-				if (module.IsUsable && module.IsFunctional(CurrentDayTime.Value))
+				if (!module.IsUsable) continue;
+				
+				if (module.IsFunctional(CurrentDayTime.Value))
 				{
+					// It's slotted and estimated functional or functional
+
+					if (module.IsEstimatedFunctional(CurrentDayTime.Value))
+					{
+						// Currently fully functional
+						newFunctionalCache.Add(module.InstanceId.Value);
+					}
+					else
+					{
+						// Currently estimated to fail
+						newEstimatedFailureCache.Add(module.InstanceId.Value);
+					}
+
 					newRefillResources.Add(module.Slots.RefillResources);
 					newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
 					newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
 					newMaxResources.Add(module.Slots.MaximumResources);
-				}
-				else continue;
 
-				if (module.EstimatedFailureDate.Value < lowestNextFailureEstimate) lowestNextFailureEstimate = module.EstimatedFailureDate.Value;
-				if (module.FailureDate.Value < lowestNextFailure) lowestNextFailure = module.FailureDate.Value; 
+					if (module.EstimatedFailureDate.Value < lowestNextFailureEstimate) lowestNextFailureEstimate = module.EstimatedFailureDate.Value;
+					if (module.FailureDate.Value < lowestNextFailure) lowestNextFailure = module.FailureDate.Value;
+				}
+				else
+				{
+					// It's slotted but has failed
+					newFailureCache.Add(module.InstanceId.Value);
+				}
 			}
+
+			if (!newFunctionalCache.IntersectEqual(FunctionalIds.Value)) functionalIdsCacheListener.Value = newFunctionalCache.ToArray();
+			if (!newEstimatedFailureCache.IntersectEqual(EstimatedFailureIds.Value)) estimatedFailureIdsCacheListener.Value = newEstimatedFailureCache.ToArray();
+			if (!newFailureCache.IntersectEqual(FailureIds.Value)) failureIdsCacheListener.Value = newFailureCache.ToArray();
 
 			RefillResources.Assign(newRefillResources);
 			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
