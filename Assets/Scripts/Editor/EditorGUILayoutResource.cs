@@ -19,8 +19,10 @@ namespace LunraGames.SpaceFarm
 			if (color.HasValue) EditorGUILayoutExtensions.PushColor(color.Value);
 			GUILayout.BeginVertical(EditorStyles.helpBox);
 			if (color.HasValue) EditorGUILayoutExtensions.PopColor();
-			GUILayout.Label(content, EditorStyles.boldLabel);
-			Values(model);
+			{
+				GUILayout.Label(content, EditorStyles.boldLabel);
+				Values(model);
+			}
 			GUILayout.EndVertical();
 		}
 

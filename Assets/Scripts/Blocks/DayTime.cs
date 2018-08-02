@@ -18,6 +18,11 @@ namespace LunraGames.SpaceFarm
 
 		public static DayTime Zero { get { return new DayTime(); } }
 
+		public static DayTime FromYear(float years)
+		{
+			return new DayTime(years * DaysInYear);
+		}
+
 		/// <summary>
 		/// Gets the current DayTime with a Time of zero.
 		/// </summary>
@@ -97,6 +102,24 @@ namespace LunraGames.SpaceFarm
 		}
 
 		/// <summary>
+		/// Multiply the specified value.
+		/// </summary>
+		/// <returns>The multiply.</returns>
+		/// <param name="value">Value.</param>
+		public DayTime Multiply(float value)
+		{
+			var dayResult = Day * value;
+			var timeResult = dayResult % TimeInDay;
+			dayResult -= timeResult;
+
+			timeResult += Time * value;
+			dayResult += timeResult - (timeResult % TimeInDay);
+			timeResult = timeResult % TimeInDay;
+
+			return new DayTime(Mathf.FloorToInt(dayResult), timeResult);
+		}
+
+		/// <summary>
 		/// Gets a value from 0.0 to 1.0 representing the progress of this
 		/// DayTime between the specified DayTimes.
 		/// </summary>
@@ -143,6 +166,16 @@ namespace LunraGames.SpaceFarm
 		public static DayTime operator +(DayTime obj0, DayTime obj1)
 		{
 			return obj0.Add(obj1.Day, obj1.Time);
+		}
+
+		public static DayTime operator *(DayTime obj, float value)
+		{
+			return obj.Multiply(value);
+		}
+
+		public static DayTime operator *(float value, DayTime obj)
+		{
+			return obj * value;
 		}
 
 		public static bool operator <(DayTime obj0, DayTime obj1)
