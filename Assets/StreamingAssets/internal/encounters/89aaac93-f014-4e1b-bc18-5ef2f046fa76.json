@@ -4,17 +4,80 @@
   "hook": "Optical scanners have picked up a reflective object in orbit around this star. We think it might be some kind of solar power station.",
   "completedEncountersRequired": [],
   "validSystems": [],
-  "validBodies": [],
-  "validCrews": [],
+  "validBodies": [
+    "Star"
+  ],
+  "validCrews": [
+    "OrbitalCrew"
+  ],
   "logs": {
     "textLogs": [
       {
+        "header": "C. Cortez",
+        "message": "Okay, coming up to the station now. Lights are still on inside.",
+        "nextLogId": "f8e98db6-05d8-4470-9930-0ebc288750f4",
         "beginning": true,
-        "logId": "3bcf86c3-f0a1-4565-b568-d48b492960b9"
+        "logId": "3bcf86c3-f0a1-4565-b568-d48b492960b9",
+        "duration": 1.0,
+        "notes": ""
+      },
+      {
+        "header": "A. Alder",
+        "message": "I'm going to swing us by some of the portholes before docking, see what we're in for.",
+        "nextLogId": "96df5287-4fc5-4da7-acad-62234f224c31",
+        "index": 1,
+        "logId": "f8e98db6-05d8-4470-9930-0ebc288750f4",
+        "duration": 1.0,
+        "showNotes": true,
+        "notes": "This would be a great way place to branch and have a more cautious response if they've already lost a crew member from the Corona Blasted Ship."
+      },
+      {
+        "header": "C. Cortez",
+        "message": "There's something covering all of the windows... it looks green and leafy?",
+        "nextLogId": "d180a06e-6a70-4a4c-bb51-f117d7acf252",
+        "index": 2,
+        "logId": "96df5287-4fc5-4da7-acad-62234f224c31",
+        "duration": 1.0
+      },
+      {
+        "header": "A. Alder",
+        "message": "Yeah I see that too, let's proceed with caution...",
+        "nextLogId": "d85800c5-a471-47a5-9e6d-fb30e1b8f4c7",
+        "index": 3,
+        "logId": "d180a06e-6a70-4a4c-bb51-f117d7acf252"
       }
     ],
-    "keyValueLogs": [],
-    "inventoryLogs": []
+    "keyValueLogs": [
+      {
+        "setStrings": [
+          {
+            "value": "Your team couldn't find a trace of any crew members aboard the station, just a steamy hothouse of green vegetation, room after room. The trip wasn't entirely fruitless though, much of the vegetation is edible, and your team harvested 1 ration from it.",
+            "operationId": "670a917d-a5e5-4227-b0f6-858f012e884f",
+            "target": "Encounter",
+            "key": "Summary"
+          }
+        ],
+        "index": 5,
+        "ending": true,
+        "logId": "fd59f6ac-f6f1-4da5-b045-fc6e1fea45dd"
+      }
+    ],
+    "inventoryLogs": [
+      {
+        "addResources": [
+          {
+            "value": {
+              "rations": 1.0
+            },
+            "operationId": "588f27a9-094d-4a5d-960b-cb4c0ebf98ea"
+          }
+        ],
+        "addInstances": [],
+        "nextLogId": "fd59f6ac-f6f1-4da5-b045-fc6e1fea45dd",
+        "index": 4,
+        "logId": "d85800c5-a471-47a5-9e6d-fb30e1b8f4c7"
+      }
+    ]
   },
   "version": 4,
   "meta": "Jungle solar station",

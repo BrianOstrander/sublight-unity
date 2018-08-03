@@ -59,6 +59,24 @@ namespace LunraGames.SpaceFarm
 			}
 			GUILayout.EndHorizontal();
 
+			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			{
+				// Pausing checks for foldout, since this shouldn't signal that the object is savable.
+				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.grey);
+				model.ShowNotes.Value = EditorGUILayout.Foldout(model.ShowNotes.Value, new GUIContent("Notes", "Internal notes for production."), true);
+				if (!model.HasNotes) EditorGUILayoutExtensions.PopColor();
+			}
+			EditorGUI.BeginChangeCheck();
+
+			if (model.ShowNotes.Value)
+			{
+				EditorGUILayoutExtensions.PushIndent();
+				{
+					model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value);
+				}
+				EditorGUILayoutExtensions.PopIndent();
+			}
+
 			OnLogDuration(infoModel, model);
 
 			return deleted;

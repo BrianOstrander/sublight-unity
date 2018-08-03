@@ -10,6 +10,9 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string logId;
 		[JsonProperty] float duration;
 
+		[JsonProperty] bool showNotes;
+		[JsonProperty] string notes;
+
 		/// <summary>
 		/// The order these appear in the editor, not used in game for anything
 		/// meaningful.
@@ -26,6 +29,11 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<float> Duration;
 
 		[JsonIgnore]
+		public readonly ListenerProperty<bool> ShowNotes;
+		[JsonIgnore]
+		public readonly ListenerProperty<string> Notes;
+
+		[JsonIgnore]
 		public abstract EncounterLogTypes LogType { get; }
 		[JsonIgnore]
 		public abstract string NextLog { get; }
@@ -34,6 +42,8 @@ namespace LunraGames.SpaceFarm.Models
 		public virtual bool EditableDuration { get { return true; } }
 		[JsonIgnore]
 		public virtual float TotalDuration { get { return Duration.Value; } }
+		[JsonIgnore]
+		public bool HasNotes { get { return !string.IsNullOrEmpty(Notes.Value); } }
 
 		public EncounterLogModel()
 		{
@@ -42,6 +52,9 @@ namespace LunraGames.SpaceFarm.Models
 			Ending = new ListenerProperty<bool>(value => ending = value, () => ending);
 			LogId = new ListenerProperty<string>(value => logId = value, () => logId);
 			Duration = new ListenerProperty<float>(value => duration = value, () => duration);
+
+			ShowNotes = new ListenerProperty<bool>(value => showNotes = value, () => showNotes);
+			Notes = new ListenerProperty<string>(value => notes = value, () => notes);
 		}
 	}
 }

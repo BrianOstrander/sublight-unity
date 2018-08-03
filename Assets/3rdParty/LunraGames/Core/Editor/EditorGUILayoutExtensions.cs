@@ -112,6 +112,16 @@ namespace LunraGamesEditor
 			EditorStyles.textArea.wordWrap = popped;
 		}
 
+		public static void PushIndent()
+		{
+			EditorGUI.indentLevel++;
+		}
+
+		public static void PopIndent()
+		{
+			EditorGUI.indentLevel--;
+		}
+
 		public static bool XButton()
 		{
 			PushColor(Color.red);
