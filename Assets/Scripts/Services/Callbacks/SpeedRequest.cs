@@ -14,7 +14,8 @@ namespace LunraGames.SpaceFarm
 		public const float PauseSpeed = 0f;
 		public const float PlaySpeed = 1f;
 		public const float FastSpeed = 4f;
-		public const float FastFastSpeed = 1460f;
+		public const float FastFastSpeed = 16f;
+		//public const float FastFastSpeed = 1460f; // About a year in one real second
 
 		public static SpeedRequest PauseRequest { get { return new SpeedRequest(States.Request, PauseSpeed); } }
 		public static SpeedRequest PlayRequest { get { return new SpeedRequest(States.Request, PlaySpeed); } }

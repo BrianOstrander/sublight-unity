@@ -42,8 +42,8 @@ namespace LunraGames.SpaceFarm
 			game.Seed.Value = DemonUtility.NextInteger;
 			game.Universe.Value = universeService.CreateUniverse(1);
 			game.FocusedSector.Value = UniversePosition.Zero;
-			game.DestructionSpeed.Value = 0.005f;
-			game.DestructionSpeedIncrement.Value = 0.005f;
+			game.DestructionSpeed.Value = 0.004f;
+			game.DestructionSpeedIncrement.Value = 0.0025f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
 			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
@@ -320,7 +320,7 @@ namespace LunraGames.SpaceFarm
 				return;
 			}
 
-			game.Ship.Value.Inventory.Add(result.Instance);
+			//game.Ship.Value.Inventory.Add(result.Instance);
 
 			OnConnectShip(game, done);
 		}
@@ -337,7 +337,7 @@ namespace LunraGames.SpaceFarm
 
 			var stockTerrestrialOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockTerrestrialOrbiter);
 			var stockStellarOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockStellarOrbiter);
-			var stockMultiOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockMultiOrbiter);
+			//var stockMultiOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockMultiOrbiter);
 
 			var rootModule0 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_0");
 			var rootModule1 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_1");
@@ -365,8 +365,8 @@ namespace LunraGames.SpaceFarm
 			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
 
 			// Uncomment this to make the void never expand
-			game.DestructionSpeed.Value = 0f;
-			game.DestructionSpeedIncrement.Value = 0f;
+			//game.DestructionSpeed.Value = 0f;
+			//game.DestructionSpeedIncrement.Value = 0f;
 
 			modelMediator.Save(game, result => OnSaveGame(result, done));
 		}
