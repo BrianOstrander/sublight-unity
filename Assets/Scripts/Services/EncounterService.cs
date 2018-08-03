@@ -184,8 +184,11 @@ namespace LunraGames.SpaceFarm
 				}
 			);
 
-			var chosen = remaining.OrderByDescending(r => r.OrderWeight.Value).FirstOrDefault();
-			if (chosen == null) return null;
+			if (remaining.Count() == 0) return null;
+
+			var ordered = remaining.OrderByDescending(r => r.OrderWeight.Value);
+			var topWeight = ordered.First().OrderWeight.Value;
+			var chosen = ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)).Random();
 
 			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
 			body.Encounter.Value = chosen.EncounterId;

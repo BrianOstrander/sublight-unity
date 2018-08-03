@@ -211,12 +211,11 @@ namespace LunraGames.SpaceFarm
 				}
 				GUILayout.EndHorizontal();
 				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
-				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
+				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
-				model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
+				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value);
+				model.Hook.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Hook", "The description given to the player before entering this encounter."), model.Hook.Value);
 
-				GUILayout.Label("Hook");
-				model.Hook.Value = GUILayout.TextArea(model.Hook.Value);
 				var alternateColor = Color.grey;
 
 				EditorGUILayoutExtensions.PushColor(alternateColor);
