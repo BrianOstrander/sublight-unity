@@ -92,6 +92,9 @@ namespace LunraGames.SpaceFarm
 			Action cancel = null,
 			Action deny = null,
 			Action confirm = null,
+			string cancelText = null,
+			string denyText = null,
+			string confirmText = null,
 			Action<RequestStatus> done = null
 		)
 		{
@@ -100,9 +103,9 @@ namespace LunraGames.SpaceFarm
 				DialogTypes.CancelDenyConfirm,
 				title ?? Defaults.AlertTitle,
 				message,
-				cancelText: Defaults.Cancel,
-				failureText: Defaults.Failure,
-				successText: Defaults.Success,
+				cancelText: cancelText ?? Defaults.Cancel,
+				failureText: denyText ?? Defaults.Failure,
+				successText: confirmText ?? Defaults.Success,
 				cancel: cancel,
 				failure: deny,
 				success: confirm,

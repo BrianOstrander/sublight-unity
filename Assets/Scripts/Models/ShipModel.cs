@@ -10,7 +10,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] UniversePosition nextSystem;
 		[JsonProperty] UniversePosition currentSystem;
 		[JsonProperty] UniversePosition position;
-		[JsonProperty] float speed;
 		[JsonProperty] DayTime maximumNavigationTime;
 		[JsonProperty] float fuelConsumption;
 		[JsonProperty] float resourceDetection;
@@ -24,11 +23,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> Position;
 
-		/// <summary>
-		/// Basically the speed of the ship, expressed in universe units per day.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Speed;
 		/// <summary>
 		/// The maximum length of a journey, in time.
 		/// </summary>
@@ -48,7 +42,8 @@ namespace LunraGames.SpaceFarm.Models
 
 		#region Derived Values
 		[JsonProperty] TravelRadius travelRadius;
-		[JsonProperty] float speedTotal;
+		[JsonProperty] float currentSpeed;
+		[JsonProperty] float maximumSpeed;
 
 		/// <summary>
 		/// The travel radius of this ship, expressed as a ratio of speed and rations.
@@ -59,7 +54,12 @@ namespace LunraGames.SpaceFarm.Models
 		/// The total speed of the ship, taking fuel consumption into account.
 		/// </summary>
 		[JsonIgnore]
-		public readonly DerivedProperty<float, float, float> SpeedTotal;
+		public readonly DerivedProperty<float, float, float> CurrentSpeed;
+		/// <summary>
+		/// The maximum speed, taking speed and current fuel consumption into account.
+		/// </summary>
+		[JsonIgnore]
+		public readonly DerivedProperty<float, float, float> MaximumSpeed;
 		#endregion
 
 		#region Shortcuts
@@ -75,7 +75,6 @@ namespace LunraGames.SpaceFarm.Models
 			NextSystem = new ListenerProperty<UniversePosition>(value => nextSystem = value, () => nextSystem);
 			CurrentSystem = new ListenerProperty<UniversePosition>(value => currentSystem = value, () => currentSystem);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
-			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
 			MaximumNavigationTime = new ListenerProperty<DayTime>(value => maximumNavigationTime = value, () => maximumNavigationTime);
 			FuelConsumption = new ListenerProperty<float>(value => fuelConsumption = value, () => fuelConsumption);
 			ResourceDetection = new ListenerProperty<float>(value => resourceDetection = value, () => resourceDetection);
@@ -86,23 +85,31 @@ namespace LunraGames.SpaceFarm.Models
 				value => travelRadius = value, 
 				() => travelRadius,
 				DeriveTravelRadius,
-				Speed,
+				Inventory.MaximumResources.Speed,
 				MaximumNavigationTime,
 				Inventory.UsableResources.Rations,
 				FuelConsumption
 			);
 
-			SpeedTotal = new DerivedProperty<float, float, float>(
-				value => speedTotal = value,
-				() => speedTotal,
-				DeriveSpeedTotal,
-				Speed,
+			CurrentSpeed = new DerivedProperty<float, float, float>(
+				value => currentSpeed = value,
+				() => currentSpeed,
+				DeriveCurrentSpeed,
+				Inventory.MaximumResources.Speed,
 				FuelConsumption
+			);
+
+			MaximumSpeed = new DerivedProperty<float, float, float>(
+				value => maximumSpeed = value,
+				() => maximumSpeed,
+				DeriveMaximumSpeed,
+				Inventory.MaximumResources.Speed,
+				Inventory.MaximumResources.Fuel
 			);
 		}
 
 		#region Events
-		float DeriveSpeedTotal(float speed, float fuelConsumption)
+		float DeriveCurrentSpeed(float speed, float fuelConsumption)
 		{
 			return speed * fuelConsumption;
 		}
@@ -114,10 +121,15 @@ namespace LunraGames.SpaceFarm.Models
 			float fuelConsumption
 		)
 		{
-			var distance = maximumNavigationTime.TotalTime * DeriveSpeedTotal(speed, fuelConsumption);
+			var distance = maximumNavigationTime.TotalTime * DeriveCurrentSpeed(speed, fuelConsumption);
 			// TODO: Find a better place for handling this weird range stuff?
 			// Maybe not... this might be the correct place for it...
 			return new TravelRadius(distance * 0.8f, distance * 0.9f, distance);
+		}
+
+		float DeriveMaximumSpeed(float speed, float maximumFuel)
+		{
+			return speed * maximumFuel;
 		}
 		#endregion
 	}

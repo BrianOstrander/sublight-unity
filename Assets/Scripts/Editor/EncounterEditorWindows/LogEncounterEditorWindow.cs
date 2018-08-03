@@ -59,6 +59,24 @@ namespace LunraGames.SpaceFarm
 			}
 			GUILayout.EndHorizontal();
 
+			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			{
+				// Pausing checks for foldout, since this shouldn't signal that the object is savable.
+				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.grey);
+				model.ShowNotes.Value = EditorGUILayout.Foldout(model.ShowNotes.Value, new GUIContent("Notes", "Internal notes for production."), true);
+				if (!model.HasNotes) EditorGUILayoutExtensions.PopColor();
+			}
+			EditorGUI.BeginChangeCheck();
+
+			if (model.ShowNotes.Value)
+			{
+				EditorGUILayoutExtensions.PushIndent();
+				{
+					model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value);
+				}
+				EditorGUILayoutExtensions.PopIndent();
+			}
+
 			OnLogDuration(infoModel, model);
 
 			return deleted;
@@ -99,10 +117,8 @@ namespace LunraGames.SpaceFarm
 		#region Text Logs
 		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model, EncounterLogModel nextModel)
 		{
-			GUILayout.Label("Header");
-			model.Header.Value = GUILayout.TextArea(model.Header.Value);
-			GUILayout.Label("Message");
-			model.Message.Value = GUILayout.TextArea(model.Message.Value);
+			model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header", model.Header.Value);
+			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
 			OnLinearLog(infoModel, model, nextModel);
 		}
 		#endregion
@@ -138,7 +154,7 @@ namespace LunraGames.SpaceFarm
 			var selection = 0;
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("Append New Key Value Operation: ", GUILayout.Width(128f));
+				GUILayout.Label("Append New Key Value Operation: ", GUILayout.ExpandWidth(false));
 				selection = EditorGUILayout.Popup(selection, labels.ToArray());
 			}
 			GUILayout.EndHorizontal();
@@ -210,19 +226,7 @@ namespace LunraGames.SpaceFarm
 		)
 		{
 			operation.Key.Value = EditorGUILayout.TextField("Key", operation.Key.Value);
-
-			var isField = string.IsNullOrEmpty(operation.Value.Value) || operation.Value.Value.Length < 32;
-			if (isField)
-			{
-				EditorStyles.textField.wordWrap = true;
-				operation.Value.Value = EditorGUILayout.TextField("Value", operation.Value.Value);
-			}
-			else
-			{
-				GUILayout.Label("Value");
-				EditorStyles.textArea.wordWrap = true;
-				operation.Value.Value = EditorGUILayout.TextArea(operation.Value.Value);
-			}
+			operation.Value.Value = EditorGUILayoutExtensions.TextDynamic("Value", operation.Value.Value);
 		}
 
 		void OnKeyValueLogSpawn(
@@ -256,7 +260,7 @@ namespace LunraGames.SpaceFarm
 			var selection = InventoryOperations.Unknown;
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("Append New Inventory Operation: ", GUILayout.Width(128f));
+				GUILayout.Label("Append New Inventory Operation: ", GUILayout.ExpandWidth(false));
 				selection = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", selection);
 			}
 			GUILayout.EndHorizontal();
@@ -282,8 +286,11 @@ namespace LunraGames.SpaceFarm
 						if (OnInventoryLogHeader(infoModel, model, operation)) deleted = operation.OperationId.Value;
 						switch (operation.Operation)
 						{
-							case InventoryOperations.AddResource:
+							case InventoryOperations.AddResources:
 								OnInventoryLogAddResource(infoModel, model, operation as AddResourceOperationModel);
+								break;
+							case InventoryOperations.AddInstance:
+								OnInventoryLogAddInstance(infoModel, model, operation as AddInstanceOperationModel);
 								break;
 							default:
 								Debug.LogError("Unrecognized InventoryOperation: " + operation.Operation);
@@ -313,7 +320,7 @@ namespace LunraGames.SpaceFarm
 			var deleted = false;
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(operation.Operation + ":", GUILayout.ExpandWidth(false));
+				GUILayout.Label(operation.Operation.ToString());
 				deleted = EditorGUILayoutExtensions.XButton();
 			}
 			GUILayout.EndHorizontal();
@@ -326,8 +333,16 @@ namespace LunraGames.SpaceFarm
 			AddResourceOperationModel operation
 		)
 		{
-			operation.Value.Rations.Value = EditorGUILayout.FloatField("Rations", operation.Value.Rations.Value);
-			operation.Value.Fuel.Value = EditorGUILayout.FloatField("Fuel", operation.Value.Fuel.Value);
+			EditorGUILayoutResource.Values(operation.Value);
+		}
+
+		void OnInventoryLogAddInstance(
+			EncounterInfoModel infoModel,
+			InventoryEncounterLogModel model,
+			AddInstanceOperationModel operation
+		)
+		{
+			operation.InventoryId.Value = EditorGUILayout.TextField("Inventory Id", operation.InventoryId);
 		}
 
 		void OnInventoryLogSpawn(
@@ -339,10 +354,15 @@ namespace LunraGames.SpaceFarm
 			var guid = Guid.NewGuid().ToString();
 			switch (operation)
 			{
-				case InventoryOperations.AddResource:
+				case InventoryOperations.AddResources:
 					var addResource = new AddResourceOperationModel();
 					addResource.OperationId.Value = guid;
 					model.Operations.Value = model.Operations.Value.Append(addResource).ToArray();
+					break;
+				case InventoryOperations.AddInstance:
+					var addInstance = new AddInstanceOperationModel();
+					addInstance.OperationId.Value = guid;
+					model.Operations.Value = model.Operations.Value.Append(addInstance).ToArray();
 					break;
 				default:
 					Debug.LogError("Unrecognized InventoryOperation: " + operation);

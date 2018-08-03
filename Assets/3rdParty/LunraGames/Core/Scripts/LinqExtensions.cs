@@ -71,5 +71,20 @@ namespace LunraGames
 			if (entries.Count() == 0) return true;
 			return entries.Contains(element);
 		}
+
+		/// <summary>
+		/// Checks if all elements exist in both collections, and no additional
+		/// elements are present.
+		/// </summary>
+		/// <returns><c>true</c>, if all elements of one collection are present in the second, <c>false</c> otherwise.</returns>
+		/// <param name="entries">Entries.</param>
+		/// <param name="second">Second.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public static bool IntersectEqual<T>(this IEnumerable<T> entries, IEnumerable<T> second)
+		{
+			var entriesCount = entries.Count();
+			if (entriesCount != second.Count()) return false;
+			return entries.Intersect(second).Count() == entriesCount;
+		}
 	}
 }

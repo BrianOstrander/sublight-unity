@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm.Models
 {
@@ -10,6 +12,8 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<InventoryTypes[]> ValidInventoryTypes;
 
 		public override SlotTypes SlotType { get { return SlotTypes.Crew; } }
+
+		public override bool CanSlot(InventoryTypes inventoryType) { return ValidInventoryTypes.Value.Contains(inventoryType); }
 
 		public CrewModuleSlotModel()
 		{

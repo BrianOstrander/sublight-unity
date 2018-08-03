@@ -103,12 +103,16 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			model.Ship.Value.Inventory.AllResources.Add(totalResources);
 
+			/* This was getting annoying...
 			App.Callbacks.DialogRequest(
 				DialogRequest.Alert(
 					"Acquired " + Strings.Rations(totalResources.Rations) + " rations and " + Strings.Fuel(totalResources.Fuel) + " fuel",
 					done: OnAlertClosed
 				)
 			);
+			*/
+			OnAlertClosed();
+
 			// Temp End
 		}
 

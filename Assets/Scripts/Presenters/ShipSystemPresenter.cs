@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+
+using UnityEngine;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
@@ -10,6 +12,9 @@ namespace LunraGames.SpaceFarm.Presenters
 		GameModel model;
 		ShipModel ship;
 
+		string[] lastEstimatedFailures = new string[0];
+		string[] lastFailures = new string[0];
+
 		public ShipSystemPresenter(GameModel model)
 		{
 			this.model = model;
@@ -18,7 +23,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta += OnDayTimeDelta;
 			App.Callbacks.ClearInventoryRequest += OnClearInventory;
 			model.TravelRequest.Changed += OnTravelRequest;
-			model.Ship.Value.Position.Changed += OnShipPosition;
+
+			ship.Position.Changed += OnShipPosition;
+			ship.Inventory.NextEstimatedFailure.Changed += OnNextEstimatedFailure;
+			ship.Inventory.NextFailure.Changed += OnNextFailure;
+			ship.Inventory.EstimatedFailureIds.Changed += OnModulesEstimatedFailure;
+			ship.Inventory.FailureIds.Changed += OnModulesFailure;
 		}
 
 		protected override void OnUnBind()
@@ -26,7 +36,12 @@ namespace LunraGames.SpaceFarm.Presenters
 			App.Callbacks.DayTimeDelta -= OnDayTimeDelta;
 			App.Callbacks.ClearInventoryRequest -= OnClearInventory;
 			model.TravelRequest.Changed -= OnTravelRequest;
-			model.Ship.Value.Position.Changed -= OnShipPosition;
+
+			ship.Position.Changed -= OnShipPosition;
+			ship.Inventory.NextEstimatedFailure.Changed -= OnNextEstimatedFailure;
+			ship.Inventory.NextFailure.Changed -= OnNextFailure;
+			ship.Inventory.EstimatedFailureIds.Changed -= OnModulesEstimatedFailure;
+			ship.Inventory.FailureIds.Changed -= OnModulesFailure;
 		}
 
 		public void Show()
@@ -90,6 +105,9 @@ namespace LunraGames.SpaceFarm.Presenters
 				);
 				model.TravelRequest.Value = travel;
 			}
+
+			// Module failure
+			ship.Inventory.CurrentDayTime.Value = delta.Current;
 		}
 
 		void OnTravelRequest(TravelRequest travelRequest)
@@ -122,6 +140,44 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnShipPosition(UniversePosition position)
 		{
 			if (View.TransitionState == TransitionStates.Shown) View.UniversePosition = position;
+		}
+
+		void OnNextEstimatedFailure(DayTime nextEstimatedFailure)
+		{
+			Debug.Log("The next estimated failure is " + nextEstimatedFailure);
+		}
+
+		void OnNextFailure(DayTime nextFailure)
+		{
+			Debug.Log("The next failure is " + nextFailure);
+		}
+
+		void OnModulesEstimatedFailure(string[] instanceIds)
+		{
+			var differences = instanceIds.Except(lastEstimatedFailures).ToArray();
+			lastEstimatedFailures = instanceIds;
+
+			if (differences.Length != 0) OnModulesShared("The following modules are going to fail!", "Modules Are Failing!", differences);
+		}
+
+		void OnModulesFailure(string[] instanceIds)
+		{
+			var differences = instanceIds.Except(lastFailures).ToArray();
+			lastFailures = instanceIds;
+
+			if (differences.Length != 0) OnModulesShared("The following modules have failed!", "Modules Have Failed!", differences);
+
+		}
+
+		void OnModulesShared(string prefix, string title, string[] instanceIds)
+		{
+			var result = prefix;
+			foreach (var value in instanceIds)
+			{
+				result += "\n - " + ship.Inventory.GetInventoryFirstOrDefault(value).Name.Value;
+			}
+
+			App.Callbacks.DialogRequest(DialogRequest.Alert(result, title));
 		}
 		#endregion
 	}

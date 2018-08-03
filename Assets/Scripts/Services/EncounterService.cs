@@ -143,7 +143,6 @@ namespace LunraGames.SpaceFarm
 
 			done(RequestStatus.Success);
 		}
-		#endregion
 
 		InteractedEncounterInfoListModel UpdateInteractedEncounters(List<EncounterInfoModel> allEncounters, InteractedEncounterInfoListModel target)
 		{
@@ -162,7 +161,9 @@ namespace LunraGames.SpaceFarm
 
 			return target;
 		}
+		#endregion
 
+		#region Utility
 		public EncounterInfoModel AssignBestEncounter(GameModel model, SystemModel system, BodyModel body)
 		{
 			// TODO: Check if old encounters are still valid here?
@@ -183,8 +184,11 @@ namespace LunraGames.SpaceFarm
 				}
 			);
 
-			var chosen = remaining.OrderByDescending(r => r.OrderWeight.Value).FirstOrDefault();
-			if (chosen == null) return null;
+			if (remaining.Count() == 0) return null;
+
+			var ordered = remaining.OrderByDescending(r => r.OrderWeight.Value);
+			var topWeight = ordered.First().OrderWeight.Value;
+			var chosen = ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)).Random();
 
 			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
 			body.Encounter.Value = chosen.EncounterId;
@@ -208,6 +212,7 @@ namespace LunraGames.SpaceFarm
 		{
 			return interactedEncounters.GetEncounter(encounter);
 		}
+		#endregion
 
 		#region Events
 		void OnSaveRequest(SaveRequest request)

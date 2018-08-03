@@ -9,6 +9,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public ResourceInventoryModel Value { get { return value; } }
 
-		public override InventoryOperations Operation { get { return InventoryOperations.AddResource; } }
+		public override InventoryOperations Operation { get { return InventoryOperations.AddResources; } }
 	}
 }

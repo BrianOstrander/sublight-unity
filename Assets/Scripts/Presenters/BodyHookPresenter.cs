@@ -43,7 +43,7 @@ namespace LunraGames.SpaceFarm.Presenters
 			else
 			{
 				var buttons = new List<LabelButtonBlock>();
-				foreach (var crew in model.Ship.Value.Inventory.GetInventory<CrewInventoryModel>())
+				foreach (var crew in model.Ship.Value.Inventory.GetUsableInventory<CrewInventoryModel>())
 				{
 					if (!crew.IsExplorable(body)) continue;
 					buttons.Add(new LabelButtonBlock(crew.Name, () => OnCrewClick(crew)));

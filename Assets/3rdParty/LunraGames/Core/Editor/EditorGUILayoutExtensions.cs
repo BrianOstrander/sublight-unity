@@ -13,7 +13,9 @@ namespace LunraGamesEditor
 	public static class EditorGUILayoutExtensions
 	{
 		static Stack<Color> ColorStack = new Stack<Color>();
+		static Stack<Color> BackgroundColorStack = new Stack<Color>();
 		static Stack<bool> EnabledStack = new Stack<bool>();
+		static Stack<bool> TextAreaWordWrapStack = new Stack<bool>();
 
 		/// <summary>
 		/// Renames the first enum entry, useful for adding a "Select X" option.
@@ -73,6 +75,18 @@ namespace LunraGamesEditor
 			GUI.color = ColorStack.Pop();
 		}
 
+		public static void PushBackgroundColor(Color backgroundColor)
+		{
+			BackgroundColorStack.Push(GUI.backgroundColor);
+			GUI.backgroundColor = backgroundColor;
+		}
+
+		public static void PopBackgroundColor()
+		{
+			if (BackgroundColorStack.Count == 0) return;
+			GUI.backgroundColor = BackgroundColorStack.Pop();
+		}
+
 		public static void PushEnabled(bool enabled)
 		{
 			EnabledStack.Push(GUI.enabled);
@@ -83,6 +97,29 @@ namespace LunraGamesEditor
 		{
 			if (EnabledStack.Count == 0) return;
 			GUI.enabled = EnabledStack.Pop();
+		}
+
+		public static void PushTextAreaWordWrap(bool enabled)
+		{
+			TextAreaWordWrapStack.Push(EditorStyles.textArea.wordWrap);
+			EditorStyles.textArea.wordWrap = enabled;
+		}
+
+		public static void PopTextAreaWordWrap()
+		{
+			if (TextAreaWordWrapStack.Count == 0) return;
+			var popped = TextAreaWordWrapStack.Pop();
+			EditorStyles.textArea.wordWrap = popped;
+		}
+
+		public static void PushIndent()
+		{
+			EditorGUI.indentLevel++;
+		}
+
+		public static void PopIndent()
+		{
+			EditorGUI.indentLevel--;
 		}
 
 		public static bool XButton()
@@ -117,7 +154,7 @@ namespace LunraGamesEditor
 					{
 						GUILayout.Space(16f);
 						GUILayout.Label("[ "+i+" ]", GUILayout.Width(32f));
-						values[i] = GUILayout.TextField(values[i]);
+						values[i] = EditorGUILayout.TextField(values[i]);
 						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();
@@ -134,7 +171,24 @@ namespace LunraGamesEditor
 		}
 
 		public static T[] EnumArray<T>(
-			string name, 
+			string name,
+			T[] values,
+			string primaryReplacemnt = null,
+			T defaultValue = default(T),
+			T[] options = null
+		) where T : struct, IConvertible
+		{
+			return EnumArray(
+				new GUIContent(name),
+				values,
+				primaryReplacemnt,
+				defaultValue,
+				options
+			);
+		}
+
+		public static T[] EnumArray<T>(
+			GUIContent content, 
 			T[] values, 
 			string primaryReplacemnt = null, 
 			T defaultValue = default(T),
@@ -147,7 +201,7 @@ namespace LunraGamesEditor
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(name);
+				GUILayout.Label(content);
 				if (GUILayout.Button("Preappend", GUILayout.Width(90f))) values = values.Prepend(defaultValue).ToArray();
 				if (GUILayout.Button("Append", GUILayout.Width(90f))) values = values.Append(defaultValue).ToArray();
 			}
@@ -166,9 +220,7 @@ namespace LunraGamesEditor
 						GUILayout.Space(16f);
 						GUILayout.Label("[ " + i + " ]", GUILayout.Width(32f));
 						values[i] = HelpfulEnumPopup(primaryReplacemnt, values[i], options);
-						PushColor(Color.red);
-						if (GUILayout.Button("X", GUILayout.Width(18f))) deletedIndex = i;
-						PopColor();
+						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();
 				}
@@ -181,6 +233,39 @@ namespace LunraGamesEditor
 				values = list.ToArray();
 			}
 			return values;
+		}
+
+		public static string TextDynamic(string value, int lengthLimit = 32)
+		{
+			return TextDynamic(GUIContent.none, value, lengthLimit);
+		}
+
+		public static string TextDynamic(string label, string value, int lengthLimit = 32)
+		{
+			return TextDynamic(new GUIContent(label), value, lengthLimit);
+		}
+
+		public static string TextDynamic(GUIContent content, string value, int lengthLimit = 32)
+		{
+			var nullContent = GUIContentExtensions.IsNullOrNone(content);
+			lengthLimit = nullContent ? lengthLimit * 2 : lengthLimit;
+			if (string.IsNullOrEmpty(value) || value.Length < lengthLimit)
+			{
+				// Is Field
+				if (nullContent) value = EditorGUILayout.TextField(value);
+				else value = EditorGUILayout.TextField(content, value);
+			}
+			else
+			{
+				// Is Area
+				PushTextAreaWordWrap(true);
+				{
+					if (!nullContent) GUILayout.Label(content);
+					value = EditorGUILayout.TextArea(value, EditorStyles.textArea);
+				}
+				PopTextAreaWordWrap();
+			}
+			return value;
 		}
 	}
 }

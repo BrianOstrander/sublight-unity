@@ -51,6 +51,7 @@ namespace LunraGames.SpaceFarm
 			Payload.Game.TravelRequest.Changed += OnTravelRequest;
 			App.Callbacks.FocusRequest += OnFocus;
 
+
 			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues);
 			Payload.KeyValueListener.Register();
 
@@ -115,6 +116,10 @@ namespace LunraGames.SpaceFarm
 			// Encounter presenters
 			new CameraEncounterPresenter(game);
 			new ContainerEncounterLogPresenter(game);
+
+			// Ship presenters
+			new CameraShipPresenter(game);
+			new ShipSlotsPresenter(game);
 
 			// Global presenters
 			new PauseMenuPresenter();

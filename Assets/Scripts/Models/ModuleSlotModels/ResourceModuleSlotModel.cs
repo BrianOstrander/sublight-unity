@@ -38,5 +38,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		public override SlotTypes SlotType { get { return SlotTypes.Resource; } }
 		public override bool IsFillable { get { return false; } }
+
+		public override bool CanSlot(InventoryTypes inventoryType) { return false; }
 	}
 }

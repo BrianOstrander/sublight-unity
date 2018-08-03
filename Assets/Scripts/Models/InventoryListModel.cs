@@ -24,12 +24,38 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] ResourceInventoryModel unUsableResources = ResourceInventoryModel.Zero;
 
 		[JsonProperty] SlotEdge[] slotEdges = new SlotEdge[0];
+		[JsonProperty] DayTime currentDayTime;
+		[JsonProperty] DayTime nextEstimatedFailure;
+		[JsonProperty] DayTime nextFailure;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SlotEdge[]> SlotEdges;
+		[JsonIgnore]
+		public readonly ListenerProperty<DayTime> CurrentDayTime;
+		[JsonIgnore]
+		public readonly ListenerProperty<DayTime> NextEstimatedFailure;
+		[JsonIgnore]
+		public readonly ListenerProperty<DayTime> NextFailure;
 		#endregion
 
 		#region Derived Values
+		[JsonProperty] string[] functionalIdsCache = new string[0];
+		[JsonProperty] string[] estimatedFailureIdsCache = new string[0];
+		[JsonProperty] string[] failureIdsCache = new string[0];
+
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> functionalIdsCacheListener;
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> estimatedFailureIdsCacheListener;
+		[JsonIgnore]
+		readonly ListenerProperty<string[]> failureIdsCacheListener;
+
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> FunctionalIds;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> EstimatedFailureIds;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<string[]> FailureIds;
 		[JsonIgnore]
 		public readonly ListenerProperty<InventoryModel[]> All;
 		#endregion
@@ -95,9 +121,27 @@ namespace LunraGames.SpaceFarm.Models
 
 		public InventoryListModel()
 		{
-			// Derived Values
 			All = new ListenerProperty<InventoryModel[]>(OnSetInventory, OnGetInventory);
 			SlotEdges = new ListenerProperty<SlotEdge[]>(value => slotEdges = value, () => slotEdges, OnSlotEdges);
+			CurrentDayTime = new ListenerProperty<DayTime>(value => currentDayTime = value, () => currentDayTime, OnCurrentDayTime);
+			NextEstimatedFailure = new ListenerProperty<DayTime>(value => nextEstimatedFailure = value, () => nextEstimatedFailure);
+			NextFailure = new ListenerProperty<DayTime>(value => nextFailure = value, () => nextFailure);
+
+			FunctionalIds = new ReadonlyProperty<string[]>(
+				value => functionalIdsCache = value,
+				() => functionalIdsCache,
+				out functionalIdsCacheListener
+			);
+			EstimatedFailureIds = new ReadonlyProperty<string[]>(
+				value => estimatedFailureIdsCache = value,
+				() => estimatedFailureIdsCache,
+				out estimatedFailureIdsCacheListener
+			);
+			FailureIds = new ReadonlyProperty<string[]>(
+				value => failureIdsCache = value,
+				() => failureIdsCache,
+				out failureIdsCacheListener
+			);
 
 			AllResources.AnyChange += OnResources;
 		}
@@ -213,76 +257,119 @@ namespace LunraGames.SpaceFarm.Models
 
 		}
 
-		public SlotEdge Connect(string slotId, string itemInstanceId)
+		/// <summary>
+		/// Connect the specified slot and item. Will disconnect any other
+		/// connections they might already have.
+		/// </summary>
+		/// <returns>The connection.</returns>
+		/// <param name="parentSlotId">Slot identifier.</param>
+		/// <param name="itemInstanceId">Item instance identifier.</param>
+		public SlotEdge Connect(string parentSlotId, string itemInstanceId)
 		{
-			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
+			if (string.IsNullOrEmpty(parentSlotId)) throw new ArgumentNullException("slotId");
 			if (string.IsNullOrEmpty(itemInstanceId)) throw new ArgumentNullException("itemInstanceId");
 
-			var slot = GetInventory<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).First(s => s.SlotId.Value == slotId);
+			var slot = GetInventory<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).First(s => s.ParentSlotId.Value == parentSlotId);
 			var item = GetInventoryFirstOrDefault(itemInstanceId);
 			if (item == null) throw new ArgumentException("No item found with id: "+itemInstanceId, "itemInstanceId");
 			return Connect(slot, item);
 		}
 
+		/// <summary>
+		/// Connect the specified slot and item. Will disconnect any other
+		/// connections they might already have.
+		/// </summary>
+		/// <returns>The connection.</returns>
+		/// <param name="slot">Slot.</param>
+		/// <param name="item">Item.</param>
 		public SlotEdge Connect(ModuleSlotModel slot, InventoryModel item)
 		{
 			if (slot == null) throw new ArgumentNullException("slot");
 			if (item == null) throw new ArgumentNullException("item");
+			if (!slot.IsFillable) throw new ArgumentException("Specified slot cannot be filled.", "slot");
+			if (!slot.CanSlot(item.InventoryType)) throw new ArgumentException("Specified slot cannot be filled with item of InventoryType: " + item.InventoryType, "slot");
 
-			var slotId = slot.SlotId.Value;
+			var parentSlotId = slot.ParentSlotId.Value;
 			var itemId = item.InstanceId.Value;
 
-			var existing = SlotEdges.Value.FirstOrDefault(e => e.SlotId == slotId && e.ItemInstanceId == itemId);
+			var existing = SlotEdges.Value.FirstOrDefault(e => e.ParentSlotId == parentSlotId && e.ItemInstanceId == itemId);
 			if (!existing.IsEmpty) return existing;
 
-			var result = new SlotEdge(slotId, itemId);
+			var result = new SlotEdge(parentSlotId, itemId);
 
-			var remaining = RemoveConnection(slotId, itemId);
+			var remaining = RemoveConnection(parentSlotId, itemId);
 
 			slot.ItemId.Value = result.ItemInstanceId;
-			item.SlotId.Value = result.SlotId;
+			item.ParentSlotId.Value = result.ParentSlotId;
 			SlotEdges.Value = remaining.Append(result).ToArray();
 			return result;
 		}
 
+		/// <summary>
+		/// Disconnects the specified connection.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="edge">Edge.</param>
 		public void Disconnect(SlotEdge edge)
 		{
-			Disconnect(edge.SlotId, edge.ItemInstanceId);
+			Disconnect(edge.ParentSlotId, edge.ItemInstanceId);
 		}
 
+		/// <summary>
+		/// Disconnects any items from this slot, if there is a connection at
+		/// all.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="slot">Slot.</param>
 		public void Disconnect(ModuleSlotModel slot)
 		{
-			Disconnect(slot.SlotId.Value, slot.ItemId.Value);
+			Disconnect(slot.ParentSlotId.Value, slot.ItemId.Value);
 		}
 
+		/// <summary>
+		/// Disconnects this item from any slots, if there's any connection at
+		/// all.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="item">Item.</param>
 		public void Disconnect(InventoryModel item)
 		{
-			Disconnect(item.SlotId.Value, item.InstanceId.Value);
+			Disconnect(item.ParentSlotId.Value, item.InstanceId.Value);
 		}
 
-		public void Disconnect(string slotId, string itemInstanceId)
+		/// <summary>
+		/// Disconnects any connection between the specified slot and item, if
+		/// there is any at all. If they're connected to anything else, those
+		/// connections are preserved.
+		/// </summary>
+		/// <returns>The disconnect.</returns>
+		/// <param name="parentSlotId">Slot identifier.</param>
+		/// <param name="itemInstanceId">Item instance identifier.</param>
+		public void Disconnect(string parentSlotId, string itemInstanceId)
 		{
-			if (string.IsNullOrEmpty(slotId)) throw new ArgumentNullException("slotId");
+			if (string.IsNullOrEmpty(parentSlotId)) throw new ArgumentNullException("slotId");
 			if (string.IsNullOrEmpty(itemInstanceId)) throw new ArgumentNullException("itemInstanceId");
 
-			var existing = SlotEdges.Value.FirstOrDefault(e => e.SlotId == slotId && e.ItemInstanceId == itemInstanceId);
+			var existing = SlotEdges.Value.FirstOrDefault(e => e.ParentSlotId == parentSlotId && e.ItemInstanceId == itemInstanceId);
 			if (existing.IsEmpty) return;
 
-			SlotEdges.Value = RemoveConnection(slotId, itemInstanceId).ToArray();
+			SlotEdges.Value = RemoveConnection(parentSlotId, itemInstanceId).ToArray();
 		}
 
 		/// <summary>
 		/// Helper method to remove all references of a slot and item without
-		/// setting the list's SlotEdges.
+		/// setting the list's SlotEdges. The specified slot and item don't
+		/// neccesarily need to already be connected to each other, it just
+		/// makes them available to be connected to each other.
 		/// </summary>
 		/// <returns>The remaining edges.</returns>
-		/// <param name="slotId">Slot identifier.</param>
+		/// <param name="parentSlotId">Slot identifier.</param>
 		/// <param name="itemInstanceId">Item identifier.</param>
-		IEnumerable<SlotEdge> RemoveConnection(string slotId, string itemInstanceId)
+		IEnumerable<SlotEdge> RemoveConnection(string parentSlotId, string itemInstanceId)
 		{
 			foreach (var itemWithSlot in All.Value)
 			{
-				if (itemWithSlot.SlotId.Value == slotId) itemWithSlot.SlotId.Value = null;
+				if (itemWithSlot.ParentSlotId.Value == parentSlotId) itemWithSlot.ParentSlotId.Value = null;
 				if (itemWithSlot.InventoryType == InventoryTypes.Module)
 				{
 					var module = itemWithSlot as ModuleInventoryModel;
@@ -292,12 +379,7 @@ namespace LunraGames.SpaceFarm.Models
 					}
 				}
 			}
-			foreach (var slotWithItem in GetInventory(i => i.InventoryType == InventoryTypes.Module).Cast<ModuleInventoryModel>().SelectMany(m => m.Slots.All.Value).Where(s => s.ItemId.Value == itemInstanceId))
-			{
-				slotWithItem.SlotId.Value = null;
-				slotWithItem.ItemId.Value = null;
-			}
-			return SlotEdges.Value.Where(e => e.SlotId != slotId && e.ItemInstanceId != itemInstanceId);
+			return SlotEdges.Value.Where(e => e.ParentSlotId != parentSlotId && e.ItemInstanceId != itemInstanceId);
 		}
 
 		public void ClearUnused()
@@ -327,41 +409,17 @@ namespace LunraGames.SpaceFarm.Models
 				return 0 < GetUnUsableInventory().Length;
 			}
 		}
+
+		public void Add(InventoryModel entry)
+		{
+			All.Value = All.Value.Append(entry).ToArray();
+		}
 		#endregion
 
 		#region Events
 		void OnSlotEdges(SlotEdge[] edges)
 		{
-			var newRefillResources = ResourceInventoryModel.Zero;
-			var newRefillLogicResources = ResourceInventoryModel.Zero;
-			var newMaxLogicResources = ResourceInventoryModel.Zero;
-			var newMaxResources = ResourceInventoryModel.Zero;
-
-			foreach (var module in modules)
-			{
-				if (module.IsUsable)
-				{
-					newRefillResources.Add(module.Slots.RefillResources);
-					newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
-					newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
-					newMaxResources.Add(module.Slots.MaximumResources);
-				}
-			}
-
-			RefillResources.Assign(newRefillResources);
-			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
-			MaximumLogisticsResources.Assign(newMaxLogicResources);
-			MaximumResources.Assign(newMaxResources);
-			MaximumRefillableLogisticsResources.Assign(MaximumLogisticsResources.Duplicate.Clamp(MaximumResources));
-
-			OnResources(AllResources);
-		}
-
-		void OnResources(ResourceInventoryModel model)
-		{
-			ResourceInventoryModel newUnUsableResources;
-			UsableResources.Assign(AllResources.Duplicate.Clamp(MaximumResources, out newUnUsableResources));
-			UnUsableResources.Assign(newUnUsableResources);
+			OnCacheChanged();
 		}
 
 		void OnSetInventory(InventoryModel[] newInventory)
@@ -373,14 +431,9 @@ namespace LunraGames.SpaceFarm.Models
 			ResourceInventoryModel newResources = null;
 			var slotEdgeList = new List<SlotEdge>();
 
-			var newRefillResources = ResourceInventoryModel.Zero;
-			var newRefillLogicResources = ResourceInventoryModel.Zero;
-			var newMaxLogicResources = ResourceInventoryModel.Zero;
-			var newMaxResources = ResourceInventoryModel.Zero;
-
 			foreach (var inventory in newInventory)
 			{
-				if (!string.IsNullOrEmpty(inventory.SlotId.Value)) slotEdgeList.Add(new SlotEdge(inventory.SlotId, inventory.InstanceId));
+				if (!string.IsNullOrEmpty(inventory.ParentSlotId.Value)) slotEdgeList.Add(new SlotEdge(inventory.ParentSlotId, inventory.InstanceId));
 				switch (inventory.InventoryType)
 				{
 					case InventoryTypes.OrbitalCrew:
@@ -398,13 +451,6 @@ namespace LunraGames.SpaceFarm.Models
 					case InventoryTypes.Module:
 						var module = inventory as ModuleInventoryModel;
 						moduleList.Add(module);
-						if (module.IsUsable)
-						{
-							newRefillResources.Add(module.Slots.RefillResources);
-							newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
-							newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
-							newMaxResources.Add(module.Slots.MaximumResources);
-						}
 						break;
 					default:
 						Debug.LogError("Unrecognized InventoryType: " + inventory.InventoryType);
@@ -417,13 +463,8 @@ namespace LunraGames.SpaceFarm.Models
 
 			SlotEdges.Value = slotEdgeList.ToArray();
 
-			RefillResources.Assign(newRefillResources);
-			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
-			MaximumLogisticsResources.Assign(newMaxLogicResources);
-			MaximumResources.Assign(newMaxResources);
-
 			if (newResources != null) AllResources.Assign(newResources);
-			else OnResources(AllResources);
+			OnCacheChanged();
 		}
 
 		InventoryModel[] OnGetInventory()
@@ -431,6 +472,82 @@ namespace LunraGames.SpaceFarm.Models
 			return orbitalCrews.Cast<InventoryModel>().Concat(modules)
 													  .Append(allResources)
 													  .ToArray();
+		}
+
+		void OnCurrentDayTime(DayTime newCurrentDayTime)
+		{
+			if (NextEstimatedFailure.Value < newCurrentDayTime || NextFailure.Value < newCurrentDayTime) OnCacheChanged();
+		}
+
+		void OnCacheChanged()
+		{
+			var newRefillResources = ResourceInventoryModel.Zero;
+			var newRefillLogicResources = ResourceInventoryModel.Zero;
+			var newMaxLogicResources = ResourceInventoryModel.Zero;
+			var newMaxResources = ResourceInventoryModel.Zero;
+
+			var lowestNextFailureEstimate = DayTime.MaxValue;
+			var lowestNextFailure = DayTime.MaxValue;
+
+			var newFunctionalCache = new List<string>();
+			var newEstimatedFailureCache = new List<string>();
+			var newFailureCache = new List<string>();
+
+			foreach (var module in modules)
+			{
+				if (!module.IsUsable) continue;
+				
+				if (module.IsFunctional(CurrentDayTime.Value))
+				{
+					// It's slotted and estimated functional or functional
+
+					if (module.IsEstimatedFunctional(CurrentDayTime.Value))
+					{
+						// Currently fully functional
+						newFunctionalCache.Add(module.InstanceId.Value);
+					}
+					else
+					{
+						// Currently estimated to fail
+						newEstimatedFailureCache.Add(module.InstanceId.Value);
+					}
+
+					newRefillResources.Add(module.Slots.RefillResources);
+					newRefillLogicResources.Add(module.Slots.RefillLogisticsResources);
+					newMaxLogicResources.Add(module.Slots.MaximumLogisticsResources);
+					newMaxResources.Add(module.Slots.MaximumResources);
+
+					if (module.EstimatedFailureDate.Value < lowestNextFailureEstimate) lowestNextFailureEstimate = module.EstimatedFailureDate.Value;
+					if (module.FailureDate.Value < lowestNextFailure) lowestNextFailure = module.FailureDate.Value;
+				}
+				else
+				{
+					// It's slotted but has failed
+					newFailureCache.Add(module.InstanceId.Value);
+				}
+			}
+
+			if (!newFunctionalCache.IntersectEqual(FunctionalIds.Value)) functionalIdsCacheListener.Value = newFunctionalCache.ToArray();
+			if (!newEstimatedFailureCache.IntersectEqual(EstimatedFailureIds.Value)) estimatedFailureIdsCacheListener.Value = newEstimatedFailureCache.ToArray();
+			if (!newFailureCache.IntersectEqual(FailureIds.Value)) failureIdsCacheListener.Value = newFailureCache.ToArray();
+
+			RefillResources.Assign(newRefillResources);
+			RefillLogisticsResources.Assign(newRefillLogicResources.ClampNegatives());
+			MaximumLogisticsResources.Assign(newMaxLogicResources);
+			MaximumResources.Assign(newMaxResources);
+			MaximumRefillableLogisticsResources.Assign(MaximumLogisticsResources.Duplicate.Clamp(MaximumResources));
+
+			OnResources(AllResources);
+
+			NextEstimatedFailure.Value = lowestNextFailureEstimate;
+			NextFailure.Value = lowestNextFailure;
+		}
+
+		void OnResources(ResourceInventoryModel newAllResources)
+		{
+			ResourceInventoryModel newUnUsableResources;
+			UsableResources.Assign(AllResources.Duplicate.Clamp(MaximumResources, out newUnUsableResources));
+			UnUsableResources.Assign(newUnUsableResources);
 		}
 		#endregion
 	}

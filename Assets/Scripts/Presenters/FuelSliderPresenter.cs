@@ -31,17 +31,14 @@ namespace LunraGames.SpaceFarm.Presenters
 
 			View.Reset();
 
-			// Turn this back up to one, since it's annoying every time fuel runs out.
-			//if (1f <= model.Ship.Value.Inventory.UsableResources.Fuel && model.Ship.Value.FuelConsumption < 1f)
-			//{
-			//	model.Ship.Value.FuelConsumption.Value = 1f;
-			//}
 			model.Ship.Value.FuelConsumption.Value = Mathf.Min(model.Ship.Value.Inventory.UsableResources.Fuel, model.Ship.Value.FuelConsumption);
 
 			View.Rations = model.Ship.Value.Inventory.UsableResources.Rations;
 			View.Fuel = model.Ship.Value.Inventory.UsableResources.Fuel;
 			View.FuelConsumption = model.Ship.Value.FuelConsumption;
 			View.FuelConsumptionUpdate = OnFuelConsumptionUpdate;
+
+			View.SlotsClick = OnSlotsClick;
 
 			ShowView(App.GameCanvasRoot, true);
 		}
@@ -74,6 +71,13 @@ namespace LunraGames.SpaceFarm.Presenters
 		void OnFuelConsumptionUpdate(float fuelConsumption)
 		{
 			model.Ship.Value.FuelConsumption.Value = fuelConsumption;
+		}
+
+		void OnSlotsClick()
+		{
+			App.Callbacks.FocusRequest(
+				ShipFocusRequest.SlotEditor()
+			);
 		}
 		#endregion
 	}

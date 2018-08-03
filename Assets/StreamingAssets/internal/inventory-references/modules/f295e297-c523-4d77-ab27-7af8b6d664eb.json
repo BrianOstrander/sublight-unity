@@ -1,0 +1,53 @@
+{
+  "model": {
+    "minimumLifespan": {
+      "Day": 36500
+    },
+    "deltaLifespan": {
+      "Day": 18250
+    },
+    "curveLifespan": {
+      "keys": [
+        {
+          "outTangent": 1.0
+        },
+        {
+          "time": 1.0,
+          "value": 1.0,
+          "inTangent": 1.0
+        }
+      ],
+      "length": 2,
+      "preWrapMode": "ClampForever",
+      "postWrapMode": "ClampForever"
+    },
+    "slots": {
+      "crews": [],
+      "resources": [
+        {
+          "refillResources": {},
+          "refillLogisticsResources": {},
+          "maximumLogisticsResources": {},
+          "maximumResources": {
+            "speed": 0.015
+          },
+          "slotId": "a9d3d20e-1b28-4ac0-a148-bf200e279803"
+        }
+      ],
+      "modules": [],
+      "refillResources": {},
+      "refillLogisticsResources": {},
+      "maximumLogisticsResources": {},
+      "maximumResources": {
+        "speed": 0.015
+      }
+    },
+    "inventoryId": "88d5280d-7802-401a-bb25-24b1e4ee46ca",
+    "name": "Stock Engine"
+  },
+  "version": 4,
+  "meta": "Stock Engine",
+  "created": "2018-08-01T11:05:45.338411-07:00",
+  "modified": "2018-08-01T11:05:45.338411-07:00",
+  "SaveType": "ModuleReference"
+}

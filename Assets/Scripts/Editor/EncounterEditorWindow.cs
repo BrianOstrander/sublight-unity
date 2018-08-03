@@ -19,14 +19,14 @@ namespace LunraGames.SpaceFarm
 
 		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
 
-		EditorSaveLoadService editorSaveLoadService;
+		EditorModelMediator editorSaveLoadService;
 		IModelMediator SaveLoadService 
 		{
 			get 
 			{
 				if (editorSaveLoadService == null)
 				{
-					editorSaveLoadService = new EditorSaveLoadService(true);
+					editorSaveLoadService = new EditorModelMediator(true);
 					editorSaveLoadService.Initialize(BuildPreferences.Instance.Info, OnSaveLoadInitialized);
 				}
 				return editorSaveLoadService;
@@ -39,7 +39,7 @@ namespace LunraGames.SpaceFarm
 			Debug.LogError("Editor time save load service returned: " + status);
 		}
 
-		[MenuItem("Window/Encounter Editor")]
+		[MenuItem("Window/Space Farm/Encounter Editor")]
 		static void Initialize()
 		{
 			GetWindow(typeof(EncounterEditorWindow), false, "Encounter Editor").Show();
@@ -62,21 +62,6 @@ namespace LunraGames.SpaceFarm
 			{
 				try
 				{
-					/*
-					if (Application.isPlaying)
-					{
-						GUILayout.FlexibleSpace();
-						GUILayout.BeginHorizontal();
-						{
-							GUILayout.FlexibleSpace();
-							GUILayout.Label("Editing Not Permitted While Playing");
-							GUILayout.FlexibleSpace();
-						}
-						GUILayout.EndHorizontal();
-						GUILayout.FlexibleSpace();
-						return;
-					}
-					*/
 					switch (currentState.Value)
 					{
 						case States.Home:

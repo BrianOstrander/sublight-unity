@@ -94,8 +94,14 @@ namespace LunraGames.SpaceFarm
 				case SaveTypes.Game: return typeof(GameModel);
 				case SaveTypes.Preferences: return typeof(PreferencesModel);
 				case SaveTypes.EncounterInfo: return typeof(EncounterInfoModel);
-				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				case SaveTypes.GlobalKeyValues: return typeof(GlobalKeyValuesModel);
+				// -- Interacted
+				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
+				case SaveTypes.InteractedInventoryReferenceList: return typeof(InteractedInventoryReferenceListModel);
+				// -- Inventory References
+				case SaveTypes.ModuleReference: return typeof(ModuleReferenceModel);
+				case SaveTypes.OrbitalCrewReference: return typeof(OrbitalCrewReferenceModel);
+				// --
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -105,9 +111,14 @@ namespace LunraGames.SpaceFarm
 			if (type == typeof(GameModel)) return SaveTypes.Game;
 			if (type == typeof(PreferencesModel)) return SaveTypes.Preferences;
 			if (type == typeof(EncounterInfoModel)) return SaveTypes.EncounterInfo;
-			if (type == typeof(InteractedEncounterInfoListModel)) return SaveTypes.InteractedEncounterInfoList;
 			if (type == typeof(GlobalKeyValuesModel)) return SaveTypes.GlobalKeyValues;
-
+			// -- Interacted
+			if (type == typeof(InteractedEncounterInfoListModel)) return SaveTypes.InteractedEncounterInfoList;
+			if (type == typeof(InteractedInventoryReferenceListModel)) return SaveTypes.InteractedInventoryReferenceList;
+			// -- Inventory References
+			if (type == typeof(ModuleReferenceModel)) return SaveTypes.ModuleReference;
+			if (type == typeof(OrbitalCrewReferenceModel)) return SaveTypes.OrbitalCrewReference;
+			// --
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 

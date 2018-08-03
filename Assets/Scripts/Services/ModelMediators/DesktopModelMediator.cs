@@ -11,11 +11,13 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SpaceFarm
 {
-	public class DesktopSaveLoadService : ModelMediator
+	public class DesktopModelMediator : ModelMediator
 	{
 		const string Extension = ".json";
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
 		static string InternalPath { get { return Path.Combine(Application.streamingAssetsPath, "internal"); } }
+
+		static string InventoryReferencePath(string suffix) { return Path.Combine(Path.Combine(InternalPath, "inventory-references"), suffix); }
 
 		bool readableSaves;
 
@@ -29,7 +31,12 @@ namespace LunraGames.SpaceFarm
 					{ SaveTypes.Preferences, -1 },
 					{ SaveTypes.EncounterInfo, 0 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
-					{ SaveTypes.GlobalKeyValues, -1 }
+					{ SaveTypes.InteractedInventoryReferenceList, -1 },
+					{ SaveTypes.GlobalKeyValues, -1 },
+					// -- Inventory References
+					{ SaveTypes.ModuleReference, 4 },
+					{ SaveTypes.OrbitalCrewReference, 4 }
+					// --
 				};
 			}
 		}
@@ -44,12 +51,17 @@ namespace LunraGames.SpaceFarm
 					{ SaveTypes.Preferences, true },
 					{ SaveTypes.EncounterInfo, false },
 					{ SaveTypes.InteractedEncounterInfoList, true },
-					{ SaveTypes.GlobalKeyValues, true }
+					{ SaveTypes.InteractedInventoryReferenceList, true },
+					{ SaveTypes.GlobalKeyValues, true },
+					// -- Inventory References
+					{ SaveTypes.ModuleReference, false },
+					{ SaveTypes.OrbitalCrewReference, false }
+					// --
 				};
 			}
 		}
 
-		public DesktopSaveLoadService(bool readableSaves = false)
+		public DesktopModelMediator(bool readableSaves = false)
 		{
 			this.readableSaves = readableSaves;
 		}
@@ -59,9 +71,12 @@ namespace LunraGames.SpaceFarm
 			BuildInfo = info;
 			try
 			{
+				var canSave = CanSave;
 				foreach (var curr in Enum.GetValues(typeof(SaveTypes)).Cast<SaveTypes>())
 				{
 					if (curr == SaveTypes.Unknown) continue;
+					if (!CanSave.ContainsKey(curr) || !CanSave[curr]) continue;
+
 					var path = GetPath(curr);
 					Directory.CreateDirectory(path);
 				}
@@ -81,9 +96,14 @@ namespace LunraGames.SpaceFarm
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
-				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
 				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
-
+				// -- Interacted
+				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
+				case SaveTypes.InteractedInventoryReferenceList: return Path.Combine(ParentPath, "interacted-references");
+				// -- Inventory References
+				case SaveTypes.ModuleReference: return InventoryReferencePath("modules");
+				case SaveTypes.OrbitalCrewReference: return InventoryReferencePath("orbital-crew");
+				// --
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}

@@ -31,6 +31,7 @@ namespace LunraGames.SpaceFarm
 			App.SM.PushBlocking(InitializePresenters);
 			App.SM.PushBlocking(InitializePreferences);
 			App.SM.PushBlocking(InitializeEncounters);
+			App.SM.PushBlocking(InitializeInventoryReferences);
 			App.SM.PushBlocking(InitializeListeners);
 			App.SM.PushBlocking(InitializeGlobalKeyValues);
 
@@ -55,10 +56,12 @@ namespace LunraGames.SpaceFarm
 				App.BuildPreferences.Info,
 				status =>
 				{
-					if (status == RequestStatus.Success) App.Log("ModelMediator Initialized", LogTypes.Initialization);
+					if (status == RequestStatus.Success)
+					{
+						App.Log("ModelMediator Initialized", LogTypes.Initialization);
+						done();
+					}
 					else App.Restart("Initializing ModelMediator failed with status " + status);
-					// TODO: Should this be called if a restart happens?
-					done();
 				}
 			);
 		}
@@ -70,10 +73,12 @@ namespace LunraGames.SpaceFarm
 				App.Main.transform,
 				status =>
 				{
-					if (status == RequestStatus.Success) App.Log("ViewMediator Initialized", LogTypes.Initialization);
+					if (status == RequestStatus.Success)
+					{
+						App.Log("ViewMediator Initialized", LogTypes.Initialization);
+						done();
+					}
 					else App.Restart("Initializing ViewMediator failed with status " + status);
-					// TODO: Should this be called if a restart happens?
-					done();
 				}
 			);
 		}
@@ -83,10 +88,12 @@ namespace LunraGames.SpaceFarm
 			App.P.Initialize(
 				status =>
 				{
-					if (status == RequestStatus.Success) App.Log("PresenterMediator Initialized", LogTypes.Initialization);
+					if (status == RequestStatus.Success)
+					{
+						App.Log("PresenterMediator Initialized", LogTypes.Initialization);
+						done();
+					}
 					else App.Restart("Initializing PresenterMediator failed with status " + status);
-					// TODO: Should this be called if a restart happens?
-					done();
 				}
 			);
 		}
@@ -170,10 +177,27 @@ namespace LunraGames.SpaceFarm
 			App.Encounters.Initialize(
 				status =>
 				{
-					if (status == RequestStatus.Success) App.Log("Encounters Initialized", LogTypes.Initialization);
+					if (status == RequestStatus.Success)
+					{
+						App.Log("Encounters Initialized", LogTypes.Initialization);
+						done();
+					}
 					else App.Restart("Initializing Encounters failed with status " + status);
-					// TODO: Should this be called if a restart happens?
-					done();
+				}
+			);
+		}
+
+		void InitializeInventoryReferences(Action done)
+		{
+			App.InventoryReferences.Initialize(
+				status =>
+				{
+					if (status == RequestStatus.Success)
+					{
+						App.Log("Inventory References Initialized", LogTypes.Initialization);
+						done();
+					}
+					else App.Restart("Initializing Inventory References failed with status " + status);
 				}
 			);
 		}
@@ -189,10 +213,12 @@ namespace LunraGames.SpaceFarm
 			App.GlobalKeyValues.Initialize(
 				status =>
 				{
-					if (status == RequestStatus.Success) App.Log("Global KVs Initialized", LogTypes.Initialization);
+					if (status == RequestStatus.Success)
+					{
+						App.Log("Global KVs Initialized", LogTypes.Initialization);
+						done();
+					}
 					else App.Restart("Initializing Global KVs failed with status " + status);
-					// TODO: Should this be called if a restart happens?
-					done();
 				}
 			);
 		}

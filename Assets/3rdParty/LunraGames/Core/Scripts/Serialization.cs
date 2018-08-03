@@ -164,5 +164,15 @@ namespace LunraGames
 		{
 			return SerializeJson(target, verbose, formatting);
 		}
+
+		public static object Deserialize(this string json, Type type, object defaultValue = null, bool verbose = false)
+		{
+			return DeserializeJson(type, json, defaultValue, verbose);
+		}
+
+		public static T Deserialize<T>(this string json, T defaultValue = default(T), bool verbose = false)
+		{
+			return DeserializeJson(json, defaultValue, verbose);
+		}
 	}
 }

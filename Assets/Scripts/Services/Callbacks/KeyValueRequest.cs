@@ -11,6 +11,7 @@ namespace LunraGames.SpaceFarm
 		public readonly T Value;
 		public readonly RequestStatus Status;
 		public readonly string Error;
+		public readonly string TargetKey;
 
 		public KeyValueResult(
 			KeyValueTargets target,
@@ -25,6 +26,7 @@ namespace LunraGames.SpaceFarm
 			Value = value;
 			Status = status;
 			Error = error;
+			TargetKey = Target + Key;
 		}
 
 		public KeyValueResult(
@@ -36,6 +38,7 @@ namespace LunraGames.SpaceFarm
 			Key = request.Key;
 			Status = RequestStatus.Failure;
 			Error = error;
+			TargetKey = Target + Key;
 
 			switch(request.ValueType)
 			{

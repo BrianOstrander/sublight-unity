@@ -17,6 +17,12 @@ namespace LunraGames.SpaceFarm
 		const float TimeInDay = 1f;
 
 		public static DayTime Zero { get { return new DayTime(); } }
+		public static DayTime MaxValue { get { return new DayTime(int.MaxValue); } }
+
+		public static DayTime FromYear(float years)
+		{
+			return new DayTime(years * DaysInYear);
+		}
 
 		/// <summary>
 		/// Gets the current DayTime with a Time of zero.
@@ -59,6 +65,13 @@ namespace LunraGames.SpaceFarm
 		[JsonIgnore]
 		public float TotalYears { get { return TotalTime / DaysInYear; } }
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:LunraGames.SpaceFarm.DayTime"/> is zero.
+		/// </summary>
+		/// <value><c>true</c> if is zero; otherwise, <c>false</c>.</value>
+		[JsonIgnore]
+		public bool IsZero { get { return Day == 0 && Mathf.Approximately(0f, Time); } }
+
 		public DayTime(float time)
 		{
 			var newTime = time % TimeInDay;
@@ -94,6 +107,24 @@ namespace LunraGames.SpaceFarm
 			dayResult += day + Mathf.FloorToInt(dayTime / TimeInDay);
 			timeResult = newTime;
 			return new DayTime(dayResult, timeResult);
+		}
+
+		/// <summary>
+		/// Multiply the specified value.
+		/// </summary>
+		/// <returns>The multiply.</returns>
+		/// <param name="value">Value.</param>
+		public DayTime Multiply(float value)
+		{
+			var dayResult = Day * value;
+			var timeResult = dayResult % TimeInDay;
+			dayResult -= timeResult;
+
+			timeResult += Time * value;
+			dayResult += timeResult - (timeResult % TimeInDay);
+			timeResult = timeResult % TimeInDay;
+
+			return new DayTime(Mathf.FloorToInt(dayResult), timeResult);
 		}
 
 		/// <summary>
@@ -143,6 +174,16 @@ namespace LunraGames.SpaceFarm
 		public static DayTime operator +(DayTime obj0, DayTime obj1)
 		{
 			return obj0.Add(obj1.Day, obj1.Time);
+		}
+
+		public static DayTime operator *(DayTime obj, float value)
+		{
+			return obj.Multiply(value);
+		}
+
+		public static DayTime operator *(float value, DayTime obj)
+		{
+			return obj * value;
 		}
 
 		public static bool operator <(DayTime obj0, DayTime obj1)
@@ -202,14 +243,15 @@ namespace LunraGames.SpaceFarm
 		public string ToDayTimeString()
 		{
 			var totalHours = Time * 24f;
+			var daysInYear = Day % DaysInYear;
 			var hours = Mathf.Floor(totalHours);
 			var minutes = Mathf.Floor(60f * (totalHours - hours));
-			return "Year " + Year + " Day " + Day + ", " + hours.ToString("N0").PadLeft(2, '0') + ":" + minutes.ToString("N0").PadLeft(2, '0');
+			return "Year " + Year + " Day " + daysInYear + ", " + hours.ToString("N0").PadLeft(2, '0') + ":" + minutes.ToString("N0").PadLeft(2, '0');
 		}
 
 		public override string ToString()
 		{
-			return "TotalTime: " + TotalTime;
+			return "TotalYears: " + TotalYears;
 		}
 	}
 }

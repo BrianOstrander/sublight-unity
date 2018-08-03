@@ -13,6 +13,9 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] float rations;
 		[JsonProperty] float fuel;
 
+		[JsonProperty] float speed;
+		[JsonProperty] float estimateFailureRange;
+
 		/// <summary>
 		/// The years worth of rations on board, assuming a person uses 1 ration
 		/// a year.
@@ -24,6 +27,25 @@ namespace LunraGames.SpaceFarm.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
+
+		/// <summary>
+		/// Basically the speed of the ship, expressed in universe units per day.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> Speed;
+		/// <summary>
+		/// The estimate failure range modifier. This is a positive value that
+		/// can be subtracted from 1 to find the proper range. Higher values are
+		/// better.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> EstimateFailureRange;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<float>[] Values;
+		[JsonIgnore]
+		public readonly int ValueCount;
+
 		[JsonIgnore]
 		public Action<ResourceInventoryModel> AnyChange = ActionExtensions.GetEmpty<ResourceInventoryModel>();
 
@@ -35,28 +57,40 @@ namespace LunraGames.SpaceFarm.Models
 		{
 			get
 			{
-				return Mathf.Approximately(0f, Rations.Value) &&
-							Mathf.Approximately(0f, Fuel.Value);
+				foreach (var value in Values)
+				{
+					if (!Mathf.Approximately(0f, value.Value)) return false;
+				}
+				return true;
 			}
 		}
 
 		[JsonIgnore]
-		public ResourceInventoryModel Duplicate { get { return new ResourceInventoryModel(Rations, Fuel); } }
+		public ResourceInventoryModel Duplicate { get { return new ResourceInventoryModel(Rations, Fuel, Speed, EstimateFailureRange); } }
 
 		[JsonConstructor]
 		ResourceInventoryModel()
 		{
-			Rations = new ListenerProperty<float>(value => rations = value, () => rations, value => AnyChange(this));
-			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel, value => AnyChange(this));
+			Values = new ListenerProperty<float>[] {
+				Rations = new ListenerProperty<float>(value => rations = value, () => rations, "Rations", value => AnyChange(this)),
+				Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel, "Fuel", value => AnyChange(this)),
+				Speed = new ListenerProperty<float>(value => speed = value, () => speed, "Speed", value => AnyChange(this)),
+				EstimateFailureRange = new ListenerProperty<float>(value => estimateFailureRange = value, () => estimateFailureRange, "EstimateFailureRange", value => AnyChange(this))
+			};
+			ValueCount = Values.Length;
 		}
 
 		public ResourceInventoryModel(
-			float rationsValue = 0f,
-			float fuelValue = 0f
+			float rations,
+			float fuel,
+			float speed,
+			float estimateFailureRange
 		) : this()
 		{
-			rations = rationsValue;
-			fuel = fuelValue;
+			this.rations = rations;
+			this.fuel = fuel;
+			this.speed = speed;
+			this.estimateFailureRange = estimateFailureRange;
 		}
 
 		/// <summary>
@@ -83,6 +117,20 @@ namespace LunraGames.SpaceFarm.Models
 			return this;
 		}
 
+		void AddOutValue(
+			ListenerProperty<float> current, 
+			ListenerProperty<float> other, 
+			ListenerProperty<float> remainder, 
+			ListenerProperty<float> assigned
+		)
+		{
+			var newValue = current.Value + other.Value;
+
+			if (newValue < 0f) remainder.Value = Mathf.Abs(newValue);
+
+			assigned.Value = newValue;
+		}
+
 		/// <summary>
 		/// Add the other resources to this one, but assign the result to the
 		/// specified object. Returns any negative values.
@@ -96,14 +144,7 @@ namespace LunraGames.SpaceFarm.Models
 
 			var remainder = Zero;
 
-			var newRations = Rations.Value + other.Rations.Value;
-			var newFuel = Fuel.Value + other.Fuel.Value;
-
-			if (newRations < 0f) remainder.Rations.Value = Mathf.Abs(newRations);
-			if (newFuel < 0f) remainder.Fuel.Value = Mathf.Abs(newFuel);
-
-			assigned.Rations.Value = newRations;
-			assigned.Fuel.Value = newFuel;
+			for (var i = 0; i < ValueCount; i++) AddOutValue(Values[i], other.Values[i], remainder.Values[i], assigned.Values[i]);
 
 			return remainder;
 		}
@@ -151,8 +192,7 @@ namespace LunraGames.SpaceFarm.Models
 		/// <param name="value">Value.</param>
 		public ResourceInventoryModel Multiply(float value)
 		{
-			Rations.Value *= value;
-			Fuel.Value *= value;
+			foreach (var curr in Values) curr.Value *= value;
 
 			return this;
 		}
@@ -189,6 +229,22 @@ namespace LunraGames.SpaceFarm.Models
 			return this;
 		}
 
+		void ClampOutValue(
+			ListenerProperty<float> current,
+			ListenerProperty<float> maximum,
+			ListenerProperty<float> remainder,
+			ListenerProperty<float> assigned
+		)
+		{
+			var otherValue = Mathf.Max(0f, maximum.Value);
+
+			var newValue = Mathf.Clamp(current.Value, 0f, otherValue);
+
+			if (newValue < current.Value) remainder.Value = current.Value - otherValue;
+
+			assigned.Value = newValue;
+		}
+
 		/// <summary>
 		/// Clamp resources using the other as a maximum, but assign the result
 		/// to the specified object. Returns a remainder, if any at all.
@@ -204,17 +260,7 @@ namespace LunraGames.SpaceFarm.Models
 
 			var remainder = Zero;
 
-			var otherRations = Mathf.Max(0f, maximum.Rations);
-			var otherFuel = Mathf.Max(0f, maximum.Fuel);
-
-			var newRations = Mathf.Clamp(Rations.Value, 0f, otherRations);
-			var newFuel = Mathf.Clamp(Fuel.Value, 0f, otherFuel);
-
-			if (newRations < Rations) remainder.Rations.Value = Rations - otherRations;
-			if (newFuel < Fuel) remainder.Fuel.Value = Fuel - otherFuel;
-
-			assigned.Rations.Value = newRations;
-			assigned.Fuel.Value = newFuel;
+			for (var i = 0; i < ValueCount; i++) ClampOutValue(Values[i], maximum.Values[i], remainder.Values[i], assigned.Values[i]);
 
 			return remainder;
 		}
@@ -287,6 +333,24 @@ namespace LunraGames.SpaceFarm.Models
 			return this;
 		}
 
+		void MinimumMaximumOutValue(
+			bool minimum,
+			ListenerProperty<float> current,
+			ListenerProperty<float> other,
+			ListenerProperty<float> difference,
+			ListenerProperty<float> assigned
+		)
+		{
+			var minValue = Mathf.Min(current.Value, other.Value);
+
+			var maxValue = Mathf.Max(current.Value, other.Value);
+
+			difference.Value = maxValue - minValue;
+
+			if (minimum) assigned.Value = minValue;
+			else assigned.Value = maxValue;
+		}
+
 		/// <summary>
 		/// Assigns the maximum or minimum values, as specified by the bool, of
 		/// this or the other model to the specified object and returns the
@@ -302,24 +366,9 @@ namespace LunraGames.SpaceFarm.Models
 
 			var difference = Zero;
 
-			var minRations = Mathf.Min(Rations, other.Rations);
-			var minFuel = Mathf.Min(Fuel, other.Fuel);
-
-			var maxRations = Mathf.Max(Rations, other.Rations);
-			var maxFuel = Mathf.Max(Fuel, other.Fuel);
-
-			difference.Rations.Value = maxRations - minRations;
-			difference.Fuel.Value = maxFuel - minFuel;
-
-			if (minimum)
+			for (var i = 0; i < ValueCount; i++)
 			{
-				assigned.Rations.Value = minRations;
-				assigned.Fuel.Value = minFuel;
-			}
-			else
-			{
-				assigned.Rations.Value = maxRations;
-				assigned.Fuel.Value = maxFuel;
+				MinimumMaximumOutValue(minimum, Values[i], other.Values[i], difference.Values[i], assigned.Values[i]);
 			}
 
 			return difference;
@@ -331,16 +380,14 @@ namespace LunraGames.SpaceFarm.Models
 		/// <param name="other">Other.</param>
 		public void Assign(ResourceInventoryModel other)
 		{
-			Rations.Value = other.Rations.Value;
-			Fuel.Value = other.Fuel.Value;
+			for (var i = 0; i < ValueCount; i++) Values[i].Value = other.Values[i].Value;
 		}
 
 		public ResourceInventoryModel Inverse()
 		{
 			var result = Zero;
 
-			result.Rations.Value = -Rations.Value;
-			result.Fuel.Value = -Fuel.Value;
+			for (var i = 0; i < ValueCount; i++) result.Values[i].Value = -Values[i].Value;
 
 			return result;
 		}
@@ -350,13 +397,18 @@ namespace LunraGames.SpaceFarm.Models
 			if (other == null) return false;
 			if (other == this) return true;
 
-			return Mathf.Approximately(Rations, other.Rations)
-						&& Mathf.Approximately(Fuel, other.Fuel);
+			for (var i = 0; i < ValueCount; i++)
+			{
+				if (!Mathf.Approximately(Values[i].Value, other.Values[i].Value)) return false;
+			}
+			return true;
 		}
 
 		public override string ToString()
 		{
-			return "Resources:\n\tRations: \t" + Rations.Value + "\n\tFuel: \t" + Fuel.Value;
+			var result = "Resources:";
+			foreach (var value in Values) result += "\n\t" + value.Name + ": \t" + value.Value;
+			return result;
 		}
 	}
 }
