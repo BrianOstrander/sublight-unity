@@ -1,0 +1,24 @@
+{
+  "encounterId": "0cd16a5f-44cc-44c5-b9aa-d85a1c0b20a3",
+  "name": "Jungle solar station",
+  "hook": "Optical scanners have picked up a reflective object in orbit around this star. We think it might be some kind of solar power station.",
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [
+      {
+        "beginning": true,
+        "logId": "3bcf86c3-f0a1-4565-b568-d48b492960b9"
+      }
+    ],
+    "keyValueLogs": [],
+    "inventoryLogs": []
+  },
+  "version": 4,
+  "meta": "Jungle solar station",
+  "created": "2018-08-03T09:00:12.26607-07:00",
+  "modified": "2018-08-03T09:00:12.26607-07:00",
+  "SaveType": "EncounterInfo"
+}

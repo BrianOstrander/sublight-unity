@@ -99,10 +99,8 @@ namespace LunraGames.SpaceFarm
 		#region Text Logs
 		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model, EncounterLogModel nextModel)
 		{
-			GUILayout.Label("Header");
-			model.Header.Value = GUILayout.TextArea(model.Header.Value);
-			GUILayout.Label("Message");
-			model.Message.Value = GUILayout.TextArea(model.Message.Value);
+			model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header", model.Header.Value);
+			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
 			OnLinearLog(infoModel, model, nextModel);
 		}
 		#endregion
@@ -210,19 +208,7 @@ namespace LunraGames.SpaceFarm
 		)
 		{
 			operation.Key.Value = EditorGUILayout.TextField("Key", operation.Key.Value);
-
-			var isField = string.IsNullOrEmpty(operation.Value.Value) || operation.Value.Value.Length < 32;
-			if (isField)
-			{
-				EditorStyles.textField.wordWrap = true;
-				operation.Value.Value = EditorGUILayout.TextField("Value", operation.Value.Value);
-			}
-			else
-			{
-				GUILayout.Label("Value");
-				EditorStyles.textArea.wordWrap = true;
-				operation.Value.Value = EditorGUILayout.TextArea(operation.Value.Value);
-			}
+			operation.Value.Value = EditorGUILayoutExtensions.TextDynamic("Value", operation.Value.Value);
 		}
 
 		void OnKeyValueLogSpawn(
