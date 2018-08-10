@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 using LunraGames.SpaceFarm.Views;
 using LunraGames.SpaceFarm.Models;
@@ -10,14 +7,12 @@ namespace LunraGames.SpaceFarm.Presenters
 {
 	public class ShipSlotsPresenter : Presenter<IShipSlotsView>
 	{
-		GameModel model;
 		ShipModel ship;
 
 		ModuleSlotModel selectedSlot;
 
 		public ShipSlotsPresenter(GameModel model)
 		{
-			this.model = model;
 			ship = model.Ship.Value;
 
 			App.Callbacks.FocusRequest += OnFocus;

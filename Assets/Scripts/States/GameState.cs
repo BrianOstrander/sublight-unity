@@ -106,19 +106,19 @@ namespace LunraGames.SpaceFarm
 			new LineSystemPresenter(game);
 
 			// System Bodies presenters
-			new CameraSystemBodiesPresenter(game);
+			new CameraSystemBodiesPresenter();
 			new SystemBodyListPresenter(game);
 
 			// Body presenters
-			new CameraBodyPresenter(game);
+			new CameraBodyPresenter();
 			new BodyHookPresenter(game);
 
 			// Encounter presenters
-			new CameraEncounterPresenter(game);
+			new CameraEncounterPresenter();
 			new ContainerEncounterLogPresenter(game);
 
 			// Ship presenters
-			new CameraShipPresenter(game);
+			new CameraShipPresenter();
 			new ShipSlotsPresenter(game);
 
 			// Global presenters

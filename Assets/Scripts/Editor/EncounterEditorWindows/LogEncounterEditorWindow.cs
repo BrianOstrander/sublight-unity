@@ -255,8 +255,6 @@ namespace LunraGames.SpaceFarm
 		#region Inventory Logs
 		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model, EncounterLogModel nextModel)
 		{
-			var operations = Enum.GetValues(typeof(InventoryOperations)).Cast<InventoryOperations>().ToList();
-
 			var selection = InventoryOperations.Unknown;
 			GUILayout.BeginHorizontal();
 			{

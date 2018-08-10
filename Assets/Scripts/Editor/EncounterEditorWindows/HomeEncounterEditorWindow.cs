@@ -163,8 +163,7 @@ namespace LunraGames.SpaceFarm
 			string[] names =
 			{
 				"General",
-				"Crew Logs",
-				"Preview"
+				"Crew Logs"
 			};
 
 			GUILayout.BeginVertical();
@@ -187,9 +186,6 @@ namespace LunraGames.SpaceFarm
 						break;
 					case 1:
 						OnHomeSelectedCrewLogs(model);
-						break;
-					case 2:
-						OnHomeSelectedPreview(model);
 						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
