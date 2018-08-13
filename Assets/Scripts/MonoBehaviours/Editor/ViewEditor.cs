@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[CustomEditor(typeof(View), true)]
 	public class ViewEditor : Editor

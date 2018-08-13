@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class ResourceModuleSlotModel : ModuleSlotModel
 	{

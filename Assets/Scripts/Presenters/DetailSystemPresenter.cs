@@ -1,8 +1,8 @@
-﻿using LunraGames.SpaceFarm.Models;
-using LunraGames.SpaceFarm.Views;
+﻿using LunraGames.SubLight.Models;
+using LunraGames.SubLight.Views;
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class DetailSystemPresenter : Presenter<IDetailSystemView>
 	{

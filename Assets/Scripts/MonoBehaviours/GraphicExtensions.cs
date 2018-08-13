@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 //using TMPro;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public static class GraphicExtensions
 	{

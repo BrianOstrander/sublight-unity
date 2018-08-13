@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Presenters;
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Presenters;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class InitializePayload : IStatePayload
 	{

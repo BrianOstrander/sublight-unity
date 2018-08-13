@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm 
+namespace LunraGames.SubLight 
 {
 	/// <summary>
 	/// Main kickstarts the App class and provides MonoBehaviour functionality without the annoying life cycle

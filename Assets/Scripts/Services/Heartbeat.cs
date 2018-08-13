@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm 
+namespace LunraGames.SubLight 
 {
 	public class Heartbeat 
 	{

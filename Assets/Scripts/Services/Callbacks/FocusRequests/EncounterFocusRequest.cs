@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class EncounterFocusRequest : FocusRequest
 	{

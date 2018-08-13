@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class DestructionSpeedAlertLeaf : MonoBehaviour
 	{

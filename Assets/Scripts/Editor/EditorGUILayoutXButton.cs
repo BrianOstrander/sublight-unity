@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutXButton {
 

@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public abstract class InventoryReferenceModel<T> : SaveModel, IInventoryReferenceModel
 		where T : InventoryModel

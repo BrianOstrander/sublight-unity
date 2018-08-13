@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 using LunraGames;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class CursorView : View, ICursorView
 	{

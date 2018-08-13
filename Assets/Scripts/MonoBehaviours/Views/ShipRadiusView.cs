@@ -4,7 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class ShipRadiusView : View, IShipRadiusView
 	{

@@ -1,7 +1,7 @@
-﻿using LunraGames.SpaceFarm.Models;
-using LunraGames.SpaceFarm.Views;
+﻿using LunraGames.SubLight.Models;
+using LunraGames.SubLight.Views;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class EndDirectionSystemPresenter : Presenter<IEndDirectionSystemView>, IPresenterCloseShow
 	{

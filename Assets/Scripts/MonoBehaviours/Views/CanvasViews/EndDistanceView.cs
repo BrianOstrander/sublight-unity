@@ -2,7 +2,7 @@
 
 using TMPro;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class EndDistanceView : CanvasView, IEndDistanceView
 	{

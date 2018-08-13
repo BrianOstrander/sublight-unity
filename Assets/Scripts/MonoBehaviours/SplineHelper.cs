@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class SplineHelper : MonoBehaviour
 	{

@@ -2,7 +2,7 @@
 
 using LunraGames;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class LookScaleAnimation : ViewAnimation
 	{

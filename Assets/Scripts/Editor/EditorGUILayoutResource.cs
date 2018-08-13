@@ -2,10 +2,10 @@
 
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 using LunraGamesEditor;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutResource
 	{

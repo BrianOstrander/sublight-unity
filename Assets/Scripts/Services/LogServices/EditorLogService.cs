@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
 using UnityEditor;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class EditorLogService : LogService
 	{

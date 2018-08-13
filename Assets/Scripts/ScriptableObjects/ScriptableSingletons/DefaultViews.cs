@@ -5,7 +5,7 @@ using UnityEngine;
 
 using LunraGames.Singletonnes;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class DefaultViews : ScriptableSingleton<DefaultViews>
 	{

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Views;
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class ContainerEncounterLogPresenter : Presenter<IContainerEncounterLogView>
 	{

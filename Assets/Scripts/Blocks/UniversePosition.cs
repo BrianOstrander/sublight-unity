@@ -4,7 +4,7 @@ using UnityEngine;
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 #pragma warning disable CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 #pragma warning disable CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()

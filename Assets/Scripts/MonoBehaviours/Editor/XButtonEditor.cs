@@ -7,7 +7,7 @@ using UnityEditor;
 
 using LunraGames;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[CustomEditor(typeof(XButton), true)]
 	[CanEditMultipleObjects]

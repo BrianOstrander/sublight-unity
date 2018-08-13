@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class EditorModelMediator : DesktopModelMediator 
 	{

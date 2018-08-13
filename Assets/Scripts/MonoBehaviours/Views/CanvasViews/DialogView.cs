@@ -5,7 +5,7 @@ using UnityEngine;
 
 using TMPro;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class DialogView : CanvasView, IDialogView
 	{

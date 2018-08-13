@@ -1,4 +1,4 @@
-﻿namespace LunraGames.SpaceFarm
+﻿namespace LunraGames.SubLight
 {
 	public interface IPresenterCloseShow : IPresenter
 	{

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public interface IInputService
 	{

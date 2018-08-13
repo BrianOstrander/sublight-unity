@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class SystemBodiesFocusRequest : FocusRequest
 	{

@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class XButton :
 		Selectable,

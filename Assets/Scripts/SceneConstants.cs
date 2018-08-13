@@ -1,4 +1,4 @@
-﻿namespace LunraGames.SpaceFarm
+﻿namespace LunraGames.SubLight
 {
 	/// <summary>
 	/// Name of each scene.

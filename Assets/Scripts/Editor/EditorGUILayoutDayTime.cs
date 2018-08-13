@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutDayTime
 	{

@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using LunraGamesEditor;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public static class ScriptableSingletonsMenu
 	{

@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 
-using LunraGames.SpaceFarm.Views;
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class BodyHookPresenter : Presenter<IBodyHookView>
 	{

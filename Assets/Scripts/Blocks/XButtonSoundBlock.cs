@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[Serializable]
 	public struct XButtonSoundBlock 

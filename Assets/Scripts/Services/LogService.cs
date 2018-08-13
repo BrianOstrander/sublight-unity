@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public enum LogTypes
 	{

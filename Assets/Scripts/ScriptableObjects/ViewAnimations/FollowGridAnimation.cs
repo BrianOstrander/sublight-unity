@@ -1,6 +1,6 @@
-﻿using LunraGames.SpaceFarm.Views;
+﻿using LunraGames.SubLight.Views;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class FollowGridAnimation : ViewAnimation
 	{

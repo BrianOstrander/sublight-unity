@@ -1,4 +1,4 @@
-﻿namespace LunraGames.SpaceFarm.Models
+﻿namespace LunraGames.SubLight.Models
 {
 	public class TerrestrialBodyModel : BodyModel
 	{

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class KeyValueService
 	{

@@ -1,6 +1,6 @@
 ﻿using LunraGames.NumberDemon;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class ModuleReferenceModel : InventoryReferenceModel<ModuleInventoryModel>
 	{

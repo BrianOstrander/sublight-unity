@@ -4,9 +4,9 @@ using UnityEngine;
 
 using LunraGamesEditor;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public partial class InventoryReferenceEditorWindow
 	{

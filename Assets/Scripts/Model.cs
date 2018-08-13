@@ -2,7 +2,7 @@ using System;
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	// TODO: Unclear if we need this?
 	public interface IModel 

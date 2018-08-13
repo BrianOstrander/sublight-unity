@@ -1,9 +1,9 @@
 using UnityEngine;
 
 using LunraGames.Singletonnes;
-using LunraGames.SpaceFarm;
+using LunraGames.SubLight;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class DefaultShaderGlobals : ScriptableSingleton<DefaultShaderGlobals>
 	{

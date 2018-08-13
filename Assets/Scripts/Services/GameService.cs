@@ -4,9 +4,9 @@ using System.Linq;
 using UnityEngine;
 
 using LunraGames.NumberDemon;
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class GameService
 	{

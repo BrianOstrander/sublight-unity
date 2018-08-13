@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 using TMPro;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class FuelSliderView : CanvasView, IFuelSliderView
 	{

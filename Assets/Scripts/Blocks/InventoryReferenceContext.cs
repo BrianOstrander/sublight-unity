@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	/// <summary>
 	/// All the context that is needed for created an instance of any

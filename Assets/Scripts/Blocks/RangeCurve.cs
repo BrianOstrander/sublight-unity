@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 using LunraGames;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public struct RangeResult
 	{
