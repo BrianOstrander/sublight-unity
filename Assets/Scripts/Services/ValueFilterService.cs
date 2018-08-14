@@ -42,7 +42,6 @@ namespace LunraGames.SubLight
 			GameModel model
 		)
 		{
-			Debug.Log("any: " + anyResult + " all: " + allResult + " none: " + noneResult);
 			if (remaining.Count == 0)
 			{
 				var passed = true;
@@ -88,8 +87,6 @@ namespace LunraGames.SubLight
 		)
 		{
 			result = negated ? !result : result;
-
-			Debug.Log(result);
 
 			switch (group)
 			{

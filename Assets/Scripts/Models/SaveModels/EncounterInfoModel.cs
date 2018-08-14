@@ -11,7 +11,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string description;
 		[JsonProperty] string hook;
 		[JsonProperty] ValueFilterModel filtering = new ValueFilterModel();
-		[JsonProperty] string[] completedEncountersRequired = new string[0];
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
@@ -50,8 +49,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Hook;
 		[JsonIgnore]
-		public readonly ListenerProperty<string[]> CompletedEncountersRequired;
-		[JsonIgnore]
 		public readonly ListenerProperty<SystemTypes[]> ValidSystems;
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyTypes[]> ValidBodies;
@@ -74,7 +71,6 @@ namespace LunraGames.SubLight.Models
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Hook = new ListenerProperty<string>(value => hook = value, () => hook);
-			CompletedEncountersRequired = new ListenerProperty<string[]>(value => completedEncountersRequired = value, () => completedEncountersRequired);
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
 			ValidCrews = new ListenerProperty<InventoryTypes[]>(value => validCrews = value, () => validCrews);

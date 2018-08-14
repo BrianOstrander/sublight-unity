@@ -212,21 +212,10 @@ namespace LunraGames.SubLight
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value);
 				model.Hook.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Hook", "The description given to the player before entering this encounter."), model.Hook.Value);
 
-				EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "These checks determine if the encounter will be selected."), model.Filtering);
-
 				var alternateColor = Color.grey;
 
-				EditorGUILayoutExtensions.PushColor(alternateColor);
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				EditorGUILayoutExtensions.PopColor();
-				{
-					model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
-						"Completed Encounters Required",
-						model.CompletedEncountersRequired.Value,
-						"- Encounter Id -"
-					);
-				}
-				GUILayout.EndVertical();
+				EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "These checks determine if the encounter will be selected."), model.Filtering, alternateColor);
+
 				GUILayout.BeginVertical(EditorStyles.helpBox);
 				{
 					model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
