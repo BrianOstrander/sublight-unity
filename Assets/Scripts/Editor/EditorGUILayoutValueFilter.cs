@@ -160,7 +160,7 @@ namespace LunraGames.SubLight
 			OnHandleKeyValueBegin(model);
 			{
 				GUILayout.Label("Equals");
-				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButton(model.FilterValue.Value);
+				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButtonValue(model.FilterValue.Value);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}

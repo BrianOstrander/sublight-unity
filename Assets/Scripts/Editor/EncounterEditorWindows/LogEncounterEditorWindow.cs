@@ -194,6 +194,9 @@ namespace LunraGames.SubLight
 								case KeyValueOperations.SetString:
 									OnKeyValueLogSetString(infoModel, model, operation as SetStringOperationModel);
 									break;
+								case KeyValueOperations.SetBoolean:
+									OnKeyValueLogSetBoolean(infoModel, model, operation as SetBooleanOperationModel);
+									break;
 								default:
 									Debug.LogError("Unrecognized KeyValueOperation: " + operation.Operation);
 									break;
@@ -241,6 +244,16 @@ namespace LunraGames.SubLight
 			operation.Value.Value = EditorGUILayoutExtensions.TextDynamic("Value", operation.Value.Value);
 		}
 
+		void OnKeyValueLogSetBoolean(
+			EncounterInfoModel infoModel,
+			KeyValueEncounterLogModel model,
+			SetBooleanOperationModel operation
+		)
+		{
+			operation.Key.Value = EditorGUILayout.TextField("Key", operation.Key.Value);
+			operation.Value.Value = EditorGUILayoutExtensions.ToggleButton(new GUIContent("Value"), operation.Value.Value);
+		}
+
 		void OnKeyValueLogSpawn(
 			EncounterInfoModel infoModel,
 			KeyValueEncounterLogModel model,
@@ -256,6 +269,12 @@ namespace LunraGames.SubLight
 					setString.OperationId.Value = guid;
 					setString.Target.Value = target;
 					model.Operations.Value = model.Operations.Value.Append(setString).ToArray();
+					break;
+				case KeyValueOperations.SetBoolean:
+					var setBoolean = new SetBooleanOperationModel();
+					setBoolean.OperationId.Value = guid;
+					setBoolean.Target.Value = target;
+					model.Operations.Value = model.Operations.Value.Append(setBoolean).ToArray();
 					break;
 				default:
 					Debug.LogError("Unrecognized KeyValueOperation: " + operation);

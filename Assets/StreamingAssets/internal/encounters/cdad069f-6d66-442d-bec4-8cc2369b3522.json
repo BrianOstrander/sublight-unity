@@ -50,6 +50,14 @@
             "key": "other_string"
           }
         ],
+        "setBooleans": [
+          {
+            "value": true,
+            "operationId": "975747e7-4dd8-4a63-bd1a-a6540c5e3779",
+            "target": "Encounter",
+            "key": "some_bool"
+          }
+        ],
         "nextLogId": "e051148c-fcdd-468a-a708-fd3bd39ddbf2",
         "beginning": true,
         "logId": "0bcdfe08-da39-4a7c-b910-329439ef593b"
@@ -63,7 +71,16 @@
             "switchId": "970e20ba-9248-417e-9f5b-f2223e7b403c",
             "nextLogId": "60e24432-3da7-41c5-9d45-10718ad11967",
             "filtering": {
-              "booleanKeyValues": [],
+              "booleanKeyValues": [
+                {
+                  "target": "Encounter",
+                  "key": "some_bool",
+                  "index": 1,
+                  "filterId": "7149a5f5-f70f-4e95-ae28-67a31c7d8d0c",
+                  "group": "All",
+                  "filterValue": true
+                }
+              ],
               "stringKeyValues": [
                 {
                   "operation": "Equals",
@@ -71,7 +88,7 @@
                   "key": "some_string",
                   "filterId": "ab8b3d02-0af2-4054-a34b-152c3ff6c497",
                   "group": "All",
-                  "filterValue": "ha"
+                  "filterValue": "what"
                 }
               ],
               "encounterInteractions": []

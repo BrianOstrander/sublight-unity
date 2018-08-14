@@ -232,6 +232,17 @@ namespace LunraGames.SubLight.Presenters
 							)
 						);
 						break;
+					case KeyValueOperations.SetBoolean:
+						var setBoolean = entry as SetBooleanOperationModel;
+						App.Callbacks.KeyValueRequest(
+							KeyValueRequest.Set(
+								entry.Target.Value,
+								entry.Key.Value,
+								setBoolean.Value.Value,
+								result => OnKeyValueLogDone(result, total, ref progress, done)
+							)
+						);
+						break;
 					default:
 						Debug.LogError("Unrecognized KeyValueType: " + entry.Operation);
 						done();
