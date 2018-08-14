@@ -19,14 +19,12 @@ namespace LunraGames.SubLight
 
 		public static void Field(GUIContent content, ValueFilterModel model, Color? color = null)
 		{
-			if (color.HasValue) EditorGUILayoutExtensions.PushColor(color.Value);
-			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (color.HasValue) EditorGUILayoutExtensions.PopColor();
+			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
 				GUILayout.Label(content, EditorStyles.boldLabel);
 				Values(model);
 			}
-			GUILayout.EndVertical();
+			EditorGUILayoutExtensions.EndVertical();
 		}
 
 		public static void Values(ValueFilterModel model)
@@ -85,9 +83,7 @@ namespace LunraGames.SubLight
 					{
 						isAlternate = !isAlternate;
 
-						if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey.NewV(0.5f));
-						GUILayout.BeginVertical(EditorStyles.helpBox);
-						if (isAlternate) EditorGUILayoutExtensions.PopColor();
+						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
 						{
 							switch (filter.FilterType)
 							{

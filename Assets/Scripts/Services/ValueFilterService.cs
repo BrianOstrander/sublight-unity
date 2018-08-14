@@ -11,15 +11,12 @@ namespace LunraGames.SubLight
 	public class ValueFilterService
 	{
 		CallbackService callbacks;
-		ILogService logger;
 
-		public ValueFilterService(CallbackService callbacks, ILogService logger)
+		public ValueFilterService(CallbackService callbacks)
 		{
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
-			if (logger == null) throw new ArgumentNullException("logger");
 
 			this.callbacks = callbacks;
-			this.logger = logger;
 		}
 
 		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model)

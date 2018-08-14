@@ -273,5 +273,34 @@ namespace LunraGamesEditor
 			GUILayout.EndHorizontal();
 			return value;
 		}
+
+		public static void BeginVertical(GUIStyle style, Color? color, bool useColor = true)
+		{
+			BeginVertical(style, color.HasValue ? color.Value : GUI.color, useColor);
+		}
+
+		public static void BeginVertical(GUIStyle style, Color color, bool useColor = true)
+		{
+			if (useColor) PushColor(color);
+			GUILayout.BeginVertical(style);
+			if (useColor) PopColor();
+		}
+
+		public static void EndVertical()
+		{
+			GUILayout.EndVertical();
+		}
+
+		public static void BeginHorizontal(GUIStyle style, Color color, bool useColor = true)
+		{
+			if (useColor) PushColor(color);
+			GUILayout.BeginHorizontal(style);
+			if (useColor) PopColor();
+		}
+
+		public static void EndHorizontal()
+		{
+			GUILayout.EndHorizontal();
+		}
 	}
 }

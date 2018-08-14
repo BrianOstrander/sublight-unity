@@ -5,7 +5,8 @@
 		Unknown = 0,
 		Text = 10,
 		KeyValue = 20,
-		Inventory = 30
+		Inventory = 30,
+		Switch = 40
 	}
 
 	public static class EncounterLogValidator
@@ -18,7 +19,8 @@
 		public static EncounterLogTypes[] Logic = {
 			EncounterLogTypes.Unknown,
 			EncounterLogTypes.KeyValue,
-			EncounterLogTypes.Inventory
+			EncounterLogTypes.Inventory,
+			EncounterLogTypes.Switch
 		};
 	}
 }

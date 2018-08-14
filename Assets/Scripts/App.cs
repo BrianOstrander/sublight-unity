@@ -149,7 +149,7 @@ namespace LunraGames.SubLight
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
 			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
-			valueFilter = new ValueFilterService(Callbacks, Logging);
+			valueFilter = new ValueFilterService(Callbacks);
 			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
 		}
 

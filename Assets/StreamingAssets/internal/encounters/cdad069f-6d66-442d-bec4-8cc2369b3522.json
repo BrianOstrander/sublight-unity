@@ -1,0 +1,94 @@
+{
+  "orderWeight": 2.0,
+  "encounterId": "85c9e84c-e797-4488-804d-4bfbee6a36b5",
+  "name": "Switch Test 0",
+  "hook": "Switch Test 0",
+  "filtering": {
+    "booleanKeyValues": [],
+    "encounterInteractions": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "Path 0",
+        "message": "Here!",
+        "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
+        "index": 1,
+        "logId": "60e24432-3da7-41c5-9d45-10718ad11967"
+      },
+      {
+        "header": "Path 1",
+        "message": "Wow, here!",
+        "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
+        "index": 2,
+        "logId": "84ff44da-0ba6-41b0-81c9-9f7b6699d1f3"
+      },
+      {
+        "header": "End",
+        "message": "The end!",
+        "index": 3,
+        "ending": true,
+        "logId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f"
+      }
+    ],
+    "keyValueLogs": [],
+    "inventoryLogs": [],
+    "switchLogs": [
+      {
+        "switches": [
+          {
+            "switchId": "970e20ba-9248-417e-9f5b-f2223e7b403c",
+            "nextLogId": "60e24432-3da7-41c5-9d45-10718ad11967",
+            "filtering": {
+              "booleanKeyValues": [
+                {
+                  "target": "Global",
+                  "key": "some_bool",
+                  "filterId": "f6fccb9a-1f47-48ca-930e-02d04571c0bf",
+                  "group": "All",
+                  "filterValue": true,
+                  "FilterType": "KeyValueBoolean",
+                  "FilterIdValue": "f6fccb9a-1f47-48ca-930e-02d04571c0bf",
+                  "FilterGroup": "All"
+                }
+              ],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "switchId": "21d6f9a7-a355-4808-aa45-a91713511533",
+            "nextLogId": "84ff44da-0ba6-41b0-81c9-9f7b6699d1f3",
+            "filtering": {
+              "booleanKeyValues": [
+                {
+                  "target": "Global",
+                  "key": "other_bool",
+                  "filterId": "95399965-5782-4d27-ae43-56790ce059c8",
+                  "group": "All",
+                  "FilterType": "KeyValueBoolean",
+                  "FilterIdValue": "95399965-5782-4d27-ae43-56790ce059c8",
+                  "FilterGroup": "All"
+                }
+              ],
+              "encounterInteractions": []
+            }
+          }
+        ],
+        "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
+        "beginning": true,
+        "logId": "e051148c-fcdd-468a-a708-fd3bd39ddbf2"
+      }
+    ]
+  },
+  "version": 4,
+  "meta": "Switch Test 0",
+  "metaKeyValues": {
+    "EncounterId": "85c9e84c-e797-4488-804d-4bfbee6a36b5"
+  },
+  "created": "2018-08-14T10:25:12.533688-07:00",
+  "modified": "2018-08-14T10:25:12.533688-07:00",
+  "SaveType": "EncounterInfo"
+}
