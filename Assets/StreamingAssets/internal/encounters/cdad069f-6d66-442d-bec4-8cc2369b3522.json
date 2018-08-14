@@ -49,10 +49,7 @@
                   "key": "some_bool",
                   "filterId": "f6fccb9a-1f47-48ca-930e-02d04571c0bf",
                   "group": "All",
-                  "filterValue": true,
-                  "FilterType": "KeyValueBoolean",
-                  "FilterIdValue": "f6fccb9a-1f47-48ca-930e-02d04571c0bf",
-                  "FilterGroup": "All"
+                  "filterValue": true
                 }
               ],
               "encounterInteractions": []
@@ -67,10 +64,7 @@
                   "target": "Global",
                   "key": "other_bool",
                   "filterId": "95399965-5782-4d27-ae43-56790ce059c8",
-                  "group": "All",
-                  "FilterType": "KeyValueBoolean",
-                  "FilterIdValue": "95399965-5782-4d27-ae43-56790ce059c8",
-                  "FilterGroup": "All"
+                  "group": "All"
                 }
               ],
               "encounterInteractions": []
