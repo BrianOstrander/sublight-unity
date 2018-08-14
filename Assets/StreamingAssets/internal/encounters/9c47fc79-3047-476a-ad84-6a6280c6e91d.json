@@ -1,0 +1,54 @@
+{
+  "orderWeight": 1.0,
+  "encounterId": "2983aa76-850e-4bed-a176-f4de07701894",
+  "name": "filtering test 1",
+  "hook": "filtering test 1",
+  "filtering": {
+    "booleanKeyValues": [
+      {
+        "target": "Global",
+        "key": "some_bool_0",
+        "filterId": "4485c46d-805b-4d26-a006-63076495e325",
+        "group": "Any",
+        "filterValue": true,
+        "FilterType": "KeyValueBoolean",
+        "FilterIdValue": "4485c46d-805b-4d26-a006-63076495e325",
+        "FilterGroup": "Any"
+      },
+      {
+        "target": "Global",
+        "key": "some_bool_1",
+        "index": 1,
+        "filterId": "8e9aeb15-d0e4-4834-bd22-40b6633bea5c",
+        "group": "Any",
+        "filterValue": true,
+        "FilterType": "KeyValueBoolean",
+        "FilterIndex": 1,
+        "FilterIdValue": "8e9aeb15-d0e4-4834-bd22-40b6633bea5c",
+        "FilterGroup": "Any"
+      }
+    ]
+  },
+  "completedEncountersRequired": [],
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "Shown",
+        "message": "Yay!",
+        "beginning": true,
+        "ending": true,
+        "logId": "4cf02706-c3cc-4732-aab9-6fbb368694d2"
+      }
+    ],
+    "keyValueLogs": [],
+    "inventoryLogs": []
+  },
+  "version": 4,
+  "meta": "filtering test 1",
+  "created": "2018-08-13T18:04:20.20573-07:00",
+  "modified": "2018-08-13T18:04:20.20573-07:00",
+  "SaveType": "EncounterInfo"
+}

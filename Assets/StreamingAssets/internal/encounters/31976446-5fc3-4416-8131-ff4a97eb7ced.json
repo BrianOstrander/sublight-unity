@@ -1,9 +1,11 @@
 {
   "orderWeight": 1.0,
-  "hidden": true,
   "encounterId": "dbedc427-ecbd-45d3-8937-8a7405dffaaf",
   "name": "Inventory Test",
   "hook": "A test for inventory",
+  "filtering": {
+    "booleanKeyValues": []
+  },
   "completedEncountersRequired": [],
   "validSystems": [],
   "validBodies": [],
@@ -30,6 +32,7 @@
             "operationId": "472621a6-d2dc-4003-9791-6483b79a6b3f"
           }
         ],
+        "index": 1,
         "beginning": true,
         "ending": true,
         "logId": "3e5b5c59-ae6b-4eb3-946d-47d02938fe12"

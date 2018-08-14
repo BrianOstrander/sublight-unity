@@ -41,6 +41,8 @@ namespace LunraGames.SubLight.Models
 						break;
 				}
 			}
+
+			booleanKeyValues = newBooleanKeyValues.ToArray();
 		}
 
 		IValueFilterEntryModel[] OnGetFilters()
