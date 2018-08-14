@@ -245,7 +245,7 @@ namespace LunraGames.SubLight
 				valueFilter.Filter(result =>
 				{
 					OnFilterEncounters(done, result, nextToFilter, toFilter, filtered, model, body);
-				}, nextToFilter.Filtering);
+				}, nextToFilter.Filtering, model);
 				return;
 			}
 

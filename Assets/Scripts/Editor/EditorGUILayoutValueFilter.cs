@@ -64,6 +64,9 @@ namespace LunraGames.SubLight
 					case ValueFilterTypes.KeyValueBoolean:
 						Create<BooleanKeyValueFilterEntryModel>(model, filterCount, group);
 						break;
+					case ValueFilterTypes.EncounterInteraction:
+						Create<EncounterInteractionFilterEntryModel>(model, filterCount, group);
+						break;
 					default:
 						Debug.LogError("Unrecognized FilterType: " + result);
 						break;
@@ -91,6 +94,9 @@ namespace LunraGames.SubLight
 								case ValueFilterTypes.KeyValueBoolean:
 									OnHandle(filter as BooleanKeyValueFilterEntryModel, ref deleted);
 									break;
+								case ValueFilterTypes.EncounterInteraction:
+									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
+									break;
 								default:
 									EditorGUILayout.HelpBox("Unrecognized FilterType: " + filter.FilterType, MessageType.Error);
 									break;
@@ -114,24 +120,51 @@ namespace LunraGames.SubLight
 		}
 
 		#region Handling
-		static void OnHandle(BooleanKeyValueFilterEntryModel model, ref string deleted)
+		static void OnOneLineHandleBegin(IValueFilterEntryModel model)
 		{
 			GUILayout.BeginHorizontal();
-			{
-				model.Ignore.Value = EditorGUILayout.Toggle(model.Ignore.Value, GUILayout.Width(14f));
-				if (model.Ignore.Value) EditorGUILayoutExtensions.PushColor(Color.gray);
 
+			model.FilterIgnore = EditorGUILayout.Toggle(model.FilterIgnore, GUILayout.Width(14f));
+			if (model.FilterIgnore) EditorGUILayoutExtensions.PushColor(Color.gray);
+
+		}
+
+		static void OnOneLineHandleEnd(IValueFilterEntryModel model, ref string deleted)
+		{
+			if (EditorGUILayoutExtensions.XButton()) deleted = model.FilterIdValue;
+			if (model.FilterIgnore) EditorGUILayoutExtensions.PopColor();
+
+			GUILayout.EndHorizontal();
+		}
+
+		static void OnHandle(BooleanKeyValueFilterEntryModel model, ref string deleted)
+		{
+			OnOneLineHandleBegin(model);
+			{
 				model.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", model.Target.Value, guiOptions: GUILayout.ExpandWidth(false));
 				model.Key.Value = EditorGUILayout.TextField(model.Key.Value);
 				GUILayout.Label("Equals");
 				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButton(model.FilterValue.Value);
-				if (EditorGUILayoutExtensions.XButton()) deleted = model.FilterId.Value;
-
-				if (model.Ignore.Value) EditorGUILayoutExtensions.PopColor();
 			}
-			GUILayout.EndHorizontal();
+			OnOneLineHandleEnd(model, ref deleted);
+
 			if (model.Target.Value == KeyValueTargets.Unknown) EditorGUILayout.HelpBox("A target must be specified.", MessageType.Error);
 			if (string.IsNullOrEmpty(model.Key.Value)) EditorGUILayout.HelpBox("A key must be specified.", MessageType.Error);
+		}
+
+		static void OnHandle(EncounterInteractionFilterEntryModel model, ref string deleted)
+		{
+			OnOneLineHandleBegin(model);
+			{
+				GUILayout.Label(new GUIContent("EncounterId", "The Id of the encounter for this filter."), GUILayout.ExpandWidth(false));
+				model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
+				GUILayout.Label("Needs To Be");
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", model.Operation.Value);
+			}
+			OnOneLineHandleEnd(model, ref deleted);
+
+			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("An EncounterId must be specified.", MessageType.Error);
+			if (model.Operation.Value == EncounterInteractionFilterOperations.Unknown) EditorGUILayout.HelpBox("An operation must be specified.", MessageType.Error);
 		}
 		#endregion
 	}

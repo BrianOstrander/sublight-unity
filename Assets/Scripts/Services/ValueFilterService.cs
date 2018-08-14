@@ -22,7 +22,7 @@ namespace LunraGames.SubLight
 			this.logger = logger;
 		}
 
-		public void Filter(Action<bool> done, ValueFilterModel filter)
+		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model)
 		{
 			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();
 
@@ -30,7 +30,7 @@ namespace LunraGames.SubLight
 			bool? allResult = null;
 			bool? noneResult = null;
 
-			OnFilter(done, anyResult, allResult, noneResult, remaining);
+			OnFilter(done, anyResult, allResult, noneResult, remaining, model);
 		}
 
 		void OnFilter(
@@ -38,7 +38,8 @@ namespace LunraGames.SubLight
 			bool? anyResult,
 			bool? allResult,
 			bool? noneResult,
-			List<IValueFilterEntryModel> remaining
+			List<IValueFilterEntryModel> remaining,
+			GameModel model
 		)
 		{
 			Debug.Log("any: " + anyResult + " all: " + allResult + " none: " + noneResult);
@@ -56,7 +57,7 @@ namespace LunraGames.SubLight
 
 			Action<ValueFilterGroups, bool> filterDone = (group, result) =>
 			{
-				OnFilterResult(group, result, current.FilterNegate, done, anyResult, allResult, noneResult, remaining);
+				OnFilterResult(group, result, current.FilterNegate, done, anyResult, allResult, noneResult, remaining, model);
 			};
 
 			switch (current.FilterType)
@@ -64,9 +65,12 @@ namespace LunraGames.SubLight
 				case ValueFilterTypes.KeyValueBoolean:
 					OnHandle(current as BooleanKeyValueFilterEntryModel, filterDone);
 					break;
+				case ValueFilterTypes.EncounterInteraction:
+					OnHandle(current as EncounterInteractionFilterEntryModel, model, filterDone);
+					break;
 				default:
 					Debug.LogError("Unrecognized FilterType: " + current.FilterType + ", skipping...");
-					OnFilter(done, anyResult, allResult, noneResult, remaining);
+					OnFilter(done, anyResult, allResult, noneResult, remaining, model);
 					break;
 			}
 		}
@@ -79,7 +83,8 @@ namespace LunraGames.SubLight
 			bool? anyResult,
 			bool? allResult,
 			bool? noneResult,
-			List<IValueFilterEntryModel> remaining
+			List<IValueFilterEntryModel> remaining,
+			GameModel model
 		)
 		{
 			result = negated ? !result : result;
@@ -101,7 +106,7 @@ namespace LunraGames.SubLight
 					Debug.LogError("Unrecognized group: " + group + ", skipping...");
 					break;
 			}
-			OnFilter(done, anyResult, allResult, noneResult, remaining);
+			OnFilter(done, anyResult, allResult, noneResult, remaining, model);
 		}
 
 		#region Handling
@@ -115,6 +120,39 @@ namespace LunraGames.SubLight
 					result => done(filter.Group.Value, result.Value == filter.FilterValue.Value)
 				)
 			);
+		}
+
+		void OnHandle(EncounterInteractionFilterEntryModel filter, GameModel model, Action<ValueFilterGroups, bool> done)
+		{
+			var operation = filter.Operation.Value;
+			var encounterInteraction = model.GetEncounterStatus(filter.FilterValue.Value);
+			var result = false;
+
+			if (operation == EncounterInteractionFilterOperations.NotCompleted)
+			{
+				result = encounterInteraction.State != EncounterStatus.States.Completed;
+			}
+			else
+			{
+				switch (encounterInteraction.State)
+				{
+					case EncounterStatus.States.Unknown:
+					case EncounterStatus.States.NeverSeen:
+						result = operation == EncounterInteractionFilterOperations.NeverSeen;
+						break;
+					case EncounterStatus.States.Seen:
+						result = operation == EncounterInteractionFilterOperations.Seen;
+						break;
+					case EncounterStatus.States.Completed:
+						result = operation == EncounterInteractionFilterOperations.Completed;
+						break;
+					default:
+						Debug.LogError("Unrecognized EncounterInteraction: " + encounterInteraction.State);
+						break;
+				}
+			}
+
+			done(filter.Group.Value, result);
 		}
 		#endregion
 	}
