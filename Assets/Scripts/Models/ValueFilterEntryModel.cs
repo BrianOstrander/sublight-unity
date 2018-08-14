@@ -5,6 +5,7 @@ namespace LunraGames.SubLight.Models
 	public abstract class ValueFilterEntryModel<T> : Model, IValueFilterEntryModel
 	{
 		[JsonProperty] int index;
+		[JsonProperty] bool ignore;
 		[JsonProperty] string filterId;
 		[JsonProperty] ValueFilterGroups group;
 		[JsonProperty] T filterValue;
@@ -15,6 +16,8 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public ListenerProperty<int> Index;
+		[JsonIgnore]
+		public ListenerProperty<bool> Ignore;
 		[JsonIgnore]
 		public ListenerProperty<string> FilterId;
 		[JsonIgnore]
@@ -28,6 +31,11 @@ namespace LunraGames.SubLight.Models
 		{
 			get { return Index.Value; }
 			set { Index.Value = value; }
+		}
+		public bool FilterIgnore
+		{
+			get { return Ignore.Value; }
+			set { Ignore.Value = value; }
 		}
 		public string FilterIdValue
 		{
@@ -46,10 +54,10 @@ namespace LunraGames.SubLight.Models
 		}
 		public abstract ValueFilterTypes FilterType { get; }
 
-		[JsonConstructor]
 		public ValueFilterEntryModel()
 		{
 			Index = new ListenerProperty<int>(value => index = value, () => index);
+			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			FilterId = new ListenerProperty<string>(value => filterId = value, () => filterId);
 			Group = new ListenerProperty<ValueFilterGroups>(value => group = value, () => group);
 			FilterValue = new ListenerProperty<T>(value => filterValue = value, () => filterValue);
@@ -60,6 +68,7 @@ namespace LunraGames.SubLight.Models
 	public interface IValueFilterEntryModel : IModel
 	{
 		int FilterIndex { get; set; }
+		bool FilterIgnore { get; set; }
 		string FilterIdValue { get; set; }
 		ValueFilterGroups FilterGroup { get; set; }
 		bool FilterNegate { get; set; }

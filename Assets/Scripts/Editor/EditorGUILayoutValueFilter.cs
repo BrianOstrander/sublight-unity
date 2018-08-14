@@ -118,11 +118,16 @@ namespace LunraGames.SubLight
 		{
 			GUILayout.BeginHorizontal();
 			{
+				model.Ignore.Value = EditorGUILayout.Toggle(model.Ignore.Value, GUILayout.Width(14f));
+				if (model.Ignore.Value) EditorGUILayoutExtensions.PushColor(Color.gray);
+
 				model.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", model.Target.Value, guiOptions: GUILayout.ExpandWidth(false));
 				model.Key.Value = EditorGUILayout.TextField(model.Key.Value);
 				GUILayout.Label("Equals");
 				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButton(model.FilterValue.Value);
 				if (EditorGUILayoutExtensions.XButton()) deleted = model.FilterId.Value;
+
+				if (model.Ignore.Value) EditorGUILayoutExtensions.PopColor();
 			}
 			GUILayout.EndHorizontal();
 			if (model.Target.Value == KeyValueTargets.Unknown) EditorGUILayout.HelpBox("A target must be specified.", MessageType.Error);

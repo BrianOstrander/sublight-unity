@@ -24,7 +24,7 @@ namespace LunraGames.SubLight
 
 		public void Filter(Action<bool> done, ValueFilterModel filter)
 		{
-			var remaining = filter.Filters.Value.ToList();
+			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();
 
 			bool? anyResult = null;
 			bool? allResult = null;
@@ -41,6 +41,7 @@ namespace LunraGames.SubLight
 			List<IValueFilterEntryModel> remaining
 		)
 		{
+			Debug.Log("any: " + anyResult + " all: " + allResult + " none: " + noneResult);
 			if (remaining.Count == 0)
 			{
 				var passed = true;
@@ -83,6 +84,8 @@ namespace LunraGames.SubLight
 		{
 			result = negated ? !result : result;
 
+			Debug.Log(result);
+
 			switch (group)
 			{
 				case ValueFilterGroups.Any:
@@ -104,7 +107,14 @@ namespace LunraGames.SubLight
 		#region Handling
 		void OnHandle(BooleanKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
-			callbacks.KeyValueRequest(KeyValueRequest.Get(filter.Target.Value, filter.Key.Value, result => done(filter.Group.Value, result.Value)));
+			callbacks.KeyValueRequest(
+				KeyValueRequest.Get(
+					filter.Target.Value,
+					filter.Key.Value,
+					// If the boolean KV is equal to the result on the filter, the result is true.
+					result => done(filter.Group.Value, result.Value == filter.FilterValue.Value)
+				)
+			);
 		}
 		#endregion
 	}

@@ -191,24 +191,21 @@ namespace LunraGames.SubLight
 				}
 			);
 
-			if (remaining.Count() == 0)
+			if (!remaining.Any())
 			{
 				done(null);
 				return;
 			}
 
-			var ordered = remaining.OrderByDescending(r => r.OrderWeight.Value);
-			var topWeight = ordered.First().OrderWeight.Value;
-			var chosen = ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)).Random();
-
-			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
-			body.Encounter.Value = chosen.EncounterId;
-
-			var interaction = GetEncounterInteraction(chosen.EncounterId);
-			interaction.TimesSeen.Value++;
-			interaction.LastSeen.Value = DateTime.Now;
-
-			done(chosen);
+			OnFilterEncounters(
+				done,
+				null,
+				null,
+				remaining.ToList(),
+				new List<EncounterInfoModel>(),
+				model,
+				body
+			);
 		}
 
 		/// <summary>
@@ -226,6 +223,52 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Events
+		void OnFilterEncounters(
+			Action<EncounterInfoModel> done,
+			bool? lastFilteredPassed,
+			EncounterInfoModel lastFiltered,
+			List<EncounterInfoModel> toFilter,
+			List<EncounterInfoModel> filtered,
+			GameModel model,
+			BodyModel body
+		)
+		{
+			if (lastFilteredPassed.HasValue)
+			{
+				if (lastFilteredPassed.Value) filtered.Add(lastFiltered);
+			}
+
+			if (toFilter.Any())
+			{
+				var nextToFilter = toFilter.First();
+				toFilter.RemoveAt(0);
+				valueFilter.Filter(result =>
+				{
+					OnFilterEncounters(done, result, nextToFilter, toFilter, filtered, model, body);
+				}, nextToFilter.Filtering);
+				return;
+			}
+
+			if (!filtered.Any())
+			{
+				done(null);
+				return;
+			}
+
+			var ordered = filtered.OrderByDescending(r => r.OrderWeight.Value);
+			var topWeight = ordered.First().OrderWeight.Value;
+			var chosen = ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)).Random();
+
+			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
+			body.Encounter.Value = chosen.EncounterId;
+
+			var interaction = GetEncounterInteraction(chosen.EncounterId);
+			interaction.TimesSeen.Value++;
+			interaction.LastSeen.Value = DateTime.Now;
+
+			done(chosen);
+		}
+
 		void OnSaveRequest(SaveRequest request)
 		{
 			if (request.State == SaveRequest.States.Complete) OnTrySave();
