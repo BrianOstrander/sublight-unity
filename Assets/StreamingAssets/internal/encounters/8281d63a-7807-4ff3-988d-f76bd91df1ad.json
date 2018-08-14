@@ -2,7 +2,10 @@
   "encounterId": "5120d87c-72cc-46c6-91a8-2debb435daa3",
   "name": "A lone probe",
   "hook": "Repeated radio emissions from a nearby moonlet indicate a vessel is in orbit.",
-  "completedEncountersRequired": [],
+  "filtering": {
+    "booleanKeyValues": [],
+    "encounterInteractions": []
+  },
   "validSystems": [],
   "validBodies": [
     "Terrestrial"
@@ -53,6 +56,7 @@
             "operationId": "de8656db-fd97-477f-8b04-06d23c0dfe0f"
           }
         ],
+        "addInstances": [],
         "nextLogId": "9978b239-a112-4327-924c-767ae81da935",
         "index": 2,
         "logId": "5e02c3a7-9b64-40d4-b55c-62bdc2a358ae"
@@ -61,6 +65,9 @@
   },
   "version": 4,
   "meta": "A lone probe",
+  "metaKeyValues": {
+    "EncounterId": "5120d87c-72cc-46c6-91a8-2debb435daa3"
+  },
   "created": "2018-07-23T12:48:41.034188-07:00",
   "modified": "2018-07-23T12:48:41.034188-07:00",
   "SaveType": "EncounterInfo"

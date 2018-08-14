@@ -9,6 +9,9 @@
   },
   "version": 4,
   "meta": "Stock Terrestrial Orbiter",
+  "metaKeyValues": {
+    "InventoryId": "84af3d23-d1c6-4bfd-bec1-c17b11c15269"
+  },
   "created": "2018-07-25T18:15:39.708176-07:00",
   "modified": "2018-07-25T18:15:39.708176-07:00",
   "SaveType": "OrbitalCrewReference"

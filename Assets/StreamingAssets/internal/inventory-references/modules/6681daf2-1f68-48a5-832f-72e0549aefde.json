@@ -48,6 +48,9 @@
   },
   "version": 4,
   "meta": "Phantom Drive",
+  "metaKeyValues": {
+    "InventoryId": "c0975397-5ef2-4fa8-9c30-fecc2591e7dc"
+  },
   "created": "2018-08-03T16:17:55.095234-07:00",
   "modified": "2018-08-03T16:17:55.095234-07:00",
   "SaveType": "ModuleReference"

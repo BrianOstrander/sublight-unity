@@ -206,7 +206,7 @@ namespace LunraGames.SubLight
 					model.Hidden.Value = EditorGUILayout.Toggle(model.Hidden.Value, GUILayout.Width(14f));
 				}
 				GUILayout.EndHorizontal();
-				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
+				model.EncounterId.Value = model.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value));
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value);
@@ -367,7 +367,7 @@ namespace LunraGames.SubLight
 		void NewEncounter()
 		{
 			var info = SaveLoadService.Create<EncounterInfoModel>();
-			info.EncounterId.Value = Guid.NewGuid().ToString();
+			info.EncounterId.Value = info.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, Guid.NewGuid().ToString());
 			info.Name.Value = string.Empty;
 			info.Meta.Value = info.Name;
 			SaveLoadService.Save(info, OnNewEncounterInfo);
@@ -455,16 +455,21 @@ namespace LunraGames.SubLight
 			if (!isSelected && isAlternate) EditorGUILayoutExtensions.PopBackgroundColor();
 			{
 				var infoPath = info.IsInternal ? info.InternalPath : info.Path;
-				var infoName = Path.GetFileNameWithoutExtension(infoPath);
-				if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
-				else infoName += Path.GetExtension(infoPath);
+				var infoId = info.GetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId);
+				var infoName = infoId;
+				if (string.IsNullOrEmpty(infoName)) infoName = "< No EncounterId >";
+				else if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
 
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.BeginVertical();
 					{
-						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta, "Name is set by Meta field."), EditorStyles.boldLabel);
-						GUILayout.Label(new GUIContent(infoName, infoPath));
+						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
+						if (GUILayout.Button(new GUIContent(infoName, "Copy EncounterId of " + infoPath)))
+						{
+							EditorGUIUtility.systemCopyBuffer = infoId;
+							ShowNotification(new GUIContent("Copied EncounterId to Clipboard"));
+						}
 					}
 					GUILayout.EndVertical();
 

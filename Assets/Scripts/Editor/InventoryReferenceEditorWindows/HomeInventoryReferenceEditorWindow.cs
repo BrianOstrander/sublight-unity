@@ -272,7 +272,7 @@ namespace LunraGames.SubLight
 			where T : InventoryModel, new()
 		{
 			reference.Model.Value = new T();
-			reference.Model.Value.InventoryId.Value = Guid.NewGuid().ToString();
+			reference.Model.Value.InventoryId.Value = reference.SetMetaKey(MetaKeyConstants.InventoryReference.InventoryId, Guid.NewGuid().ToString());
 			reference.Model.Value.Name.Value = string.Empty;
 			SaveLoadService.Save(reference, OnNewReference);
 		}
@@ -396,16 +396,21 @@ namespace LunraGames.SubLight
 			if (!isSelected && isAlternate) EditorGUILayoutExtensions.PopBackgroundColor();
 			{
 				var infoPath = reference.IsInternal ? reference.InternalPath : reference.Path;
-				var infoName = Path.GetFileNameWithoutExtension(infoPath);
-				if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
-				else infoName += Path.GetExtension(infoPath);
+				var infoId = reference.GetMetaKey(MetaKeyConstants.InventoryReference.InventoryId);
+				var infoName = infoId;
+				if (string.IsNullOrEmpty(infoName)) infoName = "< No InventoryId >";
+				else if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
 
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.BeginVertical();
 					{
 						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(reference.Meta) ? "< No Meta >" : reference.Meta, "Name is set by Meta field."), EditorStyles.boldLabel);
-						GUILayout.Label(new GUIContent(infoName, infoPath));
+						if (GUILayout.Button(new GUIContent(infoName, "Copy InventoryId of " + infoPath)))
+						{
+							EditorGUIUtility.systemCopyBuffer = infoId;
+							ShowNotification(new GUIContent("Copied InventoryId to Clipboard"));
+						}
 					}
 					GUILayout.EndVertical();
 

@@ -2,7 +2,10 @@
   "encounterId": "c98a359f-2764-4176-aea5-62ec8a6d0c34",
   "name": "Crystalline Asteroid",
   "hook": "Peaks in infrared emissions from orbit indicate something curious, and possibly artificial, is in orbit.",
-  "completedEncountersRequired": [],
+  "filtering": {
+    "booleanKeyValues": [],
+    "encounterInteractions": []
+  },
   "validSystems": [],
   "validBodies": [
     "Terrestrial"
@@ -61,14 +64,18 @@
             "operationId": "d2a1bedb-26c2-4e78-b0c5-43a8c9dfa93e"
           }
         ],
+        "addInstances": [],
         "nextLogId": "72c8b89a-4f23-43fb-a124-c9f3fa146b86",
         "index": 3,
         "logId": "638055bd-eb26-483e-98d3-608b9d74314f"
       }
     ]
   },
-  "version": 3,
+  "version": 4,
   "meta": "Crystalline Asteroid",
+  "metaKeyValues": {
+    "EncounterId": "c98a359f-2764-4176-aea5-62ec8a6d0c34"
+  },
   "created": "2018-07-17T17:50:20.64022-07:00",
   "modified": "2018-07-17T17:50:20.64022-07:00",
   "SaveType": "EncounterInfo"
