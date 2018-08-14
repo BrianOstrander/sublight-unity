@@ -11,15 +11,12 @@ namespace LunraGames.SubLight
 	public class ValueFilterService
 	{
 		CallbackService callbacks;
-		ILogService logger;
 
-		public ValueFilterService(CallbackService callbacks, ILogService logger)
+		public ValueFilterService(CallbackService callbacks)
 		{
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
-			if (logger == null) throw new ArgumentNullException("logger");
 
 			this.callbacks = callbacks;
-			this.logger = logger;
 		}
 
 		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model)
@@ -63,6 +60,9 @@ namespace LunraGames.SubLight
 			{
 				case ValueFilterTypes.KeyValueBoolean:
 					OnHandle(current as BooleanKeyValueFilterEntryModel, filterDone);
+					break;
+				case ValueFilterTypes.KeyValueString:
+					OnHandle(current as StringKeyValueFilterEntryModel, filterDone);
 					break;
 				case ValueFilterTypes.EncounterInteraction:
 					OnHandle(current as EncounterInteractionFilterEntryModel, model, filterDone);
@@ -115,6 +115,37 @@ namespace LunraGames.SubLight
 					filter.Key.Value,
 					// If the boolean KV is equal to the result on the filter, the result is true.
 					result => done(filter.Group.Value, result.Value == filter.FilterValue.Value)
+				)
+			);
+		}
+
+		void OnHandle(StringKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
+		{
+			callbacks.KeyValueRequest(
+				KeyValueRequest.Get(
+					filter.Target.Value,
+					filter.Key.Value,
+					// If the string KV is equal to the result on the filter, the result is true.
+					result =>
+					{
+						var passed = false;
+						switch (filter.Operation.Value)
+						{
+							case StringFilterOperations.Equals:
+								passed = result.Value == filter.FilterValue.Value;
+								break;
+							case StringFilterOperations.IsNullOrEmpty:
+								passed = string.IsNullOrEmpty(result.Value);
+								break;
+							case StringFilterOperations.IsNull:
+								passed = result.Value == null;
+								break;
+							default:
+								Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+								break;
+						}
+						done(filter.Group.Value, passed);
+					}
 				)
 			);
 		}

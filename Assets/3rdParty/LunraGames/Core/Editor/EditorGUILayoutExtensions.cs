@@ -16,6 +16,7 @@ namespace LunraGamesEditor
 		static Stack<Color> BackgroundColorStack = new Stack<Color>();
 		static Stack<bool> EnabledStack = new Stack<bool>();
 		static Stack<bool> TextAreaWordWrapStack = new Stack<bool>();
+		static Stack<TextAnchor> ButtonTextAnchorStack = new Stack<TextAnchor>();
 
 		/// <summary>
 		/// Renames the first enum entry, useful for adding a "Select X" option.
@@ -82,10 +83,11 @@ namespace LunraGamesEditor
 			GUI.enabled = EnabledStack.Pop();
 		}
 
-		public static void PushTextAreaWordWrap(bool enabled)
+		public static GUIStyle PushTextAreaWordWrap(bool enabled)
 		{
 			TextAreaWordWrapStack.Push(EditorStyles.textArea.wordWrap);
 			EditorStyles.textArea.wordWrap = enabled;
+			return EditorStyles.textArea;
 		}
 
 		public static void PopTextAreaWordWrap()
@@ -93,6 +95,20 @@ namespace LunraGamesEditor
 			if (TextAreaWordWrapStack.Count == 0) return;
 			var popped = TextAreaWordWrapStack.Pop();
 			EditorStyles.textArea.wordWrap = popped;
+		}
+
+		public static GUIStyle PushButtonTextAnchor(TextAnchor anchor)
+		{
+			ButtonTextAnchorStack.Push(GUI.skin.button.alignment);
+			GUI.skin.button.alignment = anchor;
+			return GUI.skin.button;
+		}
+
+		public static void PopButtonTextAnchor()
+		{
+			if (ButtonTextAnchorStack.Count == 0) return;
+			var popped = ButtonTextAnchorStack.Pop();
+			GUI.skin.button.alignment = popped;
 		}
 
 		public static void PushIndent()
@@ -235,26 +251,55 @@ namespace LunraGamesEditor
 			if (string.IsNullOrEmpty(value) || value.Length < lengthLimit)
 			{
 				// Is Field
-				if (nullContent) value = EditorGUILayout.TextField(value);
-				else value = EditorGUILayout.TextField(content, value);
+				GUILayout.BeginHorizontal();
+				{
+					if (nullContent) value = EditorGUILayout.TextField(value);
+					else value = EditorGUILayout.TextField(content, value);
+					PushEnabled(value != null);
+					if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+					PopEnabled();
+				}
+				GUILayout.EndHorizontal();
 			}
 			else
 			{
 				// Is Area
-				PushTextAreaWordWrap(true);
+				var textStyle = PushTextAreaWordWrap(true);
 				{
-					if (!nullContent) GUILayout.Label(content);
-					value = EditorGUILayout.TextArea(value, EditorStyles.textArea);
+					GUILayout.BeginHorizontal();
+					{
+						if (!nullContent) GUILayout.Label(content);
+						PushEnabled(value != null);
+						if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+						PopEnabled();
+					}
+					GUILayout.EndHorizontal();
+					value = EditorGUILayout.TextArea(value, textStyle);
 				}
 				PopTextAreaWordWrap();
 			}
 			return value;
 		}
 
-		public static bool ToggleButton(bool value, string trueText = "True", string falseText = "False", params GUILayoutOption[] options)
+		public static bool ToggleButtonValue(bool value, string trueText = "True", string falseText = "False", params GUILayoutOption[] options)
 		{
 			options = options.Prepend(GUILayout.Width(48f)).ToArray();
 			if (GUILayout.Button(value ? trueText : falseText, options)) value = !value;
+			return value;
+		}
+
+		public static bool ToggleButton(GUIContent content, bool value, string trueText = "True", string falseText = "False")
+		{
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.PrefixLabel(content);
+				var buttonStyle = PushButtonTextAnchor(TextAnchor.MiddleLeft);
+				{
+					if (GUILayout.Button(value ? trueText : falseText, buttonStyle)) value = !value;
+				}
+				PopButtonTextAnchor();
+			}
+			GUILayout.EndHorizontal();
 			return value;
 		}
 
@@ -272,6 +317,35 @@ namespace LunraGamesEditor
 			}
 			GUILayout.EndHorizontal();
 			return value;
+		}
+
+		public static void BeginVertical(GUIStyle style, Color? color, bool useColor = true)
+		{
+			BeginVertical(style, color.HasValue ? color.Value : GUI.color, useColor);
+		}
+
+		public static void BeginVertical(GUIStyle style, Color color, bool useColor = true)
+		{
+			if (useColor) PushColor(color);
+			GUILayout.BeginVertical(style);
+			if (useColor) PopColor();
+		}
+
+		public static void EndVertical()
+		{
+			GUILayout.EndVertical();
+		}
+
+		public static void BeginHorizontal(GUIStyle style, Color color, bool useColor = true)
+		{
+			if (useColor) PushColor(color);
+			GUILayout.BeginHorizontal(style);
+			if (useColor) PopColor();
+		}
+
+		public static void EndHorizontal()
+		{
+			GUILayout.EndHorizontal();
 		}
 	}
 }

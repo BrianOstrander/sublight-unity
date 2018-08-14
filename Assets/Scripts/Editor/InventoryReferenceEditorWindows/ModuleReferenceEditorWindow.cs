@@ -169,9 +169,9 @@ namespace LunraGames.SubLight
 			var deleted = false;
 			indexDelta = 0;
 			var isAlternate = count % 2 == 0;
-			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.gray);
-			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (isAlternate) EditorGUILayoutExtensions.PopColor();
+
+			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.gray, isAlternate);
+
 			GUILayout.BeginHorizontal();
 			{
 				var header = "#" + (count + 1) + " | " + slot.SlotType+ ".SlotId:";

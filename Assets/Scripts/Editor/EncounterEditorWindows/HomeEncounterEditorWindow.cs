@@ -225,9 +225,7 @@ namespace LunraGames.SubLight
 					);
 				}
 				GUILayout.EndVertical();
-				EditorGUILayoutExtensions.PushColor(alternateColor);
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				EditorGUILayoutExtensions.PopColor();
+				EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, alternateColor);
 				{
 					model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
 						"Valid Bodies",
@@ -235,7 +233,7 @@ namespace LunraGames.SubLight
 						"- Select a BodyType -"
 					);
 				}
-				GUILayout.EndVertical();
+				EditorGUILayoutExtensions.EndVertical();
 				GUILayout.BeginVertical(EditorStyles.helpBox);
 				{
 					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
@@ -259,7 +257,6 @@ namespace LunraGames.SubLight
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count()+" |", GUILayout.ExpandWidth(false));
 					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
 					var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
-					var guid = Guid.NewGuid().ToString();
 					var isBeginning = model.Logs.All.Value.Length == 0;
 					var nextIndex = model.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
 					switch (result)
@@ -267,25 +264,16 @@ namespace LunraGames.SubLight
 						case EncounterLogTypes.Unknown:
 							break;
 						case EncounterLogTypes.Text:
-							var textResult = new TextEncounterLogModel();
-							textResult.Index.Value = nextIndex;
-							textResult.LogId.Value = guid;
-							textResult.Beginning.Value = isBeginning;
-							model.Logs.All.Value = model.Logs.All.Value.Append(textResult).ToArray();
+							NewEncounterLog<TextEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
 						case EncounterLogTypes.KeyValue:
-							var keyValueResult = new KeyValueEncounterLogModel();
-							keyValueResult.Index.Value = nextIndex;
-							keyValueResult.LogId.Value = guid;
-							keyValueResult.Beginning.Value = isBeginning;
-							model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
+							NewEncounterLog<KeyValueEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
 						case EncounterLogTypes.Inventory:
-							var inventoryResult = new InventoryEncounterLogModel();
-							inventoryResult.Index.Value = nextIndex;
-							inventoryResult.LogId.Value = guid;
-							inventoryResult.Beginning.Value = isBeginning;
-							model.Logs.All.Value = model.Logs.All.Value.Append(inventoryResult).ToArray();
+							NewEncounterLog<InventoryEncounterLogModel>(model, nextIndex, isBeginning);
+							break;
+						case EncounterLogTypes.Switch:
+							NewEncounterLog<SwitchEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
 						default:
 							Debug.LogError("Unrecognized EncounterLogType:" + result);
@@ -316,7 +304,7 @@ namespace LunraGames.SubLight
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var log = sorted[i];
-						var nextLog = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
+						var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
 						int currMoveDelta;
 
 						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning, ref ending)) deleted = log.LogId;
@@ -371,6 +359,16 @@ namespace LunraGames.SubLight
 			info.Name.Value = string.Empty;
 			info.Meta.Value = info.Name;
 			SaveLoadService.Save(info, OnNewEncounterInfo);
+		}
+
+		T NewEncounterLog<T>(EncounterInfoModel model, int index, bool isBeginning) where T : EncounterLogModel, new()
+		{
+			var result = new T();
+			result.Index.Value = index;
+			result.LogId.Value = Guid.NewGuid().ToString();
+			result.Beginning.Value = isBeginning;
+			model.Logs.All.Value = model.Logs.All.Value.Append(result).ToArray();
+			return result;
 		}
 
 		void LoadEncounterList()

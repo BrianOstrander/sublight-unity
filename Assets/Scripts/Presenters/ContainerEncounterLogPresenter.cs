@@ -175,7 +175,7 @@ namespace LunraGames.SubLight.Presenters
 				current.Show(View.EntryArea, OnShownLog);
 				entries.Add(current);
 
-				OnHandledLog(logModel);
+				OnHandledLog(logModel, logModel.NextLog);
 			}
 			else Debug.LogError("Unrecognized LogType: " + logModel.LogType);
 		}
@@ -184,19 +184,23 @@ namespace LunraGames.SubLight.Presenters
 		{
 			// Some logic may be halting, so we have a done action for them to
 			// call when they're finished.
-			Action done = () => OnHandledLog(logModel);
+			Action linearDone = () => OnHandledLog(logModel, logModel.NextLog);
+			Action<string> nonLinearDone = nextLog => OnHandledLog(logModel, nextLog);
 
 			switch(logModel.LogType)
 			{
 				case EncounterLogTypes.KeyValue:
-					OnKeyValueLog(logModel as KeyValueEncounterLogModel, done);
+					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
 					break;
 				case EncounterLogTypes.Inventory:
-					OnInventoryLog(logModel as InventoryEncounterLogModel, done);
+					OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
+					break;
+				case EncounterLogTypes.Switch:
+					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
 					break;
 				default:
-					Debug.LogError("Unrecognized Logic LogType: " + logModel.LogType);
-					done();
+					Debug.LogError("Unrecognized Logic LogType: " + logModel.LogType + ", skipping...");
+					linearDone();
 					break;
 			}
 		}
@@ -224,6 +228,17 @@ namespace LunraGames.SubLight.Presenters
 								entry.Target.Value,
 								entry.Key.Value,
 								setString.Value.Value,
+								result => OnKeyValueLogDone(result, total, ref progress, done)
+							)
+						);
+						break;
+					case KeyValueOperations.SetBoolean:
+						var setBoolean = entry as SetBooleanOperationModel;
+						App.Callbacks.KeyValueRequest(
+							KeyValueRequest.Set(
+								entry.Target.Value,
+								entry.Key.Value,
+								setBoolean.Value.Value,
 								result => OnKeyValueLogDone(result, total, ref progress, done)
 							)
 						);
@@ -306,7 +321,55 @@ namespace LunraGames.SubLight.Presenters
 			if (total == progress) done();
 		}
 
-		void OnHandledLog(EncounterLogModel logModel)
+		void OnSwitchLog(SwitchEncounterLogModel logModel, Action<string> done)
+		{
+			var switches = logModel.Switches.Value.Where(e => !e.Ignore.Value && !string.IsNullOrEmpty(e.NextLogId.Value)).OrderBy(e => e.Index.Value).ToList();
+
+			OnSwitchLogFilter(
+				null,
+				null,
+				switches,
+				(status, result) => OnSwitchLogDone(status, result, logModel, done)
+			);
+		}
+
+		void OnSwitchLogFilter(
+			bool? result, 
+			string resultId, 
+			List<EncounterLogSwitchEdgeModel> remaining, 
+			Action<RequestStatus, string> done
+		)
+		{
+			if (result.HasValue && result.Value)
+			{
+				done(RequestStatus.Success, resultId);
+				return;
+			}
+
+			if (!remaining.Any())
+			{
+				done(RequestStatus.Failure, null);
+				return;
+			}
+
+			var next = remaining.First();
+			var nextId = next.NextLogId.Value;
+			remaining.RemoveAt(0);
+
+			App.ValueFilter.Filter(
+				filterResult => OnSwitchLogFilter(filterResult, nextId, remaining, done),
+				next.Filtering,
+				model
+			);
+		}
+
+		void OnSwitchLogDone(RequestStatus status, string nextLogId, SwitchEncounterLogModel logModel, Action<string> done)
+		{
+			if (status == RequestStatus.Success) done(nextLogId);
+			else done(logModel.NextLog);
+		}
+
+		void OnHandledLog(EncounterLogModel logModel, string nextLogId)
 		{
 			// TODO: Unlock done button when end is reached.
 			if (logModel.Ending.Value)
@@ -316,7 +379,6 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			var nextLogId = logModel.NextLog;
 			if (string.IsNullOrEmpty(nextLogId))
 			{
 				Debug.Log("Handle null next logs here!");

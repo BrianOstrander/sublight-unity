@@ -26,32 +26,37 @@ namespace LunraGames.SubLight.Models
 		public ListenerProperty<T> FilterValue;
 		[JsonIgnore]
 		public ListenerProperty<bool> Negate;
-
+		[JsonIgnore]
 		public int FilterIndex
 		{
 			get { return Index.Value; }
 			set { Index.Value = value; }
 		}
+		[JsonIgnore]
 		public bool FilterIgnore
 		{
 			get { return Ignore.Value; }
 			set { Ignore.Value = value; }
 		}
+		[JsonIgnore]
 		public string FilterIdValue
 		{
 			get { return FilterId.Value; }
 			set { FilterId.Value = value; }
 		}
+		[JsonIgnore]
 		public ValueFilterGroups FilterGroup
 		{
 			get { return Group.Value; }
 			set { Group.Value = value; }
 		}
+		[JsonIgnore]
 		public bool FilterNegate
 		{
 			get { return Negate.Value; }
 			set { Negate.Value = value; }
 		}
+		[JsonIgnore]
 		public abstract ValueFilterTypes FilterType { get; }
 
 		public ValueFilterEntryModel()

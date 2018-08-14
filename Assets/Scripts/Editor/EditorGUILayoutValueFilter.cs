@@ -19,14 +19,12 @@ namespace LunraGames.SubLight
 
 		public static void Field(GUIContent content, ValueFilterModel model, Color? color = null)
 		{
-			if (color.HasValue) EditorGUILayoutExtensions.PushColor(color.Value);
-			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (color.HasValue) EditorGUILayoutExtensions.PopColor();
+			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
 				GUILayout.Label(content, EditorStyles.boldLabel);
 				Values(model);
 			}
-			GUILayout.EndVertical();
+			EditorGUILayoutExtensions.EndVertical();
 		}
 
 		public static void Values(ValueFilterModel model)
@@ -64,6 +62,9 @@ namespace LunraGames.SubLight
 					case ValueFilterTypes.KeyValueBoolean:
 						Create<BooleanKeyValueFilterEntryModel>(model, filterCount, group);
 						break;
+					case ValueFilterTypes.KeyValueString:
+						Create<StringKeyValueFilterEntryModel>(model, filterCount, group);
+						break;
 					case ValueFilterTypes.EncounterInteraction:
 						Create<EncounterInteractionFilterEntryModel>(model, filterCount, group);
 						break;
@@ -85,14 +86,15 @@ namespace LunraGames.SubLight
 					{
 						isAlternate = !isAlternate;
 
-						if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.grey.NewV(0.5f));
-						GUILayout.BeginVertical(EditorStyles.helpBox);
-						if (isAlternate) EditorGUILayoutExtensions.PopColor();
+						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
 						{
 							switch (filter.FilterType)
 							{
 								case ValueFilterTypes.KeyValueBoolean:
 									OnHandle(filter as BooleanKeyValueFilterEntryModel, ref deleted);
+									break;
+								case ValueFilterTypes.KeyValueString:
+									OnHandle(filter as StringKeyValueFilterEntryModel, ref deleted);
 									break;
 								case ValueFilterTypes.EncounterInteraction:
 									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
@@ -137,19 +139,43 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 		}
 
-		static void OnHandle(BooleanKeyValueFilterEntryModel model, ref string deleted)
+		static void OnHandleKeyValueBegin(IKeyValueFilterEntryModel model)
 		{
 			OnOneLineHandleBegin(model);
-			{
-				model.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", model.Target.Value, guiOptions: GUILayout.ExpandWidth(false));
-				model.Key.Value = EditorGUILayout.TextField(model.Key.Value);
-				GUILayout.Label("Equals");
-				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButton(model.FilterValue.Value);
-			}
+
+			model.FilterKeyTarget = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", model.FilterKeyTarget, guiOptions: GUILayout.ExpandWidth(false));
+			model.FilterKey = EditorGUILayout.TextField(model.FilterKey);
+		}
+
+		static void OnHandleKeyValueEnd(IKeyValueFilterEntryModel model, ref string deleted)
+		{
 			OnOneLineHandleEnd(model, ref deleted);
 
-			if (model.Target.Value == KeyValueTargets.Unknown) EditorGUILayout.HelpBox("A target must be specified.", MessageType.Error);
-			if (string.IsNullOrEmpty(model.Key.Value)) EditorGUILayout.HelpBox("A key must be specified.", MessageType.Error);
+			if (model.FilterKeyTarget == KeyValueTargets.Unknown) EditorGUILayout.HelpBox("A target must be specified.", MessageType.Error);
+			if (string.IsNullOrEmpty(model.FilterKey)) EditorGUILayout.HelpBox("A key must be specified.", MessageType.Error);
+		}
+
+		static void OnHandle(BooleanKeyValueFilterEntryModel model, ref string deleted)
+		{
+			OnHandleKeyValueBegin(model);
+			{
+				GUILayout.Label("Equals");
+				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButtonValue(model.FilterValue.Value);
+			}
+			OnHandleKeyValueEnd(model, ref deleted);
+		}
+
+		static void OnHandle(StringKeyValueFilterEntryModel model, ref string deleted)
+		{
+			OnHandleKeyValueBegin(model);
+			{
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", model.Operation.Value, guiOptions: GUILayout.ExpandWidth(false));
+				if (model.Operation.Value == StringFilterOperations.Equals)
+				{
+					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
+				}
+			}
+			OnHandleKeyValueEnd(model, ref deleted);
 		}
 
 		static void OnHandle(EncounterInteractionFilterEntryModel model, ref string deleted)

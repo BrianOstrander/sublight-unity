@@ -13,6 +13,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty]
 		BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
 		[JsonProperty]
+		StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
+		[JsonProperty]
 		EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
 		#endregion
 
@@ -30,6 +32,7 @@ namespace LunraGames.SubLight.Models
 		void OnSetFilters(IValueFilterEntryModel[] newFilters)
 		{
 			var newBooleanKeyValues = new List<BooleanKeyValueFilterEntryModel>();
+			var newStringKeyValues = new List<StringKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
 
 			foreach (var filter in newFilters)
@@ -38,6 +41,9 @@ namespace LunraGames.SubLight.Models
 				{
 					case ValueFilterTypes.KeyValueBoolean:
 						newBooleanKeyValues.Add(filter as BooleanKeyValueFilterEntryModel);
+						break;
+					case ValueFilterTypes.KeyValueString:
+						newStringKeyValues.Add(filter as StringKeyValueFilterEntryModel);
 						break;
 					case ValueFilterTypes.EncounterInteraction:
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
@@ -49,16 +55,15 @@ namespace LunraGames.SubLight.Models
 			}
 
 			booleanKeyValues = newBooleanKeyValues.ToArray();
+			stringKeyValues = newStringKeyValues.ToArray();
 			encounterInteractions = newEncounterInteractions.ToArray();
 		}
 
 		IValueFilterEntryModel[] OnGetFilters()
 		{
-			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(encounterInteractions)
+			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(stringKeyValues)
+																  .Concat(encounterInteractions)
 																  .ToArray();
-			//return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(something)
-																  //.Concat(somethingElse)
-																  //.ToArray();
 		}
 		#endregion
 	}
