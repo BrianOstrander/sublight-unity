@@ -71,13 +71,18 @@ namespace LunraGames.SubLight.Presenters
 					if (bodyFocus.View != BodyFocusRequest.Views.BodyHook) goto default;
 					system = model.Universe.Value.GetSystem(bodyFocus.System);
 					body = system.GetBody(bodyFocus.Body);
-					encounter = App.Encounters.AssignBestEncounter(model, system, body);
-					Show();
+					App.Encounters.AssignBestEncounter(OnAssignBestEncounter, model, system, body);
 					break;
 				default:
 					if (View.TransitionState == TransitionStates.Shown) CloseView();
 					break;
 			}
+		}
+
+		void OnAssignBestEncounter(EncounterInfoModel result)
+		{
+			encounter = result;
+			Show();
 		}
 		
 		void OnCrewClick(CrewInventoryModel crew)

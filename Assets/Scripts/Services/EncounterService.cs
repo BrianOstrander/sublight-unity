@@ -13,20 +13,23 @@ namespace LunraGames.SubLight
 		IModelMediator modelMediator;
 		ILogService logger;
 		CallbackService callbacks;
+		ValueFilterService valueFilter;
 
 		List<EncounterInfoModel> encounters = new List<EncounterInfoModel>();
 		InteractedEncounterInfoListModel interactedEncounters;
 		bool currentlySaving;
 
-		public EncounterService(IModelMediator modelMediator, ILogService logger, CallbackService callbacks)
+		public EncounterService(IModelMediator modelMediator, ILogService logger, CallbackService callbacks, ValueFilterService valueFilter)
 		{
 			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
 			if (logger == null) throw new ArgumentNullException("logger");
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
+			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
 
 			this.modelMediator = modelMediator;
 			this.logger = logger;
 			this.callbacks = callbacks;
+			this.valueFilter = valueFilter;
 		}
 
 		#region Initialization
@@ -164,10 +167,14 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Utility
-		public EncounterInfoModel AssignBestEncounter(GameModel model, SystemModel system, BodyModel body)
+		public void AssignBestEncounter(Action<EncounterInfoModel> done, GameModel model, SystemModel system, BodyModel body)
 		{
 			// TODO: Check if old encounters are still valid here?
-			if (body.HasEncounter) return GetEncounter(body.Encounter);
+			if (body.HasEncounter)
+			{
+				done(GetEncounter(body.Encounter));
+				return;
+			}
 			// Required checks
 			var remaining = encounters.Where(
 				e =>
@@ -184,7 +191,11 @@ namespace LunraGames.SubLight
 				}
 			);
 
-			if (remaining.Count() == 0) return null;
+			if (remaining.Count() == 0)
+			{
+				done(null);
+				return;
+			}
 
 			var ordered = remaining.OrderByDescending(r => r.OrderWeight.Value);
 			var topWeight = ordered.First().OrderWeight.Value;
@@ -197,7 +208,7 @@ namespace LunraGames.SubLight
 			interaction.TimesSeen.Value++;
 			interaction.LastSeen.Value = DateTime.Now;
 
-			return chosen;
+			done(chosen);
 		}
 
 		/// <summary>
