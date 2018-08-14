@@ -435,7 +435,6 @@ namespace LunraGames.SubLight
 
 							if (currMoveDelta != 0)
 							{
-								Debug.Log("lol moving");
 								indexSwap0 = current;
 								indexSwap1 = currMoveDelta == 1 ? next : last;
 							}
@@ -460,7 +459,6 @@ namespace LunraGames.SubLight
 
 			if (indexSwap0 != null && indexSwap1 != null)
 			{
-				Debug.Log("lol swaping " + indexSwap0.Index.Value + " and " + indexSwap1.Index.Value);
 				var swap0 = indexSwap0.Index.Value;
 				var swap1 = indexSwap1.Index.Value;
 

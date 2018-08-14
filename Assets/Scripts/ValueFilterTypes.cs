@@ -5,7 +5,7 @@
 		Unknown = 0,
 		// -- KeyValues
 		KeyValueBoolean = 10,
-		// KeyValueString = 20
+		KeyValueString = 20,
 		// KeyValueInteger = 30
 		// KeyValueFloat = 40
 

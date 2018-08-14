@@ -235,15 +235,29 @@ namespace LunraGamesEditor
 			if (string.IsNullOrEmpty(value) || value.Length < lengthLimit)
 			{
 				// Is Field
-				if (nullContent) value = EditorGUILayout.TextField(value);
-				else value = EditorGUILayout.TextField(content, value);
+				GUILayout.BeginHorizontal();
+				{
+					if (nullContent) value = EditorGUILayout.TextField(value);
+					else value = EditorGUILayout.TextField(content, value);
+					PushEnabled(value != null);
+					if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+					PopEnabled();
+				}
+				GUILayout.EndHorizontal();
 			}
 			else
 			{
 				// Is Area
 				PushTextAreaWordWrap(true);
 				{
-					if (!nullContent) GUILayout.Label(content);
+					GUILayout.BeginHorizontal();
+					{
+						if (!nullContent) GUILayout.Label(content);
+						PushEnabled(value != null);
+						if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+						PopEnabled();
+					}
+					GUILayout.EndHorizontal();
 					value = EditorGUILayout.TextArea(value, EditorStyles.textArea);
 				}
 				PopTextAreaWordWrap();
