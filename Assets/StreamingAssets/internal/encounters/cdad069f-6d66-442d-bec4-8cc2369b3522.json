@@ -48,22 +48,22 @@
                   "target": "Global",
                   "key": "some_bool",
                   "filterId": "f6fccb9a-1f47-48ca-930e-02d04571c0bf",
-                  "group": "All",
-                  "filterValue": true
+                  "group": "All"
                 }
               ],
               "encounterInteractions": []
             }
           },
           {
-            "switchId": "21d6f9a7-a355-4808-aa45-a91713511533",
+            "switchId": "514d3878-f48b-4b2e-b7d6-a334822c21d3",
+            "index": 1,
             "nextLogId": "84ff44da-0ba6-41b0-81c9-9f7b6699d1f3",
             "filtering": {
               "booleanKeyValues": [
                 {
                   "target": "Global",
                   "key": "other_bool",
-                  "filterId": "95399965-5782-4d27-ae43-56790ce059c8",
+                  "filterId": "ae90ab75-4c18-4dba-b31c-77e5c788b3a5",
                   "group": "All"
                 }
               ],

@@ -304,7 +304,7 @@ namespace LunraGames.SubLight
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var log = sorted[i];
-						var nextLog = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
+						var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
 						int currMoveDelta;
 
 						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning, ref ending)) deleted = log.LogId;

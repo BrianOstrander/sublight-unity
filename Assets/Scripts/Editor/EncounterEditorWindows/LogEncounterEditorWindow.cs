@@ -13,7 +13,16 @@ namespace LunraGames.SubLight
 {
 	public partial class EncounterEditorWindow
 	{
-		bool OnLogBegin(int count, int maxCount, EncounterInfoModel infoModel, EncounterLogModel model, bool isMoving, out int indexDelta, ref string beginning, ref string ending)
+		bool OnLogBegin(
+			int count, 
+			int maxCount, 
+			EncounterInfoModel infoModel, 
+			EncounterLogModel model, 
+			bool isMoving, 
+			out int indexDelta, 
+			ref string beginning, 
+			ref string ending
+		)
 		{
 			var deleted = false;
 			indexDelta = 0;
@@ -397,19 +406,43 @@ namespace LunraGames.SubLight
 			var deleted = string.Empty;
 			var isAlternate = false;
 
+			EncounterLogSwitchEdgeModel indexSwap0 = null;
+			EncounterLogSwitchEdgeModel indexSwap1 = null;
+			
+			var isMoving = Event.current.control;
+
+			var sorted = model.Switches.Value.OrderBy(l => l.Index.Value).ToList();
+			var sortedCount = sorted.Count;
+			EncounterLogSwitchEdgeModel last = null;
+
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Space(16f);
 				GUILayout.BeginVertical();
 				{
-					foreach (var current in model.Switches.Value)
+					for (var i = 0; i < sortedCount; i++)
 					{
+						var current = sorted[i];
+						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
+						int currMoveDelta;
+
 						isAlternate = !isAlternate;
 
 						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
 						{
-							if (OnSwitchLogEdgeHeader(infoModel, model, current)) deleted = current.SwitchId.Value;
+							
+							if (OnSwitchLogEdgeHeader(i, sortedCount, infoModel, model, current, isMoving, out currMoveDelta)) deleted = current.SwitchId.Value;
+
+							if (currMoveDelta != 0)
+							{
+								Debug.Log("lol moving");
+								indexSwap0 = current;
+								indexSwap1 = currMoveDelta == 1 ? next : last;
+							}
+
 							OnSwitchLogEdge(infoModel, model, nextModel, current);
+
+							last = current;
 						}
 						EditorGUILayoutExtensions.EndVertical();
 					}
@@ -418,12 +451,22 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
+			OnLinearLog(infoModel, model, nextModel);
+
 			if (!string.IsNullOrEmpty(deleted))
 			{
 				model.Switches.Value = model.Switches.Value.Where(e => e.SwitchId.Value != deleted).ToArray();
 			}
 
-			OnLinearLog(infoModel, model, nextModel);
+			if (indexSwap0 != null && indexSwap1 != null)
+			{
+				Debug.Log("lol swaping " + indexSwap0.Index.Value + " and " + indexSwap1.Index.Value);
+				var swap0 = indexSwap0.Index.Value;
+				var swap1 = indexSwap1.Index.Value;
+
+				indexSwap0.Index.Value = swap1;
+				indexSwap1.Index.Value = swap0;
+			}
 		}
 
 		void OnSwitchLogSpawn(
@@ -435,7 +478,7 @@ namespace LunraGames.SubLight
 			var index = 0;
 			if (model.Switches.Value.Any())
 			{
-				index = model.Switches.Value.OrderBy(e => e.Index.Value).Last().Index.Value;
+				index = model.Switches.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
 			}
 			var result = new EncounterLogSwitchEdgeModel();
 			result.SwitchId.Value = Guid.NewGuid().ToString();
@@ -445,16 +488,40 @@ namespace LunraGames.SubLight
 		}
 
 		bool OnSwitchLogEdgeHeader(
+			int count, 
+			int maxCount, 
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
-			EncounterLogSwitchEdgeModel edge
+			EncounterLogSwitchEdgeModel edge,
+			bool isMoving, 
+			out int indexDelta
 		)
 		{
 			var deleted = false;
+			indexDelta = 0;
+
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("Filter", EditorStyles.boldLabel);
+				GUILayout.Label("#" + (count + 1) + " | Filter", EditorStyles.boldLabel);
+				if (isMoving)
+				{
+					GUILayout.Space(10f);
+					EditorGUILayoutExtensions.PushEnabled(0 < count);
+					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = -1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = 1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+				}
+				EditorGUILayoutExtensions.PushEnabled(!isMoving);
 				deleted = EditorGUILayoutExtensions.XButton();
+				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
 			return deleted;
