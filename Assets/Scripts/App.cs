@@ -65,6 +65,9 @@ namespace LunraGames.SubLight
 		GlobalKeyValueService globalKeyValues;
 		public static GlobalKeyValueService GlobalKeyValues { get { return instance.globalKeyValues; } }
 
+		ValueFilterService valueFilter;
+		public static ValueFilterService ValueFilter { get { return instance.valueFilter; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -141,12 +144,13 @@ namespace LunraGames.SubLight
 				throw new Exception("Unknown platform");
 			}
 
-			encounters = new EncounterService(M, Logging, Callbacks);
 			inventoryReferences = new InventoryReferenceService(M, Logging, Callbacks);
 			scenes = new SceneService(Logging, Callbacks);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
 			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
+			valueFilter = new ValueFilterService(Callbacks, Logging);
+			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
 		}
 
 		public static void Restart(string message)

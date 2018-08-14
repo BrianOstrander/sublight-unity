@@ -318,7 +318,7 @@ namespace LunraGames.SubLight
 			var deleted = false;
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(operation.Operation.ToString());
+				GUILayout.Label(operation.Operation.ToString(), EditorStyles.boldLabel);
 				deleted = EditorGUILayoutExtensions.XButton();
 			}
 			GUILayout.EndHorizontal();

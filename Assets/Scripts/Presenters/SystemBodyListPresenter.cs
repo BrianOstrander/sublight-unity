@@ -10,6 +10,9 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 		SystemModel destination;
 
+		int bodyCount;
+		List<LabelButtonBlock> bodies;
+
 		public SystemBodyListPresenter(GameModel model)
 		{
 			this.model = model;
@@ -30,23 +33,36 @@ namespace LunraGames.SubLight.Presenters
 
 			View.Title = Strings.ArrivedIn(destination.Name.Value);
 
-			var bodies = new List<LabelButtonBlock>();
+			bodyCount = destination.Bodies.Value.Length;
+			bodies = new List<LabelButtonBlock>();
 
 			foreach (var body in destination.Bodies.Value)
 			{
-				var encounter = App.Encounters.AssignBestEncounter(model, destination, body);
-				if (encounter != null) body.Encounter.Value = encounter.EncounterId;
-
-				bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body), body.HasEncounter));
+				App.Encounters.AssignBestEncounter(result => OnAssignBestEncounter(result, body), model, destination, body);
 			}
 
+			if (bodyCount == 0) OnAssignBestEncounterDone();
+		}
+
+		#region Events
+		void OnAssignBestEncounter(EncounterInfoModel result, BodyModel body)
+		{
+			if (result != null) body.Encounter.Value = result.EncounterId;
+
+			bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body), body.HasEncounter));
+
+			// I don't think this is possible, but just in case.
+			if (bodyCount == bodies.Count) OnAssignBestEncounterDone();
+		}
+
+		void OnAssignBestEncounterDone()
+		{
 			View.BodyEntries = bodies.ToArray();
 
 			View.DoneClick = OnDoneClick;
 			ShowView(App.GameCanvasRoot);
 		}
 
-		#region Events
 		void OnFocus(FocusRequest focus)
 		{
 			switch (focus.Focus)

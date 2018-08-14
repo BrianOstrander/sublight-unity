@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 		[JsonProperty] string hook;
+		[JsonProperty] ValueFilterModel filtering = new ValueFilterModel();
 		[JsonProperty] string[] completedEncountersRequired = new string[0];
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
@@ -58,6 +59,8 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<InventoryTypes[]> ValidCrews;
 
 		#region Shortcuts
+		[JsonIgnore]
+		public ValueFilterModel Filtering { get { return filtering; } }
 		[JsonIgnore]
 		public EncounterLogListModel Logs { get { return logs; } }
 		#endregion

@@ -23,28 +23,11 @@ namespace LunraGamesEditor
 		/// <returns>The enum popup.</returns>
 		/// <param name="primaryReplacement">Primary replacement.</param>
 		/// <param name="value">Value.</param>
-		public static Enum HelpfulEnumPopup(string primaryReplacement, Enum value)
-		{
-			var name = Enum.GetName(value.GetType(), value);
-			var originalNames = Enum.GetNames(value.GetType());
-			var names = originalNames.ToArray();
-			names[0] = primaryReplacement;
-			var selection = 0;
-			foreach (var currName in names)
-			{
-				if (currName == name) break;
-				selection++;
-			}
-			selection = selection == names.Length ? 0 : selection;
-			selection = EditorGUILayout.Popup(selection, names);
-
-			return (Enum)Enum.Parse(value.GetType(),  originalNames[selection]);
-		}
-
 		public static T HelpfulEnumPopup<T>(
 			string primaryReplacement, 
 			T value,
-			T[] options = null
+			T[] options = null,
+			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
 			var name = Enum.GetName(value.GetType(), value);
@@ -58,7 +41,7 @@ namespace LunraGamesEditor
 				selection++;
 			}
 			selection = selection == names.Length ? 0 : selection;
-			selection = EditorGUILayout.Popup(selection, names);
+			selection = EditorGUILayout.Popup(selection, names, guiOptions);
 
 			return (T)Enum.Parse(value.GetType(), originalNames[selection]);
 		}
@@ -265,6 +248,29 @@ namespace LunraGamesEditor
 				}
 				PopTextAreaWordWrap();
 			}
+			return value;
+		}
+
+		public static bool ToggleButton(bool value, string trueText = "True", string falseText = "False", params GUILayoutOption[] options)
+		{
+			options = options.Prepend(GUILayout.Width(48f)).ToArray();
+			if (GUILayout.Button(value ? trueText : falseText, options)) value = !value;
+			return value;
+		}
+
+		public static bool ToggleButtonArray(bool value, string trueText = "True", string falseText = "False", float width = 48f)
+		{
+			GUILayout.BeginHorizontal();
+			{
+				PushEnabled(!value);
+				if (GUILayout.Button(trueText, GUILayout.Width(width))) value = true;
+				PopEnabled();
+
+				PushEnabled(value);
+				if (GUILayout.Button(falseText, GUILayout.Width(width))) value = false;
+				PopEnabled();
+			}
+			GUILayout.EndHorizontal();
 			return value;
 		}
 	}
