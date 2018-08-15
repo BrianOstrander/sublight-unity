@@ -282,6 +282,15 @@ namespace LunraGames.SubLight
 					GUILayout.Label("Hold 'Ctrl' to rearrange entries.", GUILayout.ExpandWidth(false));
 				}
 				GUILayout.EndHorizontal();
+
+				if (!model.Logs.All.Value.Any(l => l.Beginning.Value))
+				{
+					EditorGUILayout.HelpBox("No \"Beginning\" log has been specified!", MessageType.Error);
+				}
+				if (!model.Logs.All.Value.Any(l => l.Ending.Value))
+				{
+					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
+				}
 			}
 			selectedEncounterModified |= EditorGUI.EndChangeCheck();
 
@@ -291,7 +300,6 @@ namespace LunraGames.SubLight
 				{
 					var deleted = string.Empty;
 					var beginning = string.Empty;
-					var ending = string.Empty;
 
 					EncounterLogModel indexSwap0 = null;
 					EncounterLogModel indexSwap1 = null;
@@ -307,7 +315,7 @@ namespace LunraGames.SubLight
 						var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
 						int currMoveDelta;
 
-						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning, ref ending)) deleted = log.LogId;
+						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning)) deleted = log.LogId;
 
 						if (currMoveDelta != 0)
 						{
@@ -329,13 +337,6 @@ namespace LunraGames.SubLight
 						foreach (var logs in model.Logs.All.Value)
 						{
 							logs.Beginning.Value = logs.LogId.Value == beginning;
-						}
-					}
-					if (!string.IsNullOrEmpty(ending))
-					{
-						foreach (var logs in model.Logs.All.Value)
-						{
-							logs.Ending.Value = logs.LogId.Value == ending;
 						}
 					}
 					if (indexSwap0 != null && indexSwap1 != null)

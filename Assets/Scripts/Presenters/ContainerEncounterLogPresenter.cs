@@ -88,6 +88,8 @@ namespace LunraGames.SubLight.Presenters
 			if (nextLog == null)
 			{
 				Debug.LogError("No beginning found for encounter " + encounter.EncounterId.Value);
+				View.DoneEnabled = true;
+				View.NextEnabled = false;
 				return;
 			}
 			nextLogDelay = 0f;

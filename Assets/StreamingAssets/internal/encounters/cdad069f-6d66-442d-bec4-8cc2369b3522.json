@@ -18,6 +18,7 @@
         "message": "Here!",
         "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
         "index": 2,
+        "ending": true,
         "logId": "60e24432-3da7-41c5-9d45-10718ad11967"
       },
       {
@@ -25,6 +26,7 @@
         "message": "Wow, here!",
         "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
         "index": 3,
+        "ending": true,
         "logId": "84ff44da-0ba6-41b0-81c9-9f7b6699d1f3"
       },
       {

@@ -14,14 +14,13 @@ namespace LunraGames.SubLight
 	public partial class EncounterEditorWindow
 	{
 		bool OnLogBegin(
-			int count, 
-			int maxCount, 
-			EncounterInfoModel infoModel, 
-			EncounterLogModel model, 
-			bool isMoving, 
-			out int indexDelta, 
-			ref string beginning, 
-			ref string ending
+			int count,
+			int maxCount,
+			EncounterInfoModel infoModel,
+			EncounterLogModel model,
+			bool isMoving,
+			out int indexDelta,
+			ref string beginning
 		)
 		{
 			var deleted = false;
@@ -57,10 +56,7 @@ namespace LunraGames.SubLight
 						{
 							beginning = model.LogId;
 						}
-						if (EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f)) && !model.Ending.Value)
-						{
-							ending = model.LogId;
-						}
+						model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f)); 
 					}
 					EditorGUILayoutExtensions.PushEnabled(!isMoving);
 					deleted = EditorGUILayoutExtensions.XButton();
