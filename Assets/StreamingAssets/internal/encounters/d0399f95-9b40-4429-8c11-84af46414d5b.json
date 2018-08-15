@@ -12,10 +12,40 @@
   "validBodies": [],
   "validCrews": [],
   "logs": {
-    "textLogs": [],
+    "textLogs": [
+      {
+        "header": "Button 0",
+        "message": "You pressed button 0!",
+        "index": 1,
+        "ending": true,
+        "logId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6"
+      },
+      {
+        "header": "Button 1",
+        "message": "You pressed button 1!",
+        "index": 2,
+        "ending": true,
+        "logId": "60a170df-e303-4f92-930b-7efe34a443d6"
+      },
+      {
+        "header": "No Buttons",
+        "message": "No buttons interactable or enabled!",
+        "index": 3,
+        "ending": true,
+        "logId": "62cc974c-8f41-413b-ac1c-25e671f87e16"
+      }
+    ],
     "keyValueLogs": [],
     "inventoryLogs": [],
-    "switchLogs": []
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [],
+        "nextLogId": "62cc974c-8f41-413b-ac1c-25e671f87e16",
+        "beginning": true,
+        "logId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb"
+      }
+    ]
   },
   "version": 4,
   "meta": "Button Test 0",

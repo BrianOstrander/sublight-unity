@@ -275,6 +275,9 @@ namespace LunraGames.SubLight
 						case EncounterLogTypes.Switch:
 							NewEncounterLog<SwitchEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
+						case EncounterLogTypes.Button:
+							NewEncounterLog<ButtonEncounterLogModel>(model, nextIndex, isBeginning);
+							break;
 						default:
 							Debug.LogError("Unrecognized EncounterLogType:" + result);
 							break;

@@ -15,6 +15,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] KeyValueEncounterLogModel[] keyValueLogs = new KeyValueEncounterLogModel[0];
 		[JsonProperty] InventoryEncounterLogModel[] inventoryLogs = new InventoryEncounterLogModel[0];
 		[JsonProperty] SwitchEncounterLogModel[] switchLogs = new SwitchEncounterLogModel[0];
+		[JsonProperty] ButtonEncounterLogModel[] buttonLogs = new ButtonEncounterLogModel[0];
 		#endregion
 
 		#region Derived Values
@@ -68,6 +69,7 @@ namespace LunraGames.SubLight.Models
 			var keyValueList = new List<KeyValueEncounterLogModel>();
 			var inventoryList = new List<InventoryEncounterLogModel>();
 			var switchList = new List<SwitchEncounterLogModel>();
+			var buttonList = new List<ButtonEncounterLogModel>();
 
 			foreach (var log in newLogs)
 			{
@@ -85,6 +87,9 @@ namespace LunraGames.SubLight.Models
 					case EncounterLogTypes.Switch:
 						switchList.Add(log as SwitchEncounterLogModel);
 						break;
+					case EncounterLogTypes.Button:
+						buttonList.Add(log as ButtonEncounterLogModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized EncounterLogType: " + log.LogType);
 						break;
@@ -95,6 +100,7 @@ namespace LunraGames.SubLight.Models
 			keyValueLogs = keyValueList.ToArray();
 			inventoryLogs = inventoryList.ToArray();
 			switchLogs = switchList.ToArray();
+			buttonLogs = buttonList.ToArray();
 		}
 
 		EncounterLogModel[] OnGetLogs()
@@ -102,6 +108,7 @@ namespace LunraGames.SubLight.Models
 			return textLogs.Cast<EncounterLogModel>().Concat(keyValueLogs)
 													 .Concat(inventoryLogs)
 													 .Concat(switchLogs)
+													 .Concat(buttonLogs)
 													 .ToArray();
 		}
 		#endregion
