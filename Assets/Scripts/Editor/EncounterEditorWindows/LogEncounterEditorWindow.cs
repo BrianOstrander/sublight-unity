@@ -27,13 +27,18 @@ namespace LunraGames.SubLight
 			indexDelta = 0;
 			var isAlternate = count % 2 == 0;
 
-			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.gray, isAlternate);
+			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.cyan.NewH(0.5f), Color.cyan.NewH(0.6f), isAlternate);
+			GUILayout.Space(2f);
+
+			GUILayout.BeginVertical(EditorStyles.miniButton);
 			{
 				GUILayout.BeginHorizontal();
 				{
+					EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
 					var header = "#" + (count + 1) + " | " + model.LogType + ".LogId:";
 					GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
 					EditorGUILayout.SelectableLabel(model.LogId, EditorStyles.boldLabel);
+					EditorGUILayoutExtensions.PopColor();
 					if (isMoving)
 					{
 						GUILayout.Space(10f);
@@ -56,14 +61,14 @@ namespace LunraGames.SubLight
 						{
 							beginning = model.LogId;
 						}
-						model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f)); 
+						model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f));
 					}
 					EditorGUILayoutExtensions.PushEnabled(!isMoving);
 					deleted = EditorGUILayoutExtensions.XButton();
 					EditorGUILayoutExtensions.PopEnabled();
 				}
 			}
-			EditorGUILayoutExtensions.EndVertical();
+			GUILayout.EndVertical();
 
 			selectedEncounterModified |= EditorGUI.EndChangeCheck();
 			{
@@ -637,6 +642,22 @@ namespace LunraGames.SubLight
 		void OnLogEnd(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
 			GUILayout.EndVertical();
+			GUILayout.Space(2f);
+			EditorGUILayoutExtensions.EndVertical();
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.FlexibleSpace();
+				EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.7f));
+				{
+					GUILayout.Button(GUIContent.none, EditorStyles.radioButton);
+					GUILayout.Button(GUIContent.none, EditorStyles.radioButton);
+					GUILayout.Button(GUIContent.none, EditorStyles.radioButton);
+				}
+				EditorGUILayoutExtensions.PopColor();
+				GUILayout.FlexibleSpace();
+			}
+			GUILayout.EndHorizontal();
 		}
 	}
 }

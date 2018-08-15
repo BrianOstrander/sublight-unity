@@ -331,6 +331,13 @@ namespace LunraGamesEditor
 			if (useColor) PopColor();
 		}
 
+		public static void BeginVertical(GUIStyle style, Color primaryColor, Color secondaryColor, bool isPrimary)
+		{
+			PushColor(isPrimary ? primaryColor : secondaryColor);
+			GUILayout.BeginVertical(style);
+			PopColor();
+		}
+
 		public static void EndVertical()
 		{
 			GUILayout.EndVertical();
