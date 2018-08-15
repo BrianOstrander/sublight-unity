@@ -1,0 +1,28 @@
+{
+  "orderWeight": 2.0,
+  "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
+  "name": "Button Test 0",
+  "hook": "Button Test 0",
+  "filtering": {
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [],
+    "keyValueLogs": [],
+    "inventoryLogs": [],
+    "switchLogs": []
+  },
+  "version": 4,
+  "meta": "Button Test 0",
+  "metaKeyValues": {
+    "EncounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe"
+  },
+  "created": "2018-08-15T10:43:00.701579-07:00",
+  "modified": "2018-08-15T10:43:00.701579-07:00",
+  "SaveType": "EncounterInfo"
+}
