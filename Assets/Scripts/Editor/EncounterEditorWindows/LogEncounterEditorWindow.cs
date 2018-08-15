@@ -426,14 +426,14 @@ namespace LunraGames.SubLight
 			var deleted = string.Empty;
 			var isAlternate = false;
 
-			EncounterLogSwitchEdgeModel indexSwap0 = null;
-			EncounterLogSwitchEdgeModel indexSwap1 = null;
+			SwitchEdgeModel indexSwap0 = null;
+			SwitchEdgeModel indexSwap1 = null;
 			
 			var isMoving = Event.current.control;
 
 			var sorted = model.Switches.Value.OrderBy(l => l.Index.Value).ToList();
 			var sortedCount = sorted.Count;
-			EncounterLogSwitchEdgeModel last = null;
+			SwitchEdgeModel last = null;
 
 			GUILayout.BeginHorizontal();
 			{
@@ -498,7 +498,7 @@ namespace LunraGames.SubLight
 			{
 				index = model.Switches.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
 			}
-			var result = new EncounterLogSwitchEdgeModel();
+			var result = new SwitchEdgeModel();
 			result.SwitchId.Value = Guid.NewGuid().ToString();
 			result.Index.Value = index;
 			result.NextLogId.Value = targetLogId;
@@ -510,7 +510,7 @@ namespace LunraGames.SubLight
 			int maxCount, 
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
-			EncounterLogSwitchEdgeModel edge,
+			SwitchEdgeModel edge,
 			bool isMoving, 
 			out int indexDelta
 		)
@@ -549,7 +549,7 @@ namespace LunraGames.SubLight
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
 			EncounterLogModel nextModel,
-			EncounterLogSwitchEdgeModel edge
+			SwitchEdgeModel edge
 		)
 		{
 			string selection;

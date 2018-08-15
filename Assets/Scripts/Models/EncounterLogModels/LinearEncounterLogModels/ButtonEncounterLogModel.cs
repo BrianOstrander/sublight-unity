@@ -1,16 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Newtonsoft.Json;
 
-public class ButtonEncounterLogModel : MonoBehaviour {
+namespace LunraGames.SubLight.Models
+{
+	public class ButtonEncounterLogModel : LinearEncounterLogModel
+	{
+		[JsonProperty] ButtonEdgeModel[] buttons = new ButtonEdgeModel[0];
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		[JsonIgnore]
+		public readonly ListenerProperty<ButtonEdgeModel[]> Buttons;
+
+		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Button; } }
+
+		public override bool EditableDuration { get { return false; } }
+
+		public ButtonEncounterLogModel()
+		{
+			Buttons = new ListenerProperty<ButtonEdgeModel[]>(value => buttons = value, () => buttons);
+		}
 	}
 }

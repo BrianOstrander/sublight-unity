@@ -163,9 +163,30 @@ namespace LunraGames.SubLight.Presenters
 			nextLog = null;
 			nextLogDelay = null;
 
-			if (EncounterLogValidator.Presented.Contains(logModel.LogType)) OnPresentedLog(logModel);
-			else if (EncounterLogValidator.Logic.Contains(logModel.LogType)) OnLogicLog(logModel);
-			else Debug.LogError("Unrecognized LogType: " + logModel.LogType);
+			// Some logic may be halting, so we have a done action for them to
+			// call when they're finished.
+			Action linearDone = () => OnHandledLog(logModel, logModel.NextLog);
+			Action<string> nonLinearDone = nextLog => OnHandledLog(logModel, nextLog);
+
+			switch(logModel.LogType)
+			{
+				case EncounterLogTypes.Text:
+					OnPresentedLog(logModel);
+					break;
+				case EncounterLogTypes.KeyValue:
+					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
+					break;
+				case EncounterLogTypes.Inventory:
+					OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
+					break;
+				case EncounterLogTypes.Switch:
+					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
+					break;
+				default:
+					Debug.LogError("Unrecognized LogType: " + logModel.LogType + ", skipping...");
+					linearDone();
+					break;
+			}
 		}
 
 		void OnPresentedLog(EncounterLogModel logModel)
@@ -180,31 +201,6 @@ namespace LunraGames.SubLight.Presenters
 				OnHandledLog(logModel, logModel.NextLog);
 			}
 			else Debug.LogError("Unrecognized LogType: " + logModel.LogType);
-		}
-
-		void OnLogicLog(EncounterLogModel logModel)
-		{
-			// Some logic may be halting, so we have a done action for them to
-			// call when they're finished.
-			Action linearDone = () => OnHandledLog(logModel, logModel.NextLog);
-			Action<string> nonLinearDone = nextLog => OnHandledLog(logModel, nextLog);
-
-			switch(logModel.LogType)
-			{
-				case EncounterLogTypes.KeyValue:
-					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
-					break;
-				case EncounterLogTypes.Inventory:
-					OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
-					break;
-				case EncounterLogTypes.Switch:
-					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
-					break;
-				default:
-					Debug.LogError("Unrecognized Logic LogType: " + logModel.LogType + ", skipping...");
-					linearDone();
-					break;
-			}
 		}
 
 		void OnKeyValueLog(KeyValueEncounterLogModel logModel, Action done)
@@ -338,7 +334,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnSwitchLogFilter(
 			bool? result, 
 			string resultId, 
-			List<EncounterLogSwitchEdgeModel> remaining, 
+			List<SwitchEdgeModel> remaining, 
 			Action<RequestStatus, string> done
 		)
 		{
