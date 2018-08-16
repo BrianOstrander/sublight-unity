@@ -744,7 +744,20 @@ namespace LunraGames.SubLight
 			);
 			if (selectionMade) edge.NextLogId.Value = selection;
 
-			GUILayout.Label("more info here");
+			edge.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", edge.Message.Value);
+
+			GUILayout.BeginHorizontal();
+			{
+				edge.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !edge.NotAutoUsed.Value, GUILayout.Width(74f));
+				edge.AutoDisableInteractions.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable Interactions", "When this button is pressed, automatically disable future interactions the next time around."), edge.AutoDisableInteractions.Value, GUILayout.Width(152f));
+				edge.AutoDisableEnabled.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable", "When this button is pressed, automatically set this button to be disabled and invisible the next time around."), edge.AutoDisableEnabled.Value, GUILayout.Width(90f));
+			}
+			GUILayout.EndHorizontal();
+
+			EditorGUILayoutValueFilter.Field(new GUIContent("Used Filtering", "If this filter returns true, the button will appear used."), edge.UsedFiltering);
+			EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), edge.InteractableFiltering);
+			EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), edge.EnabledFiltering);
+
 			//EditorGUILayoutValueFilter.Field(
 			//	new GUIContent("Filtering", "Passing this filter is required to continue to the target log."),
 			//	edge.Filtering

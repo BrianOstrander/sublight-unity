@@ -21,8 +21,8 @@ namespace LunraGames.SubLight
 		{
 			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
-				GUILayout.Label(content, EditorStyles.boldLabel);
-				Values(model);
+				model.ShowValues.Value = EditorGUILayout.Foldout(model.ShowValues.Value, content);
+				if (model.ShowValues.Value) Values(model);
 			}
 			EditorGUILayoutExtensions.EndVertical();
 		}
