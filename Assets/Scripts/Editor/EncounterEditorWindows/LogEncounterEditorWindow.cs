@@ -758,10 +758,6 @@ namespace LunraGames.SubLight
 			EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), edge.InteractableFiltering);
 			EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), edge.EnabledFiltering);
 
-			//EditorGUILayoutValueFilter.Field(
-			//	new GUIContent("Filtering", "Passing this filter is required to continue to the target log."),
-			//	edge.Filtering
-			//);
 		}
 		#endregion
 

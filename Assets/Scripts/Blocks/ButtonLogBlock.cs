@@ -25,5 +25,16 @@ namespace LunraGames.SubLight
 			Interactable = interactable;
 			Click = click;
 		}
+
+		public ButtonLogBlock Duplicate(Action<Action> wrappedClick)
+		{
+			var oldClick = Click;
+			return new ButtonLogBlock(
+				Message,
+				Used,
+				Interactable,
+				() => wrappedClick(oldClick)
+			);
+		}
 	}
 }

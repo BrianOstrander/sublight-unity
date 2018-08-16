@@ -8,7 +8,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int index;
 		[JsonProperty] bool ignore;
 		[JsonProperty] string nextLogId;
-		[JsonProperty] ValueFilterModel filtering = new ValueFilterModel();
+		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> SwitchId;

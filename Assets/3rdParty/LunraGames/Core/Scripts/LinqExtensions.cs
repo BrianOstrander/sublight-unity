@@ -86,5 +86,15 @@ namespace LunraGames
 			if (entriesCount != second.Count()) return false;
 			return entries.Intersect(second).Count() == entriesCount;
 		}
+
+		public static bool None<T>(this IEnumerable<T> entries)
+		{
+			return !entries.Any();
+		}
+
+		public static bool None<T>(this IEnumerable<T> entries, Func<T, bool> predicate)
+		{
+			return !entries.Any(predicate);
+		}
 	}
 }

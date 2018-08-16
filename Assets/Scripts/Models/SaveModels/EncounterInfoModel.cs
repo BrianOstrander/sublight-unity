@@ -10,7 +10,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 		[JsonProperty] string hook;
-		[JsonProperty] ValueFilterModel filtering = new ValueFilterModel();
+		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];

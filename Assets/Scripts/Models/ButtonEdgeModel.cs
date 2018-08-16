@@ -12,9 +12,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool notAutoUsed;
 		[JsonProperty] bool autoDisableInteractions;
 		[JsonProperty] bool autoDisableEnabled;
-		[JsonProperty] ValueFilterModel usedFiltering = new ValueFilterModel();
-		[JsonProperty] ValueFilterModel interactableFiltering = new ValueFilterModel();
-		[JsonProperty] ValueFilterModel enabledFiltering = new ValueFilterModel();
+		[JsonProperty] ValueFilterModel usedFiltering = ValueFilterModel.Default(false);
+		[JsonProperty] ValueFilterModel interactableFiltering = ValueFilterModel.Default();
+		[JsonProperty] ValueFilterModel enabledFiltering = ValueFilterModel.Default();
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> ButtonId;

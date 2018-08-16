@@ -286,11 +286,11 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndHorizontal();
 
-				if (!model.Logs.All.Value.Any(l => l.Beginning.Value))
+				if (model.Logs.All.Value.None(l => l.Beginning.Value))
 				{
 					EditorGUILayout.HelpBox("No \"Beginning\" log has been specified!", MessageType.Error);
 				}
-				if (!model.Logs.All.Value.Any(l => l.Ending.Value))
+				if (model.Logs.All.Value.None(l => l.Ending.Value))
 				{
 					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
 				}

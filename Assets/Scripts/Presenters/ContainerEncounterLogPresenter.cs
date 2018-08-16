@@ -410,7 +410,7 @@ namespace LunraGames.SubLight.Presenters
 				next.Message.Value,
 				false,
 				true,
-				() => done(next.NextLogId.Value)
+				() => OnButtonLogClick(next, () => done(next.NextLogId.Value))
 			);
 
 			if (next.AutoDisableEnabled.Value)
@@ -619,18 +619,81 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			Debug.Log("TODO: spawning a button presenter!");
+			var current = new ButtonEncounterLogPresenter(model, logModel, buttons.ToArray());
+			current.Show(View.EntryArea, OnShownLog);
+			entries.Add(current);
+		}
 
-			//var current = handler(model, logModel);
-			//current.Show(View.EntryArea, OnShownLog);
-			//entries.Add(current);
+		void OnButtonLogClick(ButtonEdgeModel edge, Action done)
+		{
+			if (!edge.NotAutoUsed)
+			{
+				// We need to set this to be used.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Set(
+						KeyValueTargets.Encounter,
+						edge.AutoUsedKey,
+						true,
+						result => OnButtonLogClickAutoUse(edge, done)
+					)
+				);
+			}
+			else
+			{
+				// Bypass setting it to be used.
+				OnButtonLogClickAutoUse(edge, done);
+			}
+		}
 
-			//OnHandledLog(logModel, logModel.NextLog);
+		void OnButtonLogClickAutoUse(ButtonEdgeModel edge, Action done)
+		{
+			if (edge.AutoDisableInteractions)
+			{
+				// We need to disable future interactions with this.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Set(
+						KeyValueTargets.Encounter,
+						edge.AutoDisabledInteractionsKey,
+						true,
+						result => OnButtonLogClickAutoDisableInteractions(edge, done)
+					)
+				);
+			}
+			else
+			{
+				// Bypass setting future interactions.
+				OnButtonLogClickAutoDisableInteractions(edge, done);
+			}
+		}
+
+		void OnButtonLogClickAutoDisableInteractions(ButtonEdgeModel edge, Action done)
+		{
+			if (edge.AutoDisableEnabled)
+			{
+				// We need to disable this button for future interactions.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Set(
+						KeyValueTargets.Encounter,
+						edge.AutoDisabledKey,
+						true,
+						result => OnButtonLogClickAutoDisableEnabled(edge, done)
+					)
+				);
+			}
+			else
+			{
+				// Bypass disabling this button.
+				OnButtonLogClickAutoDisableEnabled(edge, done);
+			}
+		}
+
+		void OnButtonLogClickAutoDisableEnabled(ButtonEdgeModel edge, Action done)
+		{
+			done();
 		}
 
 		void OnHandledLog(EncounterLogModel logModel, string nextLogId)
 		{
-			// TODO: Unlock done button when end is reached.
 			if (logModel.Ending.Value)
 			{
 				View.DoneEnabled = true;
