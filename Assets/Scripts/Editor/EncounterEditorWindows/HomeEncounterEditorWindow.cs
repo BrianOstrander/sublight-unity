@@ -197,7 +197,7 @@ namespace LunraGames.SubLight
 
 		void OnHomeSelectedGeneral(EncounterInfoModel model)
 		{
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -245,12 +245,12 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndVertical();
 			}
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 		}
 
 		void OnHomeSelectedCrewLogs(EncounterInfoModel model)
 		{
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -295,11 +295,11 @@ namespace LunraGames.SubLight
 					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
 				}
 			}
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 
 			homeCrewLogsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeCrewLogsScroll), false, true).y;
 			{
-				EditorGUI.BeginChangeCheck();
+				EditorGUIExtensions.BeginChangeCheck();
 				{
 					var deleted = string.Empty;
 					var beginning = string.Empty;
@@ -351,7 +351,7 @@ namespace LunraGames.SubLight
 						indexSwap1.Index.Value = swap0;
 					}
 				}
-				selectedEncounterModified |= EditorGUI.EndChangeCheck();
+				EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 			}
 			GUILayout.EndScrollView();
 		}

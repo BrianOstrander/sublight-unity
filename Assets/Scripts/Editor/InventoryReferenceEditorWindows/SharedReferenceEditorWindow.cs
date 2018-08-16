@@ -1,6 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
+using LunraGamesEditor;
+
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
@@ -23,7 +25,7 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.Hidden.Value = EditorGUILayout.Toggle("Hidden", model.Hidden.Value);
 				model.InventoryId.Value = reference.SetMetaKey(MetaKeyConstants.InventoryReference.InventoryId, EditorGUILayout.TextField("Inventory Id", model.InventoryId.Value));
@@ -31,7 +33,7 @@ namespace LunraGames.SubLight
 				reference.Meta.Value = model.Name;
 				model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
 			}
-			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 
 			GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(16f));
 		}

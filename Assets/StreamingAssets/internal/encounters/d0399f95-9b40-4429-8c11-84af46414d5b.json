@@ -45,6 +45,7 @@
             "buttonId": "46214372-a70a-4496-a5e4-d665ee5a5139",
             "nextLogId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6",
             "usedFiltering": {
+              "showValues": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": []

@@ -70,14 +70,14 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndVertical();
 
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.PauseChangeCheck();
 			{
 				// Pausing checks for foldout, since this shouldn't signal that the object is savable.
 				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.grey);
 				model.ShowNotes.Value = EditorGUILayout.Foldout(model.ShowNotes.Value, new GUIContent("Notes", "Internal notes for production."), true);
 				if (!model.HasNotes) EditorGUILayoutExtensions.PopColor();
 			}
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.UnPauseChangeCheck();
 
 			if (model.ShowNotes.Value)
 			{
