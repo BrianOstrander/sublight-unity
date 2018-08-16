@@ -1,5 +1,6 @@
 {
   "orderWeight": 2.0,
+  "hidden": true,
   "encounterId": "85c9e84c-e797-4488-804d-4bfbee6a36b5",
   "name": "Switch Test 0",
   "hook": "Switch Test 0",
@@ -117,9 +118,12 @@
         ],
         "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
         "index": 1,
-        "logId": "e051148c-fcdd-468a-a708-fd3bd39ddbf2"
+        "logId": "e051148c-fcdd-468a-a708-fd3bd39ddbf2",
+        "showNotes": true,
+        "notes": ""
       }
-    ]
+    ],
+    "buttonLogs": []
   },
   "version": 4,
   "meta": "Switch Test 0",

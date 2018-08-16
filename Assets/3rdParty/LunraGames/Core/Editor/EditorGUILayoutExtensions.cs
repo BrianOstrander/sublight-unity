@@ -253,6 +253,9 @@ namespace LunraGamesEditor
 				// Is Field
 				GUILayout.BeginHorizontal();
 				{
+					// Insert zero width button so we preserve the focused UI element when switching to an area.
+					GUILayout.Button(GUIContent.none, GUIStyle.none, GUILayout.Width(0f));
+					GUILayout.Space(-4f);
 					if (nullContent) value = EditorGUILayout.TextField(value);
 					else value = EditorGUILayout.TextField(content, value);
 					PushEnabled(value != null);

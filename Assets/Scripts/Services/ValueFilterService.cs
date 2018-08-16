@@ -23,6 +23,12 @@ namespace LunraGames.SubLight
 		{
 			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();
 
+			if (remaining.None())
+			{
+				done(!filter.FalseByDefault.Value);
+				return;
+			}
+
 			bool? anyResult = null;
 			bool? allResult = null;
 			bool? noneResult = null;

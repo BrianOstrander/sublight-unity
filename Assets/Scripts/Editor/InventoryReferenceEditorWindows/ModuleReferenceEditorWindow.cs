@@ -24,7 +24,7 @@ namespace LunraGames.SubLight
 			// We do this to force caching of resource info.
 			beforeSave = () => model.Slots.All.Value = model.Slots.All.Value;
 
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.IsRoot.Value = EditorGUILayout.Toggle("Is Root", model.IsRoot.Value);
 				model.MinimumLifespan.Value = EditorGUILayoutDayTime.FieldYear(
@@ -41,7 +41,7 @@ namespace LunraGames.SubLight
 					model.CurveLifespan.Value
 				);
 			}
-			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 
 			OnListModuleSlots(reference);
 		}
@@ -50,7 +50,7 @@ namespace LunraGames.SubLight
 		{
 			var model = reference.Model.Value;
 
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -78,11 +78,11 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndHorizontal();
 			}
-			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 
 			moduleSlotsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, moduleSlotsScroll), false, true).y;
 			{
-				EditorGUI.BeginChangeCheck();
+				EditorGUIExtensions.BeginChangeCheck();
 				{
 					var deleted = string.Empty;
 
@@ -143,7 +143,7 @@ namespace LunraGames.SubLight
 						indexSwap1.Index.Value = swap0;
 					}
 				}
-				selectedReferenceModified |= EditorGUI.EndChangeCheck();
+				EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 			}
 			GUILayout.EndScrollView();
 		}

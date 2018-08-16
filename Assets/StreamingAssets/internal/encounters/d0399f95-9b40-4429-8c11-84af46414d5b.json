@@ -1,0 +1,140 @@
+{
+  "orderWeight": 2.0,
+  "hidden": true,
+  "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
+  "name": "Button Test 0",
+  "hook": "Button Test 0",
+  "filtering": {
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "Button 0",
+        "message": "You pressed button 0!",
+        "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
+        "index": 2,
+        "logId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6"
+      },
+      {
+        "header": "Button 1",
+        "message": "You pressed button 1!",
+        "nextLogId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b",
+        "index": 3,
+        "logId": "60a170df-e303-4f92-930b-7efe34a443d6"
+      },
+      {
+        "header": "No Buttons",
+        "message": "No buttons interactable or enabled!",
+        "index": 5,
+        "ending": true,
+        "logId": "62cc974c-8f41-413b-ac1c-25e671f87e16"
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [],
+        "setBooleans": [
+          {
+            "operationId": "bcaee00a-96c3-44ca-8008-e5aadf13930e",
+            "target": "Encounter",
+            "key": "FirstOptionEnabled"
+          }
+        ],
+        "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
+        "beginning": true,
+        "logId": "3f84dcd0-b76a-4904-baf9-658a5c5f5b45"
+      },
+      {
+        "setStrings": [],
+        "setBooleans": [
+          {
+            "value": true,
+            "operationId": "452946dc-e647-433e-8aac-4e074bfabf9b",
+            "target": "Encounter",
+            "key": "FirstOptionEnabled"
+          }
+        ],
+        "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
+        "index": 4,
+        "logId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b"
+      }
+    ],
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "buttonId": "46214372-a70a-4496-a5e4-d665ee5a5139",
+            "message": "Some button once told me",
+            "nextLogId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "target": "Encounter",
+                  "key": "FirstOptionEnabled",
+                  "filterId": "2e213282-8976-43ef-8dd9-fc81ba5e96ee",
+                  "group": "All",
+                  "filterValue": true
+                }
+              ],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "11c8796d-81b8-4e17-9058-e3e48686f133",
+            "index": 1,
+            "message": "The world is gunna roll me",
+            "nextLogId": "60a170df-e303-4f92-930b-7efe34a443d6",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          }
+        ],
+        "nextLogId": "62cc974c-8f41-413b-ac1c-25e671f87e16",
+        "index": 1,
+        "logId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb"
+      }
+    ]
+  },
+  "version": 4,
+  "meta": "Button Test 0",
+  "metaKeyValues": {
+    "EncounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe"
+  },
+  "created": "2018-08-15T10:43:00.701579-07:00",
+  "modified": "2018-08-15T10:43:00.701579-07:00",
+  "SaveType": "EncounterInfo"
+}

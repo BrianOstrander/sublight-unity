@@ -163,9 +163,33 @@ namespace LunraGames.SubLight.Presenters
 			nextLog = null;
 			nextLogDelay = null;
 
-			if (EncounterLogValidator.Presented.Contains(logModel.LogType)) OnPresentedLog(logModel);
-			else if (EncounterLogValidator.Logic.Contains(logModel.LogType)) OnLogicLog(logModel);
-			else Debug.LogError("Unrecognized LogType: " + logModel.LogType);
+			// Some logic may be halting, so we have a done action for them to
+			// call when they're finished.
+			Action linearDone = () => OnHandledLog(logModel, logModel.NextLog);
+			Action<string> nonLinearDone = nextLog => OnHandledLog(logModel, nextLog);
+
+			switch(logModel.LogType)
+			{
+				case EncounterLogTypes.Text:
+					OnPresentedLog(logModel);
+					break;
+				case EncounterLogTypes.KeyValue:
+					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
+					break;
+				case EncounterLogTypes.Inventory:
+					OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
+					break;
+				case EncounterLogTypes.Switch:
+					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
+					break;
+				case EncounterLogTypes.Button:
+					OnButtonLog(logModel as ButtonEncounterLogModel, nonLinearDone);
+					break;
+				default:
+					Debug.LogError("Unrecognized LogType: " + logModel.LogType + ", skipping...");
+					linearDone();
+					break;
+			}
 		}
 
 		void OnPresentedLog(EncounterLogModel logModel)
@@ -180,31 +204,6 @@ namespace LunraGames.SubLight.Presenters
 				OnHandledLog(logModel, logModel.NextLog);
 			}
 			else Debug.LogError("Unrecognized LogType: " + logModel.LogType);
-		}
-
-		void OnLogicLog(EncounterLogModel logModel)
-		{
-			// Some logic may be halting, so we have a done action for them to
-			// call when they're finished.
-			Action linearDone = () => OnHandledLog(logModel, logModel.NextLog);
-			Action<string> nonLinearDone = nextLog => OnHandledLog(logModel, nextLog);
-
-			switch(logModel.LogType)
-			{
-				case EncounterLogTypes.KeyValue:
-					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
-					break;
-				case EncounterLogTypes.Inventory:
-					OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
-					break;
-				case EncounterLogTypes.Switch:
-					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
-					break;
-				default:
-					Debug.LogError("Unrecognized Logic LogType: " + logModel.LogType + ", skipping...");
-					linearDone();
-					break;
-			}
 		}
 
 		void OnKeyValueLog(KeyValueEncounterLogModel logModel, Action done)
@@ -338,7 +337,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnSwitchLogFilter(
 			bool? result, 
 			string resultId, 
-			List<EncounterLogSwitchEdgeModel> remaining, 
+			List<SwitchEdgeModel> remaining, 
 			Action<RequestStatus, string> done
 		)
 		{
@@ -371,9 +370,330 @@ namespace LunraGames.SubLight.Presenters
 			else done(logModel.NextLog);
 		}
 
+		void OnButtonLog(ButtonEncounterLogModel logModel, Action<string> done)
+		{
+			var buttons = logModel.Buttons.Value.Where(e => !e.Ignore.Value && !string.IsNullOrEmpty(e.NextLogId.Value)).OrderBy(e => e.Index.Value).ToList();
+
+			Action<RequestStatus, List<ButtonLogBlock>> filteringDone = (status, filtered) => OnButtonLogDone(status, filtered, logModel, done);
+
+			OnButtonLogFilter(
+				null,
+				buttons,
+				new List<ButtonLogBlock>(),
+				done,
+				filteringDone
+			);
+		}
+
+		void OnButtonLogFilter(
+			ButtonLogBlock? result,
+			List<ButtonEdgeModel> remaining,
+			List<ButtonLogBlock> filtered,
+			Action<string> done,
+			Action<RequestStatus, List<ButtonLogBlock>> filteringDone
+		)
+		{
+			if (result.HasValue) filtered.Add(result.Value);
+
+			if (!remaining.Any())
+			{
+				// No remaining to filter.
+				if (filtered.Where(f => f.Interactable).Any()) filteringDone(RequestStatus.Success, filtered); // There are interactable buttons.
+				else filteringDone(RequestStatus.Failure, null); // There are no interactable buttons.
+				return;
+			}
+
+			Action<ButtonLogBlock?> nextDone = filterResult => OnButtonLogFilter(filterResult, remaining, filtered, done, filteringDone);
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+			var possibleResult = new ButtonLogBlock(
+				next.Message.Value,
+				false,
+				true,
+				() => OnButtonLogClick(next, () => done(next.NextLogId.Value))
+			);
+
+			if (next.AutoDisableEnabled.Value)
+			{
+				// When this button is pressed, it gets disabled, so we have to check.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Get(
+						KeyValueTargets.Encounter,
+						next.AutoDisabledKey,
+						kvResult => OnButtonLogAutoDisabled(kvResult, next, possibleResult, nextDone)
+					)
+				);
+			}
+			else
+			{
+				// Bypass the auto disabled check.
+				OnButtonLogAutoDisabled(
+					null,
+					next,
+					possibleResult,
+					nextDone
+				);
+			}
+		}
+
+		void OnButtonLogAutoDisabled(
+			KeyValueResult<bool>? kvResult,
+			ButtonEdgeModel edge,
+			ButtonLogBlock possibleResult,
+			Action<ButtonLogBlock?> nextDone
+		)
+		{
+			if (kvResult.HasValue)
+			{
+				// We actually did a disabled check, so see the result.
+				if (kvResult.Value.Value)
+				{
+					// It has been auto disabled.
+					nextDone(null);
+					return;
+				}
+			}
+
+			if (edge.AutoDisableInteractions.Value)
+			{
+				// When this button is pressed, interactions get disabled, so we have to check.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Get(
+						KeyValueTargets.Encounter,
+						edge.AutoDisabledInteractionsKey,
+						interactionKvResult => OnButtonLogAutoDisabledInteractions(interactionKvResult, edge, possibleResult, nextDone)
+					)
+				);
+			}
+			else
+			{
+				// Bypass the auto disable interactions check.
+				OnButtonLogAutoDisabledInteractions(
+					null,
+					edge,
+					possibleResult,
+					nextDone
+				);
+			}
+		}
+
+		void OnButtonLogAutoDisabledInteractions(
+			KeyValueResult<bool>? kvResult,
+			ButtonEdgeModel edge,
+			ButtonLogBlock possibleResult,
+			Action<ButtonLogBlock?> nextDone
+		)
+		{
+			if (kvResult.HasValue)
+			{
+				// We actually did a disabled interaction check, so set the result.
+				possibleResult.Interactable = !kvResult.Value.Value;
+			}
+
+			if (!edge.NotAutoUsed.Value)
+			{
+				// When this button is pressed, it gets marked as used, so we have to check to see if that happened.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Get(
+						KeyValueTargets.Encounter,
+						edge.AutoUsedKey,
+						autoUsedKvResult => OnButtonLogAutoUsed(autoUsedKvResult, edge, possibleResult, nextDone)
+					)
+				);
+			}
+			else
+			{
+				// Bypass the auto used check.
+				OnButtonLogAutoUsed(
+					null,
+					edge,
+					possibleResult,
+					nextDone
+				);
+			}
+		}
+
+		void OnButtonLogAutoUsed(
+			KeyValueResult<bool>? kvResult,
+			ButtonEdgeModel edge,
+			ButtonLogBlock possibleResult,
+			Action<ButtonLogBlock?> nextDone
+		)
+		{
+			if (kvResult.HasValue)
+			{
+				// We actually did a disabled interaction check, so set the result.
+				possibleResult.Used = kvResult.Value.Value;
+			}
+
+			App.ValueFilter.Filter(
+				filterResult => OnButtonLogEnabledFiltering(filterResult, edge, possibleResult, nextDone),
+				edge.EnabledFiltering,
+				model
+			);
+		}
+
+		void OnButtonLogEnabledFiltering(
+			bool filteringResult,
+			ButtonEdgeModel edge,
+			ButtonLogBlock possibleResult,
+			Action<ButtonLogBlock?> nextDone
+		)
+		{
+			if (!filteringResult)
+			{
+				// This button isn't enabled.
+				nextDone(null);
+				return;
+			}
+
+			if (possibleResult.Interactable)
+			{
+				// It hasn't automatically been disabled, so we check the filter.
+				App.ValueFilter.Filter(
+					filterResult => OnButtonLogInteractableFiltering(filterResult, edge, possibleResult, nextDone),
+					edge.InteractableFiltering,
+					model
+				);
+			}
+			else
+			{
+				// Already not interactable, so bypass the filter.
+				OnButtonLogInteractableFiltering(
+					false,
+					edge,
+					possibleResult,
+					nextDone
+				);
+			}
+		}
+
+		void OnButtonLogInteractableFiltering(
+			bool filteringResult,
+			ButtonEdgeModel edge,
+			ButtonLogBlock possibleResult,
+			Action<ButtonLogBlock?> nextDone
+		)
+		{
+			possibleResult.Interactable &= filteringResult;
+
+			if (!possibleResult.Used)
+			{
+				// Hasn't been auto marked as used, so we have to check the filter.
+				App.ValueFilter.Filter(
+					filterResult => OnButtonLogUsedFiltering(filterResult, edge, possibleResult, nextDone),
+					edge.UsedFiltering,
+					model
+				);
+			}
+			else
+			{
+				// Auto using made it used, so we bypass the filter.
+				OnButtonLogUsedFiltering(
+					true,
+					edge,
+					possibleResult,
+					nextDone
+				);
+			}
+		}
+
+		void OnButtonLogUsedFiltering(
+			bool filteringResult,
+			ButtonEdgeModel edge,
+			ButtonLogBlock possibleResult,
+			Action<ButtonLogBlock?> nextDone
+		)
+		{
+			possibleResult.Used |= filteringResult;
+
+			nextDone(possibleResult);
+		}
+
+		void OnButtonLogDone(RequestStatus status, List<ButtonLogBlock> buttons, ButtonEncounterLogModel logModel, Action<string> done)
+		{
+			if (status != RequestStatus.Success)
+			{
+				// No enabled and interactable buttons found.
+				done(logModel.NextLog);
+				return;
+			}
+
+			var current = new ButtonEncounterLogPresenter(model, logModel, buttons.ToArray());
+			current.Show(View.EntryArea, OnShownLog);
+			entries.Add(current);
+		}
+
+		void OnButtonLogClick(ButtonEdgeModel edge, Action done)
+		{
+			if (!edge.NotAutoUsed)
+			{
+				// We need to set this to be used.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Set(
+						KeyValueTargets.Encounter,
+						edge.AutoUsedKey,
+						true,
+						result => OnButtonLogClickAutoUse(edge, done)
+					)
+				);
+			}
+			else
+			{
+				// Bypass setting it to be used.
+				OnButtonLogClickAutoUse(edge, done);
+			}
+		}
+
+		void OnButtonLogClickAutoUse(ButtonEdgeModel edge, Action done)
+		{
+			if (edge.AutoDisableInteractions)
+			{
+				// We need to disable future interactions with this.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Set(
+						KeyValueTargets.Encounter,
+						edge.AutoDisabledInteractionsKey,
+						true,
+						result => OnButtonLogClickAutoDisableInteractions(edge, done)
+					)
+				);
+			}
+			else
+			{
+				// Bypass setting future interactions.
+				OnButtonLogClickAutoDisableInteractions(edge, done);
+			}
+		}
+
+		void OnButtonLogClickAutoDisableInteractions(ButtonEdgeModel edge, Action done)
+		{
+			if (edge.AutoDisableEnabled)
+			{
+				// We need to disable this button for future interactions.
+				App.Callbacks.KeyValueRequest(
+					KeyValueRequest.Set(
+						KeyValueTargets.Encounter,
+						edge.AutoDisabledKey,
+						true,
+						result => OnButtonLogClickAutoDisableEnabled(edge, done)
+					)
+				);
+			}
+			else
+			{
+				// Bypass disabling this button.
+				OnButtonLogClickAutoDisableEnabled(edge, done);
+			}
+		}
+
+		void OnButtonLogClickAutoDisableEnabled(ButtonEdgeModel edge, Action done)
+		{
+			done();
+		}
+
 		void OnHandledLog(EncounterLogModel logModel, string nextLogId)
 		{
-			// TODO: Unlock done button when end is reached.
 			if (logModel.Ending.Value)
 			{
 				View.DoneEnabled = true;

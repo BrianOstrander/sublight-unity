@@ -9,7 +9,16 @@ namespace LunraGames.SubLight.Models
 {
 	public class ValueFilterModel : Model
 	{
+		public static ValueFilterModel Default(bool defaultValue = true)
+		{
+			var result = new ValueFilterModel();
+			result.FalseByDefault.Value = !defaultValue;
+			return result;
+		}
+
 		#region Assigned Values
+		[JsonProperty] bool showValues;
+		[JsonProperty] bool falseByDefault;
 		[JsonProperty]
 		BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
 		[JsonProperty]
@@ -20,11 +29,17 @@ namespace LunraGames.SubLight.Models
 
 		#region Derived Values
 		[JsonIgnore]
+		public readonly ListenerProperty<bool> ShowValues;
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> FalseByDefault;
+		[JsonIgnore]
 		public readonly ListenerProperty<IValueFilterEntryModel[]> Filters;
 		#endregion
 
 		public ValueFilterModel()
 		{
+			ShowValues = new ListenerProperty<bool>(value => showValues = value, () => showValues);
+			FalseByDefault = new ListenerProperty<bool>(value => falseByDefault = value, () => falseByDefault);
 			Filters = new ListenerProperty<IValueFilterEntryModel[]>(OnSetFilters, OnGetFilters);
 		}
 

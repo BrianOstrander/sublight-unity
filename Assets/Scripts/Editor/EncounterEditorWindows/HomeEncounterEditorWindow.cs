@@ -197,7 +197,7 @@ namespace LunraGames.SubLight
 
 		void OnHomeSelectedGeneral(EncounterInfoModel model)
 		{
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -245,12 +245,12 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndVertical();
 			}
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 		}
 
 		void OnHomeSelectedCrewLogs(EncounterInfoModel model)
 		{
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -275,6 +275,9 @@ namespace LunraGames.SubLight
 						case EncounterLogTypes.Switch:
 							NewEncounterLog<SwitchEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
+						case EncounterLogTypes.Button:
+							NewEncounterLog<ButtonEncounterLogModel>(model, nextIndex, isBeginning);
+							break;
 						default:
 							Debug.LogError("Unrecognized EncounterLogType:" + result);
 							break;
@@ -283,20 +286,20 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndHorizontal();
 
-				if (!model.Logs.All.Value.Any(l => l.Beginning.Value))
+				if (model.Logs.All.Value.None(l => l.Beginning.Value))
 				{
 					EditorGUILayout.HelpBox("No \"Beginning\" log has been specified!", MessageType.Error);
 				}
-				if (!model.Logs.All.Value.Any(l => l.Ending.Value))
+				if (model.Logs.All.Value.None(l => l.Ending.Value))
 				{
 					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
 				}
 			}
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 
 			homeCrewLogsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeCrewLogsScroll), false, true).y;
 			{
-				EditorGUI.BeginChangeCheck();
+				EditorGUIExtensions.BeginChangeCheck();
 				{
 					var deleted = string.Empty;
 					var beginning = string.Empty;
@@ -348,7 +351,7 @@ namespace LunraGames.SubLight
 						indexSwap1.Index.Value = swap0;
 					}
 				}
-				selectedEncounterModified |= EditorGUI.EndChangeCheck();
+				EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 			}
 			GUILayout.EndScrollView();
 		}

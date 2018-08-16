@@ -21,8 +21,20 @@ namespace LunraGames.SubLight
 		{
 			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
-				GUILayout.Label(content, EditorStyles.boldLabel);
-				Values(model);
+				GUILayout.BeginHorizontal();
+				{
+					EditorGUIExtensions.PauseChangeCheck();
+					{
+						model.ShowValues.Value = EditorGUILayout.Foldout(model.ShowValues.Value, content);
+					}
+					EditorGUIExtensions.UnPauseChangeCheck();
+					//GUILayout.FlexibleSpace();
+					GUILayout.Label("Default", GUILayout.ExpandWidth(false));
+					model.FalseByDefault.Value = !EditorGUILayoutExtensions.ToggleButtonValue(!model.FalseByDefault.Value);
+				}
+				GUILayout.EndHorizontal();
+
+				if (model.ShowValues.Value) Values(model);
 			}
 			EditorGUILayoutExtensions.EndVertical();
 		}

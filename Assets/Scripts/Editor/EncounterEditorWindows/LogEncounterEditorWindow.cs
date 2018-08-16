@@ -70,14 +70,14 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndVertical();
 
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.PauseChangeCheck();
 			{
 				// Pausing checks for foldout, since this shouldn't signal that the object is savable.
 				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.grey);
 				model.ShowNotes.Value = EditorGUILayout.Foldout(model.ShowNotes.Value, new GUIContent("Notes", "Internal notes for production."), true);
 				if (!model.HasNotes) EditorGUILayoutExtensions.PopColor();
 			}
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.UnPauseChangeCheck();
 
 			if (model.ShowNotes.Value)
 			{
@@ -108,6 +108,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(infoModel, model as SwitchEncounterLogModel, nextModel);
+					break;
+				case EncounterLogTypes.Button:
+					OnButtonLog(infoModel, model as ButtonEncounterLogModel, nextModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -426,14 +429,14 @@ namespace LunraGames.SubLight
 			var deleted = string.Empty;
 			var isAlternate = false;
 
-			EncounterLogSwitchEdgeModel indexSwap0 = null;
-			EncounterLogSwitchEdgeModel indexSwap1 = null;
+			SwitchEdgeModel indexSwap0 = null;
+			SwitchEdgeModel indexSwap1 = null;
 			
 			var isMoving = Event.current.control;
 
 			var sorted = model.Switches.Value.OrderBy(l => l.Index.Value).ToList();
 			var sortedCount = sorted.Count;
-			EncounterLogSwitchEdgeModel last = null;
+			SwitchEdgeModel last = null;
 
 			GUILayout.BeginHorizontal();
 			{
@@ -498,7 +501,7 @@ namespace LunraGames.SubLight
 			{
 				index = model.Switches.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
 			}
-			var result = new EncounterLogSwitchEdgeModel();
+			var result = new SwitchEdgeModel();
 			result.SwitchId.Value = Guid.NewGuid().ToString();
 			result.Index.Value = index;
 			result.NextLogId.Value = targetLogId;
@@ -510,7 +513,7 @@ namespace LunraGames.SubLight
 			int maxCount, 
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
-			EncounterLogSwitchEdgeModel edge,
+			SwitchEdgeModel edge,
 			bool isMoving, 
 			out int indexDelta
 		)
@@ -549,7 +552,7 @@ namespace LunraGames.SubLight
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
 			EncounterLogModel nextModel,
-			EncounterLogSwitchEdgeModel edge
+			SwitchEdgeModel edge
 		)
 		{
 			string selection;
@@ -571,6 +574,190 @@ namespace LunraGames.SubLight
 				new GUIContent("Filtering", "Passing this filter is required to continue to the target log."),
 				edge.Filtering
 			);
+		}
+		#endregion
+
+		#region Button Logs
+		void OnButtonLog(
+			EncounterInfoModel infoModel,
+			ButtonEncounterLogModel model,
+			EncounterLogModel nextModel
+		)
+		{
+			string selection;
+			var selectionMade = OnLogPopup(
+				null,
+				"Append New Button: ",
+				infoModel,
+				model,
+				nextModel,
+				" <- Next",
+				new Dictionary<string, string> {
+					{ "- Select Target Log -", null },
+					{ "< Blank >", null }
+				},
+				out selection
+			);
+			if (selectionMade) OnButtonLogSpawn(infoModel, model, selection);
+
+			var deleted = string.Empty;
+			var isAlternate = false;
+
+			ButtonEdgeModel indexSwap0 = null;
+			ButtonEdgeModel indexSwap1 = null;
+
+			var isMoving = Event.current.control;
+
+			var sorted = model.Buttons.Value.OrderBy(l => l.Index.Value).ToList();
+			var sortedCount = sorted.Count;
+			ButtonEdgeModel last = null;
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Space(16f);
+				GUILayout.BeginVertical();
+				{
+					for (var i = 0; i < sortedCount; i++)
+					{
+						var current = sorted[i];
+						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
+						int currMoveDelta;
+
+						isAlternate = !isAlternate;
+
+						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
+						{
+
+							if (OnButtonLogEdgeHeader(i, sortedCount, infoModel, model, current, isMoving, out currMoveDelta)) deleted = current.ButtonId.Value;
+
+							if (currMoveDelta != 0)
+							{
+								indexSwap0 = current;
+								indexSwap1 = currMoveDelta == 1 ? next : last;
+							}
+
+							OnButtonLogEdge(infoModel, model, nextModel, current);
+
+							last = current;
+						}
+						EditorGUILayoutExtensions.EndVertical();
+					}
+				}
+				GUILayout.EndVertical();
+			}
+			GUILayout.EndHorizontal();
+
+			OnLinearLog(infoModel, model, nextModel);
+
+			if (!string.IsNullOrEmpty(deleted))
+			{
+				model.Buttons.Value = model.Buttons.Value.Where(e => e.ButtonId.Value != deleted).ToArray();
+			}
+
+			if (indexSwap0 != null && indexSwap1 != null)
+			{
+				var swap0 = indexSwap0.Index.Value;
+				var swap1 = indexSwap1.Index.Value;
+
+				indexSwap0.Index.Value = swap1;
+				indexSwap1.Index.Value = swap0;
+			}
+		}
+
+		void OnButtonLogSpawn(
+			EncounterInfoModel infoModel,
+			ButtonEncounterLogModel model,
+			string targetLogId
+		)
+		{
+			var index = 0;
+			if (model.Buttons.Value.Any())
+			{
+				index = model.Buttons.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
+			}
+			var result = new ButtonEdgeModel();
+			result.ButtonId.Value = Guid.NewGuid().ToString();
+			result.Index.Value = index;
+			result.NextLogId.Value = targetLogId;
+			model.Buttons.Value = model.Buttons.Value.Append(result).ToArray();
+		}
+
+		bool OnButtonLogEdgeHeader(
+			int count,
+			int maxCount,
+			EncounterInfoModel infoModel,
+			ButtonEncounterLogModel model,
+			ButtonEdgeModel edge,
+			bool isMoving,
+			out int indexDelta
+		)
+		{
+			var deleted = false;
+			indexDelta = 0;
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("#" + (count + 1) + " | Button", EditorStyles.boldLabel);
+				if (isMoving)
+				{
+					GUILayout.Space(10f);
+					EditorGUILayoutExtensions.PushEnabled(0 < count);
+					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = -1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = 1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+				}
+				EditorGUILayoutExtensions.PushEnabled(!isMoving);
+				deleted = EditorGUILayoutExtensions.XButton();
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+			GUILayout.EndHorizontal();
+			return deleted;
+		}
+
+		void OnButtonLogEdge(
+			EncounterInfoModel infoModel,
+			ButtonEncounterLogModel model,
+			EncounterLogModel nextModel,
+			ButtonEdgeModel edge
+		)
+		{
+			string selection;
+			var selectionMade = OnLogPopup(
+				edge.NextLogId.Value,
+				"Target Log: ",
+				infoModel,
+				model,
+				nextModel,
+				" <- Next",
+				new Dictionary<string, string> {
+					{ "- Select Target Log -", null }
+				},
+				out selection
+			);
+			if (selectionMade) edge.NextLogId.Value = selection;
+
+			edge.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", edge.Message.Value);
+
+			GUILayout.BeginHorizontal();
+			{
+				edge.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !edge.NotAutoUsed.Value, GUILayout.Width(74f));
+				edge.AutoDisableInteractions.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable Interactions", "When this button is pressed, automatically disable future interactions the next time around."), edge.AutoDisableInteractions.Value, GUILayout.Width(152f));
+				edge.AutoDisableEnabled.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable", "When this button is pressed, automatically set this button to be disabled and invisible the next time around."), edge.AutoDisableEnabled.Value, GUILayout.Width(90f));
+			}
+			GUILayout.EndHorizontal();
+
+			EditorGUILayoutValueFilter.Field(new GUIContent("Used Filtering", "If this filter returns true, the button will appear used."), edge.UsedFiltering);
+			EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), edge.InteractableFiltering);
+			EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), edge.EnabledFiltering);
+
 		}
 		#endregion
 

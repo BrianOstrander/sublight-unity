@@ -2,13 +2,13 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncounterLogSwitchEdgeModel : Model
+	public class SwitchEdgeModel : Model
 	{
 		[JsonProperty] string switchId;
 		[JsonProperty] int index;
 		[JsonProperty] bool ignore;
 		[JsonProperty] string nextLogId;
-		[JsonProperty] ValueFilterModel filtering = new ValueFilterModel();
+		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> SwitchId;
@@ -21,7 +21,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public ValueFilterModel Filtering { get { return filtering; } }
 
-		public EncounterLogSwitchEdgeModel()
+		public SwitchEdgeModel()
 		{
 			SwitchId = new ListenerProperty<string>(value => switchId = value, () => switchId);
 			Index = new ListenerProperty<int>(value => index = value, () => index);
