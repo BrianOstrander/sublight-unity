@@ -1,0 +1,314 @@
+{
+  "encounterId": "50ca77ea-9380-421c-b570-019144c98047",
+  "name": "We Moved Too Fast",
+  "hook": "The crushed remains of a ship can be seen orbiting closely to the event horizon of this system's blackhole.",
+  "filtering": {
+    "showValues": true,
+    "falseByDefault": true,
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "Completed",
+        "filterId": "1520ad34-8ed8-4b27-aee6-55a00517ae63",
+        "group": "All",
+        "filterValue": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66"
+      }
+    ]
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "A. Vex",
+        "message": "We're getting down deep in the well of this blackhole, not sure how they managed to get such a large ark this close to the event horizon.",
+        "nextLogId": "3bc4f282-5afe-40e5-9e00-b811b24938dd",
+        "beginning": true,
+        "logId": "ffe513bc-e47c-4888-b260-b4966553a136",
+        "duration": 1.0
+      },
+      {
+        "header": "C. Cortez",
+        "message": "Yeah, these gravitational waves are bucking our shuttle wildly, you hear that mother? That's the sound of our hull creaking, we're lucky our shuttle is so tiny, anything bigger and these forces would shear us in half!",
+        "nextLogId": "84027803-bf8e-47d7-98df-ef7d4ae4d592",
+        "index": 1,
+        "logId": "3bc4f282-5afe-40e5-9e00-b811b24938dd"
+      },
+      {
+        "header": "A. Vex",
+        "message": "Okay, we're pulling up alongside the wreck... and wow, what a number was done to their ark. Hey Cortez, can you do a spectral scan, see if there's any evidence of weapon fire? I wanna know what brought them so far down here.",
+        "nextLogId": "ca8c6f05-7dfc-440f-b429-af651ce18479",
+        "index": 3,
+        "logId": "15f40baf-1a2c-4da8-8fe7-559cc5653f79",
+        "duration": 1.0
+      },
+      {
+        "header": "C. Cortez",
+        "message": "Running scan... not picking up any obvious traces of weapon fire. Fracture patterns and residue on the propulsion unit of the ark suggest their engines were running full tilt when the damage occured. This ark didn't drift here as a derelict, it died here...",
+        "nextLogId": "26751d85-1a59-406f-be21-9df9ecf7e9ff",
+        "index": 4,
+        "logId": "ca8c6f05-7dfc-440f-b429-af651ce18479"
+      },
+      {
+        "header": "C. Cortez",
+        "message": "It's hard to see, the hull is pretty banged up, can we get some lights trained on it Vex?",
+        "nextLogId": "35bd3d57-7e76-4e4d-a344-e5a0a2a571c2",
+        "index": 6,
+        "logId": "7f334eb2-4529-46ba-9dd7-1ea3073f78c6",
+        "duration": 1.0
+      },
+      {
+        "header": "A. Vex",
+        "message": "Activating flood lights.",
+        "nextLogId": "4d863514-8157-4c91-b5b5-b68cc8238259",
+        "index": 7,
+        "logId": "35bd3d57-7e76-4e4d-a344-e5a0a2a571c2",
+        "duration": 1.0
+      },
+      {
+        "header": "C. Cortez",
+        "message": "Okay, that's better. Definetely a Mercury ship, it's got LSM markings... looks contemporary to our own ark... LSM Rosa, that ring any bells?",
+        "nextLogId": "c5de5ce1-bb81-45ee-9bc4-cc7b8ae66eb2",
+        "index": 8,
+        "logId": "4d863514-8157-4c91-b5b5-b68cc8238259",
+        "duration": 1.0
+      },
+      {
+        "header": "A. Vex",
+        "message": "Oh god, those poor souls. Yeah.. our ancestors crossed paths with them, they're the first ark we met since leaving Sol. They're the ones that encouraged us to keep going, towards Andromeda...",
+        "nextLogId": "e3a8f6fa-11d2-4bfe-82c4-3bf6f0db003e",
+        "index": 9,
+        "logId": "c5de5ce1-bb81-45ee-9bc4-cc7b8ae66eb2",
+        "duration": 1.0
+      },
+      {
+        "header": "C. Cortez",
+        "message": "Your call mother, but if you ask me it feels wrong to leave them drifting here...",
+        "nextLogId": "aa32f74e-d619-47f3-bed9-2d991eec55b6",
+        "index": 10,
+        "logId": "e3a8f6fa-11d2-4bfe-82c4-3bf6f0db003e"
+      },
+      {
+        "header": "C. Cortez",
+        "message": "Okay, feels wrong, but we'll see what we can siphon.",
+        "nextLogId": "70c1e4f6-680c-4c24-808e-4f33f6f3e78b",
+        "index": 14,
+        "logId": "611397ad-a2cc-4dc0-8c56-fcc3f6f2be9c"
+      },
+      {
+        "header": "C. Cortez",
+        "message": "I don't think they'd have wanted to be left like this, but okay, heading back mother.",
+        "nextLogId": "09b28b18-af0e-490a-a383-3ee6a60810c6",
+        "index": 16,
+        "logId": "ec85a9ec-71bb-4c7b-b0b6-7bcfe9d09e87"
+      },
+      {
+        "header": "C. Cortez",
+        "message": "Good call, we can nudge it into a decaying orbit around the blackhole. It's the least we can do...",
+        "nextLogId": "2efd07d6-851a-4f0a-8e34-92b8d1522bd4",
+        "index": 18,
+        "logId": "5aa0e214-27df-41eb-a4c2-9e8cb26156ec"
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [
+          {
+            "value": "Your crew was able to siphon 1 unit of fuel from the wreck of the LSM Rosa. With fueling operations complete, you leave the ark adrift in orbit around the blackhole, until it too gets consumed by the void one day.",
+            "operationId": "bd1049bc-922c-4830-96e2-109d55e1152a",
+            "target": "Encounter",
+            "key": "Summary"
+          }
+        ],
+        "setBooleans": [],
+        "index": 15,
+        "ending": true,
+        "logId": "70c1e4f6-680c-4c24-808e-4f33f6f3e78b"
+      },
+      {
+        "setStrings": [
+          {
+            "value": "Your crew safely aboard, you leave the crushed remains of the LSM Rosa adrift in orbit around the blackhole, until it too gets consumed by the void one day.",
+            "operationId": "6355069f-4b97-443e-87b9-3503c4128b04",
+            "target": "Encounter",
+            "key": "Summary"
+          }
+        ],
+        "setBooleans": [],
+        "index": 17,
+        "ending": true,
+        "logId": "09b28b18-af0e-490a-a383-3ee6a60810c6"
+      },
+      {
+        "setStrings": [
+          {
+            "value": "Your crew safely aboard, you watch as the remains of the LSM Rosa get torn up and consumed by the blackhole. They'll never reach Andromeda, but at least they'll have escaped the void...",
+            "operationId": "14545ce6-e7ae-4e1b-8a55-42662ca2ee66",
+            "target": "Encounter",
+            "key": "Summary"
+          }
+        ],
+        "setBooleans": [],
+        "index": 19,
+        "ending": true,
+        "logId": "2efd07d6-851a-4f0a-8e34-92b8d1522bd4"
+      }
+    ],
+    "inventoryLogs": [
+      {
+        "addResources": [
+          {
+            "value": {
+              "fuel": 1.0
+            },
+            "operationId": "2c3ea129-cf19-446e-85ba-85a07d91a7c4"
+          }
+        ],
+        "addInstances": [],
+        "nextLogId": "611397ad-a2cc-4dc0-8c56-fcc3f6f2be9c",
+        "index": 13,
+        "logId": "973a343d-1b7d-4660-ad72-728973d6b6b3"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "buttonId": "7b0e923e-16c3-4f5d-b371-7b02bda6072d",
+            "message": "Proceed with caution",
+            "nextLogId": "15f40baf-1a2c-4da8-8fe7-559cc5653f79",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          }
+        ],
+        "nextLogId": "15f40baf-1a2c-4da8-8fe7-559cc5653f79",
+        "index": 2,
+        "logId": "84027803-bf8e-47d7-98df-ef7d4ae4d592"
+      },
+      {
+        "buttons": [
+          {
+            "buttonId": "776010e8-d7e4-4122-acc6-255aacab6a9c",
+            "message": "Any identifying markings on the hull?",
+            "nextLogId": "7f334eb2-4529-46ba-9dd7-1ea3073f78c6",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          }
+        ],
+        "nextLogId": "7f334eb2-4529-46ba-9dd7-1ea3073f78c6",
+        "index": 5,
+        "logId": "26751d85-1a59-406f-be21-9df9ecf7e9ff"
+      },
+      {
+        "buttons": [
+          {
+            "buttonId": "d322c30e-d3c0-4620-a64b-66233e0ee573",
+            "message": "We need any fuel they have onboard",
+            "nextLogId": "973a343d-1b7d-4660-ad72-728973d6b6b3",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "5d94183e-79d8-43b0-975d-943329279513",
+            "index": 1,
+            "message": "Let them be",
+            "nextLogId": "ec85a9ec-71bb-4c7b-b0b6-7bcfe9d09e87",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "ebfa6d82-2c45-437a-a685-28bc20facbf8",
+            "index": 2,
+            "message": "Give them a final resting place",
+            "nextLogId": "5aa0e214-27df-41eb-a4c2-9e8cb26156ec",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          }
+        ],
+        "index": 11,
+        "logId": "aa32f74e-d619-47f3-bed9-2d991eec55b6"
+      }
+    ]
+  },
+  "version": 4,
+  "meta": "We Moved Too Fast",
+  "metaKeyValues": {
+    "EncounterId": "50ca77ea-9380-421c-b570-019144c98047"
+  },
+  "created": "2018-08-17T08:28:31.250783-07:00",
+  "modified": "2018-08-17T08:28:31.250783-07:00",
+  "SaveType": "EncounterInfo"
+}

@@ -19,6 +19,7 @@ namespace LunraGames.SubLight.Presenters
 		// TODO: Lol hacks.
 		static string CreateMD5(string input)
 		{
+			input = input ?? string.Empty;
 			// Use input string to calculate MD5 hash
 			using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
 			{

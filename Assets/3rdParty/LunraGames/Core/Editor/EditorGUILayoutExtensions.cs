@@ -234,17 +234,17 @@ namespace LunraGamesEditor
 			return values;
 		}
 
-		public static string TextDynamic(string value, int lengthLimit = 32)
+		public static string TextDynamic(string value, int lengthLimit = 32, bool leftOffset = true)
 		{
-			return TextDynamic(GUIContent.none, value, lengthLimit);
+			return TextDynamic(GUIContent.none, value, lengthLimit, leftOffset);
 		}
 
-		public static string TextDynamic(string label, string value, int lengthLimit = 32)
+		public static string TextDynamic(string label, string value, int lengthLimit = 32, bool leftOffset = true)
 		{
-			return TextDynamic(new GUIContent(label), value, lengthLimit);
+			return TextDynamic(new GUIContent(label), value, lengthLimit, leftOffset);
 		}
 
-		public static string TextDynamic(GUIContent content, string value, int lengthLimit = 32)
+		public static string TextDynamic(GUIContent content, string value, int lengthLimit = 32, bool leftOffset = true)
 		{
 			var nullContent = GUIContentExtensions.IsNullOrNone(content);
 			lengthLimit = nullContent ? lengthLimit * 2 : lengthLimit;
@@ -255,7 +255,7 @@ namespace LunraGamesEditor
 				{
 					// Insert zero width button so we preserve the focused UI element when switching to an area.
 					GUILayout.Button(GUIContent.none, GUIStyle.none, GUILayout.Width(0f));
-					GUILayout.Space(-4f);
+					if (leftOffset) GUILayout.Space(-4f);
 					if (nullContent) value = EditorGUILayout.TextField(value);
 					else value = EditorGUILayout.TextField(content, value);
 					PushEnabled(value != null);
