@@ -1,0 +1,27 @@
+{
+  "encounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66",
+  "name": "",
+  "filtering": {
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [],
+    "keyValueLogs": [],
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": []
+  },
+  "version": 4,
+  "meta": "",
+  "metaKeyValues": {
+    "EncounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66"
+  },
+  "created": "2018-08-16T16:48:01.072051-07:00",
+  "modified": "2018-08-16T16:48:01.072051-07:00",
+  "SaveType": "EncounterInfo"
+}
