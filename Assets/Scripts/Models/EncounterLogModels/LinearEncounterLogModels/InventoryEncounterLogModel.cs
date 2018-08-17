@@ -17,6 +17,8 @@ namespace LunraGames.SubLight.Models
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Inventory; } }
 
+		public override bool EditableDuration { get { return false; } }
+
 		public InventoryEncounterLogModel()
 		{
 			Operations = new ListenerProperty<InventoryOperationModel[]>(OnSetOperations, OnGetOperations);

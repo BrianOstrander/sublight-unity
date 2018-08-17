@@ -1,0 +1,36 @@
+{
+  "encounterId": "ff34ef9d-1eb2-4498-b139-e821dedff9bb",
+  "name": "We're Staying Put",
+  "hook": "A ship in low orbit is dismantling itself, and looks like they're getting ready to colonize the surface of a nearby planet.",
+  "filtering": {
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "Captain Iris Colt",
+        "message": "Greetings! LSM Beethoven reading you clearly. Captain Iris Colt here.",
+        "beginning": true,
+        "ending": true,
+        "logId": "23f92874-2b4e-4534-9e3f-263949457d18"
+      }
+    ],
+    "keyValueLogs": [],
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": []
+  },
+  "version": 4,
+  "meta": "We're Staying Put",
+  "metaKeyValues": {
+    "EncounterId": "ff34ef9d-1eb2-4498-b139-e821dedff9bb"
+  },
+  "created": "2018-08-17T08:23:23.578781-07:00",
+  "modified": "2018-08-17T08:23:23.578781-07:00",
+  "SaveType": "EncounterInfo"
+}
