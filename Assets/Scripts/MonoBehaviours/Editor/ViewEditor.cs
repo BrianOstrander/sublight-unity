@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[CustomEditor(typeof(View), true)]
 	public class ViewEditor : Editor
@@ -21,7 +21,7 @@ namespace LunraGames.SpaceFarm
 
 		void OnDefaultViews()
 		{
-			var prefabObject = PrefabUtility.GetPrefabParent(target);
+			var prefabObject = PrefabUtility.GetCorrespondingObjectFromSource(target);
 
 			if (prefabObject == null && PrefabUtility.GetPrefabObject(target) != null) prefabObject = target;
 

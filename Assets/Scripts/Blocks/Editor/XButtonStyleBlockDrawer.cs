@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[CustomPropertyDrawer(typeof(XButtonStyleBlock))]
 	public class XButtonStyleBlockDrawer : PropertyDrawer

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class SaveModel : Model
 	{
@@ -13,6 +14,7 @@ namespace LunraGames.SpaceFarm.Models
 
 		[JsonProperty] int version;
 		[JsonProperty] string meta;
+		[JsonProperty] Dictionary<string, string> metaKeyValues = new Dictionary<string, string>();
 		[JsonProperty] DateTime created;
 		[JsonProperty] DateTime modified;
 
@@ -40,10 +42,18 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Version;
 		/// <summary>
-		/// The name.
+		/// Typically used to store the name or some identifying data.
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Meta;
+		/// <summary>
+		/// More identifying data.
+		/// </summary>
+		/// <remarks>
+		/// Editing the dictionary returned won't modify the original one.
+		/// </remarks>
+		[JsonIgnore]
+		public readonly ListenerProperty<Dictionary<string, string>> MetaKeyValues;
 		/// <summary>
 		/// When this was created and saved.
 		/// </summary>
@@ -66,10 +76,10 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public string InternalPath
 		{
-			get 
+			get
 			{
 				if (!IsInternal) return null;
-				return "Assets"+Path.Value.Substring(Application.dataPath.Length);
+				return "Assets" + Path.Value.Substring(Application.dataPath.Length);
 			}
 		}
 
@@ -79,8 +89,64 @@ namespace LunraGames.SpaceFarm.Models
 			Path = new ListenerProperty<string>(value => path = value, () => path);
 			Version = new ListenerProperty<int>(value => version = value, () => version);
 			Meta = new ListenerProperty<string>(value => meta = value, () => meta);
+			MetaKeyValues = new ListenerProperty<Dictionary<string, string>>(OnSetKeyValues, OnGetMetaKeyValues);
 			Created = new ListenerProperty<DateTime>(value => created = value, () => created);
-			Modified= new ListenerProperty<DateTime>(value => modified = value, () => modified);
+			Modified = new ListenerProperty<DateTime>(value => modified = value, () => modified);
 		}
+
+		#region Utility
+		/// <summary>
+		/// Sets the meta key. If set to null, the value is removed completely.
+		/// </summary>
+		/// <param name="key">Key.</param>
+		/// <param name="value">Value.</param>
+		public string SetMetaKey(string key, string value)
+		{
+			if (key == null) throw new ArgumentNullException("key");
+
+			string currentValue;
+			if (metaKeyValues.TryGetValue(key, out currentValue))
+			{
+				if (value == null) OnRemoveKeyValue(key);
+				else if (currentValue != value) OnSetKeyValue(key, value);
+			}
+			else if (value != null) OnSetKeyValue(key, value);
+
+			return value;
+		}
+
+		/// <summary>
+		/// Gets the meta key. If it doesn't exist, null is returned.
+		/// </summary>
+		/// <returns>The meta key.</returns>
+		/// <param name="key">Key.</param>
+		public string GetMetaKey(string key)
+		{
+			if (key == null) throw new ArgumentNullException("key");
+
+			string currentValue;
+			if (metaKeyValues.TryGetValue(key, out currentValue)) return currentValue;
+			return null;
+		}
+		#endregion
+
+		#region Events
+		void OnSetKeyValues(Dictionary<string, string> newMetaKeyValues) { metaKeyValues = new Dictionary<string, string>(newMetaKeyValues); }
+		Dictionary<string, string> OnGetMetaKeyValues() { return new Dictionary<string, string>(metaKeyValues); }
+
+		void OnRemoveKeyValue(string key)
+		{
+			var newMetaKeyValues = MetaKeyValues.Value;
+			newMetaKeyValues.Remove(key);
+			MetaKeyValues.Value = newMetaKeyValues;
+		}
+
+		void OnSetKeyValue(string key, string value)
+		{
+			var newMetaKeyValues = MetaKeyValues.Value;
+			newMetaKeyValues[key] = value;
+			MetaKeyValues.Value = newMetaKeyValues;
+		}
+		#endregion
 	}
 }

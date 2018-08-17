@@ -7,7 +7,7 @@ using UnityEngine;
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class InventoryListModel : Model
 	{

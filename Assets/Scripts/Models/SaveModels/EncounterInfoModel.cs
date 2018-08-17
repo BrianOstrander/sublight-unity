@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class EncounterInfoModel : SaveModel
 	{
@@ -10,7 +10,7 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 		[JsonProperty] string hook;
-		[JsonProperty] string[] completedEncountersRequired = new string[0];
+		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
@@ -49,8 +49,6 @@ namespace LunraGames.SpaceFarm.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Hook;
 		[JsonIgnore]
-		public readonly ListenerProperty<string[]> CompletedEncountersRequired;
-		[JsonIgnore]
 		public readonly ListenerProperty<SystemTypes[]> ValidSystems;
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyTypes[]> ValidBodies;
@@ -58,6 +56,8 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<InventoryTypes[]> ValidCrews;
 
 		#region Shortcuts
+		[JsonIgnore]
+		public ValueFilterModel Filtering { get { return filtering; } }
 		[JsonIgnore]
 		public EncounterLogListModel Logs { get { return logs; } }
 		#endregion
@@ -71,7 +71,6 @@ namespace LunraGames.SpaceFarm.Models
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Hook = new ListenerProperty<string>(value => hook = value, () => hook);
-			CompletedEncountersRequired = new ListenerProperty<string[]>(value => completedEncountersRequired = value, () => completedEncountersRequired);
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
 			ValidCrews = new ListenerProperty<InventoryTypes[]>(value => validCrews = value, () => validCrews);

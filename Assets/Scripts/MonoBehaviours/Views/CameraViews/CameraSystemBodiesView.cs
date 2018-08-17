@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class CameraSystemBodiesView : View, ICameraSystemBodiesView
 	{

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 using TMPro;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class BodyHookView : CanvasView, IBodyHookView
 	{

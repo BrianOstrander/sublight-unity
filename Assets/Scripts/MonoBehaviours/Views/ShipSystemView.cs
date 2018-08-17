@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class ShipSystemView : View, IShipSystemView
 	{

@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[Serializable]
 	public struct EncounterStatus

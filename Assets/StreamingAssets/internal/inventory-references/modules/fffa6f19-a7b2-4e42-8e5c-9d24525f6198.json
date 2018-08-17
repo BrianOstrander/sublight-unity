@@ -63,6 +63,9 @@
   },
   "version": 4,
   "meta": "Stock Logistics",
+  "metaKeyValues": {
+    "InventoryId": "90a2c3b4-7b41-449f-b23f-86bc201a1729"
+  },
   "created": "2018-07-25T17:51:51.93231-07:00",
   "modified": "2018-07-25T17:51:51.93231-07:00",
   "SaveType": "ModuleReference"

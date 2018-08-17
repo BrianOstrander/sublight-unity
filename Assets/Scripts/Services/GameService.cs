@@ -4,9 +4,9 @@ using System.Linq;
 using UnityEngine;
 
 using LunraGames.NumberDemon;
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class GameService
 	{
@@ -343,7 +343,7 @@ namespace LunraGames.SpaceFarm
 			var rootModule1 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_1");
 			var rootModule2 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_2");
 			var rootModule3 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_3");
-			var rootModule4 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_4");
+			//var rootModule4 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_4");
 
 			var orbitalBayOrbital0 = stockOrbiterBay.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("orbital_0");
 			var orbitalBayOrbital1 = stockOrbiterBay.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("orbital_1");

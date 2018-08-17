@@ -8,9 +8,9 @@ using Object = UnityEngine.Object;
 
 using LunraGamesEditor;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public partial class EncounterEditorWindow
 	{
@@ -163,8 +163,7 @@ namespace LunraGames.SpaceFarm
 			string[] names =
 			{
 				"General",
-				"Crew Logs",
-				"Preview"
+				"Crew Logs"
 			};
 
 			GUILayout.BeginVertical();
@@ -188,9 +187,6 @@ namespace LunraGames.SpaceFarm
 					case 1:
 						OnHomeSelectedCrewLogs(model);
 						break;
-					case 2:
-						OnHomeSelectedPreview(model);
-						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
 						break;
@@ -201,7 +197,7 @@ namespace LunraGames.SpaceFarm
 
 		void OnHomeSelectedGeneral(EncounterInfoModel model)
 		{
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -210,25 +206,16 @@ namespace LunraGames.SpaceFarm
 					model.Hidden.Value = EditorGUILayout.Toggle(model.Hidden.Value, GUILayout.Width(14f));
 				}
 				GUILayout.EndHorizontal();
-				model.EncounterId.Value = EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value);
+				model.EncounterId.Value = model.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value));
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
-				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value);
-				model.Hook.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Hook", "The description given to the player before entering this encounter."), model.Hook.Value);
+				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
+				model.Hook.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Hook", "The description given to the player before entering this encounter."), model.Hook.Value, leftOffset: false);
 
 				var alternateColor = Color.grey;
 
-				EditorGUILayoutExtensions.PushColor(alternateColor);
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				EditorGUILayoutExtensions.PopColor();
-				{
-					model.CompletedEncountersRequired.Value = EditorGUILayoutExtensions.StringArray(
-						"Completed Encounters Required",
-						model.CompletedEncountersRequired.Value,
-						"- Encounter Id -"
-					);
-				}
-				GUILayout.EndVertical();
+				EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "These checks determine if the encounter will be selected."), model.Filtering, alternateColor);
+
 				GUILayout.BeginVertical(EditorStyles.helpBox);
 				{
 					model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
@@ -238,9 +225,7 @@ namespace LunraGames.SpaceFarm
 					);
 				}
 				GUILayout.EndVertical();
-				EditorGUILayoutExtensions.PushColor(alternateColor);
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				EditorGUILayoutExtensions.PopColor();
+				EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, alternateColor);
 				{
 					model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
 						"Valid Bodies",
@@ -248,7 +233,7 @@ namespace LunraGames.SpaceFarm
 						"- Select a BodyType -"
 					);
 				}
-				GUILayout.EndVertical();
+				EditorGUILayoutExtensions.EndVertical();
 				GUILayout.BeginVertical(EditorStyles.helpBox);
 				{
 					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
@@ -260,19 +245,18 @@ namespace LunraGames.SpaceFarm
 				}
 				GUILayout.EndVertical();
 			}
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 		}
 
 		void OnHomeSelectedCrewLogs(EncounterInfoModel model)
 		{
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count()+" |", GUILayout.ExpandWidth(false));
 					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
 					var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
-					var guid = Guid.NewGuid().ToString();
 					var isBeginning = model.Logs.All.Value.Length == 0;
 					var nextIndex = model.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
 					switch (result)
@@ -280,25 +264,19 @@ namespace LunraGames.SpaceFarm
 						case EncounterLogTypes.Unknown:
 							break;
 						case EncounterLogTypes.Text:
-							var textResult = new TextEncounterLogModel();
-							textResult.Index.Value = nextIndex;
-							textResult.LogId.Value = guid;
-							textResult.Beginning.Value = isBeginning;
-							model.Logs.All.Value = model.Logs.All.Value.Append(textResult).ToArray();
+							NewEncounterLog<TextEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
 						case EncounterLogTypes.KeyValue:
-							var keyValueResult = new KeyValueEncounterLogModel();
-							keyValueResult.Index.Value = nextIndex;
-							keyValueResult.LogId.Value = guid;
-							keyValueResult.Beginning.Value = isBeginning;
-							model.Logs.All.Value = model.Logs.All.Value.Append(keyValueResult).ToArray();
+							NewEncounterLog<KeyValueEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
 						case EncounterLogTypes.Inventory:
-							var inventoryResult = new InventoryEncounterLogModel();
-							inventoryResult.Index.Value = nextIndex;
-							inventoryResult.LogId.Value = guid;
-							inventoryResult.Beginning.Value = isBeginning;
-							model.Logs.All.Value = model.Logs.All.Value.Append(inventoryResult).ToArray();
+							NewEncounterLog<InventoryEncounterLogModel>(model, nextIndex, isBeginning);
+							break;
+						case EncounterLogTypes.Switch:
+							NewEncounterLog<SwitchEncounterLogModel>(model, nextIndex, isBeginning);
+							break;
+						case EncounterLogTypes.Button:
+							NewEncounterLog<ButtonEncounterLogModel>(model, nextIndex, isBeginning);
 							break;
 						default:
 							Debug.LogError("Unrecognized EncounterLogType:" + result);
@@ -307,16 +285,24 @@ namespace LunraGames.SpaceFarm
 					GUILayout.Label("Hold 'Ctrl' to rearrange entries.", GUILayout.ExpandWidth(false));
 				}
 				GUILayout.EndHorizontal();
+
+				if (model.Logs.All.Value.None(l => l.Beginning.Value))
+				{
+					EditorGUILayout.HelpBox("No \"Beginning\" log has been specified!", MessageType.Error);
+				}
+				if (model.Logs.All.Value.None(l => l.Ending.Value))
+				{
+					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
+				}
 			}
-			selectedEncounterModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 
 			homeCrewLogsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeCrewLogsScroll), false, true).y;
 			{
-				EditorGUI.BeginChangeCheck();
+				EditorGUIExtensions.BeginChangeCheck();
 				{
 					var deleted = string.Empty;
 					var beginning = string.Empty;
-					var ending = string.Empty;
 
 					EncounterLogModel indexSwap0 = null;
 					EncounterLogModel indexSwap1 = null;
@@ -329,10 +315,10 @@ namespace LunraGames.SpaceFarm
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var log = sorted[i];
-						var nextLog = (i + 1 < sorted.Count) ? sorted[i + 1] : null;
+						var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
 						int currMoveDelta;
 
-						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning, ref ending)) deleted = log.LogId;
+						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning)) deleted = log.LogId;
 
 						if (currMoveDelta != 0)
 						{
@@ -356,13 +342,6 @@ namespace LunraGames.SpaceFarm
 							logs.Beginning.Value = logs.LogId.Value == beginning;
 						}
 					}
-					if (!string.IsNullOrEmpty(ending))
-					{
-						foreach (var logs in model.Logs.All.Value)
-						{
-							logs.Ending.Value = logs.LogId.Value == ending;
-						}
-					}
 					if (indexSwap0 != null && indexSwap1 != null)
 					{
 						var swap0 = indexSwap0.Index.Value;
@@ -372,7 +351,7 @@ namespace LunraGames.SpaceFarm
 						indexSwap1.Index.Value = swap0;
 					}
 				}
-				selectedEncounterModified |= EditorGUI.EndChangeCheck();
+				EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 			}
 			GUILayout.EndScrollView();
 		}
@@ -380,10 +359,20 @@ namespace LunraGames.SpaceFarm
 		void NewEncounter()
 		{
 			var info = SaveLoadService.Create<EncounterInfoModel>();
-			info.EncounterId.Value = Guid.NewGuid().ToString();
+			info.EncounterId.Value = info.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, Guid.NewGuid().ToString());
 			info.Name.Value = string.Empty;
 			info.Meta.Value = info.Name;
 			SaveLoadService.Save(info, OnNewEncounterInfo);
+		}
+
+		T NewEncounterLog<T>(EncounterInfoModel model, int index, bool isBeginning) where T : EncounterLogModel, new()
+		{
+			var result = new T();
+			result.Index.Value = index;
+			result.LogId.Value = Guid.NewGuid().ToString();
+			result.Beginning.Value = isBeginning;
+			model.Logs.All.Value = model.Logs.All.Value.Append(result).ToArray();
+			return result;
 		}
 
 		void LoadEncounterList()
@@ -468,16 +457,21 @@ namespace LunraGames.SpaceFarm
 			if (!isSelected && isAlternate) EditorGUILayoutExtensions.PopBackgroundColor();
 			{
 				var infoPath = info.IsInternal ? info.InternalPath : info.Path;
-				var infoName = Path.GetFileNameWithoutExtension(infoPath);
-				if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
-				else infoName += Path.GetExtension(infoPath);
+				var infoId = info.GetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId);
+				var infoName = infoId;
+				if (string.IsNullOrEmpty(infoName)) infoName = "< No EncounterId >";
+				else if (20 < infoName.Length) infoName = infoName.Substring(0, 20) + "...";
 
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.BeginVertical();
 					{
-						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta, "Name is set by Meta field."), EditorStyles.boldLabel);
-						GUILayout.Label(new GUIContent(infoName, infoPath));
+						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(info.Meta) ? "< No Meta >" : info.Meta, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
+						if (GUILayout.Button(new GUIContent(infoName, "Copy EncounterId of " + infoPath)))
+						{
+							EditorGUIUtility.systemCopyBuffer = infoId;
+							ShowNotification(new GUIContent("Copied EncounterId to Clipboard"));
+						}
 					}
 					GUILayout.EndVertical();
 

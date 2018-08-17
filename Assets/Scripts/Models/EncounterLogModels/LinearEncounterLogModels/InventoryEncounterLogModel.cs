@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class InventoryEncounterLogModel : LinearEncounterLogModel
 	{
@@ -16,6 +16,8 @@ namespace LunraGames.SpaceFarm.Models
 		public readonly ListenerProperty<InventoryOperationModel[]> Operations; 
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Inventory; } }
+
+		public override bool EditableDuration { get { return false; } }
 
 		public InventoryEncounterLogModel()
 		{

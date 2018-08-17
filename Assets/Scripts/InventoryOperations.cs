@@ -1,4 +1,4 @@
-﻿namespace LunraGames.SpaceFarm
+﻿namespace LunraGames.SubLight
 {
 	/// <summary>
 	/// The types of operations that can be carried out on the inventory.

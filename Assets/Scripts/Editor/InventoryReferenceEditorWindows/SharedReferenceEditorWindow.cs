@@ -1,9 +1,11 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGamesEditor;
 
-namespace LunraGames.SpaceFarm
+using LunraGames.SubLight.Models;
+
+namespace LunraGames.SubLight
 {
 	public partial class InventoryReferenceEditorWindow
 	{
@@ -23,15 +25,15 @@ namespace LunraGames.SpaceFarm
 			}
 			GUILayout.EndHorizontal();
 
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.Hidden.Value = EditorGUILayout.Toggle("Hidden", model.Hidden.Value);
-				model.InventoryId.Value = EditorGUILayout.TextField("Inventory Id", model.InventoryId.Value);
+				model.InventoryId.Value = reference.SetMetaKey(MetaKeyConstants.InventoryReference.InventoryId, EditorGUILayout.TextField("Inventory Id", model.InventoryId.Value));
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				reference.Meta.Value = model.Name;
 				model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
 			}
-			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 
 			GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(16f));
 		}

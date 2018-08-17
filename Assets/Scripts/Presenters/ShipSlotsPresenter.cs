@@ -1,23 +1,18 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-using UnityEngine;
+using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
-using LunraGames.SpaceFarm.Views;
-using LunraGames.SpaceFarm.Models;
-
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class ShipSlotsPresenter : Presenter<IShipSlotsView>
 	{
-		GameModel model;
 		ShipModel ship;
 
 		ModuleSlotModel selectedSlot;
 
 		public ShipSlotsPresenter(GameModel model)
 		{
-			this.model = model;
 			ship = model.Ship.Value;
 
 			App.Callbacks.FocusRequest += OnFocus;

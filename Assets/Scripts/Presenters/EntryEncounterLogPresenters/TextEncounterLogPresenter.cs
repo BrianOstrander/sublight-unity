@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-using LunraGames.SpaceFarm.Views;
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class TextEncounterLogPresenter : EntryEncounterLogPresenter<TextEncounterLogModel, ITextEncounterLogView>
 	{
@@ -19,6 +19,7 @@ namespace LunraGames.SpaceFarm.Presenters
 		// TODO: Lol hacks.
 		static string CreateMD5(string input)
 		{
+			input = input ?? string.Empty;
 			// Use input string to calculate MD5 hash
 			using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
 			{

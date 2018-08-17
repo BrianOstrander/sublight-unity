@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 
 using UnityEngine;
 
-using Focuses = LunraGames.SpaceFarm.FocusRequest.Focuses;
+using Focuses = LunraGames.SubLight.FocusRequest.Focuses;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class GameModel : SaveModel
 	{

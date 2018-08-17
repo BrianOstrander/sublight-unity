@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using LunraGames;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class CameraLookAnimation : ViewAnimation
 	{

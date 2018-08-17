@@ -1,4 +1,4 @@
-﻿namespace LunraGames.SpaceFarm
+﻿namespace LunraGames.SubLight
 {
 	// TODO: Create an actual string system that supports multiple languages.
 	public static class Strings

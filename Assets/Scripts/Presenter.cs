@@ -2,7 +2,7 @@ using System;
 
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	/// <summary>
 	/// Base Presenter, defining its view and model interface.

@@ -47,6 +47,9 @@
   },
   "version": 4,
   "meta": "Stock Engine",
+  "metaKeyValues": {
+    "InventoryId": "88d5280d-7802-401a-bb25-24b1e4ee46ca"
+  },
   "created": "2018-08-01T11:05:45.338411-07:00",
   "modified": "2018-08-01T11:05:45.338411-07:00",
   "SaveType": "ModuleReference"

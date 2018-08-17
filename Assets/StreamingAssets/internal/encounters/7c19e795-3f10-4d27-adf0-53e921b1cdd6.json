@@ -2,7 +2,10 @@
   "encounterId": "6a417bed-bd3a-43ba-a517-87c420477412",
   "name": "Debris in orbit",
   "hook": "A planet rich in organics has been found, perhaps we can top off our ration supply?",
-  "completedEncountersRequired": [],
+  "filtering": {
+    "booleanKeyValues": [],
+    "encounterInteractions": []
+  },
   "validSystems": [],
   "validBodies": [
     "Terrestrial"
@@ -69,14 +72,18 @@
             "operationId": "d2a642a6-a4a2-4c5e-8c17-0f272f6143e4"
           }
         ],
+        "addInstances": [],
         "nextLogId": "fd8776e3-179c-4a3f-85fb-6b7879b3957a",
         "index": 4,
         "logId": "cde7079a-ba67-4807-9ea1-e99f75a10105"
       }
     ]
   },
-  "version": 3,
+  "version": 4,
   "meta": "Debris in orbit",
+  "metaKeyValues": {
+    "EncounterId": "6a417bed-bd3a-43ba-a517-87c420477412"
+  },
   "created": "2018-07-23T12:55:07.897785-07:00",
   "modified": "2018-07-23T12:55:07.897785-07:00",
   "SaveType": "EncounterInfo"

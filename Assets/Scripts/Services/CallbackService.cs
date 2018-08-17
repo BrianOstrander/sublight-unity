@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine.SceneManagement;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class CallbackService
 	{
@@ -173,13 +173,13 @@ namespace LunraGames.SpaceFarm
 				var escape = escapes.Pop();
 				if (escape.IsShaded.HasValue)
 				{
-					if (escape.IsShaded.Value) ShadeRequest(SpaceFarm.ShadeRequest.Shade);
-					else ShadeRequest(SpaceFarm.ShadeRequest.UnShade);
+					if (escape.IsShaded.Value) ShadeRequest(SubLight.ShadeRequest.Shade);
+					else ShadeRequest(SubLight.ShadeRequest.UnShade);
 				}
 				if (escape.IsObscured.HasValue)
 				{
-					if (escape.IsShaded.Value) ObscureCameraRequest(SpaceFarm.ObscureCameraRequest.Obscure);
-					else ObscureCameraRequest(SpaceFarm.ObscureCameraRequest.UnObscure);
+					if (escape.IsShaded.Value) ObscureCameraRequest(SubLight.ObscureCameraRequest.Obscure);
+					else ObscureCameraRequest(SubLight.ObscureCameraRequest.UnObscure);
 				}
 				escape.Escape();
 			}
@@ -198,8 +198,8 @@ namespace LunraGames.SpaceFarm
 
 		public void ClearEscapables()
 		{
-			ShadeRequest(SpaceFarm.ShadeRequest.UnShade);
-			ObscureCameraRequest(SpaceFarm.ObscureCameraRequest.UnObscure);
+			ShadeRequest(SubLight.ShadeRequest.UnShade);
+			ObscureCameraRequest(SubLight.ObscureCameraRequest.UnObscure);
 			escapes.Clear();
 		}
 	}

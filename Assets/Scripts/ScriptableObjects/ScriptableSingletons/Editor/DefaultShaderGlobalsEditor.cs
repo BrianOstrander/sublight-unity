@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using LunraGamesEditor.Singletonnes;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[CustomEditor(typeof(DefaultShaderGlobals), true)]
 	public class DefaultShaderGlobalsEditor : ScriptableSingletonEditor

@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
-using SelectionState = LunraGames.SpaceFarm.XButton.SelectionState;
+using SelectionState = LunraGames.SubLight.XButton.SelectionState;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class XButtonLeaf : MonoBehaviour
 	{

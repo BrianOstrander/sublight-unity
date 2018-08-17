@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	/// <summary>
 	/// A connection between a slot and an item.

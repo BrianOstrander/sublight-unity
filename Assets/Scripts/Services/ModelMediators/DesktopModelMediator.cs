@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class DesktopModelMediator : ModelMediator
 	{

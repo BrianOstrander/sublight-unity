@@ -1,4 +1,4 @@
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class CameraView : View, ICameraView
 	{

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 using LunraGames;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class HomeMenuView : CanvasView, IHomeMenuView
 	{

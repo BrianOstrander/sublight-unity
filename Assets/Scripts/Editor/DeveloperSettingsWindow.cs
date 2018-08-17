@@ -7,7 +7,7 @@ using LunraGamesEditor;
 using UnityEditor;
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public interface ILocalDeveloperSettingsWindow
 	{

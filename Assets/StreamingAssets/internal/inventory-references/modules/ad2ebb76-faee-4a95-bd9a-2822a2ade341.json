@@ -70,6 +70,9 @@
   },
   "version": 4,
   "meta": "Stock Root",
+  "metaKeyValues": {
+    "InventoryId": "eccdddb4-553f-4f7a-be7e-b68799839bc8"
+  },
   "created": "2018-07-25T12:25:59.70448-07:00",
   "modified": "2018-07-25T12:25:59.70448-07:00",
   "SaveType": "ModuleReference"

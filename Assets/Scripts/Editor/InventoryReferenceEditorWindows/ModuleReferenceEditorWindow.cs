@@ -7,9 +7,9 @@ using UnityEngine;
 
 using LunraGamesEditor;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public partial class InventoryReferenceEditorWindow
 	{
@@ -24,7 +24,7 @@ namespace LunraGames.SpaceFarm
 			// We do this to force caching of resource info.
 			beforeSave = () => model.Slots.All.Value = model.Slots.All.Value;
 
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.IsRoot.Value = EditorGUILayout.Toggle("Is Root", model.IsRoot.Value);
 				model.MinimumLifespan.Value = EditorGUILayoutDayTime.FieldYear(
@@ -41,7 +41,7 @@ namespace LunraGames.SpaceFarm
 					model.CurveLifespan.Value
 				);
 			}
-			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 
 			OnListModuleSlots(reference);
 		}
@@ -50,7 +50,7 @@ namespace LunraGames.SpaceFarm
 		{
 			var model = reference.Model.Value;
 
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -78,11 +78,11 @@ namespace LunraGames.SpaceFarm
 				}
 				GUILayout.EndHorizontal();
 			}
-			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 
 			moduleSlotsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, moduleSlotsScroll), false, true).y;
 			{
-				EditorGUI.BeginChangeCheck();
+				EditorGUIExtensions.BeginChangeCheck();
 				{
 					var deleted = string.Empty;
 
@@ -143,7 +143,7 @@ namespace LunraGames.SpaceFarm
 						indexSwap1.Index.Value = swap0;
 					}
 				}
-				selectedReferenceModified |= EditorGUI.EndChangeCheck();
+				EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 			}
 			GUILayout.EndScrollView();
 		}
@@ -169,9 +169,9 @@ namespace LunraGames.SpaceFarm
 			var deleted = false;
 			indexDelta = 0;
 			var isAlternate = count % 2 == 0;
-			if (isAlternate) EditorGUILayoutExtensions.PushColor(Color.gray);
-			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (isAlternate) EditorGUILayoutExtensions.PopColor();
+
+			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.gray, isAlternate);
+
 			GUILayout.BeginHorizontal();
 			{
 				var header = "#" + (count + 1) + " | " + slot.SlotType+ ".SlotId:";

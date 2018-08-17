@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class KeyValueService
 	{
@@ -26,7 +26,7 @@ namespace LunraGames.SpaceFarm
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
 
 			this.callbacks = callbacks;
-			callbacks.KeyValueRequest += OnKeyValueRequest;
+			this.callbacks.KeyValueRequest += OnKeyValueRequest;
 		}
 
 		public void RegisterGet(

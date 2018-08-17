@@ -4,7 +4,7 @@ using UnityEngine;
 
 using TMPro;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class GameLostView : CanvasView, IGameLostView
 	{

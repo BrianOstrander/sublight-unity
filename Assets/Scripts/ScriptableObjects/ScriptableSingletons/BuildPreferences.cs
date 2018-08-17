@@ -2,7 +2,7 @@
 
 using LunraGames.Singletonnes;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public interface IBuildInfo
 	{

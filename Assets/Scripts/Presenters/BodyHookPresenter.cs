@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 
-using LunraGames.SpaceFarm.Views;
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class BodyHookPresenter : Presenter<IBodyHookView>
 	{
@@ -71,13 +71,18 @@ namespace LunraGames.SpaceFarm.Presenters
 					if (bodyFocus.View != BodyFocusRequest.Views.BodyHook) goto default;
 					system = model.Universe.Value.GetSystem(bodyFocus.System);
 					body = system.GetBody(bodyFocus.Body);
-					encounter = App.Encounters.AssignBestEncounter(model, system, body);
-					Show();
+					App.Encounters.AssignBestEncounter(OnAssignBestEncounter, model, system, body);
 					break;
 				default:
 					if (View.TransitionState == TransitionStates.Shown) CloseView();
 					break;
 			}
+		}
+
+		void OnAssignBestEncounter(EncounterInfoModel result)
+		{
+			encounter = result;
+			Show();
 		}
 		
 		void OnCrewClick(CrewInventoryModel crew)

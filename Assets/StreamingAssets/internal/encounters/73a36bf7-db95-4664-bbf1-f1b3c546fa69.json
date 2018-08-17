@@ -1,0 +1,350 @@
+{
+  "orderWeight": 100.0,
+  "encounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66",
+  "name": "We're On the Move",
+  "hook": "Sparks fly from a massive construction effort surrounding a ship in orbit.",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [
+      {
+        "target": "Game",
+        "key": "IntroductionShown",
+        "filterId": "c6b8ec44-86e4-469b-9023-0a33bd46d579",
+        "group": "All"
+      }
+    ],
+    "stringKeyValues": [],
+    "encounterInteractions": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "validCrews": [],
+  "logs": {
+    "textLogs": [
+      {
+        "header": "Captain Grant Cowan",
+        "message": "LSM Rosa recieving your hail, this is Captain Grant Cowan, make it quick.",
+        "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
+        "beginning": true,
+        "logId": "0f311101-6ecc-4da5-a0ef-da37b33b15b6"
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "Listen I ain't got time to explain it all, have you not been keeping an eye on the void? Well I have, and its expanding... fast! I don't intend to stick around and see what happens.",
+        "nextLogId": "ede5ccee-6c05-4eca-b6bc-fd42aaee46be",
+        "index": 3,
+        "logId": "95850ecd-bade-4da7-99ae-9d761c357059",
+        "duration": 1.0
+      },
+      {
+        "message": "Why the hurry? It'll take centuries before anything can reach this system, we'll be long dead by then.",
+        "nextLogId": "df757db3-168d-43f4-9324-416fe75f4b63",
+        "index": 5,
+        "logId": "27d21b2b-9af9-45e6-89e7-bc2e0fc41db0",
+        "duration": 1.0,
+        "showNotes": true,
+        "notes": "Response from \"Why the hurry?\""
+      },
+      {
+        "message": "What's going on? Our recievers were down until we arrived in this system, we can't make heads or tails of whats going on.",
+        "nextLogId": "95850ecd-bade-4da7-99ae-9d761c357059",
+        "index": 2,
+        "logId": "3b5aacd7-84a5-47d5-a64f-6e3b0ac9c4ea",
+        "duration": 1.0,
+        "showNotes": true,
+        "notes": "Response from \"What's happening?\""
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "Listen... it may be centuries before it gets here, it may never come at all, but don't you have any pride in humanity? We're all alone out here, we may be the only intelligence, let alone life, to ever exist. You think it's wise or fair to let your descendents find out how mortally damned you've left them, by pissing away your short life in this system?",
+        "nextLogId": "3adb9ddc-58af-4dd5-977b-cd931e69ef37",
+        "index": 6,
+        "logId": "df757db3-168d-43f4-9324-416fe75f4b63",
+        "duration": 1.0
+      },
+      {
+        "message": "We've been in space so long, our people yearn to feel dirt beneath their feet, a sky above their heads. How can you flee so quickly?",
+        "nextLogId": "333969d0-4614-47a0-bbba-99851440a096",
+        "index": 7,
+        "logId": "3adb9ddc-58af-4dd5-977b-cd931e69ef37",
+        "duration": 1.0
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "I... want these things, too. We all want these comforts, these arks are like prisons... But staying here would be selfish, I can't do that to my children, and my children's children.",
+        "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
+        "index": 8,
+        "logId": "333969d0-4614-47a0-bbba-99851440a096",
+        "duration": 1.0
+      },
+      {
+        "message": "If you really think the void won't stop, how do you plan to escape it?",
+        "nextLogId": "0138622c-ea2e-4409-8f0c-4e7916ab8a42",
+        "index": 9,
+        "logId": "73ea1dd2-ca60-47a7-8b34-6048cc449b7f",
+        "duration": 1.0,
+        "showNotes": true,
+        "notes": "Response to \"Where will you go?\""
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "I don't know that there is an escape, but we have a plan. You know what lies at the center of our galaxy?",
+        "nextLogId": "915dde69-1e95-4e3d-8865-bc1e379fbb10",
+        "index": 10,
+        "logId": "0138622c-ea2e-4409-8f0c-4e7916ab8a42",
+        "duration": 1.0
+      },
+      {
+        "message": "Uh... a black hole?",
+        "nextLogId": "38d03881-799b-452a-a8af-c545fb1f88d6",
+        "index": 11,
+        "logId": "915dde69-1e95-4e3d-8865-bc1e379fbb10",
+        "duration": 1.0
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "No! Not just any black hole, the BIGGEST black hole in the galaxy! If we can get there, and slingshot ourselves as close to the event horizon as our ship can handle... we'll be on a high velocity trajectory towards Andromeda. We may not be able to stop the void, but we can keep running...",
+        "nextLogId": "e09c55f1-3adf-4e8e-8847-46154c2931fb",
+        "index": 12,
+        "logId": "38d03881-799b-452a-a8af-c545fb1f88d6",
+        "duration": 1.0
+      },
+      {
+        "message": "That's insane! These ships were made for voyages of centuries, not... millenia! You can't be serious.",
+        "nextLogId": "5a7e85da-c0d7-4ef8-a5b5-3e93ff94f75f",
+        "index": 13,
+        "logId": "e09c55f1-3adf-4e8e-8847-46154c2931fb",
+        "duration": 1.0
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "Very serious, and I suggest you wise up and get going in that direction, too.",
+        "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
+        "index": 14,
+        "logId": "5a7e85da-c0d7-4ef8-a5b5-3e93ff94f75f",
+        "duration": 1.0
+      },
+      {
+        "message": "I don't understand, what's the void?",
+        "nextLogId": "7be7a564-6dd0-465c-91b2-13baabe300c8",
+        "index": 15,
+        "logId": "a88bcc1d-3b07-4fee-a68e-0044d269dffc",
+        "duration": 1.0,
+        "showNotes": true,
+        "notes": "Response to \"The void?\""
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "We don't understand it either, all we figure is anything passing the horizon never comes back. You might as well be falling into a black hole. It originated in Sol, it's already consumed Earth, Mercury, the whole lot...",
+        "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
+        "index": 16,
+        "logId": "7be7a564-6dd0-465c-91b2-13baabe300c8",
+        "duration": 1.0
+      },
+      {
+        "header": "Captain Grant Cowan",
+        "message": "Good luck to you too... We won't cross paths again, but perhaps our people will. I hope under better circumstances...",
+        "index": 17,
+        "ending": true,
+        "logId": "1a3f161e-1eb6-4df3-a4a6-1c5dec8d3df7"
+      }
+    ],
+    "keyValueLogs": [
+      {
+        "setStrings": [],
+        "setBooleans": [
+          {
+            "value": true,
+            "operationId": "bf0a576b-35a1-4bdf-82d4-040ec5943a42",
+            "target": "Encounter",
+            "key": "UnlockWhyTheHurry"
+          },
+          {
+            "value": true,
+            "operationId": "a9196184-a024-4494-ace5-169dc04f4360",
+            "target": "Encounter",
+            "key": "UnlockTheVoid"
+          },
+          {
+            "value": true,
+            "operationId": "ba604517-2bac-489b-9197-a5a98547632a",
+            "target": "Encounter",
+            "key": "UnlockWhereWillYouGo"
+          },
+          {
+            "value": true,
+            "operationId": "7609b825-ed85-45b3-bd63-4a1b4a32caa5",
+            "target": "Encounter",
+            "key": "UnlockGoodLuck"
+          }
+        ],
+        "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
+        "index": 4,
+        "logId": "ede5ccee-6c05-4eca-b6bc-fd42aaee46be"
+      }
+    ],
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "buttonId": "cdc5a9fe-836c-4c4b-ad12-9215a177230c",
+            "index": 3,
+            "message": "What's happening?",
+            "nextLogId": "3b5aacd7-84a5-47d5-a64f-6e3b0ac9c4ea",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "84981c0a-7f66-4f9d-84e0-1d37fcfb297e",
+            "index": 1,
+            "message": "Why the hurry?",
+            "nextLogId": "27d21b2b-9af9-45e6-89e7-bc2e0fc41db0",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "target": "Encounter",
+                  "key": "UnlockWhyTheHurry",
+                  "filterId": "ee1dbcf0-44a4-4e18-97f2-2f46d8bc0cf8",
+                  "group": "All",
+                  "filterValue": true
+                }
+              ],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "58ae46cc-98b3-4833-9947-eeb5990d48c7",
+            "message": "The void?",
+            "nextLogId": "a88bcc1d-3b07-4fee-a68e-0044d269dffc",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "target": "Encounter",
+                  "key": "UnlockTheVoid",
+                  "filterId": "5157de5f-a2d4-4de8-ad7f-2869ff42e51e",
+                  "group": "All",
+                  "filterValue": true
+                }
+              ],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "27b944cb-76d3-47e0-854c-6011f1527621",
+            "index": 4,
+            "message": "Good luck...",
+            "nextLogId": "1a3f161e-1eb6-4df3-a4a6-1c5dec8d3df7",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "target": "Encounter",
+                  "key": "UnlockGoodLuck",
+                  "filterId": "d7c8e33a-dd91-473c-808b-c96f177b7ae9",
+                  "group": "All",
+                  "filterValue": true
+                }
+              ],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "93bc70a1-5c64-49ab-9416-71f955ca93c8",
+            "index": 2,
+            "message": "Where will you go?",
+            "nextLogId": "73ea1dd2-ca60-47a7-8b34-6048cc449b7f",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "target": "Encounter",
+                  "key": "UnlockWhereWillYouGo",
+                  "filterId": "e5a4df55-5845-4031-806e-f3d34f240a60",
+                  "group": "All",
+                  "filterValue": true
+                }
+              ],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          }
+        ],
+        "index": 1,
+        "logId": "291db69e-e33f-4747-a669-d3a08df4a1a0"
+      }
+    ]
+  },
+  "version": 4,
+  "meta": "We're On the Move",
+  "metaKeyValues": {
+    "EncounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66"
+  },
+  "created": "2018-08-16T16:48:01.072051-07:00",
+  "modified": "2018-08-16T16:48:01.072051-07:00",
+  "SaveType": "EncounterInfo"
+}

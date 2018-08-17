@@ -4,15 +4,15 @@ using UnityEngine;
 
 using LunraGamesEditor;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public partial class InventoryReferenceEditorWindow
 	{
 		void OnEditCrewShared(CrewInventoryModel model)
 		{
-			EditorGUI.BeginChangeCheck();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.SupportedBodies.Value = EditorGUILayoutExtensions.EnumArray(
 					new GUIContent("Supported Bodies", "A list of all valid bodies this vessel can explore."),
@@ -20,7 +20,7 @@ namespace LunraGames.SpaceFarm
 					"- Select a BodyType -"
 				);
 			}
-			selectedReferenceModified |= EditorGUI.EndChangeCheck();
+			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 		}
 	}
 }

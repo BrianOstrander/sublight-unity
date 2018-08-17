@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	[Serializable]
 	public class XButtonStyleBlock

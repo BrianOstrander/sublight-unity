@@ -2,7 +2,10 @@
   "encounterId": "8bd04919-1176-4ec6-a252-3f8fb540a8fc",
   "name": "Sentry Crash",
   "hook": "A weak emergency hail is being emitted from a crater on the surface, a look from orbit could determine if anyone survived.",
-  "completedEncountersRequired": [],
+  "filtering": {
+    "booleanKeyValues": [],
+    "encounterInteractions": []
+  },
   "validSystems": [],
   "validBodies": [
     "Terrestrial"
@@ -61,8 +64,11 @@
     ],
     "inventoryLogs": []
   },
-  "version": 3,
+  "version": 4,
   "meta": "Sentry Crash",
+  "metaKeyValues": {
+    "EncounterId": "8bd04919-1176-4ec6-a252-3f8fb540a8fc"
+  },
   "created": "2018-07-17T18:03:44.490684-07:00",
   "modified": "2018-07-17T18:03:44.490684-07:00",
   "SaveType": "EncounterInfo"

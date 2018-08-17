@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
-using LunraGames.SpaceFarm;
+using LunraGames.SubLight;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public static class XButtonSharedEditor
 	{

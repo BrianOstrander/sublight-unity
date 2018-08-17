@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public class App
 	{
@@ -64,6 +64,9 @@ namespace LunraGames.SpaceFarm
 
 		GlobalKeyValueService globalKeyValues;
 		public static GlobalKeyValueService GlobalKeyValues { get { return instance.globalKeyValues; } }
+
+		ValueFilterService valueFilter;
+		public static ValueFilterService ValueFilter { get { return instance.valueFilter; } }
 
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
@@ -141,12 +144,13 @@ namespace LunraGames.SpaceFarm
 				throw new Exception("Unknown platform");
 			}
 
-			encounters = new EncounterService(M, Logging, Callbacks);
 			inventoryReferences = new InventoryReferenceService(M, Logging, Callbacks);
 			scenes = new SceneService(Logging, Callbacks);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
 			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
+			valueFilter = new ValueFilterService(Callbacks);
+			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
 		}
 
 		public static void Restart(string message)

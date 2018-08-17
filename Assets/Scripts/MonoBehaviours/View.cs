@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace LunraGames.SpaceFarm 
+namespace LunraGames.SubLight 
 {
 	
 	public enum TransitionStates

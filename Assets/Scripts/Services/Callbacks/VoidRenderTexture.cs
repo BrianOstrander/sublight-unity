@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public struct VoidRenderTexture
 	{

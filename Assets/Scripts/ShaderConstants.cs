@@ -1,4 +1,4 @@
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	/// <summary>
 	/// This class should have subclasses for each Shader, with the property names of each shader.
@@ -33,7 +33,7 @@ namespace LunraGames.SpaceFarm
 			/// <summary>
 			/// The texture that's splated in screen space of the void.
 			/// </summary>
-			public const string VoidInterior = "Texture_E1313884";
+			public const string VoidInterior = "_VoidInterior";
 		}
 
 		/*

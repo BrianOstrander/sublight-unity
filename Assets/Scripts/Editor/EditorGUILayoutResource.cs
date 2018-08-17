@@ -2,10 +2,10 @@
 
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Models;
+using LunraGames.SubLight.Models;
 using LunraGamesEditor;
 
-namespace LunraGames.SpaceFarm
+namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutResource
 	{
@@ -16,14 +16,12 @@ namespace LunraGames.SpaceFarm
 
 		public static void Field(GUIContent content, ResourceInventoryModel model, Color? color = null)
 		{
-			if (color.HasValue) EditorGUILayoutExtensions.PushColor(color.Value);
-			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (color.HasValue) EditorGUILayoutExtensions.PopColor();
+			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
 				GUILayout.Label(content, EditorStyles.boldLabel);
 				Values(model);
 			}
-			GUILayout.EndVertical();
+			EditorGUILayoutExtensions.EndVertical();
 		}
 
 		public static void Values(ResourceInventoryModel model)

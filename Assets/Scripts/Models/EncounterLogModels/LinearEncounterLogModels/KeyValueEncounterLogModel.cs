@@ -5,11 +5,12 @@ using UnityEngine;
 
 using Newtonsoft.Json;
 
-namespace LunraGames.SpaceFarm.Models
+namespace LunraGames.SubLight.Models
 {
 	public class KeyValueEncounterLogModel : LinearEncounterLogModel
 	{
 		[JsonProperty] SetStringOperationModel[] setStrings = new SetStringOperationModel[0];
+		[JsonProperty] SetBooleanOperationModel[] setBooleans = new SetBooleanOperationModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<KeyValueOperationModel[]> Operations;
@@ -27,6 +28,7 @@ namespace LunraGames.SpaceFarm.Models
 		void OnSetOperations(KeyValueOperationModel[] entries)
 		{
 			var setStringsList = new List<SetStringOperationModel>();
+			var setBooleanList = new List<SetBooleanOperationModel>();
 
 			foreach (var entry in entries)
 			{
@@ -35,6 +37,9 @@ namespace LunraGames.SpaceFarm.Models
 					case KeyValueOperations.SetString:
 						setStringsList.Add(entry as SetStringOperationModel);
 						break;
+					case KeyValueOperations.SetBoolean:
+						setBooleanList.Add(entry as SetBooleanOperationModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized KeyValueOperation: " + entry.Operation);
 						break;
@@ -42,11 +47,13 @@ namespace LunraGames.SpaceFarm.Models
 			}
 
 			setStrings = setStringsList.ToArray();
+			setBooleans = setBooleanList.ToArray();
 		}
 
 		KeyValueOperationModel[] OnGetOperations()
 		{
-			return setStrings.ToArray();
+			return setStrings.Cast<KeyValueOperationModel>().Concat(setBooleans)
+															.ToArray();
 		}
 		#endregion
 	}

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LunraGames.SpaceFarm.Views
+namespace LunraGames.SubLight.Views
 {
 	public class ShadeView : CanvasView, IShadeView
 	{

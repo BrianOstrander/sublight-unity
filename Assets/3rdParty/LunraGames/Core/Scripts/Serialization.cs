@@ -40,6 +40,7 @@ namespace LunraGames
 					foreach (var converter in Converters) _SerializerSettings.Converters.Add(converter);
 					foreach (var converter in AddedConverters) _SerializerSettings.Converters.Add(converter);
 #if PROP_JSON
+					// This overrides the default vector converter, so we can use our own.
 					_SerializerSettings.Converters.Remove(_SerializerSettings.Converters.First(c => c.GetType() == typeof(VectorConverter)));
 #endif
 				}
@@ -65,6 +66,7 @@ namespace LunraGames
 					foreach (var converter in Converters) _VerboseSerializerSettings.Converters.Add(converter);
 					foreach (var converter in AddedConverters) _VerboseSerializerSettings.Converters.Add(converter);
 #if PROP_JSON
+					// This overrides the default vector converter, so we can use our own.
 					_VerboseSerializerSettings.Converters.Remove(_VerboseSerializerSettings.Converters.First(c => c.GetType() == typeof(VectorConverter)));
 #endif
 				}

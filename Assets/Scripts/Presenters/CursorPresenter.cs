@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-using LunraGames.SpaceFarm.Views;
+using LunraGames.SubLight.Views;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class CursorPresenter : Presenter<ICursorView>
 	{

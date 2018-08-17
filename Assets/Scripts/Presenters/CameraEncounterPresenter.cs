@@ -1,16 +1,11 @@
-﻿using LunraGames.SpaceFarm.Views;
-using LunraGames.SpaceFarm.Models;
+﻿using LunraGames.SubLight.Views;
 
-namespace LunraGames.SpaceFarm.Presenters
+namespace LunraGames.SubLight.Presenters
 {
 	public class CameraEncounterPresenter : Presenter<ICameraEncounterView>
 	{
-		GameModel game;
-
-		public CameraEncounterPresenter(GameModel game)
+		public CameraEncounterPresenter()
 		{
-			this.game = game;
-
 			App.Callbacks.FocusRequest += OnFocus;
 		}
 
