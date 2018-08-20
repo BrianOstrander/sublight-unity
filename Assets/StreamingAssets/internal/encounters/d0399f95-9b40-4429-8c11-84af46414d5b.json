@@ -1,5 +1,6 @@
 {
   "orderWeight": 2.0,
+  "randomWeightMultiplier": 1.0,
   "hidden": true,
   "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
   "name": "Button Test 0",

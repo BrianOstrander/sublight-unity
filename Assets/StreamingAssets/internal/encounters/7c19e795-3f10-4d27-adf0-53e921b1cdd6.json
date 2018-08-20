@@ -1,4 +1,5 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "6a417bed-bd3a-43ba-a517-87c420477412",
   "name": "Debris in orbit",
   "hook": "A planet rich in organics has been found, perhaps we can top off our ration supply?",

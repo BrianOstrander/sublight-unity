@@ -1,4 +1,5 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "50ca77ea-9380-421c-b570-019144c98047",
   "name": "We Moved Too Fast",
   "hook": "The crushed remains of a ship can be seen orbiting closely to the event horizon of this system's blackhole.",

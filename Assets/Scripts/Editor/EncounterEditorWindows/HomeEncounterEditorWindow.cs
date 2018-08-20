@@ -206,6 +206,7 @@ namespace LunraGames.SubLight
 					model.Hidden.Value = EditorGUILayout.Toggle(model.Hidden.Value, GUILayout.Width(14f));
 				}
 				GUILayout.EndHorizontal();
+				model.RandomWeightMultiplier.Value = EditorGUILayout.FloatField("Random Weight Multiplier", model.RandomWeightMultiplier.Value);
 				model.EncounterId.Value = model.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value));
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
@@ -352,6 +353,7 @@ namespace LunraGames.SubLight
 		{
 			var info = SaveLoadService.Create<EncounterInfoModel>();
 			info.EncounterId.Value = info.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, Guid.NewGuid().ToString());
+			info.RandomWeightMultiplier.Value = 1f;
 			info.Name.Value = string.Empty;
 			info.Meta.Value = info.Name;
 			SaveLoadService.Save(info, OnNewEncounterInfo);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
@@ -262,7 +263,19 @@ namespace LunraGames.SubLight
 
 			var ordered = filtered.OrderByDescending(r => r.OrderWeight.Value);
 			var topWeight = ordered.First().OrderWeight.Value;
-			var chosen = ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)).Random();
+
+			var maxRandomWeight = 0f;
+			EncounterInfoModel chosen = null;
+
+			foreach (var current in ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)))
+			{
+				var currentWeight = current.RandomWeightMultiplier.Value * DemonUtility.NextFloat;
+				if (chosen == null || maxRandomWeight < currentWeight)
+				{
+					maxRandomWeight = currentWeight;
+					chosen = current;
+				}
+			}
 
 			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
 			system.EncounterId.Value = chosen.EncounterId;

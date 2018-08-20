@@ -1,4 +1,5 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "8bd04919-1176-4ec6-a252-3f8fb540a8fc",
   "name": "Sentry Crash",
   "hook": "A weak emergency hail is being emitted from a crater on the surface, a look from orbit could determine if anyone survived.",

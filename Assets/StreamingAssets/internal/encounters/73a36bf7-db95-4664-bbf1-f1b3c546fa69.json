@@ -1,5 +1,6 @@
 {
   "orderWeight": 100.0,
+  "randomWeightMultiplier": 1.0,
   "encounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66",
   "name": "We're On the Move",
   "filtering": {
