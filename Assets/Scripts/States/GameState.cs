@@ -143,17 +143,8 @@ namespace LunraGames.SubLight
 			}
 			else App.Callbacks.FocusRequest(Payload.Game.FocusRequest.Value.Duplicate(FocusRequest.States.Request));
 
-			// IntroductionShown
-			//if (!DevPrefs.SkipExplanation)
-			//{
-			//	App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation0, Strings.ExplanationTitle0, OnExplanation));
-			//}
-		}
 
-		//void OnExplanation()
-		//{
-		//	App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation1, Strings.ExplanationTitle1));
-		//}
+		}
 		#endregion
 
 		#region End
@@ -281,6 +272,14 @@ namespace LunraGames.SubLight
 		void OnAssignBestEncounter(AssignBestEncounterRequest result)
 		{
 			if (result.Status != RequestStatus.Success || !result.EncounterAssigned) return;
+
+			if (result.Encounter.IsIntroduction && DevPrefs.SkipExplanation)
+			{
+				Debug.Log("Skipping Explanation");
+				App.Callbacks.KeyValueRequest(KeyValueRequest.Set(KeyValueTargets.Game, "IntroductionShown", true));
+				App.Callbacks.FocusRequest(Payload.Game.FocusRequest.Value.Duplicate(FocusRequest.States.Request));
+				return;
+			}
 
 			switch (result.Encounter.Trigger.Value)
 			{

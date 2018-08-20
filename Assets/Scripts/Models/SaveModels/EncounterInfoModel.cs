@@ -95,6 +95,8 @@ namespace LunraGames.SubLight.Models
 		/// <value><c>true</c> if has body requirements; otherwise, <c>false</c>.</value>
 		[JsonIgnore]
 		public bool HasBodyRequirements { get { return ValidBodies.Value.Any(); } }
+		[JsonIgnore]
+		public bool IsIntroduction { get { return 100f <= OrderWeight.Value; } }
 		#endregion
 
 		public EncounterInfoModel()
