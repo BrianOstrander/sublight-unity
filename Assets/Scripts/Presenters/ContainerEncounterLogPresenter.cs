@@ -134,7 +134,10 @@ namespace LunraGames.SubLight.Presenters
 			keyValues.UnRegister();
 
 			App.Callbacks.FocusRequest(
-				new SystemBodiesFocusRequest(system.Position)
+				new SystemsFocusRequest(
+					system.Position.Value.SystemZero,
+					system.Position.Value
+				)
 			);
 		}
 
