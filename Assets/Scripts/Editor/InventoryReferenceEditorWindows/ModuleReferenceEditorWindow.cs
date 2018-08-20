@@ -56,7 +56,7 @@ namespace LunraGames.SubLight
 				{
 					GUILayout.Label("Slot Count: " + model.Slots.All.Value.Length + " |", GUILayout.ExpandWidth(false));
 					GUILayout.Label("Append New Slot", GUILayout.ExpandWidth(false));
-					var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Slot Type -", SlotTypes.Unknown);
+					var result = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Slot Type -", SlotTypes.Unknown);
 					switch (result)
 					{
 						case SlotTypes.Unknown:

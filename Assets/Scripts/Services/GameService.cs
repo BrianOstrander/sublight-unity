@@ -55,8 +55,6 @@ namespace LunraGames.SubLight
 				startSystem = system;
 			}
 
-			startSystem.Visited.Value = true;
-
 			var startPosition = startSystem.Position;
 			var rations = 0.3f;
 			var fuel = 1f;

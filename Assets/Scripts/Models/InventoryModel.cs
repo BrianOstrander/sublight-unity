@@ -4,7 +4,7 @@ namespace LunraGames.SubLight.Models
 {
 	public abstract class InventoryModel : Model
 	{
-		[JsonProperty] bool hidden;
+		[JsonProperty] bool ignore;
 		[JsonProperty] string inventoryId;
 		[JsonProperty] string instanceId;
 		[JsonProperty] string name;
@@ -37,7 +37,7 @@ namespace LunraGames.SubLight.Models
 		public bool IsSlotted { get { return !string.IsNullOrEmpty(ParentSlotId.Value); } }
 
 		[JsonIgnore]
-		public readonly ListenerProperty<bool> Hidden;
+		public readonly ListenerProperty<bool> Ignore;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> InventoryId;
 		[JsonIgnore]
@@ -56,7 +56,7 @@ namespace LunraGames.SubLight.Models
 
 		public InventoryModel()
 		{
-			Hidden = new ListenerProperty<bool>(value => hidden = value, () => hidden);
+			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			InventoryId = new ListenerProperty<string>(value => inventoryId = value, () => inventoryId);
 			InstanceId = new ListenerProperty<string>(value => instanceId = value, () => instanceId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);

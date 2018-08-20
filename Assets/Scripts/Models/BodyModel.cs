@@ -8,7 +8,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int bodyId;
 		[JsonProperty] int parentId;
 		[JsonProperty] string name;
-		[JsonProperty] string encounter;
+		[JsonProperty] float encounterWeight;
 
 		[JsonProperty] ResourceInventoryModel resources = ResourceInventoryModel.Zero;
 		[JsonProperty] ResourceInventoryModel resourcesAcquired = ResourceInventoryModel.Zero;
@@ -28,8 +28,12 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<int> ParentId;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
+		/// <summary>
+		/// A value from 0 to 1, that biases this one to have an encounter
+		/// assigned to it, if the system has such an encounter.
+		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<string> Encounter;
+		public readonly ListenerProperty<float> EncounterWeight;
 
 		[JsonIgnore]
 		public ResourceInventoryModel Resources { get { return resources; } }
@@ -44,12 +48,7 @@ namespace LunraGames.SubLight.Models
 			BodyId = new ListenerProperty<int>(value => bodyId = value, () => bodyId);
 			ParentId = new ListenerProperty<int>(value => parentId = value, () => parentId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
-			Encounter = new ListenerProperty<string>(value => encounter = value, () => encounter);
+			EncounterWeight = new ListenerProperty<float>(value => encounterWeight = value, () => encounterWeight);
 		}
-
-		#region Utility
-		[JsonIgnore]
-		public bool HasEncounter { get { return !string.IsNullOrEmpty(Encounter); } }
-		#endregion
 	}
 }

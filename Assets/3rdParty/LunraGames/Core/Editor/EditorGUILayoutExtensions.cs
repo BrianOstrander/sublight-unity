@@ -18,13 +18,31 @@ namespace LunraGamesEditor
 		static Stack<bool> TextAreaWordWrapStack = new Stack<bool>();
 		static Stack<TextAnchor> ButtonTextAnchorStack = new Stack<TextAnchor>();
 
+		public static T HelpfulEnumPopup<T>(
+			GUIContent content,
+			string primaryReplacement,
+			T value,
+			T[] options = null,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			T result;
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.PrefixLabel(content);
+				result = HelpfulEnumPopupValue(primaryReplacement, value, options, guiOptions);
+			}
+			GUILayout.EndHorizontal();
+			return result;
+		}
+
 		/// <summary>
 		/// Renames the first enum entry, useful for adding a "Select X" option.
 		/// </summary>
 		/// <returns>The enum popup.</returns>
 		/// <param name="primaryReplacement">Primary replacement.</param>
 		/// <param name="value">Value.</param>
-		public static T HelpfulEnumPopup<T>(
+		public static T HelpfulEnumPopupValue<T>(
 			string primaryReplacement, 
 			T value,
 			T[] options = null,
@@ -218,7 +236,7 @@ namespace LunraGamesEditor
 					{
 						GUILayout.Space(16f);
 						GUILayout.Label("[ " + i + " ]", GUILayout.Width(32f));
-						values[i] = HelpfulEnumPopup(primaryReplacemnt, values[i], options);
+						values[i] = HelpfulEnumPopupValue(primaryReplacemnt, values[i], options);
 						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();

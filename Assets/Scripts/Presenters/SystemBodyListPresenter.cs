@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using LunraGames.SubLight.Views;
+﻿using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
@@ -10,8 +8,7 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 		SystemModel destination;
 
-		int bodyCount;
-		List<LabelButtonBlock> bodies;
+		LabelButtonBlock? body;
 
 		public SystemBodyListPresenter(GameModel model)
 		{
@@ -33,31 +30,27 @@ namespace LunraGames.SubLight.Presenters
 
 			View.Title = Strings.ArrivedIn(destination.Name.Value);
 
-			bodyCount = destination.Bodies.Value.Length;
-			bodies = new List<LabelButtonBlock>();
-
-			foreach (var body in destination.Bodies.Value)
-			{
-				App.Encounters.AssignBestEncounter(result => OnAssignBestEncounter(result, body), model, destination, body);
-			}
-
-			if (bodyCount == 0) OnAssignBestEncounterDone();
+			body = null;
+			App.Encounters.AssignBestEncounter(OnAssignBestEncounter, model, destination);
 		}
 
 		#region Events
-		void OnAssignBestEncounter(EncounterInfoModel result, BodyModel body)
+		void OnAssignBestEncounter(AssignBestEncounterRequest result)
 		{
-			if (result != null) body.Encounter.Value = result.EncounterId;
+			if (result.Status != RequestStatus.Success || !result.EncounterAssigned)
+			{
+				OnAssignBestEncounterDone();
+				return;
+			}
 
-			bodies.Add(new LabelButtonBlock(body.Name, () => OnBodyButtonClick(body), body.HasEncounter));
+			body = new LabelButtonBlock(result.Body == null ? "Non body encounter" : "Encounter on BodyId: "+result.Body.BodyId.Value, () => OnEncounterClick(result), true);
 
-			// I don't think this is possible, but just in case.
-			if (bodyCount == bodies.Count) OnAssignBestEncounterDone();
+			OnAssignBestEncounterDone();
 		}
 
 		void OnAssignBestEncounterDone()
 		{
-			View.BodyEntries = bodies.ToArray();
+			if (body.HasValue) View.BodyEntries = new LabelButtonBlock[] { body.Value };
 
 			View.DoneClick = OnDoneClick;
 			ShowView(App.GameCanvasRoot);
@@ -80,6 +73,32 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
+		void OnEncounterClick(AssignBestEncounterRequest result)
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+
+			switch (model.GetEncounterStatus(result.Encounter.EncounterId.Value).State)
+			{
+				case EncounterStatus.States.Unknown:
+					App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no anomalies."));
+					return;
+				case EncounterStatus.States.Completed:
+					var finalReport = model.GetFinalReport(result.System.EncounterId.Value);
+					if (finalReport != null) App.Callbacks.DialogRequest(DialogRequest.Alert(finalReport.Summary, "Crew Report"));
+					else App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
+					return;
+				default:
+					App.Callbacks.FocusRequest(
+						EncounterFocusRequest.Encounter(
+							result.Encounter.EncounterId,
+							result.System.Position
+						)
+					);
+					break;
+			}
+		}
+
+		/*
 		void OnBodyButtonClick(BodyModel body)
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
@@ -101,6 +120,7 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 		}
+		*/
 
 		void OnDoneClick()
 		{

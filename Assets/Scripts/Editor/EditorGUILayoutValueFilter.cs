@@ -66,7 +66,7 @@ namespace LunraGames.SubLight
 				GUILayout.Label(group.ToString());
 
 				GUILayout.Label("Append New Filter", GUILayout.ExpandWidth(false));
-				var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Filter Type -", ValueFilterTypes.Unknown, guiOptions: GUILayout.ExpandWidth(false));
+				var result = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Filter Type -", ValueFilterTypes.Unknown, guiOptions: GUILayout.ExpandWidth(false));
 				switch (result)
 				{
 					case ValueFilterTypes.Unknown:
@@ -155,7 +155,7 @@ namespace LunraGames.SubLight
 		{
 			OnOneLineHandleBegin(model);
 
-			model.FilterKeyTarget = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", model.FilterKeyTarget, guiOptions: GUILayout.ExpandWidth(false));
+			model.FilterKeyTarget = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Target -", model.FilterKeyTarget, guiOptions: GUILayout.ExpandWidth(false));
 			model.FilterKey = EditorGUILayout.TextField(model.FilterKey);
 		}
 
@@ -181,7 +181,7 @@ namespace LunraGames.SubLight
 		{
 			OnHandleKeyValueBegin(model);
 			{
-				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", model.Operation.Value, guiOptions: GUILayout.ExpandWidth(false));
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value, guiOptions: GUILayout.ExpandWidth(false));
 				if (model.Operation.Value == StringFilterOperations.Equals)
 				{
 					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
@@ -197,7 +197,7 @@ namespace LunraGames.SubLight
 				GUILayout.Label(new GUIContent("EncounterId", "The Id of the encounter for this filter."), GUILayout.ExpandWidth(false));
 				model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
 				GUILayout.Label("Needs To Be");
-				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", model.Operation.Value);
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value);
 			}
 			OnOneLineHandleEnd(model, ref deleted);
 

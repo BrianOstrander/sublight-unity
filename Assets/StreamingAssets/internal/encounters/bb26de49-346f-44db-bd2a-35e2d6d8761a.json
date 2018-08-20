@@ -1,7 +1,9 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "51904e0a-90fc-4d30-b143-0a97b2d97a64",
   "name": "We Tried Staying Put",
   "hook": "The remains of the LSM Beethoven are in orbit, no heat signatures or energy readings are coming from it.",
+  "trigger": "BodyAlert",
   "filtering": {
     "showValues": true,
     "falseByDefault": true,
@@ -25,8 +27,8 @@
     ]
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -112,7 +114,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We Tried Staying Put",
   "metaKeyValues": {
     "EncounterId": "51904e0a-90fc-4d30-b143-0a97b2d97a64"

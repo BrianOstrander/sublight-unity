@@ -1,17 +1,18 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "5120d87c-72cc-46c6-91a8-2debb435daa3",
   "name": "A lone probe",
   "hook": "Repeated radio emissions from a nearby moonlet indicate a vessel is in orbit.",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
+    "stringKeyValues": [],
     "encounterInteractions": []
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [
     "Terrestrial"
-  ],
-  "validCrews": [
-    "OrbitalCrew"
   ],
   "logs": {
     "textLogs": [
@@ -41,6 +42,7 @@
             "key": "Summary"
           }
         ],
+        "setBooleans": [],
         "index": 3,
         "ending": true,
         "logId": "9978b239-a112-4327-924c-767ae81da935"
@@ -61,9 +63,11 @@
         "index": 2,
         "logId": "5e02c3a7-9b64-40d4-b55c-62bdc2a358ae"
       }
-    ]
+    ],
+    "switchLogs": [],
+    "buttonLogs": []
   },
-  "version": 4,
+  "version": 6,
   "meta": "A lone probe",
   "metaKeyValues": {
     "EncounterId": "5120d87c-72cc-46c6-91a8-2debb435daa3"

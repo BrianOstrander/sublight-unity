@@ -1,9 +1,11 @@
 {
   "orderWeight": 2.0,
-  "hidden": true,
+  "randomWeightMultiplier": 1.0,
+  "ignore": true,
   "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
   "name": "Button Test 0",
   "hook": "Button Test 0",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],
@@ -11,7 +13,6 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -129,7 +130,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "Button Test 0",
   "metaKeyValues": {
     "EncounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe"

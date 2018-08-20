@@ -137,17 +137,13 @@ namespace LunraGames.SubLight
 			Payload.Game.FocusedSector.Value = focusedSector;
 			if (wasSectorFocused) OnFocusedSector(focusedSector);
 
-			App.Callbacks.FocusRequest(Payload.Game.FocusRequest.Value.Duplicate(FocusRequest.States.Request));
-
-			if (!DevPrefs.SkipExplanation)
+			if (Payload.Game.TravelRequest.Value.State == TravelRequest.States.Complete && !Payload.Game.Universe.Value.GetSystem(Payload.Game.TravelRequest.Value.Destination).Visited.Value)
 			{
-				App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation0, Strings.ExplanationTitle0, OnExplanation));
+				OnTravelRequest(Payload.Game.TravelRequest);
 			}
-		}
+			else App.Callbacks.FocusRequest(Payload.Game.FocusRequest.Value.Duplicate(FocusRequest.States.Request));
 
-		void OnExplanation()
-		{
-			App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.Explanation1, Strings.ExplanationTitle1));
+
 		}
 		#endregion
 
@@ -258,17 +254,71 @@ namespace LunraGames.SubLight
 
 					var travelDestination = Payload.Game.Universe.Value.GetSystem(request.Destination);
 
-					if (!travelDestination.Visited)
-					{
-						travelDestination.Visited.Value = true;
-						App.Callbacks.FocusRequest(
-							new SystemBodiesFocusRequest(
-								travelDestination.Position
-							)
-						);
-					}
+					if (!travelDestination.Visited) OnNonVisitedSystem(travelDestination);
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Called when we enter a system for the first time.
+		/// </summary>
+		/// <param name="system">System.</param>
+		void OnNonVisitedSystem(SystemModel system)
+		{
+			system.Visited.Value = true;
+			App.Encounters.AssignBestEncounter(OnAssignBestEncounter, Payload.Game, system);
+		}
+
+		void OnAssignBestEncounter(AssignBestEncounterRequest result)
+		{
+			if (result.Status != RequestStatus.Success || !result.EncounterAssigned) return;
+
+			if (result.Encounter.IsIntroduction && DevPrefs.SkipExplanation)
+			{
+				Debug.Log("Skipping Explanation");
+				App.Callbacks.KeyValueRequest(KeyValueRequest.Set(KeyValueTargets.Game, "IntroductionShown", true));
+				App.Callbacks.FocusRequest(Payload.Game.FocusRequest.Value.Duplicate(FocusRequest.States.Request));
+				return;
+			}
+
+			switch (result.Encounter.Trigger.Value)
+			{
+				case EncounterTriggers.Automatic:
+					OnAutomaticEncounter(result);
+					break;
+				case EncounterTriggers.BodyAlert:
+					OnBodyAlertEncounter(result);
+					break;
+				default:
+					Debug.LogError("Unrecognized Trigger: " + result.Encounter.Trigger.Value);
+					break;
+			}
+		}
+
+		void OnAutomaticEncounter(AssignBestEncounterRequest result)
+		{
+			switch (Payload.Game.GetEncounterStatus(result.Encounter.EncounterId.Value).State)
+			{
+				case EncounterStatus.States.Seen:
+				case EncounterStatus.States.NeverSeen:
+					App.Callbacks.FocusRequest(
+						EncounterFocusRequest.Encounter(
+							result.Encounter.EncounterId,
+							result.System.Position
+						)
+					);
+					break;
+			}
+		}
+
+		void OnBodyAlertEncounter(AssignBestEncounterRequest result)
+		{
+			// TODO: A more subtle alert, perhaps? something more fun?
+			App.Callbacks.FocusRequest(
+				new SystemBodiesFocusRequest(
+					result.System.Position
+				)
+			);
 		}
 
 		void OnSaveRequest(SaveRequest request)

@@ -164,7 +164,7 @@ namespace LunraGames.SubLight
 				{
 					var newOptions = SaveTypeValidator.InventoryReferences;
 
-					var newSelection = EditorGUILayoutExtensions.HelpfulEnumPopup("- Create New Inventory Reference -", SaveTypes.Unknown, newOptions);
+					var newSelection = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Create New Inventory Reference -", SaveTypes.Unknown, newOptions);
 					if (newSelection != SaveTypes.Unknown) NewReference(newSelection);
 
 					if (GUILayout.Button("Refresh"))

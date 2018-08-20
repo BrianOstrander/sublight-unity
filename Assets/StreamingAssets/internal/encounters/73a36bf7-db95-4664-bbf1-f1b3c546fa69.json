@@ -1,8 +1,9 @@
 {
   "orderWeight": 100.0,
+  "randomWeightMultiplier": 1.0,
   "encounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66",
   "name": "We're On the Move",
-  "hook": "Sparks fly from a massive construction effort surrounding a ship in orbit.",
+  "trigger": "Automatic",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [
@@ -18,7 +19,6 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -339,7 +339,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We're On the Move",
   "metaKeyValues": {
     "EncounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66"

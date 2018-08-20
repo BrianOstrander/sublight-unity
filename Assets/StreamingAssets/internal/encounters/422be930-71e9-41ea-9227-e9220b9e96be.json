@@ -1,7 +1,8 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "14c17b2e-273d-4a6f-a85c-c5eaf301bacb",
   "name": "We Moved On",
-  "hook": "You're hailed by a familiar ship, the LSM Beethoven!",
+  "trigger": "Automatic",
   "filtering": {
     "showValues": true,
     "falseByDefault": true,
@@ -27,7 +28,6 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -172,7 +172,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We Moved On",
   "metaKeyValues": {
     "EncounterId": "14c17b2e-273d-4a6f-a85c-c5eaf301bacb"

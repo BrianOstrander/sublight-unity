@@ -1,7 +1,9 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "50ca77ea-9380-421c-b570-019144c98047",
   "name": "We Moved Too Fast",
   "hook": "The crushed remains of a ship can be seen orbiting closely to the event horizon of this system's blackhole.",
+  "trigger": "BodyAlert",
   "filtering": {
     "showValues": true,
     "falseByDefault": true,
@@ -17,8 +19,8 @@
     ]
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -303,7 +305,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We Moved Too Fast",
   "metaKeyValues": {
     "EncounterId": "50ca77ea-9380-421c-b570-019144c98047"

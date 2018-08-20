@@ -19,7 +19,6 @@ namespace LunraGames.SubLight.Presenters
 		EncounterInfoModel encounter;
 		SystemModel system;
 		BodyModel body;
-		//CrewInventoryModel crew;
 		KeyValueListener keyValues;
 		List<IEntryEncounterLogPresenter> entries = new List<IEntryEncounterLogPresenter>();
 
@@ -66,8 +65,7 @@ namespace LunraGames.SubLight.Presenters
 					var encounterFocus = focus as EncounterFocusRequest;
 					encounter = App.Encounters.GetEncounter(encounterFocus.EncounterId);
 					system = model.Universe.Value.GetSystem(encounterFocus.System);
-					body = system.GetBody(encounterFocus.Body);
-					//crew = model.Ship.Value.Inventory.GetInventoryFirstOrDefault<CrewInventoryModel>(encounterFocus.Crew);
+					body = system.BodyWithEncounter;
 					keyValues = new KeyValueListener(KeyValueTargets.Encounter, encounterFocus.KeyValues, App.KeyValues);
 					keyValues.Register();
 					entries.Clear();
@@ -121,7 +119,7 @@ namespace LunraGames.SubLight.Presenters
 			var finalReport = new FinalReportModel();
 			finalReport.Encounter.Value = encounter.EncounterId;
 			finalReport.System.Value = system.Position;
-			finalReport.Body.Value = body.BodyId;
+			finalReport.Body.Value = system.EncounterBodyId.Value;
 			finalReport.Summary.Value = summary;
 			model.AddFinalReport(finalReport);
 
@@ -136,7 +134,10 @@ namespace LunraGames.SubLight.Presenters
 			keyValues.UnRegister();
 
 			App.Callbacks.FocusRequest(
-				new SystemBodiesFocusRequest(system.Position)
+				new SystemsFocusRequest(
+					system.Position.Value.SystemZero,
+					system.Position.Value
+				)
 			);
 		}
 
@@ -395,7 +396,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (result.HasValue) filtered.Add(result.Value);
 
-			if (!remaining.Any())
+			if (remaining.None())
 			{
 				// No remaining to filter.
 				if (filtered.Where(f => f.Interactable).Any()) filteringDone(RequestStatus.Success, filtered); // There are interactable buttons.

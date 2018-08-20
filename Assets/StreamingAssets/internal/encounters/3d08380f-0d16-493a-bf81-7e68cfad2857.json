@@ -1,7 +1,8 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "ff34ef9d-1eb2-4498-b139-e821dedff9bb",
   "name": "We're Staying Put",
-  "hook": "A ship in low orbit is dismantling itself, and looks like they're getting ready to colonize the surface of a nearby planet.",
+  "trigger": "Automatic",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],
@@ -9,7 +10,6 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -235,7 +235,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We're Staying Put",
   "metaKeyValues": {
     "EncounterId": "ff34ef9d-1eb2-4498-b139-e821dedff9bb"
