@@ -3,6 +3,7 @@
   "encounterId": "0cd16a5f-44cc-44c5-b9aa-d85a1c0b20a3",
   "name": "Jungle solar station",
   "hook": "Optical scanners have picked up a reflective object in orbit around this star. We think it might be some kind of solar power station.",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],

@@ -4,6 +4,7 @@
   "name": "Corona Blasted Ship",
   "description": "",
   "hook": "Thermal emission dips near the star’s equator indicate some kind of large vessel is in a tight orbit.",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],

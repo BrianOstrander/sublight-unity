@@ -3,6 +3,7 @@
   "encounterId": "5120d87c-72cc-46c6-91a8-2debb435daa3",
   "name": "A lone probe",
   "hook": "Repeated radio emissions from a nearby moonlet indicate a vessel is in orbit.",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],

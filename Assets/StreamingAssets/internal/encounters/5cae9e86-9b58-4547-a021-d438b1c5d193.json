@@ -3,6 +3,7 @@
   "encounterId": "5b583f59-8ebf-4a28-a8f9-3c7eb44ad578",
   "name": "Volcanic Plumes",
   "hook": "Large plumes are visible, possibly from a subterranean factory.",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],

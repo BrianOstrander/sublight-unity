@@ -1,10 +1,11 @@
 {
   "orderWeight": 2.0,
   "randomWeightMultiplier": 1.0,
-  "hidden": true,
+  "ignore": true,
   "encounterId": "85c9e84c-e797-4488-804d-4bfbee6a36b5",
   "name": "Switch Test 0",
   "hook": "Switch Test 0",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],

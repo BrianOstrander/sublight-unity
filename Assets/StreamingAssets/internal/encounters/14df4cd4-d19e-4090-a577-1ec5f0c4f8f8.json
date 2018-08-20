@@ -3,6 +3,7 @@
   "encounterId": "09e817c1-8d15-4759-ac8a-0367e4c3a5c4",
   "name": "Spaceship Graveyard",
   "hook": "A large mass of artifical objects are in low orbit around this planet.",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],

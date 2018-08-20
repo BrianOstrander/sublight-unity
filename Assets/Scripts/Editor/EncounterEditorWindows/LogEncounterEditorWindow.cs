@@ -231,7 +231,7 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label(operation.Operation + ":", GUILayout.ExpandWidth(false));
-				operation.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", operation.Target.Value);
+				operation.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Target -", operation.Target.Value);
 				deleted = EditorGUILayoutExtensions.XButton();
 			}
 			GUILayout.EndHorizontal();
@@ -294,7 +294,7 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label("Append New Inventory Operation: ", GUILayout.ExpandWidth(false));
-				selection = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", selection);
+				selection = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", selection);
 			}
 			GUILayout.EndHorizontal();
 

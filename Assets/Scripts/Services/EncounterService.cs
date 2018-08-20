@@ -180,7 +180,7 @@ namespace LunraGames.SubLight
 			var remaining = encounters.Where(
 				e =>
 				{
-					if (e.Hidden.Value) return false;
+					if (e.Ignore.Value) return false;
 					switch (model.GetEncounterStatus(e.EncounterId).State)
 					{
 						case EncounterStatus.States.Completed:

@@ -202,8 +202,8 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					model.OrderWeight.Value = EditorGUILayout.FloatField("Order Weight", model.OrderWeight.Value, GUILayout.ExpandWidth(true));
-					GUILayout.Label("Hidden", GUILayout.ExpandWidth(false));
-					model.Hidden.Value = EditorGUILayout.Toggle(model.Hidden.Value, GUILayout.Width(14f));
+					GUILayout.Label("Ignore", GUILayout.ExpandWidth(false));
+					model.Ignore.Value = EditorGUILayout.Toggle(model.Ignore.Value, GUILayout.Width(14f));
 				}
 				GUILayout.EndHorizontal();
 				model.RandomWeightMultiplier.Value = EditorGUILayout.FloatField("Random Weight Multiplier", model.RandomWeightMultiplier.Value);
@@ -213,6 +213,8 @@ namespace LunraGames.SubLight
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
 				model.Hook.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Hook", "The description given to the player before entering this encounter."), model.Hook.Value, leftOffset: false);
 
+				model.Trigger.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Trigger", "What triggers this encounter to appear upon entering a system with it."),"- Select a Trigger -", model.Trigger.Value);
+				if (model.Trigger.Value == EncounterTriggers.Unknown) EditorGUILayout.HelpBox("A trigger for this encounter must be selected.", MessageType.Error);
 				model.AssignedToBody.Value = EditorGUILayoutExtensions.ToggleButton(new GUIContent("Assigned To Body", "If true, this encounter is associated with a specific body in the specified system."), model.AssignedToBody.Value);
 
 				var alternateColor = Color.grey;
@@ -249,7 +251,7 @@ namespace LunraGames.SubLight
 				{
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count()+" |", GUILayout.ExpandWidth(false));
 					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
-					var result = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Log Type -", EncounterLogTypes.Unknown);
+					var result = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Log Type -", EncounterLogTypes.Unknown);
 					var isBeginning = model.Logs.All.Value.Length == 0;
 					var nextIndex = model.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
 					switch (result)
@@ -356,6 +358,7 @@ namespace LunraGames.SubLight
 			info.RandomWeightMultiplier.Value = 1f;
 			info.Name.Value = string.Empty;
 			info.Meta.Value = info.Name;
+			info.Trigger.Value = EncounterTriggers.Automatic;
 			SaveLoadService.Save(info, OnNewEncounterInfo);
 		}
 

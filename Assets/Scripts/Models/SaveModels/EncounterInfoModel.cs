@@ -8,11 +8,12 @@ namespace LunraGames.SubLight.Models
 	{
 		[JsonProperty] float orderWeight;
 		[JsonProperty] float randomWeightMultiplier;
-		[JsonProperty] bool hidden;
+		[JsonProperty] bool ignore;
 		[JsonProperty] string encounterId;
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 		[JsonProperty] string hook;
+		[JsonProperty] EncounterTriggers trigger;
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] bool assignedToBody;
@@ -35,7 +36,7 @@ namespace LunraGames.SubLight.Models
 		/// If true, this encounter info will never show up in game.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<bool> Hidden;
+		public readonly ListenerProperty<bool> Ignore;
 		/// <summary>
 		/// The encounter identifier.
 		/// </summary>
@@ -57,6 +58,12 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Hook;
+		/// <summary>
+		/// The encounter trigger, does in interrupt the player, or appear in
+		/// above a body in the system viewer.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<EncounterTriggers> Trigger;
 		[JsonIgnore]
 		public readonly ListenerProperty<SystemTypes[]> ValidSystems;
 		/// <summary>
@@ -95,11 +102,12 @@ namespace LunraGames.SubLight.Models
 			SaveType = SaveTypes.EncounterInfo;
 			OrderWeight = new ListenerProperty<float>(value => orderWeight = value, () => orderWeight);
 			RandomWeightMultiplier = new ListenerProperty<float>(value => randomWeightMultiplier = value, () => randomWeightMultiplier);
-			Hidden = new ListenerProperty<bool>(value => hidden = value, () => hidden);
+			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Hook = new ListenerProperty<string>(value => hook = value, () => hook);
+			Trigger = new ListenerProperty<EncounterTriggers>(value => trigger = value, () => trigger);
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			AssignedToBody = new ListenerProperty<bool>(value => assignedToBody = value, () => assignedToBody);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);

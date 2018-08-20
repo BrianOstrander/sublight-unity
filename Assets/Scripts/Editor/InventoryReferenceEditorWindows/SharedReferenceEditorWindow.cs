@@ -27,7 +27,7 @@ namespace LunraGames.SubLight
 
 			EditorGUIExtensions.BeginChangeCheck();
 			{
-				model.Hidden.Value = EditorGUILayout.Toggle("Hidden", model.Hidden.Value);
+				model.Ignore.Value = EditorGUILayout.Toggle("Ignore", model.Ignore.Value);
 				model.InventoryId.Value = reference.SetMetaKey(MetaKeyConstants.InventoryReference.InventoryId, EditorGUILayout.TextField("Inventory Id", model.InventoryId.Value));
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				reference.Meta.Value = model.Name;

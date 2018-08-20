@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace LunraGamesEditor
 			Paused
 		}
 
-		static int CurrentLevel;
+		static int CurrentLevel = 0; // For some reason this has to be zero otherwise bugs may occur on recompile...
 		static Stack<ChangeCheckStates> ChangeCheckStateStack = new Stack<ChangeCheckStates>();
 		static Stack<bool> ChangeValueStack = new Stack<bool>();
 
