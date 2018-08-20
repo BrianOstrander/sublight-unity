@@ -9,19 +9,15 @@ namespace LunraGames.SubLight
 		public static EncounterFocusRequest Encounter(
 			string encounter,
 			UniversePosition system,
-			int body,
-			string crew,
 			KeyValueListModel keyValues = null,
 			States state = States.Request
 		)
 		{
-			return new EncounterFocusRequest(encounter, system, body, crew, keyValues ?? new KeyValueListModel(), state);
+			return new EncounterFocusRequest(encounter, system, keyValues ?? new KeyValueListModel(), state);
 		}
 
 		[JsonProperty] public readonly string EncounterId;
 		[JsonProperty] public readonly UniversePosition System;
-		[JsonProperty] public readonly int Body;
-		[JsonProperty] public readonly string Crew;
 		[JsonProperty] public readonly KeyValueListModel KeyValues;
 
 		public override Focuses Focus { get { return Focuses.Encounter; } }
@@ -30,16 +26,12 @@ namespace LunraGames.SubLight
 		EncounterFocusRequest(
 			string encounterId,
 			UniversePosition system,
-			int body,
-			string crew,
 			KeyValueListModel keyValues = null,
 			States state = States.Request
 		) : base(state)
 		{
 			EncounterId = encounterId;
 			System = system;
-			Body = body;
-			Crew = crew;
 			KeyValues = keyValues ?? new KeyValueListModel();
 		}
 
@@ -48,8 +40,6 @@ namespace LunraGames.SubLight
 			return new EncounterFocusRequest(
 				EncounterId,
 				System,
-				Body,
-				Crew,
 				KeyValues,
 				state == States.Unknown ? State : state
 			);

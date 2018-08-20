@@ -4,9 +4,11 @@
   "hook": "Large plumes are visible, possibly from a subterranean factory.",
   "filtering": {
     "booleanKeyValues": [],
+    "stringKeyValues": [],
     "encounterInteractions": []
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [
     "Terrestrial"
   ],
@@ -57,14 +59,17 @@
             "key": "Summary"
           }
         ],
+        "setBooleans": [],
         "index": 4,
         "ending": true,
         "logId": "3ecae931-b043-47bd-af51-106cb20efd99"
       }
     ],
-    "inventoryLogs": []
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": []
   },
-  "version": 4,
+  "version": 6,
   "meta": "Volcanic Plumes",
   "metaKeyValues": {
     "EncounterId": "5b583f59-8ebf-4a28-a8f9-3c7eb44ad578"

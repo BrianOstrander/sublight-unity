@@ -167,12 +167,12 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Utility
-		public void AssignBestEncounter(Action<EncounterInfoModel> done, GameModel model, SystemModel system, BodyModel body)
+		public void AssignBestEncounter(Action<AssignBestEncounterRequest> done, GameModel model, SystemModel system)
 		{
 			// TODO: Check if old encounters are still valid here?
-			if (body.HasEncounter)
+			if (system.HasEncounter)
 			{
-				done(GetEncounter(body.Encounter));
+				OnAssignBestEncounterResult(done, GetEncounter(system.EncounterId), system);
 				return;
 			}
 			// Required checks
@@ -186,14 +186,19 @@ namespace LunraGames.SubLight
 						case EncounterStatus.States.Seen:
 							return false;
 					}
-					return e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType) &&
-						e.ValidBodies.Value.ContainsOrIsEmpty(body.BodyType);
+					if (!e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType)) return false;
+					if (e.ValidBodies.Value.None()) return true;
+					foreach (var bodyType in system.Bodies.Value.Select(b => b.BodyType).Distinct())
+					{
+						if (e.ValidBodies.Value.Contains(bodyType)) return true;
+					}
+					return false;
 				}
 			);
 
-			if (!remaining.Any())
+			if (remaining.None())
 			{
-				done(null);
+				OnAssignBestEncounterResult(done, null, system);
 				return;
 			}
 
@@ -204,7 +209,7 @@ namespace LunraGames.SubLight
 				remaining.ToList(),
 				new List<EncounterInfoModel>(),
 				model,
-				body
+				system
 			);
 		}
 
@@ -224,13 +229,13 @@ namespace LunraGames.SubLight
 
 		#region Events
 		void OnFilterEncounters(
-			Action<EncounterInfoModel> done,
+			Action<AssignBestEncounterRequest> done,
 			bool? lastFilteredPassed,
 			EncounterInfoModel lastFiltered,
 			List<EncounterInfoModel> toFilter,
 			List<EncounterInfoModel> filtered,
 			GameModel model,
-			BodyModel body
+			SystemModel system
 		)
 		{
 			if (lastFilteredPassed.HasValue)
@@ -244,14 +249,14 @@ namespace LunraGames.SubLight
 				toFilter.RemoveAt(0);
 				valueFilter.Filter(result =>
 				{
-					OnFilterEncounters(done, result, nextToFilter, toFilter, filtered, model, body);
+					OnFilterEncounters(done, result, nextToFilter, toFilter, filtered, model, system);
 				}, nextToFilter.Filtering, model);
 				return;
 			}
 
-			if (!filtered.Any())
+			if (filtered.None())
 			{
-				done(null);
+				OnAssignBestEncounterResult(done, null, system);
 				return;
 			}
 
@@ -260,13 +265,37 @@ namespace LunraGames.SubLight
 			var chosen = ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)).Random();
 
 			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
-			body.Encounter.Value = chosen.EncounterId;
+			system.EncounterId.Value = chosen.EncounterId;
 
 			var interaction = GetEncounterInteraction(chosen.EncounterId);
 			interaction.TimesSeen.Value++;
 			interaction.LastSeen.Value = DateTime.Now;
 
-			done(chosen);
+			OnFilterEncountersDone(done, chosen, system);
+		}
+
+		void OnFilterEncountersDone(Action<AssignBestEncounterRequest> done, EncounterInfoModel encounter, SystemModel system)
+		{
+			system.EncounterId.Value = encounter.EncounterId.Value;
+
+			if (encounter.AssignedToBody.Value)
+			{
+				var bodies = encounter.HasBodyRequirements ? system.Bodies.Value.Where(b => encounter.ValidBodies.Value.Contains(b.BodyType)) : system.Bodies.Value;
+				var assignedBody = bodies.OrderBy(b => b.EncounterWeight.Value).First();
+				system.EncounterBodyId.Value = assignedBody.BodyId.Value;
+			}
+
+			OnAssignBestEncounterResult(done, encounter, system);
+		}
+
+		void OnAssignBestEncounterResult(Action<AssignBestEncounterRequest> done, EncounterInfoModel encounter, SystemModel system)
+		{
+			if (encounter == null)
+			{
+				done(AssignBestEncounterRequest.NoEncounterResult(system));
+				return;
+			}
+			done(AssignBestEncounterRequest.EncounterResult(system, encounter, system.BodyWithEncounter));
 		}
 
 		void OnSaveRequest(SaveRequest request)

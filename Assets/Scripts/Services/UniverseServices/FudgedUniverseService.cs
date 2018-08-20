@@ -181,6 +181,7 @@ namespace LunraGames.SubLight
 			bodies.Add(star);
 			star.Seed.Value = random.NextInteger;
 			star.BodyId.Value = 0;
+			star.EncounterWeight.Value = random.NextFloat;
 			star.ParentId.Value = -1;
 			star.Name.Value = "Primary Star";
 			star.Resources.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
@@ -196,6 +197,7 @@ namespace LunraGames.SubLight
 				BodyModel generic;
 				var seed = random.NextInteger;
 				var bodyId = (bodyCount += 1);
+				var encounterWeight = random.NextFloat;
 				var parentId = -1;
 				var name = string.Empty;
 				var rations = GetFraction(ref rationsRemaining, random.NextFloat);
@@ -222,6 +224,7 @@ namespace LunraGames.SubLight
 
 				generic.Seed.Value = seed;
 				generic.BodyId.Value = bodyId;
+				generic.EncounterWeight.Value = encounterWeight;
 				generic.ParentId.Value = parentId;
 				generic.Name.Value = name;
 				generic.Resources.Rations.Value = rations;

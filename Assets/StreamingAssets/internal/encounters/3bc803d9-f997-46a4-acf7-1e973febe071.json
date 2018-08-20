@@ -17,6 +17,7 @@
     ]
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [],
   "validCrews": [],
   "logs": {
@@ -303,7 +304,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We Moved Too Fast",
   "metaKeyValues": {
     "EncounterId": "50ca77ea-9380-421c-b570-019144c98047"

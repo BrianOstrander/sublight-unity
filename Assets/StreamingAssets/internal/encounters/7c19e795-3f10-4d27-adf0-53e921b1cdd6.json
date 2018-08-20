@@ -4,9 +4,11 @@
   "hook": "A planet rich in organics has been found, perhaps we can top off our ration supply?",
   "filtering": {
     "booleanKeyValues": [],
+    "stringKeyValues": [],
     "encounterInteractions": []
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [
     "Terrestrial"
   ],
@@ -57,6 +59,7 @@
             "key": "Summary"
           }
         ],
+        "setBooleans": [],
         "index": 5,
         "ending": true,
         "logId": "fd8776e3-179c-4a3f-85fb-6b7879b3957a"
@@ -77,9 +80,11 @@
         "index": 4,
         "logId": "cde7079a-ba67-4807-9ea1-e99f75a10105"
       }
-    ]
+    ],
+    "switchLogs": [],
+    "buttonLogs": []
   },
-  "version": 4,
+  "version": 6,
   "meta": "Debris in orbit",
   "metaKeyValues": {
     "EncounterId": "6a417bed-bd3a-43ba-a517-87c420477412"

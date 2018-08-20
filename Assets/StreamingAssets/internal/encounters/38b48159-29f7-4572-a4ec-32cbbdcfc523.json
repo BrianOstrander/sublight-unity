@@ -4,9 +4,11 @@
   "hook": "A weak emergency hail is being emitted from a crater on the surface, a look from orbit could determine if anyone survived.",
   "filtering": {
     "booleanKeyValues": [],
+    "stringKeyValues": [],
     "encounterInteractions": []
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [
     "Terrestrial"
   ],
@@ -57,14 +59,17 @@
             "key": "Summary"
           }
         ],
+        "setBooleans": [],
         "index": 4,
         "ending": true,
         "logId": "1b1d43a0-5c6a-43b2-a9d9-c23f9719dfee"
       }
     ],
-    "inventoryLogs": []
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": []
   },
-  "version": 4,
+  "version": 6,
   "meta": "Sentry Crash",
   "metaKeyValues": {
     "EncounterId": "8bd04919-1176-4ec6-a252-3f8fb540a8fc"

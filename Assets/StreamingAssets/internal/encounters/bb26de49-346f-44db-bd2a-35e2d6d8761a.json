@@ -25,6 +25,7 @@
     ]
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [],
   "validCrews": [],
   "logs": {
@@ -112,7 +113,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We Tried Staying Put",
   "metaKeyValues": {
     "EncounterId": "51904e0a-90fc-4d30-b143-0a97b2d97a64"

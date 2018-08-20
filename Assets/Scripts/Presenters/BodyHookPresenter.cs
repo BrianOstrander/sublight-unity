@@ -64,14 +64,17 @@ namespace LunraGames.SubLight.Presenters
 			switch (focus.Focus)
 			{
 				case FocusRequest.Focuses.Body:
+					UnityEngine.Debug.Log("should be phased out...");
 					// We only show UI elements once the focus is complete.
 					if (focus.State != FocusRequest.States.Complete) return;
 					var bodyFocus = focus as BodyFocusRequest;
 					// We also only show up if our view is specified
 					if (bodyFocus.View != BodyFocusRequest.Views.BodyHook) goto default;
+					/*
 					system = model.Universe.Value.GetSystem(bodyFocus.System);
 					body = system.GetBody(bodyFocus.Body);
-					App.Encounters.AssignBestEncounter(OnAssignBestEncounter, model, system, body);
+					App.Encounters.AssignBestEncounter(OnAssignBestEncounter, model, system);
+					*/
 					break;
 				default:
 					if (View.TransitionState == TransitionStates.Shown) CloseView();
@@ -87,6 +90,8 @@ namespace LunraGames.SubLight.Presenters
 		
 		void OnCrewClick(CrewInventoryModel crew)
 		{
+			UnityEngine.Debug.Log("This sohuld be phased out.........");
+			/*
 			App.Callbacks.FocusRequest(
 				EncounterFocusRequest.Encounter(
 					encounter.EncounterId,
@@ -95,6 +100,7 @@ namespace LunraGames.SubLight.Presenters
 					crew.InventoryId
 				)
 			);
+			*/
 		}
 
 		void OnBackClick()

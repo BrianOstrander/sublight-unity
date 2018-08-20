@@ -4,9 +4,11 @@
   "hook": "Optical scanners have picked up a reflective object in orbit around this star. We think it might be some kind of solar power station.",
   "filtering": {
     "booleanKeyValues": [],
+    "stringKeyValues": [],
     "encounterInteractions": []
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [
     "Star"
   ],
@@ -60,6 +62,7 @@
             "key": "Summary"
           }
         ],
+        "setBooleans": [],
         "index": 5,
         "ending": true,
         "logId": "fd59f6ac-f6f1-4da5-b045-fc6e1fea45dd"
@@ -80,9 +83,11 @@
         "index": 4,
         "logId": "d85800c5-a471-47a5-9e6d-fb30e1b8f4c7"
       }
-    ]
+    ],
+    "switchLogs": [],
+    "buttonLogs": []
   },
-  "version": 4,
+  "version": 6,
   "meta": "Jungle solar station",
   "metaKeyValues": {
     "EncounterId": "0cd16a5f-44cc-44c5-b9aa-d85a1c0b20a3"

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -12,6 +14,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string hook;
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
+		[JsonProperty] bool assignedToBody;
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
 		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
@@ -50,6 +53,17 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<string> Hook;
 		[JsonIgnore]
 		public readonly ListenerProperty<SystemTypes[]> ValidSystems;
+		/// <summary>
+		/// If true, this encounter gets associated with a specific body in a
+		/// system.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> AssignedToBody;
+		/// <summary>
+		/// A system requires at least one of these bodies in order for the
+		/// encounter to be assigned to it. If empty, there are no body
+		/// requirements.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyTypes[]> ValidBodies;
 		[JsonIgnore]
@@ -62,6 +76,16 @@ namespace LunraGames.SubLight.Models
 		public EncounterLogListModel Logs { get { return logs; } }
 		#endregion
 
+		#region Utility
+		/// <summary>
+		/// If true, this encounter has to be in a system with certain types of
+		/// bodies. Basically true if there are any entries in ValidBodies.
+		/// </summary>
+		/// <value><c>true</c> if has body requirements; otherwise, <c>false</c>.</value>
+		[JsonIgnore]
+		public bool HasBodyRequirements { get { return ValidBodies.Value.Any(); } }
+		#endregion
+
 		public EncounterInfoModel()
 		{
 			SaveType = SaveTypes.EncounterInfo;
@@ -72,6 +96,7 @@ namespace LunraGames.SubLight.Models
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Hook = new ListenerProperty<string>(value => hook = value, () => hook);
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
+			AssignedToBody = new ListenerProperty<bool>(value => assignedToBody = value, () => assignedToBody);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
 			ValidCrews = new ListenerProperty<InventoryTypes[]>(value => validCrews = value, () => validCrews);
 		}

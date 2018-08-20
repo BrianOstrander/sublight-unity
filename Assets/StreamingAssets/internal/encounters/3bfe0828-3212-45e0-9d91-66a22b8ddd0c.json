@@ -5,9 +5,11 @@
   "hook": "Thermal emission dips near the star’s equator indicate some kind of large vessel is in a tight orbit.",
   "filtering": {
     "booleanKeyValues": [],
+    "stringKeyValues": [],
     "encounterInteractions": []
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [
     "Star"
   ],
@@ -122,14 +124,17 @@
             "key": "Summary"
           }
         ],
+        "setBooleans": [],
         "index": 12,
         "ending": true,
         "logId": "9d8bdfcd-17cd-4dbb-a1bd-27dbfb8be40f"
       }
     ],
-    "inventoryLogs": []
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": []
   },
-  "version": 4,
+  "version": 6,
   "meta": "Corona Blasted Ship",
   "metaKeyValues": {
     "EncounterId": "1942bd43-4110-4020-9c01-d2c7403ab10b"
