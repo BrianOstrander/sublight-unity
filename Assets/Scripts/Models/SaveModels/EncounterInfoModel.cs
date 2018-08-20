@@ -16,7 +16,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
 		[JsonProperty] bool assignedToBody;
 		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
-		[JsonProperty] InventoryTypes[] validCrews = new InventoryTypes[0];
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
 		/// <summary>
@@ -66,8 +65,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyTypes[]> ValidBodies;
-		[JsonIgnore]
-		public readonly ListenerProperty<InventoryTypes[]> ValidCrews;
 
 		#region Shortcuts
 		[JsonIgnore]
@@ -98,7 +95,6 @@ namespace LunraGames.SubLight.Models
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			AssignedToBody = new ListenerProperty<bool>(value => assignedToBody = value, () => assignedToBody);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
-			ValidCrews = new ListenerProperty<InventoryTypes[]>(value => validCrews = value, () => validCrews);
 		}
 	}
 }

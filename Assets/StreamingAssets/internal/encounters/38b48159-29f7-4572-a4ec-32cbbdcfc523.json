@@ -12,9 +12,6 @@
   "validBodies": [
     "Terrestrial"
   ],
-  "validCrews": [
-    "OrbitalCrew"
-  ],
   "logs": {
     "textLogs": [
       {

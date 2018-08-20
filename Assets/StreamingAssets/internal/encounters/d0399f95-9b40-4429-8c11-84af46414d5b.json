@@ -11,7 +11,6 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -129,7 +128,7 @@
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "Button Test 0",
   "metaKeyValues": {
     "EncounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe"

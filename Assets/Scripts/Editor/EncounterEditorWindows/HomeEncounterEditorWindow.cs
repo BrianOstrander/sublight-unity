@@ -236,16 +236,6 @@ namespace LunraGames.SubLight
 					);
 				}
 				EditorGUILayoutExtensions.EndVertical();
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				{
-					model.ValidCrews.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Crews",
-						model.ValidCrews.Value,
-						"- Select a CrewType -",
-						options: InventoryValidator.Crews
-					);
-				}
-				GUILayout.EndVertical();
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 		}

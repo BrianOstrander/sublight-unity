@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using LunraGames.SubLight.Views;
+﻿using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
@@ -46,8 +44,6 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			body = new LabelButtonBlock(result.Body == null ? "Non body encounter" : "Encounter on BodyId: "+result.Body.BodyId.Value, () => OnEncounterClick(result), true);
-
-			// TODO: This is where encounters were assigned to bodies... but it should probably be in encoutner service
 
 			OnAssignBestEncounterDone();
 		}
