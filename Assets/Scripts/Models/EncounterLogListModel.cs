@@ -52,6 +52,31 @@ namespace LunraGames.SubLight.Models
 			return All.Value.OfType<T>().FirstOrDefault(predicate);
 		}
 
+		/// <summary>
+		/// Gets the next log after the provided index, or null if there are
+		/// none.
+		/// </summary>
+		/// <returns>The next log first or default.</returns>
+		/// <param name="index">Index.</param>
+		/// <param name="predicate">Predicate.</param>
+		public EncounterLogModel GetNextLogFirstOrDefault(int index, Func<EncounterLogModel, bool> predicate = null)
+		{
+			return GetNextLogFirstOrDefault<EncounterLogModel>(index, predicate);
+		}
+
+		/// <summary>
+		/// Gets the next log after the provided index, or null if there are
+		/// none.
+		/// </summary>
+		/// <returns>The next log first or default.</returns>
+		/// <param name="index">Index.</param>
+		/// <param name="predicate">Predicate.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public T GetNextLogFirstOrDefault<T>(int index, Func<T, bool> predicate = null) where T : EncounterLogModel
+		{
+			return GetLogs(predicate).Where(l => index < l.Index.Value).OrderBy(l => l.Index.Value).FirstOrDefault();
+		}
+
 		[JsonIgnore]
 		public EncounterLogModel Beginning
 		{

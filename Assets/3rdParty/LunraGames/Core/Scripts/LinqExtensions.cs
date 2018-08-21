@@ -96,5 +96,10 @@ namespace LunraGames
 		{
 			return !entries.Any(predicate);
 		}
+
+		public static IEnumerable<T> ExceptOne<T>(this IEnumerable<T> entries, T element)
+		{
+			return entries.Except(new T[] { element });
+		}
 	}
 }

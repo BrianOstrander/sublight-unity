@@ -410,21 +410,16 @@ namespace LunraGames.SubLight
 			EncounterLogModel nextModel
 		)
 		{
-			string selection;
-			var selectionMade = EditorGUILayoutEncounter.LogPopup(
-				null,
+			EditorGUILayoutEncounter.LogPopup(
 				"Append New Switch: ",
+				null,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null },
-					{ "< Blank >", null }
-				},
-				out selection
+				existingSelection => OnSwitchLogSpawn(infoModel, model, existingSelection),
+				newSelection => Debug.Log("newSelection here"),
+				"- Select Target Log -",
+				"< Blank >"
 			);
-			if (selectionMade) OnSwitchLogSpawn(infoModel, model, selection);
 
 			var deleted = string.Empty;
 			var isAlternate = false;
@@ -555,20 +550,15 @@ namespace LunraGames.SubLight
 			SwitchEdgeModel edge
 		)
 		{
-			string selection;
-			var selectionMade = EditorGUILayoutEncounter.LogPopup(
-				edge.NextLogId.Value,
+			EditorGUILayoutEncounter.LogPopup(
 				"Target Log: ",
+				edge.NextLogId.Value,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null }
-				},
-				out selection
+				existingSelection => edge.NextLogId.Value = existingSelection,
+				newSelection => Debug.Log("newSelection here"),
+				"- Select Target Log -"
 			);
-			if (selectionMade) edge.NextLogId.Value = selection;
 
 			EditorGUILayoutValueFilter.Field(
 				new GUIContent("Filtering", "Passing this filter is required to continue to the target log."),
@@ -584,21 +574,16 @@ namespace LunraGames.SubLight
 			EncounterLogModel nextModel
 		)
 		{
-			string selection;
-			var selectionMade = EditorGUILayoutEncounter.LogPopup(
-				null,
+			EditorGUILayoutEncounter.LogPopup(
 				"Append New Button: ",
+				null,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null },
-					{ "< Blank >", null }
-				},
-				out selection
+				existingSelection => OnButtonLogSpawn(infoModel, model, existingSelection),
+				newSelection => Debug.Log("newSelection here"),
+				"- Select Target Log -",
+				"< Blank >"
 			);
-			if (selectionMade) OnButtonLogSpawn(infoModel, model, selection);
 
 			var deleted = string.Empty;
 			var isAlternate = false;
@@ -729,20 +714,15 @@ namespace LunraGames.SubLight
 			ButtonEdgeModel edge
 		)
 		{
-			string selection;
-			var selectionMade = EditorGUILayoutEncounter.LogPopup(
-				edge.NextLogId.Value,
+			EditorGUILayoutEncounter.LogPopup(
 				"Target Log: ",
+				edge.NextLogId.Value,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null }
-				},
-				out selection
+				existingSelection => edge.NextLogId.Value = existingSelection,
+				newSelection => Debug.Log("newSelection here"),
+				"- Select Target Log -"
 			);
-			if (selectionMade) edge.NextLogId.Value = selection;
 
 			edge.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", edge.Message.Value);
 
@@ -767,18 +747,15 @@ namespace LunraGames.SubLight
 			EncounterLogModel nextModel
 		)
 		{
-			string selection;
-			var selectionMade = EditorGUILayoutEncounter.LogPopup(
+			EditorGUILayoutEncounter.LogPopup(
+				"Next Log: ",
 				model.NextLogId.Value,
-				"Next Log:",
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> { { "- Select Next Log -", null } },
-				out selection
+				existingSelection => model.NextLogId.Value = existingSelection,
+				newSelection => Debug.Log("newSelection here"),
+				"- Select Target Log -"
 			);
-			if (selectionMade) model.NextLogId.Value = selection;
 		}
 
 		void OnLogEnd(EncounterInfoModel infoModel, EncounterLogModel model)
