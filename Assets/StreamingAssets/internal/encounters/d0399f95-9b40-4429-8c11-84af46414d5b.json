@@ -19,14 +19,16 @@
         "message": "You pressed button 0!",
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
         "index": 2,
-        "logId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6"
+        "logId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6",
+        "name": "Pressed 0"
       },
       {
         "header": "Button 1",
         "message": "You pressed button 1!",
         "nextLogId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b",
         "index": 4,
-        "logId": "60a170df-e303-4f92-930b-7efe34a443d6"
+        "logId": "60a170df-e303-4f92-930b-7efe34a443d6",
+        "name": "Pressed 1"
       },
       {
         "header": "No Buttons",
@@ -34,7 +36,8 @@
         "nextLogId": "9c70c262-4810-47aa-95c7-298e05b813df",
         "index": 6,
         "ending": true,
-        "logId": "62cc974c-8f41-413b-ac1c-25e671f87e16"
+        "logId": "62cc974c-8f41-413b-ac1c-25e671f87e16",
+        "name": "NoButtons"
       }
     ],
     "keyValueLogs": [
@@ -49,7 +52,8 @@
         ],
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
         "beginning": true,
-        "logId": "3f84dcd0-b76a-4904-baf9-658a5c5f5b45"
+        "logId": "3f84dcd0-b76a-4904-baf9-658a5c5f5b45",
+        "name": "Beginning"
       },
       {
         "setStrings": [],
@@ -63,7 +67,8 @@
         ],
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
         "index": 5,
-        "logId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b"
+        "logId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b",
+        "name": "FirstOptionEnable"
       }
     ],
     "inventoryLogs": [],
@@ -126,7 +131,8 @@
         ],
         "nextLogId": "62cc974c-8f41-413b-ac1c-25e671f87e16",
         "index": 1,
-        "logId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb"
+        "logId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
+        "name": "MainButtons"
       }
     ]
   },

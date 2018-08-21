@@ -110,12 +110,30 @@ namespace LunraGames.SubLight
 
 			content = content ?? GUIContent.none;
 
-			const string currentAppend = " <- Next";
+			const string currentAppend = " | Next";
 			var nextModel = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
 
 			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
 			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
-			var rawOptionNames = rawOptions.Select(l => l == nextId ? (l + currentAppend) : l);
+
+			var optionNamesList = new List<string>();
+			foreach (var logId in rawOptions)
+			{
+				var log = infoModel.Logs.GetLogFirstOrDefault(logId);
+				if (log == null)
+				{
+					optionNamesList.Add("* Problem Finding Log "+logId+" *");
+					continue;
+				}
+
+				var shortened = logId.Substring(0, Mathf.Min(8, logId.Length));
+
+				if (log.HasName) shortened = log.Name.Value + " | " + shortened;
+
+				if (logId == nextId) shortened += currentAppend;
+				optionNamesList.Add(shortened);
+			}
+			var rawOptionNames = optionNamesList.AsEnumerable();
 
 			var rawLogTypes = new List<EncounterLogTypes>().AsEnumerable();
 

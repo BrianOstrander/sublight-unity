@@ -35,9 +35,10 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
-					var header = "#" + (count + 1) + " | " + model.LogType + ".LogId:";
+					var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId");
+						
 					GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
-					EditorGUILayout.SelectableLabel(model.LogId, EditorStyles.boldLabel);
+					EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
 					EditorGUILayoutExtensions.PopColor();
 					if (isMoving)
 					{
@@ -70,10 +71,12 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndVertical();
 
+			model.Name.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Name", "Internal name for production."), model.Name.Value);
+
 			EditorGUIExtensions.PauseChangeCheck();
 			{
 				// Pausing checks for foldout, since this shouldn't signal that the object is savable.
-				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.grey);
+				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.gray);
 				model.ShowNotes.Value = EditorGUILayout.Foldout(model.ShowNotes.Value, new GUIContent("Notes", "Internal notes for production."), true);
 				if (!model.HasNotes) EditorGUILayoutExtensions.PopColor();
 			}
