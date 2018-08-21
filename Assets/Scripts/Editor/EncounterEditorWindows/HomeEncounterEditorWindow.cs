@@ -321,7 +321,7 @@ namespace LunraGames.SubLight
 							indexSwap1 = currMoveDelta == 1 ? nextLog : lastLog;
 						}
 
-						OnLog(model, log, nextLog);
+						OnLog(model, log);
 						OnLogEnd(model, log);
 
 						lastLog = log;

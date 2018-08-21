@@ -93,24 +93,24 @@ namespace LunraGames.SubLight
 			return deleted;
 		}
 
-		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model, EncounterLogModel nextModel)
+		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
 			switch (model.LogType)
 			{
 				case EncounterLogTypes.Text:
-					OnTextLog(infoModel, model as TextEncounterLogModel, nextModel);
+					OnTextLog(infoModel, model as TextEncounterLogModel);
 					break;
 				case EncounterLogTypes.KeyValue:
-					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel, nextModel);
+					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel);
 					break;
 				case EncounterLogTypes.Inventory:
-					OnInventoryLog(infoModel, model as InventoryEncounterLogModel, nextModel);
+					OnInventoryLog(infoModel, model as InventoryEncounterLogModel);
 					break;
 				case EncounterLogTypes.Switch:
-					OnSwitchLog(infoModel, model as SwitchEncounterLogModel, nextModel);
+					OnSwitchLog(infoModel, model as SwitchEncounterLogModel);
 					break;
 				case EncounterLogTypes.Button:
-					OnButtonLog(infoModel, model as ButtonEncounterLogModel, nextModel);
+					OnButtonLog(infoModel, model as ButtonEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -132,16 +132,16 @@ namespace LunraGames.SubLight
 		}
 
 		#region Text Logs
-		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model, EncounterLogModel nextModel)
+		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
 		{
 			model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header", model.Header.Value);
 			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 		}
 		#endregion
 
 		#region KeyValue Logs
-		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model, EncounterLogModel nextModel)
+		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)
 		{
 			var targets = Enum.GetValues(typeof(KeyValueTargets)).Cast<KeyValueTargets>().ToList();
 			var kvTypes = Enum.GetValues(typeof(KeyValueOperations)).Cast<KeyValueOperations>().ToList();
@@ -218,7 +218,7 @@ namespace LunraGames.SubLight
 				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
 			}
 
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 		}
 
 		bool OnKeyValueLogHeader(
@@ -288,7 +288,7 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Inventory Logs
-		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model, EncounterLogModel nextModel)
+		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model)
 		{
 			var selection = InventoryOperations.Unknown;
 			GUILayout.BeginHorizontal();
@@ -340,7 +340,7 @@ namespace LunraGames.SubLight
 				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
 			}
 
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 		}
 
 		bool OnInventoryLogHeader(
@@ -406,8 +406,7 @@ namespace LunraGames.SubLight
 		#region Switch Logs
 		void OnSwitchLog(
 			EncounterInfoModel infoModel,
-			SwitchEncounterLogModel model,
-			EncounterLogModel nextModel
+			SwitchEncounterLogModel model
 		)
 		{
 			EditorGUILayoutEncounter.LogPopup(
@@ -457,7 +456,7 @@ namespace LunraGames.SubLight
 								indexSwap1 = currMoveDelta == 1 ? next : last;
 							}
 
-							OnSwitchLogEdge(infoModel, model, nextModel, current);
+							OnSwitchLogEdge(infoModel, model, current);
 
 							last = current;
 						}
@@ -468,7 +467,7 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 
 			if (!string.IsNullOrEmpty(deleted))
 			{
@@ -546,7 +545,6 @@ namespace LunraGames.SubLight
 		void OnSwitchLogEdge(
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
-			EncounterLogModel nextModel,
 			SwitchEdgeModel edge
 		)
 		{
@@ -570,8 +568,7 @@ namespace LunraGames.SubLight
 		#region Button Logs
 		void OnButtonLog(
 			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
-			EncounterLogModel nextModel
+			ButtonEncounterLogModel model
 		)
 		{
 			EditorGUILayoutEncounter.LogPopup(
@@ -621,7 +618,7 @@ namespace LunraGames.SubLight
 								indexSwap1 = currMoveDelta == 1 ? next : last;
 							}
 
-							OnButtonLogEdge(infoModel, model, nextModel, current);
+							OnButtonLogEdge(infoModel, model, current);
 
 							last = current;
 						}
@@ -632,7 +629,7 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 
 			if (!string.IsNullOrEmpty(deleted))
 			{
@@ -710,7 +707,6 @@ namespace LunraGames.SubLight
 		void OnButtonLogEdge(
 			EncounterInfoModel infoModel,
 			ButtonEncounterLogModel model,
-			EncounterLogModel nextModel,
 			ButtonEdgeModel edge
 		)
 		{
@@ -743,8 +739,7 @@ namespace LunraGames.SubLight
 
 		void OnLinearLog(
 			EncounterInfoModel infoModel,
-			LinearEncounterLogModel model,
-			EncounterLogModel nextModel
+			LinearEncounterLogModel model
 		)
 		{
 			EditorGUILayoutEncounter.LogPopup(
