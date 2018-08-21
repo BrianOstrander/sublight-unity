@@ -251,32 +251,7 @@ namespace LunraGames.SubLight
 				{
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count()+" |", GUILayout.ExpandWidth(false));
 					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
-					var result = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Log Type -", EncounterLogTypes.Unknown);
-					var isBeginning = model.Logs.All.Value.Length == 0;
-					var nextIndex = model.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
-					switch (result)
-					{
-						case EncounterLogTypes.Unknown:
-							break;
-						case EncounterLogTypes.Text:
-							NewEncounterLog<TextEncounterLogModel>(model, nextIndex, isBeginning);
-							break;
-						case EncounterLogTypes.KeyValue:
-							NewEncounterLog<KeyValueEncounterLogModel>(model, nextIndex, isBeginning);
-							break;
-						case EncounterLogTypes.Inventory:
-							NewEncounterLog<InventoryEncounterLogModel>(model, nextIndex, isBeginning);
-							break;
-						case EncounterLogTypes.Switch:
-							NewEncounterLog<SwitchEncounterLogModel>(model, nextIndex, isBeginning);
-							break;
-						case EncounterLogTypes.Button:
-							NewEncounterLog<ButtonEncounterLogModel>(model, nextIndex, isBeginning);
-							break;
-						default:
-							Debug.LogError("Unrecognized EncounterLogType:" + result);
-							break;
-					}
+					AppendNewLog(EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Log Type -", EncounterLogTypes.Unknown), model);
 					GUILayout.Label("Hold 'Ctrl' to rearrange entries.", GUILayout.ExpandWidth(false));
 				}
 				GUILayout.EndHorizontal();
@@ -349,6 +324,31 @@ namespace LunraGames.SubLight
 				EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 			}
 			GUILayout.EndScrollView();
+		}
+
+		string AppendNewLog(EncounterLogTypes logType, EncounterInfoModel infoModel)
+		{
+			if (logType == EncounterLogTypes.Unknown) return null;
+
+			var isBeginning = infoModel.Logs.All.Value.Length == 0;
+			var nextIndex = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
+			switch (logType)
+			{
+				case EncounterLogTypes.Text:
+					return NewEncounterLog<TextEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.KeyValue:
+					return NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Inventory:
+					return NewEncounterLog<InventoryEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Switch:
+					return NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Button:
+					return NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				default:
+					Debug.LogError("Unrecognized EncounterLogType:" + logType);
+					break;
+			}
+			return null;
 		}
 
 		void NewEncounter()

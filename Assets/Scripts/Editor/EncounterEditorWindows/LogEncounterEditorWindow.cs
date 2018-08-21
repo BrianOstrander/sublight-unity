@@ -415,7 +415,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => OnSwitchLogSpawn(infoModel, model, existingSelection),
-				newSelection => Debug.Log("newSelection here"),
+				newSelection => OnSwitchLogSpawn(infoModel, model, AppendNewLog(newSelection, infoModel)),
 				"- Select Target Log -",
 				"< Blank >"
 			);
@@ -554,7 +554,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => edge.NextLogId.Value = existingSelection,
-				newSelection => Debug.Log("newSelection here"),
+				newSelection => edge.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 				"- Select Target Log -"
 			);
 
@@ -577,7 +577,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => OnButtonLogSpawn(infoModel, model, existingSelection),
-				newSelection => Debug.Log("newSelection here"),
+				newSelection => OnButtonLogSpawn(infoModel, model, AppendNewLog(newSelection, infoModel)),
 				"- Select Target Log -",
 				"< Blank >"
 			);
@@ -716,7 +716,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => edge.NextLogId.Value = existingSelection,
-				newSelection => Debug.Log("newSelection here"),
+				newSelection => edge.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 				"- Select Target Log -"
 			);
 
@@ -748,7 +748,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => model.NextLogId.Value = existingSelection,
-				newSelection => Debug.Log("newSelection here"),
+				newSelection => model.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 				"- Select Target Log -"
 			);
 		}
