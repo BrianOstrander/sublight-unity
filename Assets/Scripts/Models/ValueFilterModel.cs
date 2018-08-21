@@ -36,6 +36,11 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<IValueFilterEntryModel[]> Filters;
 		#endregion
 
+		#region Utility
+		[JsonIgnore]
+		public bool HasFilters { get { return Filters.Value.Any(); } }
+		#endregion
+
 		public ValueFilterModel()
 		{
 			ShowValues = new ListenerProperty<bool>(value => showValues = value, () => showValues);
