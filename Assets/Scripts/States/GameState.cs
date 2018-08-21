@@ -269,7 +269,7 @@ namespace LunraGames.SubLight
 			App.Encounters.AssignBestEncounter(OnAssignBestEncounter, Payload.Game, system);
 		}
 
-		void OnAssignBestEncounter(AssignBestEncounterRequest result)
+		void OnAssignBestEncounter(AssignBestEncounter result)
 		{
 			if (result.Status != RequestStatus.Success || !result.EncounterAssigned) return;
 
@@ -295,7 +295,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnAutomaticEncounter(AssignBestEncounterRequest result)
+		void OnAutomaticEncounter(AssignBestEncounter result)
 		{
 			switch (Payload.Game.GetEncounterStatus(result.Encounter.EncounterId.Value).State)
 			{
@@ -311,7 +311,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnBodyAlertEncounter(AssignBestEncounterRequest result)
+		void OnBodyAlertEncounter(AssignBestEncounter result)
 		{
 			// TODO: A more subtle alert, perhaps? something more fun?
 			App.Callbacks.FocusRequest(

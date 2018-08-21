@@ -3,21 +3,21 @@
 namespace LunraGames.SubLight
 {
 	// TODO: Remove "Request"
-	public struct AssignBestEncounterRequest
+	public struct AssignBestEncounter
 	{
-		public static AssignBestEncounterRequest ErrorResult(string error)
+		public static AssignBestEncounter ErrorResult(string error)
 		{
-			return new AssignBestEncounterRequest(RequestStatus.Failure, error, false, null, null, null);
+			return new AssignBestEncounter(RequestStatus.Failure, error, false, null, null, null);
 		}
 
-		public static AssignBestEncounterRequest NoEncounterResult(SystemModel system)
+		public static AssignBestEncounter NoEncounterResult(SystemModel system)
 		{
-			return new AssignBestEncounterRequest(RequestStatus.Success, null, false, null, system, null);
+			return new AssignBestEncounter(RequestStatus.Success, null, false, null, system, null);
 		}
 
-		public static AssignBestEncounterRequest EncounterResult(SystemModel system, EncounterInfoModel encounter, BodyModel body)
+		public static AssignBestEncounter EncounterResult(SystemModel system, EncounterInfoModel encounter, BodyModel body)
 		{
-			return new AssignBestEncounterRequest(RequestStatus.Success, null, true, encounter, system, body);
+			return new AssignBestEncounter(RequestStatus.Success, null, true, encounter, system, body);
 		}
 
 		public readonly RequestStatus Status;
@@ -28,7 +28,7 @@ namespace LunraGames.SubLight
 		public readonly SystemModel System;
 		public readonly BodyModel Body;
 
-		public AssignBestEncounterRequest(
+		public AssignBestEncounter(
 			RequestStatus status,
 			string error,
 			bool encounterAssigned,
