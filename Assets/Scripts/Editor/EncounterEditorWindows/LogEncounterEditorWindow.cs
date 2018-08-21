@@ -411,7 +411,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			string selection;
-			var selectionMade = OnLogPopup(
+			var selectionMade = EditorGUILayoutEncounter.LogPopup(
 				null,
 				"Append New Switch: ",
 				infoModel,
@@ -556,7 +556,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			string selection;
-			var selectionMade = OnLogPopup(
+			var selectionMade = EditorGUILayoutEncounter.LogPopup(
 				edge.NextLogId.Value,
 				"Target Log: ",
 				infoModel,
@@ -585,7 +585,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			string selection;
-			var selectionMade = OnLogPopup(
+			var selectionMade = EditorGUILayoutEncounter.LogPopup(
 				null,
 				"Append New Button: ",
 				infoModel,
@@ -730,7 +730,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			string selection;
-			var selectionMade = OnLogPopup(
+			var selectionMade = EditorGUILayoutEncounter.LogPopup(
 				edge.NextLogId.Value,
 				"Target Log: ",
 				infoModel,
@@ -768,7 +768,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			string selection;
-			var selectionMade = OnLogPopup(
+			var selectionMade = EditorGUILayoutEncounter.LogPopup(
 				model.NextLogId.Value,
 				"Next Log:",
 				infoModel,
@@ -779,51 +779,6 @@ namespace LunraGames.SubLight
 				out selection
 			);
 			if (selectionMade) model.NextLogId.Value = selection;
-		}
-
-		bool OnLogPopup(
-			string current,
-			string label,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			EncounterLogModel nextModel,
-			string currentAppend,
-			Dictionary<string, string> preAppend,
-			out string selection
-		)
-		{
-			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
-			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
-			var rawOptionNames = rawOptions.Select(l => l == nextId ? (l + currentAppend) : l);
-			foreach (var kv in preAppend.Reverse())
-			{
-				rawOptions = rawOptions.Prepend(kv.Value);
-				rawOptionNames = rawOptionNames.Prepend(kv.Key);
-			}
-
-			var options = rawOptions.ToArray();
-			var optionNames = rawOptionNames.ToArray();
-
-			var index = 0;
-			for (var i = 0; i < options.Length; i++)
-			{
-				if (options[i] == current)
-				{
-					index = i;
-					break;
-				}
-			}
-			var startIndex = index;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label(label, GUILayout.ExpandWidth(false)); // was 55
-				index = EditorGUILayout.Popup(index, optionNames);
-			}
-			GUILayout.EndHorizontal();
-			selection = options[index];
-
-			return startIndex != index;
 		}
 
 		void OnLogEnd(EncounterInfoModel infoModel, EncounterLogModel model)
