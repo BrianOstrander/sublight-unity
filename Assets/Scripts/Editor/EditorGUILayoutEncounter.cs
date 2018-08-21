@@ -158,10 +158,9 @@ namespace LunraGames.SubLight
 						blankType = MessageType.Error;
 						break;
 					case EncounterLogBlankHandling.SpecifiedByModel:
+						if (model.Ending.Value) break;
 						if (model.RequiresNextLog) 
 						{
-							if (model.Ending.Value) break;
-
 							blankMessage = BlankError;
 							blankType = MessageType.Error;
 						}
