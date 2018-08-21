@@ -10,68 +10,17 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
+	public enum EncounterLogBlankHandling
+	{
+		Unknown = 0,
+		None = 10,
+		Warning = 20,
+		Error = 30,
+		SpecifiedByModel = 40
+	}
+
 	public static class EditorGUILayoutEncounter
 	{
-		/*
-		public static bool LogPopup(
-			string current,
-			string label,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			EncounterLogModel nextModel,
-			string currentAppend,
-			Dictionary<string, string> preAppend,
-			out string selection
-		)
-		{
-			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
-			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
-			var rawOptionNames = rawOptions.Select(l => l == nextId ? (l + currentAppend) : l);
-			foreach (var kv in preAppend.Reverse())
-			{
-				rawOptions = rawOptions.Prepend(kv.Value);
-				rawOptionNames = rawOptionNames.Prepend(kv.Key);
-			}
-
-			var options = rawOptions.ToArray();
-			var optionNames = rawOptionNames.ToArray();
-
-			var index = 0;
-			for (var i = 0; i < options.Length; i++)
-			{
-				if (options[i] == current)
-				{
-					index = i;
-					break;
-				}
-			}
-			var startIndex = index;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label(label, GUILayout.ExpandWidth(false)); // was 55
-				index = EditorGUILayout.Popup(index, optionNames);
-			}
-			GUILayout.EndHorizontal();
-			selection = options[index];
-
-			return startIndex != index;
-		}
-		*/
-
-		/*
-		public static bool LogPopup(
-			string current,
-			string label,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			EncounterLogModel nextModel,
-			string currentAppend,
-			Dictionary<string, string> preAppend,
-			out string selection
-		)
-		*/
-
 		public static void LogPopup(
 			string label,
 			string current,
@@ -79,6 +28,7 @@ namespace LunraGames.SubLight
 			EncounterLogModel model,
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankHandling blankHandling,
 			params string[] preAppend
 		)
 		{
@@ -89,9 +39,11 @@ namespace LunraGames.SubLight
 				model,
 				existingSelection,
 				newSelection,
+				blankHandling,
 				preAppend
 			);
 		}
+
 
 		public static void LogPopup(
 			GUIContent content,
@@ -100,6 +52,7 @@ namespace LunraGames.SubLight
 			EncounterLogModel model,
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankHandling blankHandling,
 			params string[] preAppend
 		)
 		{
@@ -166,22 +119,62 @@ namespace LunraGames.SubLight
 			var logTypes = rawLogTypes.ToArray();
 
 			var index = 0;
+			var wasFound = false;
 			for (var i = 0; i < options.Length; i++)
 			{
 				if (options[i] == current)
 				{
 					index = i;
+					wasFound = true;
 					break;
 				}
 			}
 			var startIndex = index;
+			var hasMissingId = !string.IsNullOrEmpty(current) && !wasFound;
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(content, GUILayout.ExpandWidth(false)); // was 55
+				GUILayout.Label(content, GUILayout.ExpandWidth(false));
 				index = EditorGUILayout.Popup(index, optionNames);
 			}
 			GUILayout.EndHorizontal();
+
+			if (blankHandling != EncounterLogBlankHandling.None && (string.IsNullOrEmpty(current) || hasMissingId))
+			{
+				var blankMessage = string.Empty;
+				var blankType = MessageType.Info;
+				
+				const string BlankWarning = "Specifying no log may cause unpredictable behaviour.";
+				const string BlankError = "A log must be specified.";
+
+				switch (blankHandling)
+				{
+					case EncounterLogBlankHandling.Warning:
+						blankMessage = BlankWarning;
+						blankType = MessageType.Warning;
+						break;
+					case EncounterLogBlankHandling.Error:
+						blankMessage = BlankError;
+						blankType = MessageType.Error;
+						break;
+					case EncounterLogBlankHandling.SpecifiedByModel:
+						if (model.RequiresNextLog) 
+						{
+							if (model.Ending.Value) break;
+
+							blankMessage = BlankError;
+							blankType = MessageType.Error;
+						}
+						else
+						{
+							blankMessage = BlankWarning;
+							blankType = MessageType.Warning;
+						}
+						break;
+				}
+
+				if (blankType != MessageType.Info) EditorGUILayout.HelpBox(blankMessage, blankType);
+			}
 
 			if (startIndex == index) return;
 

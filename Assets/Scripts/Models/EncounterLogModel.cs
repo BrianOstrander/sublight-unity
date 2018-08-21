@@ -41,6 +41,13 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public abstract string NextLog { get; }
 
+		/// <summary>
+		/// If this value returns true, not having a next log is an error,
+		/// otherwise just a warning will appear in the editor.
+		/// </summary>
+		/// <value><c>true</c> if requires next log; otherwise, <c>false</c>.</value>
+		[JsonIgnore]
+		public virtual bool RequiresNextLog { get { return true; } }
 		[JsonIgnore]
 		public virtual bool EditableDuration { get { return true; } }
 		[JsonIgnore]
