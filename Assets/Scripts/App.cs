@@ -56,6 +56,9 @@ namespace LunraGames.SubLight
 		EncounterService encounters;
 		public static EncounterService Encounters { get { return instance.encounters; } }
 
+		EncounterHandlerService encounterHandler;
+		public static EncounterHandlerService EncounterHandler { get { return instance.encounterHandler; } }
+
 		InventoryReferenceService inventoryReferences;
 		public static InventoryReferenceService InventoryReferences { get { return instance.inventoryReferences; } }
 
@@ -88,10 +91,13 @@ namespace LunraGames.SubLight
 		/// </summary>
 		/// <remarks>
 		/// Feel free to hook onto the Changed listeners for this model, they're
-		/// preserved when saving.
+		/// preserved when saving. Don't provide this model to any services
+		/// before initialization though, since it will be replaced.
 		/// </remarks>
 		/// <value>The preferences.</value>
 		public static PreferencesModel Preferences { get { return instance.preferences; } }
+
+		static Func<PreferencesModel> CurrentPreferences { get { return () => Preferences; } }
 
 		public App(
 			Main main, 
@@ -151,6 +157,16 @@ namespace LunraGames.SubLight
 			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
 			valueFilter = new ValueFilterService(Callbacks);
 			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
+
+			encounterHandler = new EncounterHandlerService(
+				Heartbeat,
+				Callbacks,
+				Encounters,
+				KeyValues,
+				InventoryReferences,
+				ValueFilter,
+				CurrentPreferences
+			);
 		}
 
 		public static void Restart(string message)

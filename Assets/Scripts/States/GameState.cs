@@ -115,7 +115,8 @@ namespace LunraGames.SubLight
 
 			// Encounter presenters
 			new CameraEncounterPresenter();
-			new ContainerEncounterLogPresenter(game);
+
+			//new ContainerEncounterLogPresenter(game); // Remove this once logic has been extracted!
 
 			// Ship presenters
 			new CameraShipPresenter();
@@ -301,8 +302,9 @@ namespace LunraGames.SubLight
 			{
 				case EncounterStatus.States.Seen:
 				case EncounterStatus.States.NeverSeen:
-					App.Callbacks.FocusRequest(
-						EncounterFocusRequest.Encounter(
+					App.Callbacks.EncounterRequest(
+						EncounterRequest.Request(
+							Payload.Game,
 							result.Encounter.EncounterId,
 							result.System.Position
 						)

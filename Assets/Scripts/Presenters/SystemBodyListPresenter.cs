@@ -88,8 +88,9 @@ namespace LunraGames.SubLight.Presenters
 					else App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
 					return;
 				default:
-					App.Callbacks.FocusRequest(
-						EncounterFocusRequest.Encounter(
+					App.Callbacks.EncounterRequest(
+						EncounterRequest.Request(
+							model,
 							result.Encounter.EncounterId,
 							result.System.Position
 						)
