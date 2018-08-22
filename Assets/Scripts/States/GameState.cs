@@ -115,8 +115,7 @@ namespace LunraGames.SubLight
 
 			// Encounter presenters
 			new CameraEncounterPresenter();
-
-			//new ContainerEncounterLogPresenter(game); // Remove this once logic has been extracted!
+			new ContainerEncounterLogPresenter(game);
 
 			// Ship presenters
 			new CameraShipPresenter();

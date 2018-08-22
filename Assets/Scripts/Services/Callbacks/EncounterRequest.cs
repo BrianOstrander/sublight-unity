@@ -10,8 +10,11 @@ namespace LunraGames.SubLight
 		{
 			Unknown = 0,
 			Request = 10,
-			Active = 20,
-			Complete = 30
+			Handle = 20,
+			Controls = 30,
+			Next = 40,
+			Done = 50,
+			Complete = 60
 		}
 
 		public static EncounterRequest Request(GameModel gameModel, string encounterId, UniversePosition systemPosition)
@@ -19,19 +22,29 @@ namespace LunraGames.SubLight
 			return new EncounterRequest(States.Request, gameModel, encounterId, systemPosition);
 		}
 
-		public static EncounterRequest Active<T>(
-			GameModel gameModel,
-			string encounterId,
-			UniversePosition systemPosition,
-			T model
-		) where T : Model
+		public static EncounterRequest Handle<T>(T model) where T : IEncounterHandlerModel
 		{
-			return new EncounterRequest(States.Active, gameModel, encounterId, systemPosition, typeof(T), model);
+			return new EncounterRequest(States.Handle, modelType: typeof(T), model: model);
 		}
 
-		public static EncounterRequest Complete(GameModel gameModel, string encounterId, UniversePosition systemPosition)
+		public static EncounterRequest Controls(bool next, bool done)
 		{
-			return new EncounterRequest(States.Complete, gameModel, encounterId, systemPosition);
+			return new EncounterRequest(States.Controls, next: next, done: done);
+		}
+
+		public static EncounterRequest Next()
+		{
+			return new EncounterRequest(States.Next);
+		}
+
+		public static EncounterRequest Done()
+		{
+			return new EncounterRequest(States.Done);
+		}
+
+		public static EncounterRequest Complete()
+		{
+			return new EncounterRequest(States.Complete);
 		}
 
 		public readonly States State;
@@ -39,15 +52,19 @@ namespace LunraGames.SubLight
 		public readonly string EncounterId;
 		public readonly UniversePosition SystemPosition;
 		public readonly Type ModelType;
-		public readonly Model Model;
+		public readonly IEncounterHandlerModel Model;
+		public readonly bool NextControl;
+		public readonly bool DoneControl;
 
 		public EncounterRequest(
 			States state,
-			GameModel gameModel,
-			string encounterId,
-			UniversePosition systemPosition,
+			GameModel gameModel = null,
+			string encounterId = null,
+			UniversePosition systemPosition = default(UniversePosition),
 			Type modelType = null,
-			Model model = null
+			IEncounterHandlerModel model = null,
+			bool next = false,
+			bool done = false
 		)
 		{
 			State = state;
@@ -56,20 +73,23 @@ namespace LunraGames.SubLight
 			SystemPosition = systemPosition;
 			ModelType = modelType;
 			Model = model;
+			NextControl = next;
+			DoneControl = done;
 		}
 
 		/// <summary>
 		/// Gets a correctly typed instance of the model if the provided type
-		/// matches this request's model. Returns true if it was succesful.
+		/// matches this request's model, and feeds it to the provided callback.
+		/// Returns true if it was succesful.
 		/// </summary>
 		/// <returns><c>true</c>, if model was gotten, <c>false</c> otherwise.</returns>
-		/// <param name="model">Model.</param>
+		/// <param name="done">Done.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public bool GetModel<T>(out T model) where T : Model
+		public bool TryHandle<T>(Action<T> done)
+			where T : class, IEncounterHandlerModel
 		{
-			model = default(T);
 			if (ModelType != typeof(T)) return false;
-			model = Model as T;
+			done(Model as T);
 			return true;
 		}
 	}

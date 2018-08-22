@@ -4,9 +4,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using LunraGames.NumberDemon;
-using LunraGames.SubLight.Views;
-using LunraGames.SubLight.Presenters;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
@@ -21,6 +18,7 @@ namespace LunraGames.SubLight
 		ValueFilterService valueFilter;
 		Func<PreferencesModel> currentPreferences;
 
+		bool processing;
 		GameModel model;
 		EncounterInfoModel encounter;
 		SystemModel system;
@@ -55,9 +53,10 @@ namespace LunraGames.SubLight
 			this.valueFilter = valueFilter;
 			this.currentPreferences = currentPreferences;
 
-			heartbeat.Update += OnUpdate;
 			callbacks.EncounterRequest += OnEncounter;
 			callbacks.FocusRequest += OnFocus;
+			callbacks.StateChange += OnStateChange;
+			heartbeat.Update += OnUpdate;
 		}
 
 		#region Events
@@ -66,18 +65,30 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case EncounterRequest.States.Request:
-					model = request.GameModel;
-					
-					encounter = encounterService.GetEncounter(request.EncounterId);
-					system = model.Universe.Value.GetSystem(request.SystemPosition);
-					body = system.BodyWithEncounter;
-					keyValues = new KeyValueListener(KeyValueTargets.Encounter, new KeyValueListModel(), keyValueService);
-					keyValues.Register();
+					OnBegin(
+						request.GameModel,
+						request.EncounterId,
+						request.SystemPosition
+					);
+					callbacks.FocusRequest(EncounterFocusRequest.Encounter());
+					break;
+				case EncounterRequest.States.Next:
+					if (nextLogDelay.HasValue) nextLogDelay = 0f;
+					break;
+				case EncounterRequest.States.Done:
+					callbacks.EncounterRequest(EncounterRequest.Complete());
+					break;
+				case EncounterRequest.States.Complete:
+					encounterService.GetEncounterInteraction(encounter.EncounterId).TimesCompleted.Value++;
+					model.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
+					var toFocus = system.Position.Value;
+
+					OnEnd();
 
 					callbacks.FocusRequest(
-						EncounterFocusRequest.Encounter(
-							request.EncounterId,
-							request.SystemPosition
+						new SystemsFocusRequest(
+							toFocus.SystemZero,
+							toFocus
 						)
 					);
 					break;
@@ -91,25 +102,24 @@ namespace LunraGames.SubLight
 				case FocusRequest.Focuses.Encounter:
 					// We only begin the encounter once the focus is complete.
 					if (focus.State != FocusRequest.States.Complete) return;
-					var encounterFocus = focus as EncounterFocusRequest;
-					if (encounterFocus.EncounterId != encounter.EncounterId.Value)
-					{
-						Debug.LogError("There is a mismatch between the current encounter and the focused encounter, unexpected behaviour may occur.");
-					}
 
 					nextLog = encounter.Logs.Beginning;
 					if (nextLog == null)
 					{
 						Debug.LogError("No beginning found for encounter " + encounter.EncounterId.Value);
 
-						Debug.LogWarning("Done logic here!");
-						//View.DoneEnabled = true;
-						//View.NextEnabled = false;
+						callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
 						break;
 					}
 					nextLogDelay = 0f;
 					break;
 			}
+		}
+
+		void OnStateChange(StateChange change)
+		{
+			if (!processing || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
+			OnEnd();
 		}
 
 		void OnUpdate(float delta)
@@ -122,6 +132,45 @@ namespace LunraGames.SubLight
 			if (!Mathf.Approximately(0f, nextLogDelay.Value)) return;
 
 			OnShowLog(nextLog);
+		}
+
+		void OnBegin(
+			GameModel model,
+			string encounterId,
+			UniversePosition systemPosition
+		)
+		{
+			if (processing)
+			{
+				Debug.LogError("Beginning an encounter while one is being processed, may cause unpredictable behaviour");
+			}
+
+			processing = true;
+
+			this.model = model;
+			encounter = encounterService.GetEncounter(encounterId);
+			system = model.Universe.Value.GetSystem(systemPosition);
+			body = system.BodyWithEncounter;
+			keyValues = new KeyValueListener(KeyValueTargets.Encounter, new KeyValueListModel(), keyValueService);
+
+			keyValues.Register();
+		}
+
+		void OnEnd()
+		{
+			processing = false;
+
+			model = null;
+			encounter = null;
+			system = null;
+			body = null;
+
+			if (keyValues != null) keyValues.UnRegister();
+
+			keyValues = null;
+
+			nextLog = null;
+			nextLogDelay = null;
 		}
 
 		void OnShowLog(EncounterLogModel logModel)
@@ -139,7 +188,7 @@ namespace LunraGames.SubLight
 			switch (logModel.LogType)
 			{
 				case EncounterLogTypes.Text:
-					Debug.LogWarning("handle text here");
+					OnTextLog(logModel as TextEncounterLogModel);
 					break;
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
@@ -158,6 +207,17 @@ namespace LunraGames.SubLight
 					linearDone();
 					break;
 			}
+		}
+
+		void OnTextLog(TextEncounterLogModel logModel)
+		{
+			var result = new TextHandlerModel();
+			result.Log.Value = logModel;
+			result.Message.Value = logModel.Message;
+
+			callbacks.EncounterRequest(EncounterRequest.Handle(result));
+
+			OnHandledLog(logModel, logModel.NextLog);
 		}
 
 		void OnKeyValueLog(KeyValueEncounterLogModel logModel, Action done)
@@ -573,9 +633,11 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			Debug.LogWarning("Handle button showing here, some kind of event");
-			//var current = new ButtonEncounterLogPresenter(model, logModel, buttons.ToArray());
-			//current.Show(View.EntryArea, OnShownLog);
+			var result = new ButtonHandlerModel();
+			result.Log.Value = logModel;
+			result.Buttons.Value = buttons.ToArray();
+
+			callbacks.EncounterRequest(EncounterRequest.Handle(result));
 		}
 
 		void OnButtonLogClick(ButtonEdgeModel edge, Action done)
@@ -650,9 +712,7 @@ namespace LunraGames.SubLight
 		{
 			if (logModel.Ending.Value)
 			{
-				Debug.LogWarning("handle end of encounter here!");
-				//View.DoneEnabled = true;
-				//View.NextEnabled = false;
+				callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
 				return;
 			}
 
@@ -667,8 +727,7 @@ namespace LunraGames.SubLight
 				Debug.LogError("Next log could not be found.");
 				return;
 			}
-			Debug.LogWarning("handle nexting of encounter here!");
-			//View.NextEnabled = true;
+			callbacks.EncounterRequest(EncounterRequest.Controls(true, false));
 			nextLogDelay = logModel.TotalDuration;
 		}
 		#endregion
