@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -37,6 +36,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 
 		[JsonProperty] FinalReportModel[] finalReports = new FinalReportModel[0];
+
+		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 
 		/// <summary>
 		/// The game seed.
@@ -219,6 +220,9 @@ namespace LunraGames.SubLight.Models
 		{
 			return finalReports.FirstOrDefault(r => r.Encounter.Value == encounter);
 		}
+
+		[JsonIgnore]
+		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
 		#endregion
 	}
 }
