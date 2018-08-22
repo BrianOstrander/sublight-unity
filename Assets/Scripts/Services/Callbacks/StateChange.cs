@@ -10,5 +10,10 @@ namespace LunraGames.SubLight
 			State = state;
 			Event = stateEvent;
 		}
+
+		public bool Is(StateMachine.States state, StateMachine.Events stateEvent)
+		{
+			return State == state && Event == stateEvent;
+		}
 	}
 }

@@ -35,7 +35,7 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
-		void OnAssignBestEncounter(AssignBestEncounterRequest result)
+		void OnAssignBestEncounter(AssignBestEncounter result)
 		{
 			if (result.Status != RequestStatus.Success || !result.EncounterAssigned)
 			{
@@ -73,7 +73,7 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		void OnEncounterClick(AssignBestEncounterRequest result)
+		void OnEncounterClick(AssignBestEncounter result)
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
@@ -88,8 +88,9 @@ namespace LunraGames.SubLight.Presenters
 					else App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
 					return;
 				default:
-					App.Callbacks.FocusRequest(
-						EncounterFocusRequest.Encounter(
+					App.Callbacks.EncounterRequest(
+						EncounterRequest.Request(
+							model,
 							result.Encounter.EncounterId,
 							result.System.Position
 						)

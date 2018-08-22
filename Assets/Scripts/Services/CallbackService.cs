@@ -121,6 +121,10 @@ namespace LunraGames.SubLight
 		/// resources.
 		/// </summary>
 		public Action<ClearInventoryRequest> ClearInventoryRequest = ActionExtensions.GetEmpty<ClearInventoryRequest>();
+		/// <summary>
+		/// Called when requesting, updating, or completing an encounter.
+		/// </summary>
+		public Action<EncounterRequest> EncounterRequest = ActionExtensions.GetEmpty<EncounterRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...
