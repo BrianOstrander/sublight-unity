@@ -32,6 +32,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] BodyFocusRequest bodyFocus;
 		[JsonProperty] EncounterFocusRequest encounterFocus;
 		[JsonProperty] ShipFocusRequest shipFocus;
+		[JsonProperty] EncyclopediaFocusRequest encyclopediaFocus;
 
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 
@@ -147,6 +148,7 @@ namespace LunraGames.SubLight.Models
 			bodyFocus = null;
 			encounterFocus = null;
 			shipFocus = null;
+			encyclopediaFocus = null;
 
 			switch (focus.Focus)
 			{
@@ -167,6 +169,9 @@ namespace LunraGames.SubLight.Models
 					break;
 				case Focuses.Ship:
 					shipFocus = focus as ShipFocusRequest;
+					break;
+				case Focuses.Encyclopedia:
+					encyclopediaFocus = focus as EncyclopediaFocusRequest;
 					break;
 				default:
 					Debug.LogError("Unrecognized Focus: " + focus.Focus);

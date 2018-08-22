@@ -10,12 +10,15 @@ namespace LunraGames.SubLight
 		public enum Focuses
 		{
 			Unknown = 0,
+			// TODO: Merge the below v (these should be views within the focus!)
 			Galaxy = 10,
 			Systems = 20,
 			SystemBodies = 30,
 			Body = 40,
+			// ---------------
 			Encounter = 50,
-			Ship = 60
+			Ship = 60,
+			Encyclopedia = 70
 		}
 		
 		public enum States
