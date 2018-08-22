@@ -116,8 +116,8 @@ namespace LunraGames.SubLight
 					OnButtonLog(infoModel, model as ButtonEncounterLogModel);
 					break;
 				case EncounterLogTypes.Encyclopedia:
-					//OnEncyclopediaLog(infoModel, model as EncyclopediaEncounterLogModel);
-					//break;
+					OnEncyclopediaLog(infoModel, model as EncyclopediaEncounterLogModel);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
 					break;
@@ -526,15 +526,29 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Encyclopedia Logs
-		/*
 		void OnEncyclopediaLog(
 			EncounterInfoModel infoModel,
 			EncyclopediaEncounterLogModel model
 		)
 		{
-			
+			if (GUILayout.Button("Append New Encyclopedia Section")) OnEdgedLogSpawn(model);
+
+			OnEdgedLog<EncyclopediaEncounterLogModel, EncyclopediaEdgeModel>(infoModel, model, OnEncyclopediaLogEdge);
 		}
-		*/
+
+		void OnEncyclopediaLogEdge(
+			EncounterInfoModel infoModel,
+			EncyclopediaEncounterLogModel model,
+			EncyclopediaEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+			entry.Title.Value = EditorGUILayoutExtensions.TextDynamic("Title", entry.Title.Value);
+			entry.Header.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
+			entry.Body.Value = EditorGUILayoutExtensions.TextDynamic("Body", entry.Body.Value);
+			entry.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), entry.Priority.Value);
+			entry.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), entry.OrderWeight.Value);
+		}
 		#endregion
 
 		#region Edged Logs

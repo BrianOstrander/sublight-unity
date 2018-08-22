@@ -9,7 +9,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string encyclopediaId;
 		[JsonProperty] string title;
 		[JsonProperty] string header;
-		[JsonProperty] string message;
+		[JsonProperty] string body;
 		[JsonProperty] int priority;
 		[JsonProperty] int orderWeight;
 
@@ -25,7 +25,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Header;
 		[JsonIgnore]
-		public readonly ListenerProperty<string> Message;
+		public readonly ListenerProperty<string> Body;
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Priority;
 		[JsonIgnore]
@@ -36,7 +36,7 @@ namespace LunraGames.SubLight.Models
 			EncyclopediaId = new ListenerProperty<string>(value => encyclopediaId = value, () => encyclopediaId);
 			Title = new ListenerProperty<string>(value => title = value, () => title);
 			Header = new ListenerProperty<string>(value => header = value, () => header);
-			Message = new ListenerProperty<string>(value => message = value, () => message);
+			Body = new ListenerProperty<string>(value => body = value, () => body);
 			Priority = new ListenerProperty<int>(value => priority = value, () => priority);
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
 		}
@@ -54,7 +54,7 @@ namespace LunraGames.SubLight.Models
 				result.EncyclopediaId.Value = Guid.NewGuid().ToString();
 				result.Title.Value = Title.Value;
 				result.Header.Value = Header.Value;
-				result.Message.Value = Message.Value;
+				result.Body.Value = Body.Value;
 				result.Priority.Value = Priority.Value;
 				result.OrderWeight.Value = OrderWeight.Value;
 				return result;

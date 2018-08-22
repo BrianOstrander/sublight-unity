@@ -183,6 +183,28 @@
               "stringKeyValues": [],
               "encounterInteractions": []
             }
+          },
+          {
+            "buttonId": "2f0fb32c-334a-4756-bfe0-066a88b095cf",
+            "index": 3,
+            "message": "Add encyclopedia",
+            "nextLogId": "812ad24c-98d9-4454-86d8-7dbe03460a5f",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
           }
         ],
         "index": 2,
@@ -190,7 +212,33 @@
         "name": "MainButtons"
       }
     ],
-    "encyclopediaLogs": []
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "a67e990d-d5f0-4499-b2cf-f813082dd678",
+              "title": "Some Title",
+              "body": "wow what an intro!"
+            }
+          },
+          {
+            "entry": {
+              "encyclopediaId": "81382201-61cc-4e54-a0d9-aaa0eca50747",
+              "title": "Some Title",
+              "header": "section 1",
+              "body": "whee first section!",
+              "priority": 1
+            },
+            "index": 1
+          }
+        ],
+        "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
+        "index": 10,
+        "logId": "812ad24c-98d9-4454-86d8-7dbe03460a5f",
+        "name": "EncyclopediaAdd"
+      }
+    ]
   },
   "version": 6,
   "meta": "Button Test 0",

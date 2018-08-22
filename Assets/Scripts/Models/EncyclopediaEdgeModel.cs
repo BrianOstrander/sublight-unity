@@ -27,7 +27,7 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
-		public string EdgeName { get { return "Section"; } }
+		public string EdgeName { get { return string.IsNullOrEmpty(entry.Header.Value) ? "Introduction" : "Section"; } }
 		[JsonIgnore]
 		public int EdgeIndex
 		{
