@@ -188,7 +188,7 @@ namespace LunraGames.SubLight
 			switch (logModel.LogType)
 			{
 				case EncounterLogTypes.Text:
-					OnTextLog(logModel as TextEncounterLogModel);
+					OnTextLog(logModel as TextEncounterLogModel, linearDone);
 					break;
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
@@ -202,6 +202,9 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Button:
 					OnButtonLog(logModel as ButtonEncounterLogModel, nonLinearDone);
 					break;
+				case EncounterLogTypes.Encyclopedia:
+					OnEncyclopediaLog(logModel as EncyclopediaEncounterLogModel, linearDone);
+					break;
 				default:
 					Debug.LogError("Unrecognized LogType: " + logModel.LogType + ", skipping...");
 					linearDone();
@@ -209,7 +212,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnTextLog(TextEncounterLogModel logModel)
+		void OnTextLog(TextEncounterLogModel logModel, Action done)
 		{
 			var result = new TextHandlerModel();
 			result.Log.Value = logModel;
@@ -217,7 +220,7 @@ namespace LunraGames.SubLight
 
 			callbacks.EncounterRequest(EncounterRequest.Handle(result));
 
-			OnHandledLog(logModel, logModel.NextLog);
+			done();
 		}
 
 		void OnKeyValueLog(KeyValueEncounterLogModel logModel, Action done)
@@ -705,6 +708,13 @@ namespace LunraGames.SubLight
 
 		void OnButtonLogClickAutoDisableEnabled(ButtonEdgeModel edge, Action done)
 		{
+			done();
+		}
+
+		void OnEncyclopediaLog(EncyclopediaEncounterLogModel logModel, Action done)
+		{
+			model.Encyclopedia.Add(logModel.Entries.Value.Select(e => e.Entry.Duplicate).ToArray());
+
 			done();
 		}
 

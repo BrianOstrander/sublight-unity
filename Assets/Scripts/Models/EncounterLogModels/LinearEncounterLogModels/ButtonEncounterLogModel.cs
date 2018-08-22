@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEncounterLogModel : LinearEncounterLogModel
+	public class ButtonEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
 	{
 		[JsonProperty] ButtonEdgeModel[] buttons = new ButtonEdgeModel[0];
 
@@ -18,5 +18,14 @@ namespace LunraGames.SubLight.Models
 		{
 			Buttons = new ListenerProperty<ButtonEdgeModel[]>(value => buttons = value, () => buttons);
 		}
+
+		[JsonIgnore]
+		public ButtonEdgeModel[] Edges
+		{
+			get { return Buttons.Value; }
+			set { Buttons.Value = value; }
+		}
+		[JsonIgnore]
+		public bool IsLinear { get { return true; } }
 	}
 }

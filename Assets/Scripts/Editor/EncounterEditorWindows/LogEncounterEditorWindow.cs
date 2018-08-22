@@ -115,6 +115,9 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Button:
 					OnButtonLog(infoModel, model as ButtonEncounterLogModel);
 					break;
+				case EncounterLogTypes.Encyclopedia:
+					//OnEncyclopediaLog(infoModel, model as EncyclopediaEncounterLogModel);
+					//break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
 					break;
@@ -417,133 +420,22 @@ namespace LunraGames.SubLight
 				null,
 				infoModel,
 				model,
-				existingSelection => OnSwitchLogSpawn(infoModel, model, existingSelection),
-				newSelection => OnSwitchLogSpawn(infoModel, model, AppendNewLog(newSelection, infoModel)),
+				existingSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, existingSelection)),
+				newSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, AppendNewLog(newSelection, infoModel))),
 				EncounterLogBlankHandling.None,
 				"- Select Target Log -",
 				"< Blank >"
 			);
 
-			var deleted = string.Empty;
-			var isAlternate = false;
-
-			SwitchEdgeModel indexSwap0 = null;
-			SwitchEdgeModel indexSwap1 = null;
-			
-			var isMoving = Event.current.control;
-
-			var sorted = model.Switches.Value.OrderBy(l => l.Index.Value).ToList();
-			var sortedCount = sorted.Count;
-			SwitchEdgeModel last = null;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(16f);
-				GUILayout.BeginVertical();
-				{
-					for (var i = 0; i < sortedCount; i++)
-					{
-						var current = sorted[i];
-						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
-						int currMoveDelta;
-
-						isAlternate = !isAlternate;
-
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
-							
-							if (OnSwitchLogEdgeHeader(i, sortedCount, infoModel, model, current, isMoving, out currMoveDelta)) deleted = current.SwitchId.Value;
-
-							if (currMoveDelta != 0)
-							{
-								indexSwap0 = current;
-								indexSwap1 = currMoveDelta == 1 ? next : last;
-							}
-
-							OnSwitchLogEdge(infoModel, model, current);
-
-							last = current;
-						}
-						EditorGUILayoutExtensions.EndVertical();
-					}
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-
-			OnLinearLog(infoModel, model);
-
-			if (!string.IsNullOrEmpty(deleted))
-			{
-				model.Switches.Value = model.Switches.Value.Where(e => e.SwitchId.Value != deleted).ToArray();
-			}
-
-			if (indexSwap0 != null && indexSwap1 != null)
-			{
-				var swap0 = indexSwap0.Index.Value;
-				var swap1 = indexSwap1.Index.Value;
-
-				indexSwap0.Index.Value = swap1;
-				indexSwap1.Index.Value = swap0;
-			}
+			OnEdgedLog<SwitchEncounterLogModel, SwitchEdgeModel>(infoModel, model, OnSwitchLogEdge);
 		}
 
 		void OnSwitchLogSpawn(
-			EncounterInfoModel infoModel,
-			SwitchEncounterLogModel model,
+			SwitchEdgeModel edge,
 			string targetLogId
 		)
 		{
-			var index = 0;
-			if (model.Switches.Value.Any())
-			{
-				index = model.Switches.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
-			}
-			var result = new SwitchEdgeModel();
-			result.SwitchId.Value = Guid.NewGuid().ToString();
-			result.Index.Value = index;
-			result.NextLogId.Value = targetLogId;
-			model.Switches.Value = model.Switches.Value.Append(result).ToArray();
-		}
-
-		bool OnSwitchLogEdgeHeader(
-			int count, 
-			int maxCount, 
-			EncounterInfoModel infoModel,
-			SwitchEncounterLogModel model,
-			SwitchEdgeModel edge,
-			bool isMoving, 
-			out int indexDelta
-		)
-		{
-			var deleted = false;
-			indexDelta = 0;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("#" + (count + 1) + " | Filter", EditorStyles.boldLabel);
-				if (isMoving)
-				{
-					GUILayout.Space(10f);
-					EditorGUILayoutExtensions.PushEnabled(0 < count);
-					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = -1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = 1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-				}
-				EditorGUILayoutExtensions.PushEnabled(!isMoving);
-				deleted = EditorGUILayoutExtensions.XButton();
-				EditorGUILayoutExtensions.PopEnabled();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
+			edge.NextLogId.Value = targetLogId;
 		}
 
 		void OnSwitchLogEdge(
@@ -581,133 +473,22 @@ namespace LunraGames.SubLight
 				null,
 				infoModel,
 				model,
-				existingSelection => OnButtonLogSpawn(infoModel, model, existingSelection),
-				newSelection => OnButtonLogSpawn(infoModel, model, AppendNewLog(newSelection, infoModel)),
+				existingSelection => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, existingSelection)),
+				newSelection => OnEdgedLogSpawn(model, result =>OnButtonLogSpawn(result, AppendNewLog(newSelection, infoModel))),
 				EncounterLogBlankHandling.None,
 				"- Select Target Log -",
 				"< Blank >"
 			);
 
-			var deleted = string.Empty;
-			var isAlternate = false;
-
-			ButtonEdgeModel indexSwap0 = null;
-			ButtonEdgeModel indexSwap1 = null;
-
-			var isMoving = Event.current.control;
-
-			var sorted = model.Buttons.Value.OrderBy(l => l.Index.Value).ToList();
-			var sortedCount = sorted.Count;
-			ButtonEdgeModel last = null;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(16f);
-				GUILayout.BeginVertical();
-				{
-					for (var i = 0; i < sortedCount; i++)
-					{
-						var current = sorted[i];
-						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
-						int currMoveDelta;
-
-						isAlternate = !isAlternate;
-
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
-
-							if (OnButtonLogEdgeHeader(i, sortedCount, infoModel, model, current, isMoving, out currMoveDelta)) deleted = current.ButtonId.Value;
-
-							if (currMoveDelta != 0)
-							{
-								indexSwap0 = current;
-								indexSwap1 = currMoveDelta == 1 ? next : last;
-							}
-
-							OnButtonLogEdge(infoModel, model, current);
-
-							last = current;
-						}
-						EditorGUILayoutExtensions.EndVertical();
-					}
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-
-			OnLinearLog(infoModel, model);
-
-			if (!string.IsNullOrEmpty(deleted))
-			{
-				model.Buttons.Value = model.Buttons.Value.Where(e => e.ButtonId.Value != deleted).ToArray();
-			}
-
-			if (indexSwap0 != null && indexSwap1 != null)
-			{
-				var swap0 = indexSwap0.Index.Value;
-				var swap1 = indexSwap1.Index.Value;
-
-				indexSwap0.Index.Value = swap1;
-				indexSwap1.Index.Value = swap0;
-			}
+			OnEdgedLog<ButtonEncounterLogModel, ButtonEdgeModel>(infoModel, model, OnButtonLogEdge);
 		}
 
 		void OnButtonLogSpawn(
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
+			ButtonEdgeModel edge,
 			string targetLogId
 		)
 		{
-			var index = 0;
-			if (model.Buttons.Value.Any())
-			{
-				index = model.Buttons.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
-			}
-			var result = new ButtonEdgeModel();
-			result.ButtonId.Value = Guid.NewGuid().ToString();
-			result.Index.Value = index;
-			result.NextLogId.Value = targetLogId;
-			model.Buttons.Value = model.Buttons.Value.Append(result).ToArray();
-		}
-
-		bool OnButtonLogEdgeHeader(
-			int count,
-			int maxCount,
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
-			ButtonEdgeModel edge,
-			bool isMoving,
-			out int indexDelta
-		)
-		{
-			var deleted = false;
-			indexDelta = 0;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("#" + (count + 1) + " | Button", EditorStyles.boldLabel);
-				if (isMoving)
-				{
-					GUILayout.Space(10f);
-					EditorGUILayoutExtensions.PushEnabled(0 < count);
-					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = -1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = 1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-				}
-				EditorGUILayoutExtensions.PushEnabled(!isMoving);
-				deleted = EditorGUILayoutExtensions.XButton();
-				EditorGUILayoutExtensions.PopEnabled();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
+			edge.NextLogId.Value = targetLogId;
 		}
 
 		void OnButtonLogEdge(
@@ -741,6 +522,148 @@ namespace LunraGames.SubLight
 			EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), edge.InteractableFiltering);
 			EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), edge.EnabledFiltering);
 
+		}
+		#endregion
+
+		#region Encyclopedia Logs
+		/*
+		void OnEncyclopediaLog(
+			EncounterInfoModel infoModel,
+			EncyclopediaEncounterLogModel model
+		)
+		{
+			
+		}
+		*/
+		#endregion
+
+		#region Edged Logs
+		void OnEdgedLog<L, E>(
+			EncounterInfoModel infoModel,
+			L model,
+			Action<EncounterInfoModel, L, E> edgeEditor
+		)
+			where L : IEdgedEncounterLogModel<E>
+			where E : class, IEdgeModel
+		{
+			var deleted = string.Empty;
+			var isAlternate = false;
+
+			E indexSwap0 = null;
+			E indexSwap1 = null;
+
+			var isMoving = Event.current.control;
+
+			var sorted = model.Edges.OrderBy(l => l.EdgeIndex).ToList();
+			var sortedCount = sorted.Count;
+			E last = null;
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Space(16f);
+				GUILayout.BeginVertical();
+				{
+					for (var i = 0; i < sortedCount; i++)
+					{
+						var current = sorted[i];
+						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
+						int currMoveDelta;
+
+						isAlternate = !isAlternate;
+
+						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
+						{
+
+							if (OnEdgedLogEdgeHeader(current.EdgeName, i, sortedCount, isMoving, out currMoveDelta)) deleted = current.EdgeId;
+
+							if (currMoveDelta != 0)
+							{
+								indexSwap0 = current;
+								indexSwap1 = currMoveDelta == 1 ? next : last;
+							}
+
+							edgeEditor(infoModel, model, current);
+
+							last = current;
+						}
+						EditorGUILayoutExtensions.EndVertical();
+					}
+				}
+				GUILayout.EndVertical();
+			}
+			GUILayout.EndHorizontal();
+
+			if (model.IsLinear) OnLinearLog(infoModel, model as LinearEncounterLogModel);
+
+			if (!string.IsNullOrEmpty(deleted))
+			{
+				model.Edges = model.Edges.Where(e => e.EdgeId != deleted).ToArray();
+			}
+
+			if (indexSwap0 != null && indexSwap1 != null)
+			{
+				var swap0 = indexSwap0.EdgeIndex;
+				var swap1 = indexSwap1.EdgeIndex;
+
+				indexSwap0.EdgeIndex = swap1;
+				indexSwap1.EdgeIndex = swap0;
+			}
+		}
+
+		void OnEdgedLogSpawn<E>(
+			IEdgedEncounterLogModel<E> model,
+			Action<E> initialize = null
+		)
+			where E : class, IEdgeModel, new()
+		{
+			var index = 0;
+			if (model.Edges.Any())
+			{
+				index = model.Edges.OrderBy(e => e.EdgeIndex).Last().EdgeIndex + 1;
+			}
+			var result = new E();
+			result.EdgeId = Guid.NewGuid().ToString();
+			result.EdgeIndex = index;
+			if (initialize != null) initialize(result);
+			model.Edges = model.Edges.Append(result).ToArray();
+		}
+
+		bool OnEdgedLogEdgeHeader(
+			string label,
+			int count,
+			int maxCount,
+			bool isMoving,
+			out int indexDelta
+		)
+		{
+			var deleted = false;
+			indexDelta = 0;
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("#" + (count + 1) + " | "+label, EditorStyles.boldLabel);
+				if (isMoving)
+				{
+					GUILayout.Space(10f);
+					EditorGUILayoutExtensions.PushEnabled(0 < count);
+					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = -1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = 1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+				}
+				EditorGUILayoutExtensions.PushEnabled(!isMoving);
+				deleted = EditorGUILayoutExtensions.XButton();
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+			GUILayout.EndHorizontal();
+			return deleted;
 		}
 		#endregion
 

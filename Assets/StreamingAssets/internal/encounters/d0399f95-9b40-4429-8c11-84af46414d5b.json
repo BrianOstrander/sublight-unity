@@ -1,7 +1,6 @@
 {
   "orderWeight": 999.0,
   "randomWeightMultiplier": 1.0,
-  "ignore": true,
   "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
   "name": "Button Test 0",
   "hook": "Button Test 0",
@@ -190,7 +189,8 @@
         "logId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
         "name": "MainButtons"
       }
-    ]
+    ],
+    "encyclopediaLogs": []
   },
   "version": 6,
   "meta": "Button Test 0",

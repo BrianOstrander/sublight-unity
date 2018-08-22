@@ -13,6 +13,11 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int priority;
 		[JsonProperty] int orderWeight;
 
+		/// <summary>
+		/// The encyclopedia identifier, used mostly internally for production
+		/// purposes. Two entries may be the exact same despite having different
+		/// EncyclopediaIds.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncyclopediaId;
 		[JsonIgnore]
