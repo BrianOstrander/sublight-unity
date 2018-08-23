@@ -44,13 +44,21 @@ namespace LunraGames.SubLight
 					{
 						GUILayout.Space(10f);
 						EditorGUILayoutExtensions.PushEnabled(0 < count);
-						if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+						if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f), GUILayout.Height(18f)))
 						{
 							indexDelta = -1;
 						}
+						if (GUILayout.Button("^^", EditorStyles.miniButtonMid, GUILayout.Width(30f), GUILayout.Height(18f)))
+						{
+							indexDelta = -2;
+						}
 						EditorGUILayoutExtensions.PopEnabled();
 						EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-						if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+						if (GUILayout.Button("vv", EditorStyles.miniButtonMid, GUILayout.Width(30f), GUILayout.Height(18f)))
+						{
+							indexDelta = 2;
+						}
+						if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f), GUILayout.Height(18f)))
 						{
 							indexDelta = 1;
 						}
