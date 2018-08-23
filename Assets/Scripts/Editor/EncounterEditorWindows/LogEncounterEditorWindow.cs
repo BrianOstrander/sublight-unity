@@ -531,9 +531,16 @@ namespace LunraGames.SubLight
 			EncyclopediaEncounterLogModel model
 		)
 		{
-			if (GUILayout.Button("Append New Encyclopedia Section")) OnEdgedLogSpawn(model);
+			if (GUILayout.Button("Append New Encyclopedia Section")) OnEdgedLogSpawn(model, OnEncyclopediaLogSpawn);
 
 			OnEdgedLog<EncyclopediaEncounterLogModel, EncyclopediaEdgeModel>(infoModel, model, OnEncyclopediaLogEdge);
+		}
+
+		void OnEncyclopediaLogSpawn(
+			EncyclopediaEdgeModel edge
+		)
+		{
+			edge.Entry.OrderWeight.Value = -1;
 		}
 
 		void OnEncyclopediaLogEdge(

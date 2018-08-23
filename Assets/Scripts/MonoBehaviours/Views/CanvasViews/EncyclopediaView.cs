@@ -41,7 +41,7 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
-				articleEntryArea.transform.ClearChildren<ArticleSectionLeaf>();
+				sectionEntryArea.transform.ClearChildren<ArticleSectionLeaf>();
 				if (value == null) return;
 				foreach (var entry in value)
 				{
