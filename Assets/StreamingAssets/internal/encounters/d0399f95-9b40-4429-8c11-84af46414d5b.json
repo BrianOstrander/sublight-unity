@@ -231,6 +231,14 @@
               "priority": 1
             },
             "index": 1
+          },
+          {
+            "entry": {
+              "encyclopediaId": "605fc40d-0b06-4292-9d8b-ef7b23978220",
+              "title": "Some Other Title",
+              "body": "Yaaaas"
+            },
+            "index": 2
           }
         ],
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",

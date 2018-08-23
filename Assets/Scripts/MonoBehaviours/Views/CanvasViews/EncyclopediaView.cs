@@ -46,6 +46,7 @@ namespace LunraGames.SubLight.Views
 				foreach (var entry in value)
 				{
 					var instance = sectionEntryArea.InstantiateChild(sectionEntryPrefab, setActive: true);
+					instance.HeaderLabel.gameObject.SetActive(!string.IsNullOrEmpty(entry.Header));
 					instance.HeaderLabel.text = entry.Header ?? string.Empty;
 					instance.BodyLabel.text = entry.Body ?? string.Empty;
 				}

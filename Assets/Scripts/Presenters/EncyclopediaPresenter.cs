@@ -1,4 +1,6 @@
-﻿using LunraGames.SubLight.Views;
+﻿using System.Collections.Generic;
+
+using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
@@ -10,6 +12,13 @@ namespace LunraGames.SubLight.Presenters
 		public EncyclopediaPresenter(GameModel model)
 		{
 			this.model = model;
+
+			App.Callbacks.FocusRequest += OnFocus;
+		}
+
+		protected override void OnUnBind()
+		{
+			App.Callbacks.FocusRequest -= OnFocus;
 		}
 
 		public void Show()
@@ -19,8 +28,12 @@ namespace LunraGames.SubLight.Presenters
 			View.Reset();
 
 			View.Title = "Select an Article";
-
 			View.BackClick = OnBackClick;
+
+			var buttons = new List<LabelButtonBlock>();
+			foreach (var title in model.Encyclopedia.Titles.Value) buttons.Add(new LabelButtonBlock(title, () => OnArticleClick(title)));
+
+			View.ArticleEntries = buttons.ToArray();
 
 			ShowView(App.GameCanvasRoot);
 		}
@@ -35,6 +48,7 @@ namespace LunraGames.SubLight.Presenters
 					if (focus.State != FocusRequest.States.Complete) return;
 					var encyclopediaFocus = focus as EncyclopediaFocusRequest;
 					// We also only show up if our view is specified
+					UnityEngine.Debug.Log(encyclopediaFocus.View);
 					if (encyclopediaFocus.View != EncyclopediaFocusRequest.Views.Home) goto default;
 					Show();
 					break;
@@ -42,6 +56,18 @@ namespace LunraGames.SubLight.Presenters
 					if (View.TransitionState == TransitionStates.Shown) CloseView();
 					break;
 			}
+		}
+
+		void OnArticleClick(string title)
+		{
+			if (View.TransitionState != TransitionStates.Shown) return;
+
+			var article = model.Encyclopedia.GetArticle(title);
+
+			View.Title = article.Title;
+			var sections = new List<ArticleSectionBlock>();
+			foreach (var section in article.Entries.Value) sections.Add(new ArticleSectionBlock(section.Header, section.Body));
+			View.SectionEntries = sections.ToArray();
 		}
 
 		void OnBackClick()

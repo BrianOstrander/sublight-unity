@@ -227,7 +227,6 @@ GameObject:
   - component: {fileID: 222089226181102762}
   - component: {fileID: 114745079429025264}
   - component: {fileID: 114276835817856206}
-  - component: {fileID: 114985786654181558}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -628,7 +627,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114968399040548854}
         m_MethodName: OnBackClick
         m_Mode: 1
         m_Arguments:
@@ -1134,11 +1133,11 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 6.57
+  m_Spacing: 4
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
 --- !u!114 &114721066795035218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1212,7 +1211,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1285321788252548}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -1238,7 +1237,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 1
 --- !u!114 &114894819899100002
@@ -1473,19 +1472,6 @@ MonoBehaviour:
   - {fileID: 224238397653168270}
   targetGraphics:
   - {fileID: 114460538820033496}
---- !u!114 &114985786654181558
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1900396773515036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cfc14e9fe9c9464bb505deeb4f4413c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ButtonLabel: {fileID: 114256622335414214}
-  Button: {fileID: 114276835817856206}
 --- !u!222 &222089226181102762
 CanvasRenderer:
   m_ObjectHideFlags: 1
