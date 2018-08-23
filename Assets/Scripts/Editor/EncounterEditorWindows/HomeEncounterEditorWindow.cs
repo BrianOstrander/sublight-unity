@@ -274,6 +274,8 @@ namespace LunraGames.SubLight
 					var deleted = string.Empty;
 					var beginning = string.Empty;
 
+					EncounterLogModel indexToBeginning = null;
+					EncounterLogModel indexToEnding = null;
 					EncounterLogModel indexSwap0 = null;
 					EncounterLogModel indexSwap1 = null;
 
@@ -290,10 +292,21 @@ namespace LunraGames.SubLight
 
 						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning)) deleted = log.LogId;
 
-						if (currMoveDelta != 0)
+						switch (currMoveDelta)
 						{
-							indexSwap0 = log;
-							indexSwap1 = currMoveDelta == 1 ? nextLog : lastLog;
+							case 0:
+								break;
+							case -2:
+								indexToBeginning = log;
+								break;
+							case 2:
+								indexToEnding = log;
+								break;
+							case -1:
+							case 1:
+								indexSwap0 = log;
+								indexSwap1 = currMoveDelta == 1 ? nextLog : lastLog;
+								break;
 						}
 
 						OnLog(model, log);
@@ -301,18 +314,39 @@ namespace LunraGames.SubLight
 
 						lastLog = log;
 					}
+
 					if (!string.IsNullOrEmpty(deleted))
 					{
 						model.Logs.All.Value = model.Logs.All.Value.Where(l => l.LogId != deleted).ToArray();
 					}
-					if (!string.IsNullOrEmpty(beginning))
+					else if (!string.IsNullOrEmpty(beginning))
 					{
 						foreach (var logs in model.Logs.All.Value)
 						{
 							logs.Beginning.Value = logs.LogId.Value == beginning;
 						}
 					}
-					if (indexSwap0 != null && indexSwap1 != null)
+					else if (indexToBeginning != null)
+					{
+						indexToBeginning.Index.Value = 0;
+						var index = 1;
+						foreach (var log in sorted.Where(l => l.LogId.Value != indexToBeginning.LogId.Value))
+						{
+							log.Index.Value = index;
+							index++;
+						}
+					}
+					else if (indexToEnding != null)
+					{
+						indexToEnding.Index.Value = sortedCount;
+						var index = 0;
+						foreach (var log in sorted.Where(l => l.LogId.Value != indexToEnding.LogId.Value))
+						{
+							log.Index.Value = index;
+							index++;
+						}
+					}
+					else if (indexSwap0 != null && indexSwap1 != null)
 					{
 						var swap0 = indexSwap0.Index.Value;
 						var swap1 = indexSwap1.Index.Value;
@@ -344,6 +378,8 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Button:
 					return NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Encyclopedia:
+					return NewEncounterLog<EncyclopediaEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType:" + logType);
 					break;

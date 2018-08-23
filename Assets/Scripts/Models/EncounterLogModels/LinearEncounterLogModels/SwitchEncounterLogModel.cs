@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class SwitchEncounterLogModel : LinearEncounterLogModel
+	public class SwitchEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<SwitchEdgeModel>
 	{
 		[JsonProperty] SwitchEdgeModel[] switches = new SwitchEdgeModel[0];
 
@@ -18,5 +18,14 @@ namespace LunraGames.SubLight.Models
 		{
 			Switches = new ListenerProperty<SwitchEdgeModel[]>(value => switches = value, () => switches);
 		}
+
+		[JsonIgnore]
+		public SwitchEdgeModel[] Edges
+		{
+			get { return Switches.Value; }
+			set { Switches.Value = value; }
+		}
+		[JsonIgnore]
+		public bool IsLinear { get { return true; } }
 	}
 }

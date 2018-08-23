@@ -121,6 +121,10 @@ namespace LunraGames.SubLight
 			new CameraShipPresenter();
 			new ShipSlotsPresenter(game);
 
+			// Encyclopedia presenters
+			new CameraEncyclopediaPresenter();
+			new EncyclopediaPresenter(game);
+
 			// Global presenters
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);

@@ -27,7 +27,7 @@
         "header": "A. Vex",
         "message": "We're getting down deep in the well of this blackhole, not sure how they managed to get such a large ark this close to the event horizon.",
         "nextLogId": "3bc4f282-5afe-40e5-9e00-b811b24938dd",
-        "beginning": true,
+        "index": 1,
         "logId": "ffe513bc-e47c-4888-b260-b4966553a136",
         "duration": 1.0
       },
@@ -35,14 +35,14 @@
         "header": "C. Cortez",
         "message": "Yeah, these gravitational waves are bucking our shuttle wildly, you hear that mother? That's the sound of our hull creaking, we're lucky our shuttle is so tiny, anything bigger and these forces would shear us in half!",
         "nextLogId": "84027803-bf8e-47d7-98df-ef7d4ae4d592",
-        "index": 1,
+        "index": 2,
         "logId": "3bc4f282-5afe-40e5-9e00-b811b24938dd"
       },
       {
         "header": "A. Vex",
         "message": "Okay, we're pulling up alongside the wreck... and wow, what a number was done to their ark. Hey Cortez, can you do a spectral scan, see if there's any evidence of weapon fire? I wanna know what brought them so far down here.",
         "nextLogId": "ca8c6f05-7dfc-440f-b429-af651ce18479",
-        "index": 3,
+        "index": 4,
         "logId": "15f40baf-1a2c-4da8-8fe7-559cc5653f79",
         "duration": 1.0
       },
@@ -50,14 +50,14 @@
         "header": "C. Cortez",
         "message": "Running scan... not picking up any obvious traces of weapon fire. Fracture patterns and residue on the propulsion unit of the ark suggest their engines were running full tilt when the damage occured. This ark didn't drift here as a derelict, it died here...",
         "nextLogId": "26751d85-1a59-406f-be21-9df9ecf7e9ff",
-        "index": 4,
+        "index": 5,
         "logId": "ca8c6f05-7dfc-440f-b429-af651ce18479"
       },
       {
         "header": "C. Cortez",
         "message": "It's hard to see, the hull is pretty banged up, can we get some lights trained on it Vex?",
         "nextLogId": "35bd3d57-7e76-4e4d-a344-e5a0a2a571c2",
-        "index": 6,
+        "index": 7,
         "logId": "7f334eb2-4529-46ba-9dd7-1ea3073f78c6",
         "duration": 1.0
       },
@@ -65,7 +65,7 @@
         "header": "A. Vex",
         "message": "Activating flood lights.",
         "nextLogId": "4d863514-8157-4c91-b5b5-b68cc8238259",
-        "index": 7,
+        "index": 8,
         "logId": "35bd3d57-7e76-4e4d-a344-e5a0a2a571c2",
         "duration": 1.0
       },
@@ -73,7 +73,7 @@
         "header": "C. Cortez",
         "message": "Okay, that's better. Definetely a Mercury ship, it's got LSM markings... looks contemporary to our own ark... LSM Rosa, that ring any bells?",
         "nextLogId": "c5de5ce1-bb81-45ee-9bc4-cc7b8ae66eb2",
-        "index": 8,
+        "index": 9,
         "logId": "4d863514-8157-4c91-b5b5-b68cc8238259",
         "duration": 1.0
       },
@@ -81,7 +81,7 @@
         "header": "A. Vex",
         "message": "Oh god, those poor souls. Yeah.. our ancestors crossed paths with them, they're the first ark we met since leaving Sol. They're the ones that encouraged us to keep going, towards Andromeda...",
         "nextLogId": "e3a8f6fa-11d2-4bfe-82c4-3bf6f0db003e",
-        "index": 9,
+        "index": 10,
         "logId": "c5de5ce1-bb81-45ee-9bc4-cc7b8ae66eb2",
         "duration": 1.0
       },
@@ -89,75 +89,32 @@
         "header": "C. Cortez",
         "message": "Your call mother, but if you ask me it feels wrong to leave them drifting here...",
         "nextLogId": "aa32f74e-d619-47f3-bed9-2d991eec55b6",
-        "index": 10,
+        "index": 11,
         "logId": "e3a8f6fa-11d2-4bfe-82c4-3bf6f0db003e"
       },
       {
         "header": "C. Cortez",
         "message": "Okay, feels wrong, but we'll see what we can siphon.",
-        "nextLogId": "70c1e4f6-680c-4c24-808e-4f33f6f3e78b",
-        "index": 14,
+        "nextLogId": "7d349f95-919f-464a-ab74-8ff75009eb92",
+        "index": 16,
         "logId": "611397ad-a2cc-4dc0-8c56-fcc3f6f2be9c"
       },
       {
         "header": "C. Cortez",
         "message": "I don't think they'd have wanted to be left like this, but okay, heading back mother.",
-        "nextLogId": "09b28b18-af0e-490a-a383-3ee6a60810c6",
-        "index": 16,
+        "nextLogId": "1ce08d17-24c0-4e3d-aac0-d1a0e8c3f02c",
+        "index": 19,
         "logId": "ec85a9ec-71bb-4c7b-b0b6-7bcfe9d09e87"
       },
       {
         "header": "C. Cortez",
         "message": "Good call, we can nudge it into a decaying orbit around the blackhole. It's the least we can do...",
-        "nextLogId": "2efd07d6-851a-4f0a-8e34-92b8d1522bd4",
-        "index": 18,
+        "nextLogId": "ada858b3-b2a9-459c-9b99-48764bbc6f9e",
+        "index": 22,
         "logId": "5aa0e214-27df-41eb-a4c2-9e8cb26156ec"
       }
     ],
-    "keyValueLogs": [
-      {
-        "setStrings": [
-          {
-            "value": "Your crew was able to siphon 1 unit of fuel from the wreck of the LSM Rosa. With fueling operations complete, you leave the ark adrift in orbit around the blackhole, until it too gets consumed by the void one day.",
-            "operationId": "bd1049bc-922c-4830-96e2-109d55e1152a",
-            "target": "Encounter",
-            "key": "Summary"
-          }
-        ],
-        "setBooleans": [],
-        "index": 15,
-        "ending": true,
-        "logId": "70c1e4f6-680c-4c24-808e-4f33f6f3e78b"
-      },
-      {
-        "setStrings": [
-          {
-            "value": "Your crew safely aboard, you leave the crushed remains of the LSM Rosa adrift in orbit around the blackhole, until it too gets consumed by the void one day.",
-            "operationId": "6355069f-4b97-443e-87b9-3503c4128b04",
-            "target": "Encounter",
-            "key": "Summary"
-          }
-        ],
-        "setBooleans": [],
-        "index": 17,
-        "ending": true,
-        "logId": "09b28b18-af0e-490a-a383-3ee6a60810c6"
-      },
-      {
-        "setStrings": [
-          {
-            "value": "Your crew safely aboard, you watch as the remains of the LSM Rosa get torn up and consumed by the blackhole. They'll never reach Andromeda, but at least they'll have escaped the void...",
-            "operationId": "14545ce6-e7ae-4e1b-8a55-42662ca2ee66",
-            "target": "Encounter",
-            "key": "Summary"
-          }
-        ],
-        "setBooleans": [],
-        "index": 19,
-        "ending": true,
-        "logId": "2efd07d6-851a-4f0a-8e34-92b8d1522bd4"
-      }
-    ],
+    "keyValueLogs": [],
     "inventoryLogs": [
       {
         "addResources": [
@@ -170,7 +127,7 @@
         ],
         "addInstances": [],
         "nextLogId": "611397ad-a2cc-4dc0-8c56-fcc3f6f2be9c",
-        "index": 13,
+        "index": 14,
         "logId": "973a343d-1b7d-4660-ad72-728973d6b6b3"
       }
     ],
@@ -201,7 +158,7 @@
           }
         ],
         "nextLogId": "15f40baf-1a2c-4da8-8fe7-559cc5653f79",
-        "index": 2,
+        "index": 3,
         "logId": "84027803-bf8e-47d7-98df-ef7d4ae4d592"
       },
       {
@@ -229,7 +186,7 @@
           }
         ],
         "nextLogId": "7f334eb2-4529-46ba-9dd7-1ea3073f78c6",
-        "index": 5,
+        "index": 6,
         "logId": "26751d85-1a59-406f-be21-9df9ecf7e9ff"
       },
       {
@@ -300,8 +257,77 @@
             }
           }
         ],
-        "index": 11,
+        "index": 13,
         "logId": "aa32f74e-d619-47f3-bed9-2d991eec55b6"
+      }
+    ],
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "dfc21640-2976-47fe-bdd1-d2048fa2cd98",
+              "title": "LSM Rosa",
+              "header": "Fate",
+              "body": "Requiring additional fuel, your crew salvaged what they could from the wreck of the LSM Rosa. The ark will drift in orbit around the blackhole, until it too gets consumed by the void one day.",
+              "orderWeight": -1
+            }
+          }
+        ],
+        "index": 17,
+        "ending": true,
+        "logId": "7d349f95-919f-464a-ab74-8ff75009eb92",
+        "name": "FuelEnding"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "8c54f641-00dc-4faf-89b6-f4678af7f59c",
+              "title": "LSM Rosa",
+              "header": "Fate",
+              "body": "Afraid to disturb the crumbling ruins of the LSM Rosa, your crew left it in orbit around the blackhole, until it too gets consumed by the void one day.",
+              "orderWeight": -1
+            }
+          }
+        ],
+        "index": 20,
+        "ending": true,
+        "logId": "1ce08d17-24c0-4e3d-aac0-d1a0e8c3f02c",
+        "name": "LeftAloneEnding"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "1086d45d-c1d5-41b5-906e-3e3fd4121e4a",
+              "title": "LSM Rosa",
+              "header": "Fate",
+              "body": "Not content to let the crumbling ruins of the LSM Rosa to drift alone in orbit, a minor burn was performed, nudging it into a decaying orbit. Your crew watched as the ark was torn up and consumed by the blackhole. They never reached Andromeda, but at least they escaped the void...",
+              "orderWeight": -1
+            }
+          }
+        ],
+        "index": 23,
+        "ending": true,
+        "logId": "ada858b3-b2a9-459c-9b99-48764bbc6f9e",
+        "name": "DeorbitEnding"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "27ab4883-0901-40b5-86f8-1604d9706f10",
+              "title": "LSM Rosa",
+              "header": "Final Gravity Assist",
+              "body": "The LSM Rosa’s crew continued to pursue Captain Grant’s initial proposal, gravity assisting from one black whole to another, towards the galactic core. After miscalculating the diameter of a singularity in frontier space, the LSM Rosa entered too close to the event horizon, where massive tidal stresses crumpled the hull.",
+              "orderWeight": -1
+            }
+          }
+        ],
+        "nextLogId": "ffe513bc-e47c-4888-b260-b4966553a136",
+        "beginning": true,
+        "logId": "00d95d93-5d28-48c7-84b9-22ca3c0bc928"
       }
     ]
   },

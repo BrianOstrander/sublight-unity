@@ -7,6 +7,7 @@
 		KeyValue = 20,
 		Inventory = 30,
 		Switch = 40,
-		Button = 50
+		Button = 50,
+		Encyclopedia = 60
 	}
 }
