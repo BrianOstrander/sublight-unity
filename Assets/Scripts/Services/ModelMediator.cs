@@ -124,11 +124,11 @@ namespace LunraGames.SubLight
 
 		public abstract void Initialize(IBuildInfo info, Action<RequestStatus> done);
 
-        /// <summary>
-        /// Gets the minimum supported saves by SaveTypes, -1 means it only 
-        /// supports saves equal to the current version.
-        /// </summary>
-        /// <value>The minimum supported saves.</value>
+		/// <summary>
+		/// Gets the minimum supported saves by SaveTypes, -1 means it only 
+		/// supports saves equal to the current version.
+		/// </summary>
+		/// <value>The minimum supported saves.</value>
 		protected abstract Dictionary<SaveTypes, int> MinimumSupportedSaves { get; }
 		/// <summary>
 		/// Can these models be saved, or are they readonly.
@@ -141,10 +141,10 @@ namespace LunraGames.SubLight
 		protected bool IsSupportedVersion(SaveTypes type, int version)
 		{
 			if (!MinimumSupportedSaves.ContainsKey(type)) return false;
-            var min = MinimumSupportedSaves[type];
-            // If min is -1, then it means we can only load saves that equal 
-            // this version.
-            if (min < 0) min = BuildInfo.Version;
+			var min = MinimumSupportedSaves[type];
+			// If min is -1, then it means we can only load saves that equal 
+			// this version.
+			if (min < 0) min = BuildInfo.Version;
 			return min <= version;
 		}
 
