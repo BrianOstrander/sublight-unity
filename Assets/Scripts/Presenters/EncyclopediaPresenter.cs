@@ -48,7 +48,6 @@ namespace LunraGames.SubLight.Presenters
 					if (focus.State != FocusRequest.States.Complete) return;
 					var encyclopediaFocus = focus as EncyclopediaFocusRequest;
 					// We also only show up if our view is specified
-					UnityEngine.Debug.Log(encyclopediaFocus.View);
 					if (encyclopediaFocus.View != EncyclopediaFocusRequest.Views.Home) goto default;
 					Show();
 					break;

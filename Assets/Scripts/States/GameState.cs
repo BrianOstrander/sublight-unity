@@ -331,15 +331,32 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case SaveRequest.States.Request:
-					App.M.Save(Payload.Game, OnSave);
+					if (!Payload.Game.SaveState.Value.CanSave)
+					{
+						App.Callbacks.SaveRequest(SaveRequest.Failure(request, Payload.Game.SaveState.Value.Reason));
+						break;
+					}
+					Payload.Game.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlySaving);
+					App.M.Save(Payload.Game, result => OnSave(result, request));
+					break;
+				case SaveRequest.States.Complete:
+					if (request.Status != RequestStatus.Success) Debug.LogError("Unable to save game, request returned with status " + request.Status + " and error: " + request.Error);
+					request.Done(request);
 					break;
 			}
 		}
 
-		void OnSave(SaveLoadRequest<GameModel> request)
+		void OnSave(SaveLoadRequest<GameModel> result, SaveRequest request)
 		{
-			if (request.Status != RequestStatus.Success) Debug.LogError("Error saving: " + request.Error);
-			App.Callbacks.SaveRequest(new SaveRequest(SaveRequest.States.Complete));
+			Payload.Game.SaveState.Value = SaveStateBlock.Savable();
+
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to save game, model mediator returned status "+result.Status+" and error: " + result.Error);
+				App.Callbacks.SaveRequest(SaveRequest.Failure(request, result.Error));
+				return;
+			}
+			App.Callbacks.SaveRequest(SaveRequest.Success(request));
 		}
 		#endregion
 	}

@@ -78,12 +78,12 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushEnabled(IsInGameState);
 				if (GUILayout.Button("Copy Game JSON to Clipboard"))
 				{
-					OnGameSaved(new SaveRequest(SaveRequest.States.Complete));
+					OnGameSaved(SaveRequest.Success(SaveRequest.Request()));
 				}
 				if (GUILayout.Button("Save Then Copy JSON to Clipboard"))
 				{
 					App.Callbacks.SaveRequest += OnGameSaved;
-					App.Callbacks.SaveRequest(SaveRequest.Save());
+					App.Callbacks.SaveRequest(SaveRequest.Request());
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			}

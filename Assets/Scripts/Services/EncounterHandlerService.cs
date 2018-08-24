@@ -10,6 +10,14 @@ namespace LunraGames.SubLight
 {
 	public class EncounterHandlerService
 	{
+		enum States
+		{
+			Unknown = 0,
+			Processing = 10,
+			Ending = 20,
+			Complete = 30
+		}
+
 		Heartbeat heartbeat;
 		CallbackService callbacks;
 		EncounterService encounterService;
@@ -18,7 +26,7 @@ namespace LunraGames.SubLight
 		ValueFilterService valueFilter;
 		Func<PreferencesModel> currentPreferences;
 
-		bool processing;
+		States state = States.Complete;
 		GameModel model;
 		EncounterInfoModel encounter;
 		SystemModel system;
@@ -70,7 +78,6 @@ namespace LunraGames.SubLight
 						request.EncounterId,
 						request.SystemPosition
 					);
-					callbacks.FocusRequest(EncounterFocusRequest.Encounter());
 					break;
 				case EncounterRequest.States.Next:
 					if (nextLogDelay.HasValue) nextLogDelay = 0f;
@@ -83,7 +90,7 @@ namespace LunraGames.SubLight
 					model.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
 					var toFocus = system.Position.Value;
 
-					OnEnd();
+					state = States.Ending;
 
 					callbacks.FocusRequest(
 						new SystemsFocusRequest(
@@ -113,12 +120,20 @@ namespace LunraGames.SubLight
 					}
 					nextLogDelay = 0f;
 					break;
+				default:
+					if (state != States.Ending) break;
+					// We only save once we've completely moved to the next focus.
+					if (focus.State != FocusRequest.States.Complete) return;
+					model.SaveState.Value = SaveStateBlock.Savable();
+					OnEnd();
+					callbacks.SaveRequest(SaveRequest.Request());
+					break;
 			}
 		}
 
 		void OnStateChange(StateChange change)
 		{
-			if (!processing || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
+			if (state == States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
 			OnEnd();
 		}
 
@@ -140,25 +155,40 @@ namespace LunraGames.SubLight
 			UniversePosition systemPosition
 		)
 		{
-			if (processing)
+			if (state != States.Complete)
 			{
-				Debug.LogError("Beginning an encounter while one is being processed, may cause unpredictable behaviour");
+				Debug.LogError("Beginning an encounter while one is not complete, may cause unpredictable behaviour.");
 			}
 
-			processing = true;
+			state = States.Processing;
 
 			this.model = model;
+
 			encounter = encounterService.GetEncounter(encounterId);
 			system = model.Universe.Value.GetSystem(systemPosition);
 			body = system.BodyWithEncounter;
 			keyValues = new KeyValueListener(KeyValueTargets.Encounter, new KeyValueListModel(), keyValueService);
 
 			keyValues.Register();
+
+			callbacks.SaveRequest(SaveRequest.Request(OnBeginSaved));
+		}
+
+		void OnBeginSaved(SaveRequest request)
+		{
+			if (request.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Beginning an encounter without successfully saving first may cause unpredictable behaviour.");
+			}
+
+			model.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlyInEncounter);
+
+			callbacks.FocusRequest(EncounterFocusRequest.Encounter());
 		}
 
 		void OnEnd()
 		{
-			processing = false;
+			state = States.Complete;
 
 			model = null;
 			encounter = null;

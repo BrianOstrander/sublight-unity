@@ -1,4 +1,4 @@
-﻿using LunraGames.SubLight.Models;
+﻿using System;
 
 namespace LunraGames.SubLight
 {
@@ -11,21 +11,40 @@ namespace LunraGames.SubLight
 			Complete = 20
 		}
 
-		public static SaveRequest Save() { return new SaveRequest(States.Request); }
+		public static SaveRequest Request(Action<SaveRequest> done = null) { return new SaveRequest(States.Request, done: done); }
+		public static SaveRequest Success(SaveRequest request) { return request.Duplicate(States.Complete, RequestStatus.Success, null); }
+		public static SaveRequest Failure(SaveRequest request, string error) { return request.Duplicate(States.Complete, RequestStatus.Failure, error); }
 
 		public readonly States State;
+		public readonly RequestStatus Status;
+		public readonly string Error;
+		public readonly Action<SaveRequest> Done;
 
-		public SaveRequest(States state)
+		SaveRequest(
+			States state,
+			RequestStatus status = RequestStatus.Success,
+			string error = null,
+			Action<SaveRequest> done = null
+		)
 		{
 			State = state;
+			Status = status;
+			Error = error;
+			Done = done ?? ActionExtensions.GetEmpty<SaveRequest>();
 		}
 
-		public SaveRequest Duplicate(States state = States.Unknown)
+		SaveRequest Duplicate(
+			States state,
+			RequestStatus status,
+			string error
+		)
 		{
 			return new SaveRequest(
-				state == States.Unknown ? State : state
+				state,
+				status,
+				error,
+				Done
 			);
 		}
-
 	}
 }

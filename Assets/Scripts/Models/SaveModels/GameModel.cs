@@ -108,6 +108,7 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region NonSerialized
+		SaveStateBlock saveState = SaveStateBlock.Savable();
 		UniversePosition[] focusedSectors = new UniversePosition[0];
 
 		/// <summary>
@@ -115,6 +116,8 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
+		[JsonIgnore]
+		public readonly ListenerProperty<SaveStateBlock> SaveState;
 		#endregion
 
 		public GameModel()
@@ -127,6 +130,7 @@ namespace LunraGames.SubLight.Models
 			EndSystem = new ListenerProperty<UniversePosition>(value => endSystem = value, () => endSystem);
 			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
 			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
+			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
