@@ -1,7 +1,8 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "ff34ef9d-1eb2-4498-b139-e821dedff9bb",
   "name": "We're Staying Put",
-  "hook": "A ship in low orbit is dismantling itself, and looks like they're getting ready to colonize the surface of a nearby planet.",
+  "trigger": "Automatic",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],
@@ -9,21 +10,20 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
         "header": "Captain Iris Colt",
         "message": "Greetings! LSM Beethoven reading you clearly. Captain Iris Colt here.",
         "nextLogId": "c5d288c1-a0e6-48db-b481-f8794a4bad8e",
-        "beginning": true,
+        "index": 1,
         "logId": "23f92874-2b4e-4534-9e3f-263949457d18",
         "duration": 1.0
       },
       {
         "message": "What are you doing, disassembling your ark for colonization? Aren't you concerned about the void?",
         "nextLogId": "200356f5-f8c5-4878-b941-736f6f08a96d",
-        "index": 1,
+        "index": 2,
         "logId": "c5d288c1-a0e6-48db-b481-f8794a4bad8e",
         "duration": 1.0
       },
@@ -31,13 +31,13 @@
         "header": "Captain Iris Colt",
         "message": "The void? Not our problem, it can't keep expanding like that forever.",
         "nextLogId": "d98c4fe0-77ac-4ec6-91b3-9b639d697118",
-        "index": 2,
+        "index": 3,
         "logId": "200356f5-f8c5-4878-b941-736f6f08a96d"
       },
       {
         "message": "You don't know that it will stop, how can you say that after it's already destroyed Earth and the rest of Sol?",
         "nextLogId": "2fdf6ce2-9998-447c-a59b-3456dc181d5b",
-        "index": 4,
+        "index": 5,
         "logId": "c08b7c06-8807-45f4-9ad9-771dae9c83fc",
         "duration": 1.0
       },
@@ -45,13 +45,13 @@
         "header": "Captain Iris Colt",
         "message": "And do you know how many arks have gotten lost or destroyed between the stars? The Beethoven barely survived its voyage here. If you ask me, setting off again to another system, hundreds of years away, is more dangerous.",
         "nextLogId": "95583dc9-f27d-4863-97a1-bfea3d564b5b",
-        "index": 5,
+        "index": 6,
         "logId": "2fdf6ce2-9998-447c-a59b-3456dc181d5b"
       },
       {
         "header": "Captain Iris Colt",
         "message": "I don't have time for this, terminating transmition.",
-        "index": 7,
+        "index": 8,
         "ending": true,
         "logId": "240a9500-6eb7-49a5-900e-f28b339d731e"
       },
@@ -59,7 +59,7 @@
         "header": "",
         "message": "Why do you think you're even here? Your ancestors weren't content to stay put, or you'd never be here. If you don't continue on, you're squandering their sacrifices.",
         "nextLogId": "654e8248-a96c-44e2-895e-072d5b1ce0be",
-        "index": 8,
+        "index": 9,
         "logId": "8f4c494f-b251-4f45-b128-893242940dcb",
         "duration": 1.0
       },
@@ -67,14 +67,14 @@
         "header": "Captain Iris Colt",
         "message": "We didn't ask for those sacrifices!",
         "nextLogId": "a033cb1b-3401-4aa1-82ec-226e340dd5e1",
-        "index": 9,
+        "index": 10,
         "logId": "654e8248-a96c-44e2-895e-072d5b1ce0be",
         "duration": 1.0
       },
       {
         "message": "Yet they made them anyways, and they didn't even know you.",
         "nextLogId": "d7c79c6c-bbb5-43b1-b1dd-b0764c7eb0f1",
-        "index": 10,
+        "index": 11,
         "logId": "a033cb1b-3401-4aa1-82ec-226e340dd5e1",
         "duration": 1.0
       },
@@ -82,13 +82,13 @@
         "header": "Captain Iris Colt",
         "message": "I... will take your words into consideration, but for now I must go. Good luck.",
         "nextLogId": "7eb7f5d8-53ac-46b5-b65d-8d5bc6c752fa",
-        "index": 11,
+        "index": 12,
         "logId": "d7c79c6c-bbb5-43b1-b1dd-b0764c7eb0f1"
       },
       {
         "header": "Captain Iris Colt",
         "message": "Good luck to you too.",
-        "index": 13,
+        "index": 14,
         "ending": true,
         "logId": "28d3d46f-3e8a-4fbc-b168-01c4daaf2ee9"
       }
@@ -105,7 +105,7 @@
           }
         ],
         "nextLogId": "240a9500-6eb7-49a5-900e-f28b339d731e",
-        "index": 12,
+        "index": 13,
         "ending": true,
         "logId": "7eb7f5d8-53ac-46b5-b65d-8d5bc6c752fa"
       }
@@ -159,7 +159,7 @@
             }
           }
         ],
-        "index": 3,
+        "index": 4,
         "logId": "d98c4fe0-77ac-4ec6-91b3-9b639d697118"
       },
       {
@@ -230,12 +230,38 @@
             }
           }
         ],
-        "index": 6,
+        "index": 7,
         "logId": "95583dc9-f27d-4863-97a1-bfea3d564b5b"
+      }
+    ],
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "6edb0c2c-bd1c-401c-852f-651d557fbbcf",
+              "title": "LSM Beethoven",
+              "body": "LSM Beethoven (IAPN-401), a Corona class pulsed nuclear interstellar ark, first encountered with captain Iris Colt in local space."
+            }
+          },
+          {
+            "entry": {
+              "encyclopediaId": "42b25548-35fe-477a-bc7d-623f9119f6d1",
+              "title": "LSM Beethoven",
+              "header": "Staying Put",
+              "body": "Convinced by captain Iris Colt, the crew of the LSM Beethoven planned to stay put, and hope the void’s expansion would slow down.",
+              "orderWeight": -1
+            },
+            "index": 1
+          }
+        ],
+        "nextLogId": "23f92874-2b4e-4534-9e3f-263949457d18",
+        "beginning": true,
+        "logId": "60616fed-34f5-4166-bdec-9a5bb2e81f5e"
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We're Staying Put",
   "metaKeyValues": {
     "EncounterId": "ff34ef9d-1eb2-4498-b139-e821dedff9bb"

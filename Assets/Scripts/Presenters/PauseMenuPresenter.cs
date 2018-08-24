@@ -5,18 +5,10 @@ namespace LunraGames.SubLight.Presenters
 	public class PauseMenuPresenter : Presenter<IPauseMenuView>
 	{
 		SpeedRequest lastSpeedChange;
-		bool waitingForSave;
 
 		public PauseMenuPresenter(bool pushEscapable = true)
 		{
 			if (pushEscapable) App.Callbacks.PushEscape(new EscapeEntry(ShowFromGame, true, true));
-
-			App.Callbacks.SaveRequest += OnSaveRequest;
-		}
-
-		protected override void OnUnBind()
-		{
-			App.Callbacks.SaveRequest -= OnSaveRequest;
 		}
 
 		void Show(bool cacheSpeed = true)
@@ -70,21 +62,34 @@ namespace LunraGames.SubLight.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 			App.Callbacks.PopEscape();
 			View.Interactable = false;
-			waitingForSave = true;
-			App.Callbacks.SaveRequest(SaveRequest.Save());
+			App.Callbacks.SaveRequest(SaveRequest.Request(OnSaveRequest));
 		}
 
 		void OnSaveRequest(SaveRequest request)
 		{
-			if (!waitingForSave) return;
-
 			switch(request.State)
 			{
 				case SaveRequest.States.Complete:
-					waitingForSave = false;
-					OnBackClick();
+					if (request.Status == RequestStatus.Success)
+					{
+						OnBackClick();
+						break;
+					}
+					CloseView();
+					App.Callbacks.DialogRequest(
+						DialogRequest.Alert(
+							request.Error,
+							"Cannot Save",
+							OnSaveFailAlert
+						)
+					);
 					break;
 			}
+		}
+
+		void OnSaveFailAlert()
+		{
+			ShowFromDialog();
 		}
 
 		void OnMainMenuClick()

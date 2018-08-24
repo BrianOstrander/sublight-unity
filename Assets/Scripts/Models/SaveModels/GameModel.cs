@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -33,10 +32,13 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] BodyFocusRequest bodyFocus;
 		[JsonProperty] EncounterFocusRequest encounterFocus;
 		[JsonProperty] ShipFocusRequest shipFocus;
+		[JsonProperty] EncyclopediaFocusRequest encyclopediaFocus;
 
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 
 		[JsonProperty] FinalReportModel[] finalReports = new FinalReportModel[0];
+
+		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 
 		/// <summary>
 		/// The game seed.
@@ -106,6 +108,7 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region NonSerialized
+		SaveStateBlock saveState = SaveStateBlock.Savable();
 		UniversePosition[] focusedSectors = new UniversePosition[0];
 
 		/// <summary>
@@ -113,6 +116,8 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
+		[JsonIgnore]
+		public readonly ListenerProperty<SaveStateBlock> SaveState;
 		#endregion
 
 		public GameModel()
@@ -125,6 +130,7 @@ namespace LunraGames.SubLight.Models
 			EndSystem = new ListenerProperty<UniversePosition>(value => endSystem = value, () => endSystem);
 			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
 			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
+			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
@@ -146,6 +152,7 @@ namespace LunraGames.SubLight.Models
 			bodyFocus = null;
 			encounterFocus = null;
 			shipFocus = null;
+			encyclopediaFocus = null;
 
 			switch (focus.Focus)
 			{
@@ -166,6 +173,9 @@ namespace LunraGames.SubLight.Models
 					break;
 				case Focuses.Ship:
 					shipFocus = focus as ShipFocusRequest;
+					break;
+				case Focuses.Encyclopedia:
+					encyclopediaFocus = focus as EncyclopediaFocusRequest;
 					break;
 				default:
 					Debug.LogError("Unrecognized Focus: " + focus.Focus);
@@ -219,6 +229,9 @@ namespace LunraGames.SubLight.Models
 		{
 			return finalReports.FirstOrDefault(r => r.Encounter.Value == encounter);
 		}
+
+		[JsonIgnore]
+		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
 		#endregion
 	}
 }

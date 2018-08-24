@@ -1,9 +1,11 @@
 {
-  "orderWeight": 2.0,
-  "hidden": true,
+  "orderWeight": 999.0,
+  "randomWeightMultiplier": 1.0,
+  "ignore": true,
   "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
   "name": "Button Test 0",
   "hook": "Button Test 0",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],
@@ -11,29 +13,49 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
         "header": "Button 0",
         "message": "You pressed button 0!",
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
-        "index": 2,
-        "logId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6"
+        "index": 4,
+        "logId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6",
+        "name": "Pressed 0"
       },
       {
         "header": "Button 1",
         "message": "You pressed button 1!",
         "nextLogId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b",
-        "index": 3,
-        "logId": "60a170df-e303-4f92-930b-7efe34a443d6"
+        "index": 5,
+        "logId": "60a170df-e303-4f92-930b-7efe34a443d6",
+        "name": "Pressed 1"
       },
       {
         "header": "No Buttons",
         "message": "No buttons interactable or enabled!",
-        "index": 5,
+        "nextLogId": "9c70c262-4810-47aa-95c7-298e05b813df",
+        "index": 7,
         "ending": true,
-        "logId": "62cc974c-8f41-413b-ac1c-25e671f87e16"
+        "logId": "62cc974c-8f41-413b-ac1c-25e671f87e16",
+        "name": "NoButtons"
+      },
+      {
+        "header": "Wheee",
+        "message": "start",
+        "nextLogId": "3f84dcd0-b76a-4904-baf9-658a5c5f5b45",
+        "beginning": true,
+        "logId": "6a1ae003-81f5-4944-bed0-a42e341293ab",
+        "duration": 1.0,
+        "name": "Start"
+      },
+      {
+        "header": "End",
+        "message": "Ok done",
+        "index": 9,
+        "ending": true,
+        "logId": "87a3da63-e8ae-4eea-bab0-3fef610b6d1f",
+        "name": "Ending"
       }
     ],
     "keyValueLogs": [
@@ -47,8 +69,9 @@
           }
         ],
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
-        "beginning": true,
-        "logId": "3f84dcd0-b76a-4904-baf9-658a5c5f5b45"
+        "index": 1,
+        "logId": "3f84dcd0-b76a-4904-baf9-658a5c5f5b45",
+        "name": "Beginning"
       },
       {
         "setStrings": [],
@@ -61,12 +84,30 @@
           }
         ],
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
-        "index": 4,
-        "logId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b"
+        "index": 6,
+        "logId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b",
+        "name": "FirstOptionEnable"
       }
     ],
     "inventoryLogs": [],
-    "switchLogs": [],
+    "switchLogs": [
+      {
+        "switches": [
+          {
+            "switchId": "302a5559-def9-4e8b-ab39-1fc85ef3f4cc",
+            "nextLogId": "87a3da63-e8ae-4eea-bab0-3fef610b6d1f",
+            "filtering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          }
+        ],
+        "index": 8,
+        "logId": "3699d28e-93d0-482d-9612-a02ab5bbe045",
+        "name": "switch"
+      }
+    ],
     "buttonLogs": [
       {
         "buttons": [
@@ -121,15 +162,94 @@
               "stringKeyValues": [],
               "encounterInteractions": []
             }
+          },
+          {
+            "buttonId": "c07d16a1-d09d-45b5-b61e-6dbf101d9afa",
+            "index": 2,
+            "message": "Ok End",
+            "nextLogId": "3699d28e-93d0-482d-9612-a02ab5bbe045",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
+          },
+          {
+            "buttonId": "2f0fb32c-334a-4756-bfe0-066a88b095cf",
+            "index": 3,
+            "message": "Add encyclopedia",
+            "nextLogId": "812ad24c-98d9-4454-86d8-7dbe03460a5f",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": []
+            }
           }
         ],
-        "nextLogId": "62cc974c-8f41-413b-ac1c-25e671f87e16",
-        "index": 1,
-        "logId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb"
+        "index": 2,
+        "logId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
+        "name": "MainButtons"
+      }
+    ],
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "a67e990d-d5f0-4499-b2cf-f813082dd678",
+              "title": "Some Title",
+              "body": "wow what an intro!"
+            }
+          },
+          {
+            "entry": {
+              "encyclopediaId": "81382201-61cc-4e54-a0d9-aaa0eca50747",
+              "title": "Some Title",
+              "header": "section 1",
+              "body": "whee first section!",
+              "priority": 1
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "encyclopediaId": "605fc40d-0b06-4292-9d8b-ef7b23978220",
+              "title": "Some Other Title",
+              "body": "Yaaaas"
+            },
+            "index": 2
+          }
+        ],
+        "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
+        "index": 10,
+        "logId": "812ad24c-98d9-4454-86d8-7dbe03460a5f",
+        "name": "EncyclopediaAdd"
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "Button Test 0",
   "metaKeyValues": {
     "EncounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe"

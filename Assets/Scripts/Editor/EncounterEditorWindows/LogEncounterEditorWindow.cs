@@ -35,21 +35,30 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
-					var header = "#" + (count + 1) + " | " + model.LogType + ".LogId:";
+					var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId");
+						
 					GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
-					EditorGUILayout.SelectableLabel(model.LogId, EditorStyles.boldLabel);
+					EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
 					EditorGUILayoutExtensions.PopColor();
 					if (isMoving)
 					{
 						GUILayout.Space(10f);
 						EditorGUILayoutExtensions.PushEnabled(0 < count);
-						if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+						if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f), GUILayout.Height(18f)))
 						{
 							indexDelta = -1;
 						}
+						if (GUILayout.Button("^^", EditorStyles.miniButtonMid, GUILayout.Width(30f), GUILayout.Height(18f)))
+						{
+							indexDelta = -2;
+						}
 						EditorGUILayoutExtensions.PopEnabled();
 						EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-						if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+						if (GUILayout.Button("vv", EditorStyles.miniButtonMid, GUILayout.Width(30f), GUILayout.Height(18f)))
+						{
+							indexDelta = 2;
+						}
+						if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f), GUILayout.Height(18f)))
 						{
 							indexDelta = 1;
 						}
@@ -70,10 +79,12 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndVertical();
 
+			model.Name.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Name", "Internal name for production."), model.Name.Value);
+
 			EditorGUIExtensions.PauseChangeCheck();
 			{
 				// Pausing checks for foldout, since this shouldn't signal that the object is savable.
-				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.grey);
+				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.gray);
 				model.ShowNotes.Value = EditorGUILayout.Foldout(model.ShowNotes.Value, new GUIContent("Notes", "Internal notes for production."), true);
 				if (!model.HasNotes) EditorGUILayoutExtensions.PopColor();
 			}
@@ -93,24 +104,27 @@ namespace LunraGames.SubLight
 			return deleted;
 		}
 
-		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model, EncounterLogModel nextModel)
+		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
 			switch (model.LogType)
 			{
 				case EncounterLogTypes.Text:
-					OnTextLog(infoModel, model as TextEncounterLogModel, nextModel);
+					OnTextLog(infoModel, model as TextEncounterLogModel);
 					break;
 				case EncounterLogTypes.KeyValue:
-					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel, nextModel);
+					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel);
 					break;
 				case EncounterLogTypes.Inventory:
-					OnInventoryLog(infoModel, model as InventoryEncounterLogModel, nextModel);
+					OnInventoryLog(infoModel, model as InventoryEncounterLogModel);
 					break;
 				case EncounterLogTypes.Switch:
-					OnSwitchLog(infoModel, model as SwitchEncounterLogModel, nextModel);
+					OnSwitchLog(infoModel, model as SwitchEncounterLogModel);
 					break;
 				case EncounterLogTypes.Button:
-					OnButtonLog(infoModel, model as ButtonEncounterLogModel, nextModel);
+					OnButtonLog(infoModel, model as ButtonEncounterLogModel);
+					break;
+				case EncounterLogTypes.Encyclopedia:
+					OnEncyclopediaLog(infoModel, model as EncyclopediaEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -132,16 +146,16 @@ namespace LunraGames.SubLight
 		}
 
 		#region Text Logs
-		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model, EncounterLogModel nextModel)
+		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
 		{
 			model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header", model.Header.Value);
 			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 		}
 		#endregion
 
 		#region KeyValue Logs
-		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model, EncounterLogModel nextModel)
+		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)
 		{
 			var targets = Enum.GetValues(typeof(KeyValueTargets)).Cast<KeyValueTargets>().ToList();
 			var kvTypes = Enum.GetValues(typeof(KeyValueOperations)).Cast<KeyValueOperations>().ToList();
@@ -218,7 +232,7 @@ namespace LunraGames.SubLight
 				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
 			}
 
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 		}
 
 		bool OnKeyValueLogHeader(
@@ -231,7 +245,7 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label(operation.Operation + ":", GUILayout.ExpandWidth(false));
-				operation.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Target -", operation.Target.Value);
+				operation.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Target -", operation.Target.Value);
 				deleted = EditorGUILayoutExtensions.XButton();
 			}
 			GUILayout.EndHorizontal();
@@ -288,13 +302,13 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Inventory Logs
-		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model, EncounterLogModel nextModel)
+		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model)
 		{
 			var selection = InventoryOperations.Unknown;
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label("Append New Inventory Operation: ", GUILayout.ExpandWidth(false));
-				selection = EditorGUILayoutExtensions.HelpfulEnumPopup("- Select Operation -", selection);
+				selection = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", selection);
 			}
 			GUILayout.EndHorizontal();
 
@@ -340,7 +354,7 @@ namespace LunraGames.SubLight
 				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
 			}
 
-			OnLinearLog(infoModel, model, nextModel);
+			OnLinearLog(infoModel, model);
 		}
 
 		bool OnInventoryLogHeader(
@@ -406,169 +420,48 @@ namespace LunraGames.SubLight
 		#region Switch Logs
 		void OnSwitchLog(
 			EncounterInfoModel infoModel,
-			SwitchEncounterLogModel model,
-			EncounterLogModel nextModel
+			SwitchEncounterLogModel model
 		)
 		{
-			string selection;
-			var selectionMade = OnLogPopup(
-				null,
+			EditorGUILayoutEncounter.LogPopup(
 				"Append New Switch: ",
+				null,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null },
-					{ "< Blank >", null }
-				},
-				out selection
+				existingSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, existingSelection)),
+				newSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, AppendNewLog(newSelection, infoModel))),
+				EncounterLogBlankHandling.None,
+				"- Select Target Log -",
+				"< Blank >"
 			);
-			if (selectionMade) OnSwitchLogSpawn(infoModel, model, selection);
 
-			var deleted = string.Empty;
-			var isAlternate = false;
-
-			SwitchEdgeModel indexSwap0 = null;
-			SwitchEdgeModel indexSwap1 = null;
-			
-			var isMoving = Event.current.control;
-
-			var sorted = model.Switches.Value.OrderBy(l => l.Index.Value).ToList();
-			var sortedCount = sorted.Count;
-			SwitchEdgeModel last = null;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(16f);
-				GUILayout.BeginVertical();
-				{
-					for (var i = 0; i < sortedCount; i++)
-					{
-						var current = sorted[i];
-						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
-						int currMoveDelta;
-
-						isAlternate = !isAlternate;
-
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
-							
-							if (OnSwitchLogEdgeHeader(i, sortedCount, infoModel, model, current, isMoving, out currMoveDelta)) deleted = current.SwitchId.Value;
-
-							if (currMoveDelta != 0)
-							{
-								indexSwap0 = current;
-								indexSwap1 = currMoveDelta == 1 ? next : last;
-							}
-
-							OnSwitchLogEdge(infoModel, model, nextModel, current);
-
-							last = current;
-						}
-						EditorGUILayoutExtensions.EndVertical();
-					}
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-
-			OnLinearLog(infoModel, model, nextModel);
-
-			if (!string.IsNullOrEmpty(deleted))
-			{
-				model.Switches.Value = model.Switches.Value.Where(e => e.SwitchId.Value != deleted).ToArray();
-			}
-
-			if (indexSwap0 != null && indexSwap1 != null)
-			{
-				var swap0 = indexSwap0.Index.Value;
-				var swap1 = indexSwap1.Index.Value;
-
-				indexSwap0.Index.Value = swap1;
-				indexSwap1.Index.Value = swap0;
-			}
+			OnEdgedLog<SwitchEncounterLogModel, SwitchEdgeModel>(infoModel, model, OnSwitchLogEdge);
 		}
 
 		void OnSwitchLogSpawn(
-			EncounterInfoModel infoModel,
-			SwitchEncounterLogModel model,
+			SwitchEdgeModel edge,
 			string targetLogId
 		)
 		{
-			var index = 0;
-			if (model.Switches.Value.Any())
-			{
-				index = model.Switches.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
-			}
-			var result = new SwitchEdgeModel();
-			result.SwitchId.Value = Guid.NewGuid().ToString();
-			result.Index.Value = index;
-			result.NextLogId.Value = targetLogId;
-			model.Switches.Value = model.Switches.Value.Append(result).ToArray();
-		}
-
-		bool OnSwitchLogEdgeHeader(
-			int count, 
-			int maxCount, 
-			EncounterInfoModel infoModel,
-			SwitchEncounterLogModel model,
-			SwitchEdgeModel edge,
-			bool isMoving, 
-			out int indexDelta
-		)
-		{
-			var deleted = false;
-			indexDelta = 0;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("#" + (count + 1) + " | Filter", EditorStyles.boldLabel);
-				if (isMoving)
-				{
-					GUILayout.Space(10f);
-					EditorGUILayoutExtensions.PushEnabled(0 < count);
-					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = -1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = 1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-				}
-				EditorGUILayoutExtensions.PushEnabled(!isMoving);
-				deleted = EditorGUILayoutExtensions.XButton();
-				EditorGUILayoutExtensions.PopEnabled();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
+			edge.NextLogId.Value = targetLogId;
 		}
 
 		void OnSwitchLogEdge(
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
-			EncounterLogModel nextModel,
 			SwitchEdgeModel edge
 		)
 		{
-			string selection;
-			var selectionMade = OnLogPopup(
-				edge.NextLogId.Value,
+			EditorGUILayoutEncounter.LogPopup(
 				"Target Log: ",
+				edge.NextLogId.Value,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null }
-				},
-				out selection
+				existingSelection => edge.NextLogId.Value = existingSelection,
+				newSelection => edge.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				EncounterLogBlankHandling.Error,
+				"- Select Target Log -"
 			);
-			if (selectionMade) edge.NextLogId.Value = selection;
 
 			EditorGUILayoutValueFilter.Field(
 				new GUIContent("Filtering", "Passing this filter is required to continue to the target log."),
@@ -580,169 +473,48 @@ namespace LunraGames.SubLight
 		#region Button Logs
 		void OnButtonLog(
 			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
-			EncounterLogModel nextModel
+			ButtonEncounterLogModel model
 		)
 		{
-			string selection;
-			var selectionMade = OnLogPopup(
-				null,
+			EditorGUILayoutEncounter.LogPopup(
 				"Append New Button: ",
+				null,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null },
-					{ "< Blank >", null }
-				},
-				out selection
+				existingSelection => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, existingSelection)),
+				newSelection => OnEdgedLogSpawn(model, result =>OnButtonLogSpawn(result, AppendNewLog(newSelection, infoModel))),
+				EncounterLogBlankHandling.None,
+				"- Select Target Log -",
+				"< Blank >"
 			);
-			if (selectionMade) OnButtonLogSpawn(infoModel, model, selection);
 
-			var deleted = string.Empty;
-			var isAlternate = false;
-
-			ButtonEdgeModel indexSwap0 = null;
-			ButtonEdgeModel indexSwap1 = null;
-
-			var isMoving = Event.current.control;
-
-			var sorted = model.Buttons.Value.OrderBy(l => l.Index.Value).ToList();
-			var sortedCount = sorted.Count;
-			ButtonEdgeModel last = null;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(16f);
-				GUILayout.BeginVertical();
-				{
-					for (var i = 0; i < sortedCount; i++)
-					{
-						var current = sorted[i];
-						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
-						int currMoveDelta;
-
-						isAlternate = !isAlternate;
-
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
-
-							if (OnButtonLogEdgeHeader(i, sortedCount, infoModel, model, current, isMoving, out currMoveDelta)) deleted = current.ButtonId.Value;
-
-							if (currMoveDelta != 0)
-							{
-								indexSwap0 = current;
-								indexSwap1 = currMoveDelta == 1 ? next : last;
-							}
-
-							OnButtonLogEdge(infoModel, model, nextModel, current);
-
-							last = current;
-						}
-						EditorGUILayoutExtensions.EndVertical();
-					}
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-
-			OnLinearLog(infoModel, model, nextModel);
-
-			if (!string.IsNullOrEmpty(deleted))
-			{
-				model.Buttons.Value = model.Buttons.Value.Where(e => e.ButtonId.Value != deleted).ToArray();
-			}
-
-			if (indexSwap0 != null && indexSwap1 != null)
-			{
-				var swap0 = indexSwap0.Index.Value;
-				var swap1 = indexSwap1.Index.Value;
-
-				indexSwap0.Index.Value = swap1;
-				indexSwap1.Index.Value = swap0;
-			}
+			OnEdgedLog<ButtonEncounterLogModel, ButtonEdgeModel>(infoModel, model, OnButtonLogEdge);
 		}
 
 		void OnButtonLogSpawn(
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
+			ButtonEdgeModel edge,
 			string targetLogId
 		)
 		{
-			var index = 0;
-			if (model.Buttons.Value.Any())
-			{
-				index = model.Buttons.Value.OrderBy(e => e.Index.Value).Last().Index.Value + 1;
-			}
-			var result = new ButtonEdgeModel();
-			result.ButtonId.Value = Guid.NewGuid().ToString();
-			result.Index.Value = index;
-			result.NextLogId.Value = targetLogId;
-			model.Buttons.Value = model.Buttons.Value.Append(result).ToArray();
-		}
-
-		bool OnButtonLogEdgeHeader(
-			int count,
-			int maxCount,
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
-			ButtonEdgeModel edge,
-			bool isMoving,
-			out int indexDelta
-		)
-		{
-			var deleted = false;
-			indexDelta = 0;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("#" + (count + 1) + " | Button", EditorStyles.boldLabel);
-				if (isMoving)
-				{
-					GUILayout.Space(10f);
-					EditorGUILayoutExtensions.PushEnabled(0 < count);
-					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = -1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
-					{
-						indexDelta = 1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-				}
-				EditorGUILayoutExtensions.PushEnabled(!isMoving);
-				deleted = EditorGUILayoutExtensions.XButton();
-				EditorGUILayoutExtensions.PopEnabled();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
+			edge.NextLogId.Value = targetLogId;
 		}
 
 		void OnButtonLogEdge(
 			EncounterInfoModel infoModel,
 			ButtonEncounterLogModel model,
-			EncounterLogModel nextModel,
 			ButtonEdgeModel edge
 		)
 		{
-			string selection;
-			var selectionMade = OnLogPopup(
-				edge.NextLogId.Value,
+			EditorGUILayoutEncounter.LogPopup(
 				"Target Log: ",
+				edge.NextLogId.Value,
 				infoModel,
 				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> {
-					{ "- Select Target Log -", null }
-				},
-				out selection
+				existingSelection => edge.NextLogId.Value = existingSelection,
+				newSelection => edge.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				EncounterLogBlankHandling.Error,
+				"- Select Target Log -"
 			);
-			if (selectionMade) edge.NextLogId.Value = selection;
 
 			edge.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", edge.Message.Value);
 
@@ -761,69 +533,184 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		void OnLinearLog(
+		#region Encyclopedia Logs
+		void OnEncyclopediaLog(
 			EncounterInfoModel infoModel,
-			LinearEncounterLogModel model,
-			EncounterLogModel nextModel
+			EncyclopediaEncounterLogModel model
 		)
 		{
-			string selection;
-			var selectionMade = OnLogPopup(
-				model.NextLogId.Value,
-				"Next Log:",
-				infoModel,
-				model,
-				nextModel,
-				" <- Next",
-				new Dictionary<string, string> { { "- Select Next Log -", null } },
-				out selection
-			);
-			if (selectionMade) model.NextLogId.Value = selection;
+			if (GUILayout.Button("Append New Encyclopedia Section")) OnEdgedLogSpawn(model, OnEncyclopediaLogSpawn);
+
+			OnEdgedLog<EncyclopediaEncounterLogModel, EncyclopediaEdgeModel>(infoModel, model, OnEncyclopediaLogEdge);
 		}
 
-		bool OnLogPopup(
-			string current,
-			string label,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			EncounterLogModel nextModel,
-			string currentAppend,
-			Dictionary<string, string> preAppend,
-			out string selection
+		void OnEncyclopediaLogSpawn(
+			EncyclopediaEdgeModel edge
 		)
 		{
-			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
-			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
-			var rawOptionNames = rawOptions.Select(l => l == nextId ? (l + currentAppend) : l);
-			foreach (var kv in preAppend.Reverse())
-			{
-				rawOptions = rawOptions.Prepend(kv.Value);
-				rawOptionNames = rawOptionNames.Prepend(kv.Key);
-			}
+			edge.Entry.OrderWeight.Value = -1;
+		}
 
-			var options = rawOptions.ToArray();
-			var optionNames = rawOptionNames.ToArray();
+		void OnEncyclopediaLogEdge(
+			EncounterInfoModel infoModel,
+			EncyclopediaEncounterLogModel model,
+			EncyclopediaEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+			entry.Title.Value = EditorGUILayoutExtensions.TextDynamic("Title", entry.Title.Value);
+			entry.Header.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
+			entry.Body.Value = EditorGUILayoutExtensions.TextDynamic("Body", entry.Body.Value);
+			entry.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), entry.Priority.Value);
+			entry.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), entry.OrderWeight.Value);
+		}
+		#endregion
 
-			var index = 0;
-			for (var i = 0; i < options.Length; i++)
-			{
-				if (options[i] == current)
-				{
-					index = i;
-					break;
-				}
-			}
-			var startIndex = index;
+		#region Edged Logs
+		void OnEdgedLog<L, E>(
+			EncounterInfoModel infoModel,
+			L model,
+			Action<EncounterInfoModel, L, E> edgeEditor
+		)
+			where L : IEdgedEncounterLogModel<E>
+			where E : class, IEdgeModel
+		{
+			var deleted = string.Empty;
+			var isAlternate = false;
+
+			E indexSwap0 = null;
+			E indexSwap1 = null;
+
+			var isMoving = Event.current.control;
+
+			var sorted = model.Edges.OrderBy(l => l.EdgeIndex).ToList();
+			var sortedCount = sorted.Count;
+			E last = null;
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(label, GUILayout.ExpandWidth(false)); // was 55
-				index = EditorGUILayout.Popup(index, optionNames);
+				GUILayout.Space(16f);
+				GUILayout.BeginVertical();
+				{
+					for (var i = 0; i < sortedCount; i++)
+					{
+						var current = sorted[i];
+						var next = (i + 1 < sortedCount) ? sorted[i + 1] : null;
+						int currMoveDelta;
+
+						isAlternate = !isAlternate;
+
+						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
+						{
+
+							if (OnEdgedLogEdgeHeader(current.EdgeName, i, sortedCount, isMoving, out currMoveDelta)) deleted = current.EdgeId;
+
+							if (currMoveDelta != 0)
+							{
+								indexSwap0 = current;
+								indexSwap1 = currMoveDelta == 1 ? next : last;
+							}
+
+							edgeEditor(infoModel, model, current);
+
+							last = current;
+						}
+						EditorGUILayoutExtensions.EndVertical();
+					}
+				}
+				GUILayout.EndVertical();
 			}
 			GUILayout.EndHorizontal();
-			selection = options[index];
 
-			return startIndex != index;
+			if (model.IsLinear) OnLinearLog(infoModel, model as LinearEncounterLogModel);
+
+			if (!string.IsNullOrEmpty(deleted))
+			{
+				model.Edges = model.Edges.Where(e => e.EdgeId != deleted).ToArray();
+			}
+
+			if (indexSwap0 != null && indexSwap1 != null)
+			{
+				var swap0 = indexSwap0.EdgeIndex;
+				var swap1 = indexSwap1.EdgeIndex;
+
+				indexSwap0.EdgeIndex = swap1;
+				indexSwap1.EdgeIndex = swap0;
+			}
+		}
+
+		void OnEdgedLogSpawn<E>(
+			IEdgedEncounterLogModel<E> model,
+			Action<E> initialize = null
+		)
+			where E : class, IEdgeModel, new()
+		{
+			var index = 0;
+			if (model.Edges.Any())
+			{
+				index = model.Edges.OrderBy(e => e.EdgeIndex).Last().EdgeIndex + 1;
+			}
+			var result = new E();
+			result.EdgeId = Guid.NewGuid().ToString();
+			result.EdgeIndex = index;
+			if (initialize != null) initialize(result);
+			model.Edges = model.Edges.Append(result).ToArray();
+		}
+
+		bool OnEdgedLogEdgeHeader(
+			string label,
+			int count,
+			int maxCount,
+			bool isMoving,
+			out int indexDelta
+		)
+		{
+			var deleted = false;
+			indexDelta = 0;
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("#" + (count + 1) + " | "+label, EditorStyles.boldLabel);
+				if (isMoving)
+				{
+					GUILayout.Space(10f);
+					EditorGUILayoutExtensions.PushEnabled(0 < count);
+					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = -1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+					{
+						indexDelta = 1;
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+				}
+				EditorGUILayoutExtensions.PushEnabled(!isMoving);
+				deleted = EditorGUILayoutExtensions.XButton();
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+			GUILayout.EndHorizontal();
+			return deleted;
+		}
+		#endregion
+
+		void OnLinearLog(
+			EncounterInfoModel infoModel,
+			LinearEncounterLogModel model
+		)
+		{
+			EditorGUILayoutEncounter.LogPopup(
+				"Next Log: ",
+				model.NextLogId.Value,
+				infoModel,
+				model,
+				existingSelection => model.NextLogId.Value = existingSelection,
+				newSelection => model.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				EncounterLogBlankHandling.SpecifiedByModel,
+				"- Select Target Log -"
+			);
 		}
 
 		void OnLogEnd(EncounterInfoModel infoModel, EncounterLogModel model)

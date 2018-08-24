@@ -13,6 +13,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool visited;
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] string name;
+		[JsonProperty] string encounterId;
+		[JsonProperty] int encounterBodyId = -1;
 		[JsonProperty] float rations;
 		[JsonProperty] float fuel;
 		[JsonProperty] float rationsDetection;
@@ -37,6 +39,10 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
+		public readonly ListenerProperty<string> EncounterId;
+		[JsonIgnore]
+		public readonly ListenerProperty<int> EncounterBodyId;
+		[JsonIgnore]
 		public readonly ListenerProperty<float> Rations;
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Fuel;
@@ -56,6 +62,8 @@ namespace LunraGames.SubLight.Models
 			Visited = new ListenerProperty<bool>(value => visited = value, () => visited);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
+			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
+			EncounterBodyId = new ListenerProperty<int>(value => encounterBodyId = value, () => encounterBodyId);
 			Rations = new ListenerProperty<float>(value => rations = value, () => rations);
 			Fuel = new ListenerProperty<float>(value => fuel = value, () => fuel);
 			RationsDetection = new ListenerProperty<float>(value => rationsDetection = value, () => rationsDetection);
@@ -65,6 +73,21 @@ namespace LunraGames.SubLight.Models
 		}
 
 		#region Utility
+		[JsonIgnore]
+		public bool HasEncounter { get { return !string.IsNullOrEmpty(EncounterId); } }
+		[JsonIgnore]
+		public bool HasBodyEncounter { get { return HasEncounter && EncounterBodyId.Value != -1; } }
+		[JsonIgnore]
+		public BodyModel BodyWithEncounter
+		{
+			get
+			{
+				if (!HasBodyEncounter) return null;
+				// This should never return null...
+				return Bodies.Value.FirstOrDefault(b => b.BodyId.Value == EncounterBodyId.Value);
+			}
+		}
+
 		public BodyModel GetBody(int id)
 		{
 			return Bodies.Value.FirstOrDefault(b => b.BodyId.Value == id);

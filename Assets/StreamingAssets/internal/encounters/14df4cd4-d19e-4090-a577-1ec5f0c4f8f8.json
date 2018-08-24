@@ -1,17 +1,18 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "09e817c1-8d15-4759-ac8a-0367e4c3a5c4",
   "name": "Spaceship Graveyard",
   "hook": "A large mass of artifical objects are in low orbit around this planet.",
+  "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
+    "stringKeyValues": [],
     "encounterInteractions": []
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [
     "Terrestrial"
-  ],
-  "validCrews": [
-    "OrbitalCrew"
   ],
   "logs": {
     "textLogs": [
@@ -65,6 +66,7 @@
             "key": "Summary"
           }
         ],
+        "setBooleans": [],
         "index": 6,
         "ending": true,
         "logId": "b58d01cb-f53f-47a0-bc23-ed642e27aa39"
@@ -90,9 +92,11 @@
         "index": 5,
         "logId": "a99ae5d6-aa7e-476a-9efe-ca785da66218"
       }
-    ]
+    ],
+    "switchLogs": [],
+    "buttonLogs": []
   },
-  "version": 4,
+  "version": 6,
   "meta": "Spaceship Graveyard",
   "metaKeyValues": {
     "EncounterId": "09e817c1-8d15-4759-ac8a-0367e4c3a5c4"

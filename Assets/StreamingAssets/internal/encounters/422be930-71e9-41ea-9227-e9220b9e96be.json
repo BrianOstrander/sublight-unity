@@ -1,7 +1,8 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "14c17b2e-273d-4a6f-a85c-c5eaf301bacb",
   "name": "We Moved On",
-  "hook": "You're hailed by a familiar ship, the LSM Beethoven!",
+  "trigger": "Automatic",
   "filtering": {
     "showValues": true,
     "falseByDefault": true,
@@ -27,34 +28,33 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
         "header": "Captain Gail Colt",
         "message": "LSM Beethoven greets you! Warmest regards!",
         "nextLogId": "c1c6b6a6-b6ef-40b8-a7bb-fbedfd4ec04e",
-        "beginning": true,
+        "index": 1,
         "logId": "4f2f4c3c-3d52-4392-afe7-65837d49b578"
       },
       {
         "header": "Captain Gail Colt",
         "message": "Yes, we thank you, your ancestors really, for convincing our people to move on. As a show of our gratitude, we'd like to gift you some of our rations.",
         "nextLogId": "4d8f5f35-abc6-498a-a63c-088000905df3",
-        "index": 2,
+        "index": 3,
         "logId": "299ac8ca-6591-4033-9217-5047dc7a8946"
       },
       {
         "header": "Captain Gail Colt",
         "message": "It's our pleasure, thank you again, and safe voyages. Perhaps our people will meet again, next time in Andromeda!",
         "nextLogId": "20dc712b-7610-4d55-b190-8d19b91100d8",
-        "index": 5,
+        "index": 6,
         "logId": "58963505-6824-472b-8d36-448c519d6189"
       },
       {
         "header": "Captain Gail Colt",
         "message": "You truly are a descendent of your your ancestors, our people still hope to repay you one day. Perhaps we'll get a chance again, maybe in Andromeda? Safe voyages!",
-        "index": 7,
+        "index": 8,
         "ending": true,
         "logId": "bde7751b-ab52-4097-91e6-89cc01266066"
       }
@@ -70,7 +70,7 @@
           }
         ],
         "setBooleans": [],
-        "index": 6,
+        "index": 7,
         "ending": true,
         "logId": "20dc712b-7610-4d55-b190-8d19b91100d8"
       }
@@ -87,7 +87,7 @@
         ],
         "addInstances": [],
         "nextLogId": "58963505-6824-472b-8d36-448c519d6189",
-        "index": 4,
+        "index": 5,
         "logId": "b7be828d-4de6-4017-9b74-d2a29b87d1d0"
       }
     ],
@@ -118,7 +118,7 @@
             }
           }
         ],
-        "index": 1,
+        "index": 2,
         "logId": "c1c6b6a6-b6ef-40b8-a7bb-fbedfd4ec04e"
       },
       {
@@ -167,12 +167,30 @@
             }
           }
         ],
-        "index": 3,
+        "index": 4,
         "logId": "4d8f5f35-abc6-498a-a63c-088000905df3"
+      }
+    ],
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "c154b978-4120-4e85-9ff3-5346147de08a",
+              "title": "LSM Beethoven",
+              "header": "Moved On",
+              "body": "The LSM Beethoven was encountered again  in frontier space. Despite the strong convictions of captain Iris Colt, your crew was able to convince her and her crew to move on, avoiding the inevitable expansion of the void.",
+              "orderWeight": -1
+            }
+          }
+        ],
+        "nextLogId": "4f2f4c3c-3d52-4392-afe7-65837d49b578",
+        "beginning": true,
+        "logId": "5f1829c9-40b0-4b04-a1e6-55eb6a6b06ee"
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We Moved On",
   "metaKeyValues": {
     "EncounterId": "14c17b2e-273d-4a6f-a85c-c5eaf301bacb"

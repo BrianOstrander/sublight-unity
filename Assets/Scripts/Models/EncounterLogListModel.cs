@@ -16,6 +16,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] InventoryEncounterLogModel[] inventoryLogs = new InventoryEncounterLogModel[0];
 		[JsonProperty] SwitchEncounterLogModel[] switchLogs = new SwitchEncounterLogModel[0];
 		[JsonProperty] ButtonEncounterLogModel[] buttonLogs = new ButtonEncounterLogModel[0];
+		[JsonProperty] EncyclopediaEncounterLogModel[] encyclopediaLogs = new EncyclopediaEncounterLogModel[0];
 		#endregion
 
 		#region Derived Values
@@ -52,6 +53,31 @@ namespace LunraGames.SubLight.Models
 			return All.Value.OfType<T>().FirstOrDefault(predicate);
 		}
 
+		/// <summary>
+		/// Gets the next log after the provided index, or null if there are
+		/// none.
+		/// </summary>
+		/// <returns>The next log first or default.</returns>
+		/// <param name="index">Index.</param>
+		/// <param name="predicate">Predicate.</param>
+		public EncounterLogModel GetNextLogFirstOrDefault(int index, Func<EncounterLogModel, bool> predicate = null)
+		{
+			return GetNextLogFirstOrDefault<EncounterLogModel>(index, predicate);
+		}
+
+		/// <summary>
+		/// Gets the next log after the provided index, or null if there are
+		/// none.
+		/// </summary>
+		/// <returns>The next log first or default.</returns>
+		/// <param name="index">Index.</param>
+		/// <param name="predicate">Predicate.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public T GetNextLogFirstOrDefault<T>(int index, Func<T, bool> predicate = null) where T : EncounterLogModel
+		{
+			return GetLogs(predicate).Where(l => index < l.Index.Value).OrderBy(l => l.Index.Value).FirstOrDefault();
+		}
+
 		[JsonIgnore]
 		public EncounterLogModel Beginning
 		{
@@ -70,6 +96,7 @@ namespace LunraGames.SubLight.Models
 			var inventoryList = new List<InventoryEncounterLogModel>();
 			var switchList = new List<SwitchEncounterLogModel>();
 			var buttonList = new List<ButtonEncounterLogModel>();
+			var encyclopediaList = new List<EncyclopediaEncounterLogModel>();
 
 			foreach (var log in newLogs)
 			{
@@ -90,6 +117,9 @@ namespace LunraGames.SubLight.Models
 					case EncounterLogTypes.Button:
 						buttonList.Add(log as ButtonEncounterLogModel);
 						break;
+					case EncounterLogTypes.Encyclopedia:
+						encyclopediaList.Add(log as EncyclopediaEncounterLogModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized EncounterLogType: " + log.LogType);
 						break;
@@ -101,6 +131,7 @@ namespace LunraGames.SubLight.Models
 			inventoryLogs = inventoryList.ToArray();
 			switchLogs = switchList.ToArray();
 			buttonLogs = buttonList.ToArray();
+			encyclopediaLogs = encyclopediaList.ToArray();
 		}
 
 		EncounterLogModel[] OnGetLogs()
@@ -109,6 +140,7 @@ namespace LunraGames.SubLight.Models
 													 .Concat(inventoryLogs)
 													 .Concat(switchLogs)
 													 .Concat(buttonLogs)
+													 .Concat(encyclopediaLogs)
 													 .ToArray();
 		}
 		#endregion

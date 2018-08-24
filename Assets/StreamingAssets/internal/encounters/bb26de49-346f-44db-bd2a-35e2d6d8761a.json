@@ -1,7 +1,9 @@
 {
+  "randomWeightMultiplier": 1.0,
   "encounterId": "51904e0a-90fc-4d30-b143-0a97b2d97a64",
   "name": "We Tried Staying Put",
   "hook": "The remains of the LSM Beethoven are in orbit, no heat signatures or energy readings are coming from it.",
+  "trigger": "BodyAlert",
   "filtering": {
     "showValues": true,
     "falseByDefault": true,
@@ -25,15 +27,15 @@
     ]
   },
   "validSystems": [],
+  "assignedToBody": true,
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
         "header": "D. Lang",
         "message": "Approaching the LSM Beethoven... it doesn't look good. Multiple hull fractures and the entire drive unit is shot.",
         "nextLogId": "3a33b1f4-50cd-429c-9f6b-0f4df92fddc0",
-        "beginning": true,
+        "index": 1,
         "logId": "412415f4-e60b-4d02-abec-3807988864d0",
         "duration": 1.0
       },
@@ -41,13 +43,13 @@
         "header": "D. Lang",
         "message": "Mmm... no, looks like small arms fire, there must have been a spirited fight onboard.",
         "nextLogId": "9207ffc8-30a0-4dfa-b8fa-d0c411870335",
-        "index": 2,
+        "index": 3,
         "logId": "ec5ceced-a5b1-43f7-87fe-40063bdef945"
       },
       {
         "header": "D. Lang",
         "message": "Looks like there was a mutiny, a bad one. The void started accelerating towards the Beethoven, and people panicked. Members of the mutiny blew out the engines trying to escape the void. Their manifest says they had over a thousand people onbard when this happened, all of them dead now.",
-        "index": 4,
+        "index": 5,
         "ending": true,
         "logId": "53e1127e-d23e-4524-ad99-54bdc94899cc"
       }
@@ -80,7 +82,7 @@
             }
           }
         ],
-        "index": 1,
+        "index": 2,
         "logId": "3a33b1f4-50cd-429c-9f6b-0f4df92fddc0"
       },
       {
@@ -107,12 +109,30 @@
             }
           }
         ],
-        "index": 3,
+        "index": 4,
         "logId": "9207ffc8-30a0-4dfa-b8fa-d0c411870335"
+      }
+    ],
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "99f80db1-1c5e-4c85-b410-5e17f8e04430",
+              "title": "LSM Beethoven",
+              "header": "Mutiny",
+              "body": "With the expansion of the void only accelerating, the crew of the LSM Beethoven erupted into chaos over captain Iris Colt’s stubborn refusal to retreat. It wasn’t long before a full mutiny was staged against the captain and members of the crew loyal to her. In a final act of desperation, the mutineers sabotaged the engine controls, launching the LSM Beethoven on a high speed trajectory away from the expanding void. Ill prepared for another interstellar voyage, the crew perished en-route to the ark’s final resting place.",
+              "orderWeight": -1
+            }
+          }
+        ],
+        "nextLogId": "412415f4-e60b-4d02-abec-3807988864d0",
+        "beginning": true,
+        "logId": "074968fd-208c-4b90-b8aa-755ed940f7c1"
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We Tried Staying Put",
   "metaKeyValues": {
     "EncounterId": "51904e0a-90fc-4d30-b143-0a97b2d97a64"

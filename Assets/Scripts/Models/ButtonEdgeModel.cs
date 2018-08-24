@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEdgeModel : Model
+	public class ButtonEdgeModel : Model, IEdgeModel
 	{
 		[JsonProperty] string buttonId;
 		[JsonProperty] int index;
@@ -88,6 +88,21 @@ namespace LunraGames.SubLight.Models
 			NotAutoUsed = new ListenerProperty<bool>(value => notAutoUsed = value, () => notAutoUsed);
 			AutoDisableInteractions = new ListenerProperty<bool>(value => autoDisableInteractions = value, () => autoDisableInteractions);
 			AutoDisableEnabled = new ListenerProperty<bool>(value => autoDisableEnabled = value, () => autoDisableEnabled);
+		}
+
+		[JsonIgnore]
+		public string EdgeName { get { return "Button"; } }
+		[JsonIgnore]
+		public int EdgeIndex
+		{
+			get { return Index.Value; }
+			set { Index.Value = value; }
+		}
+		[JsonIgnore]
+		public string EdgeId
+		{
+			get { return ButtonId.Value; }
+			set { ButtonId.Value = value; }
 		}
 	}
 }

@@ -1,8 +1,9 @@
 {
   "orderWeight": 100.0,
+  "randomWeightMultiplier": 1.0,
   "encounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66",
   "name": "We're On the Move",
-  "hook": "Sparks fly from a massive construction effort surrounding a ship in orbit.",
+  "trigger": "Automatic",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [
@@ -18,7 +19,6 @@
   },
   "validSystems": [],
   "validBodies": [],
-  "validCrews": [],
   "logs": {
     "textLogs": [
       {
@@ -95,7 +95,7 @@
         "duration": 1.0
       },
       {
-        "message": "Uh... a black hole?",
+        "message": "A black hole?",
         "nextLogId": "38d03881-799b-452a-a8af-c545fb1f88d6",
         "index": 11,
         "logId": "915dde69-1e95-4e3d-8865-bc1e379fbb10",
@@ -103,7 +103,7 @@
       },
       {
         "header": "Captain Grant Cowan",
-        "message": "No! Not just any black hole, the BIGGEST black hole in the galaxy! If we can get there, and slingshot ourselves as close to the event horizon as our ship can handle... we'll be on a high velocity trajectory towards Andromeda. We may not be able to stop the void, but we can keep running...",
+        "message": "No! Not just any black hole, Sagittarius A*, a crushing singularity more than 4 million times the mass of Sol! It’s the BIGGEST singularity in the galaxy! If we can get there, skirt the event horizon, and perform an orbital assist around it, we'll be on a high velocity trajectory towards Andromeda. We may not be able to stop the void, but we can keep running...",
         "nextLogId": "e09c55f1-3adf-4e8e-8847-46154c2931fb",
         "index": 12,
         "logId": "38d03881-799b-452a-a8af-c545fb1f88d6",
@@ -144,9 +144,10 @@
       {
         "header": "Captain Grant Cowan",
         "message": "Good luck to you too... We won't cross paths again, but perhaps our people will. I hope under better circumstances...",
+        "nextLogId": "70e8023f-cdca-4441-a998-62ddd5714ec2",
         "index": 17,
-        "ending": true,
-        "logId": "1a3f161e-1eb6-4df3-a4a6-1c5dec8d3df7"
+        "logId": "1a3f161e-1eb6-4df3-a4a6-1c5dec8d3df7",
+        "name": "GoodLuck"
       }
     ],
     "keyValueLogs": [
@@ -335,11 +336,38 @@
           }
         ],
         "index": 1,
-        "logId": "291db69e-e33f-4747-a669-d3a08df4a1a0"
+        "logId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
+        "name": "MainButtons"
+      }
+    ],
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "98ab8bd2-e3cc-47d5-9d63-c12f98c41c9a",
+              "title": "LSM Rosa",
+              "body": "LSM Rosa (IAPN-433), a Corona class pulsed nuclear interstellar ark, first encountered with captain Grant Cowan in local space."
+            }
+          },
+          {
+            "entry": {
+              "encyclopediaId": "39638c11-0825-49ff-a466-0a85c386d2a5",
+              "title": "LSM Rosa",
+              "header": "Destination Andromeda",
+              "body": "The LSM Rosa was pursuing aggressive orbital maneuvers towards the center of the Milky Way, thousands of years away. Grant Cowan believed their best chance for escaping the expanding void was to perform a risky orbital assist around Sagittarius A*, the galactic core’s supermassive blackhole. Their target escape trajectory, the Andromeda galaxy, 2.5 million lightyears away."
+            },
+            "index": 1
+          }
+        ],
+        "index": 18,
+        "ending": true,
+        "logId": "70e8023f-cdca-4441-a998-62ddd5714ec2",
+        "name": "Ending"
       }
     ]
   },
-  "version": 4,
+  "version": 6,
   "meta": "We're On the Move",
   "metaKeyValues": {
     "EncounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66"

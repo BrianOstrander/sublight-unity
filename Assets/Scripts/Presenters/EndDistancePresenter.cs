@@ -28,6 +28,8 @@ namespace LunraGames.SubLight.Presenters
 			if (View.Visible) return;
 
 			View.Reset();
+
+			View.EncyclopediaClick = OnEncyclopediaClick;
 			SetDistance(model.Ship.Value.Position);
 
 			ShowView(App.GameCanvasRoot, true);
@@ -45,6 +47,13 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnEncyclopediaClick()
+		{
+			App.Callbacks.FocusRequest(
+				EncyclopediaFocusRequest.Home()
+			);
+		}
+
 		void OnShipPosition(UniversePosition position)
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;

@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string logId;
 		[JsonProperty] float duration;
 
+		[JsonProperty] string name;
 		[JsonProperty] bool showNotes;
 		[JsonProperty] string notes;
 
@@ -29,6 +30,8 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<float> Duration;
 
 		[JsonIgnore]
+		public readonly ListenerProperty<string> Name;
+		[JsonIgnore]
 		public readonly ListenerProperty<bool> ShowNotes;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Notes;
@@ -38,12 +41,21 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public abstract string NextLog { get; }
 
+		/// <summary>
+		/// If this value returns true, not having a next log is an error,
+		/// otherwise just a warning will appear in the editor.
+		/// </summary>
+		/// <value><c>true</c> if requires next log; otherwise, <c>false</c>.</value>
+		[JsonIgnore]
+		public virtual bool RequiresNextLog { get { return true; } }
 		[JsonIgnore]
 		public virtual bool EditableDuration { get { return true; } }
 		[JsonIgnore]
 		public virtual float TotalDuration { get { return Duration.Value; } }
 		[JsonIgnore]
 		public bool HasNotes { get { return !string.IsNullOrEmpty(Notes.Value); } }
+		[JsonIgnore]
+		public bool HasName { get { return !string.IsNullOrEmpty(Name.Value); } }
 
 		public EncounterLogModel()
 		{
@@ -53,6 +65,7 @@ namespace LunraGames.SubLight.Models
 			LogId = new ListenerProperty<string>(value => logId = value, () => logId);
 			Duration = new ListenerProperty<float>(value => duration = value, () => duration);
 
+			Name = new ListenerProperty<string>(value => name = value, () => name);
 			ShowNotes = new ListenerProperty<bool>(value => showNotes = value, () => showNotes);
 			Notes = new ListenerProperty<string>(value => notes = value, () => notes);
 		}

@@ -25,6 +25,7 @@ namespace LunraGames.SubLight
 		{
 			get
 			{
+				// -1 means it only supports saves equal to the current version.
 				return new Dictionary<SaveTypes, int>
 				{
 					{ SaveTypes.Game, -1 },
