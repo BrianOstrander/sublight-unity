@@ -1,0 +1,65 @@
+{
+  "orderWeight": 999.0,
+  "randomWeightMultiplier": 1.0,
+  "encounterId": "96a7f3a7-df39-4cb7-a659-68d55f046ca4",
+  "name": "Inventory Test",
+  "trigger": "Automatic",
+  "filtering": {
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": [],
+    "inventoryTags": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "logs": {
+    "textLogs": [],
+    "keyValueLogs": [],
+    "inventoryLogs": [
+      {
+        "addResources": [],
+        "addInstances": [],
+        "addRandomInstances": [
+          {
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryTags": [
+                {
+                  "ignore": true,
+                  "filterId": "3b1c9d5a-cc6b-4787-8ab9-f98040381543",
+                  "group": "Any",
+                  "filterValue": "Engine"
+                },
+                {
+                  "index": 1,
+                  "ignore": true,
+                  "filterId": "9aa9e934-6a3e-4104-bcf8-6349398dfb84",
+                  "group": "All",
+                  "filterValue": "Stock"
+                }
+              ]
+            },
+            "operationId": "a399aac7-4ca5-4b71-9d3a-e94911d45b8f"
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "1790bcf4-4579-432a-8c94-b336e6bc54fd"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": []
+  },
+  "version": 7,
+  "meta": "Inventory Test",
+  "metaKeyValues": {
+    "EncounterId": "96a7f3a7-df39-4cb7-a659-68d55f046ca4"
+  },
+  "created": "2018-08-28T15:56:57.458504-07:00",
+  "modified": "2018-08-28T15:56:57.458504-07:00",
+  "SaveType": "EncounterInfo"
+}

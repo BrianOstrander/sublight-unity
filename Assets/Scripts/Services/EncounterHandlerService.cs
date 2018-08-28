@@ -340,6 +340,15 @@ namespace LunraGames.SubLight
 							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
 						);
 						break;
+					case InventoryOperations.AddRandomInstance:
+						var addRandomInstance = entry as AddRandomInstanceOperationModel;
+						inventoryReferences.CreateRandomInstance(
+							addRandomInstance.Filtering,
+							model,
+							InventoryReferenceContext.Current(model),
+							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
+						);
+						break;
 					default:
 						Debug.LogError("Unrecognized InventoryOperation: " + entry.Operation);
 						done();
@@ -348,6 +357,13 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		/// <summary>
+		/// Called when a inventory reference is created explicitly or randomly.
+		/// </summary>
+		/// <param name="result">Result.</param>
+		/// <param name="total">Total.</param>
+		/// <param name="progress">Progress.</param>
+		/// <param name="done">Done.</param>
 		void OnInventoryLogCreateInstance(InventoryReferenceRequest<InventoryModel> result, int total, ref int progress, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
