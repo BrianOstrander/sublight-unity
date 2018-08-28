@@ -21,6 +21,11 @@ namespace LunraGames.SubLight
 
 		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model)
 		{
+			Filter(done, filter, model, null);
+		}
+
+		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model, InventoryModel inventoryModel)
+		{
 			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();
 
 			if (remaining.None())
@@ -33,7 +38,7 @@ namespace LunraGames.SubLight
 			bool? allResult = null;
 			bool? noneResult = null;
 
-			OnFilter(done, anyResult, allResult, noneResult, remaining, model);
+			OnFilter(done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
 		}
 
 		void OnFilter(
@@ -42,7 +47,8 @@ namespace LunraGames.SubLight
 			bool? allResult,
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
-			GameModel model
+			GameModel model,
+			InventoryModel inventoryModel
 		)
 		{
 			if (remaining.Count == 0)
@@ -59,7 +65,7 @@ namespace LunraGames.SubLight
 
 			Action<ValueFilterGroups, bool> filterDone = (group, result) =>
 			{
-				OnFilterResult(group, result, current.FilterNegate, done, anyResult, allResult, noneResult, remaining, model);
+				OnFilterResult(group, result, current.FilterNegate, done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
 			};
 
 			switch (current.FilterType)
@@ -73,9 +79,12 @@ namespace LunraGames.SubLight
 				case ValueFilterTypes.EncounterInteraction:
 					OnHandle(current as EncounterInteractionFilterEntryModel, model, filterDone);
 					break;
+				case ValueFilterTypes.InventoryTag:
+					OnHandle(current as InventoryTagFilterEntryModel, model, inventoryModel, filterDone);
+					break;
 				default:
 					Debug.LogError("Unrecognized FilterType: " + current.FilterType + ", skipping...");
-					OnFilter(done, anyResult, allResult, noneResult, remaining, model);
+					OnFilter(done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
 					break;
 			}
 		}
@@ -89,7 +98,8 @@ namespace LunraGames.SubLight
 			bool? allResult,
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
-			GameModel model
+			GameModel model,
+			InventoryModel inventoryModel
 		)
 		{
 			result = negated ? !result : result;
@@ -109,7 +119,7 @@ namespace LunraGames.SubLight
 					Debug.LogError("Unrecognized group: " + group + ", skipping...");
 					break;
 			}
-			OnFilter(done, anyResult, allResult, noneResult, remaining, model);
+			OnFilter(done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
 		}
 
 		#region Handling
@@ -187,6 +197,18 @@ namespace LunraGames.SubLight
 			}
 
 			done(filter.Group.Value, result);
+		}
+
+		void OnHandle(InventoryTagFilterEntryModel filter, GameModel model, InventoryModel inventoryModel, Action<ValueFilterGroups, bool> done)
+		{
+			var smoothed = filter.FilterValue.Value;
+			if (string.IsNullOrEmpty(smoothed) || inventoryModel == null)
+			{
+				done(filter.Group.Value, false);
+				return;
+			}
+			smoothed = smoothed.ToLower();
+			done(filter.Group.Value, inventoryModel.Tags.Value.Any(t => t.ToLower() == smoothed));
 		}
 		#endregion
 	}

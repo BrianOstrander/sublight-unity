@@ -338,6 +338,11 @@ namespace LunraGames.SubLight
 		{
 			return interactedReferences.GetReference(inventoryId);
 		}
+
+		public void CreateRandomInstance(ValueFilterModel filtering, GameModel model, InventoryReferenceContext context, Action<InventoryReferenceRequest<InventoryModel>> done)
+		{
+			Debug.Log("create random instance hereeee");
+		}
 		#endregion
 
 		#region Events

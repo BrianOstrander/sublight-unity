@@ -19,12 +19,11 @@ namespace LunraGames.SubLight.Models
 		#region Assigned Values
 		[JsonProperty] bool showValues;
 		[JsonProperty] bool falseByDefault;
-		[JsonProperty]
-		BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
-		[JsonProperty]
-		StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
-		[JsonProperty]
-		EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
+		[JsonProperty] BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
+		[JsonProperty] StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
+		[JsonProperty] EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
+		[JsonProperty] InventoryTagFilterEntryModel[] inventoryTags = new InventoryTagFilterEntryModel[0];
+
 		#endregion
 
 		#region Derived Values
@@ -54,6 +53,7 @@ namespace LunraGames.SubLight.Models
 			var newBooleanKeyValues = new List<BooleanKeyValueFilterEntryModel>();
 			var newStringKeyValues = new List<StringKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
+			var newInventoryTags = new List<InventoryTagFilterEntryModel>();
 
 			foreach (var filter in newFilters)
 			{
@@ -68,6 +68,9 @@ namespace LunraGames.SubLight.Models
 					case ValueFilterTypes.EncounterInteraction:
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
 						break;
+					case ValueFilterTypes.InventoryTag:
+						newInventoryTags.Add(filter as InventoryTagFilterEntryModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized FilterType" + filter.FilterType);
 						break;
@@ -77,12 +80,14 @@ namespace LunraGames.SubLight.Models
 			booleanKeyValues = newBooleanKeyValues.ToArray();
 			stringKeyValues = newStringKeyValues.ToArray();
 			encounterInteractions = newEncounterInteractions.ToArray();
+			inventoryTags = newInventoryTags.ToArray();
 		}
 
 		IValueFilterEntryModel[] OnGetFilters()
 		{
 			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(stringKeyValues)
 																  .Concat(encounterInteractions)
+																  .Concat(inventoryTags)
 																  .ToArray();
 		}
 		#endregion

@@ -10,9 +10,12 @@
 		// KeyValueFloat = 40
 
 		// -- EncounterInteractions
-		EncounterInteraction = 100
+		EncounterInteraction = 100,
+
+		// -- InventoryTags
+		InventoryTag = 200
 
 		// -- Something else
-		// SomethingElseBoolean = 200
+		// SomethingElseBoolean = 300
 	}
 }

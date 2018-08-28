@@ -9,7 +9,8 @@
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],
-    "encounterInteractions": []
+    "encounterInteractions": [],
+    "inventoryTags": []
   },
   "validSystems": [],
   "validBodies": [],
@@ -99,7 +100,8 @@
             "filtering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -119,12 +121,14 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "showValues": true,
@@ -138,7 +142,8 @@
                 }
               ],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             }
           },
           {
@@ -150,17 +155,20 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             }
           },
           {
@@ -172,17 +180,20 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             }
           },
           {
@@ -194,17 +205,20 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -249,7 +263,7 @@
       }
     ]
   },
-  "version": 6,
+  "version": 7,
   "meta": "Button Test 0",
   "metaKeyValues": {
     "EncounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe"
