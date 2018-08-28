@@ -150,12 +150,12 @@ namespace LunraGames.SubLight
 				throw new Exception("Unknown platform");
 			}
 
-			inventoryReferences = new InventoryReferenceService(M, Logging, Callbacks);
 			scenes = new SceneService(Logging, Callbacks);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
 			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
 			valueFilter = new ValueFilterService(Callbacks);
+			inventoryReferences = new InventoryReferenceService(M, Logging, Callbacks, ValueFilter);
 			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
 
 			encounterHandler = new EncounterHandlerService(

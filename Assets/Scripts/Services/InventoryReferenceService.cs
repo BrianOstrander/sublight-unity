@@ -53,21 +53,29 @@ namespace LunraGames.SubLight
 		IModelMediator modelMediator;
 		ILogService logger;
 		CallbackService callbacks;
+		ValueFilterService filterService;
 
 		InventoryReferenceListModel references = new InventoryReferenceListModel();
 
 		InteractedInventoryReferenceListModel interactedReferences;
 		bool currentlySaving;
 
-		public InventoryReferenceService(IModelMediator modelMediator, ILogService logger, CallbackService callbacks)
+		public InventoryReferenceService(
+			IModelMediator modelMediator,
+			ILogService logger,
+			CallbackService callbacks,
+			ValueFilterService filterService
+		)
 		{
 			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
 			if (logger == null) throw new ArgumentNullException("logger");
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
+			if (filterService == null) throw new ArgumentNullException("filterService");
 
 			this.modelMediator = modelMediator;
 			this.logger = logger;
 			this.callbacks = callbacks;
+			this.filterService = filterService;
 		}
 
 		#region Initialization
@@ -300,7 +308,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			switch(reference.RawModel.InventoryType)
+			switch (reference.RawModel.InventoryType)
 			{
 				case InventoryTypes.Module:
 					modelMediator.Load<ModuleReferenceModel>(reference as ModuleReferenceModel, result => OnCreateInstanceLoaded(result, context, done));
@@ -334,14 +342,84 @@ namespace LunraGames.SubLight
 			done(InventoryReferenceRequest<M>.Success(reference, instance));
 		}
 
+		public void CreateRandomInstance(ValueFilterModel filtering, GameModel model, InventoryReferenceContext context, Action<InventoryReferenceRequest<InventoryModel>> done)
+		{
+			OnCreateRandomInstanceFilterReference(
+				null,
+				new List<IInventoryReferenceModel>(),
+				references.All.Value.ToList(),
+				filtering,
+				model,
+				context,
+				results => OnCreateRandomInstanceFilterReferenceDone(results, context, done)
+			);
+		}
+
+		void OnCreateRandomInstanceFilterReference(
+			IInventoryReferenceModel result,
+			List<IInventoryReferenceModel> filtered,
+			List<IInventoryReferenceModel> remaining,
+			ValueFilterModel filtering,
+			GameModel model,
+			InventoryReferenceContext context,
+			Action<IInventoryReferenceModel[]> done
+		)
+		{
+			if (result != null) filtered.Add(result);
+
+			if (remaining.None())
+			{
+				done(filtered.ToArray());
+				return;
+			}
+
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+
+			Action<bool> filterDone = filterResult =>
+			{
+				OnCreateRandomInstanceFilterReference(
+					filterResult ? next : null,
+					filtered,
+					remaining,
+					filtering,
+					model,
+					context,
+					done
+				);
+			};
+
+			filterService.Filter(
+				filterDone,
+				filtering,
+				model,
+				next.RawModel
+			);
+		}
+
+		void OnCreateRandomInstanceFilterReferenceDone(
+			IInventoryReferenceModel[] results,
+			InventoryReferenceContext context,
+			Action<InventoryReferenceRequest<InventoryModel>> done
+		)
+		{
+			if (results.None())
+			{
+				var error = "No inventory references pass that filtering.";
+				Debug.LogError(error);
+				done(InventoryReferenceRequest<InventoryModel>.Failure(null, null, error));
+				return;
+			}
+
+			// TODO: Weight these...
+			var result = results.Random();
+
+			CreateInstance(result.RawModel.InventoryId.Value, context, done);
+		}
+
 		public InteractedInventoryReferenceModel GetReferenceInteraction(string inventoryId)
 		{
 			return interactedReferences.GetReference(inventoryId);
-		}
-
-		public void CreateRandomInstance(ValueFilterModel filtering, GameModel model, InventoryReferenceContext context, Action<InventoryReferenceRequest<InventoryModel>> done)
-		{
-			Debug.Log("create random instance hereeee");
 		}
 		#endregion
 

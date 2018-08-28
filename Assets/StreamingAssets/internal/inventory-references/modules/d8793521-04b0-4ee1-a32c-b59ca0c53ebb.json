@@ -62,7 +62,6 @@
     "name": "Stock Storage",
     "description": "",
     "tags": [
-      "Root",
       "Storage",
       "RationsStorage",
       "FuelStorage"
