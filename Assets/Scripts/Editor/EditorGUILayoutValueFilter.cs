@@ -83,6 +83,9 @@ namespace LunraGames.SubLight
 					case ValueFilterTypes.EncounterInteraction:
 						Create<EncounterInteractionFilterEntryModel>(model, filterCount, group);
 						break;
+					case ValueFilterTypes.InventoryId:
+						Create<InventoryIdFilterEntryModel>(model, filterCount, group);
+						break;
 					case ValueFilterTypes.InventoryTag:
 						Create<InventoryTagFilterEntryModel>(model, filterCount, group);
 						break;
@@ -116,6 +119,9 @@ namespace LunraGames.SubLight
 									break;
 								case ValueFilterTypes.EncounterInteraction:
 									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
+									break;
+								case ValueFilterTypes.InventoryId:
+									OnHandle(filter as InventoryIdFilterEntryModel, ref deleted);
 									break;
 								case ValueFilterTypes.InventoryTag:
 									OnHandle(filter as InventoryTagFilterEntryModel, ref deleted);
@@ -212,6 +218,18 @@ namespace LunraGames.SubLight
 
 			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("An EncounterId must be specified.", MessageType.Error);
 			if (model.Operation.Value == EncounterInteractionFilterOperations.Unknown) EditorGUILayout.HelpBox("An operation must be specified.", MessageType.Error);
+		}
+
+		static void OnHandle(InventoryIdFilterEntryModel model, ref string deleted)
+		{
+			OnOneLineHandleBegin(model);
+			{
+				GUILayout.Label(new GUIContent("InventoryId", "The Id of the inventory reference."), GUILayout.ExpandWidth(false));
+				model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
+			}
+			OnOneLineHandleEnd(model, ref deleted);
+
+			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("An InventoryId must be specified.", MessageType.Error);
 		}
 
 		static void OnHandle(InventoryTagFilterEntryModel model, ref string deleted)

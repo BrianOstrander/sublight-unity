@@ -22,6 +22,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
 		[JsonProperty] StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
 		[JsonProperty] EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
+		[JsonProperty] InventoryIdFilterEntryModel[] inventoryIds = new InventoryIdFilterEntryModel[0];
 		[JsonProperty] InventoryTagFilterEntryModel[] inventoryTags = new InventoryTagFilterEntryModel[0];
 
 		#endregion
@@ -53,6 +54,7 @@ namespace LunraGames.SubLight.Models
 			var newBooleanKeyValues = new List<BooleanKeyValueFilterEntryModel>();
 			var newStringKeyValues = new List<StringKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
+			var newInventoryIds = new List<InventoryIdFilterEntryModel>();
 			var newInventoryTags = new List<InventoryTagFilterEntryModel>();
 
 			foreach (var filter in newFilters)
@@ -68,6 +70,9 @@ namespace LunraGames.SubLight.Models
 					case ValueFilterTypes.EncounterInteraction:
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
 						break;
+					case ValueFilterTypes.InventoryId:
+						newInventoryIds.Add(filter as InventoryIdFilterEntryModel);
+						break;
 					case ValueFilterTypes.InventoryTag:
 						newInventoryTags.Add(filter as InventoryTagFilterEntryModel);
 						break;
@@ -80,6 +85,7 @@ namespace LunraGames.SubLight.Models
 			booleanKeyValues = newBooleanKeyValues.ToArray();
 			stringKeyValues = newStringKeyValues.ToArray();
 			encounterInteractions = newEncounterInteractions.ToArray();
+			inventoryIds = newInventoryIds.ToArray();
 			inventoryTags = newInventoryTags.ToArray();
 		}
 
@@ -87,6 +93,7 @@ namespace LunraGames.SubLight.Models
 		{
 			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(stringKeyValues)
 																  .Concat(encounterInteractions)
+																  .Concat(inventoryIds)
 																  .Concat(inventoryTags)
 																  .ToArray();
 		}

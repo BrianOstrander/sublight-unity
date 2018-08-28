@@ -1,6 +1,7 @@
 {
   "orderWeight": 999.0,
   "randomWeightMultiplier": 1.0,
+  "ignore": true,
   "encounterId": "96a7f3a7-df39-4cb7-a659-68d55f046ca4",
   "name": "Inventory Test",
   "trigger": "Automatic",
@@ -8,6 +9,7 @@
     "booleanKeyValues": [],
     "stringKeyValues": [],
     "encounterInteractions": [],
+    "inventoryIds": [],
     "inventoryTags": []
   },
   "validSystems": [],
@@ -26,19 +28,12 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": [
                 {
-                  "ignore": true,
                   "filterId": "3b1c9d5a-cc6b-4787-8ab9-f98040381543",
                   "group": "Any",
                   "filterValue": "Engine"
-                },
-                {
-                  "index": 1,
-                  "ignore": true,
-                  "filterId": "9aa9e934-6a3e-4104-bcf8-6349398dfb84",
-                  "group": "All",
-                  "filterValue": "Stock"
                 }
               ]
             },

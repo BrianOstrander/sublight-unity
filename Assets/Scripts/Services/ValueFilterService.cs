@@ -79,6 +79,9 @@ namespace LunraGames.SubLight
 				case ValueFilterTypes.EncounterInteraction:
 					OnHandle(current as EncounterInteractionFilterEntryModel, model, filterDone);
 					break;
+				case ValueFilterTypes.InventoryId:
+					OnHandle(current as InventoryIdFilterEntryModel, model, inventoryModel, filterDone);
+					break;
 				case ValueFilterTypes.InventoryTag:
 					OnHandle(current as InventoryTagFilterEntryModel, model, inventoryModel, filterDone);
 					break;
@@ -199,7 +202,20 @@ namespace LunraGames.SubLight
 			done(filter.Group.Value, result);
 		}
 
-		void OnHandle(InventoryTagFilterEntryModel filter, GameModel model, InventoryModel inventoryModel, Action<ValueFilterGroups, bool> done)
+		void OnHandle(
+			InventoryIdFilterEntryModel filter,
+			GameModel model,
+			InventoryModel inventoryModel,
+			Action<ValueFilterGroups, bool> done)
+		{
+			done(filter.Group.Value, inventoryModel.InventoryId.Value == filter.FilterValue.Value);
+		}
+
+		void OnHandle(
+			InventoryTagFilterEntryModel filter,
+			GameModel model,
+			InventoryModel inventoryModel,
+			Action<ValueFilterGroups, bool> done)
 		{
 			var smoothed = filter.FilterValue.Value;
 			if (string.IsNullOrEmpty(smoothed) || inventoryModel == null)
