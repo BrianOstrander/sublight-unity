@@ -25,27 +25,45 @@
       "crews": [],
       "resources": [
         {
-          "refillResources": {},
-          "refillLogisticsResources": {},
-          "maximumLogisticsResources": {},
+          "refillResources": {
+            "tags": []
+          },
+          "refillLogisticsResources": {
+            "tags": []
+          },
+          "maximumLogisticsResources": {
+            "tags": []
+          },
           "maximumResources": {
-            "speed": 0.015
+            "speed": 0.015,
+            "tags": []
           },
           "slotId": "a9d3d20e-1b28-4ac0-a148-bf200e279803"
         }
       ],
       "modules": [],
-      "refillResources": {},
-      "refillLogisticsResources": {},
-      "maximumLogisticsResources": {},
+      "refillResources": {
+        "tags": []
+      },
+      "refillLogisticsResources": {
+        "tags": []
+      },
+      "maximumLogisticsResources": {
+        "tags": []
+      },
       "maximumResources": {
-        "speed": 0.015
+        "speed": 0.015,
+        "tags": []
       }
     },
     "inventoryId": "88d5280d-7802-401a-bb25-24b1e4ee46ca",
-    "name": "Stock Engine"
+    "name": "Stock Engine",
+    "tags": [
+      "Stock",
+      "Engine"
+    ]
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Engine",
   "metaKeyValues": {
     "InventoryId": "88d5280d-7802-401a-bb25-24b1e4ee46ca"

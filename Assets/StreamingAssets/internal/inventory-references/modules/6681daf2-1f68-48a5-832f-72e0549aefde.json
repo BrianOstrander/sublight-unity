@@ -25,28 +25,45 @@
       "crews": [],
       "resources": [
         {
-          "refillResources": {},
-          "refillLogisticsResources": {},
-          "maximumLogisticsResources": {},
+          "refillResources": {
+            "tags": []
+          },
+          "refillLogisticsResources": {
+            "tags": []
+          },
+          "maximumLogisticsResources": {
+            "tags": []
+          },
           "maximumResources": {
-            "speed": 0.005
+            "speed": 0.005,
+            "tags": []
           },
           "slotId": "c1ad7434-d7a7-4245-aaac-df10bc645515"
         }
       ],
       "modules": [],
-      "refillResources": {},
-      "refillLogisticsResources": {},
-      "maximumLogisticsResources": {},
+      "refillResources": {
+        "tags": []
+      },
+      "refillLogisticsResources": {
+        "tags": []
+      },
+      "maximumLogisticsResources": {
+        "tags": []
+      },
       "maximumResources": {
-        "speed": 0.005
+        "speed": 0.005,
+        "tags": []
       }
     },
     "inventoryId": "c0975397-5ef2-4fa8-9c30-fecc2591e7dc",
     "name": "Phantom Drive",
-    "description": "Discovered in a bloodstained derelict."
+    "description": "Discovered in a bloodstained derelict.",
+    "tags": [
+      "Engine"
+    ]
   },
-  "version": 4,
+  "version": 7,
   "meta": "Phantom Drive",
   "metaKeyValues": {
     "InventoryId": "c0975397-5ef2-4fa8-9c30-fecc2591e7dc"

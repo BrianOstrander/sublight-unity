@@ -25,30 +25,50 @@
       "crews": [],
       "resources": [
         {
-          "refillResources": {},
-          "refillLogisticsResources": {},
-          "maximumLogisticsResources": {},
+          "refillResources": {
+            "tags": []
+          },
+          "refillLogisticsResources": {
+            "tags": []
+          },
+          "maximumLogisticsResources": {
+            "tags": []
+          },
           "maximumResources": {
             "rations": 2.0,
-            "fuel": 2.0
+            "fuel": 2.0,
+            "tags": []
           },
           "slotId": "f8f054b1-4cd8-4aff-a139-ba625b3a66bb"
         }
       ],
       "modules": [],
-      "refillResources": {},
-      "refillLogisticsResources": {},
-      "maximumLogisticsResources": {},
+      "refillResources": {
+        "tags": []
+      },
+      "refillLogisticsResources": {
+        "tags": []
+      },
+      "maximumLogisticsResources": {
+        "tags": []
+      },
       "maximumResources": {
         "rations": 2.0,
-        "fuel": 2.0
+        "fuel": 2.0,
+        "tags": []
       }
     },
     "inventoryId": "ba230c9e-33a9-4a26-ba2c-de25cc3a0b27",
     "name": "Stock Storage",
-    "description": ""
+    "description": "",
+    "tags": [
+      "Root",
+      "Storage",
+      "RationsStorage",
+      "FuelStorage"
+    ]
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Storage",
   "metaKeyValues": {
     "InventoryId": "ba230c9e-33a9-4a26-ba2c-de25cc3a0b27"

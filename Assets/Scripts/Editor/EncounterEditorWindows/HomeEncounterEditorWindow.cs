@@ -221,24 +221,17 @@ namespace LunraGames.SubLight
 
 				EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "These checks determine if the encounter will be selected."), model.Filtering, alternateColor);
 
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				{
-					model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Systems",
-						model.ValidSystems.Value,
-						"- Select a SystemType -"
-					);
-				}
-				GUILayout.EndVertical();
-				EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, alternateColor);
-				{
-					model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
-						"Valid Bodies",
-						model.ValidBodies.Value,
-						"- Select a BodyType -"
-					);
-				}
-				EditorGUILayoutExtensions.EndVertical();
+				model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
+					"Valid Systems",
+					model.ValidSystems.Value,
+					"- Select a SystemType -"
+				);
+				model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
+					"Valid Bodies",
+					model.ValidBodies.Value,
+					"- Select a BodyType -",
+					color: alternateColor
+				);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 		}

@@ -25,29 +25,48 @@
       "crews": [],
       "resources": [
         {
-          "refillResources": {},
-          "refillLogisticsResources": {},
-          "maximumLogisticsResources": {},
+          "refillResources": {
+            "tags": []
+          },
+          "refillLogisticsResources": {
+            "tags": []
+          },
+          "maximumLogisticsResources": {
+            "tags": []
+          },
           "maximumResources": {
             "rations": 1.0,
-            "fuel": 1.0
+            "fuel": 1.0,
+            "tags": []
           },
           "slotId": "5260e14e-11fe-408d-87e4-1dae7370624b"
         }
       ],
       "modules": [],
-      "refillResources": {},
-      "refillLogisticsResources": {},
-      "maximumLogisticsResources": {},
+      "refillResources": {
+        "tags": []
+      },
+      "refillLogisticsResources": {
+        "tags": []
+      },
+      "maximumLogisticsResources": {
+        "tags": []
+      },
       "maximumResources": {
         "rations": 1.0,
-        "fuel": 1.0
+        "fuel": 1.0,
+        "tags": []
       }
     },
     "inventoryId": "18bd022e-b9f8-4445-91d2-daa0e54958b4",
-    "name": "Extra Storage"
+    "name": "Extra Storage",
+    "tags": [
+      "Storage",
+      "RationsStorage",
+      "FuelStorage"
+    ]
   },
-  "version": 4,
+  "version": 7,
   "meta": "Extra Storage",
   "metaKeyValues": {
     "InventoryId": "18bd022e-b9f8-4445-91d2-daa0e54958b4"

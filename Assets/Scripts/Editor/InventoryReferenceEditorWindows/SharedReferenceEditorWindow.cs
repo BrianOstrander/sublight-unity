@@ -32,6 +32,10 @@ namespace LunraGames.SubLight
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				reference.Meta.Value = model.Name;
 				model.Description.Value = EditorGUILayout.TextField("Description", model.Description.Value);
+				model.Tags.Value = EditorGUILayoutExtensions.StringArray(
+					"Tags",
+					model.Tags.Value
+				);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
 

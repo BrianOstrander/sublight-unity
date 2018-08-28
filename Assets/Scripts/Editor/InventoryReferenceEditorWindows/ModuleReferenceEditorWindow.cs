@@ -238,7 +238,7 @@ namespace LunraGames.SubLight
 
 		void OnCrewSlot(ModuleReferenceModel reference, CrewModuleSlotModel slot)
 		{
-			slot.ValidInventoryTypes.Value = EditorGUILayoutExtensions.EnumArray(
+			slot.ValidInventoryTypes.Value = EditorGUILayoutExtensions.EnumArrayValue(
 				new GUIContent("Valid Inventory Types", "A list of valid items that may be slotted here."),
 				slot.ValidInventoryTypes.Value,
 				"- Select a InventoryType -"

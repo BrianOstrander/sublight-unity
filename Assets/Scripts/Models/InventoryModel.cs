@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 		[JsonProperty] string parentSlotId;
+		[JsonProperty] string[] tags = new string[0];
 
 		/// <summary>
 		/// Gets the type of the inventory item.
@@ -53,6 +54,8 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> ParentSlotId;
+		[JsonIgnore]
+		public readonly ListenerProperty<string[]> Tags;
 
 		public InventoryModel()
 		{
@@ -62,6 +65,7 @@ namespace LunraGames.SubLight.Models
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			ParentSlotId = new ListenerProperty<string>(value => parentSlotId = value, () => parentSlotId);
+			Tags = new ListenerProperty<string[]>(value => tags = value, () => tags);
 		}
 	}
 }
