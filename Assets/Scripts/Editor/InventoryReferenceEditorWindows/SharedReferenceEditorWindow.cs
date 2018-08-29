@@ -27,7 +27,14 @@ namespace LunraGames.SubLight
 
 			EditorGUIExtensions.BeginChangeCheck();
 			{
-				model.Ignore.Value = EditorGUILayout.Toggle("Ignore", model.Ignore.Value);
+				GUILayout.BeginHorizontal();
+				{
+					model.RandomWeightMultiplier.Value = EditorGUILayout.FloatField("Random Weight Multiplier", model.RandomWeightMultiplier.Value, GUILayout.ExpandWidth(true));
+					GUILayout.Label("Ignore", GUILayout.ExpandWidth(false));
+					model.Ignore.Value = EditorGUILayout.Toggle(model.Ignore.Value, GUILayout.Width(14f));
+				}
+				GUILayout.EndHorizontal();
+
 				model.InventoryId.Value = reference.SetMetaKey(MetaKeyConstants.InventoryReference.InventoryId, EditorGUILayout.TextField("Inventory Id", model.InventoryId.Value));
 				model.Name.Value = EditorGUILayout.TextField("Name", model.Name.Value);
 				reference.Meta.Value = model.Name;

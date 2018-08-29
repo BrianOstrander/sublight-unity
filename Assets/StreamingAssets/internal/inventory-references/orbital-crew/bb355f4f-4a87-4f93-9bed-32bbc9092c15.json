@@ -3,11 +3,13 @@
     "supportedBodies": [
       "Star"
     ],
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "290702f5-d9a7-43e4-907f-23dfdb579eb9",
     "name": "Stock Stellar Orbiter",
-    "description": ""
+    "description": "",
+    "tags": []
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Stellar Orbiter",
   "metaKeyValues": {
     "InventoryId": "290702f5-d9a7-43e4-907f-23dfdb579eb9"

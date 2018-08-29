@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
@@ -411,10 +412,20 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			// TODO: Weight these...
-			var result = results.Random();
+			var maxRandomWeight = 0f;
+			IInventoryReferenceModel chosen = null;
 
-			CreateInstance(result.RawModel.InventoryId.Value, context, done);
+			foreach (var current in results)
+			{
+				var currentWeight = current.RawModel.RandomWeightMultiplier.Value * DemonUtility.NextFloat;
+				if (chosen == null || maxRandomWeight < currentWeight)
+				{
+					maxRandomWeight = currentWeight;
+					chosen = current;
+				}
+			}
+
+			CreateInstance(chosen.RawModel.InventoryId.Value, context, done);
 		}
 
 		public InteractedInventoryReferenceModel GetReferenceInteraction(string inventoryId)

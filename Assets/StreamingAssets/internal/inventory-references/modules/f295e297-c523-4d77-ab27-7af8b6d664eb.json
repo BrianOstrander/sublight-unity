@@ -56,6 +56,7 @@
         "tags": []
       }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "88d5280d-7802-401a-bb25-24b1e4ee46ca",
     "name": "Stock Engine",
     "tags": [

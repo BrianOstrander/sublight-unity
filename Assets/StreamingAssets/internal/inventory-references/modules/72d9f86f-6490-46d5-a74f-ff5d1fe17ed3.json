@@ -58,6 +58,7 @@
         "tags": []
       }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "18bd022e-b9f8-4445-91d2-daa0e54958b4",
     "name": "Extra Storage",
     "tags": [

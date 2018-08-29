@@ -52,6 +52,7 @@
         "tags": []
       }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "23c48a72-e35a-44d6-bd7e-29e600a76046",
     "name": "Stock Orbiter Bay",
     "tags": [

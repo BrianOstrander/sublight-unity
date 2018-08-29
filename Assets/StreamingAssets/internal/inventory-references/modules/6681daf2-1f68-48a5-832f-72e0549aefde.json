@@ -56,6 +56,7 @@
         "tags": []
       }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "c0975397-5ef2-4fa8-9c30-fecc2591e7dc",
     "name": "Phantom Drive",
     "description": "Discovered in a bloodstained derelict.",

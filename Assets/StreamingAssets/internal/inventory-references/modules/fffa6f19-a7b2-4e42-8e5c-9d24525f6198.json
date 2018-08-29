@@ -70,6 +70,7 @@
         "tags": []
       }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "90a2c3b4-7b41-449f-b23f-86bc201a1729",
     "name": "Stock Logistics",
     "tags": [

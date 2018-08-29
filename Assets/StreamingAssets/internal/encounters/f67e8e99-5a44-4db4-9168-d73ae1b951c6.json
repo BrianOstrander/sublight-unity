@@ -1,7 +1,7 @@
 {
+  "ignore": true,
   "orderWeight": 999.0,
   "randomWeightMultiplier": 1.0,
-  "ignore": true,
   "encounterId": "96a7f3a7-df39-4cb7-a659-68d55f046ca4",
   "name": "Inventory Test",
   "trigger": "Automatic",
