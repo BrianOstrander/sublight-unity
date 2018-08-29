@@ -22,8 +22,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
 		[JsonProperty] StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
 		[JsonProperty] EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
-		[JsonProperty] InventoryIdFilterEntryModel[] inventoryIds = new InventoryIdFilterEntryModel[0];
-		[JsonProperty] InventoryTagFilterEntryModel[] inventoryTags = new InventoryTagFilterEntryModel[0];
+		[JsonProperty] IdInventoryFilterEntryModel[] inventoryIds = new IdInventoryFilterEntryModel[0];
+		[JsonProperty] TagInventoryFilterEntryModel[] inventoryTags = new TagInventoryFilterEntryModel[0];
 
 		#endregion
 
@@ -54,8 +54,8 @@ namespace LunraGames.SubLight.Models
 			var newBooleanKeyValues = new List<BooleanKeyValueFilterEntryModel>();
 			var newStringKeyValues = new List<StringKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
-			var newInventoryIds = new List<InventoryIdFilterEntryModel>();
-			var newInventoryTags = new List<InventoryTagFilterEntryModel>();
+			var newInventoryIds = new List<IdInventoryFilterEntryModel>();
+			var newInventoryTags = new List<TagInventoryFilterEntryModel>();
 
 			foreach (var filter in newFilters)
 			{
@@ -71,10 +71,10 @@ namespace LunraGames.SubLight.Models
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
 						break;
 					case ValueFilterTypes.InventoryId:
-						newInventoryIds.Add(filter as InventoryIdFilterEntryModel);
+						newInventoryIds.Add(filter as IdInventoryFilterEntryModel);
 						break;
 					case ValueFilterTypes.InventoryTag:
-						newInventoryTags.Add(filter as InventoryTagFilterEntryModel);
+						newInventoryTags.Add(filter as TagInventoryFilterEntryModel);
 						break;
 					default:
 						Debug.LogError("Unrecognized FilterType" + filter.FilterType);

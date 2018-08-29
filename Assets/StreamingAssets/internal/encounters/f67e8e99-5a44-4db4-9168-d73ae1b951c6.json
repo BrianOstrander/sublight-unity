@@ -15,7 +15,13 @@
   "validSystems": [],
   "validBodies": [],
   "logs": {
-    "textLogs": [],
+    "textLogs": [
+      {
+        "index": 2,
+        "ending": true,
+        "logId": "79ee7e2c-1f70-47a0-8fc8-3db075ced004"
+      }
+    ],
     "keyValueLogs": [],
     "inventoryLogs": [
       {
@@ -31,22 +37,140 @@
               "inventoryIds": [],
               "inventoryTags": [
                 {
-                  "filterId": "3b1c9d5a-cc6b-4787-8ab9-f98040381543",
+                  "inventoryFilterType": "References",
+                  "filterId": "ab72b00e-a169-4931-893d-9c137a65714a",
                   "group": "Any",
                   "filterValue": "Engine"
                 }
               ]
             },
-            "operationId": "a399aac7-4ca5-4b71-9d3a-e94911d45b8f"
+            "operationId": "d2a6e9da-00dd-49a1-9f92-a4f27778783b"
           }
         ],
+        "nextLogId": "1f21d508-3483-41d8-a132-dfc69abc4eb4",
         "beginning": true,
-        "ending": true,
-        "logId": "1790bcf4-4579-432a-8c94-b336e6bc54fd"
+        "logId": "087c46fe-4e04-49e1-82be-190c2ec40879"
       }
     ],
     "switchLogs": [],
-    "buttonLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "buttonId": "6607ce84-2b42-441b-b272-d6d870d33015",
+            "message": "Has Engine",
+            "nextLogId": "79ee7e2c-1f70-47a0-8fc8-3db075ced004",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": [
+                {
+                  "inventoryFilterType": "Inventory",
+                  "filterId": "e9cd160d-5af5-4b11-b44d-423f26ee19c9",
+                  "group": "All",
+                  "filterValue": "Engine"
+                }
+              ]
+            }
+          },
+          {
+            "buttonId": "36d84c17-a5bb-4f3e-91a7-e82aa1cb0aae",
+            "index": 1,
+            "message": "Has Stock Engine",
+            "nextLogId": "79ee7e2c-1f70-47a0-8fc8-3db075ced004",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [
+                {
+                  "inventoryFilterType": "Inventory",
+                  "filterId": "c9379e75-ec40-43de-b369-f2e74727112e",
+                  "group": "All",
+                  "filterValue": "88d5280d-7802-401a-bb25-24b1e4ee46ca"
+                }
+              ],
+              "inventoryTags": []
+            }
+          },
+          {
+            "buttonId": "49429055-db3e-43fa-962b-8ad8311f96b5",
+            "index": 2,
+            "message": "Has Phantom",
+            "nextLogId": "79ee7e2c-1f70-47a0-8fc8-3db075ced004",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "enabledFiltering": {
+              "showValues": true,
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [
+                {
+                  "inventoryFilterType": "Inventory",
+                  "filterId": "d019c91e-2854-452d-b7a7-20bd9c39fa7f",
+                  "group": "All",
+                  "filterValue": "c0975397-5ef2-4fa8-9c30-fecc2591e7dc"
+                }
+              ],
+              "inventoryTags": []
+            }
+          }
+        ],
+        "index": 1,
+        "logId": "1f21d508-3483-41d8-a132-dfc69abc4eb4"
+      }
+    ],
     "encyclopediaLogs": []
   },
   "version": 7,

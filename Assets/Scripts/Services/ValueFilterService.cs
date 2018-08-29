@@ -80,10 +80,10 @@ namespace LunraGames.SubLight
 					OnHandle(current as EncounterInteractionFilterEntryModel, model, filterDone);
 					break;
 				case ValueFilterTypes.InventoryId:
-					OnHandle(current as InventoryIdFilterEntryModel, model, inventoryModel, filterDone);
+					OnHandle(current as IdInventoryFilterEntryModel, model, inventoryModel, filterDone);
 					break;
 				case ValueFilterTypes.InventoryTag:
-					OnHandle(current as InventoryTagFilterEntryModel, model, inventoryModel, filterDone);
+					OnHandle(current as TagInventoryFilterEntryModel, model, inventoryModel, filterDone);
 					break;
 				default:
 					Debug.LogError("Unrecognized FilterType: " + current.FilterType + ", skipping...");
@@ -203,28 +203,64 @@ namespace LunraGames.SubLight
 		}
 
 		void OnHandle(
-			InventoryIdFilterEntryModel filter,
+			IdInventoryFilterEntryModel filter,
 			GameModel model,
 			InventoryModel inventoryModel,
 			Action<ValueFilterGroups, bool> done)
 		{
-			done(filter.Group.Value, inventoryModel.InventoryId.Value == filter.FilterValue.Value);
+			var result = false;
+
+			switch (filter.InventoryFilterType.Value)
+			{
+				case InventoryFilterTypes.Inventory:
+					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
+					result = model.Ship.Value.Inventory.HasInventory(filter.FilterValue.Value);
+					break;
+				case InventoryFilterTypes.References:
+					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");
+					else result = inventoryModel.InventoryId.Value == filter.FilterValue.Value;
+					break;
+				default:
+					Debug.LogError("Unrecognized InventoryFilterType: " + filter.InventoryFilterType.Value);
+					break;
+			}
+
+			done(filter.Group.Value, result);
 		}
 
 		void OnHandle(
-			InventoryTagFilterEntryModel filter,
+			TagInventoryFilterEntryModel filter,
 			GameModel model,
 			InventoryModel inventoryModel,
 			Action<ValueFilterGroups, bool> done)
 		{
+			var result = false;
+			
 			var smoothed = filter.FilterValue.Value;
-			if (string.IsNullOrEmpty(smoothed) || inventoryModel == null)
+			if (string.IsNullOrEmpty(smoothed))
 			{
-				done(filter.Group.Value, false);
+				Debug.LogError("FilterValue was null or empty.");
+				done(filter.Group.Value, result);
 				return;
 			}
 			smoothed = smoothed.ToLower();
-			done(filter.Group.Value, inventoryModel.Tags.Value.Any(t => t.ToLower() == smoothed));
+
+			switch (filter.InventoryFilterType.Value)
+			{
+				case InventoryFilterTypes.Inventory:
+					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
+					result = model.Ship.Value.Inventory.HasInventory(i => i.Tags.Value.Any(t => t.ToLower() == smoothed));
+					break;
+				case InventoryFilterTypes.References:
+					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");
+					else result = inventoryModel.Tags.Value.Any(t => t.ToLower() == smoothed);
+					break;
+				default:
+					Debug.LogError("Unrecognized InventoryFilterType: " + filter.InventoryFilterType.Value);
+					break;
+			}
+
+			done(filter.Group.Value, result);
 		}
 		#endregion
 	}
