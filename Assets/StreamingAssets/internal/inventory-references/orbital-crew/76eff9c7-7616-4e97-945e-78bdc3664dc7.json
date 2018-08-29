@@ -3,11 +3,13 @@
     "supportedBodies": [
       "Terrestrial"
     ],
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "84af3d23-d1c6-4bfd-bec1-c17b11c15269",
     "name": "Stock Terrestrial Orbiter",
-    "description": ""
+    "description": "",
+    "tags": []
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Terrestrial Orbiter",
   "metaKeyValues": {
     "InventoryId": "84af3d23-d1c6-4bfd-bec1-c17b11c15269"

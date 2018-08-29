@@ -33,35 +33,52 @@
       "crews": [],
       "resources": [
         {
-          "refillResources": {},
+          "refillResources": {
+            "tags": []
+          },
           "refillLogisticsResources": {
             "rations": 0.1,
-            "fuel": 0.1
+            "fuel": 0.1,
+            "tags": []
           },
           "maximumLogisticsResources": {
             "rations": 1.0,
-            "fuel": 1.0
+            "fuel": 1.0,
+            "tags": []
           },
-          "maximumResources": {},
+          "maximumResources": {
+            "tags": []
+          },
           "slotId": "resource_0"
         }
       ],
       "modules": [],
-      "refillResources": {},
+      "refillResources": {
+        "tags": []
+      },
       "refillLogisticsResources": {
         "rations": 0.1,
-        "fuel": 0.1
+        "fuel": 0.1,
+        "tags": []
       },
       "maximumLogisticsResources": {
         "rations": 1.0,
-        "fuel": 1.0
+        "fuel": 1.0,
+        "tags": []
       },
-      "maximumResources": {}
+      "maximumResources": {
+        "tags": []
+      }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "90a2c3b4-7b41-449f-b23f-86bc201a1729",
-    "name": "Stock Logistics"
+    "name": "Stock Logistics",
+    "tags": [
+      "Stock",
+      "Logistics"
+    ]
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Logistics",
   "metaKeyValues": {
     "InventoryId": "90a2c3b4-7b41-449f-b23f-86bc201a1729"

@@ -159,6 +159,16 @@ namespace LunraGames.SubLight.Models
 		}
 
 		#region Utility
+		public bool HasInventory(string inventoryId)
+		{
+			return HasInventory(i => i.InventoryId.Value == inventoryId);
+		}
+
+		public bool HasInventory(Func<InventoryModel, bool> predicate)
+		{
+			return GetInventoryFirstOrDefault(predicate) != null;
+		}
+
 		public InventoryModel[] GetInventory(Func<InventoryModel, bool> predicate = null)
 		{
 			return GetInventory<InventoryModel>(predicate);

@@ -147,7 +147,21 @@ namespace LunraGamesEditor
 			return clicked;
 		}
 
-		public static string[] StringArray(string name, string[] values, string defaultValue = null)
+		public static string[] StringArray(string name, string[] values, string defaultValue = null, Color? color = null)
+		{
+			BeginVertical(EditorStyles.helpBox, color, color.HasValue);
+			{
+				values = StringArrayValue(
+					name,
+					values,
+					defaultValue
+				);
+			}
+			EndVertical();
+			return values;
+		}
+
+		public static string[] StringArrayValue(string name, string[] values, string defaultValue = null)
 		{
 			if (values == null) throw new ArgumentNullException("values");
 
@@ -192,10 +206,52 @@ namespace LunraGamesEditor
 			T[] values,
 			string primaryReplacemnt = null,
 			T defaultValue = default(T),
-			T[] options = null
+			T[] options = null,
+			Color? color = null
 		) where T : struct, IConvertible
 		{
 			return EnumArray(
+				new GUIContent(name),
+				values,
+				primaryReplacemnt,
+				defaultValue,
+				options,
+				color
+			);
+		}
+
+		public static T[] EnumArray<T>(
+			GUIContent content,
+			T[] values,
+			string primaryReplacemnt = null,
+			T defaultValue = default(T),
+			T[] options = null,
+			Color? color = null
+		) where T : struct, IConvertible
+		{
+			BeginVertical(EditorStyles.helpBox, color, color.HasValue);
+			{
+				values = EnumArrayValue(
+					content,
+					values,
+					primaryReplacemnt,
+					defaultValue,
+					options
+				);
+			}
+			EndVertical();
+			return values;
+		}
+
+		public static T[] EnumArrayValue<T>(
+			string name,
+			T[] values,
+			string primaryReplacemnt = null,
+			T defaultValue = default(T),
+			T[] options = null
+		) where T : struct, IConvertible
+		{
+			return EnumArrayValue(
 				new GUIContent(name),
 				values,
 				primaryReplacemnt,
@@ -204,7 +260,7 @@ namespace LunraGamesEditor
 			);
 		}
 
-		public static T[] EnumArray<T>(
+		public static T[] EnumArrayValue<T>(
 			GUIContent content, 
 			T[] values, 
 			string primaryReplacemnt = null, 

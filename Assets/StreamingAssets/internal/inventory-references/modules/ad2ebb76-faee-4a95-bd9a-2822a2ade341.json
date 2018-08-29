@@ -27,11 +27,18 @@
       "resources": [
         {
           "refillResources": {
-            "rations": -0.02
+            "rations": -0.02,
+            "tags": []
           },
-          "refillLogisticsResources": {},
-          "maximumLogisticsResources": {},
-          "maximumResources": {},
+          "refillLogisticsResources": {
+            "tags": []
+          },
+          "maximumLogisticsResources": {
+            "tags": []
+          },
+          "maximumResources": {
+            "tags": []
+          },
           "index": 7,
           "slotId": "resource_0"
         }
@@ -59,16 +66,27 @@
         }
       ],
       "refillResources": {
-        "rations": -0.02
+        "rations": -0.02,
+        "tags": []
       },
-      "refillLogisticsResources": {},
-      "maximumLogisticsResources": {},
-      "maximumResources": {}
+      "refillLogisticsResources": {
+        "tags": []
+      },
+      "maximumLogisticsResources": {
+        "tags": []
+      },
+      "maximumResources": {
+        "tags": []
+      }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "eccdddb4-553f-4f7a-be7e-b68799839bc8",
-    "name": "Stock Root"
+    "name": "Stock Root",
+    "tags": [
+      "Root"
+    ]
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Root",
   "metaKeyValues": {
     "InventoryId": "eccdddb4-553f-4f7a-be7e-b68799839bc8"

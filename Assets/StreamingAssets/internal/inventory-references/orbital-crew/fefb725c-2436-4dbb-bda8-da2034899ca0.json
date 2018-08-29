@@ -4,11 +4,13 @@
       "Star",
       "Terrestrial"
     ],
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "3442e5dd-00ae-4a1a-bd1c-234e652901d7",
     "name": "Stock Multi Orbiter",
-    "description": ""
+    "description": "",
+    "tags": []
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Multi Orbiter",
   "metaKeyValues": {
     "InventoryId": "3442e5dd-00ae-4a1a-bd1c-234e652901d7"

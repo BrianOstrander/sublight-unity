@@ -272,6 +272,7 @@ namespace LunraGames.SubLight
 			where T : InventoryModel, new()
 		{
 			reference.Model.Value = new T();
+			reference.Model.Value.RandomWeightMultiplier.Value = 1f;
 			reference.Model.Value.InventoryId.Value = reference.SetMetaKey(MetaKeyConstants.InventoryReference.InventoryId, Guid.NewGuid().ToString());
 			reference.Model.Value.Name.Value = string.Empty;
 			SaveLoadService.Save(reference, OnNewReference);

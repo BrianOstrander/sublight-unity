@@ -15,7 +15,7 @@ namespace LunraGamesEditor
 			Paused
 		}
 
-		static int CurrentLevel = 0; // For some reason this has to be zero otherwise bugs may occur on recompile...
+		static int CurrentLevel;
 		static Stack<ChangeCheckStates> ChangeCheckStateStack = new Stack<ChangeCheckStates>();
 		static Stack<bool> ChangeValueStack = new Stack<bool>();
 
@@ -30,7 +30,12 @@ namespace LunraGamesEditor
 					Debug.LogError("Cannot begin a change check in the middle of a pause.");
 					return;
 				}
-				var previous = ChangeValueStack.Pop() || EditorGUI.EndChangeCheck();
+
+				// If anything messes up, it's probably because of the next two lines...
+				var previous = false;
+				try { previous = EditorGUI.EndChangeCheck(); } catch {}
+
+				previous = ChangeValueStack.Pop() || previous;
 				ChangeValueStack.Push(previous);
 			}
 
@@ -44,7 +49,8 @@ namespace LunraGamesEditor
 
 		public static bool EndChangeCheck(ref bool changed)
 		{
-			return changed |= EndChangeCheck();
+			changed = EndChangeCheck() || changed;
+			return changed;
 		}
 
 		public static bool EndChangeCheck()
@@ -62,7 +68,9 @@ namespace LunraGamesEditor
 
 			ChangeCheckStateStack.Pop();
 			CurrentLevel--;
-			return ChangeValueStack.Pop() || EditorGUI.EndChangeCheck();
+			var result = ChangeValueStack.Pop();
+			result = EditorGUI.EndChangeCheck() || result;
+			return result;
 		}
 
 		public static void PauseChangeCheck()
@@ -72,7 +80,8 @@ namespace LunraGamesEditor
 
 			ChangeCheckStateStack.Push(ChangeCheckStates.Paused);
 
-			var current = ChangeValueStack.Pop() || EditorGUI.EndChangeCheck();
+			var current = EditorGUI.EndChangeCheck();
+			current = ChangeValueStack.Pop() || current;
 			ChangeValueStack.Push(current);
 		}
 

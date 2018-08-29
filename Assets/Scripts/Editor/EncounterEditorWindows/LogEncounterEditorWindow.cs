@@ -337,6 +337,9 @@ namespace LunraGames.SubLight
 								case InventoryOperations.AddInstance:
 									OnInventoryLogAddInstance(infoModel, model, operation as AddInstanceOperationModel);
 									break;
+								case InventoryOperations.AddRandomInstance:
+									OnInventoryLogAddRandomInstance(infoModel, model, operation as AddRandomInstanceOperationModel);
+									break;
 								default:
 									Debug.LogError("Unrecognized InventoryOperation: " + operation.Operation);
 									break;
@@ -391,6 +394,15 @@ namespace LunraGames.SubLight
 			operation.InventoryId.Value = EditorGUILayout.TextField("Inventory Id", operation.InventoryId);
 		}
 
+		void OnInventoryLogAddRandomInstance(
+			EncounterInfoModel infoModel,
+			InventoryEncounterLogModel model,
+			AddRandomInstanceOperationModel operation
+		)
+		{
+			EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "Constraints for the selected inventory reference."), operation.Filtering);
+		}
+
 		void OnInventoryLogSpawn(
 			EncounterInfoModel infoModel,
 			InventoryEncounterLogModel model,
@@ -409,6 +421,11 @@ namespace LunraGames.SubLight
 					var addInstance = new AddInstanceOperationModel();
 					addInstance.OperationId.Value = guid;
 					model.Operations.Value = model.Operations.Value.Append(addInstance).ToArray();
+					break;
+				case InventoryOperations.AddRandomInstance:
+					var addRandomInstance = new AddRandomInstanceOperationModel();
+					addRandomInstance.OperationId.Value = guid;
+					model.Operations.Value = model.Operations.Value.Append(addRandomInstance).ToArray();
 					break;
 				default:
 					Debug.LogError("Unrecognized InventoryOperation: " + operation);

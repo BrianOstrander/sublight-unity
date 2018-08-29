@@ -39,15 +39,28 @@
       ],
       "resources": [],
       "modules": [],
-      "refillResources": {},
-      "refillLogisticsResources": {},
-      "maximumLogisticsResources": {},
-      "maximumResources": {}
+      "refillResources": {
+        "tags": []
+      },
+      "refillLogisticsResources": {
+        "tags": []
+      },
+      "maximumLogisticsResources": {
+        "tags": []
+      },
+      "maximumResources": {
+        "tags": []
+      }
     },
+    "randomWeightMultiplier": 1.0,
     "inventoryId": "23c48a72-e35a-44d6-bd7e-29e600a76046",
-    "name": "Stock Orbiter Bay"
+    "name": "Stock Orbiter Bay",
+    "tags": [
+      "Stock",
+      "Bay"
+    ]
   },
-  "version": 4,
+  "version": 7,
   "meta": "Stock Orbiter Bay",
   "metaKeyValues": {
     "InventoryId": "23c48a72-e35a-44d6-bd7e-29e600a76046"

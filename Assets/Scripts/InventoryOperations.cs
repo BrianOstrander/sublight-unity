@@ -19,9 +19,13 @@
 		/// Adds a new instance of an inventory reference with the specified
 		/// InventoryId.
 		/// </summary>
-		AddInstance = 100
+		AddInstance = 100,
+		/// <summary>
+		/// Adds a new instance of an inventory reference within the specified
+		/// constraints.
+		/// </summary>
+		AddRandomInstance = 110
 		// RemoveInstance - Removes one, all, or a specified number of items with the specified InventoryId.
-		// AddRandomInstance - Adds a new instance of an inventory reference within the specified constraints.
 		// RemoveRandomInstance - Removes a random instance of an inventory reference within the specified constraints.
 	}
 }

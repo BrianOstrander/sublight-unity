@@ -11,6 +11,7 @@ namespace LunraGames.SubLight.Models
 	{
 		[JsonProperty] AddResourceOperationModel[] addResources = new AddResourceOperationModel[0];
 		[JsonProperty] AddInstanceOperationModel[] addInstances = new AddInstanceOperationModel[0];
+		[JsonProperty] AddRandomInstanceOperationModel[] addRandomInstances = new AddRandomInstanceOperationModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<InventoryOperationModel[]> Operations; 
@@ -29,6 +30,7 @@ namespace LunraGames.SubLight.Models
 		{
 			var addResourceList = new List<AddResourceOperationModel>();
 			var addInstanceList = new List<AddInstanceOperationModel>();
+			var addRandomInstanceList = new List<AddRandomInstanceOperationModel>();
 
 			foreach (var entry in entries)
 			{
@@ -40,6 +42,9 @@ namespace LunraGames.SubLight.Models
 					case InventoryOperations.AddInstance:
 						addInstanceList.Add(entry as AddInstanceOperationModel);
 						break;
+					case InventoryOperations.AddRandomInstance:
+						addRandomInstanceList.Add(entry as AddRandomInstanceOperationModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized InventoryOperation: " + entry.Operation);
 						break;
@@ -48,11 +53,13 @@ namespace LunraGames.SubLight.Models
 
 			addResources = addResourceList.ToArray();
 			addInstances = addInstanceList.ToArray();
+			addRandomInstances = addRandomInstanceList.ToArray();
 		}
 
 		InventoryOperationModel[] OnGetOperations()
 		{
 			return addResources.Cast<InventoryOperationModel>().Concat(addInstances)
+															   .Concat(addRandomInstances)
 															   .ToArray();
 		}
 		#endregion

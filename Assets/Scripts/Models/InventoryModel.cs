@@ -5,11 +5,13 @@ namespace LunraGames.SubLight.Models
 	public abstract class InventoryModel : Model
 	{
 		[JsonProperty] bool ignore;
+		[JsonProperty] float randomWeightMultiplier;
 		[JsonProperty] string inventoryId;
 		[JsonProperty] string instanceId;
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 		[JsonProperty] string parentSlotId;
+		[JsonProperty] string[] tags = new string[0];
 
 		/// <summary>
 		/// Gets the type of the inventory item.
@@ -38,6 +40,12 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> Ignore;
+		/// <summary>
+		/// This value is multiplied by the random weight. Higher values means
+		/// this item will appear more often. The minimum is zero.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> RandomWeightMultiplier;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> InventoryId;
 		[JsonIgnore]
@@ -53,15 +61,19 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> ParentSlotId;
+		[JsonIgnore]
+		public readonly ListenerProperty<string[]> Tags;
 
 		public InventoryModel()
 		{
 			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
+			RandomWeightMultiplier = new ListenerProperty<float>(value => randomWeightMultiplier = value, () => randomWeightMultiplier);
 			InventoryId = new ListenerProperty<string>(value => inventoryId = value, () => inventoryId);
 			InstanceId = new ListenerProperty<string>(value => instanceId = value, () => instanceId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			ParentSlotId = new ListenerProperty<string>(value => parentSlotId = value, () => parentSlotId);
+			Tags = new ListenerProperty<string[]>(value => tags = value, () => tags);
 		}
 	}
 }

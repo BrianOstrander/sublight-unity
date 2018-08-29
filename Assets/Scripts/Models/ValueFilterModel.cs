@@ -19,12 +19,12 @@ namespace LunraGames.SubLight.Models
 		#region Assigned Values
 		[JsonProperty] bool showValues;
 		[JsonProperty] bool falseByDefault;
-		[JsonProperty]
-		BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
-		[JsonProperty]
-		StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
-		[JsonProperty]
-		EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
+		[JsonProperty] BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
+		[JsonProperty] StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
+		[JsonProperty] EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
+		[JsonProperty] IdInventoryFilterEntryModel[] inventoryIds = new IdInventoryFilterEntryModel[0];
+		[JsonProperty] TagInventoryFilterEntryModel[] inventoryTags = new TagInventoryFilterEntryModel[0];
+
 		#endregion
 
 		#region Derived Values
@@ -54,6 +54,8 @@ namespace LunraGames.SubLight.Models
 			var newBooleanKeyValues = new List<BooleanKeyValueFilterEntryModel>();
 			var newStringKeyValues = new List<StringKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
+			var newInventoryIds = new List<IdInventoryFilterEntryModel>();
+			var newInventoryTags = new List<TagInventoryFilterEntryModel>();
 
 			foreach (var filter in newFilters)
 			{
@@ -68,6 +70,12 @@ namespace LunraGames.SubLight.Models
 					case ValueFilterTypes.EncounterInteraction:
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
 						break;
+					case ValueFilterTypes.InventoryId:
+						newInventoryIds.Add(filter as IdInventoryFilterEntryModel);
+						break;
+					case ValueFilterTypes.InventoryTag:
+						newInventoryTags.Add(filter as TagInventoryFilterEntryModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized FilterType" + filter.FilterType);
 						break;
@@ -77,12 +85,16 @@ namespace LunraGames.SubLight.Models
 			booleanKeyValues = newBooleanKeyValues.ToArray();
 			stringKeyValues = newStringKeyValues.ToArray();
 			encounterInteractions = newEncounterInteractions.ToArray();
+			inventoryIds = newInventoryIds.ToArray();
+			inventoryTags = newInventoryTags.ToArray();
 		}
 
 		IValueFilterEntryModel[] OnGetFilters()
 		{
 			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(stringKeyValues)
 																  .Concat(encounterInteractions)
+																  .Concat(inventoryIds)
+																  .Concat(inventoryTags)
 																  .ToArray();
 		}
 		#endregion
