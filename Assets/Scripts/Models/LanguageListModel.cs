@@ -11,7 +11,26 @@ namespace LunraGames.SubLight.Models
 
 		public void Set(
 			string key,
+			string value,
+			Action<RequestStatus, LanguageDatabaseEdge> done = null
+		)
+		{
+			OnSet(key, null, value, done);
+		}
+
+		public void Set(
+			string key,
 			int order,
+			string value,
+			Action<RequestStatus, LanguageDatabaseEdge> done = null
+		)
+		{
+			OnSet(key, order, value, done);
+		}
+
+		void OnSet(
+			string key,
+			int? order,
 			string value,
 			Action<RequestStatus, LanguageDatabaseEdge> done = null
 		)
@@ -28,10 +47,10 @@ namespace LunraGames.SubLight.Models
 			LanguageDatabaseEdge entry;
 			if (entries.TryGetValue(key, out entry))
 			{
-				entry.Order = order;
+				if (order.HasValue) entry.Order = order.Value;
 				entry.Value = value;
 			}
-			else entries.Add(key, entry = new LanguageDatabaseEdge(order, value));
+			else entries.Add(key, entry = new LanguageDatabaseEdge(order.HasValue ? order.Value : 0, value));
 
 			if (done == null) return;
 

@@ -52,18 +52,11 @@ namespace LunraGames.SubLight.Models
 			OnUpdateLanguageStrings(edges);
 		}
 
-		public void UpdateLanguageStringListener(Action<string, string, Action<string, RequestStatus>> listener)
-		{
-			foreach (var entry in languageStringsListener.Value) entry.ValueChange = listener;
-			OnUpdateLanguageStringListener(listener);
-		}
-
 		protected void AddLanguageStrings(params LanguageStringModel[] entries)
 		{
 			languageStringsListener.Value = languageStringsListener.Value.Concat(entries).ToArray();
 		}
 
 		protected virtual void OnUpdateLanguageStrings(params LanguageDatabaseEdge[] edges) {}
-		protected virtual void OnUpdateLanguageStringListener(Action<string, string, Action<string, RequestStatus>> listener) {}
 	}
 }

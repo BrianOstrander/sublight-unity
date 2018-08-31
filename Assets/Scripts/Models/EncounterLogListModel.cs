@@ -148,11 +148,6 @@ namespace LunraGames.SubLight.Models
 		{
 			foreach (var entry in All.Value) entry.UpdateLanguageStrings(edges);
 		}
-
-		protected override void OnUpdateLanguageStringListener(Action<string, string, Action<string, RequestStatus>> listener)
-		{
-			foreach (var entry in All.Value) entry.UpdateLanguageStringListener(listener);
-		}
 		#endregion
 	}
 }

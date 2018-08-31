@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 		protected Action Enable = ActionExtensions.Empty;
 		protected Action Disable = ActionExtensions.Empty;
 		protected Action Gui = ActionExtensions.Empty;
+		protected Action Save = ActionExtensions.Empty;
 
 		EditorModelMediator editorSaveLoadService;
 		protected IModelMediator SaveLoadService

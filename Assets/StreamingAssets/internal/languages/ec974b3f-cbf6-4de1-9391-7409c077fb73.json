@@ -8,7 +8,11 @@
     "Encounters"
   ],
   "language": {
-    "entries": {}
+    "entries": {
+      "762d792c-423a-4b51-9315-7bf8da941a04": {
+        "Value": "e"
+      }
+    }
   },
   "version": 7,
   "meta": "Core Encounters en-US",

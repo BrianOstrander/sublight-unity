@@ -120,10 +120,5 @@ namespace LunraGames.SubLight.Models
 		{
 			Logs.UpdateLanguageStrings(edges);
 		}
-
-		protected override void OnUpdateLanguageStringListener(Action<string, string, Action<string, RequestStatus>> listener)
-		{
-			logs.UpdateLanguageStringListener(listener);
-		}
 	}
 }

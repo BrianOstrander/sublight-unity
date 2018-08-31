@@ -61,6 +61,7 @@ namespace LunraGames.SubLight
 
 			Enable += OnHomeEnable;
 			Disable += OnHomeDisable;
+			Save += SaveSelectedEncounter;
 		}
 
 		void OnHomeEnable()
@@ -196,24 +197,28 @@ namespace LunraGames.SubLight
 				{
 					GUILayout.Label("Editing: " + encounterName);
 					GUI.enabled = selectedEncounterModified;
-					if (GUILayout.Button("Save", GUILayout.Width(64f))) SaveSelectedEncounter(selectedEncounter);
+					if (GUILayout.Button("Save", GUILayout.Width(64f))) Save();
 					GUI.enabled = true;
 				}
 				GUILayout.EndHorizontal();
 				homeSelectedToolbar.Value = GUILayout.Toolbar(Mathf.Min(homeSelectedToolbar, names.Length - 1), names);
 
-				switch(homeSelectedToolbar.Value)
+				EditorGUILayoutLanguageString.BeginLanguage(LanguageDatabase);
 				{
-					case 0:
-						OnHomeSelectedGeneral(model);
-						break;
-					case 1:
-						OnHomeSelectedCrewLogs(model);
-						break;
-					default:
-						EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
-						break;
+					switch (homeSelectedToolbar.Value)
+					{
+						case 0:
+							OnHomeSelectedGeneral(model);
+							break;
+						case 1:
+							OnHomeSelectedCrewLogs(model);
+							break;
+						default:
+							EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
+							break;
+					}
 				}
+				EditorGUILayoutLanguageString.EndLanguage();
 			}
 			GUILayout.EndVertical();
 		}
@@ -443,9 +448,10 @@ namespace LunraGames.SubLight
 			SaveLoadService.Load<EncounterInfoModel>(model, OnLoadSelectedEncounter);
 		}
 
-		void SaveSelectedEncounter(EncounterInfoModel model)
+		void SaveSelectedEncounter()
 		{
-			SaveLoadService.Save(model, OnSaveSelectedEncounter, false);
+			if (selectedEncounter == null) return;
+			SaveLoadService.Save(selectedEncounter, OnSaveSelectedEncounter, false);
 		}
 
 		void OnSaveSelectedEncounter(SaveLoadRequest<EncounterInfoModel> result)

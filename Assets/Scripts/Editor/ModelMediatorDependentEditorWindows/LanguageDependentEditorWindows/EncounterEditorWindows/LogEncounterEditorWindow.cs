@@ -151,7 +151,7 @@ namespace LunraGames.SubLight
 			model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header <old>", model.Header.Value);
 			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
 
-			model._Header.Value.Value = EditorGUILayoutExtensions.TextDynamic("Header", model._Header.Value.Value);
+			EditorGUILayoutLanguageString.Field("Header", model._Header);
 
 			OnLinearLog(infoModel, model);
 		}

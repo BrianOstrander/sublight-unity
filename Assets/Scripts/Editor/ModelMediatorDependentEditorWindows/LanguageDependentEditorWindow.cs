@@ -38,11 +38,14 @@ namespace LunraGames.SubLight
 		RequestStatus languageListenerStatus;
 		Model languageListenerTarget;
 
+		protected LanguageDatabaseModel LanguageDatabase { get { return selectedLanguageDependent; } }
+
 		public LanguageDependentEditorWindow(string keyPrefix) : base(keyPrefix)
 		{
 			languageDependentSelectedPath = new EditorPrefsString(KeyPrefix + "LanguageDependentSelectedPath");
 			Enable += OnLanguageDependentEnable;
 			Gui += OnLanguageDependentGui;
+			Save += SaveSelectedLanguageDependent;
 		}
 
 		protected void CreateNewLanguageListener(Model target)
@@ -86,7 +89,6 @@ namespace LunraGames.SubLight
 			{
 				case RequestStatus.Cancel:
 					languageListenerTarget.UpdateLanguageStrings(selectedLanguageDependent.Language.Edges);
-					languageListenerTarget.UpdateLanguageStringListener(OnLanguageValueChange);
 					languageListenerStatus = RequestStatus.Success;
 					break;
 			}
@@ -138,6 +140,25 @@ namespace LunraGames.SubLight
 			selectedLanguageDependentModified = false;
 			languageDependentSelectedPath.Value = model.Path;
 			selectedLanguageDependent = model;
+		}
+
+		void SaveSelectedLanguageDependent()
+		{
+			if (selectedLanguageDependent == null) return;
+			SaveLoadService.Save(selectedLanguageDependent, OnSaveSelectedLanguageDependent, false);
+		}
+
+		void OnSaveSelectedLanguageDependent(SaveLoadRequest<LanguageDatabaseModel> result)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				return;
+			}
+			AssetDatabase.Refresh();
+			selectedLanguageDependent = result.TypedModel;
+			selectedLanguageDependentModified = false;
+			saveLanguageDependentListStatus = RequestStatus.Cancel;
 		}
 
 		void OnDeselect()
@@ -195,11 +216,6 @@ namespace LunraGames.SubLight
 			if (Event.current.type == EventType.Layout) selectedLanguageDependentLastWarning = currentWarning = (selection == null);
 
 			if (currentWarning) EditorGUILayout.HelpBox("A language must be selected.", MessageType.Error);
-		}
-
-		void OnLanguageValueChange(string key, string newValue, Action<string, RequestStatus> done)
-		{
-			Debug.Log("someone is asking to change key " + key + " to " + newValue);
 		}
 		#endregion
 	}
