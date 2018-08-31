@@ -20,7 +20,12 @@ namespace LunraGames.SubLight
 		InteractedEncounterInfoListModel interactedEncounters;
 		bool currentlySaving;
 
-		public EncounterService(IModelMediator modelMediator, ILogService logger, CallbackService callbacks, ValueFilterService valueFilter)
+		public EncounterService(
+			IModelMediator modelMediator,
+			ILogService logger,
+			CallbackService callbacks,
+			ValueFilterService valueFilter
+		)
 		{
 			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
 			if (logger == null) throw new ArgumentNullException("logger");

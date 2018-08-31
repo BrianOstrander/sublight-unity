@@ -13,8 +13,9 @@ namespace LunraGames.SubLight
 					{ SaveTypes.EncounterInfo, true },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, true },
-					{ SaveTypes.OrbitalCrewReference, true }
+					{ SaveTypes.OrbitalCrewReference, true },
 					// --
+					{ SaveTypes.LanguageDatabase, true }
 				};
 			}
 		}

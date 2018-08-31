@@ -34,6 +34,7 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(InitializeInventoryReferences);
 			App.SM.PushBlocking(InitializeListeners);
 			App.SM.PushBlocking(InitializeGlobalKeyValues);
+			App.SM.PushBlocking(InitializeLanguage);
 
 			if (DevPrefs.WipeGameSavesOnStart) App.SM.PushBlocking(WipeGameSaves);
 		}
@@ -219,6 +220,21 @@ namespace LunraGames.SubLight
 						done();
 					}
 					else App.Restart("Initializing Global KVs failed with status " + status);
+				}
+			);
+		}
+
+		void InitializeLanguage(Action done)
+		{
+			App.Language.Initialize(
+				status => 
+				{
+					if (status == RequestStatus.Success)
+					{
+						App.Log("Language Initialized", LogTypes.Initialization);
+						done();
+					}
+					else App.Restart("Initializing Language failed with status " + status);
 				}
 			);
 		}

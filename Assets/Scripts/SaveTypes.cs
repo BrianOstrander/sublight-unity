@@ -17,7 +17,9 @@
 
 		// Inventory References
 		ModuleReference = 60,
-		OrbitalCrewReference = 70
+		OrbitalCrewReference = 70,
+
+		LanguageDatabase = 100
 	}
 
 	public static class SaveTypeValidator

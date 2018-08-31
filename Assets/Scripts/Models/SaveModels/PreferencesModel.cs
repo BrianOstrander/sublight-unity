@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -8,6 +10,12 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] float cameraSystemDragRotateScalar = 64f;
 		[JsonProperty] float sectorUnloadRadius = 1f;
 		[JsonProperty] bool encounterLogsAutoNext;
+		[JsonProperty]
+		Dictionary<string, int> languageTagOrder = new Dictionary<string, int>
+		{
+			{ "English", 1 },
+			{ "Dev", 0 }
+		};
 
 		/// <summary>
 		/// The scalar applied to dragging around the camera in the system area.
@@ -31,6 +39,15 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> EncounterLogsAutoNext;
 
+		[JsonIgnore]
+		readonly ListenerProperty<Dictionary<string, int>> languageTagOrderListener;
+		/// <summary>
+		/// The fallback order of language database models with the specified
+		/// tags. Higher languages are selected first.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ReadonlyProperty<Dictionary<string, int>> LanguageTagOrder;
+
 		public PreferencesModel()
 		{
 			SaveType = SaveTypes.Preferences;
@@ -53,6 +70,12 @@ namespace LunraGames.SubLight.Models
 			EncounterLogsAutoNext = new ListenerProperty<bool>(
 				value => encounterLogsAutoNext = value,
 				() => encounterLogsAutoNext
+			);
+
+			LanguageTagOrder = new ReadonlyProperty<Dictionary<string, int>>(
+				value => languageTagOrder = value,
+				() => languageTagOrder,
+				out languageTagOrderListener
 			);
 		}
 	}

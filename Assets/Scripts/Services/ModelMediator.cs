@@ -102,6 +102,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.ModuleReference: return typeof(ModuleReferenceModel);
 				case SaveTypes.OrbitalCrewReference: return typeof(OrbitalCrewReferenceModel);
 				// --
+				case SaveTypes.LanguageDatabase: return typeof(LanguageDatabaseModel);
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -119,6 +120,7 @@ namespace LunraGames.SubLight
 			if (type == typeof(ModuleReferenceModel)) return SaveTypes.ModuleReference;
 			if (type == typeof(OrbitalCrewReferenceModel)) return SaveTypes.OrbitalCrewReference;
 			// --
+			if (type == typeof(LanguageDatabaseModel)) return SaveTypes.LanguageDatabase;
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 

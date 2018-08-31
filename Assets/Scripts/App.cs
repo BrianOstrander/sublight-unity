@@ -71,6 +71,9 @@ namespace LunraGames.SubLight
 		ValueFilterService valueFilter;
 		public static ValueFilterService ValueFilter { get { return instance.valueFilter; } }
 
+		LanguageDatabaseService language;
+		public static LanguageDatabaseService Language { get { return instance.language; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -167,6 +170,8 @@ namespace LunraGames.SubLight
 				ValueFilter,
 				CurrentPreferences
 			);
+
+			language = new LanguageDatabaseService(M, Logging, Callbacks, CurrentPreferences);
 		}
 
 		public static void Restart(string message)

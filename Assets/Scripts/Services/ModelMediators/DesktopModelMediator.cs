@@ -36,8 +36,9 @@ namespace LunraGames.SubLight
 					{ SaveTypes.GlobalKeyValues, -1 },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, 4 },
-					{ SaveTypes.OrbitalCrewReference, 4 }
+					{ SaveTypes.OrbitalCrewReference, 4 },
 					// --
+					{ SaveTypes.LanguageDatabase, 7 }
 				};
 			}
 		}
@@ -56,8 +57,9 @@ namespace LunraGames.SubLight
 					{ SaveTypes.GlobalKeyValues, true },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, false },
-					{ SaveTypes.OrbitalCrewReference, false }
+					{ SaveTypes.OrbitalCrewReference, false },
 					// --
+					{ SaveTypes.LanguageDatabase, false }
 				};
 			}
 		}
@@ -105,6 +107,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.ModuleReference: return InventoryReferencePath("modules");
 				case SaveTypes.OrbitalCrewReference: return InventoryReferencePath("orbital-crew");
 				// --
+				case SaveTypes.LanguageDatabase: return Path.Combine(InternalPath, "languages");
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
