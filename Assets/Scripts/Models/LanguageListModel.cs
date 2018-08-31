@@ -39,18 +39,19 @@ namespace LunraGames.SubLight.Models
 
 			if (string.IsNullOrEmpty(value))
 			{
-				entries.Remove(key);
+				Entries.Remove(key);
 				if (done != null) done(RequestStatus.Success, default(LanguageDatabaseEdge));
 				return;
 			}
 
 			LanguageDatabaseEdge entry;
-			if (entries.TryGetValue(key, out entry))
+			if (Entries.TryGetValue(key, out entry))
 			{
 				if (order.HasValue) entry.Order = order.Value;
 				entry.Value = value;
+				Entries[key] = entry;
 			}
-			else entries.Add(key, entry = new LanguageDatabaseEdge(order.HasValue ? order.Value : 0, value));
+			else Entries.Add(key, entry = new LanguageDatabaseEdge(order.HasValue ? order.Value : 0, value));
 
 			if (done == null) return;
 
@@ -64,7 +65,7 @@ namespace LunraGames.SubLight.Models
 
 			LanguageDatabaseEdge entry = default(LanguageDatabaseEdge);
 			var result = RequestStatus.Failure;
-			if (entries.TryGetValue(key, out entry))
+			if (Entries.TryGetValue(key, out entry))
 			{
 				entry = entry.Duplicate(key);
 				result = RequestStatus.Success;
@@ -81,10 +82,10 @@ namespace LunraGames.SubLight.Models
 		{
 			if (list == null) throw new ArgumentNullException("list");
 
-			foreach (var kv in list.entries)
+			foreach (var kv in list.Entries)
 			{
 				LanguageDatabaseEdge entry;
-				if (entries.TryGetValue(kv.Key, out entry))
+				if (Entries.TryGetValue(kv.Key, out entry))
 				{
 					if (entry.Order < order)
 					{
@@ -92,7 +93,7 @@ namespace LunraGames.SubLight.Models
 						entry.Value = kv.Value.Value;
 					}
 				}
-				else entries.Add(kv.Key, new LanguageDatabaseEdge(null, order, kv.Value.Value));
+				else Entries.Add(kv.Key, new LanguageDatabaseEdge(null, order, kv.Value.Value));
 			}
 
 			if (done != null) done();

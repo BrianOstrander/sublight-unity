@@ -220,6 +220,14 @@ namespace LunraGames.SubLight
 			if (Event.current.type == EventType.Layout) selectedLanguageDependentLastWarning = currentWarning = (selection == null);
 
 			if (currentWarning) EditorGUILayout.HelpBox("A language must be selected.", MessageType.Error);
+
+			if (GUILayout.Button("Save lang")) SaveSelectedLanguageDependent();
+		}
+
+		void OnSetKey(string key, string value)
+		{
+			if (selectedLanguageDependent == null) return;
+			selectedLanguageDependent.Language.Set(key, value);
 		}
 		#endregion
 	}

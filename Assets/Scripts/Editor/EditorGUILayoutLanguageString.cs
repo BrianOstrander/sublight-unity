@@ -26,7 +26,6 @@ namespace LunraGames.SubLight
 
 		public static void Field(GUIContent content, LanguageStringModel model)
 		{
-			content.tooltip = model.Key.Value+" "+model.Value.Value+" "+model.lol;
 			BeginCheck(model);
 			{
 				var original = model.Value.Value;

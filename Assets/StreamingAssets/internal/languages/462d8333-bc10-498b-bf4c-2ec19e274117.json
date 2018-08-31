@@ -1,0 +1,21 @@
+{
+  "languageId": "d752bc4a-23a2-4410-96ac-1c495b02ffd1",
+  "languageTag": "en-US",
+  "name": "Core Interface en-US",
+  "tags": [
+    "en",
+    "en-US",
+    "Interface"
+  ],
+  "language": {
+    "entries": {}
+  },
+  "version": 7,
+  "meta": "Core Interface en-US",
+  "metaKeyValues": {
+    "LanguageId": "d752bc4a-23a2-4410-96ac-1c495b02ffd1"
+  },
+  "created": "2018-08-31T15:55:35.866862-07:00",
+  "modified": "2018-08-31T15:55:35.866862-07:00",
+  "SaveType": "LanguageDatabase"
+}
