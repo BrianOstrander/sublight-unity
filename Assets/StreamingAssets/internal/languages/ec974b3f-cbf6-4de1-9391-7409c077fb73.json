@@ -1,0 +1,21 @@
+{
+  "languageId": "0943ca61-b2dd-4f73-a97f-1de3ae9ec4f8",
+  "languageTag": "en-US",
+  "name": "Core Encounters en-US",
+  "tags": [
+    "en",
+    "en-US",
+    "Encounters"
+  ],
+  "language": {
+    "entries": {}
+  },
+  "version": 7,
+  "meta": "Core Encounters en-US",
+  "metaKeyValues": {
+    "LanguageId": "0943ca61-b2dd-4f73-a97f-1de3ae9ec4f8"
+  },
+  "created": "2018-08-30T18:53:08.00169-07:00",
+  "modified": "2018-08-30T18:53:08.00169-07:00",
+  "SaveType": "LanguageDatabase"
+}

@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public partial class EncounterEditorWindow : EditorWindow
+	public partial class LanguageEditorWindow : EditorWindow
 	{
-		const string KeyPrefix = "LG_SF_EncounterEditor_";
+		const string KeyPrefix = "LG_SF_LanguageEditor_";
 
 		public enum States
 		{
@@ -20,9 +20,9 @@ namespace LunraGames.SubLight
 		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
 
 		EditorModelMediator editorSaveLoadService;
-		IModelMediator SaveLoadService 
+		IModelMediator SaveLoadService
 		{
-			get 
+			get
 			{
 				if (editorSaveLoadService == null)
 				{
@@ -39,10 +39,10 @@ namespace LunraGames.SubLight
 			Debug.LogError("Editor time save load service returned: " + status);
 		}
 
-		[MenuItem("Window/Space Farm/Encounter Editor")]
+		[MenuItem("Window/SubLight/Language Editor")]
 		static void Initialize()
 		{
-			GetWindow(typeof(EncounterEditorWindow), false, "Encounter Editor").Show();
+			GetWindow(typeof(LanguageEditorWindow), false, "Language Editor").Show();
 		}
 
 		void OnEnable()

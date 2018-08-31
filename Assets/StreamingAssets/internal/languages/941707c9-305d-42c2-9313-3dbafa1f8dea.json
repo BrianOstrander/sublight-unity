@@ -1,0 +1,21 @@
+{
+  "languageId": "eb86b588-4c3f-4659-9adb-bf71133fb8b0",
+  "languageTag": "en-US",
+  "name": "Core Inventory en-US",
+  "tags": [
+    "en",
+    "en-US",
+    "Inventory"
+  ],
+  "language": {
+    "entries": {}
+  },
+  "version": 7,
+  "meta": "Core Inventory en-US",
+  "metaKeyValues": {
+    "LanguageId": "eb86b588-4c3f-4659-9adb-bf71133fb8b0"
+  },
+  "created": "2018-08-30T18:52:58.909305-07:00",
+  "modified": "2018-08-30T18:52:58.909305-07:00",
+  "SaveType": "LanguageDatabase"
+}

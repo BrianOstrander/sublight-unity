@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public partial class InventoryReferenceEditorWindow : EditorWindow
+	public partial class EncounterEditorWindow : EditorWindow
 	{
-		const string KeyPrefix = "LG_SF_InventoryReferenceEditor_";
+		const string KeyPrefix = "LG_SF_EncounterEditor_";
 
 		public enum States
 		{
@@ -20,9 +20,9 @@ namespace LunraGames.SubLight
 		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
 
 		EditorModelMediator editorSaveLoadService;
-		IModelMediator SaveLoadService
+		IModelMediator SaveLoadService 
 		{
-			get
+			get 
 			{
 				if (editorSaveLoadService == null)
 				{
@@ -33,18 +33,16 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		Action beforeSave;
-
 		void OnSaveLoadInitialized(RequestStatus status)
 		{
 			if (status == RequestStatus.Success) return;
 			Debug.LogError("Editor time save load service returned: " + status);
 		}
 
-		[MenuItem("Window/SubLight/Inventory Reference Editor")]
+		[MenuItem("Window/SubLight/Encounter Editor")]
 		static void Initialize()
 		{
-			GetWindow(typeof(InventoryReferenceEditorWindow), false, "Inventory Reference Editor").Show();
+			GetWindow(typeof(EncounterEditorWindow), false, "Encounter Editor").Show();
 		}
 
 		void OnEnable()

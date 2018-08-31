@@ -165,6 +165,11 @@ namespace LunraGames.SubLight
 					OnUpdateTagsLoad(loaded, remaining, done);
 					return;
 				}
+				if (result.TypedModel.Ignore.Value)
+				{
+					OnUpdateTagsLoad(loaded, remaining, done);
+					return;
+				}
 				current.Loaded = result.TypedModel;
 				loaded.Add(current);
 				OnUpdateTagsLoad(loaded, remaining, done);

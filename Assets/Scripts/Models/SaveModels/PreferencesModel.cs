@@ -13,7 +13,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty]
 		Dictionary<string, int> languageTagOrder = new Dictionary<string, int>
 		{
-			{ "English", 1 },
+			{ "en-US", 2 },
+			{ "en", 1 },
 			{ "Dev", 0 }
 		};
 
