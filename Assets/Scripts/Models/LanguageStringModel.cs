@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Models
 	public class LanguageStringModel : Model
 	{
 		[JsonProperty] string key = Guid.NewGuid().ToString();
+
 		string value;
 
 		[JsonIgnore]
@@ -17,6 +18,9 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<string> Value;
 		[JsonIgnore]
 		public bool HasUnsavedValue;
+
+		[JsonIgnore]
+		public string lol { get { return value; } }
 
 		public LanguageStringModel()
 		{

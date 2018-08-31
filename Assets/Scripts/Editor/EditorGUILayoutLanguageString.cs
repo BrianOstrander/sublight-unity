@@ -21,25 +21,22 @@ namespace LunraGames.SubLight
 
 		public static void Field(string name, LanguageStringModel model)
 		{
+			Field(new GUIContent(name), model);
+		}
+
+		public static void Field(GUIContent content, LanguageStringModel model)
+		{
+			content.tooltip = model.Key.Value+" "+model.Value.Value+" "+model.lol;
 			BeginCheck(model);
 			{
 				var original = model.Value.Value;
-				var result = EditorGUILayoutExtensions.TextDynamic(name, model.Value.Value);
+				var result = EditorGUILayoutExtensions.TextDynamic(content, original);
 				if (original != result || model.HasUnsavedValue)
 				{
 					model.Value.Value = result;
 					model.HasUnsavedValue = Current == null;
 					if (Current != null) Current.Language.Set(model.Key.Value, result);
 				}
-			}
-			EndCheck();
-		}
-
-		public static void Field(GUIContent content, LanguageStringModel model, Action<string, string> onChange)
-		{
-			BeginCheck(model);
-			{
-				EditorGUILayout.HelpBox("lol not done", MessageType.Error);
 			}
 			EndCheck();
 		}

@@ -131,7 +131,11 @@ namespace LunraGames.SubLight
 		void OnLoadLanguageDependentSelected(SaveLoadRequest<LanguageDatabaseModel> result)
 		{
 			selectedLanguageDependentStatus = result.Status;
-			if (result.Status != RequestStatus.Success)
+			if (result.Status == RequestStatus.Success)
+			{
+				languageListenerStatus = RequestStatus.Cancel;
+			}
+			else
 			{
 				Debug.LogError(result.Error);
 				return;

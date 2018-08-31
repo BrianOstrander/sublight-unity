@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.Serialization;
 
 using Newtonsoft.Json;
 
@@ -38,16 +39,23 @@ namespace LunraGames.SubLight.Models
 			);
 		}
 
+		/// <summary>
+		/// Don't know why I need this but I do, without this, something to do
+		/// with serialization in newtonsoft.
+		/// </summary>
+		[OnDeserialized]
+		void RegisterLanguageStrings(StreamingContext context)
+		{
+			OnRegisterLanguageStrings();
+		}
+
 		public void UpdateLanguageStrings(params LanguageDatabaseEdge[] edges)
 		{
 			foreach (var entry in languageStringsListener.Value)
 			{
-				try
-				{
-					var edge = edges.First(e => e.Key == entry.Key.Value);
-					entry.Value.Value = edge.Value;
-				}
-				catch (InvalidOperationException) { continue; }
+				// Edges are structs, so the default value will assign a null value.
+				var edge = edges.FirstOrDefault(e => e.Key == entry.Key.Value);
+				entry.Value.Value = edge.Value;
 			}
 			OnUpdateLanguageStrings(edges);
 		}
@@ -58,5 +66,6 @@ namespace LunraGames.SubLight.Models
 		}
 
 		protected virtual void OnUpdateLanguageStrings(params LanguageDatabaseEdge[] edges) {}
+		protected virtual void OnRegisterLanguageStrings() {}
 	}
 }

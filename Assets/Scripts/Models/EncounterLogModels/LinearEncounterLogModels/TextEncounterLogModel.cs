@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -23,7 +22,10 @@ namespace LunraGames.SubLight.Models
 		{
 			Header = new ListenerProperty<string>(value => header = value, () => header);
 			Message = new ListenerProperty<string>(value => message = value, () => message);
+		}
 
+		protected override void OnRegisterLanguageStrings()
+		{
 			AddLanguageStrings(_Header);
 		}
 	}
