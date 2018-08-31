@@ -143,6 +143,16 @@ namespace LunraGames.SubLight.Models
 													 .Concat(encyclopediaLogs)
 													 .ToArray();
 		}
+
+		protected override void OnUpdateLanguageStrings(params LanguageDatabaseEdge[] edges)
+		{
+			foreach (var entry in All.Value) entry.UpdateLanguageStrings(edges);
+		}
+
+		protected override void OnUpdateLanguageStringListener(Action<string, string, Action<string, RequestStatus>> listener)
+		{
+			foreach (var entry in All.Value) entry.UpdateLanguageStringListener(listener);
+		}
 		#endregion
 	}
 }

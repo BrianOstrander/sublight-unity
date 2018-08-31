@@ -81,5 +81,15 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public Dictionary<string, LanguageDatabaseEdge> Entries { get { return entries; } }
+		[JsonIgnore]
+		public LanguageDatabaseEdge[] Edges
+		{
+			get
+			{
+				var list = new List<LanguageDatabaseEdge>();
+				foreach (var kv in Entries) list.Add(kv.Value.Duplicate(kv.Key));
+				return list.ToArray();
+			}
+		}
 	}
 }

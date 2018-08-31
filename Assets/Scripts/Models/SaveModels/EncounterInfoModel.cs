@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -113,6 +114,16 @@ namespace LunraGames.SubLight.Models
 			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
 			AssignedToBody = new ListenerProperty<bool>(value => assignedToBody = value, () => assignedToBody);
 			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
+		}
+
+		protected override void OnUpdateLanguageStrings(params LanguageDatabaseEdge[] edges)
+		{
+			Logs.UpdateLanguageStrings(edges);
+		}
+
+		protected override void OnUpdateLanguageStringListener(Action<string, string, Action<string, RequestStatus>> listener)
+		{
+			logs.UpdateLanguageStringListener(listener);
 		}
 	}
 }

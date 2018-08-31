@@ -2,9 +2,9 @@
 {
 	public enum RequestStatus
 	{
-		Unknown,
-		Success,
-		Failure,
-		Cancel
+		Unknown = 0,
+		Success = 10,
+		Failure = 20,
+		Cancel = 30
 	}
 }

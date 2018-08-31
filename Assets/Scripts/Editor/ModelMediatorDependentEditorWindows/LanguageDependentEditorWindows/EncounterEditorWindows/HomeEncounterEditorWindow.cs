@@ -39,7 +39,16 @@ namespace LunraGames.SubLight
 		// Success: Loaded
 		// Failure: Deselected or failed to load
 		RequestStatus selectedEncounterStatus;
-		EncounterInfoModel selectedEncounter;
+		EncounterInfoModel _selectedEncounter;
+		EncounterInfoModel selectedEncounter
+		{
+			get { return _selectedEncounter; }
+			set
+			{
+				_selectedEncounter = value;
+				CreateNewLanguageListener(_selectedEncounter);
+			}
+		}
 		bool selectedEncounterModified;
 
 		void OnHomeConstruct()

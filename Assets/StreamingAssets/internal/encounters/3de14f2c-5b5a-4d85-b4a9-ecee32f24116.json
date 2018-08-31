@@ -1,0 +1,42 @@
+{
+  "orderWeight": 999.0,
+  "randomWeightMultiplier": 1.0,
+  "encounterId": "5e03f2b4-e3d8-4ad8-a455-826bb59dba9f",
+  "name": "Lang Test",
+  "trigger": "Automatic",
+  "filtering": {
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": [],
+    "inventoryIds": [],
+    "inventoryTags": []
+  },
+  "validSystems": [],
+  "validBodies": [],
+  "logs": {
+    "textLogs": [
+      {
+        "_header": {
+          "key": "762d792c-423a-4b51-9315-7bf8da941a04"
+        },
+        "beginning": true,
+        "ending": true,
+        "logId": "44e2893e-bfa4-4588-af51-78c0b2e7ad88",
+        "name": " "
+      }
+    ],
+    "keyValueLogs": [],
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": []
+  },
+  "version": 7,
+  "meta": "Lang Test",
+  "metaKeyValues": {
+    "EncounterId": "5e03f2b4-e3d8-4ad8-a455-826bb59dba9f"
+  },
+  "created": "2018-08-31T11:04:56.594119-07:00",
+  "modified": "2018-08-31T11:04:56.594119-07:00",
+  "SaveType": "EncounterInfo"
+}

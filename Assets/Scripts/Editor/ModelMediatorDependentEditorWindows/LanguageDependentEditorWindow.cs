@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEditor;
@@ -30,11 +31,24 @@ namespace LunraGames.SubLight
 		bool selectedLanguageDependentModified;
 		bool selectedLanguageDependentLastWarning;
 
+		// Unknown: Not yet requested
+		// Cancel: Qued for Query
+		// Success: Has sent initial edges
+		// Failure: No target
+		RequestStatus languageListenerStatus;
+		Model languageListenerTarget;
+
 		public LanguageDependentEditorWindow(string keyPrefix) : base(keyPrefix)
 		{
 			languageDependentSelectedPath = new EditorPrefsString(KeyPrefix + "LanguageDependentSelectedPath");
 			Enable += OnLanguageDependentEnable;
 			Gui += OnLanguageDependentGui;
+		}
+
+		protected void CreateNewLanguageListener(Model target)
+		{
+			languageListenerTarget = target;
+			languageListenerStatus = target == null ? RequestStatus.Failure : RequestStatus.Cancel;
 		}
 
 		#region Events
@@ -58,9 +72,23 @@ namespace LunraGames.SubLight
 
 			switch (selectedLanguageDependentStatus)
 			{
+				case RequestStatus.Success:
+					break;
 				case RequestStatus.Cancel:
 					LoadLanguageDependentSelected(saveLanguageDependentList.FirstOrDefault(m => m.Path == languageDependentSelectedPath.Value));
 					return;
+				default:
+					return;
+			}
+			// Everything loaded, time to go!
+
+			switch (languageListenerStatus)
+			{
+				case RequestStatus.Cancel:
+					languageListenerTarget.UpdateLanguageStrings(selectedLanguageDependent.Language.Edges);
+					languageListenerTarget.UpdateLanguageStringListener(OnLanguageValueChange);
+					languageListenerStatus = RequestStatus.Success;
+					break;
 			}
 		}
 
@@ -167,6 +195,11 @@ namespace LunraGames.SubLight
 			if (Event.current.type == EventType.Layout) selectedLanguageDependentLastWarning = currentWarning = (selection == null);
 
 			if (currentWarning) EditorGUILayout.HelpBox("A language must be selected.", MessageType.Error);
+		}
+
+		void OnLanguageValueChange(string key, string newValue, Action<string, RequestStatus> done)
+		{
+			Debug.Log("someone is asking to change key " + key + " to " + newValue);
 		}
 		#endregion
 	}
