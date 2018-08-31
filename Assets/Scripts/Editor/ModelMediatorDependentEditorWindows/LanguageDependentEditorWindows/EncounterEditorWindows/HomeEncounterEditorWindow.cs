@@ -21,11 +21,11 @@ namespace LunraGames.SubLight
 			Selected = 20
 		}
 
-		EditorPrefsFloat homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
-		EditorPrefsFloat homeCrewLogsScroll = new EditorPrefsFloat(KeyPrefix + "CrewLogsScroll");
-		EditorPrefsString homeSelectedEncounterPath = new EditorPrefsString(KeyPrefix + "HomeSelectedEncounter");
-		EditorPrefsEnum<HomeStates> homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
-		EditorPrefsInt homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+		EditorPrefsFloat homeLeftBarScroll;
+		EditorPrefsFloat homeCrewLogsScroll;
+		EditorPrefsString homeSelectedEncounterPath;
+		EditorPrefsEnum<HomeStates> homeState;
+		EditorPrefsInt homeSelectedToolbar;
 
 		// Unknown: Query in progress
 		// Cancel: Qued for Query
@@ -41,6 +41,18 @@ namespace LunraGames.SubLight
 		RequestStatus selectedEncounterStatus;
 		EncounterInfoModel selectedEncounter;
 		bool selectedEncounterModified;
+
+		void OnHomeConstruct()
+		{
+			homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
+			homeCrewLogsScroll = new EditorPrefsFloat(KeyPrefix + "CrewLogsScroll");
+			homeSelectedEncounterPath = new EditorPrefsString(KeyPrefix + "HomeSelectedEncounter");
+			homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
+			homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+
+			Enable += OnHomeEnable;
+			Disable += OnHomeDisable;
+		}
 
 		void OnHomeEnable()
 		{
@@ -131,6 +143,8 @@ namespace LunraGames.SubLight
 		{
 			GUILayout.BeginVertical(GUILayout.Width(300f));
 			{
+				GUILayout.Space(4f);
+				LanguageSelector();
 				GUILayout.BeginHorizontal();
 				{
 					if (GUILayout.Button("New")) NewEncounter();

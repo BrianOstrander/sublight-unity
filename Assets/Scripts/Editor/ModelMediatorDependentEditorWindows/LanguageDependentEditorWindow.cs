@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
 
+using UnityEditor;
 using UnityEngine;
 
 using LunraGamesEditor;
@@ -26,8 +28,9 @@ namespace LunraGames.SubLight
 		RequestStatus selectedLanguageDependentStatus;
 		LanguageDatabaseModel selectedLanguageDependent;
 		bool selectedLanguageDependentModified;
+		bool selectedLanguageDependentLastWarning;
 
-		public LanguageDependentEditorWindow()
+		public LanguageDependentEditorWindow(string keyPrefix) : base(keyPrefix)
 		{
 			languageDependentSelectedPath = new EditorPrefsString(KeyPrefix + "LanguageDependentSelectedPath");
 			Enable += OnLanguageDependentEnable;
@@ -111,10 +114,59 @@ namespace LunraGames.SubLight
 
 		void OnDeselect()
 		{
-			
 			selectedLanguageDependentStatus = RequestStatus.Failure;
 			selectedLanguageDependent = null;
 			selectedLanguageDependentModified = false;
+		}
+
+		protected void LanguageSelector()
+		{
+			switch (saveLanguageDependentListStatus)
+			{
+				case RequestStatus.Success: break;
+				default:
+					GUILayout.Label("Loading Languages...");
+					return;
+			}
+
+			var labels = new List<string>(new string[] { "- Select Language -"});
+			var values = new List<SaveModel>(new SaveModel[] { null });
+
+			foreach (var language in saveLanguageDependentList)
+			{
+				labels.Add(language.Meta.Value);
+				values.Add(language);
+			}
+
+			var index = 0;
+			if (selectedLanguageDependentStatus == RequestStatus.Success)
+			{
+				for (var i = 0; i < values.Count; i++)
+				{
+					if (values[i] == null) continue;
+					if (selectedLanguageDependent.LanguageId.Value == values[i].GetMetaKey(MetaKeyConstants.LanguageDatabase.LanguageId))
+					{
+						index = i;
+						break;
+					}
+				}
+			}
+			var selection = values[EditorGUILayout.Popup(index, labels.ToArray())];
+
+			if (selection == null && selectedLanguageDependentStatus == RequestStatus.Success)
+			{
+				languageDependentSelectedPath.Value = null;
+				OnDeselect();
+			}
+			else if (selection != null && (selectedLanguageDependentStatus != RequestStatus.Success || selection.GetMetaKey(MetaKeyConstants.LanguageDatabase.LanguageId) != selectedLanguageDependent.LanguageId.Value))
+			{
+				LoadLanguageDependentSelected(selection);
+			}
+
+			var currentWarning = selectedLanguageDependentLastWarning;
+			if (Event.current.type == EventType.Layout) selectedLanguageDependentLastWarning = currentWarning = (selection == null);
+
+			if (currentWarning) EditorGUILayout.HelpBox("A language must be selected.", MessageType.Error);
 		}
 		#endregion
 	}

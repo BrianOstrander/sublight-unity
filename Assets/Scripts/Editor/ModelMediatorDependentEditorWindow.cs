@@ -7,7 +7,7 @@ namespace LunraGames.SubLight
 {
 	public abstract class ModelMediatorDependentEditorWindow : EditorWindow
 	{
-		protected abstract string KeyPrefix { get; }
+		protected readonly string KeyPrefix;
 
 		protected Action Enable = ActionExtensions.Empty;
 		protected Action Disable = ActionExtensions.Empty;
@@ -25,6 +25,11 @@ namespace LunraGames.SubLight
 				}
 				return editorSaveLoadService;
 			}
+		}
+
+		public ModelMediatorDependentEditorWindow(string keyPrefix)
+		{
+			KeyPrefix = keyPrefix;
 		}
 
 		#region Events

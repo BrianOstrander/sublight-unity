@@ -7,37 +7,15 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public partial class EncounterEditorWindow : EditorWindow
+	public partial class EncounterEditorWindow : LanguageDependentEditorWindow
 	{
-		const string KeyPrefix = "LG_SF_EncounterEditor_";
-
 		public enum States
 		{
 			Unknown = 0,
 			Home = 10
 		}
 
-		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
-
-		EditorModelMediator editorSaveLoadService;
-		IModelMediator SaveLoadService 
-		{
-			get 
-			{
-				if (editorSaveLoadService == null)
-				{
-					editorSaveLoadService = new EditorModelMediator(true);
-					editorSaveLoadService.Initialize(BuildPreferences.Instance.Info, OnSaveLoadInitialized);
-				}
-				return editorSaveLoadService;
-			}
-		}
-
-		void OnSaveLoadInitialized(RequestStatus status)
-		{
-			if (status == RequestStatus.Success) return;
-			Debug.LogError("Editor time save load service returned: " + status);
-		}
+		EditorPrefsEnum<States> currentState;
 
 		[MenuItem("Window/SubLight/Encounter Editor")]
 		static void Initialize()
@@ -45,17 +23,16 @@ namespace LunraGames.SubLight
 			GetWindow(typeof(EncounterEditorWindow), false, "Encounter Editor").Show();
 		}
 
-		void OnEnable()
+		public EncounterEditorWindow() : base("LG_SF_EncounterEditor_")
 		{
-			OnHomeEnable();
+			currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
+
+			OnHomeConstruct();
+
+			Gui += OnEncounterGUI;
 		}
 
-		void OnDisable()
-		{
-			OnHomeDisable();
-		}
-
-		void OnGUI()
+		void OnEncounterGUI()
 		{
 			Exception innerException = null;
 			try
@@ -108,11 +85,6 @@ namespace LunraGames.SubLight
 		void Reset()
 		{
 			currentState.Value = States.Home;
-		}
-
-		void Space()
-		{
-			GUILayout.Space(16f);
 		}
 	}
 }
