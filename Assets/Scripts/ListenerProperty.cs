@@ -37,7 +37,8 @@ namespace LunraGames.SubLight
 		/// Converts the ModelProperty to the associated type.
 		/// </summary>
 		/// <remarks>
-		/// Only one way casting is supported so that the callbacks bound to the Changed action aren't lost.
+		/// Only one way casting is supported so that the callbacks bound to the
+		/// Changed action aren't lost.
 		/// </remarks>
 		/// <returns>The implicit.</returns>
 		/// <param name="p">P.</param>

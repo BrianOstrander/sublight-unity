@@ -49,6 +49,10 @@ namespace LunraGames.SubLight.Models
 			OnRegisterLanguageStrings();
 		}
 
+		/// <summary>
+		/// Updates all language strings registered with this model.
+		/// </summary>
+		/// <param name="edges">Edges.</param>
 		public void UpdateLanguageStrings(params LanguageDatabaseEdge[] edges)
 		{
 			foreach (var entry in languageStringsListener.Value)
@@ -60,12 +64,25 @@ namespace LunraGames.SubLight.Models
 			OnUpdateLanguageStrings(edges);
 		}
 
+		/// <summary>
+		/// Adds the language strings so they'll be updated when
+		/// UpdateLanguageStrings is run.
+		/// </summary>
+		/// <param name="entries">Entries.</param>
 		protected void AddLanguageStrings(params LanguageStringModel[] entries)
 		{
 			languageStringsListener.Value = languageStringsListener.Value.Concat(entries).ToArray();
 		}
 
+		/// <summary>
+		/// Updates all language strings registered with this model, call the
+		/// UpdateLanguageStrings of child models to make sure they're updated.
+		/// </summary>
+		/// <param name="edges">Edges.</param>
 		protected virtual void OnUpdateLanguageStrings(params LanguageDatabaseEdge[] edges) {}
+		/// <summary>
+		/// Where AddLanguageStrings should be called from.
+		/// </summary>
 		protected virtual void OnRegisterLanguageStrings() {}
 	}
 }

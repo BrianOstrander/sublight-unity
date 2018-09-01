@@ -21,6 +21,7 @@ namespace LunraGames.SubLight
 			Selected = 20
 		}
 
+		EditorPrefsBool homeAlwaysAllowSaving;
 		EditorPrefsFloat homeLeftBarScroll;
 		EditorPrefsFloat homeCrewLogsScroll;
 		EditorPrefsString homeSelectedEncounterPath;
@@ -53,6 +54,7 @@ namespace LunraGames.SubLight
 
 		void OnHomeConstruct()
 		{
+			homeAlwaysAllowSaving = new EditorPrefsBool(KeyPrefix + "AlwaysAllowSaving");
 			homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
 			homeCrewLogsScroll = new EditorPrefsFloat(KeyPrefix + "CrewLogsScroll");
 			homeSelectedEncounterPath = new EditorPrefsString(KeyPrefix + "HomeSelectedEncounter");
@@ -196,9 +198,14 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.Label("Editing: " + encounterName);
-					GUI.enabled = selectedEncounterModified;
-					if (GUILayout.Button("Save", GUILayout.Width(64f))) Save();
-					GUI.enabled = true;
+					//GUILayout.FlexibleSpace();
+					GUILayout.Label("Always Allow Saving", GUILayout.ExpandWidth(false));
+					homeAlwaysAllowSaving.Value = EditorGUILayout.Toggle(homeAlwaysAllowSaving.Value, GUILayout.Width(14f));
+					EditorGUILayoutExtensions.PushEnabled(homeAlwaysAllowSaving.Value || selectedEncounterModified);
+					{
+						if (GUILayout.Button("Save", GUILayout.Width(64f))) Save();
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 				}
 				GUILayout.EndHorizontal();
 				homeSelectedToolbar.Value = GUILayout.Toolbar(Mathf.Min(homeSelectedToolbar, names.Length - 1), names);

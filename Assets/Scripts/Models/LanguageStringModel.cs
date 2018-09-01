@@ -1,7 +1,5 @@
 ﻿using System;
 
-using UnityEngine;
-
 using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
@@ -19,13 +17,23 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public bool HasUnsavedValue;
 
-		[JsonIgnore]
-		public string lol { get { return value; } }
-
 		public LanguageStringModel()
 		{
 			Key = new ListenerProperty<string>(value => key = value, () => key);
 			Value = new ListenerProperty<string>(v => value = v, () => value);
+		}
+
+		/// <summary>
+		/// Converts the LanguageStringModel to a string.
+		/// </summary>
+		/// <remarks>
+		/// Only one way casting is supported.
+		/// </remarks>
+		/// <returns>The implicit.</returns>
+		/// <param name="p">P.</param>
+		public static implicit operator string(LanguageStringModel m)
+		{
+			return m.Value;
 		}
 	}
 }
