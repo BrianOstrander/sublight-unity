@@ -19,7 +19,12 @@
         "_header": {
           "key": "762d792c-423a-4b51-9315-7bf8da941a04"
         },
-        "message": "",
+        "_message": {
+          "key": "82fce178-810f-4b5e-8ade-b3fc080ff50a"
+        },
+        "header": "Old Header",
+        "message": "Old Message",
+        "nextLogId": "f05dce05-5a69-451d-a0c4-8046c72aec93",
         "beginning": true,
         "ending": true,
         "logId": "44e2893e-bfa4-4588-af51-78c0b2e7ad88",
@@ -29,8 +34,60 @@
     "keyValueLogs": [],
     "inventoryLogs": [],
     "switchLogs": [],
-    "buttonLogs": [],
-    "encyclopediaLogs": []
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "buttonId": "9856944a-c896-4471-acdb-82c708380511",
+            "message": "Some Button",
+            "nextLogId": "44e2893e-bfa4-4588-af51-78c0b2e7ad88",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "stringKeyValues": [],
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "2d35c6a5-384a-4d39-ba9d-f0a3dd0cf310"
+      }
+    ],
+    "encyclopediaLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encyclopediaId": "77092afd-fb62-49fa-bb95-996589c8ddfb",
+              "title": "encyTitle",
+              "header": "encyHeader",
+              "body": "encyBody",
+              "orderWeight": -1
+            }
+          }
+        ],
+        "nextLogId": "2d35c6a5-384a-4d39-ba9d-f0a3dd0cf310",
+        "index": 1,
+        "logId": "f05dce05-5a69-451d-a0c4-8046c72aec93"
+      }
+    ]
   },
   "version": 7,
   "meta": "Lang Test",

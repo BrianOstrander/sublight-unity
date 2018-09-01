@@ -4,8 +4,10 @@ namespace LunraGames.SubLight.Models
 {
 	public class TextEncounterLogModel : LinearEncounterLogModel
 	{
-		[JsonProperty] string header;
 		[JsonProperty] LanguageStringModel _header = new LanguageStringModel();
+		[JsonProperty] LanguageStringModel _message = new LanguageStringModel();
+
+		[JsonProperty] string header;
 		[JsonProperty] string message;
 
 		[JsonIgnore]
@@ -15,6 +17,8 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public LanguageStringModel _Header { get { return _header; } }
+		[JsonIgnore]
+		public LanguageStringModel _Message { get { return _message; } }
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Text; } }
 
@@ -26,7 +30,7 @@ namespace LunraGames.SubLight.Models
 
 		protected override void OnRegisterLanguageStrings()
 		{
-			AddLanguageStrings(_Header);
+			AddLanguageStrings(_Header, _Message);
 		}
 	}
 }

@@ -149,9 +149,10 @@ namespace LunraGames.SubLight
 		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
 		{
 			model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header <old>", model.Header.Value);
-			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
+			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message <old>", model.Message.Value);
 
-			EditorGUILayoutLanguageString.Field("Header", model._Header);
+			EditorGUILayoutLanguageString.Field("Header", model._Header, model.Header.Value);
+			EditorGUILayoutLanguageString.Field("Message", model._Message, model.Message.Value);
 
 			OnLinearLog(infoModel, model);
 		}

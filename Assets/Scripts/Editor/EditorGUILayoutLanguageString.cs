@@ -19,18 +19,24 @@ namespace LunraGames.SubLight
 
 		public static void EndLanguage() { Current = null; }
 
-		public static void Field(string name, LanguageStringModel model)
+		public static void Field(string name, LanguageStringModel model, string temp)
 		{
-			Field(new GUIContent(name), model);
+			Field(new GUIContent(name), model, temp);
 		}
 
-		public static void Field(GUIContent content, LanguageStringModel model)
+		public static void Field(GUIContent content, LanguageStringModel model, string temp)
 		{
 			BeginCheck(model);
 			{
 				var original = model.Value.Value;
 				var result = EditorGUILayoutExtensions.TextDynamic(content, original);
-				if (original != result || model.HasUnsavedValue)
+				if (!string.IsNullOrEmpty(temp))
+				{
+					model.Value.Value = temp;
+					model.HasUnsavedValue = Current == null;
+					if (Current != null) Current.Language.Set(model.Key.Value, result);
+				}
+				else if (original != result || model.HasUnsavedValue)
 				{
 					model.Value.Value = result;
 					model.HasUnsavedValue = Current == null;
