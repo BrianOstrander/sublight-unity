@@ -200,11 +200,11 @@ namespace LunraGames.SubLight
 		public void DebugCurrentLanguage()
 		{
 			var all = "All entries:";
-			foreach (var entry in currentLanguage.Entries)
+			foreach (var entry in currentLanguage.Edges)
 			{
-				var value = entry.Value.Value;
+				var value = entry.Value;
 				var shortened = (string.IsNullOrEmpty(value) || value.Length < 32) ? value : value.Substring(0, 32);
-				all += "\n" + entry.Value.Order + " - " + entry.Key + " : " + shortened;
+				all += "\n" + entry.Order + " - " + entry.Key + " : " + shortened;
 			}
 			Debug.Log(all);
 		}

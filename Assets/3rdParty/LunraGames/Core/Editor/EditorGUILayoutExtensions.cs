@@ -345,7 +345,7 @@ namespace LunraGamesEditor
 				{
 					GUILayout.BeginHorizontal();
 					{
-						if (!nullContent) GUILayout.Label(content);
+						GUILayout.Label(content);
 						PushEnabled(value != null);
 						if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
 						PopEnabled();

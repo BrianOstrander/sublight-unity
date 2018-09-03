@@ -24,6 +24,12 @@ namespace LunraGamesEditor
 			return GetWindowVisible(type) ? EditorWindow.GetWindow(type) : null;
 		}
 
+		public static bool DialogConfirm(string message, string title = null)
+		{
+			title = StringExtensions.IsNullOrWhiteSpace(title) ? Strings.Dialogs.Titles.Alert : title;
+			return EditorUtility.DisplayDialog(title, message, Strings.Dialogs.Responses.Confirm, Strings.Dialogs.Responses.Cancel);
+		}
+
 		public static bool DialogInvalid(string message = null)
 		{
 			return Dialog(Strings.Dialogs.Titles.Invalid, message);

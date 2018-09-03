@@ -24,6 +24,8 @@
 				public const string Yes = "Yes";
 				public const string No = "No";
 				public const string Other = "Other";
+
+				public const string Confirm = "Confirm";
 			}
 		}
 

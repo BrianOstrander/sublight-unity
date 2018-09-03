@@ -233,7 +233,76 @@ namespace LunraGames.SubLight
 
 		void OnHomeSelectedEntries(LanguageDatabaseModel model)
 		{
-			GUILayout.Label("todo: this");
+			var duplicates = model.Language.Duplicates;
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("Entry Count: " + model.Language.Edges.Length + " | Duplicates: " + duplicates.Length);
+
+				EditorGUILayoutExtensions.PushColor(Color.red);
+				{
+					if (GUILayout.Button("Delete All Entries", GUILayout.ExpandWidth(false)))
+					{
+						if (EditorUtilityExtensions.DialogConfirm("Are you sure you want to delete all entries?"))
+						{
+							selectedModified = true;
+							model.Language.Edges = new LanguageDatabaseEdge[0];
+						}
+					}
+				}
+				EditorGUILayoutExtensions.PopColor();
+			}
+			GUILayout.EndHorizontal();
+
+			var hasDuplicates = duplicates.Any();
+			if (hasDuplicates) EditorGUILayout.HelpBox("There are duplicate values.", MessageType.Info);
+
+			homeEntriesScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeEntriesScroll), false, true).y;
+			{
+				EditorGUIExtensions.BeginChangeCheck();
+				{
+					var alternate = false;
+					foreach (var entry in model.Language.Edges)
+					{
+						var isDuplicate = hasDuplicates && duplicates.Contains(entry.Key);
+
+						if (alternate) EditorGUILayoutExtensions.PushColor(Color.gray);
+						GUILayout.BeginVertical(EditorStyles.helpBox);
+						if (alternate) EditorGUILayoutExtensions.PopColor();
+						{
+							if (isDuplicate) EditorGUILayoutExtensions.PushColor(Color.yellow);
+
+							GUILayout.BeginHorizontal();
+							{
+								GUILayout.Label(entry.Key, EditorStyles.boldLabel);
+								if (isDuplicate) GUILayout.Label("[ Duplicate ]", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+							}
+							GUILayout.EndHorizontal();
+							EditorGUILayoutExtensions.PushIndent();
+							{
+								var original = entry.Value;
+								var result = EditorGUILayoutExtensions.TextDynamic(original);
+								if (original != result)
+								{
+									var apply = true;
+									if (string.IsNullOrEmpty(result)) apply = EditorUtilityExtensions.DialogConfirm("Entering a null or empty string will remove this entry.");
+									if (apply) model.Language.Set(entry.Key, result);
+								}
+							}
+							EditorGUILayoutExtensions.PopIndent();
+
+							GUILayout.Space(4f);
+
+							if (isDuplicate) EditorGUILayoutExtensions.PopColor();
+						}
+						GUILayout.EndVertical();
+
+						alternate = !alternate;
+					}
+				}
+				EditorGUIExtensions.EndChangeCheck(ref selectedModified);
+			}
+			GUILayout.EndScrollView();
 		}
 
 		void CreateNew()
