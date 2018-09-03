@@ -28,6 +28,8 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public bool IsDuplicate { get { return !string.IsNullOrEmpty(DuplicateKey); } }
 		[JsonIgnore]
+		public bool IsDuplicateSource { get { return IsDuplicate && Key.Value == DuplicateKey.Value; } }
+		[JsonIgnore]
 		public int Order { get { return order; } }
 
 		public LanguageDatabaseEdge()

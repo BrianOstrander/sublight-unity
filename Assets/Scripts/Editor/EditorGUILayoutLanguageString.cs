@@ -33,9 +33,10 @@ namespace LunraGames.SubLight
 			{
 				var edge = Current == null ? null : Current.Language.Edges.Value.FirstOrDefault(e => e.Key.Value == model.Key.Value);
 				var duplicates = edge == null ? new LanguageDatabaseEdge[0] : Current.Language.GetDuplicates(edge);
-				var hasDuplicates = duplicates.Any();
 
-				if (hasDuplicates) EditorGUILayoutExtensions.PushColor(Color.yellow);
+				var hasColor = edge != null && edge.IsDuplicate;
+
+				if (hasColor) EditorGUILayoutExtensions.PushColor(edge.IsDuplicateSource ? Color.yellow.NewB(0.75f) : Color.yellow);
 				{
 					var original = model.Value.Value;
 					var result = EditorGUILayoutExtensions.TextDynamic(
@@ -98,7 +99,7 @@ namespace LunraGames.SubLight
 						}
 					}
 				}
-				EditorGUILayoutExtensions.PopColor();
+				if (hasColor) EditorGUILayoutExtensions.PopColor();
 			}
 			EndCheck();
 		}
