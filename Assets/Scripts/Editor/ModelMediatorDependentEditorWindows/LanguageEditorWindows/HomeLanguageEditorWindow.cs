@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 using UnityEditor;
@@ -21,11 +20,11 @@ namespace LunraGames.SubLight
 			Selected = 20
 		}
 
-		EditorPrefsFloat homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
-		EditorPrefsFloat homeEntriesScroll = new EditorPrefsFloat(KeyPrefix + "EntriesScroll");
-		EditorPrefsString homeSelectedPath = new EditorPrefsString(KeyPrefix + "HomeSelected");
-		EditorPrefsEnum<HomeStates> homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
-		EditorPrefsInt homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+		EditorPrefsFloat homeLeftBarScroll;
+		EditorPrefsFloat homeEntriesScroll;
+		EditorPrefsString homeSelectedPath;
+		EditorPrefsEnum<HomeStates> homeState;
+		EditorPrefsInt homeSelectedToolbar;
 
 		// Unknown: Query in progress
 		// Cancel: Qued for Query
@@ -41,6 +40,19 @@ namespace LunraGames.SubLight
 		RequestStatus selectedStatus;
 		LanguageDatabaseModel selected;
 		bool selectedModified;
+
+		void OnHomeConstruct()
+		{
+			homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
+			homeEntriesScroll = new EditorPrefsFloat(KeyPrefix + "EntriesScroll");
+			homeSelectedPath = new EditorPrefsString(KeyPrefix + "HomeSelected");
+			homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
+			homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+
+			Enable += OnHomeEnable;
+			Disable += OnHomeDisable;
+			Save += SaveSelected;
+		}
 
 		void OnHomeEnable()
 		{
@@ -173,7 +185,7 @@ namespace LunraGames.SubLight
 				{
 					GUILayout.Label("Editing: " + entryName);
 					GUI.enabled = selectedModified;
-					if (GUILayout.Button("Save", GUILayout.Width(64f))) SaveSelected(selected);
+					if (GUILayout.Button("Save", GUILayout.Width(64f))) Save();
 					GUI.enabled = true;
 				}
 				GUILayout.EndHorizontal();
@@ -252,9 +264,10 @@ namespace LunraGames.SubLight
 			SaveLoadService.Load<LanguageDatabaseModel>(model, OnLoadSelected);
 		}
 
-		void SaveSelected(LanguageDatabaseModel model)
+		void SaveSelected()
 		{
-			SaveLoadService.Save(model, OnSaveSelected, false);
+			if (selected == null) return;
+			SaveLoadService.Save(selected, OnSaveSelected, false);
 		}
 
 		void OnSaveSelected(SaveLoadRequest<LanguageDatabaseModel> result)

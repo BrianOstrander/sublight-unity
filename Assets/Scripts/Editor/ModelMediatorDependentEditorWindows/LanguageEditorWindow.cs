@@ -7,37 +7,15 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public partial class LanguageEditorWindow : EditorWindow
+	public partial class LanguageEditorWindow : ModelMediatorDependentEditorWindow
 	{
-		const string KeyPrefix = "LG_SF_LanguageEditor_";
-
 		public enum States
 		{
 			Unknown = 0,
 			Home = 10
 		}
 
-		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
-
-		EditorModelMediator editorSaveLoadService;
-		IModelMediator SaveLoadService
-		{
-			get
-			{
-				if (editorSaveLoadService == null)
-				{
-					editorSaveLoadService = new EditorModelMediator(true);
-					editorSaveLoadService.Initialize(BuildPreferences.Instance.Info, OnSaveLoadInitialized);
-				}
-				return editorSaveLoadService;
-			}
-		}
-
-		void OnSaveLoadInitialized(RequestStatus status)
-		{
-			if (status == RequestStatus.Success) return;
-			Debug.LogError("Editor time save load service returned: " + status);
-		}
+		EditorPrefsEnum<States> currentState;
 
 		[MenuItem("Window/SubLight/Language Editor")]
 		static void Initialize()
@@ -45,17 +23,16 @@ namespace LunraGames.SubLight
 			GetWindow(typeof(LanguageEditorWindow), false, "Language Editor").Show();
 		}
 
-		void OnEnable()
+		public LanguageEditorWindow() : base("LG_SF_LanguageEditor_")
 		{
-			OnHomeEnable();
+			currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
+
+			OnHomeConstruct();
+
+			Gui += OnLanguageGUI;
 		}
 
-		void OnDisable()
-		{
-			OnHomeDisable();
-		}
-
-		void OnGUI()
+		void OnLanguageGUI()
 		{
 			Exception innerException = null;
 			try
@@ -108,11 +85,6 @@ namespace LunraGames.SubLight
 		void Reset()
 		{
 			currentState.Value = States.Home;
-		}
-
-		void Space()
-		{
-			GUILayout.Space(16f);
 		}
 	}
 }
