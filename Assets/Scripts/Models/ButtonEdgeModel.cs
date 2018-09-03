@@ -4,6 +4,8 @@ namespace LunraGames.SubLight.Models
 {
 	public class ButtonEdgeModel : Model, IEdgeModel
 	{
+		[JsonProperty] LanguageStringModel _message = new LanguageStringModel();
+
 		[JsonProperty] string buttonId;
 		[JsonProperty] int index;
 		[JsonProperty] bool ignore;
@@ -15,6 +17,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ValueFilterModel usedFiltering = ValueFilterModel.Default(false);
 		[JsonProperty] ValueFilterModel interactableFiltering = ValueFilterModel.Default();
 		[JsonProperty] ValueFilterModel enabledFiltering = ValueFilterModel.Default();
+
+		[JsonIgnore]
+		public LanguageStringModel _Message { get { return _message; } }
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> ButtonId;
@@ -88,6 +93,11 @@ namespace LunraGames.SubLight.Models
 			NotAutoUsed = new ListenerProperty<bool>(value => notAutoUsed = value, () => notAutoUsed);
 			AutoDisableInteractions = new ListenerProperty<bool>(value => autoDisableInteractions = value, () => autoDisableInteractions);
 			AutoDisableEnabled = new ListenerProperty<bool>(value => autoDisableEnabled = value, () => autoDisableEnabled);
+		}
+
+		protected override void OnRegisterLanguageStrings()
+		{
+			AddLanguageStrings(_Message);
 		}
 
 		[JsonIgnore]

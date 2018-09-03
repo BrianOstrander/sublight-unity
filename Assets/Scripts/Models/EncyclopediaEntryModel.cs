@@ -6,6 +6,10 @@ namespace LunraGames.SubLight.Models
 {
 	public class EncyclopediaEntryModel : Model
 	{
+		[JsonProperty] LanguageStringModel _title = new LanguageStringModel();
+		[JsonProperty] LanguageStringModel _header = new LanguageStringModel();
+		[JsonProperty] LanguageStringModel _body = new LanguageStringModel();
+
 		[JsonProperty] string encyclopediaId;
 		[JsonProperty] string title;
 		[JsonProperty] string header;
@@ -31,6 +35,13 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<int> OrderWeight;
 
+		[JsonIgnore]
+		public LanguageStringModel _Title { get { return _title; } }
+		[JsonIgnore]
+		public LanguageStringModel _Header { get { return _header; } }
+		[JsonIgnore]
+		public LanguageStringModel _Body { get { return _body; } }
+
 		public EncyclopediaEntryModel()
 		{
 			EncyclopediaId = new ListenerProperty<string>(value => encyclopediaId = value, () => encyclopediaId);
@@ -39,6 +50,11 @@ namespace LunraGames.SubLight.Models
 			Body = new ListenerProperty<string>(value => body = value, () => body);
 			Priority = new ListenerProperty<int>(value => priority = value, () => priority);
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
+		}
+
+		protected override void OnRegisterLanguageStrings()
+		{
+			AddLanguageStrings(_Title, _Header, _Body);
 		}
 
 		/// <summary>

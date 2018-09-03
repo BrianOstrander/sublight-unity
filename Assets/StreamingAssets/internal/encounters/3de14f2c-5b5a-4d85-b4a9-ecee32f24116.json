@@ -38,6 +38,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "da72b05c-1ac2-4b6c-ba54-22e33d80cbb9"
+            },
             "buttonId": "9856944a-c896-4471-acdb-82c708380511",
             "message": "Some Button",
             "nextLogId": "44e2893e-bfa4-4588-af51-78c0b2e7ad88",
@@ -75,6 +78,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "fa405939-f2db-4e34-baac-48dea7b66e0c"
+              },
+              "_header": {
+                "key": "6cea9afb-ad8a-49cf-b050-07dc214ea262"
+              },
+              "_body": {
+                "key": "58bf057d-fcbe-45ee-8ba4-74c75a241e03"
+              },
               "encyclopediaId": "77092afd-fb62-49fa-bb95-996589c8ddfb",
               "title": "encyTitle",
               "header": "encyHeader",

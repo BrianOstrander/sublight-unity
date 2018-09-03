@@ -537,7 +537,9 @@ namespace LunraGames.SubLight
 				"- Select Target Log -"
 			);
 
-			edge.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", edge.Message.Value);
+			edge.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message <old>", edge.Message.Value);
+
+			EditorGUILayoutLanguageString.Field("Message", edge._Message, edge.Message.Value);
 
 			GUILayout.BeginHorizontal();
 			{
@@ -579,9 +581,14 @@ namespace LunraGames.SubLight
 		)
 		{
 			var entry = edge.Entry;
-			entry.Title.Value = EditorGUILayoutExtensions.TextDynamic("Title", entry.Title.Value);
-			entry.Header.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
-			entry.Body.Value = EditorGUILayoutExtensions.TextDynamic("Body", entry.Body.Value);
+			entry.Title.Value = EditorGUILayoutExtensions.TextDynamic("Title <old>", entry.Title.Value);
+			entry.Header.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Header <old>", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
+			entry.Body.Value = EditorGUILayoutExtensions.TextDynamic("Body <old>", entry.Body.Value);
+
+			EditorGUILayoutLanguageString.Field("Title", entry._Title, entry.Title.Value);
+			EditorGUILayoutLanguageString.Field("Header", entry._Header, entry.Header.Value);
+			EditorGUILayoutLanguageString.Field("Body", entry._Body, entry.Body.Value);
+
 			entry.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), entry.Priority.Value);
 			entry.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), entry.OrderWeight.Value);
 		}
