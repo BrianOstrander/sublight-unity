@@ -308,17 +308,41 @@ namespace LunraGamesEditor
 			return values;
 		}
 
-		public static string TextDynamic(string value, int lengthLimit = 32, bool leftOffset = true)
+		public static string TextDynamic(
+			string value,
+			int lengthLimit = 32,
+			bool leftOffset = true
+		)
 		{
-			return TextDynamic(GUIContent.none, value, lengthLimit, leftOffset);
+			return TextDynamic(
+				GUIContent.none,
+				value,
+				lengthLimit,
+				leftOffset
+			);
 		}
 
-		public static string TextDynamic(string label, string value, int lengthLimit = 32, bool leftOffset = true)
+		public static string TextDynamic(
+			string label,
+			string value,
+			int lengthLimit = 32,
+			bool leftOffset = true
+		)
 		{
-			return TextDynamic(new GUIContent(label), value, lengthLimit, leftOffset);
+			return TextDynamic(
+				new GUIContent(label),
+				value,
+				lengthLimit,
+				leftOffset
+			);
 		}
 
-		public static string TextDynamic(GUIContent content, string value, int lengthLimit = 32, bool leftOffset = true)
+		public static string TextDynamic(
+			GUIContent content,
+			string value,
+			int lengthLimit = 32,
+			bool leftOffset = true
+		)
 		{
 			var nullContent = GUIContentExtensions.IsNullOrNone(content);
 			lengthLimit = nullContent ? lengthLimit * 2 : lengthLimit;

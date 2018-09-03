@@ -1,7 +1,7 @@
 {
+  "ignore": true,
   "orderWeight": 2.0,
   "randomWeightMultiplier": 1.0,
-  "ignore": true,
   "encounterId": "85c9e84c-e797-4488-804d-4bfbee6a36b5",
   "name": "Switch Test 0",
   "hook": "Switch Test 0",
@@ -9,13 +9,21 @@
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],
-    "encounterInteractions": []
+    "encounterInteractions": [],
+    "inventoryIds": [],
+    "inventoryTags": []
   },
   "validSystems": [],
   "validBodies": [],
   "logs": {
     "textLogs": [
       {
+        "_header": {
+          "key": "ec9e574b-83b3-4fcd-bf35-4ceee6433016"
+        },
+        "_message": {
+          "key": "330ff84b-1f51-4581-bac1-bca8d5603295"
+        },
         "header": "Path 0",
         "message": "Here!",
         "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
@@ -24,6 +32,12 @@
         "logId": "60e24432-3da7-41c5-9d45-10718ad11967"
       },
       {
+        "_header": {
+          "key": "ca5e56cc-3c41-4303-bfd7-8d099200bb5f"
+        },
+        "_message": {
+          "key": "97adf17b-95ee-489d-9317-b78341237880"
+        },
         "header": "Path 1",
         "message": "Wow, here!",
         "nextLogId": "395bc18a-6f42-45ca-b07b-ac72481fdc8f",
@@ -32,6 +46,12 @@
         "logId": "84ff44da-0ba6-41b0-81c9-9f7b6699d1f3"
       },
       {
+        "_header": {
+          "key": "6efd2179-13e5-4ad3-ad5a-eead6b692537"
+        },
+        "_message": {
+          "key": "9b6a7fd4-6a22-4246-984f-3a1da209f7ec"
+        },
         "header": "End",
         "message": "The end!",
         "index": 4,
@@ -95,7 +115,9 @@
                   "filterValue": "what"
                 }
               ],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
@@ -113,7 +135,9 @@
                   "group": "All"
                 }
               ],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -124,9 +148,10 @@
         "notes": ""
       }
     ],
-    "buttonLogs": []
+    "buttonLogs": [],
+    "encyclopediaLogs": []
   },
-  "version": 6,
+  "version": 7,
   "meta": "Switch Test 0",
   "metaKeyValues": {
     "EncounterId": "85c9e84c-e797-4488-804d-4bfbee6a36b5"

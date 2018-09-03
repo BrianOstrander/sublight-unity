@@ -15,13 +15,21 @@
       }
     ],
     "stringKeyValues": [],
-    "encounterInteractions": []
+    "encounterInteractions": [],
+    "inventoryIds": [],
+    "inventoryTags": []
   },
   "validSystems": [],
   "validBodies": [],
   "logs": {
     "textLogs": [
       {
+        "_header": {
+          "key": "760c2510-8a39-4b32-b1c8-7d6fa7857b4d"
+        },
+        "_message": {
+          "key": "cec13f2b-ed30-435b-ae5a-dae9508154f7"
+        },
         "header": "Captain Grant Cowan",
         "message": "LSM Rosa recieving your hail, this is Captain Grant Cowan, make it quick.",
         "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
@@ -29,6 +37,12 @@
         "logId": "0f311101-6ecc-4da5-a0ef-da37b33b15b6"
       },
       {
+        "_header": {
+          "key": "a6c72ba6-b504-414d-83d9-722e35b0b983"
+        },
+        "_message": {
+          "key": "c5f5fbd5-a1ca-4705-8f5b-189cfdc1405d"
+        },
         "header": "Captain Grant Cowan",
         "message": "Listen I ain't got time to explain it all, have you not been keeping an eye on the void? Well I have, and its expanding... fast! I don't intend to stick around and see what happens.",
         "nextLogId": "ede5ccee-6c05-4eca-b6bc-fd42aaee46be",
@@ -37,6 +51,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "961ea235-fadf-4848-8073-9adeeeaf22d4"
+        },
+        "_message": {
+          "key": "9e93095d-6a3e-41d9-a7fc-9ea39e3b939f"
+        },
         "message": "Why the hurry? It'll take centuries before anything can reach this system, we'll be long dead by then.",
         "nextLogId": "df757db3-168d-43f4-9324-416fe75f4b63",
         "index": 5,
@@ -46,6 +66,12 @@
         "notes": "Response from \"Why the hurry?\""
       },
       {
+        "_header": {
+          "key": "1b2f75a2-7fa1-440a-b4e9-0e527e96cbe5"
+        },
+        "_message": {
+          "key": "fa81e72e-599f-4289-81df-1ba4babb4c31"
+        },
         "message": "What's going on? Our recievers were down until we arrived in this system, we can't make heads or tails of whats going on.",
         "nextLogId": "95850ecd-bade-4da7-99ae-9d761c357059",
         "index": 2,
@@ -55,6 +81,12 @@
         "notes": "Response from \"What's happening?\""
       },
       {
+        "_header": {
+          "key": "e9ccfbef-f2f1-4050-b836-49a816bf48e4"
+        },
+        "_message": {
+          "key": "1d971baa-4aa4-493b-afe7-718d621c8c26"
+        },
         "header": "Captain Grant Cowan",
         "message": "Listen... it may be centuries before it gets here, it may never come at all, but don't you have any pride in humanity? We're all alone out here, we may be the only intelligence, let alone life, to ever exist. You think it's wise or fair to let your descendents find out how mortally damned you've left them, by pissing away your short life in this system?",
         "nextLogId": "3adb9ddc-58af-4dd5-977b-cd931e69ef37",
@@ -63,6 +95,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "ccceb79b-bc0c-45c2-b496-1a35db78abc1"
+        },
+        "_message": {
+          "key": "30342032-25ee-43f2-916e-c341b8669f84"
+        },
         "message": "We've been in space so long, our people yearn to feel dirt beneath their feet, a sky above their heads. How can you flee so quickly?",
         "nextLogId": "333969d0-4614-47a0-bbba-99851440a096",
         "index": 7,
@@ -70,6 +108,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "fc6c3a2d-6898-451c-a0c9-20f309ae8b9b"
+        },
+        "_message": {
+          "key": "5a01e876-8530-4ca8-99d5-ebc08dfe63c8"
+        },
         "header": "Captain Grant Cowan",
         "message": "I... want these things, too. We all want these comforts, these arks are like prisons... But staying here would be selfish, I can't do that to my children, and my children's children.",
         "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
@@ -78,6 +122,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "967c8649-2054-4742-ba32-9f6b2e9a0afe"
+        },
+        "_message": {
+          "key": "80e63301-5dcf-4c69-826b-0e8398143866"
+        },
         "message": "If you really think the void won't stop, how do you plan to escape it?",
         "nextLogId": "0138622c-ea2e-4409-8f0c-4e7916ab8a42",
         "index": 9,
@@ -87,6 +137,12 @@
         "notes": "Response to \"Where will you go?\""
       },
       {
+        "_header": {
+          "key": "36380d95-a0f3-4125-97d3-85161fb98149"
+        },
+        "_message": {
+          "key": "a001b3f8-a949-4f99-baed-9b5697664b45"
+        },
         "header": "Captain Grant Cowan",
         "message": "I don't know that there is an escape, but we have a plan. You know what lies at the center of our galaxy?",
         "nextLogId": "915dde69-1e95-4e3d-8865-bc1e379fbb10",
@@ -95,6 +151,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "cf167ab8-d0db-4698-9ed6-50e194d7a54c"
+        },
+        "_message": {
+          "key": "63008c3a-d194-4abc-977f-5ab3997fd5ba"
+        },
         "message": "A black hole?",
         "nextLogId": "38d03881-799b-452a-a8af-c545fb1f88d6",
         "index": 11,
@@ -102,6 +164,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "790b46fd-bbed-402c-a2a6-b464038c13cc"
+        },
+        "_message": {
+          "key": "cc6c22c4-cb1c-4ec3-9259-c94dec0e2ba1"
+        },
         "header": "Captain Grant Cowan",
         "message": "No! Not just any black hole, Sagittarius A*, a crushing singularity more than 4 million times the mass of Sol! It’s the BIGGEST singularity in the galaxy! If we can get there, skirt the event horizon, and perform an orbital assist around it, we'll be on a high velocity trajectory towards Andromeda. We may not be able to stop the void, but we can keep running...",
         "nextLogId": "e09c55f1-3adf-4e8e-8847-46154c2931fb",
@@ -110,6 +178,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "da29e274-c713-4c40-87f5-332cf5a288f8"
+        },
+        "_message": {
+          "key": "4034d01b-2beb-434c-ae47-0d1aec2b891d"
+        },
         "message": "That's insane! These ships were made for voyages of centuries, not... millenia! You can't be serious.",
         "nextLogId": "5a7e85da-c0d7-4ef8-a5b5-3e93ff94f75f",
         "index": 13,
@@ -117,6 +191,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "3866ff41-ffdd-451d-9d9f-bcb96cb42a61"
+        },
+        "_message": {
+          "key": "77114322-2561-47d8-aada-0b6d3015a9a2"
+        },
         "header": "Captain Grant Cowan",
         "message": "Very serious, and I suggest you wise up and get going in that direction, too.",
         "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
@@ -125,6 +205,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "7b9170a1-b077-472a-ab6c-9eebd1526238"
+        },
+        "_message": {
+          "key": "ff78f6aa-6c74-406b-b315-283c73c9bbe0"
+        },
         "message": "I don't understand, what's the void?",
         "nextLogId": "7be7a564-6dd0-465c-91b2-13baabe300c8",
         "index": 15,
@@ -134,6 +220,12 @@
         "notes": "Response to \"The void?\""
       },
       {
+        "_header": {
+          "key": "0e6d048d-6066-450f-ad11-89e030f0e3f1"
+        },
+        "_message": {
+          "key": "f98b4abb-8ecb-4004-8f64-d011222490ac"
+        },
         "header": "Captain Grant Cowan",
         "message": "We don't understand it either, all we figure is anything passing the horizon never comes back. You might as well be falling into a black hole. It originated in Sol, it's already consumed Earth, Mercury, the whole lot...",
         "nextLogId": "291db69e-e33f-4747-a669-d3a08df4a1a0",
@@ -142,6 +234,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "6d415105-92d3-49c2-8acf-0275a541a1f1"
+        },
+        "_message": {
+          "key": "de43da89-33af-4e97-88a5-5ca085e25c36"
+        },
         "header": "Captain Grant Cowan",
         "message": "Good luck to you too... We won't cross paths again, but perhaps our people will. I hope under better circumstances...",
         "nextLogId": "70e8023f-cdca-4441-a998-62ddd5714ec2",
@@ -190,6 +288,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "f81521c9-dbdb-4fb9-bb50-c1875fdfab76"
+            },
             "buttonId": "cdc5a9fe-836c-4c4b-ad12-9215a177230c",
             "index": 3,
             "message": "What's happening?",
@@ -198,20 +299,29 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "781f49da-0849-4e9c-bdde-a579dcb0141d"
+            },
             "buttonId": "84981c0a-7f66-4f9d-84e0-1d37fcfb297e",
             "index": 1,
             "message": "Why the hurry?",
@@ -220,12 +330,16 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "showValues": true,
@@ -239,10 +353,15 @@
                 }
               ],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "02d40e7d-344c-4671-ae4f-7ac6a8d5c848"
+            },
             "buttonId": "58ae46cc-98b3-4833-9947-eeb5990d48c7",
             "message": "The void?",
             "nextLogId": "a88bcc1d-3b07-4fee-a68e-0044d269dffc",
@@ -250,12 +369,16 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "showValues": true,
@@ -269,10 +392,15 @@
                 }
               ],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "45a10db0-4cd4-446d-b4cb-791e39427860"
+            },
             "buttonId": "27b944cb-76d3-47e0-854c-6011f1527621",
             "index": 4,
             "message": "Good luck...",
@@ -281,12 +409,16 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "showValues": true,
@@ -300,10 +432,15 @@
                 }
               ],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "164da15c-9429-4b76-8f03-0c83bfda718e"
+            },
             "buttonId": "93bc70a1-5c64-49ab-9416-71f955ca93c8",
             "index": 2,
             "message": "Where will you go?",
@@ -312,12 +449,16 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "showValues": true,
@@ -331,7 +472,9 @@
                 }
               ],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -345,6 +488,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "c11bec8d-90ea-4e07-85ee-7245af401546"
+              },
+              "_header": {
+                "key": "0d41374b-6fc3-4dc7-a5b6-3ae488fa8671"
+              },
+              "_body": {
+                "key": "1e2d4991-f020-4e1d-8f6f-17137ab37bfd"
+              },
               "encyclopediaId": "98ab8bd2-e3cc-47d5-9d63-c12f98c41c9a",
               "title": "LSM Rosa",
               "body": "LSM Rosa (IAPN-433), a Corona class pulsed nuclear interstellar ark, first encountered with captain Grant Cowan in local space."
@@ -352,6 +504,15 @@
           },
           {
             "entry": {
+              "_title": {
+                "key": "2151330d-3d21-4ab8-b688-f5810ca02a98"
+              },
+              "_header": {
+                "key": "437043b8-48ce-4b34-bfb2-49cfa77c2d9e"
+              },
+              "_body": {
+                "key": "2a9c493d-3003-431d-968b-246c78951d8a"
+              },
               "encyclopediaId": "39638c11-0825-49ff-a466-0a85c386d2a5",
               "title": "LSM Rosa",
               "header": "Destination Andromeda",
@@ -367,7 +528,7 @@
       }
     ]
   },
-  "version": 6,
+  "version": 7,
   "meta": "We're On the Move",
   "metaKeyValues": {
     "EncounterId": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66"

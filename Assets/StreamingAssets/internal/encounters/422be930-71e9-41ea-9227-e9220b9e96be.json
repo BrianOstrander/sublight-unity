@@ -24,13 +24,21 @@
         "group": "All",
         "filterValue": "ff34ef9d-1eb2-4498-b139-e821dedff9bb"
       }
-    ]
+    ],
+    "inventoryIds": [],
+    "inventoryTags": []
   },
   "validSystems": [],
   "validBodies": [],
   "logs": {
     "textLogs": [
       {
+        "_header": {
+          "key": "f3697172-afed-43d2-8ba9-70e15dd16b0b"
+        },
+        "_message": {
+          "key": "a1000306-6710-44c0-b473-6d3a5a3d726b"
+        },
         "header": "Captain Gail Colt",
         "message": "LSM Beethoven greets you! Warmest regards!",
         "nextLogId": "c1c6b6a6-b6ef-40b8-a7bb-fbedfd4ec04e",
@@ -38,6 +46,12 @@
         "logId": "4f2f4c3c-3d52-4392-afe7-65837d49b578"
       },
       {
+        "_header": {
+          "key": "87e7ce0a-7854-4254-8a94-0f190c29fdba"
+        },
+        "_message": {
+          "key": "212ec605-b77d-412a-9161-60adf1242890"
+        },
         "header": "Captain Gail Colt",
         "message": "Yes, we thank you, your ancestors really, for convincing our people to move on. As a show of our gratitude, we'd like to gift you some of our rations.",
         "nextLogId": "4d8f5f35-abc6-498a-a63c-088000905df3",
@@ -45,6 +59,12 @@
         "logId": "299ac8ca-6591-4033-9217-5047dc7a8946"
       },
       {
+        "_header": {
+          "key": "e6ace6dd-533a-46a2-9516-0c3737d8cb5a"
+        },
+        "_message": {
+          "key": "e4615fa3-5952-4723-9f49-793832c91eb7"
+        },
         "header": "Captain Gail Colt",
         "message": "It's our pleasure, thank you again, and safe voyages. Perhaps our people will meet again, next time in Andromeda!",
         "nextLogId": "20dc712b-7610-4d55-b190-8d19b91100d8",
@@ -52,6 +72,12 @@
         "logId": "58963505-6824-472b-8d36-448c519d6189"
       },
       {
+        "_header": {
+          "key": "abedcb02-c14e-4af2-be4e-0382cdd987e9"
+        },
+        "_message": {
+          "key": "f21a6603-b479-40da-b0c7-2f0baa436d18"
+        },
         "header": "Captain Gail Colt",
         "message": "You truly are a descendent of your your ancestors, our people still hope to repay you one day. Perhaps we'll get a chance again, maybe in Andromeda? Safe voyages!",
         "index": 8,
@@ -80,12 +106,14 @@
         "addResources": [
           {
             "value": {
-              "rations": 1.0
+              "rations": 1.0,
+              "tags": []
             },
             "operationId": "c204d6c4-0edc-45c7-bf1a-f63442872680"
           }
         ],
         "addInstances": [],
+        "addRandomInstances": [],
         "nextLogId": "58963505-6824-472b-8d36-448c519d6189",
         "index": 5,
         "logId": "b7be828d-4de6-4017-9b74-d2a29b87d1d0"
@@ -96,6 +124,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "148cd289-4b21-466a-83bc-0bf1d428addc"
+            },
             "buttonId": "0c2f20fe-a6f4-481f-8248-c62567714878",
             "index": 1,
             "message": "You didn't stay behind!",
@@ -104,17 +135,23 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -124,6 +161,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "1dd138b7-6f4c-4eeb-bb7c-f776e92548d3"
+            },
             "buttonId": "0ab23eee-7d27-4e10-b598-910f16c14dc6",
             "message": "Thank you, we're humbled by this offer",
             "nextLogId": "b7be828d-4de6-4017-9b74-d2a29b87d1d0",
@@ -131,20 +171,29 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "b558a9c4-a374-47f1-a800-ef5336bb22f6"
+            },
             "buttonId": "63d0d80f-be1b-4bc3-9b37-454814191364",
             "index": 1,
             "message": "We couldn't possibly accept such a generous offer",
@@ -153,17 +202,23 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -176,6 +231,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "8b7f8a6f-ebc4-47b5-a9ae-ce314c48f948"
+              },
+              "_header": {
+                "key": "8126044f-915a-46d9-b3a7-a0fbe1f56f12"
+              },
+              "_body": {
+                "key": "7b8f17fc-bb91-4693-bcff-d0920d148b87"
+              },
               "encyclopediaId": "c154b978-4120-4e85-9ff3-5346147de08a",
               "title": "LSM Beethoven",
               "header": "Moved On",
@@ -190,7 +254,7 @@
       }
     ]
   },
-  "version": 6,
+  "version": 7,
   "meta": "We Moved On",
   "metaKeyValues": {
     "EncounterId": "14c17b2e-273d-4a6f-a85c-c5eaf301bacb"

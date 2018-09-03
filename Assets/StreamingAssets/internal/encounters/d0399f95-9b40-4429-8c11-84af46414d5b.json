@@ -1,7 +1,7 @@
 {
+  "ignore": true,
   "orderWeight": 999.0,
   "randomWeightMultiplier": 1.0,
-  "ignore": true,
   "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
   "name": "Button Test 0",
   "hook": "Button Test 0",
@@ -10,6 +10,7 @@
     "booleanKeyValues": [],
     "stringKeyValues": [],
     "encounterInteractions": [],
+    "inventoryIds": [],
     "inventoryTags": []
   },
   "validSystems": [],
@@ -17,6 +18,12 @@
   "logs": {
     "textLogs": [
       {
+        "_header": {
+          "key": "9e595c3d-fd8b-4adb-8476-61be2bcea337"
+        },
+        "_message": {
+          "key": "b3e78535-a0b5-4bc3-9370-2a6f019df0b3"
+        },
         "header": "Button 0",
         "message": "You pressed button 0!",
         "nextLogId": "f7cd9b94-0cbc-47f7-bb8b-a7a5dd9a9feb",
@@ -25,6 +32,12 @@
         "name": "Pressed 0"
       },
       {
+        "_header": {
+          "key": "e553e2be-7724-4f39-8a59-083c0b27d7bb"
+        },
+        "_message": {
+          "key": "e54fe62b-f6c2-4783-b273-06df29b1d9ff"
+        },
         "header": "Button 1",
         "message": "You pressed button 1!",
         "nextLogId": "545b9ca3-b76c-49b2-94e4-b02014f7ce5b",
@@ -33,6 +46,12 @@
         "name": "Pressed 1"
       },
       {
+        "_header": {
+          "key": "f0e09f08-a22e-4f80-b670-a06c87ae9b43"
+        },
+        "_message": {
+          "key": "7935e64e-b0ec-4d6e-a84c-575f539ef134"
+        },
         "header": "No Buttons",
         "message": "No buttons interactable or enabled!",
         "nextLogId": "9c70c262-4810-47aa-95c7-298e05b813df",
@@ -42,6 +61,12 @@
         "name": "NoButtons"
       },
       {
+        "_header": {
+          "key": "5c6071d5-cbb1-4a0e-8085-3153ac520c70"
+        },
+        "_message": {
+          "key": "97c6fc1f-4eb9-4238-8985-19f3485211fb"
+        },
         "header": "Wheee",
         "message": "start",
         "nextLogId": "3f84dcd0-b76a-4904-baf9-658a5c5f5b45",
@@ -51,6 +76,12 @@
         "name": "Start"
       },
       {
+        "_header": {
+          "key": "b91b2724-16fe-4657-9d95-7ec84d5d402d"
+        },
+        "_message": {
+          "key": "17ddc487-795d-47b6-8bc6-44b96ef98c64"
+        },
         "header": "End",
         "message": "Ok done",
         "index": 9,
@@ -101,6 +132,7 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           }
@@ -114,6 +146,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "a0496de3-422a-411c-b3e9-b7236072b9e4"
+            },
             "buttonId": "46214372-a70a-4496-a5e4-d665ee5a5139",
             "message": "Some button once told me",
             "nextLogId": "3ad33fd5-aca0-4481-92b8-38de09d48fc6",
@@ -122,12 +157,14 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
@@ -143,10 +180,14 @@
               ],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "4245b260-1c4a-4ad5-9664-4e40d90c0c24"
+            },
             "buttonId": "11c8796d-81b8-4e17-9058-e3e48686f133",
             "index": 1,
             "message": "The world is gunna roll me",
@@ -156,22 +197,28 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "c2c56f02-7b4b-44cc-b7d1-f7f5ecb8331b"
+            },
             "buttonId": "c07d16a1-d09d-45b5-b61e-6dbf101d9afa",
             "index": 2,
             "message": "Ok End",
@@ -181,22 +228,28 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "77382afa-7187-4d1b-b946-7ca152e5244a"
+            },
             "buttonId": "2f0fb32c-334a-4756-bfe0-066a88b095cf",
             "index": 3,
             "message": "Add encyclopedia",
@@ -206,18 +259,21 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           }
@@ -232,13 +288,35 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "67653472-827a-4d26-8457-8f628d61ed8a",
+                "showDetails": true
+              },
+              "_header": {
+                "key": "e5a76c23-86d7-4855-b516-bdc92be4f236",
+                "showDetails": true
+              },
+              "_body": {
+                "key": "c7397b6e-c7e0-431f-8a7a-480bf4e1d809",
+                "showDetails": true
+              },
               "encyclopediaId": "a67e990d-d5f0-4499-b2cf-f813082dd678",
               "title": "Some Title",
-              "body": "wow what an intro!"
+              "body": "wow what an intro! aoeu snthaoe usntahoeu ao esntuhaeonsthu aonseth usantoeuh "
             }
           },
           {
             "entry": {
+              "_title": {
+                "key": "30c0dfe7-f0cf-4607-a9b1-3aae0d8ce28e",
+                "showDetails": true
+              },
+              "_header": {
+                "key": "fa61b30f-e843-412c-a204-c2587183b647"
+              },
+              "_body": {
+                "key": "71d6eb87-3428-4607-ac5f-592c81a51c8a"
+              },
               "encyclopediaId": "81382201-61cc-4e54-a0d9-aaa0eca50747",
               "title": "Some Title",
               "header": "section 1",
@@ -249,6 +327,15 @@
           },
           {
             "entry": {
+              "_title": {
+                "key": "9eabf927-3787-42db-ba05-ba7ee90da4a7"
+              },
+              "_header": {
+                "key": "fdaa844b-1624-4501-ae16-f0970c4adb03"
+              },
+              "_body": {
+                "key": "e9224d06-2c2d-4ab4-b84e-60cca099dfa0"
+              },
               "encyclopediaId": "605fc40d-0b06-4292-9d8b-ef7b23978220",
               "title": "Some Other Title",
               "body": "Yaaaas"

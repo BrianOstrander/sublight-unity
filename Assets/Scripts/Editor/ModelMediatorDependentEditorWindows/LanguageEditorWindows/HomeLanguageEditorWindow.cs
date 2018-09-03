@@ -233,11 +233,12 @@ namespace LunraGames.SubLight
 
 		void OnHomeSelectedEntries(LanguageDatabaseModel model)
 		{
-			var duplicates = model.Language.Duplicates;
+			var duplicateCount = model.Language.DuplicateCount();
+			var valueCount = model.Language.Edges.Value.Length;
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("Entry Count: " + model.Language.Edges.Length + " | Duplicates: " + duplicates.Length);
+				GUILayout.Label("Entry Count: " + valueCount + " | Duplicates: " + duplicateCount);
 
 				EditorGUILayoutExtensions.PushColor(Color.red);
 				{
@@ -246,7 +247,7 @@ namespace LunraGames.SubLight
 						if (EditorUtilityExtensions.DialogConfirm("Are you sure you want to delete all entries?"))
 						{
 							selectedModified = true;
-							model.Language.Edges = new LanguageDatabaseEdge[0];
+							model.Language.Edges.Value = new LanguageDatabaseEdge[0];
 						}
 					}
 				}
@@ -254,46 +255,54 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			var hasDuplicates = duplicates.Any();
-			if (hasDuplicates) EditorGUILayout.HelpBox("There are duplicate values.", MessageType.Info);
+			if (0 < duplicateCount) EditorGUILayout.HelpBox("There are duplicate values.", MessageType.Info);
 
 			homeEntriesScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeEntriesScroll), false, true).y;
 			{
 				EditorGUIExtensions.BeginChangeCheck();
 				{
 					var alternate = false;
-					foreach (var entry in model.Language.Edges)
+					foreach (var entry in model.Language.Edges.Value)
 					{
-						var isDuplicate = hasDuplicates && duplicates.Contains(entry.Key);
-
 						if (alternate) EditorGUILayoutExtensions.PushColor(Color.gray);
 						GUILayout.BeginVertical(EditorStyles.helpBox);
 						if (alternate) EditorGUILayoutExtensions.PopColor();
 						{
-							if (isDuplicate) EditorGUILayoutExtensions.PushColor(Color.yellow);
+							if (entry.IsDuplicate) EditorGUILayoutExtensions.PushColor(Color.yellow);
 
 							GUILayout.BeginHorizontal();
 							{
-								GUILayout.Label(entry.Key, EditorStyles.boldLabel);
-								if (isDuplicate) GUILayout.Label("[ Duplicate ]", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-							}
-							GUILayout.EndHorizontal();
-							EditorGUILayoutExtensions.PushIndent();
-							{
-								var original = entry.Value;
-								var result = EditorGUILayoutExtensions.TextDynamic(original);
-								if (original != result)
+								GUILayout.Label(entry.Key.Value, EditorStyles.boldLabel);
+								if (entry.IsDuplicate)
 								{
-									var apply = true;
-									if (string.IsNullOrEmpty(result)) apply = EditorUtilityExtensions.DialogConfirm("Entering a null or empty string will remove this entry.");
-									if (apply) model.Language.Set(entry.Key, result);
+									var duplicateLabel = entry.Key.Value == entry.DuplicateKey ? "> Duplicate <" : "[ Duplicate ]";
+									if (entry.IsDuplicate) GUILayout.Label(duplicateLabel, EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 								}
 							}
-							EditorGUILayoutExtensions.PopIndent();
+							GUILayout.EndHorizontal();
+
+							var original = entry.Value;
+							var result = EditorGUILayoutExtensions.TextDynamic("Value", original);
+							if (original != result)
+							{
+								var apply = true;
+								if (string.IsNullOrEmpty(result)) apply = EditorUtilityExtensions.DialogConfirm("Entering a null or empty string will remove this entry.");
+								if (apply) entry.Value.Value = result;
+							}
+
+							if (entry.IsDuplicate) EditorGUILayout.LabelField("Duplicates", entry.DuplicateKey);
+
+							EditorGUIExtensions.PauseChangeCheck();
+							{
+								entry.ShowNotes.Value = EditorGUILayout.Foldout(entry.ShowNotes.Value, "Notes");
+							}
+							EditorGUIExtensions.UnPauseChangeCheck();
+
+							if (entry.ShowNotes.Value) entry.Notes.Value = EditorGUILayoutExtensions.TextDynamic(entry.Notes.Value);
 
 							GUILayout.Space(4f);
 
-							if (isDuplicate) EditorGUILayoutExtensions.PopColor();
+							if (entry.IsDuplicate) EditorGUILayoutExtensions.PopColor();
 						}
 						GUILayout.EndVertical();
 
@@ -336,6 +345,7 @@ namespace LunraGames.SubLight
 		void SaveSelected()
 		{
 			if (selected == null) return;
+			selected.Language.Edges.Value = selected.Language.Edges.Value.ToArray();
 			SaveLoadService.Save(selected, OnSaveSelected, false);
 		}
 

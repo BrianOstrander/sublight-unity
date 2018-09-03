@@ -16,7 +16,9 @@
         "group": "All",
         "filterValue": "d1ce5b0d-6b5f-4142-88a8-7cbb35b17a66"
       }
-    ]
+    ],
+    "inventoryIds": [],
+    "inventoryTags": []
   },
   "validSystems": [],
   "assignedToBody": true,
@@ -24,6 +26,12 @@
   "logs": {
     "textLogs": [
       {
+        "_header": {
+          "key": "f27fcb39-c8d9-432e-a5c1-9ae614877509"
+        },
+        "_message": {
+          "key": "d61f0d40-8c23-474b-8cf5-04c2e1294156"
+        },
         "header": "A. Vex",
         "message": "We're getting down deep in the well of this blackhole, not sure how they managed to get such a large ark this close to the event horizon.",
         "nextLogId": "3bc4f282-5afe-40e5-9e00-b811b24938dd",
@@ -32,6 +40,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "2f093541-1789-4a7b-96e2-4ada153d6e16"
+        },
+        "_message": {
+          "key": "69245482-f4ee-473f-acf2-111c048cb174"
+        },
         "header": "C. Cortez",
         "message": "Yeah, these gravitational waves are bucking our shuttle wildly, you hear that mother? That's the sound of our hull creaking, we're lucky our shuttle is so tiny, anything bigger and these forces would shear us in half!",
         "nextLogId": "84027803-bf8e-47d7-98df-ef7d4ae4d592",
@@ -39,6 +53,12 @@
         "logId": "3bc4f282-5afe-40e5-9e00-b811b24938dd"
       },
       {
+        "_header": {
+          "key": "fe3f7e09-7151-4edb-9473-23a70e71cc42"
+        },
+        "_message": {
+          "key": "4a2fbf5c-33ca-451b-a35b-cf819c8f3a9c"
+        },
         "header": "A. Vex",
         "message": "Okay, we're pulling up alongside the wreck... and wow, what a number was done to their ark. Hey Cortez, can you do a spectral scan, see if there's any evidence of weapon fire? I wanna know what brought them so far down here.",
         "nextLogId": "ca8c6f05-7dfc-440f-b429-af651ce18479",
@@ -47,6 +67,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "77e6a187-9be3-4c2f-b3a3-ff7c0f903a24"
+        },
+        "_message": {
+          "key": "e62a9aa8-02ec-4d18-b221-bfd9f92414c1"
+        },
         "header": "C. Cortez",
         "message": "Running scan... not picking up any obvious traces of weapon fire. Fracture patterns and residue on the propulsion unit of the ark suggest their engines were running full tilt when the damage occured. This ark didn't drift here as a derelict, it died here...",
         "nextLogId": "26751d85-1a59-406f-be21-9df9ecf7e9ff",
@@ -54,6 +80,12 @@
         "logId": "ca8c6f05-7dfc-440f-b429-af651ce18479"
       },
       {
+        "_header": {
+          "key": "f33f4778-bc0e-47b3-9969-fda6b9464d22"
+        },
+        "_message": {
+          "key": "1d3257a1-5334-4c48-b10b-5fa851de1b10"
+        },
         "header": "C. Cortez",
         "message": "It's hard to see, the hull is pretty banged up, can we get some lights trained on it Vex?",
         "nextLogId": "35bd3d57-7e76-4e4d-a344-e5a0a2a571c2",
@@ -62,6 +94,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "27fa4af5-3252-495d-ad38-64291adb1f44"
+        },
+        "_message": {
+          "key": "8e86d841-e890-49b9-be88-51f181c10069"
+        },
         "header": "A. Vex",
         "message": "Activating flood lights.",
         "nextLogId": "4d863514-8157-4c91-b5b5-b68cc8238259",
@@ -70,6 +108,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "70351cf9-3b6d-49fa-bcd7-c51d6479e6bf"
+        },
+        "_message": {
+          "key": "762ae20b-e97d-42fd-afb7-709cc2489018"
+        },
         "header": "C. Cortez",
         "message": "Okay, that's better. Definetely a Mercury ship, it's got LSM markings... looks contemporary to our own ark... LSM Rosa, that ring any bells?",
         "nextLogId": "c5de5ce1-bb81-45ee-9bc4-cc7b8ae66eb2",
@@ -78,6 +122,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "8de64ee6-e97a-4742-8182-e3b33482ea16"
+        },
+        "_message": {
+          "key": "a85445a0-08ca-441c-af8a-3ff77b15d275"
+        },
         "header": "A. Vex",
         "message": "Oh god, those poor souls. Yeah.. our ancestors crossed paths with them, they're the first ark we met since leaving Sol. They're the ones that encouraged us to keep going, towards Andromeda...",
         "nextLogId": "e3a8f6fa-11d2-4bfe-82c4-3bf6f0db003e",
@@ -86,6 +136,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "a55440a7-2f09-470e-8cf5-198be79730d7"
+        },
+        "_message": {
+          "key": "efc4190a-2b65-4ee2-a1f9-032fb2fd53f1"
+        },
         "header": "C. Cortez",
         "message": "Your call mother, but if you ask me it feels wrong to leave them drifting here...",
         "nextLogId": "aa32f74e-d619-47f3-bed9-2d991eec55b6",
@@ -93,6 +149,12 @@
         "logId": "e3a8f6fa-11d2-4bfe-82c4-3bf6f0db003e"
       },
       {
+        "_header": {
+          "key": "6e3c7f21-9d1b-43d7-9589-96141f145abe"
+        },
+        "_message": {
+          "key": "6040d0a5-4f75-4a03-a011-3edd9ccfc0c1"
+        },
         "header": "C. Cortez",
         "message": "Okay, feels wrong, but we'll see what we can siphon.",
         "nextLogId": "7d349f95-919f-464a-ab74-8ff75009eb92",
@@ -100,6 +162,12 @@
         "logId": "611397ad-a2cc-4dc0-8c56-fcc3f6f2be9c"
       },
       {
+        "_header": {
+          "key": "742de4fe-9be3-46a9-81ea-7233e752f891"
+        },
+        "_message": {
+          "key": "620e0a61-e541-4880-89d3-b63c9eec55e1"
+        },
         "header": "C. Cortez",
         "message": "I don't think they'd have wanted to be left like this, but okay, heading back mother.",
         "nextLogId": "1ce08d17-24c0-4e3d-aac0-d1a0e8c3f02c",
@@ -107,6 +175,12 @@
         "logId": "ec85a9ec-71bb-4c7b-b0b6-7bcfe9d09e87"
       },
       {
+        "_header": {
+          "key": "e1103ab1-9361-416c-8d02-85cf75725c95"
+        },
+        "_message": {
+          "key": "05d45233-7b58-48f3-8c41-84ac84aa22e1"
+        },
         "header": "C. Cortez",
         "message": "Good call, we can nudge it into a decaying orbit around the blackhole. It's the least we can do...",
         "nextLogId": "ada858b3-b2a9-459c-9b99-48764bbc6f9e",
@@ -120,12 +194,14 @@
         "addResources": [
           {
             "value": {
-              "fuel": 1.0
+              "fuel": 1.0,
+              "tags": []
             },
             "operationId": "2c3ea129-cf19-446e-85ba-85a07d91a7c4"
           }
         ],
         "addInstances": [],
+        "addRandomInstances": [],
         "nextLogId": "611397ad-a2cc-4dc0-8c56-fcc3f6f2be9c",
         "index": 14,
         "logId": "973a343d-1b7d-4660-ad72-728973d6b6b3"
@@ -136,6 +212,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "d44626bf-cb85-4d6e-9bb5-3ebbfd495418"
+            },
             "buttonId": "7b0e923e-16c3-4f5d-b371-7b02bda6072d",
             "message": "Proceed with caution",
             "nextLogId": "15f40baf-1a2c-4da8-8fe7-559cc5653f79",
@@ -143,17 +222,23 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -164,6 +249,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "8b80e462-442f-46d8-b4fc-70b89e3181d0"
+            },
             "buttonId": "776010e8-d7e4-4122-acc6-255aacab6a9c",
             "message": "Any identifying markings on the hull?",
             "nextLogId": "7f334eb2-4529-46ba-9dd7-1ea3073f78c6",
@@ -171,17 +259,23 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -192,6 +286,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "d4038e4b-6818-4f04-a61d-407ca36cfb49"
+            },
             "buttonId": "d322c30e-d3c0-4620-a64b-66233e0ee573",
             "message": "We need any fuel they have onboard",
             "nextLogId": "973a343d-1b7d-4660-ad72-728973d6b6b3",
@@ -199,20 +296,29 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "ae2f20ab-60a3-4d8a-8ba6-aca669dbcbb5"
+            },
             "buttonId": "5d94183e-79d8-43b0-975d-943329279513",
             "index": 1,
             "message": "Let them be",
@@ -221,20 +327,29 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           },
           {
+            "_message": {
+              "key": "024e05e1-4cb2-42ab-bf34-dd0fb2d24be5"
+            },
             "buttonId": "ebfa6d82-2c45-437a-a685-28bc20facbf8",
             "index": 2,
             "message": "Give them a final resting place",
@@ -243,17 +358,23 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -266,6 +387,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "34175404-82e0-44a4-b5ee-494d4cdce8b9"
+              },
+              "_header": {
+                "key": "728c905b-ad0a-4337-afa8-32f9b7460fa7"
+              },
+              "_body": {
+                "key": "3523de05-0661-4fa7-8099-9018ab6a2264"
+              },
               "encyclopediaId": "dfc21640-2976-47fe-bdd1-d2048fa2cd98",
               "title": "LSM Rosa",
               "header": "Fate",
@@ -283,6 +413,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "736d217c-759a-48a5-aa5f-eb1950e09526"
+              },
+              "_header": {
+                "key": "476251b3-3b26-43a0-92b0-7578c1fcb519"
+              },
+              "_body": {
+                "key": "942faabe-86e5-4984-9334-8d3049ccb770"
+              },
               "encyclopediaId": "8c54f641-00dc-4faf-89b6-f4678af7f59c",
               "title": "LSM Rosa",
               "header": "Fate",
@@ -300,6 +439,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "64037ba3-547d-47e8-80e1-1c9e0cbe16e0"
+              },
+              "_header": {
+                "key": "e64bedb7-f261-4810-a4c8-275b36aa2747"
+              },
+              "_body": {
+                "key": "a0440e6a-44c8-4b26-929b-adf5308fbb8f"
+              },
               "encyclopediaId": "1086d45d-c1d5-41b5-906e-3e3fd4121e4a",
               "title": "LSM Rosa",
               "header": "Fate",
@@ -317,6 +465,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "53b36a3b-5fb1-4da3-a03d-e735d54518f7"
+              },
+              "_header": {
+                "key": "e3fb745f-95b5-4973-8eee-0c48e3702c26"
+              },
+              "_body": {
+                "key": "ca1a4c66-9b6d-4692-b240-cf6b2252be5b"
+              },
               "encyclopediaId": "27ab4883-0901-40b5-86f8-1604d9706f10",
               "title": "LSM Rosa",
               "header": "Final Gravity Assist",
@@ -331,7 +488,7 @@
       }
     ]
   },
-  "version": 6,
+  "version": 7,
   "meta": "We Moved Too Fast",
   "metaKeyValues": {
     "EncounterId": "50ca77ea-9380-421c-b570-019144c98047"

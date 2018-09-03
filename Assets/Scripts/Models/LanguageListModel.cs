@@ -10,64 +10,44 @@ namespace LunraGames.SubLight.Models
 	{
 		[JsonProperty] LanguageDatabaseEdge[] edges = new LanguageDatabaseEdge[0];
 
-		public void Set(
-			string key,
-			string value,
-			Action<RequestStatus, LanguageDatabaseEdge> done = null
-		)
+		[JsonIgnore]
+		public readonly ListenerProperty<LanguageDatabaseEdge[]> Edges;
+
+		public LanguageListModel()
 		{
-			OnSet(key, null, value, done);
+			Edges = new ListenerProperty<LanguageDatabaseEdge[]>(OnSetEdges, OnGetEdges);
 		}
 
-		public void Set(
-			string key,
-			int order,
-			string value,
-			Action<RequestStatus, LanguageDatabaseEdge> done = null
-		)
+		#region Events
+		void OnSetEdges(LanguageDatabaseEdge[] newEdges)
 		{
-			OnSet(key, order, value, done);
-		}
+			var uniques = new Dictionary<string, string>();
+			var duplicates = new List<string>();
 
-		void OnSet(
-			string key,
-			int? order,
-			string value,
-			Action<RequestStatus, LanguageDatabaseEdge> done = null
-		)
-		{
-			if (string.IsNullOrEmpty(key)) throw new ArgumentException("Cannot be null or empty", "key");
+			foreach (var edge in newEdges) edge.DuplicateKey.Value = null;
 
-			if (string.IsNullOrEmpty(value))
+			foreach (var edge in newEdges)
 			{
-				edges = edges.Where(e => e.Key != key).ToArray();
-				if (done != null) done(RequestStatus.Success, default(LanguageDatabaseEdge));
-				return;
+				if (string.IsNullOrEmpty(edge.Value.Value)) continue;
+
+				string existingKey;
+				if (uniques.TryGetValue(edge.Value.Value, out existingKey))
+				{
+					if (!duplicates.Contains(existingKey))
+					{
+						duplicates.Add(existingKey);
+						newEdges.First(e => e.Key.Value == existingKey).DuplicateKey.Value = existingKey;
+					}
+					edge.DuplicateKey.Value = existingKey;
+				}
+				else uniques.Add(edge.Value.Value, edge.Key.Value);
 			}
 
-			var edge = edges.FirstOrDefault(e => e.Key == key);
-			if (edge.IsEmpty)
-			{
-				edges = edges.Append(edge = new LanguageDatabaseEdge(key, value, order.HasValue ? order.Value : 0)).ToArray();
-			}
-			else
-			{
-				if (order.HasValue) edge.Order = order.Value;
-				edge.Value = value;
-			}
-
-			if (done != null) done(RequestStatus.Success, edge.Duplicate);
+			edges = newEdges;
 		}
 
-		public void Get(string key, Action<RequestStatus, LanguageDatabaseEdge> done)
-		{
-			if (string.IsNullOrEmpty(key)) throw new ArgumentException("Cannot be null or empty", "key");
-			if (done == null) throw new ArgumentNullException("done");
-
-			var edge = edges.FirstOrDefault(e => e.Key == key);
-
-			done(edge.IsEmpty ? RequestStatus.Failure : RequestStatus.Success, edge);
-		}
+		LanguageDatabaseEdge[] OnGetEdges() { return edges; }
+		#endregion
 
 		/// <summary>
 		/// Adds or sets the specified key values in the provided list, assuming
@@ -75,62 +55,41 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		/// <param name="list">List.</param>
 		/// <param name="order">Order.</param>
-		/// <param name="done">Done.</param>
 		public void Apply(
 			LanguageListModel list,
-			int order,
-			Action done = null
+			int order
 		)
 		{
 			if (list == null) throw new ArgumentNullException("list");
 
 			var newEdges = new List<LanguageDatabaseEdge>();
+			var currentEdges = Edges.Value;
 
-			foreach (var otherEdge in list.edges)
+			foreach (var otherEdge in list.Edges.Value)
 			{
-				var edge = edges.FirstOrDefault(e => e.Key == otherEdge.Key);
-				if (edge.IsEmpty) newEdges.Add(otherEdge.Duplicate);
-				else if (edge.Order < order)
-				{
-					edge.Value = otherEdge.Value;
-					edge.Order = order;
-				}
+				var edge = currentEdges.FirstOrDefault(e => e.Key.Value == otherEdge.Key.Value);
+				if (edge == null) newEdges.Add(otherEdge.Duplicate(order));
+				else if (edge.Order < order) newEdges.Add(otherEdge.Duplicate(order));
+				else newEdges.Add(edge.Duplicate());
 			}
 
-			edges = edges.Concat(newEdges).ToArray();
-
-			if (done != null) done();
+			Edges.Value = newEdges.ToArray();
 		}
 
-		[JsonIgnore]
-		public LanguageDatabaseEdge[] Edges
+		public LanguageDatabaseEdge[] GetDuplicates(LanguageDatabaseEdge edge)
 		{
-			get
-			{
-				var result = new List<LanguageDatabaseEdge>();
-				foreach (var edge in edges) result.Add(edge.Duplicate);
-				return result.ToArray();
-			}
-			set
-			{
-				edges = value ?? new LanguageDatabaseEdge[0];
-			}
+			//return Edges.Value;
+			return Edges.Value.Where(e => e.IsDuplicate && e.DuplicateKey == edge.DuplicateKey.Value).ToArray();
 		}
 
-		[JsonIgnore]
-		public string[] Duplicates
+		public int DuplicateCount()
 		{
-			get
+			var count = 0;
+			foreach (var edge in Edges.Value)
 			{
-				var duplicates = new List<string>();
-				var uniques = new List<string>();
-				foreach (var edge in edges)
-				{
-					if (uniques.Any(e => e == edge.Value)) duplicates.Add(edge.Value);
-					else uniques.Add(edge.Value);
-				}
-				return edges.Where(e => duplicates.Contains(e.Value)).Select(e => e.Key).ToArray();
+				if (edge.IsDuplicate) count++;
 			}
+			return count;
 		}
 	}
 }

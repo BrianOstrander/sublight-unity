@@ -57,9 +57,8 @@ namespace LunraGames.SubLight.Models
 		{
 			foreach (var entry in languageStringsListener.Value)
 			{
-				// Edges are structs, so the default value will assign a null value.
-				var edge = edges.FirstOrDefault(e => e.Key == entry.Key.Value);
-				entry.Value.Value = edge.Value;
+				var edge = edges.FirstOrDefault(e => e.Key.Value == entry.Key.Value);
+				entry.Value.Value = edge == null ? null : edge.Value.Value;
 			}
 			OnUpdateLanguageStrings(edges);
 		}

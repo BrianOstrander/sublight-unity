@@ -24,7 +24,9 @@
         "group": "All",
         "filterValue": "ff34ef9d-1eb2-4498-b139-e821dedff9bb"
       }
-    ]
+    ],
+    "inventoryIds": [],
+    "inventoryTags": []
   },
   "validSystems": [],
   "assignedToBody": true,
@@ -32,6 +34,12 @@
   "logs": {
     "textLogs": [
       {
+        "_header": {
+          "key": "a1bda0f5-d4c6-430b-9e81-df07a3f3d209"
+        },
+        "_message": {
+          "key": "a9129384-7d5c-46e6-bf97-96554afa1870"
+        },
         "header": "D. Lang",
         "message": "Approaching the LSM Beethoven... it doesn't look good. Multiple hull fractures and the entire drive unit is shot.",
         "nextLogId": "3a33b1f4-50cd-429c-9f6b-0f4df92fddc0",
@@ -40,6 +48,12 @@
         "duration": 1.0
       },
       {
+        "_header": {
+          "key": "e0859088-30bd-4b51-9c66-b0f024f99b0e"
+        },
+        "_message": {
+          "key": "05bdc529-246c-40f4-a4aa-f6eabee8fd21"
+        },
         "header": "D. Lang",
         "message": "Mmm... no, looks like small arms fire, there must have been a spirited fight onboard.",
         "nextLogId": "9207ffc8-30a0-4dfa-b8fa-d0c411870335",
@@ -47,6 +61,12 @@
         "logId": "ec5ceced-a5b1-43f7-87fe-40063bdef945"
       },
       {
+        "_header": {
+          "key": "f35dcb0a-5d7a-43d9-aa7f-b5c8dfef470b"
+        },
+        "_message": {
+          "key": "29ceb4e1-de7b-4f4f-827a-9b579831d4e2"
+        },
         "header": "D. Lang",
         "message": "Looks like there was a mutiny, a bad one. The void started accelerating towards the Beethoven, and people panicked. Members of the mutiny blew out the engines trying to escape the void. Their manifest says they had over a thousand people onbard when this happened, all of them dead now.",
         "index": 5,
@@ -61,6 +81,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "c42b60da-53c2-4f63-8797-8964ab0fdbc4"
+            },
             "buttonId": "9bda1a17-1ba7-4922-b193-087e56ba45c7",
             "message": "Was it an equipment failure?",
             "nextLogId": "ec5ceced-a5b1-43f7-87fe-40063bdef945",
@@ -68,17 +91,23 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -88,6 +117,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "dba38cf5-7212-47e5-a498-d8525b906ba5"
+            },
             "buttonId": "2a2b52e4-0092-41a9-9fa7-e34447dc7a77",
             "message": "Board and track down the crew logs.",
             "nextLogId": "53e1127e-d23e-4524-ad99-54bdc94899cc",
@@ -95,17 +127,23 @@
               "falseByDefault": true,
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
-              "encounterInteractions": []
+              "encounterInteractions": [],
+              "inventoryIds": [],
+              "inventoryTags": []
             }
           }
         ],
@@ -118,6 +156,15 @@
         "entries": [
           {
             "entry": {
+              "_title": {
+                "key": "7b3d4b85-fdbb-4752-8b01-f29610c0e979"
+              },
+              "_header": {
+                "key": "c4787694-a1e4-42fc-af76-f7e5c33091d7"
+              },
+              "_body": {
+                "key": "1610961a-20cf-476c-8eae-4e83148a08f7"
+              },
               "encyclopediaId": "99f80db1-1c5e-4c85-b410-5e17f8e04430",
               "title": "LSM Beethoven",
               "header": "Mutiny",
@@ -132,7 +179,7 @@
       }
     ]
   },
-  "version": 6,
+  "version": 7,
   "meta": "We Tried Staying Put",
   "metaKeyValues": {
     "EncounterId": "51904e0a-90fc-4d30-b143-0a97b2d97a64"

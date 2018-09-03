@@ -17,10 +17,13 @@
   "logs": {
     "textLogs": [
       {
-        "header": "You're done",
         "_header": {
           "key": "8f28e0e4-5924-4864-81bb-f017a88cecc3"
         },
+        "_message": {
+          "key": "106301ca-a49a-4df9-8b99-cc4ffd80ce01"
+        },
+        "header": "You're done",
         "message": "Doooone",
         "index": 2,
         "ending": true,
@@ -62,6 +65,9 @@
       {
         "buttons": [
           {
+            "_message": {
+              "key": "a4fcbdbf-4ce9-4eab-880f-ec145ed1f221"
+            },
             "buttonId": "6607ce84-2b42-441b-b272-d6d870d33015",
             "message": "Has Engine",
             "nextLogId": "79ee7e2c-1f70-47a0-8fc8-3db075ced004",
@@ -98,6 +104,9 @@
             }
           },
           {
+            "_message": {
+              "key": "fa8fa64e-b989-4757-823c-a75c1d716b9a"
+            },
             "buttonId": "36d84c17-a5bb-4f3e-91a7-e82aa1cb0aae",
             "index": 1,
             "message": "Has Stock Engine",
@@ -135,6 +144,9 @@
             }
           },
           {
+            "_message": {
+              "key": "8f45cb18-c06f-4c61-a589-e9cea3ed9ea7"
+            },
             "buttonId": "49429055-db3e-43fa-962b-8ad8311f96b5",
             "index": 2,
             "message": "Has Phantom",

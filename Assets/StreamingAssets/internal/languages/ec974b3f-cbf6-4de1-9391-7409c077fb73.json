@@ -8,26 +8,96 @@
     "Encounters"
   ],
   "language": {
-    "entries": {
-      "82fce178-810f-4b5e-8ade-b3fc080ff50a": {
-        "Value": "Old Message"
+    "edges": [
+      {
+        "key": "5c6071d5-cbb1-4a0e-8085-3153ac520c70",
+        "value": "Wheee"
       },
-      "762d792c-423a-4b51-9315-7bf8da941a04": {
-        "Value": "Old Header"
+      {
+        "key": "97c6fc1f-4eb9-4238-8985-19f3485211fb",
+        "value": "start"
       },
-      "fa405939-f2db-4e34-baac-48dea7b66e0c": {
-        "Value": "encyTitle"
+      {
+        "key": "a0496de3-422a-411c-b3e9-b7236072b9e4",
+        "value": "Some button once told me"
       },
-      "6cea9afb-ad8a-49cf-b050-07dc214ea262": {
-        "Value": "encyHeader"
+      {
+        "key": "4245b260-1c4a-4ad5-9664-4e40d90c0c24",
+        "value": "The world is gunna roll me"
       },
-      "58bf057d-fcbe-45ee-8ba4-74c75a241e03": {
-        "Value": "encyBody"
+      {
+        "key": "c2c56f02-7b4b-44cc-b7d1-f7f5ecb8331b",
+        "value": "Ok End"
       },
-      "da72b05c-1ac2-4b6c-ba54-22e33d80cbb9": {
-        "Value": "Some Button"
+      {
+        "key": "77382afa-7187-4d1b-b946-7ca152e5244a",
+        "value": "Add encyclopedia"
+      },
+      {
+        "key": "9e595c3d-fd8b-4adb-8476-61be2bcea337",
+        "value": "Button 0"
+      },
+      {
+        "key": "b3e78535-a0b5-4bc3-9370-2a6f019df0b3",
+        "value": "You pressed button 0!"
+      },
+      {
+        "key": "e553e2be-7724-4f39-8a59-083c0b27d7bb",
+        "value": "Button 1"
+      },
+      {
+        "key": "e54fe62b-f6c2-4783-b273-06df29b1d9ff",
+        "value": "You pressed button 1!"
+      },
+      {
+        "key": "f0e09f08-a22e-4f80-b670-a06c87ae9b43",
+        "value": "No Buttons"
+      },
+      {
+        "key": "7935e64e-b0ec-4d6e-a84c-575f539ef134",
+        "value": "No buttons interactable or enabled!"
+      },
+      {
+        "key": "b91b2724-16fe-4657-9d95-7ec84d5d402d",
+        "value": "End"
+      },
+      {
+        "key": "17ddc487-795d-47b6-8bc6-44b96ef98c64",
+        "value": "Ok done"
+      },
+      {
+        "key": "67653472-827a-4d26-8457-8f628d61ed8a",
+        "value": "Some Title",
+        "notes": "Example Title  ",
+        "showNotes": true,
+        "duplicateKey": "67653472-827a-4d26-8457-8f628d61ed8a"
+      },
+      {
+        "key": "c7397b6e-c7e0-431f-8a7a-480bf4e1d809",
+        "value": "wow what an intro! aoeu snthaoe usntahoeu ao esntuhaeonsthu aonseth usantoeuh "
+      },
+      {
+        "key": "30c0dfe7-f0cf-4607-a9b1-3aae0d8ce28e",
+        "value": "Some Title",
+        "duplicateKey": "67653472-827a-4d26-8457-8f628d61ed8a"
+      },
+      {
+        "key": "fa61b30f-e843-412c-a204-c2587183b647",
+        "value": "section 1"
+      },
+      {
+        "key": "71d6eb87-3428-4607-ac5f-592c81a51c8a",
+        "value": "whee first section!"
+      },
+      {
+        "key": "9eabf927-3787-42db-ba05-ba7ee90da4a7",
+        "value": "Some Other Title"
+      },
+      {
+        "key": "e9224d06-2c2d-4ab4-b84e-60cca099dfa0",
+        "value": "Yaaaas"
       }
-    }
+    ]
   },
   "version": 7,
   "meta": "Core Encounters en-US",

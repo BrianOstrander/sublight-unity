@@ -221,12 +221,6 @@ namespace LunraGames.SubLight
 
 			if (currentWarning) EditorGUILayout.HelpBox("A language must be selected.", MessageType.Error);
 		}
-
-		void OnSetKey(string key, string value)
-		{
-			if (selectedLanguageDependent == null) return;
-			selectedLanguageDependent.Language.Set(key, value);
-		}
 		#endregion
 	}
 }

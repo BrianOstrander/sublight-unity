@@ -187,7 +187,8 @@ namespace LunraGames.SubLight
 			var current = loaded.First();
 			loaded.RemoveAt(0);
 
-			currentLanguage.Apply(current.Loaded.Language, current.Order, () => OnUpdateTagsBuild(loaded, done));
+			currentLanguage.Apply(current.Loaded.Language, current.Order);
+			OnUpdateTagsBuild(loaded, done);
 		}
 
 		void OnUpdateTagsBuildDone(Action done)
@@ -195,19 +196,5 @@ namespace LunraGames.SubLight
 			Debug.Log("probably going to update all existing models in wild here");
 			if (done != null) done();
 		}
-
-		#region Utility
-		public void DebugCurrentLanguage()
-		{
-			var all = "All entries:";
-			foreach (var entry in currentLanguage.Edges)
-			{
-				var value = entry.Value;
-				var shortened = (string.IsNullOrEmpty(value) || value.Length < 32) ? value : value.Substring(0, 32);
-				all += "\n" + entry.Order + " - " + entry.Key + " : " + shortened;
-			}
-			Debug.Log(all);
-		}
-		#endregion
 	}
 }
