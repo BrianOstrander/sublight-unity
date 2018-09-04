@@ -13,15 +13,15 @@ namespace LunraGames.SubLight
 		}
 
 		public static TransitionFocusRequest Request(
-			DeliverFocusBlock[] gatherResults,
-			SetFocusBlock[] transitions,
+			GatherFocusResult gatherResult,
+			SetFocusTransition[] transitions,
 			DateTime startTime,
 			DateTime endTime
 		)
 		{
 			return new TransitionFocusRequest(
 				States.Request,
-				gatherResults,
+				gatherResult,
 				transitions,
 				startTime,
 				endTime,
@@ -32,13 +32,13 @@ namespace LunraGames.SubLight
 		}
 
 		public static TransitionFocusRequest RequestInstant(
-			DeliverFocusBlock[] gatherResults,
-			SetFocusBlock[] transitions
+			GatherFocusResult gatherResult,
+			SetFocusTransition[] transitions
 		)
 		{
 			return new TransitionFocusRequest(
 				States.Request,
-				gatherResults,
+				gatherResult,
 				transitions,
 				DateTime.MinValue,
 				DateTime.MinValue,
@@ -49,8 +49,8 @@ namespace LunraGames.SubLight
 		}
 
 		public readonly States State;
-		public readonly DeliverFocusBlock[] GatherResults;
-		public readonly SetFocusBlock[] Transitions;
+		public readonly GatherFocusResult GatherResult;
+		public readonly SetFocusTransition[] Transitions;
 		public readonly DateTime StartTime;
 		public readonly DateTime EndTime;
 		public readonly TimeSpan Duration;
@@ -59,8 +59,8 @@ namespace LunraGames.SubLight
 
 		public TransitionFocusRequest(
 			States state,
-			DeliverFocusBlock[] gatherResults,
-			SetFocusBlock[] transitions,
+			GatherFocusResult gatherResult,
+			SetFocusTransition[] transitions,
 			DateTime startTime,
 			DateTime endTime,
 			TimeSpan duration,
@@ -69,7 +69,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			State = state;
-			GatherResults = gatherResults;
+			GatherResult = gatherResult;
 			Transitions = transitions;
 			StartTime = startTime;
 			EndTime = endTime;
@@ -78,16 +78,19 @@ namespace LunraGames.SubLight
 			Instant = instant;
 		}
 
-		public TransitionFocusRequest Duplicate(States state = States.Unknown)
+		public TransitionFocusRequest Duplicate(
+			States state = States.Unknown,
+			float? progress = null
+		)
 		{
 			return new TransitionFocusRequest(
 				state == States.Unknown ? State : state,
-				GatherResults,
+				GatherResult,
 				Transitions,
 				StartTime,
 				EndTime,
 				Duration,
-				Progress,
+				progress.HasValue ? progress.Value : Progress,
 				Instant
 			);
 		}

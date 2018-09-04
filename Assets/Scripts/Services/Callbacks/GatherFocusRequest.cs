@@ -5,6 +5,11 @@ namespace LunraGames.SubLight
 	public struct GatherFocusResult
 	{
 		public readonly DeliverFocusBlock[] DeliveredTextures;
+
+		public GatherFocusResult(DeliverFocusBlock[] deliveredTextures)
+		{
+			DeliveredTextures = deliveredTextures;
+		}
 	}
 
 	public struct GatherFocusRequest

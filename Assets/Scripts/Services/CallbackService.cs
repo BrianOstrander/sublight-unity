@@ -125,6 +125,14 @@ namespace LunraGames.SubLight
 		/// Called when requesting, updating, or completing an encounter.
 		/// </summary>
 		public Action<EncounterRequest> EncounterRequest = ActionExtensions.GetEmpty<EncounterRequest>();
+		/// <summary>
+		/// Called to change focuses, or set new default focuses.
+		/// </summary>
+		public Action<SetFocusRequest> SetFocusRequest = ActionExtensions.GetEmpty<SetFocusRequest>();
+		/// <summary>
+		/// Called when transitioning between focuses.
+		/// </summary>
+		public Action<TransitionFocusRequest> TransitionFocusRequest = ActionExtensions.GetEmpty<TransitionFocusRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

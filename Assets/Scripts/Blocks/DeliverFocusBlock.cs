@@ -10,6 +10,7 @@ namespace LunraGames.SubLight
 		public readonly RenderTexture Texture;
 		public readonly Action<DeliverFocusBlock> Done;
 
+		public DeliverFocusBlock(SetFocusLayers layer, RenderTexture texture) : this(layer, texture, null) {}
 		public DeliverFocusBlock(SetFocusLayers layer, Action<DeliverFocusBlock> done) : this(layer, null, done) {}
 
 		DeliverFocusBlock(SetFocusLayers layer, RenderTexture texture, Action<DeliverFocusBlock> done)

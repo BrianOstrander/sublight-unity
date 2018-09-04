@@ -6,15 +6,35 @@ namespace LunraGames.SubLight
 	{
 		public static SetFocusRequest Request(float duration, SetFocusBlock[] targets, Action done = null)
 		{
-			return new SetFocusRequest(duration, targets, done);
+			return new SetFocusRequest(false, false, duration, targets, done);
 		}
 
+		public static SetFocusRequest RequestInstant(SetFocusBlock[] targets, Action done = null)
+		{
+			return new SetFocusRequest(false, true, 0f, targets, done);
+		}
+
+		public static SetFocusRequest Default(SetFocusBlock[] targets, Action done = null)
+		{
+			return new SetFocusRequest(true, true, 0f, targets, done);
+		}
+
+		public readonly bool IsDefault;
+		public readonly bool Instant;
 		public readonly float Duration;
 		public readonly SetFocusBlock[] Targets;
 		public readonly Action Done;
 
-		SetFocusRequest(float duration, SetFocusBlock[] targets, Action done)
+		SetFocusRequest(
+			bool isDefault,
+			bool instant,
+			float duration,
+			SetFocusBlock[] targets,
+			Action done
+		)
 		{
+			IsDefault = isDefault;
+			Instant = instant;
 			Duration = duration;
 			Targets = targets;
 			Done = done ?? ActionExtensions.Empty;
