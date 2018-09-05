@@ -30,6 +30,44 @@ namespace LunraGames.SubLight.Views
 		[SerializeField, Header("Test"), Range(0f, 1f)]
 		public float orientationPreview;
 
+		float orbit;
+		float zoom;
+
+		Vector3? orbitForward;
+		Vector3 gantryPosition;
+		Vector3 gantryForward;
+
+		public float Orbit
+		{
+			get { return orbit; }
+			set
+			{
+				orbit = value;
+				orbitForward = Vector3.forward;
+				Debug.LogWarning("Todo: this");
+			}
+		}
+
+		public float Zoom
+		{
+			get { return zoom; }
+			set
+			{
+				zoom = Mathf.Clamp01(value);
+				GetOrientation(
+					zoom,
+					pivot.position,
+					orbitForward.HasValue ? orbitForward.Value : Vector3.forward,
+					out gantryPosition,
+					out gantryForward
+				);
+
+			}
+		}
+
+		public Vector3 CameraPosition { get { return gantryPosition; } }
+		public Vector3 CameraForward { get { return gantryForward; } }
+
 		void GetFocalOrientation(
 			float progress,
 			Vector3 pivotPosition,
@@ -91,7 +129,7 @@ namespace LunraGames.SubLight.Views
 			Gizmos.color = Color.red;
 			Gizmos.DrawWireCube(pivotPosition, Vector3.one);
 
-			const int focalSamples = 8;
+			const int focalSamples = 16;
 
 			Vector3? last = null;
 			for (var i = 0; i < focalSamples; i++)
@@ -103,8 +141,8 @@ namespace LunraGames.SubLight.Views
 				Vector3 point;
 				GetFocalOrientation(progress, pivotPosition, out point);
 
-				if (isFirst || isLast) Gizmos.DrawWireCube(point, Vector3.one * 0.8f);
-				else Gizmos.DrawWireSphere(point, 0.2f);
+				if (isFirst || isLast) Gizmos.DrawWireCube(point, Vector3.one * 0.6f);
+				else Gizmos.DrawWireSphere(point, 0.1f);
 
 				if (last.HasValue) Gizmos.DrawLine(last.Value, point);
 				last = point;
@@ -124,10 +162,10 @@ namespace LunraGames.SubLight.Views
 				Vector3 forward;
 				GetOrientation(progress, pivotPosition, Vector3.forward, out point, out forward);
 
-				if (isFirst || isLast) Gizmos.DrawWireCube(point, Vector3.one * 0.8f);
-				else Gizmos.DrawWireSphere(point, 0.2f);
+				if (isFirst || isLast) Gizmos.DrawWireCube(point, Vector3.one * 0.6f);
+				else Gizmos.DrawWireSphere(point, 0.1f);
 
-				Gizmos.DrawLine(point, point + (forward * 3f));
+				Gizmos.DrawLine(point, point + (forward * 2f));
 
 
 				if (last.HasValue) Gizmos.DrawLine(last.Value, point);
@@ -154,6 +192,10 @@ namespace LunraGames.SubLight.Views
 
 	public interface IHoloRoomFocusCameraView : IFocusCameraView
 	{
-		
+		float Orbit { get; set; }
+		float Zoom { get; set; }
+
+		Vector3 CameraPosition { get; }
+		Vector3 CameraForward { get; }
 	}
 }
