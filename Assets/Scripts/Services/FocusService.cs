@@ -93,6 +93,7 @@ namespace LunraGames.SubLight
 
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
+			Debug.Log("Transition: " + request.State + ", Progress: " + request.Progress);
 			lastTransition = request;
 
 			switch (request.State)

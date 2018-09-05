@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 9445912c4bf714588829715e2544fd99
+  - enabled: 1
+    path: Assets/Scenes/HoloRoom.unity
+    guid: 0c3a4a2915b1c452d8721daed769152e
   m_configObjects: {}

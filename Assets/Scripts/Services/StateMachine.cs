@@ -254,7 +254,20 @@ namespace LunraGames.SubLight
 			nextState = handlingState;
 			nextState.Initialize(payload);
 			if (currentState == null) SetState(nextState, Events.Begin);
-
 		}
+
+
+		#region Utility
+		public void PushBreak()
+		{
+			Push(OnBreak, false);
+		}
+
+		void OnBreak()
+		{
+			Debug.LogWarning("Break Pushed");
+			Debug.Break();
+		}
+		#endregion
 	}
 }

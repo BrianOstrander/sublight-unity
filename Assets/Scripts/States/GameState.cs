@@ -23,7 +23,7 @@ namespace LunraGames.SubLight
 
 		public override StateMachine.States HandledState { get { return StateMachine.States.Game; } }
 
-		static string[] Scenes { get { return new string[] { SceneConstants.Game }; } }
+		static string[] Scenes { get { return new string[] { SceneConstants.Game, SceneConstants.HoloRoom }; } }
 
 		#region Begin
 		protected override void Begin()
@@ -31,7 +31,10 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
-			App.SM.PushBlocking(InitializeGame);
+			//App.SM.PushBlocking(InitializeGame);
+			App.SM.PushBlocking(InitializeFocusPresenters);
+			App.SM.PushBlocking(InitializeFocus);
+			App.SM.PushBreak();
 		}
 
 		void LoadScenes(Action done)
@@ -130,6 +133,19 @@ namespace LunraGames.SubLight
 			new GameLostPresenter(game);
 
 			done();
+		}
+
+		void InitializeFocusPresenters(Action done)
+		{
+
+
+			done();
+		}
+
+		void InitializeFocus(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(GameStateFocuses.Defaults, done));
+			//done();
 		}
 		#endregion
 
