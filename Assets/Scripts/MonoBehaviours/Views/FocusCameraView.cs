@@ -20,9 +20,10 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public void SetCameraEnabled(bool isEnabled)
+		public bool CameraEnabled
 		{
-			camera.enabled = isEnabled;
+			get { return camera.enabled; }
+			set { camera.enabled = value; }
 		}
 
 		public override void Reset()
@@ -32,13 +33,13 @@ namespace LunraGames.SubLight.Views
 			camera.targetTexture = null;
 			texture = null;
 
-			SetCameraEnabled(true);
+			CameraEnabled = true;
 		}
 	}
 
 	public interface IFocusCameraView : IView
 	{
 		RenderTexture Texture { get; }
-		void SetCameraEnabled(bool isEnabled);
+		bool CameraEnabled { get; set; }
 	}
 }

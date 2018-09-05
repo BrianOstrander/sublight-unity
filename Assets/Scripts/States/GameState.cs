@@ -17,7 +17,7 @@ namespace LunraGames.SubLight
 		public KeyValueListener KeyValueListener;
 	}
 
-	public class GameState : State<GamePayload>
+	public partial class GameState : State<GamePayload>
 	{
 		// Reminder: Keep variables in payload for easy reset of states!
 
@@ -137,15 +137,19 @@ namespace LunraGames.SubLight
 
 		void InitializeFocusPresenters(Action done)
 		{
-
+			new HoloRoomFocusCameraPresenter();
 
 			done();
 		}
 
 		void InitializeFocus(Action done)
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(GameStateFocuses.Defaults, done));
-			//done();
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(Focuses.Defaults, () => OnInializeFocusDefaults(done)));
+		}
+
+		void OnInializeFocusDefaults(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.System, done));
 		}
 		#endregion
 

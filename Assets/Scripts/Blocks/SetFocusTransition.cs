@@ -16,5 +16,7 @@
 			Start = start;
 			End = end;
 		}
+
+		public bool NoTransition { get { return Layer == SetFocusLayers.Unknown; } }
 	}
 }

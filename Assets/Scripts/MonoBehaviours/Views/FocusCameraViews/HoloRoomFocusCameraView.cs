@@ -193,6 +193,11 @@ namespace LunraGames.SubLight.Views
 	public interface IHoloRoomFocusCameraView : IFocusCameraView
 	{
 		float Orbit { get; set; }
+		/// <summary>
+		/// How close the camera is zoomed in. Lower values mean the camera is
+		/// closer.
+		/// </summary>
+		/// <value>The zoom.</value>
 		float Zoom { get; set; }
 
 		Vector3 CameraPosition { get; }

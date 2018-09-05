@@ -13,7 +13,7 @@ namespace LunraGames.SubLight
 		}
 
 		public readonly SetFocusDetailsBase Details;
-		public readonly bool Active;
+		public readonly bool Enabled;
 		public readonly int Order;
 		public readonly float Weight;
 
@@ -21,7 +21,7 @@ namespace LunraGames.SubLight
 
 		public SetFocusBlock(
 			SetFocusDetailsBase details,
-			bool active = false,
+			bool enabled = false,
 			int order = 0,
 			float weight = 0f
 		)
@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 			if (details == null) throw new ArgumentNullException("details");
 
 			Details = details;
-			Active = active;
+			Enabled = enabled;
 			Order = order;
 			Weight = weight;
 		}
@@ -42,7 +42,7 @@ namespace LunraGames.SubLight
 				return false;
 			}
 
-			return Active != other.Active
+			return Enabled != other.Enabled
 								  || Order != other.Order
 								  || !Mathf.Approximately(Weight, other.Weight)
 								  || Details.HasDelta(other.Details);
