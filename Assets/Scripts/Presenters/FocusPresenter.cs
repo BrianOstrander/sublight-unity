@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 
-using LunraGames.SubLight.Views;
-
 namespace LunraGames.SubLight.Presenters
 {
 	public abstract class FocusPresenter<V, D> : Presenter<V>

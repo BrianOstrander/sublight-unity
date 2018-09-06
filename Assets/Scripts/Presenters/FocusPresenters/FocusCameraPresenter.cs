@@ -20,7 +20,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
-			base.OnUnBind();
+			base.OnUnBind(); // There's logic above this class in FocusPresenter.
 
 			App.Focus.UnRegisterLayer(FocusLayer);
 			App.Callbacks.GatherFocusRequest -= OnGatherFocusRequest;
@@ -34,7 +34,7 @@ namespace LunraGames.SubLight.Presenters
 
 			if (!IsGatherable)
 			{
-				gather.Done(gather.Duplicate(Texture2D.blackTexture));
+				gather.Done(gather.Duplicate(null));
 				return;
 			}
 			gather.Done(gather.Duplicate(renderTexture = new RenderTexture(Screen.width, Screen.height, 16)));

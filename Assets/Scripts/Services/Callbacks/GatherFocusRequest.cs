@@ -15,6 +15,18 @@ namespace LunraGames.SubLight
 		{
 			DeliveredTextures = deliveredTextures;
 		}
+
+		public bool GetDelivery(SetFocusLayers layer, out DeliverFocusBlock result)
+		{
+			if (layer == SetFocusLayers.Unknown)
+			{
+				Debug.Log("Layer " + layer + " is not supported.");
+				result = default(DeliverFocusBlock);
+				return false;
+			}
+			result = DeliveredTextures.FirstOrDefault(d => d.Layer == layer);
+			return !result.NotGathered;
+		}
 	}
 
 	public struct GatherFocusRequest

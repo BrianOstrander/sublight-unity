@@ -50,7 +50,7 @@ namespace LunraGames.SubLight
 			this.callbacks = callbacks;
 			this.currentPreferences = currentPreferences;
 
-			defaultTexture = new RenderTexture(1, 1, 16);
+			defaultTexture = null;
 
 			callbacks.SetFocusRequest += OnSetFocusRequest;
 			callbacks.TransitionFocusRequest += OnTransitionFocusRequest;

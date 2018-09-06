@@ -9,6 +9,7 @@ namespace LunraGames.SubLight
 		public readonly SetFocusLayers Layer;
 		public readonly Texture Texture;
 		public readonly Action<DeliverFocusBlock> Done;
+		public readonly bool Ignore;
 
 		public DeliverFocusBlock(SetFocusLayers layer, Texture texture) : this(layer, texture, null) {}
 		public DeliverFocusBlock(SetFocusLayers layer, Action<DeliverFocusBlock> done) : this(layer, null, done) {}
@@ -18,6 +19,7 @@ namespace LunraGames.SubLight
 			Layer = layer;
 			Texture = texture;
 			Done = done;
+			Ignore = texture == null;
 		}
 
 		public DeliverFocusBlock Duplicate(Texture texture)
