@@ -23,6 +23,7 @@ namespace LunraGames.SubLight
 		Func<PreferencesModel> currentPreferences;
 		RenderTexture defaultTexture;
 
+		Dictionary<SetFocusLayers, int> camerasPerLayer = new Dictionary<SetFocusLayers, int>();
 		States state = States.Complete;
 		/// <summary>
 		/// The supported layers. If we get a request with an unrecognized one,
@@ -57,6 +58,26 @@ namespace LunraGames.SubLight
 			heartbeat.Update += OnUpdate;
 		}
 
+		public void RegisterLayer(SetFocusLayers layer)
+		{
+			if (camerasPerLayer.ContainsKey(layer)) camerasPerLayer[layer]++;
+			else camerasPerLayer[layer] = 1;
+		}
+
+		public void UnRegisterLayer(SetFocusLayers layer)
+		{
+			if (camerasPerLayer.ContainsKey(layer)) camerasPerLayer[layer]--;
+			else camerasPerLayer[layer] = 0;
+		}
+
+		public void SetOnTransitionFocusRequestLast()
+		{
+			// This is kind of hacky...
+
+			callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
+			callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
+		}
+
 		#region Events
 		void OnSetFocusRequest(SetFocusRequest request)
 		{
@@ -74,6 +95,7 @@ namespace LunraGames.SubLight
 				defaults = lastActive.Targets;
 				currents = lastActive.Targets;
 				supported = defaults.Select(d => d.Layer).Distinct().ToArray();
+				OnCheckRegistrations();
 			}
 
 			var transitions = BuildTransitions(lastActive.Targets, lastActive.IsDefault);
@@ -88,7 +110,45 @@ namespace LunraGames.SubLight
 				);
 				return;
 			}
-			Debug.LogWarning("Todo: handle non default focus! Trigger a gather focus request here...");
+
+			var gatherRequest = BuildGatherRequest(request, transitions);
+
+			if (gatherRequest.NoRequests)
+			{
+				gatherRequest.Done(GatherFocusResult.Empty);
+				return;
+			}
+			callbacks.GatherFocusRequest(gatherRequest);
+		}
+
+		void OnCheckRegistrations()
+		{
+			var multiRegistrations = new Dictionary<SetFocusLayers, int>();
+			var noRegistrations = new List<SetFocusLayers>();
+
+			foreach(var layer in supported)
+			{
+				int camerasForLayer;
+				if (camerasPerLayer.TryGetValue(layer, out camerasForLayer))
+				{
+					if (camerasForLayer == 0) noRegistrations.Add(layer);
+					else if (1 < camerasForLayer) multiRegistrations.Add(layer, camerasForLayer);
+				}
+				else noRegistrations.Add(layer);
+			}
+
+			if (0 < multiRegistrations.Count)
+			{
+				var result = string.Empty;
+				foreach (var entry in multiRegistrations) result += "\n\t"+entry.Key + ": " + entry.Value;
+				Debug.LogError("Multiple camera layer registrations for the following:" + result);
+			}
+			if (0 < noRegistrations.Count)
+			{
+				var result = string.Empty;
+				foreach (var layer in noRegistrations) result += "\n\t" + layer;
+				Debug.LogError("No camera layer registrations for the following:" + result);
+			}
 		}
 
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
@@ -100,6 +160,7 @@ namespace LunraGames.SubLight
 			{
 				case TransitionFocusRequest.States.Request:
 					state = States.Active;
+					SetOnTransitionFocusRequestLast();
 					callbacks.TransitionFocusRequest(request.Duplicate(TransitionFocusRequest.States.Active, request.Instant ? 1f : 0f));
 					break;
 				case TransitionFocusRequest.States.Active:
@@ -142,6 +203,32 @@ namespace LunraGames.SubLight
 			state = States.Complete;
 			lastActive.Done();
 		}
+
+		void OnGatherFocusResult(
+			DeliverFocusBlock next,
+			List<DeliverFocusBlock> results,
+			int total,
+			Action<GatherFocusResult> done
+		)
+		{
+			results.Add(next);
+			if (results.Count < total) return;
+
+			done(new GatherFocusResult(results.ToArray()));
+		}
+
+		void OnGatherFocusResultDone(SetFocusRequest request, SetFocusTransition[] transitions, GatherFocusResult result)
+		{
+			TransitionFocusRequest transitionRequest;
+			if (request.Instant) transitionRequest = TransitionFocusRequest.RequestInstant(result, transitions);
+			else
+			{
+				var startTime = DateTime.Now;
+				var endTime = startTime.Add(TimeSpan.FromSeconds(request.Duration));
+				transitionRequest = TransitionFocusRequest.Request(result, transitions, startTime, endTime);
+			}
+			callbacks.TransitionFocusRequest(transitionRequest);
+		}
 		#endregion
 		SetFocusTransition[] BuildTransitions(SetFocusBlock[] ends, bool includeIdentical)
 		{
@@ -171,6 +258,18 @@ namespace LunraGames.SubLight
 			foreach (var layer in supported) blocks.Add(new DeliverFocusBlock(layer, defaultTexture));
 
 			return new GatherFocusResult(blocks.ToArray());
+		}
+
+		GatherFocusRequest BuildGatherRequest(SetFocusRequest request, SetFocusTransition[] transitions)
+		{
+			var gatherCount = request.Targets.Length;
+			var gatherRequests = new List<DeliverFocusBlock>();
+			var gatherResults = new List<DeliverFocusBlock>();
+			Action<GatherFocusResult> onResultDone = result => OnGatherFocusResultDone(request, transitions, result);
+			Action<DeliverFocusBlock> onResult = result => OnGatherFocusResult(result, gatherResults, gatherCount, onResultDone);
+			foreach (var transition in transitions) gatherRequests.Add(new DeliverFocusBlock(transition.Layer, onResult));
+
+			return GatherFocusRequest.Request(onResultDone, gatherRequests.ToArray());
 		}
 	}
 }

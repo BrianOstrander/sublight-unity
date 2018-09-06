@@ -13,6 +13,8 @@ namespace LunraGames.SubLight.Views
 		Transform pivot;
 		[SerializeField]
 		Transform gantry;
+		[SerializeField]
+		Transform gantryAnchor;
 
 		[SerializeField]
 		Vector2 gantryHeightRange;
@@ -30,6 +32,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField, Header("Test"), Range(0f, 1f)]
 		public float orientationPreview;
 
+		bool gantryStale;
+
 		float orbit;
 		float zoom;
 
@@ -45,6 +49,7 @@ namespace LunraGames.SubLight.Views
 				orbit = value;
 				orbitForward = Vector3.forward;
 				Debug.LogWarning("Todo: this");
+				gantryStale = true;
 			}
 		}
 
@@ -61,12 +66,14 @@ namespace LunraGames.SubLight.Views
 					out gantryPosition,
 					out gantryForward
 				);
-
+				gantryStale = true;
 			}
 		}
 
 		public Vector3 CameraPosition { get { return gantryPosition; } }
 		public Vector3 CameraForward { get { return gantryForward; } }
+
+		public Transform GantryAnchor { get { return gantryAnchor; } }
 
 		void GetFocalOrientation(
 			float progress,
@@ -103,20 +110,28 @@ namespace LunraGames.SubLight.Views
 			forward = (focalPoint - worldPosition).normalized;
 		}
 
+		public override void Reset()
+		{
+			base.Reset();
+
+			Orbit = 0f;
+			Zoom = 1f;
+		}
+
+		#region Events
+		protected override void OnLateIdle(float delta)
+		{
+			base.OnLateIdle(delta);
+			if (!gantryStale) return;
+			gantryStale = false;
+			gantry.position = gantryPosition;
+			gantry.forward = gantryForward;
+		}
+		#endregion
+
 		void OnDrawGizmosSelected()
 		{
-			if (!Application.isPlaying)
-			{
-				OnDrawEditorGizmos();
-				return;
-			}
-			/*
-			Gizmos.color = Color.magenta;
-			Gizmos.DrawRay(UnityPosition, Vector3.up);
-			Gizmos.color = Color.red;
-			Gizmos.DrawLine(UnityPosition, DragForward.position);
-			Gizmos.DrawWireCube(DragForward.position, Vector3.one);
-			*/
+			OnDrawEditorGizmos();
 		}
 
 		void OnDrawEditorGizmos()
@@ -202,5 +217,7 @@ namespace LunraGames.SubLight.Views
 
 		Vector3 CameraPosition { get; }
 		Vector3 CameraForward { get; }
+
+		Transform GantryAnchor { get; }
 	}
 }

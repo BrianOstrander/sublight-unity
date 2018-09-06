@@ -56,7 +56,6 @@ namespace LunraGames.SubLight.Presenters
 						CloseView(true);
 					}
 					break;
-				case TransitionStates.Unknown:
 				case TransitionStates.Closed:
 					if (positions.Contains(system.Position.Value.SystemZero))
 					{

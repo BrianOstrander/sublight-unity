@@ -47,7 +47,6 @@ namespace LunraGames.SubLight.Presenters
 			{
 				switch(View.TransitionState)
 				{
-					case TransitionStates.Unknown:
 					case TransitionStates.Closed:
 						Show();
 						break;

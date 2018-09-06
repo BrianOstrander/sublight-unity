@@ -61,7 +61,7 @@ namespace LunraGames.SubLight
 					results.Add(SetFocusBlock.Default<RoomFocusDetails>());
 					results.Add(SetFocusBlock.Default<ToolbarFocusDetails>());
 					results.Add(SetFocusBlock.Default<SystemFocusDetails>());
-					results.Add(SetFocusBlock.Default<ShipFocusDetails>());
+					//results.Add(SetFocusBlock.Default<ShipFocusDetails>());
 
 					return results.ToArray();
 				}

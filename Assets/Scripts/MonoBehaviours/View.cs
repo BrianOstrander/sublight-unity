@@ -90,7 +90,12 @@ namespace LunraGames.SubLight
 		public virtual float CloseDuration { get { return CloseDurationDefault; } }
 		public virtual float Progress { get; set; }
 
-		public TransitionStates TransitionState { get; protected set; }
+		TransitionStates transitionState;
+		public TransitionStates TransitionState
+		{
+			get { return transitionState == TransitionStates.Unknown ? TransitionStates.Closed : transitionState; }
+			protected set { transitionState = value; }
+		}
 
 		float opacity = 1f;
 		public virtual float Opacity { get { return opacity; } set { opacity = Mathf.Max(0f, Mathf.Min(1f, value)); } }

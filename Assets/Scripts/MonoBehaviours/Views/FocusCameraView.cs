@@ -1,37 +1,25 @@
-﻿using System;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LunraGames.SubLight.Views
 {
 	public abstract class FocusCameraView : View, IFocusCameraView
 	{
 		[SerializeField]
-		Camera camera;
+		Camera focusCamera;
 
-		RenderTexture texture;
+		protected Camera FocusCamera { get { return focusCamera; } }
 
-		public RenderTexture Texture
-		{
-			get
-			{
-				if (texture == null) camera.targetTexture = texture = new RenderTexture(Screen.width, Screen.height, 16);
-				return texture;
-			}
-		}
+		public RenderTexture Texture { set { focusCamera.targetTexture = value; } }
 
 		public bool CameraEnabled
 		{
-			get { return camera.enabled; }
-			set { camera.enabled = value; }
+			get { return focusCamera.enabled; }
+			set { focusCamera.enabled = value; }
 		}
 
 		public override void Reset()
 		{
 			base.Reset();
-
-			camera.targetTexture = null;
-			texture = null;
 
 			CameraEnabled = true;
 		}
@@ -39,7 +27,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IFocusCameraView : IView
 	{
-		RenderTexture Texture { get; }
+		RenderTexture Texture { set; }
 		bool CameraEnabled { get; set; }
 	}
 }

@@ -281,8 +281,7 @@ namespace LunraGames.SubLight
 			{
 				case TransitionStates.Closed:
 					return;
-
-				case TransitionStates.Unknown:
+				case TransitionStates.Unknown: // This may no longer ever get called.
 					Debug.LogWarning("Can't close a view with an unknown state", view.gameObject);
 					return;
 			}

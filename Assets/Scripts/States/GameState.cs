@@ -137,7 +137,9 @@ namespace LunraGames.SubLight
 
 		void InitializeFocusPresenters(Action done)
 		{
-			new HoloRoomFocusCameraPresenter();
+			var gantryAnchor = (new HoloRoomFocusCameraPresenter()).GantryAnchor;
+			new ToolbarFocusCameraPresenter(gantryAnchor);
+			new SystemFocusCameraPresenter(gantryAnchor);
 
 			done();
 		}
@@ -150,6 +152,7 @@ namespace LunraGames.SubLight
 		void OnInializeFocusDefaults(Action done)
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.System, done));
+			done();
 		}
 		#endregion
 

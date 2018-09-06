@@ -133,6 +133,10 @@ namespace LunraGames.SubLight
 		/// Called when transitioning between focuses.
 		/// </summary>
 		public Action<TransitionFocusRequest> TransitionFocusRequest = ActionExtensions.GetEmpty<TransitionFocusRequest>();
+		/// <summary>
+		/// Called if there are focuses to gather for a set focus request.
+		/// </summary>
+		public Action<GatherFocusRequest> GatherFocusRequest = ActionExtensions.GetEmpty<GatherFocusRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...
