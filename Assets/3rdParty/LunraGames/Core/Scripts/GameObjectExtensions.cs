@@ -93,7 +93,7 @@ namespace LunraGames
 		/// </summary>
 		/// <returns>The with tag or handle missing tag.</returns>
 		/// <param name="tag">Tag.</param>
-		public static GameObject FindWithTagOrHandleMissingTag(string tag)
+		public static GameObject FindWithTagOrHandleMissingTag(string tag, bool quiet = false)
 		{
 			try
 			{
@@ -101,7 +101,7 @@ namespace LunraGames
 			}
 			catch (UnityException e)
 			{
-				Debug.LogException(e);
+				if (!quiet) Debug.LogException(e);
 				return null;
 			}
 		}
