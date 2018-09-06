@@ -48,7 +48,7 @@ namespace LunraGames.SubLight.Views
 			{
 				orbit = value;
 				orbitForward = Vector3.forward;
-				Debug.LogWarning("Todo: this");
+				Debug.LogWarning("Todo: orbital logic");
 				gantryStale = true;
 			}
 		}

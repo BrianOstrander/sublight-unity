@@ -6,7 +6,7 @@
 		Room = 10,
 		Toolbar = 20,
 		System = 30,
-		Ship = 40,
-		Communications = 50
+		//Ship = 40,
+		//Communications = 50
 	}
 }

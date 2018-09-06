@@ -16,6 +16,8 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		protected override void OnShowInstant()
 		{
+			base.OnShowInstant();
+
 			View.Orbit = 0f;
 			View.Zoom = 1f;
 		}

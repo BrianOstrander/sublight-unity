@@ -119,7 +119,7 @@ namespace LunraGames.SubLight
 			foreach (var tag in current.Tags)
 			{
 				if (current.FoundTags.ContainsKey(tag) || current.MissingTags.Contains(tag)) continue;
-				var tagObject = GameObject.FindWithTag(tag);
+				var tagObject = GameObjectExtensions.FindWithTagOrHandleMissingTag(tag);
 				if (tagObject == null)
 				{
 					current.MissingTags.Add(tag);

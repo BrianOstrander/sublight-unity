@@ -32,9 +32,9 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			//App.SM.PushBlocking(InitializeGame);
-			App.SM.PushBlocking(InitializeFocusPresenters);
+			App.SM.PushBlocking(Focuses.InitializePresenters);
 			App.SM.PushBlocking(InitializeFocus);
-			App.SM.PushBreak();
+			//App.SM.PushBreak();
 		}
 
 		void LoadScenes(Action done)
@@ -135,23 +135,14 @@ namespace LunraGames.SubLight
 			done();
 		}
 
-		void InitializeFocusPresenters(Action done)
-		{
-			var gantryAnchor = (new HoloRoomFocusCameraPresenter()).GantryAnchor;
-			new ToolbarFocusCameraPresenter(gantryAnchor);
-			new SystemFocusCameraPresenter(gantryAnchor);
-
-			done();
-		}
-
 		void InitializeFocus(Action done)
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(Focuses.Defaults, () => OnInializeFocusDefaults(done)));
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(Focuses.GetDefaultFocuses(), () => OnInializeFocusDefaults(done)));
 		}
 
 		void OnInializeFocusDefaults(Action done)
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.System, done));
+			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetSystemFocus(), done));
 			done();
 		}
 		#endregion

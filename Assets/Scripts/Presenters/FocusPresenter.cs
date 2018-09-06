@@ -4,36 +4,30 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public abstract class FocusCameraPresenter<V, D> : Presenter<V>
-		where V : class, IFocusCameraView
+	public abstract class FocusPresenter<V, D> : Presenter<V>
+		where V : class, IView
 		where D : SetFocusDetails<D>, new()
 	{
 		protected abstract SetFocusLayers FocusLayer { get; }
-		protected virtual bool IsGatherable { get { return true; } }
 		protected Transform ViewParent;
 
-		RenderTexture renderTexture;
+		public FocusPresenter() : this(null) {}
 
-		public FocusCameraPresenter(Transform viewParent, string overrideName = null)
+		public FocusPresenter(Transform viewParent, string overrideName = null)
 		{
 			ViewParent = viewParent;
 			if (!string.IsNullOrEmpty(overrideName)) View.InstanceName = overrideName;
 
-			App.Focus.RegisterLayer(FocusLayer);
-			App.Callbacks.GatherFocusRequest += OnGatherFocusRequest;
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
 		}
 
 		protected override void OnUnBind()
 		{
-			App.Focus.UnRegisterLayer(FocusLayer);
-			App.Callbacks.GatherFocusRequest -= OnGatherFocusRequest;
 			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
 		}
 
 		void TransitionActive(TransitionFocusRequest request, SetFocusTransition transition)
 		{
-			Debug.Log(GetType().Name + ": From " + transition.Start.Enabled + " to " + transition.End.Enabled);
 			if (transition.End.Enabled)
 			{
 				if (View.TransitionState == TransitionStates.Closed) ShowInstant();
@@ -61,37 +55,19 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.Reset();
 
-			View.Texture = IsGatherable ? renderTexture : null;
-
 			OnShowInstant();
 
 			ShowView(ViewParent, true);
 		}
-		
+
 		void CloseInstant()
 		{
-			renderTexture = null;
-			View.Texture = null;
-			
 			OnCloseInstant();
 
 			CloseView(true);
 		}
 
 		#region Events
-		void OnGatherFocusRequest(GatherFocusRequest request)
-		{
-			DeliverFocusBlock gather;
-			if (!request.GetGather(FocusLayer, out gather)) return;
-
-			if (!IsGatherable)
-			{
-				gather.Done(gather.Duplicate(Texture2D.blackTexture));
-				return;
-			}
-			gather.Done(gather.Duplicate(renderTexture = new RenderTexture(Screen.width, Screen.height, 16)));
-		}
-
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
 			switch (request.State)
@@ -104,16 +80,19 @@ namespace LunraGames.SubLight.Presenters
 			SetFocusTransition transition;
 			if (request.GetTransition(FocusLayer, out transition)) TransitionActive(request, transition);
 		}
+		#endregion
 
-		protected virtual void OnShowInstant() {}
-		protected virtual void OnCloseInstant() {}
+		#region Overridable Events
+		protected virtual void OnShowInstant() { }
+		protected virtual void OnCloseInstant() { }
 
 		protected virtual void OnTransitionActive(
 			TransitionFocusRequest request,
 			SetFocusTransition transition,
 			D startDetails,
 			D endDetails
-		) {}
+		)
+		{ }
 		#endregion
 	}
 }

@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+
+using UnityEngine;
+
+using LunraGames.SubLight.Presenters;
 
 namespace LunraGames.SubLight
 {
@@ -6,78 +12,77 @@ namespace LunraGames.SubLight
 	{
 		static class Focuses
 		{
-			static SetFocusBlock GetRoomVisible(int order = 0)
+			static SetFocusLayers[] allLayers;
+			static SetFocusLayers[] AllLayers { get { return allLayers ?? (allLayers = EnumExtensions.GetValues(SetFocusLayers.Unknown)); } }
+
+			public static void InitializePresenters(Action done)
 			{
-				var details = new RoomFocusDetails();
+				// Cameras
+				var gantryAnchor = (new HoloRoomFocusCameraPresenter()).GantryAnchor;
+				new ToolbarFocusCameraPresenter(gantryAnchor);
+				new SystemFocusCameraPresenter(gantryAnchor);
+
+				// System
+				new GridSystemPresenter();
+
+				done();
+			}
+
+			#region Focus Building
+			static SetFocusBlock GetFocus<D>(
+				int order = 0,
+				bool enabled = false,
+				D details = null
+			)
+				where D : SetFocusDetails<D>, new()
+			{
 				return new SetFocusBlock(
-					details,
-					true,
+					details ?? new D().SetDefault(),
+					enabled,
 					order,
 					1f
 				);
 			}
 
-			static SetFocusBlock GetToolbarVisible(int order = 0)
+			public static SetFocusBlock[] GetDefaultFocuses()
 			{
-				var details = new ToolbarFocusDetails();
-				return new SetFocusBlock(
-					details,
-					true,
-					order,
-					1f
-				);
-			}
+				var results = new List<SetFocusBlock>();
 
-			static SetFocusBlock GetSystemVisible(int order = 0)
-			{
-				var details = new SystemFocusDetails();
-				return new SetFocusBlock(
-					details,
-					true,
-					order,
-					1f
-				);
-			}
-
-			static List<SetFocusBlock> DefaultVisibles
-			{
-				get
+				foreach (var layer in AllLayers.Except(results.Select(e => e.Layer)))
 				{
-					var results = new List<SetFocusBlock>();
-
-					results.Add(GetRoomVisible());
-					results.Add(GetToolbarVisible());
-
-					return results;
+					switch (layer)
+					{
+						case SetFocusLayers.Room: results.Add(GetFocus<RoomFocusDetails>()); break;
+						case SetFocusLayers.Toolbar: results.Add(GetFocus<ToolbarFocusDetails>()); break;
+						case SetFocusLayers.System: results.Add(GetFocus<SystemFocusDetails>()); break;
+						default:
+							Debug.LogError("Unrecognized Layer " + layer);
+							break;
+					}
 				}
+
+				return results.ToArray();
 			}
 
-			public static SetFocusBlock[] Defaults
+			static List<SetFocusBlock> GetBaseEnabledFocuses(int startIndex = -1)
 			{
-				get
-				{
-					var results = new List<SetFocusBlock>();
+				var results = new List<SetFocusBlock>();
 
-					results.Add(SetFocusBlock.Default<RoomFocusDetails>());
-					results.Add(SetFocusBlock.Default<ToolbarFocusDetails>());
-					results.Add(SetFocusBlock.Default<SystemFocusDetails>());
-					//results.Add(SetFocusBlock.Default<ShipFocusDetails>());
+				results.Add(GetFocus<RoomFocusDetails>(startIndex, true));
+				results.Add(GetFocus<ToolbarFocusDetails>(startIndex + 1, true));
 
-					return results.ToArray();
-				}
+				return results;
 			}
 
-			public static SetFocusBlock[] System
+			public static SetFocusBlock[] GetSystemFocus()
 			{
-				get
-				{
-					var results = DefaultVisibles;
-
-					results.Add(GetSystemVisible(1));
-
-					return results.ToArray();
-				}
+				var results = GetBaseEnabledFocuses();
+				
+				results.Add(GetFocus<SystemFocusDetails>(1, true));
+				
+				return results.ToArray();
 			}
+			#endregion
 		}
 	}
 }

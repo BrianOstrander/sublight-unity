@@ -209,7 +209,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolSize: 0
-  animations: []
+  animations:
+  - {fileID: 11400000, guid: d2579ab4a52a64436b55687be85c3460, type: 2}
   focusCamera: {fileID: 20333958803510538}
   pivot: {fileID: 4831104112566666}
   gantry: {fileID: 4351189466999528}

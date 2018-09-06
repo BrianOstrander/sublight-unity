@@ -13,6 +13,8 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		protected override void OnShowInstant()
 		{
+			base.OnShowInstant();
+
 			View.CullingMask = LayerMask.GetMask(LayerConstants.HoloToolbar);
 		}
 		#endregion

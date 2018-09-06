@@ -16,7 +16,7 @@ namespace LunraGames.SubLight
 			return this;
 		}
 		
-		public virtual void OnSetDefault() {}
+		protected virtual void OnSetDefault() {}
 	}
 
 	public abstract class SetFocusDetails<T> : SetFocusDetailsBase
