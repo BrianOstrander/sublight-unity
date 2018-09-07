@@ -37,19 +37,19 @@ namespace LunraGames.SubLight.Presenters
 				gather.Done(gather.Duplicate(null));
 				return;
 			}
-			gather.Done(gather.Duplicate(renderTexture = new RenderTexture(Screen.width, Screen.height, 16)));
+			gather.Done(gather.Duplicate(renderTexture = new RenderTexture(Screen.currentResolution.width, Screen.currentResolution.height, 16)));
 		}
 
-		protected override void OnShowInstant()
+		protected override void OnUpdateEnabled()
 		{
-			// No need to call base, FocusPresenter OnShowInstant has no logic.
+			// No need to call base, FocusPresenter OnUpdateEnabled has no logic.
 
 			View.Texture = IsGatherable ? renderTexture : null;
 		}
 
-		protected override void OnCloseInstant()
+		protected override void OnUpdateDisabled()
 		{
-			// No need to call base, FocusPresenter OnCloseInstant has no logic.
+			// No need to call base, FocusPresenter OnUpdateDisabled has no logic.
 
 			renderTexture = null;
 			View.Texture = null;

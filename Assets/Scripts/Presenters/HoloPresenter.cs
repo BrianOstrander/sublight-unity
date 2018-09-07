@@ -39,7 +39,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			// Only if we're going from some other transition to Active is this run.
 
-			var orderedTransitions = request.Transitions.OrderBy(t => t.End.Order);
+			var orderedTransitions = request.Transitions.OrderBy(t => t.Order);
 
 			orderToAbsolute.Clear();
 			var absoluteOrder = 0;
@@ -60,8 +60,6 @@ namespace LunraGames.SubLight.Presenters
 				orderToAbsolute.Add(transition.Layer, absoluteOrder);
 				absoluteOrder++;
 			}
-
-
 
 			if ((ShaderConstants.HoloLayerShared.LayerCount - absoluteOrder) != 0)
 			{

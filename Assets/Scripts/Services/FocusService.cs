@@ -93,7 +93,6 @@ namespace LunraGames.SubLight
 			if (lastActive.IsDefault)
 			{
 				defaults = lastActive.Targets;
-				currents = lastActive.Targets;
 				supported = defaults.Select(d => d.Layer).Distinct().ToArray();
 				OnCheckRegistrations();
 			}
@@ -153,7 +152,7 @@ namespace LunraGames.SubLight
 
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
-			Debug.Log("Transition: " + request.State + ", Progress: " + request.Progress);
+			//Debug.Log("Transition: " + request.State + ", Progress: " + request.Progress);
 			lastTransition = request;
 
 			switch (request.State)
@@ -201,6 +200,7 @@ namespace LunraGames.SubLight
 		void OnTransitionComplete()
 		{
 			state = States.Complete;
+			currents = AddDefaults(lastActive.Targets);
 			lastActive.Done();
 		}
 
@@ -234,16 +234,16 @@ namespace LunraGames.SubLight
 		{
 			var results = new List<SetFocusTransition>();
 
-			foreach (var end in ends)
+			foreach (var end in AddDefaults(ends))
 			{
 				if (!supported.Contains(end.Layer))
 				{
 					Debug.LogError("Layer " + end.Layer + " not currently supported. Make sure to include it when setting defaults.");
 					continue;
 				}
-				var current = currents.FirstOrDefault(c => c.Layer == end.Layer);
+				var current = (currents ?? defaults).FirstOrDefault(c => c.Layer == end.Layer);
 
-				if (!current.HasDelta(end) && !includeIdentical) continue;
+				if (!(includeIdentical || end.Enabled || current.HasDelta(end))) continue;
 
 				results.Add(new SetFocusTransition(end.Layer, current, end));
 			}
@@ -270,6 +270,12 @@ namespace LunraGames.SubLight
 			foreach (var transition in transitions) gatherRequests.Add(new DeliverFocusBlock(transition.Layer, onResult));
 
 			return GatherFocusRequest.Request(onResultDone, gatherRequests.ToArray());
+		}
+
+		SetFocusBlock[] AddDefaults(SetFocusBlock[] blocks)
+		{
+			var representedLayers = blocks.Select(e => e.Layer);
+			return blocks.Concat(defaults.Where(c => !representedLayers.Contains(c.Layer))).ToArray();
 		}
 	}
 }

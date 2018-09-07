@@ -10,7 +10,7 @@ namespace LunraGames.SubLight
 {
 	public partial class GameState
 	{
-		static class Focuses
+		public static class Focuses
 		{
 			static SetFocusLayers[] allLayers;
 			static SetFocusLayers[] AllLayers { get { return allLayers ?? (allLayers = EnumExtensions.GetValues(SetFocusLayers.Unknown)); } }
@@ -21,6 +21,7 @@ namespace LunraGames.SubLight
 				var gantryAnchor = (new HoloRoomFocusCameraPresenter()).GantryAnchor;
 				new ToolbarFocusCameraPresenter(gantryAnchor);
 				new SystemFocusCameraPresenter(gantryAnchor);
+				new CommunicationsFocusCameraPresenter(gantryAnchor);
 
 				new HoloPresenter();
 
@@ -50,13 +51,14 @@ namespace LunraGames.SubLight
 			{
 				var results = new List<SetFocusBlock>();
 
-				foreach (var layer in AllLayers.Except(results.Select(e => e.Layer)))
+				foreach (var layer in AllLayers)
 				{
 					switch (layer)
 					{
 						case SetFocusLayers.Room: results.Add(GetFocus<RoomFocusDetails>()); break;
 						case SetFocusLayers.Toolbar: results.Add(GetFocus<ToolbarFocusDetails>()); break;
 						case SetFocusLayers.System: results.Add(GetFocus<SystemFocusDetails>()); break;
+						case SetFocusLayers.Communications: results.Add(GetFocus<CommunicationsFocusDetails>()); break;
 						default:
 							Debug.LogError("Unrecognized Layer " + layer);
 							break;
@@ -82,6 +84,15 @@ namespace LunraGames.SubLight
 				
 				results.Add(GetFocus<SystemFocusDetails>(1, true));
 				
+				return results.ToArray();
+			}
+
+			public static SetFocusBlock[] GetCommunicationsFocus()
+			{
+				var results = GetBaseEnabledFocuses();
+
+				results.Add(GetFocus<CommunicationsFocusDetails>(1, true));
+
 				return results.ToArray();
 			}
 			#endregion

@@ -11,9 +11,9 @@ namespace LunraGames.SubLight.Presenters
 		public SystemFocusCameraPresenter(Transform viewParent) : base(viewParent, "GenericFocusCameraView - System") {}
 
 		#region Events
-		protected override void OnShowInstant()
+		protected override void OnUpdateEnabled()
 		{
-			base.OnShowInstant();
+			base.OnUpdateEnabled();
 
 			View.CullingMask = LayerMask.GetMask(LayerConstants.HoloSystem);
 		}

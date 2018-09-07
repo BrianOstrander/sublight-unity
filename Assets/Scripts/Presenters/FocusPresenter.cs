@@ -26,13 +26,18 @@ namespace LunraGames.SubLight.Presenters
 
 		void TransitionActive(TransitionFocusRequest request, SetFocusTransition transition)
 		{
+			//Debug.Log("--- "+GetType().Name+" ---");
+			//Debug.Log("Start: " + transition.Start.Enabled + " End: " + transition.End.Enabled);
+			//Debug.Log(GetType().Name + " should be " + (transition.End.Enabled ? "opening or remaining" : "closing or remaining closed"));
 			if (transition.End.Enabled)
 			{
 				if (View.TransitionState == TransitionStates.Closed) ShowInstant();
+				else OnUpdateEnabled();
 			}
 			else if (request.LastActive)
 			{
 				if (View.TransitionState == TransitionStates.Shown) CloseInstant();
+				else OnUpdateDisabled();
 			}
 
 			if (transition.Start.Layer != transition.End.Layer)
@@ -53,14 +58,14 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.Reset();
 
-			OnShowInstant();
+			OnUpdateEnabled();
 
 			ShowView(ViewParent, true);
 		}
 
 		void CloseInstant()
 		{
-			OnCloseInstant();
+			OnUpdateDisabled();
 
 			CloseView(true);
 		}
@@ -81,8 +86,8 @@ namespace LunraGames.SubLight.Presenters
 		#endregion
 
 		#region Overridable Events
-		protected virtual void OnShowInstant() { }
-		protected virtual void OnCloseInstant() { }
+		protected virtual void OnUpdateEnabled() { }
+		protected virtual void OnUpdateDisabled() { }
 
 		protected virtual void OnTransitionActive(
 			TransitionFocusRequest request,

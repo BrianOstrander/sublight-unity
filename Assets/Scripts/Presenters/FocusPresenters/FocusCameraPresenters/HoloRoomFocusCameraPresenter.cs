@@ -14,9 +14,9 @@ namespace LunraGames.SubLight.Presenters
 		public HoloRoomFocusCameraPresenter() : base(null) {}
 
 		#region Events
-		protected override void OnShowInstant()
+		protected override void OnUpdateEnabled()
 		{
-			base.OnShowInstant();
+			base.OnUpdateEnabled();
 
 			View.Orbit = 0f;
 			View.Zoom = 1f;

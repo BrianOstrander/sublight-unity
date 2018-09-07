@@ -9,6 +9,7 @@
 		public const string HoloRoom = "HoloRoom";
 		public const string HoloToolbar = "HoloToolbar";
 		public const string HoloSystem = "HoloSystem";
+		public const string HoloCommunications = "HoloCommunications";
 		public const string HoloShip = "HoloShip";
 	}
 }
