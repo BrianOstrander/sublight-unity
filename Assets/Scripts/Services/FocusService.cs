@@ -73,7 +73,6 @@ namespace LunraGames.SubLight
 		public void SetOnTransitionFocusRequestLast()
 		{
 			// This is kind of hacky...
-
 			callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
 			callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
 		}
@@ -152,7 +151,7 @@ namespace LunraGames.SubLight
 
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
-			//Debug.Log("Transition: " + request.State + ", Progress: " + request.Progress);
+			Debug.Log("Transition: " + request.State + ", Progress: " + request.Progress);
 			lastTransition = request;
 
 			switch (request.State)
@@ -182,7 +181,10 @@ namespace LunraGames.SubLight
 
 		void OnUpdate(float delta)
 		{
-			if (state == States.Complete) return;
+			if (state == States.Complete || lastTransition.State != TransitionFocusRequest.States.Active) return;
+			Debug.Log("caling from update");
+			var currentProgress = Mathf.Clamp01((float)((DateTime.Now - lastTransition.StartTime).TotalSeconds / lastTransition.Duration.TotalSeconds));
+			callbacks.TransitionFocusRequest(lastTransition.Duplicate(progress: currentProgress));
 		}
 
 		void OnTransitionActive(TransitionFocusRequest transition)
@@ -191,10 +193,7 @@ namespace LunraGames.SubLight
 			{
 				// We're done here...
 				callbacks.TransitionFocusRequest(transition.Duplicate(TransitionFocusRequest.States.Complete));
-				return;
 			}
-
-			Debug.LogWarning("Todo: handle non instant transitions here!");
 		}
 
 		void OnTransitionComplete()
@@ -202,17 +201,22 @@ namespace LunraGames.SubLight
 			state = States.Complete;
 			currents = AddDefaults(lastActive.Targets);
 			lastActive.Done();
+			Debug.Log("we should be done...");
 		}
 
 		void OnGatherFocusResult(
 			DeliverFocusBlock next,
 			List<DeliverFocusBlock> results,
-			int total,
+			List<SetFocusLayers> remainingLayers,
 			Action<GatherFocusResult> done
 		)
 		{
+			if (remainingLayers.None()) return;
+
 			results.Add(next);
-			if (results.Count < total) return;
+			remainingLayers.RemoveAll(l => l == next.Layer);
+
+			if (remainingLayers.Any()) return;
 
 			done(new GatherFocusResult(results.ToArray()));
 		}
@@ -262,11 +266,11 @@ namespace LunraGames.SubLight
 
 		GatherFocusRequest BuildGatherRequest(SetFocusRequest request, SetFocusTransition[] transitions)
 		{
-			var gatherCount = request.Targets.Length;
+			var remainingLayers =  request.Targets.Select(t => t.Layer).ToList();
 			var gatherRequests = new List<DeliverFocusBlock>();
 			var gatherResults = new List<DeliverFocusBlock>();
 			Action<GatherFocusResult> onResultDone = result => OnGatherFocusResultDone(request, transitions, result);
-			Action<DeliverFocusBlock> onResult = result => OnGatherFocusResult(result, gatherResults, gatherCount, onResultDone);
+			Action<DeliverFocusBlock> onResult = result => OnGatherFocusResult(result, gatherResults, remainingLayers, onResultDone);
 			foreach (var transition in transitions) gatherRequests.Add(new DeliverFocusBlock(transition.Layer, onResult));
 
 			return GatherFocusRequest.Request(onResultDone, gatherRequests.ToArray());
