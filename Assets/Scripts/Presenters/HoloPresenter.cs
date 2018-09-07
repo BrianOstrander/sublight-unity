@@ -10,7 +10,7 @@ namespace LunraGames.SubLight.Presenters
 	public class HoloPresenter : Presenter<IHoloView>
 	{
 		TransitionFocusRequest.States lastTransition;
-		Dictionary<SetFocusLayers, int> orderToAbsolute = new Dictionary<SetFocusLayers, int>();
+		Dictionary<SetFocusLayers, int> layerToOrder = new Dictionary<SetFocusLayers, int>();
 
 		public HoloPresenter()
 		{
@@ -41,7 +41,7 @@ namespace LunraGames.SubLight.Presenters
 
 			var orderedTransitions = request.Transitions.OrderBy(t => t.Order);
 
-			orderToAbsolute.Clear();
+			layerToOrder.Clear();
 			var absoluteOrder = 0;
 
 			var textures = new List<RenderLayerTextureBlock>();
@@ -58,7 +58,7 @@ namespace LunraGames.SubLight.Presenters
 					properties.Add(new RenderLayerPropertyBlock(absoluteOrder, weight));
 				}
 
-				orderToAbsolute.Add(transition.Layer, absoluteOrder);
+				layerToOrder.Add(transition.Layer, absoluteOrder);
 				absoluteOrder++;
 			}
 
@@ -86,7 +86,15 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitionFocusActiveUpdate(TransitionFocusRequest request)
 		{
-			
+			var properties = new List<RenderLayerPropertyBlock>();
+			foreach (var transition in request.Transitions)
+			{
+				int order;
+				if (!layerToOrder.TryGetValue(transition.Layer, out order)) continue;
+				var weight = ((transition.End.Weight - transition.Start.Weight) * request.Progress) + transition.Start.Weight;
+				properties.Add(new RenderLayerPropertyBlock(order, weight));
+			}
+			View.LayerProperties = properties.ToArray();
 		}
 		#endregion
 	}

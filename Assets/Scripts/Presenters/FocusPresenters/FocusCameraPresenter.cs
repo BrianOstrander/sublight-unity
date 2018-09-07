@@ -31,13 +31,14 @@ namespace LunraGames.SubLight.Presenters
 		{
 			DeliverFocusBlock gather;
 			if (!request.GetGather(FocusLayer, out gather)) return;
-
 			if (!IsGatherable)
 			{
 				gather.Done(gather.Duplicate(null));
 				return;
 			}
-			gather.Done(gather.Duplicate(renderTexture = new RenderTexture(Screen.currentResolution.width, Screen.currentResolution.height, 16)));
+
+			View.Texture = renderTexture = new RenderTexture(Screen.currentResolution.width, Screen.currentResolution.height, 16);
+			gather.Done(gather.Duplicate(renderTexture));
 		}
 
 		protected override void OnUpdateEnabled()

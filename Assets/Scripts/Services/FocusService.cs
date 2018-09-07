@@ -151,7 +151,7 @@ namespace LunraGames.SubLight
 
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
-			Debug.Log("Transition: " + request.State + ", Progress: " + request.Progress);
+			//Debug.Log("Transition: " + request.State + ", Progress: " + request.Progress);
 			lastTransition = request;
 
 			switch (request.State)
@@ -182,7 +182,7 @@ namespace LunraGames.SubLight
 		void OnUpdate(float delta)
 		{
 			if (state == States.Complete || lastTransition.State != TransitionFocusRequest.States.Active) return;
-			Debug.Log("caling from update");
+
 			var currentProgress = Mathf.Clamp01((float)((DateTime.Now - lastTransition.StartTime).TotalSeconds / lastTransition.Duration.TotalSeconds));
 			callbacks.TransitionFocusRequest(lastTransition.Duplicate(progress: currentProgress));
 		}
@@ -201,7 +201,6 @@ namespace LunraGames.SubLight
 			state = States.Complete;
 			currents = AddDefaults(lastActive.Targets);
 			lastActive.Done();
-			Debug.Log("we should be done...");
 		}
 
 		void OnGatherFocusResult(
@@ -238,6 +237,8 @@ namespace LunraGames.SubLight
 		{
 			var results = new List<SetFocusTransition>();
 
+			var activeCurrents = currents ?? defaults;
+
 			foreach (var end in AddDefaults(ends))
 			{
 				if (!supported.Contains(end.Layer))
@@ -245,7 +246,8 @@ namespace LunraGames.SubLight
 					Debug.LogError("Layer " + end.Layer + " not currently supported. Make sure to include it when setting defaults.");
 					continue;
 				}
-				var current = (currents ?? defaults).FirstOrDefault(c => c.Layer == end.Layer);
+
+				var current = activeCurrents.FirstOrDefault(c => c.Layer == end.Layer);
 
 				if (!(includeIdentical || end.Enabled || current.HasDelta(end))) continue;
 
@@ -266,7 +268,8 @@ namespace LunraGames.SubLight
 
 		GatherFocusRequest BuildGatherRequest(SetFocusRequest request, SetFocusTransition[] transitions)
 		{
-			var remainingLayers =  request.Targets.Select(t => t.Layer).ToList();
+			var remainingLayers =  transitions.Select(t => t.Layer).ToList();
+
 			var gatherRequests = new List<DeliverFocusBlock>();
 			var gatherResults = new List<DeliverFocusBlock>();
 			Action<GatherFocusResult> onResultDone = result => OnGatherFocusResultDone(request, transitions, result);
