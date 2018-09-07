@@ -35,6 +35,7 @@ namespace LunraGames.SubLight
 			static SetFocusBlock GetFocus<D>(
 				int order = 0,
 				bool enabled = false,
+				float weight = 0f,
 				D details = null
 			)
 				where D : SetFocusDetails<D>, new()
@@ -43,7 +44,7 @@ namespace LunraGames.SubLight
 					details ?? new D().SetDefault(),
 					enabled,
 					order,
-					1f
+					weight
 				);
 			}
 
@@ -72,8 +73,8 @@ namespace LunraGames.SubLight
 			{
 				var results = new List<SetFocusBlock>();
 
-				results.Add(GetFocus<RoomFocusDetails>(startIndex, true));
-				results.Add(GetFocus<ToolbarFocusDetails>(startIndex + 1, true));
+				results.Add(GetFocus<RoomFocusDetails>(startIndex, true, 1f));
+				results.Add(GetFocus<ToolbarFocusDetails>(startIndex + 1, true, 1f));
 
 				return results;
 			}
@@ -82,7 +83,7 @@ namespace LunraGames.SubLight
 			{
 				var results = GetBaseEnabledFocuses();
 				
-				results.Add(GetFocus<SystemFocusDetails>(1, true));
+				results.Add(GetFocus<SystemFocusDetails>(1, true, 1f));
 				
 				return results.ToArray();
 			}
@@ -91,7 +92,7 @@ namespace LunraGames.SubLight
 			{
 				var results = GetBaseEnabledFocuses();
 
-				results.Add(GetFocus<CommunicationsFocusDetails>(1, true));
+				results.Add(GetFocus<CommunicationsFocusDetails>(1, true, 1f));
 
 				return results.ToArray();
 			}

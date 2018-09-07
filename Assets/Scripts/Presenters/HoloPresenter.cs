@@ -54,7 +54,8 @@ namespace LunraGames.SubLight.Presenters
 				{
 					if (delivery.Ignore) continue;
 					textures.Add(new RenderLayerTextureBlock(absoluteOrder, delivery.Texture));
-					properties.Add(new RenderLayerPropertyBlock(absoluteOrder, transition.Start.Weight));
+					var weight = request.LastActive ? transition.End.Weight : transition.Start.Weight;
+					properties.Add(new RenderLayerPropertyBlock(absoluteOrder, weight));
 				}
 
 				orderToAbsolute.Add(transition.Layer, absoluteOrder);
