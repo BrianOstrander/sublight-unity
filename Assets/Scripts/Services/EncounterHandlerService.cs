@@ -52,6 +52,7 @@ namespace LunraGames.SubLight
 			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
 			if (inventoryReferences == null) throw new ArgumentNullException("inventoryReferences");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
+			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
 
 			this.heartbeat = heartbeat;
 			this.callbacks = callbacks;

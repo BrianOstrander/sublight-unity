@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - RoomCameraOrigin
+  - HoloSurfaceOrigin
   layers:
   - Default
   - TransparentFX
@@ -15,10 +17,10 @@ TagManager:
   - 
   - PostProcessing
   - Void
-  - 
-  - 
-  - 
-  - 
+  - HoloRoom
+  - HoloToolbar
+  - HoloSystem
+  - HoloCommunications
   - 
   - 
   - 

@@ -71,6 +71,9 @@ namespace LunraGames.SubLight
 		ValueFilterService valueFilter;
 		public static ValueFilterService ValueFilter { get { return instance.valueFilter; } }
 
+		FocusService focus;
+		public static FocusService Focus { get { return instance.focus; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -167,6 +170,8 @@ namespace LunraGames.SubLight
 				ValueFilter,
 				CurrentPreferences
 			);
+
+			focus = new FocusService(Heartbeat, Callbacks, CurrentPreferences);
 		}
 
 		public static void Restart(string message)

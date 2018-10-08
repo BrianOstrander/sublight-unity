@@ -36,6 +36,18 @@ namespace LunraGames.SubLight
 			public const string VoidInterior = "_VoidInterior";
 		}
 
+		public static class HoloLayerShared
+		{
+			//public const string Name = 
+
+			public const int LayerCount = 4;
+			public static int MaxLayer { get { return LayerCount - 1; } }
+
+			public static string GetLayer(int order) { return "_Layer_" + order; }
+
+			public static string GetWeight(int order) { return "_Weight_" + order; }
+		}
+
 		/*
 		public static class SomeShader
 		{

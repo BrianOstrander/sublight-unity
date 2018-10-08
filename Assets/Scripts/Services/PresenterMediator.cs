@@ -85,7 +85,6 @@ namespace LunraGames.SubLight
 				registrations.Remove(entry);
 				switch(entry.GetState())
 				{
-					case TransitionStates.Unknown:
 					case TransitionStates.Closed:
 						entry.UnBind();
 						break;

@@ -17,13 +17,13 @@ namespace LunraGames.SubLight
 		public KeyValueListener KeyValueListener;
 	}
 
-	public class GameState : State<GamePayload>
+	public partial class GameState : State<GamePayload>
 	{
 		// Reminder: Keep variables in payload for easy reset of states!
 
 		public override StateMachine.States HandledState { get { return StateMachine.States.Game; } }
 
-		static string[] Scenes { get { return new string[] { SceneConstants.Game }; } }
+		static string[] Scenes { get { return new string[] { SceneConstants.Game, SceneConstants.HoloRoom }; } }
 
 		#region Begin
 		protected override void Begin()
@@ -31,7 +31,10 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
-			App.SM.PushBlocking(InitializeGame);
+			//App.SM.PushBlocking(InitializeGame);
+			App.SM.PushBlocking(Focuses.InitializePresenters);
+			App.SM.PushBlocking(InitializeFocus);
+			//App.SM.PushBreak();
 		}
 
 		void LoadScenes(Action done)
@@ -129,6 +132,17 @@ namespace LunraGames.SubLight
 			new PauseMenuPresenter();
 			new GameLostPresenter(game);
 
+			done();
+		}
+
+		void InitializeFocus(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(Focuses.GetDefaultFocuses(), () => OnInializeFocusDefaults(done)));
+		}
+
+		void OnInializeFocusDefaults(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetSystemFocus(), done));
 			done();
 		}
 		#endregion

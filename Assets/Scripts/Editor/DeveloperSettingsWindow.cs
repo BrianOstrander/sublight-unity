@@ -68,7 +68,12 @@ namespace LunraGames.SubLight
 					if (isWiping) EditorGUILayoutExtensions.PopColor();
 				}
 				GUILayout.EndVertical();
-				DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
+				GUILayout.BeginVertical();
+				{
+					DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
+					DevPrefs.ShowHoloHelper.Value = GUILayout.Toggle(DevPrefs.ShowHoloHelper, "Show Holo Helper");
+				}
+				GUILayout.EndVertical();
 				GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();

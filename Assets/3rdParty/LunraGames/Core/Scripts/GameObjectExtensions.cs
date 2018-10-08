@@ -85,5 +85,25 @@ namespace LunraGames
 			}
 			return true;
 		}
+
+		/// <summary>
+		/// A normal FindWithTag call results in an error if the tag doesn't
+		/// exist. This prints the warning to console instead of throwing the
+		/// error, and returns null.
+		/// </summary>
+		/// <returns>The with tag or handle missing tag.</returns>
+		/// <param name="tag">Tag.</param>
+		public static GameObject FindWithTagOrHandleMissingTag(string tag, bool quiet = false)
+		{
+			try
+			{
+				return GameObject.FindWithTag(tag);
+			}
+			catch (UnityException e)
+			{
+				if (!quiet) Debug.LogException(e);
+				return null;
+			}
+		}
 	}
 }
