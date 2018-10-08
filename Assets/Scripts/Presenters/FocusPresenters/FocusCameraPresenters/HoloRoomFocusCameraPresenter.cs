@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override bool IsGatherable { get { return false; } }
 
 		public Transform GantryAnchor { get { return View.GantryAnchor; } }
+		public float FieldOfView { get { return View.FieldOfView; } }
 
 		public HoloRoomFocusCameraPresenter() : base(null) {}
 
@@ -19,7 +20,7 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUpdateEnabled();
 
 			View.Orbit = 0f;
-			View.Zoom = 1f;
+			View.Zoom = 0f;
 		}
 		#endregion
 	}

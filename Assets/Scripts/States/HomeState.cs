@@ -10,44 +10,57 @@ namespace LunraGames.SubLight
 		public SaveModel[] Saves = new SaveModel[0];
 	}
 
-	public class HomeState : State<HomePayload>
+	public partial class HomeState : State<HomePayload>
 	{
 		// Reminder: Keep variables in payload for easy reset of states!
 
 		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
-		static string[] Scenes { get { return new string[] { SceneConstants.Home }; } }
+		static string[] Scenes { get { return new string[] { SceneConstants.Home, SceneConstants.HoloRoom }; } }
 
 		#region Begin
 		protected override void Begin()
 		{
 			App.SM.PushBlocking(LoadScenes);
+			App.SM.PushBlocking(InitializeInput);
+			App.SM.PushBlocking(InitializeCallbacks);
+			App.SM.PushBlocking(Focuses.InitializePresenters);
+			App.SM.PushBlocking(InitializeFocus);
 		}
 
 		void LoadScenes(Action done)
 		{
 			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
-  		#endregion
-
-		#region Idle
-		protected override void Idle()
-		{
-			App.SM.PushBlocking(InitializeCamera);
-			App.SM.PushBlocking(InitializeInput);
-			App.SM.PushBlocking(InitializeLoadSaves);
-			App.SM.PushBlocking(InitializeMenu);
-		}
-
-		void InitializeCamera(Action done)
-		{
-			new CameraPresenter().Show(done);
-		}
 
 		void InitializeInput(Action done)
 		{
 			App.Input.SetEnabled(true);
 			done();
+		}
+
+		void InitializeCallbacks(Action done)
+		{
+			done();
+		}
+
+		void InitializeFocus(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(Focuses.GetDefaultFocuses(), () => OnInializeFocusDefaults(done)));
+		}
+
+		void OnInializeFocusDefaults(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetMainMenuFocus(), done));
+			done();
+		}
+		#endregion
+
+		#region Idle
+		protected override void Idle()
+		{
+			App.SM.PushBlocking(InitializeLoadSaves);
+			App.SM.PushBlocking(ShowLoadedSaves);
 		}
 
 		void InitializeLoadSaves(Action done)
@@ -66,10 +79,12 @@ namespace LunraGames.SubLight
 			done();
 		}
 
-		void InitializeMenu(Action done)
+		void ShowLoadedSaves(Action done)
 		{
-			new HomeMenuPresenter(Payload.Saves).Show(done);
+			UnityEngine.Debug.Log("Show saves here...");
+			done();
 		}
+
 		#endregion
 
 		#region End
@@ -94,6 +109,9 @@ namespace LunraGames.SubLight
 			// will also be unbinded.
 			App.P.UnRegisterAll(done);
 		}
-  		#endregion
+		#endregion
+
+		#region Events
+		#endregion
 	}
 }

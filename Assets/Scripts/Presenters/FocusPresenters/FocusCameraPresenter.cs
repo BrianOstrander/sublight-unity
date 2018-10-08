@@ -12,10 +12,12 @@ namespace LunraGames.SubLight.Presenters
 
 		RenderTexture renderTexture;
 
-		public FocusCameraPresenter(Transform viewParent, string overrideName = null) : base(viewParent, overrideName)
+		public FocusCameraPresenter(Transform viewParent, string overrideName = null, float? fieldOfView = null) : base(viewParent, overrideName)
 		{
 			App.Focus.RegisterLayer(FocusLayer);
 			App.Callbacks.GatherFocusRequest += OnGatherFocusRequest;
+
+			if (fieldOfView.HasValue) View.FieldOfView = fieldOfView.Value;
 		}
 
 		protected override void OnUnBind()

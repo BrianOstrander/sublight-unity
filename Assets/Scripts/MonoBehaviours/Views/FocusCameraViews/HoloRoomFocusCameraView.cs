@@ -29,7 +29,9 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve focalHeightCurve;
 
 		[SerializeField, Header("Test"), Range(0f, 1f)]
-		public float orientationPreview;
+		float orientationPreview;
+		[SerializeField]
+		bool liveMode;
 
 		bool gantryStale;
 
@@ -121,7 +123,14 @@ namespace LunraGames.SubLight.Views
 		protected override void OnLateIdle(float delta)
 		{
 			base.OnLateIdle(delta);
-			if (!gantryStale) return;
+
+			if (Application.isEditor && liveMode)
+			{
+				Orbit = Orbit;
+				Zoom = Zoom;
+			}
+			else if (!gantryStale) return;
+
 			gantryStale = false;
 			gantry.position = gantryPosition;
 			gantry.forward = gantryForward;
