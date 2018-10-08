@@ -61,17 +61,22 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginVertical();
 				{
+					DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
+					DevPrefs.ShowHoloHelper.Value = GUILayout.Toggle(DevPrefs.ShowHoloHelper, "Show Holo Helper");
+					using (var check = new EditorGUI.ChangeCheckScope())
+					{
+						DevPrefs.ShowUxHelper.Value = GUILayout.Toggle(DevPrefs.ShowUxHelper, "Show UX Helper");
+						if (check.changed) UxHelper.RunUpdate();
+					}
+				}
+				GUILayout.EndVertical();
+				GUILayout.BeginVertical();
+				{
 					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
 					var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
 					if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
 					DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");
 					if (isWiping) EditorGUILayoutExtensions.PopColor();
-				}
-				GUILayout.EndVertical();
-				GUILayout.BeginVertical();
-				{
-					DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
-					DevPrefs.ShowHoloHelper.Value = GUILayout.Toggle(DevPrefs.ShowHoloHelper, "Show Holo Helper");
 				}
 				GUILayout.EndVertical();
 				GUILayout.FlexibleSpace();
