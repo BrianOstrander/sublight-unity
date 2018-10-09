@@ -64,6 +64,18 @@ namespace LunraGames.SubLight
 			public const string LipMax = "_LipMax";
 		}
 
+		public static class HoloMask
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "graphs/Holo/Mask";
+			/// <summary>
+			/// The opacity
+			/// </summary>
+			public const string Opacity = "_Opacity";
+		}
+
 		/*
 		public static class SomeShader
 		{

@@ -13,7 +13,7 @@ namespace LunraGames.SubLight
 
 		public GameObject HoloSurfaceOrigin;
 
-		public HoloLipPresenter Lip;
+		public IPresenterCloseShowOptions[] ShowAfterDelay = new IPresenterCloseShowOptions[0];
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -86,7 +86,7 @@ namespace LunraGames.SubLight
 
 		void OnShowDelay()
 		{
-			Payload.Lip.Show();
+			foreach (var presenter in Payload.ShowAfterDelay) presenter.Show();
 		}
 
 		void InitializeLoadSaves(Action done)

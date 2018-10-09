@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Lip
-  m_Shader: {fileID: 4800000, guid: f06f8459b47fd489d94bcbbc6eba9abf, type: 3}
+  m_Name: Label
+  m_Shader: {fileID: 4800000, guid: 56c4c2cbc04a44a1380fe83e8f63db2b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -18,12 +18,24 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_60559F0B:
-        m_Texture: {fileID: 2800000, guid: 3fad5c1556c8b4bc29644730b45b5178, type: 3}
+    - Texture2D_20FF2FDA:
+        m_Texture: {fileID: 2800000, guid: dc4ebab170be54e8aa11c5cb69086efd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - Texture2D_E49E457:
-        m_Texture: {fileID: 2800000, guid: a7f8bf898ea424d0eaa0897896868835, type: 3}
+    - Texture2D_8903CF1D:
+        m_Texture: {fileID: 2800000, guid: 2f36f0fa9d01a4320af8fff67935effd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_AD531C4E:
+        m_Texture: {fileID: 2800000, guid: a014fd93fe41542f0bedcfbd36710855, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_DE5629E8:
+        m_Texture: {fileID: 2800000, guid: 0fd387714a537427ba719f9ea0412a66, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_FBE5042E:
+        m_Texture: {fileID: 2800000, guid: e799a61e3bd5a4c309efa86875c07ee3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -67,8 +79,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_5E1D11C8: 0.98
-    - Vector1_7A06B420: 1
+    - Vector1_510468DC: -0.007
+    - Vector1_F6923881: 0.01
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -79,8 +91,6 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _LipMax: 1
-    - _LipMin: 0.98
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -94,5 +104,4 @@ Material:
     m_Colors:
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LipColor: {r: 1, g: 0.21295045, b: 0.1745283, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

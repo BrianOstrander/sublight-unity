@@ -20,6 +20,8 @@ ModelImporter:
     100028: Iris
     100030: Walls
     100032: WindowThreshold
+    100034: Circle
+    100036: IrisGlow
     400000: Cylinder
     400002: Cylinder_001
     400004: Cylinder_002
@@ -37,6 +39,8 @@ ModelImporter:
     400028: Iris
     400030: Walls
     400032: WindowThreshold
+    400034: Circle
+    400036: IrisGlow
     2100000: None__Untitled
     2100002: unnamed
     2300000: Cylinder
@@ -55,6 +59,8 @@ ModelImporter:
     2300026: Iris
     2300028: Walls
     2300030: WindowThreshold
+    2300032: Circle
+    2300034: IrisGlow
     3300000: Cylinder
     3300002: Cylinder_001
     3300004: Cylinder_002
@@ -71,6 +77,8 @@ ModelImporter:
     3300026: Iris
     3300028: Walls
     3300030: WindowThreshold
+    3300032: Circle
+    3300034: IrisGlow
     4300000: FadeArea
     4300002: Cylinder_006
     4300004: Cylinder_005
@@ -87,6 +95,8 @@ ModelImporter:
     4300026: Column1
     4300028: Column0
     4300030: Column3
+    4300032: Circle
+    4300034: IrisGlow
     7400000: Default Take
     9500000: //RootNode
     2186277476908879412: ImportLogs

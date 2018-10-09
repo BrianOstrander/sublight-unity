@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4206125305467614}
   - component: {fileID: 114335109359671614}
   m_Layer: 0
-  m_Name: HoloLipView
+  m_Name: LipView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1424868229221662}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.99, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4237443471518248}
@@ -125,8 +125,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolSize: 0
-  animations: []
-  showCloseDuration: {x: 1, y: 1}
+  animations:
+  - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   MinLipAnimation:
     serializedVersion: 2
     m_Curve:

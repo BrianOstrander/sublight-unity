@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Views
 {
-	public class HoloLipView : View, IHoloLipView
+	public class LipView : View, ILipView
 	{
 		[SerializeField]
 		AnimationCurve MinLipAnimation;
@@ -13,8 +13,6 @@ namespace LunraGames.SubLight.Views
 		Material lipMaterial;
 		[SerializeField]
 		MeshRenderer lipMesh;
-
-		Material currentMaterial;
 
 		void SetLips(float scalar, bool showing)
 		{
@@ -28,8 +26,7 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
-			currentMaterial = new Material(lipMaterial);
-			lipMesh.material = currentMaterial;
+			lipMesh.material = new Material(lipMaterial);
 
 			SetLips(0f, true);
 		}
@@ -49,7 +46,7 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
-	public interface IHoloLipView : IView
+	public interface ILipView : IView
 	{
 
 	}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Presenters;
 
 namespace LunraGames.SubLight
@@ -29,7 +30,11 @@ namespace LunraGames.SubLight
 				// TODO: Main menu presenter stuff...
 				new HoloPresenter();
 
-				payload.Lip = new HoloLipPresenter(holoSurface, layer);
+				payload.ShowAfterDelay = new IPresenterCloseShowOptions[]
+				{
+					new GenericPresenter<ILipView>(layer),
+					new GenericPresenter<IMenuLogoView>()
+				};
 
 				done();
 			}
