@@ -75,6 +75,8 @@ namespace LunraGames.SubLight
 		void Reset();
 
 		string InstanceName { get; set; }
+
+		void SetLayer(string layer);
 	}
 
 	public abstract class View : MonoBehaviour, IView
@@ -189,6 +191,11 @@ namespace LunraGames.SubLight
 			Interactable = true;
 		}
 
-		public bool Visible { get { return gameObject.activeInHierarchy; } }
+		public bool Visible { get { return TransitionState != TransitionStates.Closed; } }
+
+		public void SetLayer(string layer)
+		{
+			Root.gameObject.SetLayerRecursively(LayerMask.NameToLayer(layer));
+		}
 	}
 }

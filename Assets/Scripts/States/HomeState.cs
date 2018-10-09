@@ -3,11 +3,17 @@ using System;
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Presenters;
 
+using UnityEngine;
+
 namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
 		public SaveModel[] Saves = new SaveModel[0];
+
+		public GameObject HoloSurfaceOrigin;
+
+		public HoloLipPresenter Lip;
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -17,6 +23,7 @@ namespace LunraGames.SubLight
 		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
 		static string[] Scenes { get { return new string[] { SceneConstants.Home, SceneConstants.HoloRoom }; } }
+		static string[] Tags { get { return new string[] { TagConstants.HoloSurfaceOrigin }; } }
 
 		#region Begin
 		protected override void Begin()
@@ -24,13 +31,26 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
-			App.SM.PushBlocking(Focuses.InitializePresenters);
+			App.SM.PushBlocking(done => Focuses.InitializePresenters(Payload, done));
 			App.SM.PushBlocking(InitializeFocus);
 		}
 
 		void LoadScenes(Action done)
 		{
-			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
+			App.Scenes.Request(SceneRequest.Load(result => OnLoadScenes(result, done), Scenes, Tags));
+		}
+
+		void OnLoadScenes(SceneRequest result, Action done)
+		{
+			foreach (var kv in result.FoundTags)
+			{
+				switch (kv.Key)
+				{
+					case TagConstants.HoloSurfaceOrigin: Payload.HoloSurfaceOrigin = kv.Value; break;
+				}
+			}
+
+			done();
 		}
 
 		void InitializeInput(Action done)
@@ -52,15 +72,21 @@ namespace LunraGames.SubLight
 		void OnInializeFocusDefaults(Action done)
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetMainMenuFocus(), done));
-			done();
 		}
 		#endregion
 
 		#region Idle
 		protected override void Idle()
 		{
+			App.Heartbeat.Wait(OnShowDelay, 1f);
+
 			App.SM.PushBlocking(InitializeLoadSaves);
 			App.SM.PushBlocking(ShowLoadedSaves);
+		}
+
+		void OnShowDelay()
+		{
+			Payload.Lip.Show();
 		}
 
 		void InitializeLoadSaves(Action done)

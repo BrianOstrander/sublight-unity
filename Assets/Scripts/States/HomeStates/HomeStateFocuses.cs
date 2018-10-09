@@ -15,18 +15,21 @@ namespace LunraGames.SubLight
 			static SetFocusLayers[] allLayers;
 			static SetFocusLayers[] AllLayers { get { return allLayers ?? (allLayers = EnumExtensions.GetValues(SetFocusLayers.Unknown)); } }
 
-			public static void InitializePresenters(Action done)
+			public static void InitializePresenters(HomePayload payload, Action done)
 			{
 				// Basics: Cameras, Room, etc
 				var roomCamera = new HoloRoomFocusCameraPresenter();
 				var gantryAnchor = roomCamera.GantryAnchor;
 				var fieldOfView = roomCamera.FieldOfView;
+				var holoSurface = payload.HoloSurfaceOrigin.transform;
+				var layer = "Holo" + SetFocusLayers.Home;
 
 				new HomeFocusCameraPresenter(gantryAnchor, fieldOfView);
 
 				// TODO: Main menu presenter stuff...
-
 				new HoloPresenter();
+
+				payload.Lip = new HoloLipPresenter(holoSurface, layer);
 
 				done();
 			}
@@ -57,7 +60,7 @@ namespace LunraGames.SubLight
 					switch (layer)
 					{
 						case SetFocusLayers.Room: results.Add(GetFocus<RoomFocusDetails>()); break;
-						case SetFocusLayers.Home: results.Add(GetFocus<HomeFocusDetails>()); break;
+						case SetFocusLayers.Home:results.Add(GetFocus<HomeFocusDetails>()); break;
 						case SetFocusLayers.Toolbar:
 						case SetFocusLayers.System:
 						case SetFocusLayers.Communications:
@@ -76,14 +79,17 @@ namespace LunraGames.SubLight
 				var results = new List<SetFocusBlock>();
 
 				results.Add(GetFocus<RoomFocusDetails>(startIndex, true, 1f));
-				results.Add(GetFocus<HomeFocusDetails>(startIndex + 1, true, 1f));
 
 				return results;
 			}
 
 			public static SetFocusBlock[] GetMainMenuFocus()
 			{
-				return GetBaseEnabledFocuses().ToArray();
+				var results = GetBaseEnabledFocuses();
+
+				results.Add(GetFocus<HomeFocusDetails>(1, true, 1f));
+
+				return results.ToArray();
 			}
 			#endregion
 		}

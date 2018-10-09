@@ -11,10 +11,11 @@ namespace LunraGames.SubLight.Presenters
 
 		public FocusPresenter() : this(null) {}
 
-		public FocusPresenter(Transform viewParent, string overrideName = null)
+		public FocusPresenter(Transform viewParent, string overrideName = null, SetFocusLayers layer = SetFocusLayers.Unknown)
 		{
 			ViewParent = viewParent;
 			if (!string.IsNullOrEmpty(overrideName)) View.InstanceName = overrideName;
+			if (layer != SetFocusLayers.Unknown) View.SetLayer("Holo"+layer);
 
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
 		}
