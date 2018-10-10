@@ -80,6 +80,7 @@ namespace LunraGames.SubLight.Presenters
 						DialogRequest.Alert(
 							request.Error,
 							"Cannot Save",
+							DialogStyles.Neutral,
 							OnSaveFailAlert
 						)
 					);

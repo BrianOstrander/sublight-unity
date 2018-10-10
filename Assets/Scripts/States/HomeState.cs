@@ -11,8 +11,9 @@ namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
-		public bool CanContinueGame;
+		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public SaveModel[] Saves = new SaveModel[0];
+		public SaveModel ContinueSave;
 
 		public GameObject HoloSurfaceOrigin;
 
@@ -92,7 +93,7 @@ namespace LunraGames.SubLight
 			}
 			else Payload.Saves = result.Models;
 
-			Payload.CanContinueGame = Payload.Saves.Any(s => s.SupportedVersion.Value);
+			Payload.ContinueSave = Payload.Saves.Where(s => s.SupportedVersion.Value).OrderBy(s => s.Modified.Value).LastOrDefault();
 
 			done();
 		}
@@ -138,15 +139,21 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		#region Events
+		#region Events Main Menu
 		void OnNewGameClick()
 		{
-			Debug.Log("lol new game");
+			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.CancelConfirm("Starting a new game will overwrite your existing one.", "Overwrite Game", DialogStyles.Warning, confirm: OnNewGameStart));
+			else OnNewGameStart();
+		}
+
+		void OnNewGameStart()
+		{
+			App.GameService.CreateGame(OnNewGameCreated);
 		}
 
 		void OnContinueGameClick()
 		{
-			OnNotImplimentedClick();
+			App.M.Load<GameModel>(Payload.ContinueSave, OnLoadedGame);
 		}
 
 		void OnSettingsClick()
@@ -167,7 +174,46 @@ namespace LunraGames.SubLight
 
 		void OnNotImplimentedClick()
 		{
-			Debug.Log("lol not implimented");
+			App.Callbacks.DialogRequest(DialogRequest.Alert("This feature is not implemented yet.", style: DialogStyles.Warning));
+		}
+
+		void OnNewGameCreated(RequestStatus result, GameModel model)
+		{
+			if (result != RequestStatus.Success)
+			{
+				App.Callbacks.DialogRequest(DialogRequest.Alert("Creating new game returned with result " + result, style: DialogStyles.Error));
+				return;
+			}
+			App.M.Save(model, OnSaveGame);
+		}
+
+		void OnLoadedGame(SaveLoadRequest<GameModel> result)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error, style: DialogStyles.Error));
+				return;
+			}
+			App.M.Save(result.TypedModel, OnSaveGame);
+		}
+
+		void OnSaveGame(SaveLoadRequest<GameModel> result)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error, style: DialogStyles.Error));
+				return;
+			}
+			OnStartGame(result.TypedModel);
+		}
+
+		void OnStartGame(GameModel model)
+		{
+			var payload = new GamePayload();
+			payload.Game = model;
+			App.SM.RequestState(payload);
 		}
 		#endregion
 	}

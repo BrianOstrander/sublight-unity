@@ -43,7 +43,7 @@ namespace LunraGames.SubLight
 					new MainMenuOptionsPresenter(
 						new LabelButtonBlock[] {
 							new LabelButtonBlock("New Game", state.OnNewGameClick),
-							new LabelButtonBlock("Continue Game", state.OnContinueGameClick, payload.CanContinueGame)
+							new LabelButtonBlock("Continue Game", state.OnContinueGameClick, payload.CanContinueSave)
 						},
 						new LabelButtonBlock[] {
 							new LabelButtonBlock("Settings", state.OnSettingsClick),
