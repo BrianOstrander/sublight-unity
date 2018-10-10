@@ -125,6 +125,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolSize: 0
+  ShowCloseDuration:
+    OverrideShow: 1
+    OverrideClose: 0
+    ShowDuration: 1
+    CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   MinLipAnimation:

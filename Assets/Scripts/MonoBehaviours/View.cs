@@ -88,8 +88,8 @@ namespace LunraGames.SubLight
 
 		public virtual Transform Root { get { return transform; } }
 
-		public virtual float ShowDuration { get { return ShowDurationDefault; } }
-		public virtual float CloseDuration { get { return CloseDurationDefault; } }
+		public virtual float ShowDuration { get { return ShowCloseDuration.OverrideShow ? ShowCloseDuration.ShowDuration : ShowDurationDefault; } }
+		public virtual float CloseDuration { get { return ShowCloseDuration.OverrideClose ? ShowCloseDuration.CloseDuration : CloseDurationDefault; } }
 		public virtual float Progress { get; set; }
 
 		TransitionStates transitionState;
@@ -106,6 +106,7 @@ namespace LunraGames.SubLight
 		[SerializeField, Tooltip("Size of initial pool, entering \"0\" uses ViewMediator defaults.")]
 		int poolSize;
 		public virtual int PoolSize { get { return poolSize; } }
+		public ShowCloseDurationBlock ShowCloseDuration;
 		[SerializeField, FormerlySerializedAs("_animations")]
 		ViewAnimation[] animations;
 		public virtual ViewAnimation[] ViewAnimations { get { return animations; } }
