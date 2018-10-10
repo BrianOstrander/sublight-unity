@@ -61,7 +61,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     Colors:
-      DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
+      DisabledColor: {r: 1, g: 0.5921569, b: 0.5686275, a: 0}
       NormalColor: {r: 1, g: 0.5921569, b: 0.5686275, a: 1}
       HighlightedColor: {r: 1, g: 0.5921569, b: 0.5686275, a: 0}
       PressedColor: {r: 1, g: 0.5921569, b: 0.5686275, a: 0}

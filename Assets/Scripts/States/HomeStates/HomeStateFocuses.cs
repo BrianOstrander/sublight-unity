@@ -42,12 +42,13 @@ namespace LunraGames.SubLight
 				{
 					new MainMenuOptionsPresenter(
 						new LabelButtonBlock[] {
-							// none yet
+							new LabelButtonBlock("New Game", state.OnNewGameClick),
+							new LabelButtonBlock("Continue Game", state.OnContinueGameClick, payload.CanContinueGame)
 						},
 						new LabelButtonBlock[] {
-							new LabelButtonBlock("Settings", state.OnNotImplimentedClick),
-							new LabelButtonBlock("Credits", state.OnNotImplimentedClick),
-							new LabelButtonBlock("Exit", state.OnExitClick)
+							new LabelButtonBlock("Settings", state.OnNotImplimentedClick, false),
+							new LabelButtonBlock("Credits", state.OnNotImplimentedClick, false),
+							new LabelButtonBlock("Exit", state.OnExitClick, false)
 						}
 					)
 				};

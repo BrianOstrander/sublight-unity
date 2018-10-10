@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using LunraGames.SubLight.Models;
@@ -10,6 +11,7 @@ namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
+		public bool CanContinueGame;
 		public SaveModel[] Saves = new SaveModel[0];
 
 		public GameObject HoloSurfaceOrigin;
@@ -32,9 +34,9 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
+			App.SM.PushBlocking(InitializeLoadSaves);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
 			App.SM.PushBlocking(InitializeFocus);
-			App.SM.PushBlocking(InitializeLoadSaves);
 		}
 
 		void LoadScenes(Action done)
@@ -89,6 +91,9 @@ namespace LunraGames.SubLight
 				// TODO: Error logic.
 			}
 			else Payload.Saves = result.Models;
+
+			Payload.CanContinueGame = Payload.Saves.Any(s => s.SupportedVersion.Value);
+
 			done();
 		}
 		#endregion

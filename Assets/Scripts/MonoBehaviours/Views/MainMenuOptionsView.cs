@@ -75,6 +75,7 @@ namespace LunraGames.SubLight.Views
 
 				instance.ButtonLabel.text = block.Text ?? string.Empty;
 				instance.Button.OnClick.AddListener(new UnityAction(block.Click ?? ActionExtensions.Empty));
+				instance.Button.interactable = block.Interactable;
 
 				buttonInstances.Add(instance);
 			}
