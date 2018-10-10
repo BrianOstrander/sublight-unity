@@ -4,6 +4,7 @@ namespace LunraGames.SubLight
 {
 	public struct DialogRequest
 	{
+		/*
 		static class Defaults
 		{
 			public const string AlertTitle = "Alert";
@@ -14,6 +15,7 @@ namespace LunraGames.SubLight
 			public const string Failure = "Deny";
 			public const string Success = "Okay";
 		}
+		*/
 
 		public enum States
 		{
@@ -33,15 +35,16 @@ namespace LunraGames.SubLight
 		public static DialogRequest Alert(
 			string message, 
 			string title = null,
+			DialogStyles style = DialogStyles.Neutral,
 			Action done = null
 		)
 		{
 			return new DialogRequest(
 				States.Request,
 				DialogTypes.Alert,
-				title ?? Defaults.AlertTitle,
+				style,
+				title,
 				message,
-				successText: Defaults.Success,
 				success: done
 			);
 		}
@@ -58,6 +61,7 @@ namespace LunraGames.SubLight
 		public static DialogRequest CancelConfirm(
 			string message,
 			string title = null,
+			DialogStyles style = DialogStyles.Neutral,
 			Action cancel = null,
 			Action confirm = null,
 			Action<RequestStatus> done = null
@@ -66,10 +70,9 @@ namespace LunraGames.SubLight
 			return new DialogRequest(
 				States.Request,
 				DialogTypes.CancelConfirm,
-				title ?? Defaults.AlertTitle,
+				style,
+				title,
 				message,
-				cancelText: Defaults.Cancel,
-				successText: Defaults.Success,
 				cancel: cancel,
 				success: confirm,
 				done: done
@@ -89,6 +92,7 @@ namespace LunraGames.SubLight
 		public static DialogRequest CancelDenyConfirm(
 			string message,
 			string title = null,
+			DialogStyles style = DialogStyles.Neutral,
 			Action cancel = null,
 			Action deny = null,
 			Action confirm = null,
@@ -101,11 +105,12 @@ namespace LunraGames.SubLight
 			return new DialogRequest(
 				States.Request,
 				DialogTypes.CancelDenyConfirm,
-				title ?? Defaults.AlertTitle,
+				style,
+				title,
 				message,
-				cancelText: cancelText ?? Defaults.Cancel,
-				failureText: denyText ?? Defaults.Failure,
-				successText: confirmText ?? Defaults.Success,
+				cancelText: cancelText,
+				failureText: denyText,
+				successText: confirmText,
 				cancel: cancel,
 				failure: deny,
 				success: confirm,
@@ -115,6 +120,7 @@ namespace LunraGames.SubLight
 
 		public readonly States State;
 		public readonly DialogTypes DialogType;
+		public readonly DialogStyles Style;
 		public readonly string Title;
 		public readonly string Message;
 		public readonly string CancelText;
@@ -128,6 +134,7 @@ namespace LunraGames.SubLight
 		DialogRequest(
 			States state,
 			DialogTypes dialogType,
+			DialogStyles style,
 			string title,
 			string message,
 			string cancelText = null,
@@ -141,11 +148,12 @@ namespace LunraGames.SubLight
 		{
 			State = state;
 			DialogType = dialogType;
-			Title = title ?? string.Empty;
-			Message = message ?? string.Empty;
-			CancelText = cancelText ?? string.Empty;
-			FailureText = failureText ?? string.Empty;
-			SuccessText = successText ?? string.Empty;
+			Style = style == DialogStyles.Unknown ? DialogStyles.Neutral : style;
+			Title = title;
+			Message = message;
+			CancelText = cancelText;
+			FailureText = failureText;
+			SuccessText = successText;
 			Done = done ?? ActionExtensions.GetEmpty<RequestStatus>();
 			Cancel = cancel ?? ActionExtensions.Empty;
 			Failure = failure ?? ActionExtensions.Empty;
@@ -157,6 +165,7 @@ namespace LunraGames.SubLight
 			return new DialogRequest(
 				state == States.Unknown ? State : state,
 				DialogType,
+				Style,
 				Title,
 				Message,
 				CancelText,

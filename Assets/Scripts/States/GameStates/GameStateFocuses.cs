@@ -18,10 +18,13 @@ namespace LunraGames.SubLight
 			public static void InitializePresenters(Action done)
 			{
 				// Basics: Cameras, Room, etc
-				var gantryAnchor = (new HoloRoomFocusCameraPresenter()).GantryAnchor;
-				new ToolbarFocusCameraPresenter(gantryAnchor);
-				new SystemFocusCameraPresenter(gantryAnchor);
-				new CommunicationsFocusCameraPresenter(gantryAnchor);
+				var roomCamera = new HoloRoomFocusCameraPresenter();
+				var gantryAnchor = roomCamera.GantryAnchor;
+				var fieldOfView = roomCamera.FieldOfView;
+
+				new ToolbarFocusCameraPresenter(gantryAnchor, fieldOfView);
+				new SystemFocusCameraPresenter(gantryAnchor, fieldOfView);
+				new CommunicationsFocusCameraPresenter(gantryAnchor, fieldOfView);
 
 				new HoloPresenter();
 

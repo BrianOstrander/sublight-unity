@@ -3,10 +3,11 @@
 	public enum SetFocusLayers
 	{
 		Unknown = 0,
-		Room = 10,
-		Toolbar = 20,
-		System = 30,
-		Communications = 40
+		Home = 10,
+		Room = 20,
+		Toolbar = 30,
+		System = 40,
+		Communications = 50
 		//Ship = 50,
 	}
 }

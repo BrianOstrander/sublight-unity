@@ -17,6 +17,12 @@ namespace LunraGames.SubLight.Views
 			set { focusCamera.enabled = value; }
 		}
 
+		public float FieldOfView
+		{
+			get { return focusCamera.fieldOfView; }
+			set { focusCamera.fieldOfView = value; }
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -29,5 +35,6 @@ namespace LunraGames.SubLight.Views
 	{
 		RenderTexture Texture { set; }
 		bool CameraEnabled { get; set; }
+		float FieldOfView { get; set; }
 	}
 }

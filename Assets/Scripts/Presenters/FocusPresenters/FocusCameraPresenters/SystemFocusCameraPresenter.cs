@@ -8,7 +8,7 @@ namespace LunraGames.SubLight.Presenters
 	{
 		protected override SetFocusLayers FocusLayer { get { return SetFocusLayers.System; } }
 
-		public SystemFocusCameraPresenter(Transform viewParent) : base(viewParent, "GenericFocusCameraView - System") {}
+		public SystemFocusCameraPresenter(Transform viewParent, float fieldOfView) : base(viewParent, "GenericFocusCameraView - System", fieldOfView) {}
 
 		#region Events
 		protected override void OnUpdateEnabled()

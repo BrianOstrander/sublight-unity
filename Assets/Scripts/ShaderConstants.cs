@@ -48,6 +48,34 @@ namespace LunraGames.SubLight
 			public static string GetWeight(int order) { return "_Weight_" + order; }
 		}
 
+		public static class HoloLip
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "graphs/HoloLip";
+			/// <summary>
+			/// The minimum radius.
+			/// </summary>
+			public const string LipMin = "_LipMin";
+			/// <summary>
+			/// The maximum radius.
+			/// </summary>
+			public const string LipMax = "_LipMax";
+		}
+
+		public static class HoloMask
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "graphs/Holo/Mask";
+			/// <summary>
+			/// The opacity
+			/// </summary>
+			public const string Opacity = "_Opacity";
+		}
+
 		/*
 		public static class SomeShader
 		{

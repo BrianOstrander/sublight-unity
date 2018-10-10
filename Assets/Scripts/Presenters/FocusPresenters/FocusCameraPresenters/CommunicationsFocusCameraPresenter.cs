@@ -8,7 +8,7 @@ namespace LunraGames.SubLight.Presenters
 	{
 		protected override SetFocusLayers FocusLayer { get { return SetFocusLayers.Communications; } }
 
-		public CommunicationsFocusCameraPresenter(Transform viewParent) : base(viewParent, "GenericFocusCameraView - Communications") {}
+		public CommunicationsFocusCameraPresenter(Transform viewParent, float fieldOfView) : base(viewParent, "GenericFocusCameraView - Communications", fieldOfView) {}
 
 		#region Events
 		protected override void OnUpdateEnabled()

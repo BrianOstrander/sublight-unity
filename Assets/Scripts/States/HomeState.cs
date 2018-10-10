@@ -1,53 +1,82 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Presenters;
+
+using UnityEngine;
 
 namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
+		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public SaveModel[] Saves = new SaveModel[0];
+		public SaveModel ContinueSave;
+
+		public GameObject HoloSurfaceOrigin;
+
+		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
 	}
 
-	public class HomeState : State<HomePayload>
+	public partial class HomeState : State<HomePayload>
 	{
 		// Reminder: Keep variables in payload for easy reset of states!
 
 		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
-		static string[] Scenes { get { return new string[] { SceneConstants.Home }; } }
+		static string[] Scenes { get { return new string[] { SceneConstants.Home, SceneConstants.HoloRoom }; } }
+		static string[] Tags { get { return new string[] { TagConstants.HoloSurfaceOrigin }; } }
 
 		#region Begin
 		protected override void Begin()
 		{
 			App.SM.PushBlocking(LoadScenes);
+			App.SM.PushBlocking(InitializeInput);
+			App.SM.PushBlocking(InitializeCallbacks);
+			App.SM.PushBlocking(InitializeLoadSaves);
+			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
+			App.SM.PushBlocking(InitializeFocus);
 		}
 
 		void LoadScenes(Action done)
 		{
-			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
-		}
-  		#endregion
-
-		#region Idle
-		protected override void Idle()
-		{
-			App.SM.PushBlocking(InitializeCamera);
-			App.SM.PushBlocking(InitializeInput);
-			App.SM.PushBlocking(InitializeLoadSaves);
-			App.SM.PushBlocking(InitializeMenu);
+			App.Scenes.Request(SceneRequest.Load(result => OnLoadScenes(result, done), Scenes, Tags));
 		}
 
-		void InitializeCamera(Action done)
+		void OnLoadScenes(SceneRequest result, Action done)
 		{
-			new CameraPresenter().Show(done);
+			foreach (var kv in result.FoundTags)
+			{
+				switch (kv.Key)
+				{
+					case TagConstants.HoloSurfaceOrigin: Payload.HoloSurfaceOrigin = kv.Value; break;
+				}
+			}
+
+			done();
 		}
 
 		void InitializeInput(Action done)
 		{
 			App.Input.SetEnabled(true);
 			done();
+		}
+
+		void InitializeCallbacks(Action done)
+		{
+			done();
+		}
+
+		void InitializeFocus(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(Focuses.GetDefaultFocuses(), () => OnInializeFocusDefaults(done)));
+		}
+
+		void OnInializeFocusDefaults(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetMainMenuFocus(), done));
 		}
 
 		void InitializeLoadSaves(Action done)
@@ -63,12 +92,26 @@ namespace LunraGames.SubLight
 				// TODO: Error logic.
 			}
 			else Payload.Saves = result.Models;
+
+			Payload.ContinueSave = Payload.Saves.Where(s => s.SupportedVersion.Value).OrderBy(s => s.Modified.Value).LastOrDefault();
+
 			done();
 		}
+		#endregion
 
-		void InitializeMenu(Action done)
+		#region Idle
+		protected override void Idle()
 		{
-			new HomeMenuPresenter(Payload.Saves).Show(done);
+			foreach (var kv in Payload.DelayedPresenterShows)
+			{
+				App.Heartbeat.Wait(
+					() =>
+					{
+						foreach (var presenter in kv.Value) presenter.Show();
+					},
+					kv.Key
+				);
+			}
 		}
 		#endregion
 
@@ -94,6 +137,84 @@ namespace LunraGames.SubLight
 			// will also be unbinded.
 			App.P.UnRegisterAll(done);
 		}
-  		#endregion
+		#endregion
+
+		#region Events Main Menu
+		void OnNewGameClick()
+		{
+			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.CancelConfirm("Starting a new game will overwrite your existing one.", "Overwrite Game", DialogStyles.Warning, confirm: OnNewGameStart));
+			else OnNewGameStart();
+		}
+
+		void OnNewGameStart()
+		{
+			App.GameService.CreateGame(OnNewGameCreated);
+		}
+
+		void OnContinueGameClick()
+		{
+			App.M.Load<GameModel>(Payload.ContinueSave, OnLoadedGame);
+		}
+
+		void OnSettingsClick()
+		{
+			OnNotImplimentedClick();
+		}
+
+		void OnCreditsClick()
+		{
+			OnNotImplimentedClick();
+		}
+
+		void OnExitClick()
+		{
+			Debug.Log("Quiting");
+			Application.Quit();
+		}
+
+		void OnNotImplimentedClick()
+		{
+			App.Callbacks.DialogRequest(DialogRequest.Alert("This feature is not implemented yet.", style: DialogStyles.Warning));
+		}
+
+		void OnNewGameCreated(RequestStatus result, GameModel model)
+		{
+			if (result != RequestStatus.Success)
+			{
+				App.Callbacks.DialogRequest(DialogRequest.Alert("Creating new game returned with result " + result, style: DialogStyles.Error));
+				return;
+			}
+			App.M.Save(model, OnSaveGame);
+		}
+
+		void OnLoadedGame(SaveLoadRequest<GameModel> result)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error, style: DialogStyles.Error));
+				return;
+			}
+			App.M.Save(result.TypedModel, OnSaveGame);
+		}
+
+		void OnSaveGame(SaveLoadRequest<GameModel> result)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error, style: DialogStyles.Error));
+				return;
+			}
+			OnStartGame(result.TypedModel);
+		}
+
+		void OnStartGame(GameModel model)
+		{
+			var payload = new GamePayload();
+			payload.Game = model;
+			App.SM.RequestState(payload);
+		}
+		#endregion
 	}
 }
