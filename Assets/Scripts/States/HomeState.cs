@@ -149,9 +149,20 @@ namespace LunraGames.SubLight
 			OnNotImplimentedClick();
 		}
 
-		void OnExitClick()
+		void OnSettingsClick()
 		{
 			OnNotImplimentedClick();
+		}
+
+		void OnCreditsClick()
+		{
+			OnNotImplimentedClick();
+		}
+
+		void OnExitClick()
+		{
+			Debug.Log("Quiting");
+			Application.Quit();
 		}
 
 		void OnNotImplimentedClick()

@@ -46,9 +46,9 @@ namespace LunraGames.SubLight
 							new LabelButtonBlock("Continue Game", state.OnContinueGameClick, payload.CanContinueGame)
 						},
 						new LabelButtonBlock[] {
-							new LabelButtonBlock("Settings", state.OnNotImplimentedClick, false),
-							new LabelButtonBlock("Credits", state.OnNotImplimentedClick, false),
-							new LabelButtonBlock("Exit", state.OnExitClick, false)
+							new LabelButtonBlock("Settings", state.OnSettingsClick),
+							new LabelButtonBlock("Credits", state.OnCreditsClick, false),
+							new LabelButtonBlock("Exit", state.OnExitClick)
 						}
 					)
 				};
