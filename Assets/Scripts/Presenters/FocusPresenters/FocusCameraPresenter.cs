@@ -39,7 +39,7 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			View.Texture = renderTexture = new RenderTexture(Screen.currentResolution.width, Screen.currentResolution.height, 16);
+			View.Texture = renderTexture = new RenderTexture(Screen.width, Screen.height, 16);
 			gather.Done(gather.Duplicate(renderTexture));
 		}
 

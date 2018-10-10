@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 4734583670246926}
   - component: {fileID: 33107586660056032}
   - component: {fileID: 23031983267017252}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: LipMeshTEMP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
