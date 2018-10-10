@@ -16,8 +16,10 @@ namespace LunraGames.SubLight
 			static SetFocusLayers[] allLayers;
 			static SetFocusLayers[] AllLayers { get { return allLayers ?? (allLayers = EnumExtensions.GetValues(SetFocusLayers.Unknown)); } }
 
-			public static void InitializePresenters(HomePayload payload, Action done)
+			public static void InitializePresenters(HomeState state, Action done)
 			{
+				var payload = state.Payload;
+
 				// Basics: Cameras, Room, etc
 				var roomCamera = new HoloRoomFocusCameraPresenter();
 				var gantryAnchor = roomCamera.GantryAnchor;
@@ -30,10 +32,24 @@ namespace LunraGames.SubLight
 				// TODO: Main menu presenter stuff...
 				new HoloPresenter();
 
-				payload.ShowAfterDelay = new IPresenterCloseShowOptions[]
+				payload.DelayedPresenterShows[1f] = new IPresenterCloseShowOptions[]
 				{
 					new GenericPresenter<ILipView>(layer),
-					new GenericPresenter<IMenuLogoView>()
+					new GenericPresenter<IMainMenuLogoView>()
+				};
+
+				payload.DelayedPresenterShows[2f] = new IPresenterCloseShowOptions[]
+				{
+					new MainMenuOptionsPresenter(
+						new LabelButtonBlock[] {
+							// none yet
+						},
+						new LabelButtonBlock[] {
+							new LabelButtonBlock("Settings", state.OnNotImplimentedClick),
+							new LabelButtonBlock("Credits", state.OnNotImplimentedClick),
+							new LabelButtonBlock("Exit", state.OnExitClick)
+						}
+					)
 				};
 
 				done();

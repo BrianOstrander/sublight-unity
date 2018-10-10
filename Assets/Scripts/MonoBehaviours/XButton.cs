@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		IBeginDragHandler,
 		IEndDragHandler
 	{
-		const float FadeDuration = 0.2f;
+		const float FadeDuration = 0.1f;
 
 		new public enum SelectionState
 		{

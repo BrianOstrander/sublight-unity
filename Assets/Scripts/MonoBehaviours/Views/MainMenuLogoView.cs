@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Views
 {
-	public class MenuLogoView : View, IMenuLogoView
+	public class MainMenuLogoView : View, IMainMenuLogoView
 	{
 		[SerializeField]
 		MeshRenderer MaskMesh;
@@ -19,7 +19,7 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
-	public interface IMenuLogoView : IView
+	public interface IMainMenuLogoView : IView
 	{
 
 	}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Presenters;
@@ -13,7 +14,7 @@ namespace LunraGames.SubLight
 
 		public GameObject HoloSurfaceOrigin;
 
-		public IPresenterCloseShowOptions[] ShowAfterDelay = new IPresenterCloseShowOptions[0];
+		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -31,8 +32,9 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
-			App.SM.PushBlocking(done => Focuses.InitializePresenters(Payload, done));
+			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
 			App.SM.PushBlocking(InitializeFocus);
+			App.SM.PushBlocking(InitializeLoadSaves);
 		}
 
 		void LoadScenes(Action done)
@@ -73,21 +75,6 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetMainMenuFocus(), done));
 		}
-		#endregion
-
-		#region Idle
-		protected override void Idle()
-		{
-			App.Heartbeat.Wait(OnShowDelay, 1f);
-
-			App.SM.PushBlocking(InitializeLoadSaves);
-			App.SM.PushBlocking(ShowLoadedSaves);
-		}
-
-		void OnShowDelay()
-		{
-			foreach (var presenter in Payload.ShowAfterDelay) presenter.Show();
-		}
 
 		void InitializeLoadSaves(Action done)
 		{
@@ -104,13 +91,22 @@ namespace LunraGames.SubLight
 			else Payload.Saves = result.Models;
 			done();
 		}
+		#endregion
 
-		void ShowLoadedSaves(Action done)
+		#region Idle
+		protected override void Idle()
 		{
-			UnityEngine.Debug.Log("Show saves here...");
-			done();
+			foreach (var kv in Payload.DelayedPresenterShows)
+			{
+				App.Heartbeat.Wait(
+					() =>
+					{
+						foreach (var presenter in kv.Value) presenter.Show();
+					},
+					kv.Key
+				);
+			}
 		}
-
 		#endregion
 
 		#region End
@@ -138,6 +134,25 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Events
+		void OnNewGameClick()
+		{
+			Debug.Log("lol new game");
+		}
+
+		void OnContinueGameClick()
+		{
+			OnNotImplimentedClick();
+		}
+
+		void OnExitClick()
+		{
+			OnNotImplimentedClick();
+		}
+
+		void OnNotImplimentedClick()
+		{
+			Debug.Log("lol not implimented");
+		}
 		#endregion
 	}
 }
