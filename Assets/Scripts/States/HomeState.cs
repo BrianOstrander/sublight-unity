@@ -177,51 +177,7 @@ namespace LunraGames.SubLight
 
 		void OnSettingsClick()
 		{
-			//OnNotImplimentedClick();
-
-			//App.Callbacks.DialogRequest(
-			//	DialogRequest.Alert(
-			//		LanguageStringModel.Override("Testing an alert dialog."),
-			//		DialogStyles.Neutral,
-			//		done: () => Debug.Log("lol called?")
-			//	)
-			//);
-
-			//App.Callbacks.DialogRequest(
-			//	DialogRequest.CancelConfirm(
-			//		LanguageStringModel.Override("LOL"),
-			//		DialogStyles.Error,
-			//		done: result => Debug.Log("lol???")
-			//	)
-			//);
-
-			//App.Callbacks.DialogRequest(
-			//	DialogRequest.CancelConfirm(
-			//		LanguageStringModel.Override("LOL"),
-			//		DialogStyles.Error,
-			//		done: result => App.Callbacks.DialogRequest(DialogRequest.CancelDenyConfirm(LanguageStringModel.Override("ha")))
-			//	)
-			//);
-
-
-			App.Callbacks.DialogRequest(
-				DialogRequest.Alert(
-					LanguageStringModel.Override("Testing an alert dialog."),
-					DialogStyles.Neutral,
-					done: () => App.Callbacks.DialogRequest(
-						DialogRequest.CancelConfirm(
-							LanguageStringModel.Override("Testing a cancel and confirm dialog."),
-							DialogStyles.Warning,
-							done: result => App.Callbacks.DialogRequest(
-								DialogRequest.CancelDenyConfirm(
-									LanguageStringModel.Override("Testing a cancel, deny, and confirm dialog."),
-									DialogStyles.Error
-								)
-							)
-						)
-					)
-				)
-			);
+			OnNotImplimentedClick();
 		}
 
 		void OnCreditsClick()
