@@ -34,6 +34,7 @@ namespace LunraGames.SubLight
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
 					{ SaveTypes.InteractedInventoryReferenceList, -1 },
 					{ SaveTypes.GlobalKeyValues, -1 },
+					{ SaveTypes.GalaxyReference, 7 },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, 4 },
 					{ SaveTypes.OrbitalCrewReference, 4 }
@@ -54,6 +55,7 @@ namespace LunraGames.SubLight
 					{ SaveTypes.InteractedEncounterInfoList, true },
 					{ SaveTypes.InteractedInventoryReferenceList, true },
 					{ SaveTypes.GlobalKeyValues, true },
+					{ SaveTypes.GalaxyReference, false },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, false },
 					{ SaveTypes.OrbitalCrewReference, false }
@@ -98,6 +100,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
 				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
+				case SaveTypes.GalaxyReference: return Path.Combine(InternalPath, "galaxies");
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
 				case SaveTypes.InteractedInventoryReferenceList: return Path.Combine(ParentPath, "interacted-references");

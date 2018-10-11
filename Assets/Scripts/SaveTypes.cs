@@ -15,9 +15,11 @@
 
 		GlobalKeyValues = 50,
 
+		GalaxyReference = 60,
+
 		// Inventory References
-		ModuleReference = 60,
-		OrbitalCrewReference = 70
+		ModuleReference = 200,
+		OrbitalCrewReference = 210
 	}
 
 	public static class SaveTypeValidator

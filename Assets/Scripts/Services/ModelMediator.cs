@@ -95,6 +95,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.Preferences: return typeof(PreferencesModel);
 				case SaveTypes.EncounterInfo: return typeof(EncounterInfoModel);
 				case SaveTypes.GlobalKeyValues: return typeof(GlobalKeyValuesModel);
+				case SaveTypes.GalaxyReference: return typeof(GalaxyReferenceModel);
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				case SaveTypes.InteractedInventoryReferenceList: return typeof(InteractedInventoryReferenceListModel);
@@ -112,6 +113,7 @@ namespace LunraGames.SubLight
 			if (type == typeof(PreferencesModel)) return SaveTypes.Preferences;
 			if (type == typeof(EncounterInfoModel)) return SaveTypes.EncounterInfo;
 			if (type == typeof(GlobalKeyValuesModel)) return SaveTypes.GlobalKeyValues;
+			if (type == typeof(GalaxyReferenceModel)) return SaveTypes.GalaxyReference;
 			// -- Interacted
 			if (type == typeof(InteractedEncounterInfoListModel)) return SaveTypes.InteractedEncounterInfoList;
 			if (type == typeof(InteractedInventoryReferenceListModel)) return SaveTypes.InteractedInventoryReferenceList;
