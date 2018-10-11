@@ -137,6 +137,10 @@ namespace LunraGames.SubLight
 		/// Called if there are focuses to gather for a set focus request.
 		/// </summary>
 		public Action<GatherFocusRequest> GatherFocusRequest = ActionExtensions.GetEmpty<GatherFocusRequest>();
+		/// <summary>
+		/// Sets what layers are active and which won't respond to input.
+		/// </summary>
+		public Action<InputLayerRequest> InputLayerRequest = ActionExtensions.GetEmpty<InputLayerRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

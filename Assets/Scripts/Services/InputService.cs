@@ -35,6 +35,8 @@ namespace LunraGames.SubLight
 
 		bool startedDragging;
 
+		bool[] layerStates = new bool[32];
+
 		public InputService(Heartbeat heartbeat, CallbackService callbacks)
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
@@ -55,11 +57,13 @@ namespace LunraGames.SubLight
 		protected virtual void OnEnabled()
 		{
 			heartbeat.Update += OnUpdate;
+			callbacks.InputLayerRequest += OnInputLayerRequest;
 		}
 
 		protected virtual void OnDisabled()
 		{
 			heartbeat.Update -= OnUpdate;
+			callbacks.InputLayerRequest -= OnInputLayerRequest;
 		}
 
 		#region Events
@@ -116,6 +120,9 @@ namespace LunraGames.SubLight
 			// TODO: This probably doesn't need to be a foreach loop.
 			foreach (var raycast in raycasts)
 			{
+				// Ignore non active layers.
+				if (!layerStates[raycast.gameObject.layer]) continue;
+
 				if (stillHighlighted.Count == 0)
 				{
 					stillHighlighted.Add(raycast.gameObject);
@@ -187,6 +194,20 @@ namespace LunraGames.SubLight
 
 			var pointerRotation = GetPointerRotation();
 			callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
+		}
+
+		void OnInputLayerRequest(InputLayerRequest request)
+		{
+			if (request.SetAllLayers.HasValue)
+			{
+				for (var i = 0; i < layerStates.Length; i++) layerStates[i] = request.SetAllLayers.Value;
+				return;
+			}
+
+			foreach (var kv in request.LayerDeltas)
+			{
+				layerStates[LayerMask.NameToLayer(kv.Key)] = kv.Value;
+			}
 		}
 		#endregion
 		protected virtual bool IsEscapeUp() { return false; }

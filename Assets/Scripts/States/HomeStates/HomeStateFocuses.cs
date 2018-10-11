@@ -63,12 +63,15 @@ namespace LunraGames.SubLight
 				int order = 0,
 				bool enabled = false,
 				float weight = 0f,
+				bool? interactable = null,
 				D details = null
 			)
 				where D : SetFocusDetails<D>, new()
 			{
+				var baseDetails = details ?? new D().SetDefault();
+				if (interactable.HasValue) baseDetails.Interactable = interactable.Value;
 				return new SetFocusBlock(
-					details ?? new D().SetDefault(),
+					baseDetails,
 					enabled,
 					order,
 					weight
@@ -112,7 +115,7 @@ namespace LunraGames.SubLight
 			{
 				var results = GetBaseEnabledFocuses();
 
-				results.Add(GetFocus<HomeFocusDetails>(0, true, 1f));
+				results.Add(GetFocus<HomeFocusDetails>(0, true, 1f, true));
 
 				return results.ToArray();
 			}
@@ -121,8 +124,8 @@ namespace LunraGames.SubLight
 			{
 				var results = GetBaseEnabledFocuses();
 
-				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f));
-				results.Add(GetFocus<HomeFocusDetails>(1, true, 0.25f));
+				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f, true));
+				results.Add(GetFocus<HomeFocusDetails>(1, false, 0.25f, false));
 
 				return results.ToArray();
 			}
