@@ -18,7 +18,7 @@ namespace LunraGames.SubLight
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
-			return RowHeight * 2f;
+			return (RowHeight * 2f) + RowSpacing;
 		}
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

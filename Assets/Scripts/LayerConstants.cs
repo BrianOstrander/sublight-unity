@@ -7,6 +7,7 @@
 	{
 		public const string Void = "Void";
 		public const string HoloRoom = "HoloRoom";
+		public const string HoloPriority = "HoloPriority";
 		public const string HoloHome = "HoloHome";
 		public const string HoloToolbar = "HoloToolbar";
 		public const string HoloSystem = "HoloSystem";

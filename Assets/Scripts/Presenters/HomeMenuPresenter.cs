@@ -36,7 +36,7 @@ namespace LunraGames.SubLight.Presenters
 					text += " <obsolete>";
 					click = OnClickObsoleteGame;
 				}
-				entries.Add(new LabelButtonBlock(text, click));
+				entries.Add(new LabelButtonBlock(LanguageStringModel.Override(text), click));
 				index++;
 			}
 
@@ -60,7 +60,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClickObsoleteGame()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.Alert("This save file is no longer supported."));
+			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("This save file is no longer supported.")));
 		}
 
 		void OnLoadGameClick(SaveModel model)
@@ -73,7 +73,7 @@ namespace LunraGames.SubLight.Presenters
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(result.Error)));
 				return;
 			}
 			App.M.Save(result.TypedModel, OnSaveGame);
@@ -88,7 +88,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (result != RequestStatus.Success)
 			{
-				App.Callbacks.DialogRequest(DialogRequest.Alert("Creating new game returned with result "+result));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("Creating new game returned with result "+result)));
 				return;
 			}
 			OnStartGame(model);
@@ -99,7 +99,7 @@ namespace LunraGames.SubLight.Presenters
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(result.Error)));
 				return;
 			}
 			OnStartGame(result.TypedModel);

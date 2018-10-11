@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Presenters;
 
@@ -28,6 +29,7 @@ namespace LunraGames.SubLight
 				var layer = "Holo" + SetFocusLayers.Home;
 
 				new HomeFocusCameraPresenter(gantryAnchor, fieldOfView);
+				new PriorityFocusCameraPresenter(gantryAnchor, fieldOfView);
 
 				// TODO: Main menu presenter stuff...
 				new HoloPresenter();
@@ -42,13 +44,13 @@ namespace LunraGames.SubLight
 				{
 					new MainMenuOptionsPresenter(
 						new LabelButtonBlock[] {
-							new LabelButtonBlock("New Game", state.OnNewGameClick),
-							new LabelButtonBlock("Continue Game", state.OnContinueGameClick, payload.CanContinueSave)
+							new LabelButtonBlock(LanguageStringModel.Override("New Game"), state.OnNewGameClick),
+							new LabelButtonBlock(LanguageStringModel.Override("Continue Game"), state.OnContinueGameClick, payload.CanContinueSave)
 						},
 						new LabelButtonBlock[] {
-							new LabelButtonBlock("Settings", state.OnSettingsClick),
-							new LabelButtonBlock("Credits", state.OnCreditsClick, false),
-							new LabelButtonBlock("Exit", state.OnExitClick)
+							new LabelButtonBlock(LanguageStringModel.Override("Settings"), state.OnSettingsClick),
+							new LabelButtonBlock(LanguageStringModel.Override("Credits"), state.OnCreditsClick, false),
+							new LabelButtonBlock(LanguageStringModel.Override("Exit"), state.OnExitClick)
 						}
 					)
 				};
@@ -82,6 +84,7 @@ namespace LunraGames.SubLight
 					switch (layer)
 					{
 						case SetFocusLayers.Room: results.Add(GetFocus<RoomFocusDetails>()); break;
+						case SetFocusLayers.Priority: results.Add(GetFocus<PriorityFocusDetails>()); break;
 						case SetFocusLayers.Home:results.Add(GetFocus<HomeFocusDetails>()); break;
 						case SetFocusLayers.Toolbar:
 						case SetFocusLayers.System:
@@ -109,7 +112,17 @@ namespace LunraGames.SubLight
 			{
 				var results = GetBaseEnabledFocuses();
 
-				results.Add(GetFocus<HomeFocusDetails>(1, true, 1f));
+				results.Add(GetFocus<HomeFocusDetails>(0, true, 1f));
+
+				return results.ToArray();
+			}
+
+			public static SetFocusBlock[] GetPriorityFocus()
+			{
+				var results = GetBaseEnabledFocuses();
+
+				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f));
+				results.Add(GetFocus<HomeFocusDetails>(1, true, 0.25f));
 
 				return results.ToArray();
 			}

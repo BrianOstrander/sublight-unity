@@ -1,4 +1,5 @@
-﻿using LunraGames.SubLight.Views;
+﻿using LunraGames.SubLight.Models;
+using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
@@ -28,7 +29,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.Alert(Strings.HomeInfo, Strings.HomeInfoTitle));
+			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(Strings.HomeInfo), LanguageStringModel.Override(Strings.HomeInfoTitle)));
 		}
 		#endregion
 	}

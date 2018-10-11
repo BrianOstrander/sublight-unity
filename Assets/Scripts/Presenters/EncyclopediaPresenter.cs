@@ -31,7 +31,7 @@ namespace LunraGames.SubLight.Presenters
 			View.BackClick = OnBackClick;
 
 			var buttons = new List<LabelButtonBlock>();
-			foreach (var title in model.Encyclopedia.Titles.Value) buttons.Add(new LabelButtonBlock(title, () => OnArticleClick(title)));
+			foreach (var title in model.Encyclopedia.Titles.Value) buttons.Add(new LabelButtonBlock(LanguageStringModel.Override(title), () => OnArticleClick(title)));
 
 			View.ArticleEntries = buttons.ToArray();
 

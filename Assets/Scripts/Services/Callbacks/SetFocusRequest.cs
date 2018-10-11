@@ -4,7 +4,9 @@ namespace LunraGames.SubLight
 {
 	public struct SetFocusRequest
 	{
-		public static SetFocusRequest Request(float duration, SetFocusBlock[] targets, Action done = null)
+		const float DefaultDuration = 0.2f;
+
+		public static SetFocusRequest Request(SetFocusBlock[] targets, Action done = null, float duration = DefaultDuration)
 		{
 			return new SetFocusRequest(false, false, duration, targets, done);
 		}

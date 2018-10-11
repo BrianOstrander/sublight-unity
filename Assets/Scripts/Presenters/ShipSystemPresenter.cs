@@ -177,7 +177,7 @@ namespace LunraGames.SubLight.Presenters
 				result += "\n - " + ship.Inventory.GetInventoryFirstOrDefault(value).Name.Value;
 			}
 
-			App.Callbacks.DialogRequest(DialogRequest.Alert(result, title));
+			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(result), LanguageStringModel.Override(title)));
 		}
 		#endregion
 	}

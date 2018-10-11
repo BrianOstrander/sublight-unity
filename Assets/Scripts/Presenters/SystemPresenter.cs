@@ -132,10 +132,10 @@ namespace LunraGames.SubLight.Presenters
 				{
 					App.Callbacks.DialogRequest(
 						DialogRequest.CancelDenyConfirm(
-							"There are items or resources without slots, you'll lose them forever if you choose to continue.",
-							"Unused Items",
-							denyText: "Show Me",
-							confirmText: "Continue",
+							LanguageStringModel.Override("There are items or resources without slots, you'll lose them forever if you choose to continue."),
+							LanguageStringModel.Override("Unused Items"),
+							denyText: LanguageStringModel.Override("Show Me"),
+							confirmText: LanguageStringModel.Override("Continue"),
 							done: OnUnusedDialog
 						)
 					);
