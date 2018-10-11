@@ -18,6 +18,9 @@ namespace LunraGames.SubLight.Views
 		}
 
 		[SerializeField]
+		CanvasGroup rootGroup;
+
+		[SerializeField]
 		ColorStyleBlock neutralPrimaryColor = ColorStyleBlock.Default;
 		[SerializeField]
 		ColorStyleBlock neutralSecondaryColor = ColorStyleBlock.Default;
