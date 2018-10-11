@@ -1,15 +1,17 @@
 {
+  "ignore": true,
   "orderWeight": 999.0,
   "randomWeightMultiplier": 1.0,
-  "ignore": true,
   "encounterId": "a6d960d8-76de-4f88-80ba-fd1892dfacbe",
   "name": "Button Test 0",
+  "description": "",
   "hook": "Button Test 0",
   "trigger": "BodyAlert",
   "filtering": {
     "booleanKeyValues": [],
     "stringKeyValues": [],
     "encounterInteractions": [],
+    "inventoryIds": [],
     "inventoryTags": []
   },
   "validSystems": [],
@@ -101,6 +103,7 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           }
@@ -122,12 +125,14 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
@@ -143,6 +148,7 @@
               ],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           },
@@ -156,18 +162,21 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           },
@@ -181,18 +190,21 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           },
@@ -206,18 +218,21 @@
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "interactableFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             },
             "enabledFiltering": {
               "booleanKeyValues": [],
               "stringKeyValues": [],
               "encounterInteractions": [],
+              "inventoryIds": [],
               "inventoryTags": []
             }
           }
