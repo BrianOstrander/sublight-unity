@@ -42,8 +42,18 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.PlayState(PlayState.Playing);
 
-			App.P.AddGlobals(new DialogPresenter());
-			App.P.AddGlobals(new ShadePresenter());
+			App.P.AddGlobals(
+				new DialogPresenter(
+					LanguageStringModel.Override("Alert"),
+					LanguageStringModel.Override("Confirm"),
+
+					LanguageStringModel.Override("Okay"),
+					LanguageStringModel.Override("Yes"),
+					LanguageStringModel.Override("No"),
+					LanguageStringModel.Override("Cancel")
+				)
+			);
+			//App.P.AddGlobals(new ShadePresenter());
 
 			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
 			else App.SM.RequestState(Payload.homePayload);

@@ -86,6 +86,8 @@ namespace LunraGames.SubLight
 				return;
 			}
 
+			callbacks.InputLayerRequest(InputLayerRequest.SetAll(false));
+
 			state = States.Initializing;
 			lastActive = request;
 
@@ -198,6 +200,9 @@ namespace LunraGames.SubLight
 
 		void OnTransitionComplete()
 		{
+			var layerStates = new Dictionary<string, bool>();
+			foreach (var layer in lastActive.Targets.Where(t => t.Enabled && t.Details.Interactable)) layerStates.Add(LayerConstants.Get(layer.Layer), true);
+			callbacks.InputLayerRequest(InputLayerRequest.Set(layerStates));
 			state = States.Complete;
 			currents = AddDefaults(lastActive.Targets);
 			lastActive.Done();

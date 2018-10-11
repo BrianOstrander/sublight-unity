@@ -1,5 +1,7 @@
 ﻿using System;
 
+using LunraGames.SubLight.Models;
+
 namespace LunraGames.SubLight
 {
 	public struct DialogRequest
@@ -22,7 +24,8 @@ namespace LunraGames.SubLight
 			Unknown = 0,
 			Request = 10,
 			Active = 20,
-			Complete = 30
+			Completing = 30, // Called when the dialog is closing.
+			Complete = 40 // Called when the dialog is finally closed.
 		}
 
 		/// <summary>
@@ -33,9 +36,9 @@ namespace LunraGames.SubLight
 		/// <param name="title">Title.</param>
 		/// <param name="done">Done.</param>
 		public static DialogRequest Alert(
-			string message, 
-			string title = null,
+			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
 			Action done = null
 		)
 		{
@@ -59,9 +62,9 @@ namespace LunraGames.SubLight
 		/// <param name="confirm">Confirm.</param>
 		/// <param name="done">Done.</param>
 		public static DialogRequest CancelConfirm(
-			string message,
-			string title = null,
+			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
 			Action cancel = null,
 			Action confirm = null,
 			Action<RequestStatus> done = null
@@ -90,15 +93,15 @@ namespace LunraGames.SubLight
 		/// <param name="confirm">Confirm.</param>
 		/// <param name="done">Done.</param>
 		public static DialogRequest CancelDenyConfirm(
-			string message,
-			string title = null,
+			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
 			Action cancel = null,
 			Action deny = null,
 			Action confirm = null,
-			string cancelText = null,
-			string denyText = null,
-			string confirmText = null,
+			LanguageStringModel cancelText = null,
+			LanguageStringModel denyText = null,
+			LanguageStringModel confirmText = null,
 			Action<RequestStatus> done = null
 		)
 		{
@@ -121,11 +124,11 @@ namespace LunraGames.SubLight
 		public readonly States State;
 		public readonly DialogTypes DialogType;
 		public readonly DialogStyles Style;
-		public readonly string Title;
-		public readonly string Message;
-		public readonly string CancelText;
-		public readonly string FailureText;
-		public readonly string SuccessText;
+		public readonly LanguageStringModel Title;
+		public readonly LanguageStringModel Message;
+		public readonly LanguageStringModel CancelText;
+		public readonly LanguageStringModel FailureText;
+		public readonly LanguageStringModel SuccessText;
 		public readonly Action Cancel;
 		public readonly Action Failure;
 		public readonly Action Success;
@@ -135,11 +138,11 @@ namespace LunraGames.SubLight
 			States state,
 			DialogTypes dialogType,
 			DialogStyles style,
-			string title,
-			string message,
-			string cancelText = null,
-			string failureText = null,
-			string successText = null,
+			LanguageStringModel title,
+			LanguageStringModel message,
+			LanguageStringModel cancelText = null,
+			LanguageStringModel failureText = null,
+			LanguageStringModel successText = null,
 			Action cancel = null,
 			Action failure = null,
 			Action success = null,

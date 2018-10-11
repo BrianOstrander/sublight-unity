@@ -10,6 +10,8 @@ namespace LunraGames.SubLight
 		public abstract Type DetailType { get; }
 		public abstract bool HasDelta(SetFocusDetailsBase other);
 
+		public bool Interactable;
+
 		public virtual SetFocusDetailsBase SetDefault()
 		{
 			OnSetDefault();
@@ -23,8 +25,6 @@ namespace LunraGames.SubLight
 		where T : SetFocusDetails<T>, new()
 	{
 		public override Type DetailType { get { return typeof(T); } }
-
-		public bool Interactable;
 
 		public override bool HasDelta(SetFocusDetailsBase other)
 		{

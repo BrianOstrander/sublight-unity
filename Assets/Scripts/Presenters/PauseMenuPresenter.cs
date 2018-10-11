@@ -1,4 +1,5 @@
-﻿using LunraGames.SubLight.Views;
+﻿using LunraGames.SubLight.Models;
+using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
@@ -78,9 +79,9 @@ namespace LunraGames.SubLight.Presenters
 					CloseView();
 					App.Callbacks.DialogRequest(
 						DialogRequest.Alert(
-							request.Error,
-							"Cannot Save",
+							LanguageStringModel.Override(request.Error),
 							DialogStyles.Neutral,
+							LanguageStringModel.Override("Cannot Save"),
 							OnSaveFailAlert
 						)
 					);
@@ -100,7 +101,7 @@ namespace LunraGames.SubLight.Presenters
 			CloseView();
 			App.Callbacks.DialogRequest(
 				DialogRequest.CancelConfirm(
-					Strings.ConfirmToMainMenu,
+					LanguageStringModel.Override(Strings.ConfirmToMainMenu),
 					done: OnMainMenuConfirm
 				)
 			);

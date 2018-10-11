@@ -2,12 +2,13 @@
 using System.Linq;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using TMPro;
 
 namespace LunraGames.SubLight.Views
 {
-	public class DialogView : CanvasView, IDialogView
+	public class DialogView : View, IDialogView
 	{
 		[Serializable]
 		struct DialogEntry
@@ -15,6 +16,35 @@ namespace LunraGames.SubLight.Views
 			public DialogTypes DialogType;
 			public GameObject Root;
 		}
+
+		[SerializeField]
+		CanvasGroup rootGroup;
+
+		[SerializeField]
+		ColorStyleBlock neutralPrimaryColor = ColorStyleBlock.Default;
+		[SerializeField]
+		ColorStyleBlock neutralSecondaryColor = ColorStyleBlock.Default;
+		[SerializeField]
+		ColorStyleBlock warningPrimaryColor = ColorStyleBlock.Default;
+		[SerializeField]
+		ColorStyleBlock warningSecondaryColor = ColorStyleBlock.Default;
+		[SerializeField]
+		ColorStyleBlock errorPrimaryColor = ColorStyleBlock.Default;
+		[SerializeField]
+		ColorStyleBlock errorSecondaryColor = ColorStyleBlock.Default;
+
+		[SerializeField]
+		XButtonStyleObject neutralPrimaryButtonStyle;
+		[SerializeField]
+		XButtonStyleObject neutralSecondaryButtonStyle;
+		[SerializeField]
+		XButtonStyleObject warningPrimaryButtonStyle;
+		[SerializeField]
+		XButtonStyleObject warningSecondaryButtonStyle;
+		[SerializeField]
+		XButtonStyleObject errorPrimaryButtonStyle;
+		[SerializeField]
+		XButtonStyleObject errorSecondaryButtonStyle;
 
 		[SerializeField]
 		DialogEntry[] entries;
@@ -29,6 +59,23 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		TextMeshProUGUI[] successLabels;
 
+		[SerializeField]
+		GameObject[] neutralIcons;
+		[SerializeField]
+		GameObject[] warningIcons;
+		[SerializeField]
+		GameObject[] errorIcons;
+
+		[SerializeField]
+		Graphic[] primaryColors;
+		[SerializeField]
+		Graphic[] secondaryColors;
+
+		[SerializeField]
+		XButtonLeaf[] primaryButtons;
+		[SerializeField]
+		XButtonLeaf[] secondaryButtons;
+
 		public DialogTypes DialogType
 		{
 			set
@@ -37,6 +84,54 @@ namespace LunraGames.SubLight.Views
 				{
 					entry.Root.SetActive(entry.DialogType == value);
 				}
+			}
+		}
+
+		public DialogStyles Style
+		{
+			set
+			{
+				var primaryColor = Color.white;
+				var secondaryColor = Color.white;
+
+				var primaryButtonStyle = neutralPrimaryButtonStyle;
+				var secondaryButtonStyle = neutralSecondaryButtonStyle;
+
+				switch (value)
+				{
+					case DialogStyles.Neutral:
+						primaryColor = neutralPrimaryColor;
+						secondaryColor = neutralSecondaryColor;
+						primaryButtonStyle = neutralPrimaryButtonStyle;
+						secondaryButtonStyle = neutralSecondaryButtonStyle;
+						break;
+					case DialogStyles.Warning:
+						primaryColor = warningPrimaryColor;
+						secondaryColor = warningSecondaryColor;
+						primaryButtonStyle = warningPrimaryButtonStyle;
+						secondaryButtonStyle = warningSecondaryButtonStyle;
+						break;
+					case DialogStyles.Error:
+						primaryColor = errorPrimaryColor;
+						secondaryColor = errorSecondaryColor;
+						primaryButtonStyle = errorPrimaryButtonStyle;
+						secondaryButtonStyle = errorSecondaryButtonStyle;
+						break;
+					case DialogStyles.Unknown: break;
+					default:
+						Debug.LogError("Unrecognized style: " + value);
+						break;
+				}
+
+				foreach (var icon in neutralIcons) icon.SetActive(value == DialogStyles.Neutral);
+				foreach (var icon in warningIcons) icon.SetActive(value == DialogStyles.Warning);
+				foreach (var icon in errorIcons) icon.SetActive(value == DialogStyles.Error);
+
+				foreach (var graphic in primaryColors) graphic.color = primaryColor;
+				foreach (var graphic in secondaryColors) graphic.color = secondaryColor;
+
+				foreach (var button in primaryButtons) button.GlobalStyle = primaryButtonStyle;
+				foreach (var button in secondaryButtons) button.GlobalStyle = secondaryButtonStyle;
 			}
 		}
 					
@@ -61,6 +156,7 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			DialogType = DialogTypes.Unknown;
+			Style = DialogStyles.Unknown;
 
 			Title = string.Empty;
 			CancelText = string.Empty;
@@ -90,9 +186,10 @@ namespace LunraGames.SubLight.Views
 		#endregion
 	}
 
-	public interface IDialogView : ICanvasView
+	public interface IDialogView : IView
 	{
 		DialogTypes DialogType { set; }
+		DialogStyles Style { set; }
 		string Title { set; }
 		string Message { set; }
 		string CancelText { set; }

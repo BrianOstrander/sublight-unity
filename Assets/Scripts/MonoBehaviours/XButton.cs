@@ -83,6 +83,7 @@ namespace LunraGames.SubLight
 			base.OnEnable();
 			if (!Application.isPlaying) return;
 
+			highlighted = false;
 			State = SelectionState.Normal;
 			ApplyState(State);
 

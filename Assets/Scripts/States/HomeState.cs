@@ -66,6 +66,8 @@ namespace LunraGames.SubLight
 
 		void InitializeCallbacks(Action done)
 		{
+			App.Callbacks.DialogRequest += OnDialogRequest;
+
 			done();
 		}
 
@@ -118,6 +120,8 @@ namespace LunraGames.SubLight
 		#region End
 		protected override void End()
 		{
+			App.Callbacks.DialogRequest -= OnDialogRequest;
+
 			App.Input.SetEnabled(false);
 
 			App.Callbacks.ClearEscapables();
@@ -139,10 +143,25 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
+		#region Events
+		void OnDialogRequest(DialogRequest request)
+		{
+			switch (request.State)
+			{
+				case DialogRequest.States.Request:
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus()));
+					break;
+				case DialogRequest.States.Completing:
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
+					break;
+			}
+		}
+		#endregion
+
 		#region Events Main Menu
 		void OnNewGameClick()
 		{
-			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.CancelConfirm("Starting a new game will overwrite your existing one.", "Overwrite Game", DialogStyles.Warning, confirm: OnNewGameStart));
+			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.CancelConfirm(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), confirm: OnNewGameStart));
 			else OnNewGameStart();
 		}
 
@@ -174,14 +193,14 @@ namespace LunraGames.SubLight
 
 		void OnNotImplimentedClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.Alert("This feature is not implemented yet.", style: DialogStyles.Warning));
+			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
 		}
 
 		void OnNewGameCreated(RequestStatus result, GameModel model)
 		{
 			if (result != RequestStatus.Success)
 			{
-				App.Callbacks.DialogRequest(DialogRequest.Alert("Creating new game returned with result " + result, style: DialogStyles.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("Creating new game returned with result " + result), style: DialogStyles.Error));
 				return;
 			}
 			App.M.Save(model, OnSaveGame);
@@ -192,7 +211,7 @@ namespace LunraGames.SubLight
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error, style: DialogStyles.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
 				return;
 			}
 			App.M.Save(result.TypedModel, OnSaveGame);
@@ -203,7 +222,7 @@ namespace LunraGames.SubLight
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Alert(result.Error, style: DialogStyles.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
 				return;
 			}
 			OnStartGame(result.TypedModel);

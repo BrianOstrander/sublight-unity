@@ -43,7 +43,7 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			body = new LabelButtonBlock(result.Body == null ? "Non body encounter" : "Encounter on BodyId: "+result.Body.BodyId.Value, () => OnEncounterClick(result), true);
+			body = new LabelButtonBlock(LanguageStringModel.Override(result.Body == null ? "Non body encounter" : "Encounter on BodyId: "+result.Body.BodyId.Value), () => OnEncounterClick(result), true);
 
 			OnAssignBestEncounterDone();
 		}
@@ -80,12 +80,12 @@ namespace LunraGames.SubLight.Presenters
 			switch (model.GetEncounterStatus(result.Encounter.EncounterId.Value).State)
 			{
 				case EncounterStatus.States.Unknown:
-					App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no anomalies."));
+					App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("Scanners detect no anomalies.")));
 					return;
 				case EncounterStatus.States.Completed:
 					var finalReport = model.GetFinalReport(result.System.EncounterId.Value);
-					if (finalReport != null) App.Callbacks.DialogRequest(DialogRequest.Alert(finalReport.Summary, "Crew Report"));
-					else App.Callbacks.DialogRequest(DialogRequest.Alert("Scanners detect no additional anomalies."));
+					if (finalReport != null) App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(finalReport.Summary), title: LanguageStringModel.Override("Crew Report")));
+					else App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("Scanners detect no additional anomalies.")));
 					return;
 				default:
 					App.Callbacks.EncounterRequest(

@@ -47,7 +47,7 @@ namespace LunraGames.SubLight.Presenters
 				foreach (var crew in model.Ship.Value.Inventory.GetUsableInventory<CrewInventoryModel>())
 				{
 					if (!crew.IsExplorable(body)) continue;
-					buttons.Add(new LabelButtonBlock(crew.Name, () => OnCrewClick(crew)));
+					buttons.Add(new LabelButtonBlock(LanguageStringModel.Override(crew.Name), () => OnCrewClick(crew)));
 				}
 				View.CrewEntries = buttons.ToArray();
 
