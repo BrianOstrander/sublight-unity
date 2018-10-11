@@ -60,6 +60,8 @@ namespace LunraGames.SubLight
 			homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
 			homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
 
+			homeGenerationBarScroll = new EditorPrefsFloat(KeyPrefix + "HomeGenerationBarScroll");
+
 			Enable += OnHomeEnable;
 			Disable += OnHomeDisable;
 			Save += SaveSelected;
