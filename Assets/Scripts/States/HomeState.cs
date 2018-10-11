@@ -148,10 +148,10 @@ namespace LunraGames.SubLight
 		{
 			switch (request.State)
 			{
-				case DialogRequest.States.Active:
+				case DialogRequest.States.Request:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus()));
 					break;
-				case DialogRequest.States.Complete:
+				case DialogRequest.States.Completing:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
 					break;
 			}
@@ -161,7 +161,7 @@ namespace LunraGames.SubLight
 		#region Events Main Menu
 		void OnNewGameClick()
 		{
-			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.CancelConfirm(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), LanguageStringModel.Override("Overwrite Game"), DialogStyles.Warning, confirm: OnNewGameStart));
+			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.CancelConfirm(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), confirm: OnNewGameStart));
 			else OnNewGameStart();
 		}
 
@@ -177,7 +177,51 @@ namespace LunraGames.SubLight
 
 		void OnSettingsClick()
 		{
-			OnNotImplimentedClick();
+			//OnNotImplimentedClick();
+
+			//App.Callbacks.DialogRequest(
+			//	DialogRequest.Alert(
+			//		LanguageStringModel.Override("Testing an alert dialog."),
+			//		DialogStyles.Neutral,
+			//		done: () => Debug.Log("lol called?")
+			//	)
+			//);
+
+			//App.Callbacks.DialogRequest(
+			//	DialogRequest.CancelConfirm(
+			//		LanguageStringModel.Override("LOL"),
+			//		DialogStyles.Error,
+			//		done: result => Debug.Log("lol???")
+			//	)
+			//);
+
+			//App.Callbacks.DialogRequest(
+			//	DialogRequest.CancelConfirm(
+			//		LanguageStringModel.Override("LOL"),
+			//		DialogStyles.Error,
+			//		done: result => App.Callbacks.DialogRequest(DialogRequest.CancelDenyConfirm(LanguageStringModel.Override("ha")))
+			//	)
+			//);
+
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.Alert(
+					LanguageStringModel.Override("Testing an alert dialog."),
+					DialogStyles.Neutral,
+					done: () => App.Callbacks.DialogRequest(
+						DialogRequest.CancelConfirm(
+							LanguageStringModel.Override("Testing a cancel and confirm dialog."),
+							DialogStyles.Warning,
+							done: result => App.Callbacks.DialogRequest(
+								DialogRequest.CancelDenyConfirm(
+									LanguageStringModel.Override("Testing a cancel, deny, and confirm dialog."),
+									DialogStyles.Error
+								)
+							)
+						)
+					)
+				)
+			);
 		}
 
 		void OnCreditsClick()
@@ -193,8 +237,7 @@ namespace LunraGames.SubLight
 
 		void OnNotImplimentedClick()
 		{
-			//App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
-			App.Callbacks.DialogRequest(DialogRequest.CancelConfirm(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
+			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
 		}
 
 		void OnNewGameCreated(RequestStatus result, GameModel model)

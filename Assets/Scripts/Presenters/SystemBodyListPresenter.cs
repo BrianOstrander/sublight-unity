@@ -84,7 +84,7 @@ namespace LunraGames.SubLight.Presenters
 					return;
 				case EncounterStatus.States.Completed:
 					var finalReport = model.GetFinalReport(result.System.EncounterId.Value);
-					if (finalReport != null) App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(finalReport.Summary), LanguageStringModel.Override("Crew Report")));
+					if (finalReport != null) App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(finalReport.Summary), title: LanguageStringModel.Override("Crew Report")));
 					else App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("Scanners detect no additional anomalies.")));
 					return;
 				default:

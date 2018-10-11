@@ -49,7 +49,7 @@ namespace LunraGames.SubLight
 						},
 						new LabelButtonBlock[] {
 							new LabelButtonBlock(LanguageStringModel.Override("Settings"), state.OnSettingsClick),
-							new LabelButtonBlock(LanguageStringModel.Override("Credits"), state.OnCreditsClick, false),
+							new LabelButtonBlock(LanguageStringModel.Override("Credits"), state.OnCreditsClick),
 							new LabelButtonBlock(LanguageStringModel.Override("Exit"), state.OnExitClick)
 						}
 					)

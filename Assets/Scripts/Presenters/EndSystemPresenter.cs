@@ -43,7 +43,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(Strings.EndInfo), LanguageStringModel.Override(Strings.EndInfoTitle)));
+			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(Strings.EndInfo), title: LanguageStringModel.Override(Strings.EndInfoTitle)));
 		}
 
 		void OnFocusedSectors(UniversePosition[] positions)
@@ -72,7 +72,7 @@ namespace LunraGames.SubLight.Presenters
 				case TravelRequest.States.Complete:
 					// Only pop up on end system
 					if (travelRequest.Destination != model.EndSystem.Value) return;
-					App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(Strings.WonInfo), LanguageStringModel.Override(Strings.WonInfoTitle), DialogStyles.Neutral, OnAlertOkay));
+					App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(Strings.WonInfo), DialogStyles.Neutral, LanguageStringModel.Override(Strings.WonInfoTitle), OnAlertOkay));
 					break;
 			}
 		}

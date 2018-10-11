@@ -80,8 +80,8 @@ namespace LunraGames.SubLight.Presenters
 					App.Callbacks.DialogRequest(
 						DialogRequest.Alert(
 							LanguageStringModel.Override(request.Error),
-							LanguageStringModel.Override("Cannot Save"),
 							DialogStyles.Neutral,
+							LanguageStringModel.Override("Cannot Save"),
 							OnSaveFailAlert
 						)
 					);

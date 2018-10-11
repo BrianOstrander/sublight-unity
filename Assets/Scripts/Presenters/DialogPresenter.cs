@@ -107,7 +107,6 @@ namespace LunraGames.SubLight.Presenters
 					App.Callbacks.DialogRequest(lastRequest = request.Duplicate(DialogRequest.States.Active));
 					break;
 				case DialogRequest.States.Active:
-					
 					Show();
 					break;
 			}
@@ -133,26 +132,31 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClose(RequestStatus status)
 		{
+			App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Completing));
+
 			View.Closed += () => OnClosed(status);
 			CloseView();
 		}
 
 		void OnClosed(RequestStatus status)
 		{
-			App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Complete));
+			var finalRequest = lastRequest.Duplicate(DialogRequest.States.Complete);
+			lastRequest = default(DialogRequest);
+			App.Callbacks.DialogRequest(finalRequest);
+
 			switch(status)
 			{
 				case RequestStatus.Cancel: 
-					lastRequest.Cancel(); 
+					finalRequest.Cancel(); 
 					break;
 				case RequestStatus.Failure:
-					lastRequest.Failure();
+					finalRequest.Failure();
 					break;
 				case RequestStatus.Success:
-					lastRequest.Success();
+					finalRequest.Success();
 					break;
 			}
-			lastRequest.Done(status);
+			finalRequest.Done(status);
 		}
 		#endregion
 

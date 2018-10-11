@@ -24,7 +24,8 @@ namespace LunraGames.SubLight
 			Unknown = 0,
 			Request = 10,
 			Active = 20,
-			Complete = 30
+			Completing = 30, // Called when the dialog is closing.
+			Complete = 40 // Called when the dialog is finally closed.
 		}
 
 		/// <summary>
@@ -36,8 +37,8 @@ namespace LunraGames.SubLight
 		/// <param name="done">Done.</param>
 		public static DialogRequest Alert(
 			LanguageStringModel message,
-			LanguageStringModel title = null,
 			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
 			Action done = null
 		)
 		{
@@ -62,8 +63,8 @@ namespace LunraGames.SubLight
 		/// <param name="done">Done.</param>
 		public static DialogRequest CancelConfirm(
 			LanguageStringModel message,
-			LanguageStringModel title = null,
 			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
 			Action cancel = null,
 			Action confirm = null,
 			Action<RequestStatus> done = null
@@ -93,8 +94,8 @@ namespace LunraGames.SubLight
 		/// <param name="done">Done.</param>
 		public static DialogRequest CancelDenyConfirm(
 			LanguageStringModel message,
-			LanguageStringModel title = null,
 			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
 			Action cancel = null,
 			Action deny = null,
 			Action confirm = null,
