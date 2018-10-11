@@ -15,7 +15,7 @@
 
 		GlobalKeyValues = 50,
 
-		GalaxyReference = 60,
+		GalaxyInfo = 60,
 
 		// Inventory References
 		ModuleReference = 200,

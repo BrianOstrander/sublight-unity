@@ -7,6 +7,11 @@
 			public const string EncounterId = "EncounterId";
 		}
 
+		public static class GalaxyInfo
+		{
+			public const string GalaxyId = "GalaxyId";
+		}
+
 		public static class InventoryReference
 		{
 			public const string InventoryId = "InventoryId";

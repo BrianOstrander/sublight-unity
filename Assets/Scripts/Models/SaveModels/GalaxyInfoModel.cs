@@ -4,10 +4,11 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class GalaxyReferenceModel : SaveModel
+	public class GalaxyInfoModel : SaveModel
 	{
 		[JsonProperty] bool isPlayable;
-		[JsonProperty] string galaxyName;
+		[JsonProperty] string name;
+		[JsonProperty] string galaxyId;
 
 		[JsonProperty] AnimationCurve bodyAdjustment;
 		[JsonProperty] int minimumSectorBodies;
@@ -22,7 +23,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> IsPlayable;
 		[JsonIgnore]
-		public readonly ListenerProperty<string> GalaxyName;
+		public readonly ListenerProperty<string> Name;
+		[JsonIgnore]
+		public readonly ListenerProperty<string> GalaxyId;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<AnimationCurve> BodyAdjustment;
@@ -42,12 +45,13 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<Texture2D[]> VisualLayers;
 
-		public GalaxyReferenceModel()
+		public GalaxyInfoModel()
 		{
-			SaveType = SaveTypes.GalaxyReference;
+			SaveType = SaveTypes.GalaxyInfo;
 
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
-			GalaxyName = new ListenerProperty<string>(value => galaxyName = value, () => galaxyName);
+			Name = new ListenerProperty<string>(value => name = value, () => name);
+			GalaxyId = new ListenerProperty<string>(value => galaxyId = value, () => galaxyId);
 
 			BodyAdjustment = new ListenerProperty<AnimationCurve>(value => bodyAdjustment = value, () => bodyAdjustment);
 			MinimumSectorBodies = new ListenerProperty<int>(value => minimumSectorBodies = value, () => minimumSectorBodies);
