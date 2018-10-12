@@ -48,6 +48,7 @@ namespace LunraGames.SubLight.Models
 		public GalaxyInfoModel()
 		{
 			SaveType = SaveTypes.GalaxyInfo;
+			HasSiblingDirectory = true;
 
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
 			Name = new ListenerProperty<string>(value => name = value, () => name);

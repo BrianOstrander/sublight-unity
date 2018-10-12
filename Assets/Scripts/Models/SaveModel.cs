@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Newtonsoft.Json;
+using System.IO;
+using IoPath = System.IO.Path;
 
 namespace LunraGames.SubLight.Models
 {
@@ -24,6 +26,12 @@ namespace LunraGames.SubLight.Models
 		/// <value>The type of the save.</value>
 		[JsonProperty]
 		public SaveTypes SaveType { get; protected set; }
+		/// <summary>
+		/// Is there a directory with the same name as this file next to it where it's saved?
+		/// </summary>
+		/// <value>True if it should have a sibling directory.</value>
+		[JsonProperty]
+		public bool HasSiblingDirectory { get; protected set; }
 
 		/// <summary>
 		/// Is this loadable, or is the version too old.
@@ -80,6 +88,25 @@ namespace LunraGames.SubLight.Models
 			{
 				if (!IsInternal) return null;
 				return "Assets" + Path.Value.Substring(Application.dataPath.Length);
+			}
+		}
+
+		[JsonIgnore]
+		public string SiblingDirectory
+		{
+			get
+			{
+				if (Path.Value == null || !HasSiblingDirectory) return null;
+				return IoPath.Combine(Directory.GetParent(Path.Value).FullName, IoPath.GetFileNameWithoutExtension(Path.Value)+IoPath.DirectorySeparatorChar);
+			}
+		}
+		[JsonIgnore]
+		public string InternalSiblingDirectory
+		{
+			get
+			{
+				if (!HasSiblingDirectory || !IsInternal) return null;
+				return "Assets" + SiblingDirectory.Substring(Application.dataPath.Length);
 			}
 		}
 

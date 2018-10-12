@@ -9,5 +9,6 @@
   },
   "created": "2018-10-11T16:51:44.035629-07:00",
   "modified": "2018-10-11T16:51:44.035629-07:00",
-  "SaveType": "GalaxyInfo"
+  "SaveType": "GalaxyInfo",
+  "HasSiblingDirectory": true
 }

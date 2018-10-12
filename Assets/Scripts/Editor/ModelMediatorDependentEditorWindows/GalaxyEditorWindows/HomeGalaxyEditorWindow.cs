@@ -232,6 +232,9 @@ namespace LunraGames.SubLight
 			{
 				model.IsPlayable.Value = EditorGUILayout.Toggle(new GUIContent("IsPlayable", "Can the player start a game in this galaxy?"), model.IsPlayable.Value);
 
+				GUILayout.Label("SiblingDirectory: " + model.SiblingDirectory);
+				GUILayout.Label("InternalSiblingDirectory: " + model.InternalSiblingDirectory);
+
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
 

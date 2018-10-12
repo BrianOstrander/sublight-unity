@@ -138,6 +138,7 @@ namespace LunraGames.SubLight
 		protected override void OnSave<M>(M model, Action<SaveLoadRequest<M>> done = null)
 		{
 			File.WriteAllText(model.Path, Serialization.Serialize(model, formatting: readableSaves ? Formatting.Indented : Formatting.None));
+			if (model.HasSiblingDirectory) Directory.CreateDirectory(model.SiblingDirectory);
 			done(SaveLoadRequest<M>.Success(model, model));
 		}
 
