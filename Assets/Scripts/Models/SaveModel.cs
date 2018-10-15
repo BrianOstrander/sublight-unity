@@ -13,6 +13,7 @@ namespace LunraGames.SubLight.Models
 	{
 		bool supportedVersion;
 		string path;
+		Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
 		[JsonProperty] int version;
 		[JsonProperty] string meta;
@@ -109,6 +110,9 @@ namespace LunraGames.SubLight.Models
 				return "Assets" + SiblingDirectory.Substring(Application.dataPath.Length);
 			}
 		}
+
+		[JsonIgnore]
+		public Dictionary<string, Texture2D> Textures { get { return textures; } }
 
 		public SaveModel()
 		{

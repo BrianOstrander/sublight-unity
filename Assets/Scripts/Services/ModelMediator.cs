@@ -9,10 +9,10 @@ namespace LunraGames.SubLight
 {
 	public struct SaveLoadRequest<M> where M : SaveModel
 	{
-		public RequestStatus Status { get; private set; }
-		public SaveModel Model { get; private set; }
-		public M TypedModel { get; private set; }
-		public string Error { get; private set; }
+		public readonly RequestStatus Status;
+		public readonly SaveModel Model;
+		public readonly M TypedModel;
+		public readonly string Error;
 
 		public static SaveLoadRequest<M> Success(SaveModel model, M typedModel)
 		{
@@ -49,10 +49,10 @@ namespace LunraGames.SubLight
 
 	public struct SaveLoadArrayRequest<M> where M : SaveModel
 	{
-		public RequestStatus Status { get; private set; }
-		public SaveModel[] Models { get; private set; }
-		public string Error { get; private set; }
-		public int Length { get { return Models.Length; } }
+		public readonly RequestStatus Status;
+		public readonly SaveModel[] Models;
+		public readonly string Error;
+		public readonly int Length;
 
 		public static SaveLoadArrayRequest<M> Success(SaveModel[] models)
 		{
@@ -79,6 +79,47 @@ namespace LunraGames.SubLight
 		{
 			Status = status;
 			Models = models;
+			Error = error;
+			Length = models == null ? 0 : models.Length;
+		}
+	}
+
+	public struct ReadWriteRequest
+	{
+		public readonly RequestStatus Status;
+		public readonly string Path;
+		public readonly byte[] Bytes;
+		public readonly string Error;
+
+		public static ReadWriteRequest Success(string path, byte[] bytes)
+		{
+			return new ReadWriteRequest(
+				RequestStatus.Success,
+				path,
+				bytes
+			);
+		}
+
+		public static ReadWriteRequest Failure(string path, string error)
+		{
+			return new ReadWriteRequest(
+				RequestStatus.Failure,
+				path,
+				null,
+				error
+			);
+		}
+
+		ReadWriteRequest(
+			RequestStatus status,
+			string path,
+			byte[] bytes,
+			string error = null
+		)
+		{
+			Status = status;
+			Path = path;
+			Bytes = bytes;
 			Error = error;
 		}
 	}
@@ -314,6 +355,24 @@ namespace LunraGames.SubLight
 		{
 			Debug.LogError("Unhandled error: " + result.Error);
 		}
+
+		protected void Read(string path, Action<ReadWriteRequest> done)
+		{
+			if (string.IsNullOrEmpty(path)) throw new ArgumentNullException("path");
+			if (done == null) throw new ArgumentNullException("done");
+
+			try { OnRead(path, done); }
+			catch (Exception exception)
+			{
+				Debug.LogException(exception);
+				done(ReadWriteRequest.Failure(
+					path,
+					exception.Message
+				));
+			}
+		}
+
+		protected abstract void OnRead(string path, Action<ReadWriteRequest> done);
 	}
 
 	public interface IModelMediator

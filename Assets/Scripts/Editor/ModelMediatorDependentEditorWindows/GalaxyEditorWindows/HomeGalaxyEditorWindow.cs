@@ -235,6 +235,11 @@ namespace LunraGames.SubLight
 				GUILayout.Label("SiblingDirectory: " + model.SiblingDirectory);
 				GUILayout.Label("InternalSiblingDirectory: " + model.InternalSiblingDirectory);
 
+				foreach (var kv in model.Textures)
+				{
+					GUILayout.Label(kv.Key + ": ( " + kv.Value.width + " , " + kv.Value.height + " )");
+				}
+
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
 
