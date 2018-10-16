@@ -55,7 +55,9 @@ namespace LunraGames.SubLight.Views
 		{
 			//var color = (revealing ? maskReveal : maskHide).Evaluate(scalar);
 			maskMesh.material.SetColor(ShaderConstants.CameraMask.MaskColor, (revealing ? maskReveal : maskHide).Evaluate(scalar));
-			maskMesh.gameObject.SetActive(revealing || (!revealing && !Mathf.Approximately(1f, scalar)));
+
+			if (revealing) maskMesh.gameObject.SetActive(!Mathf.Approximately(1f, scalar));
+			else maskMesh.gameObject.SetActive(true);
 		}
 
 		public float Orbit
