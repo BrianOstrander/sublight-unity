@@ -262,6 +262,7 @@ namespace LunraGames.SubLight
 		void OnAutoNewGame(RequestStatus result, GameModel model)
 		{
 			var payload = new GamePayload();
+			payload.MainCamera = Payload.homePayload.MainCamera;
 			payload.Game = model;
 			App.SM.RequestState(payload);
 		}
