@@ -7,55 +7,32 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public partial class EncounterEditorWindow : EditorWindow
+	public partial class GalaxyEditorWindow : ModelMediatorDependentEditorWindow
 	{
-		const string KeyPrefix = "LG_SF_EncounterEditor_";
-
 		public enum States
 		{
 			Unknown = 0,
 			Home = 10
 		}
 
-		EditorPrefsEnum<States> currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
+		EditorPrefsEnum<States> currentState;
 
-		EditorModelMediator editorSaveLoadService;
-		IModelMediator SaveLoadService 
-		{
-			get 
-			{
-				if (editorSaveLoadService == null)
-				{
-					editorSaveLoadService = new EditorModelMediator(true);
-					editorSaveLoadService.Initialize(BuildPreferences.Instance.Info, OnSaveLoadInitialized);
-				}
-				return editorSaveLoadService;
-			}
-		}
-
-		void OnSaveLoadInitialized(RequestStatus status)
-		{
-			if (status == RequestStatus.Success) return;
-			Debug.LogError("Editor time save load service returned: " + status);
-		}
-
-		[MenuItem("Window/Space Farm/Encounter Editor")]
+		[MenuItem("Window/SubLight/Galaxy Editor")]
 		static void Initialize()
 		{
-			GetWindow(typeof(EncounterEditorWindow), false, "Encounter Editor").Show();
+			GetWindow(typeof(GalaxyEditorWindow), false, "Galaxy Editor").Show();
 		}
 
-		void OnEnable()
+		public GalaxyEditorWindow() : base("LG_SF_GalaxyEditor_")
 		{
-			OnHomeEnable();
+			currentState = new EditorPrefsEnum<States>(KeyPrefix + "State", States.Home);
+
+			OnHomeConstruct();
+
+			Gui += OnGalaxyGui;
 		}
 
-		void OnDisable()
-		{
-			OnHomeDisable();
-		}
-
-		void OnGUI()
+		void OnGalaxyGui()
 		{
 			Exception innerException = null;
 			try
@@ -108,11 +85,6 @@ namespace LunraGames.SubLight
 		void Reset()
 		{
 			currentState.Value = States.Home;
-		}
-
-		void Space()
-		{
-			GUILayout.Space(16f);
 		}
 	}
 }

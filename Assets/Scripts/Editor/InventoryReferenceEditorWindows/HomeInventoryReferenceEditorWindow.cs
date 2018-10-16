@@ -121,7 +121,16 @@ namespace LunraGames.SubLight
 			switch (selectedReferenceStatus)
 			{
 				case RequestStatus.Cancel:
-					LoadSelectedReference(referenceLists[homeSelectedSaveType.Value].FirstOrDefault(m => m.Path == homeSelectedPath.Value));
+					try 
+					{
+						LoadSelectedReference(referenceLists[homeSelectedSaveType.Value].FirstOrDefault(m => m.Path == homeSelectedPath.Value));
+					}
+					catch
+					{
+						Debug.LogError("There was an exception, possibly from a recent renaming of inventory enumerations. This should resolve on its own.");
+						selectedReferenceStatus = RequestStatus.Failure;
+						homeSelectedSaveType.Value = SaveTypes.Unknown;
+					}
 					return;
 			}
 		}

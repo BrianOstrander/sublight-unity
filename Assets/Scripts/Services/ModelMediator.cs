@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -9,10 +10,10 @@ namespace LunraGames.SubLight
 {
 	public struct SaveLoadRequest<M> where M : SaveModel
 	{
-		public RequestStatus Status { get; private set; }
-		public SaveModel Model { get; private set; }
-		public M TypedModel { get; private set; }
-		public string Error { get; private set; }
+		public readonly RequestStatus Status;
+		public readonly SaveModel Model;
+		public readonly M TypedModel;
+		public readonly string Error;
 
 		public static SaveLoadRequest<M> Success(SaveModel model, M typedModel)
 		{
@@ -49,10 +50,10 @@ namespace LunraGames.SubLight
 
 	public struct SaveLoadArrayRequest<M> where M : SaveModel
 	{
-		public RequestStatus Status { get; private set; }
-		public SaveModel[] Models { get; private set; }
-		public string Error { get; private set; }
-		public int Length { get { return Models.Length; } }
+		public readonly RequestStatus Status;
+		public readonly SaveModel[] Models;
+		public readonly string Error;
+		public readonly int Length;
 
 		public static SaveLoadArrayRequest<M> Success(SaveModel[] models)
 		{
@@ -80,6 +81,47 @@ namespace LunraGames.SubLight
 			Status = status;
 			Models = models;
 			Error = error;
+			Length = models == null ? 0 : models.Length;
+		}
+	}
+
+	public struct ReadWriteRequest
+	{
+		public readonly RequestStatus Status;
+		public readonly string Path;
+		public readonly byte[] Bytes;
+		public readonly string Error;
+
+		public static ReadWriteRequest Success(string path, byte[] bytes)
+		{
+			return new ReadWriteRequest(
+				RequestStatus.Success,
+				path,
+				bytes
+			);
+		}
+
+		public static ReadWriteRequest Failure(string path, string error)
+		{
+			return new ReadWriteRequest(
+				RequestStatus.Failure,
+				path,
+				null,
+				error
+			);
+		}
+
+		ReadWriteRequest(
+			RequestStatus status,
+			string path,
+			byte[] bytes,
+			string error = null
+		)
+		{
+			Status = status;
+			Path = path;
+			Bytes = bytes;
+			Error = error;
 		}
 	}
 	
@@ -95,6 +137,10 @@ namespace LunraGames.SubLight
 				case SaveTypes.Preferences: return typeof(PreferencesModel);
 				case SaveTypes.EncounterInfo: return typeof(EncounterInfoModel);
 				case SaveTypes.GlobalKeyValues: return typeof(GlobalKeyValuesModel);
+				// -- Galaxies
+				case SaveTypes.GalaxyPreview: return typeof(GalaxyPreviewModel);
+				case SaveTypes.GalaxyDistant: return typeof(GalaxyDistantModel);
+				case SaveTypes.GalaxyInfo: return typeof(GalaxyInfoModel);
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				case SaveTypes.InteractedInventoryReferenceList: return typeof(InteractedInventoryReferenceListModel);
@@ -106,18 +152,23 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		protected SaveTypes ToEnum(Type type)
+		protected SaveTypes[] ToEnum(Type type)
 		{
-			if (type == typeof(GameModel)) return SaveTypes.Game;
-			if (type == typeof(PreferencesModel)) return SaveTypes.Preferences;
-			if (type == typeof(EncounterInfoModel)) return SaveTypes.EncounterInfo;
-			if (type == typeof(GlobalKeyValuesModel)) return SaveTypes.GlobalKeyValues;
+			if (type == typeof(GameModel)) return new SaveTypes[] { SaveTypes.Game };
+			if (type == typeof(PreferencesModel)) return new SaveTypes[] { SaveTypes.Preferences };
+			if (type == typeof(EncounterInfoModel)) return new SaveTypes[] { SaveTypes.EncounterInfo };
+			if (type == typeof(GlobalKeyValuesModel)) return new SaveTypes[] { SaveTypes.GlobalKeyValues };
+			// -- Galaxies
+			if (type == typeof(GalaxyPreviewModel) || type == typeof(GalaxyDistantModel) || type == typeof(GalaxyInfoModel))
+			{
+				return new SaveTypes[] { SaveTypes.GalaxyPreview, SaveTypes.GalaxyDistant, SaveTypes.GalaxyInfo };
+			}
 			// -- Interacted
-			if (type == typeof(InteractedEncounterInfoListModel)) return SaveTypes.InteractedEncounterInfoList;
-			if (type == typeof(InteractedInventoryReferenceListModel)) return SaveTypes.InteractedInventoryReferenceList;
+			if (type == typeof(InteractedEncounterInfoListModel)) return new SaveTypes[] { SaveTypes.InteractedEncounterInfoList };
+			if (type == typeof(InteractedInventoryReferenceListModel)) return new SaveTypes[] { SaveTypes.InteractedInventoryReferenceList };
 			// -- Inventory References
-			if (type == typeof(ModuleReferenceModel)) return SaveTypes.ModuleReference;
-			if (type == typeof(OrbitalCrewReferenceModel)) return SaveTypes.OrbitalCrewReference;
+			if (type == typeof(ModuleReferenceModel)) return new SaveTypes[] { SaveTypes.ModuleReference };
+			if (type == typeof(OrbitalCrewReferenceModel)) return new SaveTypes[] { SaveTypes.OrbitalCrewReference };
 			// --
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
@@ -164,7 +215,7 @@ namespace LunraGames.SubLight
 		{
 			if (model == null) throw new ArgumentNullException("model");
 			if (done == null) throw new ArgumentNullException("done");
-			if (ToEnum(typeof(M)) != model.SaveType) 
+			if (!ToEnum(typeof(M)).Contains(model.SaveType))
 			{
 				done(SaveLoadRequest<M>.Failure(
 					model,
@@ -213,7 +264,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			if (ToEnum(typeof(M)) != model.SaveType) 
+			if (!ToEnum(typeof(M)).Contains(model.SaveType))
 			{
 				done(SaveLoadRequest<M>.Failure(
 					model,
@@ -312,6 +363,24 @@ namespace LunraGames.SubLight
 		{
 			Debug.LogError("Unhandled error: " + result.Error);
 		}
+
+		protected void Read(string path, Action<ReadWriteRequest> done)
+		{
+			if (string.IsNullOrEmpty(path)) throw new ArgumentNullException("path");
+			if (done == null) throw new ArgumentNullException("done");
+
+			try { OnRead(path, done); }
+			catch (Exception exception)
+			{
+				Debug.LogException(exception);
+				done(ReadWriteRequest.Failure(
+					path,
+					exception.Message
+				));
+			}
+		}
+
+		protected abstract void OnRead(string path, Action<ReadWriteRequest> done);
 	}
 
 	public interface IModelMediator

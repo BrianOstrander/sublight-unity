@@ -1,0 +1,40 @@
+{
+  "isPlayable": true,
+  "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
+  "name": "Milky Way",
+  "playerStart": {
+    "Sector": {"x":2184.0,"z":3664.0}
+  },
+  "gameEnd": {
+    "Sector": {"x":1992.0,"z":2088.0}
+  },
+  "bodyAdjustment": {
+    "keys": [
+      {
+        "inWeight": 0.333333343,
+        "outWeight": 0.333333343
+      },
+      {
+        "time": 1.0,
+        "value": 1.0,
+        "inTangent": 2.0,
+        "outTangent": 2.0,
+        "inWeight": 0.333333343,
+        "outWeight": 0.333333343
+      }
+    ],
+    "length": 2,
+    "preWrapMode": "ClampForever",
+    "postWrapMode": "ClampForever"
+  },
+  "maximumSectorBodies": 2000,
+  "version": 7,
+  "meta": "Milky Way",
+  "metaKeyValues": {
+    "GalaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089"
+  },
+  "created": "2018-10-11T16:51:44.035629-07:00",
+  "modified": "2018-10-11T16:51:44.035629-07:00",
+  "SaveType": "GalaxyInfo",
+  "SiblingBehaviour": "All"
+}

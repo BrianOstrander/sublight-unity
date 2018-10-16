@@ -1,16 +1,29 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 using Newtonsoft.Json;
+using System.IO;
+using IoPath = System.IO.Path;
 
 namespace LunraGames.SubLight.Models
 {
 	public class SaveModel : Model
 	{
+		public enum SiblingBehaviours
+		{
+			Unknown = 0,
+			None = 10,
+			Specified = 20,
+			All = 30
+		}
+
 		bool supportedVersion;
 		string path;
+		List<string> specifiedSiblings = new List<string>();
+		Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
 		[JsonProperty] int version;
 		[JsonProperty] string meta;
@@ -25,6 +38,13 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty]
 		public SaveTypes SaveType { get; protected set; }
 
+		/// <summary>
+		/// How are sibling files consumed? If None is specified, no sibling
+		/// folder is even created.
+		/// </summary>
+		/// <value>The sibling behaviour.</value>
+		[JsonProperty]
+		public SiblingBehaviours SiblingBehaviour { get; protected set; }
 		/// <summary>
 		/// Is this loadable, or is the version too old.
 		/// </summary>
@@ -83,8 +103,62 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
+		/// <summary>
+		/// Is there a directory with the same name as this file next to it where it's saved?
+		/// </summary>
+		/// <value>True if it should have a sibling directory.</value>
+		[JsonIgnore]
+		public bool HasSiblingDirectory
+		{
+			get
+			{
+				switch (SiblingBehaviour)
+				{
+					case SiblingBehaviours.Unknown:
+					case SiblingBehaviours.None:
+						return false;
+					case SiblingBehaviours.Specified:
+					case SiblingBehaviours.All:
+						return true;
+					default:
+						Debug.LogError("Unrecognized sibling behaviour: " + SiblingBehaviour);
+						return false;
+				}
+			}
+		}
+
+		[JsonIgnore]
+		public string SiblingDirectory
+		{
+			get
+			{
+				if (Path.Value == null || !HasSiblingDirectory) return null;
+				return IoPath.Combine(Directory.GetParent(Path.Value).FullName, IoPath.GetFileNameWithoutExtension(Path.Value)+IoPath.DirectorySeparatorChar);
+			}
+		}
+		[JsonIgnore]
+		public string InternalSiblingDirectory
+		{
+			get
+			{
+				if (!HasSiblingDirectory || !IsInternal) return null;
+				return "Assets" + SiblingDirectory.Substring(Application.dataPath.Length);
+			}
+		}
+
+		[JsonIgnore]
+		public Dictionary<string, Texture2D> Textures { get { return textures; } }
+
+		public Texture2D GetTexture(string name)
+		{
+			Texture2D result = null;
+			Textures.TryGetValue(name, out result);
+			return result;
+		}
+
 		public SaveModel()
 		{
+			SiblingBehaviour = SiblingBehaviours.None;
 			SupportedVersion = new ListenerProperty<bool>(value => supportedVersion = value, () => supportedVersion);
 			Path = new ListenerProperty<string>(value => path = value, () => path);
 			Version = new ListenerProperty<int>(value => version = value, () => version);
@@ -128,6 +202,11 @@ namespace LunraGames.SubLight.Models
 			if (metaKeyValues.TryGetValue(key, out currentValue)) return currentValue;
 			return null;
 		}
+
+		protected void AddSiblings(params string[] siblingNames)
+		{
+			foreach (var name in siblingNames.Where(s => !specifiedSiblings.Contains(s))) specifiedSiblings.Add(name);
+		}
 		#endregion
 
 		#region Events
@@ -147,6 +226,13 @@ namespace LunraGames.SubLight.Models
 			newMetaKeyValues[key] = value;
 			MetaKeyValues.Value = newMetaKeyValues;
 		}
+
+		public void PrepareTexture(string name, Texture2D texture)
+		{
+			OnPrepareTexture(name, texture);
+		}
+
+		protected virtual void OnPrepareTexture(string name, Texture2D texture) {}
 		#endregion
 	}
 }

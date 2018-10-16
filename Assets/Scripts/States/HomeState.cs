@@ -18,6 +18,8 @@ namespace LunraGames.SubLight
 		public GameObject HoloSurfaceOrigin;
 
 		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
+
+		public GalaxyPreviewModel PreviewGalaxy;
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -36,6 +38,7 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(InitializeLoadSaves);
+			App.SM.PushBlocking(InitializeLoadGalaxy);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
 			App.SM.PushBlocking(InitializeFocus);
 		}
@@ -90,7 +93,7 @@ namespace LunraGames.SubLight
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				UnityEngine.Debug.LogError("Unable to load a list of saved games");
+				Debug.LogError("Unable to load a list of saved games");
 				// TODO: Error logic.
 			}
 			else Payload.Saves = result.Models;
@@ -99,6 +102,47 @@ namespace LunraGames.SubLight
 
 			done();
 		}
+
+		void InitializeLoadGalaxy(Action done)
+		{
+			App.M.List<GalaxyPreviewModel>(result => OnListInitializeLoadGalaxy(result, done));
+		}
+
+		void OnListInitializeLoadGalaxy(SaveLoadArrayRequest<SaveModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to load a list of galaxies");
+				done();
+				return;
+			}
+
+			var milkyWay = result.Models.FirstOrDefault(m => m.Meta == "Milky Way");
+			
+			if (milkyWay == null)
+			{
+				Debug.LogError("No galaxies named \"Milky Way\" were listed");
+				done();
+				return;
+			}
+
+			App.M.Load<GalaxyPreviewModel>(milkyWay, loadResult => OnLoadInitializeLoadGalaxy(loadResult, done));
+		}
+
+		void OnLoadInitializeLoadGalaxy(SaveLoadRequest<GalaxyPreviewModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable load galaxy at path: "+result.Model.Path+"\nError: "+result.Error);
+				done();
+				return;
+			}
+
+			Payload.PreviewGalaxy = result.TypedModel;
+
+			done();
+		}
+
 		#endregion
 
 		#region Idle

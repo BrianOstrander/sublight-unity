@@ -21,11 +21,12 @@ namespace LunraGames.SubLight
 			Selected = 20
 		}
 
-		EditorPrefsFloat homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
-		EditorPrefsFloat homeCrewLogsScroll = new EditorPrefsFloat(KeyPrefix + "CrewLogsScroll");
-		EditorPrefsString homeSelectedEncounterPath = new EditorPrefsString(KeyPrefix + "HomeSelectedEncounter");
-		EditorPrefsEnum<HomeStates> homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
-		EditorPrefsInt homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+		EditorPrefsBool homeAlwaysAllowSaving;
+		EditorPrefsFloat homeLeftBarScroll;
+		EditorPrefsFloat homeCrewLogsScroll;
+		EditorPrefsString homeSelectedEncounterPath;
+		EditorPrefsEnum<HomeStates> homeState;
+		EditorPrefsInt homeSelectedToolbar;
 
 		// Unknown: Query in progress
 		// Cancel: Qued for Query
@@ -39,8 +40,30 @@ namespace LunraGames.SubLight
 		// Success: Loaded
 		// Failure: Deselected or failed to load
 		RequestStatus selectedEncounterStatus;
-		EncounterInfoModel selectedEncounter;
+		EncounterInfoModel _selectedEncounter;
+		EncounterInfoModel selectedEncounter
+		{
+			get { return _selectedEncounter; }
+			set
+			{
+				_selectedEncounter = value;
+			}
+		}
 		bool selectedEncounterModified;
+
+		void OnHomeConstruct()
+		{
+			homeAlwaysAllowSaving = new EditorPrefsBool(KeyPrefix + "AlwaysAllowSaving");
+			homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
+			homeCrewLogsScroll = new EditorPrefsFloat(KeyPrefix + "CrewLogsScroll");
+			homeSelectedEncounterPath = new EditorPrefsString(KeyPrefix + "HomeSelectedEncounter");
+			homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
+			homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+
+			Enable += OnHomeEnable;
+			Disable += OnHomeDisable;
+			Save += SaveSelectedEncounter;
+		}
 
 		void OnHomeEnable()
 		{
@@ -131,6 +154,7 @@ namespace LunraGames.SubLight
 		{
 			GUILayout.BeginVertical(GUILayout.Width(300f));
 			{
+				GUILayout.Space(4f);
 				GUILayout.BeginHorizontal();
 				{
 					if (GUILayout.Button("New")) NewEncounter();
@@ -172,14 +196,19 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.Label("Editing: " + encounterName);
-					GUI.enabled = selectedEncounterModified;
-					if (GUILayout.Button("Save", GUILayout.Width(64f))) SaveSelectedEncounter(selectedEncounter);
-					GUI.enabled = true;
+					//GUILayout.FlexibleSpace();
+					GUILayout.Label("Always Allow Saving", GUILayout.ExpandWidth(false));
+					homeAlwaysAllowSaving.Value = EditorGUILayout.Toggle(homeAlwaysAllowSaving.Value, GUILayout.Width(14f));
+					EditorGUILayoutExtensions.PushEnabled(homeAlwaysAllowSaving.Value || selectedEncounterModified);
+					{
+						if (GUILayout.Button("Save", GUILayout.Width(64f))) Save();
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 				}
 				GUILayout.EndHorizontal();
 				homeSelectedToolbar.Value = GUILayout.Toolbar(Mathf.Min(homeSelectedToolbar, names.Length - 1), names);
 
-				switch(homeSelectedToolbar.Value)
+				switch (homeSelectedToolbar.Value)
 				{
 					case 0:
 						OnHomeSelectedGeneral(model);
@@ -420,9 +449,10 @@ namespace LunraGames.SubLight
 			SaveLoadService.Load<EncounterInfoModel>(model, OnLoadSelectedEncounter);
 		}
 
-		void SaveSelectedEncounter(EncounterInfoModel model)
+		void SaveSelectedEncounter()
 		{
-			SaveLoadService.Save(model, OnSaveSelectedEncounter, false);
+			if (selectedEncounter == null) return;
+			SaveLoadService.Save(selectedEncounter, OnSaveSelectedEncounter, false);
 		}
 
 		void OnSaveSelectedEncounter(SaveLoadRequest<EncounterInfoModel> result)
