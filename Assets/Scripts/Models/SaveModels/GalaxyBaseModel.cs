@@ -22,7 +22,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] UniversePosition playerStart;
 		[JsonProperty] UniversePosition gameEnd;
 
-		[JsonProperty] AnimationCurve bodyAdjustment;
+		[JsonProperty] AnimationCurve bodyAdjustment = AnimationCurveExtensions.Constant(1f);
 		[JsonProperty] int minimumSectorBodies;
 		[JsonProperty] int maximumSectorBodies;
 		[JsonProperty] AnimationCurve sectorBodyChance;

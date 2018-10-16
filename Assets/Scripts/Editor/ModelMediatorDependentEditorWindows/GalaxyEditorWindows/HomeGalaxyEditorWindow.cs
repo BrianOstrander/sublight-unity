@@ -426,7 +426,7 @@ namespace LunraGames.SubLight
 					model.MinimumSectorBodies.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Minimum Sector Bodies", "The minimum bodies ever spawned in a sector."), model.MinimumSectorBodies));
 					model.MaximumSectorBodies.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Maximum Sector Bodies", "The maximum bodies ever spawned in a sector."), model.MaximumSectorBodies));
 
-					model.BodyAdjustment.Value = EditorGUILayout.CurveField(new GUIContent("Body Adjustment", "The bodymap is a linear gradient that is evaluated along a curve, then remapped between the minimum and maximum sector body count."), model.BodyAdjustment);
+					model.BodyAdjustment.Value = EditorGUILayoutAnimationCurve.Field(new GUIContent("Body Adjustment", "The bodymap is a linear gradient that is evaluated along a curve, then remapped between the minimum and maximum sector body count."), model.BodyAdjustment.Value);
 				}
 				EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 			}
