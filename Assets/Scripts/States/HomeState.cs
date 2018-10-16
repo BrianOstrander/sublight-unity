@@ -19,7 +19,7 @@ namespace LunraGames.SubLight
 
 		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
 
-		public GalaxyInfoModel PreviewGalaxy;
+		public GalaxyPreviewModel PreviewGalaxy;
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -105,7 +105,7 @@ namespace LunraGames.SubLight
 
 		void InitializeLoadGalaxy(Action done)
 		{
-			App.M.List<GalaxyInfoModel>(result => OnListInitializeLoadGalaxy(result, done));
+			App.M.List<GalaxyPreviewModel>(result => OnListInitializeLoadGalaxy(result, done));
 		}
 
 		void OnListInitializeLoadGalaxy(SaveLoadArrayRequest<SaveModel> result, Action done)
@@ -126,14 +126,14 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			App.M.Load<GalaxyInfoModel>(milkyWay, loadResult => OnLoadInitializeLoadGalaxy(loadResult, done));
+			App.M.Load<GalaxyPreviewModel>(milkyWay, loadResult => OnLoadInitializeLoadGalaxy(loadResult, done));
 		}
 
-		void OnLoadInitializeLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, Action done)
+		void OnLoadInitializeLoadGalaxy(SaveLoadRequest<GalaxyPreviewModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Unable load galaxy at path: "+result.Model.Path);
+				Debug.LogError("Unable load galaxy at path: "+result.Model.Path+"\nError: "+result.Error);
 				done();
 				return;
 			}

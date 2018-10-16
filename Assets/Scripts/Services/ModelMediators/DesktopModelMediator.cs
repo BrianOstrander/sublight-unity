@@ -34,6 +34,9 @@ namespace LunraGames.SubLight
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
 					{ SaveTypes.InteractedInventoryReferenceList, -1 },
 					{ SaveTypes.GlobalKeyValues, -1 },
+					// -- Galaxies
+					{ SaveTypes.GalaxyPreview, 7 },
+					{ SaveTypes.GalaxyDistant, 7 },
 					{ SaveTypes.GalaxyInfo, 7 },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, 4 },
@@ -55,6 +58,9 @@ namespace LunraGames.SubLight
 					{ SaveTypes.InteractedEncounterInfoList, true },
 					{ SaveTypes.InteractedInventoryReferenceList, true },
 					{ SaveTypes.GlobalKeyValues, true },
+					// -- Galaxies
+					{ SaveTypes.GalaxyPreview, false },
+					{ SaveTypes.GalaxyDistant, false },
 					{ SaveTypes.GalaxyInfo, false },
 					// -- Inventory References
 					{ SaveTypes.ModuleReference, false },
@@ -100,7 +106,11 @@ namespace LunraGames.SubLight
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
 				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
-				case SaveTypes.GalaxyInfo: return Path.Combine(InternalPath, "galaxies");
+				// -- Galaxies
+				case SaveTypes.GalaxyPreview:
+				case SaveTypes.GalaxyDistant:
+				case SaveTypes.GalaxyInfo:
+					return Path.Combine(InternalPath, "galaxies");
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
 				case SaveTypes.InteractedInventoryReferenceList: return Path.Combine(ParentPath, "interacted-references");
@@ -146,7 +156,7 @@ namespace LunraGames.SubLight
 
 		protected override void OnList<M>(Action<SaveLoadArrayRequest<SaveModel>> done)
 		{
-			var path = GetPath(ToEnum(typeof(M)));
+			var path = GetPath(ToEnum(typeof(M)).FirstOrDefault());
 			var results = new List<SaveModel>();
 			foreach (var file in Directory.GetFiles(path))
 			{
@@ -241,6 +251,7 @@ namespace LunraGames.SubLight
 			try
 			{
 				var target = new Texture2D(1, 1);
+				result.PrepareTexture(textureName, target);
 				target.LoadImage(textureResult.Bytes);
 				result.Textures.Add(textureName, target);
 				done();

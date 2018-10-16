@@ -4,12 +4,13 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class GalaxyInfoModel : SaveModel
+	public abstract class GalaxyBaseModel : SaveModel
 	{
 		public static class TextureNames
 		{
 			public const string BodyMap = "bodymap";
 			public const string Preview = "preview";
+			public const string FullPreview = "fullpreview";
 			public const string Details = "details";
 		}
 
@@ -49,18 +50,8 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<AnimationCurve> SectorBodyChance;
 
-		[JsonIgnore]
-		public Texture2D BodyMap { get { return GetTexture(TextureNames.BodyMap); } }
-		[JsonIgnore]
-		public Texture2D Preview { get { return GetTexture(TextureNames.Preview); } }
-		[JsonIgnore]
-		public Texture2D Details { get { return GetTexture(TextureNames.Details); } }
-
-		public GalaxyInfoModel()
+		public GalaxyBaseModel()
 		{
-			SaveType = SaveTypes.GalaxyInfo;
-			HasSiblingDirectory = true;
-
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
 			GalaxyId = new ListenerProperty<string>(value => galaxyId = value, () => galaxyId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
@@ -73,6 +64,17 @@ namespace LunraGames.SubLight.Models
 			MinimumSectorBodies = new ListenerProperty<int>(value => minimumSectorBodies = value, () => minimumSectorBodies);
 			MaximumSectorBodies = new ListenerProperty<int>(value => maximumSectorBodies = value, () => maximumSectorBodies);
 			SectorBodyChance = new ListenerProperty<AnimationCurve>(value => sectorBodyChance = value, () => sectorBodyChance);
+		}
+
+		protected override void OnPrepareTexture(string name, Texture2D texture)
+		{
+			// TODO: This should probably be exposed by some interface, oh well...
+			switch (name)
+			{
+				case TextureNames.Preview:
+					texture.anisoLevel = 2;
+					break;
+			}
 		}
 	}
 }

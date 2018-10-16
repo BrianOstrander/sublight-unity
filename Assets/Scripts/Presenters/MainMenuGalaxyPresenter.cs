@@ -8,9 +8,9 @@ namespace LunraGames.SubLight.Presenters
 	public class MainMenuGalaxyPresenter : Presenter<IMainMenuGalaxyView>, IPresenterCloseShowOptions
 	{
 
-		GalaxyInfoModel galaxy;
+		GalaxyPreviewModel galaxy;
 
-		public MainMenuGalaxyPresenter(GalaxyInfoModel galaxy)
+		public MainMenuGalaxyPresenter(GalaxyPreviewModel galaxy)
 		{
 			this.galaxy = galaxy;
 		}

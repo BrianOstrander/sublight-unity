@@ -263,16 +263,35 @@ namespace LunraGames.SubLight
 
 			GUILayout.FlexibleSpace();
 
-			homeGeneralPreviewBarScroll.Value = GUILayout.BeginScrollView(new Vector2(homeGeneralPreviewBarScroll, 0f), true, false, GUILayout.MinHeight(homeGeneralPreviewSize + 42f)).x;
+			homeGeneralPreviewBarScroll.Value = GUILayout.BeginScrollView(new Vector2(homeGeneralPreviewBarScroll, 0f), true, false, GUILayout.MinHeight(homeGeneralPreviewSize + 46f)).x;
 			{
 				GUILayout.BeginHorizontal();
 				{
+					var biggest = 0;
 					foreach (var kv in model.Textures)
 					{
+						if (kv.Value == null) continue;
+						biggest = Mathf.Max(biggest, Mathf.Max(kv.Value.width, kv.Value.height));
+					}
+
+					foreach (var kv in model.Textures)
+					{
+						if (kv.Value == null) continue;
 						GUILayout.BeginVertical();
 						{
-							GUILayout.Label(kv.Key);
-							GUILayout.Button(new GUIContent(kv.Value), GUILayout.MaxWidth(homeGeneralPreviewSize), GUILayout.MaxHeight(homeGeneralPreviewSize));
+							var isSmallerThanMax = Mathf.Min(kv.Value.width, kv.Value.height) < biggest;
+
+							if (isSmallerThanMax) EditorGUILayoutExtensions.PushColor(Color.red);
+							GUILayout.Label(kv.Key+" | "+kv.Value.width+" x "+kv.Value.height, EditorStyles.boldLabel);
+							if (isSmallerThanMax) EditorGUILayoutExtensions.PopColor();
+
+							if (GUILayout.Button(new GUIContent(kv.Value), GUILayout.MaxWidth(homeGeneralPreviewSize), GUILayout.MaxHeight(homeGeneralPreviewSize)))
+							{
+								var textureWithExtension = kv.Key + ".png";
+								var texturePath = Path.Combine(model.IsInternal ? model.InternalSiblingDirectory : model.SiblingDirectory, textureWithExtension);
+								EditorUtility.FocusProjectWindow();
+								Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(texturePath);
+							}
 						}
 						GUILayout.EndVertical();
 					}
@@ -299,7 +318,7 @@ namespace LunraGames.SubLight
 			{
 				"BodyMap",
 				"Details",
-				"Preview"
+				"Full Preview"
 			};
 
 			homeTargetsSelectedPreview.Value = GUILayout.Toolbar(Mathf.Min(homeTargetsSelectedPreview, names.Length - 1), names);
@@ -315,12 +334,14 @@ namespace LunraGames.SubLight
 					previewTexture = model.Details;
 					break;
 				case 2:
-					previewTexture = model.Preview;
+					previewTexture = model.FullPreview;
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
 					break;
 			}
+
+			previewTexture = previewTexture ?? Texture2D.blackTexture;
 
 			var universeSize = new Vector2(previewTexture.width, previewTexture.height);
 
@@ -385,6 +406,7 @@ namespace LunraGames.SubLight
 
 		void OnHomeSelectedGeneration(GalaxyInfoModel model)
 		{
+			/*
 			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
@@ -394,12 +416,17 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
+			*/
 
 			homeGenerationBarScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeGenerationBarScroll), false, true).y;
 			{
 				EditorGUIExtensions.BeginChangeCheck();
 				{
-					GUILayout.Label("Todo: this");
+					if (model.MaximumSectorBodies < model.MinimumSectorBodies) EditorGUILayout.HelpBox("Maximum Sector Bodies must be higher than the minimum", MessageType.Error);
+					model.MinimumSectorBodies.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Minimum Sector Bodies", "The minimum bodies ever spawned in a sector."), model.MinimumSectorBodies));
+					model.MaximumSectorBodies.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Maximum Sector Bodies", "The maximum bodies ever spawned in a sector."), model.MaximumSectorBodies));
+
+					model.BodyAdjustment.Value = EditorGUILayout.CurveField(new GUIContent("Body Adjustment", "The bodymap is a linear gradient that is evaluated along a curve, then remapped between the minimum and maximum sector body count."), model.BodyAdjustment);
 				}
 				EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 			}
