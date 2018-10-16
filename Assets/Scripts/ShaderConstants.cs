@@ -100,6 +100,18 @@ namespace LunraGames.SubLight
 			public const string Revealed = "_Revealed";
 		}
 
+		public static class CameraMask
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/CameraMask";
+			/// <summary>
+			/// The color and opacity of the mask.
+			/// </summary>
+			public const string MaskColor = "_MaskColor";
+		}
+
 		/*
 		public static class SomeShader
 		{

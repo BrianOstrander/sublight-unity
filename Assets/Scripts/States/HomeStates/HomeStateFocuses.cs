@@ -22,11 +22,11 @@ namespace LunraGames.SubLight
 				var payload = state.Payload;
 
 				// Basics: Cameras, Room, etc
-				var roomCamera = new HoloRoomFocusCameraPresenter();
+				var roomCamera = payload.MainCamera;
 				var gantryAnchor = roomCamera.GantryAnchor;
 				var fieldOfView = roomCamera.FieldOfView;
 				var holoSurface = payload.HoloSurfaceOrigin.transform;
-				var layer = "Holo" + SetFocusLayers.Home;
+				var layer = LayerConstants.Get(SetFocusLayers.Home);
 
 				new HomeFocusCameraPresenter(gantryAnchor, fieldOfView);
 				new PriorityFocusCameraPresenter(gantryAnchor, fieldOfView);

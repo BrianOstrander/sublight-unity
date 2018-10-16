@@ -141,6 +141,10 @@ namespace LunraGames.SubLight
 		/// Sets what layers are active and which won't respond to input.
 		/// </summary>
 		public Action<InputLayerRequest> InputLayerRequest = ActionExtensions.GetEmpty<InputLayerRequest>();
+		/// <summary>
+		/// Called when requesting, updating, or completeing a camera mask.
+		/// </summary>
+		public Action<CameraMaskRequest> CameraMaskRequest = ActionExtensions.GetEmpty<CameraMaskRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

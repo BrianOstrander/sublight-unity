@@ -55,6 +55,8 @@ namespace LunraGames.SubLight
 			);
 			//App.P.AddGlobals(new ShadePresenter());
 
+			Payload.homePayload.MainCamera = new HoloRoomFocusCameraPresenter();
+
 			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
 			else App.SM.RequestState(Payload.homePayload);
 		}

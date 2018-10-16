@@ -11,6 +11,8 @@ namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
+		public HoloRoomFocusCameraPresenter MainCamera;
+
 		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public SaveModel[] Saves = new SaveModel[0];
 		public SaveModel ContinueSave;
@@ -151,13 +153,18 @@ namespace LunraGames.SubLight
 		#region Idle
 		protected override void Idle()
 		{
+			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * 0.75f, OnIdleShow));
+		}
+
+		void OnIdleShow()
+		{
 			foreach (var kv in Payload.DelayedPresenterShows)
 			{
 				App.Heartbeat.Wait(
 					() =>
-					{
-						foreach (var presenter in kv.Value) presenter.Show(instant: Mathf.Approximately(0f, Payload.MenuAnimationMultiplier));
-					},
+				{
+					foreach (var presenter in kv.Value) presenter.Show(instant: Mathf.Approximately(0f, Payload.MenuAnimationMultiplier));
+				},
 					kv.Key * Payload.MenuAnimationMultiplier
 				);
 			}
