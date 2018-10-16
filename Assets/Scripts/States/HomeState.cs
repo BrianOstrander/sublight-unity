@@ -17,6 +17,7 @@ namespace LunraGames.SubLight
 
 		public GameObject HoloSurfaceOrigin;
 
+		public float MenuAnimationMultiplier;
 		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
 
 		public GalaxyPreviewModel PreviewGalaxy;
@@ -34,6 +35,8 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
+			Payload.MenuAnimationMultiplier = DevPrefs.SkipMainMenuAnimations ? 0f : 1f;
+
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
@@ -153,9 +156,9 @@ namespace LunraGames.SubLight
 				App.Heartbeat.Wait(
 					() =>
 					{
-						foreach (var presenter in kv.Value) presenter.Show();
+						foreach (var presenter in kv.Value) presenter.Show(instant: Mathf.Approximately(0f, Payload.MenuAnimationMultiplier));
 					},
-					kv.Key
+					kv.Key * Payload.MenuAnimationMultiplier
 				);
 			}
 		}
