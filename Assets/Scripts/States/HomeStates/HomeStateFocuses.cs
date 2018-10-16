@@ -55,6 +55,11 @@ namespace LunraGames.SubLight
 					)
 				};
 
+				payload.DelayedPresenterShows[2.5f] = new IPresenterCloseShowOptions[]
+				{
+					new MainMenuGalaxyPresenter(payload.PreviewGalaxy)
+				};
+
 				done();
 			}
 

@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "graphs/VoidRim";
+			public const string Name = "VoidRim";
 			/// <summary>
 			/// The texture that's splated in screen space of the void.
 			/// </summary>
@@ -53,7 +53,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "graphs/HoloLip";
+			public const string Name = "Holo/Lip";
 			/// <summary>
 			/// The minimum radius.
 			/// </summary>
@@ -69,11 +69,35 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "graphs/Holo/Mask";
+			public const string Name = "Holo/Mask";
 			/// <summary>
 			/// The opacity
 			/// </summary>
 			public const string Opacity = "_Opacity";
+		}
+
+		public static class HoloGalaxyPreviewBasic
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "Holo/GalaxyPreviewBasic";
+			/// <summary>
+			/// The RGBA texture used for the outline of each layer.
+			/// </summary>
+			public const string Layer = "_Layer";
+			/// <summary>
+			/// The RGBA channel being used.
+			/// </summary>
+			public const string Channel = "_Channel";
+			/// <summary>
+			/// The color for this layer.
+			/// </summary>
+			public const string LayerColor = "_LayerColor";
+			/// <summary>
+			/// How much of the texture, from the UV center, has been revealed.
+			/// </summary>
+			public const string Revealed = "_Revealed";
 		}
 
 		/*

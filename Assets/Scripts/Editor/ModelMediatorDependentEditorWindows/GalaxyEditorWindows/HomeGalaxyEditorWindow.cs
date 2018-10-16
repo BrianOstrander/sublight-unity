@@ -14,6 +14,9 @@ namespace LunraGames.SubLight
 {
 	public partial class GalaxyEditorWindow
 	{
+		const int PreviewMinSize = 128;
+		const int PreviewMaxSize = 1024;
+
 		enum HomeStates
 		{
 			Unknown = 0,
@@ -26,6 +29,11 @@ namespace LunraGames.SubLight
 		EditorPrefsString homeSelectedPath;
 		EditorPrefsEnum<HomeStates> homeState;
 		EditorPrefsInt homeSelectedToolbar;
+
+		EditorPrefsInt homeGeneralPreviewSize;
+		EditorPrefsFloat homeGeneralPreviewBarScroll;
+
+		EditorPrefsInt homeTargetsSelectedPreview;
 
 		EditorPrefsFloat homeGenerationBarScroll;
 
@@ -52,6 +60,8 @@ namespace LunraGames.SubLight
 		}
 		bool selectedModified;
 
+		Rect lastTargetsPreviewRect = Rect.zero;
+
 		void OnHomeConstruct()
 		{
 			homeAlwaysAllowSaving = new EditorPrefsBool(KeyPrefix + "AlwaysAllowSaving");
@@ -59,6 +69,11 @@ namespace LunraGames.SubLight
 			homeSelectedPath = new EditorPrefsString(KeyPrefix + "HomeSelected");
 			homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
 			homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+
+			homeGeneralPreviewSize = new EditorPrefsInt(KeyPrefix + "GeneralPreviewSize");
+			homeGeneralPreviewBarScroll = new EditorPrefsFloat(KeyPrefix + "GeneralPreviewBarScroll");
+
+			homeTargetsSelectedPreview = new EditorPrefsInt(KeyPrefix + "TargetsSelectedPreview");
 
 			homeGenerationBarScroll = new EditorPrefsFloat(KeyPrefix + "HomeGenerationBarScroll");
 
@@ -189,6 +204,7 @@ namespace LunraGames.SubLight
 			string[] names =
 			{
 				"General",
+				"Targets",
 				"Generation"
 			};
 
@@ -216,6 +232,9 @@ namespace LunraGames.SubLight
 						OnHomeSelectedGeneral(model);
 						break;
 					case 1:
+						OnHomeSelectedTargets(model);
+						break;
+					case 2:
 						OnHomeSelectedGeneration(model);
 						break;
 					default:
@@ -230,22 +249,138 @@ namespace LunraGames.SubLight
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
-				model.IsPlayable.Value = EditorGUILayout.Toggle(new GUIContent("IsPlayable", "Can the player start a game in this galaxy?"), model.IsPlayable.Value);
+				model.IsPlayable.Value = EditorGUILayout.Toggle(new GUIContent("Is Playable", "Can the player start a game in this galaxy?"), model.IsPlayable.Value);
 
-				GUILayout.Label("SiblingDirectory: " + model.SiblingDirectory);
-				GUILayout.Label("InternalSiblingDirectory: " + model.InternalSiblingDirectory);
-
-				foreach (var kv in model.Textures)
-				{
-					GUILayout.Label(kv.Key + ": ( " + kv.Value.width + " , " + kv.Value.height + " )");
-				}
+				model.GalaxyId.Value = model.SetMetaKey(MetaKeyConstants.GalaxyInfo.GalaxyId, EditorGUILayout.TextField("Galaxy Id", model.GalaxyId.Value));
 
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
 
-				GUILayout.Label("Todo: rest of these values");
+				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
+
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
+
+			GUILayout.FlexibleSpace();
+
+			homeGeneralPreviewBarScroll.Value = GUILayout.BeginScrollView(new Vector2(homeGeneralPreviewBarScroll, 0f), true, false, GUILayout.MinHeight(homeGeneralPreviewSize + 42f)).x;
+			{
+				GUILayout.BeginHorizontal();
+				{
+					foreach (var kv in model.Textures)
+					{
+						GUILayout.BeginVertical();
+						{
+							GUILayout.Label(kv.Key);
+							GUILayout.Button(new GUIContent(kv.Value), GUILayout.MaxWidth(homeGeneralPreviewSize), GUILayout.MaxHeight(homeGeneralPreviewSize));
+						}
+						GUILayout.EndVertical();
+					}
+				}
+				GUILayout.EndHorizontal();
+			}
+			GUILayout.EndScrollView();
+
+			OnPreviewSizeSlider();
+		}
+
+		void OnHomeSelectedTargets(GalaxyInfoModel model)
+		{
+			EditorGUIExtensions.BeginChangeCheck();
+			{
+				model.PlayerStart.Value = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart);
+				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
+			}
+			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
+
+			GUILayout.FlexibleSpace();
+
+			string[] names =
+			{
+				"BodyMap",
+				"Details",
+				"Preview"
+			};
+
+			homeTargetsSelectedPreview.Value = GUILayout.Toolbar(Mathf.Min(homeTargetsSelectedPreview, names.Length - 1), names);
+
+			var previewTexture = Texture2D.blackTexture;
+
+			switch (homeTargetsSelectedPreview.Value)
+			{
+				case 0:
+					previewTexture = model.BodyMap;
+					break;
+				case 1:
+					previewTexture = model.Details;
+					break;
+				case 2:
+					previewTexture = model.Preview;
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
+					break;
+			}
+
+			var universeSize = new Vector2(previewTexture.width, previewTexture.height);
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.FlexibleSpace();
+
+				EditorGUIExtensions.BeginChangeCheck();
+				{
+					if (GUILayout.Button(new GUIContent(previewTexture), GUIStyle.none, GUILayout.MaxWidth(homeGeneralPreviewSize), GUILayout.MaxHeight(homeGeneralPreviewSize)))
+					{
+						var universePosition = ScreenToUniverse(
+							GUIUtility.GUIToScreenPoint(Event.current.mousePosition),
+							position,
+							lastTargetsPreviewRect,
+							universeSize,
+							homeGeneralPreviewSize
+						);
+
+						OptionDialogPopup.Show(
+							"Set Target",
+							new OptionDialogPopup.Entry[]
+							{
+								OptionDialogPopup.Entry.Create(
+									"Player Start",
+									() => model.PlayerStart.Value = universePosition
+								),
+								OptionDialogPopup.Entry.Create(
+									"Game End",
+									() => model.GameEnd.Value = universePosition
+								)
+							},
+							description: "Select the following position to assign the value of ( "+universePosition.Sector.x+" , "+universePosition.Sector.z+" ) to."
+						);
+					}
+				}
+				EditorGUIExtensions.EndChangeCheck(ref selectedModified);
+
+				if (Event.current.type == EventType.Repaint) lastTargetsPreviewRect = GUILayoutUtility.GetLastRect();
+
+				GUILayout.FlexibleSpace();
+			}
+			GUILayout.EndHorizontal();
+
+			var playerStartInWindow = UniverseToWindow(model.PlayerStart, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
+			var gameEndInWindow = UniverseToWindow(model.GameEnd, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
+
+			EditorGUILayoutExtensions.PushColor(Color.green);
+			{
+				GUI.Box(CenteredScreen(playerStartInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Player Start"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
+			}
+			EditorGUILayoutExtensions.PopColor();
+
+			EditorGUILayoutExtensions.PushColor(Color.red);
+			{
+				GUI.Box(CenteredScreen(gameEndInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Game End"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
+			}
+			EditorGUILayoutExtensions.PopColor();
+
+			OnPreviewSizeSlider();
 		}
 
 		void OnHomeSelectedGeneration(GalaxyInfoModel model)
@@ -269,6 +404,16 @@ namespace LunraGames.SubLight
 				EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 			}
 			GUILayout.EndScrollView();
+		}
+
+		void OnPreviewSizeSlider()
+		{
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.FlexibleSpace();
+				homeGeneralPreviewSize.Value = Mathf.Clamp(EditorGUILayout.IntSlider(new GUIContent("Preview Size"), homeGeneralPreviewSize.Value, PreviewMinSize, PreviewMaxSize), PreviewMinSize, PreviewMaxSize);
+			}
+			GUILayout.EndHorizontal();
 		}
 
 		void NewModel()
@@ -418,5 +563,24 @@ namespace LunraGames.SubLight
 			homeSelectedPath.Value = model.Path;
 			selected = model;
 		}
+
+		#region Utility
+		UniversePosition ScreenToUniverse(Vector2 screenPosition, Rect window, Rect preview, Vector2 universeSize, float shownSize)
+		{
+			var inUniverse = ((screenPosition - window.min) - preview.min) * (universeSize.y / shownSize);
+			return new UniversePosition(new Vector3(inUniverse.x, 0f, inUniverse.y), Vector3.zero);
+		}
+
+		Vector2 UniverseToWindow(UniversePosition universePosition, Rect preview, Vector2 universeSize, float shownSize)
+		{
+			var universeScaled = new Vector2(universePosition.Sector.x, universePosition.Sector.z) * (shownSize / universeSize.y);
+			return preview.min + universeScaled;
+		}
+
+		Rect CenteredScreen(Vector2 screenPosition, Vector2 size)
+		{
+			return new Rect(screenPosition - (size * 0.5f), size);
+		}
+		#endregion
 	}
 }

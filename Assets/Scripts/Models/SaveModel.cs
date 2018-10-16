@@ -114,6 +114,13 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public Dictionary<string, Texture2D> Textures { get { return textures; } }
 
+		public Texture2D GetTexture(string name)
+		{
+			Texture2D result = null;
+			Textures.TryGetValue(name, out result);
+			return result;
+		}
+
 		public SaveModel()
 		{
 			SupportedVersion = new ListenerProperty<bool>(value => supportedVersion = value, () => supportedVersion);
