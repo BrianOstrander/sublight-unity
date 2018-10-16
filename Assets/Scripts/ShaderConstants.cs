@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "VoidRim";
+			public const string Name = "SubLight/VoidRim";
 			/// <summary>
 			/// The texture that's splated in screen space of the void.
 			/// </summary>
@@ -53,7 +53,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "Holo/Lip";
+			public const string Name = "SubLight/Holo/Lip";
 			/// <summary>
 			/// The minimum radius.
 			/// </summary>
@@ -69,7 +69,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "Holo/Mask";
+			public const string Name = "SubLight/Holo/Mask";
 			/// <summary>
 			/// The opacity
 			/// </summary>
@@ -81,7 +81,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "Holo/GalaxyPreviewBasic";
+			public const string Name = "SubLight/Holo/GalaxyPreviewBasic";
 			/// <summary>
 			/// The RGBA texture used for the outline of each layer.
 			/// </summary>
