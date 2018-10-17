@@ -14,15 +14,22 @@ namespace LunraGames.SubLight.Presenters
 
 		public HoloPresenter()
 		{
+			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
 		}
 
 		protected override void OnUnBind()
 		{
+			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
 		}
 
 		#region Events
+		void OnHoloColorRequest(HoloColorRequest request)
+		{
+			View.HoloColor = request.Color;
+		}
+
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
 			switch (request.State)
@@ -75,6 +82,8 @@ namespace LunraGames.SubLight.Presenters
 			var wasClosed = View.TransitionState == TransitionStates.Closed;
 
 			if (wasClosed) View.Reset();
+
+			View.HoloColor = App.Callbacks.LastHoloColorRequest.Color;
 
 			View.LayerTextures = textures.ToArray();
 			View.LayerProperties = properties.ToArray();

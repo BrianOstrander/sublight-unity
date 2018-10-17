@@ -13,14 +13,18 @@ namespace LunraGames.SubLight.Views
 		Material lipMaterial;
 		[SerializeField]
 		MeshRenderer lipMesh;
+		[SerializeField]
+		Color baseLipColor;
 
-		void SetLips(float scalar, bool showing)
+		public void SetLips(float scalar, bool showing)
 		{
 			if (!showing) scalar += 1f;
 
 			lipMesh.material.SetFloat(ShaderConstants.HoloLip.LipMin, MinLipAnimation.Evaluate(scalar));
 			lipMesh.material.SetFloat(ShaderConstants.HoloLip.LipMax, MaxLipAnimation.Evaluate(scalar));
 		}
+
+		public Color HoloColor { set { lipMesh.material.SetColor(ShaderConstants.HoloLip.LipColor, baseLipColor.NewHsva(value.GetH(), value.GetS())); } }
 
 		public override void Reset()
 		{
@@ -29,6 +33,7 @@ namespace LunraGames.SubLight.Views
 			lipMesh.material = new Material(lipMaterial);
 
 			SetLips(0f, true);
+			HoloColor = Color.white;
 		}
 
 		protected override void OnShowing(float scalar)
@@ -46,8 +51,8 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
-	public interface ILipView : IView
+	public interface ILipView : IView, IHoloColorView
 	{
-
+		void SetLips(float scalar, bool showing);
 	}
 }

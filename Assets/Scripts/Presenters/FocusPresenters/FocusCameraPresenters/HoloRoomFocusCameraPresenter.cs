@@ -69,13 +69,13 @@ namespace LunraGames.SubLight.Presenters
 			}
 			else
 			{
-				lastMask = lastMask.Duplicate(CameraMaskRequest.States.Active, Mathf.Min(lastMask.Duration, lastMask.Progress + delta));
+				lastMask = lastMask.Duplicate(CameraMaskRequest.States.Active, Mathf.Min(lastMask.Duration, lastMask.Elapsed + delta));
 				App.Callbacks.CameraMaskRequest(lastMask);
 			}
 
-			if (View.Visible) View.Mask(lastMask.Scalar, lastMask.Revealing);
+			if (View.Visible) View.Mask(lastMask.Progress, lastMask.Revealing);
 
-			if (Mathf.Approximately(lastMask.Duration, lastMask.Progress))
+			if (Mathf.Approximately(lastMask.Duration, lastMask.Elapsed))
 			{
 				lastMask = lastMask.Duplicate(CameraMaskRequest.States.Complete);
 				var lastDone = lastMask.Done;

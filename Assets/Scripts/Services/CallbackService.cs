@@ -145,6 +145,10 @@ namespace LunraGames.SubLight
 		/// Called when requesting, updating, or completeing a camera mask.
 		/// </summary>
 		public Action<CameraMaskRequest> CameraMaskRequest = ActionExtensions.GetEmpty<CameraMaskRequest>();
+		/// <summary>
+		/// Requests a change to the specified color.
+		/// </summary>
+		public Action<HoloColorRequest> HoloColorRequest = ActionExtensions.GetEmpty<HoloColorRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...
@@ -157,6 +161,7 @@ namespace LunraGames.SubLight
 		public ObscureCameraRequest LastObscureCameraRequest;
 		public ShadeRequest LastShadeRequest;
 		public PlayState LastPlayState;
+		public HoloColorRequest LastHoloColorRequest;
 		#endregion
 
 		#region Game Caching
@@ -185,6 +190,7 @@ namespace LunraGames.SubLight
 			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
 			UniversePositionRequest += request => LastUniversePositionRequest = request;
 			PlayState += state => LastPlayState = state;
+			HoloColorRequest += request => LastHoloColorRequest = request;
 
 			Escape += OnEscape;
 		}

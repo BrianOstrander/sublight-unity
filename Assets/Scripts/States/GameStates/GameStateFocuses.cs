@@ -32,12 +32,8 @@ namespace LunraGames.SubLight
 
 				new HoloPresenter();
 
-				foreach (var layer in new SetFocusLayers[] { SetFocusLayers.System, SetFocusLayers.Communications})
-				{
-					new GenericPresenter<ILipView>(LayerConstants.Get(layer));
-				}
-
-				// Todo: all the other presenters...
+				// All other presenters for this state...
+				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Communications);
 
 				done();
 			}

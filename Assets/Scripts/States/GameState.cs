@@ -15,6 +15,8 @@ namespace LunraGames.SubLight
 		public GameModel Game;
 
 		public KeyValueListener KeyValueListener;
+
+		//public Dictionary<SetFocusLayers, Ipresenter>
 	}
 
 	public partial class GameState : State<GamePayload>
@@ -60,19 +62,21 @@ namespace LunraGames.SubLight
 
 		void OnInializeFocusDefaults(Action done)
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetSystemFocus(), done));
+			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetNoFocus(), done));
+			//App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetSystemFocus(), done));
 		}
 		#endregion
 
 		#region Idle
 		protected override void Idle()
 		{
-			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShow));
+			App.Callbacks.HoloColorRequest(new HoloColorRequest(Color.white));
+			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 		}
 
-		void OnIdleShow()
+		void OnIdleShowFocus()
 		{
-
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetSystemFocus(), duration: 0.5f));
 		}
 		#endregion
 

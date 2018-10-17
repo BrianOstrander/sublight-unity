@@ -137,6 +137,7 @@ namespace LunraGames.SubLight
 		#region Idle
 		protected override void Idle()
 		{
+			App.Callbacks.HoloColorRequest(new HoloColorRequest(new Color(1f, 0.25f, 0.11f)));
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * 0.75f, OnIdleShow));
 		}
 

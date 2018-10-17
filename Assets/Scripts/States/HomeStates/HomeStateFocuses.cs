@@ -31,7 +31,7 @@ namespace LunraGames.SubLight
 
 				payload.DelayedPresenterShows[1f] = new IPresenterCloseShowOptions[]
 				{
-					new GenericPresenter<ILipView>(layer),
+					new FocusLipPresenter(SetFocusLayers.Home),
 					new GenericPresenter<IMainMenuLogoView>()
 				};
 

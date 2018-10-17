@@ -26,8 +26,8 @@ namespace LunraGames.SubLight
 
 		public readonly States State;
 		public readonly float Duration;
+		public readonly float Elapsed;
 		public readonly float Progress;
-		public readonly float Scalar;
 		public readonly bool Revealing;
 		public readonly Action Done;
 
@@ -36,29 +36,29 @@ namespace LunraGames.SubLight
 		CameraMaskRequest(
 			States state,
 			float duration,
-			float progress,
+			float elapsed,
 			bool revealing,
 			Action done
 		)
 		{
 			State = state;
 			Duration = duration;
-			Progress = progress;
+			Elapsed = elapsed;
 			Revealing = revealing;
 			Done = done ?? ActionExtensions.Empty;
 
-			Scalar = Mathf.Approximately(0f, Duration) ? 1f : progress / duration;
+			Progress = Mathf.Approximately(0f, Duration) ? 1f : elapsed / duration;
 		}
 
 		public CameraMaskRequest Duplicate(
 			States state = States.Unknown,
-			float? progress = null
+			float? elapsed = null
 		)
 		{
 			return new CameraMaskRequest(
 				state == States.Unknown ? State : state,
 				Duration,
-				progress.HasValue ? progress.Value : Progress,
+				elapsed.HasValue ? elapsed.Value : Elapsed,
 				Revealing,
 				Done
 			);

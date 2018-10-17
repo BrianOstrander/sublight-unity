@@ -55,6 +55,10 @@ namespace LunraGames.SubLight
 			/// </summary>
 			public const string Name = "SubLight/Holo/Lip";
 			/// <summary>
+			/// The color of the lip.
+			/// </summary>
+			public const string LipColor = "_LipColor";
+			/// <summary>
 			/// The minimum radius.
 			/// </summary>
 			public const string LipMin = "_LipMin";
@@ -110,6 +114,43 @@ namespace LunraGames.SubLight
 			/// The color and opacity of the mask.
 			/// </summary>
 			public const string MaskColor = "_MaskColor";
+		}
+
+		public static class RoomIrisGlow
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Room/IrisGlow";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GlowColor = "_GlowColor";
+		}
+
+		public static class RoomIrisGrid
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Room/IrisGrid";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GridColor = "_GridColor";
+			/// <summary>
+			/// How zoomed in the grid is, from 0 to 1.
+			/// </summary>
+			public const string Zoom = "_Zoom";
+			/// <summary>
+			/// How many tiles.
+			/// </summary>
+			public const string Tiling = "_Tiling";
+			/// <summary>
+			/// The offset, a vector2 (or 4?) between (0,0) and (1,1)... check
+			/// that though... not positive, might allow negatives.
+			/// </summary>
+			public const string Offset = "_Offset";
 		}
 
 		/*
