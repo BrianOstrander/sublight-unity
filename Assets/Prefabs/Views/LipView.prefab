@@ -200,3 +200,4 @@ MonoBehaviour:
     m_RotationOrder: 4
   lipMaterial: {fileID: 2100000, guid: de65b441ebd114ab39aebf062ff6435f, type: 2}
   lipMesh: {fileID: 23644710510876718}
+  baseLipColor: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 1}

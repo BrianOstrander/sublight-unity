@@ -73,6 +73,7 @@ namespace LunraGames.SubLight
 				GUILayout.BeginVertical();
 				{
 					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
+					DevPrefs.SkipMainMenuAnimations.Value = GUILayout.Toggle(DevPrefs.SkipMainMenuAnimations, "Skip Main Menu Animations");
 					var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
 					if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
 					DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");

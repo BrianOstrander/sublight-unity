@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -8,6 +10,13 @@ namespace LunraGames.SubLight.Views
 {
 	public class HoloRoomFocusCameraView : FocusCameraView, IHoloRoomFocusCameraView
 	{
+		[SerializeField]
+		MeshRenderer maskMesh;
+		[SerializeField]
+		Gradient maskReveal;
+		[SerializeField]
+		Gradient maskHide;
+
 		[SerializeField]
 		Transform pivot;
 		[SerializeField]
@@ -41,6 +50,15 @@ namespace LunraGames.SubLight.Views
 		Vector3? orbitForward;
 		Vector3 gantryPosition;
 		Vector3 gantryForward;
+
+		public void Mask(float scalar, bool revealing)
+		{
+			//var color = (revealing ? maskReveal : maskHide).Evaluate(scalar);
+			maskMesh.material.SetColor(ShaderConstants.CameraMask.MaskColor, (revealing ? maskReveal : maskHide).Evaluate(scalar));
+
+			if (revealing) maskMesh.gameObject.SetActive(!Mathf.Approximately(1f, scalar));
+			else maskMesh.gameObject.SetActive(true);
+		}
 
 		public float Orbit
 		{
@@ -115,6 +133,7 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
+			Mask(1f, false);
 			Orbit = 0f;
 			Zoom = 1f;
 		}
@@ -215,6 +234,8 @@ namespace LunraGames.SubLight.Views
 
 	public interface IHoloRoomFocusCameraView : IFocusCameraView
 	{
+		void Mask(float scalar, bool revealing);
+
 		float Orbit { get; set; }
 		/// <summary>
 		/// How close the camera is zoomed in. Lower values mean the camera is

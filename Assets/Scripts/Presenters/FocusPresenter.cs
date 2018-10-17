@@ -43,12 +43,12 @@ namespace LunraGames.SubLight.Presenters
 
 			if (transition.Start.Layer != transition.End.Layer)
 			{
-				Debug.LogError("Mismatch between details, cannot begin with " + transition.Start.Layer + " and end with " + transition.End.Layer);
+				Debug.LogError("Mismatch between details, cannot begin with " + transition.Start.Layer + " and end with " + transition.End.Layer, View.gameObject);
 				return;
 			}
 			if (transition.Start.Layer != FocusLayer)
 			{
-				Debug.LogError("Mismatch between start and end details of layer " + transition.Start.Layer + ", and this presenter's layer, " + FocusLayer);
+				Debug.LogError("Mismatch between start and end details of layer " + transition.Start.Layer + ", and this presenter's layer, " + FocusLayer, View.gameObject);
 				return;
 			}
 

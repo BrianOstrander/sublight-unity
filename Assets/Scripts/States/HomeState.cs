@@ -11,12 +11,13 @@ namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
+		public HoloRoomFocusCameraPresenter MainCamera;
+
 		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public SaveModel[] Saves = new SaveModel[0];
 		public SaveModel ContinueSave;
 
-		public GameObject HoloSurfaceOrigin;
-
+		public float MenuAnimationMultiplier;
 		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
 
 		public GalaxyPreviewModel PreviewGalaxy;
@@ -29,11 +30,12 @@ namespace LunraGames.SubLight
 		public override StateMachine.States HandledState { get { return StateMachine.States.Home; } }
 
 		static string[] Scenes { get { return new string[] { SceneConstants.Home, SceneConstants.HoloRoom }; } }
-		static string[] Tags { get { return new string[] { TagConstants.HoloSurfaceOrigin }; } }
 
 		#region Begin
 		protected override void Begin()
 		{
+			Payload.MenuAnimationMultiplier = DevPrefs.SkipMainMenuAnimations ? 0f : 1f;
+
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
@@ -45,20 +47,7 @@ namespace LunraGames.SubLight
 
 		void LoadScenes(Action done)
 		{
-			App.Scenes.Request(SceneRequest.Load(result => OnLoadScenes(result, done), Scenes, Tags));
-		}
-
-		void OnLoadScenes(SceneRequest result, Action done)
-		{
-			foreach (var kv in result.FoundTags)
-			{
-				switch (kv.Key)
-				{
-					case TagConstants.HoloSurfaceOrigin: Payload.HoloSurfaceOrigin = kv.Value; break;
-				}
-			}
-
-			done();
+			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
 		void InitializeInput(Action done)
@@ -148,14 +137,20 @@ namespace LunraGames.SubLight
 		#region Idle
 		protected override void Idle()
 		{
+			App.Callbacks.HoloColorRequest(new HoloColorRequest(new Color(1f, 0.25f, 0.11f)));
+			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * 0.75f, OnIdleShow));
+		}
+
+		void OnIdleShow()
+		{
 			foreach (var kv in Payload.DelayedPresenterShows)
 			{
 				App.Heartbeat.Wait(
 					() =>
-					{
-						foreach (var presenter in kv.Value) presenter.Show();
-					},
-					kv.Key
+				{
+					foreach (var presenter in kv.Value) presenter.Show(instant: Mathf.Approximately(0f, Payload.MenuAnimationMultiplier));
+				},
+					kv.Key * Payload.MenuAnimationMultiplier
 				);
 			}
 		}
@@ -274,9 +269,26 @@ namespace LunraGames.SubLight
 
 		void OnStartGame(GameModel model)
 		{
+			OnReadyTransition(() => OnFinallyStartGame(model));
+		}
+
+		void OnFinallyStartGame(GameModel model)
+		{
+			Debug.Log("Starting game...");
 			var payload = new GamePayload();
+			payload.MainCamera = Payload.MainCamera;
 			payload.Game = model;
 			App.SM.RequestState(payload);
+		}
+
+		void OnReadyTransition(Action done)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), () => OnReadyTransitionNoFocus(done)));
+		}
+
+		void OnReadyTransitionNoFocus(Action done)
+		{
+			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * 0.2f, done));
 		}
 		#endregion
 	}

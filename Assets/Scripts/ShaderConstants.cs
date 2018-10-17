@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "VoidRim";
+			public const string Name = "SubLight/VoidRim";
 			/// <summary>
 			/// The texture that's splated in screen space of the void.
 			/// </summary>
@@ -53,7 +53,11 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "Holo/Lip";
+			public const string Name = "SubLight/Holo/Lip";
+			/// <summary>
+			/// The color of the lip.
+			/// </summary>
+			public const string LipColor = "_LipColor";
 			/// <summary>
 			/// The minimum radius.
 			/// </summary>
@@ -69,7 +73,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "Holo/Mask";
+			public const string Name = "SubLight/Holo/Mask";
 			/// <summary>
 			/// The opacity
 			/// </summary>
@@ -81,7 +85,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "Holo/GalaxyPreviewBasic";
+			public const string Name = "SubLight/Holo/GalaxyPreviewBasic";
 			/// <summary>
 			/// The RGBA texture used for the outline of each layer.
 			/// </summary>
@@ -98,6 +102,55 @@ namespace LunraGames.SubLight
 			/// How much of the texture, from the UV center, has been revealed.
 			/// </summary>
 			public const string Revealed = "_Revealed";
+		}
+
+		public static class CameraMask
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/CameraMask";
+			/// <summary>
+			/// The color and opacity of the mask.
+			/// </summary>
+			public const string MaskColor = "_MaskColor";
+		}
+
+		public static class RoomIrisGlow
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Room/IrisGlow";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GlowColor = "_GlowColor";
+		}
+
+		public static class RoomIrisGrid
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Room/IrisGrid";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GridColor = "_GridColor";
+			/// <summary>
+			/// How zoomed in the grid is, from 0 to 1.
+			/// </summary>
+			public const string Zoom = "_Zoom";
+			/// <summary>
+			/// How many tiles.
+			/// </summary>
+			public const string Tiling = "_Tiling";
+			/// <summary>
+			/// The offset, a vector2 (or 4?) between (0,0) and (1,1)... check
+			/// that though... not positive, might allow negatives.
+			/// </summary>
+			public const string Offset = "_Offset";
 		}
 
 		/*

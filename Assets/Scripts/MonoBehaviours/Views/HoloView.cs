@@ -5,11 +5,23 @@ namespace LunraGames.SubLight.Views
 	public class HoloView : View, IHoloView
 	{
 		[SerializeField]
-		Material holoMaterial;
+		Material containingMaterial;
 		[SerializeField]
-		MeshRenderer meshRenderer;
+		Material glowMaterial;
+		[SerializeField]
+		Material irisMaterial;
 
-		Material currentMaterial;
+		[SerializeField]
+		MeshRenderer containingMesh;
+		[SerializeField]
+		MeshRenderer glowMesh;
+		[SerializeField]
+		MeshRenderer irisMesh;
+
+		[SerializeField]
+		Color baseGlowColor;
+		[SerializeField]
+		Color baseIrisColor;
 
 		public RenderLayerTextureBlock[] LayerTextures
 		{
@@ -17,7 +29,7 @@ namespace LunraGames.SubLight.Views
 			{
 				foreach (var block in value)
 				{
-					currentMaterial.SetTexture(ShaderConstants.HoloLayerShared.GetLayer(block.Order), block.Texture);
+					containingMesh.material.SetTexture(ShaderConstants.HoloLayerShared.GetLayer(block.Order), block.Texture);
 				}
 			}
 		}
@@ -28,8 +40,17 @@ namespace LunraGames.SubLight.Views
 			{
 				foreach (var block in value)
 				{
-					currentMaterial.SetFloat(block.WeightKey, block.Weight);
+					containingMesh.material.SetFloat(block.WeightKey, block.Weight);
 				}
+			}
+		}
+
+		public Color HoloColor
+		{
+			set
+			{
+				glowMesh.material.SetColor(ShaderConstants.RoomIrisGlow.GlowColor, baseGlowColor.NewHsva(value.GetH(), value.GetS()));
+				irisMesh.material.SetColor(ShaderConstants.RoomIrisGrid.GridColor, baseIrisColor.NewHsva(value.GetH(), value.GetS()));
 			}
 		}
 
@@ -37,12 +58,15 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
-			currentMaterial = new Material(holoMaterial);
-			meshRenderer.material = currentMaterial;
+			containingMesh.material = new Material(containingMaterial);
+			glowMesh.material = new Material(glowMaterial);
+			irisMesh.material = new Material(irisMaterial);
+
+			HoloColor = Color.white;
 		}
 	}
 
-	public interface IHoloView : IView
+	public interface IHoloView : IView, IHoloColorView
 	{
 		RenderLayerTextureBlock[] LayerTextures { set; }
 		RenderLayerPropertyBlock[] LayerProperties { set; }

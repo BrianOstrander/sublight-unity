@@ -94,6 +94,7 @@ namespace LunraGames.SubLight
 			if (lastActive.IsDefault)
 			{
 				defaults = lastActive.Targets;
+				currents = null;
 				supported = defaults.Select(d => d.Layer).Distinct().ToArray();
 				OnCheckRegistrations();
 			}

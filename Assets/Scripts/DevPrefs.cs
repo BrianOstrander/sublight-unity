@@ -7,6 +7,7 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsBool AutoApplySkybox = new DevPrefsBool(ProjectConstants.PrefsPrefix + "AutoApplySkybox", false);
 		public static readonly DevPrefsBool ApplyXButtonStyleInEditMode = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ApplyXButtonStyleInEditMode", true);
 		public static readonly DevPrefsBool SkipExplanation = new DevPrefsBool(ProjectConstants.PrefsPrefix + "SkipExplanation", false);
+		public static readonly DevPrefsBool SkipMainMenuAnimations = new DevPrefsBool(ProjectConstants.PrefsPrefix + "SkipMainMenuAnimations", false);
 		public static readonly DevPrefsBool ShowHoloHelper = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ShowHoloHelper", false);
 		public static readonly DevPrefsBool ShowUxHelper = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ShowUxHelper", false);
 

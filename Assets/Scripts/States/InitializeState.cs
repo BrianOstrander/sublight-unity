@@ -42,6 +42,8 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.PlayState(PlayState.Playing);
 
+			var mainCamera = (Payload.homePayload.MainCamera = new HoloRoomFocusCameraPresenter());
+
 			App.P.AddGlobals(
 				new DialogPresenter(
 					LanguageStringModel.Override("Alert"),
@@ -51,9 +53,10 @@ namespace LunraGames.SubLight
 					LanguageStringModel.Override("Yes"),
 					LanguageStringModel.Override("No"),
 					LanguageStringModel.Override("Cancel")
-				)
+				),
+				mainCamera,
+				new PriorityFocusCameraPresenter(mainCamera.GantryAnchor, mainCamera.FieldOfView)
 			);
-			//App.P.AddGlobals(new ShadePresenter());
 
 			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
 			else App.SM.RequestState(Payload.homePayload);
@@ -259,6 +262,7 @@ namespace LunraGames.SubLight
 		void OnAutoNewGame(RequestStatus result, GameModel model)
 		{
 			var payload = new GamePayload();
+			payload.MainCamera = Payload.homePayload.MainCamera;
 			payload.Game = model;
 			App.SM.RequestState(payload);
 		}
