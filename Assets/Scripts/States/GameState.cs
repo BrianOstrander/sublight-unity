@@ -63,7 +63,6 @@ namespace LunraGames.SubLight
 		void OnInializeFocusDefaults(Action done)
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetNoFocus(), done));
-			//App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetSystemFocus(), done));
 		}
 		#endregion
 
@@ -76,7 +75,14 @@ namespace LunraGames.SubLight
 
 		void OnIdleShowFocus()
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetSystemFocus(), duration: 0.5f));
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetSystemFocus(), OnIdleShowFocusDone, 0.5f));
+		}
+
+		void OnIdleShowFocusDone()
+		{
+			// Todo move this to where everything else is initialized.
+			new ToolbarPresenter().Show();
+
 		}
 		#endregion
 

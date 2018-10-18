@@ -81,7 +81,8 @@ namespace LunraGames.SubLight
 			{
 				var results = GetBaseEnabledFocuses();
 
-				results.Add(GetFocus<SystemFocusDetails>(0, true, 1f, true));
+				results.Add(GetFocus<ToolbarFocusDetails>(0, true, 1f, true));
+				results.Add(GetFocus<SystemFocusDetails>(1, true, 1f, true));
 
 				return results.ToArray();
 			}
