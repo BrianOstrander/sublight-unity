@@ -145,6 +145,7 @@ namespace LunraGames.SubLight.Views
 
 					button.Button.OnEnter.AddListener(() => OnButtonEnter(buttonEntry));
 					button.Button.OnExit.AddListener(() => OnButtonExit(buttonEntry));
+					button.Button.OnClick.AddListener(() => OnButtonClick(buttonEntry));
 
 					UpdateButton(buttonEntry, 0f);
 
@@ -202,6 +203,11 @@ namespace LunraGames.SubLight.Views
 		void OnButtonExit(ButtonEntry entry)
 		{
 			entry.IsHighlighted = false;
+		}
+
+		void OnButtonClick(ButtonEntry entry)
+		{
+			if (entry.Block.Click != null) entry.Block.Click();
 		}
 		#endregion
 

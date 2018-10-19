@@ -9,7 +9,7 @@ namespace LunraGames.SubLight
 		public static SetFocusBlock Default<T>()
 			where T : SetFocusDetails<T>, new()
 		{
-			return new SetFocusBlock(new T().SetDefault());
+			return new SetFocusBlock(new T());
 		}
 
 		public readonly SetFocusDetailsBase Details;

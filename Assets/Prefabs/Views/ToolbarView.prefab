@@ -593,11 +593,11 @@ MonoBehaviour:
   iconEntries:
   - Layer: 50
     Icon: {fileID: 21300000, guid: dd568591660f14c77a407a55e6275f31, type: 3}
-  - Layer: 10
+  - Layer: 70
     Icon: {fileID: 21300000, guid: e0737208a3e6a4d4faca0d9f0360d010, type: 3}
   - Layer: 60
     Icon: {fileID: 21300000, guid: 48da182071b2a4af8bf079608ebff164, type: 3}
-  - Layer: 40
+  - Layer: 80
     Icon: {fileID: 21300000, guid: 5bb852c01f8ce4b1f8751c2a74fe09fd, type: 3}
   previewCount: 4
   previewButtonDiameter: 0.24

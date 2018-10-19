@@ -128,10 +128,17 @@ namespace LunraGames.SubLight
 		/// <summary>
 		/// Called to change focuses, or set new default focuses.
 		/// </summary>
+		/// <remarks>
+		/// Use TransitionFocusRequest to actually find out when a tranisition
+		/// is in progress or done.
+		/// </remarks>
 		public Action<SetFocusRequest> SetFocusRequest = ActionExtensions.GetEmpty<SetFocusRequest>();
 		/// <summary>
 		/// Called when transitioning between focuses.
 		/// </summary>
+		/// <remarks>
+		/// Can be used to determine if a transition is in progress or done.
+		/// </remarks>
 		public Action<TransitionFocusRequest> TransitionFocusRequest = ActionExtensions.GetEmpty<TransitionFocusRequest>();
 		/// <summary>
 		/// Called if there are focuses to gather for a set focus request.

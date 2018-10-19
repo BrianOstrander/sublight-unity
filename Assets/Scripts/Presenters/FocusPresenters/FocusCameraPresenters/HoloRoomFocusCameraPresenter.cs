@@ -6,7 +6,6 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class HoloRoomFocusCameraPresenter : FocusCameraPresenter<IHoloRoomFocusCameraView, RoomFocusDetails>
 	{
-		protected override SetFocusLayers FocusLayer { get { return SetFocusLayers.Room; } }
 		protected override bool IsGatherable { get { return false; } }
 
 		public Transform GantryAnchor { get { return View.GantryAnchor; } }

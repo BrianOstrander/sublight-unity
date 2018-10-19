@@ -15,6 +15,7 @@ namespace LunraGames.SubLight
 		public const string HoloSystem = "HoloSystem";
 		public const string HoloCommunications = "HoloCommunications";
 		public const string HoloShip = "HoloShip";
+		public const string HoloEncyclopedia = "HoloEncyclopedia";
 
 		public static string Get(SetFocusLayers layer)
 		{
@@ -26,6 +27,8 @@ namespace LunraGames.SubLight
 				case SetFocusLayers.Toolbar: return HoloToolbar;
 				case SetFocusLayers.System: return HoloSystem;
 				case SetFocusLayers.Communications: return HoloCommunications;
+				case SetFocusLayers.Ship: return HoloShip;
+				case SetFocusLayers.Encyclopedia: return HoloEncyclopedia;
 				default:
 					Debug.LogError("Unrecognized layer: " + layer);
 					return null;

@@ -10,14 +10,14 @@ namespace LunraGames.SubLight
 	{
 		public LanguageStringModel Text;
 		public Sprite Icon;
-		public Action SelectClick;
+		public Action Click;
 		public bool Interactable;
 
-		public ToolbarButtonBlock(LanguageStringModel text, Sprite icon, Action selectClick, bool interactable = true)
+		public ToolbarButtonBlock(LanguageStringModel text, Sprite icon, Action click, bool interactable = true)
 		{
 			Text = text;
 			Icon = icon;
-			SelectClick = selectClick;
+			Click = click;
 			Interactable = interactable;
 		}
 	}

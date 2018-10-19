@@ -15,7 +15,7 @@
 		)
 			where D : SetFocusDetails<D>, new()
 		{
-			var baseDetails = details ?? new D().SetDefault();
+			var baseDetails = details ?? new D();
 			if (interactable.HasValue) baseDetails.Interactable = interactable.Value;
 			return new SetFocusBlock(
 				baseDetails,

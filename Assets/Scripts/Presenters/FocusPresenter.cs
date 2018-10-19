@@ -6,7 +6,12 @@ namespace LunraGames.SubLight.Presenters
 		where V : class, IView
 		where D : SetFocusDetails<D>, new()
 	{
-		protected abstract SetFocusLayers FocusLayer { get; }
+		SetFocusLayers focusLayer;
+		protected SetFocusLayers FocusLayer
+		{
+			get { return focusLayer == SetFocusLayers.Unknown ? (focusLayer = SetFocusDetailsBase.GetLayer<D>()) : focusLayer; }
+		}
+
 		protected Transform ViewParent;
 
 		public FocusPresenter() : this(null) {}

@@ -8,7 +8,8 @@
 		Home = 30,
 		Toolbar = 40,
 		System = 50,
-		Communications = 60
-		//Ship = 50,
+		Communications = 60,
+		Ship = 70,
+		Encyclopedia = 80
 	}
 }

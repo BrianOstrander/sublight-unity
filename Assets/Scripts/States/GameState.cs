@@ -11,8 +11,10 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		public HoloRoomFocusCameraPresenter MainCamera;
 		public GameModel Game;
+
+		public HoloRoomFocusCameraPresenter MainCamera;
+		public ToolbarPresenter Toolbar;
 
 		public KeyValueListener KeyValueListener;
 
@@ -80,9 +82,7 @@ namespace LunraGames.SubLight
 
 		void OnIdleShowFocusDone()
 		{
-			// Todo move this to where everything else is initialized.
-			new ToolbarPresenter().Show();
-
+			Payload.Toolbar.Show();
 		}
 		#endregion
 
