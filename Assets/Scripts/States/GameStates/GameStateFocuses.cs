@@ -36,7 +36,7 @@ namespace LunraGames.SubLight
 				// TODO: Make a lip for ship focus.
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
 
-				payload.Toolbar = new ToolbarPresenter();
+				payload.Toolbar = new ToolbarPresenter(payload.Game);
 
 				done();
 			}
@@ -83,15 +83,15 @@ namespace LunraGames.SubLight
 				return GetBaseEnabledFocuses().ToArray();
 			}
 
-			public static SetFocusBlock[] GetSystemFocus()
-			{
-				var results = GetBaseEnabledFocuses();
+			//public static SetFocusBlock[] GetSystemFocus()
+			//{
+			//	var results = GetBaseEnabledFocuses();
 
-				results.Add(GetFocus<ToolbarFocusDetails>(0, true, 1f, true));
-				results.Add(GetFocus<SystemFocusDetails>(1, true, 1f, true));
+			//	results.Add(GetFocus<ToolbarFocusDetails>(0, true, 1f, true));
+			//	results.Add(GetFocus<SystemFocusDetails>(1, true, 1f, true));
 
-				return results.ToArray();
-			}
+			//	return results.ToArray();
+			//}
 
 			public static SetFocusBlock[] GetToolbarSelectionFocus(ToolbarSelections selection)
 			{

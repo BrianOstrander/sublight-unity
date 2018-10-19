@@ -18,5 +18,8 @@ namespace LunraGames.SubLight.Views
 		public CanvasGroup UnHighlightedUnSelectedArea;
 
 		public Transform ScalableArea;
+
+		public XButtonLeaf HaloLeaf;
+		public XButtonLeaf BackgroundLeaf;
 	}
 }

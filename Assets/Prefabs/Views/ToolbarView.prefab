@@ -590,6 +590,13 @@ MonoBehaviour:
     m_RotationOrder: 4
   buttonHighlightMinimumScale: 0.3
   buttonHighlightDuration: 0.12
+  selectedHaloStyle: {fileID: 11400000, guid: 8385466d35e4d4da2a6bdbe013c0da37, type: 2}
+  selectedBackgroundStyle: {fileID: 11400000, guid: b31808c01ac57478695af0810715f21b,
+    type: 2}
+  unSelectedHaloStyle: {fileID: 11400000, guid: 49ad00da533644c6186a47c3d63eab69,
+    type: 2}
+  unSelectedBackgroundStyle: {fileID: 11400000, guid: a59664dfd6a8046b4995e960dea33c2a,
+    type: 2}
   iconEntries:
   - Layer: 50
     Icon: {fileID: 21300000, guid: dd568591660f14c77a407a55e6275f31, type: 3}
@@ -746,6 +753,8 @@ MonoBehaviour:
   UnHighlightedSelectedArea: {fileID: 225250465377151462}
   UnHighlightedUnSelectedArea: {fileID: 225635182432560550}
   ScalableArea: {fileID: 224726035616382860}
+  HaloLeaf: {fileID: 114040756631425956}
+  BackgroundLeaf: {fileID: 114443727019461138}
 --- !u!114 &114368453860961102
 MonoBehaviour:
   m_ObjectHideFlags: 1

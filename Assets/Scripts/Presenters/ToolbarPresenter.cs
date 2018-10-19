@@ -7,18 +7,23 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class ToolbarPresenter : Presenter<IToolbarView>, IPresenterCloseShowOptions
 	{
+		GameModel model;
 		TransitionFocusRequest lastTransition;
 
 		bool CanTransition { get { return lastTransition.State == TransitionFocusRequest.States.Complete; } }
 
-		public ToolbarPresenter()
+		public ToolbarPresenter(GameModel model)
 		{
+			this.model = model;
+
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
+			model.ToolbarSelection.Changed += OnToolbarSelection;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
+			model.ToolbarSelection.Changed -= OnToolbarSelection;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -27,13 +32,14 @@ namespace LunraGames.SubLight.Presenters
 
 			View.Reset();
 
-			View.Selection = 0;
+			OnToolbarSelection(model.ToolbarSelection.Value);
+
 			View.Buttons = new ToolbarButtonBlock[] 
 			{
-				new ToolbarButtonBlock(LanguageStringModel.Override("Navigation"), View.GetIcon(SetFocusLayers.System), () => OnTransitionClick(SetFocusLayers.System)),
-				new ToolbarButtonBlock(LanguageStringModel.Override("Logistics"), View.GetIcon(SetFocusLayers.Ship), () => OnTransitionClick(SetFocusLayers.Ship)),
-				new ToolbarButtonBlock(LanguageStringModel.Override("Communications"), View.GetIcon(SetFocusLayers.Communications), () => OnTransitionClick(SetFocusLayers.Communications)),
-				new ToolbarButtonBlock(LanguageStringModel.Override("Encyclopedia"), View.GetIcon(SetFocusLayers.Encyclopedia), () => OnTransitionClick(SetFocusLayers.Encyclopedia))
+				new ToolbarButtonBlock(LanguageStringModel.Override("Navigation"), View.GetIcon(SetFocusLayers.System), () => OnTransitionClick(ToolbarSelections.System)),
+				new ToolbarButtonBlock(LanguageStringModel.Override("Logistics"), View.GetIcon(SetFocusLayers.Ship), () => OnTransitionClick(ToolbarSelections.Ship)),
+				new ToolbarButtonBlock(LanguageStringModel.Override("Communications"), View.GetIcon(SetFocusLayers.Communications), () => OnTransitionClick(ToolbarSelections.Communications)),
+				new ToolbarButtonBlock(LanguageStringModel.Override("Encyclopedia"), View.GetIcon(SetFocusLayers.Encyclopedia), () => OnTransitionClick(ToolbarSelections.Encyclopedia))
 			};
 
 			ShowView(parent, instant);
@@ -50,19 +56,27 @@ namespace LunraGames.SubLight.Presenters
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
 			lastTransition = request;
-
-			View.Interactable = CanTransition;
 		}
 
-		void OnTransitionClick(SetFocusLayers layer)
+		void OnToolbarSelection(ToolbarSelections selection)
 		{
-			if (!CanTransition) return;
-
-			SetFocusTransition transition;
-			if (lastTransition.GetTransition(layer, out transition))
+			switch (selection)
 			{
-				Debug.Log("Layer " + layer + " is " + transition.End.Enabled);
+				case ToolbarSelections.System: View.Selection = 0; break;
+				case ToolbarSelections.Ship: View.Selection = 1; break;
+				case ToolbarSelections.Communications: View.Selection = 2; break;
+				case ToolbarSelections.Encyclopedia: View.Selection = 3; break;
+				default:
+					Debug.LogError("Unrecognized selection: " + model.ToolbarSelection.Value);
+					break;
 			}
+		}
+
+		void OnTransitionClick(ToolbarSelections selection)
+		{
+			if (!CanTransition || selection == model.ToolbarSelection.Value) return;
+
+			model.ToolbarSelection.Value = selection;
 		}
 		#endregion
 	}

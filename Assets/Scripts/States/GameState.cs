@@ -53,6 +53,7 @@ namespace LunraGames.SubLight
 		void InitializeCallbacks(Action done)
 		{
 			App.Callbacks.DialogRequest += OnDialogRequest;
+			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
 
 			done();
 		}
@@ -77,7 +78,7 @@ namespace LunraGames.SubLight
 
 		void OnIdleShowFocus()
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetSystemFocus(), OnIdleShowFocusDone, 0.5f));
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(Payload.Game.ToolbarSelection), OnIdleShowFocusDone, 0.5f));
 		}
 
 		void OnIdleShowFocusDone()
@@ -89,7 +90,8 @@ namespace LunraGames.SubLight
 		#region End
 		protected override void End()
 		{
-			
+			App.Callbacks.DialogRequest -= OnDialogRequest;
+			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
 		}
 		#endregion
 
@@ -107,6 +109,11 @@ namespace LunraGames.SubLight
 					//App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
 					break;
 			}
+		}
+
+		void OnToolbarSelection(ToolbarSelections selection)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(selection)));
 		}
 		#endregion
 	}

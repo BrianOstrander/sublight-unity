@@ -26,7 +26,7 @@ namespace LunraGames.SubLight.Views
 			public ToolbarButtonLeaf Leaf;
 			public ToolbarButtonBlock Block;
 			public bool IsHighlighted;
-			// 0 is not highlighted, 1 is highlighted;
+			// 0 is not highlighted, max duration is highlighted;
 			public float HighlightElapsed;
 		}
 
@@ -55,6 +55,15 @@ namespace LunraGames.SubLight.Views
 		float buttonHighlightMinimumScale;
 		[SerializeField]
 		float buttonHighlightDuration;
+
+		[SerializeField]
+		XButtonStyleObject selectedHaloStyle;
+		[SerializeField]
+		XButtonStyleObject selectedBackgroundStyle;
+		[SerializeField]
+		XButtonStyleObject unSelectedHaloStyle;
+		[SerializeField]
+		XButtonStyleObject unSelectedBackgroundStyle;
 
 		[SerializeField]
 		IconEntry[] iconEntries;
@@ -103,7 +112,26 @@ namespace LunraGames.SubLight.Views
 			{
 				selection = value;
 				if (currentButtons == null) return;
-				foreach (var button in currentButtons) button.IsSelected = button.Index == value;
+				foreach (var button in currentButtons)
+				{
+					var wasSelected = button.IsSelected;
+					var isSelected = button.Index == value;
+					button.IsSelected = isSelected;
+
+					if (wasSelected && !isSelected)
+					{
+						// No longer selected.
+						UpdateButton(button, 0f);
+						button.Leaf.HaloLeaf.GlobalStyle = unSelectedHaloStyle;
+						button.Leaf.BackgroundLeaf.GlobalStyle = unSelectedBackgroundStyle;
+					}
+					else if (isSelected && !wasSelected)
+					{
+						// Now selected.
+						button.Leaf.HaloLeaf.GlobalStyle = selectedHaloStyle;
+						button.Leaf.BackgroundLeaf.GlobalStyle = selectedBackgroundStyle;
+					}
+				}
 			}
 		}
 
@@ -134,6 +162,9 @@ namespace LunraGames.SubLight.Views
 						Block = block,
 						HighlightElapsed = 0f
 					};
+
+					button.HaloLeaf.GlobalStyle = buttonEntry.IsSelected ? selectedHaloStyle : unSelectedHaloStyle;
+					button.BackgroundLeaf.GlobalStyle = buttonEntry.IsSelected ? selectedBackgroundStyle : unSelectedBackgroundStyle;
 
 					button.transform.position = position.Position;
 					button.transform.forward = position.Forward;
