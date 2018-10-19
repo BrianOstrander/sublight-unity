@@ -17,13 +17,13 @@ namespace LunraGames.SubLight.Presenters
 		{
 			this.model = model;
 
-			App.Callbacks.FocusRequest += OnFocus;
+			//App.Callbacks.FocusRequest += OnFocus;
 			App.Callbacks.EncounterRequest += OnEncounter;
 		}
 
 		protected override void OnUnBind()
 		{
-			App.Callbacks.FocusRequest -= OnFocus;
+			//App.Callbacks.FocusRequest -= OnFocus;
 			App.Callbacks.EncounterRequest -= OnEncounter;
 		}
 
@@ -43,6 +43,7 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		/* TODO: Support the new focus system.
 		void OnFocus(FocusRequest focus)
 		{
 			switch (focus.Focus)
@@ -63,6 +64,7 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 		}
+		*/
 
 		void OnPrepareClose()
 		{

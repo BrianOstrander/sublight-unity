@@ -104,10 +104,6 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
 		/// <summary>
-		/// The focus of the game, can be cast to retrieve more information.
-		/// </summary>
-		public Action<FocusRequest> FocusRequest = ActionExtensions.GetEmpty<FocusRequest>();
-		/// <summary>
 		/// The state of game. Dialogs and similar UI will pause the game. This 
 		/// is separate from pausing the ingame time.
 		/// </summary>

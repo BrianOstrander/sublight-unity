@@ -63,7 +63,7 @@ namespace LunraGames.SubLight
 			this.currentPreferences = currentPreferences;
 
 			callbacks.EncounterRequest += OnEncounter;
-			callbacks.FocusRequest += OnFocus;
+			//callbacks.FocusRequest += OnFocus;
 			callbacks.StateChange += OnStateChange;
 			heartbeat.Update += OnUpdate;
 		}
@@ -93,16 +93,19 @@ namespace LunraGames.SubLight
 
 					state = States.Ending;
 
-					callbacks.FocusRequest(
-						new SystemsFocusRequest(
-							toFocus.SystemZero,
-							toFocus
-						)
-					);
+					Debug.LogWarning("TODO: Logic upon completing encounter!");
+					//callbacks.FocusRequest(
+					//	new SystemsFocusRequest(
+					//		toFocus.SystemZero,
+					//		toFocus
+					//	)
+					//);
 					break;
 			}
 		}
 
+		/*
+		 * TODO: Update this to use the new focus system.
 		void OnFocus(FocusRequest focus)
 		{
 			switch (focus.Focus)
@@ -131,6 +134,7 @@ namespace LunraGames.SubLight
 					break;
 			}
 		}
+		*/
 
 		void OnStateChange(StateChange change)
 		{
@@ -184,7 +188,8 @@ namespace LunraGames.SubLight
 
 			model.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlyInEncounter);
 
-			callbacks.FocusRequest(EncounterFocusRequest.Encounter());
+			Debug.LogWarning("TODO: Start enncounter here.");
+			//callbacks.FocusRequest(EncounterFocusRequest.Encounter());
 		}
 
 		void OnEnd()
