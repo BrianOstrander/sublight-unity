@@ -24,7 +24,7 @@ namespace LunraGames.SubLight
 				var fieldOfView = roomCamera.FieldOfView;
 				var layer = LayerConstants.Get(SetFocusLayers.Home);
 
-				new HomeFocusCameraPresenter(gantryAnchor, fieldOfView);
+				new GenericFocusCameraPresenter<HomeFocusDetails>(gantryAnchor, fieldOfView);
 
 				// TODO: Main menu presenter stuff...
 				new HoloPresenter();
@@ -73,6 +73,9 @@ namespace LunraGames.SubLight
 						case SetFocusLayers.Toolbar:
 						case SetFocusLayers.System:
 						case SetFocusLayers.Communications:
+						case SetFocusLayers.Ship:
+						case SetFocusLayers.Encyclopedia:
+							// I dunno why I do this...
 							break;
 						default:
 							Debug.LogError("Unrecognized Layer " + layer);

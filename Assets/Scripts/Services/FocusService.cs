@@ -86,13 +86,12 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			callbacks.InputLayerRequest(InputLayerRequest.SetAll(false));
-
 			state = States.Initializing;
 			lastActive = request;
 
 			if (lastActive.IsDefault)
 			{
+				callbacks.InputLayerRequest(InputLayerRequest.SetAll(false));
 				defaults = lastActive.Targets;
 				currents = null;
 				supported = defaults.Select(d => d.Layer).Distinct().ToArray();
@@ -110,6 +109,16 @@ namespace LunraGames.SubLight
 					)
 				);
 				return;
+			}
+			else
+			{
+				var layerStates = new Dictionary<string, bool>();
+				foreach (var transition in transitions)
+				{
+					if (transition.Start.Details.Interactable && transition.End.Details.Interactable) layerStates.Add(LayerConstants.Get(transition.Layer), true);
+					else layerStates.Add(LayerConstants.Get(transition.Layer), false);
+				}
+				callbacks.InputLayerRequest(InputLayerRequest.Set(layerStates));
 			}
 
 			var gatherRequest = BuildGatherRequest(request, transitions);

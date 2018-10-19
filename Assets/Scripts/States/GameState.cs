@@ -11,8 +11,10 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		public HoloRoomFocusCameraPresenter MainCamera;
 		public GameModel Game;
+
+		public HoloRoomFocusCameraPresenter MainCamera;
+		public ToolbarPresenter Toolbar;
 
 		public KeyValueListener KeyValueListener;
 
@@ -51,6 +53,7 @@ namespace LunraGames.SubLight
 		void InitializeCallbacks(Action done)
 		{
 			App.Callbacks.DialogRequest += OnDialogRequest;
+			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
 
 			done();
 		}
@@ -63,27 +66,32 @@ namespace LunraGames.SubLight
 		void OnInializeFocusDefaults(Action done)
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetNoFocus(), done));
-			//App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetSystemFocus(), done));
 		}
 		#endregion
 
 		#region Idle
 		protected override void Idle()
 		{
-			App.Callbacks.HoloColorRequest(new HoloColorRequest(Color.white));
+			App.Callbacks.HoloColorRequest(new HoloColorRequest(Color.white.NewV(0.12f)));
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 		}
 
 		void OnIdleShowFocus()
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetSystemFocus(), duration: 0.5f));
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(Payload.Game.ToolbarSelection), OnIdleShowFocusDone, 0.5f));
+		}
+
+		void OnIdleShowFocusDone()
+		{
+			Payload.Toolbar.Show();
 		}
 		#endregion
 
 		#region End
 		protected override void End()
 		{
-			
+			App.Callbacks.DialogRequest -= OnDialogRequest;
+			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
 		}
 		#endregion
 
@@ -101,6 +109,11 @@ namespace LunraGames.SubLight
 					//App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
 					break;
 			}
+		}
+
+		void OnToolbarSelection(ToolbarSelections selection)
+		{
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(selection)));
 		}
 		#endregion
 	}

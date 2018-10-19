@@ -104,10 +104,6 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
 		/// <summary>
-		/// The focus of the game, can be cast to retrieve more information.
-		/// </summary>
-		public Action<FocusRequest> FocusRequest = ActionExtensions.GetEmpty<FocusRequest>();
-		/// <summary>
 		/// The state of game. Dialogs and similar UI will pause the game. This 
 		/// is separate from pausing the ingame time.
 		/// </summary>
@@ -128,10 +124,17 @@ namespace LunraGames.SubLight
 		/// <summary>
 		/// Called to change focuses, or set new default focuses.
 		/// </summary>
+		/// <remarks>
+		/// Use TransitionFocusRequest to actually find out when a tranisition
+		/// is in progress or done.
+		/// </remarks>
 		public Action<SetFocusRequest> SetFocusRequest = ActionExtensions.GetEmpty<SetFocusRequest>();
 		/// <summary>
 		/// Called when transitioning between focuses.
 		/// </summary>
+		/// <remarks>
+		/// Can be used to determine if a transition is in progress or done.
+		/// </remarks>
 		public Action<TransitionFocusRequest> TransitionFocusRequest = ActionExtensions.GetEmpty<TransitionFocusRequest>();
 		/// <summary>
 		/// Called if there are focuses to gather for a set focus request.

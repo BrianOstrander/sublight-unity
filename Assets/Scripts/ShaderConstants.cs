@@ -128,6 +128,18 @@ namespace LunraGames.SubLight
 			public const string GlowColor = "_GlowColor";
 		}
 
+		public static class RoomIrisIdle
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Room/IrisIdle";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GlowColor = "_GlowColor";
+		}
+
 		public static class RoomIrisGrid
 		{
 			/// <summary>

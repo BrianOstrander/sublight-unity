@@ -13,12 +13,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			this.model = model;
 
-			App.Callbacks.FocusRequest += OnFocus;
+			//App.Callbacks.FocusRequest += OnFocus;
 		}
 
 		protected override void OnUnBind()
 		{
-			App.Callbacks.FocusRequest -= OnFocus;
+			//App.Callbacks.FocusRequest -= OnFocus;
 		}
 
 		public void Show()
@@ -39,6 +39,7 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		/* TODO: Support the new focus system.
 		void OnFocus(FocusRequest focus)
 		{
 			switch (focus.Focus)
@@ -56,6 +57,7 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 		}
+		*/
 
 		void OnArticleClick(string title)
 		{
@@ -73,12 +75,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (View.TransitionState != TransitionStates.Shown) return;
 
-			App.Callbacks.FocusRequest(
-				new SystemsFocusRequest(
-					model.Ship.Value.Position.Value.SystemZero,
-					model.Ship.Value.Position.Value
-				)
-			);
+			//App.Callbacks.FocusRequest(
+			//	new SystemsFocusRequest(
+			//		model.Ship.Value.Position.Value.SystemZero,
+			//		model.Ship.Value.Position.Value
+			//	)
+			//);
 		}
 		#endregion
 	}

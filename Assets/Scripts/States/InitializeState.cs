@@ -55,7 +55,7 @@ namespace LunraGames.SubLight
 					LanguageStringModel.Override("Cancel")
 				),
 				mainCamera,
-				new PriorityFocusCameraPresenter(mainCamera.GantryAnchor, mainCamera.FieldOfView)
+				new GenericFocusCameraPresenter<PriorityFocusDetails>(mainCamera.GantryAnchor, mainCamera.FieldOfView)
 			);
 
 			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
