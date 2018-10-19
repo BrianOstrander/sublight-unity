@@ -146,7 +146,7 @@ namespace LunraGames.SubLight.Views
 					button.Button.OnEnter.AddListener(() => OnButtonEnter(buttonEntry));
 					button.Button.OnExit.AddListener(() => OnButtonExit(buttonEntry));
 
-					UpdateButton(buttonEntry, 1f);
+					UpdateButton(buttonEntry, 0f);
 
 					currentButtons.Add(buttonEntry);
 				}
