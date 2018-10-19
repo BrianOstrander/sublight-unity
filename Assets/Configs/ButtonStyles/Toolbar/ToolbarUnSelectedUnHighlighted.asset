@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 055e030a5aa334796a6a9df96642b122, type: 3}
-  m_Name: ToolbarIcon
+  m_Name: ToolbarUnSelectedUnHighlighted
   m_EditorClassIdentifier: 
   Block:
     DistanceScaleIntensity:
@@ -62,9 +62,9 @@ MonoBehaviour:
       m_RotationOrder: 4
     Colors:
       DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
-      NormalColor: {r: 1, g: 1, b: 1, a: 1}
-      HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-      PressedColor: {r: 1, g: 1, b: 1, a: 1}
+      NormalColor: {r: 0.615, g: 0.615, b: 0.615, a: 1}
+      HighlightedColor: {r: 0.615, g: 0.615, b: 0.615, a: 1}
+      PressedColor: {r: 0.615, g: 0.615, b: 0.615, a: 1}
     Toggles:
       ActiveOnDisabled: 1
       ActiveOnNormal: 1

@@ -13,12 +13,13 @@ namespace LunraGames.SubLight.Presenters
 
 			View.Reset();
 
+			View.Selection = 0;
 			View.Buttons = new ToolbarButtonBlock[] 
 			{
-				new ToolbarButtonBlock(LanguageStringModel.Override("lol"), View.GetIcon(SetFocusLayers.System), false, null),
-				new ToolbarButtonBlock(LanguageStringModel.Override("lol"), View.GetIcon(SetFocusLayers.Room), false, null),
-				new ToolbarButtonBlock(LanguageStringModel.Override("lol"), View.GetIcon(SetFocusLayers.Communications), false, null),
-				new ToolbarButtonBlock(LanguageStringModel.Override("lol"), View.GetIcon(SetFocusLayers.Toolbar), false, null)
+				new ToolbarButtonBlock(LanguageStringModel.Override("Navigation"), View.GetIcon(SetFocusLayers.System), null),
+				new ToolbarButtonBlock(LanguageStringModel.Override("Logistics"), View.GetIcon(SetFocusLayers.Room), null),
+				new ToolbarButtonBlock(LanguageStringModel.Override("Communications"), View.GetIcon(SetFocusLayers.Communications), null),
+				new ToolbarButtonBlock(LanguageStringModel.Override("Encyclopedia"), View.GetIcon(SetFocusLayers.Toolbar), null)
 			};
 
 			ShowView(parent, instant);

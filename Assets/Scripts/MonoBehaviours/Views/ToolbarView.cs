@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -16,6 +17,17 @@ namespace LunraGames.SubLight.Views
 		{
 			public SetFocusLayers Layer;
 			public Sprite Icon;
+		}
+		
+		class ButtonEntry
+		{
+			public int Index;
+			public bool IsSelected;
+			public ToolbarButtonLeaf Leaf;
+			public ToolbarButtonBlock Block;
+			public bool IsHighlighted;
+			// 0 is not highlighted, 1 is highlighted;
+			public float HighlightElapsed;
 		}
 
 		struct ToolbarPosition
@@ -36,6 +48,15 @@ namespace LunraGames.SubLight.Views
 		ToolbarButtonLeaf buttonPrefab;
 
 		[SerializeField]
+		AnimationCurve buttonHighlightScale;
+		[SerializeField]
+		AnimationCurve buttonHighlightOpacity;
+		[SerializeField]
+		float buttonHighlightMinimumScale;
+		[SerializeField]
+		float buttonHighlightDuration;
+
+		[SerializeField]
 		IconEntry[] iconEntries;
 
 		[Header("Test")]
@@ -44,7 +65,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float previewButtonDiameter;
 
-		int currentSelection;
+		List<ButtonEntry> currentButtons = new List<ButtonEntry>();
 
 		Vector3 RangeCenter { get { return orbitOrigin.position + (orbitOrigin.forward * orbitRadius); } }
 
@@ -67,9 +88,23 @@ namespace LunraGames.SubLight.Views
 					Position = orbitOrigin.position + (forward * orbitRadius),
 					Forward = forward
 				};
+
 			}
 
 			return results;
+		}
+
+		int selection;
+
+		public int Selection
+		{
+			get { return selection; }
+			set
+			{
+				selection = value;
+				if (currentButtons == null) return;
+				foreach (var button in currentButtons) button.IsSelected = button.Index == value;
+			}
 		}
 
 		public Sprite GetIcon(SetFocusLayers layer) { return iconEntries.FirstOrDefault(e => e.Layer == layer).Icon; }
@@ -78,14 +113,8 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
-				currentSelection = -1;
-
-				for (var i = 0; i < (value == null ? 0 : value.Length); i++)
-				{
-					if (value[i].IsSelected) currentSelection = i;
-				}
-
 				buttonArea.transform.ClearChildren<ToolbarButtonLeaf>();
+				currentButtons.Clear();
 
 				if (value == null) return;
 
@@ -96,10 +125,30 @@ namespace LunraGames.SubLight.Views
 					var position = positions[i];
 					var block = value[i];
 					var button = buttonArea.InstantiateChild(buttonPrefab, setActive: true);
+
+					var buttonEntry = new ButtonEntry
+					{
+						Index = i,
+						IsSelected = i == Selection,
+						Leaf = button,
+						Block = block,
+						HighlightElapsed = 0f
+					};
+
 					button.transform.position = position.Position;
 					button.transform.forward = position.Forward;
 
 					button.ButtonImage.sprite = block.Icon;
+
+					button.ButtonLabelArea.SetActive(!string.IsNullOrEmpty(block.Text));
+					button.ButtonLabel.text = block.Text ?? string.Empty;
+
+					button.Button.OnEnter.AddListener(() => OnButtonEnter(buttonEntry));
+					button.Button.OnExit.AddListener(() => OnButtonExit(buttonEntry));
+
+					UpdateButton(buttonEntry, 1f);
+
+					currentButtons.Add(buttonEntry);
 				}
 			}
 		}
@@ -109,9 +158,52 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			Buttons = null;
+			Selection = -1;
 
 			buttonPrefab.gameObject.SetActive(false);
 		}
+
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+			foreach (var button in currentButtons)
+			{
+				if (button.IsHighlighted && Mathf.Approximately(button.HighlightElapsed, buttonHighlightDuration)) continue;
+				if (!button.IsHighlighted && Mathf.Approximately(button.HighlightElapsed, 0f)) continue;
+
+				button.HighlightElapsed = Mathf.Clamp(button.HighlightElapsed + (button.IsHighlighted ? delta : -delta), 0f, buttonHighlightDuration);
+				var scalar = button.HighlightElapsed / buttonHighlightDuration;
+
+				UpdateButton(button, scalar);
+			}
+		}
+
+		void UpdateButton(ButtonEntry button, float scalar)
+		{
+			var scale = buttonHighlightMinimumScale + (buttonHighlightScale.Evaluate(scalar) * (1f - buttonHighlightMinimumScale));
+			var highlightedOpacity = buttonHighlightOpacity.Evaluate(scalar);
+			var unHighlightedOpacity = 1f - highlightedOpacity;
+
+			button.Leaf.ScalableArea.localScale = Vector3.one * scale;
+
+			button.Leaf.UnHighlightedSelectedArea.alpha = button.IsSelected ? unHighlightedOpacity : 0f;
+			button.Leaf.UnHighlightedUnSelectedArea.alpha = button.IsSelected ? 0f : unHighlightedOpacity;
+
+			button.Leaf.HighlightedArea.alpha = highlightedOpacity;
+		}
+
+		#region Events
+		void OnButtonEnter(ButtonEntry entry)
+		{
+			entry.IsHighlighted = true;
+		}
+
+		void OnButtonExit(ButtonEntry entry)
+		{
+			entry.IsHighlighted = false;
+		}
+		#endregion
 
 		void OnDrawGizmos()
 		{
@@ -122,16 +214,19 @@ namespace LunraGames.SubLight.Views
 			Handles.DrawWireDisc(orbitOrigin.position, orbitOrigin.up, orbitRadius);
 
 			Gizmos.color = Color.green;
-			Handles.color = Color.green;
 			var count = 0f;
 			foreach (var position in GetPositions(previewCount))
 			{
+				Handles.color = Color.green;
 				if (count == 0)
 				{
 					Gizmos.DrawLine(orbitOrigin.position, position.Position);
 					Handles.DrawWireDisc(position.Position, position.Forward, previewButtonDiameter * 0.05f);
 				}
 				Handles.DrawWireDisc(position.Position, position.Forward, previewButtonDiameter * 0.5f);
+
+				Handles.color = Color.red;
+				Handles.DrawWireDisc(position.Position, position.Forward, (previewButtonDiameter * buttonHighlightMinimumScale) * 0.5f);
 				count++;
 			}
 #endif
@@ -140,6 +235,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IToolbarView : IView
 	{
+		int Selection { set; }
 		Sprite GetIcon(SetFocusLayers layer);
 		ToolbarButtonBlock[] Buttons { set; }
 	}

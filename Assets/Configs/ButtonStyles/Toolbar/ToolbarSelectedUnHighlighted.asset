@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 055e030a5aa334796a6a9df96642b122, type: 3}
-  m_Name: ToolbarIcon
+  m_Name: ToolbarSelectedUnHighlighted
   m_EditorClassIdentifier: 
   Block:
     DistanceScaleIntensity:
