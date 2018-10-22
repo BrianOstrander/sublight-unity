@@ -27,6 +27,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonProperty] ToolbarSelections toolbarSelection;
 
+		[JsonProperty] float zoom;
+
 		/// <summary>
 		/// The game seed.
 		/// </summary>
@@ -92,6 +94,9 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<float> Zoom;
 		#endregion
 
 		#region NonSerialized
@@ -126,6 +131,8 @@ namespace LunraGames.SubLight.Models
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
+
+			Zoom = new ListenerProperty<float>(value => zoom = value, () => zoom);
 		}
 
 		#region Events

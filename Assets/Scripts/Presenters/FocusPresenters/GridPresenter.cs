@@ -14,31 +14,18 @@ namespace LunraGames.SubLight.Presenters
 			this.model = model;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
-			//App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
+			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
-			//App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
+			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 		}
 
-		public void Show(Transform parent = null, bool instant = false)
+		protected override void OnUpdateEnabled()
 		{
-			if (View.Visible) return;
-
-			View.Reset();
-
-			View.HoloColor = App.Callbacks.LastHoloColorRequest.Color;
-
-			ShowView(parent, instant);
-		}
-
-		public void Close(bool instant = false)
-		{
-			if (!View.Visible) return;
-
-			CloseView(instant);
+			model.Zoom.Value = View.UpdateZoom(model.Zoom);
 		}
 
 		#region
@@ -47,10 +34,13 @@ namespace LunraGames.SubLight.Presenters
 			View.HoloColor = request.Color;
 		}
 
-		//void OnTransitionFocusRequest(TransitionFocusRequest request)
-		//{
-		//	switch (request.)
-		//}
+		void OnCurrentScrollGesture(ScrollGesture gesture)
+		{
+			if (!View.Visible || !View.Highlighted) return;
+
+			model.Zoom.Value = View.UpdateZoom(model.Zoom, gesture.Current.y * gesture.TimeDelta);
+		}
+
 		#endregion
 	}
 }

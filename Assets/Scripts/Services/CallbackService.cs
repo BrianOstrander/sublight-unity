@@ -49,6 +49,20 @@ namespace LunraGames.SubLight
 		/// The current gesture.
 		/// </summary>
 		public Action<Gesture> CurrentGesture = ActionExtensions.GetEmpty<Gesture>();
+
+		/// <summary>
+		/// On beginning a scroll gesture.
+		/// </summary>
+		public Action<ScrollGesture> BeginScrollGesture = ActionExtensions.GetEmpty<ScrollGesture>();
+		/// <summary>
+		/// On ending a scroll gesture.
+		/// </summary>
+		public Action<ScrollGesture> EndScrollGesture = ActionExtensions.GetEmpty<ScrollGesture>();
+		/// <summary>
+		/// The current scroll gesture.
+		/// </summary>
+		public Action<ScrollGesture> CurrentScrollGesture = ActionExtensions.GetEmpty<ScrollGesture>();
+
 		/// <summary>
 		/// Called after a click.
 		/// </summary>

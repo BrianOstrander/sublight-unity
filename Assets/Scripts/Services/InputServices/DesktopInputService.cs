@@ -4,7 +4,7 @@ namespace LunraGames.SubLight
 {
 	public class DesktopInputService : InputService
 	{
-		public DesktopInputService(Heartbeat heartbeat, CallbackService callbacks) : base(heartbeat, callbacks) {}
+		public DesktopInputService(Heartbeat heartbeat, CallbackService callbacks) : base(heartbeat, callbacks) { }
 
 		protected override Vector2 GetScreenPosition()
 		{
@@ -71,6 +71,7 @@ namespace LunraGames.SubLight
 			return Input.GetMouseButton(0) || Input.GetMouseButton(1);
 		}
 
+		#region Gesturing
 		protected override bool GetGestureBegan()
 		{
 			return Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1);
@@ -92,5 +93,43 @@ namespace LunraGames.SubLight
 			var clampedMouse = new Vector2(Mathf.Min(Screen.width, Mathf.Max(0f, mousePosition.x)), Mathf.Min(Screen.height, Mathf.Max(0f, mousePosition.y)));
 			return ((new Vector2(clampedMouse.x / Screen.width, clampedMouse.y / Screen.height) * 2f) - Vector2.one);
 		}
+		#endregion
+
+		#region Scroll Gesturing
+		bool beginWasScrolling;
+		bool endWasScrolling;
+
+		bool isScrolling { get { return !Mathf.Approximately(0f, GetScrollGesture().sqrMagnitude); } }
+
+		protected override bool GetScrollGestureBegan()
+		{
+			var currValue = isScrolling;
+			var wasValue = beginWasScrolling;
+
+			beginWasScrolling = currValue;
+
+			return currValue && !wasValue;
+		}
+
+		protected override bool IsScrollGesturing()
+		{
+			return isScrolling;
+		}
+
+		protected override bool GetScrollGestureEnded()
+		{
+			var currValue = isScrolling;
+			var wasValue = endWasScrolling;
+
+			endWasScrolling = currValue;
+
+			return !currValue && wasValue;
+		}
+
+		protected override Vector2 GetScrollGesture()
+		{
+			return Input.mouseScrollDelta;
+		}
+		#endregion
 	}
 }

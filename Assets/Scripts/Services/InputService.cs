@@ -33,6 +33,11 @@ namespace LunraGames.SubLight
 
 		Vector2 lastGesture;
 
+		Vector2 beginScrollGesture;
+		Vector2 beginScrollGestureNormal;
+
+		Vector2 lastScrollGesture;
+
 		bool startedDragging;
 
 		bool[] layerStates = new bool[32];
@@ -79,14 +84,13 @@ namespace LunraGames.SubLight
 			if (clickDown) clickDownTime = DateTime.Now;
 			var clickDownDuration = DateTime.Now - clickDownTime;
 			var clickClick = clickUp && clickDownDuration.TotalSeconds < GetClickDuration() && ((beginGesture - lastGesture).sqrMagnitude < MaximumClickDistance);
+
+			// BEGIN GESTURE
 			var gesturingBegan = GetGestureBegan();
 			var gesturingEnded = GetGestureEnded();
 
 			var currentGestureNormal = GetGesture();
 			var currentGesture = currentGestureNormal * GetGestureSensitivity();
-
-			// TODO: Delete this?
-			//var gestureDelta = GetGestureDelta(gesturingBegan, gesturingEnded, currentGesture, lastGesture);
 
 			if (gesturingBegan)
 			{
@@ -95,15 +99,35 @@ namespace LunraGames.SubLight
 				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
 			}
 
-			// TODO: Delete this?
-			//var gestureNormalDelta = currentGestureNormal - beginGestureNormal;
-
 			if (gesturingEnded) callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
 			callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
 
 			var gestureDeltaFromBegin = GetGestureDelta(gesturingBegan, gesturingEnded, beginGesture, lastGesture);
 
 			lastGesture = currentGesture;
+			// END GESTURE
+
+			// BEGIN SCROLL GESTURE
+			var scrollGesturingBegan = GetScrollGestureBegan();
+			var scrollGesturingEnded = GetScrollGestureEnded();
+
+			var currentScrollGestureNormal = GetScrollGesture();
+			var currentScrollGesture = currentScrollGestureNormal * GetScrollGestureSensitivity();
+
+			if (scrollGesturingBegan)
+			{
+				beginScrollGesture = currentScrollGesture;
+				beginScrollGestureNormal = currentScrollGestureNormal;
+				callbacks.BeginScrollGesture(new ScrollGesture(currentScrollGestureNormal, IsSecondaryClickInteraction(), delta));
+			}
+
+			if (scrollGesturingEnded) callbacks.EndScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, false, IsSecondaryClickInteraction(), delta));
+			callbacks.CurrentScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, IsScrollGesturing(), IsSecondaryClickInteraction(), delta));
+
+			var scrollGestureDeltaFromBegin = GetScrollGestureDelta(scrollGesturingBegan, scrollGesturingEnded, beginScrollGesture, lastScrollGesture);
+
+			lastScrollGesture = currentScrollGesture;
+			// END SCROLL GESTURE
 
 			var screenPos = GetScreenPosition();
 
@@ -231,5 +255,12 @@ namespace LunraGames.SubLight
 		protected virtual Vector3 GetCameraPosition() { return new Vector3(0f, 0f, 0f); }
 		protected virtual Quaternion GetCameraRotation() { return Quaternion.identity; }
 		protected virtual bool IsDragging(Vector2 gesture) { return 0.0001f < gesture.sqrMagnitude; }
+
+		protected virtual float GetScrollGestureSensitivity() { return 1f; }
+		protected virtual bool GetScrollGestureBegan() { return false; }
+		protected virtual bool IsScrollGesturing() { return false; }
+		protected virtual bool GetScrollGestureEnded() { return false; }
+		protected virtual Vector2 GetScrollGesture() { return Vector2.zero; }
+		protected virtual Vector2 GetScrollGestureDelta(bool gestureBegan, bool gestureEnded, Vector2 gesture, Vector2 lastGesture) { return gestureBegan || gestureEnded ? Vector2.zero : gesture - lastGesture; }
 	}
 }

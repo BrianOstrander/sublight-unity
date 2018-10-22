@@ -102,6 +102,7 @@ namespace LunraGames.SubLight
 			/// The color.
 			/// </summary>
 			public const string GridColor = "_GridColor";
+			public const string GridTint = "_GridTint";
 			/// <summary>
 			/// How zoomed in the grid is, from 0 to 1.
 			/// </summary>
@@ -119,6 +120,7 @@ namespace LunraGames.SubLight
 			/// How much of the grid is revealed, from 0 to 1.
 			/// </summary>
 			public const string RadiusProgress = "_RadiusProgress";
+			public const string Alpha = "_Alpha";
 		}
 
 		public static class CameraMask
