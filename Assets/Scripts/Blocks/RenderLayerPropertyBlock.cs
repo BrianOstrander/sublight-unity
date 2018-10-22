@@ -5,7 +5,7 @@
 		public int Order;
 		public float Weight;
 
-		public string WeightKey { get { return ShaderConstants.HoloLayerShared.GetWeight(Order); } }
+		public string WeightKey { get { return ShaderConstants.RoomProjectionShared.GetWeight(Order); } }
 
 		public RenderLayerPropertyBlock(
 			int order,

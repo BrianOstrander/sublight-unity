@@ -69,10 +69,10 @@ namespace LunraGames.SubLight.Presenters
 				absoluteOrder++;
 			}
 
-			if ((ShaderConstants.HoloLayerShared.LayerCount - absoluteOrder) != 0)
+			if ((ShaderConstants.RoomProjectionShared.LayerCount - absoluteOrder) != 0)
 			{
 				// Fill in the others with blanks.
-				for (var i = absoluteOrder; i < ShaderConstants.HoloLayerShared.MaxLayer; i++)
+				for (var i = absoluteOrder; i < ShaderConstants.RoomProjectionShared.MaxLayer; i++)
 				{
 					//textures.Add(new RenderLayerTextureBlock(i, Texture2D.blackTexture));
 					properties.Add(new RenderLayerPropertyBlock(i, 0f));

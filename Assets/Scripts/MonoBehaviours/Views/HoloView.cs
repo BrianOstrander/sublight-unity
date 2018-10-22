@@ -5,14 +5,14 @@ namespace LunraGames.SubLight.Views
 	public class HoloView : View, IHoloView
 	{
 		[SerializeField]
-		Material containingMaterial;
+		Material projectionMaterial;
 		[SerializeField]
 		Material glowMaterial;
 		[SerializeField]
 		Material irisMaterial;
 
 		[SerializeField]
-		MeshRenderer containingMesh;
+		MeshRenderer projectionMesh;
 		[SerializeField]
 		MeshRenderer glowMesh;
 		[SerializeField]
@@ -29,7 +29,7 @@ namespace LunraGames.SubLight.Views
 			{
 				foreach (var block in value)
 				{
-					containingMesh.material.SetTexture(ShaderConstants.HoloLayerShared.GetLayer(block.Order), block.Texture);
+					projectionMesh.material.SetTexture(ShaderConstants.RoomProjectionShared.GetLayer(block.Order), block.Texture);
 				}
 			}
 		}
@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Views
 			{
 				foreach (var block in value)
 				{
-					containingMesh.material.SetFloat(block.WeightKey, block.Weight);
+					projectionMesh.material.SetFloat(block.WeightKey, block.Weight);
 				}
 			}
 		}
@@ -58,7 +58,7 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
-			containingMesh.material = new Material(containingMaterial);
+			projectionMesh.material = new Material(projectionMaterial);
 			glowMesh.material = new Material(glowMaterial);
 			irisMesh.material = new Material(irisMaterial);
 
