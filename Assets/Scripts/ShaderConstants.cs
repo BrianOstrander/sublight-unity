@@ -92,12 +92,12 @@ namespace LunraGames.SubLight
 			public const string Revealed = "_Revealed";
 		}
 
-		public static class HoloIrisGrid
+		public static class HoloGrid
 		{
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "SubLight/Holo/IrisGrid";
+			public const string Name = "SubLight/Holo/Grid";
 			/// <summary>
 			/// The color.
 			/// </summary>
@@ -115,6 +115,10 @@ namespace LunraGames.SubLight
 			/// that though... not positive, might allow negatives.
 			/// </summary>
 			public const string Offset = "_Offset";
+			/// <summary>
+			/// How much of the grid is revealed, from 0 to 1.
+			/// </summary>
+			public const string RadiusProgress = "_RadiusProgress";
 		}
 
 		public static class CameraMask

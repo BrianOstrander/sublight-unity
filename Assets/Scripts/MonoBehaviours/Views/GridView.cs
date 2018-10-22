@@ -5,23 +5,20 @@ namespace LunraGames.SubLight.Views
 	public class GridView : View, IGridView
 	{
 		[SerializeField]
-		AnimationCurve RevealRadius;
+		AnimationCurve revealCurve;
 
 		[SerializeField]
 		Material gridMaterial;
 		[SerializeField]
 		MeshRenderer gridMesh;
-		[SerializeField]
-		Color baseGridColor;
 
 		public void SetRadius(float scalar, bool showing)
 		{
 			if (!showing) scalar += 1f;
-
-			//gridMesh.material.SetFloat(ShaderConstants.HoloLip.LipMin, MinGridAnimation.Evaluate(scalar));
+			gridMesh.material.SetFloat(ShaderConstants.HoloGrid.RadiusProgress, revealCurve.Evaluate(scalar));
 		}
 
-		public Color HoloColor { set { gridMesh.material.SetColor(ShaderConstants.HoloIrisGrid.GridColor, baseGridColor.NewHsva(value.GetH(), value.GetS())); } }
+		public Color HoloColor { set { gridMesh.material.SetColor(ShaderConstants.HoloGrid.GridColor, value); } }
 
 		public override void Reset()
 		{

@@ -33,10 +33,11 @@ namespace LunraGames.SubLight
 
 				// All other presenters for this state...
 
-				// TODO: Make a lip for ship focus.
+				payload.Toolbar = new ToolbarPresenter(payload.Game);
+				
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
 
-				payload.Toolbar = new ToolbarPresenter(payload.Game);
+				new GridPresenter(payload.Game);
 
 				done();
 			}
