@@ -4,7 +4,15 @@ namespace LunraGames.SubLight
 {
 	public struct ScrollGesture
 	{
-		public readonly bool IsGesturing;
+		public enum States
+		{
+			Unknown = 0,
+			Begin = 10,
+			Active = 20,
+			End = 30
+		}
+
+		public readonly States State;
 		public readonly bool IsSecondary;
 		public readonly Vector2 Begin;
 		public readonly Vector2 Current;
@@ -15,25 +23,23 @@ namespace LunraGames.SubLight
 
 		public ScrollGesture(Vector2 begin, bool isSecondary, float timeDelta)
 		{
-			IsGesturing = true;
+			State = States.Begin;
 			IsSecondary = isSecondary;
 			Begin = begin;
 			Current = begin;
 			End = begin;
 			Delta = Vector2.zero;
-
 			TimeDelta = timeDelta;
 		}
 
-		public ScrollGesture(Vector2 begin, Vector2 end, bool isGesturing, bool isSecondary, float timeDelta)
+		public ScrollGesture(Vector2 begin, Vector2 end, States state, bool isSecondary, float timeDelta)
 		{
-			IsGesturing = isGesturing;
+			State = state;
 			IsSecondary = isSecondary;
 			Begin = begin;
 			Current = end;
 			End = end;
 			Delta = end - begin;
-
 			TimeDelta = timeDelta;
 		}
 	}

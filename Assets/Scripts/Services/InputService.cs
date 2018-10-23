@@ -92,15 +92,28 @@ namespace LunraGames.SubLight
 			var currentGestureNormal = GetGesture();
 			var currentGesture = currentGestureNormal * GetGestureSensitivity();
 
+			var gestureState = Gesture.States.Unknown;
+
 			if (gesturingBegan)
 			{
+				gestureState = Gesture.States.Begin;
+
 				beginGesture = currentGesture;
 				beginGestureNormal = currentGestureNormal;
-				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
+				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction(), delta));
 			}
 
-			if (gesturingEnded) callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
-			callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
+			if (gesturingEnded)
+			{
+				gestureState = Gesture.States.End;
+
+				callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureState, IsSecondaryClickInteraction(), delta));
+			}
+
+			if (IsGesturing() || gesturingEnded)
+			{
+				callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureState, IsSecondaryClickInteraction(), delta));
+			}
 
 			var gestureDeltaFromBegin = GetGestureDelta(gesturingBegan, gesturingEnded, beginGesture, lastGesture);
 
@@ -114,15 +127,28 @@ namespace LunraGames.SubLight
 			var currentScrollGestureNormal = GetScrollGesture();
 			var currentScrollGesture = currentScrollGestureNormal * GetScrollGestureSensitivity();
 
+			var scrollGestureState = ScrollGesture.States.Unknown;
+
 			if (scrollGesturingBegan)
 			{
+				scrollGestureState = ScrollGesture.States.Begin;
+
 				beginScrollGesture = currentScrollGesture;
 				beginScrollGestureNormal = currentScrollGestureNormal;
 				callbacks.BeginScrollGesture(new ScrollGesture(currentScrollGestureNormal, IsSecondaryClickInteraction(), delta));
 			}
 
-			if (scrollGesturingEnded) callbacks.EndScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, false, IsSecondaryClickInteraction(), delta));
-			callbacks.CurrentScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, IsScrollGesturing(), IsSecondaryClickInteraction(), delta));
+			if (scrollGesturingEnded)
+			{
+				scrollGestureState = ScrollGesture.States.End;
+
+				callbacks.EndScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, scrollGestureState, IsSecondaryClickInteraction(), delta));
+			}
+
+			if (IsScrollGesturing() || scrollGesturingEnded)
+			{
+				callbacks.CurrentScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, scrollGestureState, IsSecondaryClickInteraction(), delta));
+			}
 
 			var scrollGestureDeltaFromBegin = GetScrollGestureDelta(scrollGesturingBegan, scrollGesturingEnded, beginScrollGesture, lastScrollGesture);
 

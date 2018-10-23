@@ -23,10 +23,16 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			model.Zoom.Value = View.UpdateZoom(model.Zoom);
+			View.Zoom = OnViewZoom;
+			View.UpdateZoom(model.Zoom);
 		}
 
 		#region
+		void OnViewZoom(float zoom)
+		{
+			model.Zoom.Value = zoom;
+		}
+
 		void OnHoloColorRequest(HoloColorRequest request)
 		{
 			View.HoloColor = request.Color;
@@ -36,7 +42,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible || !View.Highlighted) return;
 
-			model.Zoom.Value = View.UpdateZoom(model.Zoom, gesture.Current.y * gesture.TimeDelta);
+			View.UpdateZoom(model.Zoom, gesture.Current.y * gesture.TimeDelta);
 		}
 
 		#endregion

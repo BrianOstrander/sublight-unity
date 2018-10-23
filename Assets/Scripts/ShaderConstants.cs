@@ -153,6 +153,10 @@ namespace LunraGames.SubLight
 			/// From 0 to 1.
 			/// </summary>
 			public const string Progress = "_Progress";
+			/// <summary>
+			/// From 0 to 1.
+			/// </summary>
+			public const string FullProgress = "_FullProgress";
 		}
 
 		public static class CameraMask

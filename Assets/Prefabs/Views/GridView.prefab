@@ -364,30 +364,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  zoomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 5
-      value: 5
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   zoomRadiusProgress:
     serializedVersion: 2
     m_Curve:
@@ -463,69 +439,90 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  zoomSensitivityCurve:
+  zoomSettlingCooldown: 0.1
+  zoomSettlingScalar: 4
+  zoomSettlingMinimum: 0.1
+  zoomSettlingUpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.033778485
+      outSlope: -0.033778485
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.0598773
     - serializedVersion: 3
       time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      value: 0
+      inSlope: -3.1977594
+      outSlope: -3.1977594
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1.1018968
-      value: 0.49355257
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1.8473799
-      value: 0.49355257
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1.9
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.17504436
-      outWeight: 0.07814596
-    - serializedVersion: 3
-      time: 5
-      value: 4
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.022861958
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  zoomSettlingDownCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -3.016518
+      outSlope: -3.016518
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.01947502
+    - serializedVersion: 3
+      time: 1
+      value: -1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  GridZoomCounts:
+  - Begin: 0
+    End: 1
+    ZoomCount: 3
+    Landings: 1
+    CallClustering: 0
+  - Begin: 1
+    End: 1.75
+    ZoomCount: 3
+    Landings: 3
+    CallClustering: 1
+  - Begin: 1.75
+    End: 2
+    ZoomCount: 2
+    Landings: 1
+    CallClustering: 0
+  - Begin: 2
+    End: 3
+    ZoomCount: 2
+    Landings: 1
+    CallClustering: 0
+  - Begin: 3
+    End: 4
+    ZoomCount: 1
+    Landings: 1
+    CallClustering: 0
+  - Begin: 4
+    End: 5
+    ZoomCount: 2
+    Landings: 1
+    CallClustering: 0
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
   gridMesh: {fileID: 23745486960222072}
-  lastzum: 0
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1

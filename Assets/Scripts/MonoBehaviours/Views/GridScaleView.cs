@@ -26,6 +26,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Vector3 rotation;
 
+		[SerializeField]
+		AnimationCurve gridUnitScaleFullCurve;
+
 		public string UnitText { set { unitLabel.text = value ?? string.Empty; } }
 		public void SetZoom(float zoom, string scaleName = null) //, string unitName = null)
 		{
@@ -34,6 +37,8 @@ namespace LunraGames.SubLight.Views
 			var unitZoom = Mathf.Approximately(zoom, 5f) ? 1f : zoom - Mathf.Floor(zoom);
 
 			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Progress, unitZoom);
+
+			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.FullProgress, gridUnitScaleFullCurve.Evaluate(unitZoom));
 
 			titleLabel.text = scaleName ?? string.Empty;
 		}
