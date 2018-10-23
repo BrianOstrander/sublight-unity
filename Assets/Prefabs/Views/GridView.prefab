@@ -440,7 +440,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   zoomSettlingCooldown: 0.1
-  zoomSettlingScalar: 4
+  zoomSettlingScalar: 3
   zoomSettlingMinimum: 0.1
   zoomSettlingUpCurve:
     serializedVersion: 2
@@ -497,26 +497,41 @@ MonoBehaviour:
     Landings: 1
     CallClustering: 0
   - Begin: 1
-    End: 1.75
+    End: 1.8
     ZoomCount: 3
-    Landings: 3
-    CallClustering: 1
-  - Begin: 1.75
+    Landings: 0
+    CallClustering: 0
+  - Begin: 1.8
     End: 2
-    ZoomCount: 2
+    ZoomCount: 1
     Landings: 1
     CallClustering: 0
   - Begin: 2
+    End: 2.7
+    ZoomCount: 3
+    Landings: 0
+    CallClustering: 0
+  - Begin: 2.7
     End: 3
-    ZoomCount: 2
+    ZoomCount: 1
     Landings: 1
     CallClustering: 0
   - Begin: 3
+    End: 3.5
+    ZoomCount: 1
+    Landings: 0
+    CallClustering: 0
+  - Begin: 3.5
     End: 4
     ZoomCount: 1
     Landings: 1
     CallClustering: 0
   - Begin: 4
+    End: 4.3
+    ZoomCount: 2
+    Landings: 0
+    CallClustering: 0
+  - Begin: 4.3
     End: 5
     ZoomCount: 2
     Landings: 1

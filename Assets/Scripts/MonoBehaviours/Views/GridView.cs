@@ -27,6 +27,7 @@ namespace LunraGames.SubLight.Views
 
 			public bool IsOnLanding(float value)
 			{
+				if (Mathf.Approximately(0f, Landings)) return true;
 				for (var i = 0; i < Landings; i++)
 				{
 					if (Mathf.Approximately(GetLanding(i), value)) return true;
