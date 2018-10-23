@@ -38,6 +38,15 @@ namespace LunraGames.SubLight
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
 
 				new GridPresenter(payload.Game);
+				new GridScalePresenter(
+					payload.Game,
+					LanguageStringModel.Override("Scale"),
+					LanguageStringModel.Override("System"),
+					LanguageStringModel.Override("Local"),
+					LanguageStringModel.Override("Sector"),
+					LanguageStringModel.Override("Galactic"),
+					LanguageStringModel.Override("Cluster")
+				);
 
 				done();
 			}

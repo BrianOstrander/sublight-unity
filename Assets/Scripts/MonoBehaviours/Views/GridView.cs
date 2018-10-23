@@ -24,8 +24,6 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer gridMesh;
 
-		public float lastzum; // temp
-
 		public bool Highlighted { get; private set; }
 
 		public void SetRadius(float scalar, bool showing)
@@ -38,8 +36,6 @@ namespace LunraGames.SubLight.Views
 		{
 			var sensitivity = zoomSensitivity * (zoomSensitivityCurve.Evaluate(current));
 			var zoom = Mathf.Clamp(current + (delta * sensitivity), 0f, zoomMaximum);
-
-			lastzum = zoom;
 
 			gridMesh.material.SetFloat(ShaderConstants.HoloGrid.Zoom, zoomCurve.Evaluate(zoom) % 1f);
 			gridMesh.material.SetFloat(ShaderConstants.HoloGrid.Alpha, zoomAlpha.Evaluate(zoom));
