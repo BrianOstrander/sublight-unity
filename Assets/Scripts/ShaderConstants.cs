@@ -139,6 +139,22 @@ namespace LunraGames.SubLight
 			public const string Zoom = "_Zoom";
 		}
 
+		public static class HoloGridUnitScale
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridUnitScale";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string ColorTint = "_ColorTint";
+			/// <summary>
+			/// From 0 to 1.
+			/// </summary>
+			public const string Progress = "_Progress";
+		}
+
 		public static class CameraMask
 		{
 			/// <summary>

@@ -18,24 +18,41 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer gridScaleMesh;
 		[SerializeField]
+		Material gridUnitScaleMaterial;
+		[SerializeField]
+		MeshRenderer gridUnitScaleMesh;
+		[SerializeField]
 		Transform rotateTarget;
 		[SerializeField]
 		Vector3 rotation;
 
 		public string UnitText { set { unitLabel.text = value ?? string.Empty; } }
-		public void SetZoom(float zoom, string name = null)
+		public void SetZoom(float zoom, string scaleName = null) //, string unitName = null)
 		{
 			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, zoom);
-			titleLabel.text = name ?? string.Empty;
+
+			var unitZoom = Mathf.Approximately(zoom, 5f) ? 1f : zoom - Mathf.Floor(zoom);
+
+			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Progress, unitZoom);
+
+			titleLabel.text = scaleName ?? string.Empty;
 		}
 
-		public Color HoloColor { set { gridScaleMesh.material.SetColor(ShaderConstants.HoloGridScale.ColorTint, value); } }
+		public Color HoloColor
+		{
+			set
+			{
+				gridScaleMesh.material.SetColor(ShaderConstants.HoloGridScale.ColorTint, value);
+				gridUnitScaleMesh.material.SetColor(ShaderConstants.HoloGridUnitScale.ColorTint, value);
+			}
+		}
 
 		public override void Reset()
 		{
 			base.Reset();
 
 			gridScaleMesh.material = new Material(gridScaleMaterial);
+			gridUnitScaleMesh.material = new Material(gridUnitScaleMaterial);
 
 			UnitText = null;
 			SetZoom(1f);
@@ -48,6 +65,6 @@ namespace LunraGames.SubLight.Views
 	public interface IGridScaleView : IView, IHoloColorView
 	{
 		string UnitText { set; }
-		void SetZoom(float zoom, string name = null);
+		void SetZoom(float zoom, string scaleName = null);
 	}
 }

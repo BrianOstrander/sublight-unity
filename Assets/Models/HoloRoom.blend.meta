@@ -25,6 +25,7 @@ ModelImporter:
     100038: IrisGlow_001
     100040: RingNormal
     100042: ScaleRing
+    100044: ScaleUnitRing
     400000: Cylinder
     400002: Cylinder_001
     400004: Cylinder_002
@@ -47,6 +48,7 @@ ModelImporter:
     400038: IrisGlow_001
     400040: RingNormal
     400042: ScaleRing
+    400044: ScaleUnitRing
     2100000: None__Untitled
     2100002: unnamed
     2300000: Cylinder
@@ -70,6 +72,7 @@ ModelImporter:
     2300036: IrisGlow_001
     2300038: RingNormal
     2300040: ScaleRing
+    2300042: ScaleUnitRing
     3300000: Cylinder
     3300002: Cylinder_001
     3300004: Cylinder_002
@@ -91,6 +94,7 @@ ModelImporter:
     3300036: IrisGlow_001
     3300038: RingNormal
     3300040: ScaleRing
+    3300042: ScaleUnitRing
     4300000: FadeArea
     4300002: Cylinder_006
     4300004: Cylinder_005
@@ -112,6 +116,7 @@ ModelImporter:
     4300036: IrisGlow_001
     4300038: ScaleRing
     4300040: RingNormal
+    4300042: ScaleUnitRing
     7400000: Default Take
     9500000: //RootNode
     2186277476908879412: ImportLogs
