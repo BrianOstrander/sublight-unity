@@ -495,47 +495,56 @@ MonoBehaviour:
     End: 1
     ZoomCount: 3
     Landings: 1
-    CallClustering: 0
+    UnitType: 10
+    UnitAmount: 1
   - Begin: 1
     End: 1.8
     ZoomCount: 3
     Landings: 0
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 1
   - Begin: 1.8
     End: 2
     ZoomCount: 1
     Landings: 1
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 1
   - Begin: 2
     End: 2.7
     ZoomCount: 3
     Landings: 0
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 10000
   - Begin: 2.7
     End: 3
     ZoomCount: 1
     Landings: 1
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 10000
   - Begin: 3
     End: 3.5
     ZoomCount: 1
     Landings: 0
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 30000
   - Begin: 3.5
     End: 4
     ZoomCount: 1
     Landings: 1
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 30000
   - Begin: 4
     End: 4.3
     ZoomCount: 2
     Landings: 0
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 100000
   - Begin: 4.3
     End: 5
     ZoomCount: 2
     Landings: 1
-    CallClustering: 0
+    UnitType: 20
+    UnitAmount: 1000000
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
   gridMesh: {fileID: 23745486960222072}
 --- !u!222 &222519521389851360

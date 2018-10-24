@@ -1,4 +1,6 @@
-﻿using LunraGames.SubLight.Models;
+﻿using UnityEngine;
+
+using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
@@ -6,10 +8,16 @@ namespace LunraGames.SubLight.Presenters
 	public class GridPresenter : FocusPresenter<IGridView, SystemFocusDetails>
 	{
 		GameModel model;
+		GridInfoBlock info;
+		bool ignoreNextZoom;
 
-		public GridPresenter(GameModel model)
+		public GridPresenter(
+			GameModel model,
+			GridInfoBlock info
+		)
 		{
 			this.model = model;
+			this.info = info;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
@@ -23,14 +31,53 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			View.Zoom = OnViewZoom;
+			View.UpdateZoomInfo = OnUpdateZoomInfo;
+			ignoreNextZoom = true;
 			View.UpdateZoom(model.Zoom);
+			ignoreNextZoom = false;
 		}
 
 		#region
-		void OnViewZoom(float zoom)
+		void OnUpdateZoomInfo(ZoomInfoBlock block)
 		{
-			model.Zoom.Value = zoom;
+			if (!ignoreNextZoom) model.Zoom.Value = block.Zoom;
+
+			block.ScaleName = info.ScaleNames[Mathf.Min(info.ScaleNames.Length - 1, block.ScaleIndex)];
+
+			switch (block.UnitType)
+			{
+				case GridUnitTypes.AstronomicalUnit: block.UnitName = info.AstronomicalUnit.Get(block.UnitAmount); break;
+				case GridUnitTypes.LightYear: block.UnitName = info.LightYearUnit.Get(block.UnitAmount); break;
+				default:
+					Debug.LogError("Unrecognized grid unit: " + block.UnitType);
+					break;
+			}
+
+			block.UnitAmountFormatted = OnUnitAmountFormatted;
+
+			model.ZoomInfo.Value = block;
+		}
+
+		string OnUnitAmountFormatted()
+		{
+			var block = model.ZoomInfo.Value;
+
+			var unitValue = block.UnitAmount;
+			var suffix = string.Empty;
+
+			if (block.UnitAmount < 1000f) suffix = string.Empty;
+			else if (block.UnitAmount < 1000000)
+			{
+				suffix = info.ThousandUnit.Value.Value;
+				unitValue /= 1000f;
+			}
+			else
+			{
+				suffix = info.MillionUnit.Value.Value;
+				unitValue /= 1000000;
+			}
+
+			return ((int)unitValue) + suffix;
 		}
 
 		void OnHoloColorRequest(HoloColorRequest request)

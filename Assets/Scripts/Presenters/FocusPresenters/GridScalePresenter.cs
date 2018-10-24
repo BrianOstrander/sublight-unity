@@ -8,44 +8,30 @@ namespace LunraGames.SubLight.Presenters
 	public class GridScalePresenter : FocusPresenter<IGridScaleView, SystemFocusDetails>
 	{
 		GameModel model;
-		LanguageStringModel unit;
-		LanguageStringModel[] scales;
+		LanguageStringModel scaleText;
 
 		public GridScalePresenter(
 			GameModel model,
-			LanguageStringModel unit,
-			params LanguageStringModel[] scales
+			LanguageStringModel scaleText
 		)
 		{
 			this.model = model;
-			this.unit = unit;
-			this.scales = scales;
+			this.scaleText = scaleText;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
-			model.Zoom.Changed += OnZoom;
+			model.ZoomInfo.Changed += OnZoomInfo;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
-			model.Zoom.Changed -= OnZoom;
+			model.ZoomInfo.Changed -= OnZoomInfo;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
-			View.UnitText = unit.Value.Value;
-			View.SetZoom(model.Zoom, GetScaleText(model.Zoom));
-		}
-
-		string GetScaleText(float zoom)
-		{
-			var index = Mathf.FloorToInt(Mathf.Min(zoom, 4.9f));
-			if (scales.Length <= index)
-			{
-				Debug.LogError("Zoom is too high for provided scale units");
-				return null;
-			}
-			return scales[index].Value.Value;
+			View.ScaleText = scaleText.Value.Value;
+			View.ZoomInfo = model.ZoomInfo.Value;
 		}
 
 		#region
@@ -54,13 +40,12 @@ namespace LunraGames.SubLight.Presenters
 			View.HoloColor = request.Color;
 		}
 
-		void OnZoom(float zoom)
+		void OnZoomInfo(ZoomInfoBlock zoomInfo)
 		{
 			if (!View.Visible) return;
 
-			View.SetZoom(model.Zoom, GetScaleText(model.Zoom));
+			View.ZoomInfo = zoomInfo;
 		}
-
 		#endregion
 	}
 }

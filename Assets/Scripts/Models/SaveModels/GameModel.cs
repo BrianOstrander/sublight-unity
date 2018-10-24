@@ -102,6 +102,7 @@ namespace LunraGames.SubLight.Models
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		UniversePosition[] focusedSectors = new UniversePosition[0];
+		ZoomInfoBlock zoomInfo;
 
 		/// <summary>
 		/// Positions of all loaded sectors.
@@ -110,6 +111,8 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
+		[JsonIgnore]
+		public readonly ListenerProperty<ZoomInfoBlock> ZoomInfo;
 		#endregion
 
 		public GameModel()
@@ -121,8 +124,6 @@ namespace LunraGames.SubLight.Models
 			Universe = new ListenerProperty<UniverseModel>(value => universe = value, () => universe);
 			EndSystem = new ListenerProperty<UniversePosition>(value => endSystem = value, () => endSystem);
 			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
-			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
-			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
@@ -131,8 +132,11 @@ namespace LunraGames.SubLight.Models
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
-
 			Zoom = new ListenerProperty<float>(value => zoom = value, () => zoom);
+
+			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
+			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
+			ZoomInfo = new ListenerProperty<ZoomInfoBlock>(value => zoomInfo = value, () => zoomInfo);
 		}
 
 		#region Events

@@ -14,7 +14,9 @@ namespace LunraGames.SubLight.Views
 			public float End;
 			public float ZoomCount;
 			public float Landings;
-			public bool CallClustering;
+
+			public GridUnitTypes UnitType;
+			public float UnitAmount;
 
 			public float Delta { get { return End - Begin; } }
 
@@ -94,8 +96,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer gridMesh;
 
-		public Action<float> Zoom { set; private get; }
-		public Action<float> Clustering { set; private get; }
+		public Action<ZoomInfoBlock> UpdateZoomInfo { set; private get; }
 		public bool Highlighted { get; private set; }
 		public Color HoloColor { set { gridMesh.material.SetColor(ShaderConstants.HoloGrid.GridColor, value); } }
 
@@ -114,8 +115,7 @@ namespace LunraGames.SubLight.Views
 
 			gridMesh.material = new Material(gridMaterial);
 
-			Zoom = ActionExtensions.GetEmpty<float>();
-			Clustering = ActionExtensions.GetEmpty<float>();
+			UpdateZoomInfo = ActionExtensions.GetEmpty<ZoomInfoBlock>();
 
 			Highlighted = false;
 			SetRadius(0f, true);
@@ -212,21 +212,23 @@ namespace LunraGames.SubLight.Views
 			if (isUserInput) lastZoomDeltaSign = Mathf.Approximately(0f, delta) ? lastZoomDeltaSign : Mathf.Sign(delta);
 			else lastZoomDeltaSign = Mathf.Sign(delta);
 
-			Zoom(zoom);
-			float clustering;
-			if (UpdateClustering(zoom, out clustering)) Clustering(clustering);
+			var searchZoom = Mathf.Approximately(zoom, zoomMaximum) ? zoom - 0.01f : zoom;
+			var entry = GridZoomCounts.FirstOrDefault(c => c.Begin <= searchZoom && searchZoom < c.End);
+			if (entry.Invalid) Debug.LogError("GridZoomCount invalid or out of bounds, unexpected behaviour may occur!");
+			var clustering = entry.GetZoom(zoom);
+			var currUnitType = entry.UnitType;
+			var currUnitAmount = entry.UnitAmount;
 
 			gridMesh.material.SetFloat(ShaderConstants.HoloGrid.Zoom, clustering - (int)clustering);
-		}
 
-		bool UpdateClustering(float zoom, out float result)
-		{
-			result = 0f;
+			var result = new ZoomInfoBlock();
+			result.Zoom = zoom;
+			result.Clustering = clustering;
+			result.ScaleIndex = (int)zoom;
+			result.UnitType = currUnitType;
+			result.UnitAmount = currUnitAmount;
 
-			var entry = GridZoomCounts.FirstOrDefault(c => c.Begin <= zoom && zoom < c.End);
-			if (!entry.Invalid) result = entry.GetZoom(zoom);
-
-			return entry.CallClustering;
+			UpdateZoomInfo(result);
 		}
 
 		#region Events
@@ -244,8 +246,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IGridView : IView, IHoloColorView
 	{
-		Action<float> Zoom { set; }
-		Action<float> Clustering { set; }
+		Action<ZoomInfoBlock> UpdateZoomInfo { set; }
 		void SetRadius(float scalar, bool showing);
 		void UpdateZoom(float current, float delta = 0f);
 		bool Highlighted { get; }

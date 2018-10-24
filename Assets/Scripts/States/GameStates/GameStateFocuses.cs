@@ -37,16 +37,27 @@ namespace LunraGames.SubLight
 				
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
 
-				new GridPresenter(payload.Game);
-				new GridScalePresenter(
-					payload.Game,
-					LanguageStringModel.Override("Scale"),
+				// GRID INFO BEGIN
+				var gridInfo = new GridInfoBlock();
+
+				gridInfo.Scale = LanguageStringModel.Override("Scale");
+				gridInfo.ScaleNames = new LanguageStringModel[] {
 					LanguageStringModel.Override("System"),
 					LanguageStringModel.Override("Local"),
 					LanguageStringModel.Override("Sector"),
 					LanguageStringModel.Override("Galactic"),
 					LanguageStringModel.Override("Cluster")
-				);
+				};
+
+				gridInfo.ThousandUnit = LanguageStringModel.Override("k");
+				gridInfo.MillionUnit = LanguageStringModel.Override("m");
+
+				gridInfo.AstronomicalUnit = new PluralLanguageStringBlock(LanguageStringModel.Override("Astronomical Unit"), LanguageStringModel.Override("Astronomical Unit"));
+				gridInfo.LightYearUnit = new PluralLanguageStringBlock(LanguageStringModel.Override("Light Year"), LanguageStringModel.Override("Light Years"));
+				// GRID INFO END
+
+				new GridPresenter(payload.Game, gridInfo);
+				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
 				done();
 			}
