@@ -112,8 +112,9 @@ Material:
     - _MinimumThinness: 0.7
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RadiusChockWidth: 0.002
+    - _RadiusChockWidth: 0.005
     - _RadiusChoke: 0.97
+    - _RadiusChokeFresnelPower: 27
     - _RadiusMax: 0.1
     - _RadiusMin: 0
     - _RadiusProgress: 1
