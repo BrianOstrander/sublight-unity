@@ -496,75 +496,88 @@ MonoBehaviour:
     ZoomCount: 3
     Landings: 1
     UnitType: 10
-    UnitAmount: 20
+    UnitAmountMinimum: 10
+    UnitAmountMaximum: 30
   - Begin: 1
     End: 1.25
     ZoomCount: 1
     Landings: 0
     UnitType: 20
-    UnitAmount: 1
+    UnitAmountMinimum: 1
+    UnitAmountMaximum: 10
   - Begin: 1.25
     End: 1.5
     ZoomCount: 2
     Landings: 0
     UnitType: 20
-    UnitAmount: 10
+    UnitAmountMinimum: 10
+    UnitAmountMaximum: 100
   - Begin: 1.5
     End: 1.75
     ZoomCount: 4
     Landings: 0
     UnitType: 20
-    UnitAmount: 100
+    UnitAmountMinimum: 100
+    UnitAmountMaximum: 1000
   - Begin: 1.75
     End: 2
     ZoomCount: 1
     Landings: 1
     UnitType: 20
-    UnitAmount: 100
+    UnitAmountMinimum: 1000
+    UnitAmountMaximum: 10000
   - Begin: 2
     End: 2.7
     ZoomCount: 3
     Landings: 0
     UnitType: 20
-    UnitAmount: 10000
+    UnitAmountMinimum: 10000
+    UnitAmountMaximum: 30000
   - Begin: 2.7
     End: 3
     ZoomCount: 1
     Landings: 1
     UnitType: 20
-    UnitAmount: 10000
+    UnitAmountMinimum: 30000
+    UnitAmountMaximum: 50000
   - Begin: 3
     End: 3.5
     ZoomCount: 1
     Landings: 0
     UnitType: 20
-    UnitAmount: 30000
+    UnitAmountMinimum: 50000
+    UnitAmountMaximum: 500000
   - Begin: 3.5
     End: 4
     ZoomCount: 1
     Landings: 1
     UnitType: 20
-    UnitAmount: 30000
+    UnitAmountMinimum: 500000
+    UnitAmountMaximum: 1000000
   - Begin: 4
     End: 4.3
     ZoomCount: 2
     Landings: 0
     UnitType: 20
-    UnitAmount: 100000
+    UnitAmountMinimum: 1000000
+    UnitAmountMaximum: 2000000
   - Begin: 4.3
     End: 4.99
     ZoomCount: 2
     Landings: 1
     UnitType: 20
-    UnitAmount: 100000
+    UnitAmountMinimum: 2000000
+    UnitAmountMaximum: 5000000
   - Begin: 4.99
     End: 5
     ZoomCount: 1
     Landings: 1
     UnitType: 20
-    UnitAmount: 1000000
+    UnitAmountMinimum: 5000000
+    UnitAmountMaximum: 5000000
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
   gridMesh: {fileID: 23745486960222072}
+  gridRadius: 3.5
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1

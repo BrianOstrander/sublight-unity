@@ -3,6 +3,10 @@ using System.Linq;
 
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace LunraGames.SubLight.Views
 {
 	public class GridView : View, IGridView
@@ -16,12 +20,14 @@ namespace LunraGames.SubLight.Views
 			public float Landings;
 
 			public GridUnitTypes UnitType;
-			public float UnitAmount;
+			public float UnitAmountMinimum;
+			/// <summary>
+			/// The units in one of the visible grid cells.
+			/// </summary>
+			public float UnitAmountMaximum;
 
 			public float Delta { get { return End - Begin; } }
-
 			public bool Invalid { get { return Mathf.Approximately(0f, Delta); } }
-
 			public float GetScalar(float value) { return (value - Begin) / Delta; }
 			public float GetLanding(int index) { return Begin + ((Delta / Landings) * index); }
 
@@ -96,13 +102,28 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer gridMesh;
 
+		[SerializeField]
+		float gridRadius;
+
 		public Action<ZoomInfoBlock> UpdateZoomInfo { set; private get; }
 		public bool Highlighted { get; private set; }
 		public Color HoloColor { set { gridMesh.material.SetColor(ShaderConstants.HoloGrid.GridColor, value); } }
 
+		float tilingRadius;
+		public float TilingRadius
+		{
+			set
+			{
+				tilingRadius = value;
+				gridMesh.material.SetFloat(ShaderConstants.HoloGrid.Tiling, value);
+			}
+			private get { return tilingRadius; }
+		}
+
 		float lastZoom;
 		float lastZoomDelta;
 		float lastZoomDeltaSign;
+		ZoomInfoBlock? lastZoomInfo;
 
 		float nextZoomTarget;
 
@@ -116,7 +137,7 @@ namespace LunraGames.SubLight.Views
 			gridMesh.material = new Material(gridMaterial);
 
 			UpdateZoomInfo = ActionExtensions.GetEmpty<ZoomInfoBlock>();
-
+			TilingRadius = 1f;
 			Highlighted = false;
 			SetRadius(0f, true);
 			UpdateZoom(1.5f);
@@ -216,8 +237,6 @@ namespace LunraGames.SubLight.Views
 			var entry = GridZoomCounts.FirstOrDefault(c => c.Begin <= searchZoom && searchZoom < c.End);
 			if (entry.Invalid) Debug.LogError("GridZoomCount invalid or out of bounds, unexpected behaviour may occur!");
 			var clustering = entry.GetZoom(zoom);
-			var currUnitType = entry.UnitType;
-			var currUnitAmount = entry.UnitAmount;
 
 			gridMesh.material.SetFloat(ShaderConstants.HoloGrid.Zoom, clustering - (int)clustering);
 
@@ -225,9 +244,19 @@ namespace LunraGames.SubLight.Views
 			result.Zoom = zoom;
 			result.Clustering = clustering;
 			result.ScaleIndex = (int)zoom;
-			result.UnitType = currUnitType;
-			result.UnitAmount = currUnitAmount;
+			result.UnitType = entry.UnitType;
+			result.UnitAmountMinimum = entry.UnitAmountMinimum;
+			result.UnitAmountMaximum = entry.UnitAmountMaximum;
 			result.UnitProgress = entry.GetScalar(zoom);
+
+			lastZoomInfo = result;
+
+
+			//var minUnitRadius = result.UnitAmountMinimum * TilingRadius;
+			//var maxUnitRadius = result.UnitAmountMaximum * TilingRadius;
+
+			//gridMesh.material.SetFloat(ShaderConstants.HoloGrid.Tiling, TilingRadius);
+			//gridMesh.material.SetFloat(ShaderConstants.HoloGrid.TilingScalar, maxUnitRadius / minUnitRadius);
 
 			UpdateZoomInfo(result);
 		}
@@ -243,10 +272,37 @@ namespace LunraGames.SubLight.Views
 			Highlighted = false;
 		}
 		#endregion
+
+		void OnDrawGizmos()
+		{
+#if UNITY_EDITOR
+			Handles.color = Color.green;
+			Handles.DrawWireCube(transform.position, new Vector3(gridRadius * 2f, 0f, gridRadius * 2f));
+
+			if (!Application.isPlaying || !lastZoomInfo.HasValue) return;
+
+			var info = lastZoomInfo.Value;
+
+			var minUnitRadius = info.UnitAmountMinimum * TilingRadius;
+			var maxUnitRadius = info.UnitAmountMaximum * TilingRadius;
+			var deltaUnitRadius = maxUnitRadius - minUnitRadius;
+
+			var unitsInGridRadius = minUnitRadius + (deltaUnitRadius * info.UnitProgress);
+			//var unitsInGridRadius = (minUnitRadius * (1f - info.UnitProgress)) + (deltaUnitRadius * info.UnitProgress);
+
+			var unitInUnity = gridRadius / unitsInGridRadius;
+			var unitInUnityVector = new Vector3(unitInUnity, 0f, unitInUnity);
+			Handles.DrawWireCube(transform.position + (unitInUnityVector * -0.5f), unitInUnityVector);
+
+			Handles.Label(transform.position + (new Vector3(1f, 0f, -1.55f) * gridRadius), "Zoom: " + info.Zoom.ToString("N2"));
+			Handles.Label(transform.position + (new Vector3(1f, 0f, -1.3f) * gridRadius), "Units in Radius: " + unitsInGridRadius);
+#endif
+		}
 	}
 
 	public interface IGridView : IView, IHoloColorView
 	{
+		float TilingRadius { set; }
 		Action<ZoomInfoBlock> UpdateZoomInfo { set; }
 		void SetRadius(float scalar, bool showing);
 		void UpdateZoom(float current, float delta = 0f);

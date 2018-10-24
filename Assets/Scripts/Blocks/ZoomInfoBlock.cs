@@ -7,10 +7,11 @@ namespace LunraGames.SubLight
 	public struct ZoomInfoBlock
 	{
 		public float Zoom;
-		public float Clustering;
+		public float Clustering; // possibly delete
 		public int ScaleIndex;
 		public GridUnitTypes UnitType;
-		public float UnitAmount;
+		public float UnitAmountMinimum;
+		public float UnitAmountMaximum;
 		public float UnitProgress;
 		public LanguageStringModel ScaleName;
 		public LanguageStringModel UnitName;

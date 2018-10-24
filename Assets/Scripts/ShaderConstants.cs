@@ -123,6 +123,38 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloGridDynamic
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridDynamic";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GridColor = "_GridColor";
+			public const string GridTint = "_GridTint";
+			/// <summary>
+			/// How zoomed in the grid is, from 0 to 1.
+			/// </summary>
+			public const string Zoom = "_Zoom";
+			/// <summary>
+			/// How many tiles.
+			/// </summary>
+			public const string Tiling = "_Tiling";
+			public const string TilingScalar = "_TilingScalar";
+			/// <summary>
+			/// The offset, a vector2 (or 4?) between (0,0) and (1,1)... check
+			/// that though... not positive, might allow negatives.
+			/// </summary>
+			public const string Offset = "_Offset";
+			/// <summary>
+			/// How much of the grid is revealed, from 0 to 1.
+			/// </summary>
+			public const string RadiusProgress = "_RadiusProgress";
+			public const string Alpha = "_Alpha";
+		}
+
 		public static class HoloGridScale
 		{
 			/// <summary>

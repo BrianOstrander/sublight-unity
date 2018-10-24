@@ -242,7 +242,7 @@ namespace LunraGames.SubLight.Views
 		}
 		#endregion
 
-		void OnDrawGizmos()
+		void OnDrawGizmosSelected()
 		{
 #if UNITY_EDITOR
 			Gizmos.color = Color.yellow.NewA(0.2f);

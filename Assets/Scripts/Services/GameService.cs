@@ -45,7 +45,7 @@ namespace LunraGames.SubLight
 			game.DestructionSpeed.Value = 0.004f;
 			game.DestructionSpeedIncrement.Value = 0.0025f;
 
-			game.Zoom.Value = 1.5f;
+			game.Zoom.Value = 1f;
 
 			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
 			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);

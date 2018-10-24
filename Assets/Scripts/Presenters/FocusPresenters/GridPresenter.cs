@@ -31,6 +31,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
+			View.TilingRadius = 4f;
 			View.UpdateZoomInfo = OnUpdateZoomInfo;
 			ignoreNextZoom = true;
 			View.UpdateZoom(model.Zoom);
@@ -46,8 +47,8 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (block.UnitType)
 			{
-				case GridUnitTypes.AstronomicalUnit: block.UnitName = info.AstronomicalUnit.Get(block.UnitAmount); break;
-				case GridUnitTypes.LightYear: block.UnitName = info.LightYearUnit.Get(block.UnitAmount); break;
+				case GridUnitTypes.AstronomicalUnit: block.UnitName = info.AstronomicalUnit.Get(block.UnitAmountMinimum); break;
+				case GridUnitTypes.LightYear: block.UnitName = info.LightYearUnit.Get(block.UnitAmountMinimum); break;
 				default:
 					Debug.LogError("Unrecognized grid unit: " + block.UnitType);
 					break;
@@ -62,11 +63,11 @@ namespace LunraGames.SubLight.Presenters
 		{
 			var block = model.ZoomInfo.Value;
 
-			var unitValue = block.UnitAmount;
+			var unitValue = block.UnitAmountMinimum;
 			var suffix = string.Empty;
 
-			if (block.UnitAmount < 1000f) suffix = string.Empty;
-			else if (block.UnitAmount < 1000000)
+			if (block.UnitAmountMinimum < 1000f) suffix = string.Empty;
+			else if (block.UnitAmountMinimum < 1000000)
 			{
 				suffix = info.ThousandUnit.Value.Value;
 				unitValue /= 1000f;
