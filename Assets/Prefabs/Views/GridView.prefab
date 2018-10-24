@@ -496,19 +496,31 @@ MonoBehaviour:
     ZoomCount: 3
     Landings: 1
     UnitType: 10
-    UnitAmount: 1
+    UnitAmount: 20
   - Begin: 1
-    End: 1.8
-    ZoomCount: 3
+    End: 1.25
+    ZoomCount: 1
     Landings: 0
     UnitType: 20
     UnitAmount: 1
-  - Begin: 1.8
+  - Begin: 1.25
+    End: 1.5
+    ZoomCount: 2
+    Landings: 0
+    UnitType: 20
+    UnitAmount: 10
+  - Begin: 1.5
+    End: 1.75
+    ZoomCount: 4
+    Landings: 0
+    UnitType: 20
+    UnitAmount: 100
+  - Begin: 1.75
     End: 2
     ZoomCount: 1
     Landings: 1
     UnitType: 20
-    UnitAmount: 1
+    UnitAmount: 100
   - Begin: 2
     End: 2.7
     ZoomCount: 3
@@ -540,8 +552,14 @@ MonoBehaviour:
     UnitType: 20
     UnitAmount: 100000
   - Begin: 4.3
-    End: 5
+    End: 4.99
     ZoomCount: 2
+    Landings: 1
+    UnitType: 20
+    UnitAmount: 100000
+  - Begin: 4.99
+    End: 5
+    ZoomCount: 1
     Landings: 1
     UnitType: 20
     UnitAmount: 1000000

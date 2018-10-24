@@ -11,6 +11,7 @@ namespace LunraGames.SubLight
 		public int ScaleIndex;
 		public GridUnitTypes UnitType;
 		public float UnitAmount;
+		public float UnitProgress;
 		public LanguageStringModel ScaleName;
 		public LanguageStringModel UnitName;
 		public Func<string> UnitAmountFormatted;

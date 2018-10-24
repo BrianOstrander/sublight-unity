@@ -227,6 +227,7 @@ namespace LunraGames.SubLight.Views
 			result.ScaleIndex = (int)zoom;
 			result.UnitType = currUnitType;
 			result.UnitAmount = currUnitAmount;
+			result.UnitProgress = entry.GetScalar(zoom);
 
 			UpdateZoomInfo(result);
 		}

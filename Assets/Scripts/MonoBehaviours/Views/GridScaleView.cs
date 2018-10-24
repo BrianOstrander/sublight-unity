@@ -44,7 +44,7 @@ namespace LunraGames.SubLight.Views
 			{
 				gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, value.Zoom);
 				
-				var unitZoom = Mathf.Approximately(value.Zoom, 5f) ? 1f : value.Zoom - Mathf.Floor(value.Zoom);
+				var unitZoom = Mathf.Approximately(value.Zoom, 5f) ? 1f : value.UnitProgress;
 				
 				gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Progress, unitZoom);
 				
