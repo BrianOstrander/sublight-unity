@@ -19,19 +19,19 @@ namespace LunraGames.SubLight.Presenters
 			this.scaleText = scaleText;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
-			model.ZoomInfo.Changed += OnZoomInfo;
+			//model.ZoomInfo.Changed += OnZoomInfo;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
-			model.ZoomInfo.Changed -= OnZoomInfo;
+			//model.ZoomInfo.Changed -= OnZoomInfo;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.ScaleText = scaleText.Value.Value;
-			View.ZoomInfo = model.ZoomInfo.Value;
+			//View.ZoomInfo = model.ZoomInfo.Value;
 		}
 
 		#region

@@ -41,5 +41,12 @@ namespace LunraGames.SubLight
 			Delta = end - begin;
 			TimeDelta = timeDelta;
 		}
+
+		/// <summary>
+		/// Gestures go from -1 to 1, but viewport goes from 0 to 1. This converts to viewport.
+		/// </summary>
+		/// <returns>The viewport.</returns>
+		/// <param name="gestureNormal">Normal.</param>
+		public static Vector2 GetViewport(Vector2 gestureNormal) { return (gestureNormal + new Vector2(1f, 1f)) * 0.5f; }
 	}
 }

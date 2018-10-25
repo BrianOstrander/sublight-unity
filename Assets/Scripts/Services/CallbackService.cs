@@ -114,10 +114,6 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<VoidRenderTexture> VoidRenderTexture = ActionExtensions.GetEmpty<VoidRenderTexture>();
 		/// <summary>
-		/// Called every time the offset of the universe is updated.
-		/// </summary>
-		public Action<UniversePositionRequest> UniversePositionRequest = ActionExtensions.GetEmpty<UniversePositionRequest>();
-		/// <summary>
 		/// The state of game. Dialogs and similar UI will pause the game. This 
 		/// is separate from pausing the ingame time.
 		/// </summary>
@@ -186,7 +182,6 @@ namespace LunraGames.SubLight
 		public SystemHighlight LastSystemHighlight;
 		public SpeedRequest LastSpeedRequest;
 		public VoidRenderTexture LastVoidRenderTexture;
-		public UniversePositionRequest LastUniversePositionRequest;
 		#endregion
 
 		Stack<EscapeEntry> escapes = new Stack<EscapeEntry>();
@@ -205,7 +200,6 @@ namespace LunraGames.SubLight
 			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
 			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
 			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
-			UniversePositionRequest += request => LastUniversePositionRequest = request;
 			PlayState += state => LastPlayState = state;
 			HoloColorRequest += request => LastHoloColorRequest = request;
 

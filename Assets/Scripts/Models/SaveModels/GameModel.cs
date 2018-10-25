@@ -27,6 +27,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonProperty] ToolbarSelections toolbarSelection;
 
+		[JsonProperty] float universeUnitsPerUnityUnit;
 		[JsonProperty] float zoom;
 
 		/// <summary>
@@ -97,12 +98,13 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Zoom;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> UniverseUnitsPerUnityUnit;
 		#endregion
 
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		UniversePosition[] focusedSectors = new UniversePosition[0];
-		ZoomInfoBlock zoomInfo;
 
 		/// <summary>
 		/// Positions of all loaded sectors.
@@ -111,8 +113,6 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
-		[JsonIgnore]
-		public readonly ListenerProperty<ZoomInfoBlock> ZoomInfo;
 		#endregion
 
 		public GameModel()
@@ -136,7 +136,7 @@ namespace LunraGames.SubLight.Models
 
 			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
-			ZoomInfo = new ListenerProperty<ZoomInfoBlock>(value => zoomInfo = value, () => zoomInfo);
+			UniverseUnitsPerUnityUnit = new ListenerProperty<float>(value => universeUnitsPerUnityUnit = value, () => universeUnitsPerUnityUnit);
 		}
 
 		#region Events

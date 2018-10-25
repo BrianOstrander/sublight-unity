@@ -63,6 +63,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1730598729709772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4879815537614060}
+  m_Layer: 12
+  m_Name: GridArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1788412965252256
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,6 +108,19 @@ Transform:
   m_Father: {fileID: 4978644210578882}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!4 &4879815537614060
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1730598729709772}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4978644210578882}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4978644210578882
 Transform:
   m_ObjectHideFlags: 1
@@ -104,6 +132,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4199425350777258}
+  - {fileID: 4879815537614060}
   - {fileID: 224584378863841434}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -281,12 +310,34 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   onDragBegin:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114507132180891574}
+        m_MethodName: OnDragBegin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   onDragEnd:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114507132180891574}
+        m_MethodName: OnDragEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114417741134423250
@@ -329,8 +380,6 @@ MonoBehaviour:
     CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
-  zoomMaximum: 5
-  zoomSensitivity: 0.4
   revealCurve:
     serializedVersion: 2
     m_Curve:
@@ -364,220 +413,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  zoomRadiusProgress:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.5189295
-      value: 0
-      inSlope: 0
-      outSlope: 5.6429124
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.044256836
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.076763
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  zoomAlpha:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.076763
-      outWeight: 0
-    - serializedVersion: 3
-      time: 2
-      value: 1
-      inSlope: 0
-      outSlope: -0.55936533
-      tangentMode: 1
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.08903114
-    - serializedVersion: 3
-      time: 5
-      value: 0.247818
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  zoomSettlingCooldown: 0.1
-  zoomSettlingScalar: 3
-  zoomSettlingMinimum: 0.1
-  zoomSettlingUpCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: -0.033778485
-      outSlope: -0.033778485
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.0598773
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -3.1977594
-      outSlope: -3.1977594
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.022861958
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  zoomSettlingDownCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: -3.016518
-      outSlope: -3.016518
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.01947502
-    - serializedVersion: 3
-      time: 1
-      value: -1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  GridZoomCounts:
-  - Begin: 0
-    End: 1
-    ZoomCount: 3
-    Landings: 1
-    UnitType: 10
-    UnitAmountMinimum: 10
-    UnitAmountMaximum: 30
-  - Begin: 1
-    End: 1.25
-    ZoomCount: 1
-    Landings: 0
-    UnitType: 20
-    UnitAmountMinimum: 1
-    UnitAmountMaximum: 10
-  - Begin: 1.25
-    End: 1.5
-    ZoomCount: 2
-    Landings: 0
-    UnitType: 20
-    UnitAmountMinimum: 10
-    UnitAmountMaximum: 100
-  - Begin: 1.5
-    End: 1.75
-    ZoomCount: 4
-    Landings: 0
-    UnitType: 20
-    UnitAmountMinimum: 100
-    UnitAmountMaximum: 1000
-  - Begin: 1.75
-    End: 2
-    ZoomCount: 1
-    Landings: 1
-    UnitType: 20
-    UnitAmountMinimum: 1000
-    UnitAmountMaximum: 10000
-  - Begin: 2
-    End: 2.7
-    ZoomCount: 3
-    Landings: 0
-    UnitType: 20
-    UnitAmountMinimum: 10000
-    UnitAmountMaximum: 30000
-  - Begin: 2.7
-    End: 3
-    ZoomCount: 1
-    Landings: 1
-    UnitType: 20
-    UnitAmountMinimum: 30000
-    UnitAmountMaximum: 50000
-  - Begin: 3
-    End: 3.5
-    ZoomCount: 1
-    Landings: 0
-    UnitType: 20
-    UnitAmountMinimum: 50000
-    UnitAmountMaximum: 500000
-  - Begin: 3.5
-    End: 4
-    ZoomCount: 1
-    Landings: 1
-    UnitType: 20
-    UnitAmountMinimum: 500000
-    UnitAmountMaximum: 1000000
-  - Begin: 4
-    End: 4.3
-    ZoomCount: 2
-    Landings: 0
-    UnitType: 20
-    UnitAmountMinimum: 1000000
-    UnitAmountMaximum: 2000000
-  - Begin: 4.3
-    End: 4.99
-    ZoomCount: 2
-    Landings: 1
-    UnitType: 20
-    UnitAmountMinimum: 2000000
-    UnitAmountMaximum: 5000000
-  - Begin: 4.99
-    End: 5
-    ZoomCount: 1
-    Landings: 1
-    UnitType: 20
-    UnitAmountMinimum: 5000000
-    UnitAmountMaximum: 5000000
+  gridUnityWidth: 3.5
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
+  gridOffset: 0.001
   gridMesh: {fileID: 23745486960222072}
-  gridRadius: 3.5
+  gridArea: {fileID: 1730598729709772}
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -635,7 +475,7 @@ RectTransform:
   m_Children:
   - {fileID: 224432514708299340}
   m_Father: {fileID: 4978644210578882}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

@@ -92,7 +92,7 @@ namespace LunraGames.SubLight
 			var currentGestureNormal = GetGesture();
 			var currentGesture = currentGestureNormal * GetGestureSensitivity();
 
-			var gestureState = Gesture.States.Unknown;
+			var gestureState = Gesture.States.Active;
 
 			if (gesturingBegan)
 			{

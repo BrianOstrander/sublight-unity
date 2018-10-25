@@ -217,7 +217,6 @@ namespace LunraGames.SubLight
 
 		void InitializeListeners(Action done)
 		{
-			App.Callbacks.UniversePositionRequest += UniversePosition.OnUniversePositionRequest;
 			done();
 		}
 

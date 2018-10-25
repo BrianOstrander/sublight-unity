@@ -12,49 +12,14 @@ namespace LunraGames.SubLight
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-		const float UnityToUniverseScalar = 0.02f;
-		const float UniverseToUnityScalar = 50f;
-		const float UniverseToLightYearScalar = 25f;
-
-		/// <summary>
-		/// The current sector offset of all unity units.
-		/// </summary>
-		static UniversePosition CurrentOffset = Zero;
-
-		/// <summary>
-		/// Updates the sector offset upon request.
-		/// </summary>
-		/// <remarks>
-		/// Should be added as a listener in the initialize state.
-		/// </remarks>
-		/// <param name="request">Request.</param>
-		public static void OnUniversePositionRequest(UniversePositionRequest request)
-		{
-			// TODO: Should this stuff be here???
-			switch(request.State)
-			{
-				case UniversePositionRequest.States.Request:
-					CurrentOffset = request.Position;
-					App.Callbacks.UniversePositionRequest(request.Duplicate(UniversePositionRequest.States.Complete));
-					break;
-			}
-		}
-
-		public static float ToUniverseDistance(float unityDistance) { return unityDistance * UnityToUniverseScalar; }
-
-		public static float ToUnityDistance(float universeDistance) { return universeDistance * UniverseToUnityScalar; }
+		const float UniverseToLightYearScalar = 50f;
+		const float LightYearToUniverseScalar = 0.02f;
 
 		public static float ToLightYearDistance(float universeDistance) { return universeDistance * UniverseToLightYearScalar; }
+		public static float ToUniverseDistance(float lightYearDistance) { return lightYearDistance * LightYearToUniverseScalar; }
 
-		public static UniversePosition ToUniverse(Vector3 unityPosition)
-		{
-			return new UniversePosition(CurrentOffset.Sector, unityPosition * UnityToUniverseScalar);
-		}
-
-		public static Vector3 ToUnity(UniversePosition universePosition)
-		{
-			return ((universePosition.Sector - CurrentOffset.Sector) + universePosition.System) * UniverseToUnityScalar;
-		}
+		public static Vector3 ToLightYearDistance(Vector3 universeDistance) { return universeDistance * UniverseToLightYearScalar; }
+		public static Vector3 ToUniverseDistance(Vector3 lightYearDistance) { return lightYearDistance * LightYearToUniverseScalar; }
 
 		/// <summary>
 		/// Calculates the distance in universe units between two points.
@@ -105,8 +70,6 @@ namespace LunraGames.SubLight
 		[JsonProperty] public readonly Vector3 Sector;
 		[JsonProperty] public readonly Vector3 System;
 
-		[JsonIgnore]
-		public Vector3 Normalized { get { return ToUnity(this + CurrentOffset).normalized; } }
 		[JsonIgnore]
 		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, System); } }
 		[JsonIgnore]

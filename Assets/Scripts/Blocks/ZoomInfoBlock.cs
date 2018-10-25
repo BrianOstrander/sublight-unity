@@ -1,5 +1,7 @@
 ﻿using System;
 
+using UnityEngine;
+
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
@@ -16,5 +18,9 @@ namespace LunraGames.SubLight
 		public LanguageStringModel ScaleName;
 		public LanguageStringModel UnitName;
 		public Func<string> UnitAmountFormatted;
+
+		public Vector3 LightYearOffset;
+		public UniversePosition PositionOffset;
+		public UniversePosition Position;
 	}
 }

@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Grid
+  m_Name: Grid2
   m_Shader: {fileID: 4800000, guid: 0fd624d0b35154a1891aede5cfae0b2d, type: 3}
   m_ShaderKeywords: _GRIDINVERT_ON
   m_LightmapFlags: 4
@@ -142,6 +142,6 @@ Material:
     - _GridColor: {r: 1, g: 1, b: 1, a: 1}
     - _GridTint: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: 0, g: 1.69, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
