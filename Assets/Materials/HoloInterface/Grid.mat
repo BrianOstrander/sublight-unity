@@ -125,7 +125,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
-    - _Tiling: 4
+    - _Tiling: 8
     - _TilingPrimary: 4
     - _TilingScalar: 10
     - _TilingSecondary: 8

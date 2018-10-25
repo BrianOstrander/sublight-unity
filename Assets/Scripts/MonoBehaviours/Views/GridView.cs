@@ -19,6 +19,7 @@ namespace LunraGames.SubLight.Views
 			public bool ZoomingUp;
 			public float Progress;
 			public float Tiling;
+			public float Alpha;
 			public Vector2 Offset;
 		}
 
@@ -34,14 +35,20 @@ namespace LunraGames.SubLight.Views
 		MeshRenderer gridMesh;
 		[SerializeField]
 		GameObject gridArea;
+		[SerializeField]
+		AnimationCurve hideScaleAlpha;
+		[SerializeField]
+		AnimationCurve revealScaleAlpha;
 
 		Material[] grids;
 
 		public float GridUnityWidth { get { return gridUnityWidth; } }
 		public Action<bool> Dragging { set; private get; }
 		public bool Highlighted { get; private set; }
-		//public Color HoloColor { set { gridMesh.material.SetColor(ShaderConstants.HoloGrid.GridColor, value); } }
 		public Color HoloColor { set { Debug.LogWarning("todo"); } }
+
+		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
+		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
 
 		public Grid[] Grids
 		{
@@ -81,12 +88,10 @@ namespace LunraGames.SubLight.Views
 						else tiling = block.Tiling - (block.Tiling * 0.5f * block.Progress);
 					}
 
-					var alpha = block.IsTarget ? block.Progress : 1f - block.Progress;
-
 					//grid.SetColor(ShaderConstants.HoloGridBasic.MainColor, block.IsTarget ? Color.green : Color.red);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, tiling);
 					grid.SetVector(ShaderConstants.HoloGridBasic.Offset, block.Offset);
-					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, alpha);
+					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, block.Alpha);
 
 					activeMaterials.Add(grid);
 				}
@@ -208,6 +213,8 @@ namespace LunraGames.SubLight.Views
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
 		GridView.Grid[] Grids { set; }
+		AnimationCurve HideScaleAlpha { get; }
+		AnimationCurve RevealScaleAlpha { get; }
 		void ProcessDrag(Vector2 viewport, out Vector3 unityPosition);
 
 		void SetRadius(float scalar, bool showing);

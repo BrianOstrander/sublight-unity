@@ -415,9 +415,56 @@ MonoBehaviour:
     m_RotationOrder: 4
   gridUnityWidth: 3.5
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
-  gridOffset: 0.001
   gridMesh: {fileID: 23745486960222072}
   gridArea: {fileID: 1730598729709772}
+  hideScaleAlpha:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.03426422
+      outSlope: -0.03426422
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.07620661
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: -0.009640528
+      outSlope: -0.009640528
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.108759485
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  revealScaleAlpha:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.4
+      value: 0
+      inSlope: 0.070347175
+      outSlope: 0.070347175
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.07423087
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1.6666666
+      outSlope: 1.6666666
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1
