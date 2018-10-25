@@ -75,21 +75,8 @@ namespace LunraGames.SubLight.Views
 					var block = value[i];
 					var grid = grids[i];
 
-					var tiling = 1f;
-
-					if (block.IsTarget)
-					{
-						if (block.ZoomingUp) tiling = block.Tiling - (block.Tiling * 0.5f * (1f - block.Progress));
-						else tiling = block.Tiling + (block.Tiling * (1f - block.Progress));
-					}
-					else
-					{
-						if (block.ZoomingUp) tiling = block.Tiling + (block.Tiling * block.Progress);
-						else tiling = block.Tiling - (block.Tiling * 0.5f * block.Progress);
-					}
-
 					//grid.SetColor(ShaderConstants.HoloGridBasic.MainColor, block.IsTarget ? Color.green : Color.red);
-					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, tiling);
+					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
 					grid.SetVector(ShaderConstants.HoloGridBasic.Offset, block.Offset);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, block.Alpha);
 

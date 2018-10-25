@@ -91,16 +91,30 @@ namespace LunraGames.SubLight.Presenters
 				var curr = unitMaps[i];
 				var grid = new GridView.Grid();
 
+				grid.ZoomingUp = zoomingUp;
 				grid.IsTarget = Mathf.Approximately(curr.ZoomBegin, model.Zoom.Value);
 				grid.IsActive = grid.IsTarget || (Mathf.Approximately(curr.ZoomBegin, lastZoom) && !Mathf.Approximately(scalar, 1f));
 				grid.Progress = scalar;
 				grid.Tiling = 8f;
 
+				var finalTiling = grid.Tiling;
+
+				if (grid.IsTarget)
+				{
+					if (grid.ZoomingUp) finalTiling = grid.Tiling - (grid.Tiling * 0.5f * (1f - grid.Progress));
+					else finalTiling = grid.Tiling + (grid.Tiling * (1f - grid.Progress));
+				}
+				else
+				{
+					if (grid.ZoomingUp) finalTiling = grid.Tiling + (grid.Tiling * grid.Progress);
+					else finalTiling = grid.Tiling - (grid.Tiling * 0.5f * grid.Progress);
+				}
+
+				grid.Tiling = finalTiling;
+
 				var alphaCurve = grid.IsTarget ? View.RevealScaleAlpha : View.HideScaleAlpha;
 
 				grid.Alpha = alphaCurve.Evaluate(scalar);
-
-				grid.ZoomingUp = zoomingUp;
 
 				result[i] = grid;
 			}
