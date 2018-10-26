@@ -22,6 +22,14 @@ namespace LunraGames.SubLight.Presenters
 			ClusterOrigin = 30
 		}
 
+		enum ZoomStates
+		{
+			Unknown = 0,
+			Complete = 10,
+			Zooming = 20,
+			UnderOverZooming = 30
+		}
+
 		struct UnitMap
 		{
 			public float ZoomBegin;
@@ -85,7 +93,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture += OnCurrentGesture;
 
-			BeginZoom(model.Zoom.Value.FromZoom, model.Zoom.Value.ToZoom, true);
+			BeginZoom(model.FocusTransform.Value.Zoom.Begin, model.FocusTransform.Value.Zoom.End, true);
 		}
 
 		protected override void OnUnBind()
@@ -100,7 +108,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.Dragging = OnDragging;
 			View.DrawGizmos = OnDrawGizmos;
-			BeginZoom(model.Zoom.Value.FromZoom, model.Zoom.Value.ToZoom, true);
+			BeginZoom(model.FocusTransform.Value.Zoom.Begin, model.FocusTransform.Value.Zoom.End, true);
 		}
 
 		void AnimateZoom(float scalar)
@@ -158,17 +166,15 @@ namespace LunraGames.SubLight.Presenters
 				);
 			}
 
-			model.Zoom.Value = new ZoomBlock(
-				fromZoom,
-				toZoom,
-				fromZoom + ((toZoom - fromZoom) * scalar),
+			model.FocusTransform.Value = new FocusTransform(
+				TweenBlock.Create(fromZoom, toZoom, fromZoom + ((toZoom - fromZoom) * scalar), scalar),
+				TweenBlock.Zero,
 				fromScaleName,
 				toScaleName,
 				fromGetUnitCount,
 				toGetUnitCount,
 				fromUnitType,
-				toUnitType,
-				scalar
+				toUnitType
 			);
 
 			View.Grids = result;
@@ -196,26 +202,17 @@ namespace LunraGames.SubLight.Presenters
 			var value = gesture.TimeDelta * gesture.Current.y;
 			if (Mathf.Abs(value) < View.ScrollSensitivity) return;
 
-			var targetZoom = model.Zoom.Value.Zoom;
+			var targetZoom = model.FocusTransform.Value.Zoom.Current;
 			if (value < 0f) targetZoom = Mathf.Max(0f, targetZoom - 1f);
 			else targetZoom = Mathf.Min(targetZoom + 1f, 5f);
 
-			if (Mathf.Approximately(targetZoom, model.Zoom.Value.Zoom)) return;
-			BeginZoom(model.Zoom.Value.Zoom, targetZoom);
+			if (Mathf.Approximately(targetZoom, model.FocusTransform.Value.Zoom.Current)) return;
+			BeginZoom(model.FocusTransform.Value.Zoom.Current, targetZoom);
 		}
 
 		void OnDragging(bool isDragging)
 		{
 			return;
-			if (!isDragging)
-			{
-				var wasZoom = model.Zoom.Value.Zoom;
-				var newZoom = Mathf.Approximately(model.Zoom.Value.Zoom, 1f) ? 2f : 1f;
-				var name = Mathf.Approximately(newZoom, 1f) ? "Local" : "Stellar";
-				Debug.Log("Zooming " + ((wasZoom < newZoom) ? "Up" : "Down")+" to "+name);
-
-				BeginZoom(model.Zoom.Value.Zoom, newZoom);
-			}
 		}
 
 		void OnCurrentGesture(Gesture gesture)

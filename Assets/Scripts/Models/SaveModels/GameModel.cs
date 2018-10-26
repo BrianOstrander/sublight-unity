@@ -28,7 +28,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ToolbarSelections toolbarSelection;
 
 		[JsonProperty] float universeUnitsPerUnityUnit;
-		[JsonProperty] ZoomBlock zoom;
+		[JsonProperty] FocusTransform focusTransform;
 
 		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
 		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
@@ -104,7 +104,7 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<ZoomBlock> Zoom;
+		public readonly ListenerProperty<FocusTransform> FocusTransform;
 		[JsonIgnore]
 		public readonly ListenerProperty<float> UniverseUnitsPerUnityUnit;
 		#endregion
@@ -139,7 +139,7 @@ namespace LunraGames.SubLight.Models
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
-			Zoom = new ListenerProperty<ZoomBlock>(value => zoom = value, () => zoom);
+			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
 			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);

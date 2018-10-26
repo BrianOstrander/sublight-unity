@@ -19,19 +19,19 @@ namespace LunraGames.SubLight.Presenters
 			this.scaleText = scaleText;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
-			model.Zoom.Changed += OnZoom;
+			model.FocusTransform.Changed += OnZoom;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
-			model.Zoom.Changed -= OnZoom;
+			model.FocusTransform.Changed -= OnZoom;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.ScaleText = scaleText.Value.Value;
-			OnZoom(model.Zoom.Value);
+			OnZoom(model.FocusTransform.Value);
 		}
 
 		#region
@@ -40,12 +40,21 @@ namespace LunraGames.SubLight.Presenters
 			View.HoloColor = request.Color;
 		}
 
-		void OnZoom(ZoomBlock block)
+		void OnZoom(FocusTransform block)
 		{
-			View.ScaleNameText = block.ToScaleName.Value.Value;
-			View.UnitCountText = block.GetToUnitCount();
-			View.UnitTypeText = block.ToUnitType.Value.Value;
-			View.Zoom(block.Zoom, block.Progress, block.State == ZoomBlock.States.ZoomingDown);
+			switch(block.Zoom.Transition)
+			{
+				case TweenTransitions.ToLower:
+				case TweenTransitions.ToHigher:
+					View.ScaleNameText = block.ToScaleName.Value.Value;
+					View.UnitCountText = block.GetToUnitCount();
+					View.UnitTypeText = block.ToUnitType.Value.Value;
+					View.Zoom(block.Zoom.Current, block.Zoom.Progress, block.Zoom.Transition == TweenTransitions.ToLower);
+					break;
+				default:
+					Debug.LogError("Unrecognized zoom transition: " + block.Zoom.Transition);
+					break;
+			}
 		}
 		#endregion
 	}
