@@ -238,6 +238,11 @@ namespace LunraGames.SubLight.Presenters
 
 			Gizmos.color = Color.cyan;
 			Gizmos.DrawWireSphere(stellarScale.GetUnityPosition(oneLightYear), 0.05f);
+
+			Gizmos.color = Color.yellow;
+			var testPos = localScale.UnityOrigin + new Vector3(0f, 0f, 1f);
+			Gizmos.DrawWireSphere(testPos, 0.1f);
+			Handles.Label(testPos + new Vector3(0f, 0f, 0.5f), localScale.GetUniversePosition(testPos).ToString());
 #endif
 		}
 		#endregion

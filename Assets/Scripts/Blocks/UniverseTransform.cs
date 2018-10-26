@@ -39,7 +39,7 @@ namespace LunraGames.SubLight
 
 		public Vector3 GetUnityPosition(UniversePosition universePosition)
 		{
-			var universeFromOrigin = (universePosition - UniverseOrigin);
+			var universeFromOrigin = universePosition - UniverseOrigin;
 			var sector = universeFromOrigin.Sector;
 			var system = universeFromOrigin.System;
 			sector.Scale(UniverseToUnity);
@@ -49,7 +49,9 @@ namespace LunraGames.SubLight
 
 		public UniversePosition GetUniversePosition(Vector3 unityPosition)
 		{
-			return UniversePosition.Zero; // todo
+			var unityFromOrigin = unityPosition - UnityOrigin;
+			unityFromOrigin.Scale(UnityToUniverse);
+			return UniverseOrigin + new UniversePosition(unityFromOrigin);
 		}
 
 		// TODO: add where direction of goal is...
