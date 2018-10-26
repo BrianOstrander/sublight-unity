@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+
+using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -46,9 +49,18 @@ namespace LunraGames.SubLight.Presenters
 
 		bool isDragging;
 
-		float lastZoom;
+		float fromZoom;
+		float toZoom;
+
 		float zoomDuration;
 		float? zoomRemaining;
+
+		LanguageStringModel fromScaleName;
+		LanguageStringModel toScaleName;
+		Func<string> fromGetUnitCount;
+		Func<string> toGetUnitCount;
+		LanguageStringModel fromUnitType;
+		LanguageStringModel toUnitType;
 
 		public GridPresenter(
 			GameModel model,
@@ -72,7 +84,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture += OnCurrentGesture;
-			model.Zoom.Changed += OnZoom;
+
+			BeginZoom(model.Zoom.Value.FromZoom, model.Zoom.Value.ToZoom, true);
 		}
 
 		protected override void OnUnBind()
@@ -81,20 +94,20 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
-			model.Zoom.Changed -= OnZoom;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
 			View.DrawGizmos = OnDrawGizmos;
-			AnimateZoom(1f);
+			BeginZoom(model.Zoom.Value.FromZoom, model.Zoom.Value.ToZoom, true);
 		}
 
 		void AnimateZoom(float scalar)
 		{
-			var zoomingUp = lastZoom < model.Zoom.Value;
+			var zoomingUp = fromZoom < toZoom;
 			var result = new GridView.Grid[unitMaps.Length];
+
 			for (var i = 0; i < unitMaps.Length; i++)
 			{
 				const float Tiling = 8f;
@@ -103,8 +116,8 @@ namespace LunraGames.SubLight.Presenters
 				var grid = new GridView.Grid();
 
 				grid.ZoomingUp = zoomingUp;
-				grid.IsTarget = Mathf.Approximately(curr.ZoomBegin, model.Zoom.Value);
-				grid.IsActive = grid.IsTarget || (Mathf.Approximately(curr.ZoomBegin, lastZoom) && !Mathf.Approximately(scalar, 1f));
+				grid.IsTarget = Mathf.Approximately(curr.ZoomBegin, toZoom);
+				grid.IsActive = grid.IsTarget || (Mathf.Approximately(curr.ZoomBegin, fromZoom) && !Mathf.Approximately(scalar, 1f));
 				grid.Progress = scalar;
 
 				var tileScalar = 1f;
@@ -145,31 +158,22 @@ namespace LunraGames.SubLight.Presenters
 				);
 			}
 
+			model.Zoom.Value = new ZoomBlock(
+				fromZoom,
+				toZoom,
+				fromZoom + ((toZoom - fromZoom) * scalar),
+				fromScaleName,
+				toScaleName,
+				fromGetUnitCount,
+				toGetUnitCount,
+				fromUnitType,
+				toUnitType,
+				scalar
+			);
+
 			View.Grids = result;
 
-			if (Mathf.Approximately(1f, scalar))
-			{
-				lastZoom = model.Zoom.Value;
-				zoomRemaining = null;
-			}
-		}
-
-		void ReasonableUnits(float units, out float expressed, out float multiplier)
-		{
-			expressed = units;
-			multiplier = 1f;
-
-			if (1000000f <= units)
-			{
-				expressed = units / 1000000;
-				multiplier = 1000000;
-				return;
-			}
-			if (1000 <= units)
-			{
-				expressed = units / 1000;
-				multiplier = 1000;
-			}
+			if (Mathf.Approximately(1f, scalar)) zoomRemaining = null;
 		}
 
 		#region
@@ -179,13 +183,6 @@ namespace LunraGames.SubLight.Presenters
 
 			zoomRemaining = Mathf.Max(0f, zoomRemaining.Value - delta);
 			AnimateZoom((zoomDuration - zoomRemaining.Value) / zoomDuration);
-		}
-
-		void OnZoom(float zoom)
-		{
-			if (!View.Visible) return;
-			zoomDuration = 2.5f;
-			zoomRemaining = zoomDuration;
 		}
 
 		void OnHoloColorRequest(HoloColorRequest request)
@@ -203,12 +200,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!isDragging)
 			{
-				var wasZoom = model.Zoom.Value;
-				var newZoom = Mathf.Approximately(model.Zoom.Value, 1f) ? 2f : 1f;
+				var wasZoom = model.Zoom.Value.Zoom;
+				var newZoom = Mathf.Approximately(model.Zoom.Value.Zoom, 1f) ? 2f : 1f;
 				var name = Mathf.Approximately(newZoom, 1f) ? "Local" : "Stellar";
 				Debug.Log("Zooming " + ((wasZoom < newZoom) ? "Up" : "Down")+" to "+name);
 
-				model.Zoom.Value = newZoom;
+				BeginZoom(model.Zoom.Value.Zoom, newZoom);
 			}
 		}
 
@@ -217,6 +214,26 @@ namespace LunraGames.SubLight.Presenters
 			if (!View.Visible || !isDragging) return;
 
 
+		}
+
+		void BeginZoom(float fromZoom, float toZoom, bool instant = false)
+		{
+			this.fromZoom = fromZoom;
+			this.toZoom = toZoom;
+
+			zoomDuration = 2.5f;
+			zoomRemaining = zoomDuration;
+
+			var fromGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, fromZoom));
+			var toGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, toZoom));
+
+			fromScaleName = info.GetScaleName(fromGrid.ZoomBegin);
+			toScaleName = info.GetScaleName(toGrid.ZoomBegin);
+
+			info.GetUnitModels(fromGrid.LightYears, info.LightYearUnit, out fromGetUnitCount, out fromUnitType);
+			info.GetUnitModels(toGrid.LightYears, info.LightYearUnit, out toGetUnitCount, out toUnitType);
+
+			if (instant) AnimateZoom(1f);
 		}
 
 		void OnDrawGizmos()

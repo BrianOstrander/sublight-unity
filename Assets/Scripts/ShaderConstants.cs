@@ -209,6 +209,10 @@ namespace LunraGames.SubLight
 			/// </summary>
 			public const string Progress = "_Progress";
 			/// <summary>
+			/// Does the bar progress from right to left, or the other way?
+			/// </summary>
+			public const string ProgressToRight = "_ProgressToRight";
+			/// <summary>
 			/// From 0 to 1.
 			/// </summary>
 			public const string FullProgress = "_FullProgress";

@@ -34,31 +34,29 @@ namespace LunraGames.SubLight.Views
 		Vector3 rotation;
 
 		[SerializeField]
-		AnimationCurve gridUnitScaleFullCurve;
+		AnimationCurve toRightProgressCurve;
+		[SerializeField]
+		AnimationCurve toRightAlphaCurve;
+		[SerializeField]
+		AnimationCurve toLeftProgressCurve;
+		[SerializeField]
+		AnimationCurve toLeftAlphaCurve;
 
+		public string ScaleNameText { set { scaleNameLabel.text = value ?? string.Empty; } }
 		public string ScaleText { set { scaleLabel.text = value ?? string.Empty; } }
+		public string UnitCountText { set { unitCountLabel.text = value ?? string.Empty; } }
+		public string UnitTypeText { set { unitTypeLabel.text = value ?? string.Empty; } }
 
-		public ZoomInfoBlock ZoomInfo
+		public void Zoom(float zoom, float unitProgress, bool unitToRight)
 		{
-			set
-			{
-				gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, value.Zoom);
-				
-				var unitZoom = Mathf.Approximately(value.Zoom, 5f) ? 1f : value.UnitProgress;
-				
-				gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Progress, unitZoom);
-				
-				gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.FullProgress, gridUnitScaleFullCurve.Evaluate(unitZoom));
+			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, zoom);
 
-				if (value.ScaleName == null) scaleNameLabel.text = string.Empty;
-				else scaleNameLabel.text = value.ScaleName.Value.Value ?? string.Empty;
+			var progressCurve = unitToRight ? toRightProgressCurve : toLeftProgressCurve;
+			var alphaCurve = unitToRight ? toRightAlphaCurve : toLeftAlphaCurve;
 
-				if (value.UnitAmountFormatted == null) unitCountLabel.text = string.Empty;
-				else unitCountLabel.text = value.UnitAmountFormatted() ?? string.Empty;
-				
-				if (value.UnitName == null) unitTypeLabel.text = string.Empty;
-				else unitTypeLabel.text = value.UnitName.Value.Value ?? string.Empty;
-			}
+			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Progress, progressCurve.Evaluate(unitProgress));
+			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.FullProgress, alphaCurve.Evaluate(unitProgress));
+			//gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.ProgressToRight, unitToRight ? 1f : 0f);
 		}
 
 		public Color HoloColor
@@ -77,7 +75,10 @@ namespace LunraGames.SubLight.Views
 			gridScaleMesh.material = new Material(gridScaleMaterial);
 			gridUnitScaleMesh.material = new Material(gridUnitScaleMaterial);
 
+			ScaleNameText = null;
 			ScaleText = null;
+			UnitCountText = null;
+			UnitTypeText = null;
 
 			HoloColor = Color.white;
 
@@ -88,7 +89,10 @@ namespace LunraGames.SubLight.Views
 
 	public interface IGridScaleView : IView, IHoloColorView
 	{
+		string ScaleNameText { set; }
 		string ScaleText { set; }
-		ZoomInfoBlock ZoomInfo { set; }
+		string UnitCountText { set; }
+		string UnitTypeText { set; }
+		void Zoom(float zoom, float unitProgress, bool unitToRight);
 	}
 }

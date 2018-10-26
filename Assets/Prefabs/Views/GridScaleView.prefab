@@ -861,20 +861,11 @@ MonoBehaviour:
   rotateTargetPrimary: {fileID: 224373582771213062}
   rotateTargetSecondary: {fileID: 224273845506668954}
   rotation: {x: 0, y: -171.5, z: 0}
-  gridUnitScaleFullCurve:
+  toRightProgressCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.9
       value: 0
       inSlope: 0
       outSlope: 0
@@ -885,12 +876,84 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 10.278531
-      outSlope: 10.278531
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.030608524
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  toRightAlphaCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -10.529205
+      outSlope: -10.529205
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.03471634
+    - serializedVersion: 3
+      time: 0.25
+      value: 0
+      inSlope: -0.13406748
+      outSlope: -0.13406748
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.038950026
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  toLeftProgressCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.10110178
+      outSlope: -0.10110178
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.051651143
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.02753169
+      outSlope: -0.02753169
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.047417462
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  toLeftAlphaCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.75
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 10.572143
+      outSlope: 10.572143
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.02370882
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

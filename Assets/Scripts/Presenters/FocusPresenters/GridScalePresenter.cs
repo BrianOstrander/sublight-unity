@@ -19,19 +19,19 @@ namespace LunraGames.SubLight.Presenters
 			this.scaleText = scaleText;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
-			//model.ZoomInfo.Changed += OnZoomInfo;
+			model.Zoom.Changed += OnZoom;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
-			//model.ZoomInfo.Changed -= OnZoomInfo;
+			model.Zoom.Changed -= OnZoom;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.ScaleText = scaleText.Value.Value;
-			//View.ZoomInfo = model.ZoomInfo.Value;
+			OnZoom(model.Zoom.Value);
 		}
 
 		#region
@@ -40,11 +40,12 @@ namespace LunraGames.SubLight.Presenters
 			View.HoloColor = request.Color;
 		}
 
-		void OnZoomInfo(ZoomInfoBlock zoomInfo)
+		void OnZoom(ZoomBlock block)
 		{
-			if (!View.Visible) return;
-
-			View.ZoomInfo = zoomInfo;
+			View.ScaleNameText = block.ToScaleName.Value.Value;
+			View.UnitCountText = block.GetToUnitCount();
+			View.UnitTypeText = block.ToUnitType.Value.Value;
+			View.Zoom(block.Zoom, block.Progress, block.State == ZoomBlock.States.ZoomingDown);
 		}
 		#endregion
 	}
