@@ -39,9 +39,12 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve hideScaleAlpha;
 		[SerializeField]
 		AnimationCurve revealScaleAlpha;
+		[SerializeField]
+		float scrollSensitivity;
 
 		Material[] grids;
 
+		public float ScrollSensitivity { get { return scrollSensitivity; } }
 		public Vector3 GridUnityOrigin { get { return gridMesh.transform.position; } }
 		public float GridUnityWidth { get { return gridUnityWidth; } }
 		public Action<bool> Dragging { set; private get; }
@@ -204,6 +207,7 @@ namespace LunraGames.SubLight.Views
 	{
 		Vector3 GridUnityOrigin { get; }
 		float GridUnityWidth { get; }
+		float ScrollSensitivity { get; }
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
 		GridView.Grid[] Grids { set; }

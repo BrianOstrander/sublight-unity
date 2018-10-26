@@ -465,6 +465,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  scrollSensitivity: 0.1
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1

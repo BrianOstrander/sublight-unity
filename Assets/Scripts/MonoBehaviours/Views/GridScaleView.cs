@@ -49,7 +49,7 @@ namespace LunraGames.SubLight.Views
 
 		public void Zoom(float zoom, float unitProgress, bool unitToRight)
 		{
-			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, zoom);
+			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, zoom + 1f);
 
 			var progressCurve = unitToRight ? toRightProgressCurve : toLeftProgressCurve;
 			var alphaCurve = unitToRight ? toRightAlphaCurve : toLeftAlphaCurve;

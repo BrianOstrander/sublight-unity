@@ -44,7 +44,8 @@ namespace LunraGames.SubLight
 				gridInfo.ScaleNames = new LanguageStringModel[] {
 					LanguageStringModel.Override("System"),
 					LanguageStringModel.Override("Local"),
-					LanguageStringModel.Override("Sector"),
+					LanguageStringModel.Override("Interstellar"),
+					LanguageStringModel.Override("Quadrant"),
 					LanguageStringModel.Override("Galactic"),
 					LanguageStringModel.Override("Cluster")
 				};

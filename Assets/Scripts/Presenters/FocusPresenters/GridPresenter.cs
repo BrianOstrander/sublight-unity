@@ -192,12 +192,21 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnCurrentScrollGesture(ScrollGesture gesture)
 		{
-			if (!View.Visible || !View.Highlighted) return;
+			if (!View.Visible || !View.Highlighted || zoomRemaining.HasValue) return;
+			var value = gesture.TimeDelta * gesture.Current.y;
+			if (Mathf.Abs(value) < View.ScrollSensitivity) return;
 
+			var targetZoom = model.Zoom.Value.Zoom;
+			if (value < 0f) targetZoom = Mathf.Max(0f, targetZoom - 1f);
+			else targetZoom = Mathf.Min(targetZoom + 1f, 5f);
+
+			if (Mathf.Approximately(targetZoom, model.Zoom.Value.Zoom)) return;
+			BeginZoom(model.Zoom.Value.Zoom, targetZoom);
 		}
 
 		void OnDragging(bool isDragging)
 		{
+			return;
 			if (!isDragging)
 			{
 				var wasZoom = model.Zoom.Value.Zoom;
@@ -213,7 +222,6 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible || !isDragging) return;
 
-
 		}
 
 		void BeginZoom(float fromZoom, float toZoom, bool instant = false)
@@ -221,7 +229,7 @@ namespace LunraGames.SubLight.Presenters
 			this.fromZoom = fromZoom;
 			this.toZoom = toZoom;
 
-			zoomDuration = 2.5f;
+			zoomDuration = 0.2f;
 			zoomRemaining = zoomDuration;
 
 			var fromGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, fromZoom));
