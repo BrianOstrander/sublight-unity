@@ -133,24 +133,42 @@ namespace LunraGames.SubLight
 			{
 				scrollGestureState = ScrollGesture.States.Begin;
 
-				beginScrollGesture = currentScrollGesture;
-				beginScrollGestureNormal = currentScrollGestureNormal;
+				beginScrollGesture = Vector2.zero;
+				beginScrollGestureNormal = Vector2.zero;
 				callbacks.BeginScrollGesture(new ScrollGesture(currentScrollGestureNormal, IsSecondaryClickInteraction(), delta));
 			}
+
+			var scrollGestureDeltaSinceLast = scrollGestureState == ScrollGesture.States.Begin ? currentScrollGesture : (currentScrollGesture - lastScrollGesture);
 
 			if (scrollGesturingEnded)
 			{
 				scrollGestureState = ScrollGesture.States.End;
-
-				callbacks.EndScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, scrollGestureState, IsSecondaryClickInteraction(), delta));
+				callbacks.EndScrollGesture(
+					new ScrollGesture(
+						beginScrollGestureNormal,
+						currentScrollGestureNormal,
+						scrollGestureDeltaSinceLast,
+						scrollGestureState,
+						IsSecondaryClickInteraction(),
+						delta
+					)
+				);
 			}
 
 			if (IsScrollGesturing() || scrollGesturingEnded)
 			{
-				callbacks.CurrentScrollGesture(new ScrollGesture(beginScrollGestureNormal, currentScrollGestureNormal, scrollGestureState, IsSecondaryClickInteraction(), delta));
+				if (scrollGestureState == ScrollGesture.States.Unknown) scrollGestureState = ScrollGesture.States.Active;
+				callbacks.CurrentScrollGesture(
+					new ScrollGesture(
+						beginScrollGestureNormal,
+						currentScrollGestureNormal,
+						scrollGestureDeltaSinceLast,
+						scrollGestureState,
+						IsSecondaryClickInteraction(),
+						delta
+					)
+				);
 			}
-
-			var scrollGestureDeltaFromBegin = GetScrollGestureDelta(scrollGesturingBegan, scrollGesturingEnded, beginScrollGesture, lastScrollGesture);
 
 			lastScrollGesture = currentScrollGesture;
 			// END SCROLL GESTURE
@@ -287,6 +305,5 @@ namespace LunraGames.SubLight
 		protected virtual bool IsScrollGesturing() { return false; }
 		protected virtual bool GetScrollGestureEnded() { return false; }
 		protected virtual Vector2 GetScrollGesture() { return Vector2.zero; }
-		protected virtual Vector2 GetScrollGestureDelta(bool gestureBegan, bool gestureEnded, Vector2 gesture, Vector2 lastGesture) { return gestureBegan || gestureEnded ? Vector2.zero : gesture - lastGesture; }
 	}
 }

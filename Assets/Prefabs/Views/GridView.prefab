@@ -380,6 +380,35 @@ MonoBehaviour:
     CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
+  zoomAnimationDuration: 0.3
+  nudgeAnimationDuration: 0.4
+  zoomThreshold: 100
+  nudgeThreshold: 0.75
+  scrollCooldown: 0.2
+  scrollCooldownFalloff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: -0.000001050643
+      outSlope: -0.000001050643
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.05673158
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0.06424066
+      outSlope: 0.06424066
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.040643513
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   revealCurve:
     serializedVersion: 2
     m_Curve:
@@ -465,7 +494,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  scrollSensitivity: 0.04
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1

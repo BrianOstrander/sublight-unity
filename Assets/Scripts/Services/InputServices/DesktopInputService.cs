@@ -99,7 +99,14 @@ namespace LunraGames.SubLight
 		bool beginWasScrolling;
 		bool endWasScrolling;
 
-		bool isScrolling { get { return !Mathf.Approximately(0f, GetScrollGesture().sqrMagnitude); } }
+		bool isScrolling
+		{
+			get
+			{
+				var current = GetScrollGesture();
+				return !Mathf.Approximately(0f, current.y) || !Mathf.Approximately(0f, current.x);
+			}
+		}
 
 		protected override bool GetScrollGestureBegan()
 		{

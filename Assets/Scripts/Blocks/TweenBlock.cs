@@ -8,7 +8,9 @@ namespace LunraGames.SubLight
 		Unknown = 0,
 		NoChange = 10,
 		ToLower = 20,
-		ToHigher = 30
+		ToHigher = 30,
+		PingPongToLower = 40,
+		PingPongToHigher = 50
 	}
 
 	public enum TweenStates
@@ -33,7 +35,7 @@ namespace LunraGames.SubLight
 			if (Mathf.Approximately(begin, end)) transition = TweenTransitions.NoChange;
 			else if (begin < end) transition = TweenTransitions.ToHigher;
 			else transition = TweenTransitions.ToLower;
-			return new TweenBlock<float>(begin, end, current, progress, transition);
+			return new TweenBlock<float>(begin, end, float.NaN, current, progress, transition);
 		}
 
 		public static TweenBlock<float> CreateInstant(float begin, float end)
@@ -42,27 +44,55 @@ namespace LunraGames.SubLight
 			if (Mathf.Approximately(begin, end)) transition = TweenTransitions.NoChange;
 			else if (begin < end) transition = TweenTransitions.ToHigher;
 			else transition = TweenTransitions.ToLower;
-			return new TweenBlock<float>(begin, end, end, 1f, transition);
+			return new TweenBlock<float>(begin, end, float.NaN, end, 1f, transition);
+		}
+
+		public static TweenBlock<float> CreatePingPong(float beginEnd, float pingPong)
+		{
+			return CreatePingPong(beginEnd, pingPong, beginEnd, 0f);
+		}
+
+		public static TweenBlock<float> CreatePingPong(float beginEnd, float pingPong, float current, float progress)
+		{
+			var transition = TweenTransitions.Unknown;
+			if (Mathf.Approximately(beginEnd, pingPong)) transition = TweenTransitions.NoChange;
+			else if (beginEnd < pingPong) transition = TweenTransitions.PingPongToHigher;
+			else transition = TweenTransitions.PingPongToLower;
+			return new TweenBlock<float>(beginEnd, beginEnd, pingPong, current, progress, transition);
 		}
 	}
 
 	[Serializable]
 	public struct TweenBlock<T>
 	{
+		/// <summary>
+		/// The begin value.
+		/// </summary>
 		public readonly T Begin;
+		/// <summary>
+		/// The end value, will be the same as Begin if we're ping-ponging.
+		/// </summary>
 		public readonly T End;
+		/// <summary>
+		/// The ping pong value.
+		/// </summary>
+		public readonly T PingPong;
 		public readonly T Current;
 		public readonly float Progress;
 		public readonly TweenTransitions Transition;
 		public readonly TweenStates State;
 
-		public TweenBlock(T begin, T end, T current, float progress, TweenTransitions transition)
+		public readonly bool IsPingPong;
+
+		public TweenBlock(T begin, T end, T pingPong, T current, float progress, TweenTransitions transition)
 		{
 			Begin = begin;
 			End = end;
+			PingPong = pingPong;
 			Current = current;
 			Progress = progress;
 			Transition = transition;
+			IsPingPong = transition == TweenTransitions.PingPongToLower || transition == TweenTransitions.PingPongToHigher;
 
 			if (progress < 0f || 1f < progress)
 			{
@@ -75,7 +105,12 @@ namespace LunraGames.SubLight
 
 		public TweenBlock<T> Duplicate(T current, float progress)
 		{
-			return new TweenBlock<T>(Begin, End, current, progress, Transition);
+			return new TweenBlock<T>(Begin, End, PingPong, current, progress, Transition);
+		}
+
+		public TweenBlock<T> DuplicateNoChange()
+		{
+			return new TweenBlock<T>(Begin, End, PingPong, End, 1f, TweenTransitions.NoChange);
 		}
 	}
 }

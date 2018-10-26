@@ -42,6 +42,16 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		AnimationCurve toLeftAlphaCurve;
 
+		[SerializeField]
+		float scaleNudgeIntensity;
+		[SerializeField]
+		float scaleLabelNudgeIntensity;
+		[SerializeField]
+		AnimationCurve scaleNudgeCurve;
+
+		[SerializeField]
+		Transform scaleLabelArea;
+
 		public string ScaleNameText { set { scaleNameLabel.text = value ?? string.Empty; } }
 		public string ScaleText { set { scaleLabel.text = value ?? string.Empty; } }
 		public string UnitCountText { set { unitCountLabel.text = value ?? string.Empty; } }
@@ -57,6 +67,16 @@ namespace LunraGames.SubLight.Views
 			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Progress, progressCurve.Evaluate(unitProgress));
 			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.FullProgress, alphaCurve.Evaluate(unitProgress));
 			//gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.ProgressToRight, unitToRight ? 1f : 0f);
+		}
+
+		public void Nudge(float zoom, float progress, bool isUp)
+		{
+			var nudge = scaleNudgeCurve.Evaluate(progress);
+			var scaleOffset = nudge * (isUp ? scaleNudgeIntensity : -scaleNudgeIntensity);
+			var scaleLabelOffset = nudge * (isUp ? scaleLabelNudgeIntensity : -scaleLabelNudgeIntensity);
+
+			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, zoom + scaleOffset + 1f);
+			scaleLabelArea.localScale = Vector3.one * (1f + scaleLabelOffset);
 		}
 
 		public Color HoloColor
@@ -94,5 +114,6 @@ namespace LunraGames.SubLight.Views
 		string UnitCountText { set; }
 		string UnitTypeText { set; }
 		void Zoom(float zoom, float unitProgress, bool unitToRight);
+		void Nudge(float zoom, float progress, bool isUp);
 	}
 }

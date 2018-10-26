@@ -10,6 +10,8 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 		LanguageStringModel scaleText;
 
+		float lastZoomTo = -1f;
+
 		public GridScalePresenter(
 			GameModel model,
 			LanguageStringModel scaleText
@@ -44,15 +46,31 @@ namespace LunraGames.SubLight.Presenters
 		{
 			switch(block.Zoom.Transition)
 			{
+				case TweenTransitions.NoChange: break;
 				case TweenTransitions.ToLower:
 				case TweenTransitions.ToHigher:
-					View.ScaleNameText = block.ToScaleName.Value.Value;
-					View.UnitCountText = block.GetToUnitCount();
-					View.UnitTypeText = block.ToUnitType.Value.Value;
+					if (!Mathf.Approximately(lastZoomTo, block.Zoom.End))
+					{
+						lastZoomTo = block.Zoom.End;
+						View.ScaleNameText = block.ToScaleName.Value.Value;
+						View.UnitCountText = block.GetToUnitCount();
+						View.UnitTypeText = block.ToUnitType.Value.Value;
+					}
 					View.Zoom(block.Zoom.Current, block.Zoom.Progress, block.Zoom.Transition == TweenTransitions.ToLower);
 					break;
 				default:
 					Debug.LogError("Unrecognized zoom transition: " + block.Zoom.Transition);
+					break;
+			}
+			switch(block.NudgeZoom.Transition)
+			{
+				case TweenTransitions.NoChange: break;
+				case TweenTransitions.PingPongToLower:
+				case TweenTransitions.PingPongToHigher:
+					View.Nudge(block.NudgeZoom.Begin, block.NudgeZoom.Progress, block.NudgeZoom.Transition == TweenTransitions.PingPongToHigher);
+					break;
+				default:
+					Debug.LogError("Unrecognized nudge transition: " + block.NudgeZoom.Transition);
 					break;
 			}
 		}

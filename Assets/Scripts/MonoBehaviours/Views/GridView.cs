@@ -24,6 +24,19 @@ namespace LunraGames.SubLight.Views
 		}
 
 		[SerializeField]
+		float zoomAnimationDuration;
+		[SerializeField]
+		float nudgeAnimationDuration;
+		[SerializeField]
+		float zoomThreshold;
+		[SerializeField]
+		float nudgeThreshold;
+		[SerializeField]
+		float scrollCooldown;
+		[SerializeField]
+		AnimationCurve scrollCooldownFalloff;
+
+		[SerializeField]
 		AnimationCurve revealCurve;
 
 		[SerializeField]
@@ -39,12 +52,16 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve hideScaleAlpha;
 		[SerializeField]
 		AnimationCurve revealScaleAlpha;
-		[SerializeField]
-		float scrollSensitivity;
 
 		Material[] grids;
 
-		public float ScrollSensitivity { get { return scrollSensitivity; } }
+		public float ZoomAnimationDuration { get { return zoomAnimationDuration; } }
+		public float NudgeAnimationDuration { get { return nudgeAnimationDuration; } }
+		public float ZoomThreshold { get { return zoomThreshold; } }
+		public float NudgeThreshold { get { return nudgeThreshold; } }
+		public float ScrollCooldown { get { return scrollCooldown; } }
+		public AnimationCurve ScrollCooldownFalloff { get { return scrollCooldownFalloff; } }
+
 		public Vector3 GridUnityOrigin { get { return gridMesh.transform.position; } }
 		public float GridUnityWidth { get { return gridUnityWidth; } }
 		public Action<bool> Dragging { set; private get; }
@@ -205,9 +222,15 @@ namespace LunraGames.SubLight.Views
 
 	public interface IGridView : IView, IHoloColorView
 	{
+		float ZoomAnimationDuration { get; }
+		float NudgeAnimationDuration { get; }
+		float ZoomThreshold { get; }
+		float NudgeThreshold { get; }
+		float ScrollCooldown { get; }
+		AnimationCurve ScrollCooldownFalloff { get; }
+
 		Vector3 GridUnityOrigin { get; }
 		float GridUnityWidth { get; }
-		float ScrollSensitivity { get; }
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
 		GridView.Grid[] Grids { set; }
