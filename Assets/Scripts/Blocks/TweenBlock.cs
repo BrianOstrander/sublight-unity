@@ -20,15 +20,29 @@ namespace LunraGames.SubLight
 
 	public static class TweenBlock
 	{
-		public static TweenBlock<float> Zero { get { return Create(0f, 0f); } }
+		public static TweenBlock<float> Zero { get { return CreateInstant(0f, 0f); } }
 
-		public static TweenBlock<float> Create(float begin, float end, float? current = null, float progress = 1f)
+		public static TweenBlock<float> Create(float begin, float end)
+		{
+			return Create(begin, end, begin, 0f);
+		}
+
+		public static TweenBlock<float> Create(float begin, float end, float current, float progress)
 		{
 			var transition = TweenTransitions.Unknown;
 			if (Mathf.Approximately(begin, end)) transition = TweenTransitions.NoChange;
 			else if (begin < end) transition = TweenTransitions.ToHigher;
 			else transition = TweenTransitions.ToLower;
-			return new TweenBlock<float>(begin, end, current.HasValue ? current.Value : end, progress, transition);
+			return new TweenBlock<float>(begin, end, current, progress, transition);
+		}
+
+		public static TweenBlock<float> CreateInstant(float begin, float end)
+		{
+			var transition = TweenTransitions.Unknown;
+			if (Mathf.Approximately(begin, end)) transition = TweenTransitions.NoChange;
+			else if (begin < end) transition = TweenTransitions.ToHigher;
+			else transition = TweenTransitions.ToLower;
+			return new TweenBlock<float>(begin, end, end, 1f, transition);
 		}
 	}
 
@@ -57,6 +71,11 @@ namespace LunraGames.SubLight
 			}
 			else if (Mathf.Approximately(progress, 1f)) State = TweenStates.Complete;
 			else State = TweenStates.Active;
+		}
+
+		public TweenBlock<T> Duplicate(T current, float progress)
+		{
+			return new TweenBlock<T>(Begin, End, current, progress, Transition);
 		}
 	}
 }

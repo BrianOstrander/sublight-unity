@@ -22,12 +22,12 @@ namespace LunraGames.SubLight.Presenters
 			ClusterOrigin = 30
 		}
 
-		enum ZoomStates
+		enum TweenStates
 		{
 			Unknown = 0,
 			Complete = 10,
 			Zooming = 20,
-			UnderOverZooming = 30
+			Nudging = 30
 		}
 
 		struct UnitMap
@@ -55,20 +55,10 @@ namespace LunraGames.SubLight.Presenters
 		GridInfoBlock info;
 		UnitMap[] unitMaps;
 
-		bool isDragging;
-
-		float fromZoom;
-		float toZoom;
+		TweenStates tweenState;
 
 		float zoomDuration;
-		float? zoomRemaining;
-
-		LanguageStringModel fromScaleName;
-		LanguageStringModel toScaleName;
-		Func<string> fromGetUnitCount;
-		Func<string> toGetUnitCount;
-		LanguageStringModel fromUnitType;
-		LanguageStringModel toUnitType;
+		float zoomRemaining;
 
 		public GridPresenter(
 			GameModel model,
@@ -93,7 +83,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture += OnCurrentGesture;
 
-			BeginZoom(model.FocusTransform.Value.Zoom.Begin, model.FocusTransform.Value.Zoom.End, true);
+			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
 		protected override void OnUnBind()
@@ -108,12 +98,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.Dragging = OnDragging;
 			View.DrawGizmos = OnDrawGizmos;
-			BeginZoom(model.FocusTransform.Value.Zoom.Begin, model.FocusTransform.Value.Zoom.End, true);
+			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
-		void AnimateZoom(float scalar)
+		TweenBlock<float> AnimateZoom(float progress, TweenBlock<float> tween)
 		{
-			var zoomingUp = fromZoom < toZoom;
+			//var zoomingUp = fromZoom < toZoom;
 			var result = new GridView.Grid[unitMaps.Length];
 
 			for (var i = 0; i < unitMaps.Length; i++)
@@ -123,10 +113,10 @@ namespace LunraGames.SubLight.Presenters
 				var curr = unitMaps[i];
 				var grid = new GridView.Grid();
 
-				grid.ZoomingUp = zoomingUp;
-				grid.IsTarget = Mathf.Approximately(curr.ZoomBegin, toZoom);
-				grid.IsActive = grid.IsTarget || (Mathf.Approximately(curr.ZoomBegin, fromZoom) && !Mathf.Approximately(scalar, 1f));
-				grid.Progress = scalar;
+				grid.ZoomingUp = tween.Transition == TweenTransitions.ToHigher;
+				grid.IsTarget = Mathf.Approximately(curr.ZoomBegin, tween.End);
+				grid.IsActive = grid.IsTarget || (Mathf.Approximately(curr.ZoomBegin, tween.Begin) && !Mathf.Approximately(progress, 1f));
+				grid.Progress = progress;
 
 				var tileScalar = 1f;
 
@@ -145,11 +135,11 @@ namespace LunraGames.SubLight.Presenters
 
 				var alphaCurve = grid.IsTarget ? View.RevealScaleAlpha : View.HideScaleAlpha;
 
-				grid.Alpha = alphaCurve.Evaluate(scalar);
+				grid.Alpha = alphaCurve.Evaluate(progress);
 
 				result[i] = grid;
 
-				var currLightYearsInTile = scalar * curr.LightYears;
+				var currLightYearsInTile = progress * curr.LightYears;
 
 				var unityUnitsPerTile = (Tiling * 0.5f * tileScalar) / View.GridUnityWidth;
 				var universeUnitsPerTile = UniversePosition.ToUniverseDistance(curr.LightYears);
@@ -166,29 +156,60 @@ namespace LunraGames.SubLight.Presenters
 				);
 			}
 
-			model.FocusTransform.Value = new FocusTransform(
-				TweenBlock.Create(fromZoom, toZoom, fromZoom + ((toZoom - fromZoom) * scalar), scalar),
-				TweenBlock.Zero,
-				fromScaleName,
-				toScaleName,
-				fromGetUnitCount,
-				toGetUnitCount,
-				fromUnitType,
-				toUnitType
-			);
-
 			View.Grids = result;
 
-			if (Mathf.Approximately(1f, scalar)) zoomRemaining = null;
+			return tween.Duplicate(tween.Begin + ((tween.End - tween.Begin) * progress), progress);
+
+			//model.FocusTransform.Value = new FocusTransform(
+			//	TweenBlock.Create(fromZoom, toZoom, fromZoom + ((toZoom - fromZoom) * progress), progress),
+			//	TweenBlock.Zero,
+			//	fromScaleName,
+			//	toScaleName,
+			//	fromGetUnitCount,
+			//	toGetUnitCount,
+			//	fromUnitType,
+			//	toUnitType
+			//);
+
+			//View.Grids = result;
+
+			//if (Mathf.Approximately(1f, progress)) zoomRemaining = null;
 		}
 
 		#region
 		void OnUpdate(float delta)
 		{
-			if (!zoomRemaining.HasValue) return;
+			OnCheckTween(model.FocusTransform.Value, delta);
+		}
 
-			zoomRemaining = Mathf.Max(0f, zoomRemaining.Value - delta);
-			AnimateZoom((zoomDuration - zoomRemaining.Value) / zoomDuration);
+		void OnCheckTween(FocusTransform transform, float delta)
+		{
+			if (tweenState == TweenStates.Complete) return;
+
+			zoomRemaining = Mathf.Max(0f, zoomRemaining - delta);
+			var progress = (zoomDuration - zoomRemaining) / zoomDuration;
+			var zoomTween = transform.Zoom;
+			var nudgeTween = transform.NudgeZoom;
+
+			switch (tweenState)
+			{
+				case TweenStates.Zooming:
+					zoomTween = AnimateZoom(progress, zoomTween);
+					break;
+				case TweenStates.Nudging:
+					nudgeTween = AnimateZoom(progress, nudgeTween);
+					break;
+				default:
+					Debug.LogError("Unrecognized state " + tweenState);
+					return;
+			}
+
+			if (Mathf.Approximately(0f, zoomRemaining)) tweenState = TweenStates.Complete;
+
+			model.FocusTransform.Value = transform.Duplicate(
+				zoomTween,
+				nudgeTween
+			);
 		}
 
 		void OnHoloColorRequest(HoloColorRequest request)
@@ -198,7 +219,8 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnCurrentScrollGesture(ScrollGesture gesture)
 		{
-			if (!View.Visible || !View.Highlighted || zoomRemaining.HasValue) return;
+			if (!View.Visible || !View.Highlighted || tweenState != TweenStates.Complete) return;
+
 			var value = gesture.TimeDelta * gesture.Current.y;
 			if (Mathf.Abs(value) < View.ScrollSensitivity) return;
 
@@ -207,39 +229,62 @@ namespace LunraGames.SubLight.Presenters
 			else targetZoom = Mathf.Min(targetZoom + 1f, 5f);
 
 			if (Mathf.Approximately(targetZoom, model.FocusTransform.Value.Zoom.Current)) return;
-			BeginZoom(model.FocusTransform.Value.Zoom.Current, targetZoom);
+			BeginZoom(TweenBlock.Create(model.FocusTransform.Value.Zoom.Current, targetZoom));
 		}
 
 		void OnDragging(bool isDragging)
 		{
-			return;
+			if (isDragging) return;
 		}
 
 		void OnCurrentGesture(Gesture gesture)
 		{
-			if (!View.Visible || !isDragging) return;
-
+			
 		}
 
-		void BeginZoom(float fromZoom, float toZoom, bool instant = false)
+		void BeginZoom(TweenBlock<float> zoomTween, bool instant = false)
 		{
-			this.fromZoom = fromZoom;
-			this.toZoom = toZoom;
-
 			zoomDuration = 0.2f;
 			zoomRemaining = zoomDuration;
 
-			var fromGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, fromZoom));
-			var toGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, toZoom));
-
+			LanguageStringModel fromScaleName;
+			LanguageStringModel toScaleName;
+			Func<string> fromGetUnitCount;
+			Func<string> toGetUnitCount;
+			LanguageStringModel fromUnitType;
+			LanguageStringModel toUnitType;
+			
+			var fromGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, zoomTween.Begin));
+			var toGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, zoomTween.End));
+			
 			fromScaleName = info.GetScaleName(fromGrid.ZoomBegin);
 			toScaleName = info.GetScaleName(toGrid.ZoomBegin);
-
+			
 			info.GetUnitModels(fromGrid.LightYears, info.LightYearUnit, out fromGetUnitCount, out fromUnitType);
 			info.GetUnitModels(toGrid.LightYears, info.LightYearUnit, out toGetUnitCount, out toUnitType);
 
-			if (instant) AnimateZoom(1f);
+			var transform = model.FocusTransform.Value.Duplicate(zoomTween);
+
+			transform.SetLanguage(
+				fromScaleName,
+				toScaleName,
+				fromGetUnitCount,
+				toGetUnitCount,
+				fromUnitType,
+				toUnitType
+			);
+
+			tweenState = TweenStates.Zooming;
+
+			OnCheckTween(transform, instant ? zoomDuration : 0f);
 		}
+
+		void BeginNudge(TweenBlock<float> nudgeTween)
+		{
+			
+		}
+
+		//void BeginNudgeZoom(float fromZoom, float toZoom, bool instant = false)
 
 		void OnDrawGizmos()
 		{
