@@ -42,6 +42,7 @@ namespace LunraGames.SubLight.Views
 
 		Material[] grids;
 
+		public Vector3 GridUnityOrigin { get { return gridMesh.transform.position; } }
 		public float GridUnityWidth { get { return gridUnityWidth; } }
 		public Action<bool> Dragging { set; private get; }
 		public bool Highlighted { get; private set; }
@@ -49,6 +50,8 @@ namespace LunraGames.SubLight.Views
 
 		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
 		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
+
+		public Action DrawGizmos { set; private get; }
 
 		public Grid[] Grids
 		{
@@ -96,6 +99,8 @@ namespace LunraGames.SubLight.Views
 			Highlighted = false;
 			SetRadius(0f, true);
 			HoloColor = Color.white;
+
+			DrawGizmos = ActionExtensions.Empty;
 		}
 
 		protected override void OnShowing(float scalar)
@@ -157,6 +162,7 @@ namespace LunraGames.SubLight.Views
 
 		void OnDrawGizmos()
 		{
+			if (DrawGizmos != null) DrawGizmos();
 #if UNITY_EDITOR
 			/*
 			Handles.color = Color.green;
@@ -196,6 +202,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IGridView : IView, IHoloColorView
 	{
+		Vector3 GridUnityOrigin { get; }
 		float GridUnityWidth { get; }
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
@@ -205,5 +212,7 @@ namespace LunraGames.SubLight.Views
 		void ProcessDrag(Vector2 viewport, out Vector3 unityPosition);
 
 		void SetRadius(float scalar, bool showing);
+
+		Action DrawGizmos { set; }
 	}
 }

@@ -66,8 +66,13 @@ namespace LunraGames.SubLight
 		{
 			Adjust(new Vector3(sectorX, sectorY, sectorZ), new Vector3(systemX, systemY, systemZ), out Sector, out System);
 		}
-
+		/// <summary>
+		/// The value, from 0 to 1, within a System unit.
+		/// </summary>
 		[JsonProperty] public readonly Vector3 Sector;
+		/// <summary>
+		/// A value with no upper or lower limit. Any decimal amount gets converted into a Sector amount.
+		/// </summary>
 		[JsonProperty] public readonly Vector3 System;
 
 		[JsonIgnore]

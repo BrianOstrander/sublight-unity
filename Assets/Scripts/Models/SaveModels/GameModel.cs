@@ -30,6 +30,13 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] float universeUnitsPerUnityUnit;
 		[JsonProperty] float zoom;
 
+		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
+		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
+		[JsonProperty] UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
+		[JsonProperty] UniverseScaleModel scaleQuadrant = UniverseScaleModel.Create(UniverseScales.Quadrant);
+		[JsonProperty] UniverseScaleModel scaleGalactic = UniverseScaleModel.Create(UniverseScales.Galactic);
+		[JsonProperty] UniverseScaleModel scaleCluster = UniverseScaleModel.Create(UniverseScales.Cluster);
+
 		/// <summary>
 		/// The game seed.
 		/// </summary>
@@ -179,6 +186,22 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
+
+		public UniverseScaleModel GetScale(UniverseScales scale)
+		{
+			switch(scale)
+			{
+				case UniverseScales.System: return scaleSystem;
+				case UniverseScales.Local: return scaleLocal;
+				case UniverseScales.Stellar: return scaleStellar;
+				case UniverseScales.Quadrant: return scaleQuadrant;
+				case UniverseScales.Galactic: return scaleGalactic;
+				case UniverseScales.Cluster: return scaleCluster;
+				default:
+					Debug.LogError("Unrecognized scale: " + scale);
+					return null;
+			}
+		}
 		#endregion
 	}
 }
