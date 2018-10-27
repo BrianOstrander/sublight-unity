@@ -202,6 +202,20 @@ namespace LunraGames.SubLight.Models
 					return null;
 			}
 		}
+
+		[JsonIgnore]
+		public UniverseScaleModel ActiveScale
+		{
+			get
+			{
+				foreach (var scaleEnum in EnumExtensions.GetValues(UniverseScales.Unknown))
+				{
+					var curr = GetScale(scaleEnum);
+					if (curr.IsActive) return curr;
+				}
+				return null;
+			}
+		}
 		#endregion
 	}
 }

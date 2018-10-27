@@ -494,6 +494,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  gridDragRadius: 3.39
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1

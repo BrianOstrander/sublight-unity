@@ -30,5 +30,14 @@ namespace LunraGames.SubLight.Models
 			Opacity = new ListenerProperty<float>(value => opacity = value, () => opacity);
 			Transform = new ListenerProperty<UniverseTransform>(value => transform = value, () => transform);
 		}
+
+		[JsonIgnore]
+		public bool IsActive
+		{
+			get
+			{
+				return 0f < Opacity.Value;
+			}
+		}
 	}
 }

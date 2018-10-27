@@ -54,6 +54,18 @@ namespace LunraGames.SubLight
 			return UniverseOrigin + new UniversePosition(unityFromOrigin);
 		}
 
+		public UniverseTransform Duplicate(
+			UniversePosition? universeOrigin = null
+		)
+		{
+			return new UniverseTransform(
+				UnityOrigin,
+				universeOrigin.HasValue ? universeOrigin.Value : UniverseOrigin,
+				UnityToUniverse,
+				UniverseToUnity,
+				Rotation
+			);
+		}
 		// TODO: add where direction of goal is...
 
 	}

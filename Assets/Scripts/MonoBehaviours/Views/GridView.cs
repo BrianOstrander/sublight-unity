@@ -53,6 +53,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		AnimationCurve revealScaleAlpha;
 
+		[SerializeField]
+		float gridDragRadius;
+
 		Material[] grids;
 
 		public float ZoomAnimationDuration { get { return zoomAnimationDuration; } }
@@ -98,7 +101,6 @@ namespace LunraGames.SubLight.Views
 					var block = value[i];
 					var grid = grids[i];
 
-					//grid.SetColor(ShaderConstants.HoloGridBasic.MainColor, block.IsTarget ? Color.green : Color.red);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
 					grid.SetVector(ShaderConstants.HoloGridBasic.Offset, block.Offset);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, block.Alpha);
@@ -140,22 +142,22 @@ namespace LunraGames.SubLight.Views
 		public void SetRadius(float scalar, bool showing)
 		{
 			if (!showing) scalar += 1f;
-			//gridMesh.material.SetFloat(ShaderConstants.HoloGrid.RadiusProgress, revealCurve.Evaluate(scalar));
+			gridMesh.material.SetFloat(ShaderConstants.HoloGridBasic.Alpha, revealCurve.Evaluate(scalar));
 		}
 
-		public void ProcessDrag(Vector2 viewport, out Vector3 unityPosition)
+		public void ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius)
 		{
-			//Gesture.GetViewport(gestureNormal) don't forget to do this in the presenter!
-			
 			unityPosition = Vector3.zero;
+			inRadius = false;
 
 			var plane = new Plane(Vector3.up, transform.position);
 			var ray = Camera.main.ViewportPointToRay(viewport);
 
 			float distance;
-			if (!plane.Raycast(ray, out distance)) return; // Not sure this is possible... maybe?
+			if (!plane.Raycast(ray, out distance)) return;
 
 			unityPosition = ray.origin + (ray.direction * distance);
+			inRadius = Vector3.Distance(unityPosition, GridUnityOrigin) <= gridDragRadius;
 		}
 
 		#region Events
@@ -184,38 +186,8 @@ namespace LunraGames.SubLight.Views
 		{
 			if (DrawGizmos != null) DrawGizmos();
 #if UNITY_EDITOR
-			/*
-			Handles.color = Color.green;
-			Handles.DrawWireCube(transform.position, new Vector3(gridRadius * 2f, 0f, gridRadius * 2f));
-
-			if (!Application.isPlaying || !lastZoomInfo.HasValue) return;
-
-			var info = lastZoomInfo.Value;
-
-			var minUnitRadius = info.UnitAmountMinimum * TilingRadius;
-			var maxUnitRadius = info.UnitAmountMaximum * TilingRadius;
-			var deltaUnitRadius = maxUnitRadius - minUnitRadius;
-
-			var unitsInGridRadius = minUnitRadius + (deltaUnitRadius * info.UnitProgress);
-			//var unitsInGridRadius = (minUnitRadius * (1f - info.UnitProgress)) + (deltaUnitRadius * info.UnitProgress);
-
-			var unitInUnity = gridRadius / unitsInGridRadius;
-			var unitInUnityVector = new Vector3(unitInUnity, 0f, unitInUnity);
-			Handles.DrawWireCube(transform.position + (unitInUnityVector * -0.5f), unitInUnityVector);
-
-			Handles.Label(transform.position + (new Vector3(1f, 0f, -1.55f) * gridRadius), "Zoom: " + info.Zoom.ToString("N2"));
-			Handles.Label(transform.position + (new Vector3(1f, 0f, -1.3f) * gridRadius), "Units in Radius: " + unitsInGridRadius);
-
-			if (!dragBegin.HasValue) return;
-
-			var dragDistance = Vector3.Distance(dragBegin.Value, dragCurrent) * unitInUnity;
-			Handles.Label(transform.position + (new Vector3(1f, 0f, -1.7f) * gridRadius), "Drag Distance: " + dragDistance);
-
-			Gizmos.color = Color.red;
-			Gizmos.DrawWireSphere(dragBegin.Value, 0.1f);
-			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(dragCurrent, 0.1f);
-*/
+			Handles.color = Color.red;
+			Handles.DrawWireDisc(GridUnityOrigin, Vector3.up, gridDragRadius);
 #endif
 		}
 	}
@@ -236,8 +208,8 @@ namespace LunraGames.SubLight.Views
 		GridView.Grid[] Grids { set; }
 		AnimationCurve HideScaleAlpha { get; }
 		AnimationCurve RevealScaleAlpha { get; }
-		void ProcessDrag(Vector2 viewport, out Vector3 unityPosition);
 
+		void ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius);
 		void SetRadius(float scalar, bool showing);
 
 		Action DrawGizmos { set; }

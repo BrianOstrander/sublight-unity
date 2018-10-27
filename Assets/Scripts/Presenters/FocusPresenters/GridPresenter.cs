@@ -64,6 +64,11 @@ namespace LunraGames.SubLight.Presenters
 		float scrollWhenLastAnimated;
 		float scrollCooldownRemaining;
 
+		bool wasDragging;
+		bool isDragging;
+		Gesture lastgesture;
+		UniverseTransform transformOnBeginDrag;
+
 		public GridPresenter(
 			GameModel model,
 			GridInfoBlock info
@@ -165,27 +170,14 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			return tween.Duplicate(tween.Begin + ((tween.End - tween.Begin) * progress), progress);
-
-			//model.FocusTransform.Value = new FocusTransform(
-			//	TweenBlock.Create(fromZoom, toZoom, fromZoom + ((toZoom - fromZoom) * progress), progress),
-			//	TweenBlock.Zero,
-			//	fromScaleName,
-			//	toScaleName,
-			//	fromGetUnitCount,
-			//	toGetUnitCount,
-			//	fromUnitType,
-			//	toUnitType
-			//);
-
-			//View.Grids = result;
-
-			//if (Mathf.Approximately(1f, progress)) zoomRemaining = null;
 		}
 
 		#region
 		void OnUpdate(float delta)
 		{
 			OnCheckTween(model.FocusTransform.Value, delta);
+
+			OnCheckDragging(delta);
 		}
 
 		void OnCheckTween(FocusTransform transform, float delta)
@@ -275,16 +267,6 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		void OnDragging(bool isDragging)
-		{
-			if (isDragging) return;
-		}
-
-		void OnCurrentGesture(Gesture gesture)
-		{
-			
-		}
-
 		void BeginZoom(TweenBlock<float> zoomTween, bool instant = false)
 		{
 			animationDuration = View.ZoomAnimationDuration;
@@ -328,6 +310,60 @@ namespace LunraGames.SubLight.Presenters
 			animationRemaining = animationDuration;
 			tweenState = TweenStates.Nudging;
 			model.FocusTransform.Value = model.FocusTransform.Value.Duplicate(model.FocusTransform.Value.Zoom.DuplicateNoChange(), nudgeTween);
+		}
+
+		void OnDragging(bool isDragging)
+		{
+			this.isDragging = isDragging;
+		}
+
+		void OnCurrentGesture(Gesture gesture) { lastgesture = gesture; }
+
+		void OnCheckDragging(float delta)
+		{
+			if (!View.Visible || tweenState != TweenStates.Complete)
+			{
+				isDragging = false;
+				wasDragging = false;
+				return;
+			}
+
+			if (wasDragging != isDragging)
+			{
+				if (isDragging)
+				{
+					// start drag logic
+					Vector3 unityDragBegin;
+					bool inRadius;
+					View.ProcessDrag(Gesture.GetViewport(lastgesture.Begin), out unityDragBegin, out inRadius);
+
+					if (!inRadius)
+					{
+						isDragging = false;
+						wasDragging = false;
+						return;
+					}
+					transformOnBeginDrag = model.ActiveScale.Transform.Value;
+				}
+				else
+				{
+					// end drag logic
+				}
+			}
+
+			if (!isDragging) return;
+
+			Vector3 currUnityDrag;
+			bool currInRadius;
+			View.ProcessDrag(Gesture.GetViewport(lastgesture.Delta), out currUnityDrag, out currInRadius);
+
+			var newTransform = transformOnBeginDrag.Duplicate(transformOnBeginDrag.GetUniversePosition(currUnityDrag));
+
+			model.ActiveScale.Transform.Value = newTransform;
+
+			Debug.Log("ok so apply transform offset stuff here");
+
+			wasDragging = isDragging;
 		}
 
 		void OnDrawGizmos()
