@@ -67,6 +67,7 @@ namespace LunraGames.SubLight.Presenters
 		bool wasDragging;
 		bool isDragging;
 		Gesture lastgesture;
+		Vector3 unityPosOnDragBegin;
 		UniverseTransform transformOnBeginDrag;
 
 		public GridPresenter(
@@ -333,9 +334,8 @@ namespace LunraGames.SubLight.Presenters
 				if (isDragging)
 				{
 					// start drag logic
-					Vector3 unityDragBegin;
 					bool inRadius;
-					View.ProcessDrag(Gesture.GetViewport(lastgesture.Begin), out unityDragBegin, out inRadius);
+					View.ProcessDrag(Gesture.GetViewport(lastgesture.Begin), out unityPosOnDragBegin, out inRadius);
 
 					if (!inRadius)
 					{
@@ -349,19 +349,18 @@ namespace LunraGames.SubLight.Presenters
 				{
 					// end drag logic
 				}
+				wasDragging = isDragging;
 			}
 
 			if (!isDragging) return;
-
 			Vector3 currUnityDrag;
 			bool currInRadius;
-			View.ProcessDrag(Gesture.GetViewport(lastgesture.Delta), out currUnityDrag, out currInRadius);
+			View.ProcessDrag(Gesture.GetViewport(lastgesture.End), out currUnityDrag, out currInRadius);
 
-			var newTransform = transformOnBeginDrag.Duplicate(transformOnBeginDrag.GetUniversePosition(currUnityDrag));
+			var offset = View.GridUnityOrigin + (unityPosOnDragBegin - currUnityDrag);
+			var universePos = transformOnBeginDrag.GetUniversePosition(offset);
 
-			model.ActiveScale.Transform.Value = newTransform;
-
-			Debug.Log("ok so apply transform offset stuff here");
+			model.ActiveScale.Transform.Value = model.ActiveScale.Transform.Value.Duplicate(universePos);
 
 			wasDragging = isDragging;
 		}
@@ -376,20 +375,20 @@ namespace LunraGames.SubLight.Presenters
 			//var oneLightYear = new UniversePosition(new Vector3(1f, 0f, 1f));
 
 			var localScale = model.GetScale(UniverseScales.Local).Transform.Value;
-			var stellarScale = model.GetScale(UniverseScales.Stellar).Transform.Value;
+			//var stellarScale = model.GetScale(UniverseScales.Stellar).Transform.Value;
 
 			Gizmos.color = Color.red;
 			Gizmos.DrawWireSphere(localScale.GetUnityPosition(uniOrigin), 0.02f);
 			Gizmos.color = Color.blue;
 			Gizmos.DrawWireSphere(localScale.GetUnityPosition(oneLightYear), 0.1f);
 
-			Gizmos.color = Color.cyan;
-			Gizmos.DrawWireSphere(stellarScale.GetUnityPosition(oneLightYear), 0.05f);
+			//Gizmos.color = Color.cyan;
+			//Gizmos.DrawWireSphere(stellarScale.GetUnityPosition(oneLightYear), 0.05f);
 
-			Gizmos.color = Color.yellow;
-			var testPos = localScale.UnityOrigin + new Vector3(0f, 0f, 1f);
-			Gizmos.DrawWireSphere(testPos, 0.1f);
-			Handles.Label(testPos + new Vector3(0f, 0f, 0.5f), localScale.GetUniversePosition(testPos).ToString());
+			//Gizmos.color = Color.yellow;
+			//var testPos = localScale.UnityOrigin + new Vector3(0f, 0f, 1f);
+			//Gizmos.DrawWireSphere(testPos, 0.1f);
+			//Handles.Label(testPos + new Vector3(0f, 0f, 0.5f), localScale.GetUniversePosition(testPos).ToString());
 #endif
 		}
 		#endregion

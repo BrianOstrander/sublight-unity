@@ -156,6 +156,9 @@ namespace LunraGames.SubLight.Views
 			float distance;
 			if (!plane.Raycast(ray, out distance)) return;
 
+			Debug.DrawLine(ray.origin, ray.origin + (ray.direction * distance), Color.red);
+
+
 			unityPosition = ray.origin + (ray.direction * distance);
 			inRadius = Vector3.Distance(unityPosition, GridUnityOrigin) <= gridDragRadius;
 		}

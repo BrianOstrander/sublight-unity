@@ -6,14 +6,6 @@ namespace LunraGames.SubLight
 	[Serializable]
 	public struct UniverseTransform
 	{
-		//public static UniverseTransform Default
-		//{
-		//	get
-		//	{
-				
-		//	}
-		//}
-
 		public readonly Vector3 UnityOrigin;
 		public readonly UniversePosition UniverseOrigin;
 
