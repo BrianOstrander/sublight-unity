@@ -111,6 +111,28 @@ namespace LunraGames.SubLight.Presenters
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
+		void SetGrid()
+		{
+			var activeScale = model.ActiveScale.Scale.Value;
+			var result = new GridView.Grid[unitMaps.Length];
+
+			for (var i = 0; i < unitMaps.Length; i++)
+			{
+				var curr = unitMaps[i];
+				var isTarget = activeScale == curr.Scale;
+
+				result[i] = AnimateGrid(
+					curr,
+					1f,
+					false,
+					isTarget,
+					isTarget
+				);
+			}
+
+			View.Grids = result;
+		}
+
 		TweenBlock<float> AnimateZoom(float progress, TweenBlock<float> tween)
 		{
 			if (!tween.IsPingPong)
@@ -180,10 +202,11 @@ namespace LunraGames.SubLight.Presenters
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 
 			var scale = model.GetScale(curr.Scale);
+			var scaleTransform = scale.Transform.Value;
 			scale.Opacity.Value = grid.Alpha;
 			scale.Transform.Value = new UniverseTransform(
 				View.GridUnityOrigin,
-				UniversePosition.Zero,
+				scaleTransform.UniverseOrigin,
 				Vector3.one * universeUnitsPerUnityUnit,
 				Vector3.one * (1f / universeUnitsPerUnityUnit),
 				Quaternion.identity
@@ -211,7 +234,6 @@ namespace LunraGames.SubLight.Presenters
 					Debug.LogError("Tween state should already have been initialized with an instant update in the constructor");
 					return;
 			}
-
 
 			animationRemaining = Mathf.Max(0f, animationRemaining - delta);
 			var progress = (animationDuration - animationRemaining) / animationDuration;

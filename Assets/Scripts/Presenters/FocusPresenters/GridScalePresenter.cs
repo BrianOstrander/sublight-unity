@@ -34,6 +34,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.ScaleText = scaleText.Value.Value;
 			OnZoom(model.FocusTransform.Value);
+			OnText(model.FocusTransform.Value);
 		}
 
 		#region
@@ -52,9 +53,7 @@ namespace LunraGames.SubLight.Presenters
 					if (!Mathf.Approximately(lastZoomTo, block.Zoom.End))
 					{
 						lastZoomTo = block.Zoom.End;
-						View.ScaleNameText = block.ToScaleName.Value.Value;
-						View.UnitCountText = block.GetToUnitCount();
-						View.UnitTypeText = block.ToUnitType.Value.Value;
+						OnText(block);
 					}
 					View.Zoom(block.Zoom.Current, block.Zoom.Progress, block.Zoom.Transition == TweenTransitions.ToLower);
 					break;
@@ -73,6 +72,13 @@ namespace LunraGames.SubLight.Presenters
 					Debug.LogError("Unrecognized nudge transition: " + block.NudgeZoom.Transition);
 					break;
 			}
+		}
+
+		void OnText(FocusTransform block)
+		{
+			View.ScaleNameText = block.ToScaleName.Value.Value;
+			View.UnitCountText = block.GetToUnitCount();
+			View.UnitTypeText = block.ToUnitType.Value.Value;
 		}
 		#endregion
 	}
