@@ -21,6 +21,16 @@ namespace LunraGames.SubLight
 		public static Vector3 ToLightYearDistance(Vector3 universeDistance) { return universeDistance * UniverseToLightYearScalar; }
 		public static Vector3 ToUniverseDistance(Vector3 lightYearDistance) { return lightYearDistance * LightYearToUniverseScalar; }
 
+		public static UniversePosition Lerp(
+			float progress,
+			UniversePosition begin,
+			UniversePosition end
+		)
+		{
+			var delta = end - begin;
+			return begin + (delta * progress);
+		}
+
 		/// <summary>
 		/// Calculates the distance in universe units between two points.
 		/// </summary>
@@ -136,6 +146,16 @@ namespace LunraGames.SubLight
 			var sector = obj0.Sector - obj1.Sector;
 			var local = obj0.Local - obj1.Local;
 			return new UniversePosition(sector, local);
+		}
+
+		public static UniversePosition operator *(float value, UniversePosition obj)
+		{
+			return new UniversePosition(obj.Sector * value, obj.Local * value);
+		}
+
+		public static UniversePosition operator *(UniversePosition obj, float value)
+		{
+			return value * obj;
 		}
 
 		static void Adjust(Vector3 sector, Vector3 local, out Vector3 adjustedSector, out Vector3 adjustedLocal)

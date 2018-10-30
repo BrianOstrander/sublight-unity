@@ -15,10 +15,10 @@ namespace LunraGames.SubLight
 			UniversePosition.Zero
 		};
 
-		public UniverseModel CreateUniverse(int seed)
+		public UniverseModel CreateUniverse(CreateGameBlock info)
 		{
 			var universeModel = new UniverseModel();
-			universeModel.Seed.Value = seed;
+			universeModel.Seed.Value = info.GalaxySeed;
 
 			PopulateUniverse(universeModel, InitialSectors);
 
@@ -58,8 +58,8 @@ namespace LunraGames.SubLight
 		/// Creates a universe model with initial sectors and systems populated.
 		/// </summary>
 		/// <returns>The universe.</returns>
-		/// <param name="seed">Seed.</param>
-		UniverseModel CreateUniverse(int seed);
+		/// <param name="info">Info.</param>
+		UniverseModel CreateUniverse(CreateGameBlock info);
 		/// <summary>
 		/// Populates the specified sectors of the universe with systems.
 		/// </summary>

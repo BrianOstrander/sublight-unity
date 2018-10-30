@@ -12,9 +12,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
 		[JsonProperty] float speed;
-		[JsonProperty] UniverseModel universe;
-		[JsonProperty] UniversePosition endSystem;
-		[JsonProperty] UniversePosition focusedSector;
+
 		[JsonProperty] ShipModel ship;
 		[JsonProperty] float destructionSpeedIncrement;
 		[JsonProperty] float destructionSpeed;
@@ -54,21 +52,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Speed;
 		/// <summary>
-		/// The game universe.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseModel> Universe;
-		/// <summary>
-		/// The target system the player is traveling to.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> EndSystem;
-		/// <summary>
-		/// The sector the camera is looking at.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> FocusedSector;
-		/// <summary>
 		/// The game ship.
 		/// </summary>
 		[JsonIgnore]
@@ -107,17 +90,31 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<FocusTransform> FocusTransform;
 		[JsonIgnore]
 		public readonly ListenerProperty<float> UniverseUnitsPerUnityUnit;
+
+		[JsonProperty] string galaxyId;
+		[JsonProperty] UniverseModel universe;
+
+		[JsonIgnore]
+		public UniverseModel Universe
+		{
+			get { return universe; }
+			set { universe = value; }
+		}
+
+		[JsonIgnore]
+		public string GalaxyId
+		{
+			get { return galaxyId; }
+			set { galaxyId = value; }
+		}
+
+		[JsonIgnore]
+		public GalaxyInfoModel Galaxy { get; set; }
 		#endregion
 
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
-		UniversePosition[] focusedSectors = new UniversePosition[0];
 
-		/// <summary>
-		/// Positions of all loaded sectors.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
 		#endregion
@@ -128,9 +125,6 @@ namespace LunraGames.SubLight.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
 			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
-			Universe = new ListenerProperty<UniverseModel>(value => universe = value, () => universe);
-			EndSystem = new ListenerProperty<UniversePosition>(value => endSystem = value, () => endSystem);
-			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
@@ -141,7 +135,6 @@ namespace LunraGames.SubLight.Models
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
-			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			UniverseUnitsPerUnityUnit = new ListenerProperty<float>(value => universeUnitsPerUnityUnit = value, () => universeUnitsPerUnityUnit);
 		}

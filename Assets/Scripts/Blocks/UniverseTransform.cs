@@ -46,19 +46,6 @@ namespace LunraGames.SubLight
 			return UniverseOrigin + new UniversePosition(unityFromOrigin);
 		}
 
-		public UniverseTransform Duplicate(
-			UniversePosition? universeOrigin = null
-		)
-		{
-			return new UniverseTransform(
-				UnityOrigin,
-				universeOrigin.HasValue ? universeOrigin.Value : UniverseOrigin,
-				UnityToUniverse,
-				UniverseToUnity,
-				Rotation
-			);
-		}
-
 		public Vector3 GetGridOffset(float localGridUnitSize)
 		{
 			var gridUnitsPerSector = 1f / localGridUnitSize;
@@ -73,6 +60,20 @@ namespace LunraGames.SubLight
 		{
 			return (gridUnitsPerSector * localValue) % 1f;
 		}
+
 		// TODO: add where direction of goal is...
+
+		public UniverseTransform Duplicate(
+			UniversePosition? universeOrigin = null
+		)
+		{
+			return new UniverseTransform(
+				UnityOrigin,
+				universeOrigin.HasValue ? universeOrigin.Value : UniverseOrigin,
+				UnityToUniverse,
+				UniverseToUnity,
+				Rotation
+			);
+		}
 	}
 }

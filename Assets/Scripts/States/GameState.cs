@@ -33,6 +33,7 @@ namespace LunraGames.SubLight
 		protected override void Begin()
 		{
 			App.SM.PushBlocking(LoadScenes);
+			App.SM.PushBlocking(LoadModelDependencies);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
@@ -42,6 +43,29 @@ namespace LunraGames.SubLight
 		void LoadScenes(Action done)
 		{
 			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
+		}
+
+		void LoadModelDependencies(Action done)
+		{
+			if (string.IsNullOrEmpty(Payload.Game.GalaxyId))
+			{
+				Debug.LogError("No GalaxyId to load");
+				done();
+				return;
+			}
+			App.M.Load<GalaxyInfoModel>(Payload.Game.GalaxyId, result => OnLoadGalaxy(result, done));
+		}
+
+		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to load galaxy, resulted in " + result.Status + " and error: " + result.Error);
+				done();
+				return;
+			}
+			Payload.Game.Galaxy = result.TypedModel;
+			done();
 		}
 
 		void InitializeInput(Action done)

@@ -170,7 +170,7 @@ namespace LunraGames.SubLight
 			this.model = model;
 
 			encounter = encounterService.GetEncounter(encounterId);
-			system = model.Universe.Value.GetSystem(systemPosition);
+			system = model.Universe.GetSystem(systemPosition);
 			body = system.BodyWithEncounter;
 			keyValues = new KeyValueListener(KeyValueTargets.Encounter, new KeyValueListModel(), keyValueService);
 

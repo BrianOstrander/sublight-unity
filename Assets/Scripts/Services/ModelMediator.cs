@@ -173,6 +173,21 @@ namespace LunraGames.SubLight
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 
+		protected string GetUniqueIdKey(SaveTypes saveType)
+		{
+			switch (saveType)
+			{
+				case SaveTypes.EncounterInfo: return MetaKeyConstants.EncounterInfo.EncounterId;
+				case SaveTypes.GalaxyPreview: 
+				case SaveTypes.GalaxyDistant:
+				case SaveTypes.GalaxyInfo:
+					return MetaKeyConstants.GalaxyInfo.GalaxyId;
+				default:
+					Debug.LogWarning("Save type " + saveType + " has no unique id key and loading by default ids has not been tested");
+					return null;
+			}
+		}
+
 		public abstract void Initialize(IBuildInfo info, Action<RequestStatus> done);
 
 		/// <summary>
@@ -245,6 +260,46 @@ namespace LunraGames.SubLight
 					exception.Message
 				));
 			}
+		}
+
+		public void Load<M>(string modelId, Action<SaveLoadRequest<M>> done) where M : SaveModel
+		{
+			if (string.IsNullOrEmpty(modelId)) throw new ArgumentException("modelId cannot be null or empty", "modelId");
+			if (done == null) throw new ArgumentNullException("done");
+
+			List<M>(listResults => OnLoadFromIdList(listResults, modelId, done));
+		}
+
+		void OnLoadFromIdList<M>(SaveLoadArrayRequest<SaveModel> results, string modelId, Action<SaveLoadRequest<M>> done) where M : SaveModel
+		{
+			if (results.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Listing models failed with status: " + results.Status + " and error: " + results.Error);
+				done(SaveLoadRequest<M>.Failure(
+					null,
+					null,
+					results.Error
+				));
+				return;
+			}
+			var uniqueIdKey = GetUniqueIdKey(ToEnum(typeof(M)).FirstOrDefault());
+			SaveModel result;
+			if (string.IsNullOrEmpty(uniqueIdKey)) result = results.Models.FirstOrDefault(m => m.Id.Value == modelId);
+			else result = results.Models.FirstOrDefault(m => m.GetMetaKey(uniqueIdKey) == modelId);
+
+			if (result == null)
+			{
+				var error = "A model with Id " + modelId + " was not found";
+				Debug.LogError(error);
+				done(SaveLoadRequest<M>.Failure(
+					null,
+					null,
+					error
+				));
+				return;
+			}
+
+			Load(result, done);
 		}
 
 		protected abstract void OnLoad<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
@@ -389,6 +444,7 @@ namespace LunraGames.SubLight
 		M Create<M>(string meta = null) where M : SaveModel, new();
 		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null, bool updateModified = true) where M : SaveModel;
 		void Load<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
+		void Load<M>(string modelId, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 		void List<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel;
 		void Delete<M>(M model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 	}

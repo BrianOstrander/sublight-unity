@@ -58,7 +58,7 @@ namespace LunraGames.SubLight
 				new GenericFocusCameraPresenter<PriorityFocusDetails>(mainCamera.GantryAnchor, mainCamera.FieldOfView)
 			);
 
-			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
+			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(DevPrefs.DevCreateGame, OnAutoNewGame);
 			else App.SM.RequestState(Payload.homePayload);
 		}
 
