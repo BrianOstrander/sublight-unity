@@ -119,51 +119,15 @@ namespace LunraGames.SubLight.Presenters
 
 				for (var i = 0; i < unitMaps.Length; i++)
 				{
-					const float Tiling = 8f;
-
 					var curr = unitMaps[i];
-					var grid = new GridView.Grid();
+					var isTarget = Mathf.Approximately(curr.ZoomBegin, tween.End);
 
-					grid.ZoomingUp = tween.Transition == TweenTransitions.ToHigher;
-					grid.IsTarget = Mathf.Approximately(curr.ZoomBegin, tween.End);
-					grid.IsActive = grid.IsTarget || (Mathf.Approximately(curr.ZoomBegin, tween.Begin) && !Mathf.Approximately(progress, 1f));
-					grid.Progress = progress;
-
-					var tileScalar = 1f;
-
-					if (grid.IsTarget)
-					{
-						if (grid.ZoomingUp) tileScalar = 1f - (0.5f * (1f - grid.Progress));
-						else tileScalar = 1f + (1f - grid.Progress);
-					}
-					else
-					{
-						if (grid.ZoomingUp) tileScalar = 1f + grid.Progress;
-						else tileScalar = 1f - (0.5f * grid.Progress);
-					}
-
-					grid.Tiling = Tiling * tileScalar;
-
-					var alphaCurve = grid.IsTarget ? View.RevealScaleAlpha : View.HideScaleAlpha;
-
-					grid.Alpha = alphaCurve.Evaluate(progress);
-
-					result[i] = grid;
-
-					var currLightYearsInTile = progress * curr.LightYears;
-
-					var unityUnitsPerTile = (Tiling * 0.5f * tileScalar) / View.GridUnityWidth;
-					var universeUnitsPerTile = UniversePosition.ToUniverseDistance(curr.LightYears);
-					var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
-
-					var scale = model.GetScale(curr.Scale);
-					scale.Opacity.Value = grid.Alpha;
-					scale.Transform.Value = new UniverseTransform(
-						View.GridUnityOrigin,
-						UniversePosition.Zero,
-						Vector3.one * universeUnitsPerUnityUnit,
-						Vector3.one * (1f / universeUnitsPerUnityUnit),
-						Quaternion.identity
+					result[i] = AnimateGrid(
+						curr,
+						progress,
+						tween.Transition == TweenTransitions.ToHigher,
+						isTarget,
+						isTarget || (Mathf.Approximately(curr.ZoomBegin, tween.Begin) && !Mathf.Approximately(progress, 1f))
 					);
 				}
 
@@ -171,6 +135,61 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			return tween.Duplicate(tween.Begin + ((tween.End - tween.Begin) * progress), progress);
+		}
+
+		GridView.Grid AnimateGrid(
+			UnitMap curr,
+			float progress,
+			bool zoomingUp,
+			bool isTarget,
+			bool isActive
+		)
+		{
+			const float Tiling = 8f;
+
+			var grid = new GridView.Grid();
+
+			grid.ZoomingUp = zoomingUp;
+			grid.IsTarget = isTarget;
+			grid.IsActive = isActive;
+			grid.Progress = progress;
+
+			var tileScalar = 1f;
+
+			if (grid.IsTarget)
+			{
+				if (grid.ZoomingUp) tileScalar = 1f - (0.5f * (1f - grid.Progress));
+				else tileScalar = 1f + (1f - grid.Progress);
+			}
+			else
+			{
+				if (grid.ZoomingUp) tileScalar = 1f + grid.Progress;
+				else tileScalar = 1f - (0.5f * grid.Progress);
+			}
+
+			grid.Tiling = Tiling * tileScalar;
+
+			var alphaCurve = grid.IsTarget ? View.RevealScaleAlpha : View.HideScaleAlpha;
+
+			grid.Alpha = alphaCurve.Evaluate(progress);
+
+			var currLightYearsInTile = progress * curr.LightYears;
+
+			var unityUnitsPerTile = (Tiling * 0.5f * tileScalar) / View.GridUnityWidth;
+			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(curr.LightYears);
+			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
+
+			var scale = model.GetScale(curr.Scale);
+			scale.Opacity.Value = grid.Alpha;
+			scale.Transform.Value = new UniverseTransform(
+				View.GridUnityOrigin,
+				UniversePosition.Zero,
+				Vector3.one * universeUnitsPerUnityUnit,
+				Vector3.one * (1f / universeUnitsPerUnityUnit),
+				Quaternion.identity
+			);
+
+			return grid;
 		}
 
 		#region
