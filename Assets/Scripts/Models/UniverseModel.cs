@@ -24,7 +24,7 @@ namespace LunraGames.SubLight.Models
 		public SectorModel GetSector(UniversePosition position)
 		{
 			// TODO: Generate sector and systems if not populated.
-			var sector = Sectors.Value.FirstOrDefault(s => s.Position.Value.SectorEquals(position));
+			var sector = Sectors.Value.FirstOrDefault(s => s.Position.Value.LocalEquals(position));
 			if (sector != null) return sector;
 
 			sector = App.Universe.CreateSector(this, position);

@@ -32,8 +32,8 @@ namespace LunraGames.SubLight
 		public Vector3 GetUnityPosition(UniversePosition universePosition)
 		{
 			var universeFromOrigin = universePosition - UniverseOrigin;
-			var sector = universeFromOrigin.Sector;
-			var system = universeFromOrigin.System;
+			var sector = universeFromOrigin.Local;
+			var system = universeFromOrigin.Sector;
 			sector.Scale(UniverseToUnity);
 			system.Scale(UniverseToUnity);
 			return UnityOrigin + (sector + system);
@@ -58,7 +58,20 @@ namespace LunraGames.SubLight
 				Rotation
 			);
 		}
-		// TODO: add where direction of goal is...
 
+		public Vector3 GetGridOffset(float gridUnitsPerUniverseUnits)
+		{
+			return new Vector3(
+				GetGridAxisOffset(UniverseOrigin.Local.x, gridUnitsPerUniverseUnits),
+				GetGridAxisOffset(UniverseOrigin.Local.y, gridUnitsPerUniverseUnits),
+				GetGridAxisOffset(UniverseOrigin.Local.z, gridUnitsPerUniverseUnits)
+			);
+		}
+
+		float GetGridAxisOffset(float localValue, float gridUnitsPerUniveseUnits)
+		{
+			return localValue % gridUnitsPerUniveseUnits;
+		}
+		// TODO: add where direction of goal is...
 	}
 }

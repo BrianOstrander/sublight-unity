@@ -169,6 +169,9 @@ namespace LunraGames.SubLight.Presenters
 		{
 			const float Tiling = 8f;
 
+			var scale = model.GetScale(curr.Scale);
+			var scaleTransform = scale.Transform.Value;
+
 			var grid = new GridView.Grid();
 
 			grid.ZoomingUp = zoomingUp;
@@ -191,6 +194,8 @@ namespace LunraGames.SubLight.Presenters
 
 			grid.Tiling = Tiling * tileScalar;
 
+			grid.Offset = scaleTransform.GetGridOffset(UniversePosition.ToUniverseDistance(curr.LightYears));
+
 			var alphaCurve = grid.IsTarget ? View.RevealScaleAlpha : View.HideScaleAlpha;
 
 			grid.Alpha = alphaCurve.Evaluate(progress);
@@ -201,8 +206,6 @@ namespace LunraGames.SubLight.Presenters
 			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(curr.LightYears);
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 
-			var scale = model.GetScale(curr.Scale);
-			var scaleTransform = scale.Transform.Value;
 			scale.Opacity.Value = grid.Alpha;
 			scale.Transform.Value = new UniverseTransform(
 				View.GridUnityOrigin,
@@ -402,6 +405,8 @@ namespace LunraGames.SubLight.Presenters
 			var universePos = transformOnBeginDrag.GetUniversePosition(offset);
 
 			model.ActiveScale.Transform.Value = model.ActiveScale.Transform.Value.Duplicate(universePos);
+
+			SetGrid();
 
 			wasDragging = isDragging;
 		}

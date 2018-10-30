@@ -374,7 +374,7 @@ namespace LunraGames.SubLight
 									() => model.GameEnd.Value = universePosition
 								)
 							},
-							description: "Select the following position to assign the value of ( "+universePosition.Sector.x+" , "+universePosition.Sector.z+" ) to."
+							description: "Select the following position to assign the value of ( "+universePosition.Local.x+" , "+universePosition.Local.z+" ) to."
 						);
 					}
 				}
@@ -600,7 +600,7 @@ namespace LunraGames.SubLight
 
 		Vector2 UniverseToWindow(UniversePosition universePosition, Rect preview, Vector2 universeSize, float shownSize)
 		{
-			var universeScaled = new Vector2(universePosition.Sector.x, universePosition.Sector.z) * (shownSize / universeSize.y);
+			var universeScaled = new Vector2(universePosition.Local.x, universePosition.Local.z) * (shownSize / universeSize.y);
 			return preview.min + universeScaled;
 		}
 

@@ -42,7 +42,7 @@ namespace LunraGames.SubLight
 			sector.Position.Value = position;
 			sector.Visited.Value = false;
 			sector.Systems.Value = new SystemModel[0];
-			sector.Seed.Value = DemonUtility.CantorPairs(Mathf.FloorToInt(sector.Position.Value.Sector.x), Mathf.FloorToInt(sector.Position.Value.Sector.z), universe.Seed);
+			sector.Seed.Value = DemonUtility.CantorPairs(Mathf.FloorToInt(sector.Position.Value.Local.x), Mathf.FloorToInt(sector.Position.Value.Local.z), universe.Seed);
 			PopulateSector(sector);
 			return sector;
 		}
