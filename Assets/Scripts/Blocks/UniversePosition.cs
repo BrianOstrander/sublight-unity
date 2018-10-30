@@ -29,12 +29,12 @@ namespace LunraGames.SubLight
 		/// <param name="universePosition1">Universe position1.</param>
 		public static float Distance(UniversePosition universePosition0, UniversePosition universePosition1)
 		{
-			if (universePosition0.Local == universePosition1.Local)
+			if (universePosition0.Sector == universePosition1.Sector)
 			{
-				return Vector3.Distance(universePosition0.Sector, universePosition1.Sector);
+				return Vector3.Distance(universePosition0.Local, universePosition1.Local);
 			}
-			var adjusted0 = universePosition0.Local + universePosition0.Sector;
-			var adjusted1 = universePosition1.Local + universePosition1.Sector;
+			var adjusted0 = universePosition0.Sector + universePosition0.Local;
+			var adjusted1 = universePosition1.Sector + universePosition1.Local;
 			return Vector3.Distance(adjusted0, adjusted1);
 		}
 
@@ -52,45 +52,45 @@ namespace LunraGames.SubLight
 
 		public static UniversePosition Zero { get { return new UniversePosition(Vector3.zero, Vector3.zero); } }
 
-		public UniversePosition(Vector3 sector)
+		public UniversePosition(Vector3 local)
 		{
-			Adjust(Vector3.zero, sector, out Local, out Sector);
+			Adjust(Vector3.zero, local, out Sector, out Local);
 		}
 
-		public UniversePosition(Vector3 local, Vector3 sector)
+		public UniversePosition(Vector3 sector, Vector3 local)
 		{
-			Adjust(local, sector, out Local, out Sector);
+			Adjust(sector, local, out Sector, out Local);
 		}
 
-		public UniversePosition(float localX, float localY, float localZ, float sectorX, float sectorY, float sectorZ)
+		public UniversePosition(float sectorX, float sectorY, float sectorZ, float localX, float localY, float localZ)
 		{
-			Adjust(new Vector3(localX, localY, localZ), new Vector3(sectorX, sectorY, sectorZ), out Local, out Sector);
+			Adjust(new Vector3(sectorX, sectorY, sectorZ), new Vector3(localX, localY, localZ), out Sector, out Local);
 		}
-		/// <summary>
-		/// The value, from 0 to 1, within a Sector unit.
-		/// </summary>
-		[JsonProperty] public readonly Vector3 Local;
 		/// <summary>
 		/// A value with no upper or lower limit. Any decimal amount gets converted into a Local amount.
 		/// </summary>
 		[JsonProperty] public readonly Vector3 Sector;
+		/// <summary>
+		/// The value, from 0 to 1, within a Sector unit.
+		/// </summary>
+		[JsonProperty] public readonly Vector3 Local;
 
 		[JsonIgnore]
-		public UniversePosition LocalZero { get { return new UniversePosition(Vector3.zero, Sector); } }
+		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, Local); } }
 		[JsonIgnore]
-		public UniversePosition SectorZero { get { return new UniversePosition(Local, Vector3.zero); } }
+		public UniversePosition LocalZero { get { return new UniversePosition(Sector, Vector3.zero); } }
 
-		public UniversePosition NewLocal(Vector3 local) { return new UniversePosition(local, Sector); }
-		public UniversePosition NewSector(Vector3 sector) { return new UniversePosition(Local, sector); }
+		public UniversePosition NewSector(Vector3 sector) { return new UniversePosition(sector, Local); }
+		public UniversePosition NewLocal(Vector3 local) { return new UniversePosition(Sector, local); }
 
-		public bool LocalEquals(UniversePosition other)
+		public bool SectorEquals(UniversePosition other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 
-			return Mathf.Approximately(Local.x, other.Local.x) &&
-						Mathf.Approximately(Local.y, other.Local.y) &&
-						Mathf.Approximately(Local.z, other.Local.z);
+			return Mathf.Approximately(Sector.x, other.Sector.x) &&
+						Mathf.Approximately(Sector.y, other.Sector.y) &&
+						Mathf.Approximately(Sector.z, other.Sector.z);
 		}
 
 		public bool Equals(UniversePosition other)
@@ -98,12 +98,12 @@ namespace LunraGames.SubLight
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 
-			return Mathf.Approximately(Local.x, other.Local.x) &&
-						Mathf.Approximately(Local.y, other.Local.y) &&
-						Mathf.Approximately(Local.z, other.Local.z) &&
-						Mathf.Approximately(Sector.x, other.Sector.x) &&
+			return Mathf.Approximately(Sector.x, other.Sector.x) &&
 						Mathf.Approximately(Sector.y, other.Sector.y) &&
-						Mathf.Approximately(Sector.z, other.Sector.z);
+						Mathf.Approximately(Sector.z, other.Sector.z) &&
+						Mathf.Approximately(Local.x, other.Local.x) &&
+						Mathf.Approximately(Local.y, other.Local.y) &&
+						Mathf.Approximately(Local.z, other.Local.z);
 		}
 
 		public override bool Equals(object obj)
@@ -126,55 +126,55 @@ namespace LunraGames.SubLight
 
 		public static UniversePosition operator +(UniversePosition obj0, UniversePosition obj1)
 		{
-			var local = obj0.Local + obj1.Local;
 			var sector = obj0.Sector + obj1.Sector;
-			return new UniversePosition(local, sector);
+			var local = obj0.Local + obj1.Local;
+			return new UniversePosition(sector, local);
 		}
 
 		public static UniversePosition operator -(UniversePosition obj0, UniversePosition obj1)
 		{
-			var local = obj0.Local - obj1.Local;
 			var sector = obj0.Sector - obj1.Sector;
-			return new UniversePosition(local, sector);
+			var local = obj0.Local - obj1.Local;
+			return new UniversePosition(sector, local);
 		}
 
-		static void Adjust(Vector3 local, Vector3 sector, out Vector3 adjustedLocal, out Vector3 adjustedSector)
+		static void Adjust(Vector3 sector, Vector3 local, out Vector3 adjustedSector, out Vector3 adjustedLocal)
 		{
-			var localRemainder = new Vector3(local.x % 1f, local.y % 1f, local.z % 1f);
-			sector += localRemainder;
 			var sectorRemainder = new Vector3(sector.x % 1f, sector.y % 1f, sector.z % 1f);
-			local += sector - sectorRemainder;
-			local -= localRemainder;
-			sector = sectorRemainder;
+			local += sectorRemainder;
+			var localRemainder = new Vector3(local.x % 1f, local.y % 1f, local.z % 1f);
+			sector += local - localRemainder;
+			sector -= sectorRemainder;
+			local = localRemainder;
 
-			if (sector.x < 0f) 
+			if (local.x < 0f) 
 			{
-				sector = sector.NewX(sector.x + Mathf.Floor(Mathf.Abs(sector.x)));
-				local = local.NewX(local.x - 1f);
-				sector = sector.NewX(sector.x + 1f);
+				local = local.NewX(local.x + Mathf.Floor(Mathf.Abs(local.x)));
+				sector = sector.NewX(sector.x - 1f);
+				local = local.NewX(local.x + 1f);
 			}
-			if (sector.y < 0f)
+			if (local.y < 0f)
 			{
-				sector = sector.NewY(sector.y + Mathf.Floor(Mathf.Abs(sector.y)));
-				local = local.NewY(local.y - 1f);
-				sector = sector.NewY(sector.y + 1f);
+				local = local.NewY(local.y + Mathf.Floor(Mathf.Abs(local.y)));
+				sector = sector.NewY(sector.y - 1f);
+				local = local.NewY(local.y + 1f);
 			}
-			if (sector.z < 0f)
+			if (local.z < 0f)
 			{
-				sector = sector.NewZ(sector.z + Mathf.Floor(Mathf.Abs(sector.z)));
-				local = local.NewZ(local.z - 1f);
-				sector = sector.NewZ(sector.z + 1f);
+				local = local.NewZ(local.z + Mathf.Floor(Mathf.Abs(local.z)));
+				sector = sector.NewZ(sector.z - 1f);
+				local = local.NewZ(local.z + 1f);
 			}
 
-			sector = new Vector3(sector.x % 1f, sector.y % 1f, sector.z % 1f);
+			local = new Vector3(local.x % 1f, local.y % 1f, local.z % 1f);
 
-			adjustedLocal = local;
 			adjustedSector = sector;
+			adjustedLocal = local;
 		}
 
 		public override string ToString()
 		{
-			return "[ " + Local.x + ", " + Local.y + ", " + Local.z + " ] ( " + Sector.x + ", " + Sector.y + ", " + Sector.z + " )";
+			return "[ " + Sector.x + ", " + Sector.y + ", " + Sector.z + " ] ( " + Local.x + ", " + Local.y + ", " + Local.z + " )";
 		}
 	}
 }

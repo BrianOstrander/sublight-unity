@@ -194,7 +194,8 @@ namespace LunraGames.SubLight.Presenters
 
 			grid.Tiling = Tiling * tileScalar;
 
-			grid.Offset = scaleTransform.GetGridOffset(UniversePosition.ToUniverseDistance(curr.LightYears));
+			var offset = scaleTransform.GetGridOffset(UniversePosition.ToUniverseDistance(curr.LightYears));
+			grid.Offset = new Vector2(offset.x, offset.z);
 
 			var alphaCurve = grid.IsTarget ? View.RevealScaleAlpha : View.HideScaleAlpha;
 

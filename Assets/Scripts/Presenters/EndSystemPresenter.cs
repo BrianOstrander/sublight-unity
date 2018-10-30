@@ -51,13 +51,13 @@ namespace LunraGames.SubLight.Presenters
 			switch(View.TransitionState)
 			{
 				case TransitionStates.Shown:
-					if (!positions.Contains(system.Position.Value.SectorZero))
+					if (!positions.Contains(system.Position.Value.LocalZero))
 					{
 						CloseView(true);
 					}
 					break;
 				case TransitionStates.Closed:
-					if (positions.Contains(system.Position.Value.SectorZero))
+					if (positions.Contains(system.Position.Value.LocalZero))
 					{
 						Show();
 					}
