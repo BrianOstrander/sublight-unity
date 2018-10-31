@@ -443,6 +443,15 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			if (!isDragging) return;
+
+			if (lastgesture.IsSecondary) OnCheckSecondaryDragging(delta);
+			else OnCheckPrimaryDragging(delta);
+
+			wasDragging = isDragging;
+		}
+
+		void OnCheckPrimaryDragging(float delta)
+		{
 			Vector3 currUnityDrag;
 			bool currInRadius;
 			View.ProcessDrag(Gesture.GetViewport(lastgesture.End), out currUnityDrag, out currInRadius);
@@ -453,8 +462,11 @@ namespace LunraGames.SubLight.Presenters
 			model.ActiveScale.Transform.Value = model.ActiveScale.Transform.Value.Duplicate(universePos);
 
 			SetGrid();
+		}
 
-			wasDragging = isDragging;
+		void OnCheckSecondaryDragging(float delta)
+		{
+			Debug.Log("lol secondary");
 		}
 
 		void OnDrawGizmos()
