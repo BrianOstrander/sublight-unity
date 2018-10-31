@@ -20,34 +20,35 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform pivot;
 		[SerializeField]
+		Transform lookPivot;
+		[SerializeField]
 		Transform gantry;
 		[SerializeField]
 		Transform gantryAnchor;
 
 		[SerializeField]
-		Vector2 gantryHeightRange;
+		float radiusMinimum;
 		[SerializeField]
-		Vector2 gantryRadiusRange;
+		float radiusMaximum;
 		[SerializeField]
-		Vector2 focalHeightRange;
+		float pitchMinimum;
 		[SerializeField]
-		AnimationCurve gantryHeightCurve;
-		[SerializeField]
-		AnimationCurve gantryRadiusCurve;
-		[SerializeField]
-		AnimationCurve focalHeightCurve;
+		float pitchMaximum;
 
-		[SerializeField, Header("Test"), Range(0f, 1f)]
-		float orientationPreview;
 		[SerializeField]
-		bool liveMode;
+		AnimationCurve pitchLimitingMinimum;
+		[SerializeField]
+		AnimationCurve pitchLimitingMaximum;
 
-		bool gantryStale;
+		[Header("Testing")]
+		[SerializeField]
+		Vector3 YawPitchRadiusTest;
 
-		float orbit;
-		float zoom;
+		float yaw;
+		float pitch;
+		float radius;
+		bool transformStale;
 
-		Vector3? orbitForward;
 		Vector3 gantryPosition;
 		Vector3 gantryForward;
 
@@ -60,18 +61,80 @@ namespace LunraGames.SubLight.Views
 			else maskMesh.gameObject.SetActive(true);
 		}
 
-		public float Orbit
+		public float Yaw
 		{
-			get { return orbit; }
+			get { return yaw; }
 			set
 			{
-				orbit = value;
-				orbitForward = Vector3.forward;
-				//Debug.LogWarning("Todo: orbital logic"); // This was annoying, but still needs to be done!
-				gantryStale = true;
+				yaw = value;
+				transformStale = true;
 			}
 		}
 
+		public float Pitch
+		{
+			get { return pitch; }
+			set
+			{
+				pitch = value;
+				transformStale = true;
+			}
+		}
+
+		public float Radius
+		{
+			get { return radius; }
+			set
+			{
+				radius = value;
+				transformStale = true;
+			}
+		}
+
+		public Vector3 CameraPosition { get { return gantryPosition; } }
+		public Vector3 CameraForward { get { return gantryForward; } }
+
+		public Transform GantryAnchor { get { return gantryAnchor; } }
+
+		Vector3 PitchNormal(float pitch)
+		{
+			var adjustedMin = 90 - pitchMinimum;
+			var adjustedMax = 90 - pitchMaximum;
+			var xValue = (adjustedMin + ((adjustedMax - adjustedMin) * pitch)) * Mathf.Deg2Rad;
+			return new Vector3(0f, Mathf.Cos(xValue), Mathf.Sin(xValue));
+		}
+
+		Vector3 YawNormal(float yaw)
+		{
+			var radYaw = ((360f * yaw) + 90f) * Mathf.Deg2Rad;
+			return new Vector3(Mathf.Cos(radYaw), 0f, Mathf.Sin(radYaw)); 
+		}
+
+		void GetOrientation(float yaw, float pitch, float radius, out Vector3 position, out Vector3 forward)
+		{
+			var pitchNormal = PitchNormal(pitch);
+			var pitchZeroYawPosition = pitchNormal * (radiusMinimum + (radiusMaximum - radiusMinimum) * radius);
+			var yawNormal = YawNormal(yaw);
+			var originAtY = new Vector3(0f, pitchZeroYawPosition.y, 0f);
+			position = lookPivot.position + (originAtY + (yawNormal * pitchZeroYawPosition.z));
+			forward = (lookPivot.position - position).normalized;
+		}
+
+		float GetValue(float original, float? specified) { return specified.HasValue ? specified.Value : original; }
+
+		public void Set(float? yaw = null, float? pitch = null, float? radius = null)
+		{
+			Yaw = GetValue(Yaw, yaw);
+			Pitch = GetValue(Pitch, pitch);
+			Radius = GetValue(Radius, radius);
+		}
+
+		public void Input(float? yaw = null, float? pitch = null, float? radius = null)
+		{
+			Debug.Log("todo lol");
+		}
+
+		/*
 		public float Zoom
 		{
 			get { return zoom; }
@@ -88,11 +151,6 @@ namespace LunraGames.SubLight.Views
 				gantryStale = true;
 			}
 		}
-
-		public Vector3 CameraPosition { get { return gantryPosition; } }
-		public Vector3 CameraForward { get { return gantryForward; } }
-
-		public Transform GantryAnchor { get { return gantryAnchor; } }
 
 		void GetFocalOrientation(
 			float progress,
@@ -128,14 +186,16 @@ namespace LunraGames.SubLight.Views
 
 			forward = (focalPoint - worldPosition).normalized;
 		}
+		*/
 
 		public override void Reset()
 		{
 			base.Reset();
 
 			Mask(1f, false);
-			Orbit = 0f;
-			Zoom = 1f;
+			Yaw = 0f;
+			Pitch = 0f;
+			Radius = 0f;
 		}
 
 		#region Events
@@ -143,91 +203,62 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnLateIdle(delta);
 
-			if (Application.isEditor && liveMode)
-			{
-				Orbit = Orbit;
-				Zoom = Zoom;
-			}
-			else if (!gantryStale) return;
+			if (!transformStale) return;
 
-			gantryStale = false;
+			transformStale = false;
+
+
+
 			gantry.position = gantryPosition;
 			gantry.forward = gantryForward;
 		}
 		#endregion
 
-		void OnDrawGizmosSelected()
+		void OnDrawGizmos()
 		{
 			OnDrawEditorGizmos();
 		}
 
+		//void OnDrawGizmosSelected()
+		//{
+		//	OnDrawEditorGizmos();
+		//}
+
 		void OnDrawEditorGizmos()
 		{
 #if UNITY_EDITOR
-			if (pivot == null) return;
+			if (pivot == null || lookPivot == null) return;
 
-			var pivotPosition = pivot.position;
-
+			Handles.color = Color.green;
+			Handles.DrawWireDisc(pivot.position, Vector3.up, radiusMinimum);
+			Handles.color = Color.green.NewA(0.5f);
+			Handles.DrawWireDisc(pivot.position, Vector3.up, radiusMaximum);
+			// 6.23
 			Gizmos.color = Color.red;
-			Gizmos.DrawWireCube(pivotPosition, Vector3.one);
+			var pitchBegin = lookPivot.position + (PitchNormal(0f) * radiusMinimum);
+			var pitchEnd = lookPivot.position + (PitchNormal(1f) * radiusMinimum);
+			Gizmos.DrawWireSphere(pitchBegin, 0.1f);
+			Gizmos.color = Color.red.NewA(0.5f);
+			Gizmos.DrawWireSphere(pitchEnd, 0.1f);
 
-			const int focalSamples = 16;
+			var normalizedTest = new Vector3(YawPitchRadiusTest.x % 1f, YawPitchRadiusTest.y % 1f, YawPitchRadiusTest.z % 1f);
 
-			Vector3? last = null;
-			for (var i = 0; i < focalSamples; i++)
-			{
-				var isFirst = i == 0;
-				var isLast = i == focalSamples - 1;
-				var progress = i / (float)(focalSamples - 1);
-
-				Vector3 point;
-				GetFocalOrientation(progress, pivotPosition, out point);
-
-				if (isFirst || isLast) Gizmos.DrawWireCube(point, Vector3.one * 0.6f);
-				else Gizmos.DrawWireSphere(point, 0.1f);
-
-				if (last.HasValue) Gizmos.DrawLine(last.Value, point);
-				last = point;
-			}
-
-			last = null;
-
-			Gizmos.color = Color.green;
-
-			for (var i = 0; i < focalSamples; i++)
-			{
-				var isFirst = i == 0;
-				var isLast = i == focalSamples - 1;
-				var progress = i / (float)(focalSamples - 1);
-
-				Vector3 point;
-				Vector3 forward;
-				GetOrientation(progress, pivotPosition, Vector3.forward, out point, out forward);
-
-				if (isFirst || isLast) Gizmos.DrawWireCube(point, Vector3.one * 0.6f);
-				else Gizmos.DrawWireSphere(point, 0.1f);
-
-				Gizmos.DrawLine(point, point + (forward * 2f));
-
-
-				if (last.HasValue) Gizmos.DrawLine(last.Value, point);
-				last = point;
-
-				if (isFirst)
-				{
-					Handles.color = Color.green;
-					Handles.DrawWireDisc(pivotPosition, Vector3.up, Vector3.Distance(point.NewY(pivotPosition.y), pivotPosition));
-				}
-			}
-
-			var pivotForward = Vector3.back;
-
-			Vector3 testPoint;
-			Vector3 testForward;
-			GetOrientation(orientationPreview, pivotPosition, Vector3.forward, out testPoint, out testForward);
+			var yawTest = normalizedTest.x;
+			var pitchTest = normalizedTest.y;
+			var radiusTest = normalizedTest.z;
 
 			Gizmos.color = Color.yellow;
-			Gizmos.DrawLine(testPoint, testPoint + (testForward * 4f));
+
+			Vector3 positionTest;
+			Vector3 forwardTest;
+			GetOrientation(yawTest, pitchTest, radiusTest, out positionTest, out forwardTest);
+
+			Gizmos.DrawLine(positionTest, positionTest + forwardTest);
+			Handles.color = Color.yellow;
+			Handles.DrawWireDisc(new Vector3(0f, positionTest.y, 0f), Vector3.up, positionTest.NewY(0f).magnitude);
+
+			Gizmos.DrawWireSphere(positionTest, 0.2f);
+
 #endif
 		}
 	}
@@ -236,13 +267,12 @@ namespace LunraGames.SubLight.Views
 	{
 		void Mask(float scalar, bool revealing);
 
-		float Orbit { get; set; }
-		/// <summary>
-		/// How close the camera is zoomed in. Lower values mean the camera is
-		/// closer.
-		/// </summary>
-		/// <value>The zoom.</value>
-		float Zoom { get; set; }
+		float Yaw { get; set; }
+		float Pitch { get; set; }
+		float Radius { get; set; }
+
+		void Set(float? yaw = null, float? pitch = null, float? radius = null);
+		void Input(float? yaw = null, float? pitch = null, float? radius = null);
 
 		Vector3 CameraPosition { get; }
 		Vector3 CameraForward { get; }

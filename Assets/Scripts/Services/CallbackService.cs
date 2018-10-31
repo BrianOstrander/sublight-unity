@@ -141,6 +141,10 @@ namespace LunraGames.SubLight
 		/// Requests a change to the specified color.
 		/// </summary>
 		public Action<HoloColorRequest> HoloColorRequest = ActionExtensions.GetEmpty<HoloColorRequest>();
+		/// <summary>
+		/// The camera transform request.
+		/// </summary>
+		public Action<CameraTransformRequest> CameraTransformRequest = ActionExtensions.GetEmpty<CameraTransformRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

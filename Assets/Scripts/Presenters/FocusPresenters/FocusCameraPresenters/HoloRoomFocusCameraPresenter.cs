@@ -16,6 +16,7 @@ namespace LunraGames.SubLight.Presenters
 		public HoloRoomFocusCameraPresenter() : base(null)
 		{
 			App.Callbacks.CameraMaskRequest += OnCameraMaskRequest;
+			App.Callbacks.CameraTransformRequest += OnCameraTransformRequest;
 			App.Heartbeat.Update += OnUpdate;
 		}
 
@@ -24,6 +25,7 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			App.Callbacks.CameraMaskRequest -= OnCameraMaskRequest;
+			App.Callbacks.CameraTransformRequest -= OnCameraTransformRequest;
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
@@ -33,8 +35,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			base.OnUpdateEnabled();
 
-			View.Orbit = 0f;
-			View.Zoom = 0f;
+			View.Set(0f, 0f, 0f);
 		}
 
 		void OnCameraMaskRequest(CameraMaskRequest request)
@@ -81,6 +82,22 @@ namespace LunraGames.SubLight.Presenters
 				App.Callbacks.CameraMaskRequest(lastMask);
 				lastDone();
 			}
+		}
+
+		void OnCameraTransformRequest(CameraTransformRequest transform)
+		{
+			switch (transform.Transform)
+			{
+				case CameraTransformRequest.Transforms.Input: OnInputTransform(transform); break;
+				default:
+					Debug.LogError("Unrecognized transform: " + transform.Transform);
+					break;
+			}
+		}
+
+		void OnInputTransform(CameraTransformRequest transform)
+		{
+			
 		}
 		#endregion
 	}
