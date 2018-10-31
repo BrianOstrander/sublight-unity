@@ -134,60 +134,6 @@ namespace LunraGames.SubLight.Views
 			Debug.Log("todo lol");
 		}
 
-		/*
-		public float Zoom
-		{
-			get { return zoom; }
-			set
-			{
-				zoom = Mathf.Clamp01(value);
-				GetOrientation(
-					zoom,
-					pivot.position,
-					orbitForward.HasValue ? orbitForward.Value : Vector3.forward,
-					out gantryPosition,
-					out gantryForward
-				);
-				gantryStale = true;
-			}
-		}
-
-		void GetFocalOrientation(
-			float progress,
-			Vector3 pivotPosition,
-			out Vector3 worldPosition
-		)
-		{
-			progress = Mathf.Clamp01(progress);
-			var focalHeightDelta = focalHeightRange.y - focalHeightRange.x;
-			var focalHeight = focalHeightRange.x + (focalHeightDelta * focalHeightCurve.Evaluate(progress));
-			worldPosition = pivotPosition + (Vector3.up * focalHeight);
-		}
-
-		void GetOrientation(
-			float progress,
-			Vector3 pivotPosition,
-			Vector3 pivotForward,
-			out Vector3 worldPosition,
-			out Vector3 forward
-		)
-		{
-			progress = Mathf.Clamp01(progress);
-			var heightDelta = gantryHeightRange.y - gantryHeightRange.x;
-			var radiusDelta = gantryRadiusRange.y - gantryRadiusRange.x;
-
-			var height = gantryHeightRange.x + (heightDelta * gantryHeightCurve.Evaluate(progress));
-			var radius = gantryRadiusRange.x + (radiusDelta * gantryRadiusCurve.Evaluate(progress));
-
-			worldPosition = pivotPosition + ((pivotForward * radius) + (Vector3.up * height));
-
-			Vector3 focalPoint;
-			GetFocalOrientation(progress, pivotPosition, out focalPoint);
-
-			forward = (focalPoint - worldPosition).normalized;
-		}
-		*/
-
 		public override void Reset()
 		{
 			base.Reset();
@@ -196,6 +142,16 @@ namespace LunraGames.SubLight.Views
 			Yaw = 0f;
 			Pitch = 0f;
 			Radius = 0f;
+
+			CalculateTransform();
+		}
+
+		void CalculateTransform()
+		{
+			GetOrientation(Yaw, Pitch, Radius, out gantryPosition, out gantryForward);
+
+			gantry.position = gantryPosition;
+			gantry.forward = gantryForward;
 		}
 
 		#region Events
@@ -207,22 +163,19 @@ namespace LunraGames.SubLight.Views
 
 			transformStale = false;
 
-
-
-			gantry.position = gantryPosition;
-			gantry.forward = gantryForward;
+			CalculateTransform();
 		}
 		#endregion
 
-		void OnDrawGizmos()
-		{
-			OnDrawEditorGizmos();
-		}
-
-		//void OnDrawGizmosSelected()
+		//void OnDrawGizmos()
 		//{
 		//	OnDrawEditorGizmos();
 		//}
+
+		void OnDrawGizmosSelected()
+		{
+			OnDrawEditorGizmos();
+		}
 
 		void OnDrawEditorGizmos()
 		{
