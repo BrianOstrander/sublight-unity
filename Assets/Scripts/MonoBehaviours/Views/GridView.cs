@@ -52,6 +52,8 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve hideScaleAlpha;
 		[SerializeField]
 		AnimationCurve revealScaleAlpha;
+		[SerializeField]
+		AnimationCurve positionCurve;
 
 		[SerializeField]
 		float gridDragRadius;
@@ -73,6 +75,7 @@ namespace LunraGames.SubLight.Views
 
 		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
 		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
+		public AnimationCurve PositionCurve { get { return positionCurve; } }
 
 		public Action DrawGizmos { set; private get; }
 
@@ -211,6 +214,7 @@ namespace LunraGames.SubLight.Views
 		GridView.Grid[] Grids { set; }
 		AnimationCurve HideScaleAlpha { get; }
 		AnimationCurve RevealScaleAlpha { get; }
+		AnimationCurve PositionCurve { get; }
 
 		void ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius);
 		void SetRadius(float scalar, bool showing);

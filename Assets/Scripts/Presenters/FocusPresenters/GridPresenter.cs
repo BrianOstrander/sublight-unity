@@ -198,7 +198,7 @@ namespace LunraGames.SubLight.Presenters
 						break;
 				}
 
-				var currPosition = UniversePosition.Lerp(progress, beginPosition, endPosition);
+				var currPosition = UniversePosition.Lerp(View.PositionCurve.Evaluate(progress), beginPosition, endPosition);
 				scaleTransform = scale.Transform.Value.Duplicate(currPosition);
 			}
 
