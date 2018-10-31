@@ -55,6 +55,11 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float pitchLookYOffsetMaximum;
 
+		[SerializeField]
+		AnimationCurve yawPitchLimiting;
+		[SerializeField]
+		float yawPitchLimitingMaximum;
+
 		[Header("Testing")]
 		[SerializeField]
 		bool liveMode;
@@ -165,9 +170,17 @@ namespace LunraGames.SubLight.Views
 
 		public void Input(float? yaw = null, float? pitch = null, float? radius = null)
 		{
+			if (yaw.HasValue && pitch.HasValue && !(Mathf.Approximately(yaw.Value, 0f) || Mathf.Approximately(pitch.Value, 0f)))
+			{
+				var yawAbs = Mathf.Abs(yaw.Value);
+				var pitchAbs = Mathf.Abs(pitch.Value);
+				var limiting = yawPitchLimiting.Evaluate(Mathf.Min(yawAbs, pitchAbs) / Mathf.Max(yawAbs, pitchAbs)) * yawPitchLimitingMaximum;
+				if (yawAbs < pitchAbs) yaw = yaw.Value * limiting;
+				else pitch = pitch.Value * limiting;
+			}
+			
 			if (yaw.HasValue) Yaw = AddNormalized(Yaw, yaw.Value * yawSensitivity);
 			if (pitch.HasValue) Pitch = AddLimited(Pitch, pitch.Value, pitchLimiting, pitchLimitingMinimum, pitchSensitivity);
-			//if (pitch.HasValue) Radius = AddLimited(Pitch, pitch.Value, pitchLimiting, pitchLimitingMinimum, pitchSensitivity);
 			if (radius.HasValue) Radius = AddNormalized(Radius, radius.Value * radiusSensitivity);
 		}
 
