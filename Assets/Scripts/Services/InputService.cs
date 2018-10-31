@@ -260,7 +260,6 @@ namespace LunraGames.SubLight
 			// Camera
 			var cameraPosition = GetCameraPosition();
 			var cameraRotation = GetCameraRotation();
-			callbacks.CameraOrientation(new CameraOrientation(cameraPosition, cameraRotation));
 
 			var pointerRotation = GetPointerRotation();
 			callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));

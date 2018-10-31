@@ -864,6 +864,7 @@ MonoBehaviour:
     CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
+  - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
   scaleNameLabel: {fileID: 114770583949787846}
   scaleLabel: {fileID: 114729324959399498}
   unitCountLabel: {fileID: 114498776275681240}

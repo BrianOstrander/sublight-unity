@@ -12,7 +12,8 @@ namespace LunraGames.SubLight
 
 		Vector3 LookAtPosition(IView view)
 		{
-			var dir = (view.transform.position - App.Callbacks.LastCameraOrientation.Position).normalized;
+			if (Camera.main == null) return -view.transform.forward;
+			var dir = (view.transform.position - Camera.main.transform.forward).normalized;
 
 			return view.transform.position + (horizontalOnly ? dir.NewY(0).normalized : dir);
 		}
@@ -22,7 +23,7 @@ namespace LunraGames.SubLight
 			view.transform.LookAt(LookAtPosition(view));
 		}
 
-		public override void OnIdle(IView view)
+		public override void OnLateIdle(IView view)
 		{
 			if (idleLook) view.transform.LookAt(LookAtPosition(view));
 		}

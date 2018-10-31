@@ -34,10 +34,6 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<bool> Interaction = ActionExtensions.GetEmpty<bool>();
 		/// <summary>
-		/// On camera orientation
-		/// </summary>
-		public Action<CameraOrientation> CameraOrientation = ActionExtensions.GetEmpty<CameraOrientation>();
-		/// <summary>
 		/// On beginning a gesture.
 		/// </summary>
 		public Action<Gesture> BeginGesture = ActionExtensions.GetEmpty<Gesture>();
@@ -150,7 +146,6 @@ namespace LunraGames.SubLight
 		// TODO: Think about moving these to state or GameModel...
 
 		#region Genaral Caching
-		public CameraOrientation LastCameraOrientation;
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
@@ -167,7 +162,6 @@ namespace LunraGames.SubLight
 		{
 			SceneManager.sceneLoaded += (scene, loadMode) => SceneLoad(scene, loadMode);
 			SceneManager.sceneUnloaded += scene => SceneUnload(scene);
-			CameraOrientation += orientation => LastCameraOrientation = orientation;
 			PointerOrientation += orientation => LastPointerOrientation = orientation;
 			Highlight += highlight => LastHighlight = highlight;
 			CurrentGesture += gesture => LastGesture = gesture;
