@@ -64,11 +64,14 @@ namespace LunraGames.SubLight
 
 		public Vector3 GetGridOffset(float localGridUnitSize)
 		{
+			// Kinda magic, but basically at some point there are more than 1
+			// units per sector, so we have to change how we find the offset.
+			var target = localGridUnitSize < 1f ? UniverseOrigin.Local : UniverseOrigin.Sector;
 			var gridUnitsPerSector = 1f / localGridUnitSize;
 			return new Vector3(
-				GetGridAxisOffset(UniverseOrigin.Local.x, gridUnitsPerSector),
-				GetGridAxisOffset(UniverseOrigin.Local.y, gridUnitsPerSector),
-				GetGridAxisOffset(UniverseOrigin.Local.z, gridUnitsPerSector)
+				GetGridAxisOffset(target.x, gridUnitsPerSector),
+				GetGridAxisOffset(target.y, gridUnitsPerSector),
+				GetGridAxisOffset(target.z, gridUnitsPerSector)
 			);
 		}
 
