@@ -466,7 +466,9 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnCheckSecondaryDragging(float delta)
 		{
-			Debug.Log("lol secondary");
+			var yaw = -lastgesture.DeltaSinceLastScaledByDelta.x;
+			var pitch = -lastgesture.DeltaSinceLastScaledByDelta.y;
+			App.Callbacks.CameraTransformRequest(CameraTransformRequest.Input(yaw, pitch));
 		}
 
 		void OnDrawGizmos()

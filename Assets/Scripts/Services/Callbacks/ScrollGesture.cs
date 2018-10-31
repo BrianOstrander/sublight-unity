@@ -27,9 +27,13 @@ namespace LunraGames.SubLight
 		/// turning the Current into scrolls per second.
 		/// </summary>
 		public readonly Vector2 CurrentScaledByDelta;
+		/// <summary>
+		/// Scaled by framerate.
+		/// </summary>
+		public readonly Vector2 DeltaSinceLastScaledByDelta;
 
 		public ScrollGesture(
-			Vector2 end,
+			Vector2 begin,
 			bool isSecondary,
 			float timeDelta
 		)
@@ -37,13 +41,16 @@ namespace LunraGames.SubLight
 			State = States.Begin;
 			IsSecondary = isSecondary;
 			Begin = Vector2.zero;
-			Current = end;
-			End = end;
-			Delta = end;
-			DeltaSinceLast = end;
+			Current = begin;
+			End = begin;
+			Delta = begin;
+			DeltaSinceLast = begin;
 			TimeDelta = timeDelta;
 
-			CurrentScaledByDelta = end * (1f / timeDelta);
+			var timeDeltaScalar = 1f / timeDelta;
+
+			CurrentScaledByDelta = begin * timeDeltaScalar;
+			DeltaSinceLastScaledByDelta = DeltaSinceLast * timeDeltaScalar;
 		}
 
 		public ScrollGesture(
@@ -64,7 +71,10 @@ namespace LunraGames.SubLight
 			DeltaSinceLast = deltaSinceLast;
 			TimeDelta = timeDelta;
 
-			CurrentScaledByDelta = end * (1f / timeDelta);
+			var timeDeltaScalar = 1f / timeDelta;
+
+			CurrentScaledByDelta = end * timeDeltaScalar;
+			DeltaSinceLastScaledByDelta = DeltaSinceLast * timeDeltaScalar;
 		}
 	}
 }

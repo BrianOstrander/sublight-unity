@@ -97,7 +97,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnInputTransform(CameraTransformRequest transform)
 		{
-			
+			View.Input(transform.Yaw, transform.Pitch, transform.Radius);
 		}
 		#endregion
 	}

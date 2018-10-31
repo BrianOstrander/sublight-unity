@@ -18,9 +18,25 @@ namespace LunraGames.SubLight
 		public readonly Vector2 Current;
 		public readonly Vector2 End;
 		public readonly Vector2 Delta;
+		public readonly Vector2 DeltaSinceLast;
+
 		public readonly float TimeDelta;
 
-		public Gesture(Vector2 begin, bool isSecondary, float timeDelta)
+		/// <summary>
+		/// This makes it so gestures are normalized by the framerate, basically
+		/// turning the Current into scrolls per second.
+		/// </summary>
+		public readonly Vector2 CurrentScaledByDelta;
+		/// <summary>
+		/// Scaled by framerate.
+		/// </summary>
+		public readonly Vector2 DeltaSinceLastScaledByDelta;
+
+		public Gesture(
+			Vector2 begin,
+			bool isSecondary,
+			float timeDelta
+		)
 		{
 			State = States.Begin;
 			IsSecondary = isSecondary;
@@ -28,10 +44,23 @@ namespace LunraGames.SubLight
 			Current = begin;
 			End = begin;
 			Delta = Vector2.zero;
+			DeltaSinceLast = Vector2.zero;
 			TimeDelta = timeDelta;
+
+			var timeDeltaScalar = 1f / timeDelta;
+
+			CurrentScaledByDelta = begin * timeDeltaScalar;
+			DeltaSinceLastScaledByDelta = DeltaSinceLast * timeDeltaScalar;
 		}
 
-		public Gesture(Vector2 begin, Vector2 end, States state, bool isSecondary, float timeDelta)
+		public Gesture(
+			Vector2 begin,
+			Vector2 end,
+			Vector2 deltaSinceLast,
+			States state,
+			bool isSecondary,
+			float timeDelta
+		)
 		{
 			State = state;
 			IsSecondary = isSecondary;
@@ -39,7 +68,13 @@ namespace LunraGames.SubLight
 			Current = end;
 			End = end;
 			Delta = end - begin;
+			DeltaSinceLast = deltaSinceLast;
 			TimeDelta = timeDelta;
+
+			var timeDeltaScalar = 1f / timeDelta;
+
+			CurrentScaledByDelta = end * timeDeltaScalar;
+			DeltaSinceLastScaledByDelta = DeltaSinceLast * timeDeltaScalar;
 		}
 
 		/// <summary>

@@ -103,16 +103,18 @@ namespace LunraGames.SubLight
 				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction(), delta));
 			}
 
+			var gestureDeltaSinceLast = gestureState == Gesture.States.Begin ? Vector2.zero : (currentGesture - lastGesture);
+
 			if (gesturingEnded)
 			{
 				gestureState = Gesture.States.End;
 
-				callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureState, IsSecondaryClickInteraction(), delta));
+				callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureDeltaSinceLast, gestureState, IsSecondaryClickInteraction(), delta));
 			}
 
 			if (IsGesturing() || gesturingEnded)
 			{
-				callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureState, IsSecondaryClickInteraction(), delta));
+				callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureDeltaSinceLast, gestureState, IsSecondaryClickInteraction(), delta));
 			}
 
 			var gestureDeltaFromBegin = GetGestureDelta(gesturingBegan, gesturingEnded, beginGesture, lastGesture);

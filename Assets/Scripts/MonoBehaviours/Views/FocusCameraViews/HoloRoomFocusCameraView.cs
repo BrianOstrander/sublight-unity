@@ -36,9 +36,16 @@ namespace LunraGames.SubLight.Views
 		float pitchMaximum;
 
 		[SerializeField]
-		AnimationCurve pitchLimitingMinimum;
+		float yawSensitivity;
 		[SerializeField]
-		AnimationCurve pitchLimitingMaximum;
+		float pitchSensitivity;
+		[SerializeField]
+		float radiusSensitivity;
+
+		[SerializeField]
+		AnimationCurve pitchLimiting;
+		[SerializeField]
+		float pitchLimitingMinimum;
 
 		[Header("Testing")]
 		[SerializeField]
@@ -120,18 +127,34 @@ namespace LunraGames.SubLight.Views
 			forward = (lookPivot.position - position).normalized;
 		}
 
-		float GetValue(float original, float? specified) { return specified.HasValue ? specified.Value : original; }
+		float AddNormalized(float original, float delta)
+		{
+			original = (original + delta) % 1f;
+			return original < 0f ? (1f + original) : original;
+		}
+
+		float AddLimited(float original, float delta, AnimationCurve limiting, float limitingMinimum, float sensitivity)
+		{
+			if ((delta < 0f && (original < 0.5f)) || (0f < delta && 0.5f < original))
+			{
+				sensitivity *= limitingMinimum + (limiting.Evaluate(original) * (1f - limitingMinimum));
+			}
+			return Mathf.Clamp01(original + (sensitivity * delta));
+		}
 
 		public void Set(float? yaw = null, float? pitch = null, float? radius = null)
 		{
-			Yaw = GetValue(Yaw, yaw);
-			Pitch = GetValue(Pitch, pitch);
-			Radius = GetValue(Radius, radius);
+			if (yaw.HasValue) Yaw = yaw.Value;
+			if (pitch.HasValue) Pitch = pitch.Value;
+			if (radius.HasValue) Radius = radius.Value;
 		}
 
 		public void Input(float? yaw = null, float? pitch = null, float? radius = null)
 		{
-			Debug.Log("todo lol");
+			if (yaw.HasValue) Yaw = AddNormalized(Yaw, yaw.Value * yawSensitivity);
+			if (pitch.HasValue) Pitch = AddLimited(Pitch, pitch.Value, pitchLimiting, pitchLimitingMinimum, pitchSensitivity);
+			//if (pitch.HasValue) Radius = AddLimited(Pitch, pitch.Value, pitchLimiting, pitchLimitingMinimum, pitchSensitivity);
+			if (radius.HasValue) Radius = AddNormalized(Radius, radius.Value * radiusSensitivity);
 		}
 
 		public override void Reset()
