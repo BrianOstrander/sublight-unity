@@ -19,8 +19,11 @@ namespace LunraGames.SubLight.Presenters
 		{
 			scaleInUniverse = model.Galaxy.GalaxySize;
 			positionInUniverse = model.Galaxy.GalaxyOrigin;
-			Debug.Log(scaleInUniverse);
+		}
 
+		protected override void OnShowView()
+		{
+			View.GalaxyPreview = Model.Galaxy.FullPreview;
 		}
 	}
 }
