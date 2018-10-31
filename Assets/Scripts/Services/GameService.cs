@@ -84,17 +84,6 @@ namespace LunraGames.SubLight
 
 			game.Ship.Value = ship;
 
-			game.TravelRequest.Value = new TravelRequest(
-				TravelRequest.States.Complete,
-				startSystem.Position,
-				startSystem.Position,
-				startSystem.Position,
-				DayTime.Zero,
-				DayTime.Zero,
-				0f,
-				1f
-			);
-
 			game.ToolbarSelection.Value = ToolbarSelections.System;
 
 			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(

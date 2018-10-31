@@ -77,14 +77,6 @@ namespace LunraGames.SubLight
 		/// </remarks>
 		public Action<PointerOrientation> PointerOrientation = ActionExtensions.GetEmpty<PointerOrientation>();
 		/// <summary>
-		/// Obscures the raycasting on cameras.
-		/// </summary>
-		public Action<ObscureCameraRequest> ObscureCameraRequest = ActionExtensions.GetEmpty<ObscureCameraRequest>();
-		/// <summary>
-		/// Requests the shade presenter to shade or unshade the interface.
-		/// </summary>
-		public Action<ShadeRequest> ShadeRequest = ActionExtensions.GetEmpty<ShadeRequest>();
-		/// <summary>
 		/// Called when a dialog is requested to be open or when one is closed.
 		/// </summary>
 		public Action<DialogRequest> DialogRequest = ActionExtensions.GetEmpty<DialogRequest>();
@@ -93,26 +85,13 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<DayTimeDelta> DayTimeDelta = ActionExtensions.GetEmpty<DayTimeDelta>();
 		/// <summary>
-		/// System highlight changed.
-		/// </summary>
-		public Action<SystemHighlight> SystemHighlight = ActionExtensions.GetEmpty<SystemHighlight>();
-		/// <summary>
 		/// The speed change.
 		/// </summary>
 		public Action<SpeedRequest> SpeedRequest = ActionExtensions.GetEmpty<SpeedRequest>();
 		/// <summary>
-		/// Requests a camera change of position or reports a change in the 
-		/// camera's position.
-		/// </summary>
-		public Action<CameraSystemRequest> CameraSystemRequest = ActionExtensions.GetEmpty<CameraSystemRequest>();
-		/// <summary>
 		/// Requests or reports saving.
 		/// </summary>
 		public Action<SaveRequest> SaveRequest = ActionExtensions.GetEmpty<SaveRequest>();
-		/// <summary>
-		/// Called when the void's render texture is updated.
-		/// </summary>
-		public Action<VoidRenderTexture> VoidRenderTexture = ActionExtensions.GetEmpty<VoidRenderTexture>();
 		/// <summary>
 		/// The state of game. Dialogs and similar UI will pause the game. This 
 		/// is separate from pausing the ingame time.
@@ -171,20 +150,14 @@ namespace LunraGames.SubLight
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
-		public ObscureCameraRequest LastObscureCameraRequest;
-		public ShadeRequest LastShadeRequest;
 		public PlayState LastPlayState;
 		public HoloColorRequest LastHoloColorRequest;
 		#endregion
 
 		#region Game Caching
 		public DayTimeDelta LastDayTimeDelta;
-		public SystemHighlight LastSystemHighlight;
 		public SpeedRequest LastSpeedRequest;
-		public VoidRenderTexture LastVoidRenderTexture;
 		#endregion
-
-		Stack<EscapeEntry> escapes = new Stack<EscapeEntry>();
 
 		public CallbackService()
 		{
@@ -195,53 +168,9 @@ namespace LunraGames.SubLight
 			Highlight += highlight => LastHighlight = highlight;
 			CurrentGesture += gesture => LastGesture = gesture;
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
-			SystemHighlight += highlight => LastSystemHighlight = highlight;
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
-			ObscureCameraRequest += obscureCameraRequest => LastObscureCameraRequest = obscureCameraRequest;
-			ShadeRequest += shadeRequest => LastShadeRequest = shadeRequest;
-			VoidRenderTexture += texture => LastVoidRenderTexture = texture;
 			PlayState += state => LastPlayState = state;
 			HoloColorRequest += request => LastHoloColorRequest = request;
-
-			Escape += OnEscape;
-		}
-
-		#region Internal Events
-		void OnEscape()
-		{
-			if (0 < escapes.Count && escapes.Peek().Enabled())
-			{
-				var escape = escapes.Pop();
-				if (escape.IsShaded.HasValue)
-				{
-					if (escape.IsShaded.Value) ShadeRequest(SubLight.ShadeRequest.Shade);
-					else ShadeRequest(SubLight.ShadeRequest.UnShade);
-				}
-				if (escape.IsObscured.HasValue)
-				{
-					if (escape.IsShaded.Value) ObscureCameraRequest(SubLight.ObscureCameraRequest.Obscure);
-					else ObscureCameraRequest(SubLight.ObscureCameraRequest.UnObscure);
-				}
-				escape.Escape();
-			}
-		}
-  		#endregion
-
-		public void PushEscape(EscapeEntry escape)
-		{
-			escapes.Push(escape);
-		}
-
-		public void PopEscape()
-		{
-			if (0 < escapes.Count) escapes.Pop();
-		}
-
-		public void ClearEscapables()
-		{
-			ShadeRequest(SubLight.ShadeRequest.UnShade);
-			ObscureCameraRequest(SubLight.ObscureCameraRequest.UnObscure);
-			escapes.Clear();
 		}
 	}
 }

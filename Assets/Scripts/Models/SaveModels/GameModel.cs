@@ -17,7 +17,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] float destructionSpeedIncrement;
 		[JsonProperty] float destructionSpeed;
 		[JsonProperty] float destructionRadius;
-		[JsonProperty] TravelRequest travelRequest;
 		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
 		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
@@ -78,8 +77,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> DestructionRadius;
 		[JsonIgnore]
-		public readonly ListenerProperty<TravelRequest> TravelRequest;
-		[JsonIgnore]
 		public readonly ListenerProperty<DestructionSpeedDelta[]> DestructionSpeedDeltas;
 
 		/// <summary>
@@ -135,7 +132,6 @@ namespace LunraGames.SubLight.Models
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
 			DestructionRadius = new ListenerProperty<float>(value => destructionRadius = value, () => destructionRadius);
-			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);

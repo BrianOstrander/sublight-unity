@@ -185,8 +185,6 @@ namespace LunraGames.SubLight
 
 			App.Input.SetEnabled(false);
 
-			App.Callbacks.ClearEscapables();
-
 			App.SM.PushBlocking(UnBind);
 			App.SM.PushBlocking(UnLoadScenes);
 		}
