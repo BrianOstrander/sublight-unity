@@ -65,6 +65,9 @@ namespace LunraGames.SubLight
 				return;
 			}
 			Payload.Game.Galaxy = result.TypedModel;
+
+			if (!Payload.Game.PlayerStartSelected.Value) Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart.Value;
+
 			done();
 		}
 

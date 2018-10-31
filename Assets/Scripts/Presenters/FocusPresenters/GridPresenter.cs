@@ -191,7 +191,7 @@ namespace LunraGames.SubLight.Presenters
 				{
 					case UniverseFocuses.None: break;
 					case UniverseFocuses.Ship: endPosition = model.Ship.Value.Position.Value; break;
-					case UniverseFocuses.GalacticOrigin: endPosition = model.Galaxy.GalacticOrigin.Value; break;
+					case UniverseFocuses.GalacticOrigin: endPosition = model.Galaxy.GalaxyOrigin.Value; break;
 					case UniverseFocuses.ClusterOrigin: endPosition = model.Galaxy.ClusterOrigin.Value; break;
 					default:
 						Debug.LogError("unrecognized focus: " + focus);
@@ -228,7 +228,7 @@ namespace LunraGames.SubLight.Presenters
 
 			var alphaCurve = grid.IsTarget ? View.RevealScaleAlpha : View.HideScaleAlpha;
 
-			grid.Alpha = alphaCurve.Evaluate(progress);
+			grid.Alpha = grid.IsActive ? alphaCurve.Evaluate(progress) : 0f;
 
 			var currLightYearsInTile = progress * unitMap.LightYears;
 
@@ -475,7 +475,7 @@ namespace LunraGames.SubLight.Presenters
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
 			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalacticOrigin), 0.06f);
+			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalaxyOrigin), 0.06f);
 			//Gizmos.color = Color.magenta;
 			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.ClusterOrigin), 0.08f);
 

@@ -29,14 +29,30 @@ namespace LunraGames.SubLight
 			Rotation = rotation;
 		}
 
+		public Vector3 GetUnityScale(UniversePosition universeScale)
+		{
+			var sector = universeScale.Sector;
+			var local = universeScale.Local;
+			sector.Scale(UniverseToUnity);
+			local.Scale(UniverseToUnity);
+			return sector + local;
+		}
+
 		public Vector3 GetUnityPosition(UniversePosition universePosition)
 		{
 			var universeFromOrigin = universePosition - UniverseOrigin;
 			var sector = universeFromOrigin.Sector;
-			var system = universeFromOrigin.Local;
+			var local = universeFromOrigin.Local;
 			sector.Scale(UniverseToUnity);
-			system.Scale(UniverseToUnity);
-			return UnityOrigin + (sector + system);
+			local.Scale(UniverseToUnity);
+			return UnityOrigin + (sector + local);
+		}
+
+		public UniversePosition GetUniverseScale(Vector3 unityScale)
+		{
+			var newScale = new Vector3(unityScale.x, unityScale.y, unityScale.z);
+			newScale.Scale(UnityToUniverse);
+			return new UniversePosition(newScale);
 		}
 
 		public UniversePosition GetUniversePosition(Vector3 unityPosition)

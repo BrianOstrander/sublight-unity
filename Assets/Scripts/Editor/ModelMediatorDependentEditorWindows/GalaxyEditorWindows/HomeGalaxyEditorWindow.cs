@@ -308,7 +308,7 @@ namespace LunraGames.SubLight
 			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.ClusterOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Cluster Origin", model.ClusterOrigin);
-				model.GalacticOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Galactic Origin", model.GalacticOrigin);
+				model.GalaxyOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin);
 				model.PlayerStart.Value = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart);
 				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
 			}
@@ -368,8 +368,8 @@ namespace LunraGames.SubLight
 							new OptionDialogPopup.Entry[]
 							{
 								OptionDialogPopup.Entry.Create(
-									"Galactic Origin",
-									() => model.GalacticOrigin.Value = universePosition
+									"Galaxy Origin",
+									() => model.GalaxyOrigin.Value = universePosition
 								),
 								OptionDialogPopup.Entry.Create(
 									"Player Start",
@@ -392,7 +392,7 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			var galacticOriginInWindow = UniverseToWindow(model.GalacticOrigin, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
+			var galacticOriginInWindow = UniverseToWindow(model.GalaxyOrigin, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
 			var playerStartInWindow = UniverseToWindow(model.PlayerStart, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
 			var gameEndInWindow = UniverseToWindow(model.GameEnd, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
 

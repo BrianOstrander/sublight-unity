@@ -20,7 +20,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string description;
 
 		[JsonProperty] UniversePosition clusterOrigin;
-		[JsonProperty] UniversePosition galacticOrigin;
+		[JsonProperty] UniversePosition galaxyOrigin;
 		[JsonProperty] UniversePosition playerStart;
 		[JsonProperty] UniversePosition gameEnd;
 
@@ -41,7 +41,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> ClusterOrigin;
 		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> GalacticOrigin;
+		public readonly ListenerProperty<UniversePosition> GalaxyOrigin;
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> PlayerStart;
 		[JsonIgnore]
@@ -64,7 +64,7 @@ namespace LunraGames.SubLight.Models
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 
 			ClusterOrigin = new ListenerProperty<UniversePosition>(value => clusterOrigin = value, () => clusterOrigin);
-			GalacticOrigin = new ListenerProperty<UniversePosition>(value => galacticOrigin = value, () => galacticOrigin);
+			GalaxyOrigin = new ListenerProperty<UniversePosition>(value => galaxyOrigin = value, () => galaxyOrigin);
 			PlayerStart = new ListenerProperty<UniversePosition>(value => playerStart = value, () => playerStart);
 			GameEnd = new ListenerProperty<UniversePosition>(value => gameEnd = value, () => gameEnd);
 

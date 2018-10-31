@@ -12,7 +12,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
 		[JsonProperty] float speed;
-
+		[JsonProperty] bool playerStartSelected;
 		[JsonProperty] ShipModel ship;
 		[JsonProperty] float destructionSpeedIncrement;
 		[JsonProperty] float destructionSpeed;
@@ -51,6 +51,11 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Speed;
+		/// <summary>
+		/// Has the player start been selected yet? If not the ship position will still be zero.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> PlayerStartSelected;
 		/// <summary>
 		/// The game ship.
 		/// </summary>
@@ -125,6 +130,7 @@ namespace LunraGames.SubLight.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
 			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
+			PlayerStartSelected = new ListenerProperty<bool>(value => playerStartSelected = value, () => playerStartSelected);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
