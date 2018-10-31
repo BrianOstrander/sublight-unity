@@ -46,8 +46,18 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve pitchLimiting;
 		[SerializeField]
 		float pitchLimitingMinimum;
+		[SerializeField]
+		AnimationCurve pitchRadiusOffset;
+		[SerializeField]
+		float pitchRadiusOffsetMaximum;
+		[SerializeField]
+		AnimationCurve pitchLookYOffset;
+		[SerializeField]
+		float pitchLookYOffsetMaximum;
 
 		[Header("Testing")]
+		[SerializeField]
+		bool liveMode;
 		[SerializeField]
 		Vector3 YawPitchRadiusTest;
 
@@ -119,12 +129,16 @@ namespace LunraGames.SubLight.Views
 
 		void GetOrientation(float yaw, float pitch, float radius, out Vector3 position, out Vector3 forward)
 		{
+			radius = radius + (pitchRadiusOffset.Evaluate(pitch) * pitchRadiusOffsetMaximum);
+
+			var lookOffset = new Vector3(0f, pitchLookYOffset.Evaluate(pitch) * pitchLookYOffsetMaximum, 0f);
+
 			var pitchNormal = PitchNormal(pitch);
 			var pitchZeroYawPosition = pitchNormal * (radiusMinimum + (radiusMaximum - radiusMinimum) * radius);
 			var yawNormal = YawNormal(yaw);
 			var originAtY = new Vector3(0f, pitchZeroYawPosition.y, 0f);
 			position = lookPivot.position + (originAtY + (yawNormal * pitchZeroYawPosition.z));
-			forward = (lookPivot.position - position).normalized;
+			forward = ((lookPivot.position + lookOffset) - position).normalized;
 		}
 
 		float AddNormalized(float original, float delta)
@@ -182,7 +196,14 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnLateIdle(delta);
 
-			if (!transformStale) return;
+			if (!transformStale)
+			{
+				if (Application.isEditor)
+				{
+					if (!liveMode) return;
+				}
+				else return;
+			}
 
 			transformStale = false;
 
@@ -213,9 +234,9 @@ namespace LunraGames.SubLight.Views
 			Gizmos.color = Color.red;
 			var pitchBegin = lookPivot.position + (PitchNormal(0f) * radiusMinimum);
 			var pitchEnd = lookPivot.position + (PitchNormal(1f) * radiusMinimum);
-			Gizmos.DrawWireSphere(pitchBegin, 0.1f);
+			Gizmos.DrawWireSphere(pitchBegin, 0.05f);
 			Gizmos.color = Color.red.NewA(0.5f);
-			Gizmos.DrawWireSphere(pitchEnd, 0.1f);
+			Gizmos.DrawWireSphere(pitchEnd, 0.05f);
 
 			var normalizedTest = new Vector3(YawPitchRadiusTest.x % 1f, YawPitchRadiusTest.y % 1f, YawPitchRadiusTest.z % 1f);
 
