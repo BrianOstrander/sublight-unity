@@ -21,6 +21,8 @@ namespace LunraGames.SubLight
 			Animation = 20
 		}
 
+		public static CameraTransformRequest Default { get { return new CameraTransformRequest(States.Complete, Transforms.Animation, 0f, 0f, 0f); } }
+
 		public static CameraTransformRequest Input(
 			float? yaw = null,
 			float? pitch = null,
@@ -60,7 +62,7 @@ namespace LunraGames.SubLight
 		public readonly float? Radius;
 		public readonly Action Done;
 
-		CameraTransformRequest(
+		public CameraTransformRequest(
 			States state,
 			Transforms transform,
 			float? yaw,

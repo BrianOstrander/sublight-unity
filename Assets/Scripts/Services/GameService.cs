@@ -10,6 +10,11 @@ namespace LunraGames.SubLight
 {
 	public class GameService
 	{
+		static class DefaultGameBlock
+		{
+			public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089";
+		}
+
 		static class DefaultShip
 		{
 			public const string StockRoot = "eccdddb4-553f-4f7a-be7e-b68799839bc8";
@@ -40,7 +45,7 @@ namespace LunraGames.SubLight
 
 			var game = modelMediator.Create<GameModel>();
 			game.Seed.Value = info.GameSeed;
-			game.GalaxyId = info.GalaxyId;
+			game.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, DefaultGameBlock.GalaxyId);
 			game.Universe = universeService.CreateUniverse(info);
 			game.DestructionSpeed.Value = 0.004f;
 			game.DestructionSpeedIncrement.Value = 0.0025f;

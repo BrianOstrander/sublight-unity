@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 223995790292981632}
   - component: {fileID: 114571236075847066}
   - component: {fileID: 114705951244717954}
+  - component: {fileID: 225049681228201386}
   m_Layer: 12
   m_Name: LeftCanvas
   m_TagString: Untagged
@@ -91,6 +92,7 @@ GameObject:
   - component: {fileID: 223886209775071636}
   - component: {fileID: 114942477047944858}
   - component: {fileID: 114435940852055208}
+  - component: {fileID: 225271265382435234}
   m_Layer: 12
   m_Name: RightCanvas
   m_TagString: Untagged
@@ -1009,6 +1011,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   scaleLabelArea: {fileID: 224621540811948384}
+  opacityAreas:
+  - {fileID: 225049681228201386}
+  - {fileID: 225271265382435234}
 --- !u!114 &114942477047944858
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1229,3 +1234,25 @@ RectTransform:
   m_AnchoredPosition: {x: 111.32, y: -40.12}
   m_SizeDelta: {x: 222.64, y: 20.16}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &225049681228201386
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1172682674566672}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!225 &225271265382435234
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1415746827181640}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

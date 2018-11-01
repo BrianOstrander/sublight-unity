@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
@@ -13,10 +14,13 @@ namespace LunraGames.SubLight.Presenters
 
 		CameraMaskRequest lastMask;
 
+		GameModel model;
+
 		public HoloRoomFocusCameraPresenter() : base(null)
 		{
 			App.Callbacks.CameraMaskRequest += OnCameraMaskRequest;
 			App.Callbacks.CameraTransformRequest += OnCameraTransformRequest;
+			App.Callbacks.StateChange += OnStateChange;
 			App.Heartbeat.Update += OnUpdate;
 		}
 
@@ -26,11 +30,27 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.CameraMaskRequest -= OnCameraMaskRequest;
 			App.Callbacks.CameraTransformRequest -= OnCameraTransformRequest;
+			App.Callbacks.StateChange -= OnStateChange;
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
 
 		#region Events
+		void OnStateChange(StateChange stateChange)
+		{
+			switch (stateChange.State)
+			{
+				case StateMachine.States.Game: break;
+				default: return;
+			}
+
+			switch (stateChange.Event)
+			{
+				case StateMachine.Events.Idle: model = stateChange.GetPayload<GamePayload>().Game; break;
+				case StateMachine.Events.End: model = null; break;
+			}
+		}
+
 		protected override void OnUpdateEnabled()
 		{
 			base.OnUpdateEnabled();
@@ -98,6 +118,13 @@ namespace LunraGames.SubLight.Presenters
 		void OnInputTransform(CameraTransformRequest transform)
 		{
 			View.Input(transform.Yaw, transform.Pitch, transform.Radius);
+			if (model != null) model.CameraTransform.Value = new CameraTransformRequest(
+				CameraTransformRequest.States.Complete,
+				CameraTransformRequest.Transforms.Input,
+				View.Yaw,
+				View.Pitch,
+				View.Radius
+			);
 		}
 		#endregion
 	}

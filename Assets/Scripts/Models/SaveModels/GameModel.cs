@@ -116,9 +116,12 @@ namespace LunraGames.SubLight.Models
 
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
+		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
+		[JsonIgnore]
+		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
 		#endregion
 
 		public GameModel()
@@ -138,6 +141,7 @@ namespace LunraGames.SubLight.Models
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
+			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
 			UniverseUnitsPerUnityUnit = new ListenerProperty<float>(value => universeUnitsPerUnityUnit = value, () => universeUnitsPerUnityUnit);
 		}
 

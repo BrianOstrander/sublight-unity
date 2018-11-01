@@ -52,6 +52,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform scaleLabelArea;
 
+		[SerializeField]
+		CanvasGroup[] opacityAreas;
+
 		public string ScaleNameText { set { scaleNameLabel.text = value ?? string.Empty; } }
 		public string ScaleText { set { scaleLabel.text = value ?? string.Empty; } }
 		public string UnitCountText { set { unitCountLabel.text = value ?? string.Empty; } }
@@ -85,6 +88,22 @@ namespace LunraGames.SubLight.Views
 			{
 				gridScaleMesh.material.SetColor(ShaderConstants.HoloGridScale.ColorTint, value);
 				gridUnitScaleMesh.material.SetColor(ShaderConstants.HoloGridUnitScale.ColorTint, value);
+			}
+		}
+
+		public override float Opacity
+		{
+			get
+			{
+				return base.Opacity;
+			}
+
+			set
+			{
+				base.Opacity = value;
+				gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Alpha, value);
+				gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Alpha, value);
+				foreach (var area in opacityAreas) area.alpha = value;
 			}
 		}
 

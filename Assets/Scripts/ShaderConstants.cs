@@ -192,6 +192,7 @@ namespace LunraGames.SubLight
 			/// How zoomed in the grid is, from 0 to 5.
 			/// </summary>
 			public const string Zoom = "_Zoom";
+			public const string Alpha = "_Alpha";
 		}
 
 		public static class HoloGridUnitScale
@@ -216,6 +217,7 @@ namespace LunraGames.SubLight
 			/// From 0 to 1.
 			/// </summary>
 			public const string FullProgress = "_FullProgress";
+			public const string Alpha = "_Alpha";
 		}
 
 		public static class CameraMask
