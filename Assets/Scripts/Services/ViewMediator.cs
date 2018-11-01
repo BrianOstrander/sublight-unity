@@ -5,11 +5,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+using LunraGames.SubLight.Models;
+
 namespace LunraGames.SubLight
 {
 	public class ViewMediator
 	{
+		GameModel gameModel;
+
 		Heartbeat heartbeat;
+		CallbackService callbacks;
 
 		int interactionCount;
 		public int InteractionCount
@@ -37,11 +42,13 @@ namespace LunraGames.SubLight
 		List<IView> views = new List<IView>();
 		Transform storage;
 
-		public ViewMediator(Heartbeat heartbeat)
+		public ViewMediator(Heartbeat heartbeat, CallbackService callbacks)
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
 
 			this.heartbeat = heartbeat;
+			this.callbacks = callbacks;
 		}
 
 		public void Initialize(List<GameObject> defaultViews, Transform viewStorage, Action<RequestStatus> done)
@@ -64,6 +71,8 @@ namespace LunraGames.SubLight
 			}
 			heartbeat.Update += Update;
 			heartbeat.LateUpdate += LateUpdate;
+
+			callbacks.StateChange += OnStateChange;
 
 			done(RequestStatus.Success);
 		}
@@ -132,7 +141,7 @@ namespace LunraGames.SubLight
 				if (component == null) continue;
 				if (predicate != null)
 				{
-					try 
+					try
 					{
 						if (!predicate(component as IView)) continue;
 					}
@@ -219,9 +228,9 @@ namespace LunraGames.SubLight
 		{
 			foreach (var view in views.ToList())
 			{
-				if (view.TransitionState == TransitionStates.Shown) 
+				if (view.TransitionState == TransitionStates.Shown)
 				{
-					view.Idle (delta);
+					view.Idle(delta);
 					continue;
 				}
 
@@ -242,6 +251,21 @@ namespace LunraGames.SubLight
 			foreach (var view in views.ToList())
 			{
 				if (view.TransitionState == TransitionStates.Shown) view.LateIdle(delta);
+			}
+		}
+
+		void OnStateChange(StateChange stateChange)
+		{
+			switch (stateChange.State)
+			{
+				case StateMachine.States.Game: break;
+				default: return;
+			}
+
+			switch (stateChange.Event)
+			{
+				case StateMachine.Events.Idle: gameModel = stateChange.GetPayload<GamePayload>().Game; break;
+				case StateMachine.Events.End: gameModel = null; break;
 			}
 		}
 
@@ -290,5 +314,18 @@ namespace LunraGames.SubLight
 			view.PrepareClose();
 			Closing(view);
 		}
+
+		#region Animation Data
+		// Instead of animations getting their data from weird places, they should get everything through here.
+
+		bool IsCameraMainNull { get { return Camera.main == null; } }
+		bool IsGameModelNull { get { return gameModel == null; } }
+
+		public Vector3 CameraPosition { get { return IsCameraMainNull ? Vector3.zero : Camera.main.transform.position; } }
+		public Vector3 CameraForward { get { return IsCameraMainNull ? Vector3.forward : Camera.main.transform.forward; } }
+		public Ray CameraViewportPointToRay(Vector3 pos) { return IsCameraMainNull ? new Ray(Vector3.zero, Vector3.forward) : Camera.main.ViewportPointToRay(pos); }
+
+		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.CameraTransform.Value; } }
+		#endregion
 	}
 }

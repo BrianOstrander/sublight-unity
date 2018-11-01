@@ -12,8 +12,7 @@ namespace LunraGames.SubLight
 
 		Vector3 LookAtPosition(IView view)
 		{
-			if (Camera.main == null) return -view.transform.forward;
-			var dir = (view.transform.position - Camera.main.transform.forward).normalized;
+			var dir = (view.transform.position - App.V.CameraForward).normalized;
 
 			return view.transform.position + (horizontalOnly ? dir.NewY(0).normalized : dir);
 		}

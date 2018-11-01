@@ -154,7 +154,7 @@ namespace LunraGames.SubLight.Views
 			inRadius = false;
 
 			var plane = new Plane(Vector3.up, transform.position);
-			var ray = Camera.main.ViewportPointToRay(viewport);
+			var ray = App.V.CameraViewportPointToRay(viewport);
 
 			float distance;
 			if (!plane.Raycast(ray, out distance)) return;

@@ -14,7 +14,7 @@ namespace LunraGames.SubLight.Presenters
 
 		CameraMaskRequest lastMask;
 
-		GameModel model;
+		GameModel gameModel;
 
 		public HoloRoomFocusCameraPresenter() : base(null)
 		{
@@ -46,8 +46,8 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (stateChange.Event)
 			{
-				case StateMachine.Events.Idle: model = stateChange.GetPayload<GamePayload>().Game; break;
-				case StateMachine.Events.End: model = null; break;
+				case StateMachine.Events.Idle: gameModel = stateChange.GetPayload<GamePayload>().Game; break;
+				case StateMachine.Events.End: gameModel = null; break;
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnInputTransform(CameraTransformRequest transform)
 		{
 			View.Input(transform.Yaw, transform.Pitch, transform.Radius);
-			if (model != null) model.CameraTransform.Value = new CameraTransformRequest(
+			if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
 				CameraTransformRequest.States.Complete,
 				CameraTransformRequest.Transforms.Input,
 				View.Yaw,
