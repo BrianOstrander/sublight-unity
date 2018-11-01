@@ -62,6 +62,10 @@ namespace LunraGames.SubLight
 		public readonly float? Radius;
 		public readonly Action Done;
 
+		public float YawValue(float defaultValue = 0f) { return Yaw.HasValue ? Yaw.Value : defaultValue; }
+		public float PitchValue(float defaultValue = 0f) { return Pitch.HasValue ? Pitch.Value : defaultValue; }
+		public float RadiusValue(float defaultValue = 0f) { return Radius.HasValue ? Radius.Value : defaultValue; }
+
 		public CameraTransformRequest(
 			States state,
 			Transforms transform,

@@ -1011,6 +1011,32 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   scaleLabelArea: {fileID: 224621540811948384}
+  pitchOpacityCurve:
+    globalStyle: {fileID: 11400000, guid: 6a38ba4c930f441b389adfa88942e502, type: 2}
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   opacityAreas:
   - {fileID: 225049681228201386}
   - {fileID: 225271265382435234}

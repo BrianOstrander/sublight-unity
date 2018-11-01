@@ -12,6 +12,8 @@ namespace LunraGames.SubLight.Views
 		public XButton Button;
 		public Image ButtonImage;
 
+		public CanvasGroup OpacityArea;
+
 		public CanvasGroup HighlightedArea;
 
 		public CanvasGroup UnHighlightedSelectedArea;

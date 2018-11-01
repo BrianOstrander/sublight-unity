@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 223135266958222546}
   - component: {fileID: 114126529410075780}
   - component: {fileID: 114955235137880044}
+  - component: {fileID: 225781711050162936}
   m_Layer: 11
   m_Name: Canvas
   m_TagString: Untagged
@@ -607,6 +608,14 @@ MonoBehaviour:
     Icon: {fileID: 21300000, guid: 48da182071b2a4af8bf079608ebff164, type: 3}
   - Layer: 80
     Icon: {fileID: 21300000, guid: 5bb852c01f8ce4b1f8751c2a74fe09fd, type: 3}
+  pitchOpacityCurve:
+    globalStyle: {fileID: 11400000, guid: 6a38ba4c930f441b389adfa88942e502, type: 2}
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   previewCount: 4
   previewButtonDiameter: 0.24
 --- !u!114 &114228897184639818
@@ -750,6 +759,7 @@ MonoBehaviour:
   ButtonLabel: {fileID: 114902968191174642}
   Button: {fileID: 114897572673136784}
   ButtonImage: {fileID: 114124317552555252}
+  OpacityArea: {fileID: 225781711050162936}
   HighlightedArea: {fileID: 225595540421047908}
   UnHighlightedSelectedArea: {fileID: 225250465377151462}
   UnHighlightedUnSelectedArea: {fileID: 225635182432560550}
@@ -1804,4 +1814,15 @@ CanvasGroup:
   m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!225 &225781711050162936
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1935145171013232}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

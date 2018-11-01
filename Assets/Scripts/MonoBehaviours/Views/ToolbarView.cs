@@ -68,12 +68,16 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		IconEntry[] iconEntries;
 
+		[SerializeField]
+		CurveStyleBlock pitchOpacityCurve;
+
 		[Header("Test")]
 		[SerializeField]
 		int previewCount;
 		[SerializeField]
 		float previewButtonDiameter;
 
+		float pitch;
 		List<ButtonEntry> currentButtons = new List<ButtonEntry>();
 
 		Vector3 RangeCenter { get { return orbitOrigin.position + (orbitOrigin.forward * orbitRadius); } }
@@ -185,12 +189,41 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		public float Pitch
+		{
+			private get { return pitch; }
+			set
+			{
+				pitch = value;
+				SetOpacity();
+			}
+		}
+
+		public override float Opacity
+		{
+			get { return base.Opacity; }
+
+			set
+			{
+				base.Opacity = value;
+				SetOpacity();
+			}
+		}
+
+		void SetOpacity()
+		{
+			if (currentButtons == null) return;
+			var opacity = Opacity * pitchOpacityCurve.Curve.Evaluate(Pitch);
+			foreach (var button in currentButtons) button.Leaf.OpacityArea.alpha = opacity;
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
 
 			Buttons = null;
 			Selection = -1;
+			Pitch = 0f;
 
 			buttonPrefab.gameObject.SetActive(false);
 		}
@@ -275,5 +308,6 @@ namespace LunraGames.SubLight.Views
 		int Selection { set; }
 		Sprite GetIcon(SetFocusLayers layer);
 		ToolbarButtonBlock[] Buttons { set; }
+		float Pitch { set; }
 	}
 }

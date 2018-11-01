@@ -43,7 +43,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnCameraTransform(CameraTransformRequest transform)
 		{
 			if (!View.Visible) return;
-			View.Opacity = 1f - transform.Pitch.Value;
+			View.Pitch = transform.PitchValue();
 		}
 
 		void OnHoloColorRequest(HoloColorRequest request)
