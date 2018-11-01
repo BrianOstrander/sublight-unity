@@ -196,7 +196,12 @@ namespace LunraGames.SubLight.Views
 			{
 				base.Opacity = value;
 				if (currentButtons == null) return;
-				foreach (var button in currentButtons) button.Leaf.OpacityArea.alpha = value;
+				var interactionsEnabled = !Mathf.Approximately(0f, value);
+				foreach (var button in currentButtons)
+				{
+					button.Leaf.OpacityArea.alpha = value;
+					button.Leaf.OpacityArea.interactable = interactionsEnabled;
+				}
 			}
 		}
 
