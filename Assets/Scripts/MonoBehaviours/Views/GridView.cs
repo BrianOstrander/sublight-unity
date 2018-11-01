@@ -58,6 +58,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float gridDragRadius;
 
+		[SerializeField]
+		Transform followCameraArea;
+
 		Material[] grids;
 
 		public float ZoomAnimationDuration { get { return zoomAnimationDuration; } }
@@ -133,6 +136,8 @@ namespace LunraGames.SubLight.Views
 			base.OnShowing(scalar);
 
 			SetRadius(scalar, true);
+
+			FollowCamera();
 		}
 
 		protected override void OnClosing(float scalar)
@@ -140,6 +145,22 @@ namespace LunraGames.SubLight.Views
 			base.OnClosing(scalar);
 
 			SetRadius(scalar, false);
+
+			FollowCamera();
+		}
+
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+			FollowCamera();
+		}
+
+		void FollowCamera()
+		{
+			var dir = (followCameraArea.position - App.V.CameraForward).normalized;
+			var lookTarget = followCameraArea.position + dir.NewY(0).normalized;
+			followCameraArea.LookAt(lookTarget);
 		}
 
 		public void SetRadius(float scalar, bool showing)
