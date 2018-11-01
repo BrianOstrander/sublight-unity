@@ -18,7 +18,8 @@ namespace LunraGames.SubLight
 		{
 			Unknown = 0,
 			Input = 10,
-			Animation = 20
+			Animation = 20,
+			Settle = 30
 		}
 
 		public static CameraTransformRequest Default { get { return new CameraTransformRequest(States.Complete, Transforms.Animation, 0f, 0f, 0f); } }
@@ -52,6 +53,21 @@ namespace LunraGames.SubLight
 				pitch,
 				radius,
 				done
+			);
+		}
+
+		public static CameraTransformRequest Settle(
+			float? yaw = null,
+			float? pitch = null,
+			float? radius = null
+		)
+		{
+			return new CameraTransformRequest(
+				States.Request,
+				Transforms.Settle,
+				yaw,
+				pitch,
+				radius
 			);
 		}
 

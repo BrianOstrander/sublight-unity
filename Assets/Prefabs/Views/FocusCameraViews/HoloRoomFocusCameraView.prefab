@@ -507,5 +507,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   yawPitchLimitingMaximum: 1
+  pitchSettleThreshold: 0.1
+  pitchSettleSpeed: 100
+  delayBeforePitchSettle: 0.1
   liveMode: 0
   YawPitchRadiusTest: {x: 0, y: 0, z: 0}

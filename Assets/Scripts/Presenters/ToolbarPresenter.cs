@@ -18,14 +18,12 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
 			model.ToolbarSelection.Changed += OnToolbarSelection;
-			model.CameraTransform.Changed += OnCameraTransform;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
 			model.ToolbarSelection.Changed -= OnToolbarSelection;
-			model.CameraTransform.Changed -= OnCameraTransform;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -55,12 +53,6 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
-		void OnCameraTransform(CameraTransformRequest transform)
-		{
-			if (!View.Visible) return;
-			View.Pitch = transform.PitchValue();
-		}
-
 		void OnTransitionFocusRequest(TransitionFocusRequest request)
 		{
 			lastTransition = request;

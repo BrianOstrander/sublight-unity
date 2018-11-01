@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 402571a016e164632a3bdd4f0062739d, type: 3}
-  m_Name: PitchOpacity
+  m_Name: PitchOpacityCurve
   m_EditorClassIdentifier: 
   curve:
     serializedVersion: 2

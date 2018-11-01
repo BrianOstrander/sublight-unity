@@ -21,14 +21,12 @@ namespace LunraGames.SubLight.Presenters
 			this.scaleText = scaleText;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
-			model.CameraTransform.Changed += OnCameraTransform;
 			model.FocusTransform.Changed += OnZoom;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
-			model.CameraTransform.Changed -= OnCameraTransform;
 			model.FocusTransform.Changed -= OnZoom;
 		}
 
@@ -40,12 +38,6 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region
-		void OnCameraTransform(CameraTransformRequest transform)
-		{
-			if (!View.Visible) return;
-			View.Pitch = transform.PitchValue();
-		}
-
 		void OnHoloColorRequest(HoloColorRequest request)
 		{
 			View.HoloColor = request.Color;

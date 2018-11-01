@@ -60,6 +60,13 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float yawPitchLimitingMaximum;
 
+		[SerializeField]
+		float pitchSettleThreshold;
+		[SerializeField]
+		float pitchSettleSpeed;
+		[SerializeField]
+		float delayBeforePitchSettle;
+
 		[Header("Testing")]
 		[SerializeField]
 		bool liveMode;
@@ -117,6 +124,10 @@ namespace LunraGames.SubLight.Views
 		public Vector3 CameraForward { get { return gantryForward; } }
 
 		public Transform GantryAnchor { get { return gantryAnchor; } }
+
+		public float PitchSettleThreshold { get { return pitchSettleThreshold; } }
+		public float PitchSettleSpeed { get { return pitchSettleSpeed; } }
+		public float DelayBeforePitchSettle { get { return delayBeforePitchSettle; } }
 
 		Vector3 PitchNormal(float pitch)
 		{
@@ -288,5 +299,9 @@ namespace LunraGames.SubLight.Views
 		Vector3 CameraForward { get; }
 
 		Transform GantryAnchor { get; }
+
+		float PitchSettleThreshold { get; }
+		float PitchSettleSpeed { get; }
+		float DelayBeforePitchSettle { get; }
 	}
 }

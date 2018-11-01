@@ -53,11 +53,7 @@ namespace LunraGames.SubLight.Views
 		Transform scaleLabelArea;
 
 		[SerializeField]
-		CurveStyleBlock pitchOpacityCurve;
-		[SerializeField]
 		CanvasGroup[] opacityAreas;
-
-		float pitch;
 
 		public string ScaleNameText { set { scaleNameLabel.text = value ?? string.Empty; } }
 		public string ScaleText { set { scaleLabel.text = value ?? string.Empty; } }
@@ -95,16 +91,6 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public float Pitch
-		{
-			private get { return pitch; }
-			set
-			{
-				pitch = value;
-				SetOpacity();
-			}
-		}
-
 		public override float Opacity
 		{
 			get { return base.Opacity; }
@@ -112,16 +98,10 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				base.Opacity = value;
-				SetOpacity();
+				gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Alpha, value);
+				gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Alpha, value);
+				foreach (var area in opacityAreas) area.alpha = value;
 			}
-		}
-
-		void SetOpacity()
-		{
-			var opacity = Opacity * pitchOpacityCurve.Curve.Evaluate(Pitch);
-			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Alpha, opacity);
-			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Alpha, opacity);
-			foreach (var area in opacityAreas) area.alpha = opacity;
 		}
 
 		public override void Reset()
@@ -131,7 +111,6 @@ namespace LunraGames.SubLight.Views
 			gridScaleMesh.material = new Material(gridScaleMaterial);
 			gridUnitScaleMesh.material = new Material(gridUnitScaleMaterial);
 
-			Pitch = 0f;
 			ScaleNameText = null;
 			ScaleText = null;
 			UnitCountText = null;
@@ -152,6 +131,5 @@ namespace LunraGames.SubLight.Views
 		string UnitTypeText { set; }
 		void Zoom(float zoom, float unitProgress, bool unitToRight);
 		void Nudge(float zoom, float progress, bool isUp);
-		float Pitch { set; }
 	}
 }

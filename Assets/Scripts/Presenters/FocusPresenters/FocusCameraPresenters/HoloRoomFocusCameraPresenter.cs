@@ -16,6 +16,9 @@ namespace LunraGames.SubLight.Presenters
 
 		GameModel gameModel;
 
+		bool lastTransformedByInput;
+		float elapsedSinceInput;
+
 		public HoloRoomFocusCameraPresenter() : base(null)
 		{
 			App.Callbacks.CameraMaskRequest += OnCameraMaskRequest;
@@ -55,6 +58,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			base.OnUpdateEnabled();
 
+			lastTransformedByInput = false;
 			View.Set(0f, 0f, 0f);
 		}
 
@@ -76,6 +80,24 @@ namespace LunraGames.SubLight.Presenters
 		void OnUpdate(float delta)
 		{
 			OnUpdateMaskRequest(delta);
+
+			if (gameModel == null) return;
+			var cameraTransform = gameModel.CameraTransform.Value;
+
+			if (lastTransformedByInput)
+			{
+				if (Mathf.Approximately(0f, cameraTransform.PitchValue()) || View.PitchSettleThreshold < cameraTransform.PitchValue()) lastTransformedByInput = false;
+				else
+				{
+					elapsedSinceInput = Mathf.Max(0f, elapsedSinceInput - delta);
+					if (Mathf.Approximately(0f, elapsedSinceInput))
+					{
+						App.Callbacks.CameraTransformRequest(CameraTransformRequest.Settle(pitch: (-View.PitchSettleSpeed * delta)));
+
+					}
+				}
+			}
+
 		}
 
 		void OnUpdateMaskRequest(float delta)
@@ -108,15 +130,22 @@ namespace LunraGames.SubLight.Presenters
 		{
 			switch (transform.Transform)
 			{
-				case CameraTransformRequest.Transforms.Input: OnInputTransform(transform); break;
+				case CameraTransformRequest.Transforms.Input: OnInputTransform(transform, true); break;
+				case CameraTransformRequest.Transforms.Settle: OnInputTransform(transform, false); break;
 				default:
 					Debug.LogError("Unrecognized transform: " + transform.Transform);
 					break;
 			}
 		}
 
-		void OnInputTransform(CameraTransformRequest transform)
+		void OnInputTransform(CameraTransformRequest transform, bool setDelay)
 		{
+			if (setDelay)
+			{
+				lastTransformedByInput = true;
+				elapsedSinceInput = View.DelayBeforePitchSettle;
+			}
+
 			View.Input(transform.Yaw, transform.Pitch, transform.Radius);
 			if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
 				CameraTransformRequest.States.Complete,

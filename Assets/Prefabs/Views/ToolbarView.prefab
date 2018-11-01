@@ -537,6 +537,7 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
+  - {fileID: 11400000, guid: abb6e4efc1c574b0581174c5e575d839, type: 2}
   orbitOrigin: {fileID: 4818154708984508}
   orbitRadius: 3.56
   buttonSeparation: 3.5
