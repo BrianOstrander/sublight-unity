@@ -20,17 +20,44 @@ namespace LunraGames.SubLight
 	{
 		const string KeyPrefix = "LG_SF_DeveloperSettings_";
 
+		static string[] TabNames = {
+			"General",
+			"Game",
+			"Local"
+		};
+
+		DevPrefsInt currentTab;
+
+		public DeveloperSettingsWindow()
+		{
+			currentTab = new DevPrefsInt(KeyPrefix + "CurrentTab");
+		}
+
 		[MenuItem("Window/Lunra Games/Development Settings")]
 		static void Initialize()
 		{
 			GetWindow(typeof(DeveloperSettingsWindow), false, "Developer Settings").Show();
 		}
 
-
 		void OnGUI()
 		{
 			GUILayout.Label("Note: These values are local to your machine only.");
+			currentTab.Value = GUILayout.Toolbar(currentTab.Value, TabNames);
 
+			switch (currentTab.Value)
+			{
+				case 0: OnGeneralTab(); break;
+				case 1: OnGameTab(); break;
+				case 2: OnLocalTab(); break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized tab value: " + currentTab.Value, MessageType.Error);
+					if (GUILayout.Button("Reset")) currentTab.Value = 0;
+					break;
+			}
+		}
+
+		void OnGeneralTab()
+		{
 			#region Editor Globals
 			GUILayout.Label("Globals", EditorStyles.boldLabel);
 
@@ -61,7 +88,6 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginVertical();
 				{
-					DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
 					DevPrefs.ShowHoloHelper.Value = GUILayout.Toggle(DevPrefs.ShowHoloHelper, "Show Holo Helper");
 					using (var check = new EditorGUI.ChangeCheckScope())
 					{
@@ -70,16 +96,13 @@ namespace LunraGames.SubLight
 					}
 				}
 				GUILayout.EndVertical();
-				GUILayout.BeginVertical();
-				{
-					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
-					DevPrefs.SkipMainMenuAnimations.Value = GUILayout.Toggle(DevPrefs.SkipMainMenuAnimations, "Skip Main Menu Animations");
-					var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
-					if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
-					DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");
-					if (isWiping) EditorGUILayoutExtensions.PopColor();
-				}
-				GUILayout.EndVertical();
+
+				//GUILayout.BeginVertical();
+				//{
+				//	// second column of controlls here
+				//}
+				//GUILayout.EndVertical();
+
 				GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();
@@ -112,16 +135,47 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 			#endregion
+		}
 
-			Space();
+		void OnGameTab()
+		{
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.BeginVertical();
+				{
+					DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
+					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
+					DevPrefs.SkipMainMenuAnimations.Value = GUILayout.Toggle(DevPrefs.SkipMainMenuAnimations, "Skip Main Menu Animations");
+				}
+				GUILayout.EndVertical();
+				GUILayout.BeginVertical();
+				{
+					var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
+					if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
+					DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");
+					if (isWiping) EditorGUILayoutExtensions.PopColor();
+				}
+				GUILayout.EndVertical();
+				GUILayout.FlexibleSpace();
+			}
+			GUILayout.EndHorizontal();
 
+			GUILayout.Label("Auto Create Game Block", EditorStyles.boldLabel);
+
+			DevPrefs.GameSeed.Value = EditorGUILayout.IntField("Game Seed", DevPrefs.GameSeed.Value);
+			DevPrefs.GalaxySeed.Value = EditorGUILayout.IntField("Galaxy Seed", DevPrefs.GalaxySeed.Value);
+			DevPrefs.GalaxyId.Value = EditorGUILayout.TextField("Galaxy Id", DevPrefs.GalaxyId.Value);
+		}
+
+		void OnLocalTab()
+		{
 			if (this is ILocalDeveloperSettingsWindow)
 			{
 				GUILayout.Label("Local developer settings", EditorStyles.boldLabel);
-				try 
+				try
 				{
 					var localWindow = (this as ILocalDeveloperSettingsWindow);
-					localWindow.OnLocalGUI(); 
+					localWindow.OnLocalGUI();
 				}
 				catch (Exception e)
 				{

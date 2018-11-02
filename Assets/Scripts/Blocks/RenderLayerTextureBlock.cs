@@ -7,7 +7,7 @@ namespace LunraGames.SubLight
 		public int Order;
 		public Texture Texture;
 
-		public string TextureKey { get { return ShaderConstants.HoloLayerShared.GetLayer(Order); } }
+		public string TextureKey { get { return ShaderConstants.RoomProjectionShared.GetLayer(Order); } }
 
 		public RenderLayerTextureBlock(
 			int order,

@@ -73,7 +73,7 @@ namespace LunraGames
 		public DevPrefsFloat(string key, float defaultValue = 0f) : base(key, defaultValue) { }
 	}
 
-	public class EditorPrefsInt : DevPrefsKv<int>
+	public class DevPrefsInt : DevPrefsKv<int>
 	{
 		public override int Value
 		{
@@ -85,7 +85,7 @@ namespace LunraGames
 #endif
 		}
 
-		public EditorPrefsInt(string key, int defaultValue = 0) : base(key, defaultValue) { }
+		public DevPrefsInt(string key, int defaultValue = 0) : base(key, defaultValue) { }
 	}
 
 	public class DevPrefsEnum<T> : DevPrefsKv<T> where T : struct, IConvertible

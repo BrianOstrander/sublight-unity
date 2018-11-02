@@ -32,11 +32,35 @@ namespace LunraGames.SubLight
 				new HoloPresenter();
 
 				// All other presenters for this state...
+				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
+				payload.ShowOnIdle.Add(new ToolbarBackPresenter(payload.Game, LanguageStringModel.Override("Back")));
 
-				// TODO: Make a lip for ship focus.
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
 
-				payload.Toolbar = new ToolbarPresenter(payload.Game);
+				// GRID INFO BEGIN
+				var gridInfo = new GridInfoBlock();
+
+				gridInfo.Scale = LanguageStringModel.Override("Scale");
+				gridInfo.ScaleNames = new LanguageStringModel[] {
+					LanguageStringModel.Override("System"),
+					LanguageStringModel.Override("Local"),
+					LanguageStringModel.Override("Interstellar"),
+					LanguageStringModel.Override("Quadrant"),
+					LanguageStringModel.Override("Galactic"),
+					LanguageStringModel.Override("Cluster")
+				};
+
+				gridInfo.ThousandUnit = LanguageStringModel.Override("k");
+				gridInfo.MillionUnit = LanguageStringModel.Override("m");
+
+				gridInfo.AstronomicalUnit = new PluralLanguageStringBlock(LanguageStringModel.Override("Astronomical Unit"), LanguageStringModel.Override("Astronomical Unit"));
+				gridInfo.LightYearUnit = new PluralLanguageStringBlock(LanguageStringModel.Override("Light Year"), LanguageStringModel.Override("Light Years"));
+				// GRID INFO END
+
+				new GridPresenter(payload.Game, gridInfo);
+				new GridScalePresenter(payload.Game, gridInfo.Scale);
+
+				new GalaxyPresenter(payload.Game);
 
 				done();
 			}

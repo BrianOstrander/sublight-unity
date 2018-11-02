@@ -7,9 +7,6 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		Color color = Color.white;
 
-		public Color Color
-		{
-			get { return color; }
-		}
+		public Color Color { get { return color; } }
 	}
 }

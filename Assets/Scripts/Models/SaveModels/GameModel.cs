@@ -12,20 +12,27 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
 		[JsonProperty] float speed;
-		[JsonProperty] UniverseModel universe;
-		[JsonProperty] UniversePosition endSystem;
-		[JsonProperty] UniversePosition focusedSector;
+		[JsonProperty] bool playerStartSelected;
 		[JsonProperty] ShipModel ship;
 		[JsonProperty] float destructionSpeedIncrement;
 		[JsonProperty] float destructionSpeed;
 		[JsonProperty] float destructionRadius;
-		[JsonProperty] TravelRequest travelRequest;
 		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
 		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonProperty] FinalReportModel[] finalReports = new FinalReportModel[0];
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonProperty] ToolbarSelections toolbarSelection;
+
+		[JsonProperty] float universeUnitsPerUnityUnit;
+		[JsonProperty] FocusTransform focusTransform;
+
+		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
+		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
+		[JsonProperty] UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
+		[JsonProperty] UniverseScaleModel scaleQuadrant = UniverseScaleModel.Create(UniverseScales.Quadrant);
+		[JsonProperty] UniverseScaleModel scaleGalactic = UniverseScaleModel.Create(UniverseScales.Galactic);
+		[JsonProperty] UniverseScaleModel scaleCluster = UniverseScaleModel.Create(UniverseScales.Cluster);
 
 		/// <summary>
 		/// The game seed.
@@ -44,20 +51,10 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Speed;
 		/// <summary>
-		/// The game universe.
+		/// Has the player start been selected yet? If not the ship position will still be zero.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<UniverseModel> Universe;
-		/// <summary>
-		/// The target system the player is traveling to.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> EndSystem;
-		/// <summary>
-		/// The sector the camera is looking at.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> FocusedSector;
+		public readonly ListenerProperty<bool> PlayerStartSelected;
 		/// <summary>
 		/// The game ship.
 		/// </summary>
@@ -80,8 +77,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> DestructionRadius;
 		[JsonIgnore]
-		public readonly ListenerProperty<TravelRequest> TravelRequest;
-		[JsonIgnore]
 		public readonly ListenerProperty<DestructionSpeedDelta[]> DestructionSpeedDeltas;
 
 		/// <summary>
@@ -92,19 +87,41 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<FocusTransform> FocusTransform;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> UniverseUnitsPerUnityUnit;
+
+		[JsonProperty] string galaxyId;
+		[JsonProperty] UniverseModel universe;
+
+		[JsonIgnore]
+		public UniverseModel Universe
+		{
+			get { return universe; }
+			set { universe = value; }
+		}
+
+		[JsonIgnore]
+		public string GalaxyId
+		{
+			get { return galaxyId; }
+			set { galaxyId = value; }
+		}
+
+		[JsonIgnore]
+		public GalaxyInfoModel Galaxy { get; set; }
 		#endregion
 
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
-		UniversePosition[] focusedSectors = new UniversePosition[0];
+		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
 
-		/// <summary>
-		/// Positions of all loaded sectors.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
+		[JsonIgnore]
+		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
 		#endregion
 
 		public GameModel()
@@ -113,19 +130,19 @@ namespace LunraGames.SubLight.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
 			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
-			Universe = new ListenerProperty<UniverseModel>(value => universe = value, () => universe);
-			EndSystem = new ListenerProperty<UniversePosition>(value => endSystem = value, () => endSystem);
-			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
-			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
-			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
+			PlayerStartSelected = new ListenerProperty<bool>(value => playerStartSelected = value, () => playerStartSelected);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
 			DestructionRadius = new ListenerProperty<float>(value => destructionRadius = value, () => destructionRadius);
-			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
 			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
+			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
+
+			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
+			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
+			UniverseUnitsPerUnityUnit = new ListenerProperty<float>(value => universeUnitsPerUnityUnit = value, () => universeUnitsPerUnityUnit);
 		}
 
 		#region Events
@@ -168,6 +185,36 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
+
+		public UniverseScaleModel GetScale(UniverseScales scale)
+		{
+			switch(scale)
+			{
+				case UniverseScales.System: return scaleSystem;
+				case UniverseScales.Local: return scaleLocal;
+				case UniverseScales.Stellar: return scaleStellar;
+				case UniverseScales.Quadrant: return scaleQuadrant;
+				case UniverseScales.Galactic: return scaleGalactic;
+				case UniverseScales.Cluster: return scaleCluster;
+				default:
+					Debug.LogError("Unrecognized scale: " + scale);
+					return null;
+			}
+		}
+
+		[JsonIgnore]
+		public UniverseScaleModel ActiveScale
+		{
+			get
+			{
+				foreach (var scaleEnum in EnumExtensions.GetValues(UniverseScales.Unknown))
+				{
+					var curr = GetScale(scaleEnum);
+					if (curr.IsActive) return curr;
+				}
+				return null;
+			}
+		}
 		#endregion
 	}
 }

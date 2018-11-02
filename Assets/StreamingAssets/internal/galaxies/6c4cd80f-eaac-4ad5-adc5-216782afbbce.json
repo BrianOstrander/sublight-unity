@@ -2,6 +2,9 @@
   "isPlayable": true,
   "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
   "name": "Milky Way",
+  "galaxyOrigin": {
+    "Sector": {"x":2048.0,"z":2048.0}
+  },
   "playerStart": {
     "Sector": {"x":2184.0,"z":3664.0}
   },

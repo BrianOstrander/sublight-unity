@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
@@ -13,9 +14,21 @@ namespace LunraGames.SubLight.Presenters
 
 		CameraMaskRequest lastMask;
 
+		GameModel gameModel;
+
+		bool lastTransformedByInput;
+		float elapsedSinceInput;
+
+		CameraTransformRequest transformOnAnimationBegin;
+		CameraTransformRequest transformAnimation;
+		float? animationRemaining;
+
+
 		public HoloRoomFocusCameraPresenter() : base(null)
 		{
 			App.Callbacks.CameraMaskRequest += OnCameraMaskRequest;
+			App.Callbacks.CameraTransformRequest += OnCameraTransformRequest;
+			App.Callbacks.StateChange += OnStateChange;
 			App.Heartbeat.Update += OnUpdate;
 		}
 
@@ -24,17 +37,34 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			App.Callbacks.CameraMaskRequest -= OnCameraMaskRequest;
+			App.Callbacks.CameraTransformRequest -= OnCameraTransformRequest;
+			App.Callbacks.StateChange -= OnStateChange;
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
 
 		#region Events
+		void OnStateChange(StateChange stateChange)
+		{
+			switch (stateChange.State)
+			{
+				case StateMachine.States.Game: break;
+				default: return;
+			}
+
+			switch (stateChange.Event)
+			{
+				case StateMachine.Events.Idle: gameModel = stateChange.GetPayload<GamePayload>().Game; break;
+				case StateMachine.Events.End: gameModel = null; break;
+			}
+		}
+
 		protected override void OnUpdateEnabled()
 		{
 			base.OnUpdateEnabled();
 
-			View.Orbit = 0f;
-			View.Zoom = 0f;
+			lastTransformedByInput = false;
+			View.Set(0f, 0f, 0f);
 		}
 
 		void OnCameraMaskRequest(CameraMaskRequest request)
@@ -55,6 +85,31 @@ namespace LunraGames.SubLight.Presenters
 		void OnUpdate(float delta)
 		{
 			OnUpdateMaskRequest(delta);
+
+			if (gameModel == null) return;
+
+			if (animationRemaining.HasValue)
+			{
+				OnAnimation(delta);
+				return;
+			}
+
+			var cameraTransform = gameModel.CameraTransform.Value;
+
+			if (lastTransformedByInput)
+			{
+				if (Mathf.Approximately(0f, cameraTransform.PitchValue()) || View.PitchSettleThreshold < cameraTransform.PitchValue()) lastTransformedByInput = false;
+				else
+				{
+					elapsedSinceInput = Mathf.Max(0f, elapsedSinceInput - delta);
+					if (Mathf.Approximately(0f, elapsedSinceInput))
+					{
+						App.Callbacks.CameraTransformRequest(CameraTransformRequest.Settle(pitch: (-View.PitchSettleSpeed * delta)));
+
+					}
+				}
+			}
+
 		}
 
 		void OnUpdateMaskRequest(float delta)
@@ -81,6 +136,95 @@ namespace LunraGames.SubLight.Presenters
 				App.Callbacks.CameraMaskRequest(lastMask);
 				lastDone();
 			}
+		}
+
+		void OnCameraTransformRequest(CameraTransformRequest transform)
+		{
+			switch (transform.Transform)
+			{
+				case CameraTransformRequest.Transforms.Input: OnInputTransform(transform, true); break;
+				case CameraTransformRequest.Transforms.Settle: OnInputTransform(transform, false); break;
+				case CameraTransformRequest.Transforms.Animation: OnAnimationTransform(transform); break;
+				default:
+					Debug.LogError("Unrecognized transform: " + transform.Transform);
+					break;
+			}
+		}
+
+		void OnAnimationTransform(CameraTransformRequest transform)
+		{
+			switch (transform.State)
+			{
+				case CameraTransformRequest.States.Request:
+					if (gameModel == null)
+					{
+						Debug.LogError("Cannot request a camera animation when there is no active game");
+						return;
+					}
+					if (animationRemaining.HasValue)
+					{
+						Debug.LogError("Cannot request an animation while another is active");
+						return;
+					}
+					lastTransformedByInput = false;
+					transformOnAnimationBegin = gameModel.CameraTransform.Value;
+					transformAnimation = transform;
+					animationRemaining = transform.Duration;
+					OnAnimation(0f);
+					break;
+			}
+		}
+
+		float? GetValue(float? endValue, float beginValue, float progress, AnimationCurve curve)
+		{
+			if (endValue.HasValue) return beginValue + ((endValue.Value - beginValue) * curve.Evaluate(progress));
+			return null;
+		}
+
+		void OnAnimation(float delta)
+		{
+			animationRemaining = Mathf.Max(0f, animationRemaining.Value - delta);
+			var progress = transformAnimation.IsInstant ? 1f : 1f - (animationRemaining.Value / transformAnimation.Duration);
+
+			View.Set(
+				GetValue(transformAnimation.Yaw, transformOnAnimationBegin.YawValue(), progress, View.YawAnimationCurve),
+				GetValue(transformAnimation.Pitch, transformOnAnimationBegin.PitchValue(), progress, View.PitchAnimationCurve),
+				GetValue(transformAnimation.Radius, transformOnAnimationBegin.RadiusValue(), progress, View.RadiusAnimationCurve)
+			);
+				
+			var nextTransform = new CameraTransformRequest(
+				Mathf.Approximately(0f, animationRemaining.Value) ? CameraTransformRequest.States.Complete : CameraTransformRequest.States.Active,
+				CameraTransformRequest.Transforms.Animation,
+				View.Yaw,
+				View.Pitch,
+				View.Radius
+			);
+
+			if (nextTransform.State == CameraTransformRequest.States.Complete) animationRemaining = null;
+			var onDone = transformAnimation.Done;
+
+			gameModel.CameraTransform.Value = nextTransform;
+			App.Callbacks.CameraTransformRequest(nextTransform);
+
+			if (nextTransform.State == CameraTransformRequest.States.Complete && onDone != null) onDone();
+		}
+
+		void OnInputTransform(CameraTransformRequest transform, bool setDelay)
+		{
+			if (setDelay)
+			{
+				lastTransformedByInput = true;
+				elapsedSinceInput = View.DelayBeforePitchSettle;
+			}
+
+			View.Input(transform.Yaw, transform.Pitch, transform.Radius);
+			if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
+				CameraTransformRequest.States.Complete,
+				CameraTransformRequest.Transforms.Input,
+				View.Yaw,
+				View.Pitch,
+				View.Radius
+			);
 		}
 		#endregion
 	}

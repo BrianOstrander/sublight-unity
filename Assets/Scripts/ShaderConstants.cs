@@ -36,18 +36,6 @@ namespace LunraGames.SubLight
 			public const string VoidInterior = "_VoidInterior";
 		}
 
-		public static class HoloLayerShared
-		{
-			//public const string Name = 
-
-			public const int LayerCount = 4;
-			public static int MaxLayer { get { return LayerCount - 1; } }
-
-			public static string GetLayer(int order) { return "_Layer_" + order; }
-
-			public static string GetWeight(int order) { return "_Weight_" + order; }
-		}
-
 		public static class HoloLip
 		{
 			/// <summary>
@@ -89,7 +77,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The RGBA texture used for the outline of each layer.
 			/// </summary>
-			public const string Layer = "_Layer";
+			public const string LayerTexture = "_LayerTexture";
 			/// <summary>
 			/// The RGBA channel being used.
 			/// </summary>
@@ -97,11 +85,153 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The color for this layer.
 			/// </summary>
-			public const string LayerColor = "_LayerColor";
+			public const string ChannelColor = "_ChannelColor";
 			/// <summary>
 			/// How much of the texture, from the UV center, has been revealed.
 			/// </summary>
 			public const string Revealed = "_Revealed";
+		}
+
+		public static class HoloGridBasic
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridBasic";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string MainColor = "_MainColor";
+			public const string Tint = "_Tint";
+			/// <summary>
+			/// How many tiles.
+			/// </summary>
+			public const string Tiling = "_Tiling";
+			/// <summary>
+			/// The offset, a vector2 (or 4?) between (0,0) and (1,1)... check
+			/// that though... not positive, might allow negatives.
+			/// </summary>
+			public const string Offset = "_Offset";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloGridBackground
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridBackground";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string MainColor = "_MainColor";
+			public const string Tint = "_Tint";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloGrid
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/Grid";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GridColor = "_GridColor";
+			public const string GridTint = "_GridTint";
+			/// <summary>
+			/// How zoomed in the grid is, from 0 to 1.
+			/// </summary>
+			public const string Zoom = "_Zoom";
+			/// <summary>
+			/// How many tiles.
+			/// </summary>
+			public const string Tiling = "_Tiling";
+			/// <summary>
+			/// The offset, a vector2 (or 4?) between (0,0) and (1,1)... check
+			/// that though... not positive, might allow negatives.
+			/// </summary>
+			public const string Offset = "_Offset";
+			/// <summary>
+			/// How much of the grid is revealed, from 0 to 1.
+			/// </summary>
+			public const string RadiusProgress = "_RadiusProgress";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloGridDynamic
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridDynamic";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string GridColor = "_GridColor";
+			public const string GridTint = "_GridTint";
+			/// <summary>
+			/// How zoomed in the grid is, from 0 to 1.
+			/// </summary>
+			public const string Zoom = "_Zoom";
+			/// <summary>
+			/// How many tiles.
+			/// </summary>
+			public const string Tiling = "_Tiling";
+			public const string TilingScalar = "_TilingScalar";
+			/// <summary>
+			/// The offset, a vector2 (or 4?) between (0,0) and (1,1)... check
+			/// that though... not positive, might allow negatives.
+			/// </summary>
+			public const string Offset = "_Offset";
+			/// <summary>
+			/// How much of the grid is revealed, from 0 to 1.
+			/// </summary>
+			public const string RadiusProgress = "_RadiusProgress";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloGridScale
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridScale";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string ColorTint = "_ColorTint";
+			/// <summary>
+			/// How zoomed in the grid is, from 0 to 5.
+			/// </summary>
+			public const string Zoom = "_Zoom";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloGridUnitScale
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridUnitScale";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string ColorTint = "_ColorTint";
+			/// <summary>
+			/// From 0 to 1.
+			/// </summary>
+			public const string Progress = "_Progress";
+			/// <summary>
+			/// Does the bar progress from right to left, or the other way?
+			/// </summary>
+			public const string ProgressToRight = "_ProgressToRight";
+			/// <summary>
+			/// From 0 to 1.
+			/// </summary>
+			public const string FullProgress = "_FullProgress";
+			public const string Alpha = "_Alpha";
 		}
 
 		public static class CameraMask
@@ -114,6 +244,18 @@ namespace LunraGames.SubLight
 			/// The color and opacity of the mask.
 			/// </summary>
 			public const string MaskColor = "_MaskColor";
+		}
+
+		public static class RoomProjectionShared
+		{
+			//public const string Name = 
+
+			public const int LayerCount = 3;
+			public static int MaxLayer { get { return LayerCount - 1; } }
+
+			public static string GetLayer(int order) { return "_Layer_" + order; }
+
+			public static string GetWeight(int order) { return "_Weight_" + order; }
 		}
 
 		public static class RoomIrisGlow

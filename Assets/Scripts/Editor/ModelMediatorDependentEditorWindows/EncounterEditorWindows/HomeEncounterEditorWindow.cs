@@ -26,7 +26,7 @@ namespace LunraGames.SubLight
 		EditorPrefsFloat homeCrewLogsScroll;
 		EditorPrefsString homeSelectedEncounterPath;
 		EditorPrefsEnum<HomeStates> homeState;
-		EditorPrefsInt homeSelectedToolbar;
+		DevPrefsInt homeSelectedToolbar;
 
 		// Unknown: Query in progress
 		// Cancel: Qued for Query
@@ -58,7 +58,7 @@ namespace LunraGames.SubLight
 			homeCrewLogsScroll = new EditorPrefsFloat(KeyPrefix + "CrewLogsScroll");
 			homeSelectedEncounterPath = new EditorPrefsString(KeyPrefix + "HomeSelectedEncounter");
 			homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
-			homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+			homeSelectedToolbar = new DevPrefsInt(KeyPrefix + "HomeSelectedState");
 
 			Enable += OnHomeEnable;
 			Disable += OnHomeDisable;

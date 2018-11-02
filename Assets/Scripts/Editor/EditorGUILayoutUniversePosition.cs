@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		public static UniversePosition Field(GUIContent content, UniversePosition position)
 		{
 			var sector = position.Sector;
-			var system = position.System;
+			var system = position.Local;
 
 			EditorGUILayout.LabelField(content);
 			GUILayout.BeginHorizontal();
@@ -44,7 +44,7 @@ namespace LunraGames.SubLight
 		public static UniversePosition FieldSector(GUIContent content, UniversePosition position)
 		{
 			var sector = position.Sector;
-			var system = position.System;
+			var system = position.Local;
 
 			EditorGUILayout.LabelField(content);
 			GUILayout.BeginHorizontal();

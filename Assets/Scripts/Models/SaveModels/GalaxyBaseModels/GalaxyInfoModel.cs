@@ -13,6 +13,22 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public Texture2D Details { get { return GetTexture(TextureNames.Details); } }
 
+		UniversePosition? galaxySize;
+		/// <summary>
+		/// Gets the size of the galaxy in sectors.
+		/// </summary>
+		/// <value>The size of the galaxy.</value>
+		[JsonIgnore]
+		public UniversePosition GalaxySize
+		{
+			get
+			{
+				if (galaxySize.HasValue) return galaxySize.Value;
+				var largestDimension = Mathf.Max(BodyMap.width, BodyMap.height);
+				return (galaxySize = new UniversePosition(new Vector3(largestDimension, largestDimension, largestDimension))).Value;
+			}
+		}
+
 		public GalaxyInfoModel()
 		{
 			SaveType = SaveTypes.GalaxyInfo;

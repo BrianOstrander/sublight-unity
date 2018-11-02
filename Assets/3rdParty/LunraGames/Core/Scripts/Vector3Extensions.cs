@@ -4,6 +4,11 @@ namespace LunraGames
 {
 	public static class Vector3Extensions
 	{
+		public static bool Approximately(this Vector3 vector3, Vector3 other)
+		{
+			return Mathf.Approximately(vector3.x, other.x) && Mathf.Approximately(vector3.y, other.y) && Mathf.Approximately(vector3.z, other.z);
+		}
+
 		public static Vector3 NewX(this Vector3 vector3, float x)
 		{
 			return new Vector3(x, vector3.y, vector3.z);

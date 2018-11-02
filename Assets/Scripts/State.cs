@@ -10,7 +10,7 @@ namespace LunraGames.SubLight
 		Type PayloadType { get; }
 		bool AcceptsPayload(object payload, bool throws = false);
 		void Initialize(object payload);
-		void UpdateState(StateMachine.States state, StateMachine.Events stateEvent);
+		void UpdateState(StateMachine.States state, StateMachine.Events stateEvent, object payload);
 	}
 
 	public interface IStateTyped<P> : IState
@@ -43,7 +43,7 @@ namespace LunraGames.SubLight
 			PayloadObject = payload;
 		}
 
-		public virtual void UpdateState(StateMachine.States state, StateMachine.Events stateEvent)
+		public virtual void UpdateState(StateMachine.States state, StateMachine.Events stateEvent, object payload)
 		{
 			if (state != HandledState) return;
 			switch (stateEvent)
@@ -58,8 +58,8 @@ namespace LunraGames.SubLight
 					End();
 					break;
 			}
-			App.Log("State is now " + state + "." + stateEvent, LogTypes.StateMachine);
-			App.Callbacks.StateChange(new StateChange(state, stateEvent));
+			App.Log("State is now " + state + "." + stateEvent + " - Payload " + payload.GetType(), LogTypes.StateMachine);
+			App.Callbacks.StateChange(new StateChange(state, stateEvent, payload));
 		}
 
 		protected virtual void Begin() {}

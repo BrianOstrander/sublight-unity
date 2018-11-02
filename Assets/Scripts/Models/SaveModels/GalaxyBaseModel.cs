@@ -19,6 +19,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 
+		[JsonProperty] UniversePosition clusterOrigin;
+		[JsonProperty] UniversePosition galaxyOrigin;
 		[JsonProperty] UniversePosition playerStart;
 		[JsonProperty] UniversePosition gameEnd;
 
@@ -36,6 +38,10 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Description;
 
+		[JsonIgnore]
+		public readonly ListenerProperty<UniversePosition> ClusterOrigin;
+		[JsonIgnore]
+		public readonly ListenerProperty<UniversePosition> GalaxyOrigin;
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> PlayerStart;
 		[JsonIgnore]
@@ -57,6 +63,8 @@ namespace LunraGames.SubLight.Models
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 
+			ClusterOrigin = new ListenerProperty<UniversePosition>(value => clusterOrigin = value, () => clusterOrigin);
+			GalaxyOrigin = new ListenerProperty<UniversePosition>(value => galaxyOrigin = value, () => galaxyOrigin);
 			PlayerStart = new ListenerProperty<UniversePosition>(value => playerStart = value, () => playerStart);
 			GameEnd = new ListenerProperty<UniversePosition>(value => gameEnd = value, () => gameEnd);
 
@@ -72,6 +80,7 @@ namespace LunraGames.SubLight.Models
 			switch (name)
 			{
 				case TextureNames.Preview:
+				case TextureNames.FullPreview:
 					texture.anisoLevel = 2;
 					break;
 			}

@@ -115,7 +115,7 @@ namespace LunraGames.SubLight
 			var systems = new SystemModel[positions.Length];
 			for (var i = 0; i < positions.Length; i++)
 			{
-				systems[i] = CreateSystem(types[i], sector, seeds[i], sector.Position.Value.NewSystem(positions[i]));
+				systems[i] = CreateSystem(types[i], sector, seeds[i], sector.Position.Value.NewLocal(positions[i]));
 			}
 			sector.Systems.Value = systems;
 		}

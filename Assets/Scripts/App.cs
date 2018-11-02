@@ -124,7 +124,7 @@ namespace LunraGames.SubLight
 			callbackService = new CallbackService();
 			heartbeat = new Heartbeat();
 			presenterMediator = new PresenterMediator(Heartbeat);
-			viewMediator = new ViewMediator(Heartbeat);
+			viewMediator = new ViewMediator(Heartbeat, Callbacks);
 			audioService = new AudioService(audioRoot);
 			stateMachine = new StateMachine(
 				Heartbeat,

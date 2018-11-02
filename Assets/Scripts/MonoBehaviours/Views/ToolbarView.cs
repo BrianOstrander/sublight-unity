@@ -185,6 +185,23 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		public override float Opacity
+		{
+			get { return base.Opacity; }
+
+			set
+			{
+				base.Opacity = value;
+				if (currentButtons == null) return;
+				var interactionsEnabled = !Mathf.Approximately(0f, value);
+				foreach (var button in currentButtons)
+				{
+					button.Leaf.OpacityArea.alpha = value;
+					button.Leaf.OpacityArea.blocksRaycasts = interactionsEnabled;
+				}
+			}
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -242,7 +259,7 @@ namespace LunraGames.SubLight.Views
 		}
 		#endregion
 
-		void OnDrawGizmos()
+		void OnDrawGizmosSelected()
 		{
 #if UNITY_EDITOR
 			Gizmos.color = Color.yellow.NewA(0.2f);

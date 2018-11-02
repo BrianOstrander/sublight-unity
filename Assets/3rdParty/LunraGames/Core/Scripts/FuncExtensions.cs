@@ -1,7 +1,12 @@
-﻿namespace LunraGames
+﻿using System;
+
+namespace LunraGames
 {
 	public static class FuncExtensions
 	{
+		public static Func<T> GetEmpty<T>() { return () => { return default(T); }; }
+		public static Func<T> GetEmpty<T>(T value) { return () => { return value; }; }
+
 		/// <summary>
 		/// For some reason my version of unity doesn't have this... so here it is...
 		/// </summary>

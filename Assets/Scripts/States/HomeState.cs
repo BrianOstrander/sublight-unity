@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
+using LunraGames.NumberDemon;
+
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Presenters;
 
@@ -16,6 +18,7 @@ namespace LunraGames.SubLight
 		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public SaveModel[] Saves = new SaveModel[0];
 		public SaveModel ContinueSave;
+		public CreateGameBlock NewGameBlock;
 
 		public float MenuAnimationMultiplier;
 		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
@@ -132,6 +135,24 @@ namespace LunraGames.SubLight
 			done();
 		}
 
+		void InitializeNewGameBlock(Action done)
+		{
+			if (Payload.PreviewGalaxy == null)
+			{
+				Debug.LogError("Unable to initialize the new game block without a preview galaxy");
+				done();
+				return;
+			}
+
+			Payload.NewGameBlock = new CreateGameBlock
+			{
+				GameSeed = DemonUtility.NextInteger,
+				GalaxySeed = DemonUtility.NextInteger,
+				GalaxyId = Payload.PreviewGalaxy.GalaxyId.Value
+			};
+
+			done();
+		}
 		#endregion
 
 		#region Idle
@@ -163,8 +184,6 @@ namespace LunraGames.SubLight
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 
 			App.Input.SetEnabled(false);
-
-			App.Callbacks.ClearEscapables();
 
 			App.SM.PushBlocking(UnBind);
 			App.SM.PushBlocking(UnLoadScenes);
@@ -207,7 +226,7 @@ namespace LunraGames.SubLight
 
 		void OnNewGameStart()
 		{
-			App.GameService.CreateGame(OnNewGameCreated);
+			App.GameService.CreateGame(Payload.NewGameBlock, OnNewGameCreated);
 		}
 
 		void OnContinueGameClick()

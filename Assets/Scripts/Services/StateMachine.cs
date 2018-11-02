@@ -91,7 +91,9 @@ namespace LunraGames.SubLight
 		IState[] stateEntries;
 
 		IState currentState;
+		object currentPayload;
 		IState nextState;
+		object nextPayload;
 		Events currentEvent;
 		List<IEntry> queued = new List<IEntry>();
 		List<IEntry> entries = new List<IEntry>();
@@ -167,12 +169,12 @@ namespace LunraGames.SubLight
 				if (currentEvent == Events.Idle)
 				{
 					// We transitioning states, but we haven't completed yet.
-					SetState(currentState, Events.End);
+					SetState(currentState, Events.End, currentPayload);
 				}
 				else if (currentEvent == Events.End)
 				{
 					// We already completed last frame, so now we'll be starting.
-					SetState(nextState, Events.Begin);
+					SetState(nextState, Events.Begin, nextPayload);
 				}
 			}
 			else
@@ -180,17 +182,18 @@ namespace LunraGames.SubLight
 				if (currentEvent == Events.Begin)
 				{
 					// We already started last frame, so now we go to idle
-					SetState(currentState, Events.Idle);
+					SetState(currentState, Events.Idle, currentPayload);
 				}
 			}
 		}
 
-		void SetState(IState state, Events stateEvent)
+		void SetState(IState state, Events stateEvent, object payload)
 		{
 			currentState = state;
+			currentPayload = payload;
 			currentEvent = stateEvent;
 
-			currentState.UpdateState(currentState.HandledState, currentEvent);
+			currentState.UpdateState(currentState.HandledState, currentEvent, payload);
 		}
 
 		IState GetState<P>(P payload)
@@ -252,8 +255,9 @@ namespace LunraGames.SubLight
 			}
 
 			nextState = handlingState;
+			nextPayload = payload;
 			nextState.Initialize(payload);
-			if (currentState == null) SetState(nextState, Events.Begin);
+			if (currentState == null) SetState(nextState, Events.Begin, payload);
 		}
 
 

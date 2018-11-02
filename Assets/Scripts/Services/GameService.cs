@@ -10,6 +10,11 @@ namespace LunraGames.SubLight
 {
 	public class GameService
 	{
+		static class DefaultGameBlock
+		{
+			public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089";
+		}
+
 		static class DefaultShip
 		{
 			public const string StockRoot = "eccdddb4-553f-4f7a-be7e-b68799839bc8";
@@ -34,20 +39,31 @@ namespace LunraGames.SubLight
 			this.universeService = universeService;
 		}
 
-		public void CreateGame(Action<RequestStatus, GameModel> done)
+		public void CreateGame(CreateGameBlock info, Action<RequestStatus, GameModel> done)
 		{
 			if (done == null) throw new ArgumentNullException("done");
 
 			var game = modelMediator.Create<GameModel>();
-			game.Seed.Value = DemonUtility.NextInteger;
-			game.Universe.Value = universeService.CreateUniverse(1);
-			game.FocusedSector.Value = UniversePosition.Zero;
+			game.Seed.Value = info.GameSeed;
+			game.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, DefaultGameBlock.GalaxyId);
+			game.Universe = universeService.CreateUniverse(info);
 			game.DestructionSpeed.Value = 0.004f;
 			game.DestructionSpeedIncrement.Value = 0.0025f;
 
-			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
+			game.FocusTransform.Value = new FocusTransform(
+				TweenBlock.CreateInstant(0f, 1f),
+				TweenBlock.Zero,
+				LanguageStringModel.Empty,
+				LanguageStringModel.Empty,
+				FuncExtensions.GetEmpty(string.Empty),
+				FuncExtensions.GetEmpty(string.Empty),
+				LanguageStringModel.Empty,
+				LanguageStringModel.Empty
+			);
+
+			var startSystem = game.Universe.Sectors.Value.First().Systems.Value.First();
 			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
-			foreach (var system in game.Universe.Value.Sectors.Value.First().Systems.Value)
+			foreach (var system in game.Universe.Sectors.Value.First().Systems.Value)
 			{
 				var distance = UniversePosition.Distance(UniversePosition.Zero, system.Position);
 				if (lastDistance < distance) continue;
@@ -73,21 +89,7 @@ namespace LunraGames.SubLight
 
 			game.Ship.Value = ship;
 
-			game.TravelRequest.Value = new TravelRequest(
-				TravelRequest.States.Complete,
-				startSystem.Position,
-				startSystem.Position,
-				startSystem.Position,
-				DayTime.Zero,
-				DayTime.Zero,
-				0f,
-				1f
-			);
-
 			game.ToolbarSelection.Value = ToolbarSelections.System;
-
-			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
-			game.EndSystem.Value = endSector.Systems.Value.First().Position;
 
 			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
 				DefaultShip.StockRoot,

@@ -18,6 +18,16 @@ namespace LunraGames.SubLight.Models
 			return result;
 		}
 
+		public static LanguageStringModel Empty
+		{
+			get
+			{
+				var result = new LanguageStringModel();
+				result.Value.Value = String.Empty;
+				return result;
+			}
+		}
+
 		[JsonProperty] string key = Guid.NewGuid().ToString();
 
 		string value;

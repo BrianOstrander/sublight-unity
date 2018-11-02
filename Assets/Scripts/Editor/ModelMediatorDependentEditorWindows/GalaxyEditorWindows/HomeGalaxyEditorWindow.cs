@@ -28,12 +28,12 @@ namespace LunraGames.SubLight
 		EditorPrefsFloat homeLeftBarScroll;
 		EditorPrefsString homeSelectedPath;
 		EditorPrefsEnum<HomeStates> homeState;
-		EditorPrefsInt homeSelectedToolbar;
+		DevPrefsInt homeSelectedToolbar;
 
-		EditorPrefsInt homeGeneralPreviewSize;
+		DevPrefsInt homeGeneralPreviewSize;
 		EditorPrefsFloat homeGeneralPreviewBarScroll;
 
-		EditorPrefsInt homeTargetsSelectedPreview;
+		DevPrefsInt homeTargetsSelectedPreview;
 
 		EditorPrefsFloat homeGenerationBarScroll;
 
@@ -68,12 +68,12 @@ namespace LunraGames.SubLight
 			homeLeftBarScroll = new EditorPrefsFloat(KeyPrefix + "LeftBarScroll");
 			homeSelectedPath = new EditorPrefsString(KeyPrefix + "HomeSelected");
 			homeState = new EditorPrefsEnum<HomeStates>(KeyPrefix + "HomeState", HomeStates.Browsing);
-			homeSelectedToolbar = new EditorPrefsInt(KeyPrefix + "HomeSelectedState");
+			homeSelectedToolbar = new DevPrefsInt(KeyPrefix + "HomeSelectedState");
 
-			homeGeneralPreviewSize = new EditorPrefsInt(KeyPrefix + "GeneralPreviewSize");
+			homeGeneralPreviewSize = new DevPrefsInt(KeyPrefix + "GeneralPreviewSize");
 			homeGeneralPreviewBarScroll = new EditorPrefsFloat(KeyPrefix + "GeneralPreviewBarScroll");
 
-			homeTargetsSelectedPreview = new EditorPrefsInt(KeyPrefix + "TargetsSelectedPreview");
+			homeTargetsSelectedPreview = new DevPrefsInt(KeyPrefix + "TargetsSelectedPreview");
 
 			homeGenerationBarScroll = new EditorPrefsFloat(KeyPrefix + "HomeGenerationBarScroll");
 
@@ -307,6 +307,8 @@ namespace LunraGames.SubLight
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
+				model.ClusterOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Cluster Origin", model.ClusterOrigin);
+				model.GalaxyOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin);
 				model.PlayerStart.Value = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart);
 				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
 			}
@@ -366,6 +368,10 @@ namespace LunraGames.SubLight
 							new OptionDialogPopup.Entry[]
 							{
 								OptionDialogPopup.Entry.Create(
+									"Galaxy Origin",
+									() => model.GalaxyOrigin.Value = universePosition
+								),
+								OptionDialogPopup.Entry.Create(
 									"Player Start",
 									() => model.PlayerStart.Value = universePosition
 								),
@@ -386,8 +392,15 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
+			var galacticOriginInWindow = UniverseToWindow(model.GalaxyOrigin, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
 			var playerStartInWindow = UniverseToWindow(model.PlayerStart, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
 			var gameEndInWindow = UniverseToWindow(model.GameEnd, lastTargetsPreviewRect, universeSize, homeGeneralPreviewSize);
+
+			EditorGUILayoutExtensions.PushColor(Color.yellow);
+			{
+				GUI.Box(CenteredScreen(galacticOriginInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Galactic Origin"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
+			}
+			EditorGUILayoutExtensions.PopColor();
 
 			EditorGUILayoutExtensions.PushColor(Color.green);
 			{

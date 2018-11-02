@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		public GameModel Game;
 
 		public HoloRoomFocusCameraPresenter MainCamera;
-		public ToolbarPresenter Toolbar;
+		public List<IPresenterCloseShowOptions> ShowOnIdle = new List<IPresenterCloseShowOptions>();
 
 		public KeyValueListener KeyValueListener;
 
@@ -33,6 +33,7 @@ namespace LunraGames.SubLight
 		protected override void Begin()
 		{
 			App.SM.PushBlocking(LoadScenes);
+			App.SM.PushBlocking(LoadModelDependencies);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
@@ -42,6 +43,32 @@ namespace LunraGames.SubLight
 		void LoadScenes(Action done)
 		{
 			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
+		}
+
+		void LoadModelDependencies(Action done)
+		{
+			if (string.IsNullOrEmpty(Payload.Game.GalaxyId))
+			{
+				Debug.LogError("No GalaxyId to load");
+				done();
+				return;
+			}
+			App.M.Load<GalaxyInfoModel>(Payload.Game.GalaxyId, result => OnLoadGalaxy(result, done));
+		}
+
+		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to load galaxy, resulted in " + result.Status + " and error: " + result.Error);
+				done();
+				return;
+			}
+			Payload.Game.Galaxy = result.TypedModel;
+
+			if (!Payload.Game.PlayerStartSelected.Value) Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart.Value;
+
+			done();
 		}
 
 		void InitializeInput(Action done)
@@ -72,7 +99,7 @@ namespace LunraGames.SubLight
 		#region Idle
 		protected override void Idle()
 		{
-			App.Callbacks.HoloColorRequest(new HoloColorRequest(Color.white.NewV(0.12f)));
+			App.Callbacks.HoloColorRequest(new HoloColorRequest(Color.white));
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 		}
 
@@ -83,7 +110,7 @@ namespace LunraGames.SubLight
 
 		void OnIdleShowFocusDone()
 		{
-			Payload.Toolbar.Show();
+			foreach (var presenter in Payload.ShowOnIdle) presenter.Show();
 		}
 		#endregion
 

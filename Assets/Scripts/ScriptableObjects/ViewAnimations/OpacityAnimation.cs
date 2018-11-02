@@ -1,7 +1,5 @@
 using UnityEngine;
 
-using LunraGames;
-
 namespace LunraGames.SubLight
 {
 	public class OpacityAnimation : ViewAnimation

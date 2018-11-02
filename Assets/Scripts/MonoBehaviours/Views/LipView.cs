@@ -13,8 +13,6 @@ namespace LunraGames.SubLight.Views
 		Material lipMaterial;
 		[SerializeField]
 		MeshRenderer lipMesh;
-		[SerializeField]
-		Color baseLipColor;
 
 		public void SetLips(float scalar, bool showing)
 		{
@@ -24,7 +22,7 @@ namespace LunraGames.SubLight.Views
 			lipMesh.material.SetFloat(ShaderConstants.HoloLip.LipMax, MaxLipAnimation.Evaluate(scalar));
 		}
 
-		public Color HoloColor { set { lipMesh.material.SetColor(ShaderConstants.HoloLip.LipColor, baseLipColor.NewHsva(value.GetH(), value.GetS())); } }
+		public Color HoloColor { set { lipMesh.material.SetColor(ShaderConstants.HoloLip.LipColor, value); } }
 
 		public override void Reset()
 		{
