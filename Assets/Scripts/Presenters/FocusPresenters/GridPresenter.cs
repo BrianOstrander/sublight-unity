@@ -90,7 +90,7 @@ namespace LunraGames.SubLight.Presenters
 				new UnitMap(1f, 1f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(2f, 10f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(3f, 10000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(4f, 50000f, UniverseScales.Galactic, UniverseFocuses.GalacticOrigin, UniverseFocuses.GalacticOrigin),
+				new UnitMap(4f, 25000f, UniverseScales.Galactic, UniverseFocuses.GalacticOrigin, UniverseFocuses.GalacticOrigin),
 				new UnitMap(5f, 750000f, UniverseScales.Cluster, UniverseFocuses.ClusterOrigin, UniverseFocuses.None)
 			};
 
@@ -208,20 +208,20 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 
-			var tileScalar = 1f;
+			var zoomScalar = 1f;
 
 			if (grid.IsTarget)
 			{
-				if (grid.ZoomingUp) tileScalar = 1f - (0.5f * (1f - grid.Progress));
-				else tileScalar = 1f + (1f - grid.Progress);
+				if (grid.ZoomingUp) zoomScalar = 1f - (0.5f * (1f - grid.Progress));
+				else zoomScalar = 1f + (1f - grid.Progress);
 			}
 			else
 			{
-				if (grid.ZoomingUp) tileScalar = 1f + grid.Progress;
-				else tileScalar = 1f - (0.5f * grid.Progress);
+				if (grid.ZoomingUp) zoomScalar = 1f + grid.Progress;
+				else zoomScalar = 1f - (0.5f * grid.Progress);
 			}
 
-			grid.Tiling = Tiling * tileScalar;
+			grid.Tiling = Tiling * zoomScalar;
 
 			var offset = scaleTransform.GetGridOffset(UniversePosition.ToUniverseDistance(unitMap.LightYears));
 			grid.Offset = new Vector2(offset.x, offset.z);
@@ -232,7 +232,7 @@ namespace LunraGames.SubLight.Presenters
 
 			var currLightYearsInTile = progress * unitMap.LightYears;
 
-			var unityUnitsPerTile = (Tiling * 0.5f * tileScalar) / View.GridUnityRadius;
+			var unityUnitsPerTile = (Tiling * 0.5f * zoomScalar) / View.GridUnityRadius;
 			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(unitMap.LightYears);
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 

@@ -410,11 +410,12 @@ MonoBehaviour:
   animations: []
   scaleArea: {fileID: 4847102657539270}
   positionArea: {fileID: 4847102657539270}
+  ySeparation: 0.016
   renderQueue: 3001
   layerColors:
-  - {r: 0.357, g: 0.357, b: 0.357, a: 1}
-  - {r: 0.616, g: 0.616, b: 0.616, a: 1}
-  - {r: 0.839, g: 0.839, b: 0.839, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0.39200002, g: 0.39200002, b: 0.39200002, a: 1}
+  - {r: 0.587, g: 0.587, b: 0.587, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   layerMeshes:
   - {fileID: 23829464805630160}

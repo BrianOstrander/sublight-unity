@@ -5,6 +5,8 @@ namespace LunraGames.SubLight.Views
 	public class GalaxyView : UniverseScaleView, IGalaxyView
 	{
 		[SerializeField]
+		float ySeparation;
+		[SerializeField]
 		int renderQueue;
 		[SerializeField]
 		Color[] layerColors = new Color[0];
@@ -17,6 +19,7 @@ namespace LunraGames.SubLight.Views
 			{
 				var color = layerColors.Length == 0 ? Color.black : layerColors[Mathf.Min(i, layerColors.Length)];
 				var mesh = layerMeshes[i];
+				mesh.transform.localPosition = new Vector3(0f, ySeparation * i, 0f);
 				mesh.material.renderQueue = renderQueue;
 				mesh.material.SetTexture(ShaderConstants.HoloGalaxy.LayerTexture, texture);
 				mesh.material.SetInt(ShaderConstants.HoloGalaxy.Channel, i);
