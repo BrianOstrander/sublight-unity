@@ -115,6 +115,20 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloGridBackground
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridBackground";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string MainColor = "_MainColor";
+			public const string Tint = "_Tint";
+			public const string Alpha = "_Alpha";
+		}
+
 		public static class HoloGrid
 		{
 			/// <summary>

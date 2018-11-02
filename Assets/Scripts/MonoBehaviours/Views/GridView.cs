@@ -45,6 +45,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Material gridMaterial;
 		[SerializeField]
+		Material gridBackgroundMaterial;
+		[SerializeField]
 		MeshRenderer gridMesh;
 		[SerializeField]
 		GameObject gridArea;
@@ -61,6 +63,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform followCameraArea;
 
+		Material gridBackground;
 		Material[] grids;
 
 		public float ZoomAnimationDuration { get { return zoomAnimationDuration; } }
@@ -74,7 +77,7 @@ namespace LunraGames.SubLight.Views
 		public float GridUnityWidth { get { return gridUnityWidth; } }
 		public Action<bool> Dragging { set; private get; }
 		public bool Highlighted { get; private set; }
-		public Color HoloColor { set { Debug.LogWarning("todo"); } }
+		public Color HoloColor { set { if (gridBackground != null) gridBackground.SetColor(ShaderConstants.HoloGridBackground.Tint, value); } }
 
 		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
 		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
@@ -89,16 +92,20 @@ namespace LunraGames.SubLight.Views
 				if (value == null || value.Length == 0)
 				{
 					gridMesh.materials = new Material[0];
+					gridBackground = null;
 					grids = null;
 					return;
 				}
 				if (grids == null || grids.Length == 0)
 				{
+					gridBackground = new Material(gridBackgroundMaterial);
 					grids = new Material[value.Length];
 					for (var i = 0; i < value.Length; i++) grids[i] = new Material(gridMaterial);
 				}
 
 				var activeMaterials = new List<Material>();
+
+				activeMaterials.Add(gridBackground);
 
 				for (var i = 0; i < value.Length; i++)
 				{

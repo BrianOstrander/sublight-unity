@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Grid2
-  m_Shader: {fileID: 4800000, guid: 0fd624d0b35154a1891aede5cfae0b2d, type: 3}
+  m_Name: GridBackground
+  m_Shader: {fileID: 4800000, guid: 4768c37819f5548888d224bb9aba3dd7, type: 3}
   m_ShaderKeywords: _GRIDINVERT_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -55,7 +55,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GridRamp:
-        m_Texture: {fileID: 2800000, guid: ff6e9e1eaab1b4b3e80957642c0b0d7b, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -115,6 +115,7 @@ Material:
     - _RadiusChockWidth: 0.005
     - _RadiusChoke: 0.97
     - _RadiusChokeFresnelPower: 27
+    - _RadiusChokeWidth: 0.005
     - _RadiusMax: 0.1
     - _RadiusMin: 0
     - _RadiusProgress: 1
@@ -125,7 +126,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
-    - _Tiling: 4
+    - _Tiling: 8
     - _TilingPrimary: 4
     - _TilingScalar: 10
     - _TilingSecondary: 8
@@ -134,6 +135,7 @@ Material:
     - _ZWrite: 1
     - _Zoom: 0
     m_Colors:
+    - Color_1CADFCF0: {r: 0.18431373, g: 0.18431373, b: 0.18431373, a: 1}
     - Vector2_353EB7A2: {r: 0, g: 0, b: 0, a: 0}
     - Vector2_85E35356: {r: 0, g: 0, b: 0, a: 0}
     - Vector2_B99190B2: {r: 0.1, g: 0.1, b: 0, a: 0}
@@ -142,6 +144,6 @@ Material:
     - _GridColor: {r: 1, g: 1, b: 1, a: 1}
     - _GridTint: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Offset: {r: 0, g: 1.69, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}

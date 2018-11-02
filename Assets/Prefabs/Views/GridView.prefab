@@ -181,6 +181,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
+  - {fileID: 2100000, guid: 0b8e143a8d4004c82a2fc427a0ef675f, type: 2}
   - {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -473,6 +474,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   gridUnityWidth: 3.5
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
+  gridBackgroundMaterial: {fileID: 2100000, guid: 0b8e143a8d4004c82a2fc427a0ef675f,
+    type: 2}
   gridMesh: {fileID: 23745486960222072}
   gridArea: {fileID: 1730598729709772}
   hideScaleAlpha:
