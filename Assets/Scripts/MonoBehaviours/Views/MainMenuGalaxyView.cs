@@ -28,9 +28,9 @@ namespace LunraGames.SubLight.Views
 				{
 					var color = previewColors.Length == 0 ? Color.black : previewColors[Mathf.Min(i, previewColors.Length)];
 					var mesh = previewMeshes[i];
-					mesh.material.SetTexture(ShaderConstants.HoloGalaxyPreviewBasic.Layer, value);
+					mesh.material.SetTexture(ShaderConstants.HoloGalaxyPreviewBasic.LayerTexture, value);
 					mesh.material.SetInt(ShaderConstants.HoloGalaxyPreviewBasic.Channel, i);
-					mesh.material.SetColor(ShaderConstants.HoloGalaxyPreviewBasic.LayerColor, color);
+					mesh.material.SetColor(ShaderConstants.HoloGalaxyPreviewBasic.ChannelColor, color);
 				}
 			}
 		}

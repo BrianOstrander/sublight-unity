@@ -77,7 +77,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The RGBA texture used for the outline of each layer.
 			/// </summary>
-			public const string Layer = "_Layer";
+			public const string LayerTexture = "_LayerTexture";
 			/// <summary>
 			/// The RGBA channel being used.
 			/// </summary>
@@ -85,7 +85,7 @@ namespace LunraGames.SubLight
 			/// <summary>
 			/// The color for this layer.
 			/// </summary>
-			public const string LayerColor = "_LayerColor";
+			public const string ChannelColor = "_ChannelColor";
 			/// <summary>
 			/// How much of the texture, from the UV center, has been revealed.
 			/// </summary>
