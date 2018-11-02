@@ -19,11 +19,9 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI unitTypeLabel;
 
 		[SerializeField]
-		Material gridScaleMaterial;
+		int renderQueue;
 		[SerializeField]
 		MeshRenderer gridScaleMesh;
-		[SerializeField]
-		Material gridUnitScaleMaterial;
 		[SerializeField]
 		MeshRenderer gridUnitScaleMesh;
 		[SerializeField]
@@ -62,11 +60,13 @@ namespace LunraGames.SubLight.Views
 
 		public void Zoom(float zoom, float unitProgress, bool unitToRight)
 		{
+			gridScaleMesh.material.renderQueue = renderQueue;
 			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Zoom, zoom + 1f);
 
 			var progressCurve = unitToRight ? toRightProgressCurve : toLeftProgressCurve;
 			var alphaCurve = unitToRight ? toRightAlphaCurve : toLeftAlphaCurve;
 
+			gridUnitScaleMesh.material.renderQueue = renderQueue;
 			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Progress, progressCurve.Evaluate(unitProgress));
 			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.FullProgress, alphaCurve.Evaluate(unitProgress));
 			//gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.ProgressToRight, unitToRight ? 1f : 0f);
@@ -107,9 +107,6 @@ namespace LunraGames.SubLight.Views
 		public override void Reset()
 		{
 			base.Reset();
-
-			gridScaleMesh.material = new Material(gridScaleMaterial);
-			gridUnitScaleMesh.material = new Material(gridUnitScaleMaterial);
 
 			ScaleNameText = null;
 			ScaleText = null;

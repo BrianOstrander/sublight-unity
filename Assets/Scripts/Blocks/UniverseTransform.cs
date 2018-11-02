@@ -8,6 +8,7 @@ namespace LunraGames.SubLight
 	{
 		public readonly Vector3 UnityOrigin;
 		public readonly UniversePosition UniverseOrigin;
+		public readonly float UnityRadius;
 
 		public readonly Vector3 UnityToUniverse;
 		public readonly Vector3 UniverseToUnity;
@@ -16,6 +17,7 @@ namespace LunraGames.SubLight
 
 		public UniverseTransform(
 			Vector3 unityOrigin,
+			float unityRadius,
 			UniversePosition universeOrigin,
 			Vector3 unityToUniverse,
 			Vector3 universeToUnity,
@@ -23,6 +25,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			UnityOrigin = unityOrigin;
+			UnityRadius = unityRadius;
 			UniverseOrigin = universeOrigin;
 			UnityToUniverse = unityToUniverse;
 			UniverseToUnity = universeToUnity;
@@ -88,6 +91,7 @@ namespace LunraGames.SubLight
 		{
 			return new UniverseTransform(
 				UnityOrigin,
+				UnityRadius,
 				universeOrigin.HasValue ? universeOrigin.Value : UniverseOrigin,
 				UnityToUniverse,
 				UniverseToUnity,

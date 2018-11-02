@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve revealCurve;
 
 		[SerializeField]
-		float gridUnityWidth;
+		float gridUnityRadius;
 
 		[SerializeField]
 		Material gridMaterial;
@@ -74,7 +74,7 @@ namespace LunraGames.SubLight.Views
 		public AnimationCurve ScrollCooldownFalloff { get { return scrollCooldownFalloff; } }
 
 		public Vector3 GridUnityOrigin { get { return gridMesh.transform.position; } }
-		public float GridUnityWidth { get { return gridUnityWidth; } }
+		public float GridUnityRadius { get { return gridUnityRadius; } }
 		public Action<bool> Dragging { set; private get; }
 		public bool Highlighted { get; private set; }
 		public Color HoloColor { set { if (gridBackground != null) gridBackground.SetColor(ShaderConstants.HoloGridBackground.Tint, value); } }
@@ -236,7 +236,7 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve ScrollCooldownFalloff { get; }
 
 		Vector3 GridUnityOrigin { get; }
-		float GridUnityWidth { get; }
+		float GridUnityRadius { get; }
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
 		GridView.Grid[] Grids { set; }

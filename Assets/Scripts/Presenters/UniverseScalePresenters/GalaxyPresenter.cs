@@ -1,8 +1,4 @@
-﻿using System;
-
-using UnityEngine;
-
-using LunraGames.SubLight.Models;
+﻿using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
@@ -23,7 +19,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShowView()
 		{
-			View.GalaxyPreview = Model.Galaxy.FullPreview;
+			var transform = Model.ActiveScale.Transform.Value;
+			View.SetGalaxy(Model.Galaxy.FullPreview, transform.UnityOrigin, transform.UnityRadius);
 		}
 	}
 }

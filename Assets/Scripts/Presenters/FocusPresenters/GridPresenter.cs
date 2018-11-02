@@ -232,13 +232,14 @@ namespace LunraGames.SubLight.Presenters
 
 			var currLightYearsInTile = progress * unitMap.LightYears;
 
-			var unityUnitsPerTile = (Tiling * 0.5f * tileScalar) / View.GridUnityWidth;
+			var unityUnitsPerTile = (Tiling * 0.5f * tileScalar) / View.GridUnityRadius;
 			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(unitMap.LightYears);
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 
 			scale.Opacity.Value = grid.Alpha;
 			scale.Transform.Value = new UniverseTransform(
 				View.GridUnityOrigin,
+				View.GridUnityRadius,
 				scaleTransform.UniverseOrigin,
 				Vector3.one * universeUnitsPerUnityUnit,
 				Vector3.one * (1f / universeUnitsPerUnityUnit),
