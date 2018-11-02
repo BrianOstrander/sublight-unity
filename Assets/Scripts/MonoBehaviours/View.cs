@@ -152,12 +152,12 @@ namespace LunraGames.SubLight
 
 		protected virtual void OnIdle(float delta) 
 		{
-			foreach (var anim in ViewAnimations) anim.OnIdle(this);
+			foreach (var anim in ViewAnimations) anim.OnIdle(this, delta);
 		}
 
 		protected virtual void OnLateIdle(float delta)
 		{
-			foreach (var anim in ViewAnimations) anim.OnLateIdle(this);
+			foreach (var anim in ViewAnimations) anim.OnLateIdle(this, delta);
 		}
 
 		protected virtual void OnPrepareClose()

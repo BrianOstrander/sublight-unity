@@ -26,6 +26,7 @@ namespace LunraGames.SubLight
 
 		public CurveStyleObject GlobalStyle { get { return globalStyle; } set { globalStyle = value; } }
 		public AnimationCurve Curve { get { return globalStyle == null ? curve : globalStyle.Curve; } }
+		public float Evaluate(float time) { return Curve.Evaluate(time); }
 
 		public static implicit operator AnimationCurve(CurveStyleBlock b)
 		{

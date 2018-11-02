@@ -22,7 +22,7 @@ namespace LunraGames.SubLight
 			view.transform.LookAt(LookAtPosition(view));
 		}
 
-		public override void OnLateIdle(IView view)
+		public override void OnLateIdle(IView view, float delta)
 		{
 			if (idleLook) view.transform.LookAt(LookAtPosition(view));
 		}

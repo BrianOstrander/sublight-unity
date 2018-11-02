@@ -24,7 +24,7 @@ namespace LunraGames.SubLight
 			Follow(view);
 		}
 
-		public override void OnLateIdle(IView view)
+		public override void OnLateIdle(IView view, float delta)
 		{
 			if (idleFollow) Follow(view);
 		}

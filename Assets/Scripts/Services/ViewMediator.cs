@@ -162,7 +162,7 @@ namespace LunraGames.SubLight
 			return Create(prefab);
 		}
 
-		private IView Create(GameObject prefab)
+		IView Create(GameObject prefab)
 		{
 			var spawned = Object.Instantiate(prefab).GetComponent<IView>();
 			spawned.gameObject.SetActive(false);
@@ -226,6 +226,11 @@ namespace LunraGames.SubLight
 
 		void Update(float delta)
 		{
+			FrameCount++;
+			CameraHasMoved = !lastCameraForward.Approximately(CameraForward) || !lastCameraPosition.Approximately(CameraPosition);
+			lastCameraForward = CameraForward;
+			lastCameraPosition = CameraPosition;
+
 			foreach (var view in views.ToList())
 			{
 				if (view.TransitionState == TransitionStates.Shown)
@@ -318,9 +323,14 @@ namespace LunraGames.SubLight
 		#region Animation Data
 		// Instead of animations getting their data from weird places, they should get everything through here.
 
+		Vector3 lastCameraPosition;
+		Vector3 lastCameraForward;
+
 		bool IsCameraMainNull { get { return Camera.main == null; } }
 		bool IsGameModelNull { get { return gameModel == null; } }
 
+		public long FrameCount { get; private set; } // Should be good for 4.8 billion years at 60 FPS!
+		public bool CameraHasMoved { get; private set; }
 		public Vector3 CameraPosition { get { return IsCameraMainNull ? Vector3.zero : Camera.main.transform.position; } }
 		public Vector3 CameraForward { get { return IsCameraMainNull ? Vector3.forward : Camera.main.transform.forward; } }
 		public Ray CameraViewportPointToRay(Vector3 pos) { return IsCameraMainNull ? new Ray(Vector3.zero, Vector3.forward) : Camera.main.ViewportPointToRay(pos); }
