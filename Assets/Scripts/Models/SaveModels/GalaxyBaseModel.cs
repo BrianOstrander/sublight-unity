@@ -80,8 +80,10 @@ namespace LunraGames.SubLight.Models
 			switch (name)
 			{
 				case TextureNames.Preview:
-				case TextureNames.FullPreview:
 					texture.anisoLevel = 2;
+					break;
+				case TextureNames.FullPreview:
+					texture.anisoLevel = 4;
 					break;
 			}
 		}
