@@ -89,9 +89,9 @@ namespace LunraGames.SubLight.Presenters
 				new UnitMap(0f, 0.1f, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(1f, 1f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(2f, 10f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(3f, 10000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(4f, 25000f, UniverseScales.Galactic, UniverseFocuses.GalacticOrigin, UniverseFocuses.GalacticOrigin),
-				new UnitMap(5f, 750000f, UniverseScales.Cluster, UniverseFocuses.ClusterOrigin, UniverseFocuses.None)
+				new UnitMap(3f, 5000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(4f, 25000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(5f, 750000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
 			};
 
 			App.Heartbeat.Update += OnUpdate;
@@ -208,17 +208,18 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 
+			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
 
 			if (grid.IsTarget)
 			{
-				if (grid.ZoomingUp) zoomScalar = 1f - (0.5f * (1f - grid.Progress));
-				else zoomScalar = 1f + (1f - grid.Progress);
+				if (grid.ZoomingUp) zoomScalar = 1f - (0.5f * (1f - zoomProgress));
+				else zoomScalar = 1f + (1f - zoomProgress);
 			}
 			else
 			{
-				if (grid.ZoomingUp) zoomScalar = 1f + grid.Progress;
-				else zoomScalar = 1f - (0.5f * grid.Progress);
+				if (grid.ZoomingUp) zoomScalar = 1f + zoomProgress;
+				else zoomScalar = 1f - (0.5f * zoomProgress);
 			}
 
 			grid.Tiling = Tiling * zoomScalar;
@@ -230,7 +231,7 @@ namespace LunraGames.SubLight.Presenters
 
 			grid.Alpha = grid.IsActive ? alphaCurve.Evaluate(progress) : 0f;
 
-			var currLightYearsInTile = progress * unitMap.LightYears;
+			var currLightYearsInTile = zoomProgress * unitMap.LightYears;
 
 			var unityUnitsPerTile = (Tiling * 0.5f * zoomScalar) / View.GridUnityRadius;
 			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(unitMap.LightYears);
