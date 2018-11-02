@@ -61,6 +61,10 @@ namespace LunraGames.SubLight
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
 				new GalaxyPresenter(payload.Game);
+				new QuadrantPresenter(payload.Game);
+
+				new ShipPinPresenter(payload.Game, UniverseScales.Quadrant);
+				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
 
 				done();
 			}

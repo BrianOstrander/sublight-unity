@@ -51,7 +51,7 @@ namespace LunraGames.SubLight
 			game.DestructionSpeedIncrement.Value = 0.0025f;
 
 			game.FocusTransform.Value = new FocusTransform(
-				TweenBlock.CreateInstant(0f, 1f),
+				TweenBlock.CreateInstant(3f, 4f),
 				TweenBlock.Zero,
 				LanguageStringModel.Empty,
 				LanguageStringModel.Empty,

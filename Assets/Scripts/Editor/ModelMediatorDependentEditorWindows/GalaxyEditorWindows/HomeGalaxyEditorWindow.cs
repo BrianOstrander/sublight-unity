@@ -37,6 +37,9 @@ namespace LunraGames.SubLight
 
 		EditorPrefsFloat homeGenerationBarScroll;
 
+		bool lastIsPlayingOrWillChangePlaymode;
+		int frameDelayRemaining;
+
 		// Unknown: Query in progress
 		// Cancel: Qued for Query
 		// Success: Loaded
@@ -49,15 +52,7 @@ namespace LunraGames.SubLight
 		// Success: Loaded
 		// Failure: Deselected or failed to load
 		RequestStatus selectedStatus;
-		GalaxyInfoModel _selected;
-		GalaxyInfoModel selected
-		{
-			get { return _selected; }
-			set
-			{
-				_selected = value;
-			}
-		}
+		GalaxyInfoModel selected;
 		bool selectedModified;
 
 		Rect lastTargetsPreviewRect = Rect.zero;
@@ -80,6 +75,7 @@ namespace LunraGames.SubLight
 			Enable += OnHomeEnable;
 			Disable += OnHomeDisable;
 			Save += SaveSelected;
+			EditorUpdate += OnUpdate;
 		}
 
 		void OnHomeEnable()
@@ -102,6 +98,14 @@ namespace LunraGames.SubLight
 
 		void OnHome()
 		{
+			OnUpdate();
+			if (lastIsPlayingOrWillChangePlaymode)
+			{
+				EditorGUILayout.HelpBox("Cannot edit in playmode.", MessageType.Info);
+				return;
+			}
+			if (0 < frameDelayRemaining) return; // Adding a helpbox messes with this...
+
 			OnCheckStatus();
 			switch (homeState.Value)
 			{
@@ -114,6 +118,25 @@ namespace LunraGames.SubLight
 				default:
 					OnHomeUnknown();
 					break;
+			}
+		}
+
+		void OnUpdate()
+		{
+			if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isPlayingOrWillChangePlaymode != lastIsPlayingOrWillChangePlaymode)
+			{
+				modelListStatus = RequestStatus.Cancel;
+				modelList = new SaveModel[0];
+				selectedStatus = RequestStatus.Cancel;
+				selected = null;
+				frameDelayRemaining = 8;
+			}
+			lastIsPlayingOrWillChangePlaymode = EditorApplication.isPlayingOrWillChangePlaymode;
+
+			if (!lastIsPlayingOrWillChangePlaymode && 0 < frameDelayRemaining)
+			{
+				frameDelayRemaining--;
+				Repaint();
 			}
 		}
 
@@ -608,12 +631,12 @@ namespace LunraGames.SubLight
 		UniversePosition ScreenToUniverse(Vector2 screenPosition, Rect window, Rect preview, Vector2 universeSize, float shownSize)
 		{
 			var inUniverse = ((screenPosition - window.min) - preview.min) * (universeSize.y / shownSize);
-			return new UniversePosition(new Vector3(inUniverse.x, 0f, inUniverse.y), Vector3.zero);
+			return new UniversePosition(new Vector3(inUniverse.x, 0f, universeSize.y - inUniverse.y), Vector3.zero);
 		}
 
 		Vector2 UniverseToWindow(UniversePosition universePosition, Rect preview, Vector2 universeSize, float shownSize)
 		{
-			var universeScaled = new Vector2(universePosition.Sector.x, universePosition.Sector.z) * (shownSize / universeSize.y);
+			var universeScaled = new Vector2(universePosition.Sector.x, universeSize.y - universePosition.Sector.z) * (shownSize / universeSize.y);
 			return preview.min + universeScaled;
 		}
 
