@@ -112,6 +112,7 @@ namespace LunraGames.SubLight
 			public const string ChannelColor = "_ChannelColor";
 			public const string WorldOrigin = "_WorldOrigin";
 			public const string WorldRadius = "_WorldRadius";
+			public const string Alpha = "_Alpha";
 		}
 
 		public static class HoloGridBasic

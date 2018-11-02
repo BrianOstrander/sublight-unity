@@ -26,6 +26,20 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		public override float Opacity
+		{
+			get { return base.Opacity; }
+
+			set
+			{
+				base.Opacity = value;
+				for (var i = 0; i < layerMeshes.Length; i++)
+				{
+					layerMeshes[i].material.SetFloat(ShaderConstants.HoloGalaxy.Alpha, value);
+				}
+			}
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
