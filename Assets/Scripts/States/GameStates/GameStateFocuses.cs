@@ -32,9 +32,9 @@ namespace LunraGames.SubLight
 				new HoloPresenter();
 
 				// All other presenters for this state...
+				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
+				payload.ShowOnIdle.Add(new ToolbarBackPresenter(payload.Game, LanguageStringModel.Override("Back")));
 
-				payload.Toolbar = new ToolbarPresenter(payload.Game);
-				
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
 
 				// GRID INFO BEGIN

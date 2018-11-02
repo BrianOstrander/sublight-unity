@@ -43,6 +43,7 @@ namespace LunraGames.SubLight
 			float? yaw = null,
 			float? pitch = null,
 			float? radius = null,
+			float duration = 0f,
 			Action done = null
 		)
 		{
@@ -52,6 +53,7 @@ namespace LunraGames.SubLight
 				yaw,
 				pitch,
 				radius,
+				duration,
 				done
 			);
 		}
@@ -76,11 +78,14 @@ namespace LunraGames.SubLight
 		public readonly float? Yaw;
 		public readonly float? Pitch;
 		public readonly float? Radius;
+		public readonly float Duration;
+		public readonly bool IsInstant;
 		public readonly Action Done;
 
 		public float YawValue(float defaultValue = 0f) { return Yaw.HasValue ? Yaw.Value : defaultValue; }
 		public float PitchValue(float defaultValue = 0f) { return Pitch.HasValue ? Pitch.Value : defaultValue; }
 		public float RadiusValue(float defaultValue = 0f) { return Radius.HasValue ? Radius.Value : defaultValue; }
+
 
 		public CameraTransformRequest(
 			States state,
@@ -88,6 +93,7 @@ namespace LunraGames.SubLight
 			float? yaw,
 			float? pitch,
 			float? radius,
+			float duration = 0f,
 			Action done = null
 		)
 		{
@@ -96,6 +102,8 @@ namespace LunraGames.SubLight
 			Yaw = yaw;
 			Pitch = pitch;
 			Radius = radius;
+			Duration = duration;
+			IsInstant = Mathf.Approximately(0f, duration);
 			Done = done ?? ActionExtensions.Empty;
 		}
 
@@ -107,6 +115,7 @@ namespace LunraGames.SubLight
 				Yaw,
 				Pitch,
 				Radius,
+				Duration,
 				Done
 			);
 		}

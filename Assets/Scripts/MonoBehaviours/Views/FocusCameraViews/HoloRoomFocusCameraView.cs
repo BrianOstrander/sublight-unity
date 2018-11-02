@@ -67,6 +67,13 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float delayBeforePitchSettle;
 
+		[SerializeField]
+		AnimationCurve yawAnimationCurve;
+		[SerializeField]
+		AnimationCurve pitchAnimationCurve;
+		[SerializeField]
+		AnimationCurve radiusAnimationCurve;
+
 		[Header("Testing")]
 		[SerializeField]
 		bool liveMode;
@@ -119,6 +126,10 @@ namespace LunraGames.SubLight.Views
 				transformStale = true;
 			}
 		}
+
+		public AnimationCurve YawAnimationCurve { get { return yawAnimationCurve; } }
+		public AnimationCurve PitchAnimationCurve { get { return pitchAnimationCurve; } }
+		public AnimationCurve RadiusAnimationCurve { get { return radiusAnimationCurve; } }
 
 		public Vector3 CameraPosition { get { return gantryPosition; } }
 		public Vector3 CameraForward { get { return gantryForward; } }
@@ -291,6 +302,10 @@ namespace LunraGames.SubLight.Views
 		float Yaw { get; set; }
 		float Pitch { get; set; }
 		float Radius { get; set; }
+
+		AnimationCurve YawAnimationCurve { get; }
+		AnimationCurve PitchAnimationCurve { get; }
+		AnimationCurve RadiusAnimationCurve { get; }
 
 		void Set(float? yaw = null, float? pitch = null, float? radius = null);
 		void Input(float? yaw = null, float? pitch = null, float? radius = null);

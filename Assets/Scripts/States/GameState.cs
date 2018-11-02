@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		public GameModel Game;
 
 		public HoloRoomFocusCameraPresenter MainCamera;
-		public ToolbarPresenter Toolbar;
+		public List<IPresenterCloseShowOptions> ShowOnIdle = new List<IPresenterCloseShowOptions>();
 
 		public KeyValueListener KeyValueListener;
 
@@ -110,7 +110,7 @@ namespace LunraGames.SubLight
 
 		void OnIdleShowFocusDone()
 		{
-			Payload.Toolbar.Show();
+			foreach (var presenter in Payload.ShowOnIdle) presenter.Show();
 		}
 		#endregion
 

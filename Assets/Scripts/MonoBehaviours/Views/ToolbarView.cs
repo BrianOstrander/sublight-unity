@@ -68,9 +68,6 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		IconEntry[] iconEntries;
 
-		[SerializeField]
-		CurveStyleBlock pitchOpacityCurve;
-
 		[Header("Test")]
 		[SerializeField]
 		int previewCount;
@@ -200,7 +197,7 @@ namespace LunraGames.SubLight.Views
 				foreach (var button in currentButtons)
 				{
 					button.Leaf.OpacityArea.alpha = value;
-					button.Leaf.OpacityArea.interactable = interactionsEnabled;
+					button.Leaf.OpacityArea.blocksRaycasts = interactionsEnabled;
 				}
 			}
 		}
