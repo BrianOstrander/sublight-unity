@@ -262,6 +262,6 @@ MonoBehaviour:
     ShowDuration: 0
     CloseDuration: 0
   animations: []
-  scaleArea: {fileID: 4421958495416990}
+  scaleArea: {fileID: 0}
   positionArea: {fileID: 4421958495416990}
   unityScale: 1

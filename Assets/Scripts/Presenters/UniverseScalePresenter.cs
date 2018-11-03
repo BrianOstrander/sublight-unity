@@ -12,7 +12,7 @@ namespace LunraGames.SubLight.Presenters
 	{
 		const float MinimumScale = 0.001f;
 
-		protected abstract UniversePosition ScaleInUniverse { get; }
+		protected virtual UniversePosition ScaleInUniverse { get { return new UniversePosition(Vector3.one); } }
 		protected abstract UniversePosition PositionInUniverse { get; }
 
 		protected GameModel Model { get; private set; }
@@ -37,7 +37,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void ApplyScaleTransform(UniverseTransform transform)
 		{
-			var result = ScaleModel.Transform.Value.GetUnityScale(ScaleInUniverse);
+			var result = transform.GetUnityScale(ScaleInUniverse);
 			result = new Vector3(
 				Mathf.Max(MinimumScale, result.x),
 				Mathf.Max(MinimumScale, result.y),
