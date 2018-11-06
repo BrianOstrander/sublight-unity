@@ -82,6 +82,7 @@ namespace LunraGames.SubLight.Models
 				case TextureNames.Preview:
 					texture.anisoLevel = 2;
 					break;
+				case TextureNames.Details:
 				case TextureNames.FullPreview:
 					texture.anisoLevel = 4;
 					break;

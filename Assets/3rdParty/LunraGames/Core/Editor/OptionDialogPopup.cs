@@ -9,17 +9,19 @@ namespace LunraGamesEditor
 	{
 		public struct Entry
 		{
-			public static Entry Create(string text, Action done, string tooltip = null)
+			public static Entry Create(string text, Action done, string tooltip = null, Color? color = null)
 			{
 				return new Entry
 				{
 					Done = done,
-					Content = new GUIContent(text, tooltip)
+					Content = new GUIContent(text, tooltip),
+					Color = color
 				};
 			}
 
 			public Action Done;
 			public GUIContent Content;
+			public Color? Color;
 		}
 
 		static Vector2 Size = new Vector2(400f, 100f);
@@ -129,12 +131,14 @@ namespace LunraGamesEditor
 			{
 				foreach (var entry in entries)
 				{
+					if (entry.Color.HasValue) EditorGUILayoutExtensions.PushColor(entry.Color.Value);
 					if (GUILayout.Button(entry.Content))
 					{
 						closeHandled = true;
 						Close();
 						entry.Done();
 					}
+					if (entry.Color.HasValue) EditorGUILayoutExtensions.PopColor();
 				}
 			}
 			GUILayout.EndScrollView();

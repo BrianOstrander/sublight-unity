@@ -331,9 +331,15 @@ namespace LunraGames.SubLight
 			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.ClusterOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Cluster Origin", model.ClusterOrigin);
+				EditorGUILayoutExtensions.PushBackgroundColor(Color.yellow);
 				model.GalaxyOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin);
+				EditorGUILayoutExtensions.PopBackgroundColor();
+				EditorGUILayoutExtensions.PushBackgroundColor(Color.green);
 				model.PlayerStart.Value = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart);
+				EditorGUILayoutExtensions.PopBackgroundColor();
+				EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
 				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
+				EditorGUILayoutExtensions.PopBackgroundColor();
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 
@@ -392,15 +398,18 @@ namespace LunraGames.SubLight
 							{
 								OptionDialogPopup.Entry.Create(
 									"Galaxy Origin",
-									() => model.GalaxyOrigin.Value = universePosition
+									() => model.GalaxyOrigin.Value = universePosition,
+									color: Color.yellow
 								),
 								OptionDialogPopup.Entry.Create(
 									"Player Start",
-									() => model.PlayerStart.Value = universePosition
+									() => model.PlayerStart.Value = universePosition,
+									color: Color.green
 								),
 								OptionDialogPopup.Entry.Create(
 									"Game End",
-									() => model.GameEnd.Value = universePosition
+									() => model.GameEnd.Value = universePosition,
+									color: Color.red
 								)
 							},
 							description: "Select the following position to assign the value of ( "+universePosition.Sector.x+" , "+universePosition.Sector.z+" ) to."
