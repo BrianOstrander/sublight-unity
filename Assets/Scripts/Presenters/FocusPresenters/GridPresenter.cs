@@ -36,6 +36,16 @@ namespace LunraGames.SubLight.Presenters
 		{
 			public float ZoomBegin;
 			public float LightYears;
+			/// <summary>
+			/// Zooming up will multiply by this value then add 1.0, this should
+			/// be greater than zero.
+			/// </summary>
+			public float ZoomUpScaleMultiplier;
+			/// <summary>
+			/// Zooming down will multiply by this and then subtract the result
+			/// from 1.0, this should be greater than zero and less than 1.0.
+			/// </summary>
+			public float ZoomDownScaleMultiplier;
 			public UniverseScales Scale;
 			public UniverseFocuses FocusFromZoomDown;
 			public UniverseFocuses FocusFromZoomUp;
@@ -45,11 +55,15 @@ namespace LunraGames.SubLight.Presenters
 				float lightYears,
 				UniverseScales scale,
 				UniverseFocuses focusFromZoomDown,
-				UniverseFocuses focusFromZoomUp
+				UniverseFocuses focusFromZoomUp,
+				float zoomUpScaleMultiplier = 1f,
+				float zoomDownScaleMultiplier = 0.95f
 			)
 			{
 				ZoomBegin = zoomBegin;
 				LightYears = lightYears;
+				ZoomUpScaleMultiplier = zoomUpScaleMultiplier;
+				ZoomDownScaleMultiplier = zoomDownScaleMultiplier;
 				Scale = scale;
 				FocusFromZoomDown = focusFromZoomDown;
 				FocusFromZoomUp = focusFromZoomUp;
@@ -218,8 +232,12 @@ namespace LunraGames.SubLight.Presenters
 			}
 			else
 			{
-				if (grid.ZoomingUp) zoomScalar = 1f + zoomProgress;
-				else zoomScalar = 1f - (0.5f * zoomProgress);
+				if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * unitMap.ZoomUpScaleMultiplier);
+				else zoomScalar = 1f - (unitMap.ZoomDownScaleMultiplier * zoomProgress);
+				//if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * 2f);
+				//else zoomScalar = 1f - (0.95f * zoomProgress);
+				//if (grid.ZoomingUp) zoomScalar = 1f + zoomProgress;
+				//else zoomScalar = 1f - (0.5f * zoomProgress);
 			}
 
 			grid.Tiling = Tiling * zoomScalar;
