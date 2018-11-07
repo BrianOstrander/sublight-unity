@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -12,25 +13,26 @@ namespace LunraGames.SubLight.Views
 {
 	public class TextCurve : MonoBehaviour
 	{
+		[Serializable]
+		struct LabelFont
+		{
+			public GalaxyLabelTypes LabelType;
+			public TMP_FontAsset Font;
+			public FontStyles Style;
+		}
+
 		const float NormalSampleDelta = 0.05f;
 
 		[SerializeField]
-		string text;
+		TextCurveBlock block;
 		[SerializeField]
-		AnimationCurve curve = AnimationCurveExtensions.Constant();
+		bool flipNormals;
+
 		[SerializeField]
 		int samplingMinimum = 16;
-		[SerializeField]
-		float curveMaximum = 1f;
-		[SerializeField]
-		Vector3 beginAnchor;
-		[SerializeField]
-		Vector3 endAnchor;
-		[SerializeField]
-		bool flipAnchors;
-		[SerializeField]
-		bool flipBoundary;
 
+		[SerializeField]
+		LabelFont[] fonts = new LabelFont[0];
 		[SerializeField]
 		TextMeshProUGUI labelPrefab;
 		[SerializeField]
@@ -42,26 +44,26 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
-				isStale = value != text;
-				text = value;
+				isStale = value != block.Text;
+				block.Text = value;
 				if (isStale && enabled && gameObject.activeInHierarchy) UpdateText();
 			}
-			get { return text; }
+			get { return block.Text; }
 		}
 
 		Vector3 Delta { get { return End - Begin; } }
 		Vector3 Normal { get { return Delta.normalized; } }
 
-		Vector3 BoundaryUp
+		Vector3 CurveUp
 		{
 			get
 			{
-				return Quaternion.AngleAxis(flipBoundary ? 90f : -90f, Vector3.up) * Normal;
+				return Quaternion.AngleAxis(block.FlipCurve ? 90f : -90f, Vector3.up) * Normal;
 			}
 		}
 
-		Vector3 Begin { get { return flipAnchors ? endAnchor : beginAnchor; } }
-		Vector3 End { get { return flipAnchors ? beginAnchor : endAnchor; } }
+		Vector3 Begin { get { return block.FlipAnchors ? block.EndAnchor : block.BeginAnchor; } }
+		Vector3 End { get { return block.FlipAnchors ? block.BeginAnchor : block.EndAnchor; } }
 
 		Vector3 EvaluateLine(float progress)
 		{
@@ -70,14 +72,14 @@ namespace LunraGames.SubLight.Views
 
 		Vector3 Evaluate(float progress)
 		{
-			return EvaluateLine(progress) + (BoundaryUp * (curve.Evaluate(progress) * curveMaximum));
+			return EvaluateLine(progress) + (CurveUp * ((block.Curve ?? AnimationCurveExtensions.Constant()).Evaluate(progress) * block.CurveMaximum));
 		}
 
 		Vector3 Evaluate(float progress, out Vector3 normal)
 		{
 			var beginSample = Evaluate(Mathf.Max(0f, progress - NormalSampleDelta));
 			var endSample = Evaluate(Mathf.Min(1f, progress + NormalSampleDelta));
-			normal = Quaternion.AngleAxis(-90f, Vector3.up) * (endSample - beginSample).normalized;
+			normal = Quaternion.AngleAxis(flipNormals ? 90f : -90f, Vector3.up) * (endSample - beginSample).normalized;
 			return Evaluate(progress);
 		}
 
@@ -111,16 +113,21 @@ namespace LunraGames.SubLight.Views
 
 			labelArea.transform.ClearChildren(destroyImmediate: Application.isEditor && !Application.isPlaying);
 
-			if (string.IsNullOrEmpty(text)) return;
+			if (string.IsNullOrEmpty(Text)) return;
 
 			var totalWidth = 0f;
-			var characterCount = text.Length;
+			var characterCount = Text.Length;
 			var labels = new List<TextMeshProUGUI>();
 			var colorableLabels = new List<TextMeshProUGUI>();
+			var fontBlock = fonts.FirstOrDefault(f => f.LabelType == block.LabelType);
 
-			foreach (var currChar in text)
+			foreach (var currChar in Text)
 			{
 				var currLabel = labelArea.InstantiateChild(labelPrefab, setActive: true);
+
+				currLabel.font = fontBlock.Font;
+				currLabel.fontStyle = fontBlock.Style;
+				currLabel.fontSize = block.FontSize;
 
 				labels.Add(currLabel);
 
@@ -196,7 +203,7 @@ namespace LunraGames.SubLight.Views
 		{
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(Begin, 0.05f);
-			Gizmos.DrawLine(Begin, Begin + (BoundaryUp * 0.15f));
+			Gizmos.DrawLine(Begin, Begin + (CurveUp * 0.15f));
 			Gizmos.color = Color.red;
 			Gizmos.DrawWireSphere(End, 0.05f);
 
