@@ -14,7 +14,7 @@ namespace LunraGames.SubLight.Views
 	{
 		const float NormalSampleDelta = 0.05f;
 
-		[SerializeField, HideInInspector]
+		[SerializeField]
 		string text;
 		[SerializeField]
 		AnimationCurve curve = AnimationCurveExtensions.Constant();
@@ -116,6 +116,7 @@ namespace LunraGames.SubLight.Views
 			var totalWidth = 0f;
 			var characterCount = text.Length;
 			var labels = new List<TextMeshProUGUI>();
+			var colorableLabels = new List<TextMeshProUGUI>();
 
 			foreach (var currChar in text)
 			{
@@ -124,7 +125,16 @@ namespace LunraGames.SubLight.Views
 				labels.Add(currLabel);
 
 				currLabel.name = labelPrefab.name + " - " + currChar;
-				currLabel.text = currChar.ToString();
+				if (char.IsWhiteSpace(currChar))
+				{
+					currLabel.text = "-";
+					currLabel.color = Color.clear;
+				}
+				else
+				{
+					currLabel.text = currChar.ToString();
+					colorableLabels.Add(currLabel);
+				}
 			}
 
 			Canvas.ForceUpdateCanvases();
@@ -144,35 +154,42 @@ namespace LunraGames.SubLight.Views
 
 			var widthRatio = totalWidth / maxWidth;
 
-			if (widthRatio < 1f)
+			var fontScalar = 1f;
+			bool isShrinking = 1f < widthRatio;
+
+				if (isShrinking)
 			{
-				// center it within the length of the curve
-				var charAreaScalar = 1f - widthRatio;
-				var buffer = (charAreaScalar * 0.5f);
-
-				if (1 < characterCount) buffer -= ((totalWidth / (characterCount - 1)) * 0.25f);
-
-				var currLength = 0f;
-
-				for (var i = 0; i < characterCount; i++)
-				{
-					currLength += labelWidths[i] * 0.5f;
-
-					var progress = buffer + ((currLength / totalWidth) * widthRatio);
-					Vector3 normal;
-					Debug.Log(progress);
-					var position = Evaluate(progress, out normal);
-					labels[i].transform.position = position;
-
-					currLength += labelWidths[i] * 0.5f;
-				}
-			}
-			else
-			{
-				// shrink it to fit within the length of the curve
-				Debug.Log("todo overshot");
+				fontScalar = 1f / widthRatio;
+				totalWidth = maxWidth;
+				Debug.Log(widthRatio+" - "+fontScalar);
 			}
 
+			// center it within the length of the curve
+			var charAreaScalar = 1f - widthRatio;
+			var buffer = (charAreaScalar * 0.5f);
+
+			if (1 < characterCount) buffer -= ((totalWidth / (characterCount - 1)) * 0.25f);
+
+			var currLength = 0f;
+
+			for (var i = 0; i < characterCount; i++)
+			{
+				var currLabel = labels[i];
+				currLabel.fontSize = currLabel.fontSize * fontScalar;
+
+				currLength += labelWidths[i] * 0.5f * fontScalar;
+
+				var progress = (currLength / totalWidth);
+
+				if (!isShrinking) progress = buffer + (progress * widthRatio);
+
+				Vector3 normal;
+				var position = Evaluate(progress, out normal);
+				currLabel.transform.position = position;
+				currLabel.transform.LookAt(position + Vector3.down, normal);
+
+				currLength += labelWidths[i] * 0.5f * fontScalar;
+			}
 		}
 
 		void OnDrawGizmos()

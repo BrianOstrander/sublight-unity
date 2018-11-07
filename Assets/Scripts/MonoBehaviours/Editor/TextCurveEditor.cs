@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using UnityEngine;
+using UnityEditor;
 
 namespace LunraGames.SubLight.Views
 {
@@ -6,30 +7,17 @@ namespace LunraGames.SubLight.Views
 	[CanEditMultipleObjects]
 	public class TextCurveEditor : Editor
 	{
-		SerializedProperty textProperty;
-
-		void OnEnable()
-		{
-			textProperty = serializedObject.FindProperty("text");
-		}
-
 		public override void OnInspectorGUI()
 		{
 			serializedObject.Update();
 
-			var lastText = textProperty.stringValue;
-			EditorGUILayout.PropertyField(textProperty);
-
-			serializedObject.ApplyModifiedProperties();
-			
-			if (lastText != textProperty.stringValue)
+			EditorGUI.BeginChangeCheck();
 			{
-				(target as TextCurve).UpdateText(true);
+				base.OnInspectorGUI();
 			}
+			var changed = EditorGUI.EndChangeCheck();
 
-			EditorUtility.SetDirty(target);
-
-			base.OnInspectorGUI();
+			if (changed) (target as TextCurve).UpdateText(true);
 		}
 	}
 }
