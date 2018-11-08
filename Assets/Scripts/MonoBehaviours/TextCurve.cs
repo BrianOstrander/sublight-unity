@@ -21,8 +21,6 @@ namespace LunraGames.SubLight.Views
 			public FontStyles Style;
 		}
 
-		const float NormalSampleDelta = 0.05f;
-
 		[SerializeField]
 		TextCurveBlock block;
 		[SerializeField]
@@ -53,53 +51,6 @@ namespace LunraGames.SubLight.Views
 				if (isStale && enabled && gameObject.activeInHierarchy) UpdateText();
 			}
 			get { return block.Text; }
-		}
-
-		Vector3 Delta { get { return End - Begin; } }
-		Vector3 Normal { get { return Delta.normalized; } }
-
-		Vector3 CurveUp
-		{
-			get
-			{
-				return Quaternion.AngleAxis(block.FlipCurve ? 90f : -90f, Vector3.up) * Normal;
-			}
-		}
-
-		Vector3 Begin { get { return block.FlipAnchors ? endAnchor : beginAnchor; } }
-		Vector3 End { get { return block.FlipAnchors ? beginAnchor : endAnchor; } }
-
-		Vector3 EvaluateLine(float progress)
-		{
-			return Begin + (Delta * progress);
-		}
-
-		Vector3 Evaluate(float progress)
-		{
-			return EvaluateLine(progress) + (CurveUp * ((block.Curve ?? AnimationCurveExtensions.Constant()).Evaluate(progress) * block.CurveMaximum));
-		}
-
-		Vector3 Evaluate(float progress, out Vector3 normal)
-		{
-			var beginSample = Evaluate(Mathf.Max(0f, progress - NormalSampleDelta));
-			var endSample = Evaluate(Mathf.Min(1f, progress + NormalSampleDelta));
-			normal = Quaternion.AngleAxis(flipNormals ? 90f : -90f, Vector3.up) * (endSample - beginSample).normalized;
-			return Evaluate(progress);
-		}
-
-		float EvaluateLength(int count)
-		{
-			count = Mathf.Max(samplingMinimum, count);
-			var totalLength = 0f;
-			var lastPoint = Evaluate(0f);
-			for (var i = 0f; i < count; i++)
-			{
-				var currPoint = Evaluate((i + 1f) / count);
-				totalLength += Vector3.Distance(lastPoint, currPoint);
-				lastPoint = currPoint;
-			}
-
-			return totalLength;
 		}
 
 		void OnEnable()
@@ -161,7 +112,7 @@ namespace LunraGames.SubLight.Views
 
 			if (1 < characterCount) totalWidth -= labelWidths.Last();
 
-			var maxWidth = EvaluateLength(characterCount);
+			var maxWidth = block.EvaluateLength(beginAnchor, endAnchor, samplingMinimum, characterCount);
 
 			var widthRatio = totalWidth / maxWidth;
 
@@ -195,7 +146,7 @@ namespace LunraGames.SubLight.Views
 				if (!isShrinking) progress = buffer + (progress * widthRatio);
 
 				Vector3 normal;
-				var position = Evaluate(progress, out normal);
+				var position = block.Evaluate(beginAnchor, endAnchor, progress, flipNormals, out normal);
 				currLabel.transform.position = position;
 				currLabel.transform.LookAt(position + Vector3.down, normal);
 
@@ -205,20 +156,23 @@ namespace LunraGames.SubLight.Views
 
 		void OnDrawGizmos()
 		{
+			var currBegin = block.Begin(beginAnchor, endAnchor);
+			var currEnd = block.End(beginAnchor, endAnchor);
+
 			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(Begin, 0.05f);
-			Gizmos.DrawLine(Begin, Begin + (CurveUp * 0.15f));
+			Gizmos.DrawWireSphere(currBegin, 0.05f);
+			Gizmos.DrawLine(currBegin, currBegin + (block.CurveUp(beginAnchor, endAnchor) * 0.15f));
 			Gizmos.color = Color.red;
-			Gizmos.DrawWireSphere(End, 0.05f);
+			Gizmos.DrawWireSphere(currEnd, 0.05f);
 
 			var currSampling = Mathf.Max(1, samplingMinimum);
-			var lastPoint = Evaluate(0f);
+			var lastPoint = block.Evaluate(beginAnchor, endAnchor, 0f);
 
 			for (var i = 0f; i < currSampling; i++)
 			{
 				var scalar = (i + 1f) / currSampling;
 				Vector3 normal;
-				var currPoint = Evaluate(scalar, out normal);
+				var currPoint = block.Evaluate(beginAnchor, endAnchor, scalar, flipNormals, out normal);
 				Gizmos.color = Color.yellow;
 				Gizmos.DrawLine(lastPoint, currPoint);
 				Gizmos.color = Color.yellow.NewA(0.5f);
