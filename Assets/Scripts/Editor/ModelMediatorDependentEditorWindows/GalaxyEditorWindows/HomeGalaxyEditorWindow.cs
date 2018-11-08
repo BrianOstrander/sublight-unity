@@ -73,7 +73,7 @@ namespace LunraGames.SubLight
 		Rect lastPreviewRect = Rect.zero;
 
 		LabelStates labelState = LabelStates.Idle;
-
+		GalaxyLabelModel lastSelectedLabel;
 		GalaxyLabelModel selectedLabel;
 
 		void OnHomeConstruct()
@@ -460,18 +460,12 @@ namespace LunraGames.SubLight
 			{
 				if (selectedLabel != null)
 				{
-					selectedLabel = null;
-					labelState = LabelStates.Idle;
+					SelectLabel(null);
 				}
 			}
 			else if (selectedLabel == null)
 			{
-				selectedLabel = model.GetLabel(homeLabelsSelectedLabelId.Value);
-				if (selectedLabel == null)
-				{
-					homeLabelsSelectedLabelId.Value = null;
-				}
-				labelState = LabelStates.Idle;
+				SelectLabel(model.GetLabel(homeLabelsSelectedLabelId.Value));
 			}
 
 			UniverseScales[] scales =
@@ -482,6 +476,14 @@ namespace LunraGames.SubLight
 
 			var scaleNames = scales.Select(s => s.ToString()).ToArray();
 			var selectedScale = scales[homeLabelsSelectedScale.Value];
+
+			if (selectedLabel != null)
+			{
+				if (selectedLabel.Scale.Value != selectedScale)
+				{
+					SelectLabel(null);
+				}
+			}
 
 			GUILayout.BeginHorizontal();
 			{
@@ -505,9 +507,7 @@ namespace LunraGames.SubLight
 									EditorGUILayoutExtensions.PushEnabled(!isSelectedLabel);
 									if (GUILayout.Button("Edit Label", GUILayout.Width(100f)))
 									{
-										selectedLabel = label;
-										homeLabelsSelectedLabelId.Value = selectedLabel.LabelId.Value;
-										labelState = LabelStates.Idle;
+										SelectLabel(label);
 									}
 									EditorGUILayoutExtensions.PopEnabled();
 
@@ -515,9 +515,7 @@ namespace LunraGames.SubLight
 									{
 										if (selectedLabel == label)
 										{
-											selectedLabel = null;
-											homeLabelsSelectedLabelId.Value = null;
-											labelState = LabelStates.Idle;
+											SelectLabel(null);
 										}
 										model.RemoveLabel(label);
 										selectedModified = true;
@@ -530,7 +528,7 @@ namespace LunraGames.SubLight
 									GUILayout.Label("Group Id");
 									EditorGUILayoutExtensions.PushBackgroundColor(EditorUtilityExtensions.ColorFromString(label.GroupId.Value));
 									var groupValue = label.GroupId.Value ?? "< No Group Id >";
-									if (20 < groupValue.Length) groupValue = groupValue.Substring(0, 16) + "...";
+									if (16 < groupValue.Length) groupValue = groupValue.Substring(0, 16) + "...";
 									//if (GUILayout.Button(groupValue))
 									if (GUILayout.Button(new GUIContent(groupValue, "Copy group id"), GUILayout.Width(124f)))
 									{
@@ -576,8 +574,11 @@ namespace LunraGames.SubLight
 							{
 								case LabelStates.SelectingBegin:
 								case LabelStates.SelectingEnd:
-									selectedLabel = null;
-									homeLabelsSelectedLabelId.Value = null;
+									SelectLabel(lastSelectedLabel);
+									break;
+								case LabelStates.UpdatingBegin:
+								case LabelStates.UpdatingEnd:
+									SelectLabel(selectedLabel);
 									break;
 							}
 							labelState = LabelStates.Idle;
@@ -638,8 +639,37 @@ namespace LunraGames.SubLight
 								labelCurve.FlipAnchors = EditorGUILayout.Toggle("Flip Anchors", labelCurve.FlipAnchors);
 								labelCurve.FlipCurve = EditorGUILayout.Toggle("Flip Curve", labelCurve.FlipCurve);
 
-								selectedLabel.BeginAnchor.Value = EditorGUILayoutUniversePosition.Field("Begin Anchor", selectedLabel.BeginAnchor.Value);
-								selectedLabel.EndAnchor.Value = EditorGUILayoutUniversePosition.Field("EndAnchor", selectedLabel.EndAnchor.Value);
+								GUILayout.BeginHorizontal(EditorStyles.helpBox);
+								{
+									GUILayout.BeginVertical();
+									{
+										selectedLabel.BeginAnchor.Value = EditorGUILayoutUniversePosition.Field("Begin Anchor", selectedLabel.BeginAnchor.Value);
+									}
+									GUILayout.EndVertical();
+									EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
+									if (GUILayout.Button("Update Begin", GUILayout.Width(100f), GUILayout.Height(51f)))
+									{
+										labelState = LabelStates.UpdatingBegin;
+									}
+									EditorGUILayoutExtensions.PopBackgroundColor();
+								}
+								GUILayout.EndHorizontal();
+
+								GUILayout.BeginHorizontal(EditorStyles.helpBox);
+								{
+									GUILayout.BeginVertical();
+									{
+										selectedLabel.EndAnchor.Value = EditorGUILayoutUniversePosition.Field("EndAnchor", selectedLabel.EndAnchor.Value);
+									}
+									GUILayout.EndVertical();
+									EditorGUILayoutExtensions.PushBackgroundColor(Color.magenta);
+									if (GUILayout.Button("Update End", GUILayout.Width(100f), GUILayout.Height(51f)))
+									{
+										labelState = LabelStates.UpdatingEnd;
+									}
+									EditorGUILayoutExtensions.PopBackgroundColor();
+								}
+								GUILayout.EndHorizontal();
 							}
 							EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 						}
@@ -674,6 +704,30 @@ namespace LunraGames.SubLight
 				out universeSize,
 				clickPosition => OnHomeSelectedLabelsClickPreview(model, clickPosition, selectedScale)
 			);
+
+			if (selectedLabel == null) return; // todo: show all labels...
+
+			var beginAnchorInWindow = UniverseToWindow(selectedLabel.BeginAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize);
+			var endAnchorInWindow = UniverseToWindow(selectedLabel.EndAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize);
+
+			EditorGUILayoutExtensions.PushColor(labelState == LabelStates.UpdatingBegin ? Color.cyan.NewS(0.25f) : Color.cyan);
+			{
+				GUI.Box(CenteredScreen(beginAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor Begin"), SubLightEditorConfig.Instance.LabelAnchorStyle);
+			}
+			EditorGUILayoutExtensions.PopColor();
+
+			switch(labelState)
+			{
+				case LabelStates.Idle:
+				case LabelStates.UpdatingBegin:
+				case LabelStates.UpdatingEnd:
+					EditorGUILayoutExtensions.PushColor(labelState == LabelStates.UpdatingEnd ? Color.magenta.NewS(0.25f) : Color.magenta);
+					{
+						GUI.Box(CenteredScreen(endAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor End"), SubLightEditorConfig.Instance.LabelAnchorStyle);
+					}
+					EditorGUILayoutExtensions.PopColor();
+					break;
+			}
 		}
 
 		void OnHomeSelectedLabelsClickPreview(GalaxyInfoModel model, UniversePosition clickPosition, UniverseScales scale)
@@ -681,6 +735,7 @@ namespace LunraGames.SubLight
 			switch(labelState)
 			{
 				case LabelStates.Idle:
+					lastSelectedLabel = selectedLabel;
 					selectedLabel = CreateNewLabel(scale);
 					homeLabelsSelectedLabelId.Value = selectedLabel.LabelId.Value;
 					selectedLabel.BeginAnchor.Value = clickPosition;
@@ -696,8 +751,7 @@ namespace LunraGames.SubLight
 						},
 						() =>
 						{
-							labelState = LabelStates.Idle;
-							selectedLabel = null;
+							SelectLabel(lastSelectedLabel);
 						}
 					);
 					break;
@@ -878,6 +932,7 @@ namespace LunraGames.SubLight
 					{
 						if (GUILayout.Button("Edit"))
 						{
+							SelectLabel(null);
 							LoadSelected(model);
 						}
 						if (GUILayout.Button("Select In Project"))
@@ -980,6 +1035,13 @@ namespace LunraGames.SubLight
 				target.Value = Mathf.Clamp(EditorGUILayout.IntSlider(new GUIContent("Preview Size"), target.Value, PreviewMinSize, PreviewMaxSize), PreviewMinSize, PreviewMaxSize);
 			}
 			GUILayout.EndHorizontal();
+		}
+
+		void SelectLabel(GalaxyLabelModel label, LabelStates state = LabelStates.Idle)
+		{
+			selectedLabel = label;
+			homeLabelsSelectedLabelId.Value = selectedLabel == null ? null : selectedLabel.LabelId.Value;
+			if (state != LabelStates.Unknown) labelState = state;
 		}
 		#endregion
 	}
