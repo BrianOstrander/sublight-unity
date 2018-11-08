@@ -728,6 +728,11 @@ namespace LunraGames.SubLight
 					EditorGUILayoutExtensions.PopColor();
 					break;
 			}
+
+			if (labelState != LabelStates.Idle) return;
+
+			GUILayout.Label("Todo: make TextCurve class have static methods for retrieving arbitrary evaluations from curve blocks");
+
 		}
 
 		void OnHomeSelectedLabelsClickPreview(GalaxyInfoModel model, UniversePosition clickPosition, UniverseScales scale)

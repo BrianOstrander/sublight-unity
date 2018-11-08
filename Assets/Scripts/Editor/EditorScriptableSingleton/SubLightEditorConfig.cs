@@ -13,5 +13,9 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		GUIStyle labelAnchorStyle;
 		public GUIStyle LabelAnchorStyle { get { return labelAnchorStyle; } }
+
+		[SerializeField]
+		GUIStyle labelCurvePointStyle;
+		public GUIStyle LabelCurvePointStyle { get { return labelCurvePointStyle; } }
 	}
 }
