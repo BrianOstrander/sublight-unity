@@ -16,7 +16,7 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct LabelFont
 		{
-			public GalaxyLabelTypes LabelType;
+			public GalaxyLabelStyles LabelStyle;
 			public TMP_FontAsset Font;
 			public FontStyles Style;
 		}
@@ -27,6 +27,10 @@ namespace LunraGames.SubLight.Views
 		TextCurveBlock block;
 		[SerializeField]
 		bool flipNormals;
+		[SerializeField]
+		Vector3 beginAnchor;
+		[SerializeField]
+		Vector3 endAnchor;
 
 		[SerializeField]
 		int samplingMinimum = 16;
@@ -62,8 +66,8 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		Vector3 Begin { get { return block.FlipAnchors ? block.EndAnchor : block.BeginAnchor; } }
-		Vector3 End { get { return block.FlipAnchors ? block.BeginAnchor : block.EndAnchor; } }
+		Vector3 Begin { get { return block.FlipAnchors ? endAnchor : beginAnchor; } }
+		Vector3 End { get { return block.FlipAnchors ? beginAnchor : endAnchor; } }
 
 		Vector3 EvaluateLine(float progress)
 		{
@@ -119,7 +123,7 @@ namespace LunraGames.SubLight.Views
 			var characterCount = Text.Length;
 			var labels = new List<TextMeshProUGUI>();
 			var colorableLabels = new List<TextMeshProUGUI>();
-			var fontBlock = fonts.FirstOrDefault(f => f.LabelType == block.LabelType);
+			var fontBlock = fonts.FirstOrDefault(f => f.LabelStyle == block.LabelStyle);
 
 			foreach (var currChar in Text)
 			{

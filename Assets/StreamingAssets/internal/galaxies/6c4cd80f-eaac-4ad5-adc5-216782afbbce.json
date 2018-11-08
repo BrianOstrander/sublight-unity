@@ -33,6 +33,50 @@
     "postWrapMode": "ClampForever"
   },
   "maximumSectorBodies": 2000,
+  "labels": [
+    {
+      "labelId": "02e6a22a-21c2-4f8c-be8f-b699a4376fd4",
+      "groupId": "d3789bf2-dd8f-4f8b-8d18-01108f00d341",
+      "name": "Orion Arm",
+      "curveInfo": {
+        "Text": "",
+        "LabelStyle": "Bold",
+        "FontSize": 16.0,
+        "Curve": {
+          "keys": [
+            {},
+            {
+              "time": 1.0
+            }
+          ],
+          "length": 2,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.0
+      },
+      "source": "Static",
+      "scale": "Galactic",
+      "beginAnchor": {
+        "Sector": {"x":1505.0,"z":624.0},
+        "Local": {"x":0.7675781,"z":0.15234375}
+      },
+      "endAnchor": {
+        "Sector": {"x":2434.0,"z":920.0},
+        "Local": {"x":0.194335938,"z":0.624755859}
+      },
+      "staticText": {
+        "key": "ca2e53b9-eae7-4ebb-b837-6d0c12ab4b00"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    }
+  ],
   "version": 7,
   "meta": "Milky Way",
   "metaKeyValues": {

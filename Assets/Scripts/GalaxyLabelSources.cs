@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public enum GalaxyLabelTypes
+	public enum GalaxyLabelSources
 	{
 		Unknown = 0,
-		Bold = 10,
-		BoldUppercase = 20
+		Static = 10,
+		GameKeyValue = 20
 	}
 }

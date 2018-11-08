@@ -9,11 +9,24 @@ namespace LunraGames.SubLight
 	[Serializable]
 	public struct TextCurveBlock
 	{
+		public static TextCurveBlock Default
+		{
+			get
+			{
+				return new TextCurveBlock
+				{
+					Text = String.Empty,
+					LabelStyle = GalaxyLabelStyles.Bold,
+					FontSize = 16f,
+					Curve = AnimationCurveExtensions.Constant(),
+					CurveMaximum = 1f
+				};
+			}
+		}
+
 		public string Text;
-		public GalaxyLabelTypes LabelType;
+		public GalaxyLabelStyles LabelStyle;
 		public float FontSize;
-		public Vector3 BeginAnchor;
-		public Vector3 EndAnchor;
 		public AnimationCurve Curve;
 		public float CurveMaximum;
 		public bool FlipAnchors;

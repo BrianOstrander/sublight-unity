@@ -1,6 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+
+using UnityEngine;
 
 using Newtonsoft.Json;
+
+using LunraGames;
 
 namespace LunraGames.SubLight.Models
 {
@@ -28,6 +33,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int minimumSectorBodies;
 		[JsonProperty] int maximumSectorBodies;
 		[JsonProperty] AnimationCurve sectorBodyChance;
+
+		[JsonProperty] GalaxyLabelModel[] labels = new GalaxyLabelModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> IsPlayable;
@@ -88,5 +95,58 @@ namespace LunraGames.SubLight.Models
 					break;
 			}
 		}
+
+		#region Utility
+		public void AddLabel(GalaxyLabelModel label)
+		{
+			if (label == null) throw new ArgumentNullException("label");
+			if (labels.Contains(label))
+			{
+				Debug.LogError("An identical label already exists");
+				return;
+			}
+			var identicalLabel = GetLabel(label.LabelId.Value);
+			if (identicalLabel != null)
+			{
+				Debug.LogError("A label with id \"" + label.LabelId.Value + "\" already exists");
+				return;
+			}
+			labels = labels.Append(label).ToArray();
+		}
+
+		public void RemoveLabel(GalaxyLabelModel label)
+		{
+			if (label == null) throw new ArgumentNullException("label");
+			if (!labels.Contains(label))
+			{
+				Debug.LogError("No label found to remove");
+				return;
+			}
+			labels = labels.ExceptOne(label).ToArray();
+		}
+
+		public void RemoveLabel(string labelId)
+		{
+			var toRemove = labels.Where(l => l.LabelId.Value == labelId);
+			if (toRemove.None())
+			{
+				Debug.LogError("No label with id \"" + labelId + "\" found to remove");
+				return;
+			}
+			labels = labels.Except(toRemove).ToArray();
+		}
+
+		public GalaxyLabelModel GetLabel(string labelId)
+		{
+			return labels.FirstOrDefault(l => l.LabelId.Value == labelId);
+		}
+
+		public GalaxyLabelModel[] GetLabels() { return labels.ToArray(); }
+
+		public GalaxyLabelModel[] GetLabels(UniverseScales scale)
+		{
+			return labels.Where(l => l.Scale == scale).ToArray();
+		}
+		#endregion
 	}
 }
