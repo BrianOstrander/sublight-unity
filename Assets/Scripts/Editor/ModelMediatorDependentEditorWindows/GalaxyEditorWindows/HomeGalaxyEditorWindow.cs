@@ -381,7 +381,12 @@ namespace LunraGames.SubLight
 
 			homeTargetsSelectedPreview.Value = GUILayout.Toolbar(Mathf.Min(homeTargetsSelectedPreview, names.Length - 1), names);
 
-			OnPreviewSizeSlider(homeGeneralPreviewSize);
+			GUILayout.BeginHorizontal();
+			{
+				OnPreviewSizeSlider(homeGeneralPreviewSize);
+				GUILayout.FlexibleSpace();
+			}
+			GUILayout.EndHorizontal();
 
 			var previewTexture = Texture2D.blackTexture;
 
@@ -550,45 +555,60 @@ namespace LunraGames.SubLight
 
 					OnPreviewSizeSlider(homeGeneralPreviewSize);
 
-					switch(labelState)
+					GUILayout.BeginHorizontal();
 					{
-						case LabelStates.Idle:
-							EditorGUILayout.HelpBox("Click on preview to begin defining a new label.", MessageType.Info);
-							break;
-						case LabelStates.SelectingBegin:
-							EditorGUILayout.HelpBox("Click on preview to select where to begin.", MessageType.Info);
-							break;
-						case LabelStates.SelectingEnd:
-							EditorGUILayout.HelpBox("Click on preview to select where to end.", MessageType.Info);
-							break;
-						case LabelStates.UpdatingBegin:
-							EditorGUILayout.HelpBox("Click on preview to select a new begin.", MessageType.Info);
-							break;
-						case LabelStates.UpdatingEnd:
-							EditorGUILayout.HelpBox("Click on preview to select a new end.", MessageType.Info);
-							break;
-					}
-
-					if (labelState != LabelStates.Idle)
-					{
-						EditorGUILayoutExtensions.PushColor(Color.red);
-						if (GUILayout.Button("Cancel"))
+						switch (labelState)
 						{
-							switch(labelState)
-							{
-								case LabelStates.SelectingBegin:
-								case LabelStates.SelectingEnd:
-									SelectLabel(lastSelectedLabel);
-									break;
-								case LabelStates.UpdatingBegin:
-								case LabelStates.UpdatingEnd:
-									SelectLabel(selectedLabel);
-									break;
-							}
-							labelState = LabelStates.Idle;
+							case LabelStates.Idle:
+								EditorGUILayout.HelpBox("Click on preview to begin defining a new label.", MessageType.Info);
+								break;
+							case LabelStates.SelectingBegin:
+								EditorGUILayout.HelpBox("Click on preview to select where to begin.", MessageType.Info);
+								break;
+							case LabelStates.SelectingEnd:
+								EditorGUILayout.HelpBox("Click on preview to select where to end.", MessageType.Info);
+								break;
+							case LabelStates.UpdatingBegin:
+								EditorGUILayout.HelpBox("Click on preview to select a new begin.", MessageType.Info);
+								break;
+							case LabelStates.UpdatingEnd:
+								EditorGUILayout.HelpBox("Click on preview to select a new end.", MessageType.Info);
+								break;
 						}
-						EditorGUILayoutExtensions.PopColor();
+
+						GUILayout.BeginVertical(GUILayout.Width(72f));
+						{
+							EditorGUILayoutExtensions.PushEnabled(labelState == LabelStates.Idle && selectedLabel != null);
+							if (GUILayout.Button("Deselect"))
+							{
+								SelectLabel(null);
+							}
+							EditorGUILayoutExtensions.PopEnabled();
+
+							EditorGUILayoutExtensions.PushEnabled(labelState != LabelStates.Idle);
+							EditorGUILayoutExtensions.PushColor(Color.red);
+							if (GUILayout.Button("Cancel"))
+							{
+								switch (labelState)
+								{
+									case LabelStates.SelectingBegin:
+									case LabelStates.SelectingEnd:
+										SelectLabel(lastSelectedLabel);
+										break;
+									case LabelStates.UpdatingBegin:
+									case LabelStates.UpdatingEnd:
+										SelectLabel(selectedLabel);
+										break;
+								}
+								labelState = LabelStates.Idle;
+							}
+							EditorGUILayoutExtensions.PopColor();
+							EditorGUILayoutExtensions.PopEnabled();
+
+						}
+						GUILayout.EndVertical();
 					}
+					GUILayout.EndHorizontal();
 				}
 				GUILayout.EndVertical();
 
@@ -713,7 +733,11 @@ namespace LunraGames.SubLight
 				clickPosition => OnHomeSelectedLabelsClickPreview(model, clickPosition, selectedScale)
 			);
 
-			if (selectedLabel == null) return; // todo: show all labels...
+			if (selectedLabel == null) 
+			{
+				OnHomeSelectedLabelsShowAll(model, universeSize, displayArea, homeGeneralPreviewSize);
+				return;
+			}
 
 			var beginAnchorInWindow = UniverseToWindow(selectedLabel.BeginAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize);
 			var endAnchorInWindow = UniverseToWindow(selectedLabel.EndAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize);
@@ -757,9 +781,28 @@ namespace LunraGames.SubLight
 				}
 				EditorGUILayoutExtensions.PopColor();
 			}
+		}
 
-			//GUILayout.Label("Todo: make TextCurve class have static methods for retrieving arbitrary evaluations from curve blocks");
+		void OnHomeSelectedLabelsShowAll(
+			GalaxyInfoModel model,
+			Vector2 universeSize,
+			Rect displayArea,
+			int previewSize
+		)
+		{
+			var labels = model.GetLabels(UniverseScales.Quadrant);
+			foreach (var label in labels)
+			{
+				var beginAnchorInWindow = UniverseToWindow(label.BeginAnchor.Value, displayArea, universeSize, previewSize);
+				var endAnchorInWindow = UniverseToWindow(label.EndAnchor.Value, displayArea, universeSize, previewSize);
 
+				EditorGUILayoutExtensions.PushColor(Color.cyan);
+				{
+					GUI.Box(CenteredScreen(beginAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor Begin"), SubLightEditorConfig.Instance.LabelAnchorStyle);
+					GUI.Box(CenteredScreen(endAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor End"), SubLightEditorConfig.Instance.LabelAnchorStyle);
+				}
+				EditorGUILayoutExtensions.PopColor();
+			}
 		}
 
 		void OnHomeSelectedLabelsClickPreview(GalaxyInfoModel model, UniversePosition clickPosition, UniverseScales scale)
@@ -1059,12 +1102,7 @@ namespace LunraGames.SubLight
 
 		void OnPreviewSizeSlider(DevPrefsInt target)
 		{
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.FlexibleSpace();
-				target.Value = Mathf.Clamp(EditorGUILayout.IntSlider(new GUIContent("Preview Size"), target.Value, PreviewMinSize, PreviewMaxSize), PreviewMinSize, PreviewMaxSize);
-			}
-			GUILayout.EndHorizontal();
+			target.Value = Mathf.Clamp(EditorGUILayout.IntSlider(new GUIContent("Preview Size"), target.Value, PreviewMinSize, PreviewMaxSize), PreviewMinSize, PreviewMaxSize);
 		}
 
 		void SelectLabel(GalaxyLabelModel label, LabelStates state = LabelStates.Idle)
