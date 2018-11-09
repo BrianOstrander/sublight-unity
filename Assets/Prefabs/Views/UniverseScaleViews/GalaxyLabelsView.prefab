@@ -282,7 +282,7 @@ MonoBehaviour:
   text: 
   block:
     LabelStyle: 10
-    FontSize: 16
+    FontSize: 48
     Curve:
       serializedVersion: 2
       m_Curve:

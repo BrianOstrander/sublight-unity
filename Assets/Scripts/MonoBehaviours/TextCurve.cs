@@ -201,7 +201,7 @@ namespace LunraGames.SubLight.Views
 			Gizmos.DrawWireSphere(currEnd, 0.05f);
 
 			var currSampling = Mathf.Max(1, samplingMinimum);
-			var lastPoint = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, 0f);
+			var lastPoint = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, 0f, flipNormals);
 
 			var normalLength = transform.lossyScale.magnitude * 5f;
 

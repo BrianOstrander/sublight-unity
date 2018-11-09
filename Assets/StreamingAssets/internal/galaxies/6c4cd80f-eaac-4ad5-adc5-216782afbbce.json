@@ -40,7 +40,7 @@
       "name": "Orion Arm",
       "curveInfo": {
         "LabelStyle": "Bold",
-        "FontSize": 16.0,
+        "FontSize": 28.0,
         "Curve": {
           "keys": [
             {
@@ -49,8 +49,8 @@
               "outWeight": 0.150790527
             },
             {
-              "time": 0.501868,
-              "value": -1.02257907,
+              "time": 0.505408049,
+              "value": -0.847560763,
               "inWeight": 0.333333343,
               "outWeight": 0.333333343
             },
@@ -70,12 +70,12 @@
       "source": "Static",
       "scale": "Galactic",
       "beginAnchor": {
-        "Sector": {"x":1039.0,"z":704.0},
-        "Local": {"x":0.385620117,"z":0.320556641}
+        "Sector": {"x":1078.0,"z":715.0},
+        "Local": {"x":0.17980957,"z":0.174804688}
       },
       "endAnchor": {
-        "Sector": {"x":2434.0,"z":1005.0},
-        "Local": {"x":0.350585938,"z":0.1953125}
+        "Sector": {"x":2237.0,"z":899.0},
+        "Local": {"x":0.6296387,"z":0.386230469}
       },
       "staticText": {
         "key": "ca2e53b9-eae7-4ebb-b837-6d0c12ab4b00"

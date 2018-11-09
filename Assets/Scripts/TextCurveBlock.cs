@@ -65,27 +65,29 @@ namespace LunraGames.SubLight
 			return Begin(beginAnchor, endAnchor) + (Delta(beginAnchor, endAnchor) * progress);
 		}
 
-		public Vector3 Evaluate(Vector3 beginAnchor, Vector3 endAnchor, float progress)
+		public Vector3 Evaluate(Vector3 beginAnchor, Vector3 endAnchor, float progress, bool flipNormals)
 		{
+			progress = flipNormals ? 1f - progress : progress;
 			return EvaluateLine(beginAnchor, endAnchor, progress) + (CurveUp(beginAnchor, endAnchor) * ((Curve ?? AnimationCurveExtensions.Constant()).Evaluate(progress) * NormalizedCurveMaximum(beginAnchor, endAnchor)));
 		}
 
 		public Vector3 Evaluate(Vector3 beginAnchor, Vector3 endAnchor, float progress, bool flipNormals, out Vector3 normal)
 		{
-			var beginSample = Evaluate(beginAnchor, endAnchor, Mathf.Max(0f, progress - NormalSampleDelta));
-			var endSample = Evaluate(beginAnchor, endAnchor, Mathf.Min(1f, progress + NormalSampleDelta));
-			normal = Quaternion.AngleAxis(flipNormals ? 90f : -90f, Vector3.up) * (endSample - beginSample).normalized;
-			return Evaluate(beginAnchor, endAnchor, progress);
+			var beginSample = Evaluate(beginAnchor, endAnchor, Mathf.Max(0f, progress - NormalSampleDelta), flipNormals);
+			var endSample = Evaluate(beginAnchor, endAnchor, Mathf.Min(1f, progress + NormalSampleDelta), flipNormals);
+			//normal = Quaternion.AngleAxis(flipNormals ? 90f : -90f, Vector3.up) * (endSample - beginSample).normalized;
+			normal = Quaternion.AngleAxis(-90f, Vector3.up) * (endSample - beginSample).normalized;
+			return Evaluate(beginAnchor, endAnchor, progress, flipNormals);
 		}
 
 		public float EvaluateLength(Vector3 beginAnchor, Vector3 endAnchor, int samplingMinimum, int count)
 		{
 			count = Mathf.Max(samplingMinimum, count);
 			var totalLength = 0f;
-			var lastPoint = Evaluate(beginAnchor, endAnchor, 0f);
+			var lastPoint = Evaluate(beginAnchor, endAnchor, 0f, false); // Shouldn't matter which way normals are facing...
 			for (var i = 0f; i < count; i++)
 			{
-				var currPoint = Evaluate(beginAnchor, endAnchor, (i + 1f) / count);
+				var currPoint = Evaluate(beginAnchor, endAnchor, (i + 1f) / count, false); // Shouldn't matter which way normals are facing...
 				totalLength += Vector3.Distance(lastPoint, currPoint);
 				lastPoint = currPoint;
 			}
