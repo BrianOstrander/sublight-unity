@@ -43,6 +43,8 @@ namespace LunraGames.SubLight.Views
 		float gridUnityRadius;
 
 		[SerializeField]
+		int renderQueue;
+		[SerializeField]
 		Material gridMaterial;
 		[SerializeField]
 		Material gridBackgroundMaterial;
@@ -108,6 +110,7 @@ namespace LunraGames.SubLight.Views
 
 				var activeMaterials = new List<Material>();
 
+				gridBackground.renderQueue = renderQueue;
 				activeMaterials.Add(gridBackground);
 
 				for (var i = 0; i < value.Length; i++)
@@ -117,6 +120,7 @@ namespace LunraGames.SubLight.Views
 					var block = value[i];
 					var grid = grids[i];
 
+					grid.renderQueue = renderQueue;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
 					grid.SetVector(ShaderConstants.HoloGridBasic.Offset, block.Offset);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, block.Alpha);

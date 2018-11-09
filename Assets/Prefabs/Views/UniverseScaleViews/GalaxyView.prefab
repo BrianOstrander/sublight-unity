@@ -411,7 +411,7 @@ MonoBehaviour:
   scaleArea: {fileID: 4847102657539270}
   positionArea: {fileID: 4847102657539270}
   ySeparation: 0.016
-  renderQueue: 3001
+  renderQueue: 3000
   layerColors:
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 0.39200002, g: 0.39200002, b: 0.39200002, a: 1}

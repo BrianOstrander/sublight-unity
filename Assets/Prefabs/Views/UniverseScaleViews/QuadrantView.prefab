@@ -1234,7 +1234,7 @@ MonoBehaviour:
   positionArea: {fileID: 4822061414267954}
   channelEnabled: 01010101
   ySeparation: 0.006
-  renderQueue: 3001
+  renderQueue: 3000
   layerColors:
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 0.39200002, g: 0.39200002, b: 0.39200002, a: 1}
