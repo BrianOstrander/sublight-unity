@@ -436,7 +436,7 @@ MonoBehaviour:
   galacticColorsBySliceLayer:
   - {r: 0.3921569, g: 0.3921569, b: 0.3921569, a: 1}
   quadrantColorsBySliceLayer:
-  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0.231, g: 0.231, b: 0.231, a: 1}
 --- !u!114 &114685554615493330
 MonoBehaviour:
   m_ObjectHideFlags: 1
