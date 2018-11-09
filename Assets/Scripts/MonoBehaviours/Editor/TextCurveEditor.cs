@@ -17,7 +17,7 @@ namespace LunraGames.SubLight.Views
 			}
 			var changed = EditorGUI.EndChangeCheck();
 
-			if (changed) (target as TextCurve).UpdateText(true);
+			if (GUILayout.Button("Force Text Update") || changed) (target as TextCurve).UpdateText(true);
 		}
 	}
 }

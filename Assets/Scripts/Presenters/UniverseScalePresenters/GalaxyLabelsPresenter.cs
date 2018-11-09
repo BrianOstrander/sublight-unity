@@ -44,8 +44,6 @@ namespace LunraGames.SubLight.Presenters
 				var endNormalized = UniversePosition.NormalizedSector(label.EndAnchor, ScaleInUniverse);
 				result.BeginAnchorNormalized = new Vector2(beginNormalized.x, beginNormalized.z);
 				result.EndAnchorNormalized = new Vector2(endNormalized.x, endNormalized.z);
-				Debug.Log("begin normal: " + result.BeginAnchorNormalized);
-				Debug.Log("end normal: " + result.EndAnchorNormalized);
 				result.CurveInfo = label.CurveInfo;
 				labels.Add(result);
 			}

@@ -70,12 +70,10 @@
       "source": "Static",
       "scale": "Galactic",
       "beginAnchor": {
-        "Sector": {"x":1078.0,"z":715.0},
-        "Local": {"x":0.17980957,"z":0.174804688}
+        "Sector": {"x":1078.0,"z":715.0}
       },
       "endAnchor": {
-        "Sector": {"x":2237.0,"z":899.0},
-        "Local": {"x":0.6296387,"z":0.386230469}
+        "Sector": {"x":2237.0,"z":899.0}
       },
       "staticText": {
         "key": "ca2e53b9-eae7-4ebb-b837-6d0c12ab4b00"

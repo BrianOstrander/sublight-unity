@@ -87,7 +87,6 @@ GameObject:
   - component: {fileID: 224574437454845948}
   - component: {fileID: 223975796827142774}
   - component: {fileID: 114042589150428972}
-  - component: {fileID: 114405424139461416}
   m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
@@ -118,6 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224003384328409178}
+  - component: {fileID: 225428132869060142}
   m_Layer: 12
   m_Name: LabelArea
   m_TagString: Untagged
@@ -151,7 +151,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224564413059992732}
   - component: {fileID: 114685554615493330}
-  - component: {fileID: 225726231705743094}
   m_Layer: 12
   m_Name: LabelCurvePrefab
   m_TagString: Untagged
@@ -311,8 +310,8 @@ MonoBehaviour:
     FlipAnchors: 0
     FlipCurve: 0
   flipNormals: 0
-  beginAnchorLocal: {x: -325, y: 0, z: 0}
-  endAnchorLocal: {x: 325, y: 0, z: 0}
+  beginAnchorNormalized: {x: 0, y: 0}
+  endAnchorNormalized: {x: 0, y: 0}
   samplingMinimum: 16
   fonts:
   - LabelStyle: 10
@@ -472,22 +471,6 @@ MonoBehaviour:
   positionArea: {fileID: 4353676012314708}
   labelPrefab: {fileID: 114685554615493330}
   labelArea: {fileID: 1443556346516206}
---- !u!114 &114405424139461416
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1215820698086798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &114549095393229932
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -772,12 +755,12 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &225726231705743094
+--- !u!225 &225428132869060142
 CanvasGroup:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1707307106082594}
+  m_GameObject: {fileID: 1443556346516206}
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 0

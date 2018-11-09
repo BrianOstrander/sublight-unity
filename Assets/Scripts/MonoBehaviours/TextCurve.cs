@@ -27,10 +27,11 @@ namespace LunraGames.SubLight.Views
 		TextCurveBlock block;
 		[SerializeField]
 		bool flipNormals;
+
 		[SerializeField]
-		Vector3 beginAnchorLocal;
+		Vector2 beginAnchorNormalized;
 		[SerializeField]
-		Vector3 endAnchorLocal;
+		Vector2 endAnchorNormalized;
 
 		[SerializeField]
 		int samplingMinimum = 16;
@@ -42,6 +43,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		GameObject labelArea;
 
+		Vector3 beginAnchorLocal;
+		Vector3 endAnchorLocal;
 		bool isStale;
 
 		public TextCurveBlock CurveInfo
@@ -67,30 +70,31 @@ namespace LunraGames.SubLight.Views
 
 		public void SetBeginEndAnchorNormalized(Vector2 begin, Vector2 end)
 		{
-			var rectTransform = GetComponent<RectTransform>();
-			Vector3 minWorldCorner;
-			Vector3 maxWorldCorner;
-			rectTransform.MinMaxWorldCorner(out minWorldCorner, out maxWorldCorner);
-			var delta = maxWorldCorner - minWorldCorner;
-
-			BeginAnchorWorld = minWorldCorner + new Vector3(delta.x * begin.x, 0f, delta.z * (1f - begin.y));
-			EndAnchorWorld = minWorldCorner + new Vector3(delta.x * end.x, 0f, delta.z * (1f - end.y));
+			beginAnchorNormalized = begin;
+			endAnchorNormalized = end;
+			isStale = true;
 		}
 
 		public string Text
 		{
 			set
 			{
-				isStale = value != text;
+				isStale = isStale || value != text;
 				text = value;
+				if (Application.isPlaying || !Application.isEditor) return;
 				if (isStale && enabled && gameObject.activeInHierarchy) UpdateText();
 			}
 			get { return text; }
 		}
 
-		void OnEnable()
+		//void OnEnable()
+		//{
+		//	UpdateText();
+		//}
+
+		void Update()
 		{
-			UpdateText();
+			if (isStale) UpdateText();
 		}
 
 		public void UpdateText(bool force = false)
@@ -100,6 +104,15 @@ namespace LunraGames.SubLight.Views
 				if (!isStale) return;
 			}
 			isStale = false;
+
+			var rectTransform = GetComponent<RectTransform>();
+			Vector3 minWorldCorner;
+			Vector3 maxWorldCorner;
+			rectTransform.MinMaxWorldCorner(out minWorldCorner, out maxWorldCorner);
+			var worldCornerDeltas = maxWorldCorner - minWorldCorner;
+
+			BeginAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * beginAnchorNormalized.x, 0f, worldCornerDeltas.z * (1f - beginAnchorNormalized.y));
+			EndAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * endAnchorNormalized.x, 0f, worldCornerDeltas.z * (1f - endAnchorNormalized.y));
 
 			labelArea.transform.ClearChildren(destroyImmediate: Application.isEditor && !Application.isPlaying);
 
