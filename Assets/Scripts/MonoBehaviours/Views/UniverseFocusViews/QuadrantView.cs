@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LunraGames.SubLight.Views
 {
@@ -13,9 +11,17 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		int renderQueue;
 		[SerializeField]
-		Color[] layerColors = new Color[0];
+		Color[] layerColors;
 		[SerializeField]
-		MeshRenderer[] layerMeshes = new MeshRenderer[0];
+		AnimationCurve sliceOpacity;
+		[SerializeField]
+		float sliceOpacityMinimum;
+		[SerializeField]
+		AnimationCurve subSliceSeparation;
+		[SerializeField]
+		float subSliceRange;
+		[SerializeField]
+		GalaxySliceLeaf[] slices;
 
 		public void SetGalaxy(
 			Texture2D previewTexture,
@@ -25,24 +31,65 @@ namespace LunraGames.SubLight.Views
 		)
 		{
 			var seperationIndex = 0;
-			for (var i = 0; i < layerMeshes.Length; i++)
+			var lastYSeparation = 0f;
+			var subYDelta = ySeparation * subSliceRange;
+			var opacityDelta = 1f - sliceOpacityMinimum;
+			for (var i = 0; i < slices.Length; i++)
 			{
+				var slice = slices[i];
 				var isEnabled = channelEnabled[i];
-				var mesh = layerMeshes[i];
-				mesh.gameObject.SetActive(isEnabled);
+
+				slice.gameObject.SetActive(isEnabled);
+				
 				if (!isEnabled) continue;
 
 				var color = layerColors.Length == 0 ? Color.black : layerColors[Mathf.Min(i, layerColors.Length)];
-				mesh.transform.localPosition = new Vector3(0f, ySeparation * seperationIndex, 0f);
-				mesh.material.renderQueue = renderQueue;
-				mesh.material.SetTexture(ShaderConstants.HoloGalaxy.LayerTexture, detailsTexture);
-				mesh.material.SetInt(ShaderConstants.HoloGalaxy.Channel, i);
-				mesh.material.SetColor(ShaderConstants.HoloGalaxy.ChannelColor, color);
-				mesh.material.SetVector(ShaderConstants.HoloGalaxy.WorldOrigin, worldOrigin);
-				mesh.material.SetFloat(ShaderConstants.HoloGalaxy.WorldRadius, worldRadius);
+				var nextYSeparation = ySeparation * seperationIndex;
+
+				slice.transform.localPosition = new Vector3(0f, nextYSeparation, 0f);
+
+				for (var s = 0; s < slice.Meshes.Length; s++)
+				{
+					var progress = slice.Meshes.Length == 1 ? 0f : s / (slice.Meshes.Length - 1f);
+					var sliceY = subSliceSeparation.Evaluate(progress) * subYDelta;
+					var sliceColor = color.NewA(sliceOpacityMinimum + (sliceOpacity.Evaluate(progress) * opacityDelta));
+
+					SetSlice(
+						slice.Meshes[s],
+						new Vector3(0f, sliceY, 0f),
+						renderQueue,
+						detailsTexture,
+						i,
+						sliceColor,
+						worldOrigin,
+						worldRadius
+					);
+				}
+
+				lastYSeparation = nextYSeparation;
 
 				seperationIndex++;
 			}
+		}
+
+		void SetSlice(
+			MeshRenderer mesh,
+			Vector3 localPosition,
+			int sliceRenderQueue,
+			Texture2D detailsTexture,
+			int channel,
+			Color channelColor,
+			Vector3 worldOrigin,
+			float worldRadius
+		)
+		{
+			mesh.transform.localPosition = localPosition;
+			mesh.material.renderQueue = sliceRenderQueue;
+			mesh.material.SetTexture(ShaderConstants.HoloGalaxy.LayerTexture, detailsTexture);
+			mesh.material.SetInt(ShaderConstants.HoloGalaxy.Channel, channel);
+			mesh.material.SetColor(ShaderConstants.HoloGalaxy.ChannelColor, channelColor);
+			mesh.material.SetVector(ShaderConstants.HoloGalaxy.WorldOrigin, worldOrigin);
+			mesh.material.SetFloat(ShaderConstants.HoloGalaxy.WorldRadius, worldRadius);
 		}
 
 		public override float Opacity
@@ -52,9 +99,9 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				base.Opacity = value;
-				for (var i = 0; i < layerMeshes.Length; i++)
+				foreach (var slice in slices)
 				{
-					layerMeshes[i].material.SetFloat(ShaderConstants.HoloGalaxy.Alpha, value);
+					foreach (var subSlice in slice.Meshes) subSlice.material.SetFloat(ShaderConstants.HoloGalaxy.Alpha, value);
 				}
 			}
 		}

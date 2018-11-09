@@ -208,7 +208,6 @@ namespace LunraGames.SubLight.Views
 			{
 				fontScalar = 1f / widthRatio;
 				totalWidth = maxWidth;
-				Debug.Log(widthRatio+" - "+fontScalar);
 			}
 
 			// center it within the length of the curve
