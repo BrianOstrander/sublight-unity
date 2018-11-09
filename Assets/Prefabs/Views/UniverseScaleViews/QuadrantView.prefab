@@ -1230,10 +1230,11 @@ MonoBehaviour:
     ShowDuration: 0
     CloseDuration: 0
   animations: []
+  scaleIgnores: 30
   scaleArea: {fileID: 4822061414267954}
   positionArea: {fileID: 4822061414267954}
   channelEnabled: 01010101
-  ySeparation: 0.006
+  ySeparation: 0.2
   renderQueue: 3000
   layerColors:
   - {r: 0, g: 0, b: 0, a: 1}

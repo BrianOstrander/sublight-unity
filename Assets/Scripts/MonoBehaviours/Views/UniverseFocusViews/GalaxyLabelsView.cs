@@ -82,10 +82,10 @@ namespace LunraGames.SubLight.Views
 					switch(curr.Scale)
 					{
 						case UniverseScales.Galactic:
-							label.Color = GetGalacticColor(curr.SliceLayer);
+							label.Color = GetGalacticColor(curr.SliceLayer).NewA(0f);
 							break;
 						case UniverseScales.Quadrant:
-							label.Color = GetQuadrantColor(curr.SliceLayer);
+							label.Color = GetQuadrantColor(curr.SliceLayer).NewA(0f);
 							break;
 						default:
 							Debug.LogError("Unrecognized scale " + curr.Scale);
@@ -112,6 +112,7 @@ namespace LunraGames.SubLight.Views
 
 			labelPrefab.gameObject.SetActive(false);
 			Labels = null;
+			Opacity = 0f;
 		}
 	}
 

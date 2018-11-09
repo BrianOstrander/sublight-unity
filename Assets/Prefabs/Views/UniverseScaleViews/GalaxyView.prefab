@@ -408,9 +408,10 @@ MonoBehaviour:
     ShowDuration: 0
     CloseDuration: 0
   animations: []
+  scaleIgnores: 30
   scaleArea: {fileID: 4847102657539270}
   positionArea: {fileID: 4847102657539270}
-  ySeparation: 0.016
+  ySeparation: 0.15
   renderQueue: 3000
   layerColors:
   - {r: 0, g: 0, b: 0, a: 1}
