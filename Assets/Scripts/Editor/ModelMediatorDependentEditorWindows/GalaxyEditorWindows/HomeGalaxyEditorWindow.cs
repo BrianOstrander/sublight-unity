@@ -16,6 +16,7 @@ namespace LunraGames.SubLight
 	{
 		const int PreviewMinSize = 128;
 		const int PreviewMaxSize = 1024;
+		const int LabelCurveMinimumSampling = 16;
 
 		enum HomeStates
 		{
@@ -639,6 +640,8 @@ namespace LunraGames.SubLight
 								labelCurve.FlipAnchors = EditorGUILayout.Toggle("Flip Anchors", labelCurve.FlipAnchors);
 								labelCurve.FlipCurve = EditorGUILayout.Toggle("Flip Curve", labelCurve.FlipCurve);
 
+								selectedLabel.CurveInfo.Value = labelCurve;
+
 								GUILayout.BeginHorizontal(EditorStyles.helpBox);
 								{
 									GUILayout.BeginVertical();
@@ -731,7 +734,26 @@ namespace LunraGames.SubLight
 
 			if (labelState != LabelStates.Idle) return;
 
-			GUILayout.Label("Todo: make TextCurve class have static methods for retrieving arbitrary evaluations from curve blocks");
+			var previewCurveInfo = selectedLabel.CurveInfo.Value; // We modify this to make changes for rendering to the screen...
+			previewCurveInfo.FlipCurve = !previewCurveInfo.FlipCurve;
+
+			var currBegin = new Vector3(beginAnchorInWindow.x, 0f, beginAnchorInWindow.y);
+			var currEnd = new Vector3(endAnchorInWindow.x, 0f, endAnchorInWindow.y);
+
+			for (var i = 0; i < LabelCurveMinimumSampling; i++)
+			{
+				Vector3 curveNormal;
+				var curvePos = previewCurveInfo.Evaluate(currBegin, currEnd, i / (LabelCurveMinimumSampling - 1f), false, out curveNormal);
+				var curvePosInWindow = new Vector2(curvePos.x, curvePos.z);
+
+				EditorGUILayoutExtensions.PushColor(Color.yellow);
+				{
+					GUI.Box(CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.LabelCurvePointStyle);
+				}
+				EditorGUILayoutExtensions.PopColor();
+			}
+
+			//GUILayout.Label("Todo: make TextCurve class have static methods for retrieving arbitrary evaluations from curve blocks");
 
 		}
 

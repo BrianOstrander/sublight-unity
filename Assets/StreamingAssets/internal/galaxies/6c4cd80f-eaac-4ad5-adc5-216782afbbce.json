@@ -39,31 +39,43 @@
       "groupId": "d3789bf2-dd8f-4f8b-8d18-01108f00d341",
       "name": "Orion Arm",
       "curveInfo": {
-        "Text": "",
         "LabelStyle": "Bold",
         "FontSize": 16.0,
         "Curve": {
           "keys": [
-            {},
             {
-              "time": 1.0
+              "inTangent": -3.42211318,
+              "outTangent": -3.42211318,
+              "outWeight": 0.150790527
+            },
+            {
+              "time": 0.501868,
+              "value": -1.02257907,
+              "inWeight": 0.333333343,
+              "outWeight": 0.333333343
+            },
+            {
+              "time": 1.0,
+              "inTangent": 4.47707129,
+              "outTangent": 4.47707129,
+              "inWeight": 0.140520677
             }
           ],
-          "length": 2,
+          "length": 3,
           "preWrapMode": "ClampForever",
           "postWrapMode": "ClampForever"
         },
-        "CurveMaximum": 1.0
+        "CurveMaximum": 0.1
       },
       "source": "Static",
       "scale": "Galactic",
       "beginAnchor": {
-        "Sector": {"x":1505.0,"z":624.0},
-        "Local": {"x":0.7675781,"z":0.15234375}
+        "Sector": {"x":1039.0,"z":704.0},
+        "Local": {"x":0.385620117,"z":0.320556641}
       },
       "endAnchor": {
-        "Sector": {"x":2434.0,"z":920.0},
-        "Local": {"x":0.194335938,"z":0.624755859}
+        "Sector": {"x":2434.0,"z":1005.0},
+        "Local": {"x":0.350585938,"z":0.1953125}
       },
       "staticText": {
         "key": "ca2e53b9-eae7-4ebb-b837-6d0c12ab4b00"

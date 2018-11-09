@@ -17,7 +17,6 @@ namespace LunraGames.SubLight
 			{
 				return new TextCurveBlock
 				{
-					Text = String.Empty,
 					LabelStyle = GalaxyLabelStyles.Bold,
 					FontSize = 16f,
 					Curve = AnimationCurveExtensions.Constant(),
@@ -26,7 +25,6 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		public string Text;
 		public GalaxyLabelStyles LabelStyle;
 		public float FontSize;
 		public AnimationCurve Curve;
@@ -40,6 +38,16 @@ namespace LunraGames.SubLight
 		public Vector3 Delta(Vector3 beginAnchor, Vector3 endAnchor)
 		{
 			return End(beginAnchor, endAnchor) - Begin(beginAnchor, endAnchor);
+		}
+
+		public float Distance(Vector3 beginAnchor, Vector3 endAnchor)
+		{
+			return Vector3.Distance(End(beginAnchor, endAnchor), Begin(beginAnchor, endAnchor));
+		}
+
+		public float NormalizedCurveMaximum(Vector3 beginAnchor, Vector3 endAnchor)
+		{
+			return Distance(beginAnchor, endAnchor) * CurveMaximum;
 		}
 
 		public Vector3 Normal(Vector3 beginAnchor, Vector3 endAnchor)
@@ -59,7 +67,7 @@ namespace LunraGames.SubLight
 
 		public Vector3 Evaluate(Vector3 beginAnchor, Vector3 endAnchor, float progress)
 		{
-			return EvaluateLine(beginAnchor, endAnchor, progress) + (CurveUp(beginAnchor, endAnchor) * ((Curve ?? AnimationCurveExtensions.Constant()).Evaluate(progress) * CurveMaximum));
+			return EvaluateLine(beginAnchor, endAnchor, progress) + (CurveUp(beginAnchor, endAnchor) * ((Curve ?? AnimationCurveExtensions.Constant()).Evaluate(progress) * NormalizedCurveMaximum(beginAnchor, endAnchor)));
 		}
 
 		public Vector3 Evaluate(Vector3 beginAnchor, Vector3 endAnchor, float progress, bool flipNormals, out Vector3 normal)

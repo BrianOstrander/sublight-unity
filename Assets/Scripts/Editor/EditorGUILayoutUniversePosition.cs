@@ -13,27 +13,27 @@ namespace LunraGames.SubLight
 
 		public static UniversePosition Field(GUIContent content, UniversePosition position)
 		{
-			var sector = position.Sector;
-			var system = position.Local;
+			var sectorPos = position.Sector;
+			var localPos = position.Local;
 
 			EditorGUILayout.LabelField(content);
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Space(16f);
 				GUILayout.Label("Sector", GUILayout.Width(48f));
-				sector = EditorGUILayout.Vector3Field(GUIContent.none, sector);
+				sectorPos = EditorGUILayout.Vector3Field(GUIContent.none, sectorPos);
 			}
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Space(16f);
-				GUILayout.Label("System", GUILayout.Width(48f));
-				system = EditorGUILayout.Vector3Field(GUIContent.none, system);
+				GUILayout.Label("Local", GUILayout.Width(48f));
+				localPos = EditorGUILayout.Vector3Field(GUIContent.none, localPos);
 			}
 			GUILayout.EndHorizontal();
 
-			return new UniversePosition(sector, system);
+			return new UniversePosition(sectorPos, localPos);
 		}
 
 		public static UniversePosition FieldSector(string name, UniversePosition position)
@@ -43,21 +43,21 @@ namespace LunraGames.SubLight
 
 		public static UniversePosition FieldSector(GUIContent content, UniversePosition position)
 		{
-			var sector = position.Sector;
-			var system = position.Local;
+			var sectorPos = position.Sector;
+			var localPos = position.Local;
 
 			EditorGUILayout.LabelField(content);
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Space(16f);
 				GUILayout.Label("Sector", GUILayout.Width(48f));
-				sector = EditorGUILayout.Vector3Field(GUIContent.none, sector);
+				sectorPos = EditorGUILayout.Vector3Field(GUIContent.none, sectorPos);
 			}
 			GUILayout.EndHorizontal();
 
-			sector = new Vector3(Mathf.Round(sector.x), Mathf.Round(sector.y), Mathf.Round(sector.z));
+			sectorPos = new Vector3(Mathf.Round(sectorPos.x), Mathf.Round(sectorPos.y), Mathf.Round(sectorPos.z));
 
-			return new UniversePosition(sector, system);
+			return new UniversePosition(sectorPos, localPos);
 		}
 	}
 }

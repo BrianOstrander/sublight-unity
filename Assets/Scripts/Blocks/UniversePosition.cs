@@ -31,6 +31,16 @@ namespace LunraGames.SubLight
 			return begin + (delta * progress);
 		}
 
+		public static Vector3 NormalizedSector(
+			UniversePosition delta,
+			UniversePosition area
+		)
+		{
+			var sectorDelta = delta.Sector;
+			var sectorArea = area.Sector;
+			return new Vector3(sectorDelta.x / sectorArea.x, sectorDelta.y / sectorArea.y, sectorDelta.z / sectorArea.z);
+		}
+
 		/// <summary>
 		/// Calculates the distance in universe units between two points.
 		/// </summary>

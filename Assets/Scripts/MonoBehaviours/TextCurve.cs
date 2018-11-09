@@ -22,13 +22,15 @@ namespace LunraGames.SubLight.Views
 		}
 
 		[SerializeField]
+		string text;
+		[SerializeField]
 		TextCurveBlock block;
 		[SerializeField]
 		bool flipNormals;
 		[SerializeField]
-		Vector3 beginAnchor;
+		Vector3 beginAnchorLocal;
 		[SerializeField]
-		Vector3 endAnchor;
+		Vector3 endAnchorLocal;
 
 		[SerializeField]
 		int samplingMinimum = 16;
@@ -42,15 +44,48 @@ namespace LunraGames.SubLight.Views
 
 		bool isStale;
 
+		public TextCurveBlock CurveInfo
+		{
+			set
+			{
+				isStale = true;
+				block = value;
+			}
+		}
+
+		Vector3 BeginAnchorWorld
+		{
+			get { return transform.TransformPoint(beginAnchorLocal); }
+			set { beginAnchorLocal = transform.InverseTransformPoint(value); isStale = true; }
+		}
+
+		Vector3 EndAnchorWorld
+		{
+			get { return transform.TransformPoint(endAnchorLocal); }
+			set { endAnchorLocal = transform.InverseTransformPoint(value); isStale = true; }
+		}
+
+		public void SetBeginEndAnchorNormalized(Vector2 begin, Vector2 end)
+		{
+			var rectTransform = GetComponent<RectTransform>();
+			Vector3 minWorldCorner;
+			Vector3 maxWorldCorner;
+			rectTransform.MinMaxWorldCorner(out minWorldCorner, out maxWorldCorner);
+			var delta = maxWorldCorner - minWorldCorner;
+
+			BeginAnchorWorld = minWorldCorner + new Vector3(delta.x * begin.x, 0f, delta.z * (1f - begin.y));
+			EndAnchorWorld = minWorldCorner + new Vector3(delta.x * end.x, 0f, delta.z * (1f - end.y));
+		}
+
 		public string Text
 		{
 			set
 			{
-				isStale = value != block.Text;
-				block.Text = value;
+				isStale = value != text;
+				text = value;
 				if (isStale && enabled && gameObject.activeInHierarchy) UpdateText();
 			}
-			get { return block.Text; }
+			get { return text; }
 		}
 
 		void OnEnable()
@@ -112,7 +147,7 @@ namespace LunraGames.SubLight.Views
 
 			if (1 < characterCount) totalWidth -= labelWidths.Last();
 
-			var maxWidth = block.EvaluateLength(beginAnchor, endAnchor, samplingMinimum, characterCount);
+			var maxWidth = block.EvaluateLength(BeginAnchorWorld, EndAnchorWorld, samplingMinimum, characterCount);
 
 			var widthRatio = totalWidth / maxWidth;
 
@@ -146,7 +181,7 @@ namespace LunraGames.SubLight.Views
 				if (!isShrinking) progress = buffer + (progress * widthRatio);
 
 				Vector3 normal;
-				var position = block.Evaluate(beginAnchor, endAnchor, progress, flipNormals, out normal);
+				var position = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, progress, flipNormals, out normal);
 				currLabel.transform.position = position;
 				currLabel.transform.LookAt(position + Vector3.down, normal);
 
@@ -156,27 +191,29 @@ namespace LunraGames.SubLight.Views
 
 		void OnDrawGizmos()
 		{
-			var currBegin = block.Begin(beginAnchor, endAnchor);
-			var currEnd = block.End(beginAnchor, endAnchor);
+			var currBegin = block.Begin(BeginAnchorWorld, EndAnchorWorld);
+			var currEnd = block.End(BeginAnchorWorld, EndAnchorWorld);
 
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(currBegin, 0.05f);
-			Gizmos.DrawLine(currBegin, currBegin + (block.CurveUp(beginAnchor, endAnchor) * 0.15f));
+			Gizmos.DrawLine(currBegin, currBegin + (block.CurveUp(BeginAnchorWorld, EndAnchorWorld) * 0.15f));
 			Gizmos.color = Color.red;
 			Gizmos.DrawWireSphere(currEnd, 0.05f);
 
 			var currSampling = Mathf.Max(1, samplingMinimum);
-			var lastPoint = block.Evaluate(beginAnchor, endAnchor, 0f);
+			var lastPoint = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, 0f);
+
+			var normalLength = transform.lossyScale.magnitude * 5f;
 
 			for (var i = 0f; i < currSampling; i++)
 			{
 				var scalar = (i + 1f) / currSampling;
 				Vector3 normal;
-				var currPoint = block.Evaluate(beginAnchor, endAnchor, scalar, flipNormals, out normal);
+				var currPoint = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, scalar, flipNormals, out normal);
 				Gizmos.color = Color.yellow;
 				Gizmos.DrawLine(lastPoint, currPoint);
 				Gizmos.color = Color.yellow.NewA(0.5f);
-				Gizmos.DrawLine(currPoint, currPoint + (normal * 0.1f));
+				Gizmos.DrawLine(currPoint, currPoint + (normal * normalLength));
 				lastPoint = currPoint;
 			}
 		}
