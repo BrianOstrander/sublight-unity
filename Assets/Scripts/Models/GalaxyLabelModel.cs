@@ -13,6 +13,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] UniverseScales scale;
 		[JsonProperty] UniversePosition beginAnchor;
 		[JsonProperty] UniversePosition endAnchor;
+		[JsonProperty] int sliceLayer;
 
 		[JsonProperty] LanguageStringModel staticText = LanguageStringModel.Empty;
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
@@ -35,6 +36,8 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<UniversePosition> BeginAnchor;
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> EndAnchor;
+		[JsonIgnore]
+		public readonly ListenerProperty<int> SliceLayer;
 
 		[JsonIgnore]
 		public LanguageStringModel StaticText { get { return staticText; } }
@@ -52,6 +55,7 @@ namespace LunraGames.SubLight.Models
 			Scale = new ListenerProperty<UniverseScales>(value => scale = value, () => scale);
 			BeginAnchor = new ListenerProperty<UniversePosition>(value => beginAnchor = value, () => beginAnchor);
 			EndAnchor = new ListenerProperty<UniversePosition>(value => endAnchor = value, () => endAnchor);
+			SliceLayer = new ListenerProperty<int>(value => sliceLayer = value, () => sliceLayer);
 		}
 	}
 }

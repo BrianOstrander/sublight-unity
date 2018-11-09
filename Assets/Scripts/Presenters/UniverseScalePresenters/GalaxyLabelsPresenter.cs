@@ -45,6 +45,8 @@ namespace LunraGames.SubLight.Presenters
 				result.BeginAnchorNormalized = new Vector2(beginNormalized.x, beginNormalized.z);
 				result.EndAnchorNormalized = new Vector2(endNormalized.x, endNormalized.z);
 				result.CurveInfo = label.CurveInfo;
+				result.SliceLayer = label.SliceLayer;
+				result.Scale = label.Scale;
 				labels.Add(result);
 			}
 			View.Labels = labels.ToArray();

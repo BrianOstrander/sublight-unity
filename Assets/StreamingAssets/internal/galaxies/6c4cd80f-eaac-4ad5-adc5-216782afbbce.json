@@ -39,8 +39,8 @@
       "groupId": "d3789bf2-dd8f-4f8b-8d18-01108f00d341",
       "name": "Orion Arm",
       "curveInfo": {
-        "LabelStyle": "Bold",
-        "FontSize": 28.0,
+        "LabelStyle": "BoldUppercase",
+        "FontSize": 24.0,
         "Curve": {
           "keys": [
             {
@@ -70,7 +70,8 @@
       "source": "Static",
       "scale": "Galactic",
       "beginAnchor": {
-        "Sector": {"x":1078.0,"z":715.0}
+        "Sector": {"x":1098.0,"z":788.0},
+        "Local": {"x":0.9268799,"z":0.119140625}
       },
       "endAnchor": {
         "Sector": {"x":2237.0,"z":899.0}

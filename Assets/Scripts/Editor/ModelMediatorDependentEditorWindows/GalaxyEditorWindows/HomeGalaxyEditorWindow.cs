@@ -642,6 +642,8 @@ namespace LunraGames.SubLight
 
 								selectedLabel.CurveInfo.Value = labelCurve;
 
+								selectedLabel.SliceLayer.Value = Mathf.Max(0, EditorGUILayout.IntField("Slice Layer", selectedLabel.SliceLayer.Value));
+
 								GUILayout.BeginHorizontal(EditorStyles.helpBox);
 								{
 									GUILayout.BeginVertical();

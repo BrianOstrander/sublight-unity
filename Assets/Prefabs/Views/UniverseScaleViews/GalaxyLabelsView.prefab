@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 224148379402959964}
   - component: {fileID: 223260050011019294}
   - component: {fileID: 114186505792103672}
+  - component: {fileID: 225358659454486526}
   m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
@@ -201,6 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: 
+  color: {r: 1, g: 1, b: 1, a: 1}
   block:
     LabelStyle: 10
     FontSize: 48
@@ -342,7 +344,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0.5, y: 0, z: 0.5, w: 0}
   m_textInfo:
     textComponent: {fileID: 114172232899245772}
     characterCount: 11
@@ -425,8 +427,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   scaleArea: {fileID: 224774074883311728}
   positionArea: {fileID: 224774074883311728}
+  group: {fileID: 225358659454486526}
   labelPrefab: {fileID: 114685554615493330}
   labelArea: {fileID: 1443556346516206}
+  galacticColorsBySliceLayer:
+  - {r: 0.3921569, g: 0.3921569, b: 0.3921569, a: 1}
+  quadrantColorsBySliceLayer: []
 --- !u!114 &114685554615493330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -734,6 +740,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 650, y: 650}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &225358659454486526
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1478209762835440}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!225 &225428132869060142
 CanvasGroup:
   m_ObjectHideFlags: 1

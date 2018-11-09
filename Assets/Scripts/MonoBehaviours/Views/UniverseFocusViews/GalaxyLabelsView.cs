@@ -8,6 +8,8 @@ namespace LunraGames.SubLight.Views
 	{
 		public string Text;
 		public string GroupId;
+		public UniverseScales Scale;
+		public int SliceLayer;
 		public Vector2 BeginAnchorNormalized;
 		public Vector2 EndAnchorNormalized;
 		public TextCurveBlock CurveInfo;
@@ -22,9 +24,28 @@ namespace LunraGames.SubLight.Views
 		}
 
 		[SerializeField]
+		CanvasGroup group;
+		[SerializeField]
 		GalaxyLabelLeaf labelPrefab;
 		[SerializeField]
 		GameObject labelArea;
+
+		[SerializeField]
+		Color[] galacticColorsBySliceLayer = new Color[0];
+		[SerializeField]
+		Color[] quadrantColorsBySliceLayer = new Color[0];
+
+		Color GetGalacticColor(int sliceLayer)
+		{
+			if (galacticColorsBySliceLayer.Length == 0) return Color.white;
+			return galacticColorsBySliceLayer[Mathf.Min(sliceLayer, galacticColorsBySliceLayer.Length - 1)];
+		}
+
+		Color GetQuadrantColor(int sliceLayer)
+		{
+			if (quadrantColorsBySliceLayer.Length == 0) return Color.white;
+			return quadrantColorsBySliceLayer[Mathf.Min(sliceLayer, quadrantColorsBySliceLayer.Length - 1)];
+		}
 
 		LabelBlock[] labelBlocks = new LabelBlock[0];
 
@@ -51,7 +72,31 @@ namespace LunraGames.SubLight.Views
 					label.SetBeginEndAnchorNormalized(curr.BeginAnchorNormalized, curr.EndAnchorNormalized);
 					label.CurveInfo = curr.CurveInfo;
 					label.Text = curr.Text;
+
+					switch(curr.Scale)
+					{
+						case UniverseScales.Galactic:
+							label.Color = GetGalacticColor(curr.SliceLayer);
+							break;
+						case UniverseScales.Quadrant:
+							label.Color = GetQuadrantColor(curr.SliceLayer);
+							break;
+						default:
+							Debug.LogError("Unrecognized scale " + curr.Scale);
+							break;
+					}
 				}
+			}
+		}
+
+		public override float Opacity
+		{
+			get { return base.Opacity; }
+
+			set
+			{
+				base.Opacity = value;
+				group.alpha = value;
 			}
 		}
 

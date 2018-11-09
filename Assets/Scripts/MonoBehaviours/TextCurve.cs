@@ -24,6 +24,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		string text;
 		[SerializeField]
+		Color color = Color.white;
+		[SerializeField]
 		TextCurveBlock block;
 		[SerializeField]
 		bool flipNormals;
@@ -46,6 +48,9 @@ namespace LunraGames.SubLight.Views
 		Vector3 beginAnchorLocal;
 		Vector3 endAnchorLocal;
 		bool isStale;
+
+		float lastLossyScale;
+		int staleDelay;
 
 		public TextCurveBlock CurveInfo
 		{
@@ -75,6 +80,16 @@ namespace LunraGames.SubLight.Views
 			isStale = true;
 		}
 
+		public Color Color
+		{
+			set
+			{
+				isStale = true;
+				color = value;
+			}
+			get { return color; }
+		}
+
 		public string Text
 		{
 			set
@@ -87,9 +102,24 @@ namespace LunraGames.SubLight.Views
 			get { return text; }
 		}
 
-		void Update()
+		void LateUpdate()
 		{
-			if (isStale) UpdateText();
+			if (!Mathf.Approximately(lastLossyScale, transform.lossyScale.sqrMagnitude))
+			{
+				staleDelay = 1;
+				isStale = true;
+				lastLossyScale = transform.lossyScale.sqrMagnitude;
+			}
+
+			if (isStale)
+			{
+				if (0 < staleDelay)
+				{
+					staleDelay--;
+					return;
+				}
+				UpdateText();
+			}
 		}
 
 		public void UpdateText(bool force = false)
@@ -131,6 +161,8 @@ namespace LunraGames.SubLight.Views
 				labels.Add(currLabel);
 
 				currLabel.name = labelPrefab.name + " - " + currChar;
+				currLabel.color = Color;
+
 				if (char.IsWhiteSpace(currChar))
 				{
 					currLabel.GetComponent<GraphicRadialLimiter>().enabled = false;
