@@ -24,6 +24,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		string text;
 		[SerializeField]
+		float yOffset;
+		[SerializeField]
 		Color color = Color.white;
 		[SerializeField]
 		TextCurveBlock block;
@@ -71,6 +73,12 @@ namespace LunraGames.SubLight.Views
 		{
 			get { return transform.TransformPoint(endAnchorLocal); }
 			set { endAnchorLocal = transform.InverseTransformPoint(value); }
+		}
+
+		public float YOffset
+		{
+			get { return yOffset; }
+			set { yOffset = value; isStale = true; }
 		}
 
 		public void SetBeginEndAnchorNormalized(Vector2 begin, Vector2 end)
@@ -137,8 +145,8 @@ namespace LunraGames.SubLight.Views
 			rectTransform.MinMaxWorldCorner(out minWorldCorner, out maxWorldCorner);
 			var worldCornerDeltas = maxWorldCorner - minWorldCorner;
 
-			BeginAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * beginAnchorNormalized.x, 0f, worldCornerDeltas.z * (1f - beginAnchorNormalized.y));
-			EndAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * endAnchorNormalized.x, 0f, worldCornerDeltas.z * (1f - endAnchorNormalized.y));
+			BeginAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * beginAnchorNormalized.x, YOffset, worldCornerDeltas.z * (1f - beginAnchorNormalized.y));
+			EndAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * endAnchorNormalized.x, YOffset, worldCornerDeltas.z * (1f - endAnchorNormalized.y));
 
 			labelArea.transform.ClearChildren(destroyImmediate: Application.isEditor && !Application.isPlaying);
 

@@ -15,7 +15,7 @@ namespace LunraGames.SubLight
 	public partial class GalaxyEditorWindow
 	{
 		const int PreviewMinSize = 128;
-		const int PreviewMaxSize = 1024;
+		const int PreviewMaxSize = 2048;
 		const int LabelCurveMinimumSampling = 16;
 
 		enum HomeStates
@@ -381,6 +381,8 @@ namespace LunraGames.SubLight
 
 			homeTargetsSelectedPreview.Value = GUILayout.Toolbar(Mathf.Min(homeTargetsSelectedPreview, names.Length - 1), names);
 
+			OnPreviewSizeSlider(homeGeneralPreviewSize);
+
 			var previewTexture = Texture2D.blackTexture;
 
 			switch (homeTargetsSelectedPreview.Value)
@@ -546,6 +548,7 @@ namespace LunraGames.SubLight
 					}
 					GUILayout.EndScrollView();
 
+					OnPreviewSizeSlider(homeGeneralPreviewSize);
 
 					switch(labelState)
 					{
@@ -1051,8 +1054,6 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			OnPreviewSizeSlider(previewSize);
-
 			return lastPreviewRect;
 		}
 
@@ -1071,6 +1072,7 @@ namespace LunraGames.SubLight
 			selectedLabel = label;
 			homeLabelsSelectedLabelId.Value = selectedLabel == null ? null : selectedLabel.LabelId.Value;
 			if (state != LabelStates.Unknown) labelState = state;
+			GUIUtility.keyboardControl = 0;
 		}
 		#endregion
 	}

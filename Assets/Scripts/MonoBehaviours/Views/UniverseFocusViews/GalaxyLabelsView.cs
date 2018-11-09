@@ -13,6 +13,7 @@ namespace LunraGames.SubLight.Views
 		public Vector2 BeginAnchorNormalized;
 		public Vector2 EndAnchorNormalized;
 		public TextCurveBlock CurveInfo;
+		public float SliceOffset;
 	}
 
 	public class GalaxyLabelsView : UniverseScaleView, IGalaxyLabelsView
@@ -23,6 +24,10 @@ namespace LunraGames.SubLight.Views
 			public GalaxyLabelLeaf Instance;
 		}
 
+		[SerializeField]
+		float yMinimum;
+		[SerializeField]
+		float ySeparation;
 		[SerializeField]
 		CanvasGroup group;
 		[SerializeField]
@@ -71,6 +76,7 @@ namespace LunraGames.SubLight.Views
 					var label = result.Instance.Label;
 					label.SetBeginEndAnchorNormalized(curr.BeginAnchorNormalized, curr.EndAnchorNormalized);
 					label.CurveInfo = curr.CurveInfo;
+					label.YOffset = yMinimum + ((curr.SliceLayer + curr.SliceOffset) * ySeparation);
 					label.Text = curr.Text;
 
 					switch(curr.Scale)

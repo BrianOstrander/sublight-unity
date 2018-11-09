@@ -202,6 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: 
+  yOffset: 0
   color: {r: 1, g: 1, b: 1, a: 1}
   block:
     LabelStyle: 10
@@ -427,12 +428,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   scaleArea: {fileID: 224774074883311728}
   positionArea: {fileID: 224774074883311728}
+  yMinimum: 0.01
+  ySeparation: 0.16
   group: {fileID: 225358659454486526}
   labelPrefab: {fileID: 114685554615493330}
   labelArea: {fileID: 1443556346516206}
   galacticColorsBySliceLayer:
   - {r: 0.3921569, g: 0.3921569, b: 0.3921569, a: 1}
-  quadrantColorsBySliceLayer: []
+  quadrantColorsBySliceLayer:
+  - {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &114685554615493330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -548,7 +552,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!223 &223975796827142774
 Canvas:

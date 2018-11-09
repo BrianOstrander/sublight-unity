@@ -86,6 +86,229 @@
         "inventoryIds": [],
         "inventoryTags": []
       }
+    },
+    {
+      "labelId": "abe839b2-f977-44af-a5cc-b2dbcf193532",
+      "groupId": "79bf2c34-b4dd-4041-ad99-934ba492f6da",
+      "name": "Vega Rift",
+      "curveInfo": {
+        "LabelStyle": "Bold",
+        "FontSize": 10.0,
+        "Curve": {
+          "keys": [
+            {},
+            {
+              "time": 1.0
+            }
+          ],
+          "length": 2,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.0
+      },
+      "source": "Static",
+      "scale": "Quadrant",
+      "beginAnchor": {
+        "Sector": {"x":1752.0,"z":488.0},
+        "Local": {"x":0.638793945,"z":0.200195313}
+      },
+      "endAnchor": {
+        "Sector": {"x":1874.0,"z":575.0},
+        "Local": {"x":0.688964844,"z":0.232177734}
+      },
+      "sliceLayer": 1,
+      "staticText": {
+        "key": "02e647df-5be9-4fa0-bca6-402d5f5bf877"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    },
+    {
+      "labelId": "eaadda56-1199-4436-8983-772493034949",
+      "groupId": "28b8eb04-0dbc-4b7b-bf38-3680c23758a6",
+      "name": "Orion Spur",
+      "curveInfo": {
+        "LabelStyle": "Bold",
+        "FontSize": 8.0,
+        "Curve": {
+          "keys": [
+            {},
+            {
+              "time": 1.0
+            }
+          ],
+          "length": 2,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.0
+      },
+      "source": "Static",
+      "scale": "Quadrant",
+      "beginAnchor": {
+        "Sector": {"x":2706.0,"z":591.0},
+        "Local": {"x":0.906494141,"z":0.605957031}
+      },
+      "endAnchor": {
+        "Sector": {"x":2784.0,"z":789.0},
+        "Local": {"x":0.6340332,"z":0.967773438}
+      },
+      "sliceLayer": 1,
+      "staticText": {
+        "key": "7ef0eb3b-4f3d-487b-a492-5a0d15d3b72b"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    },
+    {
+      "labelId": "b8df29cb-12ee-408c-94a5-a7024c2107b9",
+      "groupId": "4d400fe9-a259-49b1-b6bb-b4cc010a4d20",
+      "name": "Osirus Anomaly",
+      "curveInfo": {
+        "LabelStyle": "Bold",
+        "FontSize": 16.0,
+        "Curve": {
+          "keys": [
+            {
+              "inTangent": -0.09266044,
+              "outTangent": -0.09266044,
+              "outWeight": 0.07702534
+            },
+            {
+              "time": 0.6561674,
+              "value": -0.05481019,
+              "inWeight": 0.333333343,
+              "outWeight": 0.333333343
+            },
+            {
+              "time": 1.0,
+              "inTangent": 0.3321669,
+              "outTangent": 0.3321669,
+              "inWeight": 0.08924663
+            }
+          ],
+          "length": 3,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.5
+      },
+      "source": "Static",
+      "scale": "Quadrant",
+      "beginAnchor": {
+        "Sector": {"x":2366.0,"z":533.0},
+        "Local": {"x":0.4230957,"z":0.485351563}
+      },
+      "endAnchor": {
+        "Sector": {"x":2561.0,"z":689.0},
+        "Local": {"x":0.304931641,"z":0.046875}
+      },
+      "sliceLayer": 1,
+      "staticText": {
+        "key": "70de41b0-6b9f-45df-8522-2ccff0cc8009"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    },
+    {
+      "labelId": "64dc7da6-dc53-4438-8cf0-f730353a3678",
+      "groupId": "45aeea87-39f0-4a35-aa31-c634ed9f4470",
+      "name": "Polaris Cluster",
+      "curveInfo": {
+        "LabelStyle": "Bold",
+        "FontSize": 16.0,
+        "Curve": {
+          "keys": [
+            {},
+            {
+              "time": 1.0
+            }
+          ],
+          "length": 2,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.0
+      },
+      "source": "Static",
+      "scale": "Quadrant",
+      "beginAnchor": {
+        "Sector": {"x":1889.0,"z":466.0},
+        "Local": {"x":0.658447266,"z":0.324707031}
+      },
+      "endAnchor": {
+        "Sector": {"x":2056.0,"z":494.0},
+        "Local": {"x":0.6999512,"z":0.165039063}
+      },
+      "sliceLayer": 3,
+      "staticText": {
+        "key": "e5275584-83f1-4d88-9291-4e3868ec2ea0"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    },
+    {
+      "labelId": "14c8243c-f3d4-4039-b2bc-554d332a6d2d",
+      "groupId": "43c5d406-4db0-465e-ba64-9988d2d8b7a5",
+      "name": "Ursa Continuation",
+      "curveInfo": {
+        "LabelStyle": "Bold",
+        "FontSize": 16.0,
+        "Curve": {
+          "keys": [
+            {},
+            {
+              "time": 1.0
+            }
+          ],
+          "length": 2,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.0
+      },
+      "source": "Static",
+      "scale": "Quadrant",
+      "beginAnchor": {
+        "Sector": {"x":1900.0,"z":381.0},
+        "Local": {"x":0.09851074,"z":0.303527832}
+      },
+      "endAnchor": {
+        "Sector": {"x":2091.0,"z":407.0},
+        "Local": {"x":0.500244141,"z":0.1640625}
+      },
+      "sliceLayer": 2,
+      "staticText": {
+        "key": "a26b1fba-a7ab-4ea5-b85f-ad1873878912"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
     }
   ],
   "version": 7,

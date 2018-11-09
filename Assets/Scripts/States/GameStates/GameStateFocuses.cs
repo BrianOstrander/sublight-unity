@@ -67,6 +67,7 @@ namespace LunraGames.SubLight
 				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
 
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant);
 
 				done();
 			}

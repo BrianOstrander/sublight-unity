@@ -35,6 +35,8 @@ namespace LunraGames.SubLight.Presenters
 			var labels = new List<GalaxyLabelBlock>();
 			var transform = ScaleModel.Transform.Value;
 
+			var sliceOffset = Scale == UniverseScales.Quadrant ? 1f : 0f;
+
 			foreach (var label in Model.Galaxy.GetLabels(Scale))
 			{
 				var result = new GalaxyLabelBlock();
@@ -46,6 +48,7 @@ namespace LunraGames.SubLight.Presenters
 				result.EndAnchorNormalized = new Vector2(endNormalized.x, endNormalized.z);
 				result.CurveInfo = label.CurveInfo;
 				result.SliceLayer = label.SliceLayer;
+				result.SliceOffset = sliceOffset;
 				result.Scale = label.Scale;
 				labels.Add(result);
 			}
