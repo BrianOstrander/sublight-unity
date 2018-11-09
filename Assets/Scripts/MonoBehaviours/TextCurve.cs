@@ -59,13 +59,13 @@ namespace LunraGames.SubLight.Views
 		Vector3 BeginAnchorWorld
 		{
 			get { return transform.TransformPoint(beginAnchorLocal); }
-			set { beginAnchorLocal = transform.InverseTransformPoint(value); isStale = true; }
+			set { beginAnchorLocal = transform.InverseTransformPoint(value); }
 		}
 
 		Vector3 EndAnchorWorld
 		{
 			get { return transform.TransformPoint(endAnchorLocal); }
-			set { endAnchorLocal = transform.InverseTransformPoint(value); isStale = true; }
+			set { endAnchorLocal = transform.InverseTransformPoint(value); }
 		}
 
 		public void SetBeginEndAnchorNormalized(Vector2 begin, Vector2 end)
@@ -87,11 +87,6 @@ namespace LunraGames.SubLight.Views
 			get { return text; }
 		}
 
-		//void OnEnable()
-		//{
-		//	UpdateText();
-		//}
-
 		void Update()
 		{
 			if (isStale) UpdateText();
@@ -103,6 +98,7 @@ namespace LunraGames.SubLight.Views
 			{
 				if (!isStale) return;
 			}
+			labelPrefab.gameObject.SetActive(false);
 			isStale = false;
 
 			var rectTransform = GetComponent<RectTransform>();
@@ -137,6 +133,7 @@ namespace LunraGames.SubLight.Views
 				currLabel.name = labelPrefab.name + " - " + currChar;
 				if (char.IsWhiteSpace(currChar))
 				{
+					currLabel.GetComponent<GraphicRadialLimiter>().enabled = false;
 					currLabel.text = "-";
 					currLabel.color = Color.clear;
 				}
