@@ -79,6 +79,11 @@ namespace LunraGamesEditor
 			return Color.cyan.NewH(int.Parse(CreateMD5(value).Substring(0, 2), System.Globalization.NumberStyles.HexNumber) / 255f);
 		}
 
+		public static Color ColorFromIndex(int value)
+		{
+			return Color.cyan.NewH((value * 0.618034f) % 1f);
+		}
+
 		// TODO: Lol hacks.
 		static string CreateMD5(string input)
 		{
