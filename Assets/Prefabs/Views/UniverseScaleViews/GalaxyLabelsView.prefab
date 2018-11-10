@@ -460,7 +460,7 @@ MonoBehaviour:
   scaleIgnores: 30
   scaleArea: {fileID: 4770856552250572}
   positionArea: {fileID: 4770856552250572}
-  yMinimum: 0.1
+  yMinimum: 0.001
   ySeparation: 0.2
   group: {fileID: 225880032412894102}
   labelPrefab: {fileID: 114685554615493330}

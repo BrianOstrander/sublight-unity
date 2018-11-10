@@ -117,7 +117,7 @@
         "Sector": {"x":1874.0,"z":575.0},
         "Local": {"x":0.688964844,"z":0.232177734}
       },
-      "sliceLayer": 1,
+      "sliceLayer": 2,
       "staticText": {
         "key": "02e647df-5be9-4fa0-bca6-402d5f5bf877"
       },
@@ -214,7 +214,7 @@
         "Sector": {"x":2561.0,"z":689.0},
         "Local": {"x":0.304931641,"z":0.046875}
       },
-      "sliceLayer": 1,
+      "sliceLayer": 2,
       "staticText": {
         "key": "70de41b0-6b9f-45df-8522-2ccff0cc8009"
       },
