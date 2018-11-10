@@ -17,7 +17,8 @@ namespace LunraGames.SubLight
 		const int PreviewMinSize = 128;
 		const int PreviewMaxSize = 2048;
 		const int SelectedLabelCurveSampling = 10;
-		const int AllLabelsCurveSampling = 5;
+		const int AllLabelsCurveSamplingQuadrant = 5;
+		const int AllLabelsCurveSamplingGalactic = 15;
 
 		enum HomeStates
 		{
@@ -768,7 +769,7 @@ namespace LunraGames.SubLight
 			isOverAnAllLabel = false;
 			if (selectedLabel == null) 
 			{
-				OnHomeSelectedLabelsShowAll(model, universeSize, displayArea, homeGeneralPreviewSize);
+				OnHomeSelectedLabelsShowAll(model, selectedScale, universeSize, displayArea, homeGeneralPreviewSize);
 				return;
 			}
 
@@ -817,12 +818,14 @@ namespace LunraGames.SubLight
 
 		void OnHomeSelectedLabelsShowAll(
 			GalaxyInfoModel model,
+			UniverseScales scale,
 			Vector2 universeSize,
 			Rect displayArea,
 			int previewSize
 		)
 		{
-			var labels = model.GetLabels(UniverseScales.Quadrant);
+			var labels = model.GetLabels(scale);
+			var sampling = scale == UniverseScales.Quadrant ? AllLabelsCurveSamplingQuadrant : AllLabelsCurveSamplingGalactic;
 			var labelIndex = -1;
 
 			foreach (var label in labels)
@@ -842,9 +845,9 @@ namespace LunraGames.SubLight
 				var currBegin = new Vector3(beginAnchorInWindow.x, 0f, beginAnchorInWindow.y);
 				var currEnd = new Vector3(endAnchorInWindow.x, 0f, endAnchorInWindow.y);
 
-				for (var i = 0; i < AllLabelsCurveSampling; i++)
+				for (var i = 0; i < sampling; i++)
 				{
-					var progress = i / (AllLabelsCurveSampling - 1f);
+					var progress = i / (sampling - 1f);
 					var curvePos = previewCurveInfo.Evaluate(currBegin, currEnd, progress, false);
 					var curvePosInWindow = new Vector2(curvePos.x, curvePos.z);
 					
@@ -948,18 +951,6 @@ namespace LunraGames.SubLight
 
 		void OnHomeSelectedGeneration(GalaxyInfoModel model)
 		{
-			/*
-			EditorGUIExtensions.BeginChangeCheck();
-			{
-				GUILayout.BeginHorizontal();
-				{
-					GUILayout.Label("Todo: this");
-				}
-				GUILayout.EndHorizontal();
-			}
-			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
-			*/
-
 			homeGenerationBarScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeGenerationBarScroll), false, true).y;
 			{
 				EditorGUIExtensions.BeginChangeCheck();
