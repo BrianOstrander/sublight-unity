@@ -696,7 +696,22 @@ namespace LunraGames.SubLight
 
 								selectedLabel.CurveInfo.Value = labelCurve;
 
-								selectedLabel.SliceLayer.Value = Mathf.Max(0, EditorGUILayout.IntField("Slice Layer", selectedLabel.SliceLayer.Value));
+								GUILayout.BeginHorizontal();
+								{
+									EditorGUILayout.PrefixLabel("Slice Layer");
+
+									var sliceColors = new Color[] { Color.black, Color.red, Color.yellow, Color.white };
+
+									for (var t = 0; t < 4; t++)
+									{
+										var isCurrSlice = t == selectedLabel.SliceLayer.Value;
+										EditorGUILayoutExtensions.PushBackgroundColor(sliceColors[t]);
+										if (GUILayout.Button(new GUIContent(isCurrSlice ? "Selected" : string.Empty), GUILayout.MaxWidth(100f))) selectedLabel.SliceLayer.Value = t;
+										EditorGUILayoutExtensions.PopBackgroundColor();
+									}
+								}
+								GUILayout.EndHorizontal();
+								//selectedLabel.SliceLayer.Value = Mathf.Max(0, EditorGUILayout.IntField("Slice Layer", selectedLabel.SliceLayer.Value));
 
 								GUILayout.BeginHorizontal(EditorStyles.helpBox);
 								{
