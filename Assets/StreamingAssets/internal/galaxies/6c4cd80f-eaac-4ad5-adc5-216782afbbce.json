@@ -93,7 +93,7 @@
       "name": "Vega Rift",
       "curveInfo": {
         "LabelStyle": "Bold",
-        "FontSize": 10.0,
+        "FontSize": 4.0,
         "Curve": {
           "keys": [
             {},
@@ -135,7 +135,7 @@
       "name": "Orion Spur",
       "curveInfo": {
         "LabelStyle": "Bold",
-        "FontSize": 8.0,
+        "FontSize": 4.0,
         "Curve": {
           "keys": [
             {},
@@ -177,7 +177,7 @@
       "name": "Osirus Anomaly",
       "curveInfo": {
         "LabelStyle": "Bold",
-        "FontSize": 16.0,
+        "FontSize": 4.0,
         "Curve": {
           "keys": [
             {
@@ -232,7 +232,7 @@
       "name": "Polaris Cluster",
       "curveInfo": {
         "LabelStyle": "Bold",
-        "FontSize": 16.0,
+        "FontSize": 4.0,
         "Curve": {
           "keys": [
             {},
@@ -274,7 +274,7 @@
       "name": "Ursa Continuation",
       "curveInfo": {
         "LabelStyle": "Bold",
-        "FontSize": 16.0,
+        "FontSize": 3.5,
         "Curve": {
           "keys": [
             {},

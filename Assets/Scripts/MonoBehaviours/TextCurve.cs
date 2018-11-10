@@ -54,6 +54,8 @@ namespace LunraGames.SubLight.Views
 		float lastLossyScale;
 		int staleDelay;
 
+		bool wasOversized;
+
 		public TextCurveBlock CurveInfo
 		{
 			set
@@ -204,7 +206,9 @@ namespace LunraGames.SubLight.Views
 			var fontScalar = 1f;
 			bool isShrinking = 1f < widthRatio;
 
-				if (isShrinking)
+			wasOversized = isShrinking;
+
+			if (isShrinking)
 			{
 				fontScalar = 1f / widthRatio;
 				totalWidth = maxWidth;
@@ -259,9 +263,9 @@ namespace LunraGames.SubLight.Views
 				var scalar = (i + 1f) / currSampling;
 				Vector3 normal;
 				var currPoint = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, scalar, flipNormals, out normal);
-				Gizmos.color = Color.yellow;
+				Gizmos.color = wasOversized ? Color.red : Color.yellow;
 				Gizmos.DrawLine(lastPoint, currPoint);
-				Gizmos.color = Color.yellow.NewA(0.5f);
+				Gizmos.color = (wasOversized ? Color.red : Color.yellow).NewA(0.5f);
 				Gizmos.DrawLine(currPoint, currPoint + (normal * normalLength));
 				lastPoint = currPoint;
 			}
