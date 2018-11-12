@@ -60,6 +60,8 @@ namespace LunraGames.SubLight
 				new GridPresenter(payload.Game, gridInfo);
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
+				new ClusterPresenter(payload.Game);
+
 				new GalaxyPresenter(payload.Game);
 				new QuadrantPresenter(payload.Game);
 

@@ -105,7 +105,7 @@ namespace LunraGames.SubLight.Presenters
 				new UnitMap(2f, 10f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(3f, 5000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(4f, 25000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(5f, 750000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
+				new UnitMap(5f, 75000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
 			};
 
 			App.Heartbeat.Update += OnUpdate;
