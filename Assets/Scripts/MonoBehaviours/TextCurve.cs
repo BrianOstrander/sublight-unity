@@ -6,9 +6,6 @@ using UnityEngine;
 
 using TMPro;
 
-using LunraGames;
-using UnityEngine.EventSystems;
-
 namespace LunraGames.SubLight.Views
 {
 	public class TextCurve : MonoBehaviour
@@ -126,7 +123,7 @@ namespace LunraGames.SubLight.Views
 				isStale = true;
 				lastLossyScale = transform.lossyScale.sqrMagnitude;
 			}
-			else if (lastFlipNormals != GetFlipNormalsValue())
+			else if (cameraAligned && lastFlipNormals != GetFlipNormalsValue())
 			{
 				staleDelay = 0;
 				isStale = true;
@@ -161,7 +158,6 @@ namespace LunraGames.SubLight.Views
 			BeginAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * beginAnchorNormalized.x, YOffset, worldCornerDeltas.z * (1f - beginAnchorNormalized.y));
 			EndAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * endAnchorNormalized.x, YOffset, worldCornerDeltas.z * (1f - endAnchorNormalized.y));
 
-			//block.Evaluate(block.Begin(BeginAnchorWorld, EndAnchorWorld), block.End(BeginAnchorWorld, EndAnchorWorld), 0.5f, flipNormals, out centerNormal);
 			block.Evaluate(BeginAnchorWorld, EndAnchorWorld, 0.5f, flipNormals, out centerNormal);
 			lastFlipNormals = GetFlipNormalsValue();
 			// heeeere
