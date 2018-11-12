@@ -31,6 +31,10 @@ namespace LunraGames.SubLight.Views
 		TextCurveBlock block;
 		[SerializeField]
 		bool flipNormals;
+		[SerializeField]
+		bool cameraAligned;
+		[SerializeField]
+		float cameraDotThreshold;
 
 		[SerializeField]
 		Vector2 beginAnchorNormalized;
@@ -50,6 +54,8 @@ namespace LunraGames.SubLight.Views
 		Vector3 beginAnchorLocal;
 		Vector3 endAnchorLocal;
 		bool isStale;
+		Vector3 centerNormal;
+		bool lastFlipNormals;
 
 		float lastLossyScale;
 		int staleDelay;
@@ -120,6 +126,11 @@ namespace LunraGames.SubLight.Views
 				isStale = true;
 				lastLossyScale = transform.lossyScale.sqrMagnitude;
 			}
+			else if (lastFlipNormals != GetFlipNormalsValue())
+			{
+				staleDelay = 0;
+				isStale = true;
+			}
 
 			if (isStale)
 			{
@@ -149,6 +160,11 @@ namespace LunraGames.SubLight.Views
 
 			BeginAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * beginAnchorNormalized.x, YOffset, worldCornerDeltas.z * (1f - beginAnchorNormalized.y));
 			EndAnchorWorld = minWorldCorner + new Vector3(worldCornerDeltas.x * endAnchorNormalized.x, YOffset, worldCornerDeltas.z * (1f - endAnchorNormalized.y));
+
+			//block.Evaluate(block.Begin(BeginAnchorWorld, EndAnchorWorld), block.End(BeginAnchorWorld, EndAnchorWorld), 0.5f, flipNormals, out centerNormal);
+			block.Evaluate(BeginAnchorWorld, EndAnchorWorld, 0.5f, flipNormals, out centerNormal);
+			lastFlipNormals = GetFlipNormalsValue();
+			// heeeere
 
 			labelArea.transform.ClearChildren(destroyImmediate: Application.isEditor && !Application.isPlaying);
 
@@ -234,12 +250,24 @@ namespace LunraGames.SubLight.Views
 				if (!isShrinking) progress = buffer + (progress * widthRatio);
 
 				Vector3 normal;
-				var position = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, progress, flipNormals, out normal);
+				var position = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, progress, lastFlipNormals, out normal);
 				currLabel.transform.position = position;
 				currLabel.transform.LookAt(position + Vector3.down, normal);
 
 				currLength += labelWidths[i] * 0.5f * fontScalar;
 			}
+		}
+
+		bool GetFlipNormalsValue()
+		{
+			if (!cameraAligned || !Application.isPlaying) return flipNormals;
+
+			if (Vector3.Dot(centerNormal, App.V.CameraForward.FlattenY()) < cameraDotThreshold)
+			{
+				// Camera is past the point at which we should flip the text.
+				return !flipNormals;
+			}
+			return flipNormals;
 		}
 
 		void OnDrawGizmos()
@@ -269,6 +297,16 @@ namespace LunraGames.SubLight.Views
 				Gizmos.DrawLine(currPoint, currPoint + (normal * normalLength));
 				lastPoint = currPoint;
 			}
+
+			if (!Application.isPlaying || App.V == null) return;
+
+			Gizmos.color = Color.magenta;
+			var currCenter = block.Evaluate(BeginAnchorWorld, EndAnchorWorld, 0.5f, lastFlipNormals);
+			Gizmos.DrawLine(currCenter, currCenter + (centerNormal * normalLength * 2f));
+
+			var camFlattening = App.V.CameraForward.FlattenY();
+			Gizmos.color = Color.cyan;
+			Gizmos.DrawLine(currCenter, currCenter + (camFlattening * normalLength * 2f));
 		}
 	}
 }
