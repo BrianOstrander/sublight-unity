@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 namespace LunraGames.SubLight.Views
 {
@@ -17,7 +19,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer[] meshes;
 		[SerializeField]
-		Transform canvasArea;
+		Transform lookAtArea;
+		[SerializeField]
+		CanvasGroup infoArea;
 
 		public string GalaxyName { set { galaxyNameLabel.Text = value ?? string.Empty; } }
 		public Vector3 GalaxyNormal { set { galaxyRotationArea.LookAt(galaxyRotationArea.position + value.normalized); } }
@@ -33,6 +37,21 @@ namespace LunraGames.SubLight.Views
 				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.WorldRadius, worldRadius);
 			}
 		}
+
+		public override bool Interactable
+		{
+			get { return base.Interactable; }
+
+			set
+			{
+				base.Interactable = value;
+				infoArea.interactable = value;
+				infoArea.blocksRaycasts = value;
+				infoArea.alpha = value ? 1f : 0f;
+			}
+		}
+
+		public Action Click { set; private get; }
 
 		public override float Opacity
 		{
@@ -54,7 +73,7 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnLateIdle(delta);
 
-			canvasArea.LookAt(canvasArea.position + App.V.CameraForward);
+			lookAtArea.LookAt(lookAtArea.position + App.V.CameraForward.FlattenY());
 		}
 
 		public override void Reset()
@@ -64,6 +83,7 @@ namespace LunraGames.SubLight.Views
 			line.useWorldSpace = true;
 			GalaxyName = string.Empty;
 			GalaxyNormal = Vector3.forward;
+			Click = ActionExtensions.Empty;
 		}
 
 		protected override void OnScale(Vector3 scale)
@@ -75,16 +95,24 @@ namespace LunraGames.SubLight.Views
 		{
 			galaxyNameLabelPositionScaleArea.position = position.NewY(transform.position.y);
 
-			canvasArea.position = position;
+			lookAtArea.position = position;
 
 			line.SetPosition(0, position);
 			line.SetPosition(1, galaxyNameLabelPositionScaleArea.position);
 		}
+
+		#region Events
+		public void OnClick()
+		{
+			if (Click != null) Click();
+		}
+		#endregion
 	}
 
 	public interface IClusterView : IGalaxyView
 	{
 		Vector3 GalaxyNormal { set; }
 		string GalaxyName { set; }
+		Action Click { set; }
 	}
 }

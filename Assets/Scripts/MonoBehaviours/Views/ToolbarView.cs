@@ -89,13 +89,13 @@ namespace LunraGames.SubLight.Views
 
 			for (var i = 0; i < max; i++)
 			{
-				var finalAngle = Mathf.Deg2Rad * (90f + ((buttonSeparation * i) - rangeOffset));
+				var finalAngle = Mathf.Deg2Rad * (((buttonSeparation * i) - rangeOffset) - 90f);
 				var forward = orbitOrigin.rotation * new Vector3(Mathf.Cos(finalAngle), 0f, Mathf.Sin(finalAngle));
 
 				results[i] = new ToolbarPosition
 				{
 					Position = orbitOrigin.position + (forward * orbitRadius),
-					Forward = forward
+					Forward = -forward
 				};
 
 			}
