@@ -321,6 +321,8 @@ namespace LunraGames.SubLight
 				model.Meta.Value = model.Name;
 
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
+
+				model.EncyclopediaEntryId.Value = EditorGUILayout.TextField(new GUIContent("Encyclopedia Entry Id", "The encyclopedia entry opened when viewing the details of this galaxy."), model.EncyclopediaEntryId.Value);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 

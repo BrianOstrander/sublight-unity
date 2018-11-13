@@ -37,6 +37,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int maximumSectorBodies;
 		[JsonProperty] AnimationCurve sectorBodyChance;
 
+		[JsonProperty] string encyclopediaEntryId;
+
 		[JsonProperty] GalaxyLabelModel[] labels = new GalaxyLabelModel[0];
 
 		[JsonIgnore]
@@ -71,6 +73,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<AnimationCurve> SectorBodyChance;
 
+		[JsonIgnore]
+		public readonly ListenerProperty<string> EncyclopediaEntryId;
+
 		public GalaxyBaseModel()
 		{
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
@@ -90,6 +95,8 @@ namespace LunraGames.SubLight.Models
 			MinimumSectorBodies = new ListenerProperty<int>(value => minimumSectorBodies = value, () => minimumSectorBodies);
 			MaximumSectorBodies = new ListenerProperty<int>(value => maximumSectorBodies = value, () => maximumSectorBodies);
 			SectorBodyChance = new ListenerProperty<AnimationCurve>(value => sectorBodyChance = value, () => sectorBodyChance);
+
+			EncyclopediaEntryId = new ListenerProperty<string>(value => encyclopediaEntryId = value, () => encyclopediaEntryId);
 		}
 
 		protected override void OnPrepareTexture(string name, Texture2D texture)

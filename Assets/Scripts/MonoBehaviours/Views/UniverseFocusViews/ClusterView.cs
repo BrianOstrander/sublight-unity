@@ -2,6 +2,8 @@
 
 using UnityEngine;
 
+using TMPro;
+
 namespace LunraGames.SubLight.Views
 {
 	public class ClusterView : GalaxyView, IClusterView
@@ -22,8 +24,22 @@ namespace LunraGames.SubLight.Views
 		Transform lookAtArea;
 		[SerializeField]
 		CanvasGroup interactableArea;
+		[SerializeField]
+		TextMeshProUGUI detailNameLabel;
+		[SerializeField]
+		TextMeshProUGUI detailLabel;
 
-		public string GalaxyName { set { galaxyNameLabel.Text = value ?? string.Empty; } }
+		public string GalaxyName
+		{
+			set
+			{
+				value = value ?? string.Empty;
+				galaxyNameLabel.Text = value;
+				detailNameLabel.text = value;
+			}
+		}
+		public string DetailText { set { detailLabel.text = value ?? string.Empty; } }
+
 		public Vector3 GalaxyNormal { set { galaxyRotationArea.LookAt(galaxyRotationArea.position + value.normalized); } }
 		public float AlertHeightMultiplier { set; private get; }
 
@@ -82,7 +98,9 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			line.useWorldSpace = true;
+
 			GalaxyName = string.Empty;
+			DetailText = string.Empty;
 			GalaxyNormal = Vector3.forward;
 			Click = ActionExtensions.Empty;
 			AlertHeightMultiplier = 0f;
@@ -115,6 +133,7 @@ namespace LunraGames.SubLight.Views
 	{
 		Vector3 GalaxyNormal { set; }
 		string GalaxyName { set; }
+		string DetailText { set; }
 		Action Click { set; }
 		float AlertHeightMultiplier { set; }
 	}
