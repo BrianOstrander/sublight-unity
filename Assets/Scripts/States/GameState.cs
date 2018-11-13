@@ -68,6 +68,26 @@ namespace LunraGames.SubLight
 
 			if (!Payload.Game.PlayerStartSelected.Value) Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart.Value;
 
+			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))
+			{
+				Debug.LogError("No GalaxyTargetId to load");
+				done();
+				return;
+			}
+
+			App.M.Load<GalaxyInfoModel>(Payload.Game.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, done));
+		}
+
+		void OnLoadGalaxyTarget(SaveLoadRequest<GalaxyInfoModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to load galaxy target, resulted in " + result.Status + " and error: " + result.Error);
+				done();
+				return;
+			}
+			Payload.Game.GalaxyTarget = result.TypedModel;
+
 			done();
 		}
 

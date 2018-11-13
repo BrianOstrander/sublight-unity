@@ -321,7 +321,6 @@ namespace LunraGames.SubLight
 				model.Meta.Value = model.Name;
 
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
-
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 
@@ -379,6 +378,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
 				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
 				EditorGUILayoutExtensions.PopBackgroundColor();
+				model.UniverseNormal.Value = EditorGUILayout.Vector3Field(new GUIContent("Universe Normal", "The up direction of this galaxy within the universe."), model.UniverseNormal.Value);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 

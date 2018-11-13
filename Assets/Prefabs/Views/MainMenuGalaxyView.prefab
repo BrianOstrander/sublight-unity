@@ -409,6 +409,7 @@ MonoBehaviour:
     CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
+  - {fileID: 11400000, guid: cb7c684165a9746a8b47f7d0879cb4f1, type: 2}
   rotationSpeed: {x: 0, y: 0, z: 3}
   rotationAnchor: {fileID: 4318957234477650}
   revealCurves:

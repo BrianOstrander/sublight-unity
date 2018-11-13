@@ -7,11 +7,15 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		TextCurve galaxyNameLabel;
 		[SerializeField]
+		Transform galaxyRotationArea;
+		[SerializeField]
 		CanvasGroup group;
 		[SerializeField]
 		Transform lookAtCameraArea;
 
 		public string GalaxyName { set { galaxyNameLabel.Text = value ?? string.Empty; } }
+
+		public Vector3 GalaxyNormal { set { galaxyRotationArea.up = value; } }
 
 		public override float Opacity
 		{
@@ -29,6 +33,7 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			GalaxyName = string.Empty;
+			GalaxyNormal = Vector3.up;
 		}
 
 		void OnDrawGizmos()
@@ -40,6 +45,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IClusterView : IGalaxyView
 	{
+		Vector3 GalaxyNormal { set; }
 		string GalaxyName { set; }
 	}
 }

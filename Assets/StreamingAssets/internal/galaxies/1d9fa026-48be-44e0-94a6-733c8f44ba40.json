@@ -1,0 +1,32 @@
+{
+  "galaxyId": "a6603c5e-f151-45aa-96bb-30905e781573",
+  "name": "Andromeda",
+  "universeNormal": {"x":-50.0,"y":40.0,"z":40.0},
+  "galaxyOrigin": {
+    "Sector": {"x":-1500.0,"y":1500.0,"z":1500.0}
+  },
+  "bodyAdjustment": {
+    "keys": [
+      {
+        "value": 1.0
+      },
+      {
+        "time": 1.0,
+        "value": 1.0
+      }
+    ],
+    "length": 2,
+    "preWrapMode": "ClampForever",
+    "postWrapMode": "ClampForever"
+  },
+  "labels": [],
+  "version": 7,
+  "meta": "Andromeda",
+  "metaKeyValues": {
+    "GalaxyId": "a6603c5e-f151-45aa-96bb-30905e781573"
+  },
+  "created": "2018-11-12T15:25:32.146355-08:00",
+  "modified": "2018-11-12T15:25:32.146355-08:00",
+  "SaveType": "GalaxyInfo",
+  "SiblingBehaviour": "All"
+}

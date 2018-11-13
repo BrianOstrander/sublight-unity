@@ -5,16 +5,18 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class ClusterPresenter : UniverseScalePresenter<IClusterView>
 	{
+		GalaxyInfoModel galaxy;
 		UniversePosition scaleInUniverse;
 		UniversePosition positionInUniverse;
 
 		protected override UniversePosition ScaleInUniverse { get { return scaleInUniverse; } }
 		protected override UniversePosition PositionInUniverse { get { return positionInUniverse; } }
 
-		public ClusterPresenter(GameModel model) : base(model, UniverseScales.Cluster)
+		public ClusterPresenter(GameModel model, GalaxyInfoModel galaxy) : base(model, UniverseScales.Cluster)
 		{
-			scaleInUniverse = model.Galaxy.GalaxySize;
-			positionInUniverse = model.Galaxy.GalaxyOrigin;
+			this.galaxy = galaxy;
+			scaleInUniverse = galaxy.GalaxySize;
+			positionInUniverse = galaxy.GalaxyOrigin;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -30,8 +32,10 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnShowView()
 		{
 			var transform = Model.ActiveScale.Transform.Value;
-			View.SetGalaxy(Model.Galaxy.FullPreview, transform.UnityOrigin, transform.UnityRadius);
-			View.GalaxyName = Model.Galaxy.Name.Value;
+			View.SetGalaxy(galaxy.FullPreview, transform.UnityOrigin, transform.UnityRadius);
+			View.GalaxyName = galaxy.Name;
+			View.GalaxyNormal = galaxy.UniverseNormal;
+
 		}
 
 		void OnScaleOpacity(float value)

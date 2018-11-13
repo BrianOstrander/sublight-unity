@@ -12,7 +12,8 @@ namespace LunraGames.SubLight
 	{
 		static class DefaultGameBlock
 		{
-			public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089";
+			public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089"; // Milkyway
+			public const string GalaxyTargetId = "a6603c5e-f151-45aa-96bb-30905e781573"; // Andromeda
 		}
 
 		static class DefaultShip
@@ -44,8 +45,10 @@ namespace LunraGames.SubLight
 			if (done == null) throw new ArgumentNullException("done");
 
 			var game = modelMediator.Create<GameModel>();
+
 			game.Seed.Value = info.GameSeed;
 			game.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, DefaultGameBlock.GalaxyId);
+			game.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, DefaultGameBlock.GalaxyTargetId);
 			game.Universe = universeService.CreateUniverse(info);
 			game.DestructionSpeed.Value = 0.004f;
 			game.DestructionSpeedIncrement.Value = 0.0025f;
