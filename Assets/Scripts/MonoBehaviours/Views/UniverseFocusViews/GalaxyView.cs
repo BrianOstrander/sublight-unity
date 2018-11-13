@@ -13,6 +13,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer[] layerMeshes = new MeshRenderer[0];
 
+		protected float TotalGalaxyHeight { get { return ySeparation * 3f; } }
+
 		public virtual void SetGalaxy(Texture2D texture, Vector3 worldOrigin, float worldRadius)
 		{
 			for (var i = 0; i < layerMeshes.Length; i++)

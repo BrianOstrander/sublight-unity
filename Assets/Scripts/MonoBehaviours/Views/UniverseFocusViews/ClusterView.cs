@@ -21,10 +21,11 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform lookAtArea;
 		[SerializeField]
-		CanvasGroup infoArea;
+		CanvasGroup interactableArea;
 
 		public string GalaxyName { set { galaxyNameLabel.Text = value ?? string.Empty; } }
 		public Vector3 GalaxyNormal { set { galaxyRotationArea.LookAt(galaxyRotationArea.position + value.normalized); } }
+		public float AlertHeightMultiplier { set; private get; }
 
 		public override void SetGalaxy(Texture2D texture, Vector3 worldOrigin, float worldRadius)
 		{
@@ -45,9 +46,9 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				base.Interactable = value;
-				infoArea.interactable = value;
-				infoArea.blocksRaycasts = value;
-				infoArea.alpha = value ? 1f : 0f;
+				interactableArea.interactable = value;
+				interactableArea.blocksRaycasts = value;
+				interactableArea.alpha = value ? 1f : 0f;
 			}
 		}
 
@@ -84,6 +85,7 @@ namespace LunraGames.SubLight.Views
 			GalaxyName = string.Empty;
 			GalaxyNormal = Vector3.forward;
 			Click = ActionExtensions.Empty;
+			AlertHeightMultiplier = 0f;
 		}
 
 		protected override void OnScale(Vector3 scale)
@@ -95,7 +97,7 @@ namespace LunraGames.SubLight.Views
 		{
 			galaxyNameLabelPositionScaleArea.position = position.NewY(transform.position.y);
 
-			lookAtArea.position = position;
+			lookAtArea.position = position.NewY(position.y + (TotalGalaxyHeight * (1f + AlertHeightMultiplier)));
 
 			line.SetPosition(0, position);
 			line.SetPosition(1, galaxyNameLabelPositionScaleArea.position);
@@ -114,5 +116,6 @@ namespace LunraGames.SubLight.Views
 		Vector3 GalaxyNormal { set; }
 		string GalaxyName { set; }
 		Action Click { set; }
+		float AlertHeightMultiplier { set; }
 	}
 }

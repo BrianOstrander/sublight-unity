@@ -47,6 +47,8 @@ namespace LunraGames.SubLight
 		Graphic[] targetGraphics = new Graphic[0];
 		[SerializeField]
 		MeshRendererEntry[] targetMeshRenderers = new MeshRendererEntry[0];
+		[SerializeField]
+		CanvasGroup[] targetGroups = new CanvasGroup[0];
 
 		XButtonStyleBlock Style { get { return GlobalStyle == null ? LocalStyle : GlobalStyle.Block; } }
 
@@ -122,6 +124,8 @@ namespace LunraGames.SubLight
 					meshRenderer.Set(color);
 				}
 			}
+
+			foreach (var group in targetGroups) group.alpha = color.a;
 
 			if (!Mathf.Approximately(scalar, 1f)) togglesActive = lastToggleActive || togglesActive;
 

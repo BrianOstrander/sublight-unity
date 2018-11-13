@@ -379,6 +379,7 @@ namespace LunraGames.SubLight
 				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				model.UniverseNormal.Value = EditorGUILayout.Vector3Field(new GUIContent("Universe Normal", "The up direction of this galaxy within the universe."), model.UniverseNormal.Value);
+				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 

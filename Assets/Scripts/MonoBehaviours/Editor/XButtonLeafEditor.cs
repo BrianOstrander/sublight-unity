@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 		SerializedProperty targetTransfomsProperty;
 		SerializedProperty targetGraphicsProperty;
 		SerializedProperty targetMeshRenderersProperty;
+		SerializedProperty targetGroupsProperty;
 
 		void OnEnable() 
 		{
@@ -21,6 +22,7 @@ namespace LunraGames.SubLight
 			targetTransfomsProperty = serializedObject.FindProperty("targetTransforms");
 			targetGraphicsProperty = serializedObject.FindProperty("targetGraphics");
 			targetMeshRenderersProperty = serializedObject.FindProperty("targetMeshRenderers");
+			targetGroupsProperty = serializedObject.FindProperty("targetGroups");
 		}
 
 		public override void OnInspectorGUI()
@@ -39,6 +41,7 @@ namespace LunraGames.SubLight
 			EditorGUILayout.PropertyField(targetTransfomsProperty, true);
 			EditorGUILayout.PropertyField(targetGraphicsProperty, true);
 			EditorGUILayout.PropertyField(targetMeshRenderersProperty, true);
+			EditorGUILayout.PropertyField(targetGroupsProperty, true);
 
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(target);

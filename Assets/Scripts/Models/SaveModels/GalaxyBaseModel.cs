@@ -25,6 +25,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string description;
 
 		[JsonProperty] Vector3 universeNormal;
+		[JsonProperty] float alertHeightMultiplier;
 
 		[JsonProperty] UniversePosition clusterOrigin;
 		[JsonProperty] UniversePosition galaxyOrigin;
@@ -49,6 +50,8 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<Vector3> UniverseNormal;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> AlertHeightMultiplier;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> ClusterOrigin;
@@ -76,6 +79,7 @@ namespace LunraGames.SubLight.Models
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 
 			UniverseNormal = new ListenerProperty<Vector3>(value => universeNormal = value, () => universeNormal);
+			AlertHeightMultiplier = new ListenerProperty<float>(value => alertHeightMultiplier = value, () => alertHeightMultiplier);
 
 			ClusterOrigin = new ListenerProperty<UniversePosition>(value => clusterOrigin = value, () => clusterOrigin);
 			GalaxyOrigin = new ListenerProperty<UniversePosition>(value => galaxyOrigin = value, () => galaxyOrigin);

@@ -35,7 +35,7 @@ namespace LunraGames.SubLight.Presenters
 			View.SetGalaxy(galaxy.FullPreview, transform.UnityOrigin, transform.UnityRadius);
 			View.GalaxyName = galaxy.Name;
 			View.GalaxyNormal = galaxy.UniverseNormal;
-
+			View.AlertHeightMultiplier = galaxy.AlertHeightMultiplier;
 		}
 
 		void OnScaleOpacity(float value)
