@@ -16,6 +16,8 @@ namespace LunraGames.SubLight.Views
 		LineRenderer line;
 		[SerializeField]
 		MeshRenderer[] meshes;
+		[SerializeField]
+		Transform canvasArea;
 
 		public string GalaxyName { set { galaxyNameLabel.Text = value ?? string.Empty; } }
 		public Vector3 GalaxyNormal { set { galaxyRotationArea.LookAt(galaxyRotationArea.position + value.normalized); } }
@@ -48,6 +50,13 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		protected override void OnLateIdle(float delta)
+		{
+			base.OnLateIdle(delta);
+
+			canvasArea.LookAt(canvasArea.position + App.V.CameraForward);
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -65,6 +74,8 @@ namespace LunraGames.SubLight.Views
 		protected override void OnPosition(Vector3 position)
 		{
 			galaxyNameLabelPositionScaleArea.position = position.NewY(transform.position.y);
+
+			canvasArea.position = position;
 
 			line.SetPosition(0, position);
 			line.SetPosition(1, galaxyNameLabelPositionScaleArea.position);

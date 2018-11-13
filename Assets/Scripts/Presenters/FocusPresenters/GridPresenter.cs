@@ -56,8 +56,8 @@ namespace LunraGames.SubLight.Presenters
 				UniverseScales scale,
 				UniverseFocuses focusFromZoomDown,
 				UniverseFocuses focusFromZoomUp,
-				float zoomUpScaleMultiplier = 2f,
-				float zoomDownScaleMultiplier = 0.95f
+				float zoomUpScaleMultiplier = 3f,
+				float zoomDownScaleMultiplier = 0.75f
 			)
 			{
 				ZoomBegin = zoomBegin;
