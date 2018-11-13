@@ -92,6 +92,14 @@ namespace LunraGames.SubLight
 			public const string Revealed = "_Revealed";
 		}
 
+		public static class HoloCircleMaskWorld
+		{
+			// This is a subgraph...
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
+		}
+
 		public static class HoloGalaxy
 		{
 			/// <summary>
@@ -113,6 +121,20 @@ namespace LunraGames.SubLight
 			public const string WorldOrigin = "_WorldOrigin";
 			public const string WorldRadius = "_WorldRadius";
 			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloTextureColorAlpha
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/TextureColorAlpha";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
 		}
 
 		public static class HoloGridBasic

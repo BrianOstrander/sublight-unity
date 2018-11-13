@@ -24,8 +24,6 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
-				if (scaleArea == null) return;
-
 				switch(scaleIgnores)
 				{
 					case Axises.None: break;
@@ -37,11 +35,22 @@ namespace LunraGames.SubLight.Views
 						break;
 				}
 
-				scaleArea.localScale = value;
+				if (scaleArea != null) scaleArea.localScale = value;
+				OnScale(value);
 			}
 		}
 
-		public Vector3 Position { set { if (positionArea != null) positionArea.position = value; } }
+		public Vector3 Position
+		{
+			set
+			{
+				if (positionArea != null) positionArea.position = value;
+				OnPosition(value);
+			}
+		}
+
+		protected virtual void OnScale(Vector3 scale) {}
+		protected virtual void OnPosition(Vector3 position) {}
 	}
 
 	public interface IUniverseScaleView : IView

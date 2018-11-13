@@ -451,23 +451,27 @@ namespace LunraGames.SubLight
 				}
 			);
 
-			var galacticOriginInWindow = UniverseToWindow(model.GalaxyOrigin, displayArea, universeSize, homeGeneralPreviewSize);
-			var playerStartInWindow = UniverseToWindow(model.PlayerStart, displayArea, universeSize, homeGeneralPreviewSize);
-			var gameEndInWindow = UniverseToWindow(model.GameEnd, displayArea, universeSize, homeGeneralPreviewSize);
+			var galacticOriginInPreview = true;
+			var playerStartInPreview = true;
+			var gameEndInPreview = true;
 
-			EditorGUILayoutExtensions.PushColor(Color.yellow);
+			var galacticOriginInWindow = UniverseToWindow(model.GalaxyOrigin, displayArea, universeSize, homeGeneralPreviewSize, out galacticOriginInPreview);
+			var playerStartInWindow = UniverseToWindow(model.PlayerStart, displayArea, universeSize, homeGeneralPreviewSize, out playerStartInPreview);
+			var gameEndInWindow = UniverseToWindow(model.GameEnd, displayArea, universeSize, homeGeneralPreviewSize, out gameEndInPreview);
+
+			EditorGUILayoutExtensions.PushColor(galacticOriginInPreview ? Color.yellow : Color.yellow.NewA(0.5f));
 			{
 				GUI.Box(CenteredScreen(galacticOriginInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Galactic Origin"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
 			}
 			EditorGUILayoutExtensions.PopColor();
 
-			EditorGUILayoutExtensions.PushColor(Color.green);
+			EditorGUILayoutExtensions.PushColor(playerStartInPreview ? Color.green : Color.green.NewA(0.5f));
 			{
 				GUI.Box(CenteredScreen(playerStartInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Player Start"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
 			}
 			EditorGUILayoutExtensions.PopColor();
 
-			EditorGUILayoutExtensions.PushColor(Color.red);
+			EditorGUILayoutExtensions.PushColor(gameEndInPreview ? Color.red : Color.red.NewA(0.5f));
 			{
 				GUI.Box(CenteredScreen(gameEndInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Game End"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
 			}
@@ -788,10 +792,15 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var beginAnchorInWindow = UniverseToWindow(selectedLabel.BeginAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize);
-			var endAnchorInWindow = UniverseToWindow(selectedLabel.EndAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize);
+			var beginInPreview = true;
+			var endInPreview = true;
 
-			EditorGUILayoutExtensions.PushColor(labelState == LabelStates.UpdatingBegin ? Color.cyan.NewS(0.25f) : Color.cyan);
+			var beginAnchorInWindow = UniverseToWindow(selectedLabel.BeginAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize, out beginInPreview);
+			var endAnchorInWindow = UniverseToWindow(selectedLabel.EndAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize, out endInPreview);
+
+			var beginColor = labelState == LabelStates.UpdatingBegin ? Color.cyan.NewS(0.25f) : Color.cyan;
+
+			EditorGUILayoutExtensions.PushColor(beginInPreview ? beginColor : beginColor.NewA(beginColor.a * 0.5f));
 			{
 				GUI.Box(CenteredScreen(beginAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor Begin"), SubLightEditorConfig.Instance.LabelAnchorStyle);
 			}
@@ -802,7 +811,8 @@ namespace LunraGames.SubLight
 				case LabelStates.Idle:
 				case LabelStates.UpdatingBegin:
 				case LabelStates.UpdatingEnd:
-					EditorGUILayoutExtensions.PushColor(labelState == LabelStates.UpdatingEnd ? Color.magenta.NewS(0.25f) : Color.magenta);
+					var endColor = labelState == LabelStates.UpdatingEnd ? Color.magenta.NewS(0.25f) : Color.magenta;
+					EditorGUILayoutExtensions.PushColor(endInPreview ? endColor : endColor.NewA(endColor.a * 0.5f));
 					{
 						GUI.Box(CenteredScreen(endAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor End"), SubLightEditorConfig.Instance.LabelAnchorStyle);
 					}
@@ -851,8 +861,11 @@ namespace LunraGames.SubLight
 
 				EditorGUILayoutExtensions.PushColor(color);
 
-				var beginAnchorInWindow = UniverseToWindow(label.BeginAnchor.Value, displayArea, universeSize, previewSize);
-				var endAnchorInWindow = UniverseToWindow(label.EndAnchor.Value, displayArea, universeSize, previewSize);
+				var beginInPreview = true;
+				var endInPreview = true;
+
+				var beginAnchorInWindow = UniverseToWindow(label.BeginAnchor.Value, displayArea, universeSize, previewSize, out beginInPreview);
+				var endAnchorInWindow = UniverseToWindow(label.EndAnchor.Value, displayArea, universeSize, previewSize, out endInPreview);
 
 				var previewCurveInfo = label.CurveInfo.Value; // We modify this to make changes for rendering to the screen...
 				previewCurveInfo.FlipCurve = !previewCurveInfo.FlipCurve;
@@ -1137,10 +1150,12 @@ namespace LunraGames.SubLight
 			return new UniversePosition(new Vector3(inUniverse.x, 0f, universeSize.y - inUniverse.y), Vector3.zero);
 		}
 
-		Vector2 UniverseToWindow(UniversePosition universePosition, Rect preview, Vector2 universeSize, float shownSize)
+		Vector2 UniverseToWindow(UniversePosition universePosition, Rect preview, Vector2 universeSize, float shownSize, out bool inPreview)
 		{
 			var universeScaled = new Vector2(universePosition.Sector.x, universeSize.y - universePosition.Sector.z) * (shownSize / universeSize.y);
-			return preview.min + universeScaled;
+			var result = preview.min + universeScaled;
+			inPreview = preview.Contains(result);
+			return new Vector2(Mathf.Clamp(result.x, preview.xMin, preview.xMax), Mathf.Clamp(result.y, preview.yMin, preview.yMax));
 		}
 
 		Rect CenteredScreen(Vector2 screenPosition, Vector2 size)
