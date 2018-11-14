@@ -60,7 +60,29 @@ namespace LunraGames.SubLight
 				new GridPresenter(payload.Game, gridInfo);
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
+				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
+				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
+
+				//Sagittarius A*
+
+				new SystemAlertPresenter(
+					payload.Game,
+					payload.Game.Galaxy.GameEnd,
+					LanguageStringModel.Override("Sagittarius A*"),
+					LanguageStringModel.Override("Click for information"),
+					() => Debug.LogWarning("Todo: open the encyclopedia entry for Sagittarius A*"),
+					UniverseScales.Galactic
+				);
+
 				new GalaxyPresenter(payload.Game);
+				new QuadrantPresenter(payload.Game);
+
+				new ShipPinPresenter(payload.Game, UniverseScales.Quadrant);
+				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
+				new ShipPinPresenter(payload.Game, UniverseScales.Cluster);
+
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant);
 
 				done();
 			}

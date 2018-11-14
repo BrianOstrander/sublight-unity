@@ -10,14 +10,15 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve MaxLipAnimation;
 
 		[SerializeField]
-		Material lipMaterial;
-		[SerializeField]
 		MeshRenderer lipMesh;
+		[SerializeField]
+		int renderQueue;
 
 		public void SetLips(float scalar, bool showing)
 		{
 			if (!showing) scalar += 1f;
 
+			lipMesh.material.renderQueue = renderQueue;
 			lipMesh.material.SetFloat(ShaderConstants.HoloLip.LipMin, MinLipAnimation.Evaluate(scalar));
 			lipMesh.material.SetFloat(ShaderConstants.HoloLip.LipMax, MaxLipAnimation.Evaluate(scalar));
 		}
@@ -27,8 +28,6 @@ namespace LunraGames.SubLight.Views
 		public override void Reset()
 		{
 			base.Reset();
-
-			lipMesh.material = new Material(lipMaterial);
 
 			SetLips(0f, true);
 			HoloColor = Color.white;

@@ -36,6 +36,15 @@ namespace LunraGamesEditor
 			return result;
 		}
 
+		public static T HelpfulEnumPopupValue<T>(
+			string primaryReplacement,
+			T value,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			return HelpfulEnumPopupValue(primaryReplacement, value, null, guiOptions);
+		}
+
 		/// <summary>
 		/// Renames the first enum entry, useful for adding a "Select X" option.
 		/// </summary>
@@ -45,7 +54,7 @@ namespace LunraGamesEditor
 		public static T HelpfulEnumPopupValue<T>(
 			string primaryReplacement, 
 			T value,
-			T[] options = null,
+			T[] options,
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{

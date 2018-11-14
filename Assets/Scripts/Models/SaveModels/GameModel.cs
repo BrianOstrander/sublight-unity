@@ -94,6 +94,7 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<float> UniverseUnitsPerUnityUnit;
 
 		[JsonProperty] string galaxyId;
+		[JsonProperty] string galaxyTargetId;
 		[JsonProperty] UniverseModel universe;
 
 		[JsonIgnore]
@@ -111,7 +112,16 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
+		public string GalaxyTargetId
+		{
+			get { return galaxyTargetId; }
+			set { galaxyTargetId = value; }
+		}
+
+		[JsonIgnore]
 		public GalaxyInfoModel Galaxy { get; set; }
+		[JsonIgnore]
+		public GalaxyInfoModel GalaxyTarget { get; set; }
 		#endregion
 
 		#region NonSerialized

@@ -1,11 +1,40 @@
+using System;
+
 using UnityEngine;
 using UnityEngine.UI;
+
 using SelectionState = LunraGames.SubLight.XButton.SelectionState;
 
 namespace LunraGames.SubLight
 {
 	public class XButtonLeaf : MonoBehaviour
 	{
+		[Serializable]
+		struct MeshRendererEntry
+		{
+			[SerializeField]
+			string colorPropertyName;
+			[SerializeField]
+			string alphaPropertyName;
+			[SerializeField]
+			MeshRenderer[] meshRenderers;
+
+			public void Set(Color color)
+			{
+				var hasColor = !string.IsNullOrEmpty(colorPropertyName);
+				var hasAlpha = !string.IsNullOrEmpty(alphaPropertyName);
+
+				if (!hasColor && !hasAlpha) return;
+
+				foreach (var renderer in meshRenderers)
+				{
+					if (renderer == null) continue;
+					if (hasColor) renderer.material.SetColor(colorPropertyName, color);
+					if (hasAlpha) renderer.material.SetFloat(alphaPropertyName, color.a);
+				}
+			}
+		}
+
 		[HideInInspector]
 		public XButtonStyleObject GlobalStyle;
 		[HideInInspector]
@@ -16,6 +45,10 @@ namespace LunraGames.SubLight
 		Transform[] targetTransforms = new Transform[0];
 		[SerializeField]
 		Graphic[] targetGraphics = new Graphic[0];
+		[SerializeField]
+		MeshRendererEntry[] targetMeshRenderers = new MeshRendererEntry[0];
+		[SerializeField]
+		CanvasGroup[] targetGroups = new CanvasGroup[0];
 
 		XButtonStyleBlock Style { get { return GlobalStyle == null ? LocalStyle : GlobalStyle.Block; } }
 
@@ -83,6 +116,16 @@ namespace LunraGames.SubLight
 				if (targetGraphic == null) continue;
 				targetGraphic.color = color;
 			}
+
+			if (Application.isPlaying)
+			{
+				foreach (var meshRenderer in targetMeshRenderers)
+				{
+					meshRenderer.Set(color);
+				}
+			}
+
+			foreach (var group in targetGroups) group.alpha = color.a;
 
 			if (!Mathf.Approximately(scalar, 1f)) togglesActive = lastToggleActive || togglesActive;
 

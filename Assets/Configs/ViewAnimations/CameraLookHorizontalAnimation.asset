@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Name: CameraLookHorizontalAnimation
   m_EditorClassIdentifier: 
   horizontalOnly: 1
-  idleLook: 1
+  idleLook: 0

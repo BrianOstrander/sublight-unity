@@ -40,8 +40,10 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve revealCurve;
 
 		[SerializeField]
-		float gridUnityWidth;
+		float gridUnityRadius;
 
+		[SerializeField]
+		int renderQueue;
 		[SerializeField]
 		Material gridMaterial;
 		[SerializeField]
@@ -56,6 +58,8 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve revealScaleAlpha;
 		[SerializeField]
 		AnimationCurve positionCurve;
+		[SerializeField]
+		AnimationCurve zoomCurve;
 
 		[SerializeField]
 		float gridDragRadius;
@@ -74,7 +78,7 @@ namespace LunraGames.SubLight.Views
 		public AnimationCurve ScrollCooldownFalloff { get { return scrollCooldownFalloff; } }
 
 		public Vector3 GridUnityOrigin { get { return gridMesh.transform.position; } }
-		public float GridUnityWidth { get { return gridUnityWidth; } }
+		public float GridUnityRadius { get { return gridUnityRadius; } }
 		public Action<bool> Dragging { set; private get; }
 		public bool Highlighted { get; private set; }
 		public Color HoloColor { set { if (gridBackground != null) gridBackground.SetColor(ShaderConstants.HoloGridBackground.Tint, value); } }
@@ -82,6 +86,7 @@ namespace LunraGames.SubLight.Views
 		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
 		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
 		public AnimationCurve PositionCurve { get { return positionCurve; } }
+		public AnimationCurve ZoomCurve { get { return zoomCurve; } }
 
 		public Action DrawGizmos { set; private get; }
 
@@ -105,6 +110,7 @@ namespace LunraGames.SubLight.Views
 
 				var activeMaterials = new List<Material>();
 
+				gridBackground.renderQueue = renderQueue;
 				activeMaterials.Add(gridBackground);
 
 				for (var i = 0; i < value.Length; i++)
@@ -114,6 +120,7 @@ namespace LunraGames.SubLight.Views
 					var block = value[i];
 					var grid = grids[i];
 
+					grid.renderQueue = renderQueue;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
 					grid.SetVector(ShaderConstants.HoloGridBasic.Offset, block.Offset);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, block.Alpha);
@@ -236,13 +243,14 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve ScrollCooldownFalloff { get; }
 
 		Vector3 GridUnityOrigin { get; }
-		float GridUnityWidth { get; }
+		float GridUnityRadius { get; }
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
 		GridView.Grid[] Grids { set; }
 		AnimationCurve HideScaleAlpha { get; }
 		AnimationCurve RevealScaleAlpha { get; }
 		AnimationCurve PositionCurve { get; }
+		AnimationCurve ZoomCurve { get; }
 
 		void ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius);
 		void SetRadius(float scalar, bool showing);

@@ -1,6 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+
+using UnityEngine;
 
 using Newtonsoft.Json;
+
+using LunraGames;
 
 namespace LunraGames.SubLight.Models
 {
@@ -19,6 +24,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 
+		[JsonProperty] Vector3 universeNormal;
+		[JsonProperty] float alertHeightMultiplier;
+
 		[JsonProperty] UniversePosition clusterOrigin;
 		[JsonProperty] UniversePosition galaxyOrigin;
 		[JsonProperty] UniversePosition playerStart;
@@ -29,6 +37,10 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int maximumSectorBodies;
 		[JsonProperty] AnimationCurve sectorBodyChance;
 
+		[JsonProperty] string encyclopediaEntryId;
+
+		[JsonProperty] GalaxyLabelModel[] labels = new GalaxyLabelModel[0];
+
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> IsPlayable;
 		[JsonIgnore]
@@ -37,6 +49,11 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Description;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<Vector3> UniverseNormal;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> AlertHeightMultiplier;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> ClusterOrigin;
@@ -56,12 +73,18 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<AnimationCurve> SectorBodyChance;
 
+		[JsonIgnore]
+		public readonly ListenerProperty<string> EncyclopediaEntryId;
+
 		public GalaxyBaseModel()
 		{
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
 			GalaxyId = new ListenerProperty<string>(value => galaxyId = value, () => galaxyId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
+
+			UniverseNormal = new ListenerProperty<Vector3>(value => universeNormal = value, () => universeNormal);
+			AlertHeightMultiplier = new ListenerProperty<float>(value => alertHeightMultiplier = value, () => alertHeightMultiplier);
 
 			ClusterOrigin = new ListenerProperty<UniversePosition>(value => clusterOrigin = value, () => clusterOrigin);
 			GalaxyOrigin = new ListenerProperty<UniversePosition>(value => galaxyOrigin = value, () => galaxyOrigin);
@@ -72,6 +95,8 @@ namespace LunraGames.SubLight.Models
 			MinimumSectorBodies = new ListenerProperty<int>(value => minimumSectorBodies = value, () => minimumSectorBodies);
 			MaximumSectorBodies = new ListenerProperty<int>(value => maximumSectorBodies = value, () => maximumSectorBodies);
 			SectorBodyChance = new ListenerProperty<AnimationCurve>(value => sectorBodyChance = value, () => sectorBodyChance);
+
+			EncyclopediaEntryId = new ListenerProperty<string>(value => encyclopediaEntryId = value, () => encyclopediaEntryId);
 		}
 
 		protected override void OnPrepareTexture(string name, Texture2D texture)
@@ -80,10 +105,66 @@ namespace LunraGames.SubLight.Models
 			switch (name)
 			{
 				case TextureNames.Preview:
-				case TextureNames.FullPreview:
 					texture.anisoLevel = 2;
+					break;
+				case TextureNames.Details:
+				case TextureNames.FullPreview:
+					texture.anisoLevel = 4;
 					break;
 			}
 		}
+
+		#region Utility
+		public void AddLabel(GalaxyLabelModel label)
+		{
+			if (label == null) throw new ArgumentNullException("label");
+			if (labels.Contains(label))
+			{
+				Debug.LogError("An identical label already exists");
+				return;
+			}
+			var identicalLabel = GetLabel(label.LabelId.Value);
+			if (identicalLabel != null)
+			{
+				Debug.LogError("A label with id \"" + label.LabelId.Value + "\" already exists");
+				return;
+			}
+			labels = labels.Append(label).ToArray();
+		}
+
+		public void RemoveLabel(GalaxyLabelModel label)
+		{
+			if (label == null) throw new ArgumentNullException("label");
+			if (!labels.Contains(label))
+			{
+				Debug.LogError("No label found to remove");
+				return;
+			}
+			labels = labels.ExceptOne(label).ToArray();
+		}
+
+		public void RemoveLabel(string labelId)
+		{
+			var toRemove = labels.Where(l => l.LabelId.Value == labelId);
+			if (toRemove.None())
+			{
+				Debug.LogError("No label with id \"" + labelId + "\" found to remove");
+				return;
+			}
+			labels = labels.Except(toRemove).ToArray();
+		}
+
+		public GalaxyLabelModel GetLabel(string labelId)
+		{
+			return labels.FirstOrDefault(l => l.LabelId.Value == labelId);
+		}
+
+		public GalaxyLabelModel[] GetLabels() { return labels.ToArray(); }
+
+		public GalaxyLabelModel[] GetLabels(UniverseScales scale)
+		{
+			return labels.Where(l => l.Scale == scale).ToArray();
+		}
+		#endregion
 	}
 }

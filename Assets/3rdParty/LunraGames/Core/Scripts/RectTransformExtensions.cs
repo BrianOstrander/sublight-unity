@@ -20,5 +20,19 @@ namespace LunraGames
 		{
 			return transform.WorldCorner(3);
 		}
+
+		public static void MinMaxWorldCorner(this RectTransform transform, out Vector3 min, out Vector3 max)
+		{
+			min = transform.WorldCorner(1);
+			max = transform.WorldCorner(3);
+		}
+
+		public static Vector3 WorldCornerSize(this RectTransform transform)
+		{
+			Vector3 min;
+			Vector3 max;
+			transform.MinMaxWorldCorner(out min, out max);
+			return max - min;
+		}
 	}
 }

@@ -472,7 +472,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  gridUnityWidth: 3.5
+  gridUnityRadius: 3.5
+  renderQueue: 2999
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
   gridBackgroundMaterial: {fileID: 2100000, guid: 0b8e143a8d4004c82a2fc427a0ef675f,
     type: 2}
@@ -491,13 +492,13 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.07620661
     - serializedVersion: 3
-      time: 0.5
+      time: 1
       value: 0
-      inSlope: -0.009640528
-      outSlope: -0.009640528
+      inSlope: -0.8145226
+      outSlope: -0.8145226
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.108759485
+      inWeight: 0.04487723
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -506,7 +507,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.4
+      time: 0.2
       value: 0
       inSlope: 0.070347175
       outSlope: 0.070347175
@@ -517,8 +518,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1.6666666
-      outSlope: 1.6666666
+      inSlope: 1.25
+      outSlope: 1.25
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -543,6 +544,30 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  zoomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334

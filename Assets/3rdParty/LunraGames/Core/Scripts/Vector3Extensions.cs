@@ -40,5 +40,11 @@ namespace LunraGames
 			for (var i = 0; i < vector3s.Length; i++) result[i] = vector3s[i] + addition;
 			return result;
 		}
+
+		public static Vector3 ScaleBy(this Vector3 vector3, Vector3 scaler)
+		{
+			vector3.Scale(scaler);
+			return vector3;
+		}
 	}
 }

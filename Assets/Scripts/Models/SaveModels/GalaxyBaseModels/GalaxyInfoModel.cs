@@ -24,7 +24,11 @@ namespace LunraGames.SubLight.Models
 			get
 			{
 				if (galaxySize.HasValue) return galaxySize.Value;
-				var largestDimension = Mathf.Max(BodyMap.width, BodyMap.height);
+				var largestDimension = 0;
+
+				if (IsPlayable.Value) largestDimension = Mathf.Max(BodyMap.width, BodyMap.height);
+				else largestDimension = Mathf.Max(FullPreview.width, FullPreview.height);
+
 				return (galaxySize = new UniversePosition(new Vector3(largestDimension, largestDimension, largestDimension))).Value;
 			}
 		}

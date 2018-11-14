@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		public List<GameObject> DefaultViews = new List<GameObject>();
 		public DefaultShaderGlobals ShaderGlobals;
 
-		public HomePayload homePayload = new HomePayload();
+		public HomePayload HomeStatePayload = new HomePayload();
 	}
 
 	public class InitializeState : State<InitializePayload>
@@ -42,7 +42,7 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.PlayState(PlayState.Playing);
 
-			var mainCamera = (Payload.homePayload.MainCamera = new HoloRoomFocusCameraPresenter());
+			var mainCamera = (Payload.HomeStatePayload.MainCamera = new HoloRoomFocusCameraPresenter());
 
 			App.P.AddGlobals(
 				new DialogPresenter(
@@ -59,7 +59,7 @@ namespace LunraGames.SubLight
 			);
 
 			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(DevPrefs.DevCreateGame, OnAutoNewGame);
-			else App.SM.RequestState(Payload.homePayload);
+			else App.SM.RequestState(Payload.HomeStatePayload);
 		}
 
 		#region Mediators
@@ -261,7 +261,7 @@ namespace LunraGames.SubLight
 		void OnAutoNewGame(RequestStatus result, GameModel model)
 		{
 			var payload = new GamePayload();
-			payload.MainCamera = Payload.homePayload.MainCamera;
+			payload.MainCamera = Payload.HomeStatePayload.MainCamera;
 			payload.Game = model;
 			App.SM.RequestState(payload);
 		}

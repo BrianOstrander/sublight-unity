@@ -73,5 +73,35 @@ namespace LunraGamesEditor
 					break;
 			}
 		}
+
+		public static Color ColorFromString(string value)
+		{
+			return Color.cyan.NewH(int.Parse(CreateMD5(value).Substring(0, 2), System.Globalization.NumberStyles.HexNumber) / 255f);
+		}
+
+		public static Color ColorFromIndex(int value)
+		{
+			return Color.cyan.NewH((value * 0.618034f) % 1f);
+		}
+
+		// TODO: Lol hacks.
+		static string CreateMD5(string input)
+		{
+			input = input ?? string.Empty;
+			// Use input string to calculate MD5 hash
+			using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+			{
+				var inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+				var hashBytes = md5.ComputeHash(inputBytes);
+
+				// Convert the byte array to hexadecimal string
+				var sb = new System.Text.StringBuilder();
+				for (int i = 0; i < hashBytes.Length; i++)
+				{
+					sb.Append(hashBytes[i].ToString("X2"));
+				}
+				return sb.ToString();
+			}
+		}
 	}
 }

@@ -6,5 +6,6 @@
 
 		public int GalaxySeed;
 		public string GalaxyId;
+		public string GalaxyTargetId;
 	}
 }

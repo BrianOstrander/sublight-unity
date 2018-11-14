@@ -1,8 +1,4 @@
-﻿using System;
-
-using UnityEngine;
-
-using LunraGames.SubLight.Models;
+﻿using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
@@ -19,11 +15,30 @@ namespace LunraGames.SubLight.Presenters
 		{
 			scaleInUniverse = model.Galaxy.GalaxySize;
 			positionInUniverse = model.Galaxy.GalaxyOrigin;
+
+			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
 
+		protected override void OnUnBind()
+		{
+			base.OnUnBind();
+
+			ScaleModel.Opacity.Changed -= OnScaleOpacity;
+		}
+
+		#region Events
 		protected override void OnShowView()
 		{
-			View.GalaxyPreview = Model.Galaxy.FullPreview;
+			var transform = Model.ActiveScale.Transform.Value;
+			View.SetGalaxy(Model.Galaxy.FullPreview, transform.UnityOrigin, transform.UnityRadius);
 		}
+
+		void OnScaleOpacity(float value)
+		{
+			if (!View.Visible) return;
+
+			View.Opacity = value;
+		}
+		#endregion
 	}
 }

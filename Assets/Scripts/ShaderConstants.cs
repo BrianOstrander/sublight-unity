@@ -92,6 +92,51 @@ namespace LunraGames.SubLight
 			public const string Revealed = "_Revealed";
 		}
 
+		public static class HoloCircleMaskWorld
+		{
+			// This is a subgraph...
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
+		}
+
+		public static class HoloGalaxy
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/Galaxy";
+			/// <summary>
+			/// The RGBA texture used for the outline of each layer.
+			/// </summary>
+			public const string LayerTexture = "_LayerTexture";
+			/// <summary>
+			/// The RGBA channel being used.
+			/// </summary>
+			public const string Channel = "_Channel";
+			/// <summary>
+			/// The color for this layer.
+			/// </summary>
+			public const string ChannelColor = "_ChannelColor";
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloTextureColorAlpha
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/TextureColorAlpha";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
+		}
+
 		public static class HoloGridBasic
 		{
 			/// <summary>

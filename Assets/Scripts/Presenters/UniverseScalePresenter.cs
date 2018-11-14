@@ -12,33 +12,32 @@ namespace LunraGames.SubLight.Presenters
 	{
 		const float MinimumScale = 0.001f;
 
-		protected abstract UniversePosition ScaleInUniverse { get; }
+		protected virtual UniversePosition ScaleInUniverse { get { return new UniversePosition(Vector3.one); } }
 		protected abstract UniversePosition PositionInUniverse { get; }
 
-		protected GameModel Model;
-
-		UniverseScales scale;
-		UniverseScaleModel scaleModel;
+		protected GameModel Model { get; private set; }
+		protected UniverseScales Scale { get; private set; }
+		protected UniverseScaleModel ScaleModel { get; private set; }
 
 		public UniverseScalePresenter(GameModel model, UniverseScales scale)
 		{
 			Model = model;
-			this.scale = scale;
-			scaleModel = model.GetScale(scale);
+			Scale = scale;
+			ScaleModel = model.GetScale(scale);
 
-			scaleModel.Transform.Changed += OnScaleTransform;
-			scaleModel.Opacity.Changed += OnOpacity;
+			ScaleModel.Transform.Changed += OnScaleTransform;
+			ScaleModel.Opacity.Changed += OnOpacity;
 		}
 
 		protected override void OnUnBind()
 		{
-			scaleModel.Transform.Changed -= OnScaleTransform;
-			scaleModel.Opacity.Changed -= OnOpacity;
+			ScaleModel.Transform.Changed -= OnScaleTransform;
+			ScaleModel.Opacity.Changed -= OnOpacity;
 		}
 
 		void ApplyScaleTransform(UniverseTransform transform)
 		{
-			var result = scaleModel.Transform.Value.GetUnityScale(ScaleInUniverse);
+			var result = transform.GetUnityScale(ScaleInUniverse);
 			result = new Vector3(
 				Mathf.Max(MinimumScale, result.x),
 				Mathf.Max(MinimumScale, result.y),
@@ -46,7 +45,7 @@ namespace LunraGames.SubLight.Presenters
 			);
 			View.Scale = result;
 			
-			View.Position = scaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
+			View.Position = ScaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
 		}
 
 		void ShowViewInstant()

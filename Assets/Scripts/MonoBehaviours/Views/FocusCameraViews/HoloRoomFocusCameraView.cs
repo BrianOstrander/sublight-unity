@@ -150,7 +150,7 @@ namespace LunraGames.SubLight.Views
 
 		Vector3 YawNormal(float yaw)
 		{
-			var radYaw = ((360f * yaw) + 90f) * Mathf.Deg2Rad;
+			var radYaw = ((360f * yaw) - 90f) * Mathf.Deg2Rad;
 			return new Vector3(Mathf.Cos(radYaw), 0f, Mathf.Sin(radYaw)); 
 		}
 

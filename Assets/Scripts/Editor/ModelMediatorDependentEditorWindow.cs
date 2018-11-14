@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 		protected Action Enable = ActionExtensions.Empty;
 		protected Action Disable = ActionExtensions.Empty;
 		protected Action Gui = ActionExtensions.Empty;
+		protected Action EditorUpdate = ActionExtensions.Empty;
 		protected Action Save = ActionExtensions.Empty;
 
 		EditorModelMediator editorSaveLoadService;
@@ -47,6 +48,11 @@ namespace LunraGames.SubLight
 		void OnGUI()
 		{
 			Gui();
+		}
+
+		void Update()
+		{
+			EditorUpdate();
 		}
 
 		void OnSaveLoadInitialized(RequestStatus status)

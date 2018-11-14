@@ -144,7 +144,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1594342017453310}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -172,7 +172,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1958481786401594}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.001, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4721160335375462}
@@ -237,7 +237,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 17f354411b2e44b8ba507e2bc60e3bae, type: 2}
+  - {fileID: 2100000, guid: b08c36dceab7b4512a35a964e53075ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -272,7 +272,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 17f354411b2e44b8ba507e2bc60e3bae, type: 2}
+  - {fileID: 2100000, guid: b08c36dceab7b4512a35a964e53075ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -307,7 +307,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 17f354411b2e44b8ba507e2bc60e3bae, type: 2}
+  - {fileID: 2100000, guid: b08c36dceab7b4512a35a964e53075ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -342,7 +342,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 17f354411b2e44b8ba507e2bc60e3bae, type: 2}
+  - {fileID: 2100000, guid: b08c36dceab7b4512a35a964e53075ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -408,12 +408,15 @@ MonoBehaviour:
     ShowDuration: 0
     CloseDuration: 0
   animations: []
+  scaleIgnores: 30
   scaleArea: {fileID: 4847102657539270}
   positionArea: {fileID: 4847102657539270}
+  ySeparation: 0.15
+  renderQueue: 3000
   layerColors:
-  - {r: 0.357, g: 0.357, b: 0.357, a: 1}
-  - {r: 0.616, g: 0.616, b: 0.616, a: 1}
-  - {r: 0.839, g: 0.839, b: 0.839, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0.39200002, g: 0.39200002, b: 0.39200002, a: 1}
+  - {r: 0.587, g: 0.587, b: 0.587, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   layerMeshes:
   - {fileID: 23829464805630160}

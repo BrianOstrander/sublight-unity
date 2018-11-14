@@ -36,6 +36,16 @@ namespace LunraGames.SubLight.Presenters
 		{
 			public float ZoomBegin;
 			public float LightYears;
+			/// <summary>
+			/// Zooming up will multiply by this value then add 1.0, this should
+			/// be greater than zero.
+			/// </summary>
+			public float ZoomUpScaleMultiplier;
+			/// <summary>
+			/// Zooming down will multiply by this and then subtract the result
+			/// from 1.0, this should be greater than zero and less than 1.0.
+			/// </summary>
+			public float ZoomDownScaleMultiplier;
 			public UniverseScales Scale;
 			public UniverseFocuses FocusFromZoomDown;
 			public UniverseFocuses FocusFromZoomUp;
@@ -45,11 +55,15 @@ namespace LunraGames.SubLight.Presenters
 				float lightYears,
 				UniverseScales scale,
 				UniverseFocuses focusFromZoomDown,
-				UniverseFocuses focusFromZoomUp
+				UniverseFocuses focusFromZoomUp,
+				float zoomUpScaleMultiplier = 3f,
+				float zoomDownScaleMultiplier = 0.75f
 			)
 			{
 				ZoomBegin = zoomBegin;
 				LightYears = lightYears;
+				ZoomUpScaleMultiplier = zoomUpScaleMultiplier;
+				ZoomDownScaleMultiplier = zoomDownScaleMultiplier;
 				Scale = scale;
 				FocusFromZoomDown = focusFromZoomDown;
 				FocusFromZoomUp = focusFromZoomUp;
@@ -89,9 +103,9 @@ namespace LunraGames.SubLight.Presenters
 				new UnitMap(0f, 0.1f, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(1f, 1f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(2f, 10f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(3f, 10000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(4f, 50000f, UniverseScales.Galactic, UniverseFocuses.GalacticOrigin, UniverseFocuses.GalacticOrigin),
-				new UnitMap(5f, 750000f, UniverseScales.Cluster, UniverseFocuses.ClusterOrigin, UniverseFocuses.None)
+				new UnitMap(3f, 5000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(4f, 25000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(5f, 75000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
 			};
 
 			App.Heartbeat.Update += OnUpdate;
@@ -208,20 +222,25 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 
-			var tileScalar = 1f;
+			var zoomProgress = View.ZoomCurve.Evaluate(progress);
+			var zoomScalar = 1f;
 
 			if (grid.IsTarget)
 			{
-				if (grid.ZoomingUp) tileScalar = 1f - (0.5f * (1f - grid.Progress));
-				else tileScalar = 1f + (1f - grid.Progress);
+				if (grid.ZoomingUp) zoomScalar = 1f - (0.5f * (1f - zoomProgress));
+				else zoomScalar = 1f + (1f - zoomProgress);
 			}
 			else
 			{
-				if (grid.ZoomingUp) tileScalar = 1f + grid.Progress;
-				else tileScalar = 1f - (0.5f * grid.Progress);
+				if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * unitMap.ZoomUpScaleMultiplier);
+				else zoomScalar = 1f - (unitMap.ZoomDownScaleMultiplier * zoomProgress);
+				//if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * 2f);
+				//else zoomScalar = 1f - (0.95f * zoomProgress);
+				//if (grid.ZoomingUp) zoomScalar = 1f + zoomProgress;
+				//else zoomScalar = 1f - (0.5f * zoomProgress);
 			}
 
-			grid.Tiling = Tiling * tileScalar;
+			grid.Tiling = Tiling * zoomScalar;
 
 			var offset = scaleTransform.GetGridOffset(UniversePosition.ToUniverseDistance(unitMap.LightYears));
 			grid.Offset = new Vector2(offset.x, offset.z);
@@ -230,15 +249,16 @@ namespace LunraGames.SubLight.Presenters
 
 			grid.Alpha = grid.IsActive ? alphaCurve.Evaluate(progress) : 0f;
 
-			var currLightYearsInTile = progress * unitMap.LightYears;
+			var currLightYearsInTile = zoomProgress * unitMap.LightYears;
 
-			var unityUnitsPerTile = (Tiling * 0.5f * tileScalar) / View.GridUnityWidth;
+			var unityUnitsPerTile = (Tiling * 0.5f * zoomScalar) / View.GridUnityRadius;
 			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(unitMap.LightYears);
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 
 			scale.Opacity.Value = grid.Alpha;
 			scale.Transform.Value = new UniverseTransform(
 				View.GridUnityOrigin,
+				View.GridUnityRadius,
 				scaleTransform.UniverseOrigin,
 				Vector3.one * universeUnitsPerUnityUnit,
 				Vector3.one * (1f / universeUnitsPerUnityUnit),
