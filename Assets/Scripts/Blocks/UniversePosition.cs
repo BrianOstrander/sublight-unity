@@ -71,6 +71,7 @@ namespace LunraGames.SubLight
 		}
 
 		public static UniversePosition Zero { get { return new UniversePosition(Vector3.zero, Vector3.zero); } }
+		public static UniversePosition One { get { return new UniversePosition(Vector3.one, Vector3.zero); } }
 
 		public UniversePosition(Vector3 local)
 		{

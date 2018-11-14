@@ -23,6 +23,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform lookAtArea;
 		[SerializeField]
+		Transform verticalLookAtArea;
+		[SerializeField]
 		CanvasGroup interactableArea;
 		[SerializeField]
 		TextMeshProUGUI detailNameLabel;
@@ -91,6 +93,7 @@ namespace LunraGames.SubLight.Views
 			base.OnLateIdle(delta);
 
 			lookAtArea.LookAt(lookAtArea.position + App.V.CameraForward.FlattenY());
+			verticalLookAtArea.LookAt(verticalLookAtArea.position + App.V.CameraForward);
 		}
 
 		public override void Reset()
