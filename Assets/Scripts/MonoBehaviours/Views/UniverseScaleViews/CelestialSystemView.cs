@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LunraGames.SubLight.Views
 {
@@ -60,6 +61,35 @@ namespace LunraGames.SubLight.Views
 
 	public class CelestialSystemView : UniverseScaleView, ICelestialSystemView
 	{
+		static class Constants
+		{
+			public static class DropLineThickness
+			{
+				public const float None = 0f;
+				public const float Normal = 0.5f;
+				public const float Full = 1f;
+			}
+
+			public static class SelectedOpacity
+			{
+				public const float None = 0f;
+				public const float Full = 1f;
+			}
+
+			public static class IconColorProgress
+			{
+				public const float NotVisited = 0f;
+				public const float Visited = 0.5f;
+				public const float Current = 1f;
+			}
+
+			public static class DetailsOpacity
+			{
+				public const float None = 0f;
+				public const float Full = 1f;
+			}
+		}
+
 		public Action Enter { set; private get; }
 		public Action Exit { set; private get; }
 		public Action Click { set; private get; }
@@ -75,14 +105,14 @@ namespace LunraGames.SubLight.Views
 		{
 			public float DropLineTopOffset;
 			public float DropLineThickness;
-			public float DropLineBaseVisibility;
+			public float DropLineBaseOpacity;
 			public float BaseDistanceThickness;
-			public float BaseDistanceVisibility;
-			public float DetailsVisibility;
-			public float ConfirmVisibility;
-			public float AnalysisVisibility;
-			public float OutlineThickness;
-			public float IconColorThickness;
+			public float BaseDistanceOpacity;
+			public float DetailsOpacity;
+			public float ConfirmOpacity;
+			public float AnalysisOpacity;
+			public float SelectedOpacity;
+			public float IconColorProgress;
 			public float Height;
 			public float Dimming;
 		}
@@ -139,44 +169,79 @@ namespace LunraGames.SubLight.Views
 
 
 			//	DropLineThickness
-			modified.DropLineThickness = 0f;
+			modified.DropLineThickness = Constants.DropLineThickness.None;
 			switch (HighlightState)
 			{
 				case Celestial.HighlightStates.Idle:
 					switch (VisitState)
 					{
 						case Celestial.VisitStates.Current:
-							modified.DropLineThickness = 1f;
+							modified.DropLineThickness = Constants.DropLineThickness.Full;
 							break;
 						default:
-							modified.DropLineThickness = 0.5f;
+							modified.DropLineThickness = Constants.DropLineThickness.Normal;
 							break;
 					}
 					break;
 				case Celestial.HighlightStates.OtherHighlighted:
-					if (VisitState == Celestial.VisitStates.Current) modified.DropLineThickness = 1f;
+					if (VisitState == Celestial.VisitStates.Current) modified.DropLineThickness = Constants.DropLineThickness.Full;
 					break;
 				case Celestial.HighlightStates.Highlighted:
 				case Celestial.HighlightStates.HighlightedAnalysis:
-					modified.DropLineThickness = 1f;
+					modified.DropLineThickness = Constants.DropLineThickness.Full;
 					break;
 			}
 
-			//	DropLineBaseVisibility
+			//	DropLineBaseOpacity
 
 			//	BaseDistanceThickness
 
-			//	BaseDistanceVisibility
+			//	BaseDistanceOpacity
 
-			//	DetailsVisibility
+			//	DetailsOpacity
+			modified.DetailsOpacity = Constants.DetailsOpacity.None;
+			switch (SelectedState)
+			{
+				case Celestial.SelectedStates.NotSelected:
+				case Celestial.SelectedStates.OtherSelected:
+					switch (HighlightState)
+					{
+						case Celestial.HighlightStates.Highlighted: modified.DetailsOpacity = Constants.DetailsOpacity.Full; break;
+					}
+					break;
+			}
 
-			//	ConfirmVisibility
+			//	ConfirmOpacity
 
-			//	AnalysisVisibility
+			//	AnalysisOpacity
 
-			//	OutlineThickness
+			//	SelectedOpacity
+			modified.SelectedOpacity = Constants.SelectedOpacity.None;
+			switch (SelectedState)
+			{
+				case Celestial.SelectedStates.Selected:
+					modified.SelectedOpacity = Constants.SelectedOpacity.Full;
+					break;
+				default:
+					switch(HighlightState)
+					{
+						case Celestial.HighlightStates.Idle:
+						case Celestial.HighlightStates.OtherHighlighted:
+							break;
+						default:
+							modified.SelectedOpacity = Constants.SelectedOpacity.Full;
+							break;
+					}
+					break;
+			}
 
-			//	IconColorThickness
+			//	IconColorProgress
+			modified.IconColorProgress = Constants.IconColorProgress.NotVisited;
+			switch (VisitState)
+			{
+				case Celestial.VisitStates.Visited: modified.IconColorProgress = Constants.IconColorProgress.Visited; break;
+				case Celestial.VisitStates.Current: modified.IconColorProgress = Constants.IconColorProgress.Current; break;
+			}
 
 			//	Height
 
@@ -190,7 +255,7 @@ namespace LunraGames.SubLight.Views
 			base.OnLateIdle(delta);
 
 			lookAtArea.LookAt(lookAtArea.position + App.V.CameraForward.FlattenY());
-			//verticalLookAtArea.LookAt(verticalLookAtArea.position + App.V.CameraForward);
+			verticalLookAtArea.LookAt(verticalLookAtArea.position + App.V.CameraForward);
 		}
 
 
@@ -205,15 +270,26 @@ namespace LunraGames.SubLight.Views
 			var wasChanged = false;
 
 			currentVisuals.DropLineTopOffset = ProcessVisual(currentVisuals.DropLineTopOffset, targetVisuals.DropLineTopOffset, currDelta, ref wasChanged);
+
+			// done
 			currentVisuals.DropLineThickness = ProcessVisual(currentVisuals.DropLineThickness, targetVisuals.DropLineThickness, currDelta, ref wasChanged, ApplyDropLineThickness);
-			currentVisuals.DropLineBaseVisibility = ProcessVisual(currentVisuals.DropLineBaseVisibility, targetVisuals.DropLineBaseVisibility, currDelta, ref wasChanged);
+
+			currentVisuals.DropLineBaseOpacity = ProcessVisual(currentVisuals.DropLineBaseOpacity, targetVisuals.DropLineBaseOpacity, currDelta, ref wasChanged);
 			currentVisuals.BaseDistanceThickness = ProcessVisual(currentVisuals.BaseDistanceThickness, targetVisuals.BaseDistanceThickness, currDelta, ref wasChanged);
-			currentVisuals.BaseDistanceVisibility = ProcessVisual(currentVisuals.BaseDistanceVisibility, targetVisuals.BaseDistanceVisibility, currDelta, ref wasChanged);
-			currentVisuals.DetailsVisibility = ProcessVisual(currentVisuals.DetailsVisibility, targetVisuals.DetailsVisibility, currDelta, ref wasChanged);
-			currentVisuals.ConfirmVisibility = ProcessVisual(currentVisuals.ConfirmVisibility, targetVisuals.ConfirmVisibility, currDelta, ref wasChanged);
-			currentVisuals.AnalysisVisibility = ProcessVisual(currentVisuals.AnalysisVisibility, targetVisuals.AnalysisVisibility, currDelta, ref wasChanged);
-			currentVisuals.OutlineThickness = ProcessVisual(currentVisuals.OutlineThickness, targetVisuals.OutlineThickness, currDelta, ref wasChanged);
-			currentVisuals.IconColorThickness = ProcessVisual(currentVisuals.IconColorThickness, targetVisuals.IconColorThickness, currDelta, ref wasChanged);
+			currentVisuals.BaseDistanceOpacity = ProcessVisual(currentVisuals.BaseDistanceOpacity, targetVisuals.BaseDistanceOpacity, currDelta, ref wasChanged);
+
+			//done
+			currentVisuals.DetailsOpacity = ProcessVisual(currentVisuals.DetailsOpacity, targetVisuals.DetailsOpacity, currDelta, ref wasChanged, ApplyDetailsOpacity);
+
+			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, currDelta, ref wasChanged);
+			currentVisuals.AnalysisOpacity = ProcessVisual(currentVisuals.AnalysisOpacity, targetVisuals.AnalysisOpacity, currDelta, ref wasChanged);
+
+			// done
+			currentVisuals.SelectedOpacity = ProcessVisual(currentVisuals.SelectedOpacity, targetVisuals.SelectedOpacity, currDelta, ref wasChanged, ApplySelectedOpacity);
+
+			// done
+			currentVisuals.IconColorProgress = ProcessVisual(currentVisuals.IconColorProgress, targetVisuals.IconColorProgress, currDelta, ref wasChanged, ApplyIconColorProgress);
+
 			currentVisuals.Height = ProcessVisual(currentVisuals.Height, targetVisuals.Height, currDelta, ref wasChanged);
 			currentVisuals.Dimming = ProcessVisual(currentVisuals.Dimming, targetVisuals.Dimming, currDelta, ref wasChanged);
 				
@@ -236,8 +312,8 @@ namespace LunraGames.SubLight.Views
 			var radiusNormal = RadiusNormal(dropLine.transform.position);
 			dropLine.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
 			var inBounds = radiusNormal < 1f;
-			group.interactable = inBounds;
-			group.blocksRaycasts = inBounds;
+			interactableGroup.interactable = inBounds;
+			interactableGroup.blocksRaycasts = inBounds;
 		}
 
 		#region Visual Applications
@@ -245,6 +321,22 @@ namespace LunraGames.SubLight.Views
 		{
 			dropLine.widthMultiplier = dropLineThickness.Evaluate(value) * dropLineThicknessMaximum;
 			bottomCenterMesh.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * bottomCenterOpacity.Evaluate(value));
+		}
+
+		void ApplySelectedOpacity(float value)
+		{
+			SetMeshAlpha(selectedGraphic.material, value);
+		}
+
+		void ApplyIconColorProgress(float value)
+		{
+			colorGraphic.material.SetFloat(ShaderConstants.HoloCelestialSystemIconColor.Progress, value);
+			iconGraphic.material.SetFloat(ShaderConstants.HoloCelestialSystemIcon.Progress, value);
+		}
+
+		void ApplyDetailsOpacity(float value)
+		{
+			detailsGroup.alpha = value;
 		}
 		#endregion
 
@@ -255,7 +347,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform lookAtArea;
 		[SerializeField]
-		CanvasGroup group;
+		Transform verticalLookAtArea;
+		[SerializeField]
+		CanvasGroup interactableGroup;
 
 		[SerializeField]
 		float dropLineThicknessMaximum;
@@ -270,6 +364,16 @@ namespace LunraGames.SubLight.Views
 		MeshRenderer bottomCenterMesh;
 		[SerializeField]
 		AnimationCurve bottomCenterOpacity;
+
+		[SerializeField]
+		MeshRenderer selectedGraphic;
+		[SerializeField]
+		MeshRenderer colorGraphic;
+		[SerializeField]
+		MeshRenderer iconGraphic;
+
+		[SerializeField]
+		CanvasGroup detailsGroup;
 		#endregion
 
 		#region Events
@@ -311,9 +415,14 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				base.Opacity = value;
-				dropLine.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
-
+				//dropLine.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * );
+				SetMeshAlpha(dropLine.material, dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
 			}
+		}
+
+		void SetMeshAlpha(Material material, float alpha)
+		{
+			material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * alpha);
 		}
 	}
 

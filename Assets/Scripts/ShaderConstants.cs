@@ -148,6 +148,32 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloCelestialSystemIcon
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/CelestialSystemIcon";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string Progress = "_Progress";
+		}
+
+		public static class HoloCelestialSystemIconColor
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/CelestialSystemIconColor";
+			public const string NotVisitedTexture = "_NotVisitedTexture";
+			public const string VisitedTexture = "_VisitedTexture";
+			public const string CurrentTexture = "_CurrentTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string Progress = "_Progress";
+		}
+
 		public static class HoloGridBasic
 		{
 			/// <summary>

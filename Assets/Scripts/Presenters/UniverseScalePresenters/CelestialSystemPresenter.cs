@@ -84,7 +84,8 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
-
+			visitState = Celestial.VisitStates.Visited;
+			ApplyStates();
 		}
 
 		void OnScaleOpacity(float value)
