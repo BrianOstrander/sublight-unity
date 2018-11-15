@@ -39,14 +39,15 @@ namespace LunraGames.SubLight.Presenters
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
 
-		void ApplyStates()
+		void ApplyStates(bool instant = false)
 		{
 			View.SetStates(
 				highlightState,
 				visitState,
 				rangeState,
 				selectedState,
-				travelState
+				travelState,
+				instant
 			);
 		}
 
@@ -68,7 +69,7 @@ namespace LunraGames.SubLight.Presenters
 			rangeState = Celestial.RangeStates.InRange;
 			travelState = Celestial.TravelStates.NotTraveling;
 
-			ApplyStates();
+			ApplyStates(true);
 
 		}
 

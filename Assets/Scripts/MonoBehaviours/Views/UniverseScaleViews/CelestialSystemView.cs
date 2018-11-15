@@ -126,7 +126,8 @@ namespace LunraGames.SubLight.Views
 			Celestial.VisitStates visitState = Celestial.VisitStates.Unknown,
 			Celestial.RangeStates rangeState = Celestial.RangeStates.Unknown,
 			Celestial.SelectedStates selectedState = Celestial.SelectedStates.Unknown,
-			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown
+			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown,
+			bool instant = true
 		)
 		{
 			var wasChanged = false;
@@ -157,7 +158,13 @@ namespace LunraGames.SubLight.Views
 			}
 
 			if (wasChanged) CalculateVisuals();
-			isStale = isStale || wasChanged;
+
+			if (instant)
+			{
+				ProcessAllVisuals(1f, true);
+				isStale = false;
+			}
+			else isStale = isStale || wasChanged;
 
 			return wasChanged;
 		}
@@ -267,42 +274,47 @@ namespace LunraGames.SubLight.Views
 
 			var currDelta = delta * transitionSpeed;
 
-			var wasChanged = false;
-
-			currentVisuals.DropLineTopOffset = ProcessVisual(currentVisuals.DropLineTopOffset, targetVisuals.DropLineTopOffset, currDelta, ref wasChanged);
-
-			// done
-			currentVisuals.DropLineThickness = ProcessVisual(currentVisuals.DropLineThickness, targetVisuals.DropLineThickness, currDelta, ref wasChanged, ApplyDropLineThickness);
-
-			currentVisuals.DropLineBaseOpacity = ProcessVisual(currentVisuals.DropLineBaseOpacity, targetVisuals.DropLineBaseOpacity, currDelta, ref wasChanged);
-			currentVisuals.BaseDistanceThickness = ProcessVisual(currentVisuals.BaseDistanceThickness, targetVisuals.BaseDistanceThickness, currDelta, ref wasChanged);
-			currentVisuals.BaseDistanceOpacity = ProcessVisual(currentVisuals.BaseDistanceOpacity, targetVisuals.BaseDistanceOpacity, currDelta, ref wasChanged);
-
-			//done
-			currentVisuals.DetailsOpacity = ProcessVisual(currentVisuals.DetailsOpacity, targetVisuals.DetailsOpacity, currDelta, ref wasChanged, ApplyDetailsOpacity);
-
-			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, currDelta, ref wasChanged);
-			currentVisuals.AnalysisOpacity = ProcessVisual(currentVisuals.AnalysisOpacity, targetVisuals.AnalysisOpacity, currDelta, ref wasChanged);
-
-			// done
-			currentVisuals.SelectedOpacity = ProcessVisual(currentVisuals.SelectedOpacity, targetVisuals.SelectedOpacity, currDelta, ref wasChanged, ApplySelectedOpacity);
-
-			// done
-			currentVisuals.IconColorProgress = ProcessVisual(currentVisuals.IconColorProgress, targetVisuals.IconColorProgress, currDelta, ref wasChanged, ApplyIconColorProgress);
-
-			currentVisuals.Height = ProcessVisual(currentVisuals.Height, targetVisuals.Height, currDelta, ref wasChanged);
-			currentVisuals.Dimming = ProcessVisual(currentVisuals.Dimming, targetVisuals.Dimming, currDelta, ref wasChanged);
-				
-			isStale = wasChanged;
+			isStale = ProcessAllVisuals(currDelta);
 		}
 
-		float ProcessVisual(float current, float target, float transitionDelta, ref bool wasChanged, Action<float> onChange = null)
+		bool ProcessAllVisuals(float delta, bool force = false)
+		{
+			var wasChanged = false;
+
+			currentVisuals.DropLineTopOffset = ProcessVisual(currentVisuals.DropLineTopOffset, targetVisuals.DropLineTopOffset, delta, ref wasChanged, force);
+
+			// done
+			currentVisuals.DropLineThickness = ProcessVisual(currentVisuals.DropLineThickness, targetVisuals.DropLineThickness, delta, ref wasChanged, force, ApplyDropLineThickness);
+
+			currentVisuals.DropLineBaseOpacity = ProcessVisual(currentVisuals.DropLineBaseOpacity, targetVisuals.DropLineBaseOpacity, delta, ref wasChanged, force);
+			currentVisuals.BaseDistanceThickness = ProcessVisual(currentVisuals.BaseDistanceThickness, targetVisuals.BaseDistanceThickness, delta, ref wasChanged, force);
+			currentVisuals.BaseDistanceOpacity = ProcessVisual(currentVisuals.BaseDistanceOpacity, targetVisuals.BaseDistanceOpacity, delta, ref wasChanged, force);
+
+			//done
+			currentVisuals.DetailsOpacity = ProcessVisual(currentVisuals.DetailsOpacity, targetVisuals.DetailsOpacity, delta, ref wasChanged, force, ApplyDetailsOpacity);
+
+			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, delta, ref wasChanged, force);
+			currentVisuals.AnalysisOpacity = ProcessVisual(currentVisuals.AnalysisOpacity, targetVisuals.AnalysisOpacity, delta, ref wasChanged, force);
+
+			// done
+			currentVisuals.SelectedOpacity = ProcessVisual(currentVisuals.SelectedOpacity, targetVisuals.SelectedOpacity, delta, ref wasChanged, force, ApplySelectedOpacity);
+
+			// done
+			currentVisuals.IconColorProgress = ProcessVisual(currentVisuals.IconColorProgress, targetVisuals.IconColorProgress, delta, ref wasChanged, force, ApplyIconColorProgress);
+
+			currentVisuals.Height = ProcessVisual(currentVisuals.Height, targetVisuals.Height, delta, ref wasChanged, force);
+			currentVisuals.Dimming = ProcessVisual(currentVisuals.Dimming, targetVisuals.Dimming, delta, ref wasChanged, force);
+
+			return wasChanged;
+		}
+
+		float ProcessVisual(float current, float target, float transitionDelta, ref bool wasChanged, bool force, Action<float> onChange = null)
 		{
 			var result = 0f;
 			if (current < target) result = Mathf.Min(current + transitionDelta, target);
 			else result = Mathf.Max(current - transitionDelta, target);
 			var currentChanged = !Mathf.Approximately(current, result);
-			if (currentChanged && onChange != null) onChange(result); 
+			if (onChange != null && (force || currentChanged)) onChange(result);
 			wasChanged = wasChanged || currentChanged;
 			return result;
 		}
@@ -437,7 +449,8 @@ namespace LunraGames.SubLight.Views
 			Celestial.VisitStates visitState = Celestial.VisitStates.Unknown,
 			Celestial.RangeStates rangeState = Celestial.RangeStates.Unknown,
 			Celestial.SelectedStates selectedState = Celestial.SelectedStates.Unknown,
-			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown
+			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown,
+			bool instant = false
 		);
 
 		//string Name { set; }
