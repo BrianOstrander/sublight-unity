@@ -17,6 +17,9 @@ namespace LunraGames.SubLight.Views
 
 		public virtual void SetGalaxy(Texture2D texture, Vector3 worldOrigin, float worldRadius)
 		{
+			WorldOrigin = worldOrigin;
+			WorldRadius = worldRadius;
+
 			for (var i = 0; i < layerMeshes.Length; i++)
 			{
 				var color = layerColors.Length == 0 ? Color.black : layerColors[Mathf.Min(i, layerColors.Length)];

@@ -127,11 +127,14 @@ namespace LunraGames.SubLight.Models
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
+		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default; 
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
 		[JsonIgnore]
 		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
+		[JsonIgnore]
+		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
 		#endregion
 
 		public GameModel()
@@ -152,6 +155,7 @@ namespace LunraGames.SubLight.Models
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
+			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState);
 			UniverseUnitsPerUnityUnit = new ListenerProperty<float>(value => universeUnitsPerUnityUnit = value, () => universeUnitsPerUnityUnit);
 		}
 

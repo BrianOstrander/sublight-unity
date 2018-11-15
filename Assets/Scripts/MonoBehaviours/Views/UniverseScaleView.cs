@@ -20,6 +20,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform positionArea;
 
+		public Vector3 WorldOrigin { set; protected get; }
+		public float WorldRadius { set; protected get; }
+
 		public Vector3 Scale
 		{
 			set
@@ -49,12 +52,22 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		protected float RadiusNormal(Vector3 worldPosition)
+		{
+			if (Mathf.Approximately(0f, WorldRadius)) return 1f;
+			worldPosition = worldPosition.NewY(WorldOrigin.y);
+			return Vector3.Distance(WorldOrigin, worldPosition) / WorldRadius;
+		}
+
 		protected virtual void OnScale(Vector3 scale) {}
 		protected virtual void OnPosition(Vector3 position) {}
 	}
 
 	public interface IUniverseScaleView : IView
 	{
+		Vector3 WorldOrigin { set; }
+		float WorldRadius { set; }
+
 		Vector3 Scale { set; }
 		Vector3 Position { set; }
 	}

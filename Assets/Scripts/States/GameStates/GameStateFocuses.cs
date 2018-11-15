@@ -63,8 +63,6 @@ namespace LunraGames.SubLight
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
 				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
-				//Sagittarius A*
-
 				new SystemAlertPresenter(
 					payload.Game,
 					payload.Game.Galaxy.GameEnd,
@@ -83,6 +81,14 @@ namespace LunraGames.SubLight
 
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic);
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant);
+
+				// testing this out...
+				var shipPos = payload.Game.Ship.Value.Position.Value;
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos);
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0.5f, 0f, 0f)));
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(-0.5f, 0f, 0f)));
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0f, 0.5f)));
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0f, -0.5f)));
 
 				done();
 			}

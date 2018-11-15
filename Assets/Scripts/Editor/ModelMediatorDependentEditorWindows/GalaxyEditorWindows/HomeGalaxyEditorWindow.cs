@@ -370,15 +370,15 @@ namespace LunraGames.SubLight
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
-				model.ClusterOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Cluster Origin", model.ClusterOrigin);
+				model.ClusterOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Cluster Origin", model.ClusterOrigin).LocalZero;
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.yellow);
-				model.GalaxyOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin);
+				model.GalaxyOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin).LocalZero;
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.green);
-				model.PlayerStart.Value = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart);
+				model.PlayerStart.Value = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart).LocalZero;
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
-				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
+				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd).LocalZero;
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				model.UniverseNormal.Value = EditorGUILayout.Vector3Field(new GUIContent("Universe Normal", "The up direction of this galaxy within the universe."), model.UniverseNormal.Value);
 				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);

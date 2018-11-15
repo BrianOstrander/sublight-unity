@@ -123,6 +123,20 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloTextureColorAlphaMasked
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/TextureColorAlphaMasked";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
+		}
+
 		public static class HoloTextureColorAlpha
 		{
 			/// <summary>
@@ -132,9 +146,6 @@ namespace LunraGames.SubLight
 			public const string PrimaryTexture = "_PrimaryTexture";
 			public const string PrimaryColor = "_PrimaryColor";
 			public const string Alpha = "_Alpha";
-
-			public const string WorldOrigin = "_WorldOrigin";
-			public const string WorldRadius = "_WorldRadius";
 		}
 
 		public static class HoloGridBasic

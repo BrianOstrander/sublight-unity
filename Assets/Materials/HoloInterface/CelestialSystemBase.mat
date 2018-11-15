@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: ClusterDropShadowCenter
+  m_Name: CelestialSystemBase
   m_Shader: {fileID: 4800000, guid: 81f1ed0dc90ff4a0087ba1436107611a, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -55,7 +55,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PrimaryTexture:
-        m_Texture: {fileID: 2800000, guid: 62223dbeca3d64116bf8990afef36b60, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1501e221dc29b4e268331bba13d07088, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:

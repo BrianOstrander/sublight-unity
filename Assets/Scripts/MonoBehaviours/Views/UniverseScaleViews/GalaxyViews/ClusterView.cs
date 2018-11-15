@@ -19,6 +19,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		LineRenderer line;
 		[SerializeField]
+		AnimationCurve lineRadiusOpacity;
+		[SerializeField]
 		MeshRenderer[] meshes;
 		[SerializeField]
 		Transform lookAtArea;
@@ -48,12 +50,10 @@ namespace LunraGames.SubLight.Views
 		public override void SetGalaxy(Texture2D texture, Vector3 worldOrigin, float worldRadius)
 		{
 			base.SetGalaxy(texture, worldOrigin, worldRadius);
-			line.material.SetVector(ShaderConstants.HoloTextureColorAlpha.WorldOrigin, worldOrigin);
-			line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.WorldRadius, worldRadius);
 			foreach (var mesh in meshes)
 			{
-				mesh.material.SetVector(ShaderConstants.HoloTextureColorAlpha.WorldOrigin, worldOrigin);
-				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.WorldRadius, worldRadius);
+				mesh.material.SetVector(ShaderConstants.HoloTextureColorAlphaMasked.WorldOrigin, worldOrigin);
+				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.WorldRadius, worldRadius);
 			}
 		}
 
@@ -80,10 +80,10 @@ namespace LunraGames.SubLight.Views
 			{
 				base.Opacity = value;
 				group.alpha = value;
-				line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value);
+				line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * lineRadiusOpacity.Evaluate(RadiusNormal(line.transform.position)));
 				foreach (var mesh in meshes)
 				{
-					mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value);
+					mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, value);
 				}
 			}
 		}
@@ -122,6 +122,7 @@ namespace LunraGames.SubLight.Views
 
 			line.SetPosition(0, position);
 			line.SetPosition(1, galaxyNameLabelPositionScaleArea.position);
+			line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * lineRadiusOpacity.Evaluate(RadiusNormal(line.transform.position)));
 		}
 
 		#region Events
