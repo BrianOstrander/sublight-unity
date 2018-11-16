@@ -148,6 +148,31 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloDistanceFieldColor
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/DistanceField/Color";
+			public const string DistanceField = "_DistanceField";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+		}
+
+		public static class HoloDistanceFieldColorConstant
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/DistanceField/ColorConstant";
+			public const string DistanceField = "_DistanceField";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+			public const string NearFarPlanes = "_NearFarPlanes";
+		}
+
 		public static class HoloCelestialSystemIcon
 		{
 			/// <summary>

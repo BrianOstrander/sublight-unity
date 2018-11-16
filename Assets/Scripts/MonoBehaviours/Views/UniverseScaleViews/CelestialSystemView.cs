@@ -352,7 +352,7 @@ namespace LunraGames.SubLight.Views
 		protected override void OnPosition(Vector3 position)
 		{
 			var radiusNormal = RadiusNormal(dropLine.transform.position);
-			dropLine.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
+			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
 			var inBounds = radiusNormal < 1f;
 			interactableGroup.interactable = inBounds;
 			interactableGroup.blocksRaycasts = inBounds;
@@ -362,12 +362,13 @@ namespace LunraGames.SubLight.Views
 		void ApplyDropLineThickness(float value)
 		{
 			dropLine.widthMultiplier = dropLineThickness.Evaluate(value) * dropLineThicknessMaximum;
-			bottomCenterMesh.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * bottomCenterOpacity.Evaluate(value));
+			SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorConstant.Alpha, dropLineThicknessOpacity.Evaluate(value));
+			SetMeshAlpha(bottomCenterMesh.material, ShaderConstants.HoloTextureColorAlpha.Alpha, bottomCenterOpacity.Evaluate(value));
 		}
 
 		void ApplySelectedOpacity(float value)
 		{
-			SetMeshAlpha(selectedGraphic.material, value);
+			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, value);
 		}
 
 		void ApplyIconColorProgress(float value)
@@ -407,6 +408,8 @@ namespace LunraGames.SubLight.Views
 		float dropLineThicknessMaximum;
 		[SerializeField]
 		AnimationCurve dropLineThickness;
+		[SerializeField]
+		AnimationCurve dropLineThicknessOpacity;
 		[SerializeField]
 		LineRenderer dropLine;
 		[SerializeField]
@@ -472,13 +475,13 @@ namespace LunraGames.SubLight.Views
 			{
 				base.Opacity = value;
 				//dropLine.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * );
-				SetMeshAlpha(dropLine.material, dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
+				SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorConstant.Alpha, dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
 			}
 		}
 
-		void SetMeshAlpha(Material material, float alpha)
+		void SetMeshAlpha(Material material, string fieldName, float alpha)
 		{
-			material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * alpha);
+			material.SetFloat(fieldName, Opacity * alpha);
 		}
 	}
 
