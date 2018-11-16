@@ -14,7 +14,10 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		public static CelestialSystemStateBlock Idle { get { return Default; } }
+		public static CelestialSystemStateBlock Idle(UniversePosition position)
+		{
+			return new CelestialSystemStateBlock(States.Idle, position);
+		}
 
 		public static CelestialSystemStateBlock Highlight(UniversePosition position)
 		{

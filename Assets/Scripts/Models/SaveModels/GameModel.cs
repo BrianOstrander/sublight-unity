@@ -127,7 +127,7 @@ namespace LunraGames.SubLight.Models
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
-		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default; 
+		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
@@ -135,6 +135,11 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
 		[JsonIgnore]
 		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
+
+		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
+
+		[JsonIgnore]
+		public CelestialSystemStateBlock CelestialSystemStateLastSelected { get { return celestialSystemStateLastSelected; } }
 		#endregion
 
 		public GameModel()
@@ -155,7 +160,7 @@ namespace LunraGames.SubLight.Models
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
-			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState);
+			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
 			UniverseUnitsPerUnityUnit = new ListenerProperty<float>(value => universeUnitsPerUnityUnit = value, () => universeUnitsPerUnityUnit);
 		}
 
@@ -202,7 +207,7 @@ namespace LunraGames.SubLight.Models
 
 		public UniverseScaleModel GetScale(UniverseScales scale)
 		{
-			switch(scale)
+			switch (scale)
 			{
 				case UniverseScales.System: return scaleSystem;
 				case UniverseScales.Local: return scaleLocal;
@@ -227,6 +232,20 @@ namespace LunraGames.SubLight.Models
 					if (curr.IsActive) return curr;
 				}
 				return null;
+			}
+		}
+
+		#endregion
+
+		#region Events
+		void OnCelestialSystemState(CelestialSystemStateBlock block)
+		{
+			switch (block.State)
+			{
+				case CelestialSystemStateBlock.States.UnSelected:
+				case CelestialSystemStateBlock.States.Selected:
+					celestialSystemStateLastSelected = block;
+					break;
 			}
 		}
 		#endregion

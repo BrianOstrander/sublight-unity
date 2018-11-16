@@ -82,6 +82,8 @@ namespace LunraGames.SubLight
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic);
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant);
 
+				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Stellar);
+
 				// testing this out...
 				var shipPos = payload.Game.Ship.Value.Position.Value;
 				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos);

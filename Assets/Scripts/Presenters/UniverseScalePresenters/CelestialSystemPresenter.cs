@@ -96,7 +96,19 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnExit()
 		{
-			Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle;
+			switch (selectedState)
+			{
+				case Celestial.SelectedStates.NotSelected:
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Ship.Value.Position);
+					break;
+				case Celestial.SelectedStates.Selected:
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(positionInUniverse);
+					break;
+				case Celestial.SelectedStates.OtherSelected:
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.CelestialSystemStateLastSelected.Position);
+					break;
+			}
+
 		}
 
 		void OnClick()
