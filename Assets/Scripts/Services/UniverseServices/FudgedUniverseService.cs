@@ -103,32 +103,24 @@ namespace LunraGames.SubLight
 			};
 
 			var demon = new Demon(sector.Seed);
-			var types = new SystemTypes[positions.Length];
 			var seeds = new int[positions.Length];
 
 			for (var i = 0; i < positions.Length; i++)
 			{
-				types[i] = SystemTypes.Celestial;
 				seeds[i] = demon.NextInteger;
 			}
 
 			var systems = new SystemModel[positions.Length];
 			for (var i = 0; i < positions.Length; i++)
 			{
-				systems[i] = CreateSystem(types[i], sector, seeds[i], sector.Position.Value.NewLocal(positions[i]));
+				systems[i] = CreateSystem(sector, seeds[i], sector.Position.Value.NewLocal(positions[i]));
 			}
 			sector.Systems.Value = systems;
 		}
 
-		public override SystemModel CreateSystem(SystemTypes systemType, SectorModel sector, int seed, UniversePosition position)
+		public override SystemModel CreateSystem(SectorModel sector, int seed, UniversePosition position)
 		{
-			SystemModel system;
-
-			switch (systemType)
-			{
-				case SystemTypes.Celestial: system = new CelestialSystemModel(); break;
-				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
-			}
+			SystemModel system = new SystemModel();
 
 			var random = new Demon(seed);
 
@@ -157,35 +149,23 @@ namespace LunraGames.SubLight
 			}
 			*/
 
-			system.RationsDetection.Value = random.NextFloat;
-			system.FuelDetection.Value = random.NextFloat;
-
-			switch (systemType)
-			{
-				case SystemTypes.Celestial: PopulateSystem(system as CelestialSystemModel); break;
-				default: throw new ArgumentException("Unsupported SystemType " + systemType, "systemType");
-			}
+			PopulateSystem(system);
 
 			return system;
 		}
 
-		public override void PopulateSystem(CelestialSystemModel celestialModel)
+		public override void PopulateSystem(SystemModel systemModel)
 		{
-			var random = new Demon(celestialModel.Seed + 1);
+			var random = new Demon(systemModel.Seed + 1);
 			var bodies = new List<BodyModel>();
 
-			var rationsRemaining = celestialModel.Rations.Value;
-			var fuelRemaining = celestialModel.Fuel.Value;
-
-			var star = new StarBodyModel();
+			var star = new BodyModel();
 			bodies.Add(star);
 			star.Seed.Value = random.NextInteger;
 			star.BodyId.Value = 0;
 			star.EncounterWeight.Value = random.NextFloat;
 			star.ParentId.Value = -1;
 			star.Name.Value = "Primary Star";
-			star.Resources.Rations.Value = GetFraction(ref rationsRemaining, random.NextFloat);
-			star.Resources.Fuel.Value = GetFraction(ref fuelRemaining, random.NextFloat);
 
 			var bodyCount = 0;
 
@@ -200,20 +180,18 @@ namespace LunraGames.SubLight
 				var encounterWeight = random.NextFloat;
 				var parentId = -1;
 				var name = string.Empty;
-				var rations = GetFraction(ref rationsRemaining, random.NextFloat);
-				var fuel = GetFraction(ref fuelRemaining, random.NextFloat);
 
 				switch (random.GetNextInteger(0, 2))
 				{
 					case 0:
 						// star
-						var starModel = new StarBodyModel();
+						var starModel = new BodyModel();
 						generic = starModel;
 						name = "Companion Star " + Strings.GreekAlpha(companionStar++, true);
 						break;
 					case 1:
 						// terrestrial
-						var terrestrialModel = new TerrestrialBodyModel();
+						var terrestrialModel = new BodyModel();
 						terrestrialModel.ParentId.Value = star.BodyId;
 						generic = terrestrialModel;
 
@@ -227,16 +205,11 @@ namespace LunraGames.SubLight
 				generic.EncounterWeight.Value = encounterWeight;
 				generic.ParentId.Value = parentId;
 				generic.Name.Value = name;
-				generic.Resources.Rations.Value = rations;
-				generic.Resources.Fuel.Value = fuel;
 
 				bodies.Add(generic);
 			}
 
-			star.Resources.Rations.Value += rationsRemaining;
-			star.Resources.Fuel.Value += fuelRemaining;
-
-			celestialModel.Bodies.Value = bodies.ToArray();
+			systemModel.Bodies.Value = bodies.ToArray();
 		}
 
 		#region Utility

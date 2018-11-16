@@ -85,7 +85,6 @@ namespace LunraGames.SubLight.Presenters
 			travelState = Celestial.TravelStates.NotTraveling;
 
 			ApplyStates(true);
-
 		}
 
 		void OnEnter()

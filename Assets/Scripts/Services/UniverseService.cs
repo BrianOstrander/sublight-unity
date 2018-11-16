@@ -48,8 +48,8 @@ namespace LunraGames.SubLight
 		}
 
 		public abstract void PopulateSector(SectorModel sector);
-		public abstract SystemModel CreateSystem(SystemTypes systemType, SectorModel sector, int seed, UniversePosition position);
-		public abstract void PopulateSystem(CelestialSystemModel celestialModel);
+		public abstract SystemModel CreateSystem(SectorModel sector, int seed, UniversePosition position);
+		public abstract void PopulateSystem(SystemModel systemModel);
 	}
 
 	public interface IUniverseService
@@ -91,11 +91,11 @@ namespace LunraGames.SubLight
 		/// <param name="sector">Sector.</param>
 		/// <param name="seed">Seed.</param>
 		/// <param name="position">Position.</param>
-		SystemModel CreateSystem(SystemTypes systemType, SectorModel sector, int seed, UniversePosition position);
+		SystemModel CreateSystem(SectorModel sector, int seed, UniversePosition position);
 		/// <summary>
 		/// Populates a star system.
 		/// </summary>
 		/// <param name="celestialModel">Star model.</param>
-		void PopulateSystem(CelestialSystemModel celestialModel);
+		void PopulateSystem(SystemModel systemModel);
 	}
 }

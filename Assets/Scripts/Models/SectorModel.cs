@@ -13,7 +13,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool visited;
 		[JsonProperty] UniversePosition position;
 
-		[JsonProperty] CelestialSystemModel[] celestials = new CelestialSystemModel[0];
+		[JsonProperty] SystemModel[] systems = new SystemModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;
@@ -21,19 +21,15 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<bool> Visited;
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> Position;
-
-		#region Derived
 		[JsonIgnore]
 		public readonly ListenerProperty<SystemModel[]> Systems;
-		#endregion
 
 		public SectorModel()
 		{
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			Visited = new ListenerProperty<bool>(value => visited = value, () => visited);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
-
-			Systems = new ListenerProperty<SystemModel[]>(OnSetSystems, OnGetSystems);
+			Systems = new ListenerProperty<SystemModel[]>(value => systems = value, () => systems);
 		}
 
 		#region Utility
@@ -45,33 +41,6 @@ namespace LunraGames.SubLight.Models
 		public BodyModel GetBody(UniversePosition position, int id)
 		{
 			return GetSystem(position).GetBody(id);
-		}
-		#endregion
-
-		#region Events
-		void OnSetSystems(SystemModel[] newSystems)
-		{
-			var celestialList = new List<CelestialSystemModel>();
-
-			foreach (var system in newSystems)
-			{
-				switch(system.SystemType)
-				{
-					case SystemTypes.Celestial:
-						celestialList.Add(system as CelestialSystemModel);
-						break;
-					default:
-						Debug.LogError("Unrecognized SystemType: " + system.SystemType);
-						break;
-				}
-			}
-
-			celestials = celestialList.ToArray();
-		}
-
-		SystemModel[] OnGetSystems()
-		{
-			return celestials.ToArray();
 		}
 		#endregion
 	}

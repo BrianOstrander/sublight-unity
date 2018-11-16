@@ -249,18 +249,6 @@ namespace LunraGames.SubLight
 				var alternateColor = Color.grey;
 
 				EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "These checks determine if the encounter will be selected."), model.Filtering, alternateColor);
-
-				model.ValidSystems.Value = EditorGUILayoutExtensions.EnumArray(
-					"Valid Systems",
-					model.ValidSystems.Value,
-					"- Select a SystemType -"
-				);
-				model.ValidBodies.Value = EditorGUILayoutExtensions.EnumArray(
-					"Valid Bodies",
-					model.ValidBodies.Value,
-					"- Select a BodyType -",
-					color: alternateColor
-				);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref selectedEncounterModified);
 		}
