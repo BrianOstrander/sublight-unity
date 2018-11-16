@@ -121,6 +121,10 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.HoloColorRequest(new HoloColorRequest(Color.white));
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
+
+			Payload.Game.ActiveScale.Opacity.Changed(1f); // Probably bad to do and I should feel bad... but oh well...
+
+			//App.Callbacks.
 		}
 
 		void OnIdleShowFocus()
