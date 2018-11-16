@@ -5,6 +5,8 @@ namespace LunraGames.SubLight.Views
 	public class CelestialSystemDistanceLineView : UniverseScaleView, ICelestialSystemDistanceLineView
 	{
 		[SerializeField]
+		float yMinimumOffset;
+		[SerializeField]
 		LineRenderer bottomLine;
 		[SerializeField]
 		LineRenderer topLine;
@@ -16,7 +18,7 @@ namespace LunraGames.SubLight.Views
 		public void SetPoints(Vector3 begin, Vector3 end)
 		{
 			var delta = end - begin;
-			bottomLine.SetPositions(new Vector3[] { Vector3.zero, delta });
+			bottomLine.SetPositions(new Vector3[] { Vector3.zero, delta.NewY(0f) });
 
 			var distance = Vector3.Distance(begin, end);
 			var totalMargins = topLineMargin * 2f;
@@ -40,7 +42,7 @@ namespace LunraGames.SubLight.Views
 
 			var allTopSegments = new Vector3[topSegments + 1];
 
-			topBegin += new Vector3(0f, 0.5f, 0f); // this should be automatic...
+			topBegin += new Vector3(0f, yMinimumOffset, 0f); // this should be automatic...
 
 			for (var i = 0; i < allTopSegments.Length; i++)
 			{

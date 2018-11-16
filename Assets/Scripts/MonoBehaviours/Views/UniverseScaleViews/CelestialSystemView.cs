@@ -351,9 +351,15 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
 		{
+			var positionWithHeight = new Vector3(0f, yMinimumOffset + (rawPosition - position).y, 0f);
+			verticalLookAtArea.transform.localPosition = positionWithHeight;
+			
 			var radiusNormal = RadiusNormal(dropLine.transform.position);
 			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
+			dropLine.SetPosition(1, positionWithHeight);
+
 			var inBounds = radiusNormal < 1f;
+
 			interactableGroup.interactable = inBounds;
 			interactableGroup.blocksRaycasts = inBounds;
 		}
@@ -403,6 +409,9 @@ namespace LunraGames.SubLight.Views
 		Transform verticalLookAtArea;
 		[SerializeField]
 		CanvasGroup interactableGroup;
+
+		[SerializeField]
+		float yMinimumOffset;
 
 		[SerializeField]
 		float dropLineThicknessMaximum;

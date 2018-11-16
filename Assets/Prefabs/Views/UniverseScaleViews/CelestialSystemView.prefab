@@ -1157,12 +1157,14 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   scaleIgnores: 30
+  positionIgnores: 30
   scaleArea: {fileID: 0}
   positionArea: {fileID: 4930568094924322}
   transitionSpeed: 5
   lookAtArea: {fileID: 4256427941479970}
   verticalLookAtArea: {fileID: 4514107281748900}
   interactableGroup: {fileID: 225938377382916814}
+  yMinimumOffset: 0.5
   dropLineThicknessMaximum: 0.1
   dropLineThickness:
     serializedVersion: 2

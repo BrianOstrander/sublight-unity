@@ -152,6 +152,7 @@ MonoBehaviour:
   positionIgnores: 30
   scaleArea: {fileID: 0}
   positionArea: {fileID: 4389095139619840}
+  yMinimumOffset: 0.5
   bottomLine: {fileID: 120391768602615030}
   topLine: {fileID: 120696821935069996}
   topLineMargin: 0.3
