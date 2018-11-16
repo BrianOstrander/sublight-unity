@@ -94,6 +94,12 @@ namespace LunraGames.SubLight.Views
 				public const float None = 0f;
 				public const float Full = 1f;
 			}
+
+			public static class BaseDistanceOpacity
+			{
+				public const float None = 0f;
+				public const float Full = 1f;
+			}
 		}
 
 		public Action Enter { set; private get; }
@@ -210,6 +216,14 @@ namespace LunraGames.SubLight.Views
 			//	BaseDistanceThickness
 
 			//	BaseDistanceOpacity
+			modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.None;
+			switch (HighlightState)
+			{
+				case Celestial.HighlightStates.Highlighted:
+				case Celestial.HighlightStates.HighlightedAnalysis:
+					modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+					break;
+			}
 
 			//	DetailsOpacity
 			modified.DetailsOpacity = Constants.DetailsOpacity.None;
@@ -304,9 +318,9 @@ namespace LunraGames.SubLight.Views
 
 			currentVisuals.DropLineBaseOpacity = ProcessVisual(currentVisuals.DropLineBaseOpacity, targetVisuals.DropLineBaseOpacity, delta, ref wasChanged, force);
 			currentVisuals.BaseDistanceThickness = ProcessVisual(currentVisuals.BaseDistanceThickness, targetVisuals.BaseDistanceThickness, delta, ref wasChanged, force);
-			currentVisuals.BaseDistanceOpacity = ProcessVisual(currentVisuals.BaseDistanceOpacity, targetVisuals.BaseDistanceOpacity, delta, ref wasChanged, force);
 
 			//done
+			currentVisuals.BaseDistanceOpacity = ProcessVisual(currentVisuals.BaseDistanceOpacity, targetVisuals.BaseDistanceOpacity, delta, ref wasChanged, force, ApplyBaseDistanceOpacity);
 			currentVisuals.DetailsOpacity = ProcessVisual(currentVisuals.DetailsOpacity, targetVisuals.DetailsOpacity, delta, ref wasChanged, force, ApplyDetailsOpacity);
 			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, delta, ref wasChanged, force, ApplyConfirmOpacity);
 
@@ -371,6 +385,11 @@ namespace LunraGames.SubLight.Views
 		{
 			confirmGroup.alpha = value;
 		}
+
+		void ApplyBaseDistanceOpacity(float value)
+		{
+			baseDistanceGroup.alpha = value;
+		}
 		#endregion
 
 		#region Children
@@ -407,9 +426,10 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		CanvasGroup detailsGroup;
-
 		[SerializeField]
 		CanvasGroup confirmGroup;
+		[SerializeField]
+		CanvasGroup baseDistanceGroup;
 		#endregion
 
 		#region Events
