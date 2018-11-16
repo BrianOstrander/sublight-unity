@@ -22,8 +22,14 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform positionArea;
 
-		public Vector3 WorldOrigin { set; protected get; }
-		public float WorldRadius { set; protected get; }
+		protected Vector3 GridOrigin { private set; get; }
+		protected float GridRadius { private set; get; }
+
+		public void SetGrid(Vector3 gridOrigin, float gridRadius)
+		{
+			GridOrigin = gridOrigin;
+			GridRadius = gridRadius;
+		}
 
 		public Vector3 Scale
 		{
@@ -69,9 +75,9 @@ namespace LunraGames.SubLight.Views
 
 		protected float RadiusNormal(Vector3 worldPosition)
 		{
-			if (Mathf.Approximately(0f, WorldRadius)) return 1f;
-			worldPosition = worldPosition.NewY(WorldOrigin.y);
-			return Vector3.Distance(WorldOrigin, worldPosition) / WorldRadius;
+			if (Mathf.Approximately(0f, GridRadius)) return 1f;
+			worldPosition = worldPosition.NewY(GridOrigin.y);
+			return Vector3.Distance(GridOrigin, worldPosition) / GridRadius;
 		}
 
 		protected virtual void OnScale(Vector3 scale, Vector3 rawScale) {}
@@ -80,8 +86,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IUniverseScaleView : IView
 	{
-		Vector3 WorldOrigin { set; }
-		float WorldRadius { set; }
+		void SetGrid(Vector3 gridOrigin, float gridRadius);
 
 		Vector3 Scale { set; }
 		Vector3 Position { set; }

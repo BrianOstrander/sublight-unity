@@ -47,13 +47,13 @@ namespace LunraGames.SubLight.Views
 		public Vector3 GalaxyNormal { set { galaxyRotationArea.LookAt(galaxyRotationArea.position + value.normalized); } }
 		public float AlertHeightMultiplier { set; private get; }
 
-		public override void SetGalaxy(Texture2D texture, Vector3 worldOrigin, float worldRadius)
+		public override void SetGalaxy(Texture2D texture, Vector3 gridOrigin, float gridRadius)
 		{
-			base.SetGalaxy(texture, worldOrigin, worldRadius);
+			base.SetGalaxy(texture, gridOrigin, gridRadius);
 			foreach (var mesh in meshes)
 			{
-				mesh.material.SetVector(ShaderConstants.HoloTextureColorAlphaMasked.WorldOrigin, worldOrigin);
-				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.WorldRadius, worldRadius);
+				mesh.material.SetVector(ShaderConstants.HoloTextureColorAlphaMasked.WorldOrigin, gridOrigin);
+				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.WorldRadius, gridRadius);
 			}
 		}
 

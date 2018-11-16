@@ -55,8 +55,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShowView()
 		{
-			View.WorldOrigin = ScaleModel.Transform.Value.UnityOrigin;
-			View.WorldRadius = ScaleModel.Transform.Value.UnityRadius;
+			View.SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
 
 			UniversePosition? end = null;
 			if (Model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected)
