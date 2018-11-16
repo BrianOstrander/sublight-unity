@@ -21,11 +21,23 @@ namespace LunraGames.SubLight
 			return new CelestialSystemStateBlock(States.Highlighted, position);
 		}
 
+		public static CelestialSystemStateBlock Select(UniversePosition position)
+		{
+			return new CelestialSystemStateBlock(States.Selected, position);
+		}
+
+		public static CelestialSystemStateBlock UnSelect(UniversePosition position)
+		{
+			return new CelestialSystemStateBlock(States.UnSelected, position);
+		}
+
 		public enum States
 		{
 			Unknown = 0,
 			Idle = 10,
-			Highlighted = 20
+			Highlighted = 20,
+			Selected = 30,
+			UnSelected = 40
 		}
 
 		public States State;

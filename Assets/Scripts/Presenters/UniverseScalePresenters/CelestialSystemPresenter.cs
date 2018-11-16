@@ -25,6 +25,8 @@ namespace LunraGames.SubLight.Presenters
 		{
 			this.positionInUniverse = positionInUniverse;
 
+			App.Callbacks.Click += OnGlobalClick;
+
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
@@ -33,6 +35,8 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
+
+			App.Callbacks.Click -= OnGlobalClick;
 
 			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
 
@@ -52,6 +56,18 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnGlobalClick(Click click)
+		{
+			if (!click.ClickedNothing) return;
+
+			switch(selectedState)
+			{
+				case Celestial.SelectedStates.Selected:
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(positionInUniverse);
+					break;
+			}
+		}
+
 		protected override void OnShowView()
 		{
 			View.WorldOrigin = ScaleModel.Transform.Value.UnityOrigin;
@@ -85,8 +101,13 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
-			visitState = Celestial.VisitStates.Visited;
-			ApplyStates();
+			switch (selectedState)
+			{
+				case Celestial.SelectedStates.OtherSelected:
+				case Celestial.SelectedStates.NotSelected:
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse);
+					break;
+			}
 		}
 
 		void OnScaleOpacity(float value)
@@ -98,24 +119,42 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
 		{
+			if (OnCelestialSystemStateProcess(block.Position.Equals(positionInUniverse), block))
+			{
+				if (View.Visible) ApplyStates();
+			}
+		}
 
+		bool OnCelestialSystemStateProcess(bool isCurrent, CelestialSystemStateBlock block)
+		{
 			switch (block.State)
 			{
 				case CelestialSystemStateBlock.States.Idle:
 					highlightState = Celestial.HighlightStates.Idle;
-					selectedState = Celestial.SelectedStates.NotSelected;
-					ApplyStates();
-					break;
+					return true;
 				case CelestialSystemStateBlock.States.Highlighted:
-					var isCurrent = block.Position.Equals(positionInUniverse);
-					highlightState = isCurrent ? Celestial.HighlightStates.Highlighted : Celestial.HighlightStates.OtherHighlighted;
-					ApplyStates();
-					break;
+					if (isCurrent) highlightState = Celestial.HighlightStates.Highlighted;
+					else highlightState = Celestial.HighlightStates.OtherHighlighted;
+					return true;
+				case CelestialSystemStateBlock.States.Selected:
+					if (isCurrent)
+					{
+						highlightState = Celestial.HighlightStates.Highlighted;
+						selectedState = Celestial.SelectedStates.Selected;
+					}
+					else
+					{
+						highlightState = Celestial.HighlightStates.OtherHighlighted;
+						selectedState = Celestial.SelectedStates.OtherSelected;
+					}
+					return true;
+				case CelestialSystemStateBlock.States.UnSelected:
+					selectedState = Celestial.SelectedStates.NotSelected;
+					return true;
+				default:
+					Debug.Log("Unrecognized state: " + block.State);
+					return false;
 			}
-			//if ()
-			//{
-
-			//}
 		}
 		#endregion
 	}
