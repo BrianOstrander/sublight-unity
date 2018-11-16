@@ -88,9 +88,9 @@ namespace LunraGames.SubLight
 				var shipPos = payload.Game.Ship.Value.Position.Value;
 				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos);
 				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0.5f, 0f, 0f)));
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(-0.5f, 0f, 0f)));
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0f, 0.5f)));
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0f, -0.5f)));
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(-0.5f, 1f, 0f)));
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.5f, 0.5f)));
+				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.25f, -0.5f)));
 
 				done();
 			}

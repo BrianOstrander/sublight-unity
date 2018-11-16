@@ -349,7 +349,7 @@ namespace LunraGames.SubLight.Views
 			return result;
 		}
 
-		protected override void OnPosition(Vector3 position)
+		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
 		{
 			var radiusNormal = RadiusNormal(dropLine.transform.position);
 			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));

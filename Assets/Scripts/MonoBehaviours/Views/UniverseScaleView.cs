@@ -16,6 +16,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Axises scaleIgnores = Axises.Y;
 		[SerializeField]
+		Axises positionIgnores = Axises.Y;
+		[SerializeField]
 		Transform scaleArea;
 		[SerializeField]
 		Transform positionArea;
@@ -27,6 +29,7 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
+				var rawValue = value;
 				switch(scaleIgnores)
 				{
 					case Axises.None: break;
@@ -39,7 +42,7 @@ namespace LunraGames.SubLight.Views
 				}
 
 				if (scaleArea != null) scaleArea.localScale = value;
-				OnScale(value);
+				OnScale(value, rawValue);
 			}
 		}
 
@@ -47,8 +50,20 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
+				var rawValue = value;
+				switch (positionIgnores)
+				{
+					case Axises.None: break;
+					case Axises.X: value = value.NewX(transform.position.x); break;
+					case Axises.Y: value = value.NewY(transform.position.y); break;
+					case Axises.Z: value = value.NewZ(transform.position.z); break;
+					default:
+						Debug.LogError("Unrecognized axis: " + positionIgnores);
+						break;
+				}
+
 				if (positionArea != null) positionArea.position = value;
-				OnPosition(value);
+				OnPosition(value, rawValue);
 			}
 		}
 
@@ -59,8 +74,8 @@ namespace LunraGames.SubLight.Views
 			return Vector3.Distance(WorldOrigin, worldPosition) / WorldRadius;
 		}
 
-		protected virtual void OnScale(Vector3 scale) {}
-		protected virtual void OnPosition(Vector3 position) {}
+		protected virtual void OnScale(Vector3 scale, Vector3 rawScale) {}
+		protected virtual void OnPosition(Vector3 position, Vector3 rawPosition) {}
 	}
 
 	public interface IUniverseScaleView : IView

@@ -9,6 +9,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e11b1321c1af4e669957594e319f9fe, type: 3}
-  m_Name: FollowRoomCameraOriginAnimation
+  m_Name: HoloSurfaceFollow
   m_EditorClassIdentifier: 
-  tag: RoomCameraOrigin
+  tag: HoloSurfaceOrigin

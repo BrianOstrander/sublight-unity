@@ -2867,6 +2867,7 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   scaleIgnores: 30
+  positionIgnores: 10
   scaleArea: {fileID: 4824721827506310}
   positionArea: {fileID: 4824721827506310}
   ySeparation: 0.075

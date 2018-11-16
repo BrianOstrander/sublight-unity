@@ -34,6 +34,19 @@ namespace LunraGames.SubLight.Presenters
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
 
+		void SetPoints(UniversePosition? end)
+		{
+			var noShow = !end.HasValue;
+
+			View.Opacity = noShow ? 0f : 1f;
+
+			var transform = ScaleModel.Transform.Value;
+
+			end = end ?? Model.Ship.Value.Position;
+
+			View.SetPoints(transform.GetUnityPosition(Model.Ship.Value.Position), transform.GetUnityPosition(end.Value));
+		}
+
 		#region Events
 		void OnShipPosition(UniversePosition position)
 		{
@@ -45,16 +58,16 @@ namespace LunraGames.SubLight.Presenters
 			View.WorldOrigin = ScaleModel.Transform.Value.UnityOrigin;
 			View.WorldRadius = ScaleModel.Transform.Value.UnityRadius;
 
-			UniversePosition? endPosition = null;
+			UniversePosition? end = null;
 			if (Model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected)
 			{
 				switch (Model.CelestialSystemState.Value.State)
 				{
 					case CelestialSystemStateBlock.States.Highlighted:
-						endPosition = Model.CelestialSystemState.Value.Position;
+						end = Model.CelestialSystemState.Value.Position;
 						break;
 					default:
-						endPosition = Model.CelestialSystemStateLastSelected.Position;
+						end = Model.CelestialSystemStateLastSelected.Position;
 						break;
 				}
 			}
@@ -63,19 +76,12 @@ namespace LunraGames.SubLight.Presenters
 				switch (Model.CelestialSystemState.Value.State)
 				{
 					case CelestialSystemStateBlock.States.Highlighted:
-						endPosition = Model.CelestialSystemState.Value.Position;
+						end = Model.CelestialSystemState.Value.Position;
 						break;
 				}
 			}
-			var noShow = !endPosition.HasValue;
 
-			View.Opacity = noShow ? 0f : 1f;
-
-			var transform = ScaleModel.Transform.Value;
-
-			endPosition = endPosition ?? Model.Ship.Value.Position;
-
-			View.SetPoints(transform.GetUnityPosition(Model.Ship.Value.Position), transform.GetUnityPosition(endPosition.Value));
+			SetPoints(end);
 		}
 
 		void OnScaleOpacity(float value)
@@ -87,7 +93,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
 		{
-			UniversePosition? endPosition = null;
+			UniversePosition? end = null;
 
 			switch (block.State)
 			{
@@ -95,32 +101,19 @@ namespace LunraGames.SubLight.Presenters
 					break;
 				case CelestialSystemStateBlock.States.Highlighted:
 				case CelestialSystemStateBlock.States.Selected:
-					endPosition = block.Position;
+					end = block.Position;
 					break;
 				default:
 					switch (Model.CelestialSystemStateLastSelected.State)
 					{
 						case CelestialSystemStateBlock.States.Selected:
-							endPosition = Model.CelestialSystemStateLastSelected.Position;
+							end = Model.CelestialSystemStateLastSelected.Position;
 							break;
 					}
 					break;
 			}
 
-			var noShow = !endPosition.HasValue;
-
-			View.Opacity = noShow ? 0f : 1f;
-
-			var transform = ScaleModel.Transform.Value;
-
-			endPosition = endPosition ?? Model.Ship.Value.Position;
-
-			View.SetPoints(transform.GetUnityPosition(Model.Ship.Value.Position), transform.GetUnityPosition(endPosition.Value));
-
-			//if (OnCelestialSystemStateProcess(block.Position.Equals(positionInUniverse), block))
-			//{
-			//	if (View.Visible) ApplyStates();
-			//}
+			SetPoints(end);
 		}
 		#endregion
 	}

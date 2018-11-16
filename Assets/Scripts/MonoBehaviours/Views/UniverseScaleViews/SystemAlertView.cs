@@ -53,7 +53,7 @@ namespace LunraGames.SubLight.Views
 			Click = ActionExtensions.Empty;
 		}
 
-		protected override void OnPosition(Vector3 position)
+		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
 		{
 			lookAtArea.position = position.NewY(position.y + yHeight);
 		}

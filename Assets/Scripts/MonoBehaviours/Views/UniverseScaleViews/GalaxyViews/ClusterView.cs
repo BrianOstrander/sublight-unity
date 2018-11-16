@@ -109,12 +109,12 @@ namespace LunraGames.SubLight.Views
 			AlertHeightMultiplier = 0f;
 		}
 
-		protected override void OnScale(Vector3 scale)
+		protected override void OnScale(Vector3 scale, Vector3 rawScale)
 		{
 			galaxyNameLabelPositionScaleArea.localScale = scale;
 		}
 
-		protected override void OnPosition(Vector3 position)
+		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
 		{
 			galaxyNameLabelPositionScaleArea.position = position.NewY(transform.position.y);
 
