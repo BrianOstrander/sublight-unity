@@ -88,6 +88,12 @@ namespace LunraGames.SubLight.Views
 				public const float None = 0f;
 				public const float Full = 1f;
 			}
+
+			public static class ConfirmOpacity
+			{
+				public const float None = 0f;
+				public const float Full = 1f;
+			}
 		}
 
 		public Action Enter { set; private get; }
@@ -219,6 +225,16 @@ namespace LunraGames.SubLight.Views
 			}
 
 			//	ConfirmOpacity
+			modified.ConfirmOpacity = Constants.ConfirmOpacity.None;
+			switch (SelectedState)
+			{
+				case Celestial.SelectedStates.Selected:
+					switch (HighlightState)
+					{
+						case Celestial.HighlightStates.Highlighted: modified.ConfirmOpacity = Constants.ConfirmOpacity.Full; break;
+					}
+					break;
+			}
 
 			//	AnalysisOpacity
 
@@ -292,8 +308,8 @@ namespace LunraGames.SubLight.Views
 
 			//done
 			currentVisuals.DetailsOpacity = ProcessVisual(currentVisuals.DetailsOpacity, targetVisuals.DetailsOpacity, delta, ref wasChanged, force, ApplyDetailsOpacity);
+			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, delta, ref wasChanged, force, ApplyConfirmOpacity);
 
-			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, delta, ref wasChanged, force);
 			currentVisuals.AnalysisOpacity = ProcessVisual(currentVisuals.AnalysisOpacity, targetVisuals.AnalysisOpacity, delta, ref wasChanged, force);
 
 			// done
@@ -350,6 +366,11 @@ namespace LunraGames.SubLight.Views
 		{
 			detailsGroup.alpha = value;
 		}
+
+		void ApplyConfirmOpacity(float value)
+		{
+			confirmGroup.alpha = value;
+		}
 		#endregion
 
 		#region Children
@@ -386,6 +407,9 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		CanvasGroup detailsGroup;
+
+		[SerializeField]
+		CanvasGroup confirmGroup;
 		#endregion
 
 		#region Events
