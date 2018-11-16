@@ -199,4 +199,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   lipMesh: {fileID: 23644710510876718}
-  renderQueue: 2999
+  renderQueue: 2990

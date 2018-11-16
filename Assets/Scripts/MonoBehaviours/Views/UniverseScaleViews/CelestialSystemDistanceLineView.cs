@@ -9,7 +9,8 @@ namespace LunraGames.SubLight.Views
 
 		public void SetPoints(Vector3 begin, Vector3 end)
 		{
-			bottomLine.SetPositions(new Vector3[] { begin, end });
+			var delta = end - begin;
+			bottomLine.SetPositions(new Vector3[] { Vector3.zero, delta });
 		}
 	}
 
