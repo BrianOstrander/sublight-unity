@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Models
 {
 	public class SystemModel : Model
 	{
+		[JsonProperty] int index;
 		[JsonProperty] int seed;
 		[JsonProperty] bool visited;
 		[JsonProperty] UniversePosition position;
@@ -17,6 +18,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int encounterBodyId = -1;
 		[JsonProperty] BodyModel[] bodies = new BodyModel[0];
 
+		[JsonIgnore]
+		public readonly ListenerProperty<int> Index;
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;
 		[JsonIgnore]
@@ -34,6 +37,7 @@ namespace LunraGames.SubLight.Models
 
 		public SystemModel()
 		{
+			Index = new ListenerProperty<int>(value => index = value, () => index);
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			Visited = new ListenerProperty<bool>(value => visited = value, () => visited);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);

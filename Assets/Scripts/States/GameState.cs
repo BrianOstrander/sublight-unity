@@ -18,6 +18,8 @@ namespace LunraGames.SubLight
 
 		public KeyValueListener KeyValueListener;
 
+
+		public List<SectorInstanceModel> SectorInstances = new List<SectorInstanceModel>();
 		//public Dictionary<SetFocusLayers, Ipresenter>
 	}
 
@@ -66,6 +68,7 @@ namespace LunraGames.SubLight
 			}
 			Payload.Game.Galaxy = result.TypedModel;
 
+			//Debug.Log("Undo this hack here, it will mess with player start pos!");
 			if (!Payload.Game.PlayerStartSelected.Value) Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart.Value;
 
 			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))

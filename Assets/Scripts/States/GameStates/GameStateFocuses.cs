@@ -86,11 +86,49 @@ namespace LunraGames.SubLight
 
 				// testing this out...
 				var shipPos = payload.Game.Ship.Value.Position.Value;
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos);
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0.5f, 0f, 0f)));
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(-0.5f, 0.025f, 0f)));
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.075f, 0.5f)));
-				new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.1f, -0.5f)));
+
+				var maxSectorOffset = 1;
+				var maxSystemsPerSector = 4;
+
+				var shipSector = payload.Game.Ship.Value.Position.Value.LocalZero;
+
+				var shipX = (int)shipSector.Sector.x;
+				var shipZ = (int)shipSector.Sector.z;
+
+				for (var x = shipX - maxSectorOffset; x < (shipX + maxSectorOffset) + 1; x++)
+				{
+					for (var z = shipZ - maxSectorOffset; z < (shipZ + maxSectorOffset) + 1; z++)
+					{
+						var sectorPosition = new UniversePosition(new Vector3(x, 0f, z), Vector3.zero);
+
+						App.Universe.PopulateUniverse(payload.Game.Universe, sectorPosition);
+
+						payload.SectorInstances.Add(
+							new SectorInstanceModel(
+								payload.Game.Universe,
+								sectorPosition,
+								maxSectorOffset,
+								maxSystemsPerSector
+							)
+						);
+					}
+				}
+
+				foreach (var sector in payload.SectorInstances)
+				{
+					foreach (var system in sector.SystemModels)
+					{
+						new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, system);
+					}
+				}
+
+				//for (var x = 0 - maxSectorOffset; x < )
+
+				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos);
+				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0.5f, 0f, 0f)));
+				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(-0.5f, 0.025f, 0f)));
+				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.075f, 0.5f)));
+				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.1f, -0.5f)));
 
 				done();
 			}

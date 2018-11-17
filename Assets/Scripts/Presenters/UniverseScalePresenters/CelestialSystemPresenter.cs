@@ -15,26 +15,36 @@ namespace LunraGames.SubLight.Presenters
 
 		UniversePosition positionInUniverse;
 
+		protected override bool CanShow { get { return instanceModel.HasSystem; } }
+
 		protected override UniversePosition PositionInUniverse { get { return positionInUniverse; } }
+
+		SystemInstanceModel instanceModel;
 
 		public CelestialSystemPresenter(
 			GameModel model,
 			UniverseScales scale,
-			UniversePosition positionInUniverse // Temp...
+			SystemInstanceModel instanceModel
 		) : base(model, scale)
 		{
-			this.positionInUniverse = positionInUniverse;
+			this.instanceModel = instanceModel;
+
+			instanceModel.ActiveSystem.Changed += OnActiveSystem;
 
 			App.Callbacks.Click += OnGlobalClick;
 
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
+
+			OnActiveSystem(instanceModel.ActiveSystem);
 		}
 
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
+
+			instanceModel.ActiveSystem.Changed -= OnActiveSystem;
 
 			App.Callbacks.Click -= OnGlobalClick;
 
@@ -56,6 +66,37 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnActiveSystem(SystemModel activeSystem)
+		{
+			if (activeSystem == null)
+			{
+				if (View.Visible) CloseViewInstant();
+				return;
+			}
+			Debug.Log("not null! pos: "+activeSystem.Position.Value);
+
+			positionInUniverse = activeSystem.Position;
+
+			highlightState = Celestial.HighlightStates.Idle;
+
+			if (activeSystem.Position.Value.Equals(Model.Ship.Value.Position.Value)) visitState = Celestial.VisitStates.Current;
+			else visitState = activeSystem.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
+
+			rangeState = Celestial.RangeStates.InRange;
+
+			switch (Model.CelestialSystemStateLastSelected.State)
+			{
+				case CelestialSystemStateBlock.States.Selected:
+					selectedState = Model.CelestialSystemStateLastSelected.Position.Equals(activeSystem.Position.Value) ? Celestial.SelectedStates.Selected : Celestial.SelectedStates.OtherSelected;
+					break;
+				default:
+					selectedState = Celestial.SelectedStates.NotSelected;
+					break;
+			}
+
+			travelState = Celestial.TravelStates.NotTraveling;
+		}
+
 		void OnGlobalClick(Click click)
 		{
 			if (!click.ClickedNothing) return;

@@ -39,6 +39,12 @@ namespace LunraGames.SubLight.Models
 			return GetSector(position).GetSystem(position);
 		}
 
+		public SystemModel GetSystem(UniversePosition sectorPosition, int systemIndex)
+		{
+			UnityEngine.Debug.Log("is null? " + (GetSector(sectorPosition).GetSystem(systemIndex) == null) + " - " + sectorPosition);
+			return GetSector(sectorPosition).GetSystem(systemIndex);
+		}
+
 		public BodyModel GetBody(UniversePosition position, int id)
 		{
 			return GetSystem(position).GetBody(id);

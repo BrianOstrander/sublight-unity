@@ -20,6 +20,7 @@ namespace LunraGames.SubLight
 			var universeModel = new UniverseModel();
 			universeModel.Seed.Value = info.GalaxySeed;
 
+			// I don't think I need this...
 			PopulateUniverse(universeModel, InitialSectors);
 
 			return universeModel;
@@ -41,14 +42,14 @@ namespace LunraGames.SubLight
 			var sector = new SectorModel();
 			sector.Position.Value = position;
 			sector.Visited.Value = false;
-			sector.Systems.Value = new SystemModel[0];
+			sector.SetSystems(new SystemModel[0]);
 			sector.Seed.Value = DemonUtility.CantorPairs(Mathf.FloorToInt(sector.Position.Value.Sector.x), Mathf.FloorToInt(sector.Position.Value.Sector.z), universe.Seed);
 			PopulateSector(sector);
 			return sector;
 		}
 
 		public abstract void PopulateSector(SectorModel sector);
-		public abstract SystemModel CreateSystem(SectorModel sector, int seed, UniversePosition position);
+		public abstract SystemModel CreateSystem(SectorModel sector, int seed, UniversePosition position, int index);
 		public abstract void PopulateSystem(SystemModel systemModel);
 	}
 
@@ -91,7 +92,7 @@ namespace LunraGames.SubLight
 		/// <param name="sector">Sector.</param>
 		/// <param name="seed">Seed.</param>
 		/// <param name="position">Position.</param>
-		SystemModel CreateSystem(SectorModel sector, int seed, UniversePosition position);
+		SystemModel CreateSystem(SectorModel sector, int seed, UniversePosition position, int index);
 		/// <summary>
 		/// Populates a star system.
 		/// </summary>

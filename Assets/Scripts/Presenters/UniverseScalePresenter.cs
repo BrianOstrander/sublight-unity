@@ -14,6 +14,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected virtual UniversePosition ScaleInUniverse { get { return new UniversePosition(Vector3.one); } }
 		protected abstract UniversePosition PositionInUniverse { get; }
+		protected virtual bool CanShow { get { return true; } }
 
 		protected GameModel Model { get; private set; }
 		protected UniverseScales Scale { get; private set; }
@@ -48,7 +49,7 @@ namespace LunraGames.SubLight.Presenters
 			View.Position = ScaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
 		}
 
-		void ShowViewInstant()
+		protected void ShowViewInstant()
 		{
 			View.Reset();
 
@@ -57,7 +58,7 @@ namespace LunraGames.SubLight.Presenters
 			ShowView(instant: true);
 		}
 
-		void CloseViewInstant()
+		protected void CloseViewInstant()
 		{
 			OnCloseView();
 
@@ -73,6 +74,8 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnOpacity(float opacity)
 		{
+			if (!CanShow) return;
+
 			var isOpacityZero = Mathf.Approximately(0f, opacity);
 
 			switch (View.TransitionState)
