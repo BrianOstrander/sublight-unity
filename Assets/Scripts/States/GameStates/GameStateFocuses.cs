@@ -87,7 +87,7 @@ namespace LunraGames.SubLight
 				// testing this out...
 				var shipPos = payload.Game.Ship.Value.Position.Value;
 
-				var maxSectorOffset = 1;
+				var maxSectorOffset = 2;
 				var maxSystemsPerSector = 4;
 
 				var shipSector = payload.Game.Ship.Value.Position.Value.LocalZero;

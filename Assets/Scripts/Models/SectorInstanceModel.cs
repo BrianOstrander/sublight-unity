@@ -49,7 +49,7 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
-		public void SetSectorOrigin(UniversePosition origin)
+		public void UpdateOrigin(UniversePosition origin)
 		{
 			//var originX = 0;
 			//var originZ = 0;

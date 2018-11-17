@@ -18,9 +18,7 @@ namespace LunraGames.SubLight
 
 		public KeyValueListener KeyValueListener;
 
-
 		public List<SectorInstanceModel> SectorInstances = new List<SectorInstanceModel>();
-		//public Dictionary<SetFocusLayers, Ipresenter>
 	}
 
 	public partial class GameState : State<GamePayload>
@@ -40,6 +38,7 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
 			App.SM.PushBlocking(InitializeFocus);
+			App.SM.PushBlocking(InitializeCelestialSystems);
 		}
 
 		void LoadScenes(Action done)
@@ -117,6 +116,12 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetNoFocus(), done));
 		}
+
+		void InitializeCelestialSystems(Action done)
+		{
+			Payload.Game.GetScale(UniverseScales.Stellar).Transform.Changed += OnStellarTransform;
+			done();
+		}
 		#endregion
 
 		#region Idle
@@ -146,6 +151,7 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
+			Payload.Game.GetScale(UniverseScales.Stellar).Transform.Changed -= OnStellarTransform;
 		}
 		#endregion
 
@@ -168,6 +174,11 @@ namespace LunraGames.SubLight
 		void OnToolbarSelection(ToolbarSelections selection)
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(selection)));
+		}
+
+		void OnStellarTransform(UniverseTransform transform)
+		{
+			foreach (var sector in Payload.SectorInstances) sector.UpdateOrigin(transform.UniverseOrigin);
 		}
 		#endregion
 	}

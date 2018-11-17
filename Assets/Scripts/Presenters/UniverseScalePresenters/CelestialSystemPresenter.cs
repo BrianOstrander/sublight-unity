@@ -73,7 +73,6 @@ namespace LunraGames.SubLight.Presenters
 				if (View.Visible) CloseViewInstant();
 				return;
 			}
-			Debug.Log("not null! pos: "+activeSystem.Position.Value);
 
 			positionInUniverse = activeSystem.Position;
 
