@@ -12,96 +12,99 @@ namespace LunraGames.SubLight
 	{
 		public override void PopulateSector(SectorModel sector)
 		{
-			//var positions = new Vector3[]
-			//{
-			//	new Vector3(0.05f, 0f, 0.75f),
-			//	new Vector3(0.05f, 0f, 0.30f),
-			//	new Vector3(0.05f, 0f, 0.05f),
+			/*
+			var positions = new Vector3[]
+			{
+				new Vector3(0.05f, 0f, 0.75f),
+				new Vector3(0.05f, 0f, 0.30f),
+				new Vector3(0.05f, 0f, 0.05f),
 
-			//	new Vector3(0.10f, 0f, 0.85f),
-			//	new Vector3(0.10f, 0f, 0.65f),
-			//	new Vector3(0.10f, 0f, 0.55f),
-			//	new Vector3(0.10f, 0f, 0.35f),
-			//	new Vector3(0.10f, 0f, 0.15f),
-			//	new Vector3(0.10f, 0f, 0.05f),
+				new Vector3(0.10f, 0f, 0.85f),
+				new Vector3(0.10f, 0f, 0.65f),
+				new Vector3(0.10f, 0f, 0.55f),
+				new Vector3(0.10f, 0f, 0.35f),
+				new Vector3(0.10f, 0f, 0.15f),
+				new Vector3(0.10f, 0f, 0.05f),
 
-			//	new Vector3(0.15f, 0f, 0.95f),
-			//	new Vector3(0.15f, 0f, 0.45f),
-			//	new Vector3(0.15f, 0f, 0.40f),
-			//	new Vector3(0.15f, 0f, 0.10f),
+				new Vector3(0.15f, 0f, 0.95f),
+				new Vector3(0.15f, 0f, 0.45f),
+				new Vector3(0.15f, 0f, 0.40f),
+				new Vector3(0.15f, 0f, 0.10f),
 
-			//	new Vector3(0.20f, 0f, 0.80f),
-			//	new Vector3(0.20f, 0f, 0.25f),
-			//	new Vector3(0.20f, 0f, 0.15f),
+				new Vector3(0.20f, 0f, 0.80f),
+				new Vector3(0.20f, 0f, 0.25f),
+				new Vector3(0.20f, 0f, 0.15f),
 
-			//	new Vector3(0.25f, 0f, 0.75f),
-			//	new Vector3(0.25f, 0f, 0.45f),
-			//	new Vector3(0.25f, 0f, 0.20f),
-			//	new Vector3(0.25f, 0f, 0.10f),
+				new Vector3(0.25f, 0f, 0.75f),
+				new Vector3(0.25f, 0f, 0.45f),
+				new Vector3(0.25f, 0f, 0.20f),
+				new Vector3(0.25f, 0f, 0.10f),
 
-			//	new Vector3(0.30f, 0f, 0.75f),
-			//	new Vector3(0.30f, 0f, 0.45f),
-			//	new Vector3(0.30f, 0f, 0.30f),
+				new Vector3(0.30f, 0f, 0.75f),
+				new Vector3(0.30f, 0f, 0.45f),
+				new Vector3(0.30f, 0f, 0.30f),
 
-			//	new Vector3(0.35f, 0f, 0.20f),
-			//	new Vector3(0.35f, 0f, 0.10f),
+				new Vector3(0.35f, 0f, 0.20f),
+				new Vector3(0.35f, 0f, 0.10f),
 
-			//	new Vector3(0.40f, 0f, 0.80f),
-			//	new Vector3(0.40f, 0f, 0.35f),
-			//	new Vector3(0.40f, 0f, 0.05f),
+				new Vector3(0.40f, 0f, 0.80f),
+				new Vector3(0.40f, 0f, 0.35f),
+				new Vector3(0.40f, 0f, 0.05f),
 
-			//	// None in x 0.45f
+				// None in x 0.45f
 
-			//	new Vector3(0.50f, 0f, 0.90f),
-			//	new Vector3(0.50f, 0f, 0.35f),
-			//	new Vector3(0.50f, 0f, 0.20f),
+				new Vector3(0.50f, 0f, 0.90f),
+				new Vector3(0.50f, 0f, 0.35f),
+				new Vector3(0.50f, 0f, 0.20f),
 
-			//	new Vector3(0.55f, 0f, 0.95f),
-			//	new Vector3(0.55f, 0f, 0.80f),
+				new Vector3(0.55f, 0f, 0.95f),
+				new Vector3(0.55f, 0f, 0.80f),
 
-			//	new Vector3(0.60f, 0f, 0.75f),
-			//	new Vector3(0.60f, 0f, 0.35f),
-			//	new Vector3(0.60f, 0f, 0.20f),
+				new Vector3(0.60f, 0f, 0.75f),
+				new Vector3(0.60f, 0f, 0.35f),
+				new Vector3(0.60f, 0f, 0.20f),
 
-			//	new Vector3(0.65f, 0f, 0.70f),
-			//	new Vector3(0.65f, 0f, 0.65f),
-			//	new Vector3(0.65f, 0f, 0.15f),
-			//	new Vector3(0.65f, 0f, 0.05f),
+				new Vector3(0.65f, 0f, 0.70f),
+				new Vector3(0.65f, 0f, 0.65f),
+				new Vector3(0.65f, 0f, 0.15f),
+				new Vector3(0.65f, 0f, 0.05f),
 
-			//	new Vector3(0.70f, 0f, 0.65f),
-			//	new Vector3(0.70f, 0f, 0.60f),
-			//	new Vector3(0.70f, 0f, 0.50f),
-			//	new Vector3(0.70f, 0f, 0.45f),
-			//	new Vector3(0.70f, 0f, 0.20f),
+				new Vector3(0.70f, 0f, 0.65f),
+				new Vector3(0.70f, 0f, 0.60f),
+				new Vector3(0.70f, 0f, 0.50f),
+				new Vector3(0.70f, 0f, 0.45f),
+				new Vector3(0.70f, 0f, 0.20f),
 
-			//	new Vector3(0.75f, 0f, 0.55f),
-			//	new Vector3(0.75f, 0f, 0.15f),
-			//	new Vector3(0.75f, 0f, 0.05f),
+				new Vector3(0.75f, 0f, 0.55f),
+				new Vector3(0.75f, 0f, 0.15f),
+				new Vector3(0.75f, 0f, 0.05f),
 
-			//	new Vector3(0.80f, 0f, 0.45f),
-			//	new Vector3(0.80f, 0f, 0.10f),
+				new Vector3(0.80f, 0f, 0.45f),
+				new Vector3(0.80f, 0f, 0.10f),
 
-			//	new Vector3(0.85f, 0f, 0.80f),
-			//	new Vector3(0.85f, 0f, 0.75f),
-			//	new Vector3(0.85f, 0f, 0.50f),
-			//	new Vector3(0.85f, 0f, 0.40f),
-			//	new Vector3(0.85f, 0f, 0.15f),
-			//	new Vector3(0.85f, 0f, 0.05f),
+				new Vector3(0.85f, 0f, 0.80f),
+				new Vector3(0.85f, 0f, 0.75f),
+				new Vector3(0.85f, 0f, 0.50f),
+				new Vector3(0.85f, 0f, 0.40f),
+				new Vector3(0.85f, 0f, 0.15f),
+				new Vector3(0.85f, 0f, 0.05f),
 
-			//	new Vector3(0.90f, 0f, 0.95f),
-			//	new Vector3(0.90f, 0f, 0.70f),
-			//	new Vector3(0.90f, 0f, 0.65f),
-			//	new Vector3(0.90f, 0f, 0.60f),
-			//	new Vector3(0.90f, 0f, 0.55f),
-			//	new Vector3(0.90f, 0f, 0.20f),
-			//	new Vector3(0.90f, 0f, 0.10f),
+				new Vector3(0.90f, 0f, 0.95f),
+				new Vector3(0.90f, 0f, 0.70f),
+				new Vector3(0.90f, 0f, 0.65f),
+				new Vector3(0.90f, 0f, 0.60f),
+				new Vector3(0.90f, 0f, 0.55f),
+				new Vector3(0.90f, 0f, 0.20f),
+				new Vector3(0.90f, 0f, 0.10f),
 
-			//	new Vector3(0.95f, 0f, 0.85f),
-			//	new Vector3(0.95f, 0f, 0.35f),
-			//	new Vector3(0.95f, 0f, 0.30f),
-			//	new Vector3(0.95f, 0f, 0.25f)
-			//};
+				new Vector3(0.95f, 0f, 0.85f),
+				new Vector3(0.95f, 0f, 0.35f),
+				new Vector3(0.95f, 0f, 0.30f),
+				new Vector3(0.95f, 0f, 0.25f)
+			};
+			*/
 
+			/*
 			var positions = new Vector3[]
 			{
 				new Vector3(0.10f, 0f, 0.85f),
@@ -191,6 +194,16 @@ namespace LunraGames.SubLight
 
 
 				new Vector3(0.90f, 0f, 0.60f)
+			};
+			*/
+
+			var positions = new Vector3[]
+			{
+				new Vector3(0.1f, 0f, 0.1f),
+				new Vector3(0.1f, 0f, 0.9f),
+				new Vector3(0.9f, 0f, 0.9f),
+				new Vector3(0.9f, 0f, 0.1f),
+				new Vector3(0.5f, 0f, 0.5f)
 			};
 
 			var demon = new Demon(sector.Seed);
