@@ -24,6 +24,7 @@ namespace LunraGames.SubLight
 		KeyValueService keyValueService;
 		InventoryReferenceService inventoryReferences;
 		ValueFilterService valueFilter;
+		IUniverseService universeService;
 		Func<PreferencesModel> currentPreferences;
 
 		States state = States.Complete;
@@ -43,6 +44,7 @@ namespace LunraGames.SubLight
 			KeyValueService keyValueService,
 			InventoryReferenceService inventoryReferences,
 			ValueFilterService valueFilter,
+			IUniverseService universeService,
 			Func<PreferencesModel> currentPreferences
 		)
 		{
@@ -52,6 +54,7 @@ namespace LunraGames.SubLight
 			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
 			if (inventoryReferences == null) throw new ArgumentNullException("inventoryReferences");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
+			if (universeService == null) throw new ArgumentNullException("universeService");
 			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
 
 			this.heartbeat = heartbeat;
@@ -60,6 +63,7 @@ namespace LunraGames.SubLight
 			this.keyValueService = keyValueService;
 			this.inventoryReferences = inventoryReferences;
 			this.valueFilter = valueFilter;
+			this.universeService = universeService;
 			this.currentPreferences = currentPreferences;
 
 			callbacks.EncounterRequest += OnEncounter;
@@ -77,7 +81,8 @@ namespace LunraGames.SubLight
 					OnBegin(
 						request.GameModel,
 						request.EncounterId,
-						request.SystemPosition
+						request.SectorPosition,
+						request.SystemIndex
 					);
 					break;
 				case EncounterRequest.States.Next:
@@ -157,7 +162,8 @@ namespace LunraGames.SubLight
 		void OnBegin(
 			GameModel model,
 			string encounterId,
-			UniversePosition systemPosition
+			UniversePosition sectorPosition,
+			int systemIndex
 		)
 		{
 			if (state != States.Complete)
@@ -170,7 +176,7 @@ namespace LunraGames.SubLight
 			this.model = model;
 
 			encounter = encounterService.GetEncounter(encounterId);
-			system = model.Universe.GetSystem(systemPosition);
+			system = universeService.GetSystem(model.Galaxy, model.Universe, sectorPosition, systemIndex);
 			body = system.BodyWithEncounter;
 			keyValues = new KeyValueListener(KeyValueTargets.Encounter, new KeyValueListModel(), keyValueService);
 

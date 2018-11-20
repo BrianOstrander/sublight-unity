@@ -986,11 +986,11 @@ namespace LunraGames.SubLight
 			{
 				EditorGUIExtensions.BeginChangeCheck();
 				{
-					if (model.MaximumSectorBodies < model.MinimumSectorBodies) EditorGUILayout.HelpBox("Maximum Sector Bodies must be higher than the minimum", MessageType.Error);
-					model.MinimumSectorBodies.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Minimum Sector Bodies", "The minimum bodies ever spawned in a sector."), model.MinimumSectorBodies));
-					model.MaximumSectorBodies.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Maximum Sector Bodies", "The maximum bodies ever spawned in a sector."), model.MaximumSectorBodies));
+					if (model.MaximumSectorSystemCount < model.MinimumSectorSystemCount) EditorGUILayout.HelpBox("Maximum Sector System Count must be higher than the minimum", MessageType.Error);
+					model.MinimumSectorSystemCount.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Minimum Sector System Count", "The minimum bodies ever spawned in a sector."), model.MinimumSectorSystemCount));
+					model.MaximumSectorSystemCount.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Maximum Sector System Count", "The maximum bodies ever spawned in a sector."), model.MaximumSectorSystemCount));
 
-					model.BodyAdjustment.Value = EditorGUILayoutAnimationCurve.Field(new GUIContent("Body Adjustment", "The bodymap is a linear gradient that is evaluated along a curve, then remapped between the minimum and maximum sector body count."), model.BodyAdjustment.Value);
+					model.SectorSystemChance.Value = EditorGUILayoutAnimationCurve.Field(new GUIContent("Sector System Chance", "The bodymap is a linear gradient that is evaluated along a curve, then remapped between the minimum and maximum sector body count."), model.SectorSystemChance.Value);
 				}
 				EditorGUIExtensions.EndChangeCheck(ref selectedModified);
 			}

@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+
+using UnityEngine;
 
 using Newtonsoft.Json;
 
@@ -38,6 +42,18 @@ namespace LunraGames.SubLight.Models
 			SaveType = SaveTypes.GalaxyInfo;
 
 			SiblingBehaviour = SiblingBehaviours.All;
+		}
+
+		public TexturePixelCache GetBodyMapPixel(UniversePosition sectorPosition)
+		{
+			return GetPixel(BodyMap, sectorPosition);
+		}
+
+		TexturePixelCache GetPixel(Texture2D texture, UniversePosition sectorPosition)
+		{
+			var x = sectorPosition.SectorInteger.x;
+			var y = sectorPosition.SectorInteger.z;
+			return new TexturePixelCache(x, y, texture.GetPixel(x, y));
 		}
 	}
 }

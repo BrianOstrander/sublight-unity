@@ -1,14 +1,18 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
-
-using UnityEngine;
 
 using Newtonsoft.Json;
+
+using LunraGames.NumberDemon;
 
 namespace LunraGames.SubLight.Models
 {
 	public class SystemModel : Model
 	{
+		public static class Seeds
+		{
+			public static int Position(int seed) { return DemonUtility.CantorPairs(seed, 1); }
+		}
+
 		[JsonProperty] int index;
 		[JsonProperty] int seed;
 		[JsonProperty] bool visited;
@@ -34,6 +38,9 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<int> EncounterBodyId;
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyModel[]> Bodies;
+
+		[JsonIgnore]
+		public bool IsGenerated { get; set; }
 
 		public SystemModel()
 		{
@@ -61,11 +68,6 @@ namespace LunraGames.SubLight.Models
 				// This should never return null...
 				return Bodies.Value.FirstOrDefault(b => b.BodyId.Value == EncounterBodyId.Value);
 			}
-		}
-
-		public BodyModel GetBody(int id)
-		{
-			return Bodies.Value.FirstOrDefault(b => b.BodyId.Value == id);
 		}
 		#endregion
 	}

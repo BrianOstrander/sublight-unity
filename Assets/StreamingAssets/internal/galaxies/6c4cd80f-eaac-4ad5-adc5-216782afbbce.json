@@ -11,26 +11,30 @@
   "gameEnd": {
     "Sector": {"x":1924.0,"z":2059.0}
   },
-  "bodyAdjustment": {
+  "maximumSectorSystemCount": 5,
+  "sectorSystemChance": {
     "keys": [
       {
+        "inTangent": 1.0,
+        "outTangent": 1.0,
         "inWeight": 0.333333343,
-        "outWeight": 0.333333343
+        "outWeight": 0.333333343,
+        "tangentMode": 34
       },
       {
         "time": 1.0,
         "value": 1.0,
-        "inTangent": 2.0,
-        "outTangent": 2.0,
+        "inTangent": 1.0,
+        "outTangent": 1.0,
         "inWeight": 0.333333343,
-        "outWeight": 0.333333343
+        "outWeight": 0.333333343,
+        "tangentMode": 34
       }
     ],
     "length": 2,
     "preWrapMode": "ClampForever",
     "postWrapMode": "ClampForever"
   },
-  "maximumSectorBodies": 2000,
   "labels": [
     {
       "labelId": "02e6a22a-21c2-4f8c-be8f-b699a4376fd4",

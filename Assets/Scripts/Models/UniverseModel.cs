@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -19,35 +17,5 @@ namespace LunraGames.SubLight.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			Sectors = new ListenerProperty<SectorModel[]>(value => sectors = value, () => sectors);
 		}
-
-		#region Utility
-		public SectorModel GetSector(UniversePosition position)
-		{
-			// TODO: Generate sector and systems if not populated.
-			var sector = Sectors.Value.FirstOrDefault(s => s.Position.Value.SectorEquals(position));
-			if (sector != null) return sector;
-
-			sector = App.Universe.CreateSector(this, position);
-			var list = Sectors.Value.ToList();
-			list.Add(sector);
-			Sectors.Value = list.ToArray();
-			return sector;
-		}
-
-		public SystemModel GetSystem(UniversePosition position)
-		{
-			return GetSector(position).GetSystem(position);
-		}
-
-		public SystemModel GetSystem(UniversePosition sectorPosition, int systemIndex)
-		{
-			return GetSector(sectorPosition).GetSystem(systemIndex);
-		}
-
-		public BodyModel GetBody(UniversePosition position, int id)
-		{
-			return GetSystem(position).GetBody(id);
-		}
-  		#endregion
 	}
 }

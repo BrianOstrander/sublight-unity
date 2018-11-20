@@ -65,6 +65,11 @@ namespace LunraGames.SubLight.Presenters
 			CloseView(true);
 		}
 
+		protected void ForceApplyScaleTransform()
+		{
+			ApplyScaleTransform(ScaleModel.Transform);
+		}
+
 		#region Events
 		void OnScaleTransform(UniverseTransform transform)
 		{

@@ -9,8 +9,6 @@ namespace LunraGames.SubLight.Models
 {
 	public class SystemInstanceModel : Model
 	{
-		UniverseModel universe;
-		UniversePosition sector;
 		SystemModel activeSystem;
 
 		readonly ListenerProperty<SystemModel> activeSystemListener;
@@ -23,20 +21,19 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public bool HasSystem { get; private set; }
 
-		public SystemInstanceModel(UniverseModel universe, int systemIndex)
+		public SystemInstanceModel(
+			int systemIndex
+		)
 		{
-			this.universe = universe;
 			SystemIndex = systemIndex;
 
 			ActiveSystem = new ReadonlyProperty<SystemModel>(value => activeSystem = value, () => activeSystem, out activeSystemListener);
 		}
 
-		public void SetSector(UniversePosition sector)
+		public void SetSystem(SystemModel system)
 		{
-			this.sector = sector;
-			var newSystem = universe.GetSystem(sector, SystemIndex);
-			HasSystem = newSystem != null;
-			activeSystemListener.Value = newSystem;
+			HasSystem = system != null;
+			activeSystemListener.Value = system;
 		}
 	}
 }

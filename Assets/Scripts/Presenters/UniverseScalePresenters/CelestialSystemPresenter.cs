@@ -36,8 +36,6 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
-
-			OnActiveSystem(instanceModel.ActiveSystem);
 		}
 
 		protected override void OnUnBind()
@@ -74,6 +72,20 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
+			if (View.Visible)
+			{
+				View.Reset();
+				ForceApplyScaleTransform();
+				OnShowView();
+			}
+			else
+			{
+				View.Reset();
+				ForceApplyScaleTransform();
+				OnShowView();
+				ShowView(instant: true);
+			}
+			/*
 			positionInUniverse = activeSystem.Position;
 
 			highlightState = Celestial.HighlightStates.Idle;
@@ -94,6 +106,7 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			travelState = Celestial.TravelStates.NotTraveling;
+			*/
 		}
 
 		void OnGlobalClick(Click click)
@@ -110,6 +123,10 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShowView()
 		{
+			var activeSystem = instanceModel.ActiveSystem.Value;
+
+			positionInUniverse = activeSystem.Position.Value;
+
 			View.SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
 
 			View.Enter = OnEnter;
@@ -117,11 +134,22 @@ namespace LunraGames.SubLight.Presenters
 			View.Click = OnClick;
 
 			highlightState = Celestial.HighlightStates.Idle;
-			selectedState = Celestial.SelectedStates.NotSelected;
 
-			// TODO: derive these values from a model...
-			visitState = Model.Ship.Value.Position.Value.Equals(positionInUniverse) ? Celestial.VisitStates.Current : Celestial.VisitStates.NotVisited;
+			if (activeSystem.Position.Value.Equals(Model.Ship.Value.Position.Value)) visitState = Celestial.VisitStates.Current;
+			else visitState = activeSystem.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
+
 			rangeState = Celestial.RangeStates.InRange;
+
+			switch (Model.CelestialSystemStateLastSelected.State)
+			{
+				case CelestialSystemStateBlock.States.Selected:
+					selectedState = Model.CelestialSystemStateLastSelected.Position.Equals(activeSystem.Position.Value) ? Celestial.SelectedStates.Selected : Celestial.SelectedStates.OtherSelected;
+					break;
+				default:
+					selectedState = Celestial.SelectedStates.NotSelected;
+					break;
+			}
+
 			travelState = Celestial.TravelStates.NotTraveling;
 
 			ApplyStates(true);

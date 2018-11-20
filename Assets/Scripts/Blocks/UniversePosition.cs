@@ -73,6 +73,11 @@ namespace LunraGames.SubLight
 		public static UniversePosition Zero { get { return new UniversePosition(Vector3.zero, Vector3.zero); } }
 		public static UniversePosition One { get { return new UniversePosition(Vector3.one, Vector3.zero); } }
 
+		public UniversePosition(Vector3Int sector)
+		{
+			Adjust(new Vector3(sector.x, sector.y, sector.z), Vector3.zero, out Sector, out Local);
+		}
+
 		public UniversePosition(Vector3 local)
 		{
 			Adjust(Vector3.zero, local, out Sector, out Local);
@@ -81,6 +86,11 @@ namespace LunraGames.SubLight
 		public UniversePosition(Vector3 sector, Vector3 local)
 		{
 			Adjust(sector, local, out Sector, out Local);
+		}
+
+		public UniversePosition(Vector3Int sector, Vector3 local)
+		{
+			Adjust(new Vector3(sector.x, sector.y, sector.z), local, out Sector, out Local);
 		}
 
 		public UniversePosition(float sectorX, float sectorY, float sectorZ, float localX, float localY, float localZ)
@@ -100,6 +110,8 @@ namespace LunraGames.SubLight
 		public UniversePosition SectorZero { get { return new UniversePosition(Vector3.zero, Local); } }
 		[JsonIgnore]
 		public UniversePosition LocalZero { get { return new UniversePosition(Sector, Vector3.zero); } }
+		[JsonIgnore]
+		public Vector3Int SectorInteger { get { return new Vector3Int((int)Sector.x, (int)Sector.y, (int)Sector.z); } }
 
 		public UniversePosition NewSector(Vector3 sector) { return new UniversePosition(sector, Local); }
 		public UniversePosition NewLocal(Vector3 local) { return new UniversePosition(Sector, local); }
@@ -109,9 +121,12 @@ namespace LunraGames.SubLight
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 
-			return Mathf.Approximately(Sector.x, other.Sector.x) &&
-						Mathf.Approximately(Sector.y, other.Sector.y) &&
-						Mathf.Approximately(Sector.z, other.Sector.z);
+			return SectorEquals(other.SectorInteger);
+		}
+
+		public bool SectorEquals(Vector3Int other)
+		{
+			return SectorInteger == other;
 		}
 
 		public bool Equals(UniversePosition other)

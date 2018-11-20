@@ -31,11 +31,10 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] UniversePosition galaxyOrigin;
 		[JsonProperty] UniversePosition playerStart;
 		[JsonProperty] UniversePosition gameEnd;
-
-		[JsonProperty] AnimationCurve bodyAdjustment = AnimationCurveExtensions.Constant(1f);
-		[JsonProperty] int minimumSectorBodies;
-		[JsonProperty] int maximumSectorBodies;
-		[JsonProperty] AnimationCurve sectorBodyChance;
+		 
+		[JsonProperty] int minimumSectorSystemCount;
+		[JsonProperty] int maximumSectorSystemCount;
+		[JsonProperty] AnimationCurve sectorSystemChance = AnimationCurveExtensions.Constant(1f);
 
 		[JsonProperty] string encyclopediaEntryId;
 
@@ -65,13 +64,11 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<UniversePosition> GameEnd;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<AnimationCurve> BodyAdjustment;
+		public readonly ListenerProperty<int> MinimumSectorSystemCount;
 		[JsonIgnore]
-		public readonly ListenerProperty<int> MinimumSectorBodies;
+		public readonly ListenerProperty<int> MaximumSectorSystemCount;
 		[JsonIgnore]
-		public readonly ListenerProperty<int> MaximumSectorBodies;
-		[JsonIgnore]
-		public readonly ListenerProperty<AnimationCurve> SectorBodyChance;
+		public readonly ListenerProperty<AnimationCurve> SectorSystemChance;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncyclopediaEntryId;
@@ -91,10 +88,9 @@ namespace LunraGames.SubLight.Models
 			PlayerStart = new ListenerProperty<UniversePosition>(value => playerStart = value, () => playerStart);
 			GameEnd = new ListenerProperty<UniversePosition>(value => gameEnd = value, () => gameEnd);
 
-			BodyAdjustment = new ListenerProperty<AnimationCurve>(value => bodyAdjustment = value, () => bodyAdjustment);
-			MinimumSectorBodies = new ListenerProperty<int>(value => minimumSectorBodies = value, () => minimumSectorBodies);
-			MaximumSectorBodies = new ListenerProperty<int>(value => maximumSectorBodies = value, () => maximumSectorBodies);
-			SectorBodyChance = new ListenerProperty<AnimationCurve>(value => sectorBodyChance = value, () => sectorBodyChance);
+			MinimumSectorSystemCount = new ListenerProperty<int>(value => minimumSectorSystemCount = value, () => minimumSectorSystemCount);
+			MaximumSectorSystemCount = new ListenerProperty<int>(value => maximumSectorSystemCount = value, () => maximumSectorSystemCount);
+			SectorSystemChance = new ListenerProperty<AnimationCurve>(value => sectorSystemChance = value, () => sectorSystemChance);
 
 			EncyclopediaEntryId = new ListenerProperty<string>(value => encyclopediaEntryId = value, () => encyclopediaEntryId);
 		}
@@ -164,6 +160,12 @@ namespace LunraGames.SubLight.Models
 		public GalaxyLabelModel[] GetLabels(UniverseScales scale)
 		{
 			return labels.Where(l => l.Scale == scale).ToArray();
+		}
+
+		public int SectorBodyCount(float value)
+		{
+			var delta = (MaximumSectorSystemCount.Value - MinimumSectorSystemCount.Value);
+			return MinimumSectorSystemCount.Value + Mathf.FloorToInt((SectorSystemChance.Value.Evaluate(value) * delta));
 		}
 		#endregion
 	}

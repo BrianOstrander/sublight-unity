@@ -85,10 +85,39 @@ namespace LunraGames.SubLight
 				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Stellar);
 
 				// testing this out...
-				var shipPos = payload.Game.Ship.Value.Position.Value;
 
-				var maxSectorOffset = 2;
-				var maxSystemsPerSector = 5;
+				//var originInt = payload.Game.Ship.Value.Position.Value.SectorInteger;
+				//var minSector = new Vector3Int(originInt.x - payload.InterstellarSectorOffset, 0, originInt.z - payload.InterstellarSectorOffset);
+				//var maxSector = new Vector3Int(originInt.x + payload.InterstellarSectorOffset, 0, originInt.z + payload.InterstellarSectorOffset);
+
+				//for (var x = 0; x < payload.InterstellarSectorOffsetTotal; x++)
+				//{
+				//	for (var z = 0; z < payload.InterstellarSectorOffsetTotal; z++)
+				//	{
+				//		var sectorPos = new UniversePosition(new Vector3Int(x + minSector.x, 0, z + minSector.z));
+				//		var sector = new SectorInstanceModel();
+				//	}
+				//}
+
+				for (var i = 0; i < payload.InterstellarSectorCount; i++)
+				{
+					var sector = new SectorInstanceModel();
+					sector.Sector.Value = App.Universe.GetSector(payload.Game.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
+					var systems = new SystemInstanceModel[payload.Game.Galaxy.MaximumSectorSystemCount.Value];
+					for (var s = 0; s < systems.Length; s++)
+					{
+						new CelestialSystemPresenter(
+							payload.Game,
+							UniverseScales.Stellar,
+							systems[s] = new SystemInstanceModel(s)
+						);
+					}
+					sector.SystemModels.Value = systems;
+					payload.SectorInstances.Add(sector);
+				}
+
+				/*
+				var shipPos = payload.Game.Ship.Value.Position.Value;
 
 				var shipSector = payload.Game.Ship.Value.Position.Value.LocalZero;
 
@@ -121,6 +150,7 @@ namespace LunraGames.SubLight
 						new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, system);
 					}
 				}
+				*/
 
 				//for (var x = 0 - maxSectorOffset; x < )
 
