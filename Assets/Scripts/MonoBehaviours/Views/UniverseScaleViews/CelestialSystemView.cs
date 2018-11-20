@@ -358,6 +358,10 @@ namespace LunraGames.SubLight.Views
 			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
 			dropLine.SetPosition(1, positionWithHeight);
 
+			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
+			SetMeshAlpha(colorGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
+			SetMeshAlpha(iconGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
+
 			var inBounds = radiusNormal < 1f;
 
 			interactableGroup.interactable = inBounds;
@@ -483,14 +487,14 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				base.Opacity = value;
-				//dropLine.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * );
-				SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorConstant.Alpha, dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
+
+				SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorConstant.Alpha);
 			}
 		}
 
-		void SetMeshAlpha(Material material, string fieldName, float alpha)
+		void SetMeshAlpha(Material material, string fieldName, float alpha = 1f)
 		{
-			material.SetFloat(fieldName, Opacity * alpha);
+			material.SetFloat(fieldName, Opacity * alpha * dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
 		}
 	}
 
