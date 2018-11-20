@@ -24,5 +24,11 @@ namespace LunraGames.SubLight
 					return sectorPosition;
 			}
 		}
+
+		protected override SystemModel OnCreateSystem(SystemModel systemModel)
+		{
+			systemModel.Name.Value = "Sys " + systemModel.Index.Value + " - [ " + systemModel.Position.Value.SectorInteger.x + " , " + systemModel.Position.Value.SectorInteger.z + " ]";
+			return systemModel;
+		}
 	}
 }

@@ -1297,6 +1297,12 @@ MonoBehaviour:
   detailsGroup: {fileID: 225407479818079206}
   confirmGroup: {fileID: 225115326305604906}
   baseDistanceGroup: {fileID: 225848230000753088}
+  detailsNameLabel: {fileID: 114522091715795628}
+  detailsDescriptionLabel: {fileID: 114454424877841918}
+  confirmLabel: {fileID: 114130682897377030}
+  confirmDescriptionLabel: {fileID: 114606027197622972}
+  distanceLabel: {fileID: 114442835638697144}
+  distanceUnitLabel: {fileID: 114583877078923132}
 --- !u!114 &114182206620360976
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using TMPro;
+
 namespace LunraGames.SubLight.Views
 {
 	public static class Celestial
@@ -446,7 +448,27 @@ namespace LunraGames.SubLight.Views
 		CanvasGroup confirmGroup;
 		[SerializeField]
 		CanvasGroup baseDistanceGroup;
+
+		[SerializeField]
+		TextMeshProUGUI detailsNameLabel;
+		[SerializeField]
+		TextMeshProUGUI detailsDescriptionLabel;
+		[SerializeField]
+		TextMeshProUGUI confirmLabel;
+		[SerializeField]
+		TextMeshProUGUI confirmDescriptionLabel;
+		[SerializeField]
+		TextMeshProUGUI distanceLabel;
+		[SerializeField]
+		TextMeshProUGUI distanceUnitLabel;
 		#endregion
+
+		public string DetailsName { set { detailsNameLabel.text = value ?? string.Empty; } }
+		public string DetailsDescription { set { detailsDescriptionLabel.text = value ?? string.Empty; } }
+		public string Confirm { set { confirmLabel.text = value ?? string.Empty; } }
+		public string ConfirmDescription { set { confirmDescriptionLabel.text = value ?? string.Empty; } }
+		public string Distance { set { distanceLabel.text = value ?? string.Empty; } }
+		public string DistanceUnit { set { distanceUnitLabel.text = value ?? string.Empty; } }
 
 		#region Events
 		public void OnEnter()
@@ -478,6 +500,13 @@ namespace LunraGames.SubLight.Views
 			Enter = ActionExtensions.Empty;
 			Exit = ActionExtensions.Empty;
 			Click = ActionExtensions.Empty;
+
+			DetailsName = string.Empty;
+			DetailsDescription = string.Empty;
+			Confirm = string.Empty;
+			ConfirmDescription = string.Empty;
+			Distance = string.Empty;
+			DistanceUnit = string.Empty;
 		}
 
 		public override float Opacity
@@ -513,7 +542,13 @@ namespace LunraGames.SubLight.Views
 			bool instant = false
 		);
 
-		//string Name { set; }
+		string DetailsName { set; }
+		string DetailsDescription { set; }
+		string Confirm { set; }
+		string ConfirmDescription { set; }
+		string Distance { set; }
+		string DistanceUnit { set; }
+
 		//string ClassificationText { set; }
 		//string DistanceText { set; }
 		//string DistanceUnitText { set; }

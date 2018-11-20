@@ -85,28 +85,6 @@ namespace LunraGames.SubLight.Presenters
 				OnShowView();
 				ShowView(instant: true);
 			}
-			/*
-			positionInUniverse = activeSystem.Position;
-
-			highlightState = Celestial.HighlightStates.Idle;
-
-			if (activeSystem.Position.Value.Equals(Model.Ship.Value.Position.Value)) visitState = Celestial.VisitStates.Current;
-			else visitState = activeSystem.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
-
-			rangeState = Celestial.RangeStates.InRange;
-
-			switch (Model.CelestialSystemStateLastSelected.State)
-			{
-				case CelestialSystemStateBlock.States.Selected:
-					selectedState = Model.CelestialSystemStateLastSelected.Position.Equals(activeSystem.Position.Value) ? Celestial.SelectedStates.Selected : Celestial.SelectedStates.OtherSelected;
-					break;
-				default:
-					selectedState = Celestial.SelectedStates.NotSelected;
-					break;
-			}
-
-			travelState = Celestial.TravelStates.NotTraveling;
-			*/
 		}
 
 		void OnGlobalClick(Click click)
@@ -153,6 +131,8 @@ namespace LunraGames.SubLight.Presenters
 			travelState = Celestial.TravelStates.NotTraveling;
 
 			ApplyStates(true);
+
+			View.DetailsName = activeSystem.Name.Value;
 		}
 
 		void OnEnter()
