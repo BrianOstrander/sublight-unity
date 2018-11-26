@@ -11,14 +11,16 @@ namespace LunraGames.SubLight.Presenters
 	{
 		UniversePosition scaleInUniverse;
 		UniversePosition positionInUniverse;
+		UniverseScales[] scaleLabels;
 
 		protected override UniversePosition ScaleInUniverse { get { return scaleInUniverse; } }
 		protected override UniversePosition PositionInUniverse { get { return positionInUniverse; } }
 
-		public GalaxyLabelsPresenter(GameModel model, UniverseScales scale) : base(model, scale)
+		public GalaxyLabelsPresenter(GameModel model, UniverseScales scale, params UniverseScales[] scaleLabels) : base(model, scale)
 		{
 			scaleInUniverse = model.Galaxy.GalaxySize;
 			positionInUniverse = UniversePosition.Zero;
+			this.scaleLabels = scaleLabels;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -35,7 +37,7 @@ namespace LunraGames.SubLight.Presenters
 			var labels = new List<GalaxyLabelBlock>();
 			var transform = ScaleModel.Transform.Value;
 
-			foreach (var label in Model.Galaxy.GetLabels(Scale))
+			foreach (var label in Model.Galaxy.GetLabels(scaleLabels))
 			{
 				var result = new GalaxyLabelBlock();
 				result.Text = label.Name;

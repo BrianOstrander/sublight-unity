@@ -102,7 +102,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				new UnitMap(0f, 0.1f, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(1f, 1f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(2f, 10f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(2f, 2000f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(3f, 5000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(4f, 25000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
 				new UnitMap(5f, 75000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)

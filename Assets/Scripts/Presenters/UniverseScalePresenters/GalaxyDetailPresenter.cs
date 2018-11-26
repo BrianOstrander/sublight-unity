@@ -3,7 +3,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class QuadrantPresenter : UniverseScalePresenter<IQuadrantView>
+	public class GalaxyDetailPresenter : UniverseScalePresenter<IGalaxyDetailView>
 	{
 		UniversePosition scaleInUniverse;
 		UniversePosition positionInUniverse;
@@ -11,7 +11,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override UniversePosition ScaleInUniverse { get { return scaleInUniverse; } }
 		protected override UniversePosition PositionInUniverse { get { return positionInUniverse; } }
 
-		public QuadrantPresenter(GameModel model) : base(model, UniverseScales.Quadrant)
+		public GalaxyDetailPresenter(GameModel model, UniverseScales scale) : base(model, scale)
 		{
 			scaleInUniverse = model.Galaxy.GalaxySize;
 			positionInUniverse = model.Galaxy.GalaxyOrigin;

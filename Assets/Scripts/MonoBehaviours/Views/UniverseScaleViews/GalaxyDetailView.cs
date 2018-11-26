@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Views
 {
-	public class QuadrantView : UniverseScaleView, IQuadrantView
+	public class GalaxyDetailView : UniverseScaleView, IGalaxyDetailView
 	{
 		[SerializeField]
 		bool[] channelEnabled;
@@ -114,7 +114,7 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
-	public interface IQuadrantView : IUniverseScaleView
+	public interface IGalaxyDetailView : IUniverseScaleView
 	{
 		void SetGalaxy(
 			Texture2D previewTexture,

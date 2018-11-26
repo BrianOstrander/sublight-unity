@@ -127,7 +127,7 @@ namespace LunraGames.SubLight
 
 		void InitializeCelestialSystems(Action done)
 		{
-			Payload.Game.GetScale(UniverseScales.Stellar).Transform.Changed += OnStellarTransform;
+			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed += OnCelestialSystemsTransform;
 			done();
 		}
 		#endregion
@@ -139,8 +139,11 @@ namespace LunraGames.SubLight
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 
 			// HACK BEGIN - Probably bad to do and I should feel bad... but oh well...
-			Payload.Game.ActiveScale.Opacity.Changed(1f);
-			Payload.Game.GetScale(UniverseScales.Stellar).Transform.Changed(Payload.Game.GetScale(UniverseScales.Stellar).Transform.Value);
+			var activeScale = Payload.Game.ActiveScale;
+			activeScale.Opacity.Changed(1f);
+			activeScale.Transform.Changed(activeScale.Transform.Value);
+			//Payload.Game.ActiveScale.Opacity.Changed(1f);
+			//Payload.Game.GetScale(UniverseScales.Local).Transform.Changed(Payload.Game.GetScale(UniverseScales.Local).Transform.Value);
 			// HACK END
 		}
 
@@ -160,7 +163,7 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
-			Payload.Game.GetScale(UniverseScales.Stellar).Transform.Changed -= OnStellarTransform;
+			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
 		}
 		#endregion
 
@@ -185,7 +188,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(selection)));
 		}
 
-		void OnStellarTransform(UniverseTransform transform)
+		void OnCelestialSystemsTransform(UniverseTransform transform)
 		{
 			if (transform.UniverseOrigin.SectorEquals(Payload.LastInterstellarFocus))
 			{
@@ -220,12 +223,12 @@ namespace LunraGames.SubLight
 					if (sectorPositionExists[x, z]) continue;
 					var replacement = staleSectors.First();
 					staleSectors.RemoveAt(0);
-					OnStellarTransformUpdateSystems(replacement, new UniversePosition(new Vector3Int(x + minSector.x, 0, z + minSector.z)));
+					OnCelestialSystemsTransformUpdateSystems(replacement, new UniversePosition(new Vector3Int(x + minSector.x, 0, z + minSector.z)));
 				}
 			}
 		}
 
-		void OnStellarTransformUpdateSystems(SectorInstanceModel sectorModel, UniversePosition sectorPosition)
+		void OnCelestialSystemsTransformUpdateSystems(SectorInstanceModel sectorModel, UniversePosition sectorPosition)
 		{
 			sectorModel.Sector.Value = App.Universe.GetSector(Payload.Game.Galaxy, Payload.Game.Universe, sectorPosition);
 			var systemCount = sectorModel.Sector.Value.SystemCount.Value;

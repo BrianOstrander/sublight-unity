@@ -73,31 +73,19 @@ namespace LunraGames.SubLight
 				);
 
 				new GalaxyPresenter(payload.Game);
-				new QuadrantPresenter(payload.Game);
+				new GalaxyDetailPresenter(payload.Game, UniverseScales.Quadrant);
+				new GalaxyDetailPresenter(payload.Game, UniverseScales.Stellar);
 
-				new ShipPinPresenter(payload.Game, UniverseScales.Quadrant);
-				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
 				new ShipPinPresenter(payload.Game, UniverseScales.Cluster);
+				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
+				new ShipPinPresenter(payload.Game, UniverseScales.Quadrant);
+				new ShipPinPresenter(payload.Game, UniverseScales.Stellar);
 
-				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic);
-				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic, UniverseScales.Galactic);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant, UniverseScales.Quadrant);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Stellar, UniverseScales.Quadrant, UniverseScales.Stellar);
 
-				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Stellar);
-
-				// testing this out...
-
-				//var originInt = payload.Game.Ship.Value.Position.Value.SectorInteger;
-				//var minSector = new Vector3Int(originInt.x - payload.InterstellarSectorOffset, 0, originInt.z - payload.InterstellarSectorOffset);
-				//var maxSector = new Vector3Int(originInt.x + payload.InterstellarSectorOffset, 0, originInt.z + payload.InterstellarSectorOffset);
-
-				//for (var x = 0; x < payload.InterstellarSectorOffsetTotal; x++)
-				//{
-				//	for (var z = 0; z < payload.InterstellarSectorOffsetTotal; z++)
-				//	{
-				//		var sectorPos = new UniversePosition(new Vector3Int(x + minSector.x, 0, z + minSector.z));
-				//		var sector = new SectorInstanceModel();
-				//	}
-				//}
+				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Local);
 
 				for (var i = 0; i < payload.InterstellarSectorCount; i++)
 				{
@@ -108,57 +96,13 @@ namespace LunraGames.SubLight
 					{
 						new CelestialSystemPresenter(
 							payload.Game,
-							UniverseScales.Stellar,
+							UniverseScales.Local,
 							systems[s] = new SystemInstanceModel(s)
 						);
 					}
 					sector.SystemModels.Value = systems;
 					payload.SectorInstances.Add(sector);
 				}
-
-				/*
-				var shipPos = payload.Game.Ship.Value.Position.Value;
-
-				var shipSector = payload.Game.Ship.Value.Position.Value.LocalZero;
-
-				var shipX = (int)shipSector.Sector.x;
-				var shipZ = (int)shipSector.Sector.z;
-
-				for (var x = shipX - maxSectorOffset; x < (shipX + maxSectorOffset) + 1; x++)
-				{
-					for (var z = shipZ - maxSectorOffset; z < (shipZ + maxSectorOffset) + 1; z++)
-					{
-						var sectorPosition = new UniversePosition(new Vector3(x, 0f, z), Vector3.zero);
-
-						App.Universe.PopulateUniverse(payload.Game.Universe, sectorPosition);
-
-						payload.SectorInstances.Add(
-							new SectorInstanceModel(
-								payload.Game.Universe,
-								sectorPosition,
-								maxSectorOffset,
-								maxSystemsPerSector
-							)
-						);
-					}
-				}
-
-				foreach (var sector in payload.SectorInstances)
-				{
-					foreach (var system in sector.SystemModels)
-					{
-						new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, system);
-					}
-				}
-				*/
-
-				//for (var x = 0 - maxSectorOffset; x < )
-
-				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos);
-				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0.5f, 0f, 0f)));
-				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(-0.5f, 0.025f, 0f)));
-				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.075f, 0.5f)));
-				//new CelestialSystemPresenter(payload.Game, UniverseScales.Stellar, shipPos.NewLocal(new Vector3(0f, 0.1f, -0.5f)));
 
 				done();
 			}

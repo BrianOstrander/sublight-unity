@@ -157,9 +157,9 @@ namespace LunraGames.SubLight.Models
 
 		public GalaxyLabelModel[] GetLabels() { return labels.ToArray(); }
 
-		public GalaxyLabelModel[] GetLabels(UniverseScales scale)
+		public GalaxyLabelModel[] GetLabels(params UniverseScales[] scales)
 		{
-			return labels.Where(l => l.Scale == scale).ToArray();
+			return labels.Where(l => scales.Contains(l.Scale)).ToArray();
 		}
 
 		public int SectorBodyCount(float value)
