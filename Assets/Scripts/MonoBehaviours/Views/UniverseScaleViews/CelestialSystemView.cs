@@ -11,16 +11,6 @@ namespace LunraGames.SubLight.Views
 {
 	public static class Celestial
 	{
-		public enum StateTypes
-		{
-			Unknown = 0,
-			Highlight = 10,
-			Visit = 20,
-			Range = 30,
-			Selected = 40,
-			Travel = 50
-		}
-
 		public enum HighlightStates
 		{
 			Unknown = 0,
@@ -63,6 +53,7 @@ namespace LunraGames.SubLight.Views
 
 	public class CelestialSystemView : UniverseScaleView, ICelestialSystemView
 	{
+		#region Definitions & Blocks
 		static class Constants
 		{
 			public static class DropLineThickness
@@ -104,16 +95,6 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public Action Enter { set; private get; }
-		public Action Exit { set; private get; }
-		public Action Click { set; private get; }
-
-		Celestial.HighlightStates HighlightState { get; set; }
-		Celestial.VisitStates VisitState { get; set; }
-		Celestial.RangeStates RangeState { get; set; }
-		Celestial.SelectedStates SelectedState { get; set; }
-		Celestial.TravelStates TravelState { get; set; }
-
 		[Serializable]
 		struct VisualState
 		{
@@ -130,10 +111,77 @@ namespace LunraGames.SubLight.Views
 			public float Height;
 			public float Dimming;
 		}
+		#endregion
 
-		VisualState currentVisuals;
-		VisualState targetVisuals;
-		bool isStale;
+		#region Serialized Properties
+		[Header("Children")]
+		[SerializeField]
+		float transitionSpeed;
+		[SerializeField]
+		Transform lookAtArea;
+		[SerializeField]
+		Transform verticalLookAtArea;
+		[SerializeField]
+		CanvasGroup interactableGroup;
+
+		[SerializeField]
+		float yMinimumOffset;
+
+		[SerializeField]
+		float dropLineThicknessMaximum;
+		[SerializeField]
+		AnimationCurve dropLineThickness;
+		[SerializeField]
+		AnimationCurve dropLineThicknessOpacity;
+		[SerializeField]
+		LineRenderer dropLine;
+		[SerializeField]
+		AnimationCurve dropLineRadiusOpacity;
+
+		[SerializeField]
+		MeshRenderer bottomCenterMesh;
+		[SerializeField]
+		AnimationCurve bottomCenterOpacity;
+
+		[SerializeField]
+		MeshRenderer selectedGraphic;
+		[SerializeField]
+		MeshRenderer colorGraphic;
+		[SerializeField]
+		MeshRenderer iconGraphic;
+
+		[SerializeField]
+		CanvasGroup detailsGroup;
+		[SerializeField]
+		CanvasGroup confirmGroup;
+		[SerializeField]
+		CanvasGroup baseDistanceGroup;
+
+		[SerializeField]
+		TextMeshProUGUI detailsNameLabel;
+		[SerializeField]
+		TextMeshProUGUI detailsDescriptionLabel;
+		[SerializeField]
+		TextMeshProUGUI confirmLabel;
+		[SerializeField]
+		TextMeshProUGUI confirmDescriptionLabel;
+		[SerializeField]
+		TextMeshProUGUI distanceLabel;
+		[SerializeField]
+		TextMeshProUGUI distanceUnitLabel;
+		#endregion
+
+		#region View Properties & Methods
+		public string DetailsName { set { detailsNameLabel.text = value ?? string.Empty; } }
+		public string DetailsDescription { set { detailsDescriptionLabel.text = value ?? string.Empty; } }
+		public string Confirm { set { confirmLabel.text = value ?? string.Empty; } }
+		public string ConfirmDescription { set { confirmDescriptionLabel.text = value ?? string.Empty; } }
+		public string Distance { set { distanceLabel.text = value ?? string.Empty; } }
+		public string DistanceUnit { set { distanceUnitLabel.text = value ?? string.Empty; } }
+
+		public Action Enter { set; private get; }
+		public Action Exit { set; private get; }
+		public Action Click { set; private get; }
 
 		public bool SetStates(
 			Celestial.HighlightStates highlightState = Celestial.HighlightStates.Unknown,
@@ -182,7 +230,89 @@ namespace LunraGames.SubLight.Views
 
 			return wasChanged;
 		}
+		#endregion
 
+		#region Local Properties
+		Celestial.HighlightStates HighlightState { get; set; }
+		Celestial.VisitStates VisitState { get; set; }
+		Celestial.RangeStates RangeState { get; set; }
+		Celestial.SelectedStates SelectedState { get; set; }
+		Celestial.TravelStates TravelState { get; set; }
+
+		VisualState currentVisuals;
+		VisualState targetVisuals;
+		bool isStale;
+		#endregion
+
+		#region Overrides
+		public override float Opacity
+		{
+			get { return base.Opacity; }
+
+			set
+			{
+				base.Opacity = value;
+
+				SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorConstant.Alpha);
+			}
+		}
+
+		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
+		{
+			var positionWithHeight = new Vector3(0f, yMinimumOffset + (rawPosition - position).y, 0f);
+			verticalLookAtArea.transform.localPosition = positionWithHeight;
+
+			var radiusNormal = RadiusNormal(dropLine.transform.position);
+			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
+			dropLine.SetPosition(1, positionWithHeight);
+
+			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
+			SetMeshAlpha(colorGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
+			SetMeshAlpha(iconGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
+
+			var inBounds = radiusNormal < 1f;
+
+			interactableGroup.interactable = inBounds;
+			interactableGroup.blocksRaycasts = inBounds;
+		}
+
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+			if (!isStale) return;
+
+			var currDelta = delta * transitionSpeed;
+
+			isStale = ProcessAllVisuals(currDelta);
+		}
+
+		protected override void OnLateIdle(float delta)
+		{
+			base.OnLateIdle(delta);
+
+			lookAtArea.LookAt(lookAtArea.position + App.V.CameraForward.FlattenY());
+			verticalLookAtArea.LookAt(verticalLookAtArea.position + App.V.CameraForward);
+		}
+
+		public override void Reset()
+		{
+			base.Reset();
+
+			Enter = ActionExtensions.Empty;
+			Exit = ActionExtensions.Empty;
+			Click = ActionExtensions.Empty;
+
+			DetailsName = string.Empty;
+			DetailsDescription = string.Empty;
+			Confirm = string.Empty;
+			ConfirmDescription = string.Empty;
+			Distance = string.Empty;
+			DistanceUnit = string.Empty;
+		}
+		#endregion
+
+		#region Visuals
 		void CalculateVisuals()
 		{
 			var modified = targetVisuals;
@@ -262,7 +392,7 @@ namespace LunraGames.SubLight.Views
 					modified.SelectedOpacity = Constants.SelectedOpacity.Full;
 					break;
 				default:
-					switch(HighlightState)
+					switch (HighlightState)
 					{
 						case Celestial.HighlightStates.Idle:
 						case Celestial.HighlightStates.OtherHighlighted:
@@ -289,57 +419,41 @@ namespace LunraGames.SubLight.Views
 			targetVisuals = modified;
 		}
 
-		protected override void OnLateIdle(float delta)
-		{
-			base.OnLateIdle(delta);
-
-			lookAtArea.LookAt(lookAtArea.position + App.V.CameraForward.FlattenY());
-			verticalLookAtArea.LookAt(verticalLookAtArea.position + App.V.CameraForward);
-		}
-
-
-		protected override void OnIdle(float delta)
-		{
-			base.OnIdle(delta);
-
-			if (!isStale) return;
-
-			var currDelta = delta * transitionSpeed;
-
-			isStale = ProcessAllVisuals(currDelta);
-		}
-
 		bool ProcessAllVisuals(float delta, bool force = false)
 		{
 			var wasChanged = false;
 
+			// TODO: these...
 			currentVisuals.DropLineTopOffset = ProcessVisual(currentVisuals.DropLineTopOffset, targetVisuals.DropLineTopOffset, delta, ref wasChanged, force);
+			// ---
 
-			// done
 			currentVisuals.DropLineThickness = ProcessVisual(currentVisuals.DropLineThickness, targetVisuals.DropLineThickness, delta, ref wasChanged, force, ApplyDropLineThickness);
 
+			// TODO: these...
 			currentVisuals.DropLineBaseOpacity = ProcessVisual(currentVisuals.DropLineBaseOpacity, targetVisuals.DropLineBaseOpacity, delta, ref wasChanged, force);
 			currentVisuals.BaseDistanceThickness = ProcessVisual(currentVisuals.BaseDistanceThickness, targetVisuals.BaseDistanceThickness, delta, ref wasChanged, force);
+			// ---
 
-			//done
 			currentVisuals.BaseDistanceOpacity = ProcessVisual(currentVisuals.BaseDistanceOpacity, targetVisuals.BaseDistanceOpacity, delta, ref wasChanged, force, ApplyBaseDistanceOpacity);
 			currentVisuals.DetailsOpacity = ProcessVisual(currentVisuals.DetailsOpacity, targetVisuals.DetailsOpacity, delta, ref wasChanged, force, ApplyDetailsOpacity);
 			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, delta, ref wasChanged, force, ApplyConfirmOpacity);
 
+			// TODO: these...
 			currentVisuals.AnalysisOpacity = ProcessVisual(currentVisuals.AnalysisOpacity, targetVisuals.AnalysisOpacity, delta, ref wasChanged, force);
+			// ---
 
-			// done
 			currentVisuals.SelectedOpacity = ProcessVisual(currentVisuals.SelectedOpacity, targetVisuals.SelectedOpacity, delta, ref wasChanged, force, ApplySelectedOpacity);
-
-			// done
 			currentVisuals.IconColorProgress = ProcessVisual(currentVisuals.IconColorProgress, targetVisuals.IconColorProgress, delta, ref wasChanged, force, ApplyIconColorProgress);
 
+			// TODO: these...
 			currentVisuals.Height = ProcessVisual(currentVisuals.Height, targetVisuals.Height, delta, ref wasChanged, force);
 			currentVisuals.Dimming = ProcessVisual(currentVisuals.Dimming, targetVisuals.Dimming, delta, ref wasChanged, force);
+			// ---
 
 			return wasChanged;
 		}
 
+		// TODO: Make onChange a required parameter...
 		float ProcessVisual(float current, float target, float transitionDelta, ref bool wasChanged, bool force, Action<float> onChange = null)
 		{
 			var result = 0f;
@@ -350,25 +464,7 @@ namespace LunraGames.SubLight.Views
 			wasChanged = wasChanged || currentChanged;
 			return result;
 		}
-
-		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
-		{
-			var positionWithHeight = new Vector3(0f, yMinimumOffset + (rawPosition - position).y, 0f);
-			verticalLookAtArea.transform.localPosition = positionWithHeight;
-			
-			var radiusNormal = RadiusNormal(dropLine.transform.position);
-			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
-			dropLine.SetPosition(1, positionWithHeight);
-
-			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
-			SetMeshAlpha(colorGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
-			SetMeshAlpha(iconGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
-
-			var inBounds = radiusNormal < 1f;
-
-			interactableGroup.interactable = inBounds;
-			interactableGroup.blocksRaycasts = inBounds;
-		}
+		#endregion
 
 		#region Visual Applications
 		void ApplyDropLineThickness(float value)
@@ -405,71 +501,6 @@ namespace LunraGames.SubLight.Views
 		}
 		#endregion
 
-		#region Children
-		[Header("Children")]
-		[SerializeField]
-		float transitionSpeed;
-		[SerializeField]
-		Transform lookAtArea;
-		[SerializeField]
-		Transform verticalLookAtArea;
-		[SerializeField]
-		CanvasGroup interactableGroup;
-
-		[SerializeField]
-		float yMinimumOffset;
-
-		[SerializeField]
-		float dropLineThicknessMaximum;
-		[SerializeField]
-		AnimationCurve dropLineThickness;
-		[SerializeField]
-		AnimationCurve dropLineThicknessOpacity;
-		[SerializeField]
-		LineRenderer dropLine;
-		[SerializeField]
-		AnimationCurve dropLineRadiusOpacity;
-
-		[SerializeField]
-		MeshRenderer bottomCenterMesh;
-		[SerializeField]
-		AnimationCurve bottomCenterOpacity;
-
-		[SerializeField]
-		MeshRenderer selectedGraphic;
-		[SerializeField]
-		MeshRenderer colorGraphic;
-		[SerializeField]
-		MeshRenderer iconGraphic;
-
-		[SerializeField]
-		CanvasGroup detailsGroup;
-		[SerializeField]
-		CanvasGroup confirmGroup;
-		[SerializeField]
-		CanvasGroup baseDistanceGroup;
-
-		[SerializeField]
-		TextMeshProUGUI detailsNameLabel;
-		[SerializeField]
-		TextMeshProUGUI detailsDescriptionLabel;
-		[SerializeField]
-		TextMeshProUGUI confirmLabel;
-		[SerializeField]
-		TextMeshProUGUI confirmDescriptionLabel;
-		[SerializeField]
-		TextMeshProUGUI distanceLabel;
-		[SerializeField]
-		TextMeshProUGUI distanceUnitLabel;
-		#endregion
-
-		public string DetailsName { set { detailsNameLabel.text = value ?? string.Empty; } }
-		public string DetailsDescription { set { detailsDescriptionLabel.text = value ?? string.Empty; } }
-		public string Confirm { set { confirmLabel.text = value ?? string.Empty; } }
-		public string ConfirmDescription { set { confirmDescriptionLabel.text = value ?? string.Empty; } }
-		public string Distance { set { distanceLabel.text = value ?? string.Empty; } }
-		public string DistanceUnit { set { distanceUnitLabel.text = value ?? string.Empty; } }
-
 		#region Events
 		public void OnEnter()
 		{
@@ -493,34 +524,6 @@ namespace LunraGames.SubLight.Views
 		}
 		#endregion
 
-		public override void Reset()
-		{
-			base.Reset();
-
-			Enter = ActionExtensions.Empty;
-			Exit = ActionExtensions.Empty;
-			Click = ActionExtensions.Empty;
-
-			DetailsName = string.Empty;
-			DetailsDescription = string.Empty;
-			Confirm = string.Empty;
-			ConfirmDescription = string.Empty;
-			Distance = string.Empty;
-			DistanceUnit = string.Empty;
-		}
-
-		public override float Opacity
-		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-
-				SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorConstant.Alpha);
-			}
-		}
-
 		void SetMeshAlpha(Material material, string fieldName, float alpha = 1f)
 		{
 			material.SetFloat(fieldName, Opacity * alpha * dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
@@ -529,6 +532,13 @@ namespace LunraGames.SubLight.Views
 
 	public interface ICelestialSystemView : IUniverseScaleView
 	{
+		string DetailsName { set; }
+		string DetailsDescription { set; }
+		string Confirm { set; }
+		string ConfirmDescription { set; }
+		string Distance { set; }
+		string DistanceUnit { set; }
+
 		Action Enter { set; }
 		Action Exit { set; }
 		Action Click { set; }
@@ -541,13 +551,6 @@ namespace LunraGames.SubLight.Views
 			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown,
 			bool instant = false
 		);
-
-		string DetailsName { set; }
-		string DetailsDescription { set; }
-		string Confirm { set; }
-		string ConfirmDescription { set; }
-		string Distance { set; }
-		string DistanceUnit { set; }
 
 		//string ClassificationText { set; }
 		//string DistanceText { set; }

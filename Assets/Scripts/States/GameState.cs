@@ -142,8 +142,6 @@ namespace LunraGames.SubLight
 			var activeScale = Payload.Game.ActiveScale;
 			activeScale.Opacity.Changed(1f);
 			activeScale.Transform.Changed(activeScale.Transform.Value);
-			//Payload.Game.ActiveScale.Opacity.Changed(1f);
-			//Payload.Game.GetScale(UniverseScales.Local).Transform.Changed(Payload.Game.GetScale(UniverseScales.Local).Transform.Value);
 			// HACK END
 		}
 
