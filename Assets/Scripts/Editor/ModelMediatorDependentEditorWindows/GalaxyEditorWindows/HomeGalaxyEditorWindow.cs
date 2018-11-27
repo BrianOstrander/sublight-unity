@@ -370,15 +370,23 @@ namespace LunraGames.SubLight
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
-				model.ClusterOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Cluster Origin", model.ClusterOrigin).LocalZero;
+				GUILayout.BeginHorizontal();
+				{
+					model.GalaxyRadius = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Galaxy Radius", "Galaxy radius in sectors"), model.GalaxyRadius, GUILayout.Width(250f)));
+					GUILayout.Label("( " + UniversePosition.ToLightYearDistance(model.GalaxyRadius).ToString("N0")+" Light Years )");
+					GUILayout.FlexibleSpace();
+				}
+				GUILayout.EndHorizontal();
+
+				model.ClusterOriginNormal.Value = EditorGUILayout.Vector3Field("Cluster Origin", model.ClusterOriginNormal);
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.yellow);
-				model.GalaxyOrigin.Value = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin).LocalZero;
+				model.GalaxyOriginNormal.Value = EditorGUILayout.Vector3Field("Galaxy Origin", model.GalaxyOriginNormal);
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.green);
-				model.PlayerStart.Value = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart).LocalZero;
+				model.PlayerStartNormal.Value = EditorGUILayout.Vector3Field("Player Start", model.PlayerStartNormal);
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
-				model.GameEnd.Value = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd).LocalZero;
+				model.GameEndNormal.Value = EditorGUILayout.Vector3Field("Game End", model.GameEndNormal);
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				model.UniverseNormal.Value = EditorGUILayout.Vector3Field(new GUIContent("Universe Normal", "The up direction of this galaxy within the universe."), model.UniverseNormal.Value);
 				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);
@@ -421,13 +429,10 @@ namespace LunraGames.SubLight
 					break;
 			}
 
-			Vector2 universeSize;
-
 			var displayArea = DisplayPreview(
 				previewTexture,
 				homeGeneralPreviewSize,
-				out universeSize,
-				clickPosition =>
+				clickNormal =>
 				{
 					OptionDialogPopup.Show(
 						"Set Target",
@@ -435,21 +440,21 @@ namespace LunraGames.SubLight
 						{
 							OptionDialogPopup.Entry.Create(
 								"Galaxy Origin",
-								() => { model.GalaxyOrigin.Value = clickPosition; selectedModified = true; },
+								() => { model.GalaxyOriginNormal.Value = clickNormal; selectedModified = true; },
 								color: Color.yellow
 							),
 							OptionDialogPopup.Entry.Create(
 								"Player Start",
-								() => { model.PlayerStart.Value = clickPosition; selectedModified = true; },
+								() => { model.PlayerStartNormal.Value = clickNormal; selectedModified = true; },
 								color: Color.green
 							),
 							OptionDialogPopup.Entry.Create(
 								"Game End",
-								() => { model.GameEnd.Value = clickPosition; selectedModified = true; },
+								() => { model.GameEndNormal.Value = clickNormal; selectedModified = true; },
 								color: Color.red
 							)
 						},
-						description: "Select the following position to assign the value of ( " + clickPosition.Sector.x + " , " + clickPosition.Sector.z + " ) to."
+						description: "Select the following position to assign the value of ( " + clickNormal.x + " , " + clickNormal.z + " ) to."
 					);
 				}
 			);
@@ -458,9 +463,9 @@ namespace LunraGames.SubLight
 			var playerStartInPreview = true;
 			var gameEndInPreview = true;
 
-			var galacticOriginInWindow = UniverseToWindow(model.GalaxyOrigin, displayArea, universeSize, homeGeneralPreviewSize, out galacticOriginInPreview);
-			var playerStartInWindow = UniverseToWindow(model.PlayerStart, displayArea, universeSize, homeGeneralPreviewSize, out playerStartInPreview);
-			var gameEndInWindow = UniverseToWindow(model.GameEnd, displayArea, universeSize, homeGeneralPreviewSize, out gameEndInPreview);
+			var galacticOriginInWindow = NormalToWindow(model.GalaxyOriginNormal, displayArea, out galacticOriginInPreview);
+			var playerStartInWindow = NormalToWindow(model.PlayerStartNormal, displayArea, out playerStartInPreview);
+			var gameEndInWindow = NormalToWindow(model.GameEndNormal, displayArea, out gameEndInPreview);
 
 			EditorGUILayoutExtensions.PushColor(galacticOriginInPreview ? Color.yellow : Color.yellow.NewA(0.5f));
 			{
@@ -724,7 +729,7 @@ namespace LunraGames.SubLight
 								{
 									GUILayout.BeginVertical();
 									{
-										selectedLabel.BeginAnchor.Value = EditorGUILayoutUniversePosition.Field("Begin Anchor", selectedLabel.BeginAnchor.Value);
+										selectedLabel.BeginAnchorNormal.Value = EditorGUILayout.Vector3Field("Begin Anchor", selectedLabel.BeginAnchorNormal);
 									}
 									GUILayout.EndVertical();
 									EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
@@ -740,7 +745,7 @@ namespace LunraGames.SubLight
 								{
 									GUILayout.BeginVertical();
 									{
-										selectedLabel.EndAnchor.Value = EditorGUILayoutUniversePosition.Field("EndAnchor", selectedLabel.EndAnchor.Value);
+										selectedLabel.EndAnchorNormal.Value = EditorGUILayout.Vector3Field("EndAnchor", selectedLabel.EndAnchorNormal);
 									}
 									GUILayout.EndVertical();
 									EditorGUILayoutExtensions.PushBackgroundColor(Color.magenta);
@@ -777,12 +782,9 @@ namespace LunraGames.SubLight
 					break;
 			}
 
-			Vector2 universeSize;
-
 			var displayArea = DisplayPreview(
 				previewTexture,
 				homeGeneralPreviewSize,
-				out universeSize,
 				clickPosition => OnHomeSelectedLabelsPrimaryClickPreview(model, clickPosition, selectedScale),
 				clickPosition => OnHomeSelectedLabelsSecondaryClickPreview(model, clickPosition, selectedScale),
 				!isOverAnAllLabel
@@ -791,15 +793,15 @@ namespace LunraGames.SubLight
 			isOverAnAllLabel = false;
 			if (selectedLabel == null) 
 			{
-				OnHomeSelectedLabelsShowAll(model, selectedScale, universeSize, displayArea, homeGeneralPreviewSize);
+				OnHomeSelectedLabelsShowAll(model, selectedScale, displayArea);
 				return;
 			}
 
 			var beginInPreview = true;
 			var endInPreview = true;
 
-			var beginAnchorInWindow = UniverseToWindow(selectedLabel.BeginAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize, out beginInPreview);
-			var endAnchorInWindow = UniverseToWindow(selectedLabel.EndAnchor.Value, displayArea, universeSize, homeGeneralPreviewSize, out endInPreview);
+			var beginAnchorInWindow = NormalToWindow(selectedLabel.BeginAnchorNormal.Value, displayArea, out beginInPreview);
+			var endAnchorInWindow = NormalToWindow(selectedLabel.EndAnchorNormal.Value, displayArea, out endInPreview);
 
 			var beginColor = labelState == LabelStates.UpdatingBegin ? Color.cyan.NewS(0.25f) : Color.cyan;
 
@@ -847,9 +849,7 @@ namespace LunraGames.SubLight
 		void OnHomeSelectedLabelsShowAll(
 			GalaxyInfoModel model,
 			UniverseScales scale,
-			Vector2 universeSize,
-			Rect displayArea,
-			int previewSize
+			Rect displayArea
 		)
 		{
 			var labels = model.GetLabels(scale);
@@ -867,8 +867,8 @@ namespace LunraGames.SubLight
 				var beginInPreview = true;
 				var endInPreview = true;
 
-				var beginAnchorInWindow = UniverseToWindow(label.BeginAnchor.Value, displayArea, universeSize, previewSize, out beginInPreview);
-				var endAnchorInWindow = UniverseToWindow(label.EndAnchor.Value, displayArea, universeSize, previewSize, out endInPreview);
+				var beginAnchorInWindow = NormalToWindow(label.BeginAnchorNormal.Value, displayArea, out beginInPreview);
+				var endAnchorInWindow = NormalToWindow(label.EndAnchorNormal.Value, displayArea, out endInPreview);
 
 				var previewCurveInfo = label.CurveInfo.Value; // We modify this to make changes for rendering to the screen...
 				previewCurveInfo.FlipCurve = !previewCurveInfo.FlipCurve;
@@ -900,7 +900,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnHomeSelectedLabelsPrimaryClickPreview(GalaxyInfoModel model, UniversePosition clickPosition, UniverseScales scale)
+		void OnHomeSelectedLabelsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition, UniverseScales scale)
 		{
 			switch(labelState)
 			{
@@ -908,7 +908,7 @@ namespace LunraGames.SubLight
 					lastSelectedLabel = selectedLabel;
 					selectedLabel = CreateNewLabel(scale);
 					homeLabelsSelectedLabelId.Value = selectedLabel.LabelId.Value;
-					selectedLabel.BeginAnchor.Value = clickPosition;
+					selectedLabel.BeginAnchorNormal.Value = clickPosition;
 
 					labelState = LabelStates.SelectingBegin;
 
@@ -926,22 +926,22 @@ namespace LunraGames.SubLight
 					);
 					break;
 				case LabelStates.SelectingBegin:
-					selectedLabel.BeginAnchor.Value = clickPosition;
+					selectedLabel.BeginAnchorNormal.Value = clickPosition;
 					labelState = LabelStates.SelectingEnd;
 					break;
 				case LabelStates.SelectingEnd:
-					selectedLabel.EndAnchor.Value = clickPosition;
+					selectedLabel.EndAnchorNormal.Value = clickPosition;
 					model.AddLabel(selectedLabel);
 					selectedModified = true;
 					labelState = LabelStates.Idle;
 					break;
 				case LabelStates.UpdatingBegin:
-					selectedLabel.BeginAnchor.Value = clickPosition;
+					selectedLabel.BeginAnchorNormal.Value = clickPosition;
 					selectedModified = true;
 					labelState = LabelStates.Idle;
 					break;
 				case LabelStates.UpdatingEnd:
-					selectedLabel.EndAnchor.Value = clickPosition;
+					selectedLabel.EndAnchorNormal.Value = clickPosition;
 					selectedModified = true;
 					labelState = LabelStates.Idle;
 					break;
@@ -951,7 +951,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnHomeSelectedLabelsSecondaryClickPreview(GalaxyInfoModel model, UniversePosition clickPosition, UniverseScales scale)
+		void OnHomeSelectedLabelsSecondaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition, UniverseScales scale)
 		{
 			switch (labelState)
 			{
@@ -1147,16 +1147,15 @@ namespace LunraGames.SubLight
 		}
 
 		#region Utility
-		UniversePosition ScreenToUniverse(Vector2 screenPosition, Rect window, Rect preview, Vector2 universeSize, float shownSize)
+		Vector3 ScreenToNormal(Vector2 screenPosition, Rect window, Rect preview)
 		{
-			var inUniverse = ((screenPosition - window.min) - preview.min) * (universeSize.y / shownSize);
-			return new UniversePosition(new Vector3(inUniverse.x, 0f, universeSize.y - inUniverse.y), Vector3.zero);
+			var previewOffset = ((screenPosition - window.min) - preview.min);
+			return new Vector3(previewOffset.x / preview.width, 0f, 1f - (previewOffset.y / preview.height));
 		}
 
-		Vector2 UniverseToWindow(UniversePosition universePosition, Rect preview, Vector2 universeSize, float shownSize, out bool inPreview)
+		Vector2 NormalToWindow(Vector3 normalPosition, Rect preview, out bool inPreview)
 		{
-			var universeScaled = new Vector2(universePosition.Sector.x, universeSize.y - universePosition.Sector.z) * (shownSize / universeSize.y);
-			var result = preview.min + universeScaled;
+			var result = preview.min + new Vector2(preview.width * normalPosition.x, preview.height * (1f - normalPosition.z));
 			inPreview = preview.Contains(result);
 			return new Vector2(Mathf.Clamp(result.x, preview.xMin, preview.xMax), Mathf.Clamp(result.y, preview.yMin, preview.yMax));
 		}
@@ -1169,15 +1168,12 @@ namespace LunraGames.SubLight
 		Rect DisplayPreview(
 			Texture2D texture,
 			DevPrefsInt previewSize,
-			out Vector2 universeSize,
-			Action<UniversePosition> primaryClick,
-			Action<UniversePosition> secondaryClick = null,
+			Action<Vector3> primaryClick,
+			Action<Vector3> secondaryClick = null,
 			bool isClickable = true
 		)
 		{
 			texture = texture ?? Texture2D.blackTexture;
-
-			universeSize = new Vector2(texture.width, texture.height);
 
 			GUILayout.BeginHorizontal();
 			{
@@ -1187,12 +1183,10 @@ namespace LunraGames.SubLight
 				{
 					if (GUILayout.Button(new GUIContent(texture), GUIStyle.none, GUILayout.MaxWidth(previewSize), GUILayout.MaxHeight(previewSize)))
 					{
-						var universePosition = ScreenToUniverse(
+						var universePosition = ScreenToNormal(
 							GUIUtility.GUIToScreenPoint(Event.current.mousePosition),
 							position,
-							lastPreviewRect,
-							universeSize,
-							previewSize
+							lastPreviewRect
 						);
 
 						if (secondaryClick != null)

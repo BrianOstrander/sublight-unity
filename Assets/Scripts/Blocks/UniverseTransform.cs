@@ -69,7 +69,7 @@ namespace LunraGames.SubLight
 		{
 			// Kinda magic, but basically at some point there are more than 1
 			// units per sector, so we have to change how we find the offset.
-			var target = localGridUnitSize < 1f ? UniverseOrigin.Local : UniverseOrigin.Sector;
+			var target = localGridUnitSize < UniversePosition.LightYearToUniverseScalar ? UniverseOrigin.Local : UniverseOrigin.Lossy;
 			var gridUnitsPerSector = 1f / localGridUnitSize;
 			return new Vector3(
 				GetGridAxisOffset(target.x, gridUnitsPerSector),

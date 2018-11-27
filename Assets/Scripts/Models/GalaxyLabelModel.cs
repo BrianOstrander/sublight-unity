@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using UnityEngine;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -11,8 +13,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] TextCurveBlock curveInfo = TextCurveBlock.Default;
 		[JsonProperty] GalaxyLabelSources source = GalaxyLabelSources.Static;
 		[JsonProperty] UniverseScales scale;
-		[JsonProperty] UniversePosition beginAnchor;
-		[JsonProperty] UniversePosition endAnchor;
+		[JsonProperty] Vector3 beginAnchorNormal;
+		[JsonProperty] Vector3 endAnchorNormal;
 		[JsonProperty] int sliceLayer;
 
 		[JsonProperty] LanguageStringModel staticText = LanguageStringModel.Empty;
@@ -33,9 +35,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<UniverseScales> Scale;
 		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> BeginAnchor;
+		public readonly ListenerProperty<Vector3> BeginAnchorNormal;
 		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> EndAnchor;
+		public readonly ListenerProperty<Vector3> EndAnchorNormal;
 		[JsonIgnore]
 		public readonly ListenerProperty<int> SliceLayer;
 
@@ -53,8 +55,8 @@ namespace LunraGames.SubLight.Models
 			CurveInfo = new ListenerProperty<TextCurveBlock>(value => curveInfo = value, () => curveInfo);
 			Source = new ListenerProperty<GalaxyLabelSources>(value => source = value, () => source);
 			Scale = new ListenerProperty<UniverseScales>(value => scale = value, () => scale);
-			BeginAnchor = new ListenerProperty<UniversePosition>(value => beginAnchor = value, () => beginAnchor);
-			EndAnchor = new ListenerProperty<UniversePosition>(value => endAnchor = value, () => endAnchor);
+			BeginAnchorNormal = new ListenerProperty<Vector3>(value => beginAnchorNormal = value, () => beginAnchorNormal);
+			EndAnchorNormal = new ListenerProperty<Vector3>(value => endAnchorNormal = value, () => endAnchorNormal);
 			SliceLayer = new ListenerProperty<int>(value => sliceLayer = value, () => sliceLayer);
 		}
 	}

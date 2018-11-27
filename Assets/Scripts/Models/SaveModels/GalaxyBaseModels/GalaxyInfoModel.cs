@@ -17,26 +17,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public Texture2D Details { get { return GetTexture(TextureNames.Details); } }
 
-		UniversePosition? galaxySize;
-		/// <summary>
-		/// Gets the size of the galaxy in sectors.
-		/// </summary>
-		/// <value>The size of the galaxy.</value>
-		[JsonIgnore]
-		public UniversePosition GalaxySize
-		{
-			get
-			{
-				if (galaxySize.HasValue) return galaxySize.Value;
-				var largestDimension = 0;
-
-				if (IsPlayable.Value) largestDimension = Mathf.Max(BodyMap.width, BodyMap.height);
-				else largestDimension = Mathf.Max(FullPreview.width, FullPreview.height);
-
-				return (galaxySize = new UniversePosition(new Vector3(largestDimension, largestDimension, largestDimension))).Value;
-			}
-		}
-
 		public GalaxyInfoModel()
 		{
 			SaveType = SaveTypes.GalaxyInfo;
@@ -51,9 +31,10 @@ namespace LunraGames.SubLight.Models
 
 		TexturePixelCache GetPixel(Texture2D texture, UniversePosition sectorPosition)
 		{
-			var x = sectorPosition.SectorInteger.x;
-			var y = sectorPosition.SectorInteger.z;
-			return new TexturePixelCache(x, y, texture.GetPixel(x, y));
+			var normal = UniversePosition.NormalizedSector(GalaxySize, sectorPosition);
+			var x = Mathf.FloorToInt(normal.x * (texture.width - 1));
+			var y = Mathf.FloorToInt(normal.y * (texture.height - 1));
+			return new TexturePixelCache(sectorPosition.SectorInteger.x, sectorPosition.SectorInteger.y, texture.GetPixel(x, y));
 		}
 	}
 }

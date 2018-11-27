@@ -12,8 +12,8 @@ namespace LunraGames.SubLight
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-		const float UniverseToLightYearScalar = 50f;
-		const float LightYearToUniverseScalar = 0.02f;
+		public const float UniverseToLightYearScalar = 500f;
+		public const float LightYearToUniverseScalar = 0.002f;
 
 		public static float ToLightYearDistance(float universeDistance) { return universeDistance * UniverseToLightYearScalar; }
 		public static float ToUniverseDistance(float lightYearDistance) { return lightYearDistance * LightYearToUniverseScalar; }
@@ -31,6 +31,14 @@ namespace LunraGames.SubLight
 			return begin + (delta * progress);
 		}
 
+		/// <summary>
+		/// Gets a normalized Vector3 from the provided UniversePositions.
+		/// Useful for getting a normal value of where something is within an
+		/// area.
+		/// </summary>
+		/// <returns>The sector.</returns>
+		/// <param name="delta">Delta.</param>
+		/// <param name="area">Area.</param>
 		public static Vector3 NormalizedSector(
 			UniversePosition delta,
 			UniversePosition area
@@ -112,6 +120,8 @@ namespace LunraGames.SubLight
 		public UniversePosition LocalZero { get { return new UniversePosition(Sector, Vector3.zero); } }
 		[JsonIgnore]
 		public Vector3Int SectorInteger { get { return new Vector3Int((int)Sector.x, (int)Sector.y, (int)Sector.z); } }
+		[JsonIgnore]
+		public Vector3 Lossy { get { return Sector + Local; } }
 
 		public UniversePosition NewSector(Vector3 sector) { return new UniversePosition(sector, Local); }
 		public UniversePosition NewLocal(Vector3 local) { return new UniversePosition(Sector, local); }

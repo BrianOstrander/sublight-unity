@@ -42,10 +42,8 @@ namespace LunraGames.SubLight.Presenters
 				var result = new GalaxyLabelBlock();
 				result.Text = label.Name;
 				result.GroupId = label.GroupId;
-				var beginNormalized = UniversePosition.NormalizedSector(label.BeginAnchor, ScaleInUniverse);
-				var endNormalized = UniversePosition.NormalizedSector(label.EndAnchor, ScaleInUniverse);
-				result.BeginAnchorNormalized = new Vector2(beginNormalized.x, beginNormalized.z);
-				result.EndAnchorNormalized = new Vector2(endNormalized.x, endNormalized.z);
+				result.BeginAnchorNormalized = new Vector2(label.BeginAnchorNormal.Value.x, label.BeginAnchorNormal.Value.z);
+				result.EndAnchorNormalized = new Vector2(label.EndAnchorNormal.Value.x, label.EndAnchorNormal.Value.z);
 				result.CurveInfo = label.CurveInfo;
 				result.SliceLayer = label.SliceLayer;
 				result.Scale = label.Scale;

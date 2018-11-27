@@ -74,8 +74,8 @@ namespace LunraGames.SubLight
 
 			if (!Payload.Game.PlayerStartSelected.Value)
 			{
-				Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart.Value;
-				Payload.Game.Ship.Value.CurrentSystem.Value = Payload.Game.Galaxy.PlayerStart.Value;
+				Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart;
+				Payload.Game.Ship.Value.CurrentSystem.Value = Payload.Game.Galaxy.PlayerStart;
 			}
 
 			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))

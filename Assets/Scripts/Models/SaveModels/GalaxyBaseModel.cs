@@ -27,11 +27,11 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] Vector3 universeNormal;
 		[JsonProperty] float alertHeightMultiplier;
 
-		[JsonProperty] UniversePosition clusterOrigin;
-		[JsonProperty] UniversePosition galaxyOrigin;
-		[JsonProperty] UniversePosition playerStart;
-		[JsonProperty] UniversePosition gameEnd;
-		 
+		[JsonProperty] Vector3 clusterOriginNormal;
+		[JsonProperty] Vector3 galaxyOriginNormal;
+		[JsonProperty] Vector3 playerStartNormal;
+		[JsonProperty] Vector3 gameEndNormal;
+
 		[JsonProperty] int minimumSectorSystemCount;
 		[JsonProperty] int maximumSectorSystemCount;
 		[JsonProperty] AnimationCurve sectorSystemChance = AnimationCurveExtensions.Constant(1f);
@@ -55,13 +55,13 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<float> AlertHeightMultiplier;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> ClusterOrigin;
+		public readonly ListenerProperty<Vector3> ClusterOriginNormal;
 		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> GalaxyOrigin;
+		public readonly ListenerProperty<Vector3> GalaxyOriginNormal;
 		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> PlayerStart;
+		public readonly ListenerProperty<Vector3> PlayerStartNormal;
 		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> GameEnd;
+		public readonly ListenerProperty<Vector3> GameEndNormal;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> MinimumSectorSystemCount;
@@ -73,6 +73,41 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncyclopediaEntryId;
 
+		[JsonProperty] int galaxyRadius;
+		[JsonProperty] UniversePosition galaxySize;
+
+		/// <summary>
+		/// Gets or sets the galaxy radius in sectors.
+		/// </summary>
+		/// <value>The galaxy radius.</value>
+		[JsonIgnore]
+		public int GalaxyRadius
+		{
+			get { return galaxyRadius; }
+			set
+			{
+				galaxyRadius = value;
+				var galaxySectorDiameter = value * 2;
+				galaxySize = new UniversePosition(new Vector3Int(galaxySectorDiameter, galaxySectorDiameter, galaxySectorDiameter));
+			}
+		}
+
+		/// <summary>
+		/// Gets the size of the galaxy in sectors.
+		/// </summary>
+		/// <value>The size of the galaxy.</value>
+		[JsonIgnore]
+		public UniversePosition GalaxySize { get { return galaxySize; } }
+
+		[JsonIgnore]
+		public UniversePosition ClusterOrigin { get { return UniversePositionFromNormal(ClusterOriginNormal.Value); } }
+		[JsonIgnore]
+		public UniversePosition GalaxyOrigin { get { return UniversePositionFromNormal(GalaxyOriginNormal.Value); } }
+		[JsonIgnore]
+		public UniversePosition PlayerStart { get { return UniversePositionFromNormal(PlayerStartNormal.Value); } }
+		[JsonIgnore]
+		public UniversePosition GameEnd { get { return UniversePositionFromNormal(GameEndNormal.Value); } }
+
 		public GalaxyBaseModel()
 		{
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
@@ -83,10 +118,10 @@ namespace LunraGames.SubLight.Models
 			UniverseNormal = new ListenerProperty<Vector3>(value => universeNormal = value, () => universeNormal);
 			AlertHeightMultiplier = new ListenerProperty<float>(value => alertHeightMultiplier = value, () => alertHeightMultiplier);
 
-			ClusterOrigin = new ListenerProperty<UniversePosition>(value => clusterOrigin = value, () => clusterOrigin);
-			GalaxyOrigin = new ListenerProperty<UniversePosition>(value => galaxyOrigin = value, () => galaxyOrigin);
-			PlayerStart = new ListenerProperty<UniversePosition>(value => playerStart = value, () => playerStart);
-			GameEnd = new ListenerProperty<UniversePosition>(value => gameEnd = value, () => gameEnd);
+			ClusterOriginNormal = new ListenerProperty<Vector3>(value => clusterOriginNormal = value, () => clusterOriginNormal);
+			GalaxyOriginNormal = new ListenerProperty<Vector3>(value => galaxyOriginNormal = value, () => galaxyOriginNormal);
+			PlayerStartNormal = new ListenerProperty<Vector3>(value => playerStartNormal = value, () => playerStartNormal);
+			GameEndNormal = new ListenerProperty<Vector3>(value => gameEndNormal = value, () => gameEndNormal);
 
 			MinimumSectorSystemCount = new ListenerProperty<int>(value => minimumSectorSystemCount = value, () => minimumSectorSystemCount);
 			MaximumSectorSystemCount = new ListenerProperty<int>(value => maximumSectorSystemCount = value, () => maximumSectorSystemCount);
@@ -109,6 +144,14 @@ namespace LunraGames.SubLight.Models
 					break;
 			}
 		}
+
+		#region Private Utility
+		UniversePosition UniversePositionFromNormal(Vector3 normal)
+		{
+			var maxDiameter = (GalaxyRadius * 2) - 1;
+			return new UniversePosition(new Vector3(normal.x * maxDiameter, normal.y * maxDiameter, normal.z * maxDiameter));
+		}
+		#endregion
 
 		#region Utility
 		public void AddLabel(GalaxyLabelModel label)
