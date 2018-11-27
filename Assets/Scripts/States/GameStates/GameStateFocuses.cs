@@ -63,8 +63,6 @@ namespace LunraGames.SubLight
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
 				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
-				//Sagittarius A*
-
 				new SystemAlertPresenter(
 					payload.Game,
 					payload.Game.Galaxy.GameEnd,
@@ -75,14 +73,46 @@ namespace LunraGames.SubLight
 				);
 
 				new GalaxyPresenter(payload.Game);
-				new QuadrantPresenter(payload.Game);
+				new GalaxyDetailPresenter(payload.Game, UniverseScales.Quadrant);
+				new GalaxyDetailPresenter(payload.Game, UniverseScales.Stellar);
 
-				new ShipPinPresenter(payload.Game, UniverseScales.Quadrant);
-				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
 				new ShipPinPresenter(payload.Game, UniverseScales.Cluster);
+				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
+				new ShipPinPresenter(payload.Game, UniverseScales.Quadrant);
+				new ShipPinPresenter(payload.Game, UniverseScales.Stellar);
 
-				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic);
-				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic, UniverseScales.Galactic);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant, UniverseScales.Quadrant);
+				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Stellar, UniverseScales.Quadrant, UniverseScales.Stellar);
+
+				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Local);
+
+				var celestialLanguageBlock = new CelestialSystemLanguageBlock
+				{
+					Confirm = LanguageStringModel.Override("Confirm"),
+					ConfirmDescription = LanguageStringModel.Override("Click again"),
+					DistanceUnit = LanguageStringModel.Override("ly"),
+					Analysis = LanguageStringModel.Override("System Analysis"),
+					AnalysisDescription = LanguageStringModel.Override("Click for details")
+				};
+
+				for (var i = 0; i < payload.InterstellarSectorCount; i++)
+				{
+					var sector = new SectorInstanceModel();
+					sector.Sector.Value = App.Universe.GetSector(payload.Game.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
+					var systems = new SystemInstanceModel[payload.Game.Galaxy.MaximumSectorSystemCount.Value];
+					for (var s = 0; s < systems.Length; s++)
+					{
+						new CelestialSystemPresenter(
+							payload.Game,
+							UniverseScales.Local,
+							systems[s] = new SystemInstanceModel(s),
+							celestialLanguageBlock
+						);
+					}
+					sector.SystemModels.Value = systems;
+					payload.SectorInstances.Add(sector);
+				}
 
 				done();
 			}

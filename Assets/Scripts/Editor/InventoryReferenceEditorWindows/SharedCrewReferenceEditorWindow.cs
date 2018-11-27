@@ -12,15 +12,7 @@ namespace LunraGames.SubLight
 	{
 		void OnEditCrewShared(CrewInventoryModel model)
 		{
-			EditorGUIExtensions.BeginChangeCheck();
-			{
-				model.SupportedBodies.Value = EditorGUILayoutExtensions.EnumArrayValue(
-					new GUIContent("Supported Bodies", "A list of all valid bodies this vessel can explore."),
-					model.SupportedBodies.Value,
-					"- Select a BodyType -"
-				);
-			}
-			EditorGUIExtensions.EndChangeCheck(ref selectedReferenceModified);
+
 		}
 	}
 }

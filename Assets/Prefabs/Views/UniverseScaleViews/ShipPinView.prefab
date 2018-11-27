@@ -261,8 +261,10 @@ MonoBehaviour:
     OverrideClose: 0
     ShowDuration: 0
     CloseDuration: 0
-  animations: []
+  animations:
+  - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   scaleIgnores: 30
+  positionIgnores: 30
   scaleArea: {fileID: 0}
   positionArea: {fileID: 4421958495416990}
   unityScale: 1

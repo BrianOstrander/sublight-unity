@@ -187,13 +187,7 @@ namespace LunraGames.SubLight
 						case EncounterStatus.States.Seen:
 							return false;
 					}
-					if (!e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType)) return false;
-					if (e.ValidBodies.Value.None()) return true;
-					foreach (var bodyType in system.Bodies.Value.Select(b => b.BodyType).Distinct())
-					{
-						if (e.ValidBodies.Value.Contains(bodyType)) return true;
-					}
-					return false;
+					return true;
 				}
 			);
 
@@ -293,7 +287,7 @@ namespace LunraGames.SubLight
 
 			if (encounter.AssignedToBody.Value)
 			{
-				var bodies = encounter.HasBodyRequirements ? system.Bodies.Value.Where(b => encounter.ValidBodies.Value.Contains(b.BodyType)) : system.Bodies.Value;
+				var bodies = system.Bodies.Value;
 				var assignedBody = bodies.OrderBy(b => b.EncounterWeight.Value).First();
 				system.EncounterBodyId.Value = assignedBody.BodyId.Value;
 			}

@@ -3,10 +3,8 @@
   "name": "Andromeda",
   "universeNormal": {"x":-1.0,"y":1.0,"z":1.0},
   "alertHeightMultiplier": 2.0,
-  "galaxyOrigin": {
-    "Sector": {"x":-1750.0,"y":2000.0,"z":5250.0}
-  },
-  "bodyAdjustment": {
+  "galaxyOriginNormal": {"x":-0.427,"y":0.488,"z":1.2817},
+  "sectorSystemChance": {
     "keys": [
       {
         "value": 1.0
@@ -21,6 +19,10 @@
     "postWrapMode": "ClampForever"
   },
   "labels": [],
+  "galaxyRadius": 100,
+  "galaxySize": {
+    "Sector": {"x":200.0,"y":200.0,"z":200.0}
+  },
   "version": 7,
   "meta": "Andromeda",
   "metaKeyValues": {

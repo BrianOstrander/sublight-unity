@@ -35,6 +35,9 @@ namespace LunraGames.SubLight.Presenters
 		struct UnitMap
 		{
 			public float ZoomBegin;
+			/// <summary>
+			/// The light years per tile.
+			/// </summary>
 			public float LightYears;
 			/// <summary>
 			/// Zooming up will multiply by this value then add 1.0, this should
@@ -101,11 +104,11 @@ namespace LunraGames.SubLight.Presenters
 			unitMaps = new UnitMap[]
 			{
 				new UnitMap(0f, 0.1f, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(1f, 1f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(2f, 10f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(3f, 5000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(4f, 25000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(5f, 75000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
+				new UnitMap(1f, 150f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(2f, 1000f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(3f, 4000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(4f, 12000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
+				new UnitMap(5f, 36000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
 			};
 
 			App.Heartbeat.Update += OnUpdate;
@@ -205,8 +208,8 @@ namespace LunraGames.SubLight.Presenters
 				{
 					case UniverseFocuses.None: break;
 					case UniverseFocuses.Ship: endPosition = model.Ship.Value.Position.Value; break;
-					case UniverseFocuses.GalacticOrigin: endPosition = model.Galaxy.GalaxyOrigin.Value; break;
-					case UniverseFocuses.ClusterOrigin: endPosition = model.Galaxy.ClusterOrigin.Value; break;
+					case UniverseFocuses.GalacticOrigin: endPosition = model.Galaxy.GalaxyOrigin; break;
+					case UniverseFocuses.ClusterOrigin: endPosition = model.Galaxy.ClusterOrigin; break;
 					default:
 						Debug.LogError("unrecognized focus: " + focus);
 						break;

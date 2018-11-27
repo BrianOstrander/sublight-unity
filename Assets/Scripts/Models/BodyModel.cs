@@ -2,23 +2,13 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public abstract class BodyModel : Model
+	public class BodyModel : Model
 	{
 		[JsonProperty] int seed;
 		[JsonProperty] int bodyId;
 		[JsonProperty] int parentId;
 		[JsonProperty] string name;
 		[JsonProperty] float encounterWeight;
-
-		[JsonProperty] ResourceInventoryModel resources = ResourceInventoryModel.Zero;
-		[JsonProperty] ResourceInventoryModel resourcesAcquired = ResourceInventoryModel.Zero;
-
-		/// <summary>
-		/// Gets the type of the body.
-		/// </summary>
-		/// <value>The type of the body.</value>
-		[JsonIgnore]
-		public abstract BodyTypes BodyType { get; }
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;
@@ -34,13 +24,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> EncounterWeight;
-
-		[JsonIgnore]
-		public ResourceInventoryModel Resources { get { return resources; } }
-		[JsonIgnore]
-		public ResourceInventoryModel ResourcesAcquired { get { return resourcesAcquired; } }
-		[JsonIgnore]
-		public ResourceInventoryModel ResourcesCurrent { get { return Resources.Duplicate.Subtract(ResourcesAcquired); } }
 
 		public BodyModel()
 		{

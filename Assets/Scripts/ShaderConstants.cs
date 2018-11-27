@@ -123,6 +123,20 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloTextureColorAlphaMasked
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/TextureColorAlphaMasked";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
+		}
+
 		public static class HoloTextureColorAlpha
 		{
 			/// <summary>
@@ -132,9 +146,57 @@ namespace LunraGames.SubLight
 			public const string PrimaryTexture = "_PrimaryTexture";
 			public const string PrimaryColor = "_PrimaryColor";
 			public const string Alpha = "_Alpha";
+		}
 
-			public const string WorldOrigin = "_WorldOrigin";
-			public const string WorldRadius = "_WorldRadius";
+		public static class HoloDistanceFieldColor
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/DistanceField/Color";
+			public const string DistanceField = "_DistanceField";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+		}
+
+		public static class HoloDistanceFieldColorConstant
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/DistanceField/ColorConstant";
+			public const string DistanceField = "_DistanceField";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+			public const string NearFarPlanes = "_NearFarPlanes";
+		}
+
+		public static class HoloCelestialSystemIcon
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/CelestialSystemIcon";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string Progress = "_Progress";
+		}
+
+		public static class HoloCelestialSystemIconColor
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/CelestialSystemIconColor";
+			public const string NotVisitedTexture = "_NotVisitedTexture";
+			public const string VisitedTexture = "_VisitedTexture";
+			public const string CurrentTexture = "_CurrentTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string Progress = "_Progress";
 		}
 
 		public static class HoloGridBasic

@@ -2867,6 +2867,7 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   scaleIgnores: 30
+  positionIgnores: 10
   scaleArea: {fileID: 4824721827506310}
   positionArea: {fileID: 4824721827506310}
   ySeparation: 0.075
@@ -2886,6 +2887,39 @@ MonoBehaviour:
   galaxyRotationArea: {fileID: 4824721827506310}
   group: {fileID: 225977324005416042}
   line: {fileID: 120180704698186110}
+  lineRadiusOpacity:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.975
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   meshes:
   - {fileID: 23662338352898516}
   - {fileID: 23919217631938098}

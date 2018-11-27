@@ -2,37 +2,33 @@
   "isPlayable": true,
   "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
   "name": "Milky Way",
-  "galaxyOrigin": {
-    "Sector": {"x":2048.0,"z":2048.0}
-  },
-  "playerStart": {
-    "Sector": {"x":1908.0,"z":461.0},
-    "Local": {"x":0.815551758,"z":0.297119141}
-  },
-  "gameEnd": {
-    "Sector": {"x":1924.0,"z":2059.0},
-    "Local": {"x":0.7224121,"z":0.9301758}
-  },
-  "bodyAdjustment": {
+  "galaxyOriginNormal": {"x":0.5,"z":0.5},
+  "playerStartNormal": {"x":0.396984935,"z":0.1281407},
+  "gameEndNormal": {"x":0.469726563,"z":0.5026855},
+  "maximumSectorSystemCount": 5,
+  "sectorSystemChance": {
     "keys": [
       {
+        "inTangent": 1.0,
+        "outTangent": 1.0,
         "inWeight": 0.333333343,
-        "outWeight": 0.333333343
+        "outWeight": 0.333333343,
+        "tangentMode": 34
       },
       {
         "time": 1.0,
         "value": 1.0,
-        "inTangent": 2.0,
-        "outTangent": 2.0,
+        "inTangent": 1.0,
+        "outTangent": 1.0,
         "inWeight": 0.333333343,
-        "outWeight": 0.333333343
+        "outWeight": 0.333333343,
+        "tangentMode": 34
       }
     ],
     "length": 2,
     "preWrapMode": "ClampForever",
     "postWrapMode": "ClampForever"
   },
-  "maximumSectorBodies": 2000,
   "labels": [
     {
       "labelId": "02e6a22a-21c2-4f8c-be8f-b699a4376fd4",
@@ -69,13 +65,8 @@
       },
       "source": "Static",
       "scale": "Galactic",
-      "beginAnchor": {
-        "Sector": {"x":1098.0,"z":788.0},
-        "Local": {"x":0.9268799,"z":0.119140625}
-      },
-      "endAnchor": {
-        "Sector": {"x":2237.0,"z":899.0}
-      },
+      "beginAnchorNormal": {"x":0.2998661,"z":0.1780455},
+      "endAnchorNormal": {"x":0.563437939,"z":0.226},
       "staticText": {
         "key": "ca2e53b9-eae7-4ebb-b837-6d0c12ab4b00"
       },
@@ -109,14 +100,8 @@
       },
       "source": "Static",
       "scale": "Quadrant",
-      "beginAnchor": {
-        "Sector": {"x":1752.0,"z":488.0},
-        "Local": {"x":0.638793945,"z":0.200195313}
-      },
-      "endAnchor": {
-        "Sector": {"x":1874.0,"z":575.0},
-        "Local": {"x":0.688964844,"z":0.232177734}
-      },
+      "beginAnchorNormal": {"x":0.430485755,"z":0.121},
+      "endAnchorNormal": {"x":0.458123952,"z":0.14},
       "sliceLayer": 2,
       "staticText": {
         "key": "02e647df-5be9-4fa0-bca6-402d5f5bf877"
@@ -151,14 +136,8 @@
       },
       "source": "Static",
       "scale": "Quadrant",
-      "beginAnchor": {
-        "Sector": {"x":2706.0,"z":591.0},
-        "Local": {"x":0.906494141,"z":0.605957031}
-      },
-      "endAnchor": {
-        "Sector": {"x":2784.0,"z":789.0},
-        "Local": {"x":0.6340332,"z":0.967773438}
-      },
+      "beginAnchorNormal": {"x":0.661664367,"z":0.148703963},
+      "endAnchorNormal": {"x":0.682,"z":0.197817191},
       "sliceLayer": 1,
       "staticText": {
         "key": "7ef0eb3b-4f3d-487b-a492-5a0d15d3b72b"
@@ -186,8 +165,8 @@
               "outWeight": 0.07702534
             },
             {
-              "time": 0.6561674,
-              "value": -0.05481019,
+              "time": 0.6332792,
+              "value": -0.04193177,
               "inWeight": 0.333333343,
               "outWeight": 0.333333343
             },
@@ -206,14 +185,8 @@
       },
       "source": "Static",
       "scale": "Quadrant",
-      "beginAnchor": {
-        "Sector": {"x":2366.0,"z":533.0},
-        "Local": {"x":0.4230957,"z":0.485351563}
-      },
-      "endAnchor": {
-        "Sector": {"x":2561.0,"z":689.0},
-        "Local": {"x":0.304931641,"z":0.046875}
-      },
+      "beginAnchorNormal": {"x":0.581314862,"z":0.133},
+      "endAnchorNormal": {"x":0.619377136,"z":0.161},
       "sliceLayer": 2,
       "staticText": {
         "key": "70de41b0-6b9f-45df-8522-2ccff0cc8009"
@@ -248,14 +221,8 @@
       },
       "source": "Static",
       "scale": "Quadrant",
-      "beginAnchor": {
-        "Sector": {"x":1889.0,"z":466.0},
-        "Local": {"x":0.658447266,"z":0.324707031}
-      },
-      "endAnchor": {
-        "Sector": {"x":2056.0,"z":494.0},
-        "Local": {"x":0.6999512,"z":0.165039063}
-      },
+      "beginAnchorNormal": {"x":0.461474031,"z":0.1139029},
+      "endAnchorNormal": {"x":0.501675069,"z":0.122278},
       "sliceLayer": 3,
       "staticText": {
         "key": "e5275584-83f1-4d88-9291-4e3868ec2ea0"
@@ -290,14 +257,8 @@
       },
       "source": "Static",
       "scale": "Quadrant",
-      "beginAnchor": {
-        "Sector": {"x":1900.0,"z":381.0},
-        "Local": {"x":0.09851074,"z":0.303527832}
-      },
-      "endAnchor": {
-        "Sector": {"x":2091.0,"z":407.0},
-        "Local": {"x":0.500244141,"z":0.1640625}
-      },
+      "beginAnchorNormal": {"x":0.461474031,"z":0.09296482},
+      "endAnchorNormal": {"x":0.507537663,"z":0.099},
       "sliceLayer": 2,
       "staticText": {
         "key": "a26b1fba-a7ab-4ea5-b85f-ad1873878912"
@@ -311,6 +272,10 @@
       }
     }
   ],
+  "galaxyRadius": 100,
+  "galaxySize": {
+    "Sector": {"x":200.0,"y":200.0,"z":200.0}
+  },
   "version": 7,
   "meta": "Milky Way",
   "metaKeyValues": {

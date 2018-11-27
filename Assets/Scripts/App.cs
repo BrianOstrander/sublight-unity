@@ -168,6 +168,7 @@ namespace LunraGames.SubLight
 				KeyValues,
 				InventoryReferences,
 				ValueFilter,
+				Universe,
 				CurrentPreferences
 			);
 

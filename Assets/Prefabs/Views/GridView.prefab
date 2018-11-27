@@ -473,7 +473,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   gridUnityRadius: 3.5
-  renderQueue: 2999
+  renderQueue: 2990
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
   gridBackgroundMaterial: {fileID: 2100000, guid: 0b8e143a8d4004c82a2fc427a0ef675f,
     type: 2}

@@ -28,7 +28,7 @@ namespace LunraGamesEditor
 					{
 						_DescriptionLabel = new GUIStyle(EditorStyles.label);
 						_DescriptionLabel.alignment = TextAnchor.MiddleLeft;
-						_DescriptionLabel.fontSize = 18;
+						_DescriptionLabel.fontSize = 12;
 						_DescriptionLabel.wordWrap = true;
 					}
 					return _DescriptionLabel;

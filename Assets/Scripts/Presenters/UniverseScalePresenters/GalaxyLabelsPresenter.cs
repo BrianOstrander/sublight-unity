@@ -11,14 +11,16 @@ namespace LunraGames.SubLight.Presenters
 	{
 		UniversePosition scaleInUniverse;
 		UniversePosition positionInUniverse;
+		UniverseScales[] scaleLabels;
 
 		protected override UniversePosition ScaleInUniverse { get { return scaleInUniverse; } }
 		protected override UniversePosition PositionInUniverse { get { return positionInUniverse; } }
 
-		public GalaxyLabelsPresenter(GameModel model, UniverseScales scale) : base(model, scale)
+		public GalaxyLabelsPresenter(GameModel model, UniverseScales scale, params UniverseScales[] scaleLabels) : base(model, scale)
 		{
 			scaleInUniverse = model.Galaxy.GalaxySize;
 			positionInUniverse = UniversePosition.Zero;
+			this.scaleLabels = scaleLabels;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -35,15 +37,13 @@ namespace LunraGames.SubLight.Presenters
 			var labels = new List<GalaxyLabelBlock>();
 			var transform = ScaleModel.Transform.Value;
 
-			foreach (var label in Model.Galaxy.GetLabels(Scale))
+			foreach (var label in Model.Galaxy.GetLabels(scaleLabels))
 			{
 				var result = new GalaxyLabelBlock();
 				result.Text = label.Name;
 				result.GroupId = label.GroupId;
-				var beginNormalized = UniversePosition.NormalizedSector(label.BeginAnchor, ScaleInUniverse);
-				var endNormalized = UniversePosition.NormalizedSector(label.EndAnchor, ScaleInUniverse);
-				result.BeginAnchorNormalized = new Vector2(beginNormalized.x, beginNormalized.z);
-				result.EndAnchorNormalized = new Vector2(endNormalized.x, endNormalized.z);
+				result.BeginAnchorNormalized = new Vector2(label.BeginAnchorNormal.Value.x, label.BeginAnchorNormal.Value.z);
+				result.EndAnchorNormalized = new Vector2(label.EndAnchorNormal.Value.x, label.EndAnchorNormal.Value.z);
 				result.CurveInfo = label.CurveInfo;
 				result.SliceLayer = label.SliceLayer;
 				result.Scale = label.Scale;
