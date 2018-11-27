@@ -56,6 +56,18 @@ namespace LunraGamesEditor
 			set { EditorPrefs.SetFloat(Key, value); }
 		}
 
+		public Vector2 HorizontalScroll
+		{
+			get { return new Vector2(Value, 0f); }
+			set { Value = value.x; }
+		}
+
+		public Vector2 VerticalScroll
+		{
+			get { return new Vector2(0f, Value); }
+			set { Value = value.y; }
+		}
+
 		public EditorPrefsFloat(string key, float defaultValue = 0f) : base(key, defaultValue) {}
 	}
 
