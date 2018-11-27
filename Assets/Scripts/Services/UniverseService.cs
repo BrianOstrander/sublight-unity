@@ -230,7 +230,11 @@ namespace LunraGames.SubLight
 			system.Seed.Value = DemonUtility.CantorPairs(index, sector.Seed);
 			system.Visited.Value = false;
 			system.Position.Value = GetPositionInSector(sector.Position.Value, SystemModel.Seeds.Position(system.Seed.Value), index, sector.SystemCount.Value);
-			system.Name.Value = "Star System - " + system.Seed.Value.ToString().Substring(0, 4);
+
+			var seedString = system.Seed.Value.ToString();
+			if (4 < seedString.Length) seedString = seedString.Substring(0, 4);
+
+			system.Name.Value = "Star System - " + seedString;
 			return system;
 		}
 

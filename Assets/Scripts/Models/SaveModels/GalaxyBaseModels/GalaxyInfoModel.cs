@@ -31,9 +31,11 @@ namespace LunraGames.SubLight.Models
 
 		TexturePixelCache GetPixel(Texture2D texture, UniversePosition sectorPosition)
 		{
-			var normal = UniversePosition.NormalizedSector(GalaxySize, sectorPosition);
-			var x = Mathf.FloorToInt(normal.x * (texture.width - 1));
-			var y = Mathf.FloorToInt(normal.y * (texture.height - 1));
+			var normal = UniversePosition.NormalizedSector(sectorPosition, GalaxySize);
+
+			var x = Mathf.FloorToInt(normal.x * (texture.width - 1f));
+			var y = Mathf.FloorToInt(normal.z * (texture.height - 1f));
+
 			return new TexturePixelCache(sectorPosition.SectorInteger.x, sectorPosition.SectorInteger.y, texture.GetPixel(x, y));
 		}
 	}
