@@ -93,6 +93,12 @@ namespace LunraGames.SubLight.Views
 				public const float None = 0f;
 				public const float Full = 1f;
 			}
+
+			public static class MaximizedProgress
+			{
+				public const float Minimized = 0f;
+				public const float Maximized = 1f;
+			}
 		}
 
 		[Serializable]
@@ -110,6 +116,22 @@ namespace LunraGames.SubLight.Views
 			public float IconColorProgress;
 			public float Height;
 			public float Dimming;
+			public float MaximizedProgress;
+		}
+
+		[Serializable]
+		struct MaximizeOpacityGraphic
+		{
+			public MeshRenderer Graphic;
+			public string AlphaKey;
+			public bool AppearsWhenMinimized;
+		}
+
+		[Serializable]
+		struct MaximizeArea
+		{
+			public Transform Area;
+			public float MinimumScale;
 		}
 		#endregion
 
@@ -169,6 +191,13 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI distanceLabel;
 		[SerializeField]
 		TextMeshProUGUI distanceUnitLabel;
+
+		[SerializeField]
+		AnimationCurve maximizeScale;
+		[SerializeField]
+		MaximizeArea[] maximizeAreas;
+		[SerializeField]
+		MaximizeOpacityGraphic[] maximizeOpacityGraphics;
 		#endregion
 
 		#region View Properties & Methods
@@ -267,8 +296,8 @@ namespace LunraGames.SubLight.Views
 			dropLine.SetPosition(1, positionWithHeight);
 
 			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
-			SetMeshAlpha(colorGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
-			SetMeshAlpha(iconGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha);
+
+			SetMaximizeOpacity(currentVisuals.MaximizedProgress);
 
 			var inBounds = radiusNormal < 1f;
 
@@ -416,6 +445,25 @@ namespace LunraGames.SubLight.Views
 
 			//	Dimming
 
+			// MaximizedProgress
+			modified.MaximizedProgress = Constants.MaximizedProgress.Minimized;
+			switch (SelectedState)
+			{
+				case Celestial.SelectedStates.NotSelected:
+				case Celestial.SelectedStates.OtherSelected:
+					switch (HighlightState)
+					{
+						case Celestial.HighlightStates.Highlighted:
+						case Celestial.HighlightStates.HighlightedAnalysis:
+							modified.MaximizedProgress = Constants.MaximizedProgress.Maximized;
+							break;
+					}
+					break;
+				default:
+					modified.MaximizedProgress = Constants.MaximizedProgress.Maximized;
+					break;
+			}
+
 			targetVisuals = modified;
 		}
 
@@ -449,6 +497,8 @@ namespace LunraGames.SubLight.Views
 			currentVisuals.Height = ProcessVisual(currentVisuals.Height, targetVisuals.Height, delta, ref wasChanged, force);
 			currentVisuals.Dimming = ProcessVisual(currentVisuals.Dimming, targetVisuals.Dimming, delta, ref wasChanged, force);
 			// ---
+
+			currentVisuals.MaximizedProgress = ProcessVisual(currentVisuals.MaximizedProgress, targetVisuals.MaximizedProgress, delta, ref wasChanged, force, ApplyMaximizedProgress);
 
 			return wasChanged;
 		}
@@ -499,6 +549,17 @@ namespace LunraGames.SubLight.Views
 		{
 			baseDistanceGroup.alpha = value;
 		}
+
+		void ApplyMaximizedProgress(float value)
+		{
+			var scaleProgress = maximizeScale.Evaluate(value);
+			foreach (var entry in maximizeAreas)
+			{
+				entry.Area.localScale = Vector3.one * (entry.MinimumScale + ((1f - entry.MinimumScale) * scaleProgress));
+			}
+
+			SetMaximizeOpacity(value);
+		}
 		#endregion
 
 		#region Events
@@ -523,6 +584,17 @@ namespace LunraGames.SubLight.Views
 			if (Click != null) Click();
 		}
 		#endregion
+
+		void SetMaximizeOpacity(float value)
+		{
+			var appearOpacity = value;
+			var disappearOpacity = 1f - value;
+
+			foreach (var entry in maximizeOpacityGraphics)
+			{
+				SetMeshAlpha(entry.Graphic.material, entry.AlphaKey, entry.AppearsWhenMinimized ? disappearOpacity : appearOpacity);
+			}
+		}
 
 		void SetMeshAlpha(Material material, string fieldName, float alpha = 1f)
 		{
