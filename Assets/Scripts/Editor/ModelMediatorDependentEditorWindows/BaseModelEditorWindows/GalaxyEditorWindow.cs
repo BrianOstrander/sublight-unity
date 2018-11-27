@@ -141,18 +141,31 @@ namespace LunraGames.SubLight
 						biggest = Mathf.Max(biggest, Mathf.Max(kv.Value.width, kv.Value.height));
 					}
 
+					var editorButtonStyle = new GUIStyle(EditorStyles.miniButton);
+
 					foreach (var kv in model.Textures)
 					{
 						if (kv.Value == null) continue;
 						GUILayout.BeginVertical();
 						{
-							var isSmallerThanMax = Mathf.Min(kv.Value.width, kv.Value.height) < biggest;
+							var largestDimension = Mathf.Max(kv.Value.width, kv.Value.height);
+							var isUpsized = largestDimension < homeGeneralPreviewSize;
+							var isDownsized = homeGeneralPreviewSize < largestDimension;
 
-							if (isSmallerThanMax) EditorGUILayoutExtensions.PushColor(Color.red);
-							GUILayout.Label(kv.Key + " | " + kv.Value.width + " x " + kv.Value.height, EditorStyles.boldLabel);
-							if (isSmallerThanMax) EditorGUILayoutExtensions.PopColor();
+							var labelText = kv.Key + " | " + kv.Value.width + " x " + kv.Value.height;
 
-							if (GUILayout.Button(new GUIContent(kv.Value), GUILayout.MaxWidth(homeGeneralPreviewSize), GUILayout.MaxHeight(homeGeneralPreviewSize)))
+							if (isUpsized) labelText += " ( Scaled Up )";
+							else if (isDownsized) labelText += " ( Scaled Down )";
+
+							if (isUpsized || isDownsized) EditorGUILayoutExtensions.PushColor(Color.yellow);
+							var labelClicked = GUILayout.Button(labelText);
+							if (isUpsized || isDownsized) EditorGUILayoutExtensions.PopColor();
+
+							var currStyle = new GUIStyle(editorButtonStyle);
+							currStyle.normal.background = kv.Value;
+							currStyle.active.background = kv.Value;
+
+							if (GUILayout.Button(GUIContent.none, currStyle, GUILayout.Width(homeGeneralPreviewSize), GUILayout.Height(homeGeneralPreviewSize)) || labelClicked)
 							{
 								var textureWithExtension = kv.Key + ".png";
 								var texturePath = Path.Combine(model.IsInternal ? model.InternalSiblingDirectory : model.SiblingDirectory, textureWithExtension);
@@ -832,9 +845,13 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.FlexibleSpace();
 
+				var previewStyle = new GUIStyle(GUIStyle.none);
+				previewStyle.normal.background = texture;
+				previewStyle.active.background = texture;
+			
 				if (isClickable)
 				{
-					if (GUILayout.Button(new GUIContent(texture), GUIStyle.none, GUILayout.MaxWidth(previewSize), GUILayout.MaxHeight(previewSize)))
+					if (GUILayout.Button(GUIContent.none, previewStyle, GUILayout.Width(previewSize), GUILayout.Height(previewSize)))
 					{
 						var universePosition = ScreenToNormal(
 							GUIUtility.GUIToScreenPoint(Event.current.mousePosition),
@@ -852,7 +869,7 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					GUILayout.Box(new GUIContent(texture), GUIStyle.none, GUILayout.MaxWidth(previewSize), GUILayout.MaxHeight(previewSize));
+					GUILayout.Box(GUIContent.none, previewStyle, GUILayout.Width(previewSize), GUILayout.Height(previewSize));
 				}
 
 				if (Event.current.type == EventType.Repaint) lastPreviewRect = GUILayoutUtility.GetLastRect();
