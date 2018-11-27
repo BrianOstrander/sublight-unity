@@ -36,6 +36,8 @@ namespace LunraGames.SubLight
 			Maximized = 20
 		}
 
+		string readableModelName;
+
 		EditorPrefsBool modelAlwaysAllowSaving;
 		EditorPrefsEnum<ModelSelectionStates> modelSelectionState;
 		EditorPrefsEnum<ModelTabStates> modelTabState;
@@ -68,8 +70,10 @@ namespace LunraGames.SubLight
 			GetWindow(typeof(T), false, windowName).Show();
 		}
 
-		protected BaseModelEditorWindow(string keyPrefix) : base(keyPrefix)
+		protected BaseModelEditorWindow(string keyPrefix, string readableModelName) : base(keyPrefix)
 		{
+			this.readableModelName = readableModelName;
+
 			modelAlwaysAllowSaving = new EditorPrefsBool(KeyPrefix + "ModelAlwaysAllowSaving");
 			modelSelectionState = new EditorPrefsEnum<ModelSelectionStates>(KeyPrefix + "ModelSelectionState", ModelSelectionStates.Browsing);
 			modelTabState = new EditorPrefsEnum<ModelTabStates>(KeyPrefix + "ModelTabState", ModelTabStates.Maximized);
@@ -105,9 +109,17 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnNewModel(M model)
+		void OnNewModel()
 		{
-			SaveLoadService.Save(model, OnNewModelSaveDone);
+			TextDialogPopup.Show(
+				"New "+readableModelName+" Model",
+				value =>
+				{
+					SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
+				},
+				doneText: "Create",
+				description: "Enter a name for this new "+readableModelName+" model. This will also be used for the meta key."
+			);
 		}
 
 		void OnNewModelSaveDone(SaveLoadRequest<M> result)
@@ -250,7 +262,7 @@ namespace LunraGames.SubLight
 				{
 					const float buttonHeight = 24f;
 					if (GUILayout.Button(">", GUILayout.Height(buttonHeight), GUILayout.Width(buttonHeight))) SetTabState(ModelTabStates.Minimized);
-					if (GUILayout.Button("New", GUILayout.Height(buttonHeight))) OnNewModel(CreateModel());
+					if (GUILayout.Button("New", GUILayout.Height(buttonHeight))) OnNewModel();
 					if (GUILayout.Button("Refresh", GUILayout.Height(buttonHeight))) OnLoadList();
 				}
 				GUILayout.EndHorizontal();
@@ -419,10 +431,12 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Defaults
-		protected virtual M CreateModel()
+		protected virtual M CreateModel(string name)
 		{
 			var model = SaveLoadService.Create<M>();
+			model.Meta.Value = name;
 			AssignModelId(model, Guid.NewGuid().ToString());
+			AssignModelName(model, name);
 			return model;
 		}
 
@@ -435,7 +449,7 @@ namespace LunraGames.SubLight
 		{
 			Action<M> onDraw = DrawSelectedEditorNotImplemented;
 
-			GUILayout.BeginHorizontal();
+			GUILayout.BeginHorizontal(EditorStyles.helpBox);
 			{
 				var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
 				GUILayout.Label("Editing: " + metaName, GUILayout.ExpandWidth(false));
@@ -468,6 +482,7 @@ namespace LunraGames.SubLight
 
 		#region Required
 		protected abstract void AssignModelId(M model, string id);
+		protected abstract void AssignModelName(M model, string name);
 		protected abstract string GetModelId(SaveModel model);
 		#endregion
 

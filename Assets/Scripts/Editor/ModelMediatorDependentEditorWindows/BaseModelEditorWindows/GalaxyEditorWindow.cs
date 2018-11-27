@@ -62,7 +62,7 @@ namespace LunraGames.SubLight
 		GalaxyLabelModel selectedLabel;
 		bool isOverAnAllLabel;
 
-		public GalaxyEditorWindow() : base("LG_SL_GalaxyEditor_")
+		public GalaxyEditorWindow() : base("LG_SL_GalaxyEditor_", "Galaxy")
 		{
 			homeSelectedToolbar = new DevPrefsInt(KeyPrefix + "HomeSelectedState");
 
@@ -88,17 +88,14 @@ namespace LunraGames.SubLight
 		}
 
 		#region Model Overrides
-		protected override GalaxyInfoModel CreateModel()
-		{
-			var model = base.CreateModel();
-			model.Name.Value = string.Empty;
-			model.Meta.Value = model.Name;
-			return model;
-		}
-
 		protected override void AssignModelId(GalaxyInfoModel model, string id)
 		{
 			model.GalaxyId.Value = model.SetMetaKey(MetaKeyConstants.GalaxyInfo.GalaxyId, Guid.NewGuid().ToString());
+		}
+
+		protected override void AssignModelName(GalaxyInfoModel model, string name)
+		{
+			model.Name.Value = name;
 		}
 
 		protected override string GetModelId(SaveModel model)
