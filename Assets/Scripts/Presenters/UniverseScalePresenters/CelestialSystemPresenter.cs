@@ -20,14 +20,17 @@ namespace LunraGames.SubLight.Presenters
 		protected override UniversePosition PositionInUniverse { get { return positionInUniverse; } }
 
 		SystemInstanceModel instanceModel;
+		CelestialSystemLanguageBlock language;
 
 		public CelestialSystemPresenter(
 			GameModel model,
 			UniverseScales scale,
-			SystemInstanceModel instanceModel
+			SystemInstanceModel instanceModel,
+			CelestialSystemLanguageBlock language
 		) : base(model, scale)
 		{
 			this.instanceModel = instanceModel;
+			this.language = language;
 
 			instanceModel.ActiveSystem.Changed += OnActiveSystem;
 
@@ -133,6 +136,11 @@ namespace LunraGames.SubLight.Presenters
 			ApplyStates(true);
 
 			View.DetailsName = activeSystem.Name.Value;
+			View.DetailsDescription = "Todo";
+			View.Confirm = language.Confirm.Value;
+			View.ConfirmDescription = language.ConfirmDescription.Value;
+			View.Distance = "99";
+			View.DistanceUnit = language.DistanceUnit.Value;
 		}
 
 		void OnEnter()

@@ -87,6 +87,15 @@ namespace LunraGames.SubLight
 
 				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Local);
 
+				var celestialLanguageBlock = new CelestialSystemLanguageBlock
+				{
+					Confirm = LanguageStringModel.Override("Confirm"),
+					ConfirmDescription = LanguageStringModel.Override("Click again"),
+					DistanceUnit = LanguageStringModel.Override("ly"),
+					Analysis = LanguageStringModel.Override("System Analysis"),
+					AnalysisDescription = LanguageStringModel.Override("Click for details")
+				};
+
 				for (var i = 0; i < payload.InterstellarSectorCount; i++)
 				{
 					var sector = new SectorInstanceModel();
@@ -97,7 +106,8 @@ namespace LunraGames.SubLight
 						new CelestialSystemPresenter(
 							payload.Game,
 							UniverseScales.Local,
-							systems[s] = new SystemInstanceModel(s)
+							systems[s] = new SystemInstanceModel(s),
+							celestialLanguageBlock
 						);
 					}
 					sector.SystemModels.Value = systems;
