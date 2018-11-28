@@ -63,9 +63,14 @@ namespace LunraGames.SubLight
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
 				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
+				var foundEnd = false;
+				var playerEnd = payload.Game.Galaxy.GetPlayerEnd(out foundEnd);
+
+				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
+
 				new SystemAlertPresenter(
 					payload.Game,
-					payload.Game.Galaxy.GameEnd,
+					playerEnd,
 					LanguageStringModel.Override("Sagittarius A*"),
 					LanguageStringModel.Override("Click for information"),
 					() => Debug.LogWarning("Todo: open the encyclopedia entry for Sagittarius A*"),

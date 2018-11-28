@@ -45,12 +45,39 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.yellow);
 				model.GalaxyOrigin = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin);
 				EditorGUILayoutExtensions.PopBackgroundColor();
-				EditorGUILayoutExtensions.PushBackgroundColor(Color.green);
-				model.PlayerStart = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart);
-				EditorGUILayoutExtensions.PopBackgroundColor();
-				EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
-				model.GameEnd = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
-				EditorGUILayoutExtensions.PopBackgroundColor();
+
+				var foundBegin = false;
+				var foundEnd = false;
+
+				var wasBegin = model.GetPlayerBegin(out foundBegin);
+				var wasEnd = model.GetPlayerEnd(out foundEnd);
+
+				if (!foundBegin)
+				{
+					EditorGUILayout.HelpBox("Specify a begin sector and system in the Specified Sectors tab", MessageType.Error);
+
+				}
+				else
+				{
+					EditorGUILayoutExtensions.PushBackgroundColor(Color.green);
+					var newBegin = EditorGUILayoutUniversePosition.FieldSector("Player Begin", model.GetPlayerBegin());
+					EditorGUILayoutExtensions.PopBackgroundColor();
+
+					if (!newBegin.Equals(wasBegin)) model.SetPlayerBegin(newBegin);
+				}
+
+				if (!foundEnd)
+				{
+					EditorGUILayout.HelpBox("Specify an end sector and system in the Specified Sectors tab", MessageType.Error);
+				}
+				else
+				{
+					EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
+					var newEnd = EditorGUILayoutUniversePosition.FieldSector("Player End", model.GetPlayerEnd());
+					EditorGUILayoutExtensions.PopBackgroundColor();
+
+					if (!newEnd.Equals(wasEnd)) model.SetPlayerEnd(newEnd);
+				}
 
 				model.UniverseNormal.Value = EditorGUILayout.Vector3Field(new GUIContent("Universe Normal", "The up direction of this galaxy within the universe."), model.UniverseNormal.Value);
 				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);
@@ -83,17 +110,45 @@ namespace LunraGames.SubLight
 					),
 					OptionDialogPopup.Entry.Create(
 						"Player Start",
-						() => { model.PlayerStartNormal = clickPosition; ModelSelectionModified = true; },
+						() => TargetsPrimaryClickSetPlayerBegin(model, clickPosition),
 						color: Color.green
 					),
 					OptionDialogPopup.Entry.Create(
 						"Game End",
-						() => { model.GameEndNormal = clickPosition; ModelSelectionModified = true; },
+						() => TargetsPrimaryClickSetPlayerEnd(model, clickPosition),
 						color: Color.red
 					)
 				},
 				description: "Select the following position to assign the value of ( " + clickPosition.x + " , " + clickPosition.z + " ) to."
 			);
+		}
+
+		void TargetsPrimaryClickSetPlayerBegin(GalaxyInfoModel model, Vector3 clickPosition)
+		{
+			var found = false;
+			model.GetPlayerBegin(out found);
+
+			if (found)
+			{
+				model.PlayerBeginNormal = clickPosition;
+				ModelSelectionModified = true;
+				return;
+			}
+			EditorUtility.DisplayDialog("Missing System", "Specify a begin sector and system in the Specified Sectors tab first.", "Okay");
+		}
+
+		void TargetsPrimaryClickSetPlayerEnd(GalaxyInfoModel model, Vector3 clickPosition)
+		{
+			var found = false;
+			model.GetPlayerEnd(out found);
+
+			if (found)
+			{
+				model.PlayerEndNormal = clickPosition;
+				ModelSelectionModified = true;
+				return;
+			}
+			EditorUtility.DisplayDialog("Missing System", "Specify an end sector and system in the Specified Sectors tab first.", "Okay");
 		}
 	}
 }

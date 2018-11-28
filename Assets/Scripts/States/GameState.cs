@@ -74,8 +74,12 @@ namespace LunraGames.SubLight
 
 			if (!Payload.Game.PlayerStartSelected.Value)
 			{
-				Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart;
-				Payload.Game.Ship.Value.CurrentSystem.Value = Payload.Game.Galaxy.PlayerStart;
+				var foundBegin = false;
+				var begin = Payload.Game.Galaxy.GetPlayerBegin(out foundBegin);
+				Payload.Game.Ship.Value.Position.Value = begin;
+				Payload.Game.Ship.Value.CurrentSystem.Value = begin;
+
+				if (!foundBegin) Debug.LogError("Provided galaxy has no player begin defined");
 			}
 
 			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))

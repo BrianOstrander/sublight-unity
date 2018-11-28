@@ -1,12 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 using LunraGamesEditor;
+
+using LunraGames.NumberDemon;
 
 using LunraGames.SubLight.Models;
 
@@ -276,7 +276,7 @@ namespace LunraGames.SubLight
 			{
 				case SpecifiedSectorsStates.Idle:
 					specifiedSectorsSelectedSectorLast = specifiedSectorsSelectedSector;
-					specifiedSectorsSelectedSector = SpecifiedSectorsCreateNewSector();
+					specifiedSectorsSelectedSector = SpecifiedSectorsCreateSector();
 					specifiedSectorsSelectedSectorName.Value = specifiedSectorsSelectedSector.Name.Value;
 					specifiedSectorsSelectedSector.Position.Value = UniversePosition.Lerp(clickPosition, UniversePosition.Zero, model.GalaxySize).LocalZero;
 
@@ -331,10 +331,13 @@ namespace LunraGames.SubLight
 			specifiedSectorsState = SpecifiedSectorsStates.Idle;
 		}
 
-		SectorModel SpecifiedSectorsCreateNewSector()
+		SectorModel SpecifiedSectorsCreateSector()
 		{
 			var result = new SectorModel();
 			result.Name.Value = Guid.NewGuid().ToString();
+			result.Seed.Value = DemonUtility.NextInteger;
+			result.Specified.Value = true;
+
 			return result;
 		}
 
@@ -410,17 +413,24 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			SystemModel deletedSystem = null;
+			SystemModel beginSystem = null;
+			SystemModel endSystem = null;
+
 			foreach (var system in sector.Systems.Value.OrderBy(s => s.Index.Value))
 			{
 				var isDeleted = false;
+				var setToPlayerBegin = false;
+				var setToPlayerEnd = false;
 
 				GUILayout.BeginVertical(EditorStyles.helpBox);
 				{
-					SpecifiedSectorsDrawSystem(model, sector, system, out isDeleted);
+					SpecifiedSectorsDrawSystem(model, sector, system, out isDeleted, out setToPlayerBegin, out setToPlayerEnd);
 				}
 				GUILayout.EndHorizontal();
 
 				if (isDeleted) deletedSystem = system;
+				if (setToPlayerBegin) beginSystem = system;
+				if (setToPlayerEnd) endSystem = system;
 			}
 
 			if (deletedSystem != null)
@@ -435,13 +445,29 @@ namespace LunraGames.SubLight
 					newIndex++;
 				}
 			}
+
+			if (beginSystem != null || endSystem != null)
+			{
+				var changingBegin = beginSystem != null;
+				var changingEnd = endSystem != null;
+				foreach (var otherSector in model.GetSpecifiedSectors())
+				{
+					foreach (var otherSystem in otherSector.Systems.Value)
+					{
+						if (changingBegin && otherSystem != beginSystem) otherSystem.PlayerBegin.Value = false;
+						if (changingEnd && otherSystem != endSystem) otherSystem.PlayerEnd.Value = false;
+					}
+				}
+			}
 		}
 
 		void SpecifiedSectorsDrawSystem(
 			GalaxyInfoModel model,
 			SectorModel sector,
 			SystemModel system,
-			out bool deleted
+			out bool deleted,
+			out bool setToPlayerBegin,
+			out bool setToPlayerEnd
 		)
 		{
 			GUILayout.BeginHorizontal();
@@ -454,11 +480,21 @@ namespace LunraGames.SubLight
 
 			system.Name.Value = EditorGUILayout.TextField(new GUIContent("Name"), system.Name.Value);
 
+			var wasPlayerBegin = system.PlayerBegin.Value;
+			var wasPlayerEnd = system.PlayerEnd.Value;
+
+			system.PlayerBegin.Value = EditorGUILayout.Toggle("Player Begin", system.PlayerBegin.Value);
+			system.PlayerEnd.Value = EditorGUILayout.Toggle("Player End", system.PlayerEnd.Value);
+
+			setToPlayerBegin = !wasPlayerBegin && system.PlayerBegin.Value;
+			setToPlayerEnd = !wasPlayerEnd && system.PlayerEnd.Value;
+
 			if (specifiedSectorsShowDerivedValues.Value)
 			{
 				EditorGUILayoutExtensions.PushEnabled(false);
 				{
 					EditorGUILayout.Toggle("Specified", system.Specified.Value);
+					EditorGUILayout.Vector3IntField("Sector", system.Position.Value.SectorInteger);
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			}
@@ -472,7 +508,7 @@ namespace LunraGames.SubLight
 			var currSystems = sector.Systems.Value.OrderBy(s => s.Index.Value);
 			var result = new SystemModel();
 			result.Index.Value = currSystems.None() ? 0 : currSystems.Last().Index.Value + 1;
-			result.Seed.Value = NumberDemon.DemonUtility.NextInteger;
+			result.Seed.Value = DemonUtility.NextInteger;
 			result.Specified.Value = true;
 			result.Position.Value = sector.Position.Value;
 

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 using LunraGamesEditor;
 
@@ -220,8 +217,8 @@ namespace LunraGames.SubLight
 			var gameEndInPreview = true;
 
 			var galacticOriginInWindow = NormalToWindow(model.GalaxyOriginNormal, displayArea, out galacticOriginInPreview);
-			var playerStartInWindow = NormalToWindow(model.PlayerStartNormal, displayArea, out playerStartInPreview);
-			var gameEndInWindow = NormalToWindow(model.GameEndNormal, displayArea, out gameEndInPreview);
+			var playerStartInWindow = NormalToWindow(model.PlayerBeginNormal, displayArea, out playerStartInPreview);
+			var gameEndInWindow = NormalToWindow(model.PlayerEndNormal, displayArea, out gameEndInPreview);
 
 			EditorGUILayoutExtensions.PushColor(galacticOriginInPreview ? Color.yellow : Color.yellow.NewA(0.5f));
 			{

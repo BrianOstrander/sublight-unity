@@ -29,8 +29,6 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] UniversePosition clusterOrigin;
 		[JsonProperty] UniversePosition galaxyOrigin;
-		[JsonProperty] UniversePosition playerStart;
-		[JsonProperty] UniversePosition gameEnd;
 
 		[JsonProperty] int minimumSectorSystemCount;
 		[JsonProperty] int maximumSectorSystemCount;
@@ -106,17 +104,17 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
-		public Vector3 PlayerStartNormal
+		public Vector3 PlayerBeginNormal
 		{
-			get { return UniversePosition.NormalizedSector(playerStart, galaxySize); }
-			set { playerStart = UniversePositionFromNormal(value); }
+			get { return UniversePosition.NormalizedSector(GetPlayerBegin(), galaxySize); }
+			set { SetPlayerBegin(UniversePositionFromNormal(value)); }
 		}
 
 		[JsonIgnore]
-		public Vector3 GameEndNormal
+		public Vector3 PlayerEndNormal
 		{
-			get { return UniversePosition.NormalizedSector(gameEnd, galaxySize); }
-			set { gameEnd = UniversePositionFromNormal(value); }
+			get { return UniversePosition.NormalizedSector(GetPlayerEnd(), galaxySize); }
+			set { SetPlayerEnd(UniversePositionFromNormal(value)); }
 		}
 
 		[JsonIgnore]
@@ -132,21 +130,6 @@ namespace LunraGames.SubLight.Models
 			get { return galaxyOrigin; }
 			set { galaxyOrigin = value; }
 		}
-
-		[JsonIgnore]
-		public UniversePosition PlayerStart
-		{
-			get { return playerStart; }
-			set { playerStart = value; }
-		}
-
-		[JsonIgnore]
-		public UniversePosition GameEnd
-		{
-			get { return gameEnd; }
-			set { gameEnd = value; }
-		}
-
 
 		public GalaxyBaseModel()
 		{
@@ -189,6 +172,96 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region Utility
+		public UniversePosition GetPlayerBegin()
+		{
+			var found = false;
+			return GetPlayerBegin(out found);
+		}
+
+		public UniversePosition GetPlayerEnd()
+		{
+			var found = false;
+			return GetPlayerEnd(out found);
+		}
+
+		public UniversePosition GetPlayerBegin(out bool found)
+		{
+			SectorModel sector = null;
+			SystemModel system = null;
+			return GetPlayerBegin(out found, out sector, out system);
+		}
+
+		public UniversePosition GetPlayerEnd(out bool found)
+		{
+			SectorModel sector = null;
+			SystemModel system = null;
+			return GetPlayerEnd(out found, out sector, out system);
+		}
+
+		public UniversePosition GetPlayerBegin(out bool found, out SectorModel sector, out SystemModel system)
+		{
+			found = false;
+			sector = null;
+			system = null;
+
+			foreach (var currSector in specifiedSectors)
+			{
+				foreach (var currSystem in currSector.Systems.Value)
+				{
+					found = currSystem.PlayerBegin.Value;
+					if (found)
+					{
+						sector = currSector;
+						system = currSystem;
+						return system.Position.Value;
+					}
+				}
+			}
+
+			return UniversePosition.Zero;
+		}
+
+		public UniversePosition GetPlayerEnd(out bool found, out SectorModel sector, out SystemModel system)
+		{
+			found = false;
+			sector = null;
+			system = null;
+
+			foreach (var currSector in specifiedSectors)
+			{
+				foreach (var currSystem in currSector.Systems.Value)
+				{
+					found = currSystem.PlayerEnd.Value;
+					if (found)
+					{
+						sector = currSector;
+						system = currSystem;
+						return system.Position.Value;
+					}
+				}
+			}
+
+			return UniversePosition.Zero;
+		}
+
+		public void SetPlayerBegin(UniversePosition position)
+		{
+			var found = false;
+			SectorModel sector = null;
+			SystemModel system = null;
+			GetPlayerBegin(out found, out sector, out system);
+			if (found) sector.Position.Value = position.LocalZero;
+		}
+
+		public void SetPlayerEnd(UniversePosition position)
+		{
+			var found = false;
+			SectorModel sector = null;
+			SystemModel system = null;
+			GetPlayerEnd(out found, out sector, out system);
+			if (found) sector.Position.Value = position.LocalZero;
+		}
+
 		public void AddLabel(GalaxyLabelModel label)
 		{
 			if (label == null) throw new ArgumentNullException("label");
