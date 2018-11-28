@@ -283,9 +283,11 @@
   "specifiedSectors": [
     {
       "name": "PlayerBegin",
+      "specified": true,
       "position": {
         "Sector": {"x":79.0,"z":25.0}
       },
+      "systemCount": 5,
       "systems": [
         {
           "seed": 1063743355,
@@ -342,7 +344,7 @@
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.35,"z":0.2}
           },
-          "name": "Wold",
+          "name": "Wolf",
           "encounterBodyId": -1,
           "bodies": []
         }

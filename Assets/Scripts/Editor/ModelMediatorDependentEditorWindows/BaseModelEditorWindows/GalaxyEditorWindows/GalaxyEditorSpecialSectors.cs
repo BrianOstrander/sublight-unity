@@ -29,6 +29,7 @@ namespace LunraGames.SubLight
 		EditorPrefsFloat specifiedSectorsListScroll;
 		EditorPrefsFloat specifiedSectorsDetailsScroll;
 		EditorPrefsBool specifiedSectorsShowTargets;
+		EditorPrefsBool specifiedSectorsShowDerivedValues;
 
 		SpecifiedSectorsStates specifiedSectorsState = SpecifiedSectorsStates.Idle;
 		SectorModel specifiedSectorsSelectedSectorLast;
@@ -46,6 +47,7 @@ namespace LunraGames.SubLight
 			specifiedSectorsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			specifiedSectorsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
 			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
+			specifiedSectorsShowDerivedValues = new EditorPrefsBool(currPrefix + "ShowDerivedValues");
 
 			RegisterToolbar("Specified Sectors", SpecifiedSectorsToolbar);
 
@@ -353,17 +355,38 @@ namespace LunraGames.SubLight
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
-				specifiedSectorsSelectedSector.Name.Value = EditorGUILayout.TextField("Name", specifiedSectorsSelectedSector.Name.Value);
+				GUILayout.BeginHorizontal();
+				{
+					sector.Name.Value = EditorGUILayout.TextField("Name", sector.Name.Value);
+					EditorGUILayout.LabelField("Show Derived Values", GUILayout.Width(115f));
+					EditorGUIExtensions.PauseChangeCheck();
+					specifiedSectorsShowDerivedValues.Value = EditorGUILayout.Toggle(specifiedSectorsShowDerivedValues.Value, GUILayout.Width(16f));
+					EditorGUIExtensions.UnPauseChangeCheck();
+				}
+				GUILayout.EndHorizontal();
+
+				sector.Seed.Value = EditorGUILayout.IntField("Seed", sector.Seed.Value);
+				sector.Visited.Value = EditorGUILayout.Toggle("Visited", sector.Visited.Value);
+
+				if (specifiedSectorsShowDerivedValues.Value)
+				{
+					EditorGUILayoutExtensions.PushEnabled(false);
+					{
+						EditorGUILayout.Toggle("Specified", sector.Specified.Value);
+						EditorGUILayout.IntField("System Count", sector.SystemCount.Value);
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+				}
 
 				GUILayout.BeginHorizontal(EditorStyles.helpBox);
 				{
 					GUILayout.BeginVertical();
 					{
-						specifiedSectorsSelectedSector.Position.Value = EditorGUILayoutUniversePosition.FieldSector("Sector", specifiedSectorsSelectedSector.Position.Value).LocalZero;
+						sector.Position.Value = EditorGUILayoutUniversePosition.FieldSector("Sector", sector.Position.Value).LocalZero;
 					}
 					GUILayout.EndVertical();
 					EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
-					if (GUILayout.Button("Update Sector", GUILayout.Width(100f), GUILayout.Height(51f)))
+					if (GUILayout.Button("Update Sector", GUILayout.Width(100f), GUILayout.Height(36f)))
 					{
 						specifiedSectorsState = SpecifiedSectorsStates.UpdatingSector;
 					}
@@ -374,7 +397,6 @@ namespace LunraGames.SubLight
 				SpecifiedSectorsListSystems(model, sector);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
-
 		}
 
 		void SpecifiedSectorsListSystems(GalaxyInfoModel model, SectorModel sector)
@@ -404,6 +426,8 @@ namespace LunraGames.SubLight
 			if (deletedSystem != null)
 			{
 				sector.Systems.Value = sector.Systems.Value.ExceptOne(deletedSystem).ToArray();
+				sector.SystemCount.Value = sector.Systems.Value.Count();
+
 				var newIndex = 0;
 				foreach (var system in sector.Systems.Value.OrderBy(s => s.Index.Value))
 				{
@@ -429,6 +453,16 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			system.Name.Value = EditorGUILayout.TextField(new GUIContent("Name"), system.Name.Value);
+
+			if (specifiedSectorsShowDerivedValues.Value)
+			{
+				EditorGUILayoutExtensions.PushEnabled(false);
+				{
+					EditorGUILayout.Toggle("Specified", system.Specified.Value);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+
 			var localPos = new UniversePosition(EditorGUILayout.Vector3Field("Local Position", system.Position.Value.Local));
 			system.Position.Value = new UniversePosition(sector.Position.Value.SectorInteger, localPos.Local);
 		}
@@ -443,6 +477,7 @@ namespace LunraGames.SubLight
 			result.Position.Value = sector.Position.Value;
 
 			sector.Systems.Value = sector.Systems.Value.Append(result).ToArray();
+			sector.SystemCount.Value = sector.Systems.Value.Count();
 		}
 	}
 }
