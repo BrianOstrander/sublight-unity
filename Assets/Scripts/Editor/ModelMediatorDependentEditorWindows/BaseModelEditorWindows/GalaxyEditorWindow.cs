@@ -54,11 +54,11 @@ namespace LunraGames.SubLight
 
 		public GalaxyEditorWindow() : base("LG_SL_GalaxyEditor_", "Galaxy")
 		{
-			OnGeneralConstruct();
-			OnTargetsConstruct();
-			OnLabelsConstruct();
-			OnSpecifiedSectorsConstruct();
-			OnGenerationConstruct();
+			GeneralConstruct();
+			TargetsConstruct();
+			LabelsConstruct();
+			SpecifiedSectorsConstruct();
+			GenerationConstruct();
 		}
 
 		#region Model Overrides

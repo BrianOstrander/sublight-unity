@@ -11,15 +11,15 @@ namespace LunraGames.SubLight
 	{
 		EditorPrefsFloat generationBarScroll;
 
-		void OnGenerationConstruct()
+		void GenerationConstruct()
 		{
 			var currPrefix = "Generation";
 			generationBarScroll = new EditorPrefsFloat(currPrefix + "BarScroll");
 
-			RegisterToolbar("Generation", OnGenerationToolbar);
+			RegisterToolbar("Generation", GenerationToolbar);
 		}
 
-		void OnGenerationToolbar(GalaxyInfoModel model)
+		void GenerationToolbar(GalaxyInfoModel model)
 		{
 			generationBarScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, generationBarScroll), false, true).y;
 			{

@@ -16,7 +16,7 @@ namespace LunraGames.SubLight
 		EditorPrefsBool generalPreviewMinimized;
 		EditorPrefsFloat generalPreviewBarScroll;
 
-		void OnGeneralConstruct()
+		void GeneralConstruct()
 		{
 			var currPrefix = KeyPrefix + "General";
 
@@ -24,10 +24,10 @@ namespace LunraGames.SubLight
 			generalPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 			generalPreviewBarScroll = new EditorPrefsFloat(currPrefix + "PreviewBarScroll");
 
-			RegisterToolbar("General", OnGeneralToolbar);
+			RegisterToolbar("General", GeneralToolbar);
 		}
 
-		void OnGeneralToolbar(GalaxyInfoModel model)
+		void GeneralToolbar(GalaxyInfoModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{

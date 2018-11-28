@@ -18,7 +18,7 @@ namespace LunraGames.SubLight
 		DevPrefsInt targetsPreviewSize;
 		EditorPrefsBool targetsPreviewMinimized;
 
-		void OnTargetsConstruct()
+		void TargetsConstruct()
 		{
 			var currPrefix = KeyPrefix + "Targets";
 
@@ -26,10 +26,10 @@ namespace LunraGames.SubLight
 			targetsPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
 			targetsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 
-			RegisterToolbar("Targets", OnTargetsToolbar);
+			RegisterToolbar("Targets", TargetsToolbar);
 		}
 
-		void OnTargetsToolbar(GalaxyInfoModel model)
+		void TargetsToolbar(GalaxyInfoModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
@@ -65,12 +65,12 @@ namespace LunraGames.SubLight
 				targetsPreviewSize,
 				targetsPreviewMinimized,
 				true,
-				clickPosition => OnTargetsPrimaryClickPreview(model, clickPosition),
+				clickPosition => TargetsPrimaryClickPreview(model, clickPosition),
 				drawOnPreview: displayArea => DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyTargetStyle)
 			);
 		}
 
-		void OnTargetsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
+		void TargetsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
 		{
 			OptionDialogPopup.Show(
 				"Set Target",

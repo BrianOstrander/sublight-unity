@@ -51,7 +51,7 @@ namespace LunraGames.SubLight
 		GalaxyLabelModel labelsSelectedLabel;
 		bool labelsIsOverAnAllLabel;
 
-		void OnLabelsConstruct()
+		void LabelsConstruct()
 		{
 			var currPrefix = KeyPrefix + "Labels";
 
@@ -63,17 +63,17 @@ namespace LunraGames.SubLight
 			labelsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
 			labelsColorCodeBy = new EditorPrefsEnum<LabelColorCodes>(currPrefix + "ColorCodeBy");
 
-			RegisterToolbar("Labels", OnLabelsToolbar);
+			RegisterToolbar("Labels", LabelsToolbar);
 
-			BeforeLoadSelection += OnBeforeLoadSelectionLabels;
+			BeforeLoadSelection += LabelsBeforeLoadSelection;
 		}
 
-		void OnBeforeLoadSelectionLabels()
+		void LabelsBeforeLoadSelection()
 		{
 			SelectLabel(null);
 		}
 
-		void OnLabelsToolbar(GalaxyInfoModel model)
+		void LabelsToolbar(GalaxyInfoModel model)
 		{
 			if (string.IsNullOrEmpty(labelsSelectedLabelId.Value))
 			{
@@ -373,19 +373,19 @@ namespace LunraGames.SubLight
 				labelsPreviewSize,
 				labelsPreviewMinimized,
 				!labelsIsOverAnAllLabel,
-				clickPosition => OnLabelsPrimaryClickPreview(model, clickPosition, selectedScale),
-				clickPosition => OnLabelsSecondaryClickPreview(model, clickPosition, selectedScale),
-				drawOnPreview: displayArea => OnLabelsDrawOnPreview(model, selectedScale, displayArea),
+				clickPosition => LabelsPrimaryClickPreview(model, clickPosition, selectedScale),
+				clickPosition => LabelsSecondaryClickPreview(model, clickPosition, selectedScale),
+				drawOnPreview: displayArea => LabelsDrawOnPreview(model, selectedScale, displayArea),
 				previewSelectedOverride: selectedPreviewIndex
 			);
 		}
 
-		void OnLabelsDrawOnPreview(GalaxyInfoModel model, UniverseScales selectedScale, Rect displayArea)
+		void LabelsDrawOnPreview(GalaxyInfoModel model, UniverseScales selectedScale, Rect displayArea)
 		{
 			labelsIsOverAnAllLabel = false;
 			if (labelsSelectedLabel == null)
 			{
-				OnLabelsShowAllLabels(model, selectedScale, displayArea);
+				LabelsShowAllLabels(model, selectedScale, displayArea);
 				return;
 			}
 
@@ -438,7 +438,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnLabelsShowAllLabels(
+		void LabelsShowAllLabels(
 			GalaxyInfoModel model,
 			UniverseScales scale,
 			Rect displayArea
@@ -492,13 +492,13 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnLabelsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition, UniverseScales scale)
+		void LabelsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition, UniverseScales scale)
 		{
 			switch (labelsLabelState)
 			{
 				case LabelStates.Idle:
 					labelsLastSelectedLabel = labelsSelectedLabel;
-					labelsSelectedLabel = CreateNewLabel(scale);
+					labelsSelectedLabel = LabelsCreateNewLabel(scale);
 					labelsSelectedLabelId.Value = labelsSelectedLabel.LabelId.Value;
 					labelsSelectedLabel.BeginAnchorNormal.Value = clickPosition;
 
@@ -543,7 +543,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnLabelsSecondaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition, UniverseScales scale)
+		void LabelsSecondaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition, UniverseScales scale)
 		{
 			switch (labelsLabelState)
 			{
@@ -562,7 +562,7 @@ namespace LunraGames.SubLight
 			labelsLabelState = LabelStates.Idle;
 		}
 
-		GalaxyLabelModel CreateNewLabel(UniverseScales scale, string groupId = null)
+		GalaxyLabelModel LabelsCreateNewLabel(UniverseScales scale, string groupId = null)
 		{
 			var result = new GalaxyLabelModel();
 			result.LabelId.Value = Guid.NewGuid().ToString();

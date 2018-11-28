@@ -35,7 +35,7 @@ namespace LunraGames.SubLight
 		SectorModel specifiedSectorsSelectedSector;
 		bool specifiedSectorsIsOverAnAllSector;
 
-		void OnSpecifiedSectorsConstruct()
+		void SpecifiedSectorsConstruct()
 		{
 			var currPrefix = KeyPrefix + "SpecifiedSectors";
 
@@ -47,23 +47,23 @@ namespace LunraGames.SubLight
 			specifiedSectorsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
 			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
 
-			RegisterToolbar("Specified Sectors", OnSpecifiedSectorsToolbar);
+			RegisterToolbar("Specified Sectors", SpecifiedSectorsToolbar);
 
-			BeforeLoadSelection += OnBeforeLoadSelectionSpecifiedSectors;
+			BeforeLoadSelection += SpecifiedSectorsBeforeLoadSelection;
 		}
 
-		void OnSpecifiedSectorsToolbar(GalaxyInfoModel model)
+		void SpecifiedSectorsToolbar(GalaxyInfoModel model)
 		{
 			if (string.IsNullOrEmpty(specifiedSectorsSelectedSectorName.Value))
 			{
 				if (specifiedSectorsSelectedSector != null)
 				{
-					SelectSpecifiedSector(null);
+					SpecifiedSectorsSelectSpecifiedSector(null);
 				}
 			}
 			else if (specifiedSectorsSelectedSector == null)
 			{
-				SelectSpecifiedSector(model.GetSpecifiedSector(specifiedSectorsSelectedSectorName.Value));
+				SpecifiedSectorsSelectSpecifiedSector(model.GetSpecifiedSector(specifiedSectorsSelectedSectorName.Value));
 			}
 
 			GUILayout.BeginHorizontal();
@@ -93,7 +93,7 @@ namespace LunraGames.SubLight
 								EditorGUILayoutExtensions.PushEnabled(!isSelectedSector);
 								if (GUILayout.Button("Edit Sector", GUILayout.Width(100f)))
 								{
-									SelectSpecifiedSector(specifiedSector);
+									SpecifiedSectorsSelectSpecifiedSector(specifiedSector);
 								}
 								EditorGUILayoutExtensions.PopEnabled();
 
@@ -101,7 +101,7 @@ namespace LunraGames.SubLight
 								{
 									if (specifiedSectorsSelectedSector == specifiedSector)
 									{
-										SelectSpecifiedSector(null);
+										SpecifiedSectorsSelectSpecifiedSector(null);
 									}
 									model.RemoveSpecifiedSector(specifiedSector);
 									ModelSelectionModified = true;
@@ -133,7 +133,7 @@ namespace LunraGames.SubLight
 							EditorGUILayoutExtensions.PushEnabled(specifiedSectorsState == SpecifiedSectorsStates.Idle && specifiedSectorsSelectedSector != null);
 							if (GUILayout.Button("Deselect"))
 							{
-								SelectSpecifiedSector(null);
+								SpecifiedSectorsSelectSpecifiedSector(null);
 							}
 							EditorGUILayoutExtensions.PopEnabled();
 
@@ -144,10 +144,10 @@ namespace LunraGames.SubLight
 								switch (specifiedSectorsState)
 								{
 									case SpecifiedSectorsStates.SelectingSector:
-										SelectSpecifiedSector(specifiedSectorsSelectedSectorLast);
+										SpecifiedSectorsSelectSpecifiedSector(specifiedSectorsSelectedSectorLast);
 										break;
 									case SpecifiedSectorsStates.UpdatingSector:
-										SelectSpecifiedSector(specifiedSectorsSelectedSector);
+										SpecifiedSectorsSelectSpecifiedSector(specifiedSectorsSelectedSector);
 										break;
 								}
 								labelsLabelState = LabelStates.Idle;
@@ -208,31 +208,31 @@ namespace LunraGames.SubLight
 				specifiedSectorsPreviewSize,
 				specifiedSectorsPreviewMinimized,
 				!specifiedSectorsIsOverAnAllSector,
-				clickPosition => OnSpecifiedSectorsPrimaryClickPreview(model, clickPosition),
-				clickPosition => OnSpecifiedSectorsSecondaryClickPreview(model, clickPosition),
-				() => OnSpecifiedSectorsDrawPreviewToolbarPrefix(model),
-				() => OnSpecifiedSectorsDrawPreviewToolbarSuffix(model),
-				displayArea => OnSpecifiedSectorsDrawOnPreview(model, displayArea) 
+				clickPosition => SpecifiedSectorsPrimaryClickPreview(model, clickPosition),
+				clickPosition => SpecifiedSectorsSecondaryClickPreview(model, clickPosition),
+				() => SpecifiedSectorsDrawPreviewToolbarPrefix(model),
+				() => SpecifiedSectorsDrawPreviewToolbarSuffix(model),
+				displayArea => SpecifiedSectorsDrawOnPreview(model, displayArea) 
 			);
 		}
 
-		void OnSpecifiedSectorsDrawPreviewToolbarPrefix(GalaxyInfoModel model)
+		void SpecifiedSectorsDrawPreviewToolbarPrefix(GalaxyInfoModel model)
 		{
 			specifiedSectorsShowTargets.Value = GUILayout.Toggle(specifiedSectorsShowTargets.Value, "Show Targets", GUILayout.ExpandWidth(false));
 		}
 
-		void OnSpecifiedSectorsDrawPreviewToolbarSuffix(GalaxyInfoModel model)
+		void SpecifiedSectorsDrawPreviewToolbarSuffix(GalaxyInfoModel model)
 		{
 
 		}
 
-		void OnSpecifiedSectorsDrawOnPreview(GalaxyInfoModel model, Rect displayArea)
+		void SpecifiedSectorsDrawOnPreview(GalaxyInfoModel model, Rect displayArea)
 		{
 			specifiedSectorsIsOverAnAllSector = false;
 			if (specifiedSectorsSelectedSector == null)
 			{
 				// TODO: show all!
-				OnSpecifiedSectorsShowAll(model, displayArea);
+				SpecifiedSectorsShowAll(model, displayArea);
 				return;
 			}
 
@@ -252,7 +252,7 @@ namespace LunraGames.SubLight
 			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyTargetStyleSmall);
 		}
 
-		void OnSpecifiedSectorsShowAll(
+		void SpecifiedSectorsShowAll(
 			GalaxyInfoModel model,
 			Rect displayArea
 		)
@@ -277,7 +277,7 @@ namespace LunraGames.SubLight
 
 				if (GUI.Button(selectCurrentArea, new GUIContent(string.Empty, sector.Name.Value), SubLightEditorConfig.Instance.SpecifiedSectorTargetStyle))
 				{
-					SelectSpecifiedSector(sector);
+					SpecifiedSectorsSelectSpecifiedSector(sector);
 				}
 
 				specifiedSectorsIsOverAnAllSector = specifiedSectorsIsOverAnAllSector || selectCurrentArea.Contains(Event.current.mousePosition);
@@ -288,13 +288,13 @@ namespace LunraGames.SubLight
 			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyTargetStyleSmall);
 		}
 
-		void OnSpecifiedSectorsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
+		void SpecifiedSectorsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
 		{
 			switch (specifiedSectorsState)
 			{
 				case SpecifiedSectorsStates.Idle:
 					specifiedSectorsSelectedSectorLast = specifiedSectorsSelectedSector;
-					specifiedSectorsSelectedSector = OnSpecifiedSectorCreateNewSector();
+					specifiedSectorsSelectedSector = SpecifiedSectorsCreateNewSector();
 					specifiedSectorsSelectedSectorName.Value = specifiedSectorsSelectedSector.Name.Value;
 					specifiedSectorsSelectedSector.Position.Value = UniversePosition.Lerp(clickPosition, UniversePosition.Zero, model.GalaxySize).LocalZero;
 
@@ -311,7 +311,7 @@ namespace LunraGames.SubLight
 						},
 						() =>
 						{
-							SelectSpecifiedSector(specifiedSectorsSelectedSectorLast);
+							SpecifiedSectorsSelectSpecifiedSector(specifiedSectorsSelectedSectorLast);
 						}
 					);
 					break;
@@ -332,41 +332,43 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnSpecifiedSectorsSecondaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
+		void SpecifiedSectorsSecondaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
 		{
 			switch (specifiedSectorsState)
 			{
 				case SpecifiedSectorsStates.Idle:
-					SelectSpecifiedSector(null);
+					SpecifiedSectorsSelectSpecifiedSector(null);
 					return;
 				case SpecifiedSectorsStates.SelectingSector:
-					SelectSpecifiedSector(specifiedSectorsSelectedSectorLast);
+					SpecifiedSectorsSelectSpecifiedSector(specifiedSectorsSelectedSectorLast);
 					break;
 				case SpecifiedSectorsStates.UpdatingSector:
-					SelectSpecifiedSector(specifiedSectorsSelectedSector);
+					SpecifiedSectorsSelectSpecifiedSector(specifiedSectorsSelectedSector);
 					break;
 			}
 			specifiedSectorsState = SpecifiedSectorsStates.Idle;
 		}
 
-		SectorModel OnSpecifiedSectorCreateNewSector()
+		SectorModel SpecifiedSectorsCreateNewSector()
 		{
 			var result = new SectorModel();
 			result.Name.Value = Guid.NewGuid().ToString();
 			return result;
 		}
 
-		void OnBeforeLoadSelectionSpecifiedSectors()
+		void SpecifiedSectorsBeforeLoadSelection()
 		{
-			SelectSpecifiedSector(null);
+			SpecifiedSectorsSelectSpecifiedSector(null);
 		}
 
-		void SelectSpecifiedSector(SectorModel sector, SpecifiedSectorsStates state = SpecifiedSectorsStates.Idle)
+		void SpecifiedSectorsSelectSpecifiedSector(SectorModel sector, SpecifiedSectorsStates state = SpecifiedSectorsStates.Idle)
 		{
 			specifiedSectorsSelectedSector = sector;
 			specifiedSectorsSelectedSectorName.Value = sector == null ? null : sector.Name.Value;
 			if (state != SpecifiedSectorsStates.Unknown) specifiedSectorsState = state;
 			GUIUtility.keyboardControl = 0;
 		}
+
+		//void SpecifiedSectorsListSystems(
 	}
 }
