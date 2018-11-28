@@ -24,6 +24,7 @@ namespace LunraGames.SubLight
 
 		EditorPrefsString specifiedSectorsSelectedSectorName;
 		DevPrefsInt specifiedSectorsPreviewSize;
+		EditorPrefsBool specifiedSectorsPreviewMinimized;
 		DevPrefsInt specifiedSectorsSelectedPreview;
 		EditorPrefsFloat specifiedSectorsListScroll;
 		EditorPrefsFloat specifiedSectorsDetailsScroll;
@@ -36,12 +37,17 @@ namespace LunraGames.SubLight
 
 		void OnSpecifiedSectorsConstruct()
 		{
-			specifiedSectorsSelectedSectorName = new EditorPrefsString(KeyPrefix + "SpecifiedSectorsSelectedSectorName");
-			specifiedSectorsPreviewSize = new DevPrefsInt(KeyPrefix + "SpecifiedSectorsPreviewSize");
-			specifiedSectorsSelectedPreview = new DevPrefsInt(KeyPrefix + "SpecifiedSectorsSelectedPreview");
-			specifiedSectorsListScroll = new EditorPrefsFloat(KeyPrefix + "SpecifiedSectorsListScroll");
-			specifiedSectorsDetailsScroll = new EditorPrefsFloat(KeyPrefix + "SpecifiedSectorsDetailsScroll");
-			specifiedSectorsShowTargets = new EditorPrefsBool(KeyPrefix + "SpecifiedSectorsShowTargets");
+			var currPrefix = KeyPrefix + "SpecifiedSectors";
+
+			specifiedSectorsSelectedSectorName = new EditorPrefsString(currPrefix + "SelectedSectorName");
+			specifiedSectorsPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
+			specifiedSectorsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
+			specifiedSectorsSelectedPreview = new DevPrefsInt(currPrefix + "SelectedPreview");
+			specifiedSectorsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
+			specifiedSectorsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
+			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
+
+			RegisterToolbar("Specified Sectors", OnSpecifiedSectorsToolbar);
 
 			BeforeLoadSelection += OnBeforeLoadSelectionSpecifiedSectors;
 		}
@@ -64,7 +70,7 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginVertical(GUILayout.Width(350f));
 				{
-					homeLabelsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, homeLabelsListScroll.Value), false, true, GUILayout.ExpandHeight(true)).y;
+					labelsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsListScroll.Value), false, true, GUILayout.ExpandHeight(true)).y;
 					{
 						var sectorIndex = -1;
 						foreach (var specifiedSector in model.GetSpecifiedSectors())
@@ -107,8 +113,6 @@ namespace LunraGames.SubLight
 					}
 					GUILayout.EndScrollView();
 
-					OnPreviewSizeSlider(specifiedSectorsPreviewSize);
-
 					GUILayout.BeginHorizontal();
 					{
 						switch (specifiedSectorsState)
@@ -133,7 +137,7 @@ namespace LunraGames.SubLight
 							}
 							EditorGUILayoutExtensions.PopEnabled();
 
-							EditorGUILayoutExtensions.PushEnabled(labelState != LabelStates.Idle);
+							EditorGUILayoutExtensions.PushEnabled(labelsLabelState != LabelStates.Idle);
 							EditorGUILayoutExtensions.PushColor(Color.red);
 							if (GUILayout.Button("Cancel"))
 							{
@@ -146,7 +150,7 @@ namespace LunraGames.SubLight
 										SelectSpecifiedSector(specifiedSectorsSelectedSector);
 										break;
 								}
-								labelState = LabelStates.Idle;
+								labelsLabelState = LabelStates.Idle;
 							}
 							EditorGUILayoutExtensions.PopColor();
 							EditorGUILayoutExtensions.PopEnabled();
@@ -198,46 +202,32 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			string[] names =
-			{
-				"BodyMap",
-				"Details",
-				"Full Preview"
-			};
-
-			GUILayout.BeginHorizontal();
-			{
-				specifiedSectorsShowTargets.Value = GUILayout.Toggle(specifiedSectorsShowTargets.Value, "Show Targets", GUILayout.ExpandWidth(false));
-				specifiedSectorsSelectedPreview.Value = GUILayout.Toolbar(Mathf.Min(specifiedSectorsSelectedPreview, names.Length - 1), names);
-			}
-			GUILayout.EndHorizontal();
-
-			var previewTexture = Texture2D.blackTexture;
-
-			switch (specifiedSectorsSelectedPreview.Value)
-			{
-				case 0:
-					previewTexture = model.BodyMap;
-					break;
-				case 1:
-					previewTexture = model.Details;
-					break;
-				case 2:
-					previewTexture = model.FullPreview;
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized index", MessageType.Error);
-					break;
-			}
-
-			var displayArea = DisplayPreview(
-				previewTexture,
+			DrawPreviews(
+				model,
+				specifiedSectorsSelectedPreview,
 				specifiedSectorsPreviewSize,
+				specifiedSectorsPreviewMinimized,
+				!specifiedSectorsIsOverAnAllSector,
 				clickPosition => OnSpecifiedSectorsPrimaryClickPreview(model, clickPosition),
 				clickPosition => OnSpecifiedSectorsSecondaryClickPreview(model, clickPosition),
-				!specifiedSectorsIsOverAnAllSector
+				() => OnSpecifiedSectorsDrawPreviewToolbarPrefix(model),
+				() => OnSpecifiedSectorsDrawPreviewToolbarSuffix(model),
+				displayArea => OnSpecifiedSectorsDrawOnPreview(model, displayArea) 
 			);
+		}
 
+		void OnSpecifiedSectorsDrawPreviewToolbarPrefix(GalaxyInfoModel model)
+		{
+			specifiedSectorsShowTargets.Value = GUILayout.Toggle(specifiedSectorsShowTargets.Value, "Show Targets", GUILayout.ExpandWidth(false));
+		}
+
+		void OnSpecifiedSectorsDrawPreviewToolbarSuffix(GalaxyInfoModel model)
+		{
+
+		}
+
+		void OnSpecifiedSectorsDrawOnPreview(GalaxyInfoModel model, Rect displayArea)
+		{
 			specifiedSectorsIsOverAnAllSector = false;
 			if (specifiedSectorsSelectedSector == null)
 			{
@@ -337,7 +327,7 @@ namespace LunraGames.SubLight
 					specifiedSectorsState = SpecifiedSectorsStates.Idle;
 					break;
 				default:
-					Debug.LogError("Unrecognized state " + labelState);
+					Debug.LogError("Unrecognized state " + labelsLabelState);
 					break;
 			}
 		}
