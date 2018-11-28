@@ -36,9 +36,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
-		public readonly ListenerProperty<string> EncounterId;
+		public readonly ListenerProperty<string> EncounterId; // TODO: probably delete this?
 		[JsonIgnore]
-		public readonly ListenerProperty<int> EncounterBodyId;
+		public readonly ListenerProperty<int> EncounterBodyId; // TODO: probably delete this?
 		[JsonIgnore]
 		public readonly ListenerProperty<BodyModel[]> Bodies;
 

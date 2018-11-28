@@ -172,27 +172,7 @@ namespace LunraGames.SubLight
 					{
 						EditorGUILayoutExtensions.PushEnabled(specifiedSectorsState == SpecifiedSectorsStates.Idle);
 						{
-							EditorGUIExtensions.BeginChangeCheck();
-							{
-								specifiedSectorsSelectedSector.Name.Value = EditorGUILayout.TextField("Name", specifiedSectorsSelectedSector.Name.Value);
-
-								GUILayout.BeginHorizontal(EditorStyles.helpBox);
-								{
-									GUILayout.BeginVertical();
-									{
-										specifiedSectorsSelectedSector.Position.Value = EditorGUILayoutUniversePosition.FieldSector("Sector", specifiedSectorsSelectedSector.Position.Value).LocalZero;
-									}
-									GUILayout.EndVertical();
-									EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
-									if (GUILayout.Button("Update Sector", GUILayout.Width(100f), GUILayout.Height(51f)))
-									{
-										specifiedSectorsState = SpecifiedSectorsStates.UpdatingSector;
-									}
-									EditorGUILayoutExtensions.PopBackgroundColor();
-								}
-								GUILayout.EndHorizontal();
-							}
-							EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+							SpecifiedSectorsDetails(model, specifiedSectorsSelectedSector);
 						}
 						EditorGUILayoutExtensions.PopEnabled();
 					}
@@ -369,6 +349,100 @@ namespace LunraGames.SubLight
 			GUIUtility.keyboardControl = 0;
 		}
 
-		//void SpecifiedSectorsListSystems(
+		void SpecifiedSectorsDetails(GalaxyInfoModel model, SectorModel sector)
+		{
+			EditorGUIExtensions.BeginChangeCheck();
+			{
+				specifiedSectorsSelectedSector.Name.Value = EditorGUILayout.TextField("Name", specifiedSectorsSelectedSector.Name.Value);
+
+				GUILayout.BeginHorizontal(EditorStyles.helpBox);
+				{
+					GUILayout.BeginVertical();
+					{
+						specifiedSectorsSelectedSector.Position.Value = EditorGUILayoutUniversePosition.FieldSector("Sector", specifiedSectorsSelectedSector.Position.Value).LocalZero;
+					}
+					GUILayout.EndVertical();
+					EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
+					if (GUILayout.Button("Update Sector", GUILayout.Width(100f), GUILayout.Height(51f)))
+					{
+						specifiedSectorsState = SpecifiedSectorsStates.UpdatingSector;
+					}
+					EditorGUILayoutExtensions.PopBackgroundColor();
+				}
+				GUILayout.EndHorizontal();
+
+				SpecifiedSectorsListSystems(model, sector);
+			}
+			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+
+		}
+
+		void SpecifiedSectorsListSystems(GalaxyInfoModel model, SectorModel sector)
+		{
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("Systems");
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button("Add System", GUILayout.Width(100f))) SpecifiedSectorsCreateSystem(model, sector);
+			}
+			GUILayout.EndHorizontal();
+
+			SystemModel deletedSystem = null;
+			foreach (var system in sector.Systems.Value.OrderBy(s => s.Index.Value))
+			{
+				var isDeleted = false;
+
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				{
+					SpecifiedSectorsDrawSystem(model, sector, system, out isDeleted);
+				}
+				GUILayout.EndHorizontal();
+
+				if (isDeleted) deletedSystem = system;
+			}
+
+			if (deletedSystem != null)
+			{
+				sector.Systems.Value = sector.Systems.Value.ExceptOne(deletedSystem).ToArray();
+				var newIndex = 0;
+				foreach (var system in sector.Systems.Value.OrderBy(s => s.Index.Value))
+				{
+					system.Index.Value = newIndex;
+					newIndex++;
+				}
+			}
+		}
+
+		void SpecifiedSectorsDrawSystem(
+			GalaxyInfoModel model,
+			SectorModel sector,
+			SystemModel system,
+			out bool deleted
+		)
+		{
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("#" + system.Index.Value + " | " + (string.IsNullOrEmpty(system.Name.Value) ? "< Null or Empty Name >" : system.Name.Value), EditorStyles.boldLabel);
+				GUILayout.FlexibleSpace();
+				deleted = EditorGUILayoutExtensions.XButton();
+			}
+			GUILayout.EndHorizontal();
+
+			system.Name.Value = EditorGUILayout.TextField(new GUIContent("Name"), system.Name.Value);
+			var localPos = new UniversePosition(EditorGUILayout.Vector3Field("Local Position", system.Position.Value.Local));
+			system.Position.Value = new UniversePosition(sector.Position.Value.SectorInteger, localPos.Local);
+		}
+
+		void SpecifiedSectorsCreateSystem(GalaxyInfoModel model, SectorModel sector)
+		{
+			var currSystems = sector.Systems.Value.OrderBy(s => s.Index.Value);
+			var result = new SystemModel();
+			result.Index.Value = currSystems.None() ? 0 : currSystems.Last().Index.Value + 1;
+			result.Seed.Value = NumberDemon.DemonUtility.NextInteger;
+			result.Specified.Value = true;
+			result.Position.Value = sector.Position.Value;
+
+			sector.Systems.Value = sector.Systems.Value.Append(result).ToArray();
+		}
 	}
 }

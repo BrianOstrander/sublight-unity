@@ -286,7 +286,67 @@
       "position": {
         "Sector": {"x":79.0,"z":25.0}
       },
-      "systems": []
+      "systems": [
+        {
+          "seed": 1063743355,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.5,"z":0.5}
+          },
+          "name": "Sol",
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 1,
+          "seed": 1218121807,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.5,"z":0.7}
+          },
+          "name": "Alpha Centauri",
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 2,
+          "seed": 123782430,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.3,"z":0.5}
+          },
+          "name": "Barnard's Star",
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 3,
+          "seed": 579281218,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.3,"z":0.4}
+          },
+          "name": "Sirius",
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 4,
+          "seed": 1072218910,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.35,"z":0.2}
+          },
+          "name": "Wold",
+          "encounterBodyId": -1,
+          "bodies": []
+        }
+      ]
     }
   ],
   "galaxyRadius": 100,
