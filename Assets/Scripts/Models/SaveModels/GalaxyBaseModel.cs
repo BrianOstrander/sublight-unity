@@ -27,10 +27,10 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] Vector3 universeNormal;
 		[JsonProperty] float alertHeightMultiplier;
 
-		[JsonProperty] Vector3 clusterOriginNormal;
-		[JsonProperty] Vector3 galaxyOriginNormal;
-		[JsonProperty] Vector3 playerStartNormal;
-		[JsonProperty] Vector3 gameEndNormal;
+		[JsonProperty] UniversePosition clusterOrigin;
+		[JsonProperty] UniversePosition galaxyOrigin;
+		[JsonProperty] UniversePosition playerStart;
+		[JsonProperty] UniversePosition gameEnd;
 
 		[JsonProperty] int minimumSectorSystemCount;
 		[JsonProperty] int maximumSectorSystemCount;
@@ -39,6 +39,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string encyclopediaEntryId;
 
 		[JsonProperty] GalaxyLabelModel[] labels = new GalaxyLabelModel[0];
+		[JsonProperty] SectorModel[] specifiedSectors = new SectorModel[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> IsPlayable;
@@ -53,15 +54,6 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<Vector3> UniverseNormal;
 		[JsonIgnore]
 		public readonly ListenerProperty<float> AlertHeightMultiplier;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<Vector3> ClusterOriginNormal;
-		[JsonIgnore]
-		public readonly ListenerProperty<Vector3> GalaxyOriginNormal;
-		[JsonIgnore]
-		public readonly ListenerProperty<Vector3> PlayerStartNormal;
-		[JsonIgnore]
-		public readonly ListenerProperty<Vector3> GameEndNormal;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> MinimumSectorSystemCount;
@@ -100,13 +92,61 @@ namespace LunraGames.SubLight.Models
 		public UniversePosition GalaxySize { get { return galaxySize; } }
 
 		[JsonIgnore]
-		public UniversePosition ClusterOrigin { get { return UniversePositionFromNormal(ClusterOriginNormal.Value); } }
+		public Vector3 ClusterOriginNormal
+		{
+			get { return UniversePosition.NormalizedSector(clusterOrigin, galaxySize); }
+			set { clusterOrigin = UniversePositionFromNormal(value); }
+		}
+
 		[JsonIgnore]
-		public UniversePosition GalaxyOrigin { get { return UniversePositionFromNormal(GalaxyOriginNormal.Value); } }
+		public Vector3 GalaxyOriginNormal
+		{
+			get { return UniversePosition.NormalizedSector(galaxyOrigin, galaxySize); }
+			set { galaxyOrigin = UniversePositionFromNormal(value); }
+		}
+
 		[JsonIgnore]
-		public UniversePosition PlayerStart { get { return UniversePositionFromNormal(PlayerStartNormal.Value); } }
+		public Vector3 PlayerStartNormal
+		{
+			get { return UniversePosition.NormalizedSector(playerStart, galaxySize); }
+			set { playerStart = UniversePositionFromNormal(value); }
+		}
+
 		[JsonIgnore]
-		public UniversePosition GameEnd { get { return UniversePositionFromNormal(GameEndNormal.Value); } }
+		public Vector3 GameEndNormal
+		{
+			get { return UniversePosition.NormalizedSector(gameEnd, galaxySize); }
+			set { gameEnd = UniversePositionFromNormal(value); }
+		}
+
+		[JsonIgnore]
+		public UniversePosition ClusterOrigin
+		{
+			get { return clusterOrigin; }
+			set { clusterOrigin = value; }
+		}
+
+		[JsonIgnore]
+		public UniversePosition GalaxyOrigin
+		{
+			get { return galaxyOrigin; }
+			set { galaxyOrigin = value; }
+		}
+
+		[JsonIgnore]
+		public UniversePosition PlayerStart
+		{
+			get { return playerStart; }
+			set { playerStart = value; }
+		}
+
+		[JsonIgnore]
+		public UniversePosition GameEnd
+		{
+			get { return gameEnd; }
+			set { gameEnd = value; }
+		}
+
 
 		public GalaxyBaseModel()
 		{
@@ -117,11 +157,6 @@ namespace LunraGames.SubLight.Models
 
 			UniverseNormal = new ListenerProperty<Vector3>(value => universeNormal = value, () => universeNormal);
 			AlertHeightMultiplier = new ListenerProperty<float>(value => alertHeightMultiplier = value, () => alertHeightMultiplier);
-
-			ClusterOriginNormal = new ListenerProperty<Vector3>(value => clusterOriginNormal = value, () => clusterOriginNormal);
-			GalaxyOriginNormal = new ListenerProperty<Vector3>(value => galaxyOriginNormal = value, () => galaxyOriginNormal);
-			PlayerStartNormal = new ListenerProperty<Vector3>(value => playerStartNormal = value, () => playerStartNormal);
-			GameEndNormal = new ListenerProperty<Vector3>(value => gameEndNormal = value, () => gameEndNormal);
 
 			MinimumSectorSystemCount = new ListenerProperty<int>(value => minimumSectorSystemCount = value, () => minimumSectorSystemCount);
 			MaximumSectorSystemCount = new ListenerProperty<int>(value => maximumSectorSystemCount = value, () => maximumSectorSystemCount);
@@ -204,6 +239,52 @@ namespace LunraGames.SubLight.Models
 		{
 			return labels.Where(l => scales.Contains(l.Scale)).ToArray();
 		}
+
+		public void AddSpecifiedSector(SectorModel sector)
+		{
+			if (sector == null) throw new ArgumentNullException("sector");
+			if (specifiedSectors.Contains(sector))
+			{
+				Debug.LogError("An identical sector already exists");
+				return;
+			}
+			var identicalSector = GetSpecifiedSector(sector.Name);
+			if (identicalSector != null)
+			{
+				Debug.LogError("A sector with name \"" + sector.Name.Value + "\" already exists");
+				return;
+			}
+			specifiedSectors = specifiedSectors.Append(sector).ToArray();
+		}
+
+		public void RemoveSpecifiedSector(SectorModel sector)
+		{
+			if (sector == null) throw new ArgumentNullException("sector");
+			if (!specifiedSectors.Contains(sector))
+			{
+				Debug.LogError("No sector found to remove");
+				return;
+			}
+			specifiedSectors = specifiedSectors.ExceptOne(sector).ToArray();
+		}
+
+		public void RemoveSpecifiedSector(string name)
+		{
+			var toRemove = specifiedSectors.Where(s => s.Name.Value == name);
+			if (toRemove.None())
+			{
+				Debug.LogError("No sector with name \"" + name + "\" found to remove");
+				return;
+			}
+			specifiedSectors = specifiedSectors.Except(toRemove).ToArray();
+		}
+
+		public SectorModel GetSpecifiedSector(string name)
+		{
+			return specifiedSectors.FirstOrDefault(s => s.Name.Value == name);
+		}
+
+		public SectorModel[] GetSpecifiedSectors() { return specifiedSectors.ToArray(); }
 
 		public int SectorBodyCount(float value)
 		{

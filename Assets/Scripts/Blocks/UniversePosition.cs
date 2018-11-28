@@ -31,6 +31,17 @@ namespace LunraGames.SubLight
 			return begin + (delta * progress);
 		}
 
+		public static UniversePosition Lerp(
+			Vector3 progress,
+			UniversePosition begin,
+			UniversePosition end
+		)
+		{
+			var delta = (end - begin).Lossy;
+			delta.Scale(progress);
+			return begin + new UniversePosition(delta, Vector3.zero);
+		}
+
 		/// <summary>
 		/// Gets a normalized Vector3 from the provided UniversePositions.
 		/// Useful for getting a normal value of where something is within an

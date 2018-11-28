@@ -12,7 +12,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class GalaxyEditorWindow : BaseModelEditorWindow<GalaxyEditorWindow, GalaxyInfoModel>
+	public partial class GalaxyEditorWindow : BaseModelEditorWindow<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		const int PreviewMinSize = 128;
 		const int PreviewMaxSize = 2048;
@@ -40,8 +40,6 @@ namespace LunraGames.SubLight
 		[MenuItem("Window/SubLight/Galaxy Editor")]
 		static void Initialize() { OnInitialize("Galaxy Editor"); }
 
-		DevPrefsInt homeSelectedToolbar;
-
 		DevPrefsInt homeGeneralPreviewSize;
 		EditorPrefsFloat homeGeneralPreviewBarScroll;
 
@@ -64,8 +62,6 @@ namespace LunraGames.SubLight
 
 		public GalaxyEditorWindow() : base("LG_SL_GalaxyEditor_", "Galaxy")
 		{
-			homeSelectedToolbar = new DevPrefsInt(KeyPrefix + "HomeSelectedState");
-
 			homeGeneralPreviewSize = new DevPrefsInt(KeyPrefix + "GeneralPreviewSize");
 			homeGeneralPreviewBarScroll = new EditorPrefsFloat(KeyPrefix + "GeneralPreviewBarScroll");
 
@@ -83,8 +79,11 @@ namespace LunraGames.SubLight
 			RegisterToolbar("Targets", OnTargetsToolbar);
 			RegisterToolbar("Labels", OnLabelsToolbar);
 			RegisterToolbar("Generation", OnGenerationToolbar);
+			RegisterToolbar("Specified Sectors", OnSpecifiedSectorsToolbar);
 
 			BeforeLoadSelection += OnBeforeLoadSelection;
+
+			OnSpecifiedSectorsConstruct();
 		}
 
 		#region Model Overrides
@@ -193,16 +192,17 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndHorizontal();
 
-				model.ClusterOriginNormal.Value = EditorGUILayout.Vector3Field("Cluster Origin", model.ClusterOriginNormal);
+				model.ClusterOrigin = EditorGUILayoutUniversePosition.FieldSector("Cluster Origin", model.ClusterOrigin);
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.yellow);
-				model.GalaxyOriginNormal.Value = EditorGUILayout.Vector3Field("Galaxy Origin", model.GalaxyOriginNormal);
+				model.GalaxyOrigin = EditorGUILayoutUniversePosition.FieldSector("Galaxy Origin", model.GalaxyOrigin);
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.green);
-				model.PlayerStartNormal.Value = EditorGUILayout.Vector3Field("Player Start", model.PlayerStartNormal);
+				model.PlayerStart = EditorGUILayoutUniversePosition.FieldSector("Player Start", model.PlayerStart);
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
-				model.GameEndNormal.Value = EditorGUILayout.Vector3Field("Game End", model.GameEndNormal);
+				model.GameEnd = EditorGUILayoutUniversePosition.FieldSector("Game End", model.GameEnd);
 				EditorGUILayoutExtensions.PopBackgroundColor();
+
 				model.UniverseNormal.Value = EditorGUILayout.Vector3Field(new GUIContent("Universe Normal", "The up direction of this galaxy within the universe."), model.UniverseNormal.Value);
 				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);
 			}
@@ -255,17 +255,17 @@ namespace LunraGames.SubLight
 						{
 							OptionDialogPopup.Entry.Create(
 								"Galaxy Origin",
-								() => { model.GalaxyOriginNormal.Value = clickNormal; ModelSelectionModified = true; },
+								() => { model.GalaxyOriginNormal = clickNormal; ModelSelectionModified = true; },
 								color: Color.yellow
 							),
 							OptionDialogPopup.Entry.Create(
 								"Player Start",
-								() => { model.PlayerStartNormal.Value = clickNormal; ModelSelectionModified = true; },
+								() => { model.PlayerStartNormal = clickNormal; ModelSelectionModified = true; },
 								color: Color.green
 							),
 							OptionDialogPopup.Entry.Create(
 								"Game End",
-								() => { model.GameEndNormal.Value = clickNormal; ModelSelectionModified = true; },
+								() => { model.GameEndNormal = clickNormal; ModelSelectionModified = true; },
 								color: Color.red
 							)
 						},
@@ -274,31 +274,7 @@ namespace LunraGames.SubLight
 				}
 			);
 
-			var galacticOriginInPreview = true;
-			var playerStartInPreview = true;
-			var gameEndInPreview = true;
-
-			var galacticOriginInWindow = NormalToWindow(model.GalaxyOriginNormal, displayArea, out galacticOriginInPreview);
-			var playerStartInWindow = NormalToWindow(model.PlayerStartNormal, displayArea, out playerStartInPreview);
-			var gameEndInWindow = NormalToWindow(model.GameEndNormal, displayArea, out gameEndInPreview);
-
-			EditorGUILayoutExtensions.PushColor(galacticOriginInPreview ? Color.yellow : Color.yellow.NewA(0.5f));
-			{
-				GUI.Box(CenteredScreen(galacticOriginInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Galactic Origin"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
-			}
-			EditorGUILayoutExtensions.PopColor();
-
-			EditorGUILayoutExtensions.PushColor(playerStartInPreview ? Color.green : Color.green.NewA(0.5f));
-			{
-				GUI.Box(CenteredScreen(playerStartInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Player Start"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
-			}
-			EditorGUILayoutExtensions.PopColor();
-
-			EditorGUILayoutExtensions.PushColor(gameEndInPreview ? Color.red : Color.red.NewA(0.5f));
-			{
-				GUI.Box(CenteredScreen(gameEndInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Game End"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
-			}
-			EditorGUILayoutExtensions.PopColor();
+			DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyTargetStyle);
 		}
 
 		void OnLabelsToolbar(GalaxyInfoModel model)
@@ -892,6 +868,35 @@ namespace LunraGames.SubLight
 			homeLabelsSelectedLabelId.Value = selectedLabel == null ? null : selectedLabel.LabelId.Value;
 			if (state != LabelStates.Unknown) labelState = state;
 			GUIUtility.keyboardControl = 0;
+		}
+
+		void DrawGalaxyTargets(GalaxyInfoModel model, Rect displayArea, GUIStyle style)
+		{
+			var galacticOriginInPreview = true;
+			var playerStartInPreview = true;
+			var gameEndInPreview = true;
+
+			var galacticOriginInWindow = NormalToWindow(model.GalaxyOriginNormal, displayArea, out galacticOriginInPreview);
+			var playerStartInWindow = NormalToWindow(model.PlayerStartNormal, displayArea, out playerStartInPreview);
+			var gameEndInWindow = NormalToWindow(model.GameEndNormal, displayArea, out gameEndInPreview);
+
+			EditorGUILayoutExtensions.PushColor(galacticOriginInPreview ? Color.yellow : Color.yellow.NewA(0.5f));
+			{
+				GUI.Box(CenteredScreen(galacticOriginInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Galactic Origin"), style);
+			}
+			EditorGUILayoutExtensions.PopColor();
+
+			EditorGUILayoutExtensions.PushColor(playerStartInPreview ? Color.green : Color.green.NewA(0.5f));
+			{
+				GUI.Box(CenteredScreen(playerStartInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Player Start"), style);
+			}
+			EditorGUILayoutExtensions.PopColor();
+
+			EditorGUILayoutExtensions.PushColor(gameEndInPreview ? Color.red : Color.red.NewA(0.5f));
+			{
+				GUI.Box(CenteredScreen(gameEndInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Game End"), style);
+			}
+			EditorGUILayoutExtensions.PopColor();
 		}
 		#endregion
 	}

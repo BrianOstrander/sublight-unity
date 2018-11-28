@@ -13,7 +13,7 @@ namespace LunraGames.SubLight
 
 		public static UniversePosition Field(GUIContent content, UniversePosition position)
 		{
-			var sectorPos = position.Sector;
+			var sectorPos = position.SectorInteger;
 			var localPos = position.Local;
 
 			EditorGUILayout.LabelField(content);
@@ -21,7 +21,7 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.Space(16f);
 				GUILayout.Label("Sector", GUILayout.Width(48f));
-				sectorPos = EditorGUILayout.Vector3Field(GUIContent.none, sectorPos);
+				sectorPos = EditorGUILayout.Vector3IntField(GUIContent.none, sectorPos);
 			}
 			GUILayout.EndHorizontal();
 
@@ -43,7 +43,7 @@ namespace LunraGames.SubLight
 
 		public static UniversePosition FieldSector(GUIContent content, UniversePosition position)
 		{
-			var sectorPos = position.Sector;
+			var sectorPos = position.SectorInteger;
 			var localPos = position.Local;
 
 			EditorGUILayout.LabelField(content);
@@ -51,11 +51,9 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.Space(16f);
 				GUILayout.Label("Sector", GUILayout.Width(48f));
-				sectorPos = EditorGUILayout.Vector3Field(GUIContent.none, sectorPos);
+				sectorPos = EditorGUILayout.Vector3IntField(GUIContent.none, sectorPos);
 			}
 			GUILayout.EndHorizontal();
-
-			sectorPos = new Vector3(Mathf.Round(sectorPos.x), Mathf.Round(sectorPos.y), Mathf.Round(sectorPos.z));
 
 			return new UniversePosition(sectorPos, localPos);
 		}

@@ -16,6 +16,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int index;
 		[JsonProperty] int seed;
 		[JsonProperty] bool visited;
+		[JsonProperty] bool specified;
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] string name;
 		[JsonProperty] string encounterId;
@@ -28,6 +29,8 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<int> Seed;
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> Visited;
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> Specified;
 		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> Position;
 		[JsonIgnore]
@@ -47,6 +50,7 @@ namespace LunraGames.SubLight.Models
 			Index = new ListenerProperty<int>(value => index = value, () => index);
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			Visited = new ListenerProperty<bool>(value => visited = value, () => visited);
+			Specified = new ListenerProperty<bool>(value => specified = value, () => specified);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);

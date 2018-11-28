@@ -2,9 +2,17 @@
   "isPlayable": true,
   "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
   "name": "Milky Way",
-  "galaxyOriginNormal": {"x":0.5,"z":0.5},
-  "playerStartNormal": {"x":0.396984935,"z":0.1281407},
-  "gameEndNormal": {"x":0.469726563,"z":0.5026855},
+  "galaxyOrigin": {
+    "Sector": {"x":100.0,"z":100.0}
+  },
+  "playerStart": {
+    "Sector": {"x":79.0,"z":25.0},
+    "Local": {"x":0.385444641,"z":0.942049}
+  },
+  "gameEnd": {
+    "Sector": {"x":93.0,"z":97.0},
+    "Local": {"x":0.06333923,"z":0.6226425}
+  },
   "maximumSectorSystemCount": 5,
   "sectorSystemChance": {
     "keys": [
@@ -270,6 +278,15 @@
         "inventoryIds": [],
         "inventoryTags": []
       }
+    }
+  ],
+  "specifiedSectors": [
+    {
+      "name": "PlayerBegin",
+      "position": {
+        "Sector": {"x":79.0,"z":25.0}
+      },
+      "systems": []
     }
   ],
   "galaxyRadius": 100,

@@ -21,5 +21,8 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		GUIStyle labelCurveCenterStyle;
 		public GUIStyle LabelCurveCenterStyle { get { return labelCurveCenterStyle; } }
+
+		public GUIStyle SpecifiedSectorTargetStyle { get { return galaxyTargetStyle; } }
+		public GUIStyle GalaxyTargetStyleSmall { get { return labelCurvePointStyle; } }
 	}
 }
