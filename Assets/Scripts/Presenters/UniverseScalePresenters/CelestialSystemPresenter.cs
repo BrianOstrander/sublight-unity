@@ -66,6 +66,8 @@ namespace LunraGames.SubLight.Presenters
 			);
 		}
 
+		bool NotInteractable() { return !Mathf.Approximately(1f, ScaleModel.Opacity.Value); }
+
 		#region Events
 		void OnActiveSystem(SystemModel activeSystem)
 		{
@@ -93,6 +95,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnGlobalClick(Click click)
 		{
 			if (!click.ClickedNothing) return;
+			if (NotInteractable()) return;
 
 			switch(selectedState)
 			{
@@ -145,11 +148,13 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnEnter()
 		{
+			if (NotInteractable()) return;
 			Model.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse);
 		}
 
 		void OnExit()
 		{
+			if (NotInteractable()) return;
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.NotSelected:
@@ -167,6 +172,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
+			if (NotInteractable()) return;
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.OtherSelected:

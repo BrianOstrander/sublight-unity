@@ -94,6 +94,12 @@ namespace LunraGames.SubLight.Views
 				public const float Full = 1f;
 			}
 
+			public static class BaseRingOpacity
+			{
+				public const float None = 0f;
+				public const float Full = 1f;
+			}
+
 			public static class MaximizedProgress
 			{
 				public const float Minimized = 0f;
@@ -109,6 +115,7 @@ namespace LunraGames.SubLight.Views
 			public float DropLineBaseOpacity;
 			public float BaseDistanceThickness;
 			public float BaseDistanceOpacity;
+			public float BaseRingOpacity;
 			public float DetailsOpacity;
 			public float ConfirmOpacity;
 			public float AnalysisOpacity;
@@ -122,20 +129,25 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct MaximizeOpacityGraphic
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public MeshRenderer Graphic;
 			public string AlphaKey;
 			public bool AppearsWhenMinimized;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
 
 		[Serializable]
 		struct MaximizeArea
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public Transform Area;
 			public float MinimumScale;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
 		#endregion
 
 		#region Serialized Properties
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[Header("Children")]
 		[SerializeField]
 		float transitionSpeed;
@@ -180,6 +192,8 @@ namespace LunraGames.SubLight.Views
 		CanvasGroup confirmGroup;
 		[SerializeField]
 		CanvasGroup baseDistanceGroup;
+		[SerializeField]
+		CanvasGroup baseRingGroup;
 
 		[SerializeField]
 		TextMeshProUGUI detailsNameLabel;
@@ -203,6 +217,7 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		RectTransform detailsContainer;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		#endregion
 
 		#region View Properties & Methods
@@ -408,6 +423,24 @@ namespace LunraGames.SubLight.Views
 					break;
 			}
 
+			//	BaseRingOpacity
+			modified.BaseRingOpacity = Constants.BaseRingOpacity.None;
+			switch (HighlightState)
+			{
+				case Celestial.HighlightStates.Highlighted:
+				case Celestial.HighlightStates.HighlightedAnalysis:
+					modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+					break;
+				default:
+					switch (SelectedState)
+					{
+						case Celestial.SelectedStates.Selected:
+							modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+							break;
+					}
+					break;
+			}
+
 			//	DetailsOpacity
 			modified.DetailsOpacity = Constants.DetailsOpacity.None;
 			switch (SelectedState)
@@ -505,6 +538,7 @@ namespace LunraGames.SubLight.Views
 			// ---
 
 			currentVisuals.BaseDistanceOpacity = ProcessVisual(currentVisuals.BaseDistanceOpacity, targetVisuals.BaseDistanceOpacity, delta, ref wasChanged, force, ApplyBaseDistanceOpacity);
+			currentVisuals.BaseRingOpacity = ProcessVisual(currentVisuals.BaseRingOpacity, targetVisuals.BaseRingOpacity, delta, ref wasChanged, force, ApplyBaseRingOpacity);
 			currentVisuals.DetailsOpacity = ProcessVisual(currentVisuals.DetailsOpacity, targetVisuals.DetailsOpacity, delta, ref wasChanged, force, ApplyDetailsOpacity);
 			currentVisuals.ConfirmOpacity = ProcessVisual(currentVisuals.ConfirmOpacity, targetVisuals.ConfirmOpacity, delta, ref wasChanged, force, ApplyConfirmOpacity);
 
@@ -569,6 +603,11 @@ namespace LunraGames.SubLight.Views
 		}
 
 		void ApplyBaseDistanceOpacity(float value)
+		{
+			baseDistanceGroup.alpha = value;
+		}
+
+		void ApplyBaseRingOpacity(float value)
 		{
 			baseDistanceGroup.alpha = value;
 		}

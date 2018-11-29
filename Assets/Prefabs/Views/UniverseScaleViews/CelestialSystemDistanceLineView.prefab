@@ -156,6 +156,7 @@ MonoBehaviour:
   bottomLine: {fileID: 120391768602615030}
   topLine: {fileID: 120696821935069996}
   topLineMargin: 0.3
+  bottomLineEndMargin: 0.18
   topLineSegmentLength: 0.2
 --- !u!120 &120391768602615030
 LineRenderer:
@@ -193,7 +194,7 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
+  - {x: 0.18, y: 0, z: 0}
   - {x: 1, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 2

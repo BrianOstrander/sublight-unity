@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class CelestialSystemDistanceLineView : UniverseScaleView, ICelestialSystemDistanceLineView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float yMinimumOffset;
 		[SerializeField]
@@ -13,12 +14,44 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float topLineMargin; // In unity units...
 		[SerializeField]
+		float bottomLineEndMargin; // In unity units...
+		[SerializeField]
 		float topLineSegmentLength; // In unity units...
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public void SetPoints(Vector3 begin, Vector3 end)
 		{
+			SetBottomPoints(begin, end);
+			SetTopPoints(begin, end);
+		}
+
+		public void SetBottomPoints(Vector3 begin, Vector3 end)
+		{
+			begin = begin.NewY(0f);
+			end = end.NewY(0f);
+
 			var delta = end - begin;
-			bottomLine.SetPositions(new Vector3[] { Vector3.zero, delta.NewY(0f) });
+
+			var distance = Vector3.Distance(begin, end);
+			var totalMargins = bottomLineEndMargin;
+
+			if (distance <= totalMargins)
+			{
+				bottomLine.enabled = false;
+				return;
+			}
+			bottomLine.enabled = true;
+
+			distance -= totalMargins;
+
+			var bottomDelta = delta.normalized * distance;
+
+			bottomLine.SetPositions(new Vector3[] { Vector3.zero, bottomDelta });
+		}
+
+		public void SetTopPoints(Vector3 begin, Vector3 end)
+		{
+			var delta = end - begin;
 
 			var distance = Vector3.Distance(begin, end);
 			var totalMargins = topLineMargin * 2f;
@@ -51,6 +84,19 @@ namespace LunraGames.SubLight.Views
 
 			topLine.positionCount = allTopSegments.Length;
 			topLine.SetPositions(allTopSegments);
+		}
+
+		public override float Opacity
+		{
+			get { return base.Opacity; }
+
+			set
+			{
+				base.Opacity = value;
+				var currOpacity = Mathf.Approximately(value, 1f) ? 1f : 0f;
+				topLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
+				bottomLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
+			}
 		}
 	}
 

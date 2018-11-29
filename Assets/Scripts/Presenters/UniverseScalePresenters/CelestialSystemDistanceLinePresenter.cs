@@ -8,6 +8,7 @@ namespace LunraGames.SubLight.Presenters
 	public class CelestialSystemDistanceLinePresenter : UniverseScalePresenter<ICelestialSystemDistanceLineView>
 	{
 		UniversePosition positionInUniverse;
+		float lastOpacity;
 
 		protected override UniversePosition PositionInUniverse { get { return positionInUniverse; } }
 
@@ -22,6 +23,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
+			ScaleModel.Transform.Changed += OnScaleTransform;
 		}
 
 		protected override void OnUnBind()
@@ -32,13 +34,16 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
+			ScaleModel.Transform.Changed -= OnScaleTransform;
 		}
 
 		void SetPoints(UniversePosition? end)
 		{
 			var noShow = !end.HasValue;
 
-			View.Opacity = noShow ? 0f : 1f;
+			lastOpacity = noShow ? 0f : 1f;
+
+			View.Opacity = ScaleModel.Opacity.Value * lastOpacity;
 
 			var transform = ScaleModel.Transform.Value;
 
@@ -55,7 +60,19 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShowView()
 		{
-			View.SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
+			OnScaleTransform(ScaleModel.Transform.Value);
+		}
+
+		void OnScaleOpacity(float value)
+		{
+			if (!View.Visible) return;
+
+			View.Opacity = value * lastOpacity;
+		}
+
+		void OnScaleTransform(UniverseTransform transform)
+		{
+			View.SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
 			UniversePosition? end = null;
 			if (Model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected)
@@ -81,13 +98,6 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			SetPoints(end);
-		}
-
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value;
 		}
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
