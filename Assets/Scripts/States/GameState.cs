@@ -72,7 +72,7 @@ namespace LunraGames.SubLight
 			}
 			Payload.Game.Galaxy = result.TypedModel;
 
-			if (!Payload.Game.PlayerStartSelected.Value)
+			//if (!Payload.Game.PlayerStartSelected.Value) // TODO: check if specified systems have been set up!
 			{
 				var foundBegin = false;
 				var begin = Payload.Game.Galaxy.GetPlayerBegin(out foundBegin);
