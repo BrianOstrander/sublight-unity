@@ -200,26 +200,12 @@ namespace LunraGames.SubLight.Views
 		MaximizeOpacityGraphic[] maximizeOpacityGraphics;
 
 		[SerializeField]
-		GameObject detailsNameBackground;
-		[SerializeField]
-		GameObject detailsDescriptionBackground;
+		RectTransform detailsContainer;
 		#endregion
 
 		#region View Properties & Methods
-
-		public void SetDetails(string name, string description)
-		{
-			name = name ?? string.Empty;
-			description = description ?? string.Empty;
-
-			detailsNameLabel.text = name;
-			detailsDescriptionLabel.text = description;
-
-			var nameIsLonger = description.Length < name.Length;
-			detailsNameBackground.SetActive(nameIsLonger);
-			detailsDescriptionBackground.SetActive(!nameIsLonger);
-		}
-
+		public string DetailsName { set { detailsNameLabel.text = value ?? string.Empty; isDetailsLayoutStale = true; } }
+		public string DetailsDescription { set { detailsDescriptionLabel.text = value ?? string.Empty; isDetailsLayoutStale = true; } }
 		public string Confirm { set { confirmLabel.text = value ?? string.Empty; } }
 		public string ConfirmDescription { set { confirmDescriptionLabel.text = value ?? string.Empty; } }
 		public string Distance { set { distanceLabel.text = value ?? string.Empty; } }
@@ -288,6 +274,9 @@ namespace LunraGames.SubLight.Views
 		VisualState currentVisuals;
 		VisualState targetVisuals;
 		bool isStale;
+
+		bool isDetailsLayoutStale;
+		int? detailsLayoutDelay;
 		#endregion
 
 		#region Overrides
@@ -326,6 +315,20 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnIdle(delta);
 
+			// Some kludge to make sure the faded background lines up nicely with the description AND the name.
+			if (isDetailsLayoutStale)
+			{
+				if (!detailsLayoutDelay.HasValue) detailsLayoutDelay = 1;
+				else detailsLayoutDelay--;
+
+				if (detailsLayoutDelay <= 0)
+				{
+					isDetailsLayoutStale = false;
+					detailsLayoutDelay = null;
+					LayoutRebuilder.MarkLayoutForRebuild(detailsContainer);
+				}
+			}
+
 			if (!isStale) return;
 
 			var currDelta = delta * transitionSpeed;
@@ -349,7 +352,8 @@ namespace LunraGames.SubLight.Views
 			Exit = ActionExtensions.Empty;
 			Click = ActionExtensions.Empty;
 
-			SetDetails(string.Empty, string.Empty);
+			DetailsName = string.Empty;
+			DetailsDescription = string.Empty;
 			Confirm = string.Empty;
 			ConfirmDescription = string.Empty;
 			Distance = string.Empty;
@@ -620,7 +624,8 @@ namespace LunraGames.SubLight.Views
 
 	public interface ICelestialSystemView : IUniverseScaleView
 	{
-		void SetDetails(string name, string description);
+		string DetailsName { set; }
+		string DetailsDescription { set; }
 		string Confirm { set; }
 		string ConfirmDescription { set; }
 		string Distance { set; }
