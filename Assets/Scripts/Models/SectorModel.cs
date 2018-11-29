@@ -27,8 +27,13 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<SystemModel[]> Systems;
 
+		bool isGenerated;
 		[JsonIgnore]
-		public bool IsGenerated { get; set; }
+		public bool IsGenerated
+		{
+			get { return isGenerated || Visited.Value || Specified.Value; }
+			set { isGenerated = value; }
+		}
 
 		public SectorModel()
 		{

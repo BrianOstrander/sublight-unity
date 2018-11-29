@@ -54,7 +54,7 @@ namespace LunraGames.SubLight
 			game.DestructionSpeedIncrement.Value = 0.0025f;
 
 			game.FocusTransform.Value = new FocusTransform(
-				TweenBlock.CreateInstant(1f, 2f),
+				TweenBlock.CreateInstant(0f, 1f),
 				TweenBlock.Zero,
 				LanguageStringModel.Empty,
 				LanguageStringModel.Empty,
@@ -64,17 +64,6 @@ namespace LunraGames.SubLight
 				LanguageStringModel.Empty
 			);
 
-			//var startSystem = game.Universe.Sectors.Value.First().Systems.Value.First();
-			//var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
-			//foreach (var system in game.Universe.Sectors.Value.First().Systems.Value)
-			//{
-			//	var distance = UniversePosition.Distance(UniversePosition.Zero, system.Position);
-			//	if (lastDistance < distance) continue;
-			//	lastDistance = distance;
-			//	startSystem = system;
-			//}
-
-			//var startPosition = startSystem.Position;
 			var rations = 0.3f;
 			var fuel = 1f;
 			var fuelConsumption = 1f;
@@ -82,8 +71,6 @@ namespace LunraGames.SubLight
 			var maximumNavigationTime = 10f;
 
 			var ship = new ShipModel();
-			//ship.CurrentSystem.Value = startSystem.Position;
-			//ship.Position.Value = startPosition;
 			ship.Inventory.AllResources.Rations.Value = rations;
 			ship.Inventory.AllResources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
