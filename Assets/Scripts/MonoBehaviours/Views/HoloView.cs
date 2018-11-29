@@ -5,13 +5,6 @@ namespace LunraGames.SubLight.Views
 	public class HoloView : View, IHoloView
 	{
 		[SerializeField]
-		Material projectionMaterial;
-		[SerializeField]
-		Material glowMaterial;
-		[SerializeField]
-		Material irisMaterial;
-
-		[SerializeField]
 		MeshRenderer projectionMesh;
 		[SerializeField]
 		MeshRenderer glowMesh;
@@ -57,10 +50,6 @@ namespace LunraGames.SubLight.Views
 		public override void Reset()
 		{
 			base.Reset();
-
-			projectionMesh.material = new Material(projectionMaterial);
-			glowMesh.material = new Material(glowMaterial);
-			irisMesh.material = new Material(irisMaterial);
 
 			HoloColor = Color.white;
 		}

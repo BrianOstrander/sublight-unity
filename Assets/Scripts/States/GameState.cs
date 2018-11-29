@@ -133,7 +133,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 
 			// HACK BEGIN - Probably bad to do and I should feel bad... but oh well...
-			var activeScale = Payload.Game.ActiveScale;
+			var activeScale = Payload.Game.ActiveScale.Value;
 			activeScale.Opacity.Changed(1f);
 			activeScale.Transform.Changed(activeScale.Transform.Value);
 			// HACK END

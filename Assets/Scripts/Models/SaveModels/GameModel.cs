@@ -120,6 +120,12 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
 
+
+		UniverseScaleModel activeScale;
+		ListenerProperty<UniverseScaleModel> activeScaleListener;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
+
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 
 		[JsonIgnore]
@@ -143,10 +149,25 @@ namespace LunraGames.SubLight.Models
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
 			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
+
+			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
+			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
+			{
+				currScale.Opacity.Changed += OnScaleOpacity;
+				if (activeScale == null || activeScale.Opacity.Value < currScale.Opacity.Value) activeScale = currScale;
+			}
 		}
 
 		#region Events
-
+		void OnScaleOpacity(float opacity)
+		{
+			var newHighestOpacityScale = activeScale;
+			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
+			{
+				if (newHighestOpacityScale.Opacity.Value < currScale.Opacity.Value) newHighestOpacityScale = currScale;
+			}
+			activeScaleListener.Value = newHighestOpacityScale;
+		}
 		#endregion
 
 		#region Utility
@@ -186,21 +207,6 @@ namespace LunraGames.SubLight.Models
 					return null;
 			}
 		}
-
-		[JsonIgnore]
-		public UniverseScaleModel ActiveScale
-		{
-			get
-			{
-				foreach (var scaleEnum in EnumExtensions.GetValues(UniverseScales.Unknown))
-				{
-					var curr = GetScale(scaleEnum);
-					if (curr.IsActive) return curr;
-				}
-				return null;
-			}
-		}
-
 		#endregion
 
 		#region Events

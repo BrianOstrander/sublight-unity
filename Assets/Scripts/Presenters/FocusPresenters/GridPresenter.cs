@@ -145,7 +145,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void SetGrid()
 		{
-			var activeScale = model.ActiveScale.Scale.Value;
+			var activeScale = model.ActiveScale.Value.Scale.Value;
 			var result = new GridView.Grid[unitMaps.Length];
 
 			for (var i = 0; i < unitMaps.Length; i++)
@@ -425,7 +425,7 @@ namespace LunraGames.SubLight.Presenters
 			scaleTransformsOnBeginAnimation.Clear();
 
 			var origin = ShipPositionOnPlane;
-			var activeScale = model.ActiveScale;
+			var activeScale = model.ActiveScale.Value;
 
 			if (activeScale != null) origin = activeScale.Transform.Value.UniverseOrigin;
 
@@ -465,7 +465,7 @@ namespace LunraGames.SubLight.Presenters
 						wasDragging = false;
 						return;
 					}
-					transformOnBeginDrag = model.ActiveScale.Transform.Value;
+					transformOnBeginDrag = model.ActiveScale.Value.Transform.Value;
 				}
 				else
 				{
@@ -491,7 +491,7 @@ namespace LunraGames.SubLight.Presenters
 			var offset = View.GridUnityOrigin + (unityPosOnDragBegin - currUnityDrag);
 			var universePos = transformOnBeginDrag.GetUniversePosition(offset);
 
-			model.ActiveScale.Transform.Value = model.ActiveScale.Transform.Value.Duplicate(universePos);
+			model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
 
 			SetGrid();
 		}
@@ -516,7 +516,7 @@ namespace LunraGames.SubLight.Presenters
 			//var galacticScale = model.GetScale(UniverseScales.Galactic);
 			//var clusterScale = model.GetScale(UniverseScales.Cluster);
 
-			var activeScale = model.ActiveScale;
+			var activeScale = model.ActiveScale.Value;
 
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
