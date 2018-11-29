@@ -375,6 +375,7 @@ namespace LunraGames.SubLight
 			/// The color.
 			/// </summary>
 			public const string GlowColor = "_GlowColor";
+			public const string GlowIntensity = "_GlowIntensity";
 		}
 
 		public static class RoomIrisIdle
@@ -412,6 +413,7 @@ namespace LunraGames.SubLight
 			/// that though... not positive, might allow negatives.
 			/// </summary>
 			public const string Offset = "_Offset";
+			public const string GridIntensity = "_GridIntensity";
 		}
 
 		/*

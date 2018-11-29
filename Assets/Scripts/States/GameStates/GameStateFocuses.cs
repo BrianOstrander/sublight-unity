@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 				new GenericFocusCameraPresenter<ShipFocusDetails>(gantryAnchor, fieldOfView);
 				new GenericFocusCameraPresenter<EncyclopediaFocusDetails>(gantryAnchor, fieldOfView);
 
-				new HoloPresenter();
+				new HoloPresenter(payload.Game);
 
 				// All other presenters for this state...
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
