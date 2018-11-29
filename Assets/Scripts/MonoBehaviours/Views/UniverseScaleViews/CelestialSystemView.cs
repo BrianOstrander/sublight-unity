@@ -171,6 +171,8 @@ namespace LunraGames.SubLight.Views
 		MeshRenderer colorGraphic;
 		[SerializeField]
 		MeshRenderer iconGraphic;
+		[SerializeField]
+		MeshRenderer minimizeGraphic;
 
 		[SerializeField]
 		CanvasGroup detailsGroup;
@@ -553,6 +555,7 @@ namespace LunraGames.SubLight.Views
 		{
 			colorGraphic.material.SetFloat(ShaderConstants.HoloCelestialSystemIconColor.Progress, value);
 			iconGraphic.material.SetFloat(ShaderConstants.HoloCelestialSystemIcon.Progress, value);
+			minimizeGraphic.material.SetFloat(ShaderConstants.HoloCelestialSystemIconColor.Progress, value);
 		}
 
 		void ApplyDetailsOpacity(float value)

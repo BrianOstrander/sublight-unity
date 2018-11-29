@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 33390727803448110}
   - component: {fileID: 23770744671652472}
   m_Layer: 12
-  m_Name: MinimizeIcon
+  m_Name: MinimizeMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1424,6 +1424,7 @@ MonoBehaviour:
   selectedGraphic: {fileID: 23533010198673774}
   colorGraphic: {fileID: 23316676303694428}
   iconGraphic: {fileID: 23676553591735776}
+  minimizeGraphic: {fileID: 23770744671652472}
   detailsGroup: {fileID: 225407479818079206}
   confirmGroup: {fileID: 225115326305604906}
   baseDistanceGroup: {fileID: 225848230000753088}

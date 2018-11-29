@@ -284,6 +284,7 @@
       "systems": [
         {
           "seed": 1063743355,
+          "visited": true,
           "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
@@ -312,6 +313,7 @@
         {
           "index": 2,
           "seed": 123782430,
+          "visited": true,
           "specified": true,
           "playerBegin": true,
           "position": {
@@ -359,7 +361,7 @@
       "seed": 528735376,
       "specified": true,
       "position": {
-        "Sector": {"x":100.0,"z":95.0}
+        "Sector": {"x":100.0,"z":100.0}
       },
       "systemCount": 1,
       "systems": [
@@ -368,7 +370,7 @@
           "specified": true,
           "playerEnd": true,
           "position": {
-            "Sector": {"x":100.0,"z":95.0},
+            "Sector": {"x":100.0,"z":100.0},
             "Local": {"x":0.5,"z":0.5}
           },
           "name": "Sagittarius A*",
