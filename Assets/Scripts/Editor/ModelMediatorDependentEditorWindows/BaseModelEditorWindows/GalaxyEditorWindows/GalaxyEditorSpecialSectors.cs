@@ -480,6 +480,16 @@ namespace LunraGames.SubLight
 
 			system.Name.Value = EditorGUILayout.TextField(new GUIContent("Name"), system.Name.Value);
 
+			system.Visited.Value = EditorGUILayout.Toggle("Visited", system.Visited.Value);
+
+			GUILayout.BeginHorizontal();
+			{
+				system.SecondaryClassification.Value = EditorGUILayout.TextField("Classification", system.SecondaryClassification.Value);
+				system.PrimaryClassification.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select a Primary Classification -", system.PrimaryClassification.Value, GUILayout.Width(150f));
+			}
+			GUILayout.EndHorizontal();
+
+			// --- Begin / End
 			var wasPlayerBegin = system.PlayerBegin.Value;
 			var wasPlayerEnd = system.PlayerEnd.Value;
 
@@ -488,6 +498,7 @@ namespace LunraGames.SubLight
 
 			setToPlayerBegin = !wasPlayerBegin && system.PlayerBegin.Value;
 			setToPlayerEnd = !wasPlayerEnd && system.PlayerEnd.Value;
+			// ---
 
 			if (specifiedSectorsShowDerivedValues.Value)
 			{

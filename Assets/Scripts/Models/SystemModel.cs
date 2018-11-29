@@ -21,6 +21,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool playerEnd;
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] string name;
+		[JsonProperty] SystemClassifications primaryClassification;
+		[JsonProperty] string secondaryClassification;
 		[JsonProperty] string encounterId;
 		[JsonProperty] int encounterBodyId = -1;
 		[JsonProperty] BodyModel[] bodies = new BodyModel[0];
@@ -42,6 +44,10 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
+		public readonly ListenerProperty<SystemClassifications> PrimaryClassification;
+		[JsonIgnore]
+		public readonly ListenerProperty<string> SecondaryClassification;
+		[JsonIgnore]
 		public readonly ListenerProperty<string> EncounterId; // TODO: probably delete this?
 		[JsonIgnore]
 		public readonly ListenerProperty<int> EncounterBodyId; // TODO: probably delete this?
@@ -61,6 +67,8 @@ namespace LunraGames.SubLight.Models
 			Specified = new ListenerProperty<bool>(value => specified = value, () => specified);
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
+			PrimaryClassification = new ListenerProperty<SystemClassifications>(value => primaryClassification = value, () => primaryClassification);
+			SecondaryClassification = new ListenerProperty<string>(value => secondaryClassification = value, () => secondaryClassification);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			EncounterBodyId = new ListenerProperty<int>(value => encounterBodyId = value, () => encounterBodyId);
 			Bodies = new ListenerProperty<BodyModel[]>(value => bodies = value, () => bodies);

@@ -135,8 +135,10 @@ namespace LunraGames.SubLight.Presenters
 
 			ApplyStates(true);
 
-			View.DetailsName = activeSystem.Name.Value;
-			View.DetailsDescription = "Todo";
+			View.SetDetails(
+				activeSystem.Name.Value,
+				language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value
+			);
 			View.Confirm = language.Confirm.Value;
 			View.ConfirmDescription = language.ConfirmDescription.Value;
 			View.Distance = "99";

@@ -290,6 +290,8 @@
             "Local": {"x":0.5,"z":0.5}
           },
           "name": "Sol",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Yellow Dwarf",
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -299,9 +301,11 @@
           "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
-            "Local": {"x":0.5,"z":0.7}
+            "Local": {"x":0.5,"z":0.75}
           },
           "name": "Alpha Centauri",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Yellow Dwarf",
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -312,9 +316,11 @@
           "playerBegin": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
-            "Local": {"x":0.3,"z":0.5}
+            "Local": {"x":0.25,"z":0.5}
           },
           "name": "Barnard's Star",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Red Dwarf",
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -324,9 +330,11 @@
           "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
-            "Local": {"x":0.3,"z":0.4}
+            "Local": {"x":0.1,"z":0.1}
           },
           "name": "Sirius",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Dwarf",
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -336,9 +344,11 @@
           "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
-            "Local": {"x":0.35,"z":0.2}
+            "Local": {"x":0.8,"z":0.9}
           },
           "name": "Wolf",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Red Dwarf",
           "encounterBodyId": -1,
           "bodies": []
         }

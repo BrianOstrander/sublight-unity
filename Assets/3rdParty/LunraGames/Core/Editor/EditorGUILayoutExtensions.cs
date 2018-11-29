@@ -46,7 +46,7 @@ namespace LunraGamesEditor
 		}
 
 		/// <summary>
-		/// Renames the first enum entry, useful for adding a "Select X" option.
+		/// Renames the first enum entry, useful for adding a "- Select X -" option.
 		/// </summary>
 		/// <returns>The enum popup.</returns>
 		/// <param name="primaryReplacement">Primary replacement.</param>

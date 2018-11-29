@@ -98,7 +98,14 @@ namespace LunraGames.SubLight
 					ConfirmDescription = LanguageStringModel.Override("Click again"),
 					DistanceUnit = LanguageStringModel.Override("ly"),
 					Analysis = LanguageStringModel.Override("System Analysis"),
-					AnalysisDescription = LanguageStringModel.Override("Click for details")
+					AnalysisDescription = LanguageStringModel.Override("Click for details"),
+					PrimaryClassifications = new Dictionary<SystemClassifications, LanguageStringModel> {
+						{ SystemClassifications.Unknown,LanguageStringModel.Override("Unrecognized Classification") },
+						{ SystemClassifications.Stellar,LanguageStringModel.Override("Stellar") },
+						{ SystemClassifications.Degenerate,LanguageStringModel.Override("Degenerate") },
+						{ SystemClassifications.Special,LanguageStringModel.Override("Special") },
+						{ SystemClassifications.Anomalous,LanguageStringModel.Override("Anomalous") }
+					}
 				};
 
 				for (var i = 0; i < payload.InterstellarSectorCount; i++)

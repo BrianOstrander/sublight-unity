@@ -198,11 +198,28 @@ namespace LunraGames.SubLight.Views
 		MaximizeArea[] maximizeAreas;
 		[SerializeField]
 		MaximizeOpacityGraphic[] maximizeOpacityGraphics;
+
+		[SerializeField]
+		GameObject detailsNameBackground;
+		[SerializeField]
+		GameObject detailsDescriptionBackground;
 		#endregion
 
 		#region View Properties & Methods
-		public string DetailsName { set { detailsNameLabel.text = value ?? string.Empty; } }
-		public string DetailsDescription { set { detailsDescriptionLabel.text = value ?? string.Empty; } }
+
+		public void SetDetails(string name, string description)
+		{
+			name = name ?? string.Empty;
+			description = description ?? string.Empty;
+
+			detailsNameLabel.text = name;
+			detailsDescriptionLabel.text = description;
+
+			var nameIsLonger = description.Length < name.Length;
+			detailsNameBackground.SetActive(nameIsLonger);
+			detailsDescriptionBackground.SetActive(!nameIsLonger);
+		}
+
 		public string Confirm { set { confirmLabel.text = value ?? string.Empty; } }
 		public string ConfirmDescription { set { confirmDescriptionLabel.text = value ?? string.Empty; } }
 		public string Distance { set { distanceLabel.text = value ?? string.Empty; } }
@@ -332,8 +349,7 @@ namespace LunraGames.SubLight.Views
 			Exit = ActionExtensions.Empty;
 			Click = ActionExtensions.Empty;
 
-			DetailsName = string.Empty;
-			DetailsDescription = string.Empty;
+			SetDetails(string.Empty, string.Empty);
 			Confirm = string.Empty;
 			ConfirmDescription = string.Empty;
 			Distance = string.Empty;
@@ -604,8 +620,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface ICelestialSystemView : IUniverseScaleView
 	{
-		string DetailsName { set; }
-		string DetailsDescription { set; }
+		void SetDetails(string name, string description);
 		string Confirm { set; }
 		string ConfirmDescription { set; }
 		string Distance { set; }
