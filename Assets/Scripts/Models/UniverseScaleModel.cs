@@ -32,7 +32,7 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
-		public bool IsActive
+		public bool IsVisible
 		{
 			get
 			{
