@@ -72,16 +72,6 @@ namespace LunraGames.SubLight
 			}
 			Payload.Game.Galaxy = result.TypedModel;
 
-			//if (!Payload.Game.PlayerStartSelected.Value) // TODO: check if specified systems have been set up!
-			{
-				var foundBegin = false;
-				var begin = Payload.Game.Galaxy.GetPlayerBegin(out foundBegin);
-				Payload.Game.Ship.Value.Position.Value = begin;
-				Payload.Game.Ship.Value.CurrentSystem.Value = begin;
-
-				if (!foundBegin) Debug.LogError("Provided galaxy has no player begin defined");
-			}
-
 			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))
 			{
 				Debug.LogError("No GalaxyTargetId to load");

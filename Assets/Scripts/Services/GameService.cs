@@ -94,6 +94,34 @@ namespace LunraGames.SubLight
 
 			game.ToolbarSelection.Value = ToolbarSelections.System;
 
+			App.M.Load<GalaxyInfoModel>(game.GalaxyId, result => OnGalaxyLoaded(result, game, done));
+		}
+
+		void OnGalaxyLoaded(SaveLoadRequest<GalaxyInfoModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			var galaxy = result.TypedModel;
+
+			var foundBegin = false;
+			var begin = galaxy.GetPlayerBegin(out foundBegin);
+			if (!foundBegin)
+			{
+				Debug.LogError("Provided galaxy has no player begin defined");
+				done(RequestStatus.Failure, null);
+				return;
+			}
+
+			game.Ship.Value.Position.Value = begin;
+			game.Ship.Value.CurrentSystem.Value = begin;
+
+			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
+
 			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
 				DefaultShip.StockRoot,
 				InventoryReferenceContext.Default,
