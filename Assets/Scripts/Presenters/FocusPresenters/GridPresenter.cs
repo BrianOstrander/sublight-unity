@@ -93,6 +93,15 @@ namespace LunraGames.SubLight.Presenters
 		Vector3 unityPosOnDragBegin;
 		UniverseTransform transformOnBeginDrag;
 
+		UniversePosition ShipPositionOnPlane
+		{
+			get
+			{
+				var position = model.Ship.Value.Position.Value;
+				return new UniversePosition(position.Sector, position.Local.NewY(0f));
+			}
+		}
+
 		public GridPresenter(
 			GameModel model,
 			GridInfoBlock info
@@ -207,7 +216,7 @@ namespace LunraGames.SubLight.Presenters
 				switch (focus)
 				{
 					case UniverseFocuses.None: break;
-					case UniverseFocuses.Ship: endPosition = model.Ship.Value.Position.Value; break;
+					case UniverseFocuses.Ship: endPosition = ShipPositionOnPlane; break;
 					case UniverseFocuses.GalacticOrigin: endPosition = model.Galaxy.GalaxyOrigin; break;
 					case UniverseFocuses.ClusterOrigin: endPosition = model.Galaxy.ClusterOrigin; break;
 					default:
@@ -415,7 +424,7 @@ namespace LunraGames.SubLight.Presenters
 			animationRemaining = duration;
 			scaleTransformsOnBeginAnimation.Clear();
 
-			var origin = model.Ship.Value.Position.Value;
+			var origin = ShipPositionOnPlane;
 			var activeScale = model.ActiveScale;
 
 			if (activeScale != null) origin = activeScale.Transform.Value.UniverseOrigin;

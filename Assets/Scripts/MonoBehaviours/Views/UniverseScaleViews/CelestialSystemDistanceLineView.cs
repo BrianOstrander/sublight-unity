@@ -42,7 +42,7 @@ namespace LunraGames.SubLight.Views
 
 			var allTopSegments = new Vector3[topSegments + 1];
 
-			topBegin += new Vector3(0f, yMinimumOffset, 0f); // this should be automatic...
+			topBegin += new Vector3(0f, yMinimumOffset + (begin.y - transform.position.y), 0f); // this should be automatic...
 
 			for (var i = 0; i < allTopSegments.Length; i++)
 			{
