@@ -129,6 +129,7 @@ namespace LunraGames.SubLight.Views
 			t = (-B - sqrtDet) / doubleA;
 			var result1 = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
 
+			/*
 			var originalDistance = Vector3.Distance(begin, end);
 			var beginOnGrid = begin.NewY(GridOrigin.y);
 			var endOnGrid = end.NewY(GridOrigin.y);
@@ -149,6 +150,19 @@ namespace LunraGames.SubLight.Views
 				clampedBegin = end + ((begin - end).normalized * (originalDistance * scalar));
 				return Clamping.BeginClamped;
 			}
+			*/
+
+			if (beginIsInRadius)
+			{
+				clampedEnd = CalculateClamped(begin, end, result0);
+				return Clamping.EndClamped;
+			}
+
+			if (endIsInRadius)
+			{
+				clampedBegin = CalculateClamped(end, begin, result0);
+				return Clamping.BeginClamped;
+			}
 
 			var minClamped = new Vector3(Mathf.Min(result0.x, result1.x), 0f, Mathf.Min(result0.z, result1.z));
 			var maxClamped = new Vector3(Mathf.Max(result0.x, result1.x), 0f, Mathf.Max(result0.z, result1.z));
@@ -160,10 +174,24 @@ namespace LunraGames.SubLight.Views
 				return Clamping.NotVisible;
 			}
 
-			clampedBegin = result0;
-			clampedEnd = result1;
+			//clampedBegin = result0;
+			//clampedEnd = result1;
+
+			clampedBegin = CalculateClamped(begin, end, result0);
+			clampedEnd = CalculateClamped(end, begin, result1);
 
 			return Clamping.BothClamped;
+		}
+
+		Vector3? CalculateClamped(Vector3 clampOrigin, Vector3 clampTermination, Vector3 position)
+		{
+			var originalDistance = Vector3.Distance(clampOrigin, clampTermination);
+			var orginOnGrid = clampOrigin.NewY(GridOrigin.y);
+			var terminationOnGrid = clampTermination.NewY(GridOrigin.y);
+			var distanceOnGrid = Vector3.Distance(orginOnGrid, terminationOnGrid);
+
+			var scalar = Vector3.Distance(orginOnGrid, position) / distanceOnGrid;
+			return clampOrigin + ((clampTermination - clampOrigin).normalized * (originalDistance * scalar));
 		}
 
 		void SetBottomPoints(Vector3 begin, Vector3 end, Clamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
