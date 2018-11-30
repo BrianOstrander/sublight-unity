@@ -24,7 +24,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float topLineMargin; // In unity units...
 		[SerializeField]
-		float bottomLineEndMargin; // In unity units...
+		float bottomLineMarginEnd; // In unity units...
 		[SerializeField]
 		float topLineSegmentLength; // In unity units...
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
@@ -49,7 +49,15 @@ namespace LunraGames.SubLight.Views
 				Debug.DrawLine(clampedEnd.Value, clampedEnd.Value + (Vector3.up * 0.1f), Color.red, 0.1f);
 			}
 
-			SetBottomPoints(begin, end);
+			switch (clamping)
+			{
+				case Clamping.NotVisible:
+					topLine.enabled = false;
+					bottomLine.enabled = false;
+					return;
+			}
+
+			SetBottomPoints(begin, end, clamping, clampedBegin, clampedEnd);
 			SetTopPoints(begin, end, clamping, clampedBegin, clampedEnd);
 		}
 
@@ -131,31 +139,65 @@ namespace LunraGames.SubLight.Views
 				clampedEnd = result0;
 				var scalar = Vector3.Distance(beginOnGrid, clampedEnd.Value) / distanceOnGrid;
 				clampedEnd = begin + ((end - begin).normalized * (originalDistance * scalar));
+				return Clamping.EndClamped;
 			}
-			else if (endIsInRadius)
+
+			if (endIsInRadius)
 			{
 				clampedBegin = result0;
 				var scalar = Vector3.Distance(endOnGrid, clampedBegin.Value) / distanceOnGrid;
 				clampedBegin = end + ((begin - end).normalized * (originalDistance * scalar));
+				return Clamping.BeginClamped;
 			}
-			else
+
+			var minClamped = new Vector3(Mathf.Min(result0.x, result1.x), 0f, Mathf.Min(result0.z, result1.z));
+			var maxClamped = new Vector3(Mathf.Max(result0.x, result1.x), 0f, Mathf.Max(result0.z, result1.z));
+			var minOriginal = new Vector3(Mathf.Min(begin.x, end.x), 0f, Mathf.Min(begin.z, end.z));
+			var maxOriginal = new Vector3(Mathf.Max(begin.x, end.x), 0f, Mathf.Max(begin.z, end.z));
+
+			if ((maxOriginal.x < minClamped.x && maxOriginal.z < minClamped.z) || (maxClamped.x < minOriginal.x && maxClamped.z < minOriginal.z))
 			{
-				clampedBegin = result0;
-				clampedEnd = result1;
+				return Clamping.NotVisible;
 			}
+
+			clampedBegin = result0;
+			clampedEnd = result1;
 
 			return Clamping.BothClamped;
 		}
 
-		void SetBottomPoints(Vector3 begin, Vector3 end)
+		void SetBottomPoints(Vector3 begin, Vector3 end, Clamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
 		{
 			begin = begin.NewY(0f);
 			end = end.NewY(0f);
+			if (clampedBegin.HasValue) clampedBegin = clampedBegin.Value.NewY(0f);
+			if (clampedEnd.HasValue) clampedEnd = clampedEnd.Value.NewY(0f);
+
+			var bottomLineMarginEndCurrent = bottomLineMarginEnd;
+			var beginOffset = Vector3.zero;
+
+			switch (clamping)
+			{
+				case Clamping.BothClamped:
+					bottomLineMarginEndCurrent = Mathf.Max(0f, bottomLineMarginEndCurrent - Vector3.Distance(end, clampedEnd.Value));
+					beginOffset = clampedBegin.Value - begin;
+					begin = clampedBegin.Value;
+					end = clampedEnd.Value;
+					break;
+				case Clamping.BeginClamped:
+					beginOffset = clampedBegin.Value - begin;
+					begin = clampedBegin.Value;
+					break;
+				case Clamping.EndClamped:
+					bottomLineMarginEndCurrent = Mathf.Max(0f, bottomLineMarginEndCurrent - Vector3.Distance(end, clampedEnd.Value));
+					end = clampedEnd.Value;
+					break;
+			}
 
 			var delta = end - begin;
 
 			var distance = Vector3.Distance(begin, end);
-			var totalMargins = bottomLineEndMargin;
+			var totalMargins = bottomLineMarginEndCurrent;
 
 			if (distance <= totalMargins)
 			{
@@ -168,15 +210,39 @@ namespace LunraGames.SubLight.Views
 
 			var bottomDelta = delta.normalized * distance;
 
-			bottomLine.SetPositions(new Vector3[] { Vector3.zero, bottomDelta });
+			bottomLine.SetPositions(new Vector3[] { beginOffset, beginOffset + bottomDelta });
 		}
 
 		void SetTopPoints(Vector3 begin, Vector3 end, Clamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
 		{
+			var topLineMarginBegin = topLineMargin;
+			var topLineMarginEnd = topLineMargin;
+			var beginOffset = Vector3.zero;
+
+			switch (clamping)
+			{
+				case Clamping.BothClamped:
+					topLineMarginBegin = Mathf.Max(0f, topLineMarginBegin - Vector3.Distance(begin, clampedBegin.Value));
+					topLineMarginEnd = Mathf.Max(0f, topLineMarginEnd - Vector3.Distance(end, clampedEnd.Value));
+					beginOffset = (clampedBegin.Value - begin).NewY(0f);
+					begin = clampedBegin.Value;
+					end = clampedEnd.Value;
+					break;
+				case Clamping.BeginClamped:
+					topLineMarginBegin = Mathf.Max(0f, topLineMarginBegin - Vector3.Distance(begin, clampedBegin.Value));
+					beginOffset = (clampedBegin.Value - begin).NewY(0f);
+					begin = clampedBegin.Value;
+					break;
+				case Clamping.EndClamped:
+					topLineMarginEnd = Mathf.Max(0f, topLineMarginEnd - Vector3.Distance(end, clampedEnd.Value));
+					end = clampedEnd.Value;
+					break;
+			}
+
 			var delta = end - begin;
 
 			var distance = Vector3.Distance(begin, end);
-			var totalMargins = topLineMargin * 2f;
+			var totalMargins = topLineMarginBegin + topLineMarginEnd;
 
 			if (distance <= totalMargins)
 			{
@@ -189,7 +255,7 @@ namespace LunraGames.SubLight.Views
 
 			var deltaNormal = delta.normalized;
 
-			var topBegin = deltaNormal * topLineMargin;
+			var topBegin = beginOffset + (deltaNormal * topLineMarginBegin);
 			var topDelta = deltaNormal * distance;
 
 			var topSegments = Mathf.Max(1, Mathf.RoundToInt(distance / topLineSegmentLength));

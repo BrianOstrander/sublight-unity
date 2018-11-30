@@ -156,7 +156,7 @@ MonoBehaviour:
   bottomLine: {fileID: 120391768602615030}
   topLine: {fileID: 120696821935069996}
   topLineMargin: 0.3
-  bottomLineEndMargin: 0.18
+  bottomLineMarginEnd: 0.18
   topLineSegmentLength: 0.2
 --- !u!120 &120391768602615030
 LineRenderer:
