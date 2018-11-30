@@ -27,6 +27,8 @@ namespace LunraGames.SubLight.Views
 		float bottomLineMarginEnd; // In unity units...
 		[SerializeField]
 		float topLineSegmentLength; // In unity units...
+		[SerializeField]
+		float gridRadiusMargin;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public void SetPoints(Vector3 begin, Vector3 end)
@@ -68,8 +70,8 @@ namespace LunraGames.SubLight.Views
 			clampedBegin = null;
 			clampedEnd = null;
 
-			var beginIsInRadius = PositionIsInRadius(begin);
-			var endIsInRadius = PositionIsInRadius(end);
+			var beginIsInRadius = PositionIsInRadius(begin, gridRadiusMargin);
+			var endIsInRadius = PositionIsInRadius(end, gridRadiusMargin);
 
 			if (beginIsInRadius && endIsInRadius) return Clamping.NoClamping;
 
@@ -78,7 +80,7 @@ namespace LunraGames.SubLight.Views
 
 			var gridRadiusX = GridOrigin.x;
 			var gridRadiesZ = GridOrigin.z;
-			var radius = GridRadius;
+			var radius = GridRadius - gridRadiusMargin;
 
 			float xDelta, zDelta, A, B, C, det, t;
 

@@ -86,9 +86,9 @@ namespace LunraGames.SubLight.Views
 		protected virtual void OnScale(Vector3 scale, Vector3 rawScale) {}
 		protected virtual void OnPosition(Vector3 position, Vector3 rawPosition) {}
 
-		protected bool PositionIsInRadius(Vector3 worldPosition)
+		protected bool PositionIsInRadius(Vector3 worldPosition, float margin = 0f)
 		{
-			return Vector3.Distance(GridOrigin, worldPosition.NewY(GridOrigin.y)) <= GridRadius;
+			return Vector3.Distance(GridOrigin, worldPosition.NewY(GridOrigin.y)) <= Mathf.Max(0f, GridRadius - margin);
 		}
 	}
 
