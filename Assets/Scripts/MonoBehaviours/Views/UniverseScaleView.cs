@@ -22,6 +22,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform positionArea;
 
+		protected Transform ScaleArea { get { return scaleArea; } }
+		protected Transform PositionArea { get { return positionArea; } }
+
 		protected Vector3 GridOrigin { private set; get; }
 		protected float GridRadius { private set; get; }
 
@@ -82,6 +85,11 @@ namespace LunraGames.SubLight.Views
 
 		protected virtual void OnScale(Vector3 scale, Vector3 rawScale) {}
 		protected virtual void OnPosition(Vector3 position, Vector3 rawPosition) {}
+
+		protected bool PositionIsInRadius(Vector3 worldPosition)
+		{
+			return Vector3.Distance(GridOrigin, worldPosition.NewY(GridOrigin.y)) <= GridRadius;
+		}
 	}
 
 	public interface IUniverseScaleView : IView
