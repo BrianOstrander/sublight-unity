@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+
+using UnityEngine;
 
 namespace LunraGames.SubLight.Views
 {
@@ -29,6 +31,10 @@ namespace LunraGames.SubLight.Views
 		float topLineSegmentLength; // In unity units...
 		[SerializeField]
 		float gridRadiusMargin;
+		[SerializeField]
+		GameObject terminatorBegin;
+		[SerializeField]
+		GameObject terminatorEnd;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public void SetPoints(Vector3 begin, Vector3 end)
@@ -56,6 +62,8 @@ namespace LunraGames.SubLight.Views
 				case Clamping.NotVisible:
 					topLine.enabled = false;
 					bottomLine.enabled = false;
+					terminatorBegin.SetActive(false);
+					terminatorEnd.SetActive(false);
 					return;
 			}
 
@@ -131,29 +139,6 @@ namespace LunraGames.SubLight.Views
 			t = (-B - sqrtDet) / doubleA;
 			var result1 = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
 
-			/*
-			var originalDistance = Vector3.Distance(begin, end);
-			var beginOnGrid = begin.NewY(GridOrigin.y);
-			var endOnGrid = end.NewY(GridOrigin.y);
-			var distanceOnGrid = Vector3.Distance(beginOnGrid, endOnGrid);
-
-			if (beginIsInRadius)
-			{
-				clampedEnd = result0;
-				var scalar = Vector3.Distance(beginOnGrid, clampedEnd.Value) / distanceOnGrid;
-				clampedEnd = begin + ((end - begin).normalized * (originalDistance * scalar));
-				return Clamping.EndClamped;
-			}
-
-			if (endIsInRadius)
-			{
-				clampedBegin = result0;
-				var scalar = Vector3.Distance(endOnGrid, clampedBegin.Value) / distanceOnGrid;
-				clampedBegin = end + ((begin - end).normalized * (originalDistance * scalar));
-				return Clamping.BeginClamped;
-			}
-			*/
-
 			if (beginIsInRadius)
 			{
 				clampedEnd = CalculateClamped(begin, end, result0);
@@ -175,9 +160,6 @@ namespace LunraGames.SubLight.Views
 			{
 				return Clamping.NotVisible;
 			}
-
-			//clampedBegin = result0;
-			//clampedEnd = result1;
 
 			clampedBegin = CalculateClamped(begin, end, result0);
 			clampedEnd = CalculateClamped(end, begin, result1);
@@ -303,6 +285,32 @@ namespace LunraGames.SubLight.Views
 
 			topLine.positionCount = allTopSegments.Length;
 			topLine.SetPositions(allTopSegments);
+
+			switch (clamping)
+			{
+				case Clamping.NoClamping:
+					terminatorBegin.SetActive(false);
+					terminatorEnd.SetActive(false);
+					break;
+				case Clamping.BothClamped:
+					var endPos = allTopSegments.Last();
+					SetTerminator(terminatorBegin, topBegin);
+					SetTerminator(terminatorEnd, endPos);
+					break;
+				case Clamping.BeginClamped:
+					SetTerminator(terminatorBegin, topBegin);
+					break;
+				case Clamping.EndClamped:
+					SetTerminator(terminatorEnd, allTopSegments.Last());
+					break;
+			}
+		}
+
+		void SetTerminator(GameObject terminator, Vector3 origin)
+		{
+			terminator.transform.localPosition = origin;
+			terminator.transform.LookAt(GridOrigin.NewY(GridOrigin.y + origin.y));
+			terminator.SetActive(true);
 		}
 
 		public override float Opacity
@@ -316,6 +324,16 @@ namespace LunraGames.SubLight.Views
 				topLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
 				bottomLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
 			}
+		}
+
+		public override void Reset()
+		{
+			base.Reset();
+
+			topLine.enabled = false;
+			bottomLine.enabled = false;
+			terminatorBegin.SetActive(false);
+			terminatorEnd.SetActive(false);
 		}
 	}
 
