@@ -66,7 +66,12 @@ namespace LunraGames.SubLight.Presenters
 			);
 		}
 
-		bool NotInteractable() { return !Mathf.Approximately(1f, ScaleModel.Opacity.Value); }
+		bool NotInteractable()
+		{
+			if (App.V.CameraHasMoved) return true;
+			return !Mathf.Approximately(1f, ScaleModel.Opacity.Value);
+		}
+
 
 		#region Events
 		void OnActiveSystem(SystemModel activeSystem)

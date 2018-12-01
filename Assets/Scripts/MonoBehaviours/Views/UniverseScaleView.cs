@@ -76,11 +76,11 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		protected float RadiusNormal(Vector3 worldPosition)
+		protected float RadiusNormal(Vector3 worldPosition, float margin = 0f)
 		{
 			if (Mathf.Approximately(0f, GridRadius)) return 1f;
 			worldPosition = worldPosition.NewY(GridOrigin.y);
-			return Vector3.Distance(GridOrigin, worldPosition) / GridRadius;
+			return Vector3.Distance(GridOrigin, worldPosition) / Mathf.Max(0f, GridRadius - margin);
 		}
 
 		protected virtual void OnScale(Vector3 scale, Vector3 rawScale) {}

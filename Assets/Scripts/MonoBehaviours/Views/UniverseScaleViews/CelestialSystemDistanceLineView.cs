@@ -26,6 +26,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float topLineMargin; // In unity units...
 		[SerializeField]
+		float bottomLineMarginBegin; // In unity units...
+		[SerializeField]
 		float bottomLineMarginEnd; // In unity units...
 		[SerializeField]
 		float topLineSegmentLength; // In unity units...
@@ -35,6 +37,10 @@ namespace LunraGames.SubLight.Views
 		GameObject terminatorBegin;
 		[SerializeField]
 		GameObject terminatorEnd;
+		[SerializeField]
+		GameObject directionRing;
+		[SerializeField]
+		MeshRenderer directionRingGraphic;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public void SetPoints(Vector3 begin, Vector3 end)
@@ -64,6 +70,7 @@ namespace LunraGames.SubLight.Views
 					bottomLine.enabled = false;
 					terminatorBegin.SetActive(false);
 					terminatorEnd.SetActive(false);
+					directionRing.SetActive(false);
 					return;
 			}
 
@@ -151,6 +158,30 @@ namespace LunraGames.SubLight.Views
 				return Clamping.BeginClamped;
 			}
 
+			var minPoint = begin.NewY(GridOrigin.y);
+			var maxPoint = end.NewY(GridOrigin.y);
+
+			if (Vector3.Distance(GridOrigin, maxPoint) < Vector3.Distance(GridOrigin, minPoint))
+			{
+				var newMax = minPoint;
+				minPoint = maxPoint;
+				maxPoint = newMax;
+			}
+
+			var midPointDelta = (maxPoint - minPoint) * 0.5f;
+
+			var midPoint = minPoint + midPointDelta;
+
+			if (Vector3.Distance(GridOrigin, minPoint) < Vector3.Distance(GridOrigin, midPoint))
+			{
+				// Line is outside the circle and doesn't intersect it.
+				return Clamping.NotVisible;
+			}
+
+			//var minOriginal = new Vector3(Mathf.Min(begin.x, end.x), 0f, Mathf.Min(begin.z, end.z));
+			//var maxOriginal = new Vector3(Mathf.Max(begin.x, end.x), 0f, Mathf.Max(begin.z, end.z));
+
+			/*
 			var minClamped = new Vector3(Mathf.Min(result0.x, result1.x), 0f, Mathf.Min(result0.z, result1.z));
 			var maxClamped = new Vector3(Mathf.Max(result0.x, result1.x), 0f, Mathf.Max(result0.z, result1.z));
 			var minOriginal = new Vector3(Mathf.Min(begin.x, end.x), 0f, Mathf.Min(begin.z, end.z));
@@ -160,7 +191,7 @@ namespace LunraGames.SubLight.Views
 			{
 				return Clamping.NotVisible;
 			}
-
+			*/
 			clampedBegin = CalculateClamped(begin, end, result0);
 			clampedEnd = CalculateClamped(end, begin, result1);
 
@@ -185,18 +216,21 @@ namespace LunraGames.SubLight.Views
 			if (clampedBegin.HasValue) clampedBegin = clampedBegin.Value.NewY(0f);
 			if (clampedEnd.HasValue) clampedEnd = clampedEnd.Value.NewY(0f);
 
+			var bottomLineMarginBeginCurrent = bottomLineMarginBegin;
 			var bottomLineMarginEndCurrent = bottomLineMarginEnd;
 			var beginOffset = Vector3.zero;
 
 			switch (clamping)
 			{
 				case Clamping.BothClamped:
+					bottomLineMarginBeginCurrent = Mathf.Max(0f, bottomLineMarginBeginCurrent - Vector3.Distance(begin, clampedBegin.Value));
 					bottomLineMarginEndCurrent = Mathf.Max(0f, bottomLineMarginEndCurrent - Vector3.Distance(end, clampedEnd.Value));
 					beginOffset = clampedBegin.Value - begin;
 					begin = clampedBegin.Value;
 					end = clampedEnd.Value;
 					break;
 				case Clamping.BeginClamped:
+					bottomLineMarginBeginCurrent = Mathf.Max(0f, bottomLineMarginBeginCurrent - Vector3.Distance(begin, clampedBegin.Value));
 					beginOffset = clampedBegin.Value - begin;
 					begin = clampedBegin.Value;
 					break;
@@ -209,20 +243,26 @@ namespace LunraGames.SubLight.Views
 			var delta = end - begin;
 
 			var distance = Vector3.Distance(begin, end);
-			var totalMargins = bottomLineMarginEndCurrent;
+			var totalMargins = bottomLineMarginEndCurrent + bottomLineMarginBeginCurrent;
 
 			if (distance <= totalMargins)
 			{
 				bottomLine.enabled = false;
+				directionRing.SetActive(false);
 				return;
 			}
 			bottomLine.enabled = true;
+			directionRing.SetActive(true);
 
 			distance -= totalMargins;
 
 			var bottomDelta = delta.normalized * distance;
 
-			bottomLine.SetPositions(new Vector3[] { beginOffset, beginOffset + bottomDelta });
+			var bottomBegin = beginOffset + (bottomDelta.normalized * bottomLineMarginBeginCurrent);
+
+			bottomLine.SetPositions(new Vector3[] { bottomBegin, bottomBegin + bottomDelta });
+
+			directionRing.transform.forward = delta;
 		}
 
 		void SetTopPoints(Vector3 begin, Vector3 end, Clamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
@@ -259,6 +299,8 @@ namespace LunraGames.SubLight.Views
 			if (distance <= totalMargins)
 			{
 				topLine.enabled = false;
+				terminatorBegin.SetActive(false);
+				terminatorEnd.SetActive(false);
 				return;
 			}
 			topLine.enabled = true;
@@ -298,9 +340,11 @@ namespace LunraGames.SubLight.Views
 					SetTerminator(terminatorEnd, endPos);
 					break;
 				case Clamping.BeginClamped:
+					terminatorEnd.SetActive(false);
 					SetTerminator(terminatorBegin, topBegin);
 					break;
 				case Clamping.EndClamped:
+					terminatorBegin.SetActive(false);
 					SetTerminator(terminatorEnd, allTopSegments.Last());
 					break;
 			}
@@ -323,6 +367,7 @@ namespace LunraGames.SubLight.Views
 				var currOpacity = Mathf.Approximately(value, 1f) ? 1f : 0f;
 				topLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
 				bottomLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
+				directionRingGraphic.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, currOpacity);
 			}
 		}
 
@@ -334,6 +379,7 @@ namespace LunraGames.SubLight.Views
 			bottomLine.enabled = false;
 			terminatorBegin.SetActive(false);
 			terminatorEnd.SetActive(false);
+			directionRing.SetActive(false);
 		}
 	}
 

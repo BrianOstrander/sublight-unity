@@ -100,6 +100,12 @@ namespace LunraGames.SubLight.Views
 				public const float Full = 1f;
 			}
 
+			public static class DirectionRingOpacity
+			{
+				public const float None = 0f;
+				public const float Full = 1f;
+			}
+
 			public static class MaximizedProgress
 			{
 				public const float Minimized = 0f;
@@ -170,7 +176,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		LineRenderer dropLine;
 		[SerializeField]
-		AnimationCurve dropLineRadiusOpacity;
+		CurveStyleBlock dropLineRadiusOpacity = CurveStyleBlock.Default;
 
 		[SerializeField]
 		MeshRenderer bottomCenterMesh;
@@ -190,6 +196,8 @@ namespace LunraGames.SubLight.Views
 		CanvasGroup detailsGroup;
 		[SerializeField]
 		CanvasGroup confirmGroup;
+		[SerializeField]
+		CanvasGroup baseGroup;
 		[SerializeField]
 		CanvasGroup baseDistanceGroup;
 		[SerializeField]
@@ -315,8 +323,10 @@ namespace LunraGames.SubLight.Views
 			verticalLookAtArea.transform.localPosition = positionWithHeight;
 
 			var radiusNormal = RadiusNormal(dropLine.transform.position);
-			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal));
+			var radiusOpacity = Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal);
+			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, radiusOpacity);
 			dropLine.SetPosition(1, positionWithHeight);
+			baseGroup.alpha = radiusOpacity;
 
 			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
 
@@ -396,12 +406,31 @@ namespace LunraGames.SubLight.Views
 							modified.DropLineThickness = Constants.DropLineThickness.Full;
 							break;
 						default:
-							modified.DropLineThickness = Constants.DropLineThickness.Normal;
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.Selected:
+								case Celestial.SelectedStates.NotSelected:
+									modified.DropLineThickness = Constants.DropLineThickness.Normal;
+									break;
+							}
 							break;
 					}
 					break;
 				case Celestial.HighlightStates.OtherHighlighted:
-					if (VisitState == Celestial.VisitStates.Current) modified.DropLineThickness = Constants.DropLineThickness.Full;
+					switch (VisitState)
+					{
+						case Celestial.VisitStates.Current:
+							modified.DropLineThickness = Constants.DropLineThickness.Full;
+							break;
+						default:
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.Selected:
+									modified.DropLineThickness = Constants.DropLineThickness.Full;
+									break;
+							}
+							break;
+					}
 					break;
 				case Celestial.HighlightStates.Highlighted:
 				case Celestial.HighlightStates.HighlightedAnalysis:
@@ -415,11 +444,39 @@ namespace LunraGames.SubLight.Views
 
 			//	BaseDistanceOpacity
 			modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.None;
-			switch (HighlightState)
+			switch (VisitState)
 			{
-				case Celestial.HighlightStates.Highlighted:
-				case Celestial.HighlightStates.HighlightedAnalysis:
-					modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+				case Celestial.VisitStates.Current: break;
+				default:
+					switch (HighlightState)
+					{
+						case Celestial.HighlightStates.OtherHighlighted:
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.Selected:
+									modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+									break;
+							}
+							break;
+						case Celestial.HighlightStates.Highlighted:
+						case Celestial.HighlightStates.HighlightedAnalysis:
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.Selected:
+								case Celestial.SelectedStates.NotSelected:
+									modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+									break;
+							}
+							break;
+						case Celestial.HighlightStates.Idle:
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.Selected:
+									modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+									break;
+							}
+							break;
+					}
 					break;
 			}
 
@@ -427,11 +484,33 @@ namespace LunraGames.SubLight.Views
 			modified.BaseRingOpacity = Constants.BaseRingOpacity.None;
 			switch (HighlightState)
 			{
+				case Celestial.HighlightStates.OtherHighlighted:
+					switch (SelectedState)
+					{
+						case Celestial.SelectedStates.Selected:
+							modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+							break;
+						default:
+							switch (VisitState)
+							{
+								case Celestial.VisitStates.Current:
+									modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+									break;
+							}
+							break;
+					}
+					break;
 				case Celestial.HighlightStates.Highlighted:
 				case Celestial.HighlightStates.HighlightedAnalysis:
-					modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+					switch (SelectedState)
+					{
+						case Celestial.SelectedStates.OtherSelected: break;
+						default:
+							modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+							break;
+					}
 					break;
-				default:
+				case Celestial.HighlightStates.Idle:
 					switch (SelectedState)
 					{
 						case Celestial.SelectedStates.Selected:
@@ -446,7 +525,6 @@ namespace LunraGames.SubLight.Views
 			switch (SelectedState)
 			{
 				case Celestial.SelectedStates.NotSelected:
-				case Celestial.SelectedStates.OtherSelected:
 					switch (HighlightState)
 					{
 						case Celestial.HighlightStates.Highlighted: modified.DetailsOpacity = Constants.DetailsOpacity.Full; break;
@@ -473,16 +551,32 @@ namespace LunraGames.SubLight.Views
 			switch (SelectedState)
 			{
 				case Celestial.SelectedStates.Selected:
-					modified.SelectedOpacity = Constants.SelectedOpacity.Full;
+				case Celestial.SelectedStates.NotSelected:
+					switch (HighlightState)
+					{
+						case Celestial.HighlightStates.Idle:
+						case Celestial.HighlightStates.OtherHighlighted: 
+							break;
+						case Celestial.HighlightStates.Highlighted:
+						case Celestial.HighlightStates.HighlightedAnalysis:
+							modified.SelectedOpacity = Constants.SelectedOpacity.Full;
+							break;
+					}
 					break;
-				default:
+				case Celestial.SelectedStates.OtherSelected:
 					switch (HighlightState)
 					{
 						case Celestial.HighlightStates.Idle:
 						case Celestial.HighlightStates.OtherHighlighted:
 							break;
-						default:
-							modified.SelectedOpacity = Constants.SelectedOpacity.Full;
+						case Celestial.HighlightStates.Highlighted:
+						case Celestial.HighlightStates.HighlightedAnalysis:
+							switch (VisitState)
+							{
+								case Celestial.VisitStates.Current:
+									modified.SelectedOpacity = Constants.SelectedOpacity.Full;
+									break;
+							}
 							break;
 					}
 					break;
@@ -502,22 +596,31 @@ namespace LunraGames.SubLight.Views
 
 			// MaximizedProgress
 			modified.MaximizedProgress = Constants.MaximizedProgress.Minimized;
-			switch (SelectedState)
+			switch (VisitState)
 			{
-				case Celestial.SelectedStates.NotSelected:
-				case Celestial.SelectedStates.OtherSelected:
-					switch (HighlightState)
+				case Celestial.VisitStates.Current:
+					modified.MaximizedProgress = Constants.MaximizedProgress.Maximized;
+					break;
+				default:
+					switch (SelectedState)
 					{
-						case Celestial.HighlightStates.Highlighted:
-						case Celestial.HighlightStates.HighlightedAnalysis:
+						case Celestial.SelectedStates.OtherSelected: break;
+						case Celestial.SelectedStates.NotSelected:
+							switch (HighlightState)
+							{
+								case Celestial.HighlightStates.Highlighted:
+								case Celestial.HighlightStates.HighlightedAnalysis:
+									modified.MaximizedProgress = Constants.MaximizedProgress.Maximized;
+									break;
+							}
+							break;
+						case Celestial.SelectedStates.Selected:
 							modified.MaximizedProgress = Constants.MaximizedProgress.Maximized;
 							break;
 					}
 					break;
-				default:
-					modified.MaximizedProgress = Constants.MaximizedProgress.Maximized;
-					break;
 			}
+
 
 			targetVisuals = modified;
 		}
@@ -577,7 +680,7 @@ namespace LunraGames.SubLight.Views
 		{
 			dropLine.widthMultiplier = dropLineThickness.Evaluate(value) * dropLineThicknessMaximum;
 			SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorConstant.Alpha, dropLineThicknessOpacity.Evaluate(value));
-			SetMeshAlpha(bottomCenterMesh.material, ShaderConstants.HoloTextureColorAlpha.Alpha, bottomCenterOpacity.Evaluate(value));
+			bottomCenterMesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, bottomCenterOpacity.Evaluate(value));
 		}
 
 		void ApplySelectedOpacity(float value)
@@ -609,7 +712,7 @@ namespace LunraGames.SubLight.Views
 
 		void ApplyBaseRingOpacity(float value)
 		{
-			baseDistanceGroup.alpha = value;
+			baseRingGroup.alpha = value;
 		}
 
 		void ApplyMaximizedProgress(float value)

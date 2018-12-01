@@ -106,13 +106,22 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (block.State)
 			{
-				case CelestialSystemStateBlock.States.UnSelected:
-					break;
+				case CelestialSystemStateBlock.States.UnSelected: break;
 				case CelestialSystemStateBlock.States.Highlighted:
+					switch (Model.CelestialSystemStateLastSelected.State)
+					{
+						case CelestialSystemStateBlock.States.Selected:
+							end = Model.CelestialSystemStateLastSelected.Position;
+							break;
+						default:
+							end = block.Position;
+							break;
+					}
+					break;
 				case CelestialSystemStateBlock.States.Selected:
 					end = block.Position;
 					break;
-				default:
+				case CelestialSystemStateBlock.States.Idle:
 					switch (Model.CelestialSystemStateLastSelected.State)
 					{
 						case CelestialSystemStateBlock.States.Selected:
