@@ -11,7 +11,7 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		public int InterstellarSectorOffset = 1;
+		public int InterstellarSectorOffset = 2; // Not set anywhere else at the moment...
 		public int InterstellarSectorOffsetTotal { get { return (InterstellarSectorOffset * 2) + 1; } }
 		public int InterstellarSectorCount { get { return InterstellarSectorOffsetTotal * InterstellarSectorOffsetTotal; } }
 

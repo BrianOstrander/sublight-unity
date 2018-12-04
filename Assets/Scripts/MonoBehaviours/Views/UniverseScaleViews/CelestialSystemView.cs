@@ -212,6 +212,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer selectedGraphic;
 		[SerializeField]
+		MeshRenderer selectedInsideGraphic;
+		[SerializeField]
 		MeshRenderer colorGraphic;
 		[SerializeField]
 		MeshRenderer minimizeGraphic;
@@ -267,6 +269,17 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		ParticleSystem selectedParticles;
+
+		[SerializeField]
+		TrailRenderer dragTrail;
+
+		[SerializeField]
+		GameObject[] enableOnInBounds;
+
+		[SerializeField]
+		float onEnterDelayDuration;
+		[SerializeField]
+		float interactableOpacityCutoff;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		#endregion
 
@@ -293,6 +306,15 @@ namespace LunraGames.SubLight.Views
 				dropLine.material.SetColor(ShaderConstants.HoloDistanceFieldColorShiftConstant.PrimaryColor, modifiedColorPrimary.NewS(value.GetS() * dropLineSaturation));
 
 				minimizedParticles.startColor = modifiedColorPrimary;
+
+				dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, modifiedColorTertiary);
+
+				selectedParticles.startColor = modifiedColorPrimary;
+
+				selectedInsideGraphic.material.SetColor(ShaderConstants.HoloTextureColorAlpha.PrimaryColor, modifiedColorTertiary);
+
+				detailsNameLabel.color = modifiedColorPrimary;
+				detailsDescriptionLabel.color = modifiedColorTertiary;
 			}
 		}
 
@@ -357,8 +379,6 @@ namespace LunraGames.SubLight.Views
 
 			return wasChanged;
 		}
-
-		public void EmitSelectedParticle() { selectedParticles.Emit(1); }
 		#endregion
 
 		#region Local Properties
@@ -374,39 +394,78 @@ namespace LunraGames.SubLight.Views
 
 		bool isDetailsLayoutStale;
 		int? detailsLayoutDelay;
+		int? dragTrailDelay;
+
+		bool? wasInBounds;
+		bool isInBounds;
+
+		float? onEnterDelayRemaining;
 		#endregion
 
 		#region Overrides
-		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
+		protected override void OnPosition(Vector3 position, Vector3 rawPosition) // These are world positions
 		{
-			var positionWithHeight = new Vector3(0f, yMinimumOffset + (rawPosition - position).y, 0f);
-			verticalLookAtArea.transform.localPosition = positionWithHeight;
-
 			var radiusNormal = RadiusNormal(dropLine.transform.position);
-			var radiusOpacity = Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal);
-			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorShiftConstant.Alpha, radiusOpacity);
-			dropLine.SetPosition(1, positionWithHeight);
-			baseGroup.alpha = radiusOpacity;
+			isInBounds = radiusNormal < 1f;
 
-			SetMeshAlpha(bottomCenterMesh.material, ShaderConstants.HoloTextureColorAlphaMasked.Alpha, Opacity * currentVisuals.BaseCenterOpacity);
+			// Trails need to wait a fram before enabling so they don't zig zag across the grid.
 
-			var particleOpacity = Opacity * radiusOpacity * minimizedParticlesBaseAlpha; 
-			minimizedParticles.startColor = minimizedParticles.startColor.NewA(particleOpacity);
-			minimizedParticles.gameObject.SetActive(!Mathf.Approximately(0f, particleOpacity));
+			if (!isInBounds)
+			{
+				dragTrail.emitting = false;
+				dragTrailDelay = 3;
+			}
 
-			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
+			if (isInBounds)
+			{
+				var localPositionWithHeight = new Vector3(0f, yMinimumOffset + (rawPosition - position).y, 0f);
+				verticalLookAtArea.transform.localPosition = localPositionWithHeight;
 
-			SetMaximizeOpacity(currentVisuals.MaximizedProgress);
 
-			var inBounds = radiusNormal < 1f;
+				var radiusOpacity = Opacity * dropLineRadiusOpacity.Evaluate(radiusNormal);
+				dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorShiftConstant.Alpha, radiusOpacity);
+				dropLine.SetPosition(1, localPositionWithHeight);
+				baseGroup.alpha = radiusOpacity;
 
-			interactableGroup.interactable = inBounds;
-			interactableGroup.blocksRaycasts = inBounds;
+				SetMeshAlpha(bottomCenterMesh.material, ShaderConstants.HoloTextureColorAlphaMasked.Alpha, Opacity * currentVisuals.BaseCenterOpacity);
+
+				var particleOpacity = Opacity * radiusOpacity * minimizedParticlesBaseAlpha;
+				minimizedParticles.startColor = minimizedParticles.startColor.NewA(particleOpacity);
+				minimizedParticles.gameObject.SetActive(!Mathf.Approximately(0f, particleOpacity));
+
+				SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
+				SetMeshAlpha(selectedInsideGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
+
+				SetMaximizeOpacity(currentVisuals.MaximizedProgress);
+			}
+
+			if (isInBounds && !dragTrail.emitting)
+			{
+				if (dragTrailDelay.HasValue) dragTrailDelay--;
+
+				if (!dragTrailDelay.HasValue || dragTrailDelay <= 0)
+				{
+					dragTrail.Clear();
+					dragTrail.emitting = true;
+				}
+			}
+
 		}
 
 		protected override void OnIdle(float delta)
 		{
 			base.OnIdle(delta);
+
+			if (onEnterDelayRemaining.HasValue)
+			{
+				onEnterDelayRemaining -= delta;
+				if (onEnterDelayRemaining <= 0f)
+				{
+					onEnterDelayRemaining = null;
+					selectedParticles.Emit(1);
+					if (Enter != null) Enter();
+				}
+			}
 
 			// Some kludge to make sure the faded background lines up nicely with the description AND the name.
 			if (isDetailsLayoutStale)
@@ -433,6 +492,13 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnLateIdle(delta);
 
+			if (!wasInBounds.HasValue || isInBounds != wasInBounds)
+			{
+				OnInBoundsChanged(isInBounds);
+			}
+
+			if (!isInBounds) return;
+
 			lookAtArea.LookAt(lookAtArea.position + App.V.CameraForward.FlattenY());
 			verticalLookAtArea.LookAt(verticalLookAtArea.position + App.V.CameraForward);
 		}
@@ -454,6 +520,11 @@ namespace LunraGames.SubLight.Views
 
 			IconColor = Color.white;
 			IconScale = 1f;
+
+			dragTrail.emitting = false;
+			dragTrail.Clear();
+
+			wasInBounds = null;
 		}
 		#endregion
 
@@ -787,6 +858,7 @@ namespace LunraGames.SubLight.Views
 		void ApplySelectedOpacity(float value)
 		{
 			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, value);
+			SetMeshAlpha(selectedInsideGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, value);
 		}
 
 		void ApplyDetailsOpacity(float value)
@@ -829,11 +901,21 @@ namespace LunraGames.SubLight.Views
 		#region Events
 		public void OnEnter()
 		{
-			if (Enter != null) Enter();
+			if (NotInteractable) return;
+
+			onEnterDelayRemaining = onEnterDelayDuration;
 		}
 
 		public void OnExit()
 		{
+			if (NotInteractable) return;
+
+			if (onEnterDelayRemaining.HasValue)
+			{
+				onEnterDelayRemaining = null;
+				return;
+			}
+
 			switch(HighlightState)
 			{
 				case Celestial.HighlightStates.Highlighted:
@@ -845,9 +927,21 @@ namespace LunraGames.SubLight.Views
 
 		public void OnClick()
 		{
+			if (NotInteractable) return;
+
 			if (Click != null) Click();
 		}
 		#endregion
+
+		bool NotInteractable
+		{
+			get
+			{
+				if (!Interactable) return true;
+				if (App.V.CameraHasMoved) return true;
+				return Opacity <= interactableOpacityCutoff;
+			}
+		}
 
 		void SetMaximizeOpacity(float value)
 		{
@@ -863,6 +957,21 @@ namespace LunraGames.SubLight.Views
 		void SetMeshAlpha(Material material, string fieldName, float alpha = 1f)
 		{
 			material.SetFloat(fieldName, Opacity * alpha * dropLineRadiusOpacity.Evaluate(RadiusNormal(dropLine.transform.position)));
+		}
+
+		void OnInBoundsChanged(bool value)
+		{
+			foreach (var entry in enableOnInBounds)
+			{
+				entry.SetActive(value);
+			}
+
+			interactableGroup.interactable = value;
+			interactableGroup.blocksRaycasts = value;
+
+			if (value) isDetailsLayoutStale = true;
+
+			wasInBounds = value;
 		}
 	}
 
@@ -890,8 +999,6 @@ namespace LunraGames.SubLight.Views
 			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown,
 			bool instant = false
 		);
-
-		void EmitSelectedParticle();
 
 		//string ClassificationText { set; }
 		//string DistanceText { set; }

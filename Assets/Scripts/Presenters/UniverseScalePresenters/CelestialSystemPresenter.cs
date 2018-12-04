@@ -157,7 +157,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnEnter()
 		{
 			if (NotInteractable()) return;
-			View.EmitSelectedParticle();
+
 			Model.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse);
 		}
 

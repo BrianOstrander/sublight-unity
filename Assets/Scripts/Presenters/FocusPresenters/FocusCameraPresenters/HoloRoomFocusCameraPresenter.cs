@@ -142,8 +142,8 @@ namespace LunraGames.SubLight.Presenters
 		{
 			switch (transform.Transform)
 			{
-				case CameraTransformRequest.Transforms.Input: OnInputTransform(transform, true); break;
-				case CameraTransformRequest.Transforms.Settle: OnInputTransform(transform, false); break;
+				case CameraTransformRequest.Transforms.Input: OnInputTransform(transform); break;
+				case CameraTransformRequest.Transforms.Settle: OnSettleTransform(transform); break;
 				case CameraTransformRequest.Transforms.Animation: OnAnimationTransform(transform); break;
 				default:
 					Debug.LogError("Unrecognized transform: " + transform.Transform);
@@ -209,18 +209,41 @@ namespace LunraGames.SubLight.Presenters
 			if (nextTransform.State == CameraTransformRequest.States.Complete && onDone != null) onDone();
 		}
 
-		void OnInputTransform(CameraTransformRequest transform, bool setDelay)
+		void OnInputTransform(CameraTransformRequest transform)
 		{
-			if (setDelay)
+			switch (transform.State)
 			{
-				lastTransformedByInput = true;
-				elapsedSinceInput = View.DelayBeforePitchSettle;
-			}
+				case CameraTransformRequest.States.Request:
+					lastTransformedByInput = true;
+					elapsedSinceInput = View.DelayBeforePitchSettle;
 
+					View.Input(transform.Yaw, transform.Pitch, transform.Radius);
+					if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
+						CameraTransformRequest.States.Active,
+						CameraTransformRequest.Transforms.Input,
+						View.Yaw,
+						View.Pitch,
+						View.Radius
+					);
+					break;
+				case CameraTransformRequest.States.Complete:
+					if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
+						CameraTransformRequest.States.Complete,
+						CameraTransformRequest.Transforms.Input,
+						View.Yaw,
+						View.Pitch,
+						View.Radius
+					);
+					break;
+			}
+		}
+
+		void OnSettleTransform(CameraTransformRequest transform)
+		{
 			View.Input(transform.Yaw, transform.Pitch, transform.Radius);
 			if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
 				CameraTransformRequest.States.Complete,
-				CameraTransformRequest.Transforms.Input,
+				CameraTransformRequest.Transforms.Settle,
 				View.Yaw,
 				View.Pitch,
 				View.Radius

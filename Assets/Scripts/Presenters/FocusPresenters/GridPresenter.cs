@@ -470,6 +470,7 @@ namespace LunraGames.SubLight.Presenters
 				else
 				{
 					// end drag logic
+					App.Callbacks.CameraTransformRequest(CameraTransformRequest.InputComplete());
 				}
 				wasDragging = isDragging;
 			}
