@@ -111,12 +111,15 @@ namespace LunraGames.SubLight.Models
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
+		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
 		[JsonIgnore]
 		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
+		[JsonIgnore]
+		public readonly ListenerProperty<GridInputRequest> GridInput;
 		[JsonIgnore]
 		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
 
@@ -148,6 +151,7 @@ namespace LunraGames.SubLight.Models
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
+			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);
 			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
 
 			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);

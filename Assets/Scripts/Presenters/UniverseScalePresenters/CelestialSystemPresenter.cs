@@ -37,6 +37,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click += OnGlobalClick;
 
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
+			Model.CameraTransform.Changed += OnCameraTransform;
+			Model.GridInput.Changed += OnGridInput;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -50,6 +52,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click -= OnGlobalClick;
 
 			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Model.CameraTransform.Changed -= OnCameraTransform;
+			Model.GridInput.Changed -= OnGridInput;
 
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
@@ -65,13 +69,6 @@ namespace LunraGames.SubLight.Presenters
 				instant
 			);
 		}
-
-		bool NotInteractable()
-		{
-			if (App.V.CameraHasMoved) return true;
-			return !Mathf.Approximately(1f, ScaleModel.Opacity.Value);
-		}
-
 
 		#region Events
 		void OnActiveSystem(SystemModel activeSystem)
@@ -100,7 +97,8 @@ namespace LunraGames.SubLight.Presenters
 		void OnGlobalClick(Click click)
 		{
 			if (!click.ClickedNothing) return;
-			if (NotInteractable()) return;
+			if (App.V.CameraHasMoved) return;
+			if (!Mathf.Approximately(1f, ScaleModel.Opacity.Value)) return;
 
 			switch(selectedState)
 			{
@@ -156,14 +154,11 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnEnter()
 		{
-			if (NotInteractable()) return;
-
 			Model.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse);
 		}
 
 		void OnExit()
 		{
-			if (NotInteractable()) return;
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.NotSelected:
@@ -181,7 +176,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
-			if (NotInteractable()) return;
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.OtherSelected:
@@ -236,6 +230,23 @@ namespace LunraGames.SubLight.Presenters
 					Debug.Log("Unrecognized state: " + block.State);
 					return false;
 			}
+		}
+
+		void OnCameraTransform(CameraTransformRequest transform)
+		{
+			if (!View.Visible) return;
+			ProcessInterectable(transform, Model.GridInput.Value);
+		}
+
+		void OnGridInput(GridInputRequest gridInput)
+		{
+			if (!View.Visible) return;
+			ProcessInterectable(Model.CameraTransform.Value, gridInput);
+		}
+
+		void ProcessInterectable(CameraTransformRequest transform, GridInputRequest gridInput)
+		{
+			View.Interactable = transform.State == CameraTransformRequest.States.Complete && gridInput.State == GridInputRequest.States.Complete;
 		}
 		#endregion
 	}

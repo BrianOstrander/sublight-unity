@@ -379,6 +379,11 @@ namespace LunraGames.SubLight.Views
 
 			return wasChanged;
 		}
+
+		public void ResetSelectionCooldown()
+		{
+
+		}
 		#endregion
 
 		#region Local Properties
@@ -408,15 +413,13 @@ namespace LunraGames.SubLight.Views
 			var radiusNormal = RadiusNormal(dropLine.transform.position);
 			isInBounds = radiusNormal < 1f;
 
-			// Trails need to wait a fram before enabling so they don't zig zag across the grid.
-
 			if (!isInBounds)
 			{
+				// Trails need to wait a fram before enabling so they don't zig zag across the grid.
 				dragTrail.emitting = false;
 				dragTrailDelay = 3;
 			}
-
-			if (isInBounds)
+			else
 			{
 				var localPositionWithHeight = new Vector3(0f, yMinimumOffset + (rawPosition - position).y, 0f);
 				verticalLookAtArea.transform.localPosition = localPositionWithHeight;
@@ -437,19 +440,18 @@ namespace LunraGames.SubLight.Views
 				SetMeshAlpha(selectedInsideGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
 
 				SetMaximizeOpacity(currentVisuals.MaximizedProgress);
-			}
 
-			if (isInBounds && !dragTrail.emitting)
-			{
-				if (dragTrailDelay.HasValue) dragTrailDelay--;
-
-				if (!dragTrailDelay.HasValue || dragTrailDelay <= 0)
+				if (!dragTrail.emitting)
 				{
-					dragTrail.Clear();
-					dragTrail.emitting = true;
+					if (dragTrailDelay.HasValue) dragTrailDelay--;
+					
+					if (!dragTrailDelay.HasValue || dragTrailDelay <= 0)
+					{
+						dragTrail.Clear();
+						dragTrail.emitting = true;
+					}
 				}
 			}
-
 		}
 
 		protected override void OnIdle(float delta)

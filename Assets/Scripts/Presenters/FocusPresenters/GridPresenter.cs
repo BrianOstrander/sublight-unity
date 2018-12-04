@@ -470,7 +470,8 @@ namespace LunraGames.SubLight.Presenters
 				else
 				{
 					// end drag logic
-					App.Callbacks.CameraTransformRequest(CameraTransformRequest.InputComplete());
+					if (lastgesture.IsSecondary) App.Callbacks.CameraTransformRequest(CameraTransformRequest.InputComplete());
+					else model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 				}
 				wasDragging = isDragging;
 			}
@@ -495,6 +496,8 @@ namespace LunraGames.SubLight.Presenters
 			model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
 
 			SetGrid();
+
+			model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Input);
 		}
 
 		void OnCheckSecondaryDragging(float delta)
