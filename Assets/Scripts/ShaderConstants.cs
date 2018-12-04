@@ -195,14 +195,10 @@ namespace LunraGames.SubLight
 			/// The name of the shader.
 			/// </summary>
 			public const string Name = "SubLight/Holo/CelestialSystemIconColor";
-			public const string NotVisitedTexture = "_NotVisitedTexture";
-			public const string VisitedTexture = "_VisitedTexture";
-			public const string CurrentTexture = "_CurrentTexture";
 			public const string PrimaryColor = "_PrimaryColor";
 			public const string SecondaryColor = "_SecondaryColor";
 			public const string TertiaryColor = "_TertiaryColor";
 			public const string Alpha = "_Alpha";
-			public const string Progress = "_Progress";
 		}
 
 		public static class HoloGridBasic

@@ -296,25 +296,25 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				var modifiedColorPrimary = value.NewS(value.GetS() * iconSaturationMinimizedBottom);
-				var modifiedColorTertiary = value.NewS(value.GetS() * iconSaturationMinimizedTop);
+				var modifiedColorSecondary = value.NewS(value.GetS() * iconSaturationMinimizedTop);
 				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.PrimaryColor, modifiedColorPrimary);
-				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.TertiaryColor, modifiedColorTertiary);
+				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.SecondaryColor, modifiedColorSecondary);
 
 				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.PrimaryColor, modifiedColorPrimary);
-				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.TertiaryColor, modifiedColorTertiary);
+				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.SecondaryColor, modifiedColorSecondary);
 
 				dropLine.material.SetColor(ShaderConstants.HoloDistanceFieldColorShiftConstant.PrimaryColor, modifiedColorPrimary.NewS(value.GetS() * dropLineSaturation));
 
 				minimizedParticles.startColor = modifiedColorPrimary;
 
-				dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, modifiedColorTertiary);
+				dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, modifiedColorSecondary);
 
 				selectedParticles.startColor = modifiedColorPrimary;
 
-				selectedInsideGraphic.material.SetColor(ShaderConstants.HoloTextureColorAlpha.PrimaryColor, modifiedColorTertiary);
+				selectedInsideGraphic.material.SetColor(ShaderConstants.HoloTextureColorAlpha.PrimaryColor, modifiedColorSecondary);
 
 				detailsNameLabel.color = modifiedColorPrimary;
-				detailsDescriptionLabel.color = modifiedColorTertiary;
+				detailsDescriptionLabel.color = modifiedColorSecondary;
 			}
 		}
 
