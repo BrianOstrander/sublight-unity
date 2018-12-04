@@ -279,7 +279,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float onEnterDelayDuration;
 		[SerializeField]
-		float interactableOpacityCutoff;
+		float interactableRadialNormalCutoff;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		#endregion
 
@@ -405,12 +405,13 @@ namespace LunraGames.SubLight.Views
 		bool isInBounds;
 
 		float? onEnterDelayRemaining;
+		float radiusNormal;
 		#endregion
 
 		#region Overrides
 		protected override void OnPosition(Vector3 position, Vector3 rawPosition) // These are world positions
 		{
-			var radiusNormal = RadiusNormal(dropLine.transform.position);
+			radiusNormal = RadiusNormal(dropLine.transform.position);
 			isInBounds = radiusNormal < 1f;
 
 			if (!isInBounds)
@@ -941,7 +942,7 @@ namespace LunraGames.SubLight.Views
 			{
 				if (!Interactable) return true;
 				if (App.V.CameraHasMoved) return true;
-				return Opacity <= interactableOpacityCutoff;
+				return interactableRadialNormalCutoff < radiusNormal;
 			}
 		}
 
