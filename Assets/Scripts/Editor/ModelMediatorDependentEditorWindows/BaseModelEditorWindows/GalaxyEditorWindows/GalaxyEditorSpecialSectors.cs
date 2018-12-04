@@ -489,6 +489,9 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
+			system.IconColor.Value = EditorGUILayout.ColorField("Icon Color", system.IconColor.Value);
+			system.IconScale.Value = EditorGUILayout.Slider("Icon Scale", system.IconScale.Value, 0f, 1f);
+
 			// --- Begin / End
 			var wasPlayerBegin = system.PlayerBegin.Value;
 			var wasPlayerEnd = system.PlayerEnd.Value;

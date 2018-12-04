@@ -6,15 +6,17 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: CelestialSystemDropLine
-  m_Shader: {fileID: 4800000, guid: d33280b4d11ca4fd2a77dee14a114d15, type: 3}
-  m_ShaderKeywords: BOOLEAN_D7E37715_ON _SHIFTVERTICAL_ON
-  m_LightmapFlags: 4
+  m_Name: CelestialSystemSelectedParticleRing
+  m_Shader: {fileID: 4800000, guid: 0406db5a14f94604a8c57ccfbc9f3b46, type: 3}
+  m_ShaderKeywords: BOOLEAN_D7E37715_ON _ALPHABLEND_ON
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses:
+  - ALWAYS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -35,7 +37,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DistanceField:
-        m_Texture: {fileID: 2800000, guid: f1488e9aac1bf4d2bb213fab7d1d9c19, type: 3}
+        m_Texture: {fileID: 2800000, guid: 302a4c5f0bcc14aad82a88646cdf4151, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -43,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: b67b025bd461a45e3b3694a16a7c0bad, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -59,19 +61,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PrimaryTexture:
-        m_Texture: {fileID: 2800000, guid: f1488e9aac1bf4d2bb213fab7d1d9c19, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ShiftMap:
-        m_Texture: {fileID: 2800000, guid: 07020ef8777b44d00904be9ff24203bd, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ShiftMapPrimary:
-        m_Texture: {fileID: 2800000, guid: 07020ef8777b44d00904be9ff24203bd, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ShiftMapSecondary:
-        m_Texture: {fileID: 2800000, guid: a6f1f7a6e81c64cb3a0424c2ee72611b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 774f99fd4d187424d9762676c94e46bb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -79,41 +69,53 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Boolean_D7E37715: 1
     - _Alpha: 1
     - _AlphaClip: 0
     - _Blend: 0
+    - _BlendOp: 0
     - _BumpScale: 1
-    - _Cull: 2
+    - _CameraFadingEnabled: 0
+    - _CameraFarFadeDistance: 2
+    - _CameraNearFadeDistance: 1
+    - _ColorMode: 0
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 1
+    - _EmissionEnabled: 0
+    - _FlipbookMode: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _LightingEnabled: 0
     - _Metallic: 0
+    - _Mode: 4
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RadiusChoke: 0.975
     - _RadiusChokeFresnelPower: 27
     - _RadiusChokeWidth: 0.005
     - _RadiusProgress: 1
-    - _ShiftMapProgress: 0
-    - _ShiftVertical: 1
     - _SmoothnessTextureChannel: 0
+    - _SoftParticlesEnabled: 0
+    - _SoftParticlesFarFadeDistance: 1
+    - _SoftParticlesNearFadeDistance: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _Surface: 0
     - _UVSec: 0
     - _WorkflowMode: 1
     - _WorldRadius: 3.5
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0.5019608}
+    - _ColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
     - _DistanceFieldRange: {r: 0.4, g: 0.6, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NearFarPlanes: {r: 0, g: 10, b: 0, a: 0}
     - _PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SecondaryColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ScrollSpeed: {r: -0.4, g: 0, b: 0, a: 0}
+    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _WorldOrigin: {r: 0, g: 2.99, b: 0, a: 0}

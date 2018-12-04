@@ -2,6 +2,8 @@
 
 using Newtonsoft.Json;
 
+using UnityEngine;
+
 using LunraGames.NumberDemon;
 
 namespace LunraGames.SubLight.Models
@@ -23,6 +25,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string name;
 		[JsonProperty] SystemClassifications primaryClassification;
 		[JsonProperty] string secondaryClassification;
+		[JsonProperty] Color iconColor;
+		[JsonProperty] float iconScale;
 		[JsonProperty] string encounterId;
 		[JsonProperty] int encounterBodyId = -1;
 		[JsonProperty] BodyModel[] bodies = new BodyModel[0];
@@ -48,6 +52,10 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> SecondaryClassification;
 		[JsonIgnore]
+		public readonly ListenerProperty<Color> IconColor;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> IconScale;
+		[JsonIgnore]
 		public readonly ListenerProperty<string> EncounterId; // TODO: probably delete this?
 		[JsonIgnore]
 		public readonly ListenerProperty<int> EncounterBodyId; // TODO: probably delete this?
@@ -69,6 +77,8 @@ namespace LunraGames.SubLight.Models
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			PrimaryClassification = new ListenerProperty<SystemClassifications>(value => primaryClassification = value, () => primaryClassification);
 			SecondaryClassification = new ListenerProperty<string>(value => secondaryClassification = value, () => secondaryClassification);
+			IconColor = new ListenerProperty<Color>(value => iconColor = value, () => iconColor);
+			IconScale = new ListenerProperty<float>(value => iconScale = value, () => iconScale);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			EncounterBodyId = new ListenerProperty<int>(value => encounterBodyId = value, () => encounterBodyId);
 			Bodies = new ListenerProperty<BodyModel[]>(value => bodies = value, () => bodies);

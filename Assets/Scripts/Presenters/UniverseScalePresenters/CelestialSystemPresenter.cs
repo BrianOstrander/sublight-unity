@@ -141,19 +141,23 @@ namespace LunraGames.SubLight.Presenters
 
 			travelState = Celestial.TravelStates.NotTraveling;
 
-			ApplyStates(true);
-
 			View.DetailsName = activeSystem.Name.Value;
 			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
 			View.Confirm = language.Confirm.Value;
 			View.ConfirmDescription = language.ConfirmDescription.Value;
 			View.Distance = "99";
 			View.DistanceUnit = language.DistanceUnit.Value;
+
+			View.IconColor = activeSystem.IconColor.Value;
+			View.IconScale = activeSystem.IconScale.Value;
+
+			ApplyStates(true);
 		}
 
 		void OnEnter()
 		{
 			if (NotInteractable()) return;
+			View.EmitSelectedParticle();
 			Model.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse);
 		}
 

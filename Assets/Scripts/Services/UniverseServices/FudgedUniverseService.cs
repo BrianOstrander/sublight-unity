@@ -31,6 +31,7 @@ namespace LunraGames.SubLight
 			systemModel.Name.Value = "Unnamed";
 			systemModel.PrimaryClassification.Value = SystemClassifications.Stellar;
 			systemModel.SecondaryClassification.Value = "Red Dwarf";
+			systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.53f, 1f);
 
 			return systemModel;
 		}

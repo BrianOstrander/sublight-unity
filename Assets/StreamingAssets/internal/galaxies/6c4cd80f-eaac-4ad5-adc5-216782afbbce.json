@@ -293,6 +293,8 @@
           "name": "Sol",
           "primaryClassification": "Stellar",
           "secondaryClassification": "Yellow Dwarf",
+          "iconColor": {"r":1.0,"g":0.85,"b":0.4705882,"a":1.0},
+          "iconScale": 0.475,
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -307,6 +309,8 @@
           "name": "Alpha Centauri",
           "primaryClassification": "Stellar",
           "secondaryClassification": "Yellow Dwarf",
+          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
+          "iconScale": 0.236,
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -323,6 +327,8 @@
           "name": "Barnard's Star",
           "primaryClassification": "Stellar",
           "secondaryClassification": "Red Dwarf",
+          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
+          "iconScale": 0.238,
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -337,6 +343,8 @@
           "name": "Sirius",
           "primaryClassification": "Stellar",
           "secondaryClassification": "Dwarf",
+          "iconColor": {"r":0.470000029,"g":0.743833363,"b":1.0,"a":1.0},
+          "iconScale": 0.797,
           "encounterBodyId": -1,
           "bodies": []
         },
@@ -351,6 +359,8 @@
           "name": "Wolf",
           "primaryClassification": "Stellar",
           "secondaryClassification": "Red Dwarf",
+          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
+          "iconScale": 0.079,
           "encounterBodyId": -1,
           "bodies": []
         }
