@@ -2271,10 +2271,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: DUL
+  m_text: dul
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ab7b22cb046d74d679f0c19900325ffe, type: 2}
-  m_sharedMaterial: {fileID: 21843791319836284, guid: ab7b22cb046d74d679f0c19900325ffe,
+  m_fontAsset: {fileID: 11400000, guid: 6fa718601de6a4c5b9e11ddf01a83075, type: 2}
+  m_sharedMaterial: {fileID: 21064389710991354, guid: 6fa718601de6a4c5b9e11ddf01a83075,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -2299,13 +2299,13 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_textAlignment: 4100
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
@@ -12643,7 +12643,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 146.83, y: 0}
+  m_AnchoredPosition: {x: 154.77, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!224 &224498478928978176

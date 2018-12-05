@@ -143,7 +143,11 @@ namespace LunraGames.SubLight.Presenters
 			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
 			View.Confirm = language.Confirm.Value;
 			View.ConfirmDescription = language.ConfirmDescription.Value;
-			View.Distance = "99";
+
+			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Value.Position.Value, activeSystem.Position.Value));
+			var lightyearText = lightyearDistance < 10f ? lightyearDistance.ToString("N1") : Mathf.RoundToInt(lightyearDistance).ToString("N0");
+
+			View.Distance = lightyearText;
 			View.DistanceUnit = language.DistanceUnit.Value;
 
 			View.IconColor = activeSystem.IconColor.Value;
