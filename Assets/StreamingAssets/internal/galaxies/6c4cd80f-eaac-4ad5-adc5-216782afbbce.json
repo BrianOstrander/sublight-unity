@@ -270,6 +270,42 @@
         "inventoryIds": [],
         "inventoryTags": []
       }
+    },
+    {
+      "labelId": "5548b0a2-e76f-4735-9b59-0a4965119a39",
+      "groupId": "93b1f033-5596-4849-8962-f0eac47d5335",
+      "name": "Local Group",
+      "curveInfo": {
+        "LabelStyle": "Bold",
+        "FontSize": 4.0,
+        "Curve": {
+          "keys": [
+            {},
+            {
+              "time": 1.0
+            }
+          ],
+          "length": 2,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.0
+      },
+      "source": "Static",
+      "scale": "Quadrant",
+      "beginAnchorNormal": {"x":0.3929385,"z":0.12},
+      "endAnchorNormal": {"x":0.429384977,"z":0.132},
+      "sliceLayer": 2,
+      "staticText": {
+        "key": "65d59a1c-4775-4ad6-8e41-b31ac6e5c211"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
     }
   ],
   "specifiedSectors": [

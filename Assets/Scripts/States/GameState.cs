@@ -24,6 +24,8 @@ namespace LunraGames.SubLight
 
 		public List<SectorInstanceModel> SectorInstances = new List<SectorInstanceModel>();
 		public UniversePosition LastInterstellarFocus = new UniversePosition(new Vector3Int(int.MinValue, 0, int.MinValue));
+
+		public UniverseScaleModel LastActiveScale;
 	}
 
 	public partial class GameState : State<GamePayload>
@@ -37,11 +39,19 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
+			Payload.Game.ScaleLabelSystem.Changed += value => Debug.Log("System label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelLocal.Changed += value => Debug.Log("Local label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelStellar.Changed += value => Debug.Log("Stellar label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelQuadrant.Changed += value => Debug.Log("Quadrant label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelGalactic.Changed += value => Debug.Log("Galactic label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelCluster.Changed += value => Debug.Log("Cluster label is now " + value.Name.Value);
+
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(LoadModelDependencies);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
+			App.SM.PushBlocking(InitializeActiveScale);
 			App.SM.PushBlocking(InitializeFocus);
 			App.SM.PushBlocking(InitializeCelestialSystems);
 		}
@@ -109,6 +119,12 @@ namespace LunraGames.SubLight
 			done();
 		}
 
+		void InitializeActiveScale(Action done)
+		{
+			Payload.Game.ActiveScale.Changed += OnActiveScale;
+			done();
+		}
+
 		void InitializeFocus(Action done)
 		{
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Default(Focuses.GetDefaultFocuses(), () => OnInializeFocusDefaults(done)));
@@ -155,6 +171,10 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
+
+			if (Payload.LastActiveScale != null) Payload.LastActiveScale.Transform.Changed -= OnActiveScaleTransform;
+			Payload.Game.ActiveScale.Changed -= OnActiveScale;
+
 			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
 		}
 		#endregion
@@ -234,6 +254,67 @@ namespace LunraGames.SubLight
 				}
 				else currSystem.SetSystem(null);
 			}
+		}
+
+		void OnActiveScale(UniverseScaleModel scale)
+		{
+			if (Payload.LastActiveScale != null) Payload.LastActiveScale.Transform.Changed -= OnActiveScaleTransform;
+			Payload.LastActiveScale = scale;
+			Payload.LastActiveScale.Transform.Changed += OnActiveScaleTransform;
+			OnActiveScaleTransform(Payload.LastActiveScale.Transform);
+		}
+
+		void OnActiveScaleTransform(UniverseTransform transform)
+		{
+			var labels = Payload.Game.Galaxy.GetLabels();
+			var targetProperty = Payload.Game.ScaleLabelSystem;
+
+			switch (Payload.Game.ActiveScale.Value.Scale.Value)
+			{
+				case UniverseScales.System:
+					Payload.Game.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
+					return;
+				case UniverseScales.Local:
+				case UniverseScales.Stellar:
+					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
+					targetProperty = Payload.Game.ScaleLabelStellar;
+					break;
+				case UniverseScales.Quadrant:
+					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Galactic);
+					targetProperty = Payload.Game.ScaleLabelQuadrant;
+					break;
+				case UniverseScales.Galactic:
+					Payload.Game.ScaleLabelGalactic.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Milky Way"));
+					return;
+				case UniverseScales.Cluster:
+					Payload.Game.ScaleLabelCluster.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Local Group"));
+					return;
+			}
+
+			var normalizedPosition = UniversePosition.NormalizedSector(transform.UniverseOrigin, Payload.Game.Galaxy.GalaxySize);
+
+			float? proximity = null;
+			GalaxyLabelModel closestLabel = null;
+
+			foreach (var label in labels)
+			{
+				var currProximity = label.Proximity(normalizedPosition, 4);
+				if (!proximity.HasValue || currProximity < proximity)
+				{
+					proximity = currProximity;
+					closestLabel = label;
+				}
+			}
+
+			if (closestLabel == null)
+			{
+				Debug.LogError("No labels were found for current scale");
+				targetProperty.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("No labels provided"));
+				return;
+			}
+
+			// TODO: Add language support for this.
+			targetProperty.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override(closestLabel.Name.Value));
 		}
 		#endregion
 	}
