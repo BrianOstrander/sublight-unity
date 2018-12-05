@@ -198,6 +198,10 @@ namespace LunraGames.SubLight
 			public const string PrimaryColor = "_PrimaryColor";
 			public const string SecondaryColor = "_SecondaryColor";
 			public const string TertiaryColor = "_TertiaryColor";
+			public const string ShiftedPrimaryColor = "_ShiftedPrimaryColor";
+			public const string ShiftedSecondaryColor = "_ShiftedSecondaryColor";
+			public const string ShiftedTertiaryColor = "_ShiftedTertiaryColor";
+			public const string ShiftProgress = "_ShiftProgress";
 			public const string Alpha = "_Alpha";
 		}
 

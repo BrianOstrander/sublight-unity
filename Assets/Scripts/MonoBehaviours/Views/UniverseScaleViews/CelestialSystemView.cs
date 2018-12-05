@@ -130,6 +130,12 @@ namespace LunraGames.SubLight.Views
 				public const float None = 0f;
 				public const float Full = 1f;
 			}
+
+			public static class IconSaturation
+			{
+				public const float None = 1f;
+				public const float Full = 0f;
+			}
 		}
 
 		[Serializable]
@@ -147,15 +153,7 @@ namespace LunraGames.SubLight.Views
 			public float AnalysisOpacity;
 			public float SelectedOpacity;
 			public float MaximizedProgress;
-		}
-
-		[Serializable]
-		struct ClassificationIcons
-		{
-#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
-			public SystemClassifications Classification;
-			public Texture2D Icon;
-#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+			public float IconSaturation;
 		}
 
 		[Serializable]
@@ -175,6 +173,22 @@ namespace LunraGames.SubLight.Views
 			public Transform Area;
 			public float MinimumScale;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+		}
+
+		struct ColorShift
+		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+			public Color Normal;
+			public Color Shifted;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+			public ColorShift(Color normal, Color shifted)
+			{
+				Normal = normal;
+				Shifted = shifted;
+			}
+
+			public Color Evaluate(float progress) { return Color.Lerp(Normal, Shifted, progress); }
 		}
 		#endregion
 
@@ -253,11 +267,15 @@ namespace LunraGames.SubLight.Views
 		RectTransform detailsContainer;
 
 		[SerializeField]
-		float iconSaturationMinimizedBottom;
+		HsvMultiplier iconPrimaryModifiers;
 		[SerializeField]
-		float iconSaturationMinimizedTop;
+		HsvMultiplier iconSecondaryModifiers;
 		[SerializeField]
-		float dropLineSaturation;
+		HsvMultiplier iconShiftedPrimaryModifiers;
+		[SerializeField]
+		HsvMultiplier iconShiftedSecondaryModifiers;
+		[SerializeField]
+		HsvMultiplier dropLineModifiers;
 		[SerializeField]
 		AnimationCurve iconScale;
 		[SerializeField]
@@ -295,26 +313,38 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
-				var modifiedColorPrimary = value.NewS(value.GetS() * iconSaturationMinimizedBottom);
-				var modifiedColorSecondary = value.NewS(value.GetS() * iconSaturationMinimizedTop);
-				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.PrimaryColor, modifiedColorPrimary);
-				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.SecondaryColor, modifiedColorSecondary);
+				var primaryColor = iconPrimaryModifiers.Apply(value);
+				var secondaryColor = iconSecondaryModifiers.Apply(value);
 
-				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.PrimaryColor, modifiedColorPrimary);
-				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.SecondaryColor, modifiedColorSecondary);
+				var shiftedPrimaryColor = iconShiftedPrimaryModifiers.Apply(value);
+				var shiftedSecondaryColor = iconShiftedSecondaryModifiers.Apply(value);
 
-				dropLine.material.SetColor(ShaderConstants.HoloDistanceFieldColorShiftConstant.PrimaryColor, modifiedColorPrimary.NewS(value.GetS() * dropLineSaturation));
+				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.PrimaryColor, primaryColor);
+				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.SecondaryColor, secondaryColor);
+				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.ShiftedPrimaryColor, shiftedPrimaryColor);
+				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.ShiftedSecondaryColor, shiftedSecondaryColor);
 
-				minimizedParticles.startColor = modifiedColorPrimary;
+				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.PrimaryColor, primaryColor);
+				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.SecondaryColor, secondaryColor);
+				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.ShiftedPrimaryColor, shiftedPrimaryColor);
+				minimizeGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.ShiftedSecondaryColor, shiftedSecondaryColor);
 
-				dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, modifiedColorSecondary);
+				selectedInsideGraphic.material.SetColor(ShaderConstants.HoloTextureColorAlpha.PrimaryColor, secondaryColor);
 
-				selectedParticles.startColor = modifiedColorPrimary;
+				detailsNameLabel.color = primaryColor;
+				detailsDescriptionLabel.color = secondaryColor;
 
-				selectedInsideGraphic.material.SetColor(ShaderConstants.HoloTextureColorAlpha.PrimaryColor, modifiedColorSecondary);
+				// Shiftables 
 
-				detailsNameLabel.color = modifiedColorPrimary;
-				detailsDescriptionLabel.color = modifiedColorSecondary;
+				dropLineColors = new ColorShift(dropLineModifiers.Apply(value), shiftedSecondaryColor);
+				dragTrailColors = new ColorShift(secondaryColor, shiftedSecondaryColor);
+				selectedParticleColors = new ColorShift(primaryColor, shiftedPrimaryColor);
+				minimizedParticleColors = new ColorShift(primaryColor, shiftedPrimaryColor);
+
+				dropLine.material.SetColor(ShaderConstants.HoloDistanceFieldColorShiftConstant.PrimaryColor, dropLineColors.Evaluate(0f));
+				minimizedParticles.startColor = minimizedParticleColors.Evaluate(0f);
+				dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, dragTrailColors.Evaluate(0f));
+				selectedParticles.startColor = selectedParticleColors.Evaluate(0f);
 			}
 		}
 
@@ -406,6 +436,11 @@ namespace LunraGames.SubLight.Views
 
 		float? onEnterDelayRemaining;
 		float radiusNormal;
+
+		ColorShift dropLineColors;
+		ColorShift dragTrailColors;
+		ColorShift selectedParticleColors;
+		ColorShift minimizedParticleColors;
 		#endregion
 
 		#region Overrides
@@ -801,6 +836,15 @@ namespace LunraGames.SubLight.Views
 					break;
 			}
 
+			// IconSaturation
+			modified.IconSaturation = Constants.IconSaturation.Full;
+			switch (VisitState)
+			{
+				case Celestial.VisitStates.Visited:
+					modified.IconSaturation = Constants.IconSaturation.None;
+					break;
+			}
+
 
 			targetVisuals = modified;
 		}
@@ -829,6 +873,7 @@ namespace LunraGames.SubLight.Views
 
 			currentVisuals.SelectedOpacity = ProcessVisual(currentVisuals.SelectedOpacity, targetVisuals.SelectedOpacity, delta, ref wasChanged, force, ApplySelectedOpacity);
 			currentVisuals.MaximizedProgress = ProcessVisual(currentVisuals.MaximizedProgress, targetVisuals.MaximizedProgress, delta, ref wasChanged, force, ApplyMaximizedProgress);
+			currentVisuals.IconSaturation = ProcessVisual(currentVisuals.IconSaturation, targetVisuals.IconSaturation, delta, ref wasChanged, force, ApplyIconSaturation);
 
 			return wasChanged;
 		}
@@ -898,6 +943,16 @@ namespace LunraGames.SubLight.Views
 			}
 
 			SetMaximizeOpacity(value);
+		}
+
+		void ApplyIconSaturation(float value)
+		{
+			minimizeGraphic.material.SetFloat(ShaderConstants.HoloCelestialSystemIconColor.ShiftProgress, value);
+
+			dropLine.material.SetColor(ShaderConstants.HoloDistanceFieldColorShiftConstant.PrimaryColor, dropLineColors.Evaluate(value));
+			minimizedParticles.startColor = minimizedParticleColors.Evaluate(value);
+			dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, dragTrailColors.Evaluate(value));
+			selectedParticles.startColor = selectedParticleColors.Evaluate(value);
 		}
 		#endregion
 
