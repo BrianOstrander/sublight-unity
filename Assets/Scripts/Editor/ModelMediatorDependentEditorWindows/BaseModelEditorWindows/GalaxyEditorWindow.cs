@@ -238,6 +238,11 @@ namespace LunraGames.SubLight
 			}
 			EditorGUILayoutExtensions.PopColor();
 		}
+
+		bool HorizontalPreviewSupported(float ratio = 1.25f)
+		{
+			return ratio < (position.width / position.height);
+		}
 		#endregion
 	}
 }

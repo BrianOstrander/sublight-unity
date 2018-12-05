@@ -31,6 +31,33 @@ namespace LunraGames.SubLight
 
 		void TargetsToolbar(GalaxyInfoModel model)
 		{
+			if (HorizontalPreviewSupported())
+			{
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.BeginVertical();
+					{
+						TargetsToolbarPrimary(model);
+					}
+					GUILayout.EndVertical();
+					GUILayout.BeginVertical();
+					{
+						TargetsToolbarSecondary(model);
+					}
+					GUILayout.EndVertical();
+				}
+				GUILayout.EndHorizontal();
+			}
+			else
+			{
+				TargetsToolbarPrimary(model);
+				GUILayout.FlexibleSpace();
+				TargetsToolbarSecondary(model);
+			}
+		}
+
+		void TargetsToolbarPrimary(GalaxyInfoModel model)
+		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
 				GUILayout.BeginHorizontal();
@@ -83,9 +110,10 @@ namespace LunraGames.SubLight
 				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+		}
 
-			GUILayout.FlexibleSpace();
-
+		void TargetsToolbarSecondary(GalaxyInfoModel model)
+		{
 			DrawPreviews(
 				model,
 				targetsSelectedPreview,
