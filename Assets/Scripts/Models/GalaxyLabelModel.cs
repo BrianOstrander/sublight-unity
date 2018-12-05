@@ -17,8 +17,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] Vector3 endAnchorNormal;
 		[JsonProperty] int sliceLayer;
 
-		//[JsonProperty]
-
 		[JsonProperty] LanguageStringModel staticText = LanguageStringModel.Empty;
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 

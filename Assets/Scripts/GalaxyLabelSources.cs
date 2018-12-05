@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace LunraGames.SubLight
+﻿namespace LunraGames.SubLight
 {
 	public enum GalaxyLabelSources
 	{
