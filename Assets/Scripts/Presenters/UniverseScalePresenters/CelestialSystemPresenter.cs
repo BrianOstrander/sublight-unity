@@ -37,6 +37,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click += OnGlobalClick;
 
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
+			Model.CameraTransform.Changed += OnCameraTransform;
+			Model.GridInput.Changed += OnGridInput;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -50,6 +52,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click -= OnGlobalClick;
 
 			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Model.CameraTransform.Changed -= OnCameraTransform;
+			Model.GridInput.Changed -= OnGridInput;
 
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
@@ -69,7 +73,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnActiveSystem(SystemModel activeSystem)
 		{
-			if (activeSystem == null || !ScaleModel.IsActive)
+			if (activeSystem == null || !ScaleModel.IsVisible)
 			{
 				if (View.Visible) CloseViewInstant();
 				return;
@@ -93,6 +97,8 @@ namespace LunraGames.SubLight.Presenters
 		void OnGlobalClick(Click click)
 		{
 			if (!click.ClickedNothing) return;
+			if (App.V.CameraHasMoved) return;
+			if (!Mathf.Approximately(1f, ScaleModel.Opacity.Value)) return;
 
 			switch(selectedState)
 			{
@@ -133,14 +139,21 @@ namespace LunraGames.SubLight.Presenters
 
 			travelState = Celestial.TravelStates.NotTraveling;
 
-			ApplyStates(true);
-
 			View.DetailsName = activeSystem.Name.Value;
-			View.DetailsDescription = "Todo";
+			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
 			View.Confirm = language.Confirm.Value;
 			View.ConfirmDescription = language.ConfirmDescription.Value;
-			View.Distance = "99";
+
+			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Value.Position.Value, activeSystem.Position.Value));
+			var lightyearText = lightyearDistance < 10f ? lightyearDistance.ToString("N1") : Mathf.RoundToInt(lightyearDistance).ToString("N0");
+
+			View.Distance = lightyearText;
 			View.DistanceUnit = language.DistanceUnit.Value;
+
+			View.IconColor = activeSystem.IconColor.Value;
+			View.IconScale = activeSystem.IconScale.Value;
+
+			ApplyStates(true);
 		}
 
 		void OnEnter()
@@ -221,6 +234,23 @@ namespace LunraGames.SubLight.Presenters
 					Debug.Log("Unrecognized state: " + block.State);
 					return false;
 			}
+		}
+
+		void OnCameraTransform(CameraTransformRequest transform)
+		{
+			if (!View.Visible) return;
+			ProcessInterectable(transform, Model.GridInput.Value);
+		}
+
+		void OnGridInput(GridInputRequest gridInput)
+		{
+			if (!View.Visible) return;
+			ProcessInterectable(Model.CameraTransform.Value, gridInput);
+		}
+
+		void ProcessInterectable(CameraTransformRequest transform, GridInputRequest gridInput)
+		{
+			View.Interactable = transform.State == CameraTransformRequest.States.Complete && gridInput.State == GridInputRequest.States.Complete;
 		}
 		#endregion
 	}

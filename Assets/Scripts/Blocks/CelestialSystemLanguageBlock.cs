@@ -1,6 +1,4 @@
-﻿using System;
-
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 using LunraGames.SubLight.Models;
 
@@ -13,5 +11,7 @@ namespace LunraGames.SubLight
 		public LanguageStringModel DistanceUnit;
 		public LanguageStringModel Analysis;
 		public LanguageStringModel AnalysisDescription;
+
+		public Dictionary<SystemClassifications, LanguageStringModel> PrimaryClassifications;
 	}
 }

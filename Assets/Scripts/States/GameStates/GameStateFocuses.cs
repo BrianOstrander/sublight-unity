@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 				new GenericFocusCameraPresenter<ShipFocusDetails>(gantryAnchor, fieldOfView);
 				new GenericFocusCameraPresenter<EncyclopediaFocusDetails>(gantryAnchor, fieldOfView);
 
-				new HoloPresenter();
+				new HoloPresenter(payload.Game);
 
 				// All other presenters for this state...
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
@@ -63,9 +63,14 @@ namespace LunraGames.SubLight
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
 				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
+				var foundEnd = false;
+				var playerEnd = payload.Game.Galaxy.GetPlayerEnd(out foundEnd);
+
+				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
+
 				new SystemAlertPresenter(
 					payload.Game,
-					payload.Game.Galaxy.GameEnd,
+					playerEnd,
 					LanguageStringModel.Override("Sagittarius A*"),
 					LanguageStringModel.Override("Click for information"),
 					() => Debug.LogWarning("Todo: open the encyclopedia entry for Sagittarius A*"),
@@ -93,7 +98,14 @@ namespace LunraGames.SubLight
 					ConfirmDescription = LanguageStringModel.Override("Click again"),
 					DistanceUnit = LanguageStringModel.Override("ly"),
 					Analysis = LanguageStringModel.Override("System Analysis"),
-					AnalysisDescription = LanguageStringModel.Override("Click for details")
+					AnalysisDescription = LanguageStringModel.Override("Click for details"),
+					PrimaryClassifications = new Dictionary<SystemClassifications, LanguageStringModel> {
+						{ SystemClassifications.Unknown,LanguageStringModel.Override("Unrecognized Classification") },
+						{ SystemClassifications.Stellar,LanguageStringModel.Override("Stellar") },
+						{ SystemClassifications.Degenerate,LanguageStringModel.Override("Degenerate") },
+						{ SystemClassifications.Special,LanguageStringModel.Override("Special") },
+						{ SystemClassifications.Anomalous,LanguageStringModel.Override("Anomalous") }
+					}
 				};
 
 				for (var i = 0; i < payload.InterstellarSectorCount; i++)

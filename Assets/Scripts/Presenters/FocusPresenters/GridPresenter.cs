@@ -93,6 +93,15 @@ namespace LunraGames.SubLight.Presenters
 		Vector3 unityPosOnDragBegin;
 		UniverseTransform transformOnBeginDrag;
 
+		UniversePosition ShipPositionOnPlane
+		{
+			get
+			{
+				var position = model.Ship.Value.Position.Value;
+				return new UniversePosition(position.Sector, position.Local.NewY(0f));
+			}
+		}
+
 		public GridPresenter(
 			GameModel model,
 			GridInfoBlock info
@@ -136,7 +145,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void SetGrid()
 		{
-			var activeScale = model.ActiveScale.Scale.Value;
+			var activeScale = model.ActiveScale.Value.Scale.Value;
 			var result = new GridView.Grid[unitMaps.Length];
 
 			for (var i = 0; i < unitMaps.Length; i++)
@@ -207,7 +216,7 @@ namespace LunraGames.SubLight.Presenters
 				switch (focus)
 				{
 					case UniverseFocuses.None: break;
-					case UniverseFocuses.Ship: endPosition = model.Ship.Value.Position.Value; break;
+					case UniverseFocuses.Ship: endPosition = ShipPositionOnPlane; break;
 					case UniverseFocuses.GalacticOrigin: endPosition = model.Galaxy.GalaxyOrigin; break;
 					case UniverseFocuses.ClusterOrigin: endPosition = model.Galaxy.ClusterOrigin; break;
 					default:
@@ -415,8 +424,8 @@ namespace LunraGames.SubLight.Presenters
 			animationRemaining = duration;
 			scaleTransformsOnBeginAnimation.Clear();
 
-			var origin = model.Ship.Value.Position.Value;
-			var activeScale = model.ActiveScale;
+			var origin = ShipPositionOnPlane;
+			var activeScale = model.ActiveScale.Value;
 
 			if (activeScale != null) origin = activeScale.Transform.Value.UniverseOrigin;
 
@@ -456,11 +465,13 @@ namespace LunraGames.SubLight.Presenters
 						wasDragging = false;
 						return;
 					}
-					transformOnBeginDrag = model.ActiveScale.Transform.Value;
+					transformOnBeginDrag = model.ActiveScale.Value.Transform.Value;
 				}
 				else
 				{
 					// end drag logic
+					if (lastgesture.IsSecondary) App.Callbacks.CameraTransformRequest(CameraTransformRequest.InputComplete());
+					else model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 				}
 				wasDragging = isDragging;
 			}
@@ -482,9 +493,11 @@ namespace LunraGames.SubLight.Presenters
 			var offset = View.GridUnityOrigin + (unityPosOnDragBegin - currUnityDrag);
 			var universePos = transformOnBeginDrag.GetUniversePosition(offset);
 
-			model.ActiveScale.Transform.Value = model.ActiveScale.Transform.Value.Duplicate(universePos);
+			model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
 
 			SetGrid();
+
+			model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Input);
 		}
 
 		void OnCheckSecondaryDragging(float delta)
@@ -507,7 +520,7 @@ namespace LunraGames.SubLight.Presenters
 			//var galacticScale = model.GetScale(UniverseScales.Galactic);
 			//var clusterScale = model.GetScale(UniverseScales.Cluster);
 
-			var activeScale = model.ActiveScale;
+			var activeScale = model.ActiveScale.Value;
 
 			Gizmos.color = Color.green;
 			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);

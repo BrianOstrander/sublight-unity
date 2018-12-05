@@ -2,9 +2,9 @@
   "isPlayable": true,
   "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
   "name": "Milky Way",
-  "galaxyOriginNormal": {"x":0.5,"z":0.5},
-  "playerStartNormal": {"x":0.396984935,"z":0.1281407},
-  "gameEndNormal": {"x":0.469726563,"z":0.5026855},
+  "galaxyOrigin": {
+    "Sector": {"x":100.0,"z":100.0}
+  },
   "maximumSectorSystemCount": 5,
   "sectorSystemChance": {
     "keys": [
@@ -270,6 +270,124 @@
         "inventoryIds": [],
         "inventoryTags": []
       }
+    }
+  ],
+  "specifiedSectors": [
+    {
+      "name": "PlayerBegin",
+      "seed": 1234324,
+      "specified": true,
+      "position": {
+        "Sector": {"x":79.0,"z":25.0}
+      },
+      "systemCount": 5,
+      "systems": [
+        {
+          "seed": 1063743355,
+          "visited": true,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.5,"y":0.2,"z":0.5}
+          },
+          "name": "Sol",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Yellow Dwarf",
+          "iconColor": {"r":1.0,"g":0.85,"b":0.4705882,"a":1.0},
+          "iconScale": 0.475,
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 1,
+          "seed": 1218121807,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.5,"y":0.1,"z":0.75}
+          },
+          "name": "Alpha Centauri",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Yellow Dwarf",
+          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
+          "iconScale": 0.236,
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 2,
+          "seed": 123782430,
+          "visited": true,
+          "specified": true,
+          "playerBegin": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.25,"y":0.15,"z":0.5}
+          },
+          "name": "Barnard's Star",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Red Dwarf",
+          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
+          "iconScale": 0.238,
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 3,
+          "seed": 579281218,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.1,"y":0.3,"z":0.1}
+          },
+          "name": "Sirius",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Dwarf",
+          "iconColor": {"r":0.470000029,"g":0.743833363,"b":1.0,"a":1.0},
+          "iconScale": 0.797,
+          "encounterBodyId": -1,
+          "bodies": []
+        },
+        {
+          "index": 4,
+          "seed": 1072218910,
+          "specified": true,
+          "position": {
+            "Sector": {"x":79.0,"z":25.0},
+            "Local": {"x":0.8,"z":0.9}
+          },
+          "name": "Wolf",
+          "primaryClassification": "Stellar",
+          "secondaryClassification": "Red Dwarf",
+          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
+          "iconScale": 0.079,
+          "encounterBodyId": -1,
+          "bodies": []
+        }
+      ]
+    },
+    {
+      "name": "PlayerEnd",
+      "seed": 528735376,
+      "specified": true,
+      "position": {
+        "Sector": {"x":100.0,"z":100.0}
+      },
+      "systemCount": 1,
+      "systems": [
+        {
+          "seed": 85921647,
+          "specified": true,
+          "playerEnd": true,
+          "position": {
+            "Sector": {"x":100.0,"z":100.0},
+            "Local": {"x":0.5,"z":0.5}
+          },
+          "name": "Sagittarius A*",
+          "encounterBodyId": -1,
+          "bodies": []
+        }
+      ]
     }
   ],
   "galaxyRadius": 100,

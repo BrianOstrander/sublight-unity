@@ -330,6 +330,10 @@ namespace LunraGames.SubLight
 		bool IsGameModelNull { get { return gameModel == null; } }
 
 		public long FrameCount { get; private set; } // Should be good for 4.8 billion years at 60 FPS!
+		/// <summary>
+		/// Has the camera moved since the last frame?
+		/// </summary>
+		/// <value><c>true</c> if camera has moved; otherwise, <c>false</c>.</value>
 		public bool CameraHasMoved { get; private set; }
 		public Vector3 CameraPosition { get { return IsCameraMainNull ? Vector3.zero : Camera.main.transform.position; } }
 		public Vector3 CameraForward { get { return IsCameraMainNull ? Vector3.forward : Camera.main.transform.forward; } }

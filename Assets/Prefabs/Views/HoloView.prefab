@@ -45,7 +45,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1343446143027818
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,11 +366,58 @@ MonoBehaviour:
     CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: d2579ab4a52a64436b55687be85c3460, type: 2}
-  projectionMaterial: {fileID: 2100000, guid: 3f52be7336ecd47978d6532d572a8827, type: 2}
-  glowMaterial: {fileID: 2100000, guid: b3be22037442a42338112a19eed82163, type: 2}
-  irisMaterial: {fileID: 2100000, guid: 25e05584e862f4106b028259fa8b581d, type: 2}
   projectionMesh: {fileID: 23006959515739016}
   glowMesh: {fileID: 23116346378646818}
   irisMesh: {fileID: 23377314449061674}
   baseGlowColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
   baseIrisColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 1}
+  glowIntensityRange: {x: 0.1, y: 1}
+  glowIntensity:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -1
+      outSlope: -1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1
+      outSlope: -1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  gridIntensityRange: {x: 0.1, y: 1}
+  gridIntensity:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -1
+      outSlope: -1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1
+      outSlope: -1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

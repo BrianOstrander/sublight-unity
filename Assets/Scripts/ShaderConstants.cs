@@ -173,16 +173,20 @@ namespace LunraGames.SubLight
 			public const string NearFarPlanes = "_NearFarPlanes";
 		}
 
-		public static class HoloCelestialSystemIcon
+		public static class HoloDistanceFieldColorShiftConstant
 		{
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "SubLight/Holo/CelestialSystemIcon";
-			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string Name = "SubLight/Holo/DistanceField/ColorShiftConstant";
+			public const string DistanceField = "_DistanceField";
 			public const string PrimaryColor = "_PrimaryColor";
+			public const string SecondaryColor = "_SecondaryColor";
+			public const string ShiftVertical = "_ShiftVertical";
 			public const string Alpha = "_Alpha";
-			public const string Progress = "_Progress";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+			public const string NearFarPlanes = "_NearFarPlanes";
+			public const string ShiftMapProgress = "_ShiftMapProgress";
 		}
 
 		public static class HoloCelestialSystemIconColor
@@ -191,12 +195,14 @@ namespace LunraGames.SubLight
 			/// The name of the shader.
 			/// </summary>
 			public const string Name = "SubLight/Holo/CelestialSystemIconColor";
-			public const string NotVisitedTexture = "_NotVisitedTexture";
-			public const string VisitedTexture = "_VisitedTexture";
-			public const string CurrentTexture = "_CurrentTexture";
 			public const string PrimaryColor = "_PrimaryColor";
+			public const string SecondaryColor = "_SecondaryColor";
+			public const string TertiaryColor = "_TertiaryColor";
+			public const string ShiftedPrimaryColor = "_ShiftedPrimaryColor";
+			public const string ShiftedSecondaryColor = "_ShiftedSecondaryColor";
+			public const string ShiftedTertiaryColor = "_ShiftedTertiaryColor";
+			public const string ShiftProgress = "_ShiftProgress";
 			public const string Alpha = "_Alpha";
-			public const string Progress = "_Progress";
 		}
 
 		public static class HoloGridBasic
@@ -375,6 +381,7 @@ namespace LunraGames.SubLight
 			/// The color.
 			/// </summary>
 			public const string GlowColor = "_GlowColor";
+			public const string GlowIntensity = "_GlowIntensity";
 		}
 
 		public static class RoomIrisIdle
@@ -412,6 +419,7 @@ namespace LunraGames.SubLight
 			/// that though... not positive, might allow negatives.
 			/// </summary>
 			public const string Offset = "_Offset";
+			public const string GridIntensity = "_GridIntensity";
 		}
 
 		/*

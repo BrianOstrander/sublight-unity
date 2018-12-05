@@ -12,20 +12,16 @@ namespace LunraGames.SubLight.Models
 		#region Serialized
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
-		[JsonProperty] float speed;
-		[JsonProperty] bool playerStartSelected;
 		[JsonProperty] ShipModel ship;
-		[JsonProperty] float destructionSpeedIncrement;
-		[JsonProperty] float destructionSpeed;
-		[JsonProperty] float destructionRadius;
-		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
+		[JsonProperty] float destructionSpeedIncrement; // TODO: move to a destruction model
+		[JsonProperty] float destructionSpeed; // TODO: move to a destruction model
+		[JsonProperty] float destructionRadius; // TODO: move to a destruction model
+		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0]; // TODO: move to a destruction model
 		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
-		[JsonProperty] FinalReportModel[] finalReports = new FinalReportModel[0];
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonProperty] ToolbarSelections toolbarSelection;
 
-		[JsonProperty] float universeUnitsPerUnityUnit;
 		[JsonProperty] FocusTransform focusTransform;
 
 		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
@@ -45,17 +41,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<DayTime> DayTime;
-		/// <summary>
-		/// The speed of the ship, in universe units per day, whether or not
-		/// it's curently in motion.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Speed;
-		/// <summary>
-		/// Has the player start been selected yet? If not the ship position will still be zero.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> PlayerStartSelected;
 		/// <summary>
 		/// The game ship.
 		/// </summary>
@@ -91,8 +76,6 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<FocusTransform> FocusTransform;
-		[JsonIgnore]
-		public readonly ListenerProperty<float> UniverseUnitsPerUnityUnit;
 
 		[JsonProperty] string galaxyId;
 		[JsonProperty] string galaxyTargetId;
@@ -128,6 +111,7 @@ namespace LunraGames.SubLight.Models
 		#region NonSerialized
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
+		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
 
 		[JsonIgnore]
@@ -135,7 +119,15 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
 		[JsonIgnore]
+		public readonly ListenerProperty<GridInputRequest> GridInput;
+		[JsonIgnore]
 		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
+
+
+		UniverseScaleModel activeScale;
+		ListenerProperty<UniverseScaleModel> activeScaleListener;
+		[JsonIgnore]
+		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
 
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 
@@ -148,8 +140,6 @@ namespace LunraGames.SubLight.Models
 			SaveType = SaveTypes.Game;
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
-			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
-			PlayerStartSelected = new ListenerProperty<bool>(value => playerStartSelected = value, () => playerStartSelected);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
 			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
@@ -161,12 +151,27 @@ namespace LunraGames.SubLight.Models
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
+			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);
 			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
-			UniverseUnitsPerUnityUnit = new ListenerProperty<float>(value => universeUnitsPerUnityUnit = value, () => universeUnitsPerUnityUnit);
+
+			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
+			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
+			{
+				currScale.Opacity.Changed += OnScaleOpacity;
+				if (activeScale == null || activeScale.Opacity.Value < currScale.Opacity.Value) activeScale = currScale;
+			}
 		}
 
 		#region Events
-
+		void OnScaleOpacity(float opacity)
+		{
+			var newHighestOpacityScale = activeScale;
+			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
+			{
+				if (newHighestOpacityScale.Opacity.Value < currScale.Opacity.Value) newHighestOpacityScale = currScale;
+			}
+			activeScaleListener.Value = newHighestOpacityScale;
+		}
 		#endregion
 
 		#region Utility
@@ -188,21 +193,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public KeyValueListModel KeyValues { get { return keyValues; } }
 
-		public void AddFinalReport(FinalReportModel finalReport)
-		{
-			if (finalReports.FirstOrDefault(r => r.Encounter.Value == finalReport.Encounter.Value) != null)
-			{
-				Debug.LogError("A final report with EncounterId " + finalReport.Encounter.Value + " already exists.");
-				return;
-			}
-			finalReports = finalReports.Append(finalReport).ToArray();
-		}
-
-		public FinalReportModel GetFinalReport(string encounter)
-		{
-			return finalReports.FirstOrDefault(r => r.Encounter.Value == encounter);
-		}
-
 		[JsonIgnore]
 		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
 
@@ -221,21 +211,6 @@ namespace LunraGames.SubLight.Models
 					return null;
 			}
 		}
-
-		[JsonIgnore]
-		public UniverseScaleModel ActiveScale
-		{
-			get
-			{
-				foreach (var scaleEnum in EnumExtensions.GetValues(UniverseScales.Unknown))
-				{
-					var curr = GetScale(scaleEnum);
-					if (curr.IsActive) return curr;
-				}
-				return null;
-			}
-		}
-
 		#endregion
 
 		#region Events

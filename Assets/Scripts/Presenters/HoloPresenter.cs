@@ -4,27 +4,64 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
 	public class HoloPresenter : Presenter<IHoloView>
 	{
+		GameModel model;
 		TransitionFocusRequest.States lastTransition;
 		Dictionary<SetFocusLayers, int> layerToOrder = new Dictionary<SetFocusLayers, int>();
 
-		public HoloPresenter()
+		UniverseScaleModel lastActiveScale;
+
+		public HoloPresenter(GameModel model = null)
 		{
+			this.model = model;
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
+			App.Callbacks.CameraTransformRequest += OnCameraTransformRequest;
+
+			if (model == null) return;
+
+			model.ActiveScale.Changed += OnActiveScale;
+			OnActiveScale(model.ActiveScale.Value);
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
+			App.Callbacks.CameraTransformRequest -= OnCameraTransformRequest;
+
+			if (model == null) return;
+
+			if (lastActiveScale != null) lastActiveScale.Transform.Changed -= OnActiveScaleTransform;
+			model.ActiveScale.Changed -= OnActiveScale;
 		}
 
 		#region Events
+		void OnCameraTransformRequest(CameraTransformRequest request)
+		{
+			if (!View.Visible) return;
+
+			View.CameraPitch = App.V.CameraTransform.PitchValue();
+		}
+
+		void OnActiveScale(UniverseScaleModel scale)
+		{
+			if (lastActiveScale != null) lastActiveScale.Transform.Changed -= OnActiveScaleTransform;
+			lastActiveScale = scale;
+			lastActiveScale.Transform.Changed += OnActiveScaleTransform;
+		}
+
+		void OnActiveScaleTransform(UniverseTransform transform)
+		{
+			var offset = transform.GetGridOffset(transform.UnityToUniverse.x); // Lol don't know what i'm doing...
+			View.GridOffset = new Vector2(offset.x, offset.z);
+		}
+
 		void OnHoloColorRequest(HoloColorRequest request)
 		{
 			View.HoloColor = request.Color;
@@ -84,7 +121,7 @@ namespace LunraGames.SubLight.Presenters
 			if (wasClosed) View.Reset();
 
 			View.HoloColor = App.Callbacks.LastHoloColorRequest.Color;
-
+			View.CameraPitch = App.V.CameraTransform.PitchValue();
 			View.LayerTextures = textures.ToArray();
 			View.LayerProperties = properties.ToArray();
 

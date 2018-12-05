@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: CelestialSystemDistanceLineTop
-  m_Shader: {fileID: 4800000, guid: 00b672b67134742cf92f9a43786019df, type: 3}
+  m_Shader: {fileID: 4800000, guid: a4ab375c19e4a47bc9c71c558c3e330d, type: 3}
   m_ShaderKeywords: BOOLEAN_D7E37715_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -98,6 +98,7 @@ Material:
     - _DistanceFieldRange: {r: 0.4, g: 0.6, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NearFarPlanes: {r: 0, g: 10, b: 0, a: 0}
-    - _PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
+    - _PrimaryColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _ScrollSpeed: {r: -0.4, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _WorldOrigin: {r: 0, g: 2.99, b: 0, a: 0}

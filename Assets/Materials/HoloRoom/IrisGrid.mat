@@ -50,6 +50,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GridLipFade:
+        m_Texture: {fileID: 2800000, guid: 172a135ecfed84bae8477d33ae9327cb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: dffef66376be4fa480fb02b19edbe903, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -75,7 +79,7 @@ Material:
     - Vector1_9EC3C678: -0.5
     - Vector1_A87B78D3: 0
     - Vector1_C384AA28: 0.7
-    - Vector1_C9F244F9: 6
+    - Vector1_C9F244F9: 4
     - Vector1_E9271C64: 0.465
     - _AlphaClip: 0
     - _Blend: 0
@@ -88,6 +92,8 @@ Material:
     - _Glossiness: 0.5
     - _GlossinessSource: 0
     - _GlossyReflections: 1
+    - _GridIntensity: 1
+    - _GridRadius: 3
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -107,4 +113,5 @@ Material:
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GridColor: {r: 0.14, g: 0.14, b: 0.14, a: 1}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

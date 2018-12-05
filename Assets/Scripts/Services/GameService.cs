@@ -54,7 +54,7 @@ namespace LunraGames.SubLight
 			game.DestructionSpeedIncrement.Value = 0.0025f;
 
 			game.FocusTransform.Value = new FocusTransform(
-				TweenBlock.CreateInstant(1f, 2f),
+				TweenBlock.CreateInstant(0f, 1f),
 				TweenBlock.Zero,
 				LanguageStringModel.Empty,
 				LanguageStringModel.Empty,
@@ -64,17 +64,6 @@ namespace LunraGames.SubLight
 				LanguageStringModel.Empty
 			);
 
-			//var startSystem = game.Universe.Sectors.Value.First().Systems.Value.First();
-			//var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
-			//foreach (var system in game.Universe.Sectors.Value.First().Systems.Value)
-			//{
-			//	var distance = UniversePosition.Distance(UniversePosition.Zero, system.Position);
-			//	if (lastDistance < distance) continue;
-			//	lastDistance = distance;
-			//	startSystem = system;
-			//}
-
-			//var startPosition = startSystem.Position;
 			var rations = 0.3f;
 			var fuel = 1f;
 			var fuelConsumption = 1f;
@@ -82,8 +71,6 @@ namespace LunraGames.SubLight
 			var maximumNavigationTime = 10f;
 
 			var ship = new ShipModel();
-			//ship.CurrentSystem.Value = startSystem.Position;
-			//ship.Position.Value = startPosition;
 			ship.Inventory.AllResources.Rations.Value = rations;
 			ship.Inventory.AllResources.Fuel.Value = fuel;
 			ship.FuelConsumption.Value = fuelConsumption;
@@ -93,6 +80,34 @@ namespace LunraGames.SubLight
 			game.Ship.Value = ship;
 
 			game.ToolbarSelection.Value = ToolbarSelections.System;
+
+			App.M.Load<GalaxyInfoModel>(game.GalaxyId, result => OnGalaxyLoaded(result, game, done));
+		}
+
+		void OnGalaxyLoaded(SaveLoadRequest<GalaxyInfoModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError(result.Error);
+				done(result.Status, null);
+				return;
+			}
+
+			var galaxy = result.TypedModel;
+
+			var foundBegin = false;
+			var begin = galaxy.GetPlayerBegin(out foundBegin);
+			if (!foundBegin)
+			{
+				Debug.LogError("Provided galaxy has no player begin defined");
+				done(RequestStatus.Failure, null);
+				return;
+			}
+
+			game.Ship.Value.Position.Value = begin;
+			game.Ship.Value.CurrentSystem.Value = begin;
+
+			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
 
 			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
 				DefaultShip.StockRoot,

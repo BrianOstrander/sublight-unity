@@ -39,6 +39,11 @@ namespace LunraGames.SubLight
 			);
 		}
 
+		public static CameraTransformRequest InputComplete()
+		{
+			return new CameraTransformRequest(States.Complete, Transforms.Input, null, null, null);
+		}
+
 		public static CameraTransformRequest Animation(
 			float? yaw = null,
 			float? pitch = null,

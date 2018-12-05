@@ -11,7 +11,7 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		public int InterstellarSectorOffset = 1;
+		public int InterstellarSectorOffset = 2; // Not set anywhere else at the moment...
 		public int InterstellarSectorOffsetTotal { get { return (InterstellarSectorOffset * 2) + 1; } }
 		public int InterstellarSectorCount { get { return InterstellarSectorOffsetTotal * InterstellarSectorOffsetTotal; } }
 
@@ -71,12 +71,6 @@ namespace LunraGames.SubLight
 				return;
 			}
 			Payload.Game.Galaxy = result.TypedModel;
-
-			if (!Payload.Game.PlayerStartSelected.Value)
-			{
-				Payload.Game.Ship.Value.Position.Value = Payload.Game.Galaxy.PlayerStart;
-				Payload.Game.Ship.Value.CurrentSystem.Value = Payload.Game.Galaxy.PlayerStart;
-			}
 
 			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))
 			{
@@ -139,7 +133,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 
 			// HACK BEGIN - Probably bad to do and I should feel bad... but oh well...
-			var activeScale = Payload.Game.ActiveScale;
+			var activeScale = Payload.Game.ActiveScale.Value;
 			activeScale.Opacity.Changed(1f);
 			activeScale.Transform.Changed(activeScale.Transform.Value);
 			// HACK END
