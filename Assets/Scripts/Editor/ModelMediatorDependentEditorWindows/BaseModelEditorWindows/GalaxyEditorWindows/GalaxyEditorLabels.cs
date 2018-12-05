@@ -38,10 +38,10 @@ namespace LunraGames.SubLight
 			Group = 20
 		}
 
-		DevPrefsInt labelsPreviewSize;
+		EditorPrefsInt labelsPreviewSize;
 		EditorPrefsBool labelsPreviewMinimized;
 		EditorPrefsString labelsSelectedLabelId;
-		DevPrefsInt labelsSelectedUniverseScale;
+		EditorPrefsInt labelsSelectedUniverseScale;
 		EditorPrefsFloat labelsListScroll;
 		EditorPrefsFloat labelsDetailsScroll;
 		EditorPrefsEnum<LabelColorCodes> labelsColorCodeBy;
@@ -55,10 +55,10 @@ namespace LunraGames.SubLight
 		{
 			var currPrefix = KeyPrefix + "Labels";
 
-			labelsPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
+			labelsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
 			labelsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 			labelsSelectedLabelId = new EditorPrefsString(currPrefix + "SelectedLabelId");
-			labelsSelectedUniverseScale = new DevPrefsInt(currPrefix + "SelectedUniverseScale");
+			labelsSelectedUniverseScale = new EditorPrefsInt(currPrefix + "SelectedUniverseScale");
 			labelsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			labelsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
 			labelsColorCodeBy = new EditorPrefsEnum<LabelColorCodes>(currPrefix + "ColorCodeBy");

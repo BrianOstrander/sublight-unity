@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Linq;
 
 using UnityEditor;
@@ -14,49 +15,47 @@ namespace LunraGames.SubLight
 {
 	public partial class GalaxyEditorWindow
 	{
-		enum SpecifiedSectorsStates
+		enum GroupLabelsStates
 		{
 			Unknown = 0,
 			Idle = 10,
-			SelectingSector = 20,
-			UpdatingSector = 30
+			SelectingPosition = 20,
+			UpdatingPosition = 30
 		}
 
-		EditorPrefsString specifiedSectorsSelectedSectorName;
-		EditorPrefsInt specifiedSectorsPreviewSize;
-		EditorPrefsBool specifiedSectorsPreviewMinimized;
-		EditorPrefsInt specifiedSectorsSelectedPreview;
-		EditorPrefsFloat specifiedSectorsListScroll;
-		EditorPrefsFloat specifiedSectorsDetailsScroll;
-		EditorPrefsBool specifiedSectorsShowTargets;
-		EditorPrefsBool specifiedSectorsShowDerivedValues;
+		EditorPrefsString groupLabelsSelectedGroup;
+		EditorPrefsInt groupLabelsPreviewSize;
+		EditorPrefsBool groupLabelsPreviewMinimized;
+		EditorPrefsInt groupLabelsSelectedPreview;
+		EditorPrefsFloat groupLabelsListScroll;
+		EditorPrefsFloat groupLabelsDetailsScroll;
+		EditorPrefsBool groupLabelsShowTargets;
 
-		SpecifiedSectorsStates specifiedSectorsState = SpecifiedSectorsStates.Idle;
-		SectorModel specifiedSectorsSelectedSectorLast;
-		SectorModel specifiedSectorsSelectedSector;
-		bool specifiedSectorsIsOverAnAllSector;
+		GroupLabelsStates groupLabelsState = GroupLabelsStates.Idle;
+		//SectorModel specifiedSectorsSelectedSectorLast;
+		//SectorModel specifiedSectorsSelectedSector;
+		bool groupLabelsIsOverAnAllSector;
 
-		void SpecifiedSectorsConstruct()
+		void GroupLabelsConstruct()
 		{
-			var currPrefix = KeyPrefix + "SpecifiedSectors";
+			var currPrefix = KeyPrefix + "GroupLabels";
 
-			specifiedSectorsSelectedSectorName = new EditorPrefsString(currPrefix + "SelectedSectorName");
-			specifiedSectorsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
-			specifiedSectorsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
-			specifiedSectorsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
-			specifiedSectorsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
-			specifiedSectorsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
-			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
-			specifiedSectorsShowDerivedValues = new EditorPrefsBool(currPrefix + "ShowDerivedValues");
+			groupLabelsSelectedGroup = new EditorPrefsString(currPrefix + "SelectedGroup");
+			groupLabelsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
+			groupLabelsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
+			groupLabelsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
+			groupLabelsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
+			groupLabelsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
+			groupLabelsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
 
-			RegisterToolbar("Specified Sectors", SpecifiedSectorsToolbar);
+			RegisterToolbar("Group Labels", GroupLabelsToolbar);
 
-			BeforeLoadSelection += SpecifiedSectorsBeforeLoadSelection;
+			//BeforeLoadSelection += SpecifiedSectorsBeforeLoadSelection;
 		}
 
-		void SpecifiedSectorsToolbar(GalaxyInfoModel model)
+		void GroupLabelsToolbar(GalaxyInfoModel model)
 		{
-			if (string.IsNullOrEmpty(specifiedSectorsSelectedSectorName.Value))
+			if (string.IsNullOrEmpty(groupLabelsSelectedGroup.Value))
 			{
 				if (specifiedSectorsSelectedSector != null)
 				{
@@ -65,7 +64,7 @@ namespace LunraGames.SubLight
 			}
 			else if (specifiedSectorsSelectedSector == null)
 			{
-				SpecifiedSectorsSelectSpecifiedSector(model.GetSpecifiedSector(specifiedSectorsSelectedSectorName.Value));
+				SpecifiedSectorsSelectSpecifiedSector(model.GetSpecifiedSector(groupLabelsSelectedGroup.Value));
 			}
 
 			GUILayout.BeginHorizontal();
@@ -79,7 +78,7 @@ namespace LunraGames.SubLight
 						{
 							sectorIndex++;
 
-							var isSelectedSector = specifiedSector.Name.Value == specifiedSectorsSelectedSectorName.Value;
+							var isSelectedSector = specifiedSector.Name.Value == groupLabelsSelectedGroup.Value;
 							if (isSelectedSector) EditorGUILayoutExtensions.PushColor(Color.blue.NewS(0.7f));
 							GUILayout.BeginHorizontal(EditorStyles.helpBox);
 							if (isSelectedSector) EditorGUILayoutExtensions.PopColor();
@@ -194,7 +193,7 @@ namespace LunraGames.SubLight
 				clickPosition => SpecifiedSectorsSecondaryClickPreview(model, clickPosition),
 				() => SpecifiedSectorsDrawPreviewToolbarPrefix(model),
 				() => SpecifiedSectorsDrawPreviewToolbarSuffix(model),
-				displayArea => SpecifiedSectorsDrawOnPreview(model, displayArea) 
+				displayArea => SpecifiedSectorsDrawOnPreview(model, displayArea)
 			);
 		}
 
@@ -277,7 +276,7 @@ namespace LunraGames.SubLight
 				case SpecifiedSectorsStates.Idle:
 					specifiedSectorsSelectedSectorLast = specifiedSectorsSelectedSector;
 					specifiedSectorsSelectedSector = SpecifiedSectorsCreateSector();
-					specifiedSectorsSelectedSectorName.Value = specifiedSectorsSelectedSector.Name.Value;
+					groupLabelsSelectedGroup.Value = specifiedSectorsSelectedSector.Name.Value;
 					specifiedSectorsSelectedSector.Position.Value = UniversePosition.Lerp(clickPosition, UniversePosition.Zero, model.GalaxySize).LocalZero;
 
 					specifiedSectorsState = SpecifiedSectorsStates.SelectingSector;
@@ -349,7 +348,7 @@ namespace LunraGames.SubLight
 		void SpecifiedSectorsSelectSpecifiedSector(SectorModel sector, SpecifiedSectorsStates state = SpecifiedSectorsStates.Idle)
 		{
 			specifiedSectorsSelectedSector = sector;
-			specifiedSectorsSelectedSectorName.Value = sector == null ? null : sector.Name.Value;
+			groupLabelsSelectedGroup.Value = sector == null ? null : sector.Name.Value;
 			if (state != SpecifiedSectorsStates.Unknown) specifiedSectorsState = state;
 			GUIUtility.keyboardControl = 0;
 		}
@@ -531,3 +530,4 @@ namespace LunraGames.SubLight
 		}
 	}
 }
+*/

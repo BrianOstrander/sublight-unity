@@ -14,16 +14,16 @@ namespace LunraGames.SubLight
 {
 	public partial class GalaxyEditorWindow
 	{
-		DevPrefsInt targetsSelectedPreview;
-		DevPrefsInt targetsPreviewSize;
+		EditorPrefsInt targetsSelectedPreview;
+		EditorPrefsInt targetsPreviewSize;
 		EditorPrefsBool targetsPreviewMinimized;
 
 		void TargetsConstruct()
 		{
 			var currPrefix = KeyPrefix + "Targets";
 
-			targetsSelectedPreview = new DevPrefsInt(currPrefix + "SelectedPreview");
-			targetsPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
+			targetsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
+			targetsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
 			targetsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 
 			RegisterToolbar("Targets", TargetsToolbar);

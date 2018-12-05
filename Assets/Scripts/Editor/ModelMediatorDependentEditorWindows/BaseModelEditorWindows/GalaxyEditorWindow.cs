@@ -154,8 +154,8 @@ namespace LunraGames.SubLight
 
 		void DrawPreviews(
 			GalaxyInfoModel model,
-			DevPrefsInt previewSelected,
-			DevPrefsInt previewSize,
+			EditorPrefsInt previewSelected,
+			EditorPrefsInt previewSize,
 			EditorPrefsBool previewMinimized,
 			bool previewClickable,
 			Action<Vector3> primaryClick = null,
