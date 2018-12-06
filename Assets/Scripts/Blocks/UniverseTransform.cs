@@ -60,7 +60,7 @@ namespace LunraGames.SubLight
 
 		public UniversePosition GetUniversePosition(Vector3 unityPosition)
 		{
-			var unityFromOrigin = unityPosition - UnityOrigin;
+			var unityFromOrigin = unityPosition.ApproximateSubtract(UnityOrigin);
 			unityFromOrigin.Scale(UnityToUniverse);
 			return UniverseOrigin + new UniversePosition(unityFromOrigin);
 		}

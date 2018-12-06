@@ -536,12 +536,12 @@ namespace LunraGames.SubLight.Presenters
 			//var galacticScale = model.GetScale(UniverseScales.Galactic);
 			//var clusterScale = model.GetScale(UniverseScales.Cluster);
 
-			var activeScale = model.ActiveScale.Value;
+			//var activeScale = model.ActiveScale.Value;
 
-			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
-			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalaxyOrigin), 0.06f);
+			//Gizmos.color = Color.green;
+			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
+			//Gizmos.color = Color.yellow;
+			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalaxyOrigin), 0.06f);
 			//Gizmos.color = Color.magenta;
 			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.ClusterOrigin), 0.08f);
 

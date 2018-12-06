@@ -46,5 +46,19 @@ namespace LunraGames
 			vector3.Scale(scaler);
 			return vector3;
 		}
+
+		public static Vector3 ApproximateSubtract(this Vector3 vector3, Vector3 other)
+		{
+			return new Vector3(
+				ApproximateSubtractFloat(vector3.x, other.x),
+				ApproximateSubtractFloat(vector3.y, other.y),
+				ApproximateSubtractFloat(vector3.z, other.z)
+			);
+		}
+
+		static float ApproximateSubtractFloat(float float0, float float1)
+		{
+			return Mathf.Approximately(float0, float1) ? 0f : float0 - float1;
+		}
 	}
 }
