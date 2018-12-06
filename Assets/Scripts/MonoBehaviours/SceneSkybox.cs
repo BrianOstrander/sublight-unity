@@ -20,7 +20,7 @@ namespace LunraGames.SubLight
 #if UNITY_EDITOR
 		void Update()
 		{
-			if (DevPrefs.AutoApplySkybox) Apply();	
+			if (!Application.isPlaying && DevPrefs.AutoApplySkybox) Apply();	
 		}
 #endif
 

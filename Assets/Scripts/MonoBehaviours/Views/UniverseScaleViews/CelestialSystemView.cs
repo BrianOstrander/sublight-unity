@@ -362,6 +362,8 @@ namespace LunraGames.SubLight.Views
 		public Action Exit { set; private get; }
 		public Action Click { set; private get; }
 
+		public bool IsInBounds { get; private set; }
+
 		public bool SetStates(
 			Celestial.HighlightStates highlightState = Celestial.HighlightStates.Unknown,
 			Celestial.VisitStates visitState = Celestial.VisitStates.Unknown,
@@ -409,11 +411,6 @@ namespace LunraGames.SubLight.Views
 
 			return wasChanged;
 		}
-
-		public void ResetSelectionCooldown()
-		{
-
-		}
 		#endregion
 
 		#region Local Properties
@@ -432,7 +429,6 @@ namespace LunraGames.SubLight.Views
 		int? dragTrailDelay;
 
 		bool? wasInBounds;
-		bool isInBounds;
 
 		float? onEnterDelayRemaining;
 		float radiusNormal;
@@ -447,9 +443,9 @@ namespace LunraGames.SubLight.Views
 		protected override void OnPosition(Vector3 position, Vector3 rawPosition) // These are world positions
 		{
 			radiusNormal = RadiusNormal(dropLine.transform.position);
-			isInBounds = radiusNormal < 1f;
+			IsInBounds = radiusNormal < 1f;
 
-			if (!isInBounds)
+			if (!IsInBounds)
 			{
 				// Trails need to wait a fram before enabling so they don't zig zag across the grid.
 				dragTrail.emitting = false;
@@ -530,12 +526,12 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnLateIdle(delta);
 
-			if (!wasInBounds.HasValue || isInBounds != wasInBounds)
+			if (!wasInBounds.HasValue || IsInBounds != wasInBounds)
 			{
-				OnInBoundsChanged(isInBounds);
+				OnInBoundsChanged(IsInBounds);
 			}
 
-			if (!isInBounds) return;
+			if (!IsInBounds) return;
 
 			lookAtArea.LookAt(lookAtArea.position + App.V.CameraForward.FlattenY());
 			verticalLookAtArea.LookAt(verticalLookAtArea.position + App.V.CameraForward);
@@ -1057,6 +1053,8 @@ namespace LunraGames.SubLight.Views
 			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown,
 			bool instant = false
 		);
+
+		bool IsInBounds { get; }
 
 		//string ClassificationText { set; }
 		//string DistanceText { set; }
