@@ -9,6 +9,7 @@ namespace LunraGames.SubLight
 	public struct GridInfoBlock
 	{
 		public LanguageStringModel Scale;
+		public UniverseScales[] Scales;
 		public LanguageStringModel[] ScaleNames;
 
 		public LanguageStringModel ThousandUnit;
@@ -17,7 +18,12 @@ namespace LunraGames.SubLight
 		public PluralLanguageStringBlock AstronomicalUnit;
 		public PluralLanguageStringBlock LightYearUnit;
 
-		public LanguageStringModel GetScaleName(float zoom) { return ScaleNames[Mathf.FloorToInt(zoom)]; }
+		public void GetScaleName(float zoom, out UniverseScales scale, out LanguageStringModel scaleName)
+		{
+			var zoomIndex = Mathf.FloorToInt(zoom);
+			scale = Scales[zoomIndex];
+			scaleName = ScaleNames[zoomIndex];
+		}
 
 		public void GetUnitModels(
 			float count,

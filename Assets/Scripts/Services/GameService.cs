@@ -56,6 +56,8 @@ namespace LunraGames.SubLight
 			game.FocusTransform.Value = new FocusTransform(
 				TweenBlock.CreateInstant(0f, 1f),
 				TweenBlock.Zero,
+				UniverseScales.System,
+				UniverseScales.Local,
 				LanguageStringModel.Empty,
 				LanguageStringModel.Empty,
 				FuncExtensions.GetEmpty(string.Empty),

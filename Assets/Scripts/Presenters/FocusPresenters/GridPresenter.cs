@@ -387,9 +387,12 @@ namespace LunraGames.SubLight.Presenters
 			
 			var fromGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, zoomTween.Begin));
 			var toGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, zoomTween.End));
-			
-			fromScaleName = info.GetScaleName(fromGrid.ZoomBegin);
-			toScaleName = info.GetScaleName(toGrid.ZoomBegin);
+
+			UniverseScales fromScale;
+			info.GetScaleName(fromGrid.ZoomBegin, out fromScale, out fromScaleName);
+
+			UniverseScales toScale;
+			info.GetScaleName(toGrid.ZoomBegin, out toScale, out toScaleName);
 			
 			info.GetUnitModels(fromGrid.LightYears, info.LightYearUnit, out fromGetUnitCount, out fromUnitType);
 			info.GetUnitModels(toGrid.LightYears, info.LightYearUnit, out toGetUnitCount, out toUnitType);
@@ -397,6 +400,8 @@ namespace LunraGames.SubLight.Presenters
 			var transform = model.FocusTransform.Value.Duplicate(zoomTween, model.FocusTransform.Value.NudgeZoom.DuplicateNoChange());
 
 			transform.SetLanguage(
+				fromScale,
+				toScale,
 				fromScaleName,
 				toScaleName,
 				fromGetUnitCount,

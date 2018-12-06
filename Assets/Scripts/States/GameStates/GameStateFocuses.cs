@@ -41,6 +41,14 @@ namespace LunraGames.SubLight
 				var gridInfo = new GridInfoBlock();
 
 				gridInfo.Scale = LanguageStringModel.Override("Scale");
+				gridInfo.Scales = new UniverseScales[] {
+					UniverseScales.System,
+					UniverseScales.Local,
+					UniverseScales.Stellar,
+					UniverseScales.Quadrant,
+					UniverseScales.Galactic,
+					UniverseScales.Cluster
+				};
 				gridInfo.ScaleNames = new LanguageStringModel[] {
 					LanguageStringModel.Override("System"),
 					LanguageStringModel.Override("Local"),

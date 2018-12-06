@@ -10,6 +10,8 @@ namespace LunraGames.SubLight
 		public readonly TweenBlock<float> Zoom;
 		public readonly TweenBlock<float> NudgeZoom;
 
+		public UniverseScales FromScale { get; private set; }
+		public UniverseScales ToScale { get; private set; }
 		public LanguageStringModel FromScaleName { get; private set; }
 		public LanguageStringModel ToScaleName { get; private set; }
 		public Func<string> GetFromUnitCount { get; private set; }
@@ -20,6 +22,8 @@ namespace LunraGames.SubLight
 		public FocusTransform(
 			TweenBlock<float> zoom,
 			TweenBlock<float> nudgeZoom,
+			UniverseScales fromScale,
+			UniverseScales toScale,
 			LanguageStringModel fromScaleName,
 			LanguageStringModel toScaleName,
 			Func<string> getFromUnitCount,
@@ -31,6 +35,8 @@ namespace LunraGames.SubLight
 			Zoom = zoom;
 			NudgeZoom = nudgeZoom;
 
+			FromScale = fromScale;
+			ToScale = toScale;
 			FromScaleName = fromScaleName;
 			ToScaleName = toScaleName;
 			GetFromUnitCount = getFromUnitCount;
@@ -47,6 +53,8 @@ namespace LunraGames.SubLight
 			return new FocusTransform(
 				zoom.HasValue ? zoom.Value : Zoom,
 				nudgeZoom.HasValue ? nudgeZoom.Value : NudgeZoom,
+				FromScale,
+				ToScale,
 				FromScaleName,
 				ToScaleName,
 				GetFromUnitCount,
@@ -57,6 +65,8 @@ namespace LunraGames.SubLight
 		}
 
 		public void SetLanguage(
+			UniverseScales fromScale,
+			UniverseScales toScale,
 			LanguageStringModel fromScaleName,
 			LanguageStringModel toScaleName,
 			Func<string> getFromUnitCount,
@@ -65,6 +75,8 @@ namespace LunraGames.SubLight
 			LanguageStringModel toUnitType
 		)
 		{
+			FromScale = fromScale;
+			ToScale = toScale;
 			FromScaleName = fromScaleName;
 			ToScaleName = toScaleName;
 			GetFromUnitCount = getFromUnitCount;

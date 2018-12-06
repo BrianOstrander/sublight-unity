@@ -21,6 +21,7 @@ namespace LunraGames.SubLight.Presenters
 
 		SystemInstanceModel instanceModel;
 		CelestialSystemLanguageBlock language;
+		UniverseScales lastZoomToScale;
 
 		public CelestialSystemPresenter(
 			GameModel model,
@@ -39,6 +40,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 			Model.CameraTransform.Changed += OnCameraTransform;
 			Model.GridInput.Changed += OnGridInput;
+			Model.FocusTransform.Changed += OnFocusTransform;
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -54,6 +56,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Model.CameraTransform.Changed -= OnCameraTransform;
 			Model.GridInput.Changed -= OnGridInput;
+			Model.FocusTransform.Changed -= OnFocusTransform;
 
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
@@ -251,6 +254,20 @@ namespace LunraGames.SubLight.Presenters
 		void ProcessInterectable(CameraTransformRequest transform, GridInputRequest gridInput)
 		{
 			View.Interactable = transform.State == CameraTransformRequest.States.Complete && gridInput.State == GridInputRequest.States.Complete;
+		}
+
+		void OnFocusTransform(FocusTransform transform)
+		{
+			if (!View.Visible || lastZoomToScale == transform.ToScale)
+			{
+				lastZoomToScale = transform.ToScale;
+				return;
+			}
+
+			lastZoomToScale = transform.ToScale;
+			if (lastZoomToScale == Scale) return;
+
+			if (View.Visible && !View.IsInBounds) CloseViewInstant();
 		}
 		#endregion
 	}
