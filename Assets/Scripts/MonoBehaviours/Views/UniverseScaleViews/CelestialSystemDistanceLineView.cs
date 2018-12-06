@@ -85,8 +85,8 @@ namespace LunraGames.SubLight.Views
 			clampedBegin = null;
 			clampedEnd = null;
 
-			var beginIsInRadius = PositionIsInRadius(begin, gridRadiusMargin);
-			var endIsInRadius = PositionIsInRadius(end, gridRadiusMargin);
+			var beginIsInRadius = GetPositionIsInRadius(begin, gridRadiusMargin);
+			var endIsInRadius = GetPositionIsInRadius(end, gridRadiusMargin);
 
 			if (beginIsInRadius && endIsInRadius) return Clamping.NoClamping;
 

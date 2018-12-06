@@ -72,7 +72,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnScaleTransform(UniverseTransform transform)
 		{
-			View.SetGrid(transform.UnityOrigin, transform.UnityRadius);
+			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
 			UniversePosition? end = null;
 			if (Model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected)

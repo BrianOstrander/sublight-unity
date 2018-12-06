@@ -20,6 +20,9 @@ namespace LunraGames.SubLight.Presenters
 		protected UniverseScales Scale { get; private set; }
 		protected UniverseScaleModel ScaleModel { get; private set; }
 
+		protected Vector3 GridOrigin { private set; get; }
+		protected float GridRadius { private set; get; }
+
 		public UniverseScalePresenter(GameModel model, UniverseScales scale)
 		{
 			Model = model;
@@ -38,20 +41,53 @@ namespace LunraGames.SubLight.Presenters
 
 		void ApplyScaleTransform(UniverseTransform transform)
 		{
-			var result = transform.GetUnityScale(ScaleInUniverse);
-			result = new Vector3(
-				Mathf.Max(MinimumScale, result.x),
-				Mathf.Max(MinimumScale, result.y),
-				Mathf.Max(MinimumScale, result.z)
+			var scale = transform.GetUnityScale(ScaleInUniverse);
+			scale = new Vector3(
+				Mathf.Max(MinimumScale, scale.x),
+				Mathf.Max(MinimumScale, scale.y),
+				Mathf.Max(MinimumScale, scale.z)
 			);
-			View.Scale = result;
-			
-			View.Position = ScaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
+			var position = ScaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
+
+			var rawScale = scale;
+			switch (View.ScaleIgnores)
+			{
+				case UniverseScaleAxises.None: break;
+				case UniverseScaleAxises.X: scale = scale.NewX(1f); break;
+				case UniverseScaleAxises.Y: scale = scale.NewY(1f); break;
+				case UniverseScaleAxises.Z: scale = scale.NewZ(1f); break;
+				default:
+					Debug.LogError("Unrecognized axis: " + View.ScaleIgnores);
+					break;
+			}
+
+			View.SetScale(scale, rawScale);
+
+			var rawPosition = position;
+			switch (View.PositionIgnores)
+			{
+				case UniverseScaleAxises.None: break;
+				case UniverseScaleAxises.X: position = position.NewX(View.transform.position.x); break;
+				case UniverseScaleAxises.Y: position = position.NewY(View.transform.position.y); break;
+				case UniverseScaleAxises.Z: position = position.NewZ(View.transform.position.z); break;
+				default:
+					Debug.LogError("Unrecognized axis: " + View.PositionIgnores);
+					break;
+			}
+
+			var radiusNormal = GetRadiusNormal(position);
+			var isInBounds = radiusNormal < 1f;
+			var isInBoundsUnscaled = radiusNormal < scale.x;
+
+			View.SetPosition(position, rawPosition, isInBounds, isInBoundsUnscaled);
 		}
 
 		protected void ShowViewInstant()
 		{
 			View.Reset();
+
+			View.GetRadiusNormalCallback = GetRadiusNormal;
+			View.GetPositionIsInRadiusCallback = GetPositionIsInRadius;
 
 			OnShowView();
 
@@ -70,6 +106,26 @@ namespace LunraGames.SubLight.Presenters
 			ApplyScaleTransform(ScaleModel.Transform);
 		}
 
+		protected void SetGrid(Vector3 gridOrigin, float gridRadius)
+		{
+			GridOrigin = gridOrigin;
+			GridRadius = gridRadius;
+
+			View.SetGrid(gridOrigin, gridRadius);
+		}
+
+		protected float GetRadiusNormal(Vector3 worldPosition, float margin = 0f)
+		{
+			if (Mathf.Approximately(0f, GridRadius)) return 1f;
+			worldPosition = worldPosition.NewY(GridOrigin.y);
+			return Vector3.Distance(GridOrigin, worldPosition) / Mathf.Max(0f, GridRadius - margin);
+		}
+
+		protected bool GetPositionIsInRadius(Vector3 worldPosition, float margin = 0f)
+		{
+			return Vector3.Distance(GridOrigin, worldPosition.NewY(GridOrigin.y)) <= Mathf.Max(0f, GridRadius - margin);
+		}
+
 		#region Events
 		void OnScaleTransform(UniverseTransform transform)
 		{
@@ -86,8 +142,14 @@ namespace LunraGames.SubLight.Presenters
 			switch (View.TransitionState)
 			{
 				case TransitionStates.Closed:
-					if (!isOpacityZero) ShowViewInstant();
-					else return;
+					if (isOpacityZero) return;
+					ShowViewInstant();
+					//if (View.RestrictVisibiltyInBounds)
+					//{
+
+					//}
+					//else ShowViewInstant();
+
 					break;
 				case TransitionStates.Shown:
 					if (isOpacityZero) CloseViewInstant();

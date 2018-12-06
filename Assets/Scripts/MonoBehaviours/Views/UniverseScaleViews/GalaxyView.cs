@@ -15,10 +15,8 @@ namespace LunraGames.SubLight.Views
 
 		protected float TotalGalaxyHeight { get { return ySeparation * 3f; } }
 
-		public virtual void SetGalaxy(Texture2D texture, Vector3 gridOrigin, float gridRadius)
+		public virtual void SetGalaxy(Texture2D texture)
 		{
-			SetGrid(gridOrigin, gridRadius);
-
 			for (var i = 0; i < layerMeshes.Length; i++)
 			{
 				var color = layerColors.Length == 0 ? Color.black : layerColors[Mathf.Min(i, layerColors.Length)];
@@ -28,8 +26,8 @@ namespace LunraGames.SubLight.Views
 				mesh.material.SetTexture(ShaderConstants.HoloGalaxy.LayerTexture, texture);
 				mesh.material.SetInt(ShaderConstants.HoloGalaxy.Channel, i);
 				mesh.material.SetColor(ShaderConstants.HoloGalaxy.ChannelColor, color);
-				mesh.material.SetVector(ShaderConstants.HoloGalaxy.WorldOrigin, gridOrigin);
-				mesh.material.SetFloat(ShaderConstants.HoloGalaxy.WorldRadius, gridRadius);
+				mesh.material.SetVector(ShaderConstants.HoloGalaxy.WorldOrigin, GridOrigin);
+				mesh.material.SetFloat(ShaderConstants.HoloGalaxy.WorldRadius, GridRadius);
 			}
 		}
 
@@ -51,12 +49,12 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
-			SetGalaxy(null, Vector3.zero, 1f);
+			SetGalaxy(null);
 		}
 	}
 
 	public interface IGalaxyView : IUniverseScaleView
 	{
-		void SetGalaxy(Texture2D texture, Vector3 worldOrigin, float worldRadius);
+		void SetGalaxy(Texture2D texture);
 	}
 }

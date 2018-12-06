@@ -1,32 +1,49 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 namespace LunraGames.SubLight.Views
 {
+	public enum UniverseScaleAxises
+	{
+		Unknown = 0,
+		None = 10,
+		X = 20,
+		Y = 30,
+		Z = 40
+	}
+
 	public abstract class UniverseScaleView : View, IUniverseScaleView
 	{
-		enum Axises
-		{
-			Unknown = 0,
-			None = 10,
-			X = 20,
-			Y = 30,
-			Z = 40
-		}
 
 		[SerializeField]
-		Axises scaleIgnores = Axises.Y;
+		UniverseScaleAxises scaleIgnores = UniverseScaleAxises.Y;
 		[SerializeField]
-		Axises positionIgnores = Axises.Y;
+		UniverseScaleAxises positionIgnores = UniverseScaleAxises.Y;
 		[SerializeField]
 		Transform scaleArea;
 		[SerializeField]
 		Transform positionArea;
 
+		bool? wasInBounds;
+		bool? wasInBoundsUnscaled;
+
+		public UniverseScaleAxises ScaleIgnores { get { return scaleIgnores; } }
+		public UniverseScaleAxises PositionIgnores { get { return positionIgnores; } }
 		protected Transform ScaleArea { get { return scaleArea; } }
 		protected Transform PositionArea { get { return positionArea; } }
 
 		protected Vector3 GridOrigin { private set; get; }
 		protected float GridRadius { private set; get; }
+
+		public virtual bool RestrictVisibiltyInBounds { get { return false; } }
+
+		public bool IsInBounds { get; private set; }
+		public bool IsInBoundsUnscaled { get; private set; }
+		public float RadiusNormal { get; private set; }
+
+		public Func<Vector3, float, float> GetRadiusNormalCallback { get; set; }
+		public Func<Vector3, float, bool> GetPositionIsInRadiusCallback { get; set; }
 
 		public void SetGrid(Vector3 gridOrigin, float gridRadius)
 		{
@@ -34,6 +51,7 @@ namespace LunraGames.SubLight.Views
 			GridRadius = gridRadius;
 		}
 
+		/*
 		public Vector3 Scale
 		{
 			set
@@ -41,62 +59,129 @@ namespace LunraGames.SubLight.Views
 				var rawValue = value;
 				switch(scaleIgnores)
 				{
-					case Axises.None: break;
-					case Axises.X: value = value.NewX(1f); break;
-					case Axises.Y: value = value.NewY(1f); break;
-					case Axises.Z: value = value.NewZ(1f); break;
+					case UniverseScaleAxises.None: break;
+					case UniverseScaleAxises.X: value = value.NewX(1f); break;
+					case UniverseScaleAxises.Y: value = value.NewY(1f); break;
+					case UniverseScaleAxises.Z: value = value.NewZ(1f); break;
 					default:
 						Debug.LogError("Unrecognized axis: " + scaleIgnores);
 						break;
 				}
 
+				wasScale = value;
+
 				if (scaleArea != null) scaleArea.localScale = value;
 				OnScale(value, rawValue);
 			}
 		}
+		*/
 
+		public void SetScale(Vector3 scale, Vector3 rawScale)
+		{
+			if (scaleArea != null) scaleArea.localScale = scale;
+			OnScale(scale, rawScale);
+		}
+
+		public void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, bool isInBoundsUnscaled)
+		{
+			if (positionArea != null) positionArea.position = position;
+			IsInBounds = isInBounds;
+			IsInBoundsUnscaled = isInBoundsUnscaled;
+
+			if (!wasInBounds.HasValue || wasInBounds != isInBounds)
+			{
+				wasInBounds = isInBounds;
+				OnInBoundsChanged(isInBounds);
+			}
+			if (!wasInBoundsUnscaled.HasValue || wasInBoundsUnscaled != isInBoundsUnscaled)
+			{
+				wasInBoundsUnscaled = isInBoundsUnscaled;
+				OnInBoundsUnscaledChanged(isInBoundsUnscaled);
+			}
+			OnPosition(position, rawPosition);
+		}
+
+		/*
 		public Vector3 Position
 		{
 			set
 			{
-				var rawValue = value;
+				var rawPosition = value;
 				switch (positionIgnores)
 				{
-					case Axises.None: break;
-					case Axises.X: value = value.NewX(transform.position.x); break;
-					case Axises.Y: value = value.NewY(transform.position.y); break;
-					case Axises.Z: value = value.NewZ(transform.position.z); break;
+					case UniverseScaleAxises.None: break;
+					case UniverseScaleAxises.X: value = value.NewX(transform.position.x); break;
+					case UniverseScaleAxises.Y: value = value.NewY(transform.position.y); break;
+					case UniverseScaleAxises.Z: value = value.NewZ(transform.position.z); break;
 					default:
 						Debug.LogError("Unrecognized axis: " + positionIgnores);
 						break;
 				}
 
+				RadiusNormal = GetRadiusNormal(value);
+				IsInBounds = RadiusNormal < 1f;
+				IsInBoundsUnscaled = RadiusNormal < wasScale.x;
+
+				var oldWasInBounds = wasInBounds;
+				var oldWasInBoundsUnscaled = wasInBoundsUnscaled;
+
+				wasInBounds = IsInBounds;
+				wasInBoundsUnscaled = IsInBoundsUnscaled;
+
+				if (oldWasInBounds != IsInBounds) OnInBoundsChanged(IsInBounds);
+				if (oldWasInBoundsUnscaled != IsInBoundsUnscaled) OnInBoundsUnscaledChanged(IsInBoundsUnscaled);
+
 				if (positionArea != null) positionArea.position = value;
-				OnPosition(value, rawValue);
+				OnPosition(value, rawPosition);
 			}
 		}
+		*/
 
-		protected float RadiusNormal(Vector3 worldPosition, float margin = 0f)
+		public override void Reset()
 		{
-			if (Mathf.Approximately(0f, GridRadius)) return 1f;
-			worldPosition = worldPosition.NewY(GridOrigin.y);
-			return Vector3.Distance(GridOrigin, worldPosition) / Mathf.Max(0f, GridRadius - margin);
+			base.Reset();
+
+			wasInBounds = null;
+			wasInBoundsUnscaled = null;
+
+			// These are set to null to make sure they're properly set...
+			GetRadiusNormalCallback = null;
+			GetPositionIsInRadiusCallback = null;
 		}
 
 		protected virtual void OnScale(Vector3 scale, Vector3 rawScale) {}
 		protected virtual void OnPosition(Vector3 position, Vector3 rawPosition) {}
+		protected virtual void OnInBoundsChanged(bool isInBounds) {}
+		protected virtual void OnInBoundsUnscaledChanged(bool isInBoundsUnscaled) {}
 
-		protected bool PositionIsInRadius(Vector3 worldPosition, float margin = 0f)
+		protected float GetRadiusNormal(Vector3 worldPosition, float margin = 0f)
 		{
-			return Vector3.Distance(GridOrigin, worldPosition.NewY(GridOrigin.y)) <= Mathf.Max(0f, GridRadius - margin);
+			if (GetRadiusNormalCallback == null) return 0f;
+			return GetRadiusNormalCallback(worldPosition, margin);
+		}
+
+		protected bool GetPositionIsInRadius(Vector3 worldPosition, float margin = 0f)
+		{
+			if (GetPositionIsInRadiusCallback == null) return false;
+			return GetPositionIsInRadiusCallback(worldPosition, margin);
 		}
 	}
 
 	public interface IUniverseScaleView : IView
 	{
-		void SetGrid(Vector3 gridOrigin, float gridRadius);
+		bool RestrictVisibiltyInBounds { get; }
+		bool IsInBounds { get; }
+		bool IsInBoundsUnscaled { get; }
+		float RadiusNormal { get; }
+		UniverseScaleAxises ScaleIgnores { get; }
+		UniverseScaleAxises PositionIgnores { get; }
 
-		Vector3 Scale { set; }
-		Vector3 Position { set; }
+		Func<Vector3, float, float> GetRadiusNormalCallback { get; set; }
+		Func<Vector3, float, bool> GetPositionIsInRadiusCallback { get; set; }
+
+		void SetScale(Vector3 scale, Vector3 rawScale);
+		void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, bool isInBoundsUnscaled);
+
+		void SetGrid(Vector3 gridOrigin, float gridRadius);
 	}
 }
