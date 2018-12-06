@@ -15,6 +15,7 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] UniverseScales scale;
 		[JsonProperty] float opacity;
+		[JsonProperty] UniverseTransform transformDefault;
 		[JsonProperty] UniverseTransform transform;
 
 		[JsonIgnore]
@@ -22,13 +23,16 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public ListenerProperty<float> Opacity;
 		[JsonIgnore]
+		public ListenerProperty<UniverseTransform> TransformDefault;
+		[JsonIgnore]
 		public ListenerProperty<UniverseTransform> Transform;
 
 		public UniverseScaleModel()
 		{
 			Scale = new ListenerProperty<UniverseScales>(value => scale = value, () => scale);
 			Opacity = new ListenerProperty<float>(value => opacity = value, () => opacity);
-			Transform = new ListenerProperty<UniverseTransform>(value => transform = value, () => transform);
+			TransformDefault = new ListenerProperty<UniverseTransform>(value => transformDefault = value, () => transformDefault);
+			Transform = new ListenerProperty<UniverseTransform>(value => transform = value, () => transform, OnTransform);
 		}
 
 		[JsonIgnore]
@@ -39,5 +43,12 @@ namespace LunraGames.SubLight.Models
 				return 0f < Opacity.Value;
 			}
 		}
+
+		#region Events
+		void OnTransform(UniverseTransform transform)
+		{
+			TransformDefault.Value = TransformDefault.Value.Duplicate(transform.UniverseOrigin);
+		}
+		#endregion
 	}
 }

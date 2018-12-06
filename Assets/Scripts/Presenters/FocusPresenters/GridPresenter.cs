@@ -15,6 +15,8 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class GridPresenter : FocusPresenter<IGridView, SystemFocusDetails>
 	{
+		const float Tiling = 8f;
+
 		enum UniverseFocuses
 		{
 			Unknown = 0,
@@ -125,6 +127,12 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture += OnCurrentGesture;
 
+			foreach (var unitMap in unitMaps)
+			{
+				var currTransform = model.GetScale(unitMap.Scale);
+				currTransform.TransformDefault.Value = DefineTransform(unitMap, UniversePosition.Zero, 1f);
+			}
+
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
@@ -201,8 +209,6 @@ namespace LunraGames.SubLight.Presenters
 			bool zoomingUp = false
 		)
 		{
-			const float Tiling = 8f;
-
 			var scale = model.GetScale(unitMap.Scale);
 			var scaleTransform = scale.Transform.Value;
 
@@ -246,10 +252,6 @@ namespace LunraGames.SubLight.Presenters
 			{
 				if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * unitMap.ZoomUpScaleMultiplier);
 				else zoomScalar = 1f - (unitMap.ZoomDownScaleMultiplier * zoomProgress);
-				//if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * 2f);
-				//else zoomScalar = 1f - (0.95f * zoomProgress);
-				//if (grid.ZoomingUp) zoomScalar = 1f + zoomProgress;
-				//else zoomScalar = 1f - (0.5f * zoomProgress);
 			}
 
 			grid.Tiling = Tiling * zoomScalar;
@@ -263,21 +265,30 @@ namespace LunraGames.SubLight.Presenters
 
 			var currLightYearsInTile = zoomProgress * unitMap.LightYears;
 
+			scale.Opacity.Value = grid.Alpha;
+			scale.Transform.Value = DefineTransform(unitMap, scaleTransform.UniverseOrigin, zoomScalar);
+
+			return grid;
+		}
+
+		UniverseTransform DefineTransform(
+			UnitMap unitMap,
+			UniversePosition universeOrigin,
+			float zoomScalar
+		)
+		{
 			var unityUnitsPerTile = (Tiling * 0.5f * zoomScalar) / View.GridUnityRadius;
 			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(unitMap.LightYears);
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 
-			scale.Opacity.Value = grid.Alpha;
-			scale.Transform.Value = new UniverseTransform(
+			return new UniverseTransform(
 				View.GridUnityOrigin,
 				View.GridUnityRadius,
-				scaleTransform.UniverseOrigin,
+				universeOrigin,
 				Vector3.one * universeUnitsPerUnityUnit,
 				Vector3.one * (1f / universeUnitsPerUnityUnit),
 				Quaternion.identity
 			);
-
-			return grid;
 		}
 
 		#region

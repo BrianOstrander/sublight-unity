@@ -41,13 +41,12 @@ namespace LunraGames.SubLight.Presenters
 
 		void ApplyScaleTransform(UniverseTransform transform)
 		{
-			var scale = transform.GetUnityScale(ScaleInUniverse);
+			var scale = ScaleModel.Transform.Value.GetUnityScale(ScaleInUniverse);
 			scale = new Vector3(
 				Mathf.Max(MinimumScale, scale.x),
 				Mathf.Max(MinimumScale, scale.y),
 				Mathf.Max(MinimumScale, scale.z)
 			);
-			var position = ScaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
 
 			var rawScale = scale;
 			switch (View.ScaleIgnores)
@@ -62,6 +61,8 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			View.SetScale(scale, rawScale);
+
+			var position = ScaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
 
 			var rawPosition = position;
 			switch (View.PositionIgnores)
@@ -143,12 +144,13 @@ namespace LunraGames.SubLight.Presenters
 			{
 				case TransitionStates.Closed:
 					if (isOpacityZero) return;
-					ShowViewInstant();
-					//if (View.RestrictVisibiltyInBounds)
-					//{
 
-					//}
-					//else ShowViewInstant();
+					if (View.RestrictVisibiltyInBounds)
+					{
+						// At some point we may want to do this only when we start zooming, but it's not too laggy right now so whatever...
+						if (GetRadiusNormal(ScaleModel.TransformDefault.Value.GetUnityPosition(PositionInUniverse)) < 1f) ShowViewInstant();
+					}
+					else ShowViewInstant();
 
 					break;
 				case TransitionStates.Shown:

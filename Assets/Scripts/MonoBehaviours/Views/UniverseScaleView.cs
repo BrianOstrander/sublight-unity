@@ -51,31 +51,6 @@ namespace LunraGames.SubLight.Views
 			GridRadius = gridRadius;
 		}
 
-		/*
-		public Vector3 Scale
-		{
-			set
-			{
-				var rawValue = value;
-				switch(scaleIgnores)
-				{
-					case UniverseScaleAxises.None: break;
-					case UniverseScaleAxises.X: value = value.NewX(1f); break;
-					case UniverseScaleAxises.Y: value = value.NewY(1f); break;
-					case UniverseScaleAxises.Z: value = value.NewZ(1f); break;
-					default:
-						Debug.LogError("Unrecognized axis: " + scaleIgnores);
-						break;
-				}
-
-				wasScale = value;
-
-				if (scaleArea != null) scaleArea.localScale = value;
-				OnScale(value, rawValue);
-			}
-		}
-		*/
-
 		public void SetScale(Vector3 scale, Vector3 rawScale)
 		{
 			if (scaleArea != null) scaleArea.localScale = scale;
@@ -100,42 +75,6 @@ namespace LunraGames.SubLight.Views
 			}
 			OnPosition(position, rawPosition);
 		}
-
-		/*
-		public Vector3 Position
-		{
-			set
-			{
-				var rawPosition = value;
-				switch (positionIgnores)
-				{
-					case UniverseScaleAxises.None: break;
-					case UniverseScaleAxises.X: value = value.NewX(transform.position.x); break;
-					case UniverseScaleAxises.Y: value = value.NewY(transform.position.y); break;
-					case UniverseScaleAxises.Z: value = value.NewZ(transform.position.z); break;
-					default:
-						Debug.LogError("Unrecognized axis: " + positionIgnores);
-						break;
-				}
-
-				RadiusNormal = GetRadiusNormal(value);
-				IsInBounds = RadiusNormal < 1f;
-				IsInBoundsUnscaled = RadiusNormal < wasScale.x;
-
-				var oldWasInBounds = wasInBounds;
-				var oldWasInBoundsUnscaled = wasInBoundsUnscaled;
-
-				wasInBounds = IsInBounds;
-				wasInBoundsUnscaled = IsInBoundsUnscaled;
-
-				if (oldWasInBounds != IsInBounds) OnInBoundsChanged(IsInBounds);
-				if (oldWasInBoundsUnscaled != IsInBoundsUnscaled) OnInBoundsUnscaledChanged(IsInBoundsUnscaled);
-
-				if (positionArea != null) positionArea.position = value;
-				OnPosition(value, rawPosition);
-			}
-		}
-		*/
 
 		public override void Reset()
 		{
