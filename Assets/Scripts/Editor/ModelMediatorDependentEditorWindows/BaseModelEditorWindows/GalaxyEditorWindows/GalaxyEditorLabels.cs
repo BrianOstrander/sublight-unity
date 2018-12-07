@@ -302,7 +302,7 @@ namespace LunraGames.SubLight
 
 		void LabelsToolbarPrimaryDetails(GalaxyInfoModel model)
 		{
-			labelsDetailsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsDetailsScroll.Value), false, true, GUILayout.ExpandHeight(true)).y;
+			labelsDetailsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsDetailsScroll.Value), false, true, GUILayout.ExpandHeight(true), GUILayout.Width(475f)).y;
 			{
 				if (labelsSelectedLabel == null)
 				{

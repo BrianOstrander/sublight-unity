@@ -98,6 +98,12 @@ namespace LunraGames.SubLight
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant, UniverseScales.Quadrant);
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Stellar, UniverseScales.Quadrant, UniverseScales.Stellar);
 
+				new RegionLabelPresenter(payload.Game, UniverseScales.Local);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Stellar);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Quadrant);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Galactic);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Cluster);
+
 				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Local);
 
 				var celestialLanguageBlock = new CelestialSystemLanguageBlock

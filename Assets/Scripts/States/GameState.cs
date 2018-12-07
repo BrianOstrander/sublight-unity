@@ -302,6 +302,9 @@ namespace LunraGames.SubLight
 					Payload.Game.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
 					return;
 				case UniverseScales.Local:
+					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
+					targetProperty = Payload.Game.ScaleLabelLocal;
+					break;
 				case UniverseScales.Stellar:
 					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
 					targetProperty = Payload.Game.ScaleLabelStellar;

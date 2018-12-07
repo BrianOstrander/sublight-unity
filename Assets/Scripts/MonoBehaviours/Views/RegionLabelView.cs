@@ -34,17 +34,34 @@ namespace LunraGames.SubLight.Views
 		float transitionRemaining;
 		States state = States.Idle;
 
+		float regionOpacity;
+
+		public float RegionOpacity
+		{
+			get { return regionOpacity; }
+			set
+			{
+				regionOpacity = value;
+				UpdateOpacity();
+			}
+		}
+
 		public void SetRegion(string text, bool instant = false)
 		{
+			text = text ?? string.Empty;
+
 			if (instant)
 			{
 				currentText = text;
 				nextText = text;
 				transitionRemaining = 0f;
 				regionLabel.text = text;
+				regionLabel.alpha = string.IsNullOrEmpty(text) ? 0f : 1f;
 				state = States.Idle;
 				return;
 			}
+
+			if (text == nextText) return;
 
 			switch (state)
 			{
@@ -74,14 +91,20 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				base.Opacity = value;
-				labelGroup.alpha = value;
+				UpdateOpacity();
 			}
+		}
+
+		void UpdateOpacity()
+		{
+			labelGroup.alpha = Opacity * RegionOpacity;
 		}
 
 		public override void Reset()
 		{
 			base.Reset();
 
+			SetRegion(string.Empty, true);
 		}
 
 		#region Events
@@ -93,7 +116,7 @@ namespace LunraGames.SubLight.Views
 
 			transitionRemaining = Mathf.Max(0f, transitionRemaining - delta);
 			var hideCutoff = transitionDuration * (1f - transitionHideRatio);
-			var scalar = 1f;
+			var scalar = 0f;
 			var newState = state;
 			if (hideCutoff <= transitionRemaining)
 			{
@@ -105,6 +128,8 @@ namespace LunraGames.SubLight.Views
 				newState = States.Revealing;
 				scalar = transitionRemaining / hideCutoff;
 			}
+
+			scalar = 1f - scalar;
 
 			if (newState != state)
 			{
@@ -130,6 +155,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IRegionLabelView : IView
 	{
+		float RegionOpacity { set; }
 		void SetRegion(string text, bool instant = false);
 	}
 }

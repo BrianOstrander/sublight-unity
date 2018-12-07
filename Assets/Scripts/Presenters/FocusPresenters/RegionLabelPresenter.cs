@@ -10,11 +10,16 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 		UniverseScales scale;
 		ListenerProperty<UniverseScaleLabelBlock> labelProperty;
+		UniverseScaleModel scaleModel;
 
 		public RegionLabelPresenter(GameModel model, UniverseScales scale)
 		{
 			this.model = model;
 			this.scale = scale;
+			scaleModel = model.GetScale(scale);
+
+			scaleModel.Opacity.Changed += OnScaleOpacity;
+			OnScaleOpacity(scaleModel.Opacity.Value);
 
 			switch (scale)
 			{
@@ -34,6 +39,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			model.GetScale(scale).Opacity.Changed -= OnScaleOpacity;
+
 			if (labelProperty == null)
 			{
 				Debug.LogError("A labelProperty was never defined");
@@ -45,13 +52,19 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-
+			OnScaleOpacity(scaleModel.Opacity.Value);
+			OnLabel(labelProperty.Value);
 		}
 
-		#region
+		#region Events
+		void OnScaleOpacity(float opacity)
+		{
+			View.RegionOpacity = opacity;
+		}
+
 		void OnLabel(UniverseScaleLabelBlock label)
 		{
-
+			View.SetRegion(label.Name.Value.Value);
 		}
 		#endregion
 	}
