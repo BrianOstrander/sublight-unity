@@ -140,35 +140,6 @@ namespace LunraGames.SubLight.Presenters
 			ApplyScaleTransform(transform);
 		}
 
-		//void OnOpacity(float opacity)
-		//{
-		//	OnSetOpacity(opacity);
-		//	/*
-		//	if (!CanShow) return;
-
-		//	var isOpacityZero = Mathf.Approximately(0f, opacity);
-
-		//	switch (View.TransitionState)
-		//	{
-		//		case TransitionStates.Closed:
-		//			if (isOpacityZero) return;
-
-		//			if (View.RestrictVisibiltyInBounds)
-		//			{
-		//				// At some point we may want to do this only when we start zooming, but it's not too laggy right now so whatever...
-		//				if (GetRadiusNormal(ScaleModel.TransformDefault.Value.GetUnityPosition(PositionInUniverse)) < 1f) ShowViewInstant();
-		//			}
-		//			else ShowViewInstant();
-
-		//			break;
-		//		case TransitionStates.Shown:
-		//			if (isOpacityZero) CloseViewInstant();
-		//			break;
-		//	}
-		//	OnSetOpacity(opacity);
-		//	*/
-		//}
-
 		void OnFocusTransform(FocusTransform focusTransform)
 		{
 			if (focusTransform.Zoom.State == lastZoomState) return;
@@ -176,20 +147,6 @@ namespace LunraGames.SubLight.Presenters
 
 			if (focusTransform.ToScale == Scale) OnFocusTransformShowing(focusTransform);
 			else if (focusTransform.FromScale == Scale) OnFocusTransformClosing(focusTransform);
-
-			//switch (focusTransform.Zoom.State)
-			//{
-			//	case TweenStates.Active:
-			//		break;
-			//	case TweenStates.Complete:
-			//		break;
-			//	default:
-			//		Debug.LogError("Unrecognized tween state: " + focusTransform.Zoom.State);
-			//		return;
-			//}
-
-			//focusTransform.
-			//if (focusTransform.ToScale == Scale)
 		}
 
 		void OnFocusTransformShowing(FocusTransform focusTransform)

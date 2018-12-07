@@ -291,14 +291,6 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		//void OnActiveScale(UniverseScaleModel scale)
-		//{
-		//	if (Payload.LastActiveScale != null) Payload.LastActiveScale.Transform.Changed -= OnActiveScaleTransform;
-		//	Payload.LastActiveScale = scale;
-		//	Payload.LastActiveScale.Transform.Changed += OnActiveScaleTransform;
-		//	OnActiveScaleTransform(Payload.LastActiveScale.Transform);
-		//}
-
 		void OnScaleTransform(UniverseTransform transform)
 		{
 			var labels = Payload.Game.Galaxy.GetLabels();
