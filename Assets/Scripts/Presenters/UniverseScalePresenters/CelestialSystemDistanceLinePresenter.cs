@@ -208,6 +208,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnScaleTransform(UniverseTransform transform)
 		{
 			if (!View.Visible) return;
+			OnScaleTransformForced(transform);
 		}
 
 		void OnScaleTransformForced(UniverseTransform transform)

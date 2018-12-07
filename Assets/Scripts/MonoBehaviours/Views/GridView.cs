@@ -185,7 +185,7 @@ namespace LunraGames.SubLight.Views
 			gridMesh.material.SetFloat(ShaderConstants.HoloGridBasic.Alpha, revealCurve.Evaluate(scalar));
 		}
 
-		public void ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius)
+		public bool ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius)
 		{
 			unityPosition = Vector3.zero;
 			inRadius = false;
@@ -194,13 +194,14 @@ namespace LunraGames.SubLight.Views
 			var ray = App.V.CameraViewportPointToRay(viewport);
 
 			float distance;
-			if (!plane.Raycast(ray, out distance)) return;
+			if (!plane.Raycast(ray, out distance)) return false;
 
 			Debug.DrawLine(ray.origin, ray.origin + (ray.direction * distance), Color.red);
 
 
 			unityPosition = ray.origin + (ray.direction * distance);
 			inRadius = Vector3.Distance(unityPosition, GridUnityOrigin) <= gridDragRadius;
+			return true;
 		}
 
 		#region Events
@@ -255,7 +256,7 @@ namespace LunraGames.SubLight.Views
 
 		AnimationCurve GetPositionCurve(bool zoomingUp);
 
-		void ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius);
+		bool ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius);
 		void SetRadius(float scalar, bool showing);
 
 		Action DrawGizmos { set; }

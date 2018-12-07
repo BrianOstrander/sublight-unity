@@ -530,9 +530,9 @@ namespace LunraGames.SubLight.Presenters
 				{
 					// start drag logic
 					bool inRadius;
-					View.ProcessDrag(Gesture.GetViewport(lastgesture.Begin), out unityPosOnDragBegin, out inRadius);
+					var isValidDrag = View.ProcessDrag(Gesture.GetViewport(lastgesture.Begin), out unityPosOnDragBegin, out inRadius);
 
-					if (!inRadius)
+					if (!inRadius || !isValidDrag)
 					{
 						isDragging = false;
 						wasDragging = false;
@@ -561,9 +561,9 @@ namespace LunraGames.SubLight.Presenters
 		{
 			Vector3 currUnityDrag;
 			bool currInRadius;
-			View.ProcessDrag(Gesture.GetViewport(lastgesture.End), out currUnityDrag, out currInRadius);
+			var isValidDrag = View.ProcessDrag(Gesture.GetViewport(lastgesture.End), out currUnityDrag, out currInRadius);
 
-			if (currInRadius) unityPosOnDragLast = currUnityDrag;
+			if (isValidDrag) unityPosOnDragLast = currUnityDrag;
 			else currUnityDrag = unityPosOnDragLast;
 
 			var offset = View.GridUnityOrigin + (unityPosOnDragBegin - currUnityDrag);
