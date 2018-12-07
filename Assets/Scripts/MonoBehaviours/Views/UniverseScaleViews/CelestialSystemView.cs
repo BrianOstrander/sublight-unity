@@ -475,7 +475,7 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnInBoundsChanged(bool isInBounds)
 		{
-			if (!IsInBounds)
+			if (!isInBounds)
 			{
 				// Trails need to wait a fram before enabling so they don't zig zag across the grid.
 				dragTrail.emitting = false;
@@ -558,6 +558,7 @@ namespace LunraGames.SubLight.Views
 			IconScale = 1f;
 
 			dragTrail.emitting = false;
+			dragTrailDelay = 3;
 			dragTrail.Clear();
 		}
 		#endregion

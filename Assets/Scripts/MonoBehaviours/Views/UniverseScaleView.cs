@@ -26,7 +26,6 @@ namespace LunraGames.SubLight.Views
 		Transform positionArea;
 
 		bool? wasInBounds;
-		bool? wasInBoundsUnscaled;
 
 		public UniverseScaleAxises ScaleIgnores { get { return scaleIgnores; } }
 		public UniverseScaleAxises PositionIgnores { get { return positionIgnores; } }
@@ -76,7 +75,6 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			wasInBounds = null;
-			wasInBoundsUnscaled = null;
 
 			// These are set to null to make sure they're properly set...
 			GetRadiusNormalCallback = null;
@@ -90,13 +88,13 @@ namespace LunraGames.SubLight.Views
 
 		protected float GetRadiusNormal(Vector3 worldPosition, float margin = 0f)
 		{
-			if (GetRadiusNormalCallback == null) return 0f;
+			if (GetRadiusNormalCallback == null) throw new NullReferenceException("GetRadiusNormalCallback");
 			return GetRadiusNormalCallback(worldPosition, margin);
 		}
 
 		protected bool GetPositionIsInRadius(Vector3 worldPosition, float margin = 0f)
 		{
-			if (GetPositionIsInRadiusCallback == null) return false;
+			if (GetPositionIsInRadiusCallback == null) throw new NullReferenceException("GetPositionIsInRadiusCallback");
 			return GetPositionIsInRadiusCallback(worldPosition, margin);
 		}
 	}

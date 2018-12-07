@@ -77,21 +77,8 @@ namespace LunraGames.SubLight.Presenters
 				if (View.Visible) CloseViewInstant();
 				return;
 			}
-			//Debug.Log("Actvise system: "+activeSystem.Name.Value);
 
-			if (View.Visible)
-			{
-				View.Reset();
-				ForceApplyScaleTransform();
-				OnShowView();
-			}
-			else
-			{
-				View.Reset();
-				ForceApplyScaleTransform();
-				OnShowView();
-				ShowView(instant: true);
-			}
+			ShowViewInstant(View.Visible);
 		}
 
 		void OnGlobalClick(Click click)

@@ -80,7 +80,7 @@ namespace LunraGames.SubLight.Views
 			{
 				base.Opacity = value;
 				group.alpha = value;
-				line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * lineRadiusOpacity.Evaluate(GetRadiusNormal(line.transform.position)));
+				line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * lineRadiusOpacity.Evaluate(RadiusNormal));
 				foreach (var mesh in meshes)
 				{
 					mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, value);

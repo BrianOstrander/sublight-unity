@@ -7,6 +7,25 @@ namespace LunraGames.SubLight
 	[Serializable]
 	public struct FocusTransform
 	{
+		public static FocusTransform Default
+		{
+			get
+			{
+				return new FocusTransform(
+					TweenBlock.CreateInstant(0f, 1f),
+					TweenBlock.Zero,
+					UniverseScales.System,
+					UniverseScales.Local,
+					LanguageStringModel.Empty,
+					LanguageStringModel.Empty,
+					FuncExtensions.GetEmpty(string.Empty),
+					FuncExtensions.GetEmpty(string.Empty),
+					LanguageStringModel.Empty,
+					LanguageStringModel.Empty
+				);
+			}
+		}
+
 		public readonly TweenBlock<float> Zoom;
 		public readonly TweenBlock<float> NudgeZoom;
 

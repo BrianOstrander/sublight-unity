@@ -53,18 +53,7 @@ namespace LunraGames.SubLight
 			game.DestructionSpeed.Value = 0.004f;
 			game.DestructionSpeedIncrement.Value = 0.0025f;
 
-			game.FocusTransform.Value = new FocusTransform(
-				TweenBlock.CreateInstant(0f, 1f),
-				TweenBlock.Zero,
-				UniverseScales.System,
-				UniverseScales.Local,
-				LanguageStringModel.Empty,
-				LanguageStringModel.Empty,
-				FuncExtensions.GetEmpty(string.Empty),
-				FuncExtensions.GetEmpty(string.Empty),
-				LanguageStringModel.Empty,
-				LanguageStringModel.Empty
-			);
+			game.FocusTransform.Value = FocusTransform.Default;
 
 			var rations = 0.3f;
 			var fuel = 1f;

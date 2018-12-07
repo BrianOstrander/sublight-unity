@@ -45,7 +45,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void ApplyScaleTransform(UniverseTransform transform)
 		{
-			var scale = ScaleModel.Transform.Value.GetUnityScale(ScaleInUniverse);
+			var scale = transform.GetUnityScale(ScaleInUniverse);
 			scale = new Vector3(
 				Mathf.Max(MinimumScale, scale.x),
 				Mathf.Max(MinimumScale, scale.y),
@@ -66,7 +66,7 @@ namespace LunraGames.SubLight.Presenters
 
 			View.SetScale(scale, rawScale);
 
-			var position = ScaleModel.Transform.Value.GetUnityPosition(PositionInUniverse);
+			var position = transform.GetUnityPosition(PositionInUniverse);
 
 			var rawPosition = position;
 			switch (View.PositionIgnores)
@@ -86,7 +86,7 @@ namespace LunraGames.SubLight.Presenters
 			View.SetPosition(position, rawPosition, isInBounds, radiusNormal);
 		}
 
-		protected void ShowViewInstant()
+		protected void ShowViewInstant(bool onlyReset = false)
 		{
 			View.Reset();
 
@@ -96,8 +96,8 @@ namespace LunraGames.SubLight.Presenters
 
 			OnShowView();
 
-			ShowView(instant: true);
-			ApplyScaleTransform(ScaleModel.Transform.Value);
+			if (!onlyReset) ShowView(instant: true);
+			ForceApplyScaleTransform();
 		}
 
 		protected void CloseViewInstant()

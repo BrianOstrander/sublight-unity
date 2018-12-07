@@ -60,7 +60,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShowView()
 		{
-			OnScaleTransform(ScaleModel.Transform.Value);
+			OnScaleTransformForced(ScaleModel.Transform.Value);
 		}
 
 		void OnScaleOpacity(float value)
@@ -71,6 +71,11 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		void OnScaleTransform(UniverseTransform transform)
+		{
+			if (!View.Visible) return;
+		}
+
+		void OnScaleTransformForced(UniverseTransform transform)
 		{
 			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
