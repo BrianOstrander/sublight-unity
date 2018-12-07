@@ -98,6 +98,7 @@ namespace LunraGames.SubLight.Presenters
 		bool isDragging;
 		Gesture lastgesture;
 		Vector3 unityPosOnDragBegin;
+		Vector3 unityPosOnDragLast;
 		UniverseTransform transformOnBeginDrag;
 
 		UniversePosition ShipPositionOnPlane
@@ -561,6 +562,9 @@ namespace LunraGames.SubLight.Presenters
 			Vector3 currUnityDrag;
 			bool currInRadius;
 			View.ProcessDrag(Gesture.GetViewport(lastgesture.End), out currUnityDrag, out currInRadius);
+
+			if (currInRadius) unityPosOnDragLast = currUnityDrag;
+			else currUnityDrag = unityPosOnDragLast;
 
 			var offset = View.GridUnityOrigin + (unityPosOnDragBegin - currUnityDrag);
 			var universePos = transformOnBeginDrag.GetUniversePosition(offset);
