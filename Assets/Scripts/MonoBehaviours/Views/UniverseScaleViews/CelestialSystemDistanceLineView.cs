@@ -4,17 +4,18 @@ using UnityEngine;
 
 namespace LunraGames.SubLight.Views
 {
+	public enum LineClamping
+	{
+		Unknown = 0,
+		NoClamping = 10,
+		BeginClamped = 20,
+		EndClamped = 30,
+		BothClamped = 40,
+		NotVisible = 50,
+	}
+
 	public class CelestialSystemDistanceLineView : UniverseScaleView, ICelestialSystemDistanceLineView
 	{
-		enum Clamping
-		{
-			Unknown = 0,
-			NoClamping = 10,
-			BeginClamped = 20,
-			EndClamped = 30,
-			BothClamped = 40,
-			NotVisible = 50,
-		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
@@ -43,29 +44,20 @@ namespace LunraGames.SubLight.Views
 		MeshRenderer directionRingGraphic;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		public void SetPoints(Vector3 begin, Vector3 end)
+		public float GridRadiusMargin { get { return gridRadiusMargin; } }
+		public float YMinimumOffset { get { return yMinimumOffset; } }
+
+		public void SetPoints(
+			Vector3 begin,
+			Vector3 end,
+			LineClamping clamping,
+			Vector3? clampedBegin,
+			Vector3? clampedEnd
+		)
 		{
-			var minOffset = new Vector3(0f, yMinimumOffset, 0f);
-			begin += minOffset;
-			end += minOffset;
-
-			Vector3? clampedBegin = null;
-			Vector3? clampedEnd = null;
-			var clamping = ClampPoints(begin, end, out clampedBegin, out clampedEnd);
-
-			if (clampedBegin.HasValue)
-			{
-				Debug.DrawLine(clampedBegin.Value, clampedBegin.Value + (Vector3.up * 0.1f), Color.green, 0.1f);
-			}
-
-			if (clampedEnd.HasValue)
-			{
-				Debug.DrawLine(clampedEnd.Value, clampedEnd.Value + (Vector3.up * 0.1f), Color.red, 0.1f);
-			}
-
 			switch (clamping)
 			{
-				case Clamping.NotVisible:
+				case LineClamping.NotVisible:
 					topLine.enabled = false;
 					bottomLine.enabled = false;
 					terminatorBegin.SetActive(false);
@@ -78,138 +70,7 @@ namespace LunraGames.SubLight.Views
 			SetTopPoints(begin, end, clamping, clampedBegin, clampedEnd);
 		}
 
-		Clamping ClampPoints(Vector3 begin, Vector3 end, out Vector3? clampedBegin, out Vector3? clampedEnd)
-		{
-			// Incase you can't tell... I did not write this. Sourced frome here http://csharphelper.com/blog/2014/09/determine-where-a-line-intersects-a-circle-in-c/
-
-			clampedBegin = null;
-			clampedEnd = null;
-
-			var beginIsInRadius = GetPositionIsInRadius(begin, gridRadiusMargin);
-			var endIsInRadius = GetPositionIsInRadius(end, gridRadiusMargin);
-
-			if (beginIsInRadius && endIsInRadius) return Clamping.NoClamping;
-
-			var pointInside = beginIsInRadius ? begin : end;
-			var pointOutside = beginIsInRadius ? end : begin;
-
-			var gridRadiusX = GridOrigin.x;
-			var gridRadiesZ = GridOrigin.z;
-			var radius = GridRadius - gridRadiusMargin;
-
-			float xDelta, zDelta, A, B, C, det, t;
-
-			xDelta = pointOutside.x - pointInside.x;
-			zDelta = pointOutside.z - pointInside.z;
-
-			A = xDelta * xDelta + zDelta * zDelta;
-			B = 2f * (xDelta * (pointInside.x - GridOrigin.x) + zDelta * (pointInside.z - GridOrigin.z));
-			C = (pointInside.x - GridOrigin.x) * (pointInside.x - GridOrigin.x) + (pointInside.z - GridOrigin.z) * (pointInside.z - GridOrigin.z) - radius * radius;
-
-			det = B * B - 4f * A * C;
-			if (Mathf.Approximately(A, 0f) || (det < 0f))
-			{
-				// No real solutions.
-				return Clamping.NotVisible;
-			}
-
-			if (Mathf.Approximately(det, 0f))
-			{
-				// We don't care about a single tangent...
-				return Clamping.NotVisible;
-				/*
-				// One solution.
-				t = -B / (2f * A);
-				var result = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
-				var status = ClampedPointResults.NoClamping;
-
-				if (beginIsInRadius)
-				{
-					clampedEnd = result;
-					status = ClampedPointResults.EndClamped;
-				}
-				else 
-				{
-					clampedBegin = result;
-					status = ClampedPointResults.BeginClamped;
-				}
-				return status;
-				*/
-			}
-
-			// Two solutions.
-			var doubleA = 2f * A;
-			var sqrtDet = Mathf.Sqrt(det);
-
-			t = (-B + sqrtDet) / doubleA;
-			var result0 = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
-			t = (-B - sqrtDet) / doubleA;
-			var result1 = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
-
-			if (beginIsInRadius)
-			{
-				clampedEnd = CalculateClamped(begin, end, result0);
-				return Clamping.EndClamped;
-			}
-
-			if (endIsInRadius)
-			{
-				clampedBegin = CalculateClamped(end, begin, result0);
-				return Clamping.BeginClamped;
-			}
-
-			var minPoint = begin.NewY(GridOrigin.y);
-			var maxPoint = end.NewY(GridOrigin.y);
-
-			if (Vector3.Distance(GridOrigin, maxPoint) < Vector3.Distance(GridOrigin, minPoint))
-			{
-				var newMax = minPoint;
-				minPoint = maxPoint;
-				maxPoint = newMax;
-			}
-
-			var midPointDelta = (maxPoint - minPoint) * 0.5f;
-
-			var midPoint = minPoint + midPointDelta;
-
-			if (Vector3.Distance(GridOrigin, minPoint) < Vector3.Distance(GridOrigin, midPoint))
-			{
-				// Line is outside the circle and doesn't intersect it.
-				return Clamping.NotVisible;
-			}
-
-			//var minOriginal = new Vector3(Mathf.Min(begin.x, end.x), 0f, Mathf.Min(begin.z, end.z));
-			//var maxOriginal = new Vector3(Mathf.Max(begin.x, end.x), 0f, Mathf.Max(begin.z, end.z));
-
-			/*
-			var minClamped = new Vector3(Mathf.Min(result0.x, result1.x), 0f, Mathf.Min(result0.z, result1.z));
-			var maxClamped = new Vector3(Mathf.Max(result0.x, result1.x), 0f, Mathf.Max(result0.z, result1.z));
-			var minOriginal = new Vector3(Mathf.Min(begin.x, end.x), 0f, Mathf.Min(begin.z, end.z));
-			var maxOriginal = new Vector3(Mathf.Max(begin.x, end.x), 0f, Mathf.Max(begin.z, end.z));
-
-			if ((maxOriginal.x < minClamped.x && maxOriginal.z < minClamped.z) || (maxClamped.x < minOriginal.x && maxClamped.z < minOriginal.z))
-			{
-				return Clamping.NotVisible;
-			}
-			*/
-			clampedBegin = CalculateClamped(begin, end, result0);
-			clampedEnd = CalculateClamped(end, begin, result1);
-
-			return Clamping.BothClamped;
-		}
-
-		Vector3? CalculateClamped(Vector3 clampOrigin, Vector3 clampTermination, Vector3 position)
-		{
-			var originalDistance = Vector3.Distance(clampOrigin, clampTermination);
-			var orginOnGrid = clampOrigin.NewY(GridOrigin.y);
-			var terminationOnGrid = clampTermination.NewY(GridOrigin.y);
-			var distanceOnGrid = Vector3.Distance(orginOnGrid, terminationOnGrid);
-
-			var scalar = Vector3.Distance(orginOnGrid, position) / distanceOnGrid;
-			return clampOrigin + ((clampTermination - clampOrigin).normalized * (originalDistance * scalar));
-		}
-
-		void SetBottomPoints(Vector3 begin, Vector3 end, Clamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
+		void SetBottomPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
 		{
 			begin = begin.NewY(0f);
 			end = end.NewY(0f);
@@ -222,19 +83,19 @@ namespace LunraGames.SubLight.Views
 
 			switch (clamping)
 			{
-				case Clamping.BothClamped:
+				case LineClamping.BothClamped:
 					bottomLineMarginBeginCurrent = Mathf.Max(0f, bottomLineMarginBeginCurrent - Vector3.Distance(begin, clampedBegin.Value));
 					bottomLineMarginEndCurrent = Mathf.Max(0f, bottomLineMarginEndCurrent - Vector3.Distance(end, clampedEnd.Value));
 					beginOffset = clampedBegin.Value - begin;
 					begin = clampedBegin.Value;
 					end = clampedEnd.Value;
 					break;
-				case Clamping.BeginClamped:
+				case LineClamping.BeginClamped:
 					bottomLineMarginBeginCurrent = Mathf.Max(0f, bottomLineMarginBeginCurrent - Vector3.Distance(begin, clampedBegin.Value));
 					beginOffset = clampedBegin.Value - begin;
 					begin = clampedBegin.Value;
 					break;
-				case Clamping.EndClamped:
+				case LineClamping.EndClamped:
 					bottomLineMarginEndCurrent = Mathf.Max(0f, bottomLineMarginEndCurrent - Vector3.Distance(end, clampedEnd.Value));
 					end = clampedEnd.Value;
 					break;
@@ -265,7 +126,7 @@ namespace LunraGames.SubLight.Views
 			directionRing.transform.forward = delta;
 		}
 
-		void SetTopPoints(Vector3 begin, Vector3 end, Clamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
+		void SetTopPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
 		{
 			var topLineMarginBegin = topLineMargin;
 			var topLineMarginEnd = topLineMargin;
@@ -273,19 +134,19 @@ namespace LunraGames.SubLight.Views
 
 			switch (clamping)
 			{
-				case Clamping.BothClamped:
+				case LineClamping.BothClamped:
 					topLineMarginBegin = Mathf.Max(0f, topLineMarginBegin - Vector3.Distance(begin, clampedBegin.Value));
 					topLineMarginEnd = Mathf.Max(0f, topLineMarginEnd - Vector3.Distance(end, clampedEnd.Value));
 					beginOffset = (clampedBegin.Value - begin).NewY(0f);
 					begin = clampedBegin.Value;
 					end = clampedEnd.Value;
 					break;
-				case Clamping.BeginClamped:
+				case LineClamping.BeginClamped:
 					topLineMarginBegin = Mathf.Max(0f, topLineMarginBegin - Vector3.Distance(begin, clampedBegin.Value));
 					beginOffset = (clampedBegin.Value - begin).NewY(0f);
 					begin = clampedBegin.Value;
 					break;
-				case Clamping.EndClamped:
+				case LineClamping.EndClamped:
 					topLineMarginEnd = Mathf.Max(0f, topLineMarginEnd - Vector3.Distance(end, clampedEnd.Value));
 					end = clampedEnd.Value;
 					break;
@@ -330,20 +191,20 @@ namespace LunraGames.SubLight.Views
 
 			switch (clamping)
 			{
-				case Clamping.NoClamping:
+				case LineClamping.NoClamping:
 					terminatorBegin.SetActive(false);
 					terminatorEnd.SetActive(false);
 					break;
-				case Clamping.BothClamped:
+				case LineClamping.BothClamped:
 					var endPos = allTopSegments.Last();
 					SetTerminator(terminatorBegin, topBegin);
 					SetTerminator(terminatorEnd, endPos);
 					break;
-				case Clamping.BeginClamped:
+				case LineClamping.BeginClamped:
 					terminatorEnd.SetActive(false);
 					SetTerminator(terminatorBegin, topBegin);
 					break;
-				case Clamping.EndClamped:
+				case LineClamping.EndClamped:
 					terminatorBegin.SetActive(false);
 					SetTerminator(terminatorEnd, allTopSegments.Last());
 					break;
@@ -385,6 +246,15 @@ namespace LunraGames.SubLight.Views
 
 	public interface ICelestialSystemDistanceLineView : IUniverseScaleView
 	{
-		void SetPoints(Vector3 begin, Vector3 end);
+		float GridRadiusMargin { get; }
+		float YMinimumOffset { get; }
+
+		void SetPoints(
+			Vector3 begin,
+			Vector3 end,
+			LineClamping clamping,
+			Vector3? clampedBegin,
+			Vector3? clampedEnd
+		);
 	}
 }
