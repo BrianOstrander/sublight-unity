@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Models
 		{
 			var result = new UniverseScaleModel();
 			result.Scale.Value = scale;
+			result.TransformDefault.Value = UniverseTransform.Default(scale);
 			return result;
 		}
 
@@ -32,7 +33,7 @@ namespace LunraGames.SubLight.Models
 			Scale = new ListenerProperty<UniverseScales>(value => scale = value, () => scale);
 			Opacity = new ListenerProperty<float>(value => opacity = value, () => opacity);
 			TransformDefault = new ListenerProperty<UniverseTransform>(value => transformDefault = value, () => transformDefault);
-			Transform = new ListenerProperty<UniverseTransform>(value => transform = value, () => transform, OnTransform);
+			Transform = new ListenerProperty<UniverseTransform>(value => transform = value, () => transform);
 		}
 
 		[JsonIgnore]
@@ -43,12 +44,5 @@ namespace LunraGames.SubLight.Models
 				return 0f < Opacity.Value;
 			}
 		}
-
-		#region Events
-		void OnTransform(UniverseTransform transform)
-		{
-			TransformDefault.Value = TransformDefault.Value.Duplicate(transform.UniverseOrigin);
-		}
-		#endregion
 	}
 }

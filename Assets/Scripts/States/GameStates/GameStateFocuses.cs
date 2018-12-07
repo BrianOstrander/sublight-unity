@@ -116,7 +116,7 @@ namespace LunraGames.SubLight
 					}
 				};
 
-				for (var i = 0; i < payload.InterstellarSectorCount; i++)
+				for (var i = 0; i < payload.LocalSectorCount; i++)
 				{
 					var sector = new SectorInstanceModel();
 					sector.Sector.Value = App.Universe.GetSector(payload.Game.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
@@ -131,7 +131,7 @@ namespace LunraGames.SubLight
 						);
 					}
 					sector.SystemModels.Value = systems;
-					payload.SectorInstances.Add(sector);
+					payload.LocalSectorInstances.Add(sector);
 				}
 
 				done();

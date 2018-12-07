@@ -23,18 +23,22 @@ namespace LunraGames.SubLight.Presenters
 		protected Vector3 GridOrigin { private set; get; }
 		protected float GridRadius { private set; get; }
 
+		TweenStates lastZoomState;
+
 		public UniverseScalePresenter(GameModel model, UniverseScales scale)
 		{
 			Model = model;
 			Scale = scale;
 			ScaleModel = model.GetScale(scale);
 
+			Model.FocusTransform.Changed += OnFocusTransform;
 			ScaleModel.Transform.Changed += OnScaleTransform;
 			ScaleModel.Opacity.Changed += OnOpacity;
 		}
 
 		protected override void OnUnBind()
 		{
+			Model.FocusTransform.Changed -= OnFocusTransform;
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 			ScaleModel.Opacity.Changed -= OnOpacity;
 		}
@@ -89,10 +93,12 @@ namespace LunraGames.SubLight.Presenters
 
 			View.GetRadiusNormalCallback = GetRadiusNormal;
 			View.GetPositionIsInRadiusCallback = GetPositionIsInRadius;
+			View.Opacity = ScaleModel.Opacity.Value;
 
 			OnShowView();
 
 			ShowView(instant: true);
+			ApplyScaleTransform(ScaleModel.Transform.Value);
 		}
 
 		protected void CloseViewInstant()
@@ -134,35 +140,86 @@ namespace LunraGames.SubLight.Presenters
 			ApplyScaleTransform(transform);
 		}
 
-		void OnOpacity(float opacity)
+		//void OnOpacity(float opacity)
+		//{
+		//	OnSetOpacity(opacity);
+		//	/*
+		//	if (!CanShow) return;
+
+		//	var isOpacityZero = Mathf.Approximately(0f, opacity);
+
+		//	switch (View.TransitionState)
+		//	{
+		//		case TransitionStates.Closed:
+		//			if (isOpacityZero) return;
+
+		//			if (View.RestrictVisibiltyInBounds)
+		//			{
+		//				// At some point we may want to do this only when we start zooming, but it's not too laggy right now so whatever...
+		//				if (GetRadiusNormal(ScaleModel.TransformDefault.Value.GetUnityPosition(PositionInUniverse)) < 1f) ShowViewInstant();
+		//			}
+		//			else ShowViewInstant();
+
+		//			break;
+		//		case TransitionStates.Shown:
+		//			if (isOpacityZero) CloseViewInstant();
+		//			break;
+		//	}
+		//	OnSetOpacity(opacity);
+		//	*/
+		//}
+
+		void OnFocusTransform(FocusTransform focusTransform)
 		{
+			if (focusTransform.Zoom.State == lastZoomState) return;
+			lastZoomState = focusTransform.Zoom.State;
+
+			if (focusTransform.ToScale == Scale) OnFocusTransformShowing(focusTransform);
+			else if (focusTransform.FromScale == Scale) OnFocusTransformClosing(focusTransform);
+
+			//switch (focusTransform.Zoom.State)
+			//{
+			//	case TweenStates.Active:
+			//		break;
+			//	case TweenStates.Complete:
+			//		break;
+			//	default:
+			//		Debug.LogError("Unrecognized tween state: " + focusTransform.Zoom.State);
+			//		return;
+			//}
+
+			//focusTransform.
+			//if (focusTransform.ToScale == Scale)
+		}
+
+		void OnFocusTransformShowing(FocusTransform focusTransform)
+		{
+			if (focusTransform.Zoom.State == TweenStates.Complete && !View.RestrictVisibiltyInBounds) return;
 			if (!CanShow) return;
 
-			var isOpacityZero = Mathf.Approximately(0f, opacity);
-
-			switch (View.TransitionState)
+			if (View.RestrictVisibiltyInBounds)
 			{
-				case TransitionStates.Closed:
-					if (isOpacityZero) return;
-
-					if (View.RestrictVisibiltyInBounds)
-					{
-						// At some point we may want to do this only when we start zooming, but it's not too laggy right now so whatever...
-						if (GetRadiusNormal(ScaleModel.TransformDefault.Value.GetUnityPosition(PositionInUniverse)) < 1f) ShowViewInstant();
-					}
-					else ShowViewInstant();
-
-					break;
-				case TransitionStates.Shown:
-					if (isOpacityZero) CloseViewInstant();
-					break;
+				if (focusTransform.Zoom.State == TweenStates.Active)
+				{
+					if (1f <= GetRadiusNormal(ScaleModel.TransformDefault.Value.GetUnityPosition(PositionInUniverse))) return;
+				}
 			}
-			OnSetOpacity(opacity);
+			ShowViewInstant();
+		}
+
+		void OnFocusTransformClosing(FocusTransform focusTransform)
+		{
+			if (focusTransform.Zoom.State == TweenStates.Active) return;
+			CloseViewInstant();
 		}
 
 		protected virtual void OnShowView() {}
 		protected virtual void OnCloseView() {}
-		protected virtual void OnSetOpacity(float opacity) {}
+		protected virtual void OnOpacity(float opacity)
+		{
+			if (!View.Visible) return;
+			View.Opacity = opacity;
+		}
 		#endregion
 	}
 }

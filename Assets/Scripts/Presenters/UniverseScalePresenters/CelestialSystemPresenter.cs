@@ -41,8 +41,6 @@ namespace LunraGames.SubLight.Presenters
 			Model.CameraTransform.Changed += OnCameraTransform;
 			Model.GridInput.Changed += OnGridInput;
 			Model.FocusTransform.Changed += OnFocusTransform;
-
-			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
 
 		protected override void OnUnBind()
@@ -57,8 +55,6 @@ namespace LunraGames.SubLight.Presenters
 			Model.CameraTransform.Changed -= OnCameraTransform;
 			Model.GridInput.Changed -= OnGridInput;
 			Model.FocusTransform.Changed -= OnFocusTransform;
-
-			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
 
 		void ApplyStates(bool instant = false)
@@ -81,6 +77,7 @@ namespace LunraGames.SubLight.Presenters
 				if (View.Visible) CloseViewInstant();
 				return;
 			}
+			//Debug.Log("Actvise system: "+activeSystem.Name.Value);
 
 			if (View.Visible)
 			{
@@ -190,13 +187,6 @@ namespace LunraGames.SubLight.Presenters
 					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse);
 					break;
 			}
-		}
-
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value;
 		}
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)

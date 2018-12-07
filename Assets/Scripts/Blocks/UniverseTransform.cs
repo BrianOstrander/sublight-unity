@@ -6,6 +6,20 @@ namespace LunraGames.SubLight
 	[Serializable]
 	public struct UniverseTransform
 	{
+		public static UniverseTransform Default(UniverseScales scale)
+		{
+			return new UniverseTransform(
+				scale,
+				Vector3.zero,
+				0f,
+				UniversePosition.Zero,
+				Vector3.zero,
+				Vector3.zero,
+				Quaternion.identity
+			);
+		}
+
+		public readonly UniverseScales Scale;
 		public readonly Vector3 UnityOrigin;
 		public readonly UniversePosition UniverseOrigin;
 		public readonly float UnityRadius;
@@ -16,6 +30,7 @@ namespace LunraGames.SubLight
 		public readonly Quaternion Rotation;
 
 		public UniverseTransform(
+			UniverseScales scale,
 			Vector3 unityOrigin,
 			float unityRadius,
 			UniversePosition universeOrigin,
@@ -24,6 +39,7 @@ namespace LunraGames.SubLight
 			Quaternion rotation
 		)
 		{
+			Scale = scale;
 			UnityOrigin = unityOrigin;
 			UnityRadius = unityRadius;
 			UniverseOrigin = universeOrigin;
@@ -90,6 +106,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			return new UniverseTransform(
+				Scale,
 				UnityOrigin,
 				UnityRadius,
 				universeOrigin.HasValue ? universeOrigin.Value : UniverseOrigin,

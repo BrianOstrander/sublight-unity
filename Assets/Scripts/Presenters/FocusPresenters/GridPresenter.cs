@@ -131,7 +131,11 @@ namespace LunraGames.SubLight.Presenters
 			{
 				var currTransform = model.GetScale(unitMap.Scale);
 				currTransform.TransformDefault.Value = DefineTransform(unitMap, UniversePosition.Zero, 1f);
+
 			}
+
+			model.Ship.Value.Position.Changed += OnShipPosition;
+			OnShipPosition(model.Ship.Value.Position.Value);
 
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
@@ -142,6 +146,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
+
+			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -282,6 +288,7 @@ namespace LunraGames.SubLight.Presenters
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 
 			return new UniverseTransform(
+				unitMap.Scale,
 				View.GridUnityOrigin,
 				View.GridUnityRadius,
 				universeOrigin,
@@ -521,6 +528,14 @@ namespace LunraGames.SubLight.Presenters
 			var yaw = -lastgesture.DeltaSinceLastScaledByDelta.x;
 			var pitch = -lastgesture.DeltaSinceLastScaledByDelta.y;
 			App.Callbacks.CameraTransformRequest(CameraTransformRequest.Input(yaw, pitch));
+		}
+
+		void OnShipPosition(UniversePosition position)
+		{
+			foreach (var transformProperty in unitMaps.Select(u => model.GetScale(u.Scale).TransformDefault))
+			{
+				transformProperty.Value = transformProperty.Value.Duplicate(ShipPositionOnPlane);
+			}
 		}
 
 		void OnDrawGizmos()
