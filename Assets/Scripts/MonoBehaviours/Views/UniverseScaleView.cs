@@ -39,7 +39,6 @@ namespace LunraGames.SubLight.Views
 		public virtual bool RestrictVisibiltyInBounds { get { return false; } }
 
 		public bool IsInBounds { get; private set; }
-		public bool IsInBoundsUnscaled { get; private set; }
 		public float RadiusNormal { get; private set; }
 
 		public Func<Vector3, float, float> GetRadiusNormalCallback { get; set; }
@@ -57,22 +56,18 @@ namespace LunraGames.SubLight.Views
 			OnScale(scale, rawScale);
 		}
 
-		public void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, bool isInBoundsUnscaled)
+		public void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, float radiusNormal)
 		{
 			if (positionArea != null) positionArea.position = position;
 			IsInBounds = isInBounds;
-			IsInBoundsUnscaled = isInBoundsUnscaled;
+			RadiusNormal = radiusNormal;
 
 			if (!wasInBounds.HasValue || wasInBounds != isInBounds)
 			{
 				wasInBounds = isInBounds;
 				OnInBoundsChanged(isInBounds);
 			}
-			if (!wasInBoundsUnscaled.HasValue || wasInBoundsUnscaled != isInBoundsUnscaled)
-			{
-				wasInBoundsUnscaled = isInBoundsUnscaled;
-				OnInBoundsUnscaledChanged(isInBoundsUnscaled);
-			}
+
 			OnPosition(position, rawPosition);
 		}
 
@@ -110,7 +105,6 @@ namespace LunraGames.SubLight.Views
 	{
 		bool RestrictVisibiltyInBounds { get; }
 		bool IsInBounds { get; }
-		bool IsInBoundsUnscaled { get; }
 		float RadiusNormal { get; }
 		UniverseScaleAxises ScaleIgnores { get; }
 		UniverseScaleAxises PositionIgnores { get; }
@@ -119,7 +113,7 @@ namespace LunraGames.SubLight.Views
 		Func<Vector3, float, bool> GetPositionIsInRadiusCallback { get; set; }
 
 		void SetScale(Vector3 scale, Vector3 rawScale);
-		void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, bool isInBoundsUnscaled);
+		void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, float radiusNormal);
 
 		void SetGrid(Vector3 gridOrigin, float gridRadius);
 	}

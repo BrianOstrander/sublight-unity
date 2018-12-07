@@ -445,7 +445,8 @@ namespace LunraGames.SubLight.Views
 			verticalLookAtArea.transform.localPosition = localPositionWithHeight;
 
 			var radiusOpacity = Opacity * dropLineRadiusOpacity.Evaluate(RadiusNormal);
-			dropLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorShiftConstant.Alpha, radiusOpacity);
+			SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorShiftConstant.Alpha, dropLineThicknessOpacity.Evaluate(currentVisuals.DropLineThickness));
+
 			dropLine.SetPosition(1, localPositionWithHeight);
 			baseGroup.alpha = radiusOpacity;
 
@@ -1009,7 +1010,7 @@ namespace LunraGames.SubLight.Views
 
 		void SetMeshAlpha(Material material, string fieldName, float alpha = 1f)
 		{
-			material.SetFloat(fieldName, Opacity * alpha * dropLineRadiusOpacity.Evaluate(GetRadiusNormal(dropLine.transform.position)));
+			material.SetFloat(fieldName, Opacity * alpha * dropLineRadiusOpacity.Evaluate(RadiusNormal));
 		}
 	}
 

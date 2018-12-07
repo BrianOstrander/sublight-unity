@@ -82,9 +82,8 @@ namespace LunraGames.SubLight.Presenters
 
 			var radiusNormal = GetRadiusNormal(position);
 			var isInBounds = radiusNormal < 1f;
-			var isInBoundsUnscaled = radiusNormal < scale.x;
 
-			View.SetPosition(position, rawPosition, isInBounds, isInBoundsUnscaled);
+			View.SetPosition(position, rawPosition, isInBounds, radiusNormal);
 		}
 
 		protected void ShowViewInstant()
