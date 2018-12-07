@@ -2,6 +2,9 @@
   "isPlayable": true,
   "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
   "name": "Milky Way",
+  "clusterOrigin": {
+    "Sector": {"z":170.0}
+  },
   "galaxyOrigin": {
     "Sector": {"x":100.0,"z":100.0}
   },

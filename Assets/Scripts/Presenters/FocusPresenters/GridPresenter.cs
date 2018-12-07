@@ -38,13 +38,14 @@ namespace LunraGames.SubLight.Presenters
 		{
 			public float ZoomBegin;
 			public float LightYearsPrevious;
-			public float LightYearsNext;
 			/// <summary>
 			/// The light years per tile.
 			/// </summary>
 			public float LightYears;
+			public float LightYearsNext;
 			public UniverseScales Scale;
 			public UniverseFocuses FocusFromZoomDown;
+			public UniverseFocuses Focus;
 			public UniverseFocuses FocusFromZoomUp;
 
 			public float ZoomUpBase;
@@ -54,20 +55,22 @@ namespace LunraGames.SubLight.Presenters
 
 			public UnitMap(
 				float zoomBegin,
-				float lightYears,
 				UniverseScales scale,
-				UniverseFocuses focusFromZoomDown,
-				UniverseFocuses focusFromZoomUp,
 				float lightYearsPrevious,
-				float lightYearsNext
+				float lightYears,
+				float lightYearsNext,
+				UniverseFocuses focusFromZoomDown,
+				UniverseFocuses focus,
+				UniverseFocuses focusFromZoomUp
 			)
 			{
 				ZoomBegin = zoomBegin;
+				Scale = scale;
 				LightYearsPrevious = lightYearsPrevious;
 				LightYearsNext = lightYearsNext;
 				LightYears = lightYears;
-				Scale = scale;
 				FocusFromZoomDown = focusFromZoomDown;
+				Focus = focus;
 				FocusFromZoomUp = focusFromZoomUp;
 
 				ZoomUpBase = lightYearsPrevious / lightYears;
@@ -123,12 +126,42 @@ namespace LunraGames.SubLight.Presenters
 
 			unitMaps = new UnitMap[]
 			{
-				new UnitMap(0f, systemScale, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship, systemScale, localScale),
-				new UnitMap(1f, localScale, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship, systemScale, stellarScale),
-				new UnitMap(2f, stellarScale, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship, localScale, quadrantScale),
-				new UnitMap(3f, quadrantScale, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship, stellarScale, galacticScale),
-				new UnitMap(4f, galacticScale, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship, quadrantScale, clusterScale),
-				new UnitMap(5f, clusterScale, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.Ship, galacticScale, clusterScale)
+				new UnitMap(
+					0f,
+					UniverseScales.System,
+					systemScale, systemScale, localScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.Ship
+				),
+				new UnitMap(
+					1f,
+					UniverseScales.Local,
+					systemScale, localScale, stellarScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.Ship
+				),
+				new UnitMap(
+					2f,
+					UniverseScales.Stellar,
+					localScale, stellarScale, quadrantScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.Ship
+				),
+				new UnitMap(
+					3f,
+					UniverseScales.Quadrant,
+					stellarScale, quadrantScale, galacticScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.GalacticOrigin
+				),
+				new UnitMap(
+					4f,
+					UniverseScales.Galactic,
+					quadrantScale, galacticScale, clusterScale,
+					UniverseFocuses.Ship, UniverseFocuses.GalacticOrigin, UniverseFocuses.ClusterOrigin
+				),
+				new UnitMap(
+					5f,
+					UniverseScales.Cluster,
+					galacticScale, clusterScale, clusterScale,
+					UniverseFocuses.GalacticOrigin, UniverseFocuses.ClusterOrigin, UniverseFocuses.ClusterOrigin
+				)
 			};
 
 			App.Heartbeat.Update += OnUpdate;
@@ -232,7 +265,13 @@ namespace LunraGames.SubLight.Presenters
 				var beginPosition = scaleTransformsOnBeginAnimation[scale.Scale.Value].UniverseOrigin;
 				var endPosition = beginPosition;
 
-				var focus = zoomingUp ? unitMap.FocusFromZoomDown : unitMap.FocusFromZoomUp;
+				var focus = UniverseFocuses.Unknown;
+
+				if (isTarget) focus = unitMap.Focus;
+				else
+				{
+					focus = zoomingUp ? unitMap.FocusFromZoomUp : unitMap.FocusFromZoomDown;
+				}
 
 				switch (focus)
 				{
@@ -245,7 +284,7 @@ namespace LunraGames.SubLight.Presenters
 						break;
 				}
 
-				var currPosition = UniversePosition.Lerp(View.PositionCurve.Evaluate(progress), beginPosition, endPosition);
+				var currPosition = UniversePosition.Lerp(View.GetPositionCurve(zoomingUp).Evaluate(progress), beginPosition, endPosition);
 				scaleTransform = scale.Transform.Value.Duplicate(currPosition);
 			}
 
