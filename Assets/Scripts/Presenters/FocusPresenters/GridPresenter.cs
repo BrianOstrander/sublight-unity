@@ -37,23 +37,20 @@ namespace LunraGames.SubLight.Presenters
 		struct UnitMap
 		{
 			public float ZoomBegin;
+			public float LightYearsPrevious;
+			public float LightYearsNext;
 			/// <summary>
 			/// The light years per tile.
 			/// </summary>
 			public float LightYears;
-			/// <summary>
-			/// Zooming up will multiply by this value then add 1.0, this should
-			/// be greater than zero.
-			/// </summary>
-			public float ZoomUpScaleMultiplier;
-			/// <summary>
-			/// Zooming down will multiply by this and then subtract the result
-			/// from 1.0, this should be greater than zero and less than 1.0.
-			/// </summary>
-			public float ZoomDownScaleMultiplier;
 			public UniverseScales Scale;
 			public UniverseFocuses FocusFromZoomDown;
 			public UniverseFocuses FocusFromZoomUp;
+
+			public float ZoomUpBase;
+			public float ZoomUpDelta;
+			public float ZoomDownBase;
+			public float ZoomDownDelta;
 
 			public UnitMap(
 				float zoomBegin,
@@ -61,17 +58,22 @@ namespace LunraGames.SubLight.Presenters
 				UniverseScales scale,
 				UniverseFocuses focusFromZoomDown,
 				UniverseFocuses focusFromZoomUp,
-				float zoomUpScaleMultiplier = 3f,
-				float zoomDownScaleMultiplier = 0.75f
+				float lightYearsPrevious,
+				float lightYearsNext
 			)
 			{
 				ZoomBegin = zoomBegin;
+				LightYearsPrevious = lightYearsPrevious;
+				LightYearsNext = lightYearsNext;
 				LightYears = lightYears;
-				ZoomUpScaleMultiplier = zoomUpScaleMultiplier;
-				ZoomDownScaleMultiplier = zoomDownScaleMultiplier;
 				Scale = scale;
 				FocusFromZoomDown = focusFromZoomDown;
 				FocusFromZoomUp = focusFromZoomUp;
+
+				ZoomUpBase = lightYearsPrevious / lightYears;
+				ZoomUpDelta = 1f - ZoomUpBase;
+				ZoomDownBase = lightYearsNext / lightYears;
+				ZoomDownDelta = -(ZoomDownBase - 1f);
 			}
 		}
 
@@ -112,14 +114,21 @@ namespace LunraGames.SubLight.Presenters
 			this.model = model;
 			this.info = info;
 
+			var systemScale = 0.1f;
+			var localScale = 150f;
+			var stellarScale = 1000f;
+			var quadrantScale = 4000f;
+			var galacticScale = 12000f;
+			var clusterScale = 36000f;
+
 			unitMaps = new UnitMap[]
 			{
-				new UnitMap(0f, 0.1f, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(1f, 150f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(2f, 1000f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(3f, 4000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(4f, 12000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(5f, 36000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
+				new UnitMap(0f, systemScale, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship, systemScale, localScale),
+				new UnitMap(1f, localScale, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship, systemScale, stellarScale),
+				new UnitMap(2f, stellarScale, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship, localScale, quadrantScale),
+				new UnitMap(3f, quadrantScale, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship, stellarScale, galacticScale),
+				new UnitMap(4f, galacticScale, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship, quadrantScale, clusterScale),
+				new UnitMap(5f, clusterScale, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.Ship, galacticScale, clusterScale)
 			};
 
 			App.Heartbeat.Update += OnUpdate;
@@ -251,13 +260,14 @@ namespace LunraGames.SubLight.Presenters
 
 			if (grid.IsTarget)
 			{
-				if (grid.ZoomingUp) zoomScalar = 1f - (0.5f * (1f - zoomProgress));
-				else zoomScalar = 1f + (1f - zoomProgress);
+				if (grid.ZoomingUp) zoomScalar = unitMap.ZoomUpBase + (unitMap.ZoomUpDelta * zoomProgress);
+				else zoomScalar = unitMap.ZoomDownBase + (unitMap.ZoomDownDelta * zoomProgress);
 			}
 			else
 			{
-				if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * unitMap.ZoomUpScaleMultiplier);
-				else zoomScalar = 1f - (unitMap.ZoomDownScaleMultiplier * zoomProgress);
+				var zoomProgressInverse = 1f - zoomProgress;
+				if (grid.ZoomingUp) zoomScalar = unitMap.ZoomDownBase + (unitMap.ZoomDownDelta * zoomProgressInverse);
+				else zoomScalar = unitMap.ZoomUpBase + (unitMap.ZoomUpDelta * zoomProgressInverse);
 			}
 
 			grid.Tiling = Tiling * zoomScalar;

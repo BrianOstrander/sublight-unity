@@ -111,6 +111,7 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnScale(Vector3 scale, Vector3 rawScale)
 		{
+			//Debug.Break();
 			galaxyNameLabelPositionScaleArea.localScale = scale;
 		}
 
