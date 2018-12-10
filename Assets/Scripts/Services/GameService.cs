@@ -18,7 +18,7 @@ namespace LunraGames.SubLight
 				public const string GalaxyTargetId = "a6603c5e-f151-45aa-96bb-30905e781573"; // Andromeda
 			}
 
-			public const float MinimumTravelRange = 0.5f; // In universe units.
+			public const float MinimumTravelRange = 1f; // In universe units.
 		}
 
 		IModelMediator modelMediator;

@@ -14,7 +14,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		ListenerProperty<TravelRange> travelRangeListener;
 		[JsonIgnore]
-		ReadonlyProperty<TravelRange> TravelRange;
+		public readonly ReadonlyProperty<TravelRange> TravelRange;
 
 		[JsonProperty] InventoryListModel inventory = new InventoryListModel();
 		[JsonIgnore]

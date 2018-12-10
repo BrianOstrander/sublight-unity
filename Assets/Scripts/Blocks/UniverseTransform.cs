@@ -57,6 +57,11 @@ namespace LunraGames.SubLight
 			return sector + local;
 		}
 
+		public float GetUnityScale(float universeScale)
+		{
+			return universeScale * UniverseToUnity.x;
+		}
+
 		public Vector3 GetUnityPosition(UniversePosition universePosition)
 		{
 			var universeFromOrigin = universePosition - UniverseOrigin;
@@ -72,6 +77,11 @@ namespace LunraGames.SubLight
 			var newScale = new Vector3(unityScale.x, unityScale.y, unityScale.z);
 			newScale.Scale(UnityToUniverse);
 			return new UniversePosition(newScale);
+		}
+
+		public float GetUniverseScale(float unityScale)
+		{
+			return unityScale * UnityToUniverse.x;
 		}
 
 		public UniversePosition GetUniversePosition(Vector3 unityPosition)

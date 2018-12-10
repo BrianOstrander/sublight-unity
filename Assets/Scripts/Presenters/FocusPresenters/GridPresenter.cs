@@ -293,6 +293,7 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Value.Position.Value);
+			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Value.TravelRange.Value.Total);
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;

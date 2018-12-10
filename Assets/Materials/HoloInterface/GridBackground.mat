@@ -156,7 +156,7 @@ Material:
     - _GridTint: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
-    - _RangeColorPrimary: {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
+    - _RangeColorPrimary: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 1}
     - _RangeColorSecondary: {r: 0, g: 0, b: 0, a: 1}
     - _RangeColorTertiary: {r: 0.14901961, g: 0.14901961, b: 0.14901961, a: 1}
     - _RangeOrigin: {r: 0, g: 0, b: 0, a: 0}

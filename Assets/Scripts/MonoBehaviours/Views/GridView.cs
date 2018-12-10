@@ -22,6 +22,7 @@ namespace LunraGames.SubLight.Views
 			public float Alpha;
 			public Vector2 Offset;
 			public Vector3 RangeOrigin;
+			public float RangeRadius;
 		}
 
 		[SerializeField]
@@ -130,6 +131,7 @@ namespace LunraGames.SubLight.Views
 
 					background.renderQueue = renderQueue;
 					background.SetVector(ShaderConstants.HoloGridBackgroundRange.RangeOrigin, block.RangeOrigin);
+					background.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeRadius, block.RangeRadius);
 
 					grid.renderQueue = renderQueue;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
