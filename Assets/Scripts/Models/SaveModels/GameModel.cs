@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
@@ -13,7 +12,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
 		[JsonProperty] ShipModel ship;
-		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0]; // TODO move to an encounter handling model (with kv and stuff).
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonProperty] ToolbarSelections toolbarSelection;
@@ -31,6 +29,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] UniverseScaleModel scaleGalactic = UniverseScaleModel.Create(UniverseScales.Galactic);
 		[JsonProperty] UniverseScaleModel scaleCluster = UniverseScaleModel.Create(UniverseScales.Cluster);
 
+		[JsonProperty] EncounterStateModel encounterState = new EncounterStateModel();
+
 		/// <summary>
 		/// The game seed.
 		/// </summary>
@@ -46,17 +46,15 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<ShipModel> Ship;
-		/// <summary>
-		/// The encounters seen, completed or otherwise.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<EncounterStatus[]> EncounterStatuses;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<FocusTransform> FocusTransform;
+
+		[JsonIgnore]
+		public KeyValueListModel KeyValues { get { return keyValues; } }
 
 		[JsonIgnore]
 		public UniverseModel Universe
@@ -83,6 +81,9 @@ namespace LunraGames.SubLight.Models
 		public GalaxyInfoModel Galaxy { get; set; }
 		[JsonIgnore]
 		public GalaxyInfoModel GalaxyTarget { get; set; }
+
+		[JsonIgnore]
+		public EncounterStateModel EncounterState { get { return encounterState; } }
 		#endregion
 
 		#region NonSerialized
@@ -134,7 +135,6 @@ namespace LunraGames.SubLight.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
-			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
@@ -171,24 +171,6 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region Utility
-		public void SetEncounterStatus(EncounterStatus status)
-		{
-			if (status.Encounter == null)
-			{
-				Debug.LogError("Cannot update the status of an encounter with a null id, update ignored.");
-				return;
-			}
-			EncounterStatuses.Value = EncounterStatuses.Value.Where(e => e.Encounter != status.Encounter).Append(status).ToArray();
-		}
-
-		public EncounterStatus GetEncounterStatus(string encounterId)
-		{
-			return EncounterStatuses.Value.FirstOrDefault(e => e.Encounter == encounterId);
-		}
-
-		[JsonIgnore]
-		public KeyValueListModel KeyValues { get { return keyValues; } }
-
 		[JsonIgnore]
 		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
 

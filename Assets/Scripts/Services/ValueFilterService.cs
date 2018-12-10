@@ -172,7 +172,7 @@ namespace LunraGames.SubLight
 		void OnHandle(EncounterInteractionFilterEntryModel filter, GameModel model, Action<ValueFilterGroups, bool> done)
 		{
 			var operation = filter.Operation.Value;
-			var encounterInteraction = model.GetEncounterStatus(filter.FilterValue.Value);
+			var encounterInteraction = model.EncounterState.GetEncounterStatus(filter.FilterValue.Value);
 			var result = false;
 
 			if (operation == EncounterInteractionFilterOperations.NotCompleted)

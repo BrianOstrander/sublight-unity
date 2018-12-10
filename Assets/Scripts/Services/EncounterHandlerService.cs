@@ -93,7 +93,7 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Complete:
 					encounterService.GetEncounterInteraction(encounter.EncounterId).TimesCompleted.Value++;
-					model.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
+					model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
 					var toFocus = system.Position.Value;
 
 					state = States.Ending;
