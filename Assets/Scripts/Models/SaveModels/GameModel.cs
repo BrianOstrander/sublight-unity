@@ -13,16 +13,16 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int seed;
 		[JsonProperty] DayTime dayTime;
 		[JsonProperty] ShipModel ship;
-		[JsonProperty] float destructionSpeedIncrement; // TODO: move to a destruction model
-		[JsonProperty] float destructionSpeed; // TODO: move to a destruction model
-		[JsonProperty] float destructionRadius; // TODO: move to a destruction model
-		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0]; // TODO: move to a destruction model
-		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
+		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0]; // TODO move to an encounter handling model (with kv and stuff).
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonProperty] ToolbarSelections toolbarSelection;
 
 		[JsonProperty] FocusTransform focusTransform;
+
+		[JsonProperty] string galaxyId;
+		[JsonProperty] string galaxyTargetId;
+		[JsonProperty] UniverseModel universe;
 
 		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
 		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
@@ -47,25 +47,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<ShipModel> Ship;
 		/// <summary>
-		/// The destruction speed increments.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> DestructionSpeedIncrement;
-		/// <summary>
-		/// The speed at which the destruction expands, in universe units per
-		/// day.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> DestructionSpeed;
-		/// <summary>
-		/// The total destruction radius, in universe units.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> DestructionRadius;
-		[JsonIgnore]
-		public readonly ListenerProperty<DestructionSpeedDelta[]> DestructionSpeedDeltas;
-
-		/// <summary>
 		/// The encounters seen, completed or otherwise.
 		/// </summary>
 		[JsonIgnore]
@@ -76,10 +57,6 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<FocusTransform> FocusTransform;
-
-		[JsonProperty] string galaxyId;
-		[JsonProperty] string galaxyTargetId;
-		[JsonProperty] UniverseModel universe;
 
 		[JsonIgnore]
 		public UniverseModel Universe
@@ -141,14 +118,12 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelCluster;
 
-
 		UniverseScaleModel activeScale;
 		ListenerProperty<UniverseScaleModel> activeScaleListener;
 		[JsonIgnore]
 		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
 
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
-
 		[JsonIgnore]
 		public CelestialSystemStateBlock CelestialSystemStateLastSelected { get { return celestialSystemStateLastSelected; } }
 		#endregion
@@ -159,10 +134,6 @@ namespace LunraGames.SubLight.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
-			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
-			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
-			DestructionRadius = new ListenerProperty<float>(value => destructionRadius = value, () => destructionRadius);
-			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
 			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);

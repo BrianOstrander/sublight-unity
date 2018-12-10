@@ -50,8 +50,6 @@ namespace LunraGames.SubLight
 			game.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, DefaultGameBlock.GalaxyId);
 			game.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, DefaultGameBlock.GalaxyTargetId);
 			game.Universe = universeService.CreateUniverse(info);
-			game.DestructionSpeed.Value = 0.004f;
-			game.DestructionSpeedIncrement.Value = 0.0025f;
 
 			game.FocusTransform.Value = FocusTransform.Default;
 
