@@ -10,14 +10,6 @@ namespace LunraGames.SubLight
 {
 	public class EncounterHandlerService
 	{
-		enum States
-		{
-			Unknown = 0,
-			Processing = 10,
-			Ending = 20,
-			Complete = 30
-		}
-
 		Heartbeat heartbeat;
 		CallbackService callbacks;
 		EncounterService encounterService;
@@ -27,12 +19,10 @@ namespace LunraGames.SubLight
 		IUniverseService universeService;
 		Func<PreferencesModel> currentPreferences;
 
-		States state = States.Complete;
 		GameModel model;
 		EncounterInfoModel encounter;
 		SystemModel system;
 		BodyModel body;
-		KeyValueListener keyValues;
 
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
@@ -96,7 +86,7 @@ namespace LunraGames.SubLight
 					model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
 					var toFocus = system.Position.Value;
 
-					state = States.Ending;
+					model.EncounterState.State.Value = EncounterStateModel.States.Ending;
 
 					Debug.LogWarning("TODO: Logic upon completing encounter!");
 					//callbacks.FocusRequest(
@@ -143,7 +133,7 @@ namespace LunraGames.SubLight
 
 		void OnStateChange(StateChange change)
 		{
-			if (state == States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
+			if (model.EncounterState.State.Value == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
 			OnEnd();
 		}
 
@@ -166,21 +156,19 @@ namespace LunraGames.SubLight
 			int systemIndex
 		)
 		{
-			if (state != States.Complete)
+			if (model.EncounterState.State.Value != EncounterStateModel.States.Complete)
 			{
 				Debug.LogError("Beginning an encounter while one is not complete, may cause unpredictable behaviour.");
 			}
 
-			state = States.Processing;
+			model.EncounterState.State.Value = EncounterStateModel.States.Processing;
 
 			this.model = model;
 
 			encounter = encounterService.GetEncounter(encounterId);
 			system = universeService.GetSystem(model.Galaxy, model.Universe, sectorPosition, systemIndex);
 			body = system.BodyWithEncounter;
-			keyValues = new KeyValueListener(KeyValueTargets.Encounter, new KeyValueListModel(), keyValueService);
-
-			keyValues.Register();
+			model.EncounterState.RegisterKeyValueListener(keyValueService);
 
 			callbacks.SaveRequest(SaveRequest.Request(OnBeginSaved));
 		}
@@ -200,19 +188,18 @@ namespace LunraGames.SubLight
 
 		void OnEnd()
 		{
-			state = States.Complete;
+			var oldModel = model;
 
 			model = null;
 			encounter = null;
 			system = null;
 			body = null;
 
-			if (keyValues != null) keyValues.UnRegister();
-
-			keyValues = null;
-
 			nextLog = null;
 			nextLogDelay = null;
+
+			oldModel.EncounterState.State.Value = EncounterStateModel.States.Complete;
+			oldModel.EncounterState.UnRegisterKeyValueListener();
 		}
 
 		void OnShowLog(EncounterLogModel logModel)
