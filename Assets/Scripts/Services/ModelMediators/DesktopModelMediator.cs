@@ -30,7 +30,6 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, -1 },
 					{ SaveTypes.EncounterInfo, 0 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
-					{ SaveTypes.InteractedInventoryReferenceList, -1 },
 					{ SaveTypes.GlobalKeyValues, -1 },
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, 7 },
@@ -53,7 +52,6 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, true },
 					{ SaveTypes.EncounterInfo, false },
 					{ SaveTypes.InteractedEncounterInfoList, true },
-					{ SaveTypes.InteractedInventoryReferenceList, true },
 					{ SaveTypes.GlobalKeyValues, true },
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, false },
@@ -109,7 +107,6 @@ namespace LunraGames.SubLight
 					return Path.Combine(InternalPath, "galaxies");
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
-				case SaveTypes.InteractedInventoryReferenceList: return Path.Combine(ParentPath, "interacted-references");
 				// -- Inventory References
 				case SaveTypes.InventoryModule: return Path.Combine(InternalPath, "inventory-modules");
 				// --

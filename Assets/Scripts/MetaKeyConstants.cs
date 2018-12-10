@@ -12,7 +12,7 @@
 			public const string GalaxyId = "GalaxyId";
 		}
 
-		public static class InventoryReference
+		public static class InventoryModule
 		{
 			public const string InventoryId = "InventoryId";
 		}

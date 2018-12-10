@@ -11,7 +11,6 @@
 
 		// Interactions
 		InteractedEncounterInfoList = 40,
-		InteractedInventoryReferenceList = 45,
 
 		GlobalKeyValues = 50,
 
