@@ -133,7 +133,7 @@ namespace LunraGames.SubLight
 
 		void OnStateChange(StateChange change)
 		{
-			if (model.EncounterState.State.Value == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
+			if (model == null || model.EncounterState.State.Value == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
 			OnEnd();
 		}
 

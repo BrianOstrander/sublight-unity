@@ -21,6 +21,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] States state = States.Complete;
 		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
 
+		// TODO: Move this into some kind of block so the state and id have to be modified at the same time...
 		[JsonIgnore]
 		public readonly ListenerProperty<States> State;
 		[JsonIgnore]
