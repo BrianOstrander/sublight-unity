@@ -104,6 +104,12 @@ namespace LunraGames.SubLight
 				new RegionLabelPresenter(payload.Game, UniverseScales.Galactic);
 				new RegionLabelPresenter(payload.Game, UniverseScales.Cluster);
 
+				new BodiesDisabledPresenter(
+					payload.Game,
+					LanguageStringModel.Override("Telescope Malfunction"),
+					LanguageStringModel.Override("< unable to retrieve system survey >")
+				);
+
 				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Local);
 
 				var celestialLanguageBlock = new CelestialSystemLanguageBlock
