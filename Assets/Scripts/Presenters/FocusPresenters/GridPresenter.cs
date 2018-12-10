@@ -179,6 +179,8 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Value.Position.Changed += OnShipPosition;
 			OnShipPosition(model.Ship.Value.Position.Value);
 
+			model.Ship.Value.TravelRange.Changed += OnTravelRange;
+
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
@@ -189,6 +191,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
 
 			model.Ship.Value.Position.Changed -= OnShipPosition;
+			model.Ship.Value.TravelRange.Changed -= OnTravelRange;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -584,6 +587,11 @@ namespace LunraGames.SubLight.Presenters
 			{
 				transformProperty.Value = transformProperty.Value.Duplicate(ShipPositionOnPlane);
 			}
+		}
+
+		void OnTravelRange(TravelRange range)
+		{
+			if (tweenState == TweenStates.Complete) SetGrid();
 		}
 
 		void OnDrawGizmos()
