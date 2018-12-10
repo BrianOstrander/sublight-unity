@@ -166,7 +166,6 @@ namespace LunraGames.SubLight.Presenters
 			};
 
 			App.Heartbeat.Update += OnUpdate;
-			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture += OnCurrentGesture;
 
@@ -186,7 +185,6 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUnBind()
 		{
 			App.Heartbeat.Update -= OnUpdate;
-			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
 
@@ -294,6 +292,7 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsTarget = isTarget;
 			grid.IsActive = isActive;
 			grid.Progress = progress;
+			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Value.Position.Value);
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
@@ -393,11 +392,6 @@ namespace LunraGames.SubLight.Presenters
 				zoomTween,
 				nudgeTween
 			);
-		}
-
-		void OnHoloColorRequest(HoloColorRequest request)
-		{
-			View.HoloColor = request.Color;
 		}
 
 		void OnCurrentScrollGesture(ScrollGesture gesture)

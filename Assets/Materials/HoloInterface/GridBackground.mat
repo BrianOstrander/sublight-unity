@@ -83,7 +83,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RangeFalloffGradient:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: cd87126bdac3d4d498cbaee6f42e0549, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -125,7 +125,7 @@ Material:
     - _RadiusProgress: 1
     - _RadiusWidth: 0
     - _RangeFalloff: 0.5
-    - _RangeRadius: 1
+    - _RangeRadius: 2
     - _RangeRadiusPrimary: 0.5
     - _RangeRadiusSecondary: 1.59
     - _RangeRadiusTertiary: 1.36
@@ -156,9 +156,9 @@ Material:
     - _GridTint: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
-    - _RangeColorPrimary: {r: 1, g: 1, b: 1, a: 1}
-    - _RangeColorSecondary: {r: 1, g: 0, b: 0, a: 1}
-    - _RangeColorTertiary: {r: 0.00965023, g: 0, b: 1, a: 1}
+    - _RangeColorPrimary: {r: 0.33333334, g: 0.33333334, b: 0.33333334, a: 1}
+    - _RangeColorSecondary: {r: 0, g: 0, b: 0, a: 1}
+    - _RangeColorTertiary: {r: 0.14901961, g: 0.14901961, b: 0.14901961, a: 1}
     - _RangeOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}

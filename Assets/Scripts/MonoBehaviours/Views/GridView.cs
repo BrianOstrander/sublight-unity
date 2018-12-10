@@ -21,6 +21,7 @@ namespace LunraGames.SubLight.Views
 			public float Tiling;
 			public float Alpha;
 			public Vector2 Offset;
+			public Vector3 RangeOrigin;
 		}
 
 		[SerializeField]
@@ -69,7 +70,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform followCameraArea;
 
-		Material gridBackground;
+		Material[] gridBackgrounds;
 		Material[] grids;
 
 		public float ZoomAnimationDuration { get { return zoomAnimationDuration; } }
@@ -83,7 +84,6 @@ namespace LunraGames.SubLight.Views
 		public float GridUnityRadius { get { return gridUnityRadius; } }
 		public Action<bool> Dragging { set; private get; }
 		public bool Highlighted { get; private set; }
-		public Color HoloColor { set { if (gridBackground != null) gridBackground.SetColor(ShaderConstants.HoloGridBackground.Tint, value); } }
 
 		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
 		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
@@ -99,38 +99,48 @@ namespace LunraGames.SubLight.Views
 				if (value == null || value.Length == 0)
 				{
 					gridMesh.materials = new Material[0];
-					gridBackground = null;
+					gridBackgrounds = null;
 					grids = null;
 					return;
 				}
 				if (grids == null || grids.Length == 0)
 				{
-					gridBackground = new Material(gridBackgroundMaterial);
+					gridBackgrounds = new Material[value.Length];
 					grids = new Material[value.Length];
-					for (var i = 0; i < value.Length; i++) grids[i] = new Material(gridMaterial);
+					for (var i = 0; i < value.Length; i++)
+					{
+						gridBackgrounds[i] = new Material(gridBackgroundMaterial);
+						grids[i] = new Material(gridMaterial);
+					}
 				}
 
-				var activeMaterials = new List<Material>();
+				var activeGridBackgrounds = new List<Material>();
+				var activeGrids = new List<Material>();
 
-				gridBackground.renderQueue = renderQueue;
-				activeMaterials.Add(gridBackground);
+				//gridBackground.renderQueue = renderQueue;
+				//activeMaterials.Add(gridBackground);
 
 				for (var i = 0; i < value.Length; i++)
 				{
 					if (!value[i].IsActive) continue;
 
 					var block = value[i];
+					var background = gridBackgrounds[i];
 					var grid = grids[i];
+
+					background.renderQueue = renderQueue;
+					background.SetVector(ShaderConstants.HoloGridBackgroundRange.RangeOrigin, block.RangeOrigin);
 
 					grid.renderQueue = renderQueue;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
 					grid.SetVector(ShaderConstants.HoloGridBasic.Offset, block.Offset);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, block.Alpha);
 
-					activeMaterials.Add(grid);
+					activeGridBackgrounds.Add(background);
+					activeGrids.Add(grid);
 				}
 
-				gridMesh.materials = activeMaterials.ToArray();
+				gridMesh.materials = activeGridBackgrounds.Concat(activeGrids).ToArray();
 			}
 		}
 
@@ -142,7 +152,6 @@ namespace LunraGames.SubLight.Views
 			Dragging = ActionExtensions.GetEmpty<bool>();
 			Highlighted = false;
 			SetRadius(0f, true);
-			HoloColor = Color.white;
 
 			DrawGizmos = ActionExtensions.Empty;
 		}
@@ -236,7 +245,7 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
-	public interface IGridView : IView, IHoloColorView
+	public interface IGridView : IView
 	{
 		float ZoomAnimationDuration { get; }
 		float NudgeAnimationDuration { get; }
