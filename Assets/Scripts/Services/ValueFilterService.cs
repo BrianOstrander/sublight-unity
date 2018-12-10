@@ -24,7 +24,7 @@ namespace LunraGames.SubLight
 			Filter(done, filter, model, null);
 		}
 
-		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model, InventoryModel inventoryModel)
+		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model, InventoryModuleModel inventoryModel)
 		{
 			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();
 
@@ -48,7 +48,7 @@ namespace LunraGames.SubLight
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
 			GameModel model,
-			InventoryModel inventoryModel
+			InventoryModuleModel inventoryModel
 		)
 		{
 			if (remaining.Count == 0)
@@ -102,7 +102,7 @@ namespace LunraGames.SubLight
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
 			GameModel model,
-			InventoryModel inventoryModel
+			InventoryModuleModel inventoryModel
 		)
 		{
 			result = negated ? !result : result;
@@ -172,7 +172,7 @@ namespace LunraGames.SubLight
 		void OnHandle(EncounterInteractionFilterEntryModel filter, GameModel model, Action<ValueFilterGroups, bool> done)
 		{
 			var operation = filter.Operation.Value;
-			var encounterInteraction = model.GetEncounterStatus(filter.FilterValue.Value);
+			var encounterInteraction = model.EncounterState.GetEncounterStatus(filter.FilterValue.Value);
 			var result = false;
 
 			if (operation == EncounterInteractionFilterOperations.NotCompleted)
@@ -205,7 +205,7 @@ namespace LunraGames.SubLight
 		void OnHandle(
 			IdInventoryFilterEntryModel filter,
 			GameModel model,
-			InventoryModel inventoryModel,
+			InventoryModuleModel inventoryModel,
 			Action<ValueFilterGroups, bool> done)
 		{
 			var result = false;
@@ -214,7 +214,8 @@ namespace LunraGames.SubLight
 			{
 				case InventoryFilterTypes.Inventory:
 					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
-					result = model.Ship.Value.Inventory.HasInventory(filter.FilterValue.Value);
+					//result = model.Ship.Value.Inventory.HasInventory(filter.FilterValue.Value);
+					throw new NotImplementedException("Inventory filtering not implimented yet");
 					break;
 				case InventoryFilterTypes.References:
 					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");
@@ -231,7 +232,7 @@ namespace LunraGames.SubLight
 		void OnHandle(
 			TagInventoryFilterEntryModel filter,
 			GameModel model,
-			InventoryModel inventoryModel,
+			InventoryModuleModel inventoryModel,
 			Action<ValueFilterGroups, bool> done)
 		{
 			var result = false;
@@ -249,7 +250,8 @@ namespace LunraGames.SubLight
 			{
 				case InventoryFilterTypes.Inventory:
 					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
-					result = model.Ship.Value.Inventory.HasInventory(i => i.Tags.Value.Any(t => t.ToLower() == smoothed));
+					//result = model.Ship.Value.Inventory.HasInventory(i => i.Tags.Value.Any(t => t.ToLower() == smoothed));
+					throw new NotImplementedException("Inventory filtering not implimented yet");
 					break;
 				case InventoryFilterTypes.References:
 					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");

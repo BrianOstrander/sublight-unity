@@ -11,7 +11,6 @@
 
 		// Interactions
 		InteractedEncounterInfoList = 40,
-		InteractedInventoryReferenceList = 45,
 
 		GlobalKeyValues = 50,
 
@@ -20,17 +19,6 @@
 		GalaxyInfo = 64,
 
 		// Inventory References
-		ModuleReference = 200,
-		OrbitalCrewReference = 210
-	}
-
-	public static class SaveTypeValidator
-	{
-		public static SaveTypes[] InventoryReferences = {
-			SaveTypes.Unknown,
-			SaveTypes.ModuleReference,
-			SaveTypes.OrbitalCrewReference
-		};
-
+		InventoryModule = 200
 	}
 }

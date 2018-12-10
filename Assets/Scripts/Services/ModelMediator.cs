@@ -143,10 +143,8 @@ namespace LunraGames.SubLight
 				case SaveTypes.GalaxyInfo: return typeof(GalaxyInfoModel);
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
-				case SaveTypes.InteractedInventoryReferenceList: return typeof(InteractedInventoryReferenceListModel);
 				// -- Inventory References
-				case SaveTypes.ModuleReference: return typeof(ModuleReferenceModel);
-				case SaveTypes.OrbitalCrewReference: return typeof(OrbitalCrewReferenceModel);
+				case SaveTypes.InventoryModule: return typeof(InventoryModuleModel);
 				// --
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
@@ -165,10 +163,8 @@ namespace LunraGames.SubLight
 			}
 			// -- Interacted
 			if (type == typeof(InteractedEncounterInfoListModel)) return new SaveTypes[] { SaveTypes.InteractedEncounterInfoList };
-			if (type == typeof(InteractedInventoryReferenceListModel)) return new SaveTypes[] { SaveTypes.InteractedInventoryReferenceList };
 			// -- Inventory References
-			if (type == typeof(ModuleReferenceModel)) return new SaveTypes[] { SaveTypes.ModuleReference };
-			if (type == typeof(OrbitalCrewReferenceModel)) return new SaveTypes[] { SaveTypes.OrbitalCrewReference };
+			if (type == typeof(InventoryModuleModel)) return new SaveTypes[] { SaveTypes.InventoryModule};
 			// --
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
@@ -182,6 +178,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.GalaxyDistant:
 				case SaveTypes.GalaxyInfo:
 					return MetaKeyConstants.GalaxyInfo.GalaxyId;
+				case SaveTypes.InventoryModule: return MetaKeyConstants.InventoryModule.InventoryId;
 				default:
 					Debug.LogWarning("Save type " + saveType + " has no unique id key and loading by default ids has not been tested");
 					return null;

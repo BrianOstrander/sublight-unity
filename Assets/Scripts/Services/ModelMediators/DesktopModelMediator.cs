@@ -17,8 +17,6 @@ namespace LunraGames.SubLight
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
 		static string InternalPath { get { return Path.Combine(Application.streamingAssetsPath, "internal"); } }
 
-		static string InventoryReferencePath(string suffix) { return Path.Combine(Path.Combine(InternalPath, "inventory-references"), suffix); }
-
 		bool readableSaves;
 
 		protected override Dictionary<SaveTypes, int> MinimumSupportedSaves
@@ -32,15 +30,13 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, -1 },
 					{ SaveTypes.EncounterInfo, 0 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
-					{ SaveTypes.InteractedInventoryReferenceList, -1 },
 					{ SaveTypes.GlobalKeyValues, -1 },
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, 7 },
 					{ SaveTypes.GalaxyDistant, 7 },
 					{ SaveTypes.GalaxyInfo, 7 },
 					// -- Inventory References
-					{ SaveTypes.ModuleReference, 4 },
-					{ SaveTypes.OrbitalCrewReference, 4 }
+					{ SaveTypes.InventoryModule, 5 }
 					// --
 				};
 			}
@@ -56,15 +52,13 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, true },
 					{ SaveTypes.EncounterInfo, false },
 					{ SaveTypes.InteractedEncounterInfoList, true },
-					{ SaveTypes.InteractedInventoryReferenceList, true },
 					{ SaveTypes.GlobalKeyValues, true },
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, false },
 					{ SaveTypes.GalaxyDistant, false },
 					{ SaveTypes.GalaxyInfo, false },
 					// -- Inventory References
-					{ SaveTypes.ModuleReference, false },
-					{ SaveTypes.OrbitalCrewReference, false }
+					{ SaveTypes.InventoryModule, false }
 					// --
 				};
 			}
@@ -113,10 +107,8 @@ namespace LunraGames.SubLight
 					return Path.Combine(InternalPath, "galaxies");
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
-				case SaveTypes.InteractedInventoryReferenceList: return Path.Combine(ParentPath, "interacted-references");
 				// -- Inventory References
-				case SaveTypes.ModuleReference: return InventoryReferencePath("modules");
-				case SaveTypes.OrbitalCrewReference: return InventoryReferencePath("orbital-crew");
+				case SaveTypes.InventoryModule: return Path.Combine(InternalPath, "inventory-modules");
 				// --
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}

@@ -10,29 +10,18 @@ namespace LunraGames.SubLight
 {
 	public class EncounterHandlerService
 	{
-		enum States
-		{
-			Unknown = 0,
-			Processing = 10,
-			Ending = 20,
-			Complete = 30
-		}
-
 		Heartbeat heartbeat;
 		CallbackService callbacks;
 		EncounterService encounterService;
 		KeyValueService keyValueService;
-		InventoryReferenceService inventoryReferences;
 		ValueFilterService valueFilter;
 		IUniverseService universeService;
 		Func<PreferencesModel> currentPreferences;
 
-		States state = States.Complete;
 		GameModel model;
 		EncounterInfoModel encounter;
 		SystemModel system;
 		BodyModel body;
-		KeyValueListener keyValues;
 
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
@@ -42,7 +31,6 @@ namespace LunraGames.SubLight
 			CallbackService callbacks,
 			EncounterService encounterService,
 			KeyValueService keyValueService,
-			InventoryReferenceService inventoryReferences,
 			ValueFilterService valueFilter,
 			IUniverseService universeService,
 			Func<PreferencesModel> currentPreferences
@@ -52,7 +40,6 @@ namespace LunraGames.SubLight
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
 			if (encounterService == null) throw new ArgumentNullException("encounterService");
 			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
-			if (inventoryReferences == null) throw new ArgumentNullException("inventoryReferences");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
 			if (universeService == null) throw new ArgumentNullException("universeService");
 			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
@@ -61,7 +48,6 @@ namespace LunraGames.SubLight
 			this.callbacks = callbacks;
 			this.encounterService = encounterService;
 			this.keyValueService = keyValueService;
-			this.inventoryReferences = inventoryReferences;
 			this.valueFilter = valueFilter;
 			this.universeService = universeService;
 			this.currentPreferences = currentPreferences;
@@ -93,10 +79,10 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Complete:
 					encounterService.GetEncounterInteraction(encounter.EncounterId).TimesCompleted.Value++;
-					model.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
+					model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
 					var toFocus = system.Position.Value;
 
-					state = States.Ending;
+					model.EncounterState.State.Value = EncounterStateModel.States.Ending;
 
 					Debug.LogWarning("TODO: Logic upon completing encounter!");
 					//callbacks.FocusRequest(
@@ -143,7 +129,7 @@ namespace LunraGames.SubLight
 
 		void OnStateChange(StateChange change)
 		{
-			if (state == States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
+			if (model == null || model.EncounterState.State.Value == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
 			OnEnd();
 		}
 
@@ -166,21 +152,19 @@ namespace LunraGames.SubLight
 			int systemIndex
 		)
 		{
-			if (state != States.Complete)
+			if (model.EncounterState.State.Value != EncounterStateModel.States.Complete)
 			{
 				Debug.LogError("Beginning an encounter while one is not complete, may cause unpredictable behaviour.");
 			}
 
-			state = States.Processing;
+			model.EncounterState.State.Value = EncounterStateModel.States.Processing;
 
 			this.model = model;
 
 			encounter = encounterService.GetEncounter(encounterId);
 			system = universeService.GetSystem(model.Galaxy, model.Universe, sectorPosition, systemIndex);
 			body = system.BodyWithEncounter;
-			keyValues = new KeyValueListener(KeyValueTargets.Encounter, new KeyValueListModel(), keyValueService);
-
-			keyValues.Register();
+			model.EncounterState.RegisterKeyValueListener(keyValueService);
 
 			callbacks.SaveRequest(SaveRequest.Request(OnBeginSaved));
 		}
@@ -200,19 +184,18 @@ namespace LunraGames.SubLight
 
 		void OnEnd()
 		{
-			state = States.Complete;
+			var oldModel = model;
 
 			model = null;
 			encounter = null;
 			system = null;
 			body = null;
 
-			if (keyValues != null) keyValues.UnRegister();
-
-			keyValues = null;
-
 			nextLog = null;
 			nextLogDelay = null;
+
+			oldModel.EncounterState.State.Value = EncounterStateModel.States.Complete;
+			oldModel.EncounterState.UnRegisterKeyValueListener();
 		}
 
 		void OnShowLog(EncounterLogModel logModel)
@@ -236,7 +219,8 @@ namespace LunraGames.SubLight
 					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
 					break;
 				case EncounterLogTypes.Inventory:
-					OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
+					throw new NotImplementedException("Inventory logs not supported yet");
+					//OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
 					break;
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
@@ -322,6 +306,7 @@ namespace LunraGames.SubLight
 			if (total == progress) done();
 		}
 
+		/*
 		void OnInventoryLog(InventoryEncounterLogModel logModel, Action done)
 		{
 			var total = logModel.Operations.Value.Length;
@@ -396,6 +381,7 @@ namespace LunraGames.SubLight
 			progress++;
 			if (total == progress) done();
 		}
+		*/
 
 		void OnSwitchLog(SwitchEncounterLogModel logModel, Action<string> done)
 		{
