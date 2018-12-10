@@ -11,9 +11,9 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		public int InterstellarSectorOffset = 2; // Not set anywhere else at the moment...
-		public int InterstellarSectorOffsetTotal { get { return (InterstellarSectorOffset * 2) + 1; } }
-		public int InterstellarSectorCount { get { return InterstellarSectorOffsetTotal * InterstellarSectorOffsetTotal; } }
+		public int LocalSectorOffset = 2; // Not set anywhere else at the moment...
+		public int LocalSectorOffsetTotal { get { return (LocalSectorOffset * 2) + 1; } }
+		public int LocalSectorCount { get { return LocalSectorOffsetTotal * LocalSectorOffsetTotal; } }
 
 		public GameModel Game;
 
@@ -22,8 +22,11 @@ namespace LunraGames.SubLight
 
 		public KeyValueListener KeyValueListener;
 
-		public List<SectorInstanceModel> SectorInstances = new List<SectorInstanceModel>();
-		public UniversePosition LastInterstellarFocus = new UniversePosition(new Vector3Int(int.MinValue, 0, int.MinValue));
+		public List<SectorInstanceModel> LocalSectorInstances = new List<SectorInstanceModel>();
+		public UniversePosition LastLocalFocus = new UniversePosition(new Vector3Int(int.MinValue, 0, int.MinValue));
+		public UniverseScales LastUniverseFocusToScale;
+
+		public UniverseScaleModel LastActiveScale;
 	}
 
 	public partial class GameState : State<GamePayload>
@@ -37,11 +40,20 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
+			/*
+			Payload.Game.ScaleLabelSystem.Changed += value => Debug.Log("System label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelLocal.Changed += value => Debug.Log("Local label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelStellar.Changed += value => Debug.Log("Stellar label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelQuadrant.Changed += value => Debug.Log("Quadrant label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelGalactic.Changed += value => Debug.Log("Galactic label is now " + value.Name.Value);
+			Payload.Game.ScaleLabelCluster.Changed += value => Debug.Log("Cluster label is now " + value.Name.Value);
+			*/
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(LoadModelDependencies);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
+			App.SM.PushBlocking(InitializeScaleTransforms);
 			App.SM.PushBlocking(InitializeFocus);
 			App.SM.PushBlocking(InitializeCelestialSystems);
 		}
@@ -105,7 +117,17 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
+			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
+			done();
+		}
+
+		void InitializeScaleTransforms(Action done)
+		{
+			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
+			{
+				scaleTransformProperty.Changed += OnScaleTransform;
+			}
 			done();
 		}
 
@@ -155,6 +177,13 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
+			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
+
+			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
+			{
+				scaleTransformProperty.Changed -= OnScaleTransform;
+			}
+
 			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
 		}
 		#endregion
@@ -182,23 +211,49 @@ namespace LunraGames.SubLight
 
 		void OnCelestialSystemsTransform(UniverseTransform transform)
 		{
-			if (transform.UniverseOrigin.SectorEquals(Payload.LastInterstellarFocus))
+			if (transform.UniverseOrigin.SectorEquals(Payload.LastLocalFocus) || Payload.Game.FocusTransform.Value.Zoom.State != TweenStates.Complete)
 			{
-				Payload.LastInterstellarFocus = transform.UniverseOrigin;
+				Payload.LastLocalFocus = transform.UniverseOrigin;
 				return;
 			}
-			Payload.LastInterstellarFocus = transform.UniverseOrigin;
+			Payload.LastLocalFocus = transform.UniverseOrigin;
+
+			OnCalculateLocalSectors(transform, false);
+		}
+
+		void OnFocusTransform(FocusTransform focusTransform)
+		{
+			if (focusTransform.ToScale == Payload.LastUniverseFocusToScale) return;
+			Payload.LastUniverseFocusToScale = focusTransform.ToScale;
+
+ 			switch (focusTransform.ToScale)
+			{
+				case UniverseScales.Local:
+					OnCalculateLocalSectors(Payload.Game.GetScale(focusTransform.ToScale).TransformDefault.Value, true);
+					break;
+			}
+		}
+
+		void OnCalculateLocalSectors(UniverseTransform transform, bool force)
+		{
+			if (Payload.LocalSectorInstances.None()) return;
 
 			var originInt = transform.UniverseOrigin.SectorInteger;
-			var minSector = new Vector3Int(originInt.x - Payload.InterstellarSectorOffset, 0, originInt.z - Payload.InterstellarSectorOffset);
-			var maxSector = new Vector3Int(originInt.x + Payload.InterstellarSectorOffset, 0, originInt.z + Payload.InterstellarSectorOffset);
+			var minSector = new Vector3Int(originInt.x - Payload.LocalSectorOffset, 0, originInt.z - Payload.LocalSectorOffset);
+			var maxSector = new Vector3Int(originInt.x + Payload.LocalSectorOffset, 0, originInt.z + Payload.LocalSectorOffset);
 
 			var staleSectors = new List<SectorInstanceModel>();
 
-			var sectorPositionExists = new bool[Payload.InterstellarSectorOffsetTotal, Payload.InterstellarSectorOffsetTotal];
+			var sectorPositionExists = new bool[Payload.LocalSectorOffsetTotal, Payload.LocalSectorOffsetTotal];
 
-			foreach (var sector in Payload.SectorInstances)
+			foreach (var sector in Payload.LocalSectorInstances)
 			{
+				if (force)
+				{
+					staleSectors.Add(sector);
+					continue;
+				}
+
 				var currSectorInt = sector.Sector.Value.Position.Value.SectorInteger;
 				if (currSectorInt.x < minSector.x || maxSector.x < currSectorInt.x || currSectorInt.z < minSector.z || maxSector.z < currSectorInt.z)
 				{
@@ -208,19 +263,19 @@ namespace LunraGames.SubLight
 				else sectorPositionExists[currSectorInt.x - minSector.x, currSectorInt.z - minSector.z] = true;
 			}
 
-			for (var x = 0; x < Payload.InterstellarSectorOffsetTotal; x++)
+			for (var x = 0; x < Payload.LocalSectorOffsetTotal; x++)
 			{
-				for (var z = 0; z < Payload.InterstellarSectorOffsetTotal; z++)
+				for (var z = 0; z < Payload.LocalSectorOffsetTotal; z++)
 				{
-					if (sectorPositionExists[x, z]) continue;
+					if (!force && sectorPositionExists[x, z]) continue;
 					var replacement = staleSectors.First();
 					staleSectors.RemoveAt(0);
-					OnCelestialSystemsTransformUpdateSystems(replacement, new UniversePosition(new Vector3Int(x + minSector.x, 0, z + minSector.z)));
+					OnCalculateLocalSectorsUpdateSystems(replacement, new UniversePosition(new Vector3Int(x + minSector.x, 0, z + minSector.z)));
 				}
 			}
 		}
 
-		void OnCelestialSystemsTransformUpdateSystems(SectorInstanceModel sectorModel, UniversePosition sectorPosition)
+		void OnCalculateLocalSectorsUpdateSystems(SectorInstanceModel sectorModel, UniversePosition sectorPosition)
 		{
 			sectorModel.Sector.Value = App.Universe.GetSector(Payload.Game.Galaxy, Payload.Game.Universe, sectorPosition);
 			var systemCount = sectorModel.Sector.Value.SystemCount.Value;
@@ -234,6 +289,62 @@ namespace LunraGames.SubLight
 				}
 				else currSystem.SetSystem(null);
 			}
+		}
+
+		void OnScaleTransform(UniverseTransform transform)
+		{
+			var labels = Payload.Game.Galaxy.GetLabels();
+			var targetProperty = Payload.Game.ScaleLabelSystem;
+
+			switch (transform.Scale)
+			{
+				case UniverseScales.System:
+					Payload.Game.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
+					return;
+				case UniverseScales.Local:
+					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
+					targetProperty = Payload.Game.ScaleLabelLocal;
+					break;
+				case UniverseScales.Stellar:
+					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
+					targetProperty = Payload.Game.ScaleLabelStellar;
+					break;
+				case UniverseScales.Quadrant:
+					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Galactic);
+					targetProperty = Payload.Game.ScaleLabelQuadrant;
+					break;
+				case UniverseScales.Galactic:
+					Payload.Game.ScaleLabelGalactic.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Milky Way"));
+					return;
+				case UniverseScales.Cluster:
+					Payload.Game.ScaleLabelCluster.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Local Group"));
+					return;
+			}
+
+			var normalizedPosition = UniversePosition.NormalizedSector(transform.UniverseOrigin, Payload.Game.Galaxy.GalaxySize);
+
+			float? proximity = null;
+			GalaxyLabelModel closestLabel = null;
+
+			foreach (var label in labels)
+			{
+				var currProximity = label.Proximity(normalizedPosition, 4);
+				if (!proximity.HasValue || currProximity < proximity)
+				{
+					proximity = currProximity;
+					closestLabel = label;
+				}
+			}
+
+			if (closestLabel == null)
+			{
+				Debug.LogError("No labels were found for current scale");
+				targetProperty.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("No labels provided"));
+				return;
+			}
+
+			// TODO: Add language support for this.
+			targetProperty.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override(closestLabel.Name.Value));
 		}
 		#endregion
 	}

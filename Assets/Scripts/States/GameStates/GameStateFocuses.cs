@@ -41,6 +41,14 @@ namespace LunraGames.SubLight
 				var gridInfo = new GridInfoBlock();
 
 				gridInfo.Scale = LanguageStringModel.Override("Scale");
+				gridInfo.Scales = new UniverseScales[] {
+					UniverseScales.System,
+					UniverseScales.Local,
+					UniverseScales.Stellar,
+					UniverseScales.Quadrant,
+					UniverseScales.Galactic,
+					UniverseScales.Cluster
+				};
 				gridInfo.ScaleNames = new LanguageStringModel[] {
 					LanguageStringModel.Override("System"),
 					LanguageStringModel.Override("Local"),
@@ -90,6 +98,12 @@ namespace LunraGames.SubLight
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant, UniverseScales.Quadrant);
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Stellar, UniverseScales.Quadrant, UniverseScales.Stellar);
 
+				new RegionLabelPresenter(payload.Game, UniverseScales.Local);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Stellar);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Quadrant);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Galactic);
+				new RegionLabelPresenter(payload.Game, UniverseScales.Cluster);
+
 				new CelestialSystemDistanceLinePresenter(payload.Game, UniverseScales.Local);
 
 				var celestialLanguageBlock = new CelestialSystemLanguageBlock
@@ -108,7 +122,7 @@ namespace LunraGames.SubLight
 					}
 				};
 
-				for (var i = 0; i < payload.InterstellarSectorCount; i++)
+				for (var i = 0; i < payload.LocalSectorCount; i++)
 				{
 					var sector = new SectorInstanceModel();
 					sector.Sector.Value = App.Universe.GetSector(payload.Game.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
@@ -123,7 +137,7 @@ namespace LunraGames.SubLight
 						);
 					}
 					sector.SystemModels.Value = systems;
-					payload.SectorInstances.Add(sector);
+					payload.LocalSectorInstances.Add(sector);
 				}
 
 				done();
@@ -170,16 +184,6 @@ namespace LunraGames.SubLight
 			{
 				return GetBaseEnabledFocuses().ToArray();
 			}
-
-			//public static SetFocusBlock[] GetSystemFocus()
-			//{
-			//	var results = GetBaseEnabledFocuses();
-
-			//	results.Add(GetFocus<ToolbarFocusDetails>(0, true, 1f, true));
-			//	results.Add(GetFocus<SystemFocusDetails>(1, true, 1f, true));
-
-			//	return results.ToArray();
-			//}
 
 			public static SetFocusBlock[] GetToolbarSelectionFocus(ToolbarSelections selection)
 			{

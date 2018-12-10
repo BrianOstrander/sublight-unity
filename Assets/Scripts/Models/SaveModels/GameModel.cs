@@ -113,6 +113,12 @@ namespace LunraGames.SubLight.Models
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
 		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
+		UniverseScaleLabelBlock scaleLabelSystem = UniverseScaleLabelBlock.Default;
+		UniverseScaleLabelBlock scaleLabelLocal = UniverseScaleLabelBlock.Default;
+		UniverseScaleLabelBlock scaleLabelStellar = UniverseScaleLabelBlock.Default;
+		UniverseScaleLabelBlock scaleLabelQuadrant = UniverseScaleLabelBlock.Default;
+		UniverseScaleLabelBlock scaleLabelGalactic = UniverseScaleLabelBlock.Default;
+		UniverseScaleLabelBlock scaleLabelCluster = UniverseScaleLabelBlock.Default;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
@@ -122,6 +128,18 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<GridInputRequest> GridInput;
 		[JsonIgnore]
 		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
+		[JsonIgnore]
+		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelSystem;
+		[JsonIgnore]
+		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelLocal;
+		[JsonIgnore]
+		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelStellar;
+		[JsonIgnore]
+		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelQuadrant;
+		[JsonIgnore]
+		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelGalactic;
+		[JsonIgnore]
+		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelCluster;
 
 
 		UniverseScaleModel activeScale;
@@ -153,6 +171,13 @@ namespace LunraGames.SubLight.Models
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
 			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);
 			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
+
+			ScaleLabelSystem = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelSystem = value, () => scaleLabelSystem);
+			ScaleLabelLocal = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelLocal = value, () => scaleLabelLocal);
+			ScaleLabelStellar = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelStellar = value, () => scaleLabelStellar);
+			ScaleLabelQuadrant = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelQuadrant = value, () => scaleLabelQuadrant);
+			ScaleLabelGalactic = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelGalactic = value, () => scaleLabelGalactic);
+			ScaleLabelCluster = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelCluster = value, () => scaleLabelCluster);
 
 			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
 			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))

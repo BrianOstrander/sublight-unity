@@ -154,8 +154,8 @@ namespace LunraGames.SubLight
 
 		void DrawPreviews(
 			GalaxyInfoModel model,
-			DevPrefsInt previewSelected,
-			DevPrefsInt previewSize,
+			EditorPrefsInt previewSelected,
+			EditorPrefsInt previewSize,
 			EditorPrefsBool previewMinimized,
 			bool previewClickable,
 			Action<Vector3> primaryClick = null,
@@ -237,6 +237,11 @@ namespace LunraGames.SubLight
 				GUI.Box(CenteredScreen(gameEndInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Game End"), style);
 			}
 			EditorGUILayoutExtensions.PopColor();
+		}
+
+		bool HorizontalPreviewSupported(float ratio = 1.25f)
+		{
+			return ratio < (position.width / position.height);
 		}
 		#endregion
 	}

@@ -59,5 +59,21 @@ namespace LunraGames.SubLight.Models
 			EndAnchorNormal = new ListenerProperty<Vector3>(value => endAnchorNormal = value, () => endAnchorNormal);
 			SliceLayer = new ListenerProperty<int>(value => sliceLayer = value, () => sliceLayer);
 		}
+
+		public float Proximity(Vector3 normal, int sampling = 1)
+		{
+			var lastProximity = float.MaxValue;
+
+			sampling = Mathf.Max(sampling, 1);
+			var delta = 1f / sampling;
+			var offset = delta * 0.5f;
+			for (var i = 0; i < sampling; i++)
+			{
+				var progress = offset + (i / sampling);
+				var currProximity = Vector3.Distance(normal, CurveInfo.Value.Evaluate(BeginAnchorNormal.Value, EndAnchorNormal.Value, progress, false));
+				if (currProximity < lastProximity) lastProximity = currProximity;
+			}
+			return lastProximity;
+		}
 	}
 }

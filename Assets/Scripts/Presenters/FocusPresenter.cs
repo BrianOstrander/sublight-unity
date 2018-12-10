@@ -32,9 +32,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void TransitionActive(TransitionFocusRequest request, SetFocusTransition transition)
 		{
-			//Debug.Log("--- "+GetType().Name+" ---");
-			//Debug.Log("Start: " + transition.Start.Enabled + " End: " + transition.End.Enabled);
-			//Debug.Log(GetType().Name + " should be " + (transition.End.Enabled ? "opening or remaining" : "closing or remaining closed"));
 			if (transition.End.Enabled)
 			{
 				if (View.TransitionState == TransitionStates.Closed) ShowInstant();

@@ -59,14 +59,6 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		protected override void OnUpdateEnabled()
-		{
-			base.OnUpdateEnabled();
-
-			lastTransformedByInput = false;
-			View.Set(0f, 0f, 0f);
-		}
-
 		void OnCameraMaskRequest(CameraMaskRequest request)
 		{
 			switch (request.State)

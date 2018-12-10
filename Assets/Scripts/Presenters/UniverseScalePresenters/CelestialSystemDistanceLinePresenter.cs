@@ -24,6 +24,8 @@ namespace LunraGames.SubLight.Presenters
 
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 			ScaleModel.Transform.Changed += OnScaleTransform;
+
+			ShowViewInstant();
 		}
 
 		protected override void OnUnBind()
@@ -49,8 +51,141 @@ namespace LunraGames.SubLight.Presenters
 
 			end = end ?? Model.Ship.Value.Position;
 
-			View.SetPoints(transform.GetUnityPosition(Model.Ship.Value.Position), transform.GetUnityPosition(end.Value));
+			var minOffset = new Vector3(0f, View.YMinimumOffset, 0f);
+			var begin = transform.GetUnityPosition(Model.Ship.Value.Position) + minOffset;
+			var endResult = transform.GetUnityPosition(end.Value) + minOffset;
+
+			Vector3? clampedBegin = null;
+			Vector3? clampedEnd = null;
+			var clamping = ClampPoints(begin, endResult, out clampedBegin, out clampedEnd);
+
+			View.SetPoints(
+				begin,
+				endResult,
+				clamping,
+				clampedBegin,
+				clampedEnd
+			);
 		}
+
+		#region Utility
+		LineClamping ClampPoints(Vector3 begin, Vector3 end, out Vector3? clampedBegin, out Vector3? clampedEnd)
+		{
+			// Incase you can't tell... I did not write this. Sourced frome here http://csharphelper.com/blog/2014/09/determine-where-a-line-intersects-a-circle-in-c/
+
+			clampedBegin = null;
+			clampedEnd = null;
+
+			var beginIsInRadius = GetPositionIsInRadius(begin, View.GridRadiusMargin);
+			var endIsInRadius = GetPositionIsInRadius(end, View.GridRadiusMargin);
+
+			if (beginIsInRadius && endIsInRadius) return LineClamping.NoClamping;
+
+			var pointInside = beginIsInRadius ? begin : end;
+			var pointOutside = beginIsInRadius ? end : begin;
+
+			var gridRadiusX = GridOrigin.x;
+			var gridRadiesZ = GridOrigin.z;
+			var radius = GridRadius - View.GridRadiusMargin;
+
+			float xDelta, zDelta, A, B, C, det, t;
+
+			xDelta = pointOutside.x - pointInside.x;
+			zDelta = pointOutside.z - pointInside.z;
+
+			A = xDelta * xDelta + zDelta * zDelta;
+			B = 2f * (xDelta * (pointInside.x - GridOrigin.x) + zDelta * (pointInside.z - GridOrigin.z));
+			C = (pointInside.x - GridOrigin.x) * (pointInside.x - GridOrigin.x) + (pointInside.z - GridOrigin.z) * (pointInside.z - GridOrigin.z) - radius * radius;
+
+			det = B * B - 4f * A * C;
+			if (Mathf.Approximately(A, 0f) || (det < 0f))
+			{
+				// No real solutions.
+				return LineClamping.NotVisible;
+			}
+
+			if (Mathf.Approximately(det, 0f))
+			{
+				// We don't care about a single tangent...
+				return LineClamping.NotVisible;
+				/*
+				// One solution.
+				t = -B / (2f * A);
+				var result = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
+				var status = ClampedPointResults.NoClamping;
+
+				if (beginIsInRadius)
+				{
+					clampedEnd = result;
+					status = ClampedPointResults.EndClamped;
+				}
+				else 
+				{
+					clampedBegin = result;
+					status = ClampedPointResults.BeginClamped;
+				}
+				return status;
+				*/
+			}
+
+			// Two solutions.
+			var doubleA = 2f * A;
+			var sqrtDet = Mathf.Sqrt(det);
+
+			t = (-B + sqrtDet) / doubleA;
+			var result0 = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
+			t = (-B - sqrtDet) / doubleA;
+			var result1 = new Vector3(pointInside.x + t * xDelta, GridOrigin.y, pointInside.z + t * zDelta);
+
+			if (beginIsInRadius)
+			{
+				clampedEnd = CalculateClamped(begin, end, result0);
+				return LineClamping.EndClamped;
+			}
+
+			if (endIsInRadius)
+			{
+				clampedBegin = CalculateClamped(end, begin, result0);
+				return LineClamping.BeginClamped;
+			}
+
+			var minPoint = begin.NewY(GridOrigin.y);
+			var maxPoint = end.NewY(GridOrigin.y);
+
+			if (Vector3.Distance(GridOrigin, maxPoint) < Vector3.Distance(GridOrigin, minPoint))
+			{
+				var newMax = minPoint;
+				minPoint = maxPoint;
+				maxPoint = newMax;
+			}
+
+			var midPointDelta = (maxPoint - minPoint) * 0.5f;
+
+			var midPoint = minPoint + midPointDelta;
+
+			if (Vector3.Distance(GridOrigin, minPoint) < Vector3.Distance(GridOrigin, midPoint))
+			{
+				// Line is outside the circle and doesn't intersect it.
+				return LineClamping.NotVisible;
+			}
+
+			clampedBegin = CalculateClamped(begin, end, result0);
+			clampedEnd = CalculateClamped(end, begin, result1);
+
+			return LineClamping.BothClamped;
+		}
+
+		Vector3? CalculateClamped(Vector3 clampOrigin, Vector3 clampTermination, Vector3 position)
+		{
+			var originalDistance = Vector3.Distance(clampOrigin, clampTermination);
+			var orginOnGrid = clampOrigin.NewY(GridOrigin.y);
+			var terminationOnGrid = clampTermination.NewY(GridOrigin.y);
+			var distanceOnGrid = Vector3.Distance(orginOnGrid, terminationOnGrid);
+
+			var scalar = Vector3.Distance(orginOnGrid, position) / distanceOnGrid;
+			return clampOrigin + ((clampTermination - clampOrigin).normalized * (originalDistance * scalar));
+		}
+		#endregion
 
 		#region Events
 		void OnShipPosition(UniversePosition position)
@@ -60,7 +195,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShowView()
 		{
-			OnScaleTransform(ScaleModel.Transform.Value);
+			OnScaleTransformForced(ScaleModel.Transform.Value);
 		}
 
 		void OnScaleOpacity(float value)
@@ -72,7 +207,13 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnScaleTransform(UniverseTransform transform)
 		{
-			View.SetGrid(transform.UnityOrigin, transform.UnityRadius);
+			if (!View.Visible) return;
+			OnScaleTransformForced(transform);
+		}
+
+		void OnScaleTransformForced(UniverseTransform transform)
+		{
+			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
 			UniversePosition? end = null;
 			if (Model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected)

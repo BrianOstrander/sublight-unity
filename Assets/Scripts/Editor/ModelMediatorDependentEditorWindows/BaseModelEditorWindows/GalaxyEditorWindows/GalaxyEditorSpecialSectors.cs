@@ -23,9 +23,9 @@ namespace LunraGames.SubLight
 		}
 
 		EditorPrefsString specifiedSectorsSelectedSectorName;
-		DevPrefsInt specifiedSectorsPreviewSize;
+		EditorPrefsInt specifiedSectorsPreviewSize;
 		EditorPrefsBool specifiedSectorsPreviewMinimized;
-		DevPrefsInt specifiedSectorsSelectedPreview;
+		EditorPrefsInt specifiedSectorsSelectedPreview;
 		EditorPrefsFloat specifiedSectorsListScroll;
 		EditorPrefsFloat specifiedSectorsDetailsScroll;
 		EditorPrefsBool specifiedSectorsShowTargets;
@@ -41,9 +41,9 @@ namespace LunraGames.SubLight
 			var currPrefix = KeyPrefix + "SpecifiedSectors";
 
 			specifiedSectorsSelectedSectorName = new EditorPrefsString(currPrefix + "SelectedSectorName");
-			specifiedSectorsPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
+			specifiedSectorsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
 			specifiedSectorsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
-			specifiedSectorsSelectedPreview = new DevPrefsInt(currPrefix + "SelectedPreview");
+			specifiedSectorsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
 			specifiedSectorsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			specifiedSectorsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
 			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");

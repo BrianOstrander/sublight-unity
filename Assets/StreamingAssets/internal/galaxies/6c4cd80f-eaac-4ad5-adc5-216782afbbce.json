@@ -2,6 +2,9 @@
   "isPlayable": true,
   "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
   "name": "Milky Way",
+  "clusterOrigin": {
+    "Sector": {"z":170.0}
+  },
   "galaxyOrigin": {
     "Sector": {"x":100.0,"z":100.0}
   },
@@ -262,6 +265,138 @@
       "sliceLayer": 2,
       "staticText": {
         "key": "a26b1fba-a7ab-4ea5-b85f-ad1873878912"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    },
+    {
+      "labelId": "5548b0a2-e76f-4735-9b59-0a4965119a39",
+      "groupId": "93b1f033-5596-4849-8962-f0eac47d5335",
+      "name": "Local Group",
+      "curveInfo": {
+        "LabelStyle": "Bold",
+        "FontSize": 4.0,
+        "Curve": {
+          "keys": [
+            {},
+            {
+              "time": 1.0
+            }
+          ],
+          "length": 2,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.0
+      },
+      "source": "Static",
+      "scale": "Quadrant",
+      "beginAnchorNormal": {"x":0.3929385,"z":0.12},
+      "endAnchorNormal": {"x":0.429384977,"z":0.132},
+      "sliceLayer": 2,
+      "staticText": {
+        "key": "65d59a1c-4775-4ad6-8e41-b31ac6e5c211"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    },
+    {
+      "labelId": "17be70f3-3521-4630-892c-93b7322dfdc5",
+      "groupId": "2635b03e-5c3f-4f04-9e5f-649ac2beb684",
+      "name": "Perseus Arm",
+      "curveInfo": {
+        "LabelStyle": "BoldUppercase",
+        "FontSize": 24.0,
+        "Curve": {
+          "keys": [
+            {
+              "inTangent": 0.194321379,
+              "outTangent": 0.194321379,
+              "outWeight": 0.100961536
+            },
+            {
+              "time": 0.501204848,
+              "value": 0.04004767,
+              "inWeight": 0.333333343,
+              "outWeight": 0.333333343
+            },
+            {
+              "time": 1.0,
+              "inTangent": -0.187961742,
+              "outTangent": -0.187961742,
+              "inWeight": 0.0845410749
+            }
+          ],
+          "length": 3,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 2.39
+      },
+      "source": "Static",
+      "scale": "Galactic",
+      "beginAnchorNormal": {"x":0.6810934,"z":0.738041},
+      "endAnchorNormal": {"x":0.867881536,"z":0.521640062},
+      "staticText": {
+        "key": "6cfa0e6b-a79f-4497-9540-a66f150662d3"
+      },
+      "filtering": {
+        "booleanKeyValues": [],
+        "stringKeyValues": [],
+        "encounterInteractions": [],
+        "inventoryIds": [],
+        "inventoryTags": []
+      }
+    },
+    {
+      "labelId": "e49ad57a-010f-4a98-bf7a-cf481ff73e5b",
+      "groupId": "564c22a2-6e54-4573-be91-7be3889e3fb4",
+      "name": "Centaurus Arm",
+      "curveInfo": {
+        "LabelStyle": "BoldUppercase",
+        "FontSize": 24.0,
+        "Curve": {
+          "keys": [
+            {
+              "inTangent": 0.266172349,
+              "outTangent": 0.266172349,
+              "outWeight": 0.1824638
+            },
+            {
+              "time": 0.4966643,
+              "value": 0.0591840371,
+              "inWeight": 0.333333343,
+              "outWeight": 0.333333343
+            },
+            {
+              "time": 1.0,
+              "inTangent": -0.216154665,
+              "outTangent": -0.216154665,
+              "inWeight": 0.169056639
+            }
+          ],
+          "length": 3,
+          "preWrapMode": "ClampForever",
+          "postWrapMode": "ClampForever"
+        },
+        "CurveMaximum": 1.96
+      },
+      "source": "Static",
+      "scale": "Galactic",
+      "beginAnchorNormal": {"x":0.205011383,"z":0.579726636},
+      "endAnchorNormal": {"x":0.350797266,"z":0.887243748},
+      "staticText": {
+        "key": "d824514c-8101-4184-984a-7bfe8599349f"
       },
       "filtering": {
         "booleanKeyValues": [],

@@ -38,10 +38,10 @@ namespace LunraGames.SubLight
 			Group = 20
 		}
 
-		DevPrefsInt labelsPreviewSize;
+		EditorPrefsInt labelsPreviewSize;
 		EditorPrefsBool labelsPreviewMinimized;
 		EditorPrefsString labelsSelectedLabelId;
-		DevPrefsInt labelsSelectedUniverseScale;
+		EditorPrefsInt labelsSelectedUniverseScale;
 		EditorPrefsFloat labelsListScroll;
 		EditorPrefsFloat labelsDetailsScroll;
 		EditorPrefsEnum<LabelColorCodes> labelsColorCodeBy;
@@ -55,10 +55,10 @@ namespace LunraGames.SubLight
 		{
 			var currPrefix = KeyPrefix + "Labels";
 
-			labelsPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
+			labelsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
 			labelsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 			labelsSelectedLabelId = new EditorPrefsString(currPrefix + "SelectedLabelId");
-			labelsSelectedUniverseScale = new DevPrefsInt(currPrefix + "SelectedUniverseScale");
+			labelsSelectedUniverseScale = new EditorPrefsInt(currPrefix + "SelectedUniverseScale");
 			labelsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			labelsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
 			labelsColorCodeBy = new EditorPrefsEnum<LabelColorCodes>(currPrefix + "ColorCodeBy");
@@ -75,6 +75,35 @@ namespace LunraGames.SubLight
 
 		void LabelsToolbar(GalaxyInfoModel model)
 		{
+			var selectedScale = UniverseScales.Quadrant;
+
+			if (HorizontalPreviewSupported())
+			{
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.BeginVertical();
+					{
+						selectedScale = LabelsToolbarPrimary(model, true);
+					}
+					GUILayout.EndVertical();
+					GUILayout.BeginVertical();
+					{
+						LabelsToolbarSecondary(model, selectedScale);
+					}
+					GUILayout.EndVertical();
+				}
+				GUILayout.EndHorizontal();
+			}
+			else
+			{
+				selectedScale = LabelsToolbarPrimary(model, false);
+				GUILayout.FlexibleSpace();
+				LabelsToolbarSecondary(model, selectedScale);
+			}
+		}
+
+		UniverseScales LabelsToolbarPrimary(GalaxyInfoModel model, bool vertical)
+		{
 			if (string.IsNullOrEmpty(labelsSelectedLabelId.Value))
 			{
 				if (labelsSelectedLabel != null)
@@ -87,6 +116,34 @@ namespace LunraGames.SubLight
 				SelectLabel(model.GetLabel(labelsSelectedLabelId.Value));
 			}
 
+			var selectedScale = UniverseScales.Quadrant;
+
+			if (vertical)
+			{
+				selectedScale = LabelsToolbarPrimaryList(model, 200f);
+				LabelsToolbarPrimaryDetails(model);
+			}
+			else
+			{
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.BeginVertical(EditorStyles.helpBox);
+					{
+						selectedScale = LabelsToolbarPrimaryList(model);
+					}
+					GUILayout.EndVertical();
+					
+					LabelsToolbarPrimaryDetails(model);
+				}
+				GUILayout.EndHorizontal();
+			}
+
+
+			return selectedScale;
+		}
+
+		UniverseScales LabelsToolbarPrimaryList(GalaxyInfoModel model, float? height = null)
+		{
 			UniverseScales[] scales =
 			{
 				UniverseScales.Quadrant,
@@ -104,254 +161,260 @@ namespace LunraGames.SubLight
 				}
 			}
 
+			labelsSelectedUniverseScale.Value = GUILayout.Toolbar(Mathf.Min(labelsSelectedUniverseScale, scaleNames.Length - 1), scaleNames);
+
+			EditorGUILayoutExtensions.PushEnabled(labelsSelectedLabel == null);
+			{
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.Label("Color Code By");
+					labelsColorCodeBy.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Color Coding -", labelsColorCodeBy.Value);
+					if (labelsColorCodeBy.Value == LabelColorCodes.Unknown) labelsColorCodeBy.Value = LabelColorCodes.Group;
+				}
+				EditorGUILayout.EndHorizontal();
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			selectedScale = scales[labelsSelectedUniverseScale.Value];
+
+			var scrollOptions = height.HasValue ? new GUILayoutOption[] { GUILayout.Height(height.Value) } : new GUILayoutOption[] { GUILayout.ExpandHeight(true) };
+
+			labelsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsListScroll.Value), false, true, scrollOptions).y;
+			{
+				var labelIndex = -1;
+				foreach (var label in model.GetLabels(selectedScale))
+				{
+					labelIndex++;
+					
+					var isSelectedLabel = label.LabelId.Value == labelsSelectedLabelId.Value;
+					if (isSelectedLabel) EditorGUILayoutExtensions.PushColor(Color.blue.NewS(0.7f));
+					GUILayout.BeginVertical(EditorStyles.helpBox);
+					if (isSelectedLabel) EditorGUILayoutExtensions.PopColor();
+					{
+						GUILayout.BeginHorizontal();
+						{
+							EditorGUILayoutExtensions.PushColor(EditorUtilityExtensions.ColorFromIndex(labelIndex));
+							GUILayout.BeginHorizontal(EditorStyles.helpBox);
+							EditorGUILayoutExtensions.PopColor();
+							{
+								GUILayout.Label(label.Name.Value, EditorStyles.boldLabel);
+							}
+							GUILayout.EndHorizontal();
+							
+							EditorGUILayoutExtensions.PushEnabled(!isSelectedLabel);
+							if (GUILayout.Button("Edit Label", GUILayout.Width(100f)))
+							{
+								SelectLabel(label);
+							}
+							EditorGUILayoutExtensions.PopEnabled();
+							
+							if (EditorGUILayoutExtensions.XButton())
+							{
+								if (labelsSelectedLabel == label)
+								{
+									SelectLabel(null);
+								}
+								model.RemoveLabel(label);
+								ModelSelectionModified = true;
+							}
+						}
+						GUILayout.EndHorizontal();
+						
+						GUILayout.BeginHorizontal();
+						{
+							GUILayout.Label("Group Id");
+							EditorGUILayoutExtensions.PushBackgroundColor(EditorUtilityExtensions.ColorFromString(label.GroupId.Value));
+							var groupValue = label.GroupId.Value ?? "< No Group Id >";
+							if (16 < groupValue.Length) groupValue = groupValue.Substring(0, 16) + "...";
+							//if (GUILayout.Button(groupValue))
+							if (GUILayout.Button(new GUIContent(groupValue, "Copy group id"), GUILayout.Width(124f)))
+							{
+								EditorGUIUtility.systemCopyBuffer = label.GroupId.Value;
+								ShowNotification(new GUIContent("Copied Group Id to Clipboard"));
+							}
+							EditorGUILayoutExtensions.PopBackgroundColor();
+						}
+						GUILayout.EndHorizontal();
+					}
+					GUILayout.EndVertical();
+				}
+				
+			}
+			GUILayout.EndScrollView();
+			
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.BeginVertical(GUILayout.Width(350f));
+				switch (labelsLabelState)
 				{
-					labelsSelectedUniverseScale.Value = GUILayout.Toolbar(Mathf.Min(labelsSelectedUniverseScale, scaleNames.Length - 1), scaleNames);
-					selectedScale = scales[labelsSelectedUniverseScale.Value];
-
-					labelsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsListScroll.Value), false, true, GUILayout.ExpandHeight(true)).y;
+					case LabelStates.Idle:
+						EditorGUILayout.HelpBox("Click on preview to begin defining a new label.", MessageType.Info);
+						break;
+					case LabelStates.SelectingBegin:
+						EditorGUILayout.HelpBox("Click on preview to select where to begin.", MessageType.Info);
+						break;
+					case LabelStates.SelectingEnd:
+						EditorGUILayout.HelpBox("Click on preview to select where to end.", MessageType.Info);
+						break;
+					case LabelStates.UpdatingBegin:
+						EditorGUILayout.HelpBox("Click on preview to select a new begin.", MessageType.Info);
+						break;
+					case LabelStates.UpdatingEnd:
+						EditorGUILayout.HelpBox("Click on preview to select a new end.", MessageType.Info);
+						break;
+				}
+				
+				GUILayout.BeginVertical(GUILayout.Width(72f));
+				{
+					EditorGUILayoutExtensions.PushEnabled(labelsLabelState == LabelStates.Idle && labelsSelectedLabel != null);
+					if (GUILayout.Button("Deselect"))
 					{
-						var labelIndex = -1;
-						foreach (var label in model.GetLabels(selectedScale))
-						{
-							labelIndex++;
-
-							var isSelectedLabel = label.LabelId.Value == labelsSelectedLabelId.Value;
-							if (isSelectedLabel) EditorGUILayoutExtensions.PushColor(Color.blue.NewS(0.7f));
-							GUILayout.BeginVertical(EditorStyles.helpBox);
-							if (isSelectedLabel) EditorGUILayoutExtensions.PopColor();
-							{
-								GUILayout.BeginHorizontal();
-								{
-									EditorGUILayoutExtensions.PushColor(EditorUtilityExtensions.ColorFromIndex(labelIndex));
-									GUILayout.BeginHorizontal(EditorStyles.helpBox);
-									EditorGUILayoutExtensions.PopColor();
-									{
-										GUILayout.Label(label.Name.Value, EditorStyles.boldLabel);
-									}
-									GUILayout.EndHorizontal();
-
-									EditorGUILayoutExtensions.PushEnabled(!isSelectedLabel);
-									if (GUILayout.Button("Edit Label", GUILayout.Width(100f)))
-									{
-										SelectLabel(label);
-									}
-									EditorGUILayoutExtensions.PopEnabled();
-
-									if (EditorGUILayoutExtensions.XButton())
-									{
-										if (labelsSelectedLabel == label)
-										{
-											SelectLabel(null);
-										}
-										model.RemoveLabel(label);
-										ModelSelectionModified = true;
-									}
-								}
-								GUILayout.EndHorizontal();
-
-								GUILayout.BeginHorizontal();
-								{
-									GUILayout.Label("Group Id");
-									EditorGUILayoutExtensions.PushBackgroundColor(EditorUtilityExtensions.ColorFromString(label.GroupId.Value));
-									var groupValue = label.GroupId.Value ?? "< No Group Id >";
-									if (16 < groupValue.Length) groupValue = groupValue.Substring(0, 16) + "...";
-									//if (GUILayout.Button(groupValue))
-									if (GUILayout.Button(new GUIContent(groupValue, "Copy group id"), GUILayout.Width(124f)))
-									{
-										EditorGUIUtility.systemCopyBuffer = label.GroupId.Value;
-										ShowNotification(new GUIContent("Copied Group Id to Clipboard"));
-									}
-									EditorGUILayoutExtensions.PopBackgroundColor();
-								}
-								GUILayout.EndHorizontal();
-							}
-							GUILayout.EndVertical();
-						}
-
+						SelectLabel(null);
 					}
-					GUILayout.EndScrollView();
-
-					GUILayout.BeginHorizontal();
+					EditorGUILayoutExtensions.PopEnabled();
+					
+					EditorGUILayoutExtensions.PushEnabled(labelsLabelState != LabelStates.Idle);
+					EditorGUILayoutExtensions.PushColor(Color.red);
+					if (GUILayout.Button("Cancel"))
 					{
 						switch (labelsLabelState)
 						{
-							case LabelStates.Idle:
-								EditorGUILayout.HelpBox("Click on preview to begin defining a new label.", MessageType.Info);
-								break;
 							case LabelStates.SelectingBegin:
-								EditorGUILayout.HelpBox("Click on preview to select where to begin.", MessageType.Info);
-								break;
 							case LabelStates.SelectingEnd:
-								EditorGUILayout.HelpBox("Click on preview to select where to end.", MessageType.Info);
+								SelectLabel(labelsLastSelectedLabel);
 								break;
 							case LabelStates.UpdatingBegin:
-								EditorGUILayout.HelpBox("Click on preview to select a new begin.", MessageType.Info);
-								break;
 							case LabelStates.UpdatingEnd:
-								EditorGUILayout.HelpBox("Click on preview to select a new end.", MessageType.Info);
+								SelectLabel(labelsSelectedLabel);
 								break;
 						}
-
-						GUILayout.BeginVertical(GUILayout.Width(72f));
-						{
-							EditorGUILayoutExtensions.PushEnabled(labelsLabelState == LabelStates.Idle && labelsSelectedLabel != null);
-							if (GUILayout.Button("Deselect"))
-							{
-								SelectLabel(null);
-							}
-							EditorGUILayoutExtensions.PopEnabled();
-
-							EditorGUILayoutExtensions.PushEnabled(labelsLabelState != LabelStates.Idle);
-							EditorGUILayoutExtensions.PushColor(Color.red);
-							if (GUILayout.Button("Cancel"))
-							{
-								switch (labelsLabelState)
-								{
-									case LabelStates.SelectingBegin:
-									case LabelStates.SelectingEnd:
-										SelectLabel(labelsLastSelectedLabel);
-										break;
-									case LabelStates.UpdatingBegin:
-									case LabelStates.UpdatingEnd:
-										SelectLabel(labelsSelectedLabel);
-										break;
-								}
-								labelsLabelState = LabelStates.Idle;
-							}
-							EditorGUILayoutExtensions.PopColor();
-							EditorGUILayoutExtensions.PopEnabled();
-
-						}
-						GUILayout.EndVertical();
+						labelsLabelState = LabelStates.Idle;
 					}
-					GUILayout.EndHorizontal();
+					EditorGUILayoutExtensions.PopColor();
+					EditorGUILayoutExtensions.PopEnabled();
+
 				}
 				GUILayout.EndVertical();
-
-				labelsDetailsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsDetailsScroll.Value), false, true, GUILayout.ExpandHeight(true)).y;
-				{
-					if (labelsSelectedLabel == null)
-					{
-						EditorGUILayout.HelpBox("Select a label to edit it.", MessageType.Info);
-						GUILayout.FlexibleSpace();
-						GUILayout.BeginHorizontal();
-						{
-							GUILayout.Label("Color Code By");
-							labelsColorCodeBy.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Color Coding -", labelsColorCodeBy.Value);
-							if (labelsColorCodeBy.Value == LabelColorCodes.Unknown) labelsColorCodeBy.Value = LabelColorCodes.Group;
-							GUILayout.FlexibleSpace();
-						}
-						EditorGUILayout.EndHorizontal();
-					}
-					else
-					{
-						EditorGUILayoutExtensions.PushEnabled(labelsLabelState == LabelStates.Idle);
-						{
-							EditorGUIExtensions.BeginChangeCheck();
-							{
-								GUILayout.BeginHorizontal();
-								{
-									labelsSelectedLabel.Name.Value = EditorGUILayout.TextField("Name", labelsSelectedLabel.Name.Value);
-									labelsSelectedLabel.LabelId.Value = EditorGUILayout.TextField(labelsSelectedLabel.LabelId.Value, GUILayout.Width(128f));
-									labelsSelectedLabel.Source.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select a Source -", labelsSelectedLabel.Source.Value, GUILayout.Width(90f));
-								}
-								GUILayout.EndHorizontal();
-
-								labelsSelectedLabel.GroupId.Value = EditorGUILayout.TextField("Group Id", labelsSelectedLabel.GroupId.Value);
-
-								switch (labelsSelectedLabel.Source.Value)
-								{
-									case GalaxyLabelSources.Static:
-										labelsSelectedLabel.StaticText.Key.Value = EditorGUILayout.TextField("Static Key", labelsSelectedLabel.StaticText.Key.Value);
-										EditorGUILayoutExtensions.PushEnabled(false);
-										{
-											EditorGUILayout.TextField(new GUIContent("Value", "Edit the name until proper language support is added"), labelsSelectedLabel.StaticText.Value.Value);
-										}
-										EditorGUILayoutExtensions.PopEnabled();
-										break;
-									case GalaxyLabelSources.GameKeyValue:
-										labelsSelectedLabel.SourceKey.Value = EditorGUILayout.TextField("Source Key", labelsSelectedLabel.SourceKey.Value);
-										break;
-									default:
-										EditorGUILayout.HelpBox("Unrecognized source " + labelsSelectedLabel.Source.Value, MessageType.Error);
-										break;
-								}
-
-								EditorGUILayoutValueFilter.Field("Filtering", labelsSelectedLabel.Filtering);
-
-								var labelCurve = labelsSelectedLabel.CurveInfo.Value;
-
-								labelCurve.LabelStyle = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select a Style -", labelCurve.LabelStyle);
-								labelCurve.FontSize = EditorGUILayout.FloatField("Font Size", labelCurve.FontSize);
-								labelCurve.Curve = EditorGUILayoutAnimationCurve.Field("Curve", labelCurve.Curve);
-								labelCurve.CurveMaximum = EditorGUILayout.FloatField("Curve Maximum", labelCurve.CurveMaximum);
-								labelCurve.FlipAnchors = EditorGUILayout.Toggle("Flip Anchors", labelCurve.FlipAnchors);
-								labelCurve.FlipCurve = EditorGUILayout.Toggle("Flip Curve", labelCurve.FlipCurve);
-
-								labelsSelectedLabel.CurveInfo.Value = labelCurve;
-
-								GUILayout.BeginHorizontal();
-								{
-									EditorGUILayout.PrefixLabel("Slice Layer");
-
-									var sliceColors = new Color[] { Color.black, Color.red, Color.yellow, Color.white };
-
-									for (var t = 0; t < 4; t++)
-									{
-										var isCurrSlice = t == labelsSelectedLabel.SliceLayer.Value;
-										EditorGUILayoutExtensions.PushBackgroundColor(sliceColors[t]);
-										if (GUILayout.Button(new GUIContent(isCurrSlice ? "Selected" : string.Empty), GUILayout.MaxWidth(100f))) labelsSelectedLabel.SliceLayer.Value = t;
-										EditorGUILayoutExtensions.PopBackgroundColor();
-									}
-								}
-								GUILayout.EndHorizontal();
-								//selectedLabel.SliceLayer.Value = Mathf.Max(0, EditorGUILayout.IntField("Slice Layer", selectedLabel.SliceLayer.Value));
-
-								GUILayout.BeginHorizontal(EditorStyles.helpBox);
-								{
-									GUILayout.BeginVertical();
-									{
-										labelsSelectedLabel.BeginAnchorNormal.Value = EditorGUILayout.Vector3Field("Begin Anchor", labelsSelectedLabel.BeginAnchorNormal);
-									}
-									GUILayout.EndVertical();
-									EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
-									if (GUILayout.Button("Update Begin", GUILayout.Width(100f), GUILayout.Height(51f)))
-									{
-										labelsLabelState = LabelStates.UpdatingBegin;
-									}
-									EditorGUILayoutExtensions.PopBackgroundColor();
-								}
-								GUILayout.EndHorizontal();
-
-								GUILayout.BeginHorizontal(EditorStyles.helpBox);
-								{
-									GUILayout.BeginVertical();
-									{
-										labelsSelectedLabel.EndAnchorNormal.Value = EditorGUILayout.Vector3Field("EndAnchor", labelsSelectedLabel.EndAnchorNormal);
-									}
-									GUILayout.EndVertical();
-									EditorGUILayoutExtensions.PushBackgroundColor(Color.magenta);
-									if (GUILayout.Button("Update End", GUILayout.Width(100f), GUILayout.Height(51f)))
-									{
-										labelsLabelState = LabelStates.UpdatingEnd;
-									}
-									EditorGUILayoutExtensions.PopBackgroundColor();
-								}
-								GUILayout.EndHorizontal();
-							}
-							EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
-						}
-						EditorGUILayoutExtensions.PopEnabled();
-					}
-				}
-				GUILayout.EndScrollView();
-
 			}
 			GUILayout.EndHorizontal();
 
+			return selectedScale;
+		}
+
+		void LabelsToolbarPrimaryDetails(GalaxyInfoModel model)
+		{
+			labelsDetailsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsDetailsScroll.Value), false, true, GUILayout.ExpandHeight(true), GUILayout.Width(475f)).y;
+			{
+				if (labelsSelectedLabel == null)
+				{
+					EditorGUILayout.HelpBox("Select a label to edit it.", MessageType.Info);
+					GUILayout.FlexibleSpace();
+				}
+				else
+				{
+					EditorGUILayoutExtensions.PushEnabled(labelsLabelState == LabelStates.Idle);
+					{
+						EditorGUIExtensions.BeginChangeCheck();
+						{
+							GUILayout.BeginHorizontal();
+							{
+								labelsSelectedLabel.Name.Value = EditorGUILayout.TextField("Name", labelsSelectedLabel.Name.Value);
+								labelsSelectedLabel.LabelId.Value = EditorGUILayout.TextField(labelsSelectedLabel.LabelId.Value, GUILayout.Width(128f));
+								labelsSelectedLabel.Source.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select a Source -", labelsSelectedLabel.Source.Value, GUILayout.Width(90f));
+							}
+							GUILayout.EndHorizontal();
+
+							labelsSelectedLabel.GroupId.Value = EditorGUILayout.TextField("Group Id", labelsSelectedLabel.GroupId.Value);
+
+							switch (labelsSelectedLabel.Source.Value)
+							{
+								case GalaxyLabelSources.Static:
+									labelsSelectedLabel.StaticText.Key.Value = EditorGUILayout.TextField("Static Key", labelsSelectedLabel.StaticText.Key.Value);
+									EditorGUILayoutExtensions.PushEnabled(false);
+									{
+										EditorGUILayout.TextField(new GUIContent("Value", "Edit the name until proper language support is added"), labelsSelectedLabel.StaticText.Value.Value);
+									}
+									EditorGUILayoutExtensions.PopEnabled();
+									break;
+								case GalaxyLabelSources.GameKeyValue:
+									labelsSelectedLabel.SourceKey.Value = EditorGUILayout.TextField("Source Key", labelsSelectedLabel.SourceKey.Value);
+									break;
+								default:
+									EditorGUILayout.HelpBox("Unrecognized source " + labelsSelectedLabel.Source.Value, MessageType.Error);
+									break;
+							}
+
+							EditorGUILayoutValueFilter.Field("Filtering", labelsSelectedLabel.Filtering);
+
+							var labelCurve = labelsSelectedLabel.CurveInfo.Value;
+
+							labelCurve.LabelStyle = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select a Style -", labelCurve.LabelStyle);
+							labelCurve.FontSize = EditorGUILayout.FloatField("Font Size", labelCurve.FontSize);
+							labelCurve.Curve = EditorGUILayoutAnimationCurve.Field("Curve", labelCurve.Curve);
+							labelCurve.CurveMaximum = EditorGUILayout.FloatField("Curve Maximum", labelCurve.CurveMaximum);
+							labelCurve.FlipAnchors = EditorGUILayout.Toggle("Flip Anchors", labelCurve.FlipAnchors);
+							labelCurve.FlipCurve = EditorGUILayout.Toggle("Flip Curve", labelCurve.FlipCurve);
+
+							labelsSelectedLabel.CurveInfo.Value = labelCurve;
+
+							GUILayout.BeginHorizontal();
+							{
+								EditorGUILayout.PrefixLabel("Slice Layer");
+
+								var sliceColors = new Color[] { Color.black, Color.red, Color.yellow, Color.white };
+
+								for (var t = 0; t < 4; t++)
+								{
+									var isCurrSlice = t == labelsSelectedLabel.SliceLayer.Value;
+									EditorGUILayoutExtensions.PushBackgroundColor(sliceColors[t]);
+									if (GUILayout.Button(new GUIContent(isCurrSlice ? "Selected" : string.Empty), GUILayout.MaxWidth(100f))) labelsSelectedLabel.SliceLayer.Value = t;
+									EditorGUILayoutExtensions.PopBackgroundColor();
+								}
+							}
+							GUILayout.EndHorizontal();
+							//selectedLabel.SliceLayer.Value = Mathf.Max(0, EditorGUILayout.IntField("Slice Layer", selectedLabel.SliceLayer.Value));
+
+							GUILayout.BeginHorizontal(EditorStyles.helpBox);
+							{
+								GUILayout.BeginVertical();
+								{
+									labelsSelectedLabel.BeginAnchorNormal.Value = EditorGUILayout.Vector3Field("Begin Anchor", labelsSelectedLabel.BeginAnchorNormal);
+								}
+								GUILayout.EndVertical();
+								EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
+								if (GUILayout.Button("Update Begin", GUILayout.Width(100f), GUILayout.Height(51f)))
+								{
+									labelsLabelState = LabelStates.UpdatingBegin;
+								}
+								EditorGUILayoutExtensions.PopBackgroundColor();
+							}
+							GUILayout.EndHorizontal();
+
+							GUILayout.BeginHorizontal(EditorStyles.helpBox);
+							{
+								GUILayout.BeginVertical();
+								{
+									labelsSelectedLabel.EndAnchorNormal.Value = EditorGUILayout.Vector3Field("EndAnchor", labelsSelectedLabel.EndAnchorNormal);
+								}
+								GUILayout.EndVertical();
+								EditorGUILayoutExtensions.PushBackgroundColor(Color.magenta);
+								if (GUILayout.Button("Update End", GUILayout.Width(100f), GUILayout.Height(51f)))
+								{
+									labelsLabelState = LabelStates.UpdatingEnd;
+								}
+								EditorGUILayoutExtensions.PopBackgroundColor();
+							}
+							GUILayout.EndHorizontal();
+						}
+						EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+				}
+			}
+			GUILayout.EndScrollView();
+		}
+
+		void LabelsToolbarSecondary(GalaxyInfoModel model, UniverseScales selectedScale)
+		{
 			var selectedPreviewIndex = 0;
 
 			switch (selectedScale)

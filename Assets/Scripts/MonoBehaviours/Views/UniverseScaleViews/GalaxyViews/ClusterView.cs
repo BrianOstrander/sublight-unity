@@ -47,13 +47,13 @@ namespace LunraGames.SubLight.Views
 		public Vector3 GalaxyNormal { set { galaxyRotationArea.LookAt(galaxyRotationArea.position + value.normalized); } }
 		public float AlertHeightMultiplier { set; private get; }
 
-		public override void SetGalaxy(Texture2D texture, Vector3 gridOrigin, float gridRadius)
+		public override void SetGalaxy(Texture2D texture)
 		{
-			base.SetGalaxy(texture, gridOrigin, gridRadius);
+			base.SetGalaxy(texture);
 			foreach (var mesh in meshes)
 			{
-				mesh.material.SetVector(ShaderConstants.HoloTextureColorAlphaMasked.WorldOrigin, gridOrigin);
-				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.WorldRadius, gridRadius);
+				mesh.material.SetVector(ShaderConstants.HoloTextureColorAlphaMasked.WorldOrigin, GridOrigin);
+				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.WorldRadius, GridRadius);
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace LunraGames.SubLight.Views
 			{
 				base.Opacity = value;
 				group.alpha = value;
-				line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * lineRadiusOpacity.Evaluate(RadiusNormal(line.transform.position)));
+				line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * lineRadiusOpacity.Evaluate(RadiusNormal));
 				foreach (var mesh in meshes)
 				{
 					mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, value);
@@ -111,6 +111,7 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnScale(Vector3 scale, Vector3 rawScale)
 		{
+			//Debug.Break();
 			galaxyNameLabelPositionScaleArea.localScale = scale;
 		}
 
@@ -122,7 +123,7 @@ namespace LunraGames.SubLight.Views
 
 			line.SetPosition(0, position);
 			line.SetPosition(1, galaxyNameLabelPositionScaleArea.position);
-			line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * lineRadiusOpacity.Evaluate(RadiusNormal(line.transform.position)));
+			line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * lineRadiusOpacity.Evaluate(GetRadiusNormal(line.transform.position)));
 		}
 
 		#region Events

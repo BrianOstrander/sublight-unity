@@ -21,6 +21,7 @@ namespace LunraGames.SubLight.Presenters
 
 		SystemInstanceModel instanceModel;
 		CelestialSystemLanguageBlock language;
+		UniverseScales lastZoomToScale;
 
 		public CelestialSystemPresenter(
 			GameModel model,
@@ -39,8 +40,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 			Model.CameraTransform.Changed += OnCameraTransform;
 			Model.GridInput.Changed += OnGridInput;
-
-			ScaleModel.Opacity.Changed += OnScaleOpacity;
+			Model.FocusTransform.Changed += OnFocusTransform;
 		}
 
 		protected override void OnUnBind()
@@ -54,8 +54,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Model.CameraTransform.Changed -= OnCameraTransform;
 			Model.GridInput.Changed -= OnGridInput;
-
-			ScaleModel.Opacity.Changed -= OnScaleOpacity;
+			Model.FocusTransform.Changed -= OnFocusTransform;
 		}
 
 		void ApplyStates(bool instant = false)
@@ -79,19 +78,7 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			if (View.Visible)
-			{
-				View.Reset();
-				ForceApplyScaleTransform();
-				OnShowView();
-			}
-			else
-			{
-				View.Reset();
-				ForceApplyScaleTransform();
-				OnShowView();
-				ShowView(instant: true);
-			}
+			ShowViewInstant(View.Visible);
 		}
 
 		void OnGlobalClick(Click click)
@@ -114,7 +101,7 @@ namespace LunraGames.SubLight.Presenters
 
 			positionInUniverse = activeSystem.Position.Value;
 
-			View.SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
+			SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
 
 			View.Enter = OnEnter;
 			View.Exit = OnExit;
@@ -189,13 +176,6 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value;
-		}
-
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
 		{
 			if (OnCelestialSystemStateProcess(block.Position.Equals(positionInUniverse), block))
@@ -251,6 +231,20 @@ namespace LunraGames.SubLight.Presenters
 		void ProcessInterectable(CameraTransformRequest transform, GridInputRequest gridInput)
 		{
 			View.Interactable = transform.State == CameraTransformRequest.States.Complete && gridInput.State == GridInputRequest.States.Complete;
+		}
+
+		void OnFocusTransform(FocusTransform transform)
+		{
+			if (!View.Visible || lastZoomToScale == transform.ToScale)
+			{
+				lastZoomToScale = transform.ToScale;
+				return;
+			}
+
+			lastZoomToScale = transform.ToScale;
+			if (lastZoomToScale == Scale) return;
+
+			if (View.Visible && !View.IsInBounds) CloseViewInstant();
 		}
 		#endregion
 	}

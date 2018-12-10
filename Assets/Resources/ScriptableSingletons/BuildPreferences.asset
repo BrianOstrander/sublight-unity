@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -11,4 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ce4fe8a46884a65a88a65eb1fc167a, type: 3}
   m_Name: BuildPreferences
   m_EditorClassIdentifier: 
-  version: 0
+  TargetFrameRate: 60
+  VSyncCount: 0

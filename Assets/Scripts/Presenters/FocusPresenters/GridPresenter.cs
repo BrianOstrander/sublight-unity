@@ -15,6 +15,8 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class GridPresenter : FocusPresenter<IGridView, SystemFocusDetails>
 	{
+		const float Tiling = 8f;
+
 		enum UniverseFocuses
 		{
 			Unknown = 0,
@@ -35,41 +37,46 @@ namespace LunraGames.SubLight.Presenters
 		struct UnitMap
 		{
 			public float ZoomBegin;
+			public float LightYearsPrevious;
 			/// <summary>
 			/// The light years per tile.
 			/// </summary>
 			public float LightYears;
-			/// <summary>
-			/// Zooming up will multiply by this value then add 1.0, this should
-			/// be greater than zero.
-			/// </summary>
-			public float ZoomUpScaleMultiplier;
-			/// <summary>
-			/// Zooming down will multiply by this and then subtract the result
-			/// from 1.0, this should be greater than zero and less than 1.0.
-			/// </summary>
-			public float ZoomDownScaleMultiplier;
+			public float LightYearsNext;
 			public UniverseScales Scale;
 			public UniverseFocuses FocusFromZoomDown;
+			public UniverseFocuses Focus;
 			public UniverseFocuses FocusFromZoomUp;
+
+			public float ZoomUpBase;
+			public float ZoomUpDelta;
+			public float ZoomDownBase;
+			public float ZoomDownDelta;
 
 			public UnitMap(
 				float zoomBegin,
-				float lightYears,
 				UniverseScales scale,
+				float lightYearsPrevious,
+				float lightYears,
+				float lightYearsNext,
 				UniverseFocuses focusFromZoomDown,
-				UniverseFocuses focusFromZoomUp,
-				float zoomUpScaleMultiplier = 3f,
-				float zoomDownScaleMultiplier = 0.75f
+				UniverseFocuses focus,
+				UniverseFocuses focusFromZoomUp
 			)
 			{
 				ZoomBegin = zoomBegin;
-				LightYears = lightYears;
-				ZoomUpScaleMultiplier = zoomUpScaleMultiplier;
-				ZoomDownScaleMultiplier = zoomDownScaleMultiplier;
 				Scale = scale;
+				LightYearsPrevious = lightYearsPrevious;
+				LightYearsNext = lightYearsNext;
+				LightYears = lightYears;
 				FocusFromZoomDown = focusFromZoomDown;
+				Focus = focus;
 				FocusFromZoomUp = focusFromZoomUp;
+
+				ZoomUpBase = lightYearsPrevious / lightYears;
+				ZoomUpDelta = 1f - ZoomUpBase;
+				ZoomDownBase = lightYearsNext / lightYears;
+				ZoomDownDelta = -(ZoomDownBase - 1f);
 			}
 		}
 
@@ -91,6 +98,7 @@ namespace LunraGames.SubLight.Presenters
 		bool isDragging;
 		Gesture lastgesture;
 		Vector3 unityPosOnDragBegin;
+		Vector3 unityPosOnDragLast;
 		UniverseTransform transformOnBeginDrag;
 
 		UniversePosition ShipPositionOnPlane
@@ -110,20 +118,67 @@ namespace LunraGames.SubLight.Presenters
 			this.model = model;
 			this.info = info;
 
+			var systemScale = 0.1f;
+			var localScale = 150f;
+			var stellarScale = 1000f;
+			var quadrantScale = 4000f;
+			var galacticScale = 12000f;
+			var clusterScale = 36000f;
+
 			unitMaps = new UnitMap[]
 			{
-				new UnitMap(0f, 0.1f, UniverseScales.System, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(1f, 150f, UniverseScales.Local, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(2f, 1000f, UniverseScales.Stellar, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(3f, 4000f, UniverseScales.Quadrant, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(4f, 12000f, UniverseScales.Galactic, UniverseFocuses.Ship, UniverseFocuses.Ship),
-				new UnitMap(5f, 36000f, UniverseScales.Cluster, UniverseFocuses.Ship, UniverseFocuses.None)
+				new UnitMap(
+					0f,
+					UniverseScales.System,
+					systemScale, systemScale, localScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.Ship
+				),
+				new UnitMap(
+					1f,
+					UniverseScales.Local,
+					systemScale, localScale, stellarScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.Ship
+				),
+				new UnitMap(
+					2f,
+					UniverseScales.Stellar,
+					localScale, stellarScale, quadrantScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.Ship
+				),
+				new UnitMap(
+					3f,
+					UniverseScales.Quadrant,
+					stellarScale, quadrantScale, galacticScale,
+					UniverseFocuses.Ship, UniverseFocuses.Ship, UniverseFocuses.GalacticOrigin
+				),
+				new UnitMap(
+					4f,
+					UniverseScales.Galactic,
+					quadrantScale, galacticScale, clusterScale,
+					UniverseFocuses.Ship, UniverseFocuses.GalacticOrigin, UniverseFocuses.ClusterOrigin
+				),
+				new UnitMap(
+					5f,
+					UniverseScales.Cluster,
+					galacticScale, clusterScale, clusterScale,
+					UniverseFocuses.GalacticOrigin, UniverseFocuses.ClusterOrigin, UniverseFocuses.ClusterOrigin
+				)
 			};
 
 			App.Heartbeat.Update += OnUpdate;
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture += OnCurrentGesture;
+
+			foreach (var unitMap in unitMaps)
+			{
+				var currTransform = model.GetScale(unitMap.Scale);
+				currTransform.TransformDefault.Value = DefineTransform(unitMap, UniversePosition.Zero, 1f);
+
+			}
+
+			model.Ship.Value.Position.Changed += OnShipPosition;
+			OnShipPosition(model.Ship.Value.Position.Value);
 
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
@@ -134,6 +189,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
+
+			model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -201,8 +258,6 @@ namespace LunraGames.SubLight.Presenters
 			bool zoomingUp = false
 		)
 		{
-			const float Tiling = 8f;
-
 			var scale = model.GetScale(unitMap.Scale);
 			var scaleTransform = scale.Transform.Value;
 
@@ -211,7 +266,13 @@ namespace LunraGames.SubLight.Presenters
 				var beginPosition = scaleTransformsOnBeginAnimation[scale.Scale.Value].UniverseOrigin;
 				var endPosition = beginPosition;
 
-				var focus = zoomingUp ? unitMap.FocusFromZoomDown : unitMap.FocusFromZoomUp;
+				var focus = UniverseFocuses.Unknown;
+
+				if (isTarget) focus = unitMap.Focus;
+				else
+				{
+					focus = zoomingUp ? unitMap.FocusFromZoomUp : unitMap.FocusFromZoomDown;
+				}
 
 				switch (focus)
 				{
@@ -224,7 +285,7 @@ namespace LunraGames.SubLight.Presenters
 						break;
 				}
 
-				var currPosition = UniversePosition.Lerp(View.PositionCurve.Evaluate(progress), beginPosition, endPosition);
+				var currPosition = UniversePosition.Lerp(View.GetPositionCurve(zoomingUp).Evaluate(progress), beginPosition, endPosition);
 				scaleTransform = scale.Transform.Value.Duplicate(currPosition);
 			}
 
@@ -239,17 +300,14 @@ namespace LunraGames.SubLight.Presenters
 
 			if (grid.IsTarget)
 			{
-				if (grid.ZoomingUp) zoomScalar = 1f - (0.5f * (1f - zoomProgress));
-				else zoomScalar = 1f + (1f - zoomProgress);
+				if (grid.ZoomingUp) zoomScalar = unitMap.ZoomUpBase + (unitMap.ZoomUpDelta * zoomProgress);
+				else zoomScalar = unitMap.ZoomDownBase + (unitMap.ZoomDownDelta * zoomProgress);
 			}
 			else
 			{
-				if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * unitMap.ZoomUpScaleMultiplier);
-				else zoomScalar = 1f - (unitMap.ZoomDownScaleMultiplier * zoomProgress);
-				//if (grid.ZoomingUp) zoomScalar = 1f + (zoomProgress * 2f);
-				//else zoomScalar = 1f - (0.95f * zoomProgress);
-				//if (grid.ZoomingUp) zoomScalar = 1f + zoomProgress;
-				//else zoomScalar = 1f - (0.5f * zoomProgress);
+				var zoomProgressInverse = 1f - zoomProgress;
+				if (grid.ZoomingUp) zoomScalar = unitMap.ZoomDownBase + (unitMap.ZoomDownDelta * zoomProgressInverse);
+				else zoomScalar = unitMap.ZoomUpBase + (unitMap.ZoomUpDelta * zoomProgressInverse);
 			}
 
 			grid.Tiling = Tiling * zoomScalar;
@@ -263,21 +321,31 @@ namespace LunraGames.SubLight.Presenters
 
 			var currLightYearsInTile = zoomProgress * unitMap.LightYears;
 
+			scale.Opacity.Value = grid.Alpha;
+			scale.Transform.Value = DefineTransform(unitMap, scaleTransform.UniverseOrigin, zoomScalar);
+
+			return grid;
+		}
+
+		UniverseTransform DefineTransform(
+			UnitMap unitMap,
+			UniversePosition universeOrigin,
+			float zoomScalar
+		)
+		{
 			var unityUnitsPerTile = (Tiling * 0.5f * zoomScalar) / View.GridUnityRadius;
 			var universeUnitsPerTile = UniversePosition.ToUniverseDistance(unitMap.LightYears);
 			var universeUnitsPerUnityUnit = unityUnitsPerTile * universeUnitsPerTile;
 
-			scale.Opacity.Value = grid.Alpha;
-			scale.Transform.Value = new UniverseTransform(
+			return new UniverseTransform(
+				unitMap.Scale,
 				View.GridUnityOrigin,
 				View.GridUnityRadius,
-				scaleTransform.UniverseOrigin,
+				universeOrigin,
 				Vector3.one * universeUnitsPerUnityUnit,
 				Vector3.one * (1f / universeUnitsPerUnityUnit),
 				Quaternion.identity
 			);
-
-			return grid;
 		}
 
 		#region
@@ -387,9 +455,12 @@ namespace LunraGames.SubLight.Presenters
 			
 			var fromGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, zoomTween.Begin));
 			var toGrid = unitMaps.FirstOrDefault(u => Mathf.Approximately(u.ZoomBegin, zoomTween.End));
-			
-			fromScaleName = info.GetScaleName(fromGrid.ZoomBegin);
-			toScaleName = info.GetScaleName(toGrid.ZoomBegin);
+
+			UniverseScales fromScale;
+			info.GetScaleName(fromGrid.ZoomBegin, out fromScale, out fromScaleName);
+
+			UniverseScales toScale;
+			info.GetScaleName(toGrid.ZoomBegin, out toScale, out toScaleName);
 			
 			info.GetUnitModels(fromGrid.LightYears, info.LightYearUnit, out fromGetUnitCount, out fromUnitType);
 			info.GetUnitModels(toGrid.LightYears, info.LightYearUnit, out toGetUnitCount, out toUnitType);
@@ -397,6 +468,8 @@ namespace LunraGames.SubLight.Presenters
 			var transform = model.FocusTransform.Value.Duplicate(zoomTween, model.FocusTransform.Value.NudgeZoom.DuplicateNoChange());
 
 			transform.SetLanguage(
+				fromScale,
+				toScale,
 				fromScaleName,
 				toScaleName,
 				fromGetUnitCount,
@@ -457,9 +530,9 @@ namespace LunraGames.SubLight.Presenters
 				{
 					// start drag logic
 					bool inRadius;
-					View.ProcessDrag(Gesture.GetViewport(lastgesture.Begin), out unityPosOnDragBegin, out inRadius);
+					var isValidDrag = View.ProcessDrag(Gesture.GetViewport(lastgesture.Begin), out unityPosOnDragBegin, out inRadius);
 
-					if (!inRadius)
+					if (!inRadius || !isValidDrag)
 					{
 						isDragging = false;
 						wasDragging = false;
@@ -488,7 +561,10 @@ namespace LunraGames.SubLight.Presenters
 		{
 			Vector3 currUnityDrag;
 			bool currInRadius;
-			View.ProcessDrag(Gesture.GetViewport(lastgesture.End), out currUnityDrag, out currInRadius);
+			var isValidDrag = View.ProcessDrag(Gesture.GetViewport(lastgesture.End), out currUnityDrag, out currInRadius);
+
+			if (isValidDrag) unityPosOnDragLast = currUnityDrag;
+			else currUnityDrag = unityPosOnDragLast;
 
 			var offset = View.GridUnityOrigin + (unityPosOnDragBegin - currUnityDrag);
 			var universePos = transformOnBeginDrag.GetUniversePosition(offset);
@@ -507,6 +583,14 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CameraTransformRequest(CameraTransformRequest.Input(yaw, pitch));
 		}
 
+		void OnShipPosition(UniversePosition position)
+		{
+			foreach (var transformProperty in unitMaps.Select(u => model.GetScale(u.Scale).TransformDefault))
+			{
+				transformProperty.Value = transformProperty.Value.Duplicate(ShipPositionOnPlane);
+			}
+		}
+
 		void OnDrawGizmos()
 		{
 #if UNITY_EDITOR
@@ -520,12 +604,12 @@ namespace LunraGames.SubLight.Presenters
 			//var galacticScale = model.GetScale(UniverseScales.Galactic);
 			//var clusterScale = model.GetScale(UniverseScales.Cluster);
 
-			var activeScale = model.ActiveScale.Value;
+			//var activeScale = model.ActiveScale.Value;
 
-			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
-			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalaxyOrigin), 0.06f);
+			//Gizmos.color = Color.green;
+			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
+			//Gizmos.color = Color.yellow;
+			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalaxyOrigin), 0.06f);
 			//Gizmos.color = Color.magenta;
 			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.ClusterOrigin), 0.08f);
 

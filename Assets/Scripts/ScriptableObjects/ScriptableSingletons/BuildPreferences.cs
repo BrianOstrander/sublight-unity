@@ -25,6 +25,9 @@ namespace LunraGames.SubLight
 		//[SerializeField]
 		//int version;
 
+		public int TargetFrameRate;
+		public int VSyncCount;
+
 		public IBuildInfo Info
 		{
 			get

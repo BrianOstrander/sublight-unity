@@ -14,22 +14,49 @@ namespace LunraGames.SubLight
 {
 	public partial class GalaxyEditorWindow
 	{
-		DevPrefsInt targetsSelectedPreview;
-		DevPrefsInt targetsPreviewSize;
+		EditorPrefsInt targetsSelectedPreview;
+		EditorPrefsInt targetsPreviewSize;
 		EditorPrefsBool targetsPreviewMinimized;
 
 		void TargetsConstruct()
 		{
 			var currPrefix = KeyPrefix + "Targets";
 
-			targetsSelectedPreview = new DevPrefsInt(currPrefix + "SelectedPreview");
-			targetsPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
+			targetsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
+			targetsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
 			targetsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 
 			RegisterToolbar("Targets", TargetsToolbar);
 		}
 
 		void TargetsToolbar(GalaxyInfoModel model)
+		{
+			if (HorizontalPreviewSupported())
+			{
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.BeginVertical();
+					{
+						TargetsToolbarPrimary(model);
+					}
+					GUILayout.EndVertical();
+					GUILayout.BeginVertical();
+					{
+						TargetsToolbarSecondary(model);
+					}
+					GUILayout.EndVertical();
+				}
+				GUILayout.EndHorizontal();
+			}
+			else
+			{
+				TargetsToolbarPrimary(model);
+				GUILayout.FlexibleSpace();
+				TargetsToolbarSecondary(model);
+			}
+		}
+
+		void TargetsToolbarPrimary(GalaxyInfoModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
@@ -83,9 +110,10 @@ namespace LunraGames.SubLight
 				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+		}
 
-			GUILayout.FlexibleSpace();
-
+		void TargetsToolbarSecondary(GalaxyInfoModel model)
+		{
 			DrawPreviews(
 				model,
 				targetsSelectedPreview,
