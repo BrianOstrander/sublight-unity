@@ -145,8 +145,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				case SaveTypes.InteractedInventoryReferenceList: return typeof(InteractedInventoryReferenceListModel);
 				// -- Inventory References
-				case SaveTypes.ModuleReference: return typeof(ModuleReferenceModel);
-				case SaveTypes.OrbitalCrewReference: return typeof(OrbitalCrewReferenceModel);
+				case SaveTypes.InventoryModule: return typeof(InventoryModel);
 				// --
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
@@ -167,8 +166,7 @@ namespace LunraGames.SubLight
 			if (type == typeof(InteractedEncounterInfoListModel)) return new SaveTypes[] { SaveTypes.InteractedEncounterInfoList };
 			if (type == typeof(InteractedInventoryReferenceListModel)) return new SaveTypes[] { SaveTypes.InteractedInventoryReferenceList };
 			// -- Inventory References
-			if (type == typeof(ModuleReferenceModel)) return new SaveTypes[] { SaveTypes.ModuleReference };
-			if (type == typeof(OrbitalCrewReferenceModel)) return new SaveTypes[] { SaveTypes.OrbitalCrewReference };
+			if (type == typeof(InventoryModel)) return new SaveTypes[] { SaveTypes.InventoryModule};
 			// --
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}

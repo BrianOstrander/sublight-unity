@@ -13,8 +13,7 @@ namespace LunraGames.SubLight
 					{ SaveTypes.EncounterInfo, true },
 					{ SaveTypes.GalaxyInfo, true },
 					// -- Inventory References
-					{ SaveTypes.ModuleReference, true },
-					{ SaveTypes.OrbitalCrewReference, true }
+					{ SaveTypes.InventoryModule, true }
 					// --
 				};
 			}

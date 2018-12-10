@@ -59,9 +59,6 @@ namespace LunraGames.SubLight
 		EncounterHandlerService encounterHandler;
 		public static EncounterHandlerService EncounterHandler { get { return instance.encounterHandler; } }
 
-		InventoryReferenceService inventoryReferences;
-		public static InventoryReferenceService InventoryReferences { get { return instance.inventoryReferences; } }
-
 		KeyValueService keyValues;
 		public static KeyValueService KeyValues { get { return instance.keyValues; } }
 
@@ -158,7 +155,6 @@ namespace LunraGames.SubLight
 			keyValues = new KeyValueService(Callbacks);
 			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
 			valueFilter = new ValueFilterService(Callbacks);
-			inventoryReferences = new InventoryReferenceService(M, Logging, Callbacks, ValueFilter);
 			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
 
 			encounterHandler = new EncounterHandlerService(
@@ -166,7 +162,6 @@ namespace LunraGames.SubLight
 				Callbacks,
 				Encounters,
 				KeyValues,
-				InventoryReferences,
 				ValueFilter,
 				Universe,
 				CurrentPreferences

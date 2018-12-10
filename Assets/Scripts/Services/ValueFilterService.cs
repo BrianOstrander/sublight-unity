@@ -214,7 +214,8 @@ namespace LunraGames.SubLight
 			{
 				case InventoryFilterTypes.Inventory:
 					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
-					result = model.Ship.Value.Inventory.HasInventory(filter.FilterValue.Value);
+					//result = model.Ship.Value.Inventory.HasInventory(filter.FilterValue.Value);
+					throw new NotImplementedException("Inventory filtering not implimented yet");
 					break;
 				case InventoryFilterTypes.References:
 					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");
@@ -249,7 +250,8 @@ namespace LunraGames.SubLight
 			{
 				case InventoryFilterTypes.Inventory:
 					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
-					result = model.Ship.Value.Inventory.HasInventory(i => i.Tags.Value.Any(t => t.ToLower() == smoothed));
+					//result = model.Ship.Value.Inventory.HasInventory(i => i.Tags.Value.Any(t => t.ToLower() == smoothed));
+					throw new NotImplementedException("Inventory filtering not implimented yet");
 					break;
 				case InventoryFilterTypes.References:
 					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");

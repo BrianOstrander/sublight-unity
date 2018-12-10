@@ -31,7 +31,6 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(InitializePresenters);
 			App.SM.PushBlocking(InitializePreferences);
 			App.SM.PushBlocking(InitializeEncounters);
-			App.SM.PushBlocking(InitializeInventoryReferences);
 			App.SM.PushBlocking(InitializeListeners);
 			App.SM.PushBlocking(InitializeGlobalKeyValues);
 
@@ -196,21 +195,6 @@ namespace LunraGames.SubLight
 						done();
 					}
 					else App.Restart("Initializing Encounters failed with status " + status);
-				}
-			);
-		}
-
-		void InitializeInventoryReferences(Action done)
-		{
-			App.InventoryReferences.Initialize(
-				status =>
-				{
-					if (status == RequestStatus.Success)
-					{
-						App.Log("Inventory References Initialized", LogTypes.Initialization);
-						done();
-					}
-					else App.Restart("Initializing Inventory References failed with status " + status);
 				}
 			);
 		}

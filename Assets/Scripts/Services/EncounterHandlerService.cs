@@ -14,7 +14,6 @@ namespace LunraGames.SubLight
 		CallbackService callbacks;
 		EncounterService encounterService;
 		KeyValueService keyValueService;
-		InventoryReferenceService inventoryReferences;
 		ValueFilterService valueFilter;
 		IUniverseService universeService;
 		Func<PreferencesModel> currentPreferences;
@@ -32,7 +31,6 @@ namespace LunraGames.SubLight
 			CallbackService callbacks,
 			EncounterService encounterService,
 			KeyValueService keyValueService,
-			InventoryReferenceService inventoryReferences,
 			ValueFilterService valueFilter,
 			IUniverseService universeService,
 			Func<PreferencesModel> currentPreferences
@@ -42,7 +40,6 @@ namespace LunraGames.SubLight
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
 			if (encounterService == null) throw new ArgumentNullException("encounterService");
 			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
-			if (inventoryReferences == null) throw new ArgumentNullException("inventoryReferences");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
 			if (universeService == null) throw new ArgumentNullException("universeService");
 			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
@@ -51,7 +48,6 @@ namespace LunraGames.SubLight
 			this.callbacks = callbacks;
 			this.encounterService = encounterService;
 			this.keyValueService = keyValueService;
-			this.inventoryReferences = inventoryReferences;
 			this.valueFilter = valueFilter;
 			this.universeService = universeService;
 			this.currentPreferences = currentPreferences;
@@ -223,7 +219,8 @@ namespace LunraGames.SubLight
 					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
 					break;
 				case EncounterLogTypes.Inventory:
-					OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
+					throw new NotImplementedException("Inventory logs not supported yet");
+					//OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
 					break;
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
@@ -309,6 +306,7 @@ namespace LunraGames.SubLight
 			if (total == progress) done();
 		}
 
+		/*
 		void OnInventoryLog(InventoryEncounterLogModel logModel, Action done)
 		{
 			var total = logModel.Operations.Value.Length;
@@ -383,6 +381,7 @@ namespace LunraGames.SubLight
 			progress++;
 			if (total == progress) done();
 		}
+		*/
 
 		void OnSwitchLog(SwitchEncounterLogModel logModel, Action<string> done)
 		{

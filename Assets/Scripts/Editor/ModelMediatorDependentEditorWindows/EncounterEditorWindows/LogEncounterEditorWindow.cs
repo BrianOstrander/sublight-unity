@@ -115,7 +115,8 @@ namespace LunraGames.SubLight
 					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel);
 					break;
 				case EncounterLogTypes.Inventory:
-					OnInventoryLog(infoModel, model as InventoryEncounterLogModel);
+					//OnInventoryLog(infoModel, model as InventoryEncounterLogModel);
+					throw new NotImplementedException("Inventory log not implimented yet");
 					break;
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(infoModel, model as SwitchEncounterLogModel);
@@ -302,6 +303,7 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Inventory Logs
+		/*
 		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model)
 		{
 			var selection = InventoryOperations.Unknown;
@@ -384,7 +386,7 @@ namespace LunraGames.SubLight
 		{
 			EditorGUILayoutResource.Values(operation.Value);
 		}
-
+		
 		void OnInventoryLogAddInstance(
 			EncounterInfoModel infoModel,
 			InventoryEncounterLogModel model,
@@ -432,6 +434,7 @@ namespace LunraGames.SubLight
 					break;
 			}
 		}
+		*/
 		#endregion
 
 		#region Switch Logs
@@ -752,3 +755,4 @@ namespace LunraGames.SubLight
 		}
 	}
 }
+ 
