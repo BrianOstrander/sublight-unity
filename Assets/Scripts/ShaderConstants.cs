@@ -148,6 +148,18 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class TextureColorAlphaScrollingRange
+		{
+			public const string Name = "SubLight/Holo/TextureColorAlphaScrollingRange";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string ScrollSpeed = "_ScrollSpeed";
+			public const string Range = "_Range";
+			public const string RangeBegin = "_RangeBegin";
+			public const string RangeThreshold = "_RangeThreshold";
+		}
+
 		public static class HoloDistanceFieldColor
 		{
 			/// <summary>
@@ -171,6 +183,23 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 			public const string DistanceFieldRange = "_DistanceFieldRange";
 			public const string NearFarPlanes = "_NearFarPlanes";
+		}
+
+		public static class HoloDistanceFieldColorConstantScrollingRange
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/DistanceField/ColorConstantScrollingRange";
+			public const string DistanceField = "_DistanceField";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+			public const string NearFarPlanes = "_NearFarPlanes";
+			public const string ScrollSpeed = "_ScrollSpeed";
+			public const string Range = "_Range";
+			public const string RangeBegin = "_RangeBegin";
+			public const string RangeThreshold = "_RangeThreshold";
 		}
 
 		public static class HoloDistanceFieldColorShiftConstant
