@@ -25,16 +25,10 @@ namespace LunraGames.SubLight.Views
 		public string BackText { set { backLabel.text = value ?? string.Empty; } }
 		public Action Click { set; private get; }
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				opacityGroup.alpha = value;
-				opacityGroup.blocksRaycasts = opacityInteractionThreshold < value;
-			}
+			opacityGroup.alpha = opacity;
+			opacityGroup.blocksRaycasts = opacityInteractionThreshold < opacity;
 		}
 
 		public override void Reset()

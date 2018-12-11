@@ -92,7 +92,7 @@ namespace LunraGames.SubLight.Presenters
 
 			View.GetRadiusNormalCallback = GetRadiusNormal;
 			View.GetPositionIsInRadiusCallback = GetPositionIsInRadius;
-			View.Opacity = ScaleModel.Opacity.Value;
+			View.PushOpacity(() => ScaleModel.Opacity.Value);
 
 			OnShowView();
 
@@ -173,8 +173,7 @@ namespace LunraGames.SubLight.Presenters
 		protected virtual void OnCloseView() {}
 		protected virtual void OnOpacity(float opacity)
 		{
-			if (!View.Visible) return;
-			View.Opacity = opacity;
+			View.SetOpacityStale();
 		}
 		#endregion
 	}

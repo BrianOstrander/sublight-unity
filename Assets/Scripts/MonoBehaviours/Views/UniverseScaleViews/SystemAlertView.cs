@@ -25,15 +25,9 @@ namespace LunraGames.SubLight.Views
 		public string DetailText { set { detailLabel.text = value ?? string.Empty; } }
 		public Action Click { set; private get; }
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				group.alpha = value;
-			}
+			group.alpha = opacity;
 		}
 
 		protected override void OnLateIdle(float delta)

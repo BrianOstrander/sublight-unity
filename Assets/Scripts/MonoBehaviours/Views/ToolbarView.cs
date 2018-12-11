@@ -185,20 +185,14 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
+			if (currentButtons == null) return;
+			var interactionsEnabled = !Mathf.Approximately(0f, opacity);
+			foreach (var button in currentButtons)
 			{
-				base.Opacity = value;
-				if (currentButtons == null) return;
-				var interactionsEnabled = !Mathf.Approximately(0f, value);
-				foreach (var button in currentButtons)
-				{
-					button.Leaf.OpacityArea.alpha = value;
-					button.Leaf.OpacityArea.blocksRaycasts = interactionsEnabled;
-				}
+				button.Leaf.OpacityArea.alpha = opacity;
+				button.Leaf.OpacityArea.blocksRaycasts = interactionsEnabled;
 			}
 		}
 

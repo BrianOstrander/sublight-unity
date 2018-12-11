@@ -233,18 +233,12 @@ namespace LunraGames.SubLight.Views
 			terminator.SetActive(true);
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				var currOpacity = Mathf.Approximately(value, 1f) ? 1f : 0f;
-				topLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
-				bottomLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
-				directionRingGraphic.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, currOpacity);
-			}
+			var currOpacity = Mathf.Approximately(opacity, 1f) ? 1f : 0f;
+			topLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
+			bottomLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
+			directionRingGraphic.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, currOpacity);
 		}
 
 		public override void Reset()

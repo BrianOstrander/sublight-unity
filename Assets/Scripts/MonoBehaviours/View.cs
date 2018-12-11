@@ -32,7 +32,6 @@ namespace LunraGames.SubLight
 
 		float OpacityStack { get; }
 
-		float Opacity { get; set; }
 		bool Interactable { get; set; }
 		int PoolSize { get; }
 
@@ -79,6 +78,14 @@ namespace LunraGames.SubLight
 		/// </summary>
 		/// <value>The closed.</value>
 		Action Closed { get; set; }
+		/// <summary>
+		/// Always called on update if the view is not Closed.
+		/// </summary>
+		Action<float> Constant { get; set; }
+		/// <summary>
+		/// Always called on late update if the view is not Closed.
+		/// </summary>
+		Action<float> LateConstant { get; set; }
 
 		void Reset();
 
@@ -108,11 +115,12 @@ namespace LunraGames.SubLight
 		}
 
 		bool opacityStackStale;
-		float lastCalculatedOpacityStack = 1f;
+		float lastCalculatedOpacityStack;
 		List<Func<float>> opacityStack = new List<Func<float>>();
+		public float DefaultOpacity { get; set; }
 		public void PushOpacity(Func<float> query) { opacityStack.Remove(query); opacityStack.Add(query); SetOpacityStale(); }
 		public void PopOpacity(Func<float> query) { opacityStack.Remove(query); SetOpacityStale(); }
-		public void ClearOpacity() { opacityStack.Clear(); SetOpacityStale(); }
+		public void ClearOpacity() { lastCalculatedOpacityStack = DefaultOpacity; opacityStack.Clear(); SetOpacityStale(); }
 		public void SetOpacityStale() { opacityStackStale = true; }
 
 		public float OpacityStack { get { return lastCalculatedOpacityStack; } }
@@ -138,8 +146,6 @@ namespace LunraGames.SubLight
 
 		protected virtual void OnOpacityStack(float opacity) {}
 
-		float opacity = 1f;
-		public virtual float Opacity { get { return opacity; } set { opacity = Mathf.Max(0f, Mathf.Min(1f, value)); } }
 		bool interactable = true;
 		public virtual bool Interactable { get { return interactable; } set { interactable = value; } }
 		[SerializeField, Tooltip("Size of initial pool, entering \"0\" uses ViewMediator defaults.")]
@@ -165,6 +171,9 @@ namespace LunraGames.SubLight
 		public Action<float> Closing { get; set; }
 		public Action Closed { get; set; }
 
+		public Action<float> Constant { get; set; }
+		public Action<float> LateConstant { get; set; }
+
 		protected virtual void OnPrepare()
 		{
 			TransitionState = TransitionStates.Showing;
@@ -176,51 +185,55 @@ namespace LunraGames.SubLight
 			Root.gameObject.SetActive(true);
 
 			foreach (var anim in ViewAnimations) anim.OnPrepare(this);
-			CheckOpacityStack();
 		}
 
 		protected virtual void OnShowing(float scalar) 
 		{
 			foreach (var anim in ViewAnimations) anim.OnShowing(this, scalar);
-			CheckOpacityStack();
 		}
 
 		protected virtual void OnShown() 
 		{
 			TransitionState = TransitionStates.Shown;
 			foreach (var anim in ViewAnimations) anim.OnShown(this);
-			CheckOpacityStack();
 		}
 
 		protected virtual void OnIdle(float delta) 
 		{
 			foreach (var anim in ViewAnimations) anim.OnIdle(this, delta);
-			CheckOpacityStack();
 		}
 
 		protected virtual void OnLateIdle(float delta)
 		{
 			foreach (var anim in ViewAnimations) anim.OnLateIdle(this, delta);
-			CheckOpacityStack();
 		}
 
 		protected virtual void OnPrepareClose()
 		{
 			TransitionState = TransitionStates.Closing;
 			foreach (var anim in ViewAnimations) anim.OnPrepareClose(this);
-			CheckOpacityStack();
 		}
 
 		protected virtual void OnClosing(float scalar) 
 		{
 			foreach (var anim in ViewAnimations) anim.OnClosing(this, scalar);
-			CheckOpacityStack();
 		}
 
 		protected virtual void OnClosed() 
 		{
 			TransitionState = TransitionStates.Closed;
 			foreach (var anim in ViewAnimations) anim.OnClosed(this);
+		}
+
+		protected virtual void OnConstant(float delta)
+		{
+			foreach (var anim in ViewAnimations) anim.OnConstant(this, delta);
+			CheckOpacityStack();
+		}
+
+		protected virtual void OnLateConstant(float delta)
+		{
+			foreach (var anim in ViewAnimations) anim.OnLateConstant(this, delta);
 			CheckOpacityStack();
 		}
 
@@ -235,8 +248,10 @@ namespace LunraGames.SubLight
 			Closing = OnClosing;
 			Closed = OnClosed;
 
+			Constant = OnConstant;
+			LateConstant = OnLateConstant;
+
 			ClearOpacity();
-			Opacity = 1f;
 			Interactable = true;
 		}
 

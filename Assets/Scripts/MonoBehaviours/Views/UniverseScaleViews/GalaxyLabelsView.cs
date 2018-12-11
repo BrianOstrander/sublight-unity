@@ -94,15 +94,9 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				group.alpha = value;
-			}
+			group.alpha = opacity;
 		}
 
 		public override void Reset()
@@ -111,7 +105,8 @@ namespace LunraGames.SubLight.Views
 
 			labelPrefab.gameObject.SetActive(false);
 			Labels = null;
-			Opacity = 0f;
+			DefaultOpacity = 0f;
+			ClearOpacity();
 		}
 	}
 

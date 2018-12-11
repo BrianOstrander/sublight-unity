@@ -233,6 +233,8 @@ namespace LunraGames.SubLight
 
 			foreach (var view in views.ToList())
 			{
+				if (view.TransitionState != TransitionStates.Closed) view.Constant(delta);
+
 				if (view.TransitionState == TransitionStates.Shown)
 				{
 					view.Idle(delta);
@@ -255,6 +257,7 @@ namespace LunraGames.SubLight
 		{
 			foreach (var view in views.ToList())
 			{
+				if (view.TransitionState != TransitionStates.Closed) view.LateConstant(delta);
 				if (view.TransitionState == TransitionStates.Shown) view.LateIdle(delta);
 			}
 		}

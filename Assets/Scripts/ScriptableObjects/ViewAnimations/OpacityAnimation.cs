@@ -9,14 +9,17 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		AnimationCurve closingOpacity = AnimationCurveExtensions.Constant(1f);
 
+
 		public override void OnShowing(IView view, float scalar)
 		{
-			view.Opacity = showingOpacity.Evaluate(scalar);
+			Debug.LogError("not implimented");
+			//view.Opacity = showingOpacity.Evaluate(scalar);
 		}
 
 		public override void OnClosing(IView view, float scalar)
 		{
-			view.Opacity = closingOpacity.Evaluate(scalar);
+			Debug.LogError("not implimented");
+			//view.Opacity = closingOpacity.Evaluate(scalar);
 		}
 	}
 }

@@ -22,7 +22,6 @@ namespace LunraGames.SubLight.Presenters
 			Model.Ship.Value.Position.Changed += OnShipPosition;
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 
-			ScaleModel.Opacity.Changed += OnScaleOpacity;
 			ScaleModel.Transform.Changed += OnScaleTransform;
 
 			ShowViewInstant();
@@ -35,7 +34,6 @@ namespace LunraGames.SubLight.Presenters
 			Model.Ship.Value.Position.Changed -= OnShipPosition;
 			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
 
-			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 		}
 
@@ -45,7 +43,7 @@ namespace LunraGames.SubLight.Presenters
 
 			lastOpacity = noShow ? 0f : 1f;
 
-			View.Opacity = ScaleModel.Opacity.Value * lastOpacity;
+			View.SetOpacityStale();
 
 			var transform = ScaleModel.Transform.Value;
 
@@ -197,13 +195,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnShowView()
 		{
 			OnScaleTransformForced(ScaleModel.Transform.Value);
-		}
-
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value * lastOpacity;
+			View.PushOpacity(() => lastOpacity);
 		}
 
 		void OnScaleTransform(UniverseTransform transform)

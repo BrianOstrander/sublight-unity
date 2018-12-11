@@ -42,7 +42,7 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				regionOpacity = value;
-				UpdateOpacity();
+				//UpdateOpacity();
 			}
 		}
 
@@ -84,20 +84,10 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				UpdateOpacity();
-			}
-		}
-
-		void UpdateOpacity()
-		{
-			labelGroup.alpha = Opacity * RegionOpacity;
+			labelGroup.alpha = opacity;
+			//labelGroup.alpha = Opacity * RegionOpacity;
 		}
 
 		public override void Reset()

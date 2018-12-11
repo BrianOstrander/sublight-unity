@@ -32,15 +32,11 @@ namespace LunraGames.SubLight.Presenters
 			this.titleText = titleText;
 			this.detailText = detailText;
 			this.click = click;
-
-			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
 
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
-
-			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
 
 		#region Events
@@ -49,13 +45,6 @@ namespace LunraGames.SubLight.Presenters
 			View.TitleText = titleText.Value;
 			View.DetailText = detailText.Value;
 			View.Click = click;
-		}
-
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value;
 		}
 
 		void OnClick()
