@@ -601,6 +601,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   gridDragRadius: 3.39
   followCameraArea: {fileID: 4704531991954276}
+  gridSelectDuration: 0.2
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1

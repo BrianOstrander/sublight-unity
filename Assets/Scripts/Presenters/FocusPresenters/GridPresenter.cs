@@ -180,6 +180,7 @@ namespace LunraGames.SubLight.Presenters
 			OnShipPosition(model.Ship.Value.Position.Value);
 
 			model.Ship.Value.TravelRange.Changed += OnTravelRange;
+			model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
@@ -192,12 +193,14 @@ namespace LunraGames.SubLight.Presenters
 
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 			model.Ship.Value.TravelRange.Changed -= OnTravelRange;
+			model.CelestialSystemState.Changed -= OnCelestialSystemState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
 			View.DrawGizmos = OnDrawGizmos;
+			View.SetGridSelected(model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected, true);
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
@@ -592,6 +595,21 @@ namespace LunraGames.SubLight.Presenters
 		void OnTravelRange(TravelRange range)
 		{
 			if (tweenState == TweenStates.Complete) SetGrid();
+		}
+
+		void OnCelestialSystemState(CelestialSystemStateBlock block)
+		{
+			if (!View.Visible) return;
+
+			switch (block.State)
+			{
+				case CelestialSystemStateBlock.States.UnSelected:
+					View.SetGridSelected(false);
+					break;
+				case CelestialSystemStateBlock.States.Selected:
+					View.SetGridSelected(true);
+					break;
+			}
 		}
 
 		void OnDrawGizmos()

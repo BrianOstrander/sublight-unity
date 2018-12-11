@@ -71,8 +71,16 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform followCameraArea;
 
+		[SerializeField]
+		float gridSelectDuration;
+
 		Material[] gridBackgrounds;
 		Material[] grids;
+
+		float fromShiftValue;
+		float toShiftValue;
+		float lastShiftValue;
+		float? gridSelectRemaining;
 
 		public float ZoomAnimationDuration { get { return zoomAnimationDuration; } }
 		public float NudgeAnimationDuration { get { return nudgeAnimationDuration; } }
@@ -118,9 +126,6 @@ namespace LunraGames.SubLight.Views
 				var activeGridBackgrounds = new List<Material>();
 				var activeGrids = new List<Material>();
 
-				//gridBackground.renderQueue = renderQueue;
-				//activeMaterials.Add(gridBackground);
-
 				for (var i = 0; i < value.Length; i++)
 				{
 					if (!value[i].IsActive) continue;
@@ -132,6 +137,7 @@ namespace LunraGames.SubLight.Views
 					background.renderQueue = renderQueue;
 					background.SetVector(ShaderConstants.HoloGridBackgroundRange.RangeOrigin, block.RangeOrigin);
 					background.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeRadius, block.RangeRadius);
+					OnSetGridSelection(background, lastShiftValue);
 
 					grid.renderQueue = renderQueue;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
@@ -146,6 +152,51 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		public void SetGridSelected(bool value, bool instant = false)
+		{
+			var shiftValue = value ? 1f : 0f;
+
+			if (gridBackgrounds == null)
+			{
+				fromShiftValue = shiftValue;
+				toShiftValue = shiftValue;
+				lastShiftValue = shiftValue;
+				gridSelectRemaining = null;
+				return;
+			}
+
+			fromShiftValue = toShiftValue;
+			toShiftValue = shiftValue;
+			lastShiftValue = fromShiftValue;
+			gridSelectRemaining = gridSelectDuration;
+
+			if (instant) OnUpdateGridSelection(gridSelectDuration);
+		}
+
+		void OnUpdateGridSelection(float delta)
+		{
+			if (!gridSelectRemaining.HasValue) return;
+
+			gridSelectRemaining = Mathf.Max(0f, gridSelectRemaining.Value - delta);
+
+			if (Mathf.Approximately(0f, gridSelectRemaining.Value))
+			{
+				lastShiftValue = toShiftValue;
+				foreach (var background in gridBackgrounds) OnSetGridSelection(background, toShiftValue);
+				gridSelectRemaining = null;
+				return;
+			}
+
+			var scalar = 1f - (gridSelectRemaining.Value / gridSelectDuration);
+			lastShiftValue = fromShiftValue + ((toShiftValue - fromShiftValue) * scalar);
+			foreach (var background in gridBackgrounds) OnSetGridSelection(background, lastShiftValue);
+		}
+
+		void OnSetGridSelection(Material material, float value)
+		{
+			material.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeShifted, value);
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -154,6 +205,11 @@ namespace LunraGames.SubLight.Views
 			Dragging = ActionExtensions.GetEmpty<bool>();
 			Highlighted = false;
 			SetRadius(0f, true);
+
+			fromShiftValue = 0f;
+			toShiftValue = 0f;
+			lastShiftValue = 0f;
+			gridSelectRemaining = null;
 
 			DrawGizmos = ActionExtensions.Empty;
 		}
@@ -181,6 +237,8 @@ namespace LunraGames.SubLight.Views
 			base.OnIdle(delta);
 
 			FollowCamera();
+
+			OnUpdateGridSelection(delta);
 		}
 
 		void FollowCamera()
@@ -269,6 +327,8 @@ namespace LunraGames.SubLight.Views
 
 		bool ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius);
 		void SetRadius(float scalar, bool showing);
+
+		void SetGridSelected(bool value, bool instant = false);
 
 		Action DrawGizmos { set; }
 	}
