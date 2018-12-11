@@ -8,17 +8,6 @@ namespace LunraGames.SubLight.Views
 		float unityScale;
 
 		public float UnityScale { get { return unityScale; } }
-
-		public override float Opacity
-		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-
-			}
-		}
 	}
 
 	public interface IShipPinView : IUniverseScaleView

@@ -22,15 +22,9 @@ namespace LunraGames.SubLight.Views
 			descriptionLabel.text = description;
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				group.alpha = value;
-			}
+			group.alpha = opacity;
 		}
 
 		public override void Reset()

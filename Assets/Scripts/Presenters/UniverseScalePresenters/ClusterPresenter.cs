@@ -27,15 +27,11 @@ namespace LunraGames.SubLight.Presenters
 
 			scaleInUniverse = galaxy.GalaxySize;
 			positionInUniverse = galaxy.GalaxyOrigin;
-
-			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
 
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
-
-			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
 
 		#region Events
@@ -58,13 +54,6 @@ namespace LunraGames.SubLight.Presenters
 
 			View.GalaxyNormal = galaxy.UniverseNormal;
 			View.AlertHeightMultiplier = galaxy.AlertHeightMultiplier;
-		}
-
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value;
 		}
 
 		void OnClick()

@@ -15,15 +15,11 @@ namespace LunraGames.SubLight.Presenters
 		{
 			scaleInUniverse = model.Galaxy.GalaxySize;
 			positionInUniverse = model.Galaxy.GalaxyOrigin;
-
-			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
 
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
-
-			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
 
 		#region Events
@@ -32,13 +28,6 @@ namespace LunraGames.SubLight.Presenters
 			var transform = Model.ActiveScale.Value.Transform.Value;
 			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 			View.SetGalaxy(Model.Galaxy.FullPreview);
-		}
-
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value;
 		}
 		#endregion
 	}

@@ -7,15 +7,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer MaskMesh;
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				MaskMesh.material.SetFloat(ShaderConstants.HoloMask.Opacity, Opacity);
-			}
+			MaskMesh.material.SetFloat(ShaderConstants.HoloMask.Opacity, opacity);
 		}
 	}
 

@@ -72,19 +72,13 @@ namespace LunraGames.SubLight.Views
 
 		public Action Click { set; private get; }
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
+			group.alpha = opacity;
+			line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, opacity * lineRadiusOpacity.Evaluate(RadiusNormal));
+			foreach (var mesh in meshes)
 			{
-				base.Opacity = value;
-				group.alpha = value;
-				line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, value * lineRadiusOpacity.Evaluate(RadiusNormal));
-				foreach (var mesh in meshes)
-				{
-					mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, value);
-				}
+				mesh.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, opacity);
 			}
 		}
 
@@ -123,7 +117,7 @@ namespace LunraGames.SubLight.Views
 
 			line.SetPosition(0, position);
 			line.SetPosition(1, galaxyNameLabelPositionScaleArea.position);
-			line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, Opacity * lineRadiusOpacity.Evaluate(GetRadiusNormal(line.transform.position)));
+			line.material.SetFloat(ShaderConstants.HoloTextureColorAlpha.Alpha, OpacityStack * lineRadiusOpacity.Evaluate(GetRadiusNormal(line.transform.position)));
 		}
 
 		#region Events

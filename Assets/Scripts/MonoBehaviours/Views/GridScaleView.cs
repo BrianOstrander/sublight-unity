@@ -91,17 +91,11 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Alpha, value);
-				gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Alpha, value);
-				foreach (var area in opacityAreas) area.alpha = value;
-			}
+			gridScaleMesh.material.SetFloat(ShaderConstants.HoloGridScale.Alpha, opacity);
+			gridUnitScaleMesh.material.SetFloat(ShaderConstants.HoloGridUnitScale.Alpha, opacity);
+			foreach (var area in opacityAreas) area.alpha = opacity;
 		}
 
 		public override void Reset()
