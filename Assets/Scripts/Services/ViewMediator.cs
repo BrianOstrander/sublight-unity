@@ -197,8 +197,10 @@ namespace LunraGames.SubLight
 		void Closing(IView view)
 		{
 			// TODO: make this take into account multiple calls per frame, because Time.deltaTime is going to ruin it.
-			view.Progress = Mathf.Min(view.CloseDuration, view.Progress + Time.deltaTime);
-			var scalar = view.Progress / view.CloseDuration;
+			var progress = Mathf.Min(view.CloseDuration, view.Progress + Time.deltaTime);
+			var scalar = progress / view.CloseDuration;
+
+			view.SetProgress(progress, scalar);
 
 			view.Closing(scalar);
 			if (Mathf.Approximately(1f, scalar))
@@ -214,8 +216,10 @@ namespace LunraGames.SubLight
 		void Showing(IView view)
 		{
 			// TODO: make this take into account multiple calls per frame, because Time.deltaTime is going to ruin it.
-			view.Progress = Mathf.Min(view.ShowDuration, view.Progress + Time.deltaTime);
-			var scalar = view.Progress / view.ShowDuration;
+			var progress = Mathf.Min(view.ShowDuration, view.Progress + Time.deltaTime);
+			var scalar = progress / view.ShowDuration;
+
+			view.SetProgress(progress, scalar);
 
 			view.Showing(scalar);
 			if (Mathf.Approximately(1f, scalar))
@@ -297,7 +301,9 @@ namespace LunraGames.SubLight
 			}
 
 			view.Parent = parent;
-			view.Progress = instant ? view.ShowDuration : 0f;
+
+			if (instant) view.SetProgress(view.ShowDuration, 1f);
+			else view.SetProgress(0f, 0f);
 
 			views.Add(view);
 			view.Prepare();
@@ -318,7 +324,9 @@ namespace LunraGames.SubLight
 					return;
 			}
 
-			view.Progress = instant ? view.CloseDuration : 0f;
+			if (instant) view.SetProgress(view.CloseDuration, 1f);
+			else view.SetProgress(0f, 0f);
+
 			view.PrepareClose();
 			Closing(view);
 		}

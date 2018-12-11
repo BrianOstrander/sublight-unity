@@ -23,10 +23,14 @@ namespace LunraGames.SubLight
 
 		float ShowDuration { get; }
 		float CloseDuration { get; }
-		float Progress { get; set; }
+		float Progress { get; }
+		float ProgressScalar { get; }
+		void SetProgress(float progress, float progressScalar);
 
 		void PushOpacity(Func<float> query);
 		void PopOpacity(Func<float> query);
+		void PushOpacity(Func<IView, float> query);
+		void PopOpacity(Func<IView, float> query);
 		void ClearOpacity();
 		void SetOpacityStale(bool force = false);
 
@@ -113,7 +117,14 @@ namespace LunraGames.SubLight
 
 		public virtual float ShowDuration { get { return ShowCloseDuration.OverrideShow ? ShowCloseDuration.ShowDuration : ShowDurationDefault; } }
 		public virtual float CloseDuration { get { return ShowCloseDuration.OverrideClose ? ShowCloseDuration.CloseDuration : CloseDurationDefault; } }
-		public virtual float Progress { get; set; }
+		public virtual float Progress { get; private set; }
+		public virtual float ProgressScalar { get; private set; }
+
+		public void SetProgress(float progress, float progressScalar)
+		{
+			Progress = progress;
+			ProgressScalar = progressScalar;
+		}
 
 		TransitionStates transitionState;
 		public TransitionStates TransitionState
@@ -124,11 +135,25 @@ namespace LunraGames.SubLight
 
 		StackOpacityStates opacityStackStale = StackOpacityStates.NotStale;
 		float lastCalculatedOpacityStack;
+
 		List<Func<float>> opacityStack = new List<Func<float>>();
+		List<Func<IView, float>> opacityViewStack = new List<Func<IView, float>>();
+
 		public float DefaultOpacity { get; set; }
+
 		public void PushOpacity(Func<float> query) { opacityStack.Remove(query); opacityStack.Add(query); SetOpacityStale(); }
 		public void PopOpacity(Func<float> query) { opacityStack.Remove(query); SetOpacityStale(); }
-		public void ClearOpacity() { lastCalculatedOpacityStack = DefaultOpacity; opacityStack.Clear(); SetOpacityStale(); }
+
+		public void PushOpacity(Func<IView, float> query) { opacityViewStack.Remove(query); opacityViewStack.Add(query); SetOpacityStale(); }
+		public void PopOpacity(Func<IView, float> query) { opacityViewStack.Remove(query); SetOpacityStale(); }
+
+		public void ClearOpacity()
+		{
+			lastCalculatedOpacityStack = DefaultOpacity;
+			opacityStack.Clear();
+			opacityViewStack.Clear();
+			SetOpacityStale();
+		}
 
 		public void SetOpacityStale(bool force = false)
 		{
@@ -152,6 +177,11 @@ namespace LunraGames.SubLight
 			foreach (var entry in opacityStack)
 			{
 				opacity *= entry();
+				if (Mathf.Approximately(opacity, 0f)) break;
+			}
+			foreach (var entry in opacityViewStack)
+			{
+				opacity *= entry(this);
 				if (Mathf.Approximately(opacity, 0f)) break;
 			}
 			lastCalculatedOpacityStack = opacity;
