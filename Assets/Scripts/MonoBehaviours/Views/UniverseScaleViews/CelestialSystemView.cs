@@ -637,35 +637,40 @@ namespace LunraGames.SubLight.Views
 
 			//	BaseDistanceOpacity
 			modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.None;
-			switch (VisitState)
+			switch (RangeState)
 			{
-				case Celestial.VisitStates.Current: break;
-				default:
-					switch (HighlightState)
+				case Celestial.RangeStates.InRange:
+					switch (VisitState)
 					{
-						case Celestial.HighlightStates.OtherHighlighted:
-							switch (SelectedState)
+						case Celestial.VisitStates.Current: break;
+						default:
+							switch (HighlightState)
 							{
-								case Celestial.SelectedStates.Selected:
-									modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+								case Celestial.HighlightStates.OtherHighlighted:
+									switch (SelectedState)
+									{
+										case Celestial.SelectedStates.Selected:
+											modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+											break;
+									}
 									break;
-							}
-							break;
-						case Celestial.HighlightStates.Highlighted:
-						case Celestial.HighlightStates.HighlightedAnalysis:
-							switch (SelectedState)
-							{
-								case Celestial.SelectedStates.Selected:
-								case Celestial.SelectedStates.NotSelected:
-									modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+								case Celestial.HighlightStates.Highlighted:
+								case Celestial.HighlightStates.HighlightedAnalysis:
+									switch (SelectedState)
+									{
+										case Celestial.SelectedStates.Selected:
+										case Celestial.SelectedStates.NotSelected:
+											modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+											break;
+									}
 									break;
-							}
-							break;
-						case Celestial.HighlightStates.Idle:
-							switch (SelectedState)
-							{
-								case Celestial.SelectedStates.Selected:
-									modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+								case Celestial.HighlightStates.Idle:
+									switch (SelectedState)
+									{
+										case Celestial.SelectedStates.Selected:
+											modified.BaseDistanceOpacity = Constants.BaseDistanceOpacity.Full;
+											break;
+									}
 									break;
 							}
 							break;
@@ -675,39 +680,44 @@ namespace LunraGames.SubLight.Views
 
 			//	BaseRingOpacity
 			modified.BaseRingOpacity = Constants.BaseRingOpacity.None;
-			switch (HighlightState)
+			switch (RangeState)
 			{
-				case Celestial.HighlightStates.OtherHighlighted:
-					switch (SelectedState)
+				case Celestial.RangeStates.InRange:
+					switch (HighlightState)
 					{
-						case Celestial.SelectedStates.Selected:
-							modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
-							break;
-						default:
-							switch (VisitState)
+						case Celestial.HighlightStates.OtherHighlighted:
+							switch (SelectedState)
 							{
-								case Celestial.VisitStates.Current:
+								case Celestial.SelectedStates.Selected:
+									modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+									break;
+								default:
+									switch (VisitState)
+									{
+										case Celestial.VisitStates.Current:
+											modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+											break;
+									}
+									break;
+							}
+							break;
+						case Celestial.HighlightStates.Highlighted:
+						case Celestial.HighlightStates.HighlightedAnalysis:
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.OtherSelected: break;
+								default:
 									modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
 									break;
 							}
 							break;
-					}
-					break;
-				case Celestial.HighlightStates.Highlighted:
-				case Celestial.HighlightStates.HighlightedAnalysis:
-					switch (SelectedState)
-					{
-						case Celestial.SelectedStates.OtherSelected: break;
-						default:
-							modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
-							break;
-					}
-					break;
-				case Celestial.HighlightStates.Idle:
-					switch (SelectedState)
-					{
-						case Celestial.SelectedStates.Selected:
-							modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+						case Celestial.HighlightStates.Idle:
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.Selected:
+									modified.BaseRingOpacity = Constants.BaseRingOpacity.Full;
+									break;
+							}
 							break;
 					}
 					break;
@@ -1000,6 +1010,9 @@ namespace LunraGames.SubLight.Views
 		public void OnClick()
 		{
 			if (NotInteractable) return;
+
+			onEnterDelayRemaining = null;
+			selectedParticles.Emit(1);
 
 			if (Click != null) Click();
 		}

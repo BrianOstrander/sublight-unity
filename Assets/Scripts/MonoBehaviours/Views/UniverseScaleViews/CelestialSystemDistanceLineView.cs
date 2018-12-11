@@ -69,14 +69,31 @@ namespace LunraGames.SubLight.Views
 					return;
 			}
 
-			SetBottomPoints(begin, end, clamping, clampedBegin, clampedEnd, range);
-			SetTopPoints(begin, end, clamping, clampedBegin, clampedEnd, range);
+			var rangeFalloff = 1f;
+			var totalDistance = Vector3.Distance(begin, end);
+			if (range < totalDistance)
+			{
+				rangeFalloff = totalDistance - range;
+				//rangeFalloff = Mathf.Max(-totalDistance, totalDistance - 1f);
+			}
+
+			SetBottomPoints(begin, end, clamping, clampedBegin, clampedEnd, range, rangeFalloff);
+			SetTopPoints(begin, end, clamping, clampedBegin, clampedEnd, range, rangeFalloff);
 		}
 
-		void SetBottomPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd, float range)
+		void SetBottomPoints(
+			Vector3 begin,
+			Vector3 end,
+			LineClamping clamping,
+			Vector3? clampedBegin,
+			Vector3? clampedEnd,
+			float range,
+			float falloff
+		)
 		{
 			foreach (var material in bottomLine.materials)
 			{
+				material.SetFloat(ShaderConstants.TextureColorAlphaScrollingRange.RangeFadeFalloff, falloff);
 				material.SetFloat(ShaderConstants.TextureColorAlphaScrollingRange.Range, range - rangeMargin);
 				material.SetVector(ShaderConstants.TextureColorAlphaScrollingRange.RangeBegin, begin);
 			}
@@ -135,10 +152,19 @@ namespace LunraGames.SubLight.Views
 			directionRing.transform.forward = delta;
 		}
 
-		void SetTopPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd, float range)
+		void SetTopPoints(
+			Vector3 begin,
+			Vector3 end,
+			LineClamping clamping,
+			Vector3? clampedBegin,
+			Vector3? clampedEnd,
+			float range,
+			float falloff
+		)
 		{
 			foreach (var material in topLine.materials)
 			{
+				material.SetFloat(ShaderConstants.TextureColorAlphaScrollingRange.RangeFadeFalloff, falloff);
 				material.SetFloat(ShaderConstants.TextureColorAlphaScrollingRange.Range, range - rangeMargin);
 				material.SetVector(ShaderConstants.TextureColorAlphaScrollingRange.RangeBegin, begin);
 			}
