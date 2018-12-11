@@ -837,6 +837,7 @@ namespace LunraGames.SubLight.Views
 			modified.IconSaturation = Constants.IconSaturation.Full;
 			switch (VisitState)
 			{
+				case Celestial.VisitStates.Current: break;
 				case Celestial.VisitStates.Visited:
 					modified.IconSaturation = Constants.IconSaturation.None;
 					break;
@@ -845,6 +846,14 @@ namespace LunraGames.SubLight.Views
 					{
 						case Celestial.RangeStates.OutOfRange:
 							modified.IconSaturation = Constants.IconSaturation.None;
+							break;
+						default:
+							switch (SelectedState)
+							{
+								case Celestial.SelectedStates.OtherSelected:
+									modified.IconSaturation = Constants.IconSaturation.None;
+									break;
+							}
 							break;
 					}
 					break;
