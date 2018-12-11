@@ -402,7 +402,7 @@ namespace LunraGames.SubLight.Views
 
 			if (instant)
 			{
-				ProcessAllVisuals(1f, true);
+				ProcessAllVisuals(1f);
 				isStale = false;
 			}
 			else isStale = isStale || wasChanged;
@@ -444,22 +444,24 @@ namespace LunraGames.SubLight.Views
 			var localPositionWithHeight = new Vector3(0f, yMinimumOffset + (rawPosition - position).y, 0f);
 			verticalLookAtArea.transform.localPosition = localPositionWithHeight;
 
-			var radiusOpacity = OpacityStack * dropLineRadiusOpacity.Evaluate(RadiusNormal);
-			SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorShiftConstant.Alpha, dropLineThicknessOpacity.Evaluate(currentVisuals.DropLineThickness));
+			//var radiusOpacity = OpacityStack * dropLineRadiusOpacity.Evaluate(RadiusNormal);
+			//SetMeshAlpha(dropLine.material, ShaderConstants.HoloDistanceFieldColorShiftConstant.Alpha, dropLineThicknessOpacity.Evaluate(currentVisuals.DropLineThickness));
 
 			dropLine.SetPosition(1, localPositionWithHeight);
-			baseGroup.alpha = radiusOpacity;
+			//baseGroup.alpha = radiusOpacity;
 
-			SetMeshAlpha(bottomCenterMesh.material, ShaderConstants.HoloTextureColorAlphaMasked.Alpha, OpacityStack * currentVisuals.BaseCenterOpacity);
+			//SetMeshAlpha(bottomCenterMesh.material, ShaderConstants.HoloTextureColorAlphaMasked.Alpha, OpacityStack * currentVisuals.BaseCenterOpacity);
 
-			var particleOpacity = OpacityStack * radiusOpacity * minimizedParticlesBaseAlpha;
-			minimizedParticles.startColor = minimizedParticles.startColor.NewA(particleOpacity);
-			minimizedParticles.gameObject.SetActive(!Mathf.Approximately(0f, particleOpacity));
+			//var particleOpacity = OpacityStack * radiusOpacity * minimizedParticlesBaseAlpha;
+			//minimizedParticles.startColor = minimizedParticles.startColor.NewA(particleOpacity);
+			//minimizedParticles.gameObject.SetActive(!Mathf.Approximately(0f, particleOpacity));
 
-			SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
-			SetMeshAlpha(selectedInsideGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
+			//SetMeshAlpha(selectedGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
+			//SetMeshAlpha(selectedInsideGraphic.material, ShaderConstants.HoloTextureColorAlpha.Alpha, currentVisuals.SelectedOpacity);
 
-			SetMaximizeOpacity(currentVisuals.MaximizedProgress);
+			//SetMaximizeOpacity(currentVisuals.MaximizedProgress);
+
+			isStale = true;
 
 			if (!dragTrail.emitting)
 			{
@@ -863,7 +865,7 @@ namespace LunraGames.SubLight.Views
 			targetVisuals = modified;
 		}
 
-		bool ProcessAllVisuals(float delta, bool force = false)
+		bool ProcessAllVisuals(float delta, bool force = true)
 		{
 			var wasChanged = false;
 
@@ -1029,6 +1031,12 @@ namespace LunraGames.SubLight.Views
 		void SetMeshAlpha(Material material, string fieldName, float alpha = 1f)
 		{
 			material.SetFloat(fieldName, OpacityStack * alpha * dropLineRadiusOpacity.Evaluate(RadiusNormal));
+		}
+
+		protected override void OnOpacityStack(float opacity)
+		{
+			//Debug.Log("Opacity is: " + opacity.ToString("N4"), gameObject);
+			//base.OnOpacityStack(opacity);
 		}
 	}
 

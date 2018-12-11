@@ -28,7 +28,7 @@ namespace LunraGames.SubLight
 		void PushOpacity(Func<float> query);
 		void PopOpacity(Func<float> query);
 		void ClearOpacity();
-		void SetOpacityStale();
+		void SetOpacityStale(bool force = false);
 
 		float OpacityStack { get; }
 
@@ -99,6 +99,14 @@ namespace LunraGames.SubLight
 		const float ShowDurationDefault = 0.2f;
 		const float CloseDurationDefault = 0.2f;
 
+		enum StackOpacityStates
+		{
+			Unknown = 0,
+			Stale = 10,
+			NotStale = 20,
+			Forced = 30
+		}
+
 		public Transform Parent { get; set; }
 
 		public virtual Transform Root { get { return transform; } }
@@ -114,21 +122,27 @@ namespace LunraGames.SubLight
 			protected set { transitionState = value; }
 		}
 
-		bool opacityStackStale;
+		StackOpacityStates opacityStackStale = StackOpacityStates.NotStale;
 		float lastCalculatedOpacityStack;
 		List<Func<float>> opacityStack = new List<Func<float>>();
 		public float DefaultOpacity { get; set; }
 		public void PushOpacity(Func<float> query) { opacityStack.Remove(query); opacityStack.Add(query); SetOpacityStale(); }
 		public void PopOpacity(Func<float> query) { opacityStack.Remove(query); SetOpacityStale(); }
 		public void ClearOpacity() { lastCalculatedOpacityStack = DefaultOpacity; opacityStack.Clear(); SetOpacityStale(); }
-		public void SetOpacityStale() { opacityStackStale = true; }
+
+		public void SetOpacityStale(bool force = false)
+		{
+			opacityStackStale = (force || opacityStackStale == StackOpacityStates.Forced) ? StackOpacityStates.Forced : StackOpacityStates.Stale;
+		}
 
 		public float OpacityStack { get { return lastCalculatedOpacityStack; } }
 
 		void CheckOpacityStack()
 		{
-			if (!opacityStackStale) return;
-			if (CalculateOpacityStack()) OnOpacityStack(OpacityStack);
+			if (opacityStackStale == StackOpacityStates.NotStale) return;
+			var wasState = opacityStackStale;
+			opacityStackStale = StackOpacityStates.NotStale;
+			if (CalculateOpacityStack() || wasState == StackOpacityStates.Forced) OnOpacityStack(OpacityStack);
 		}
 
 		bool CalculateOpacityStack()
@@ -141,7 +155,7 @@ namespace LunraGames.SubLight
 				if (Mathf.Approximately(opacity, 0f)) break;
 			}
 			lastCalculatedOpacityStack = opacity;
-			return Mathf.Approximately(original, lastCalculatedOpacityStack);
+			return !Mathf.Approximately(original, lastCalculatedOpacityStack);
 		}
 
 		protected virtual void OnOpacityStack(float opacity) {}
@@ -185,6 +199,7 @@ namespace LunraGames.SubLight
 			Root.gameObject.SetActive(true);
 
 			foreach (var anim in ViewAnimations) anim.OnPrepare(this);
+			SetOpacityStale(true);
 		}
 
 		protected virtual void OnShowing(float scalar) 
