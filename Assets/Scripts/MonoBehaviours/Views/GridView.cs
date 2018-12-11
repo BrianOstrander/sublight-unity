@@ -49,6 +49,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Material gridMaterial;
 		[SerializeField]
+		Material gridHazardMaterial;
+		[SerializeField]
 		Material gridBackgroundMaterial;
 		[SerializeField]
 		MeshRenderer gridMesh;
@@ -75,6 +77,7 @@ namespace LunraGames.SubLight.Views
 		float gridSelectDuration;
 
 		Material[] gridBackgrounds;
+		Material[] gridsHazards;
 		Material[] grids;
 
 		float fromShiftValue;
@@ -109,21 +112,25 @@ namespace LunraGames.SubLight.Views
 				{
 					gridMesh.materials = new Material[0];
 					gridBackgrounds = null;
+					gridsHazards = null;
 					grids = null;
 					return;
 				}
 				if (grids == null || grids.Length == 0)
 				{
 					gridBackgrounds = new Material[value.Length];
+					gridsHazards = new Material[value.Length];
 					grids = new Material[value.Length];
 					for (var i = 0; i < value.Length; i++)
 					{
 						gridBackgrounds[i] = new Material(gridBackgroundMaterial);
+						gridsHazards[i] = new Material(gridHazardMaterial);
 						grids[i] = new Material(gridMaterial);
 					}
 				}
 
 				var activeGridBackgrounds = new List<Material>();
+				var activeGridHazards = new List<Material>();
 				var activeGrids = new List<Material>();
 
 				for (var i = 0; i < value.Length; i++)
@@ -132,6 +139,7 @@ namespace LunraGames.SubLight.Views
 
 					var block = value[i];
 					var background = gridBackgrounds[i];
+					var hazard = gridsHazards[i];
 					var grid = grids[i];
 
 					background.renderQueue = renderQueue;
@@ -139,16 +147,23 @@ namespace LunraGames.SubLight.Views
 					background.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeRadius, block.RangeRadius);
 					OnSetGridSelection(background, lastShiftValue);
 
-					grid.renderQueue = renderQueue;
+					hazard.renderQueue = renderQueue + 1;
+					hazard.SetVector(ShaderConstants.HoloGridRange.RangeOrigin, block.RangeOrigin);
+					hazard.SetFloat(ShaderConstants.HoloGridRange.RangeRadius, block.RangeRadius);
+					hazard.SetFloat(ShaderConstants.HoloGridRange.RadiusV, block.RangeRadius);
+					OnSetGridSelection(hazard, lastShiftValue);
+
+					grid.renderQueue = renderQueue + 2;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
 					grid.SetVector(ShaderConstants.HoloGridBasic.Offset, block.Offset);
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Alpha, block.Alpha);
 
 					activeGridBackgrounds.Add(background);
+					activeGridHazards.Add(hazard);
 					activeGrids.Add(grid);
 				}
 
-				gridMesh.materials = activeGridBackgrounds.Concat(activeGrids).ToArray();
+				gridMesh.materials = activeGridBackgrounds.Concat(activeGridHazards).Concat(activeGrids).ToArray();
 			}
 		}
 
@@ -183,6 +198,7 @@ namespace LunraGames.SubLight.Views
 			{
 				lastShiftValue = toShiftValue;
 				foreach (var background in gridBackgrounds) OnSetGridSelection(background, toShiftValue);
+				foreach (var hazard in gridsHazards) OnSetGridSelection(hazard, lastShiftValue);
 				gridSelectRemaining = null;
 				return;
 			}
@@ -190,6 +206,7 @@ namespace LunraGames.SubLight.Views
 			var scalar = 1f - (gridSelectRemaining.Value / gridSelectDuration);
 			lastShiftValue = fromShiftValue + ((toShiftValue - fromShiftValue) * scalar);
 			foreach (var background in gridBackgrounds) OnSetGridSelection(background, lastShiftValue);
+			foreach (var hazard in gridsHazards) OnSetGridSelection(hazard, lastShiftValue);
 		}
 
 		void OnSetGridSelection(Material material, float value)
