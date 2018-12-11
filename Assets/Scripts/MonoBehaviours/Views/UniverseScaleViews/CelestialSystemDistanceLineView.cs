@@ -235,9 +235,10 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnOpacityStack(float opacity)
 		{
-			var currOpacity = Mathf.Approximately(opacity, 1f) ? 1f : 0f;
-			topLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
-			bottomLine.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
+			var isVisible = Mathf.Approximately(opacity, 1f);
+			var currOpacity = isVisible ? 1f : 0f;
+			foreach (var material in topLine.materials) material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
+			foreach (var material in bottomLine.materials) material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstant.Alpha, currOpacity);
 			directionRingGraphic.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, currOpacity);
 		}
 
