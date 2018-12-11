@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -23,6 +24,13 @@ namespace LunraGames.SubLight
 		float ShowDuration { get; }
 		float CloseDuration { get; }
 		float Progress { get; set; }
+
+		void PushOpacity(Func<float> query);
+		void PopOpacity(Func<float> query);
+		void ClearOpacity();
+		void SetOpacityStale();
+
+		float OpacityStack { get; }
 
 		float Opacity { get; set; }
 		bool Interactable { get; set; }
@@ -99,6 +107,37 @@ namespace LunraGames.SubLight
 			protected set { transitionState = value; }
 		}
 
+		bool opacityStackStale;
+		float lastCalculatedOpacityStack = 1f;
+		List<Func<float>> opacityStack = new List<Func<float>>();
+		public void PushOpacity(Func<float> query) { opacityStack.Remove(query); opacityStack.Add(query); SetOpacityStale(); }
+		public void PopOpacity(Func<float> query) { opacityStack.Remove(query); SetOpacityStale(); }
+		public void ClearOpacity() { opacityStack.Clear(); SetOpacityStale(); }
+		public void SetOpacityStale() { opacityStackStale = true; }
+
+		public float OpacityStack { get { return lastCalculatedOpacityStack; } }
+
+		void CheckOpacityStack()
+		{
+			if (!opacityStackStale) return;
+			if (CalculateOpacityStack()) OnOpacityStack(OpacityStack);
+		}
+
+		bool CalculateOpacityStack()
+		{
+			var original = lastCalculatedOpacityStack;
+			var opacity = 1f;
+			foreach (var entry in opacityStack)
+			{
+				opacity *= entry();
+				if (Mathf.Approximately(opacity, 0f)) break;
+			}
+			lastCalculatedOpacityStack = opacity;
+			return Mathf.Approximately(original, lastCalculatedOpacityStack);
+		}
+
+		protected virtual void OnOpacityStack(float opacity) {}
+
 		float opacity = 1f;
 		public virtual float Opacity { get { return opacity; } set { opacity = Mathf.Max(0f, Mathf.Min(1f, value)); } }
 		bool interactable = true;
@@ -137,44 +176,52 @@ namespace LunraGames.SubLight
 			Root.gameObject.SetActive(true);
 
 			foreach (var anim in ViewAnimations) anim.OnPrepare(this);
+			CheckOpacityStack();
 		}
 
 		protected virtual void OnShowing(float scalar) 
 		{
 			foreach (var anim in ViewAnimations) anim.OnShowing(this, scalar);
+			CheckOpacityStack();
 		}
 
 		protected virtual void OnShown() 
 		{
 			TransitionState = TransitionStates.Shown;
 			foreach (var anim in ViewAnimations) anim.OnShown(this);
+			CheckOpacityStack();
 		}
 
 		protected virtual void OnIdle(float delta) 
 		{
 			foreach (var anim in ViewAnimations) anim.OnIdle(this, delta);
+			CheckOpacityStack();
 		}
 
 		protected virtual void OnLateIdle(float delta)
 		{
 			foreach (var anim in ViewAnimations) anim.OnLateIdle(this, delta);
+			CheckOpacityStack();
 		}
 
 		protected virtual void OnPrepareClose()
 		{
 			TransitionState = TransitionStates.Closing;
 			foreach (var anim in ViewAnimations) anim.OnPrepareClose(this);
+			CheckOpacityStack();
 		}
 
 		protected virtual void OnClosing(float scalar) 
 		{
 			foreach (var anim in ViewAnimations) anim.OnClosing(this, scalar);
+			CheckOpacityStack();
 		}
 
 		protected virtual void OnClosed() 
 		{
 			TransitionState = TransitionStates.Closed;
 			foreach (var anim in ViewAnimations) anim.OnClosed(this);
+			CheckOpacityStack();
 		}
 
 		public virtual void Reset() 
@@ -188,6 +235,7 @@ namespace LunraGames.SubLight
 			Closing = OnClosing;
 			Closed = OnClosed;
 
+			ClearOpacity();
 			Opacity = 1f;
 			Interactable = true;
 		}
