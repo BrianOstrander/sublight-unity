@@ -152,6 +152,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (focusTransform.Zoom.State == TweenStates.Complete && !View.RestrictVisibiltyInBounds) return;
 			if (!CanShow) return;
+			if (View.Visible) return;
 
 			if (View.RestrictVisibiltyInBounds)
 			{

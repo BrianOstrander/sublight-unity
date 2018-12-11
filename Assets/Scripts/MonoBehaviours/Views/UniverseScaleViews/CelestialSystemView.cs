@@ -927,22 +927,22 @@ namespace LunraGames.SubLight.Views
 
 		void ApplyDetailsOpacity(float value)
 		{
-			detailsGroup.alpha = value;
+			detailsGroup.alpha = value * OpacityStack;
 		}
 
 		void ApplyConfirmOpacity(float value)
 		{
-			confirmGroup.alpha = value;
+			confirmGroup.alpha = value * OpacityStack;
 		}
 
 		void ApplyBaseDistanceOpacity(float value)
 		{
-			baseDistanceGroup.alpha = value;
+			baseDistanceGroup.alpha = value * OpacityStack;
 		}
 
 		void ApplyBaseRingOpacity(float value)
 		{
-			baseRingGroup.alpha = value;
+			baseRingGroup.alpha = value * OpacityStack;
 		}
 
 		void ApplyBaseCenterOpacity(float value)
@@ -1035,8 +1035,7 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnOpacityStack(float opacity)
 		{
-			//Debug.Log("Opacity is: " + opacity.ToString("N4"), gameObject);
-			//base.OnOpacityStack(opacity);
+			isStale = true;
 		}
 	}
 
