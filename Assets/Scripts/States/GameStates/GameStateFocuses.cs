@@ -116,6 +116,8 @@ namespace LunraGames.SubLight
 				{
 					Confirm = LanguageStringModel.Override("Confirm"),
 					ConfirmDescription = LanguageStringModel.Override("Click again"),
+					OutOfRange = LanguageStringModel.Override("Out Of Range"),
+					OutOfRangeDescription = LanguageStringModel.Override("Transit not possible"),
 					DistanceUnit = LanguageStringModel.Override("ly"),
 					Analysis = LanguageStringModel.Override("System Analysis"),
 					AnalysisDescription = LanguageStringModel.Override("Click for details"),
