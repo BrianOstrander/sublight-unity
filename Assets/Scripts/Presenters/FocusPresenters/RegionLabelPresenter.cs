@@ -19,7 +19,6 @@ namespace LunraGames.SubLight.Presenters
 			scaleModel = model.GetScale(scale);
 
 			scaleModel.Opacity.Changed += OnScaleOpacity;
-			OnScaleOpacity(scaleModel.Opacity.Value);
 
 			switch (scale)
 			{
@@ -52,19 +51,25 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			OnScaleOpacity(scaleModel.Opacity.Value);
 			OnLabel(labelProperty.Value);
+			View.PushOpacity(GetOpacity);
+			//View.SetOpacityStale(true);
 		}
 
 		#region Events
 		void OnScaleOpacity(float opacity)
 		{
-			View.RegionOpacity = opacity;
+			View.SetOpacityStale();
 		}
 
 		void OnLabel(UniverseScaleLabelBlock label)
 		{
 			View.SetRegion(label.Name.Value.Value);
+		}
+
+		float GetOpacity()
+		{
+			return scaleModel.Opacity.Value;
 		}
 		#endregion
 	}

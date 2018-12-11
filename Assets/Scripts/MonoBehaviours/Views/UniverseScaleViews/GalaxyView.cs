@@ -31,17 +31,11 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
+			for (var i = 0; i < layerMeshes.Length; i++)
 			{
-				base.Opacity = value;
-				for (var i = 0; i < layerMeshes.Length; i++)
-				{
-					layerMeshes[i].material.SetFloat(ShaderConstants.HoloGalaxy.Alpha, value);
-				}
+				layerMeshes[i].material.SetFloat(ShaderConstants.HoloGalaxy.Alpha, opacity);
 			}
 		}
 

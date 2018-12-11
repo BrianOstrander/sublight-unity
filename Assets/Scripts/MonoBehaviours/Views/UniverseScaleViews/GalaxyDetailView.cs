@@ -92,17 +92,11 @@ namespace LunraGames.SubLight.Views
 			mesh.material.SetFloat(ShaderConstants.HoloGalaxy.WorldRadius, worldRadius);
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
+			foreach (var slice in slices)
 			{
-				base.Opacity = value;
-				foreach (var slice in slices)
-				{
-					foreach (var subSlice in slice.Meshes) subSlice.material.SetFloat(ShaderConstants.HoloGalaxy.Alpha, value);
-				}
+				foreach (var subSlice in slice.Meshes) subSlice.material.SetFloat(ShaderConstants.HoloGalaxy.Alpha, opacity);
 			}
 		}
 

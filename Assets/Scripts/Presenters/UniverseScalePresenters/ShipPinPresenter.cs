@@ -14,28 +14,17 @@ namespace LunraGames.SubLight.Presenters
 		public ShipPinPresenter(GameModel model, UniverseScales scale) : base(model, scale)
 		{
 			OnPosition(model.Ship.Value.Position.Value);
-
-			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
 
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
-
-			ScaleModel.Opacity.Changed -= OnScaleOpacity;
 		}
 
 		#region Events
 		void OnPosition(UniversePosition position)
 		{
 			positionInUniverse = position;
-		}
-
-		void OnScaleOpacity(float value)
-		{
-			if (!View.Visible) return;
-
-			View.Opacity = value;
 		}
 		#endregion
 	}

@@ -34,18 +34,6 @@ namespace LunraGames.SubLight.Views
 		float transitionRemaining;
 		States state = States.Idle;
 
-		float regionOpacity;
-
-		public float RegionOpacity
-		{
-			get { return regionOpacity; }
-			set
-			{
-				regionOpacity = value;
-				UpdateOpacity();
-			}
-		}
-
 		public void SetRegion(string text, bool instant = false)
 		{
 			text = text ?? string.Empty;
@@ -84,20 +72,9 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				UpdateOpacity();
-			}
-		}
-
-		void UpdateOpacity()
-		{
-			labelGroup.alpha = Opacity * RegionOpacity;
+			labelGroup.alpha = opacity;
 		}
 
 		public override void Reset()
@@ -155,7 +132,6 @@ namespace LunraGames.SubLight.Views
 
 	public interface IRegionLabelView : IView
 	{
-		float RegionOpacity { set; }
 		void SetRegion(string text, bool instant = false);
 	}
 }
