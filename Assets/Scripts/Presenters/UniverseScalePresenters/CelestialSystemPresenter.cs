@@ -111,8 +111,13 @@ namespace LunraGames.SubLight.Presenters
 
 			if (activeSystem.Position.Value.Equals(Model.Ship.Value.Position.Value)) visitState = Celestial.VisitStates.Current;
 			else visitState = activeSystem.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
+			
+			rangeState = Celestial.RangeStates.OutOfRange;
 
-			rangeState = Celestial.RangeStates.InRange;
+			if (UniversePosition.Distance(activeSystem.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.TravelRange.Value.Total)
+			{
+				rangeState = Celestial.RangeStates.InRange;
+			}
 
 			switch (Model.CelestialSystemStateLastSelected.State)
 			{
@@ -128,8 +133,19 @@ namespace LunraGames.SubLight.Presenters
 
 			View.DetailsName = activeSystem.Name.Value;
 			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
-			View.Confirm = language.Confirm.Value;
-			View.ConfirmDescription = language.ConfirmDescription.Value;
+
+			switch (rangeState)
+			{
+				case Celestial.RangeStates.InRange:
+					View.Confirm = language.Confirm.Value;
+					View.ConfirmDescription = language.ConfirmDescription.Value;
+					break;
+				case Celestial.RangeStates.OutOfRange:
+					View.Confirm = language.OutOfRange.Value;
+					View.ConfirmDescription = language.OutOfRangeDescription.Value;
+					break;
+			}
+
 
 			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Value.Position.Value, activeSystem.Position.Value));
 			var lightyearText = lightyearDistance < 10f ? lightyearDistance.ToString("N1") : Mathf.RoundToInt(lightyearDistance).ToString("N0");

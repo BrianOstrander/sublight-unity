@@ -532,6 +532,7 @@ MonoBehaviour:
   terminatorEnd: {fileID: 1094448558708536}
   directionRing: {fileID: 1900302015011204}
   directionRingGraphic: {fileID: 23933581084951680}
+  rangeMargin: 0.01
 --- !u!120 &120391768602615030
 LineRenderer:
   m_ObjectHideFlags: 1

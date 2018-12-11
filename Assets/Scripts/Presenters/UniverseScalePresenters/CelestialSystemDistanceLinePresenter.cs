@@ -64,7 +64,8 @@ namespace LunraGames.SubLight.Presenters
 				endResult,
 				clamping,
 				clampedBegin,
-				clampedEnd
+				clampedEnd,
+				transform.GetUnityScale(Model.Ship.Value.TravelRange.Value.Total)
 			);
 		}
 

@@ -166,7 +166,6 @@ namespace LunraGames.SubLight.Presenters
 			};
 
 			App.Heartbeat.Update += OnUpdate;
-			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture += OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture += OnCurrentGesture;
 
@@ -180,23 +179,28 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Value.Position.Changed += OnShipPosition;
 			OnShipPosition(model.Ship.Value.Position.Value);
 
+			model.Ship.Value.TravelRange.Changed += OnTravelRange;
+			model.CelestialSystemState.Changed += OnCelestialSystemState;
+
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Heartbeat.Update -= OnUpdate;
-			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
 
 			model.Ship.Value.Position.Changed -= OnShipPosition;
+			model.Ship.Value.TravelRange.Changed -= OnTravelRange;
+			model.CelestialSystemState.Changed -= OnCelestialSystemState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
 			View.DrawGizmos = OnDrawGizmos;
+			View.SetGridSelected(model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected, true);
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
@@ -294,6 +298,8 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsTarget = isTarget;
 			grid.IsActive = isActive;
 			grid.Progress = progress;
+			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Value.Position.Value);
+			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Value.TravelRange.Value.Total);
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
@@ -393,11 +399,6 @@ namespace LunraGames.SubLight.Presenters
 				zoomTween,
 				nudgeTween
 			);
-		}
-
-		void OnHoloColorRequest(HoloColorRequest request)
-		{
-			View.HoloColor = request.Color;
 		}
 
 		void OnCurrentScrollGesture(ScrollGesture gesture)
@@ -588,6 +589,26 @@ namespace LunraGames.SubLight.Presenters
 			foreach (var transformProperty in unitMaps.Select(u => model.GetScale(u.Scale).TransformDefault))
 			{
 				transformProperty.Value = transformProperty.Value.Duplicate(ShipPositionOnPlane);
+			}
+		}
+
+		void OnTravelRange(TravelRange range)
+		{
+			if (tweenState == TweenStates.Complete) SetGrid();
+		}
+
+		void OnCelestialSystemState(CelestialSystemStateBlock block)
+		{
+			if (!View.Visible) return;
+
+			switch (block.State)
+			{
+				case CelestialSystemStateBlock.States.UnSelected:
+					View.SetGridSelected(false);
+					break;
+				case CelestialSystemStateBlock.States.Selected:
+					View.SetGridSelected(true);
+					break;
 			}
 		}
 

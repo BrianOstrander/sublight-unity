@@ -182,6 +182,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 0b8e143a8d4004c82a2fc427a0ef675f, type: 2}
+  - {fileID: 2100000, guid: 3d798679bde274b71b76ae9020a45ced, type: 2}
   - {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -475,6 +476,7 @@ MonoBehaviour:
   gridUnityRadius: 3.5
   renderQueue: 2990
   gridMaterial: {fileID: 2100000, guid: 0b603199b8a6244e9825c45ee8541559, type: 2}
+  gridHazardMaterial: {fileID: 2100000, guid: 3d798679bde274b71b76ae9020a45ced, type: 2}
   gridBackgroundMaterial: {fileID: 2100000, guid: 0b8e143a8d4004c82a2fc427a0ef675f,
     type: 2}
   gridMesh: {fileID: 23745486960222072}
@@ -601,6 +603,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   gridDragRadius: 3.39
   followCameraArea: {fileID: 4704531991954276}
+  gridSelectDuration: 0.2
 --- !u!222 &222519521389851360
 CanvasRenderer:
   m_ObjectHideFlags: 1

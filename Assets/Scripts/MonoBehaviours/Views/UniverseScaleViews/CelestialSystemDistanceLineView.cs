@@ -42,6 +42,8 @@ namespace LunraGames.SubLight.Views
 		GameObject directionRing;
 		[SerializeField]
 		MeshRenderer directionRingGraphic;
+		[SerializeField]
+		float rangeMargin;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public float GridRadiusMargin { get { return gridRadiusMargin; } }
@@ -52,7 +54,8 @@ namespace LunraGames.SubLight.Views
 			Vector3 end,
 			LineClamping clamping,
 			Vector3? clampedBegin,
-			Vector3? clampedEnd
+			Vector3? clampedEnd,
+			float range
 		)
 		{
 			switch (clamping)
@@ -66,12 +69,18 @@ namespace LunraGames.SubLight.Views
 					return;
 			}
 
-			SetBottomPoints(begin, end, clamping, clampedBegin, clampedEnd);
-			SetTopPoints(begin, end, clamping, clampedBegin, clampedEnd);
+			SetBottomPoints(begin, end, clamping, clampedBegin, clampedEnd, range);
+			SetTopPoints(begin, end, clamping, clampedBegin, clampedEnd, range);
 		}
 
-		void SetBottomPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
+		void SetBottomPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd, float range)
 		{
+			foreach (var material in bottomLine.materials)
+			{
+				material.SetFloat(ShaderConstants.TextureColorAlphaScrollingRange.Range, range - rangeMargin);
+				material.SetVector(ShaderConstants.TextureColorAlphaScrollingRange.RangeBegin, begin);
+			}
+
 			begin = begin.NewY(0f);
 			end = end.NewY(0f);
 			if (clampedBegin.HasValue) clampedBegin = clampedBegin.Value.NewY(0f);
@@ -126,8 +135,14 @@ namespace LunraGames.SubLight.Views
 			directionRing.transform.forward = delta;
 		}
 
-		void SetTopPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd)
+		void SetTopPoints(Vector3 begin, Vector3 end, LineClamping clamping, Vector3? clampedBegin, Vector3? clampedEnd, float range)
 		{
+			foreach (var material in topLine.materials)
+			{
+				material.SetFloat(ShaderConstants.TextureColorAlphaScrollingRange.Range, range - rangeMargin);
+				material.SetVector(ShaderConstants.TextureColorAlphaScrollingRange.RangeBegin, begin);
+			}
+
 			var topLineMarginBegin = topLineMargin;
 			var topLineMarginEnd = topLineMargin;
 			var beginOffset = Vector3.zero;
@@ -254,7 +269,8 @@ namespace LunraGames.SubLight.Views
 			Vector3 end,
 			LineClamping clamping,
 			Vector3? clampedBegin,
-			Vector3? clampedEnd
+			Vector3? clampedEnd,
+			float range
 		);
 	}
 }

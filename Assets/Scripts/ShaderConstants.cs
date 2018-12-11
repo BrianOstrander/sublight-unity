@@ -148,6 +148,18 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class TextureColorAlphaScrollingRange
+		{
+			public const string Name = "SubLight/Holo/TextureColorAlphaScrollingRange";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string ScrollSpeed = "_ScrollSpeed";
+			public const string Range = "_Range";
+			public const string RangeBegin = "_RangeBegin";
+			public const string RangeThreshold = "_RangeThreshold";
+		}
+
 		public static class HoloDistanceFieldColor
 		{
 			/// <summary>
@@ -171,6 +183,23 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 			public const string DistanceFieldRange = "_DistanceFieldRange";
 			public const string NearFarPlanes = "_NearFarPlanes";
+		}
+
+		public static class HoloDistanceFieldColorConstantScrollingRange
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/DistanceField/ColorConstantScrollingRange";
+			public const string DistanceField = "_DistanceField";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+			public const string NearFarPlanes = "_NearFarPlanes";
+			public const string ScrollSpeed = "_ScrollSpeed";
+			public const string Range = "_Range";
+			public const string RangeBegin = "_RangeBegin";
+			public const string RangeThreshold = "_RangeThreshold";
 		}
 
 		public static class HoloDistanceFieldColorShiftConstant
@@ -240,6 +269,57 @@ namespace LunraGames.SubLight
 			public const string MainColor = "_MainColor";
 			public const string Tint = "_Tint";
 			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloGridBackgroundRange
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridBackgroundRange";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string Alpha = "_Alpha";
+			public const string RangeOrigin = "_RangeOrigin";
+			public const string RangeRadius = "_RangeRadius";
+			public const string RangeFalloff = "_RangeFalloff";
+			public const string RangeColorPrimary = "_RangeColorPrimary";
+			public const string RangeColorSecondary = "_RangeColorSecondary";
+			public const string RangeColorTertiary = "_RangeColorTertiary";
+			public const string RangeThreshold = "_RangeThreshold";
+			public const string RangeFalloffGradient = "_RangeFalloffGradient";
+			public const string RangeShifted = "_RangeShifted";
+			public const string RangeColorPrimaryShifted = "_RangeColorPrimaryShifted";
+			public const string RangeColorSecondaryShifted = "_RangeColorSecondaryShifted";
+			public const string RangeColorTertiaryShifted = "_RangeColorTertiaryShifted";
+		}
+
+		public static class HoloGridRange
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GridRange";
+			/// <summary>
+			/// The color.
+			/// </summary>
+			public const string Alpha = "_Alpha";
+			public const string RangeOrigin = "_RangeOrigin";
+			public const string RangeRadius = "_RangeRadius";
+			public const string RangeFalloff = "_RangeFalloff";
+			public const string RangeColorPrimary = "_RangeColorPrimary";
+			public const string RangeColorSecondary = "_RangeColorSecondary";
+			public const string RangeThreshold = "_RangeThreshold";
+			public const string RangeFalloffGradient = "_RangeFalloffGradient";
+			public const string RangeShifted = "_RangeShifted";
+			public const string RangeColorPrimaryShifted = "_RangeColorPrimaryShifted";
+			public const string RangeColorSecondaryShifted = "_RangeColorSecondaryShifted";
+			public const string RadiusV = "_RadiusV";
+			public const string RadiusVFalloff = "_RadiusVFalloff";
+			public const string RadiusUTiling = "_RadiusUTiling";
+			public const string GridRangeMap = "_GridRangeMap";
+			public const string RadiusUSpeed = "_RadiusUSpeed";
 		}
 
 		public static class HoloGrid
