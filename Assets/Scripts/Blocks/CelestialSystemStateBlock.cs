@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using LunraGames.SubLight.Models;
+
 namespace LunraGames.SubLight
 {
 	public struct CelestialSystemStateBlock
@@ -10,28 +12,28 @@ namespace LunraGames.SubLight
 		{
 			get
 			{
-				return new CelestialSystemStateBlock(States.Idle, UniversePosition.Zero);
+				return new CelestialSystemStateBlock(States.Idle, UniversePosition.Zero, null);
 			}
 		}
 
-		public static CelestialSystemStateBlock Idle(UniversePosition position)
+		public static CelestialSystemStateBlock Idle(UniversePosition position, SystemModel system)
 		{
-			return new CelestialSystemStateBlock(States.Idle, position);
+			return new CelestialSystemStateBlock(States.Idle, position, system);
 		}
 
-		public static CelestialSystemStateBlock Highlight(UniversePosition position)
+		public static CelestialSystemStateBlock Highlight(UniversePosition position, SystemModel system)
 		{
-			return new CelestialSystemStateBlock(States.Highlighted, position);
+			return new CelestialSystemStateBlock(States.Highlighted, position, system);
 		}
 
-		public static CelestialSystemStateBlock Select(UniversePosition position)
+		public static CelestialSystemStateBlock Select(UniversePosition position, SystemModel system)
 		{
-			return new CelestialSystemStateBlock(States.Selected, position);
+			return new CelestialSystemStateBlock(States.Selected, position, system);
 		}
 
-		public static CelestialSystemStateBlock UnSelect(UniversePosition position)
+		public static CelestialSystemStateBlock UnSelect(UniversePosition position, SystemModel system)
 		{
-			return new CelestialSystemStateBlock(States.UnSelected, position);
+			return new CelestialSystemStateBlock(States.UnSelected, position, system);
 		}
 
 		public enum States
@@ -45,11 +47,17 @@ namespace LunraGames.SubLight
 
 		public States State;
 		public UniversePosition Position;
+		public SystemModel System;
 
-		CelestialSystemStateBlock(States state, UniversePosition position)
+		CelestialSystemStateBlock(
+			States state,
+			UniversePosition position,
+			SystemModel system
+		)
 		{
 			State = state;
 			Position = position;
+			System = system;
 		}
 	}
 }

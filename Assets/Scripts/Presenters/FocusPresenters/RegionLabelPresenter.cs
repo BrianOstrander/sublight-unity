@@ -18,7 +18,8 @@ namespace LunraGames.SubLight.Presenters
 			this.scale = scale;
 			scaleModel = model.GetScale(scale);
 
-			scaleModel.Opacity.Changed += OnScaleOpacity;
+			scaleModel.Opacity.Changed += OnOpacityStale;
+			model.GridScaleOpacity.Changed += OnOpacityStale;
 
 			switch (scale)
 			{
@@ -38,7 +39,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
-			model.GetScale(scale).Opacity.Changed -= OnScaleOpacity;
+			model.GetScale(scale).Opacity.Changed -= OnOpacityStale;
+			model.GridScaleOpacity.Changed -= OnOpacityStale;
 
 			if (labelProperty == null)
 			{
@@ -52,12 +54,12 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUpdateEnabled()
 		{
 			OnLabel(labelProperty.Value);
-			View.PushOpacity(GetOpacity);
-			//View.SetOpacityStale(true);
+			View.PushOpacity(() => scaleModel.Opacity.Value);
+			View.PushOpacity(() => model.GridScaleOpacity.Value);
 		}
 
 		#region Events
-		void OnScaleOpacity(float opacity)
+		void OnOpacityStale(float opacity)
 		{
 			View.SetOpacityStale();
 		}
@@ -65,11 +67,6 @@ namespace LunraGames.SubLight.Presenters
 		void OnLabel(UniverseScaleLabelBlock label)
 		{
 			View.SetRegion(label.Name.Value.Value);
-		}
-
-		float GetOpacity()
-		{
-			return scaleModel.Opacity.Value;
 		}
 		#endregion
 	}

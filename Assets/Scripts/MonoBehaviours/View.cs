@@ -272,13 +272,21 @@ namespace LunraGames.SubLight
 
 		protected virtual void OnConstant(float delta)
 		{
-			foreach (var anim in ViewAnimations) anim.OnConstant(this, delta);
+			foreach (var anim in ViewAnimations)
+			{
+				anim.ConstantOnce(this, delta);
+				anim.OnConstant(this, delta);
+			}
 			CheckOpacityStack();
 		}
 
 		protected virtual void OnLateConstant(float delta)
 		{
-			foreach (var anim in ViewAnimations) anim.OnLateConstant(this, delta);
+			foreach (var anim in ViewAnimations)
+			{
+				anim.LateConstantOnce(this, delta);
+				anim.OnLateConstant(this, delta);
+			}
 			CheckOpacityStack();
 		}
 

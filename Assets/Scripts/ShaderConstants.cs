@@ -158,6 +158,7 @@ namespace LunraGames.SubLight
 			public const string Range = "_Range";
 			public const string RangeBegin = "_RangeBegin";
 			public const string RangeThreshold = "_RangeThreshold";
+			public const string RangeFadeFalloff = "_RangeFadeFalloff";
 		}
 
 		public static class HoloDistanceFieldColor
@@ -200,6 +201,7 @@ namespace LunraGames.SubLight
 			public const string Range = "_Range";
 			public const string RangeBegin = "_RangeBegin";
 			public const string RangeThreshold = "_RangeThreshold";
+			public const string RangeFadeFalloff = "_RangeFadeFalloff";
 		}
 
 		public static class HoloDistanceFieldColorShiftConstant

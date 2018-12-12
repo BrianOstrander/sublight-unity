@@ -950,6 +950,7 @@ MonoBehaviour:
   opacityAreas:
   - {fileID: 225049681228201386}
   - {fileID: 225271265382435234}
+  selectionFadeDuration: 0.2
 --- !u!114 &114942477047944858
 MonoBehaviour:
   m_ObjectHideFlags: 1

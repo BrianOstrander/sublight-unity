@@ -90,7 +90,7 @@ namespace LunraGames.SubLight.Presenters
 			switch(selectedState)
 			{
 				case Celestial.SelectedStates.Selected:
-					Model.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(positionInUniverse);
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(positionInUniverse, instanceModel.ActiveSystem.Value);
 					break;
 			}
 		}
@@ -161,7 +161,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnEnter()
 		{
-			Model.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse);
+			Model.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse, instanceModel.ActiveSystem.Value);
 		}
 
 		void OnExit()
@@ -169,13 +169,13 @@ namespace LunraGames.SubLight.Presenters
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.NotSelected:
-					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Ship.Value.Position);
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Ship.Value.Position, null);
 					break;
 				case Celestial.SelectedStates.Selected:
-					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(positionInUniverse);
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(positionInUniverse, instanceModel.ActiveSystem.Value);
 					break;
 				case Celestial.SelectedStates.OtherSelected:
-					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.CelestialSystemStateLastSelected.Position);
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.CelestialSystemStateLastSelected.Position, Model.CelestialSystemStateLastSelected.System);
 					break;
 			}
 
@@ -187,7 +187,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				case Celestial.SelectedStates.OtherSelected:
 				case Celestial.SelectedStates.NotSelected:
-					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse);
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
 					break;
 			}
 		}

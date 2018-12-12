@@ -148,6 +148,13 @@ namespace LunraGames.SubLight
 					payload.LocalSectorInstances.Add(sector);
 				}
 
+				var systemPreviewLanguageBlock = new SystemPreviewLanguageBlock
+				{
+					PrimaryClassifications = celestialLanguageBlock.PrimaryClassifications
+				};
+
+				new SystemPreviewLabelPresenter(payload.Game, systemPreviewLanguageBlock);
+
 				done();
 			}
 

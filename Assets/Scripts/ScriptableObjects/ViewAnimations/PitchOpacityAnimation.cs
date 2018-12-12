@@ -11,7 +11,6 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		CurveStyleBlock hideRevealCurve = CurveStyleBlock.Default;
 
-		long lastFrame;
 		float elapsed;
 
 		float lastOpacity;
@@ -22,22 +21,21 @@ namespace LunraGames.SubLight
 			view.PushOpacity(() => lastOpacity);
 		}
 
+		public override void OnConstantOnce(IView view, float delta)
+		{
+			var original = lastOpacity;
+
+			if (App.V.CameraHasMoved) elapsed = Mathf.Min(hideRevealDuration, elapsed + delta);
+			else elapsed = Mathf.Max(0f, elapsed - delta);
+
+			lastOpacity = hideRevealCurve.Evaluate(1f - (elapsed / hideRevealDuration));
+			lastOpacity *= pitchOpacity.Evaluate(App.V.CameraTransform.PitchValue());
+
+			hasChanged = !Mathf.Approximately(original, lastOpacity);
+		}
+
 		public override void OnConstant(IView view, float delta)
 		{
-			if (lastFrame != App.V.FrameCount)
-			{
-				lastFrame = App.V.FrameCount;
-				var original = lastOpacity;
-
-				if (App.V.CameraHasMoved) elapsed = Mathf.Min(hideRevealDuration, elapsed + delta);
-				else elapsed = Mathf.Max(0f, elapsed - delta);
-
-				lastOpacity = hideRevealCurve.Evaluate(1f - (elapsed / hideRevealDuration));
-				lastOpacity *= pitchOpacity.Evaluate(App.V.CameraTransform.PitchValue());
-
-				hasChanged = !Mathf.Approximately(original, lastOpacity);
-			}
-
 			if (hasChanged) view.SetOpacityStale();
 		}
 	}

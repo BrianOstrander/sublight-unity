@@ -97,6 +97,7 @@ namespace LunraGames.SubLight.Models
 		UniverseScaleLabelBlock scaleLabelQuadrant = UniverseScaleLabelBlock.Default;
 		UniverseScaleLabelBlock scaleLabelGalactic = UniverseScaleLabelBlock.Default;
 		UniverseScaleLabelBlock scaleLabelCluster = UniverseScaleLabelBlock.Default;
+		float gridScaleOpacity;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
@@ -118,6 +119,8 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelGalactic;
 		[JsonIgnore]
 		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelCluster;
+		[JsonIgnore]
+		public readonly ListenerProperty<float> GridScaleOpacity;
 
 		UniverseScaleModel activeScale;
 		ListenerProperty<UniverseScaleModel> activeScaleListener;
@@ -149,6 +152,7 @@ namespace LunraGames.SubLight.Models
 			ScaleLabelQuadrant = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelQuadrant = value, () => scaleLabelQuadrant);
 			ScaleLabelGalactic = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelGalactic = value, () => scaleLabelGalactic);
 			ScaleLabelCluster = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelCluster = value, () => scaleLabelCluster);
+			GridScaleOpacity = new ListenerProperty<float>(value => gridScaleOpacity = value, () => gridScaleOpacity);
 
 			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
 			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
