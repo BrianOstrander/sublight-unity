@@ -53,6 +53,11 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		CanvasGroup[] opacityAreas;
 
+		[SerializeField]
+		float selectionFadeDuration;
+
+		public float SelectionFadeDuration { get { return selectionFadeDuration; } }
+
 		public string ScaleNameText { set { scaleNameLabel.text = value ?? string.Empty; } }
 		public string ScaleText { set { scaleLabel.text = value ?? string.Empty; } }
 		public string UnitCountText { set { unitCountLabel.text = value ?? string.Empty; } }
@@ -122,5 +127,7 @@ namespace LunraGames.SubLight.Views
 		string UnitTypeText { set; }
 		void Zoom(float zoom, float unitProgress, bool unitToRight);
 		void Nudge(float zoom, float progress, bool isUp);
+
+		float SelectionFadeDuration { get; }
 	}
 }

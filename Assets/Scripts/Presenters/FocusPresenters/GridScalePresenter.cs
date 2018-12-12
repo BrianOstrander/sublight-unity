@@ -12,6 +12,11 @@ namespace LunraGames.SubLight.Presenters
 
 		float lastZoomTo = -1f;
 
+		float opacityTarget;
+		float opacityBegin;
+		float opacityCurrent;
+		float? opacityRemaining;
+
 		public GridScalePresenter(
 			GameModel model,
 			LanguageStringModel scaleText
@@ -21,13 +26,17 @@ namespace LunraGames.SubLight.Presenters
 			this.scaleText = scaleText;
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
+			App.Heartbeat.Update += OnUpdate;
 			model.FocusTransform.Changed += OnZoom;
+			model.CelestialSystemState.Changed += OnCelestialSystemState;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
+			App.Heartbeat.Update -= OnUpdate;
 			model.FocusTransform.Changed -= OnZoom;
+			model.CelestialSystemState.Changed -= OnCelestialSystemState;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -35,9 +44,25 @@ namespace LunraGames.SubLight.Presenters
 			View.ScaleText = scaleText.Value.Value;
 			OnZoom(model.FocusTransform.Value);
 			OnText(model.FocusTransform.Value);
+			View.PushOpacity(() => model.GridScaleOpacity.Value);
+			OnCelestialSystemState(model.CelestialSystemStateLastSelected);
 		}
 
 		#region
+		void OnUpdate(float delta)
+		{
+			if (!opacityRemaining.HasValue) return;
+
+			opacityRemaining = Mathf.Max(0f, opacityRemaining.Value - delta);
+
+			var scalar = 1f - (opacityRemaining.Value / View.SelectionFadeDuration);
+			opacityCurrent = opacityBegin + ((opacityTarget - opacityBegin) * scalar);
+			if (Mathf.Approximately(0f, opacityRemaining.Value)) opacityRemaining = null;
+
+			model.GridScaleOpacity.Value = opacityCurrent;
+			View.SetOpacityStale();
+		}
+
 		void OnHoloColorRequest(HoloColorRequest request)
 		{
 			View.HoloColor = request.Color;
@@ -79,6 +104,30 @@ namespace LunraGames.SubLight.Presenters
 			View.ScaleNameText = block.ToScaleName.Value.Value;
 			View.UnitCountText = block.GetToUnitCount();
 			View.UnitTypeText = block.ToUnitType.Value.Value;
+		}
+
+		void OnCelestialSystemState(CelestialSystemStateBlock state)
+		{
+			var newTarget = opacityTarget;
+
+			switch (state.State)
+			{
+				case CelestialSystemStateBlock.States.Selected:
+					newTarget = 0f;
+					break;
+				case CelestialSystemStateBlock.States.Idle:
+					newTarget = model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected ? 0f : 1f;
+					break;
+				case CelestialSystemStateBlock.States.UnSelected:
+					newTarget = 1f;
+					break;
+			}
+
+			if (Mathf.Approximately(newTarget, opacityTarget)) return;
+
+			opacityBegin = opacityCurrent;
+			opacityTarget = newTarget;
+			opacityRemaining = View.SelectionFadeDuration;
 		}
 		#endregion
 	}
