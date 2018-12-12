@@ -67,18 +67,6 @@ namespace LunraGames.SubLight.Views
 		float transitionRemaining;
 		States state = States.Idle;
 
-		float previewOpacity;
-
-		float PreviewOpacity
-		{
-			get { return previewOpacity; }
-			set
-			{
-				previewOpacity = value;
-				UpdateOpacity();
-			}
-		}
-
 		public void SetPreview(PreviewSystemBlock block, bool instant = false)
 		{
 			if (instant)
@@ -115,20 +103,9 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public override float Opacity
+		protected override void OnOpacityStack(float opacity)
 		{
-			get { return base.Opacity; }
-
-			set
-			{
-				base.Opacity = value;
-				UpdateOpacity();
-			}
-		}
-
-		void UpdateOpacity()
-		{
-			blockGroup.alpha = Opacity * PreviewOpacity;
+			blockGroup.alpha = opacity;
 		}
 
 		public override void Reset()
