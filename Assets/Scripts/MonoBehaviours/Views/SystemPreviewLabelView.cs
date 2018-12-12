@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using TMPro;
 
@@ -12,7 +13,9 @@ namespace LunraGames.SubLight.Views
 		public string Title;
 		public string Description;
 		public float Size;
-		public XButtonColorBlock Color;
+		public XButtonColorBlock BodyColor;
+		public XButtonColorBlock DropShadowColor;
+		public XButtonColorBlock ShadowColor;
 	}
 
 	public struct PreviewSystemBlock
@@ -21,14 +24,6 @@ namespace LunraGames.SubLight.Views
 		public string Title;
 		public string Description;
 		public PreviewBodyBlock[] Bodies;
-
-		/// <summary>
-		/// Too lazy to override equality comparisions, deal with this.
-		/// </summary>
-		public bool Equals(PreviewSystemBlock other)
-		{
-			return Position == other.Position;
-		}
 	}
 
 	public class SystemPreviewLabelView : View, ISystemPreviewLabelView
@@ -51,13 +46,24 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		AnimationCurve transitionHideCurve;
 		[SerializeField]
+		RectTransform labelsContainer;
+		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
 		TextMeshProUGUI descriptionLabel;
 		[SerializeField]
-		CanvasGroup blockGroup;
+		CanvasGroup group;
 		[SerializeField]
 		CanvasGroup previewGroup;
+
+		[SerializeField]
+		SystemPreviewBodyLeaf bodyPrefab;
+		[SerializeField]
+		GameObject bodyArea;
+		[SerializeField]
+		Vector2 bodySizeRange;
+		[SerializeField]
+		AnimationCurve bodySizeCurve;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		PreviewSystemBlock currentBlock;
@@ -75,12 +81,10 @@ namespace LunraGames.SubLight.Views
 				nextBlock = block;
 				transitionRemaining = 0f;
 				ApplyPreview(block);
-				blockGroup.alpha = 1f;
+				previewGroup.alpha = 1f;
 				state = States.Idle;
 				return;
 			}
-
-			if (block.Equals(nextBlock)) return;
 
 			switch (state)
 			{
@@ -93,7 +97,7 @@ namespace LunraGames.SubLight.Views
 				case States.Revealing:
 					currentBlock = nextBlock;
 					nextBlock = block;
-					transitionBeginOpacity = blockGroup.alpha;
+					transitionBeginOpacity = previewGroup.alpha;
 					transitionRemaining = transitionDuration;
 					state = States.Hiding;
 					break;
@@ -105,13 +109,18 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnOpacityStack(float opacity)
 		{
-			blockGroup.alpha = opacity;
+			group.alpha = opacity;
 		}
 
 		public override void Reset()
 		{
 			base.Reset();
 
+			bodyPrefab.Body.LocalStyle.Colors.NormalColor = Color.clear;
+			bodyPrefab.DropShadow.LocalStyle.Colors.NormalColor = Color.clear;
+			bodyPrefab.Shadow.LocalStyle.Colors.NormalColor = Color.clear;
+
+			bodyPrefab.gameObject.SetActive(false);
 			SetPreview(new PreviewSystemBlock(), true);
 		}
 
@@ -119,6 +128,22 @@ namespace LunraGames.SubLight.Views
 		{
 			titleLabel.text = block.Title ?? string.Empty;
 			descriptionLabel.text = block.Description ?? string.Empty;
+
+			bodyArea.transform.ClearChildren<SystemPreviewBodyLeaf>();
+
+			if (block.Bodies != null)
+			{
+				foreach (var body in block.Bodies)
+				{
+					var curr = bodyArea.InstantiateChild(bodyPrefab, setActive: true);
+					curr.Layout.preferredWidth = bodySizeRange.x + ((bodySizeRange.y - bodySizeRange.x) * bodySizeCurve.Evaluate(body.Size));
+					curr.Body.LocalStyle.Colors = body.BodyColor;
+					curr.DropShadow.LocalStyle.Colors = body.DropShadowColor;
+					curr.Shadow.LocalStyle.Colors = body.ShadowColor;
+				}
+			}
+
+			LayoutRebuilder.ForceRebuildLayoutImmediate(labelsContainer);
 		}
 
 		#region Events
@@ -162,7 +187,7 @@ namespace LunraGames.SubLight.Views
 
 			var curve = state == States.Revealing ? transitionRevealCurve : transitionHideCurve;
 
-			blockGroup.alpha = curve.Evaluate(scalar);
+			previewGroup.alpha = curve.Evaluate(scalar);
 		}
 		#endregion
 	}
