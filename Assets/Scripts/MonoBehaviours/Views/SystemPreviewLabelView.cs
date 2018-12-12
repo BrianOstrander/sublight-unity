@@ -80,9 +80,9 @@ namespace LunraGames.SubLight.Views
 				currentBlock = block;
 				nextBlock = block;
 				transitionRemaining = 0f;
-				ApplyPreview(block);
 				previewGroup.alpha = 1f;
 				state = States.Idle;
+				ApplyPreview(block);
 				return;
 			}
 
