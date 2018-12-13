@@ -48,8 +48,8 @@ namespace LunraGames.SubLight
 
 			game.DayTime.Value = new DayTimeBlock
 			{
-				ShipTime = new DayTime(365 * 1057),
-				GalacticTime = new DayTime(365 * 1057)
+				ShipTime = new DayTime((365 * 1057) + (30 * 2) + 5),
+				GalacticTime = new DayTime((365 * 4080) + (30 * 6) + 0)
 			};
 
 			// Ship ---

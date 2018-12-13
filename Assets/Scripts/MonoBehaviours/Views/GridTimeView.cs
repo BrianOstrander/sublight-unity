@@ -78,7 +78,7 @@ namespace LunraGames.SubLight.Views
 		GridTimeBlock configuration;
 		public GridTimeBlock Configuration
 		{
-			get { return configuration; }
+			private get { return configuration; }
 			set
 			{
 				configuration = value;
@@ -102,11 +102,48 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		GridTimeStampBlock timeStamp;
 		public GridTimeStampBlock TimeStamp
 		{
+			private get { return timeStamp; }
 			set
 			{
+				timeStamp = value;
 
+				if (configuration.IsDelta)
+				{
+					Debug.LogError("not implemented yet");
+				}
+
+				if (value.AbsoluteTimes == null) return;
+
+				var shipYears = 0;
+				var shipMonths = 0;
+				var shipDays = 0;
+				value.AbsoluteTimes[ReferenceFrames.Ship].GetValues(out shipYears, out shipMonths, out shipDays);
+
+				var galacticYears = 0;
+				var galacticMonths = 0;
+				var galacticDays = 0;
+				value.AbsoluteTimes[ReferenceFrames.Galactic].GetValues(out galacticYears, out galacticMonths, out galacticDays);
+
+				switch (ReferenceFrame)
+				{
+					case ReferenceFrames.Ship:
+						absoluteArea.YearLabel.text = shipYears.ToString("N0");
+						absoluteArea.MonthLabel.text = shipMonths.ToString("00");
+						absoluteArea.DayLabel.text = shipDays.ToString("00");
+						break;
+					case ReferenceFrames.Galactic:
+						absoluteArea.YearLabel.text = galacticYears.ToString("N0");
+						absoluteArea.MonthLabel.text = galacticMonths.ToString("00");
+						absoluteArea.DayLabel.text = galacticDays.ToString("00");
+						break;
+					default:
+						Debug.LogError("Unrecognized reference frame");
+						break;
+				}
+				//absoluteArea.lab
 			}
 		}
 
@@ -141,6 +178,8 @@ namespace LunraGames.SubLight.Views
 			if (Configuration.ReferenceFrameSelection == null || ReferenceFrame == ReferenceFrames.Ship) return;
 			Configuration.ReferenceFrameSelection(ReferenceFrames.Ship);
 			ReferenceFrame = ReferenceFrames.Ship;
+			TimeStamp = TimeStamp; // Weird, ignore...
+
 		}
 
 		public void OnGalacticClick()
@@ -148,6 +187,7 @@ namespace LunraGames.SubLight.Views
 			if (Configuration.ReferenceFrameSelection == null || ReferenceFrame == ReferenceFrames.Galactic) return;
 			Configuration.ReferenceFrameSelection(ReferenceFrames.Galactic);
 			ReferenceFrame = ReferenceFrames.Galactic;
+			TimeStamp = TimeStamp; // Weird, ignore...
 		}
 		#endregion
 	}

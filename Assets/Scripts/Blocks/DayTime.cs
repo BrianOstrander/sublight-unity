@@ -14,6 +14,8 @@ namespace LunraGames.SubLight
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
 		const float DaysInYear = 365f;
+		const float MonthsInYear = 12f;
+		const float DaysInMonth = 30f;
 		const float TimeInDay = 1f;
 
 		public static DayTime Zero { get { return new DayTime(); } }
@@ -89,6 +91,15 @@ namespace LunraGames.SubLight
 		public DayTime(int day, float time) : this(time)
 		{
 			Day += day;
+		}
+
+		public void GetValues(out int years, out int months, out int days)
+		{
+			var dayRemainder = Day % DaysInYear;
+			years = Year;
+			var monthRemainder = dayRemainder % DaysInMonth;
+			months = (int)((dayRemainder - monthRemainder) / DaysInMonth);
+			days = Mathf.FloorToInt(monthRemainder);
 		}
 
 		/// <summary>
