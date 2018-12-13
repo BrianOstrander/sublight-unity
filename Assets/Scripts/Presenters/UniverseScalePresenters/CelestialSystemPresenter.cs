@@ -119,10 +119,10 @@ namespace LunraGames.SubLight.Presenters
 				rangeState = Celestial.RangeStates.InRange;
 			}
 
-			switch (Model.CelestialSystemStateLastSelected.State)
+			switch (Model.CelestialSystemStateLastSelected.Value.State)
 			{
 				case CelestialSystemStateBlock.States.Selected:
-					selectedState = Model.CelestialSystemStateLastSelected.Position.Equals(activeSystem.Position.Value) ? Celestial.SelectedStates.Selected : Celestial.SelectedStates.OtherSelected;
+					selectedState = Model.CelestialSystemStateLastSelected.Value.Position.Equals(activeSystem.Position.Value) ? Celestial.SelectedStates.Selected : Celestial.SelectedStates.OtherSelected;
 					break;
 				default:
 					selectedState = Celestial.SelectedStates.NotSelected;
@@ -175,7 +175,7 @@ namespace LunraGames.SubLight.Presenters
 					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(positionInUniverse, instanceModel.ActiveSystem.Value);
 					break;
 				case Celestial.SelectedStates.OtherSelected:
-					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.CelestialSystemStateLastSelected.Position, Model.CelestialSystemStateLastSelected.System);
+					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.CelestialSystemStateLastSelected.Value.Position, Model.CelestialSystemStateLastSelected.Value.System);
 					break;
 			}
 

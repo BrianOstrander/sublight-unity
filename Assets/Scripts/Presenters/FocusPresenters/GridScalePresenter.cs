@@ -116,7 +116,7 @@ namespace LunraGames.SubLight.Presenters
 					newTarget = 0f;
 					break;
 				case CelestialSystemStateBlock.States.Idle:
-					newTarget = model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected ? 0f : 1f;
+					newTarget = model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected ? 0f : 1f;
 					break;
 				case CelestialSystemStateBlock.States.UnSelected:
 					newTarget = 1f;

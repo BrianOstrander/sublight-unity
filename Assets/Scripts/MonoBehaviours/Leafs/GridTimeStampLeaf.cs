@@ -7,11 +7,9 @@ namespace LunraGames.SubLight.Views
 {
 	public class GridTimeStampLeaf : MonoBehaviour
 	{
-		[SerializeField]
-		TextMeshProUGUI yearLabel;
-		[SerializeField]
-		TextMeshProUGUI monthLabel;
-		[SerializeField]
-		TextMeshProUGUI dayLabel;
+		public XButtonLeaf ButtonLeaf;
+		public TextMeshProUGUI YearLabel;
+		public TextMeshProUGUI MonthLabel;
+		public TextMeshProUGUI DayLabel;
 	}
 }

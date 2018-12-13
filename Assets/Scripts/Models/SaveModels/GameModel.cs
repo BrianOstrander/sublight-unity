@@ -129,7 +129,7 @@ namespace LunraGames.SubLight.Models
 
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 		[JsonIgnore]
-		public CelestialSystemStateBlock CelestialSystemStateLastSelected { get { return celestialSystemStateLastSelected; } }
+		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
 		#endregion
 
 		public GameModel()
@@ -160,6 +160,8 @@ namespace LunraGames.SubLight.Models
 				currScale.Opacity.Changed += OnScaleOpacity;
 				if (activeScale == null || activeScale.Opacity.Value < currScale.Opacity.Value) activeScale = currScale;
 			}
+
+			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
 		}
 
 		#region Events
@@ -202,7 +204,7 @@ namespace LunraGames.SubLight.Models
 			{
 				case CelestialSystemStateBlock.States.UnSelected:
 				case CelestialSystemStateBlock.States.Selected:
-					celestialSystemStateLastSelected = block;
+					CelestialSystemStateLastSelected.Value = block;
 					break;
 			}
 		}

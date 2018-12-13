@@ -7,11 +7,8 @@ namespace LunraGames.SubLight.Views
 {
 	public class GridTimeReferenceButtonLeaf : MonoBehaviour
 	{
-		[SerializeField]
-		XButtonLeaf labelLeaf;
-		[SerializeField]
-		XButtonLeaf backgroundLeaf;
-		[SerializeField]
-		TextMeshProUGUI label;
+		public XButtonLeaf LabelLeaf;
+		public XButtonLeaf BackgroundLeaf;
+		public TextMeshProUGUI Label;
 	}
 }

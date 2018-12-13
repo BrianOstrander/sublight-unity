@@ -200,7 +200,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.Dragging = OnDragging;
 			View.DrawGizmos = OnDrawGizmos;
-			View.SetGridSelected(model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected, true);
+			View.SetGridSelected(model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected, true);
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 

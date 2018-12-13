@@ -171,9 +171,9 @@ namespace LunraGames.SubLight.Presenters
 					newSystem = state.System;
 					break;
 				case CelestialSystemStateBlock.States.Idle:
-					if (model.CelestialSystemStateLastSelected.System != null)
+					if (model.CelestialSystemStateLastSelected.Value.System != null)
 					{
-						newSystem = model.CelestialSystemStateLastSelected.System;
+						newSystem = model.CelestialSystemStateLastSelected.Value.System;
 					}
 					break;
 				case CelestialSystemStateBlock.States.UnSelected:

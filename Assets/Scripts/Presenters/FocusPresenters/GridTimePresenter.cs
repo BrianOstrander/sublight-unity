@@ -8,10 +8,12 @@ namespace LunraGames.SubLight.Presenters
 	public class GridTimePresenter : FocusPresenter<IGridTimeView, SystemFocusDetails>
 	{
 		GameModel model;
+		bool isDelta;
 
-		public GridTimePresenter(GameModel model)
+		public GridTimePresenter(GameModel model, bool isDelta)
 		{
 			this.model = model;
+			model.DayTime.Changed += OnDayTime;
 
 		}
 
@@ -26,7 +28,10 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnDayTime(DayTime dayTime)
+		{
 
+		}
 		#endregion
 	}
 }

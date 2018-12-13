@@ -68,7 +68,8 @@ namespace LunraGames.SubLight
 				new GridPresenter(payload.Game, gridInfo);
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
-				new GridTimePresenter(payload.Game);
+				//new GridTimePresenter(payload.Game, true);
+				new GridTimePresenter(payload.Game, false);
 
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
 				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
