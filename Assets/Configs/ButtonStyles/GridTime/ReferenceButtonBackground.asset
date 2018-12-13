@@ -62,9 +62,9 @@ MonoBehaviour:
       m_RotationOrder: 4
     Colors:
       DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
-      NormalColor: {r: 0.64, g: 0.64, b: 0.64, a: 0}
-      HighlightedColor: {r: 0.64, g: 0.64, b: 0.64, a: 1}
-      PressedColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+      NormalColor: {r: 0.08, g: 0.08, b: 0.08, a: 0}
+      HighlightedColor: {r: 0.08, g: 0.08, b: 0.08, a: 0}
+      PressedColor: {r: 0.08, g: 0.08, b: 0.08, a: 1}
     Toggles:
       ActiveOnDisabled: 1
       ActiveOnNormal: 1

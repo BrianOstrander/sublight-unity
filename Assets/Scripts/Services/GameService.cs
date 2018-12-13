@@ -46,6 +46,12 @@ namespace LunraGames.SubLight
 
 			game.FocusTransform.Value = FocusTransform.Default;
 
+			game.DayTime.Value = new DayTimeBlock
+			{
+				ShipTime = new DayTime(365 * 1057),
+				GalacticTime = new DayTime(365 * 1057)
+			};
+
 			// Ship ---
 			var ship = new ShipModel();
 			ship.SetMinimumTravelRange(Defaults.MinimumTravelRange);

@@ -69,7 +69,18 @@ namespace LunraGames.SubLight
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
 				//new GridTimePresenter(payload.Game, true);
-				new GridTimePresenter(payload.Game, false);
+				new GridTimePresenter(
+					payload.Game,
+					false,
+					new GridTimeLanguageBlock
+					{
+						Title = LanguageStringModel.Override("Chronometer"),
+						SubTitle = LanguageStringModel.Override("ReferenceFrame"),
+						Tooltip = LanguageStringModel.Override("Elapsed time since leaving Sol, see the encyclopedia for additional info."),
+						Ship = LanguageStringModel.Override("Ark"),
+						Galactic = LanguageStringModel.Override("Galactic")
+					}
+				);
 
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
 				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
