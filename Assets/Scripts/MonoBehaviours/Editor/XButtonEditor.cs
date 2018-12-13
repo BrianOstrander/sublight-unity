@@ -16,6 +16,7 @@ namespace LunraGames.SubLight
 		SerializedProperty interactableProperty;
 		SerializedProperty globalSoundsProperty;
 		SerializedProperty localSoundsProperty;
+		SerializedProperty fadeDurationProperty;
 		SerializedProperty leafsProperty;
 		SerializedProperty onExitProperty;
 		SerializedProperty onEnterProperty;
@@ -29,6 +30,7 @@ namespace LunraGames.SubLight
 			interactableProperty = serializedObject.FindProperty("m_Interactable");
 			globalSoundsProperty = serializedObject.FindProperty("globalSounds");
 			localSoundsProperty = serializedObject.FindProperty("localSounds");
+			fadeDurationProperty = serializedObject.FindProperty("fadeDuration");
 			leafsProperty = serializedObject.FindProperty("leafs");
 			onExitProperty = serializedObject.FindProperty("onExit");
 			onEnterProperty = serializedObject.FindProperty("onEnter");
@@ -51,6 +53,7 @@ namespace LunraGames.SubLight
 			EditorGUILayout.PropertyField(globalSoundsProperty);
 			if (!hasGlobal) EditorGUILayout.PropertyField(localSoundsProperty);
 
+			EditorGUILayout.PropertyField(fadeDurationProperty, true);
 			EditorGUILayout.PropertyField(leafsProperty, true);
 
 			if (targets.Length == 1) GUI.enabled = true;

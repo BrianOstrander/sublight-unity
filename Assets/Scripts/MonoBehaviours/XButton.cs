@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		IBeginDragHandler,
 		IEndDragHandler
 	{
-		const float FadeDuration = 0.1f;
+		const float FadeDurationDefault = 0.1f;
 
 		new public enum SelectionState
 		{
@@ -24,6 +24,8 @@ namespace LunraGames.SubLight
 		}
 
 		#region Inspector
+		[SerializeField]
+		FloatOverrideBlock fadeDuration;
 		[SerializeField]
 		XButtonLeaf[] leafs = new XButtonLeaf[0];
 		[SerializeField]
@@ -54,6 +56,8 @@ namespace LunraGames.SubLight
 		UnityEvent onDragEnd;
 		public UnityEvent OnDragEnd { get { return onDragEnd; } }
 		#endregion
+
+		float FadeDuration { get { return fadeDuration.Override ? fadeDuration.Value : FadeDurationDefault; } }
 
 		SelectionState state;
 		SelectionState State 
