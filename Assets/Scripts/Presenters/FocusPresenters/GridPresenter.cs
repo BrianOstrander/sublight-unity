@@ -179,7 +179,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Value.Position.Changed += OnShipPosition;
 			OnShipPosition(model.Ship.Value.Position.Value);
 
-			model.Ship.Value.TravelRange.Changed += OnTravelRange;
+			model.Ship.Value.Range.Changed += OnTravelRange;
 			model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
@@ -192,7 +192,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
 
 			model.Ship.Value.Position.Changed -= OnShipPosition;
-			model.Ship.Value.TravelRange.Changed -= OnTravelRange;
+			model.Ship.Value.Range.Changed -= OnTravelRange;
 			model.CelestialSystemState.Changed -= OnCelestialSystemState;
 		}
 
@@ -299,7 +299,7 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Value.Position.Value);
-			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Value.TravelRange.Value.Total);
+			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Value.Range.Value.Total);
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
@@ -592,7 +592,7 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		void OnTravelRange(TravelRange range)
+		void OnTravelRange(TransitRange range)
 		{
 			if (tweenState == TweenStates.Complete) SetGrid();
 		}

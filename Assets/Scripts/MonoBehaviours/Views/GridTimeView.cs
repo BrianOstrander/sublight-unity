@@ -10,23 +10,57 @@ namespace LunraGames.SubLight.Views
 {
 	public struct GridTimeBlock
 	{
+		public static GridTimeBlock Default
+		{
+			get
+			{
+				var referenceFrameNames = new Dictionary<ReferenceFrames, string>();
+				foreach (var referenceFrame in EnumExtensions.GetValues<ReferenceFrames>()) referenceFrameNames[referenceFrame] = null;
+				return new GridTimeBlock
+				{
+					ReferenceFrameNames = referenceFrameNames
+				};
+			}
+		}
+
 		public string Title;
 		public string SubTitle;
 		public string Tooltip;
-		public Dictionary<ReferenceFrames, string> ReferenceFrames;
+		public Dictionary<ReferenceFrames, string> ReferenceFrameNames;
 		public Action<ReferenceFrames> ReferenceFrameSelection;
 		public Action TitleClick;
-		public bool IsDelta;
+		public bool IsTransit;
 	}
 
 	public struct GridTimeStampBlock
 	{
+		public static GridTimeStampBlock Default
+		{
+			get
+			{
+				var absoluteTimes = new Dictionary<ReferenceFrames, DayTime>();
+				var deltaTimes = new Dictionary<ReferenceFrames, DayTime>();
+				foreach (var referenceFrame in EnumExtensions.GetValues<ReferenceFrames>())
+				{
+					absoluteTimes[referenceFrame] = DayTime.Zero;
+					deltaTimes[referenceFrame] = DayTime.Zero;
+				}
+
+				return new GridTimeStampBlock
+				{
+					AbsoluteTimes = absoluteTimes,
+					DeltaTimes = deltaTimes
+				};
+			}
+		}
+
 		public Dictionary<ReferenceFrames, DayTime> AbsoluteTimes;
 		public Dictionary<ReferenceFrames, DayTime> DeltaTimes;
 	}
 
 	public class GridTimeView : View, IGridTimeView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
@@ -49,16 +83,24 @@ namespace LunraGames.SubLight.Views
 		GridTimeStampLeaf absoluteArea;
 		[SerializeField]
 		GridTimeStampLeaf deltaArea;
-		[Header("Absolute Style")]
 		[SerializeField]
-		XButtonStyleBlock absoluteStyle = XButtonStyleBlock.Default;
-		[Header("Delta Styles")]
+		ParticleSystem timeStampTransitionParticles;
+
+		[Header("Chronometer Time Stamp Style")]
+		[SerializeField]
+		XButtonStyleBlock chronometerAbsoluteTimeStampStyle = XButtonStyleBlock.Default;
+		[Header("Transit Time Stamp Styles")]
 		[Header("--Absolute")]
 		[SerializeField]
-		XButtonStyleBlock deltaAbsoluteStyle = XButtonStyleBlock.Default;
+		XButtonStyleBlock transitAbsoluteTimeStampStyle = XButtonStyleBlock.Default;
 		[Header("--Delta")]
 		[SerializeField]
-		XButtonStyleBlock deltaDeltaStyle = XButtonStyleBlock.Default;
+		XButtonStyleBlock transitDeltaTimeStampStyle = XButtonStyleBlock.Default;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		bool isReferenceFrameStale;
+		bool isConfigurationStale;
+		bool isTimeStampStale;
 
 		ReferenceFrames referenceFrame;
 		public ReferenceFrames ReferenceFrame
@@ -67,84 +109,35 @@ namespace LunraGames.SubLight.Views
 			set
 			{
 				referenceFrame = value;
-				if (Configuration.ReferenceFrames != null)
-				{
-					ApplyStyles(shipButton, Configuration.ReferenceFrames[ReferenceFrames.Ship], ReferenceFrame == ReferenceFrames.Ship);
-					ApplyStyles(galacticButton, Configuration.ReferenceFrames[ReferenceFrames.Galactic], ReferenceFrame == ReferenceFrames.Galactic);
-				}
+				isReferenceFrameStale = true;
 			}
 		}
 
-		GridTimeBlock configuration;
+		GridTimeBlock configuration = GridTimeBlock.Default;
 		public GridTimeBlock Configuration
 		{
 			private get { return configuration; }
 			set
 			{
 				configuration = value;
-				titleLabel.text = value.Title ?? string.Empty;
-				subTitleLabel.text = value.SubTitle ?? string.Empty;
-				tooltipLabel.text = value.Tooltip ?? string.Empty;
-
-				ReferenceFrame = ReferenceFrame; // Uh weird... but just go with it...
-
-				if (value.IsDelta)
-				{
-					absoluteArea.ButtonLeaf.LocalStyle = deltaAbsoluteStyle;
-					deltaArea.ButtonLeaf.LocalStyle = deltaDeltaStyle;
-					deltaArea.gameObject.SetActive(true);
-				}
-				else
-				{
-					absoluteArea.ButtonLeaf.LocalStyle = absoluteStyle;
-					deltaArea.gameObject.SetActive(false);
-				}
+				isConfigurationStale = true;
 			}
 		}
 
-		GridTimeStampBlock timeStamp;
+		GridTimeStampBlock timeStamp = GridTimeStampBlock.Default;
 		public GridTimeStampBlock TimeStamp
 		{
 			private get { return timeStamp; }
 			set
 			{
 				timeStamp = value;
-
-				if (configuration.IsDelta)
-				{
-					Debug.LogError("not implemented yet");
-				}
-
-				if (value.AbsoluteTimes == null) return;
-
-				var shipYears = 0;
-				var shipMonths = 0;
-				var shipDays = 0;
-				value.AbsoluteTimes[ReferenceFrames.Ship].GetValues(out shipYears, out shipMonths, out shipDays);
-
-				var galacticYears = 0;
-				var galacticMonths = 0;
-				var galacticDays = 0;
-				value.AbsoluteTimes[ReferenceFrames.Galactic].GetValues(out galacticYears, out galacticMonths, out galacticDays);
-
-				switch (ReferenceFrame)
-				{
-					case ReferenceFrames.Ship:
-						absoluteArea.YearLabel.text = shipYears.ToString("N0");
-						absoluteArea.MonthLabel.text = shipMonths.ToString("00");
-						absoluteArea.DayLabel.text = shipDays.ToString("00");
-						break;
-					case ReferenceFrames.Galactic:
-						absoluteArea.YearLabel.text = galacticYears.ToString("N0");
-						absoluteArea.MonthLabel.text = galacticMonths.ToString("00");
-						absoluteArea.DayLabel.text = galacticDays.ToString("00");
-						break;
-					default:
-						Debug.LogError("Unrecognized reference frame");
-						break;
-				}
-				//absoluteArea.lab
+				isTimeStampStale = true;
 			}
+		}
+
+		public void TimeStampTransition()
+		{
+			timeStampTransitionParticles.Emit(1);
 		}
 
 		protected override void OnOpacityStack(float opacity)
@@ -152,14 +145,68 @@ namespace LunraGames.SubLight.Views
 		
 		}
 
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+
+			if (isConfigurationStale)
+			{
+				titleLabel.text = Configuration.Title ?? string.Empty;
+				subTitleLabel.text = Configuration.SubTitle ?? string.Empty;
+				tooltipLabel.text = Configuration.Tooltip ?? string.Empty;
+
+				if (Configuration.IsTransit)
+				{
+					absoluteArea.ButtonLeaf.LocalStyle = transitAbsoluteTimeStampStyle;
+					deltaArea.ButtonLeaf.LocalStyle = transitDeltaTimeStampStyle;
+					deltaArea.gameObject.SetActive(true);
+				}
+				else
+				{
+					absoluteArea.ButtonLeaf.LocalStyle = chronometerAbsoluteTimeStampStyle;
+					deltaArea.gameObject.SetActive(false);
+				}
+			}
+
+			if (isConfigurationStale || isReferenceFrameStale)
+			{
+				ApplyStyles(shipButton, Configuration.ReferenceFrameNames[ReferenceFrames.Ship], ReferenceFrame == ReferenceFrames.Ship);
+				ApplyStyles(galacticButton, Configuration.ReferenceFrameNames[ReferenceFrames.Galactic], ReferenceFrame == ReferenceFrames.Galactic);
+			}
+
+			if (isReferenceFrameStale || isTimeStampStale || isConfigurationStale)
+			{
+				ApplyTimeStamp(TimeStamp.AbsoluteTimes[ReferenceFrame], absoluteArea);
+				ApplyTimeStamp(TimeStamp.DeltaTimes[ReferenceFrame], deltaArea);
+			}
+
+			isConfigurationStale = false;
+			isReferenceFrameStale = false;
+			isTimeStampStale = false;
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
 
-			Configuration = new GridTimeBlock();
-			TimeStamp = new GridTimeStampBlock();
+			Configuration = GridTimeBlock.Default;
+			ReferenceFrame = ReferenceFrames.Ship;
+			TimeStamp = GridTimeStampBlock.Default;
 		}
 
+		void ApplyTimeStamp(DayTime time, GridTimeStampLeaf leaf)
+		{
+			var years = 0;
+			var months = 0;
+			var days = 0;
+			time.GetValues(out years, out months, out days);
+
+			leaf.YearLabel.text = years.ToString("N0");
+			leaf.MonthLabel.text = months.ToString("00");
+			leaf.DayLabel.text = days.ToString("00");
+		}
+		
 		void ApplyStyles(GridTimeReferenceButtonLeaf leaf, string text, bool isActive)
 		{
 			leaf.Label.text = text;
@@ -175,19 +222,17 @@ namespace LunraGames.SubLight.Views
 
 		public void OnShipClick()
 		{
-			if (Configuration.ReferenceFrameSelection == null || ReferenceFrame == ReferenceFrames.Ship) return;
-			Configuration.ReferenceFrameSelection(ReferenceFrames.Ship);
+			if (ReferenceFrame == ReferenceFrames.Ship) return;
+			if (Configuration.ReferenceFrameSelection != null) Configuration.ReferenceFrameSelection(ReferenceFrames.Ship);
 			ReferenceFrame = ReferenceFrames.Ship;
-			TimeStamp = TimeStamp; // Weird, ignore...
 
 		}
 
 		public void OnGalacticClick()
 		{
-			if (Configuration.ReferenceFrameSelection == null || ReferenceFrame == ReferenceFrames.Galactic) return;
-			Configuration.ReferenceFrameSelection(ReferenceFrames.Galactic);
+			if (ReferenceFrame == ReferenceFrames.Galactic) return;
+			if (Configuration.ReferenceFrameSelection != null) Configuration.ReferenceFrameSelection(ReferenceFrames.Galactic);
 			ReferenceFrame = ReferenceFrames.Galactic;
-			TimeStamp = TimeStamp; // Weird, ignore...
 		}
 		#endregion
 	}
@@ -197,5 +242,6 @@ namespace LunraGames.SubLight.Views
 		ReferenceFrames ReferenceFrame { set; }
 		GridTimeBlock Configuration { set; }
 		GridTimeStampBlock TimeStamp { set; }
+		void TimeStampTransition();
 	}
 }

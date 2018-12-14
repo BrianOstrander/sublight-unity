@@ -114,7 +114,7 @@ namespace LunraGames.SubLight.Presenters
 			
 			rangeState = Celestial.RangeStates.OutOfRange;
 
-			if (UniversePosition.Distance(activeSystem.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.TravelRange.Value.Total)
+			if (UniversePosition.Distance(activeSystem.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.Range.Value.Total)
 			{
 				rangeState = Celestial.RangeStates.InRange;
 			}

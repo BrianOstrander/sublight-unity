@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -10,8 +11,8 @@ namespace LunraGames.SubLight.Presenters
 	public class GridTimePresenter : FocusPresenter<IGridTimeView, SystemFocusDetails>
 	{
 		GameModel model;
-		bool isDelta;
-		GridTimeLanguageBlock language;
+		GridTimeLanguageBlock chronometerLanguage;
+		GridTimeLanguageBlock transitLanguage;
 
 		float targetOpacitySpeed = 1f / 0.3f;
 		float beginOpacity;
@@ -20,13 +21,13 @@ namespace LunraGames.SubLight.Presenters
 
 		public GridTimePresenter(
 			GameModel model,
-			bool isDelta,
-			GridTimeLanguageBlock language
+			GridTimeLanguageBlock chronometerLanguage,
+			GridTimeLanguageBlock transitLanguage
 		)
 		{
 			this.model = model;
-			this.isDelta = isDelta;
-			this.language = language;
+			this.chronometerLanguage = chronometerLanguage;
+			this.transitLanguage = transitLanguage;
 
 			model.DayTime.Changed += OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
@@ -40,43 +41,52 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			OnSelectedSystem(model.CelestialSystemStateLastSelected.Value);
+			//OnSelectedSystem(model.CelestialSystemStateLastSelected.Value);
 			View.PushOpacity(() => currentOpacity);
 
-			if (isDelta)
-			{
-				Debug.Log("logic here");
-			}
-			else
-			{
-				View.ReferenceFrame = ReferenceFrames.Ship;
-				View.Configuration = new GridTimeBlock
-				{
-					Title = language.Title.Value.Value,
-					SubTitle = language.SubTitle.Value.Value,
-					Tooltip = language.Tooltip.Value.Value,
-					ReferenceFrames = new Dictionary<ReferenceFrames, string> {
-						{ ReferenceFrames.Ship, language.Ship.Value.Value },
-						{ ReferenceFrames.Galactic, language.Galactic.Value.Value },
-					},
-					ReferenceFrameSelection = OnReferenceFrameSelection,
-					TitleClick = OnTitleClick,
-					IsDelta = false
-				};
+			View.ReferenceFrame = ReferenceFrames.Ship;
+			View.Configuration = GetConfiguration(IsTransit);
 
-				View.TimeStamp = new GridTimeStampBlock
-				{
-					AbsoluteTimes = new Dictionary<ReferenceFrames, DayTime> {
-						{ ReferenceFrames.Ship, model.DayTime.Value.ShipTime },
-						{ ReferenceFrames.Galactic, model.DayTime.Value.GalacticTime }
-					},
-					DeltaTimes = new Dictionary<ReferenceFrames, DayTime> {
-						{ ReferenceFrames.Ship, model.DayTime.Value.ShipTime },
-						{ ReferenceFrames.Galactic, model.DayTime.Value.GalacticTime }
-					}
-				};
-			}
+			View.TimeStamp = GetTimeStamp(model.CelestialSystemStateLastSelected.Value);
 		}
+
+		GridTimeBlock GetConfiguration(bool isTransit)
+		{
+			var result = GridTimeBlock.Default;
+
+			var language = isTransit ? transitLanguage : chronometerLanguage;
+
+			result.Title = language.Title.Value.Value;
+			result.SubTitle = language.SubTitle.Value.Value;
+			result.Tooltip = language.Tooltip.Value.Value;
+			foreach (var kv in language.ReferenceFrameNames) result.ReferenceFrameNames[kv.Key] = kv.Value.Value.Value; // Lol...
+			result.IsTransit = isTransit;
+
+			return result;
+		}
+
+		GridTimeStampBlock GetTimeStamp(CelestialSystemStateBlock block)
+		{
+			var result = GridTimeStampBlock.Default;
+
+			if (block.State == CelestialSystemStateBlock.States.Selected)
+			{
+				result.DeltaTimes[ReferenceFrames.Ship] = new DayTime(365 * 10);
+				result.DeltaTimes[ReferenceFrames.Galactic] = new DayTime(365 * 25);
+
+				result.AbsoluteTimes[ReferenceFrames.Ship] = model.DayTime.Value.ShipTime + result.DeltaTimes[ReferenceFrames.Ship];
+				result.AbsoluteTimes[ReferenceFrames.Galactic] = model.DayTime.Value.GalacticTime + result.DeltaTimes[ReferenceFrames.Galactic];
+
+				return result;
+			}
+
+			result.AbsoluteTimes[ReferenceFrames.Ship] = model.DayTime.Value.ShipTime;
+			result.AbsoluteTimes[ReferenceFrames.Galactic] = model.DayTime.Value.GalacticTime;
+
+			return result;
+		}
+
+		bool IsTransit { get { return model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected; } }
 
 		#region Events
 		void OnUpdate(float delta)
@@ -95,32 +105,16 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible) return;
 
-			View.TimeStamp = new GridTimeStampBlock
-			{
-				AbsoluteTimes = new Dictionary<ReferenceFrames, DayTime> {
-					{ ReferenceFrames.Ship, dayTime.ShipTime },
-					{ ReferenceFrames.Galactic, dayTime.GalacticTime }
-				},
-				DeltaTimes = new Dictionary<ReferenceFrames, DayTime> {
-					{ ReferenceFrames.Ship, dayTime.ShipTime },
-					{ ReferenceFrames.Galactic, dayTime.GalacticTime }
-				}
-			};
+			View.TimeStamp = GetTimeStamp(model.CelestialSystemStateLastSelected.Value);
 		}
 
 		void OnSelectedSystem(CelestialSystemStateBlock block)
 		{
-			beginOpacity = currentOpacity;
-			switch (block.State)
-			{
-				case CelestialSystemStateBlock.States.Selected:
-					targetOpacity = isDelta ? 1f : 0f;
-					if (isDelta) Debug.Log("todo calculate time stuff herer");
-					break;
-				case CelestialSystemStateBlock.States.UnSelected:
-					targetOpacity = isDelta ? 0f : 1f;
-					break;
-			}
+			if (!View.Visible) return;
+
+			View.Configuration = GetConfiguration(block.State == CelestialSystemStateBlock.States.Selected);
+			View.TimeStamp = GetTimeStamp(block);
+			View.TimeStampTransition();
 		}
 
 		void OnReferenceFrameSelection(ReferenceFrames referenceFrame)

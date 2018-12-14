@@ -18,7 +18,8 @@ namespace LunraGames.SubLight
 				public const string GalaxyTargetId = "a6603c5e-f151-45aa-96bb-30905e781573"; // Andromeda
 			}
 
-			public const float MinimumTravelRange = 1f; // In universe units.
+			public const float TransitRangeMinimum = 1f; // In universe units.
+			public const float TransitVelocityMinimum = 0.1f * UniversePosition.LightYearToUniverseScalar; // In universe units. Shouldn't be greater than 1 lightyear...
 		}
 
 		IModelMediator modelMediator;
@@ -54,7 +55,8 @@ namespace LunraGames.SubLight
 
 			// Ship ---
 			var ship = new ShipModel();
-			ship.SetMinimumTravelRange(Defaults.MinimumTravelRange);
+			ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
 
 			game.Ship.Value = ship;
 			// --------

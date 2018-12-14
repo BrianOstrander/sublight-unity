@@ -68,18 +68,21 @@ namespace LunraGames.SubLight
 				new GridPresenter(payload.Game, gridInfo);
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
-				//new GridTimePresenter(payload.Game, true);
+				var gridTimeChronometerLanguage = GridTimeLanguageBlock.Default;
+				gridTimeChronometerLanguage.Title = LanguageStringModel.Override("Chronometer");
+				gridTimeChronometerLanguage.SubTitle = LanguageStringModel.Override("Reference Frame");
+				gridTimeChronometerLanguage.Tooltip = LanguageStringModel.Override("Elapsed time since leaving Sol. See the encyclopedia for additional info.");
+				gridTimeChronometerLanguage.ReferenceFrameNames[ReferenceFrames.Ship] = LanguageStringModel.Override("Ark");
+				gridTimeChronometerLanguage.ReferenceFrameNames[ReferenceFrames.Galactic] = LanguageStringModel.Override("Galactic");
+
+				var gridTimeTransitLanguage = gridTimeChronometerLanguage.Duplicate;
+				gridTimeTransitLanguage.Title = LanguageStringModel.Override("Transit Time");
+				gridTimeTransitLanguage.Tooltip = LanguageStringModel.Override("Duration of the Ark's voyage to the specified system. See the encyclopedia for additional info.");
+
 				new GridTimePresenter(
 					payload.Game,
-					false,
-					new GridTimeLanguageBlock
-					{
-						Title = LanguageStringModel.Override("Chronometer"),
-						SubTitle = LanguageStringModel.Override("ReferenceFrame"),
-						Tooltip = LanguageStringModel.Override("Elapsed time since leaving Sol, see the encyclopedia for additional info."),
-						Ship = LanguageStringModel.Override("Ark"),
-						Galactic = LanguageStringModel.Override("Galactic")
-					}
+					gridTimeChronometerLanguage,
+					gridTimeTransitLanguage
 				);
 
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
