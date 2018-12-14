@@ -29,25 +29,30 @@ namespace LunraGames.SubLight.Presenters
 			this.chronometerLanguage = chronometerLanguage;
 			this.transitLanguage = transitLanguage;
 
+			App.Heartbeat.Update += OnUpdate;
+
 			model.DayTime.Changed += OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
 		}
 
 		protected override void OnUnBind()
 		{
+			App.Heartbeat.Update -= OnUpdate;
+
 			model.DayTime.Changed -= OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
-			//OnSelectedSystem(model.CelestialSystemStateLastSelected.Value);
 			View.PushOpacity(() => currentOpacity);
 
 			View.ReferenceFrame = ReferenceFrames.Ship;
 			View.Configuration = GetConfiguration(IsTransit);
 
 			View.TimeStamp = GetTimeStamp(model.CelestialSystemStateLastSelected.Value);
+
+			targetOpacity = 1f;
 		}
 
 		GridTimeBlock GetConfiguration(bool isTransit)

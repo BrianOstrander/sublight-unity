@@ -62,6 +62,8 @@ namespace LunraGames.SubLight.Views
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
+		CanvasGroup group;
+		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
 		TextMeshProUGUI subTitleLabel;
@@ -85,6 +87,8 @@ namespace LunraGames.SubLight.Views
 		GridTimeStampLeaf deltaArea;
 		[SerializeField]
 		ParticleSystem timeStampTransitionParticles;
+		[SerializeField]
+		ParticleSystem timeStampReferenceFrameParticles;
 
 		[Header("Chronometer Time Stamp Style")]
 		[SerializeField]
@@ -135,14 +139,26 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		ParticleSystem.EmitParams ParticleWithOpacity(ParticleSystem particleSystem)
+		{
+			var emit = new ParticleSystem.EmitParams();
+			emit.startColor = particleSystem.main.startColor.color.NewA(particleSystem.main.startColor.color.a * OpacityStack);
+			return emit;
+		}
+
 		public void TimeStampTransition()
 		{
-			timeStampTransitionParticles.Emit(1);
+			timeStampTransitionParticles.Emit(ParticleWithOpacity(timeStampTransitionParticles), 1);
+		}
+
+		void ReferenceFrameTransition()
+		{
+			timeStampReferenceFrameParticles.Emit(ParticleWithOpacity(timeStampReferenceFrameParticles), 1);
 		}
 
 		protected override void OnOpacityStack(float opacity)
 		{
-		
+			group.alpha = opacity;
 		}
 
 		protected override void OnIdle(float delta)
@@ -220,12 +236,22 @@ namespace LunraGames.SubLight.Views
 			if (Configuration.TitleClick != null) Configuration.TitleClick();
 		}
 
+		public void OnReferenceFrameEnter()
+		{
+			if (Configuration.IsTransit) ReferenceFrameTransition();
+		}
+
+		public void OnReferenceFrameExit()
+		{
+			//if (Configuration.IsTransit) ReferenceFrameTransition();
+		}
+
 		public void OnShipClick()
 		{
 			if (ReferenceFrame == ReferenceFrames.Ship) return;
 			if (Configuration.ReferenceFrameSelection != null) Configuration.ReferenceFrameSelection(ReferenceFrames.Ship);
 			ReferenceFrame = ReferenceFrames.Ship;
-
+			ReferenceFrameTransition();
 		}
 
 		public void OnGalacticClick()
@@ -233,6 +259,7 @@ namespace LunraGames.SubLight.Views
 			if (ReferenceFrame == ReferenceFrames.Galactic) return;
 			if (Configuration.ReferenceFrameSelection != null) Configuration.ReferenceFrameSelection(ReferenceFrames.Galactic);
 			ReferenceFrame = ReferenceFrames.Galactic;
+			ReferenceFrameTransition();
 		}
 		#endregion
 	}
