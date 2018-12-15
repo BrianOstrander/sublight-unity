@@ -13,17 +13,18 @@ namespace LunraGames.SubLight
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-		const float DaysInYear = 365f;
-		const float MonthsInYear = 12f;
-		const float DaysInMonth = 30f;
-		const float TimeInDay = 1f;
+		public const float DaysInYear = 365f;
+		public const float MonthsInYear = 12f;
+		public const float DaysInMonth = 30f;
+		public const float TimeInDay = 1f;
 
 		public static DayTime Zero { get { return new DayTime(); } }
 		public static DayTime MaxValue { get { return new DayTime(int.MaxValue); } }
 
 		public static DayTime FromYear(float years)
 		{
-			return new DayTime(years * DaysInYear);
+			var wholeYears = Mathf.FloorToInt(years);
+			return new DayTime(wholeYears * Mathf.FloorToInt(DaysInYear), (years - wholeYears) * DaysInYear);
 		}
 
 		/// <summary>
@@ -73,6 +74,8 @@ namespace LunraGames.SubLight
 		/// <value><c>true</c> if is zero; otherwise, <c>false</c>.</value>
 		[JsonIgnore]
 		public bool IsZero { get { return Day == 0 && Mathf.Approximately(0f, Time); } }
+
+		public DayTime(DayTime other) : this(other.Day, other.Time) {}
 
 		public DayTime(float time)
 		{

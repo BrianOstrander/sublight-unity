@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 					0f,
 					0f,
 					0,
-					new float[] { 0f }
+					0
 				);
 			}
 		}
@@ -25,38 +25,57 @@ namespace LunraGames.SubLight
 
 		public readonly int MultiplierCurrent;
 		public readonly int MultiplierMaximum;
-
-		public readonly float[] MultiplierVelocityDeltas;
 		#endregion
 
 		#region Calculated
+		/// <summary>
+		/// The velocity minimum and ship velocity combined.
+		/// </summary>
+		public readonly float VelocityBase;
+
+		public readonly float VelocityMinimumLightSpeed;
+		public readonly float VelocityShipLightSpeed;
+		/// <summary>
+		/// The velocity minimum and ship velocity combined.
+		/// </summary>
+		public readonly float VelocityBaseLightSpeed;
+
 		public readonly float VelocityCurrent;
 		public readonly float VelocityLightYearsCurrent;
 
-		public readonly float[] MultiplierVelocityDeltasLightYears;
+		public readonly float[] MultiplierVelocities;
+		public readonly float[] MultiplierVelocitiesLightYears;
 		#endregion
 
 		TransitVelocity(
 			float velocityMinimum,
 			float velocityShip,
 			int multiplierCurrent,
-			float[] multiplierVelocityDeltas
+			int multiplierMaximum
 		)
 		{
 			VelocityMinimum = velocityMinimum;
 			VelocityShip = velocityShip;
 			MultiplierCurrent = multiplierCurrent;
-			MultiplierMaximum = multiplierVelocityDeltas.Length;
-			MultiplierVelocityDeltas = multiplierVelocityDeltas;
+			MultiplierMaximum = multiplierMaximum;
 
-			VelocityCurrent = MultiplierVelocityDeltas[MultiplierCurrent];
+			VelocityBase = VelocityMinimum + VelocityShip;
+			VelocityMinimumLightSpeed = UniversePosition.ToLightYearDistance(VelocityMinimum);
+			VelocityShipLightSpeed = UniversePosition.ToLightYearDistance(VelocityShip);
+			VelocityBaseLightSpeed = UniversePosition.ToLightYearDistance(VelocityBase);
 
-			MultiplierVelocityDeltasLightYears = new float[MultiplierVelocityDeltas.Length];
-			for (var i = 0; i < MultiplierVelocityDeltas.Length; i++)
+			MultiplierVelocities = new float[MultiplierMaximum + 1];
+			MultiplierVelocitiesLightYears = new float[MultiplierMaximum + 1];
+
+			for (var i = 0; i < MultiplierVelocities.Length; i++)
 			{
-				MultiplierVelocityDeltasLightYears[i] = UniversePosition.ToLightYearDistance(MultiplierVelocityDeltas[i]);
+				var curr = RelativityUtility.VelocityByEnergyMultiplier(VelocityBaseLightSpeed, i + 1);
+				MultiplierVelocitiesLightYears[i] = curr;
+				MultiplierVelocities[i] = UniversePosition.ToUniverseDistance(curr);
 			}
-			VelocityLightYearsCurrent = MultiplierVelocityDeltasLightYears[multiplierCurrent];
+
+			VelocityCurrent = MultiplierVelocities[MultiplierCurrent];
+			VelocityLightYearsCurrent = MultiplierVelocitiesLightYears[multiplierCurrent];
 		}
 
 		public TransitVelocity NewVelocityMinimum(float velocityMinimum)
@@ -74,23 +93,23 @@ namespace LunraGames.SubLight
 			return Duplicate(multiplierCurrent: multiplierCurrent);
 		}
 
-		public TransitVelocity NewMultiplierVelocityDeltas(float[] multiplierVelocityDeltas)
+		public TransitVelocity NewMultiplierMaximum(int multiplierMaximum)
 		{
-			return Duplicate(multiplierVelocityDeltas: multiplierVelocityDeltas);
+			return Duplicate(multiplierMaximum: multiplierMaximum);
 		}
 
 		public TransitVelocity Duplicate(
 			float? velocityMinimum = null,
 			float? velocityShip = null,
 			int? multiplierCurrent = null,
-			float[] multiplierVelocityDeltas = null
+			int? multiplierMaximum = null
 		)
 		{
 			return new TransitVelocity(
 				velocityMinimum.HasValue ? velocityMinimum.Value : VelocityMinimum,
 				velocityShip.HasValue ? velocityShip.Value : VelocityShip,
 				multiplierCurrent.HasValue ? multiplierCurrent.Value : MultiplierCurrent,
-				multiplierVelocityDeltas != null ? multiplierVelocityDeltas : MultiplierVelocityDeltas.ToArray()
+				multiplierMaximum.HasValue ? multiplierMaximum.Value : MultiplierMaximum
 			);
 		}
 	}
