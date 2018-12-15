@@ -34,6 +34,8 @@ namespace LunraGames.SubLight.Presenters
 			Model.FocusTransform.Changed += OnFocusTransform;
 			ScaleModel.Transform.Changed += OnScaleTransform;
 			ScaleModel.Opacity.Changed += OnOpacity;
+
+			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
 		}
 
 		protected override void OnUnBind()
@@ -41,6 +43,8 @@ namespace LunraGames.SubLight.Presenters
 			Model.FocusTransform.Changed -= OnFocusTransform;
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 			ScaleModel.Opacity.Changed -= OnOpacity;
+
+			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
 		}
 
 		void ApplyScaleTransform(UniverseTransform transform)
@@ -132,7 +136,54 @@ namespace LunraGames.SubLight.Presenters
 			return Vector3.Distance(GridOrigin, worldPosition.NewY(GridOrigin.y)) <= Mathf.Max(0f, GridRadius - margin);
 		}
 
+		void TransitionActive(TransitionFocusRequest request, SetFocusTransition transition)
+		{
+			if (!transition.End.Enabled && request.LastActive)
+			{
+				lastZoomState = TweenStates.Unknown;
+				if (View.TransitionState == TransitionStates.Shown) CloseViewInstant();
+			}
+			/*
+			if (transition.End.Enabled)
+			{
+				if (View.TransitionState == TransitionStates.Closed) ShowInstant();
+				else OnUpdateEnabled();
+			}
+			else if (request.LastActive)
+			{
+				if (View.TransitionState == TransitionStates.Shown) CloseInstant();
+				else OnUpdateDisabled();
+			}
+
+			if (transition.Start.Layer != transition.End.Layer)
+			{
+				Debug.LogError("Mismatch between details, cannot begin with " + transition.Start.Layer + " and end with " + transition.End.Layer, View.gameObject);
+				return;
+			}
+			if (transition.Start.Layer != FocusLayer)
+			{
+				Debug.LogError("Mismatch between start and end details of layer " + transition.Start.Layer + ", and this presenter's layer, " + FocusLayer, View.gameObject);
+				return;
+			}
+
+			OnTransitionActive(request, transition, transition.Start.Details as D, transition.End.Details as D);
+			*/
+		}
+
 		#region Events
+		void OnTransitionFocusRequest(TransitionFocusRequest request)
+		{
+			switch (request.State)
+			{
+				case TransitionFocusRequest.States.Active:
+					break;
+				default:
+					return;
+			}
+			SetFocusTransition transition;
+			if (request.GetTransition(SetFocusLayers.System, out transition)) TransitionActive(request, transition);
+		}
+
 		void OnScaleTransform(UniverseTransform transform)
 		{
 			if (!View.Visible) return;
@@ -142,15 +193,16 @@ namespace LunraGames.SubLight.Presenters
 		void OnFocusTransform(FocusTransform focusTransform)
 		{
 			if (focusTransform.Zoom.State == lastZoomState) return;
+			var wasUnknown = lastZoomState == TweenStates.Unknown;
 			lastZoomState = focusTransform.Zoom.State;
 
-			if (focusTransform.ToScale == Scale) OnFocusTransformShowing(focusTransform);
+			if (focusTransform.ToScale == Scale) OnFocusTransformShowing(focusTransform, wasUnknown);
 			else if (focusTransform.FromScale == Scale) OnFocusTransformClosing(focusTransform);
 		}
 
-		void OnFocusTransformShowing(FocusTransform focusTransform)
+		void OnFocusTransformShowing(FocusTransform focusTransform, bool wasUnknown)
 		{
-			if (focusTransform.Zoom.State == TweenStates.Complete && !View.RestrictVisibiltyInBounds) return;
+			if (focusTransform.Zoom.State == TweenStates.Complete && !wasUnknown) return;
 			if (!CanShow) return;
 			if (View.Visible) return;
 

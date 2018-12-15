@@ -6,30 +6,32 @@ namespace LunraGames.SubLight.Models
 	{
 		#region Serialized
 		[JsonProperty] UniversePosition position;
+		[JsonIgnore] public readonly ListenerProperty<UniversePosition> Position;
 
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> Position;
+		[JsonProperty] TransitRange range = TransitRange.Default;
+		[JsonIgnore] ListenerProperty<TransitRange> rangeListener;
+		[JsonIgnore] public readonly ReadonlyProperty<TransitRange> Range;
 
-		[JsonProperty] TravelRange travelRange;
-		[JsonIgnore]
-		ListenerProperty<TravelRange> travelRangeListener;
-		[JsonIgnore]
-		public readonly ReadonlyProperty<TravelRange> TravelRange;
+		[JsonProperty] TransitVelocity velocity = TransitVelocity.Default;
+		[JsonIgnore] ListenerProperty<TransitVelocity> velocityListener;
+		[JsonIgnore] public readonly ReadonlyProperty<TransitVelocity> Velocity;
 
 		[JsonProperty] InventoryListModel inventory = new InventoryListModel();
-		[JsonIgnore]
-		public InventoryListModel Inventory { get { return inventory; } }
+		[JsonIgnore] public InventoryListModel Inventory { get { return inventory; } }
 		#endregion
 
 		public ShipModel()
 		{
-			// Assigned Values
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
-			TravelRange = new ReadonlyProperty<TravelRange>(value => travelRange = value, () => travelRange, out travelRangeListener);
+			Range = new ReadonlyProperty<TransitRange>(value => range = value, () => range, out rangeListener);
+			Velocity = new ReadonlyProperty<TransitVelocity>(value => velocity = value, () => velocity, out velocityListener);
 		}
 
 		#region Utility
-		public void SetMinimumTravelRange(float minimum) { travelRangeListener.Value = travelRangeListener.Value.NewMinimum(minimum); }
+		public void SetRangeMinimum(float minimum) { rangeListener.Value = rangeListener.Value.NewMinimum(minimum); }
+
+		public void SetVelocityMinimum(float minimum) { velocityListener.Value = velocityListener.Value.NewVelocityMinimum(minimum); }
+		public void SetVelocityCurrentMultiplier(int multiplier) { velocityListener.Value = velocityListener.Value.NewMultiplierCurrent(multiplier); }
 		#endregion
 	}
 }

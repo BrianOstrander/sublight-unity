@@ -63,7 +63,7 @@ namespace LunraGames.SubLight.Presenters
 				clamping,
 				clampedBegin,
 				clampedEnd,
-				transform.GetUnityScale(Model.Ship.Value.TravelRange.Value.Total)
+				transform.GetUnityScale(Model.Ship.Value.Range.Value.Total)
 			);
 		}
 
@@ -209,7 +209,7 @@ namespace LunraGames.SubLight.Presenters
 			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
 			UniversePosition? end = null;
-			if (Model.CelestialSystemStateLastSelected.State == CelestialSystemStateBlock.States.Selected)
+			if (Model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected)
 			{
 				switch (Model.CelestialSystemState.Value.State)
 				{
@@ -217,7 +217,7 @@ namespace LunraGames.SubLight.Presenters
 						end = Model.CelestialSystemState.Value.Position;
 						break;
 					default:
-						end = Model.CelestialSystemStateLastSelected.Position;
+						end = Model.CelestialSystemStateLastSelected.Value.Position;
 						break;
 				}
 			}
@@ -242,10 +242,10 @@ namespace LunraGames.SubLight.Presenters
 			{
 				case CelestialSystemStateBlock.States.UnSelected: break;
 				case CelestialSystemStateBlock.States.Highlighted:
-					switch (Model.CelestialSystemStateLastSelected.State)
+					switch (Model.CelestialSystemStateLastSelected.Value.State)
 					{
 						case CelestialSystemStateBlock.States.Selected:
-							end = Model.CelestialSystemStateLastSelected.Position;
+							end = Model.CelestialSystemStateLastSelected.Value.Position;
 							break;
 						default:
 							end = block.Position;
@@ -256,10 +256,10 @@ namespace LunraGames.SubLight.Presenters
 					end = block.Position;
 					break;
 				case CelestialSystemStateBlock.States.Idle:
-					switch (Model.CelestialSystemStateLastSelected.State)
+					switch (Model.CelestialSystemStateLastSelected.Value.State)
 					{
 						case CelestialSystemStateBlock.States.Selected:
-							end = Model.CelestialSystemStateLastSelected.Position;
+							end = Model.CelestialSystemStateLastSelected.Value.Position;
 							break;
 					}
 					break;

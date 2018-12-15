@@ -3,8 +3,10 @@
 namespace LunraGames.SubLight
 {
 	[Serializable]
-	public struct TravelRange
+	public struct TransitRange
 	{
+		public static TransitRange Default { get { return new TransitRange(); } }
+
 		public readonly float Minimum;
 		public readonly float Ship;
 		public readonly float Total;
@@ -13,7 +15,7 @@ namespace LunraGames.SubLight
 		public readonly float ShipLightYears;
 		public readonly float TotalLightYears;
 
-		public TravelRange(
+		TransitRange(
 			float minimum,
 			float ship
 		)
@@ -27,22 +29,22 @@ namespace LunraGames.SubLight
 			TotalLightYears = UniversePosition.ToLightYearDistance(Total);
 		}
 
-		public TravelRange NewMinimum(float minimum)
+		public TransitRange NewMinimum(float minimum)
 		{
-			return new TravelRange(minimum, Ship);
+			return new TransitRange(minimum, Ship);
 		}
 
-		public TravelRange NewShip(float ship)
+		public TransitRange NewShip(float ship)
 		{
-			return new TravelRange(Minimum, ship);
+			return new TransitRange(Minimum, ship);
 		}
 
-		public TravelRange Duplicate(
+		public TransitRange Duplicate(
 			float? minumum = null,
 			float? ship = null
 		)
 		{
-			return new TravelRange(
+			return new TransitRange(
 				minumum ?? Minimum,
 				ship ?? Ship
 			);
