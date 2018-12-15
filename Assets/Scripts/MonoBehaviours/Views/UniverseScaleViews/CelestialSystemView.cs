@@ -287,6 +287,8 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		ParticleSystem selectedParticles;
+		[SerializeField]
+		ParticleSystem selectedOutOfRangeParticles;
 
 		[SerializeField]
 		TrailRenderer dragTrail;
@@ -1014,7 +1016,9 @@ namespace LunraGames.SubLight.Views
 			if (NotInteractable) return;
 
 			onEnterDelayRemaining = null;
-			selectedParticles.Emit(1);
+
+			if (RangeState == Celestial.RangeStates.InRange) selectedParticles.Emit(1);
+			else selectedOutOfRangeParticles.Emit(1);
 
 			if (Click != null) Click();
 		}

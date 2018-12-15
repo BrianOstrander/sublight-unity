@@ -183,11 +183,16 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
-			switch (selectedState)
+			switch (rangeState)
 			{
-				case Celestial.SelectedStates.OtherSelected:
-				case Celestial.SelectedStates.NotSelected:
-					Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
+				case Celestial.RangeStates.InRange:
+					switch (selectedState)
+					{
+						case Celestial.SelectedStates.OtherSelected:
+						case Celestial.SelectedStates.NotSelected:
+							Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
+							break;
+					}
 					break;
 			}
 		}
