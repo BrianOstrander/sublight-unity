@@ -15,101 +15,144 @@ namespace LunraGames.SubLight.Views
 			Unknown = 0,
 			Maximizing = 10,
 			Maximized = 20,
-			WaitingToMinimize = 30,
-			Minimizing = 40,
-			Minimized = 50
+			Minimizing = 30,
+			Minimized = 40
 		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
-		float exitDelayDuration;
+		float sizeTransitionDuration;
+		[SerializeField]
+		MeshRenderer velocityMesh;
+		[SerializeField]
+		TextMeshProUGUI velocityLabel;
+		[SerializeField]
+		TextMeshProUGUI velocityUnitLabel;
+		[SerializeField]
+		TextMeshProUGUI multiplierLabel;
+		[SerializeField]
+		TextMeshProUGUI multiplierResourceLabel;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		SizeTransitions sizeTransition;
-		float? exitDelayRemaining;
+		public float Velocity { set { velocityLabel.text = value.ToString("0.00"); } }
 
-		public override void Reset()
+		public int Multiplier
 		{
-			base.Reset();
+			set
+			{
+				multiplierLabel.text = value.ToString("N0");
+				// TODO: Other logic....
+			}
 		}
+
+		public string VelocityUnit { set { velocityUnitLabel.text = value ?? string.Empty; } }
+
+		public string ResourceUnit { set { multiplierResourceLabel.text = value ?? string.Empty; } }
+
+		float SizeTransitionScalar { get { return 1f / sizeTransitionDuration; } }
+
+		SizeTransitions sizeTransition;
+		float sizeTransitionProgress; // 0 is minimized and 1 is maximized
 
 		protected override void OnIdle(float delta)
 		{
 			base.OnIdle(delta);
 
+			var transitionDelta = 0f;
 
-			//exitDelayRemaining = Mathf.Max(0f, exitDelayRemaining.Value - delta);
+			switch (sizeTransition)
+			{
+				case SizeTransitions.Maximized:
+				case SizeTransitions.Minimized:
+					return;
+				case SizeTransitions.Maximizing:
+					transitionDelta = delta * SizeTransitionScalar;
+					break;
+				case SizeTransitions.Minimizing:
+					transitionDelta = -(delta * SizeTransitionScalar);
+					break;
+				default:
+					Debug.LogError("Unrecognized transition: " + sizeTransition);
+					break;
+			}
 
-			//if (Mathf.Approximately(0f, exitDelayRemaining.Value)) exitDelayRemaining = null;
+			SetTransition(sizeTransitionProgress = Mathf.Clamp01(sizeTransitionProgress + transitionDelta));
 
+			if (Mathf.Approximately(sizeTransition == SizeTransitions.Maximizing ? 1f : 0f, sizeTransitionProgress))
+			{
+				switch (sizeTransition)
+				{
+					case SizeTransitions.Maximizing:
+						sizeTransition = SizeTransitions.Maximized;
+						break;
+					case SizeTransitions.Minimizing:
+						sizeTransition = SizeTransitions.Minimized;
+						break;
+				}
+			}
+		}
+
+		void SetTransition(float transition)
+		{
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.Maximized, 1f - transition);
+		}
+
+		public override void Reset()
+		{
+			base.Reset();
+
+			Velocity = 0f;
+			Multiplier = 0;
+			VelocityUnit = string.Empty;
+			ResourceUnit = string.Empty;
+
+			SetTransition(0f);
+			sizeTransition = SizeTransitions.Minimized;
+			sizeTransitionProgress = 0f;
 		}
 
 		#region Events
-		public void OnEnter()
+		public void OnEnterTransitionArea()
 		{
-			Debug.Log("Enter: Root");
-			//switch (sizeTransition)
-			//{
-			//	case SizeTransitions.Maximizing:
-			//	case SizeTransitions.Maximized:
-			//		// These could happen if you hover over a button while it's maximized or whatever.
-			//		break;
-			//	case SizeTransitions.WaitingToMinimize:
-			//		sizeTransition = SizeTransitions.Maximized;
-			//		break;
-			//	case SizeTransitions.Minimizing:
-			//	case SizeTransitions.Minimized:
-			//		sizeTransition = SizeTransitions.Maximizing;
-			//		break;
-			//	default:
-			//		Debug.LogError("Unrecognized transition: " + sizeTransition);
-			//		break;
-			//}
+			switch (sizeTransition)
+			{
+				case SizeTransitions.Maximizing:
+				case SizeTransitions.Maximized:
+					break;
+				case SizeTransitions.Minimizing:
+				case SizeTransitions.Minimized:
+					sizeTransition = SizeTransitions.Maximizing;
+					break;
+				default:
+					Debug.LogError("Unrecognized transition: " + sizeTransition);
+					break;
+			}
 		}
 
-		public void OnExit()
+		public void OnExitTransitionArea()
 		{
-			Debug.Log("Exit: Root");
-			//switch (sizeTransition)
-			//{
-			//	case SizeTransitions.Maximizing:
-			//	case SizeTransitions.Maximized:
-			//		sizeTransition = SizeTransitions.WaitingToMinimize;
-			//		break;
-			//	case SizeTransitions.WaitingToMinimize:
-			//	case SizeTransitions.Minimizing:
-			//	case SizeTransitions.Minimized:
-			//		break;
-			//	default:
-			//		Debug.LogError("Unrecognized transition: " + sizeTransition);
-			//		break;
-			//}
-		}
-
-		public void OnPinEnter()
-		{
-			Debug.Log("Enter: Child");
-		}
-
-		public void OnPinExit()
-		{
-			Debug.Log("Exit: Child");
-		}
-
-		public void OnClick()
-		{
-			Debug.Log("Click: Root");
-		}
-
-		public void OnClickButton()
-		{
-			Debug.Log("Click: Child");
+			switch (sizeTransition)
+			{
+				case SizeTransitions.Maximizing:
+				case SizeTransitions.Maximized:
+					sizeTransition = SizeTransitions.Minimizing;
+					break;
+				case SizeTransitions.Minimizing:
+				case SizeTransitions.Minimized:
+					break;
+				default:
+					Debug.LogError("Unrecognized transition: " + sizeTransition);
+					break;
+			}
 		}
 		#endregion
 	}
 
 	public interface IGridVelocityView : IView
 	{
-
+		float Velocity { set; }
+		int Multiplier { set; }
+		string VelocityUnit { set; }
+		string ResourceUnit { set; }
 	}
 }
