@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -197,30 +198,30 @@ namespace LunraGames.SubLight
 				{
 					stillHighlighted.Add(raycast.gameObject);
 
-					if (!highlighted.Contains(raycast.gameObject)) ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
+					if (!highlighted.Contains(raycast.gameObject)) OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
 				}
 
 				if (!anyInteraction) break;
 				if (clickDown)
 				{
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler) != null;
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.beginDragHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler).Any();
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.beginDragHandler).Any();
 					dragging.Add(raycast.gameObject);
 				}
 				if (clickUp)
 				{
 					if (clickClick)
 					{
-						wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
+						wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler).Any();
 					}
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler).Any();
 
 					expiredDrags.Add(raycast.gameObject);
 				}
 				if (clickHeldDown && (startedDragging || IsDragging(gestureDeltaFromBegin)))
 				{
 					startedDragging = true;
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler).Any();
 				}
 				break;
 			}
@@ -240,7 +241,7 @@ namespace LunraGames.SubLight
 			{
 				if (highlight != null && !stillHighlighted.Contains(highlight))
 				{
-					ExecuteEvents.ExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler);
+					OnExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler);
 				}
 			}
 
@@ -277,6 +278,29 @@ namespace LunraGames.SubLight
 			{
 				layerStates[LayerMask.NameToLayer(kv.Key)] = kv.Value;
 			}
+		}
+
+		GameObject[] OnExecuteHierarchy<T>(GameObject root, BaseEventData eventData, ExecuteEvents.EventFunction<T> callbackFunction, Func<GameObject, bool> condition = null)
+			where T : IEventSystemHandler
+		{
+			var results = new List<GameObject>();
+
+			while (root != null)
+			{
+				if (condition != null)
+				{
+					if (!condition(root)) break;
+				}
+
+				root = ExecuteEvents.ExecuteHierarchy(root, eventData, callbackFunction);
+				if (root != null)
+				{
+					results.Add(root);
+					root = root.transform.parent.gameObject;
+				}
+			}
+
+			return results.ToArray();
 		}
 		#endregion
 		protected virtual bool IsEscapeUp() { return false; }
