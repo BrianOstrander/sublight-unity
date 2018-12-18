@@ -110,7 +110,7 @@ Material:
     - _Height: 0.16
     - _InvertHorizontal: 0
     - _InvertU: 0
-    - _Maximized: 0
+    - _Maximized: 1
     - _Metallic: 0
     - _MinimizedAnchorBumpers: 0.075
     - _OcclusionStrength: 1
@@ -125,12 +125,12 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _CurrentColor: {r: 1, g: 0, b: 0, a: 1}
-    - _CurrentRemainderColor: {r: 0.039849162, g: 1, b: 0, a: 1}
+    - _CurrentColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CurrentRemainderColor: {r: 0.64, g: 0.64, b: 0.64, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MaxiumumColor: {r: 0.018116951, g: 0, b: 1, a: 1}
+    - _MaxiumumColor: {r: 0.31, g: 0.31, b: 0.31, a: 1}
     - _MinimumColor: {r: 1, g: 1, b: 1, a: 1}
     - _PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _WidthHeight: {r: 0.19, g: 0.15, b: 0, a: 0}
+    - _WidthHeight: {r: 0.2, g: 0.15, b: 0, a: 0}
