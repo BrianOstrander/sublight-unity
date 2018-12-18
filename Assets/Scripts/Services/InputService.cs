@@ -194,12 +194,7 @@ namespace LunraGames.SubLight
 				// Ignore non active layers.
 				if (!layerStates[raycast.gameObject.layer]) continue;
 
-				if (stillHighlighted.Count == 0)
-				{
-					stillHighlighted.Add(raycast.gameObject);
-
-					if (!highlighted.Contains(raycast.gameObject)) OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
-				}
+				stillHighlighted.AddRange(OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler, r => !highlighted.Contains(r), r => !stillHighlighted.Contains(r)));
 
 				if (!anyInteraction) break;
 				if (clickDown)
@@ -237,11 +232,13 @@ namespace LunraGames.SubLight
 
 			foreach (var drag in expiredDrags) dragging.Remove(drag);
 
+			var highlightsExited = new List<GameObject>();
+			Func<GameObject, bool> checkExecuteOrReturnHighlightExit = r => { return !stillHighlighted.Contains(r) && !highlightsExited.Contains(r); };
 			foreach (var highlight in highlighted)
 			{
-				if (highlight != null && !stillHighlighted.Contains(highlight))
+				if (highlight != null && checkExecuteOrReturnHighlightExit(highlight))
 				{
-					OnExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler);
+					highlightsExited.AddRange(OnExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler, checkExecuteOrReturnHighlightExit, checkExecuteOrReturnHighlightExit));
 				}
 			}
 
@@ -280,24 +277,34 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		GameObject[] OnExecuteHierarchy<T>(GameObject root, BaseEventData eventData, ExecuteEvents.EventFunction<T> callbackFunction, Func<GameObject, bool> condition = null)
+		GameObject[] OnExecuteHierarchy<T>(
+			GameObject root,
+			BaseEventData eventData,
+			ExecuteEvents.EventFunction<T> callbackFunction,
+			Func<GameObject, bool> executeCondition = null,
+			Func<GameObject, bool> returnCondition = null
+		)
 			where T : IEventSystemHandler
 		{
 			var results = new List<GameObject>();
 
 			while (root != null)
 			{
-				if (condition != null)
+				root = ExecuteEvents.GetEventHandler<T>(root);
+
+				if (root == null) break;
+
+				if (executeCondition == null || executeCondition(root))
 				{
-					if (!condition(root)) break;
+					ExecuteEvents.Execute(root, eventData, callbackFunction);
 				}
 
-				root = ExecuteEvents.ExecuteHierarchy(root, eventData, callbackFunction);
-				if (root != null)
+				if (returnCondition == null || returnCondition(root))
 				{
 					results.Add(root);
-					root = root.transform.parent.gameObject;
 				}
+
+				root = root.transform.parent.gameObject;
 			}
 
 			return results.ToArray();

@@ -47,7 +47,7 @@ namespace LunraGames.SubLight.Views
 		#region Events
 		public void OnEnter()
 		{
-			Debug.Log("entered");
+			Debug.Log("Enter: Root");
 			//switch (sizeTransition)
 			//{
 			//	case SizeTransitions.Maximizing:
@@ -69,7 +69,7 @@ namespace LunraGames.SubLight.Views
 
 		public void OnExit()
 		{
-			Debug.Log("exited");
+			Debug.Log("Exit: Root");
 			//switch (sizeTransition)
 			//{
 			//	case SizeTransitions.Maximizing:
@@ -86,14 +86,24 @@ namespace LunraGames.SubLight.Views
 			//}
 		}
 
+		public void OnPinEnter()
+		{
+			Debug.Log("Enter: Child");
+		}
+
+		public void OnPinExit()
+		{
+			Debug.Log("Exit: Child");
+		}
+
 		public void OnClick()
 		{
-			Debug.Log("clicked area");
+			Debug.Log("Click: Root");
 		}
 
 		public void OnClickButton()
 		{
-			Debug.Log("clicked button");
+			Debug.Log("Click: Child");
 		}
 		#endregion
 	}
