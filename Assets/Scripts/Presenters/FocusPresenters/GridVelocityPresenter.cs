@@ -46,7 +46,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnVelocityForced(TransitVelocity velocity)
 		{
-			View.Velocity = velocity.VelocityCurrent;
+			View.SetVelocities(velocity, velocity.MultiplierCurrent);
 			View.Multiplier = velocity.MultiplierCurrent;
 		}
 		#endregion

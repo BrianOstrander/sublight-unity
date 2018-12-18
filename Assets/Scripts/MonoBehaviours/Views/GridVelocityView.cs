@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using TMPro;
 
 namespace LunraGames.SubLight.Views
@@ -32,9 +36,47 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI multiplierLabel;
 		[SerializeField]
 		TextMeshProUGUI multiplierResourceLabel;
+
+		[SerializeField]
+		Transform velocityOptionsAnchor;
+		[SerializeField]
+		float velocityOptionsRadius;
+		[SerializeField]
+		float velocityOptionsBeginAngleOffset;
+		[SerializeField]
+		float velocityOptionsSpacing;
+
+		[SerializeField]
+		Transform velocityOptionsRoot;
+		[SerializeField]
+		GridVelocityOptionLeaf velocityOptionPrefab;
+
+		[Header("Test")]
+		[SerializeField]
+		int previewCount;
+		[SerializeField]
+		float previewRadius;
+
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		public float Velocity { set { velocityLabel.text = value.ToString("0.00"); } }
+		public void SetVelocities(TransitVelocity velocities, int multiplier)
+		{
+			ClearVelocities();
+
+			var velocityCount = velocities.MultiplierVelocities.Length;
+			for (var i = 0; i < velocityCount; i++)
+			{
+				var velocityIndex = (velocityCount - 1) - i;
+				var position = Vector3.zero;
+				var normal = Vector3.zero;
+				GetOrientation(velocityIndex, out position, out normal);
+
+				var instance = velocityOptionsRoot.gameObject.InstantiateChild(velocityOptionPrefab, setActive: true);
+
+				instance.transform.position = position;
+				instance.transform.forward = normal;
+			}
+		}
 
 		public int Multiplier
 		{
@@ -97,11 +139,33 @@ namespace LunraGames.SubLight.Views
 			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.Maximized, 1f - transition);
 		}
 
+		void ClearVelocities()
+		{
+			velocityLabel.text = string.Empty;
+			velocityOptionsRoot.ClearChildren<GridVelocityOptionLeaf>();
+		}
+
+		void GetOrientation(int index, out Vector3 position, out Vector3 normal)
+		{
+			var beginOffset = Mathf.Deg2Rad * (90f - velocityOptionsBeginAngleOffset);
+			var totalAngle = beginOffset - (index * velocityOptionsSpacing * Mathf.Deg2Rad);
+
+			var result = new Vector3(Mathf.Cos(totalAngle), Mathf.Sin(totalAngle), 0f);
+			result = result.NewX(result.x * -1f);
+
+			result = velocityOptionsAnchor.rotation * result;
+
+			normal = result;
+			position = velocityOptionsAnchor.position + (result * velocityOptionsRadius);
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
 
-			Velocity = 0f;
+			velocityOptionPrefab.gameObject.SetActive(false);
+
+			ClearVelocities();
 			Multiplier = 0;
 			VelocityUnit = string.Empty;
 			ResourceUnit = string.Empty;
@@ -146,11 +210,28 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 		#endregion
+
+		void OnDrawGizmos()
+		{
+#if UNITY_EDITOR
+			Handles.color = Color.green;
+			Handles.DrawWireDisc(velocityOptionsAnchor.position, velocityOptionsAnchor.forward, velocityOptionsRadius);
+
+			for (var i = 0; i < previewCount; i++)
+			{
+				var position = Vector3.zero;
+				var normal = Vector3.zero;
+				GetOrientation(i, out position, out normal);
+				Handles.DrawWireDisc(position, normal, previewRadius);
+				if (i == 0) Handles.DrawWireDisc(position, normal, previewRadius * 0.5f);
+			}
+#endif
+		}
 	}
 
 	public interface IGridVelocityView : IView
 	{
-		float Velocity { set; }
+		void SetVelocities(TransitVelocity velocities, int multiplier);
 		int Multiplier { set; }
 		string VelocityUnit { set; }
 		string ResourceUnit { set; }

@@ -19,8 +19,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224031776542247878}
-  - component: {fileID: 225879562683023556}
-  - component: {fileID: 114152508514373786}
   m_Layer: 12
   m_Name: MinimizedArea
   m_TagString: Untagged
@@ -71,9 +69,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224504207108326880}
+  - component: {fileID: 114087059157943558}
   - component: {fileID: 114566454294983846}
   m_Layer: 12
-  m_Name: PinPrefab
+  m_Name: VelocityOptionPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123,6 +122,21 @@ GameObject:
   - component: {fileID: 23049579581191304}
   m_Layer: 12
   m_Name: VelocityMesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1424413198047908
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4664551723835640}
+  m_Layer: 12
+  m_Name: VelocityOptionsAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,7 +200,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224301572933321526}
   m_Layer: 12
-  m_Name: PinArea
+  m_Name: VelocityOptionsRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -342,7 +356,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4943830333167382}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4282846905803910
 Transform:
@@ -358,6 +372,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4664551723835640
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424413198047908}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -0.024, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4943830333167382}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!4 &4943830333167382
 Transform:
   m_ObjectHideFlags: 1
@@ -368,6 +395,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.866, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4664551723835640}
   - {fileID: 4026581102820980}
   - {fileID: 224628668360289252}
   m_Father: {fileID: 4282846905803910}
@@ -428,6 +456,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!114 &114087059157943558
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1240468822439278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de043add04263451fa06fce80c736f85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Button: {fileID: 114566454294983846}
 --- !u!114 &114146939471967912
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -450,107 +490,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 0
---- !u!114 &114152508514373786
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1014527124963968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
-    DistanceScaleIntensity:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    ClickScaleDelta:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    Colors:
-      DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
-      NormalColor: {r: 1, g: 1, b: 1, a: 1}
-      HighlightedColor: {r: 1, g: 1, b: 1, a: 0}
-      PressedColor: {r: 1, g: 1, b: 1, a: 0}
-    Toggles:
-      ActiveOnDisabled: 1
-      ActiveOnNormal: 1
-      ActiveOnHighlighted: 1
-      ActiveOnPressed: 1
-    ClickDistanceDelta:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  targetToggles: []
-  targetTransforms: []
-  targetGraphics: []
-  targetMeshRenderers: []
-  targetGroups:
-  - {fileID: 225879562683023556}
 --- !u!114 &114164053116436256
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -607,7 +546,6 @@ MonoBehaviour:
     Override: 0
     Value: 0
   leafs:
-  - {fileID: 114152508514373786}
   - {fileID: 114792310510295954}
   globalSounds: {fileID: 0}
   localSounds:
@@ -1342,6 +1280,14 @@ MonoBehaviour:
   velocityUnitLabel: {fileID: 114544725861826346}
   multiplierLabel: {fileID: 114838930811002104}
   multiplierResourceLabel: {fileID: 114725657739336916}
+  velocityOptionsAnchor: {fileID: 4664551723835640}
+  velocityOptionsRadius: 3.49
+  velocityOptionsBeginAngleOffset: 12.8
+  velocityOptionsSpacing: 2.3
+  velocityOptionsRoot: {fileID: 224301572933321526}
+  velocityOptionPrefab: {fileID: 114087059157943558}
+  previewCount: 15
+  previewRadius: 0.05
 --- !u!114 &114725657739336916
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1953,8 +1899,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -110.96, y: -34.1}
-  m_SizeDelta: {x: 64, y: 64}
+  m_AnchoredPosition: {x: -105.6, y: -28.6}
+  m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224563431536278826
 RectTransform:
@@ -2004,7 +1950,7 @@ RectTransform:
   m_Children:
   - {fileID: 224713542422917792}
   m_Father: {fileID: 4943830333167382}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2069,7 +2015,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00017613173, y: 0.00006055832}
+  m_AnchoredPosition: {x: 0.00017613173, y: -37.51}
   m_SizeDelta: {x: 145.17, y: 102.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &225185341966855332
@@ -2078,17 +2024,6 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1328465537677564}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
---- !u!225 &225879562683023556
-CanvasGroup:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1014527124963968}
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 0

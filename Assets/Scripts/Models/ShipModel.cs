@@ -32,6 +32,7 @@ namespace LunraGames.SubLight.Models
 
 		public void SetVelocityMinimum(float minimum) { velocityListener.Value = velocityListener.Value.NewVelocityMinimum(minimum); }
 		public void SetVelocityCurrentMultiplier(int multiplier) { velocityListener.Value = velocityListener.Value.NewMultiplierCurrent(multiplier); }
+		public void SetVelocityMaximumMultiplier(int maximum) { velocityListener.Value = velocityListener.Value.NewMultiplierMaximum(maximum); }
 		#endregion
 	}
 }

@@ -58,6 +58,7 @@ namespace LunraGames.SubLight
 			var ship = new ShipModel();
 			ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
 			ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			ship.SetVelocityMaximumMultiplier(8);
 
 			game.Ship.Value = ship;
 			// --------

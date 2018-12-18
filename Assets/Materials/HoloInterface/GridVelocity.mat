@@ -110,7 +110,7 @@ Material:
     - _Height: 0.16
     - _InvertHorizontal: 0
     - _InvertU: 0
-    - _Maximized: 1
+    - _Maximized: 0
     - _Metallic: 0
     - _MinimizedAnchorBumpers: 0.075
     - _OcclusionStrength: 1
