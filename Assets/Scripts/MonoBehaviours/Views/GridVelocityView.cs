@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -38,6 +39,10 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI multiplierResourceLabel;
 
 		[SerializeField]
+		CanvasGroup velocityOptionsGroup;
+		[SerializeField]
+		AnimationCurve velocityOptionsTransitionOpacity;
+		[SerializeField]
 		Transform velocityOptionsAnchor;
 		[SerializeField]
 		float velocityOptionsRadius;
@@ -64,43 +69,47 @@ namespace LunraGames.SubLight.Views
 		float previewRadius;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
+		TransitVelocity lastVelocity;
 		GridVelocityOptionLeaf[] options;
+		long frameOptionEntered;
+		long frameOptionExited;
 
-		public void SetVelocities(TransitVelocity velocities, int multiplier)
+		public void SetVelocities(TransitVelocity velocity)
 		{
+			lastVelocity = velocity;
+
 			ClearVelocities();
-			var velocityCount = velocities.MultiplierVelocities.Length;
+			var velocityCount = velocity.MultiplierVelocities.Length;
 			options = new GridVelocityOptionLeaf[velocityCount];
 
 			for (var i = 0; i < velocityCount; i++)
 			{
-				var velocityIndex = (velocityCount - 1) - i;
+				var currentIndex = i;
+				var orientationIndex = (velocityCount - 1) - currentIndex;
 				var position = Vector3.zero;
 				var normal = Vector3.zero;
-				GetOrientation(velocityIndex, out position, out normal);
+				GetOrientation(orientationIndex, out position, out normal);
 
 				var instance = velocityOptionsRoot.gameObject.InstantiateChild(velocityOptionPrefab, setActive: true);
 
 				instance.transform.position = position;
-				instance.transform.forward = normal;
+				instance.transform.forward = -normal;
 
-				SetOptionIndex(instance, velocityIndex, multiplier);
+				instance.Button.OnEnter.AddListener(() => OnEnterOption(currentIndex));
+				instance.Button.OnExit.AddListener(OnExitOption);
+				instance.Button.OnClick.AddListener(() => OnClickOption(currentIndex));
 
-				options[velocityIndex] = instance;
+				options[currentIndex] = instance;
 			}
+
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMinimum, velocity.VelocityBaseLightSpeed);
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMaximum, velocity.MultiplierVelocitiesLightYears.LastOrDefault());
+
+			SetOptionIndices(velocity.MultiplierCurrent);
 		}
 
-		public int Multiplier
-		{
-			set
-			{
-				multiplierLabel.text = value.ToString("N0");
-				// TODO: Other logic....
-			}
-		}
-
+		public Action<int> MultiplierSelection { set; private get; }
 		public string VelocityUnit { set { velocityUnitLabel.text = value ?? string.Empty; } }
-
 		public string ResourceUnit { set { multiplierResourceLabel.text = value ?? string.Empty; } }
 
 		float SizeTransitionScalar { get { return 1f / sizeTransitionDuration; } }
@@ -149,13 +158,18 @@ namespace LunraGames.SubLight.Views
 		void SetTransition(float transition)
 		{
 			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.Maximized, 1f - transition);
+			velocityOptionsGroup.alpha = velocityOptionsTransitionOpacity.Evaluate(transition);
 		}
 
 		void ClearVelocities()
 		{
 			velocityLabel.text = string.Empty;
+			multiplierLabel.text = string.Empty;
 			velocityOptionsRoot.ClearChildren<GridVelocityOptionLeaf>();
 			options = null;
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMinimum, 0f);
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorCurrent, 0f);
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMaximum, 0f);
 		}
 
 		void GetOrientation(int index, out Vector3 position, out Vector3 normal)
@@ -174,19 +188,24 @@ namespace LunraGames.SubLight.Views
 
 		void SetOptionIndices(int index)
 		{
+			multiplierLabel.text = (index + 1).ToString("N0");
+			velocityLabel.text = lastVelocity.MultiplierVelocitiesLightYears[index].ToString("0.00");
 			for (var i = 0; i < options.Length; i++)
 			{
 				SetOptionIndex(options[i], i, index);
 			}
+
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorCurrent, lastVelocity.VelocityNormals[index]);
 		}
 
 		void SetOptionIndex(GridVelocityOptionLeaf leaf, int currentIndex, int targetIndex)
 		{
 			var toggleEnabled = currentIndex <= targetIndex;
-			Debug.Log("Toggle " + currentIndex + " is " + (toggleEnabled ? "enabled" : "disabled"));
+			//Debug.Log("Toggle " + currentIndex + " is " + (toggleEnabled ? "enabled" : "disabled"));
 			leaf.Toggle.LocalStyle = toggleEnabled ? optionToggleEnabledStyle : optionToggleDisabledStyle;
 			leaf.Toggle.gameObject.SetActive(false);
 			leaf.Toggle.gameObject.SetActive(true);
+			leaf.Button.ForceApplyState();
 		}
 
 		public override void Reset()
@@ -196,7 +215,8 @@ namespace LunraGames.SubLight.Views
 			velocityOptionPrefab.gameObject.SetActive(false);
 
 			ClearVelocities();
-			Multiplier = 0;
+
+			MultiplierSelection = ActionExtensions.GetEmpty<int>();
 			VelocityUnit = string.Empty;
 			ResourceUnit = string.Empty;
 
@@ -239,7 +259,30 @@ namespace LunraGames.SubLight.Views
 					break;
 			}
 		}
+
+
+		void OnEnterOption(int index)
+		{
+			frameOptionEntered = App.V.FrameCount;
+
+			SetOptionIndices(index);
+		}
+
+		void OnExitOption()
+		{
+			frameOptionExited = App.V.FrameCount;
+
+			if (frameOptionExited == frameOptionEntered) return;
+
+			SetOptionIndices(lastVelocity.MultiplierCurrent);
+		}
+
+		void OnClickOption(int index)
+		{
+			if (MultiplierSelection != null) MultiplierSelection(index);
+		}
 		#endregion
+
 
 		void OnDrawGizmos()
 		{
@@ -261,9 +304,9 @@ namespace LunraGames.SubLight.Views
 
 	public interface IGridVelocityView : IView
 	{
-		void SetVelocities(TransitVelocity velocities, int multiplier);
-		int Multiplier { set; }
+		Action<int> MultiplierSelection { set; }
 		string VelocityUnit { set; }
 		string ResourceUnit { set; }
+		void SetVelocities(TransitVelocity velocities);
 	}
 }

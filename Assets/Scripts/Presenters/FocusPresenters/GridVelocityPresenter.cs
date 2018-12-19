@@ -32,6 +32,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUpdateEnabled()
 		{
 			OnVelocityForced(model.Ship.Value.Velocity.Value);
+			View.MultiplierSelection = OnMultiplierSelection;
 			View.VelocityUnit = language.Velocity.Value.Value;
 			View.ResourceUnit = language.Resource.Value.Value;
 		}
@@ -46,8 +47,13 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnVelocityForced(TransitVelocity velocity)
 		{
-			View.SetVelocities(velocity, velocity.MultiplierCurrent);
-			View.Multiplier = velocity.MultiplierCurrent;
+			View.SetVelocities(velocity);
+			//View.Multiplier = velocity.MultiplierCurrent;
+		}
+
+		void OnMultiplierSelection(int index)
+		{
+			model.Ship.Value.SetVelocityCurrentMultiplier(index);
 		}
 		#endregion
 	}

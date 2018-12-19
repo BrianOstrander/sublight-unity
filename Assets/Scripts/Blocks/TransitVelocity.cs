@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using UnityEngine;
+
 namespace LunraGames.SubLight
 {
 	[Serializable]
@@ -54,6 +56,11 @@ namespace LunraGames.SubLight
 		public readonly float[] MultiplierVelocitiesNewtonianLightYears;
 
 		public readonly float[] VelocityRelativityRatios;
+		/// <summary>
+		/// The velocities, from 0 to 1, between the minimum and maximum
+		/// multiplier speeds.
+		/// </summary>
+		public readonly float[] VelocityNormals;
 		#endregion
 
 		TransitVelocity(
@@ -91,6 +98,22 @@ namespace LunraGames.SubLight
 				MultiplierVelocitiesNewtonianLightYears[i] = UniversePosition.ToUniverseDistance(currNewtonian);
 
 				VelocityRelativityRatios[i] = currRelative / currNewtonian;
+			}
+
+			VelocityNormals = new float[MultiplierVelocities.Length];
+			var maximumVelocity = MultiplierVelocities.LastOrDefault();
+
+			if (Mathf.Approximately(maximumVelocity, 0f))
+			{
+				for (var i = 0; i < MultiplierVelocities.Length; i++) VelocityNormals[i] = 0f;
+			}
+			else
+			{
+				var range = maximumVelocity - VelocityBase;
+				for (var i = 0; i < MultiplierVelocities.Length; i++)
+				{
+					VelocityNormals[i] = (MultiplierVelocities[i] - VelocityBase) / range;
+				}
 			}
 
 			VelocityCurrent = MultiplierVelocities[MultiplierCurrent];
