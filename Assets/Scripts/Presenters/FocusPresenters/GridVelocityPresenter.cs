@@ -52,7 +52,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnMultiplierSelection(int index)
 		{
-			model.Ship.Value.SetVelocityCurrentMultiplier(index);
+			model.Ship.Value.SetVelocityMultiplierCurrent(index);
 		}
 		#endregion
 	}

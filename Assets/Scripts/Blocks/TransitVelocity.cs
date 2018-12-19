@@ -16,6 +16,7 @@ namespace LunraGames.SubLight
 					0f,
 					0f,
 					0,
+					0,
 					0
 				);
 			}
@@ -25,8 +26,20 @@ namespace LunraGames.SubLight
 		public readonly float VelocityMinimum;
 		public readonly float VelocityShip;
 
+		/// <summary>
+		/// The current multiplier, 0 is base speed, multiplier maximum is max
+		/// speed.
+		/// </summary>
 		public readonly int MultiplierCurrent;
+		/// <summary>
+		/// The maximum multiplier possible with the amount of propellent
+		/// available.
+		/// </summary>
 		public readonly int MultiplierMaximum;
+		/// <summary>
+		/// The maximum multiplier with the current fuel supply.
+		/// </summary>
+		public readonly int MultiplierEnabledMaximum;
 		#endregion
 
 		#region Calculated
@@ -67,13 +80,15 @@ namespace LunraGames.SubLight
 			float velocityMinimum,
 			float velocityShip,
 			int multiplierCurrent,
-			int multiplierMaximum
+			int multiplierMaximum,
+			int multiplierEnabledMaximum
 		)
 		{
 			VelocityMinimum = velocityMinimum;
 			VelocityShip = velocityShip;
 			MultiplierCurrent = multiplierCurrent;
 			MultiplierMaximum = multiplierMaximum;
+			MultiplierEnabledMaximum = multiplierEnabledMaximum;
 
 			VelocityBase = VelocityMinimum + VelocityShip;
 			VelocityMinimumLightSpeed = UniversePosition.ToLightYearDistance(VelocityMinimum);
@@ -144,26 +159,34 @@ namespace LunraGames.SubLight
 			return Duplicate(multiplierMaximum: multiplierMaximum);
 		}
 
+		public TransitVelocity NewMultiplierEnabledMaximum(int multiplierEnabledMaximum)
+		{
+			return Duplicate(multiplierEnabledMaximum: multiplierEnabledMaximum);
+		}
+
 		public TransitVelocity Duplicate(
 			float? velocityMinimum = null,
 			float? velocityShip = null,
 			int? multiplierCurrent = null,
-			int? multiplierMaximum = null
+			int? multiplierMaximum = null,
+			int? multiplierEnabledMaximum = null
 		)
 		{
 			return new TransitVelocity(
-				velocityMinimum.HasValue ? velocityMinimum.Value : VelocityMinimum,
-				velocityShip.HasValue ? velocityShip.Value : VelocityShip,
-				multiplierCurrent.HasValue ? multiplierCurrent.Value : MultiplierCurrent,
-				multiplierMaximum.HasValue ? multiplierMaximum.Value : MultiplierMaximum
+				velocityMinimum ?? VelocityMinimum,
+				velocityShip ?? VelocityShip,
+				multiplierCurrent ?? MultiplierCurrent,
+				multiplierMaximum ?? MultiplierMaximum,
+				multiplierEnabledMaximum ?? MultiplierEnabledMaximum
 			);
 		}
 
-		public bool Approximately(TransitVelocity other, bool includingMultiplier = false)
+		public bool Approximately(TransitVelocity other, bool includingState = false)
 		{
-			if (includingMultiplier)
+			if (includingState)
 			{
 				if (MultiplierCurrent != other.MultiplierCurrent) return false;
+				if (MultiplierEnabledMaximum != other.MultiplierEnabledMaximum) return false;
 			}
 
 			if (MultiplierMaximum != other.MultiplierMaximum) return false;
