@@ -96,7 +96,7 @@ Material:
     - _AnchorCurrent: 0.27
     - _AnchorMaximum: 0.75
     - _AnchorMinimum: 0.25
-    - _AnchorWidth: 0.025
+    - _AnchorWidth: 0.02
     - _BeginU: 0.24
     - _Blend: 0
     - _BumpScale: 1

@@ -30,6 +30,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		MeshRenderer velocityMesh;
 		[SerializeField]
+		CanvasGroup group;
+		[SerializeField]
 		TextMeshProUGUI velocityLabel;
 		[SerializeField]
 		TextMeshProUGUI velocityUnitLabel;
@@ -69,19 +71,22 @@ namespace LunraGames.SubLight.Views
 		float previewRadius;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		TransitVelocity lastVelocity;
+		TransitVelocity? lastVelocity;
 		GridVelocityOptionLeaf[] options;
 		long frameOptionEntered;
 		long frameOptionExited;
 
 		public void SetVelocities(TransitVelocity velocity)
 		{
-			if (lastVelocity.Approximately(velocity))
+			if (lastVelocity.HasValue)
 			{
-				if (lastVelocity.MultiplierCurrent != velocity.MultiplierCurrent) SetOptionIndices(velocity.MultiplierCurrent);
+				if (lastVelocity.Value.Approximately(velocity))
+				{
+					if (lastVelocity.Value.MultiplierCurrent != velocity.MultiplierCurrent) SetOptionIndices(velocity.MultiplierCurrent);
 
-				lastVelocity = velocity;
-				return;
+					lastVelocity = velocity;
+					return;
+				}
 			}
 
 			lastVelocity = velocity;
@@ -198,13 +203,13 @@ namespace LunraGames.SubLight.Views
 		void SetOptionIndices(int index)
 		{
 			multiplierLabel.text = (index + 1).ToString("N0");
-			velocityLabel.text = lastVelocity.MultiplierVelocitiesLightYears[index].ToString("0.00");
+			velocityLabel.text = lastVelocity.Value.MultiplierVelocitiesLightYears[index].ToString("0.00");
 			for (var i = 0; i < options.Length; i++)
 			{
 				SetOptionIndex(options[i], i, index);
 			}
 
-			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorCurrent, lastVelocity.VelocityNormals[index]);
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorCurrent, lastVelocity.Value.VelocityNormals[index]);
 		}
 
 		void SetOptionIndex(GridVelocityOptionLeaf leaf, int currentIndex, int targetIndex)
@@ -217,6 +222,13 @@ namespace LunraGames.SubLight.Views
 			leaf.Button.ForceApplyState();
 		}
 
+		protected override void OnOpacityStack(float opacity)
+		{
+			group.alpha = opacity;
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.Alpha, opacity);
+			group.interactable = Mathf.Approximately(opacity, 1f);
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -224,6 +236,8 @@ namespace LunraGames.SubLight.Views
 			velocityOptionPrefab.gameObject.SetActive(false);
 
 			ClearVelocities();
+
+			lastVelocity = null;
 
 			MultiplierSelection = ActionExtensions.GetEmpty<int>();
 			VelocityUnit = string.Empty;
@@ -274,7 +288,7 @@ namespace LunraGames.SubLight.Views
 
 		void OnEnterOption(GridVelocityOptionLeaf leaf, int index)
 		{
-			if (!multiplierBeforePreview.HasValue) multiplierBeforePreview = lastVelocity.MultiplierCurrent;
+			if (!multiplierBeforePreview.HasValue) multiplierBeforePreview = lastVelocity.Value.MultiplierCurrent;
 
 			frameOptionEntered = App.V.FrameCount;
 
@@ -291,7 +305,7 @@ namespace LunraGames.SubLight.Views
 
 			if (frameOptionExited == frameOptionEntered) return;
 
-			var result = multiplierBeforePreview ?? lastVelocity.MultiplierCurrent;
+			var result = multiplierBeforePreview ?? lastVelocity.Value.MultiplierCurrent;
 
 			multiplierBeforePreview = null;
 
