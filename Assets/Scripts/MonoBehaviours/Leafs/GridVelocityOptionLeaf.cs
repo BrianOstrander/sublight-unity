@@ -9,5 +9,6 @@ namespace LunraGames.SubLight.Views
 	{
 		public XButton Button;
 		public XButtonLeaf Toggle;
+		public ParticleSystem EnterParticles;
 	}
 }

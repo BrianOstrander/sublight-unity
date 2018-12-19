@@ -158,5 +158,22 @@ namespace LunraGames.SubLight
 				multiplierMaximum.HasValue ? multiplierMaximum.Value : MultiplierMaximum
 			);
 		}
+
+		public bool Approximately(TransitVelocity other, bool includingMultiplier = false)
+		{
+			if (includingMultiplier)
+			{
+				if (MultiplierCurrent != other.MultiplierCurrent) return false;
+			}
+
+			if (MultiplierMaximum != other.MultiplierMaximum) return false;
+
+			for (var i = 0; i < MultiplierVelocities.Length; i++)
+			{
+				if (!Mathf.Approximately(MultiplierVelocities[i], other.MultiplierVelocities[i])) return false;
+			}
+
+			return true;
+		}
 	}
 }

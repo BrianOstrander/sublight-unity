@@ -194,7 +194,7 @@ namespace LunraGames.SubLight
 				// Ignore non active layers.
 				if (!layerStates[raycast.gameObject.layer]) continue;
 
-				stillHighlighted.AddRange(OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler, r => !highlighted.Contains(r), r => !stillHighlighted.Contains(r)));
+				stillHighlighted.AddRange(OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler, r => !highlighted.Contains(r) && !stillHighlighted.Contains(r), r => !stillHighlighted.Contains(r)));
 
 				if (!anyInteraction) break;
 				if (clickDown)

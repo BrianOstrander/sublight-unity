@@ -76,6 +76,14 @@ namespace LunraGames.SubLight.Views
 
 		public void SetVelocities(TransitVelocity velocity)
 		{
+			if (lastVelocity.Approximately(velocity))
+			{
+				if (lastVelocity.MultiplierCurrent != velocity.MultiplierCurrent) SetOptionIndices(velocity.MultiplierCurrent);
+
+				lastVelocity = velocity;
+				return;
+			}
+
 			lastVelocity = velocity;
 
 			ClearVelocities();
@@ -95,9 +103,9 @@ namespace LunraGames.SubLight.Views
 				instance.transform.position = position;
 				instance.transform.forward = -normal;
 
-				instance.Button.OnEnter.AddListener(() => OnEnterOption(currentIndex));
-				instance.Button.OnExit.AddListener(OnExitOption);
-				instance.Button.OnClick.AddListener(() => OnClickOption(currentIndex));
+				instance.Button.OnEnter.AddListener(() => OnEnterOption(instance, currentIndex));
+				instance.Button.OnExit.AddListener(() => OnExitOption(instance));
+				instance.Button.OnClick.AddListener(() => OnClickOption(instance, currentIndex));
 
 				options[currentIndex] = instance;
 			}
@@ -116,6 +124,7 @@ namespace LunraGames.SubLight.Views
 
 		SizeTransitions sizeTransition;
 		float sizeTransitionProgress; // 0 is minimized and 1 is maximized
+		int? multiplierBeforePreview;
 
 		protected override void OnIdle(float delta)
 		{
@@ -223,6 +232,8 @@ namespace LunraGames.SubLight.Views
 			SetTransition(0f);
 			sizeTransition = SizeTransitions.Minimized;
 			sizeTransitionProgress = 0f;
+
+			multiplierBeforePreview = null;
 		}
 
 		#region Events
@@ -261,24 +272,37 @@ namespace LunraGames.SubLight.Views
 		}
 
 
-		void OnEnterOption(int index)
+		void OnEnterOption(GridVelocityOptionLeaf leaf, int index)
 		{
+			if (!multiplierBeforePreview.HasValue) multiplierBeforePreview = lastVelocity.MultiplierCurrent;
+
 			frameOptionEntered = App.V.FrameCount;
 
 			SetOptionIndices(index);
+
+			leaf.EnterParticles.Emit(1);
+
+			if (MultiplierSelection != null) MultiplierSelection(index);
 		}
 
-		void OnExitOption()
+		void OnExitOption(GridVelocityOptionLeaf leaf)
 		{
 			frameOptionExited = App.V.FrameCount;
 
 			if (frameOptionExited == frameOptionEntered) return;
 
-			SetOptionIndices(lastVelocity.MultiplierCurrent);
+			var result = multiplierBeforePreview ?? lastVelocity.MultiplierCurrent;
+
+			multiplierBeforePreview = null;
+
+			SetOptionIndices(result);
+
+			if (MultiplierSelection != null) MultiplierSelection(result);
 		}
 
-		void OnClickOption(int index)
+		void OnClickOption(GridVelocityOptionLeaf leaf, int index)
 		{
+			multiplierBeforePreview = index;
 			if (MultiplierSelection != null) MultiplierSelection(index);
 		}
 		#endregion

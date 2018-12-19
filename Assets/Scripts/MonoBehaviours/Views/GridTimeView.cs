@@ -153,7 +153,7 @@ namespace LunraGames.SubLight.Views
 			timeStampTransitionParticles.Emit(ParticleWithOpacity(timeStampTransitionParticles), 1);
 		}
 
-		void ReferenceFrameTransition()
+		public void ReferenceFrameTransition()
 		{
 			timeStampReferenceFrameParticles.Emit(ParticleWithOpacity(timeStampReferenceFrameParticles), 1);
 		}
@@ -275,5 +275,6 @@ namespace LunraGames.SubLight.Views
 		GridTimeBlock Configuration { set; }
 		GridTimeStampBlock TimeStamp { set; }
 		void TimeStampTransition();
+		void ReferenceFrameTransition();
 	}
 }
