@@ -47,8 +47,6 @@ namespace LunraGames.SubLight.Presenters
 			View.PushOpacity(() => lastOpacity.Value);
 			View.PushOpacity(() => 1f - model.GridScaleOpacity.Value);
 			if (currentSystem != null) View.SetPreview(GetBlock(currentSystem), true);
-			//Debug.Break();
-			//OnCelestialSystemState(model.CelestialSystemStateLastSelected);
 		}
 			
 		PreviewSystemBlock GetBlock(SystemModel system)
