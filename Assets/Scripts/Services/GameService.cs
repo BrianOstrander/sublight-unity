@@ -80,9 +80,11 @@ namespace LunraGames.SubLight
 
 			var galaxy = result.TypedModel;
 
-			var foundBegin = false;
-			var begin = galaxy.GetPlayerBegin(out foundBegin);
-			if (!foundBegin)
+			var beginFound = false;
+			SectorModel beginSector;
+			SystemModel beginSystem;
+			var begin = galaxy.GetPlayerBegin(out beginFound, out beginSector, out beginSystem);
+			if (!beginFound)
 			{
 				Debug.LogError("Provided galaxy has no player begin defined");
 				done(RequestStatus.Failure, null);
@@ -90,6 +92,7 @@ namespace LunraGames.SubLight
 			}
 
 			game.Ship.Value.Position.Value = begin;
+			game.Ship.Value.SystemIndex.Value = beginSystem.Index;
 
 			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
 

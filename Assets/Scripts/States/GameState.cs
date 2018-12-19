@@ -50,6 +50,7 @@ namespace LunraGames.SubLight
 			*/
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(LoadModelDependencies);
+			App.SM.PushBlocking(SetNonSerializedValues);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
@@ -103,6 +104,15 @@ namespace LunraGames.SubLight
 				return;
 			}
 			Payload.Game.GalaxyTarget = result.TypedModel;
+
+			done();
+		}
+
+		void SetNonSerializedValues(Action done)
+		{
+			Payload.Game.Ship.Value.CurrentSystem.Value = App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex);
+
+			if (Payload.Game.Ship.Value.CurrentSystem.Value == null) Debug.LogError("Unable to load current system at "+Payload.Game.Ship.Value.Position.Value+" and index "+Payload.Game.Ship.Value.SystemIndex.Value);
 
 			done();
 		}
