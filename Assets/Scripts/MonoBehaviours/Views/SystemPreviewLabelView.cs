@@ -140,6 +140,7 @@ namespace LunraGames.SubLight.Views
 					curr.Body.LocalStyle.Colors = body.BodyColor;
 					curr.DropShadow.LocalStyle.Colors = body.DropShadowColor;
 					curr.Shadow.LocalStyle.Colors = body.ShadowColor;
+					curr.Button.ForceApplyState();
 				}
 			}
 

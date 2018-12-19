@@ -82,6 +82,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		XButtonStyleObject referenceButtonActiveBackgroundStyle;
 		[SerializeField]
+		XButton timeAreaButton;
+		[SerializeField]
 		GridTimeStampLeaf absoluteArea;
 		[SerializeField]
 		GridTimeStampLeaf deltaArea;
@@ -183,6 +185,7 @@ namespace LunraGames.SubLight.Views
 					absoluteArea.ButtonLeaf.LocalStyle = chronometerAbsoluteTimeStampStyle;
 					deltaArea.gameObject.SetActive(false);
 				}
+				timeAreaButton.ForceApplyState();
 			}
 
 			if (isConfigurationStale || isReferenceFrameStale)
@@ -228,6 +231,8 @@ namespace LunraGames.SubLight.Views
 			leaf.Label.text = text;
 			leaf.LabelLeaf.GlobalStyle = isActive ? referenceButtonActiveLabelStyle : referenceButtonLabelStyle;
 			leaf.BackgroundLeaf.GlobalStyle = isActive ? referenceButtonActiveBackgroundStyle : referenceButtonBackgroundStyle;
+
+			leaf.Button.ForceApplyState();
 		}
 
 		#region Events
