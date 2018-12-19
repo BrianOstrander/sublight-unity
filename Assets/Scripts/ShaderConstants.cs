@@ -511,6 +511,10 @@ namespace LunraGames.SubLight
 			public const string AnchorMinimum = "_AnchorMinimum";
 			public const string AnchorCurrent = "_AnchorCurrent";
 			public const string AnchorMaximum = "_AnchorMaximum";
+
+			public const string MinimumColor = "_MinimumColor";
+			public const string CurrentColor = "_CurrentColor";
+
 			public const string Alpha = "_Alpha";
 		}
 

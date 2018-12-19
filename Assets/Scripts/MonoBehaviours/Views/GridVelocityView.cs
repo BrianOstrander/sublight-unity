@@ -43,6 +43,11 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI multiplierResourceLabel;
 
 		[SerializeField]
+		Color velocityColorCurrentNormal;
+		[SerializeField]
+		Color velocityColorCurrentDisabled;
+
+		[SerializeField]
 		CanvasGroup resourceWarningGroup;
 		[SerializeField]
 		float resourceWarningRevealDuration;
@@ -232,6 +237,10 @@ namespace LunraGames.SubLight.Views
 			var isEnabled = index <= lastVelocity.Value.MultiplierEnabledMaximum;
 			showingResourceWarning = !isEnabled;
 			labelGroup.alpha = isEnabled ? 1f : velocityDisabledLabelOpacity;
+
+			var currColor = isEnabled ? velocityColorCurrentNormal : velocityColorCurrentDisabled;
+			velocityMesh.material.SetColor(ShaderConstants.HoloWidgetGridVelocitySelection.MinimumColor, currColor);
+			velocityMesh.material.SetColor(ShaderConstants.HoloWidgetGridVelocitySelection.CurrentColor, currColor);
 
 			for (var i = 0; i < options.Length; i++)
 			{
