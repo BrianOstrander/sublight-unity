@@ -776,7 +776,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1526673183368282}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.8668, z: -3.352}
+  m_LocalPosition: {x: 0, y: 1.8668, z: -3.434}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224081914400074310}
@@ -1122,8 +1122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1223,8 +1223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1324,8 +1324,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1532,8 +1532,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1633,6 +1633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a86d052a7c21483cafcfe8896dfdaf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Button: {fileID: 114162661226156582}
   LabelLeaf: {fileID: 114240997057162750}
   BackgroundLeaf: {fileID: 114165150134777060}
   Label: {fileID: 114842727415260856}
@@ -1698,6 +1699,7 @@ MonoBehaviour:
     type: 2}
   referenceButtonActiveBackgroundStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd,
     type: 2}
+  timeAreaButton: {fileID: 114343767869996694}
   absoluteArea: {fileID: 114881525678583888}
   deltaArea: {fileID: 114337824757406280}
   timeStampTransitionParticles: {fileID: 198970310794871648}
@@ -2116,6 +2118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a86d052a7c21483cafcfe8896dfdaf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Button: {fileID: 114318545673674416}
   LabelLeaf: {fileID: 114163792254593884}
   BackgroundLeaf: {fileID: 114775802886519236}
   Label: {fileID: 114770307270684300}
@@ -2629,8 +2632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3009,8 +3012,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3675,8 +3678,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3803,8 +3806,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -4650,8 +4653,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -5323,7 +5326,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 2
+    maxNumParticles: 4
     size3D: 1
     rotation3D: 0
     gravityModifier:

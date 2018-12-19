@@ -19,7 +19,7 @@ namespace LunraGames.SubLight
 			}
 
 			public const float TransitRangeMinimum = 1f; // In universe units.
-			public const float TransitVelocityMinimum = 0.1f * UniversePosition.LightYearToUniverseScalar; // In universe units. Shouldn't be greater than 1 lightyear...
+			public const float TransitVelocityMinimum = 0.3f * UniversePosition.LightYearToUniverseScalar; // In universe units. Shouldn't be greater than 1 lightyear...
 		}
 
 		IModelMediator modelMediator;
@@ -58,6 +58,7 @@ namespace LunraGames.SubLight
 			var ship = new ShipModel();
 			ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
 			ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			ship.SetVelocityMaximumMultiplier(7);
 
 			game.Ship.Value = ship;
 			// --------

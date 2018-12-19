@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -193,34 +194,29 @@ namespace LunraGames.SubLight
 				// Ignore non active layers.
 				if (!layerStates[raycast.gameObject.layer]) continue;
 
-				if (stillHighlighted.Count == 0)
-				{
-					stillHighlighted.Add(raycast.gameObject);
-
-					if (!highlighted.Contains(raycast.gameObject)) ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
-				}
+				stillHighlighted.AddRange(OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler, r => !highlighted.Contains(r) && !stillHighlighted.Contains(r), r => !stillHighlighted.Contains(r)));
 
 				if (!anyInteraction) break;
 				if (clickDown)
 				{
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler) != null;
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.beginDragHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler).Any();
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.beginDragHandler).Any();
 					dragging.Add(raycast.gameObject);
 				}
 				if (clickUp)
 				{
 					if (clickClick)
 					{
-						wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
+						wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler).Any();
 					}
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler).Any();
 
 					expiredDrags.Add(raycast.gameObject);
 				}
 				if (clickHeldDown && (startedDragging || IsDragging(gestureDeltaFromBegin)))
 				{
 					startedDragging = true;
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler).Any();
 				}
 				break;
 			}
@@ -236,11 +232,13 @@ namespace LunraGames.SubLight
 
 			foreach (var drag in expiredDrags) dragging.Remove(drag);
 
+			var highlightsExited = new List<GameObject>();
+			Func<GameObject, bool> checkExecuteOrReturnHighlightExit = r => { return !stillHighlighted.Contains(r) && !highlightsExited.Contains(r); };
 			foreach (var highlight in highlighted)
 			{
-				if (highlight != null && !stillHighlighted.Contains(highlight))
+				if (highlight != null && checkExecuteOrReturnHighlightExit(highlight))
 				{
-					ExecuteEvents.ExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler);
+					highlightsExited.AddRange(OnExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler, checkExecuteOrReturnHighlightExit, checkExecuteOrReturnHighlightExit));
 				}
 			}
 
@@ -277,6 +275,39 @@ namespace LunraGames.SubLight
 			{
 				layerStates[LayerMask.NameToLayer(kv.Key)] = kv.Value;
 			}
+		}
+
+		GameObject[] OnExecuteHierarchy<T>(
+			GameObject root,
+			BaseEventData eventData,
+			ExecuteEvents.EventFunction<T> callbackFunction,
+			Func<GameObject, bool> executeCondition = null,
+			Func<GameObject, bool> returnCondition = null
+		)
+			where T : IEventSystemHandler
+		{
+			var results = new List<GameObject>();
+
+			while (root != null)
+			{
+				root = ExecuteEvents.GetEventHandler<T>(root);
+
+				if (root == null) break;
+
+				if (executeCondition == null || executeCondition(root))
+				{
+					ExecuteEvents.Execute(root, eventData, callbackFunction);
+				}
+
+				if (returnCondition == null || returnCondition(root))
+				{
+					results.Add(root);
+				}
+
+				root = root.transform.parent.gameObject;
+			}
+
+			return results.ToArray();
 		}
 		#endregion
 		protected virtual bool IsEscapeUp() { return false; }

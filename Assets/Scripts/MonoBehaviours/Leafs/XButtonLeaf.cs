@@ -2,6 +2,7 @@ using System;
 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 using SelectionState = LunraGames.SubLight.XButton.SelectionState;
 
@@ -35,10 +36,10 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		[HideInInspector]
-		public XButtonStyleObject GlobalStyle;
-		[HideInInspector]
-		public XButtonStyleBlock LocalStyle = XButtonStyleBlock.Default;
+		[FormerlySerializedAs("GlobalStyle"), SerializeField, HideInInspector]
+		XButtonStyleObject globalStyle;
+		[FormerlySerializedAs("LocalStyle"), SerializeField, HideInInspector]
+		XButtonStyleBlock localStyle = XButtonStyleBlock.Default;
 		[SerializeField]
 		GameObject[] targetToggles = new GameObject[0];
 		[SerializeField]
@@ -49,6 +50,17 @@ namespace LunraGames.SubLight
 		MeshRendererEntry[] targetMeshRenderers = new MeshRendererEntry[0];
 		[SerializeField]
 		CanvasGroup[] targetGroups = new CanvasGroup[0];
+
+		public XButtonStyleObject GlobalStyle
+		{
+			set { globalStyle = value; }
+			get { return globalStyle; }
+		}
+		public XButtonStyleBlock LocalStyle
+		{
+			set { localStyle = value; }
+			get { return localStyle; }
+		}
 
 		XButtonStyleBlock Style { get { return GlobalStyle == null ? LocalStyle : GlobalStyle.Block; } }
 

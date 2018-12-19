@@ -131,6 +131,11 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		public void ForceApplyState()
+		{
+			ApplyState(state);
+		}
+
 		void ApplyState(SelectionState appliedState, float scalar = 1f)
 		{
 			foreach (var leaf in leafs)

@@ -85,6 +85,14 @@ namespace LunraGames.SubLight
 					gridTimeTransitLanguage
 				);
 
+				new GridVelocityPresenter(
+					payload.Game,
+					new GridVelocityLanguageBlock {
+						Velocity = LanguageStringModel.Override("Velocity"),
+						Resource = LanguageStringModel.Override("Propellant")
+					}
+				);
+
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
 				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 

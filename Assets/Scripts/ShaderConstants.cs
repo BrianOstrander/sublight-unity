@@ -504,6 +504,16 @@ namespace LunraGames.SubLight
 			public const string GridIntensity = "_GridIntensity";
 		}
 
+		public static class HoloWidgetGridVelocitySelection
+		{
+			public const string Name = "Sublight/Holo/Widget/GridVelocitySelection";
+			public const string Maximized = "_Maximized";
+			public const string AnchorMinimum = "_AnchorMinimum";
+			public const string AnchorCurrent = "_AnchorCurrent";
+			public const string AnchorMaximum = "_AnchorMaximum";
+			public const string Alpha = "_Alpha";
+		}
+
 		/*
 		public static class SomeShader
 		{

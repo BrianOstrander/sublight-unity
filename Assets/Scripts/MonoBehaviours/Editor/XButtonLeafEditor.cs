@@ -16,8 +16,8 @@ namespace LunraGames.SubLight
 
 		void OnEnable() 
 		{
-			globalStyleProperty = serializedObject.FindProperty("GlobalStyle");
-			localStyleProperty = serializedObject.FindProperty("LocalStyle");
+			globalStyleProperty = serializedObject.FindProperty("globalStyle");
+			localStyleProperty = serializedObject.FindProperty("localStyle");
 			targetTogglesProperty = serializedObject.FindProperty("targetToggles");
 			targetTransfomsProperty = serializedObject.FindProperty("targetTransforms");
 			targetGraphicsProperty = serializedObject.FindProperty("targetGraphics");

@@ -33,6 +33,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.DayTime.Changed += OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
+			model.Ship.Value.Velocity.Changed += OnVelocity;
 		}
 
 		protected override void OnUnBind()
@@ -41,6 +42,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.DayTime.Changed -= OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
+			model.Ship.Value.Velocity.Changed -= OnVelocity;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -123,6 +125,14 @@ namespace LunraGames.SubLight.Presenters
 			View.Configuration = GetConfiguration(block.State == CelestialSystemStateBlock.States.Selected);
 			View.TimeStamp = GetTimeStamp(block);
 			View.TimeStampTransition();
+		}
+
+		void OnVelocity(TransitVelocity velocity)
+		{
+			if (!View.Visible) return;
+
+			View.TimeStamp = GetTimeStamp(model.CelestialSystemStateLastSelected.Value);
+			if (model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected) View.ReferenceFrameTransition();
 		}
 
 		void OnReferenceFrameSelection(ReferenceFrames referenceFrame)

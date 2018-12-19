@@ -26,6 +26,11 @@ ModelImporter:
     100040: RingNormal
     100042: ScaleRing
     100044: ScaleUnitRing
+    100046: RingNormal_001
+    100048: VelocityRing
+    100050: VoidProgressRing
+    100052: VoidVelocityRing
+    100054: BasicRing
     400000: Cylinder
     400002: Cylinder_001
     400004: Cylinder_002
@@ -49,8 +54,14 @@ ModelImporter:
     400040: RingNormal
     400042: ScaleRing
     400044: ScaleUnitRing
+    400046: RingNormal_001
+    400048: VelocityRing
+    400050: VoidProgressRing
+    400052: VoidVelocityRing
+    400054: BasicRing
     2100000: None__Untitled
     2100002: unnamed
+    2100004: None__Untitled_002
     2300000: Cylinder
     2300002: Cylinder_001
     2300004: Cylinder_002
@@ -73,6 +84,11 @@ ModelImporter:
     2300038: RingNormal
     2300040: ScaleRing
     2300042: ScaleUnitRing
+    2300044: RingNormal_001
+    2300046: VelocityRing
+    2300048: VoidProgressRing
+    2300050: VoidVelocityRing
+    2300052: BasicRing
     3300000: Cylinder
     3300002: Cylinder_001
     3300004: Cylinder_002
@@ -95,6 +111,11 @@ ModelImporter:
     3300038: RingNormal
     3300040: ScaleRing
     3300042: ScaleUnitRing
+    3300044: RingNormal_001
+    3300046: VelocityRing
+    3300048: VoidProgressRing
+    3300050: VoidVelocityRing
+    3300052: BasicRing
     4300000: FadeArea
     4300002: Cylinder_006
     4300004: Cylinder_005
@@ -117,6 +138,11 @@ ModelImporter:
     4300038: ScaleRing
     4300040: RingNormal
     4300042: ScaleUnitRing
+    4300044: RingNormal_001
+    4300046: VelocityRing
+    4300048: VoidProgressRing
+    4300050: VoidVelocityRing
+    4300052: BasicRing
     7400000: Default Take
     9500000: //RootNode
     2186277476908879412: ImportLogs
@@ -192,7 +218,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
