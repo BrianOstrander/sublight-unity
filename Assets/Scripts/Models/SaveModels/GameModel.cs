@@ -10,7 +10,7 @@ namespace LunraGames.SubLight.Models
 	{
 		#region Serialized
 		[JsonProperty] int seed;
-		[JsonProperty] DayTimeBlock dayTime;
+		[JsonProperty] RelativeDayTime relativeDayTime;
 		[JsonProperty] ShipModel ship;
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Models
 		/// The day time.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<DayTimeBlock> DayTime;
+		public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
 		/// <summary>
 		/// The game ship.
 		/// </summary>
@@ -136,7 +136,7 @@ namespace LunraGames.SubLight.Models
 		{
 			SaveType = SaveTypes.Game;
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
-			DayTime = new ListenerProperty<DayTimeBlock>(value => dayTime = value, () => dayTime);
+			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);

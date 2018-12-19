@@ -192,6 +192,9 @@ namespace LunraGames.SubLight.Presenters
 						case Celestial.SelectedStates.NotSelected:
 							Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
 							break;
+						case Celestial.SelectedStates.Selected:
+							Debug.Log("start travel here!");
+							break;
 					}
 					break;
 			}

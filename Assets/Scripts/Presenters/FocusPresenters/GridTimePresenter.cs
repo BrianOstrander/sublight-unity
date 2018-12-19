@@ -31,7 +31,7 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Heartbeat.Update += OnUpdate;
 
-			model.DayTime.Changed += OnDayTime;
+			model.RelativeDayTime.Changed += OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed += OnVelocity;
 		}
@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			App.Heartbeat.Update -= OnUpdate;
 
-			model.DayTime.Changed -= OnDayTime;
+			model.RelativeDayTime.Changed -= OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
 		}
@@ -84,14 +84,14 @@ namespace LunraGames.SubLight.Presenters
 				result.DeltaTimes[ReferenceFrames.Ship] = transitDelta.ShipTime;
 				result.DeltaTimes[ReferenceFrames.Galactic] = transitDelta.GalacticTime;
 
-				result.AbsoluteTimes[ReferenceFrames.Ship] = model.DayTime.Value.ShipTime + result.DeltaTimes[ReferenceFrames.Ship];
-				result.AbsoluteTimes[ReferenceFrames.Galactic] = model.DayTime.Value.GalacticTime + result.DeltaTimes[ReferenceFrames.Galactic];
+				result.AbsoluteTimes[ReferenceFrames.Ship] = model.RelativeDayTime.Value.ShipTime + result.DeltaTimes[ReferenceFrames.Ship];
+				result.AbsoluteTimes[ReferenceFrames.Galactic] = model.RelativeDayTime.Value.GalacticTime + result.DeltaTimes[ReferenceFrames.Galactic];
 
 				return result;
 			}
 
-			result.AbsoluteTimes[ReferenceFrames.Ship] = model.DayTime.Value.ShipTime;
-			result.AbsoluteTimes[ReferenceFrames.Galactic] = model.DayTime.Value.GalacticTime;
+			result.AbsoluteTimes[ReferenceFrames.Ship] = model.RelativeDayTime.Value.ShipTime;
+			result.AbsoluteTimes[ReferenceFrames.Galactic] = model.RelativeDayTime.Value.GalacticTime;
 
 			return result;
 		}
@@ -111,7 +111,7 @@ namespace LunraGames.SubLight.Presenters
 			View.SetOpacityStale();
 		}
 
-		void OnDayTime(DayTimeBlock dayTime)
+		void OnDayTime(RelativeDayTime relativeDayTime)
 		{
 			if (!View.Visible) return;
 

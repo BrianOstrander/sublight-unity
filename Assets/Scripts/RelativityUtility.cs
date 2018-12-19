@@ -21,12 +21,12 @@ namespace LunraGames.SubLight
 			newtonianVelocity = velocityBaseLightYear * Mathf.Sqrt(count);
 		}
 
-		public static DayTimeBlock TransitTime(
+		public static RelativeDayTime TransitTime(
 			float velocityLightYear,
 			float distanceLightYear
 		)
 		{
-			var result = new DayTimeBlock();
+			var result = new RelativeDayTime();
 
 			var galacticTime = distanceLightYear / velocityLightYear;
 			result.GalacticTime = DayTime.FromYear(galacticTime);

@@ -48,7 +48,7 @@ namespace LunraGames.SubLight
 			game.FocusTransform.Value = FocusTransform.Default;
 
 			var initialTime = new DayTime((365 * 1057) + (30 * 2) + 5);
-			game.DayTime.Value = new DayTimeBlock
+			game.RelativeDayTime.Value = new RelativeDayTime
 			{
 				ShipTime = initialTime,
 				GalacticTime = new DayTime(initialTime)

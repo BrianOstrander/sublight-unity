@@ -3,7 +3,7 @@
 namespace LunraGames.SubLight
 {
 	[Serializable]
-	public struct DayTimeBlock
+	public struct RelativeDayTime
 	{
 		public DayTime ShipTime;
 		public DayTime GalacticTime;
