@@ -35,6 +35,7 @@ namespace LunraGames.SubLight.Presenters
 			View.MultiplierSelection = OnMultiplierSelection;
 			View.VelocityUnit = language.Velocity.Value.Value;
 			View.ResourceUnit = language.Resource.Value.Value;
+			View.ResourceWarning = language.ResourceWarning.Value.Value;
 		}
 
 		#region Events
