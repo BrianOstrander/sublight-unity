@@ -50,20 +50,28 @@ namespace LunraGames.SubLight.Views
 		Transform velocityOptionsRoot;
 		[SerializeField]
 		GridVelocityOptionLeaf velocityOptionPrefab;
+		[Header("Option Toggle Enabled")]
+		[SerializeField]
+		XButtonStyleBlock optionToggleEnabledStyle;
+		[Header("Option Toggle Disabled")]
+		[SerializeField]
+		XButtonStyleBlock optionToggleDisabledStyle;
 
 		[Header("Test")]
 		[SerializeField]
 		int previewCount;
 		[SerializeField]
 		float previewRadius;
-
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		GridVelocityOptionLeaf[] options;
 
 		public void SetVelocities(TransitVelocity velocities, int multiplier)
 		{
 			ClearVelocities();
-
 			var velocityCount = velocities.MultiplierVelocities.Length;
+			options = new GridVelocityOptionLeaf[velocityCount];
+
 			for (var i = 0; i < velocityCount; i++)
 			{
 				var velocityIndex = (velocityCount - 1) - i;
@@ -75,6 +83,10 @@ namespace LunraGames.SubLight.Views
 
 				instance.transform.position = position;
 				instance.transform.forward = normal;
+
+				SetOptionIndex(instance, velocityIndex, multiplier);
+
+				options[velocityIndex] = instance;
 			}
 		}
 
@@ -143,6 +155,7 @@ namespace LunraGames.SubLight.Views
 		{
 			velocityLabel.text = string.Empty;
 			velocityOptionsRoot.ClearChildren<GridVelocityOptionLeaf>();
+			options = null;
 		}
 
 		void GetOrientation(int index, out Vector3 position, out Vector3 normal)
@@ -157,6 +170,23 @@ namespace LunraGames.SubLight.Views
 
 			normal = result;
 			position = velocityOptionsAnchor.position + (result * velocityOptionsRadius);
+		}
+
+		void SetOptionIndices(int index)
+		{
+			for (var i = 0; i < options.Length; i++)
+			{
+				SetOptionIndex(options[i], i, index);
+			}
+		}
+
+		void SetOptionIndex(GridVelocityOptionLeaf leaf, int currentIndex, int targetIndex)
+		{
+			var toggleEnabled = currentIndex <= targetIndex;
+			Debug.Log("Toggle " + currentIndex + " is " + (toggleEnabled ? "enabled" : "disabled"));
+			leaf.Toggle.LocalStyle = toggleEnabled ? optionToggleEnabledStyle : optionToggleDisabledStyle;
+			leaf.Toggle.gameObject.SetActive(false);
+			leaf.Toggle.gameObject.SetActive(true);
 		}
 
 		public override void Reset()

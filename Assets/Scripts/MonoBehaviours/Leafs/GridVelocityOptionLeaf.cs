@@ -8,5 +8,6 @@ namespace LunraGames.SubLight.Views
 	public class GridVelocityOptionLeaf : MonoBehaviour
 	{
 		public XButton Button;
+		public XButtonLeaf Toggle;
 	}
 }
