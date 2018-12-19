@@ -35,6 +35,7 @@ namespace LunraGames.SubLight.Presenters
 			View.MultiplierSelection = OnMultiplierSelection;
 			View.VelocityUnit = language.Velocity.Value.Value;
 			View.ResourceUnit = language.Resource.Value.Value;
+			View.ResourceWarning = language.ResourceWarning.Value.Value;
 		}
 
 		#region Events
@@ -52,7 +53,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnMultiplierSelection(int index)
 		{
-			model.Ship.Value.SetVelocityCurrentMultiplier(index);
+			model.Ship.Value.SetVelocityMultiplierCurrent(index);
 		}
 		#endregion
 	}

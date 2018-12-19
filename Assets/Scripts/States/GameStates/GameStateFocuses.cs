@@ -89,7 +89,8 @@ namespace LunraGames.SubLight
 					payload.Game,
 					new GridVelocityLanguageBlock {
 						Velocity = LanguageStringModel.Override("Velocity"),
-						Resource = LanguageStringModel.Override("Propellant")
+						Resource = LanguageStringModel.Override("Propellant"),
+						ResourceWarning = LanguageStringModel.Override("Insufficient Propellant")
 					}
 				);
 

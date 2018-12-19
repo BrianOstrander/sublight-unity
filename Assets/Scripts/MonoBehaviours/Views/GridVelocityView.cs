@@ -32,6 +32,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		CanvasGroup group;
 		[SerializeField]
+		CanvasGroup labelGroup;
+		[SerializeField]
 		TextMeshProUGUI velocityLabel;
 		[SerializeField]
 		TextMeshProUGUI velocityUnitLabel;
@@ -39,6 +41,17 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI multiplierLabel;
 		[SerializeField]
 		TextMeshProUGUI multiplierResourceLabel;
+
+		[SerializeField]
+		CanvasGroup resourceWarningGroup;
+		[SerializeField]
+		float resourceWarningRevealDuration;
+		[SerializeField]
+		TextMeshProUGUI resourceWarningLabel;
+		[SerializeField]
+		ParticleSystem resourceWarningParticles;
+		[SerializeField]
+		Vector3 resourceWarningRotation;
 
 		[SerializeField]
 		CanvasGroup velocityOptionsGroup;
@@ -53,6 +66,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float velocityOptionsSpacing;
 
+		[SerializeField]
+		float velocityDisabledLabelOpacity;
 		[SerializeField]
 		Transform velocityOptionsRoot;
 		[SerializeField]
@@ -76,17 +91,16 @@ namespace LunraGames.SubLight.Views
 		long frameOptionEntered;
 		long frameOptionExited;
 
+		bool showingResourceWarning;
+
 		public void SetVelocities(TransitVelocity velocity)
 		{
-			if (lastVelocity.HasValue)
+			if (lastVelocity.HasValue && lastVelocity.Value.Approximately(velocity) && lastVelocity.Value.MultiplierEnabledMaximum == velocity.MultiplierEnabledMaximum)
 			{
-				if (lastVelocity.Value.Approximately(velocity))
-				{
-					if (lastVelocity.Value.MultiplierCurrent != velocity.MultiplierCurrent) SetOptionIndices(velocity.MultiplierCurrent);
-
-					lastVelocity = velocity;
-					return;
-				}
+				if (lastVelocity.Value.MultiplierCurrent != velocity.MultiplierCurrent) SetOptionIndices(velocity.MultiplierCurrent);
+				
+				lastVelocity = velocity;
+				return;
 			}
 
 			lastVelocity = velocity;
@@ -98,6 +112,7 @@ namespace LunraGames.SubLight.Views
 			for (var i = 0; i < velocityCount; i++)
 			{
 				var currentIndex = i;
+				var isEnabled = i <= velocity.MultiplierEnabledMaximum;
 				var orientationIndex = (velocityCount - 1) - currentIndex;
 				var position = Vector3.zero;
 				var normal = Vector3.zero;
@@ -110,7 +125,12 @@ namespace LunraGames.SubLight.Views
 
 				instance.Button.OnEnter.AddListener(() => OnEnterOption(instance, currentIndex));
 				instance.Button.OnExit.AddListener(() => OnExitOption(instance));
-				instance.Button.OnClick.AddListener(() => OnClickOption(instance, currentIndex));
+
+				if (isEnabled) instance.Button.OnClick.AddListener(() => OnClickEnabledOption(instance, currentIndex));
+				else instance.Button.OnClick.AddListener(() => OnClickDisabledOption(instance, currentIndex));
+
+				instance.EnabledArea.SetActive(isEnabled);
+				instance.DisabledArea.SetActive(!isEnabled);
 
 				options[currentIndex] = instance;
 			}
@@ -124,6 +144,7 @@ namespace LunraGames.SubLight.Views
 		public Action<int> MultiplierSelection { set; private get; }
 		public string VelocityUnit { set { velocityUnitLabel.text = value ?? string.Empty; } }
 		public string ResourceUnit { set { multiplierResourceLabel.text = value ?? string.Empty; } }
+		public string ResourceWarning { set { resourceWarningLabel.text = value ?? string.Empty; } }
 
 		float SizeTransitionScalar { get { return 1f / sizeTransitionDuration; } }
 
@@ -134,6 +155,9 @@ namespace LunraGames.SubLight.Views
 		protected override void OnIdle(float delta)
 		{
 			base.OnIdle(delta);
+
+			var revealDelta = delta * (1f / resourceWarningRevealDuration);
+			resourceWarningGroup.alpha = Mathf.Clamp01(resourceWarningGroup.alpha + (showingResourceWarning ? revealDelta : -revealDelta));
 
 			var transitionDelta = 0f;
 
@@ -204,6 +228,11 @@ namespace LunraGames.SubLight.Views
 		{
 			multiplierLabel.text = (index + 1).ToString("N0");
 			velocityLabel.text = lastVelocity.Value.MultiplierVelocitiesLightYears[index].ToString("0.00");
+
+			var isEnabled = index <= lastVelocity.Value.MultiplierEnabledMaximum;
+			showingResourceWarning = !isEnabled;
+			labelGroup.alpha = isEnabled ? 1f : velocityDisabledLabelOpacity;
+
 			for (var i = 0; i < options.Length; i++)
 			{
 				SetOptionIndex(options[i], i, index);
@@ -242,6 +271,10 @@ namespace LunraGames.SubLight.Views
 			MultiplierSelection = ActionExtensions.GetEmpty<int>();
 			VelocityUnit = string.Empty;
 			ResourceUnit = string.Empty;
+			ResourceWarning = string.Empty;
+			resourceWarningGroup.alpha = 0f;
+			showingResourceWarning = false;
+			resourceWarningGroup.transform.localRotation = Quaternion.Euler(resourceWarningRotation);
 
 			SetTransition(0f);
 			sizeTransition = SizeTransitions.Minimized;
@@ -314,10 +347,19 @@ namespace LunraGames.SubLight.Views
 			if (MultiplierSelection != null) MultiplierSelection(result);
 		}
 
-		void OnClickOption(GridVelocityOptionLeaf leaf, int index)
+		void OnClickEnabledOption(GridVelocityOptionLeaf leaf, int index)
 		{
 			multiplierBeforePreview = index;
 			if (MultiplierSelection != null) MultiplierSelection(index);
+		}
+
+		void OnClickDisabledOption(GridVelocityOptionLeaf leaf, int index)
+		{
+			multiplierBeforePreview = lastVelocity.Value.MultiplierEnabledMaximum;
+			//options[lastVelocity.Value.MultiplierEnabledMaximum].EnterParticles.Emit(1);
+
+			leaf.DisabledParticles.Emit(1);
+			resourceWarningParticles.Emit(1);
 		}
 		#endregion
 
@@ -345,6 +387,7 @@ namespace LunraGames.SubLight.Views
 		Action<int> MultiplierSelection { set; }
 		string VelocityUnit { set; }
 		string ResourceUnit { set; }
+		string ResourceWarning { set; }
 		void SetVelocities(TransitVelocity velocities);
 	}
 }

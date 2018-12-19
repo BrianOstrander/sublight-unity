@@ -10,5 +10,10 @@ namespace LunraGames.SubLight.Views
 		public XButton Button;
 		public XButtonLeaf Toggle;
 		public ParticleSystem EnterParticles;
+
+		public GameObject EnabledArea;
+
+		public GameObject DisabledArea;
+		public ParticleSystem DisabledParticles;
 	}
 }

@@ -8,5 +8,6 @@ namespace LunraGames.SubLight
 	{
 		public LanguageStringModel Velocity;
 		public LanguageStringModel Resource;
+		public LanguageStringModel ResourceWarning;
 	}
 }
