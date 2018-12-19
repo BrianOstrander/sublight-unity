@@ -1122,8 +1122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1223,8 +1223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1324,8 +1324,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1532,8 +1532,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 3a2cb62dc283f4a3b969d4a909d33049, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -2629,8 +2629,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3009,8 +3009,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3675,8 +3675,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 2f7466c6eb74e495283941e59f38e3dd, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3803,8 +3803,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -4650,8 +4650,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -14452,10 +14452,10 @@ RectTransform:
   m_Father: {fileID: 224393727170567278}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 78.03999, y: -13.655}
-  m_SizeDelta: {x: 0, y: 27.31}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224171386456280056
 RectTransform:
@@ -14528,10 +14528,10 @@ RectTransform:
   m_Father: {fileID: 224393727170567278}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 118.695, y: -13.655}
-  m_SizeDelta: {x: 0, y: 27.31}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224296469404095284
 RectTransform:
@@ -14564,10 +14564,10 @@ RectTransform:
   m_Father: {fileID: 224105122696411904}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 108.69501, y: -13.655}
-  m_SizeDelta: {x: 0, y: 27.31}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224373906338980160
 RectTransform:
@@ -14582,10 +14582,10 @@ RectTransform:
   m_Father: {fileID: 224393727170567278}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 160.65498, y: -13.655}
-  m_SizeDelta: {x: 0, y: 27.31}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224393727170567278
 RectTransform:
@@ -14756,10 +14756,10 @@ RectTransform:
   m_Father: {fileID: 224105122696411904}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.655, y: -13.655}
-  m_SizeDelta: {x: 0, y: 27.31}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224601600730200374
 RectTransform:
@@ -15001,10 +15001,10 @@ RectTransform:
   m_Father: {fileID: 224105122696411904}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 68.04001, y: -13.655}
-  m_SizeDelta: {x: 0, y: 27.31}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224971984465790474
 RectTransform:
