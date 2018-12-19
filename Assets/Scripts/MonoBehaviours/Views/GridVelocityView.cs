@@ -356,7 +356,7 @@ namespace LunraGames.SubLight.Views
 		void OnClickDisabledOption(GridVelocityOptionLeaf leaf, int index)
 		{
 			multiplierBeforePreview = lastVelocity.Value.MultiplierEnabledMaximum;
-			options[lastVelocity.Value.MultiplierEnabledMaximum].EnterParticles.Emit(1);
+			//options[lastVelocity.Value.MultiplierEnabledMaximum].EnterParticles.Emit(1);
 
 			leaf.DisabledParticles.Emit(1);
 			resourceWarningParticles.Emit(1);
