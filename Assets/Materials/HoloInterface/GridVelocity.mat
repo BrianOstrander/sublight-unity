@@ -38,6 +38,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 64b40b892fb4a48e9942fbf77db08756, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BarGuideScrollingMask:
+        m_Texture: {fileID: 2800000, guid: 6b439c085796546c7b22efd38cfaa91c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BarGuideTexture:
         m_Texture: {fileID: 2800000, guid: 245a1bde669fe4a5c84b205e271ce7fe, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -116,6 +120,8 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RightSided: 0
+    - _ScrollingMaskSpeed: -0.05
+    - _ScrollingMaskTiling: 3
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
