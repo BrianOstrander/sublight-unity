@@ -60,3 +60,6 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
+  prepareDuration: 0.1
+  transitDuration: {x: 0.1, y: 5}
+  finalizeDuration: 0.1

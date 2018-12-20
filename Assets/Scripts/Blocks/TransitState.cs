@@ -4,7 +4,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public struct TransitState
+	public class TransitState
 	{
 		public enum States
 		{
@@ -22,13 +22,28 @@ namespace LunraGames.SubLight
 			Finalize = 30,
 		}
 
-		public struct StepDetails
+		public class StepDetails
 		{
 			public Steps Step;
 			public bool Initializing;
 			public float Duration;
 			public float Elapsed;
 			public float Progress;
+
+			public StepDetails Duplicate
+			{
+				get
+				{
+					return new StepDetails
+					{
+						Step = Step,
+						Initializing = Initializing,
+						Duration = Duration,
+						Elapsed = Elapsed,
+						Progress = Progress
+					};
+				}
+			}
 		}
 
 		public static TransitState Request(
@@ -41,6 +56,7 @@ namespace LunraGames.SubLight
 			{
 				Instant = instant,
 				State = States.Request,
+				Step = Steps.Prepare,
 				BeginSystem = beginSystem,
 				EndSystem = endSystem
 			};
@@ -52,17 +68,20 @@ namespace LunraGames.SubLight
 		public SystemModel EndSystem;
 		public RelativeDayTime BeginRelativeDayTime;
 		public RelativeDayTime EndRelativeDayTime;
-		public float TotalDuration;
+
+		public float TotalDuration { get { return PrepareStep.Duration + TransitStep.Duration + FinalizeStep.Duration; } }
 		#endregion
 
 		#region Dynamic
 		public States State;
 		public Steps Step;
-		public float TotalElapsed;
-		public float TotalProgress;
-		public StepDetails PrepareStep;
-		public StepDetails TransitStep;
-		public StepDetails FinalizeStep;
+
+		public float TotalElapsed { get { return PrepareStep.Elapsed + TransitStep.Elapsed + FinalizeStep.Elapsed; } }
+		public float TotalProgress { get { return TotalElapsed / TotalDuration; } }
+
+		public StepDetails PrepareStep = new StepDetails { Step = Steps.Prepare };
+		public StepDetails TransitStep = new StepDetails { Step = Steps.Transit };
+		public StepDetails FinalizeStep = new StepDetails { Step = Steps.Finalize };
 
 		public StepDetails CurrentStep
 		{
@@ -77,9 +96,45 @@ namespace LunraGames.SubLight
 						throw new NotImplementedException("Unrecognized step: " + Step);
 				}
 			}
+			set
+			{
+				switch (value.Step)
+				{
+					case Steps.Prepare: PrepareStep = value; break;
+					case Steps.Transit: TransitStep = value; break;
+					case Steps.Finalize: FinalizeStep = value; break;
+					default:
+						throw new NotImplementedException("Unrecognized step: " + Step);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the requested step, and returns true if it has changed since last time.
+		/// </summary>
+		/// <returns><c>true</c>, if step has changed, <c>false</c> otherwise.</returns>
+		/// <param name="step">Step.</param>
+		/// <param name="details">Details.</param>
+		public bool GetStep(Steps step, out StepDetails details)
+		{
+			switch (step)
+			{
+				case Steps.Prepare: details = PrepareStep; break;
+				case Steps.Transit: details = TransitStep; break;
+				case Steps.Finalize: details = FinalizeStep; break;
+				default: details = default(StepDetails); break;
+			}
+
+			if (Step == step) return true;
+
+			if (step == Steps.Prepare && Step == Steps.Transit && TransitStep.Initializing) return true;
+			if (step == Steps.Transit && Step == Steps.Finalize && FinalizeStep.Initializing) return true;
+
+			return false;
 		}
 
 		public float DistanceProgress;
+		public float DistanceTotal;
 		public float DistanceElapsed; // In universe units
 		public float DistanceRemaining; // In universe units
 		public UniversePosition CurrentPosition;
@@ -88,6 +143,48 @@ namespace LunraGames.SubLight
 		public RelativeDayTime TimeElapsed;
 		public RelativeDayTime TimeRemaining;
 		public RelativeDayTime CurrentRelativeDayTime;
+
+		public float VelocityProgress; // Should go from 0 to 1 to 0 again.
+		public float VelocityLightYearsMaximum; // relative to lightspeed.
+		public float VelocityLightYearsCurrent; // relative to lightspeed.
 		#endregion
+
+		public TransitState Duplicate
+		{
+			get
+			{
+				var result = new TransitState();
+
+				result.Instant = Instant;
+				result.BeginSystem = BeginSystem;
+				result.EndSystem = EndSystem;
+				result.BeginRelativeDayTime = BeginRelativeDayTime;
+				result.EndRelativeDayTime = EndRelativeDayTime;
+
+				result.State = State;
+				result.Step = Step;
+
+				result.PrepareStep = PrepareStep.Duplicate;
+				result.TransitStep = TransitStep.Duplicate;
+				result.FinalizeStep = FinalizeStep.Duplicate;
+
+				result.DistanceProgress = DistanceProgress;
+				result.DistanceTotal = DistanceTotal;
+				result.DistanceElapsed = DistanceElapsed;
+				result.DistanceRemaining = DistanceRemaining;
+				result.CurrentPosition = CurrentPosition;
+
+				result.TimeProgress = TimeProgress;
+				result.TimeElapsed = TimeElapsed;
+				result.TimeRemaining = TimeRemaining;
+				result.CurrentRelativeDayTime = CurrentRelativeDayTime;
+
+				result.VelocityProgress = VelocityProgress;
+				result.VelocityLightYearsMaximum = VelocityLightYearsMaximum;
+				result.VelocityLightYearsCurrent = VelocityLightYearsCurrent;
+
+				return result;
+			}
+		}
 	}
 }
