@@ -40,6 +40,7 @@ namespace LunraGames.SubLight
 			return new TransitState
 			{
 				Instant = instant,
+				State = States.Request,
 				BeginSystem = beginSystem,
 				EndSystem = endSystem
 			};
