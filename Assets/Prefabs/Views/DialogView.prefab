@@ -1734,8 +1734,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1823,6 +1823,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114452735187360892}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114131128338117432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1899,9 +1900,12 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114667936277025164}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: c07f3d3805e6b4ddda019f9278f70408, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -1985,9 +1989,12 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114343290344878790}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: ccc1773be1adf4a2c9b61da60f3cbfd4, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -2924,8 +2931,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3013,6 +3020,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114701514765341572}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114361406335075472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3049,9 +3057,12 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114660818108507644}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: c07f3d3805e6b4ddda019f9278f70408, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -3151,8 +3162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -3240,6 +3251,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114728906569885066}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114406894761271750
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3370,9 +3382,12 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114395609587455660}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 12e60cae1ff56492bafb26e7431218ba, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -4266,8 +4281,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -4355,6 +4370,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114965721158475382}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114666829546497098
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4393,8 +4409,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -4482,6 +4498,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114196699660006778}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114674871346895574
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4518,9 +4535,12 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114119781919515886}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: c07f3d3805e6b4ddda019f9278f70408, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -4579,8 +4599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 0}
-  LocalStyle:
+  globalStyle: {fileID: 0}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -4668,6 +4688,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114726481598655386}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114701514765341572
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5505,9 +5526,12 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114699633658764246}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: ccc1773be1adf4a2c9b61da60f3cbfd4, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -6236,8 +6260,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 430, y: 0}
-  m_SizeDelta: {x: 860, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224247038616649814
 RectTransform:
@@ -6311,8 +6335,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 430, y: 0}
-  m_SizeDelta: {x: 860, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224280777716555388
 RectTransform:
@@ -6754,8 +6778,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 430, y: 0}
-  m_SizeDelta: {x: 860, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224586254395921458
 RectTransform:

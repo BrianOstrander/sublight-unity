@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fdfa5b22e1fd4cda8845235d11e182f, type: 3}
-  m_Name: DefaultButton
+  m_Name: DialogCancel
   m_EditorClassIdentifier: 
   Block:
     DisabledSound: {fileID: 8300000, guid: 28b2b442a1b6e4cf09c0ce48afed381b, type: 3}
-    PressedSound: {fileID: 8300000, guid: e03f2bec8b3924b508b606e8da1fe833, type: 3}
+    PressedSound: {fileID: 8300000, guid: 28b2b442a1b6e4cf09c0ce48afed381b, type: 3}
     EnteredSound: {fileID: 0}
     ExitedSound: {fileID: 0}
     HighlightedSound: {fileID: 0}

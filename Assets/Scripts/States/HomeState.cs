@@ -236,7 +236,8 @@ namespace LunraGames.SubLight
 
 		void OnSettingsClick()
 		{
-			OnNotImplimentedClick();
+			App.Callbacks.DialogRequest(DialogRequest.CancelConfirm(LanguageStringModel.Override("Testing sounds."), style: DialogStyles.Warning));
+			//OnNotImplimentedClick();
 		}
 
 		void OnCreditsClick()
