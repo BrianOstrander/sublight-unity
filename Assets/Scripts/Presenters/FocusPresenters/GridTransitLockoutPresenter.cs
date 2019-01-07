@@ -8,7 +8,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class GridTransitLockoutPresenter : FocusPresenter<IGridTransitLockoutView, SystemFocusDetails>
+	public class GridTransitLockoutPresenter : Presenter<IGridTransitLockoutView>
 	{
 		GameModel model;
 
@@ -32,11 +32,6 @@ namespace LunraGames.SubLight.Presenters
 			model.TransitState.Changed -= OnTransitState;
 		}
 
-		protected override void OnUpdateEnabled()
-		{
-
-		}
-
 		TransitState.StepDetails CompleteStep(TransitState.StepDetails step)
 		{
 			step.Initializing = false;
@@ -54,13 +49,13 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitState(TransitState transitState)
 		{
-			var currProg = "\nVelocity: "+transitState.VelocityLightYearsCurrent;
-			currProg += "\nDistance Remaining: " + transitState.DistanceRemaining;
-			currProg += "\nRelative Time Remaining: " + transitState.RelativeTimeRemaining;
+			//var currProg = "\nVelocity: "+transitState.VelocityLightYearsCurrent;
+			//currProg += "\nDistance Remaining: " + transitState.DistanceRemaining;
+			//currProg += "\nRelative Time Remaining: " + transitState.RelativeTimeRemaining;
 
-			if (transitState.Step == TransitState.Steps.Transit && transitState.CurrentStep.Initializing) Debug.Log("-----------------------v");
-			Debug.Log("TransitState: " + transitState.State + "." + transitState.Step + "." + (transitState.CurrentStep.Initializing ? "Initializing" : "Normal")+" "+transitState.CurrentStep.Progress+currProg);
-			if (transitState.Step == TransitState.Steps.Finalize && transitState.CurrentStep.Initializing) Debug.Log("-----------------------^");
+			//if (transitState.Step == TransitState.Steps.Transit && transitState.CurrentStep.Initializing) Debug.Log("-----------------------v");
+			//Debug.Log("TransitState: " + transitState.State + "." + transitState.Step + "." + (transitState.CurrentStep.Initializing ? "Initializing" : "Normal")+" "+transitState.CurrentStep.Progress+currProg);
+			//if (transitState.Step == TransitState.Steps.Finalize && transitState.CurrentStep.Initializing) Debug.Log("-----------------------^");
 
 			switch (transitState.State)
 			{
@@ -157,6 +152,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.TransitState.Value = transitState;
 			if (transitState.Instant) OnProcessState(transitState, 1f);
+			else OnProcessVisuals(transitState);
 		}
 
 		void OnProcessState(TransitState transitState, float delta)
@@ -231,7 +227,76 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 
+			if (!transitState.Instant) OnProcessVisuals(transitState);
 			model.TransitState.Value = transitState;
+		}
+
+		void OnProcessVisuals(TransitState transitState)
+		{
+			switch (transitState.State)
+			{
+				case TransitState.States.Active:
+					var details = transitState.CurrentStep;
+					Debug.Log("we are: " + details.Step + " init? " + details.Initializing);
+					switch(transitState.Step)
+					{
+						case TransitState.Steps.Prepare:
+							if (details.Initializing) OnProcessVisualsPrepareInitialize(transitState, details);
+							OnProcessVisualsPrepare(transitState, details);
+							break;
+						case TransitState.Steps.Transit:
+							if (details.Initializing) OnProcessVisualsTransitInitialize(transitState, details);
+							OnProcessVisualsTransit(transitState, details);
+							break;
+						case TransitState.Steps.Finalize:
+							if (details.Initializing) OnProcessVisualsFinalizeInitialize(transitState, details);
+							OnProcessVisualsFinalize(transitState, details);
+							break;
+					}
+					View.AnimationProgress = transitState.AnimationProgress;
+					break;
+				default:
+					OnProcessVisualsComplete(transitState);
+					break;
+			}
+		}
+
+		void OnProcessVisualsPrepareInitialize(TransitState transitState, TransitState.StepDetails details)
+		{
+			Debug.Log("lol called");
+			View.Reset();
+			ShowView();
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetPriorityFocus(ToolbarSelections.System)));
+		}
+
+		void OnProcessVisualsPrepare(TransitState transitState, TransitState.StepDetails details)
+		{
+
+		}
+
+		void OnProcessVisualsTransitInitialize(TransitState transitState, TransitState.StepDetails details)
+		{
+
+		}
+
+		void OnProcessVisualsTransit(TransitState transitState, TransitState.StepDetails details)
+		{
+
+		}
+
+		void OnProcessVisualsFinalizeInitialize(TransitState transitState, TransitState.StepDetails details)
+		{
+
+		}
+
+		void OnProcessVisualsFinalize(TransitState transitState, TransitState.StepDetails details)
+		{
+
+		}
+
+		void OnProcessVisualsComplete(TransitState transitState)
+		{
+
 		}
 		#endregion
 	}

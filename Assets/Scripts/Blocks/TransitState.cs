@@ -78,6 +78,7 @@ namespace LunraGames.SubLight
 
 		public float TotalElapsed { get { return PrepareStep.Elapsed + TransitStep.Elapsed + FinalizeStep.Elapsed; } }
 		public float TotalProgress { get { return TotalElapsed / TotalDuration; } }
+		public float AnimationProgress { get { return PrepareStep.Progress + TransitStep.Progress + FinalizeStep.Progress; } }
 
 		public StepDetails PrepareStep = new StepDetails { Step = Steps.Prepare };
 		public StepDetails TransitStep = new StepDetails { Step = Steps.Transit };

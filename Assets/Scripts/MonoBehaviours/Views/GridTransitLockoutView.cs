@@ -24,6 +24,32 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve transitTimeCurve;
 		[SerializeField]
 		AnimationCurve transitVelocityCurve;
+
+		[Header("Animation Ranges")]
+		[SerializeField]
+		Vector2 groupScaleRange;
+		[SerializeField]
+		Vector2 groupHorizontalOffsetRange;
+
+		[Header("Animation Curves")]
+		[SerializeField]
+		AnimationCurve groupOpacityCurve;
+		[SerializeField]
+		AnimationCurve groupScaleCurve;
+		[SerializeField]
+		AnimationCurve groupHorizontalOffsetCurve;
+		[SerializeField]
+		AnimationCurve shadowOpacityCurve;
+
+		[Header("Animation Objects")]
+		[SerializeField]
+		CanvasGroup groupOpacity;
+		[SerializeField]
+		Transform groupScale;
+		[SerializeField]
+		Transform groupHorizontalOffset;
+		[SerializeField]
+		CanvasGroup shadowOpacity;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public float PrepareDuration { get { return prepareDuration; } }
@@ -34,10 +60,22 @@ namespace LunraGames.SubLight.Views
 		public AnimationCurve TransitTimeCurve { get { return transitTimeCurve; } }
 		public AnimationCurve TransitVelocityCurve { get { return transitVelocityCurve; } }
 
+		public float AnimationProgress
+		{
+			set
+			{
+				groupOpacity.alpha = groupOpacityCurve.Evaluate(value);
+				groupScale.localScale = Vector3.one * (groupScaleRange.x + ((groupScaleRange.y - groupScaleRange.x) * groupScaleCurve.Evaluate(value)));
+				groupHorizontalOffset.localPosition = groupHorizontalOffset.localPosition.NewX(groupHorizontalOffsetRange.x + ((groupHorizontalOffsetRange.y - groupHorizontalOffsetRange.x) * groupHorizontalOffsetCurve.Evaluate(value)));
+				shadowOpacity.alpha = shadowOpacityCurve.Evaluate(value);
+			}
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
 
+			AnimationProgress = 0f;
 		}
 
 		#region Events
@@ -54,5 +92,11 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve TransitDistanceCurve { get; }
 		AnimationCurve TransitTimeCurve { get; }
 		AnimationCurve TransitVelocityCurve { get; }
+
+		/// <summary>
+		/// A value from 0 to 3.
+		/// </summary>
+		/// <value>The animation progress.</value>
+		float AnimationProgress { set; }
 	}
 }

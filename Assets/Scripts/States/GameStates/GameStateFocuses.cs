@@ -14,6 +14,8 @@ namespace LunraGames.SubLight
 	{
 		public class Focuses : StateFocuses
 		{
+			const float PriorityDimming = 0.25f;
+
 			public static void InitializePresenters(GameState state, Action done)
 			{
 				var payload = state.Payload;
@@ -258,13 +260,32 @@ namespace LunraGames.SubLight
 				return results.ToArray();
 			}
 
-			public static SetFocusBlock[] GetPriorityFocus()
+			public static SetFocusBlock[] GetPriorityFocus(ToolbarSelections selection)
 			{
 				var results = GetBaseEnabledFocuses();
 
 				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f, true));
-				// todo: ability to dim already opened ones...
-				//results.Add(GetFocus<HomeFocusDetails>(1, false, 0.25f, false));
+
+				results.Add(GetFocus<ToolbarFocusDetails>(1, true, PriorityDimming, false));
+
+				switch (selection)
+				{
+					case ToolbarSelections.System:
+						results.Add(GetFocus<SystemFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					case ToolbarSelections.Ship:
+						results.Add(GetFocus<ShipFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					case ToolbarSelections.Communications:
+						results.Add(GetFocus<CommunicationsFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					case ToolbarSelections.Encyclopedia:
+						results.Add(GetFocus<EncyclopediaFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					default:
+						Debug.LogError("Unrecognized selection: " + selection);
+						break;
+				}
 
 				return results.ToArray();
 			}
