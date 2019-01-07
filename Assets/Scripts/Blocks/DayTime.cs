@@ -190,6 +190,11 @@ namespace LunraGames.SubLight
 			return obj0.Add(obj1.Day, obj1.Time);
 		}
 
+		public static DayTime operator -(DayTime obj0, DayTime obj1)
+		{
+			return obj0.Add(-obj1.Day, -obj1.Time);
+		}
+
 		public static DayTime operator *(DayTime obj, float value)
 		{
 			return obj.Multiply(value);

@@ -139,10 +139,11 @@ namespace LunraGames.SubLight
 		public float DistanceRemaining; // In universe units
 		public UniversePosition CurrentPosition;
 
-		public float TimeProgress;
-		public RelativeDayTime TimeElapsed;
-		public RelativeDayTime TimeRemaining;
-		public RelativeDayTime CurrentRelativeDayTime;
+		public float RelativeTimeProgress;
+		public RelativeDayTime RelativeTimeTotal;
+		public RelativeDayTime RelativeTimeElapsed;
+		public RelativeDayTime RelativeTimeRemaining;
+		public RelativeDayTime RelativeTimeCurrent;
 
 		public float VelocityProgress; // Should go from 0 to 1 to 0 again.
 		public float VelocityLightYearsMaximum; // relative to lightspeed.
@@ -174,10 +175,11 @@ namespace LunraGames.SubLight
 				result.DistanceRemaining = DistanceRemaining;
 				result.CurrentPosition = CurrentPosition;
 
-				result.TimeProgress = TimeProgress;
-				result.TimeElapsed = TimeElapsed;
-				result.TimeRemaining = TimeRemaining;
-				result.CurrentRelativeDayTime = CurrentRelativeDayTime;
+				result.RelativeTimeProgress = RelativeTimeProgress;
+				result.RelativeTimeTotal = RelativeTimeTotal;
+				result.RelativeTimeElapsed = RelativeTimeElapsed;
+				result.RelativeTimeRemaining = RelativeTimeRemaining;
+				result.RelativeTimeCurrent = RelativeTimeCurrent;
 
 				result.VelocityProgress = VelocityProgress;
 				result.VelocityLightYearsMaximum = VelocityLightYearsMaximum;

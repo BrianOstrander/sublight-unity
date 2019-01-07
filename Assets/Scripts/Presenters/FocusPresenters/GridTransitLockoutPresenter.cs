@@ -54,7 +54,14 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitState(TransitState transitState)
 		{
-			Debug.Log("TransitState: " + transitState.State + "." + transitState.Step + "." + (transitState.CurrentStep.Initializing ? "Initializing" : "Normal")+" "+transitState.CurrentStep.Progress);
+			var currProg = "\nVelocity: "+transitState.VelocityLightYearsCurrent;
+			currProg += "\nDistance Remaining: " + transitState.DistanceRemaining;
+			currProg += "\nRelative Time Remaining: " + transitState.RelativeTimeRemaining;
+
+			if (transitState.Step == TransitState.Steps.Transit && transitState.CurrentStep.Initializing) Debug.Log("-----------------------v");
+			Debug.Log("TransitState: " + transitState.State + "." + transitState.Step + "." + (transitState.CurrentStep.Initializing ? "Initializing" : "Normal")+" "+transitState.CurrentStep.Progress+currProg);
+			if (transitState.Step == TransitState.Steps.Finalize && transitState.CurrentStep.Initializing) Debug.Log("-----------------------^");
+
 			switch (transitState.State)
 			{
 				case TransitState.States.Request:
@@ -91,8 +98,8 @@ namespace LunraGames.SubLight.Presenters
 			transitState.DistanceRemaining = transitState.DistanceTotal;
 			transitState.CurrentPosition = transitState.BeginSystem.Position;
 
-			transitState.TimeProgress = 0f;
-			transitState.TimeElapsed = RelativeDayTime.Zero;
+			transitState.RelativeTimeProgress = 0f;
+			transitState.RelativeTimeElapsed = RelativeDayTime.Zero;
 
 			transitState.BeginRelativeDayTime = model.RelativeDayTime;
 
@@ -104,8 +111,10 @@ namespace LunraGames.SubLight.Presenters
 				GalacticTime = transitState.BeginRelativeDayTime.GalacticTime + relativeDurationDelta.GalacticTime
 			};
 
-			transitState.TimeRemaining = relativeDurationDelta;
-			transitState.CurrentRelativeDayTime = transitState.BeginRelativeDayTime;
+			transitState.RelativeTimeTotal = relativeDurationDelta;
+
+			transitState.RelativeTimeRemaining = relativeDurationDelta;
+			transitState.RelativeTimeCurrent = transitState.BeginRelativeDayTime;
 
 			transitState.State = TransitState.States.Active;
 			transitState.Step = TransitState.Steps.Prepare;
@@ -190,7 +199,37 @@ namespace LunraGames.SubLight.Presenters
 				transitState.CurrentStep = currentStep;
 			}
 
-			// TODO: Calculate intermediate values here...
+			switch (currentStep.Step)
+			{
+				case TransitState.Steps.Transit:
+					transitState.DistanceProgress = View.TransitDistanceCurve.Evaluate(currentStep.Progress);
+					transitState.DistanceElapsed = transitState.DistanceProgress * transitState.DistanceTotal;
+					transitState.DistanceRemaining = transitState.DistanceTotal - transitState.DistanceElapsed;
+					transitState.CurrentPosition = UniversePosition.Lerp(transitState.DistanceProgress, transitState.BeginSystem.Position.Value, transitState.EndSystem.Position.Value);
+
+					transitState.RelativeTimeProgress = View.TransitTimeCurve.Evaluate(currentStep.Progress);
+					transitState.RelativeTimeElapsed = transitState.RelativeTimeProgress * transitState.RelativeTimeTotal;
+					transitState.RelativeTimeRemaining = transitState.RelativeTimeTotal - transitState.RelativeTimeElapsed;
+					transitState.RelativeTimeCurrent = transitState.BeginRelativeDayTime + transitState.RelativeTimeElapsed;
+
+					transitState.VelocityProgress = View.TransitVelocityCurve.Evaluate(currentStep.Progress);
+					transitState.VelocityLightYearsCurrent = transitState.VelocityProgress * transitState.VelocityLightYearsMaximum;
+					break;
+				case TransitState.Steps.Finalize:
+					transitState.DistanceProgress = 1f;
+					transitState.DistanceElapsed = transitState.DistanceTotal;
+					transitState.DistanceRemaining = 0f;
+					transitState.CurrentPosition = transitState.EndSystem.Position.Value;
+
+					transitState.RelativeTimeProgress = 1f;
+					transitState.RelativeTimeElapsed = transitState.RelativeTimeTotal;
+					transitState.RelativeTimeRemaining = RelativeDayTime.Zero;
+					transitState.RelativeTimeCurrent = transitState.EndRelativeDayTime;
+
+					transitState.VelocityProgress = 1f;
+					transitState.VelocityLightYearsCurrent = 0f;
+					break;
+			}
 
 			model.TransitState.Value = transitState;
 		}
