@@ -97,7 +97,12 @@ namespace LunraGames.SubLight
 				);
 
 				new GridTransitLockoutPresenter(
-					payload.Game
+					payload.Game,
+					new GridTransitLockoutLanguageBlock
+					{
+						TransitTitle = LanguageStringModel.Override("Crew Lockout"),
+						TransitDescription = LanguageStringModel.Override("Interstellar ark is under automated\ncontrol until reaching destination")
+					}
 				);
 
 				new ClusterPresenter(payload.Game, payload.Game.Galaxy);

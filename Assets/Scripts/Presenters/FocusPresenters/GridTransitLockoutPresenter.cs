@@ -11,14 +11,17 @@ namespace LunraGames.SubLight.Presenters
 	public class GridTransitLockoutPresenter : Presenter<IGridTransitLockoutView>
 	{
 		GameModel model;
+		GridTransitLockoutLanguageBlock language;
 
 		TransitState lastState;
 
 		public GridTransitLockoutPresenter(
-			GameModel model
+			GameModel model,
+			GridTransitLockoutLanguageBlock language
 		)
 		{
 			this.model = model;
+			this.language = language;
 
 			App.Heartbeat.Update += OnUpdate;
 
@@ -106,6 +109,8 @@ namespace LunraGames.SubLight.Presenters
 				GalacticTime = transitState.BeginRelativeDayTime.GalacticTime + relativeDurationDelta.GalacticTime
 			};
 
+			transitState.LengthScalar = 0f;
+
 			transitState.RelativeTimeTotal = relativeDurationDelta;
 
 			transitState.RelativeTimeRemaining = relativeDurationDelta;
@@ -127,7 +132,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				Step = TransitState.Steps.Transit,
 				Initializing = false,
-				Duration = View.TransitDuration.x,
+				Duration = View.GetTransitDuration(transitState.LengthScalar),
 				Elapsed = 0f,
 				Progress = 0f
 			};
@@ -203,8 +208,16 @@ namespace LunraGames.SubLight.Presenters
 					transitState.DistanceRemaining = transitState.DistanceTotal - transitState.DistanceElapsed;
 					transitState.CurrentPosition = UniversePosition.Lerp(transitState.DistanceProgress, transitState.BeginSystem.Position.Value, transitState.EndSystem.Position.Value);
 
-					transitState.RelativeTimeProgress = View.TransitTimeCurve.Evaluate(currentStep.Progress);
-					transitState.RelativeTimeElapsed = transitState.RelativeTimeProgress * transitState.RelativeTimeTotal;
+					View.GetTimeProgress(
+						currentStep.Progress,
+						transitState.LengthScalar,
+						transitState.RelativeTimeTotal,
+						out transitState.RelativeTimeProgress,
+						out transitState.RelativeTimeElapsed
+					);
+
+					//transitState.RelativeTimeProgress = View.TransitTimeMinimumCurve.Evaluate(currentStep.Progress);
+					//transitState.RelativeTimeElapsed = transitState.RelativeTimeProgress * transitState.RelativeTimeTotal;
 					transitState.RelativeTimeRemaining = transitState.RelativeTimeTotal - transitState.RelativeTimeElapsed;
 					transitState.RelativeTimeCurrent = transitState.BeginRelativeDayTime + transitState.RelativeTimeElapsed;
 
@@ -237,7 +250,6 @@ namespace LunraGames.SubLight.Presenters
 			{
 				case TransitState.States.Active:
 					var details = transitState.CurrentStep;
-					Debug.Log("we are: " + details.Step + " init? " + details.Initializing);
 					switch(transitState.Step)
 					{
 						case TransitState.Steps.Prepare:
@@ -263,9 +275,15 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnProcessVisualsPrepareInitialize(TransitState transitState, TransitState.StepDetails details)
 		{
-			Debug.Log("lol called");
 			View.Reset();
+
+			View.TransitTitle = language.TransitTitle.Value.Value;
+			View.TransitDescription = language.TransitDescription.Value.Value;
+
+			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
+
 			ShowView();
+
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetPriorityFocus(ToolbarSelections.System)));
 		}
 
@@ -281,12 +299,12 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnProcessVisualsTransit(TransitState transitState, TransitState.StepDetails details)
 		{
-
+			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
 		}
 
 		void OnProcessVisualsFinalizeInitialize(TransitState transitState, TransitState.StepDetails details)
 		{
-
+			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
 		}
 
 		void OnProcessVisualsFinalize(TransitState transitState, TransitState.StepDetails details)

@@ -69,6 +69,11 @@ namespace LunraGames.SubLight
 		public RelativeDayTime BeginRelativeDayTime;
 		public RelativeDayTime EndRelativeDayTime;
 
+		/// <summary>
+		/// How long thould this take on a scale of shortest possible transit to longest? 0 to 1.
+		/// </summary>
+		public float LengthScalar;
+
 		public float TotalDuration { get { return PrepareStep.Duration + TransitStep.Duration + FinalizeStep.Duration; } }
 		#endregion
 
@@ -162,6 +167,8 @@ namespace LunraGames.SubLight
 				result.EndSystem = EndSystem;
 				result.BeginRelativeDayTime = BeginRelativeDayTime;
 				result.EndRelativeDayTime = EndRelativeDayTime;
+
+				result.LengthScalar = LengthScalar;
 
 				result.State = State;
 				result.Step = Step;
