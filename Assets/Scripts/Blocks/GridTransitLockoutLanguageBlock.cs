@@ -8,5 +8,7 @@ namespace LunraGames.SubLight
 	{
 		public LanguageStringModel TransitTitle;
 		public LanguageStringModel TransitDescription;
+		public LanguageStringModel UnlockLeftTitle;
+		public LanguageStringModel UnlockRightTitle;
 	}
 }

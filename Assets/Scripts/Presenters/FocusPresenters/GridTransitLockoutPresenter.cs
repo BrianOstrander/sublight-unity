@@ -282,6 +282,9 @@ namespace LunraGames.SubLight.Presenters
 
 			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
 
+			View.UnlockLeftTitle = language.UnlockLeftTitle.Value.Value;
+			View.UnlockRightTitle = language.UnlockRightTitle.Value.Value;
+
 			ShowView();
 
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetPriorityFocus(ToolbarSelections.System)));

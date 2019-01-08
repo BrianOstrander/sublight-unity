@@ -28,6 +28,10 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI transitDescriptionLabel;
 		[SerializeField]
 		GridTransitLockoutTimeStampLeaf transitTimeStamp;
+		[SerializeField]
+		TextMeshProUGUI unlockLeftLabel;
+		[SerializeField]
+		TextMeshProUGUI unlockRightLabel;
 
 		[SerializeField]
 		string zeroTransitTimeHexColor;
@@ -55,6 +59,12 @@ namespace LunraGames.SubLight.Views
 		Vector2 detailProgressScaleRange;
 		[SerializeField]
 		Vector2 detailPinwheelSpeedRange;
+		[SerializeField]
+		Vector2 detailToUnlockScaleRange;
+		[SerializeField]
+		Vector2 unlockProgressRange;
+		[SerializeField]
+		Vector2 unlockProgressAnimationRange;
 
 		[Header("Animation Curves")]
 		[SerializeField]
@@ -75,6 +85,14 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve detailProgressCoverScaleCurve;
 		[SerializeField]
 		AnimationCurve detailPinWheelSpeedCurve;
+		[SerializeField]
+		AnimationCurve detailToUnlockScaleCurve;
+		[SerializeField]
+		AnimationCurve detailGroupOpacityByScaleCurve;
+		[SerializeField]
+		AnimationCurve unlockOpacityCurve;
+		[SerializeField]
+		AnimationCurve[] unlockProgressCurves;
 
 		[Header("Animation Objects")]
 		[SerializeField]
@@ -86,6 +104,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		CanvasGroup detailOpacity;
 		[SerializeField]
+		CanvasGroup detailGroupOpacity;
+		[SerializeField]
 		RawImage detailProgress;
 		[SerializeField]
 		RawImage detailProgressDrop;
@@ -95,10 +115,19 @@ namespace LunraGames.SubLight.Views
 		Image detailProgressCover;
 		[SerializeField]
 		RawImage detailPinWheel;
+		[SerializeField]
+		RectTransform detailToUnlockScale;
+		[SerializeField]
+		CanvasGroup unlockOpacity;
+		[SerializeField]
+		RectTransform unlockProgress;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float pinwheelRotation;
 		float pinwheelSpeed;
+
+		AnimationCurve unlockLeftProgressCurve;
+		AnimationCurve unlockRightProgressCurve;
 
 		public float PrepareDuration { get { return prepareDuration; } }
 		public float GetTransitDuration(float scalar = 0f) { return transitCooldownDuration + transitWarmupDuration + (transitDuration.x + ((transitDuration.y - transitDuration.x) * scalar)); }
@@ -114,6 +143,7 @@ namespace LunraGames.SubLight.Views
 				groupOpacity.alpha = groupOpacityCurve.Evaluate(value);
 				groupScale.localScale = Vector3.one * (groupScaleRange.x + ((groupScaleRange.y - groupScaleRange.x) * groupScaleCurve.Evaluate(value)));
 				groupHorizontalOffset.localPosition = groupHorizontalOffset.localPosition.NewX(groupHorizontalOffsetRange.x + ((groupHorizontalOffsetRange.y - groupHorizontalOffsetRange.x) * groupHorizontalOffsetCurve.Evaluate(value)));
+
 				detailOpacity.alpha = detailOpacityCurve.Evaluate(value);
 
 				var detailProgressValue = detailProgressRange.x + ((detailProgressRange.y - detailProgressRange.x) * detailProgressCurve.Evaluate(value));
@@ -126,11 +156,33 @@ namespace LunraGames.SubLight.Views
 				detailProgressCover.transform.localScale = Vector2.one * (detailProgressScaleRange.x + ((detailProgressScaleRange.y - detailProgressScaleRange.x) * detailProgressCoverScaleCurve.Evaluate(value)));
 				detailProgressCover.color = detailProgressCover.color.NewA(detailProgressCoverOpacityCurve.Evaluate(value));
 				detailPinWheel.color = detailPinWheel.color = detailProgressCover.color.NewA(1f - detailProgressCoverOpacityCurve.Evaluate(value));
+
+				var detailToUnlockScaleCurrent = detailToUnlockScaleCurve.Evaluate(value);
+				detailToUnlockScale.localScale = Vector3.one * (detailToUnlockScaleRange.x + ((detailToUnlockScaleRange.y - detailToUnlockScaleRange.x) * detailToUnlockScaleCurrent));
+
+				detailGroupOpacity.alpha = detailGroupOpacityByScaleCurve.Evaluate(1f - detailToUnlockScaleCurrent);
+
+				unlockOpacity.alpha = unlockOpacityCurve.Evaluate(value);
+
+				if (unlockProgressAnimationRange.x <= value)
+				{
+					// Animate unlock progress bar here
+					var unlockProgressBarRange = unlockProgressAnimationRange.y - unlockProgressAnimationRange.x;
+					var barValue = Mathf.Min(value - unlockProgressAnimationRange.x, unlockProgressBarRange) / unlockProgressBarRange;
+					var barRange = unlockProgressRange.y - unlockProgressRange.x;
+					var leftValue = unlockProgressRange.x + (unlockLeftProgressCurve.Evaluate(barValue) * barRange);
+					var rightValue = unlockProgressRange.x + (unlockRightProgressCurve.Evaluate(barValue) * barRange);
+
+					unlockProgress.offsetMin = new Vector2(leftValue, 0f);
+					unlockProgress.offsetMax = new Vector2(-rightValue, 0f);
+				}
 			}
 		}
 
 		public string TransitTitle { set { transitTitleLabel.text = value ?? string.Empty; } }
 		public string TransitDescription { set { transitDescriptionLabel.text = value ?? string.Empty; } }
+		public string UnlockLeftTitle { set { unlockLeftLabel.text = value ?? string.Empty; } }
+		public string UnlockRightTitle { set { unlockRightLabel.text = value ?? string.Empty; } }
 
 		public void SetTimeStamp(DayTime remaining, DayTime total)
 		{
@@ -252,6 +304,17 @@ namespace LunraGames.SubLight.Views
 
 			TransitTitle = string.Empty;
 			TransitDescription = string.Empty;
+			UnlockLeftTitle = string.Empty;
+			UnlockRightTitle = string.Empty;
+
+			var progressCurveOptions = new List<int>();
+			for (var i = 0; i < unlockProgressCurves.Length; i++) progressCurveOptions.Add(i);
+			var leftIndex = progressCurveOptions.Random();
+			progressCurveOptions.RemoveAt(leftIndex);
+			var rightIndex = progressCurveOptions.Random();
+
+			unlockLeftProgressCurve = unlockProgressCurves[leftIndex];
+			unlockRightProgressCurve = unlockProgressCurves[rightIndex];
 		}
 
 		protected override void OnIdle(float delta)
@@ -294,5 +357,7 @@ namespace LunraGames.SubLight.Views
 		string TransitTitle { set; }
 		string TransitDescription { set; }
 		void SetTimeStamp(DayTime remaining, DayTime total);
+		string UnlockLeftTitle { set; }
+		string UnlockRightTitle { set; }
 	}
 }
