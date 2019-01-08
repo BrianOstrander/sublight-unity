@@ -35,6 +35,10 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		string zeroTransitTimeHexColor;
+		[SerializeField]
+		float unlockStatusLabelListInterval;
+		[SerializeField]
+		float unlockStatusLabelListCooldown;
 
 		[SerializeField]
 		AnimationCurve transitDistanceCurve;
@@ -65,6 +69,8 @@ namespace LunraGames.SubLight.Views
 		Vector2 unlockProgressRange;
 		[SerializeField]
 		Vector2 unlockProgressAnimationRange;
+		[SerializeField]
+		Vector2 unlockStatusLabelListRange;
 
 		[Header("Animation Curves")]
 		[SerializeField]
@@ -121,6 +127,8 @@ namespace LunraGames.SubLight.Views
 		CanvasGroup unlockOpacity;
 		[SerializeField]
 		RectTransform unlockProgress;
+		[SerializeField]
+		RectTransform unlockLeftStatusLabelList;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float pinwheelRotation;
@@ -128,6 +136,10 @@ namespace LunraGames.SubLight.Views
 
 		AnimationCurve unlockLeftProgressCurve;
 		AnimationCurve unlockRightProgressCurve;
+
+		float unlockLeftProgressLastValue;
+		float unlockLeftStatusListCooldownRemaining;
+		float unlockLeftStatusListTarget;
 
 		public float PrepareDuration { get { return prepareDuration; } }
 		public float GetTransitDuration(float scalar = 0f) { return transitCooldownDuration + transitWarmupDuration + (transitDuration.x + ((transitDuration.y - transitDuration.x) * scalar)); }
@@ -175,6 +187,14 @@ namespace LunraGames.SubLight.Views
 
 					unlockProgress.offsetMin = new Vector2(leftValue, 0f);
 					unlockProgress.offsetMax = new Vector2(-rightValue, 0f);
+
+					if (!Mathf.Approximately(unlockLeftProgressLastValue, leftValue) && Mathf.Approximately(0f, unlockLeftStatusListCooldownRemaining))
+					{
+						unlockLeftProgressLastValue = leftValue;
+						unlockLeftStatusListTarget = Mathf.Max(0f, unlockLeftStatusListTarget - unlockStatusLabelListInterval);
+						unlockLeftStatusListCooldownRemaining = unlockStatusLabelListCooldown;
+						Debug.Log(unlockLeftStatusListTarget);
+					}
 				}
 			}
 		}
@@ -315,6 +335,8 @@ namespace LunraGames.SubLight.Views
 
 			unlockLeftProgressCurve = unlockProgressCurves[leftIndex];
 			unlockRightProgressCurve = unlockProgressCurves[rightIndex];
+
+			unlockLeftStatusListTarget = unlockStatusLabelListRange.x;
 		}
 
 		protected override void OnIdle(float delta)
@@ -324,6 +346,12 @@ namespace LunraGames.SubLight.Views
 			pinwheelRotation = pinwheelRotation + ((detailPinwheelSpeedRange.x + ((detailPinwheelSpeedRange.y - detailPinwheelSpeedRange.x) * pinwheelSpeed)) * delta);
 			pinwheelRotation = pinwheelRotation % 360f;
 			detailPinWheel.material.SetFloat(ShaderConstants.HoloPinWheel.Rotation, pinwheelRotation);
+
+			unlockLeftStatusListCooldownRemaining = Mathf.Max(0f, unlockLeftStatusListCooldownRemaining - delta);
+
+			unlockLeftStatusLabelList.offsetMin = new Vector2(0f, unlockLeftStatusListTarget);
+			//var leftListDelta = unlockLeftStatusListTarget - unlockLeftStatusLabelList.localPosition.y;
+			//unlockLeftStatusLabelList.localPosition = unlockLeftStatusLabelList.localPosition.NewY(Mathf.Max(unlockLeftStatusListTarget, unlockLeftStatusLabelList.localPosition.y - delta));
 		}
 
 		#region Events
