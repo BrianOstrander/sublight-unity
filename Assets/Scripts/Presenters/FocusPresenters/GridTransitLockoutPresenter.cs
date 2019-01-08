@@ -6,6 +6,8 @@ using UnityEngine;
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
+using LunraGames.NumberDemon;
+
 namespace LunraGames.SubLight.Presenters
 {
 	public class GridTransitLockoutPresenter : Presenter<IGridTransitLockoutView>
@@ -284,6 +286,22 @@ namespace LunraGames.SubLight.Presenters
 
 			View.UnlockLeftTitle = language.UnlockLeftTitle.Value.Value;
 			View.UnlockRightTitle = language.UnlockRightTitle.Value.Value;
+
+			var leftStatuses = new List<string>();
+			var rightStatuses = new List<string>();
+
+			foreach (var status in language.UnlockLeftStatuses)
+			{
+				leftStatuses.Insert(DemonUtility.GetNextInteger(0, leftStatuses.Count), status.Value.Value);
+			}
+
+			foreach (var status in language.UnlockRightStatuses)
+			{
+				rightStatuses.Insert(DemonUtility.GetNextInteger(0, rightStatuses.Count), status.Value.Value);
+			}
+
+			View.UnlockLeftStatuses = leftStatuses.ToArray();
+			View.UnlockRightStatuses = rightStatuses.ToArray();
 
 			ShowView();
 

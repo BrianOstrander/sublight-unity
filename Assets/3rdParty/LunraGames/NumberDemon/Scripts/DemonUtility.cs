@@ -130,9 +130,28 @@ namespace LunraGames.NumberDemon
 			return (long)(value - UlongHalfValue);
 		}
 
+		public static bool NextBool { get { return Generator.NextBool; } }
 		public static int NextInteger { get { return Generator.NextInteger; } }
 		public static long NextLong { get { return Generator.NextLong; } }
 		public static float NextFloat { get { return Generator.NextFloat; } }
 		public static Color NextColor { get { return new Color(NextFloat, NextFloat, NextFloat); } }
+
+		public static byte[] GetNextBytes(int count) { return Generator.GetNextBytes(count); }
+
+		/// <summary>
+		/// Gets the next integer between the inclusive min and exclusive max.
+		/// </summary>
+		/// <returns>The next integer.</returns>
+		/// <param name="min">Min, included.</param>
+		/// <param name="max">Max, excluded.</param>
+		public static int GetNextInteger(int min = 0, int max = int.MaxValue) { return Generator.GetNextInteger(min, max); }
+
+		/// <summary>
+		/// Gets the next float between the inclusive min and exclusive max.
+		/// </summary>
+		/// <returns>The next float.</returns>
+		/// <param name="min">Min, included.</param>
+		/// <param name="max">Max, excluded.</param>
+		public static float GetNextFloat(float min = 0f, float max = float.MaxValue) { return Generator.GetNextFloat(min, max); }
 	}
 }

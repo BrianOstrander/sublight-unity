@@ -32,13 +32,17 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI unlockLeftLabel;
 		[SerializeField]
 		TextMeshProUGUI unlockRightLabel;
+		[SerializeField]
+		TextMeshProUGUI[] unlockLeftStatusLabels;
+		[SerializeField]
+		TextMeshProUGUI[] unlockRightStatusLabels;
 
 		[SerializeField]
 		string zeroTransitTimeHexColor;
 		[SerializeField]
 		float unlockStatusLabelListInterval;
 		[SerializeField]
-		float unlockStatusLabelListCooldown;
+		float unlockStatusLabelListIntervalDuration;
 
 		[SerializeField]
 		AnimationCurve transitDistanceCurve;
@@ -50,7 +54,6 @@ namespace LunraGames.SubLight.Views
 		int transitTimeCooldownDays;
 		[SerializeField]
 		AnimationCurve transitVelocityCurve;
-
 
 		[Header("Animation Ranges")]
 		[SerializeField]
@@ -71,6 +74,8 @@ namespace LunraGames.SubLight.Views
 		Vector2 unlockProgressAnimationRange;
 		[SerializeField]
 		Vector2 unlockStatusLabelListRange;
+		[SerializeField]
+		Vector2 unlockStatusLabelListCooldownRange;
 
 		[Header("Animation Curves")]
 		[SerializeField]
@@ -129,6 +134,8 @@ namespace LunraGames.SubLight.Views
 		RectTransform unlockProgress;
 		[SerializeField]
 		RectTransform unlockLeftStatusLabelList;
+		[SerializeField]
+		RectTransform unlockRightStatusLabelList;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float pinwheelRotation;
@@ -140,6 +147,10 @@ namespace LunraGames.SubLight.Views
 		float unlockLeftProgressLastValue;
 		float unlockLeftStatusListCooldownRemaining;
 		float unlockLeftStatusListTarget;
+
+		float unlockRightProgressLastValue;
+		float unlockRightStatusListCooldownRemaining;
+		float unlockRightStatusListTarget;
 
 		public float PrepareDuration { get { return prepareDuration; } }
 		public float GetTransitDuration(float scalar = 0f) { return transitCooldownDuration + transitWarmupDuration + (transitDuration.x + ((transitDuration.y - transitDuration.x) * scalar)); }
@@ -192,8 +203,14 @@ namespace LunraGames.SubLight.Views
 					{
 						unlockLeftProgressLastValue = leftValue;
 						unlockLeftStatusListTarget = Mathf.Max(0f, unlockLeftStatusListTarget - unlockStatusLabelListInterval);
-						unlockLeftStatusListCooldownRemaining = unlockStatusLabelListCooldown;
-						Debug.Log(unlockLeftStatusListTarget);
+						unlockLeftStatusListCooldownRemaining = unlockStatusLabelListCooldownRange.x + ((unlockStatusLabelListCooldownRange.y - unlockStatusLabelListCooldownRange.x) * NumberDemon.DemonUtility.NextFloat);
+					}
+
+					if (!Mathf.Approximately(unlockRightProgressLastValue, rightValue) && Mathf.Approximately(0f, unlockRightStatusListCooldownRemaining))
+					{
+						unlockRightProgressLastValue = rightValue;
+						unlockRightStatusListTarget = Mathf.Max(0f, unlockRightStatusListTarget - unlockStatusLabelListInterval);
+						unlockRightStatusListCooldownRemaining = unlockStatusLabelListCooldownRange.x + ((unlockStatusLabelListCooldownRange.y - unlockStatusLabelListCooldownRange.x) * NumberDemon.DemonUtility.NextFloat);
 					}
 				}
 			}
@@ -203,6 +220,9 @@ namespace LunraGames.SubLight.Views
 		public string TransitDescription { set { transitDescriptionLabel.text = value ?? string.Empty; } }
 		public string UnlockLeftTitle { set { unlockLeftLabel.text = value ?? string.Empty; } }
 		public string UnlockRightTitle { set { unlockRightLabel.text = value ?? string.Empty; } }
+
+		public string[] UnlockLeftStatuses { set { SetStatuses(unlockLeftStatusLabels, value ?? new string[0]); } }
+		public string[] UnlockRightStatuses { set { SetStatuses(unlockRightStatusLabels, value ?? new string[0]); } }
 
 		public void SetTimeStamp(DayTime remaining, DayTime total)
 		{
@@ -286,6 +306,15 @@ namespace LunraGames.SubLight.Views
 			timeProgress = elapsed.ShipTime.TotalTime / duration.ShipTime.TotalTime;
 		}
 
+		void SetStatuses(TextMeshProUGUI[] labels, params string[] statuses)
+		{
+			for (var i = 0; i < labels.Length; i++)
+			{
+				var currLabel = labels[(labels.Length - 1) - i];
+				currLabel.text = i < statuses.Length ? statuses[i] : string.Empty;
+			}
+		}
+
 		string ApplyZeroColor(string value, bool apply = true)
 		{
 			if (!apply) return value;
@@ -327,6 +356,9 @@ namespace LunraGames.SubLight.Views
 			UnlockLeftTitle = string.Empty;
 			UnlockRightTitle = string.Empty;
 
+			UnlockLeftStatuses = null;
+			UnlockRightStatuses = null;
+
 			var progressCurveOptions = new List<int>();
 			for (var i = 0; i < unlockProgressCurves.Length; i++) progressCurveOptions.Add(i);
 			var leftIndex = progressCurveOptions.Random();
@@ -337,6 +369,7 @@ namespace LunraGames.SubLight.Views
 			unlockRightProgressCurve = unlockProgressCurves[rightIndex];
 
 			unlockLeftStatusListTarget = unlockStatusLabelListRange.x;
+			unlockRightStatusListTarget = unlockStatusLabelListRange.x;
 		}
 
 		protected override void OnIdle(float delta)
@@ -348,10 +381,17 @@ namespace LunraGames.SubLight.Views
 			detailPinWheel.material.SetFloat(ShaderConstants.HoloPinWheel.Rotation, pinwheelRotation);
 
 			unlockLeftStatusListCooldownRemaining = Mathf.Max(0f, unlockLeftStatusListCooldownRemaining - delta);
+			unlockRightStatusListCooldownRemaining = Mathf.Max(0f, unlockRightStatusListCooldownRemaining - delta);
 
-			unlockLeftStatusLabelList.offsetMin = new Vector2(0f, unlockLeftStatusListTarget);
-			//var leftListDelta = unlockLeftStatusListTarget - unlockLeftStatusLabelList.localPosition.y;
-			//unlockLeftStatusLabelList.localPosition = unlockLeftStatusLabelList.localPosition.NewY(Mathf.Max(unlockLeftStatusListTarget, unlockLeftStatusLabelList.localPosition.y - delta));
+			if (unlockLeftStatusListTarget - unlockLeftStatusLabelList.offsetMin.y < 0f)
+			{
+				unlockLeftStatusLabelList.offsetMin = new Vector2(0f, Mathf.Max(unlockLeftStatusListTarget, unlockLeftStatusLabelList.offsetMin.y - (delta * unlockStatusLabelListInterval * (1f / unlockStatusLabelListIntervalDuration))));
+			}
+
+			if (unlockRightStatusListTarget - unlockRightStatusLabelList.offsetMin.y < 0f)
+			{
+				unlockRightStatusLabelList.offsetMin = new Vector2(0f, Mathf.Max(unlockRightStatusListTarget, unlockRightStatusLabelList.offsetMin.y - (delta * unlockStatusLabelListInterval * (1f / unlockStatusLabelListIntervalDuration))));
+			}
 		}
 
 		#region Events
@@ -387,5 +427,8 @@ namespace LunraGames.SubLight.Views
 		void SetTimeStamp(DayTime remaining, DayTime total);
 		string UnlockLeftTitle { set; }
 		string UnlockRightTitle { set; }
+
+		string[] UnlockLeftStatuses { set; }
+		string[] UnlockRightStatuses { set; }
 	}
 }

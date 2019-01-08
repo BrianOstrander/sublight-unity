@@ -103,7 +103,31 @@ namespace LunraGames.SubLight
 						TransitTitle = LanguageStringModel.Override("Crew Lockout"),
 						TransitDescription = LanguageStringModel.Override("Interstellar ark is under automated\ncontrol until reaching destination"),
 						UnlockLeftTitle = LanguageStringModel.Override("Unlocking"),
-						UnlockRightTitle = LanguageStringModel.Override("System Survey")
+						UnlockRightTitle = LanguageStringModel.Override("System Survey"),
+						UnlockLeftStatuses = LanguageStringModel.Overrides(
+							"Restarting Crew Control System <b>Success</b>",
+							"Confirming Subsystem Integrity <b>Success</b>",
+							"Generating Administrator Privileges <b>Passed</b>",
+							"Confirming Admin Identities <b>Validated</b>",
+							"Unlocking Engine Control Systems <b>Success</b>",
+							"Flushing Life Support Mechanisms <b>Vented</b>",
+							"Updating Hull Damage Manifest <b>Recorded</b>",
+							"Aligning Astrogation Sensors <b>Calibrated</b>",
+							"Locating Tracer From Terra <b>Failed</b>",
+							"Downloading Database Deltas <b>Disconnected</b>"
+						),
+						UnlockRightStatuses = LanguageStringModel.Overrides(
+							"<b>Waking</b> Probe Bay",
+							"<b>Scanning</b> Surface Of Primary Bodies",
+							"<b>Running</b> Chemical Analysis",
+							"<b>Collating</b> Results Of Scans",
+							"<b>Processing</b> Atmospheric Data",
+							"<b>Rendering</b> Orbital Anomalies",
+							"<b>Sweeping</b> Debris Fields For Impacts",
+							"<b>Integrating</b> Collected Data From Databases",
+							"<b>Rewriting</b> Known System Entries",
+							"<b>Assigning</b> Targets For Further Study"
+						)
 					}
 				);
 
