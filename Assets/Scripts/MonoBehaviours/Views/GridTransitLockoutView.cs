@@ -68,6 +68,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		AnimationCurve detailProgressCurve;
 		[SerializeField]
+		AnimationCurve detailProgressBackgroundOpacityCurve;
+		[SerializeField]
 		AnimationCurve detailProgressCoverOpacityCurve;
 		[SerializeField]
 		AnimationCurve detailProgressCoverScaleCurve;
@@ -85,6 +87,10 @@ namespace LunraGames.SubLight.Views
 		CanvasGroup detailOpacity;
 		[SerializeField]
 		RawImage detailProgress;
+		[SerializeField]
+		RawImage detailProgressDrop;
+		[SerializeField]
+		Image detailProgressBackground;
 		[SerializeField]
 		Image detailProgressCover;
 		[SerializeField]
@@ -109,10 +115,14 @@ namespace LunraGames.SubLight.Views
 				groupScale.localScale = Vector3.one * (groupScaleRange.x + ((groupScaleRange.y - groupScaleRange.x) * groupScaleCurve.Evaluate(value)));
 				groupHorizontalOffset.localPosition = groupHorizontalOffset.localPosition.NewX(groupHorizontalOffsetRange.x + ((groupHorizontalOffsetRange.y - groupHorizontalOffsetRange.x) * groupHorizontalOffsetCurve.Evaluate(value)));
 				detailOpacity.alpha = detailOpacityCurve.Evaluate(value);
-				detailProgress.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstantVanish.Vanish, detailProgressRange.x + ((detailProgressRange.y - detailProgressRange.x) * detailProgressCurve.Evaluate(value)));
+
+				var detailProgressValue = detailProgressRange.x + ((detailProgressRange.y - detailProgressRange.x) * detailProgressCurve.Evaluate(value));
+				detailProgress.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstantVanish.Vanish, detailProgressValue);
+				detailProgressDrop.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstantVanish.Vanish, detailProgressValue);
 				pinwheelSpeed = detailPinWheelSpeedCurve.Evaluate(value);
 				detailPinWheel.material.SetFloat(ShaderConstants.HoloPinWheel.Speed, pinwheelSpeed);
 
+				detailProgressBackground.color = detailProgressBackground.color.NewA(detailProgressBackgroundOpacityCurve.Evaluate(value));
 				detailProgressCover.transform.localScale = Vector2.one * (detailProgressScaleRange.x + ((detailProgressScaleRange.y - detailProgressScaleRange.x) * detailProgressCoverScaleCurve.Evaluate(value)));
 				detailProgressCover.color = detailProgressCover.color.NewA(detailProgressCoverOpacityCurve.Evaluate(value));
 				detailPinWheel.color = detailPinWheel.color = detailProgressCover.color.NewA(1f - detailProgressCoverOpacityCurve.Evaluate(value));
@@ -232,6 +242,7 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			detailProgress.material = new Material(detailProgress.material);
+			detailProgressDrop.material = new Material(detailProgressDrop.material);
 			detailPinWheel.material = new Material(detailPinWheel.material);
 
 			pinwheelRotation = 0f;

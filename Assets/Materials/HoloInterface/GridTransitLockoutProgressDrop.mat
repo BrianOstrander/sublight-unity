@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: GridTransitLockoutProgress
+  m_Name: GridTransitLockoutProgressDrop
   m_Shader: {fileID: 4800000, guid: c6f34a9c5bed24d6abb2f6d6462d3b27, type: 3}
   m_ShaderKeywords: BOOLEAN_D7E37715_ON
   m_LightmapFlags: 4
@@ -90,7 +90,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _DistanceFieldRange: {r: 0.4, g: 0.401, b: 0, a: 0}
+    - _DistanceFieldRange: {r: 0.5, g: 0.501, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NearFarPlanes: {r: 0, g: 30, b: 0, a: 0}
     - _PrimaryColor: {r: 0.9882353, g: 0.37254903, b: 0.37254903, a: 1}
