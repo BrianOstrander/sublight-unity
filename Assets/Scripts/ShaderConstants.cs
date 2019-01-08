@@ -186,6 +186,20 @@ namespace LunraGames.SubLight
 			public const string NearFarPlanes = "_NearFarPlanes";
 		}
 
+		public static class HoloDistanceFieldColorConstantVanish
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/DistanceField/ColorConstantVanish";
+			public const string DistanceField = "_DistanceField";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+			public const string DistanceFieldRange = "_DistanceFieldRange";
+			public const string NearFarPlanes = "_NearFarPlanes";
+			public const string Vanish = "_Vanish";
+		}
+
 		public static class HoloDistanceFieldColorConstantScrollingRange
 		{
 			/// <summary>
@@ -516,6 +530,13 @@ namespace LunraGames.SubLight
 			public const string CurrentColor = "_CurrentColor";
 
 			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloPinWheel
+		{
+			public const string Name = "SubLight/Holo/PinWheel";
+			public const string Speed = "_Speed";
+			public const string Rotation = "_Rotation";
 		}
 
 		/*

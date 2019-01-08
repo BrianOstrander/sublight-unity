@@ -49,6 +49,12 @@ namespace LunraGames.SubLight.Views
 		Vector2 groupScaleRange;
 		[SerializeField]
 		Vector2 groupHorizontalOffsetRange;
+		[SerializeField]
+		Vector2 detailProgressRange;
+		[SerializeField]
+		Vector2 detailProgressScaleRange;
+		[SerializeField]
+		Vector2 detailPinwheelSpeedRange;
 
 		[Header("Animation Curves")]
 		[SerializeField]
@@ -59,6 +65,14 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve groupHorizontalOffsetCurve;
 		[SerializeField]
 		AnimationCurve detailOpacityCurve;
+		[SerializeField]
+		AnimationCurve detailProgressCurve;
+		[SerializeField]
+		AnimationCurve detailProgressCoverOpacityCurve;
+		[SerializeField]
+		AnimationCurve detailProgressCoverScaleCurve;
+		[SerializeField]
+		AnimationCurve detailPinWheelSpeedCurve;
 
 		[Header("Animation Objects")]
 		[SerializeField]
@@ -69,7 +83,16 @@ namespace LunraGames.SubLight.Views
 		Transform groupHorizontalOffset;
 		[SerializeField]
 		CanvasGroup detailOpacity;
+		[SerializeField]
+		RawImage detailProgress;
+		[SerializeField]
+		Image detailProgressCover;
+		[SerializeField]
+		RawImage detailPinWheel;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		float pinwheelRotation;
+		float pinwheelSpeed;
 
 		public float PrepareDuration { get { return prepareDuration; } }
 		public float GetTransitDuration(float scalar = 0f) { return transitCooldownDuration + transitWarmupDuration + (transitDuration.x + ((transitDuration.y - transitDuration.x) * scalar)); }
@@ -86,6 +109,13 @@ namespace LunraGames.SubLight.Views
 				groupScale.localScale = Vector3.one * (groupScaleRange.x + ((groupScaleRange.y - groupScaleRange.x) * groupScaleCurve.Evaluate(value)));
 				groupHorizontalOffset.localPosition = groupHorizontalOffset.localPosition.NewX(groupHorizontalOffsetRange.x + ((groupHorizontalOffsetRange.y - groupHorizontalOffsetRange.x) * groupHorizontalOffsetCurve.Evaluate(value)));
 				detailOpacity.alpha = detailOpacityCurve.Evaluate(value);
+				detailProgress.material.SetFloat(ShaderConstants.HoloDistanceFieldColorConstantVanish.Vanish, detailProgressRange.x + ((detailProgressRange.y - detailProgressRange.x) * detailProgressCurve.Evaluate(value)));
+				pinwheelSpeed = detailPinWheelSpeedCurve.Evaluate(value);
+				detailPinWheel.material.SetFloat(ShaderConstants.HoloPinWheel.Speed, pinwheelSpeed);
+
+				detailProgressCover.transform.localScale = Vector2.one * (detailProgressScaleRange.x + ((detailProgressScaleRange.y - detailProgressScaleRange.x) * detailProgressCoverScaleCurve.Evaluate(value)));
+				detailProgressCover.color = detailProgressCover.color.NewA(detailProgressCoverOpacityCurve.Evaluate(value));
+				detailPinWheel.color = detailPinWheel.color = detailProgressCover.color.NewA(1f - detailProgressCoverOpacityCurve.Evaluate(value));
 			}
 		}
 
@@ -201,10 +231,25 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
+			detailProgress.material = new Material(detailProgress.material);
+			detailPinWheel.material = new Material(detailPinWheel.material);
+
+			pinwheelRotation = 0f;
+			pinwheelSpeed = 0f;
+
 			AnimationProgress = 0f;
 
 			TransitTitle = string.Empty;
 			TransitDescription = string.Empty;
+		}
+
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+			pinwheelRotation = pinwheelRotation + ((detailPinwheelSpeedRange.x + ((detailPinwheelSpeedRange.y - detailPinwheelSpeedRange.x) * pinwheelSpeed)) * delta);
+			pinwheelRotation = pinwheelRotation % 360f;
+			detailPinWheel.material.SetFloat(ShaderConstants.HoloPinWheel.Rotation, pinwheelRotation);
 		}
 
 		#region Events
