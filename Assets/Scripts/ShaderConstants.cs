@@ -541,12 +541,28 @@ namespace LunraGames.SubLight
 			public const string Rotation = "_Rotation";
 		}
 
+		public static class HoloPinInside
+		{
+			public const string Name = "SubLight/Holo/PinInside";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloPinOutside
+		{
+			public const string Name = "SubLight/Holo/PinOutside";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string Alpha = "_Alpha";
+		}
+
+		#region NonSubLight Shaders
 		public static class SkyboxPanoramic
 		{
 			public const string Name = "Skybox/Panoramic";
 			public const string Rotation = "_Rotation";
 			public const string Exposure = "_Exposure";
 		}
+  		#endregion
 
 		/*
 		public static class SomeShader

@@ -27,8 +27,8 @@ namespace LunraGames.SubLight.Views
 
 		bool? wasInBounds;
 
-		public UniverseScaleAxises ScaleIgnores { get { return scaleIgnores; } }
-		public UniverseScaleAxises PositionIgnores { get { return positionIgnores; } }
+		public UniverseScaleAxises ScaleIgnores { get { return scaleIgnores; } set { scaleIgnores = value; } }
+		public UniverseScaleAxises PositionIgnores { get { return positionIgnores; } set { positionIgnores = value; } }
 		protected Transform ScaleArea { get { return scaleArea; } }
 		protected Transform PositionArea { get { return positionArea; } }
 
@@ -104,8 +104,8 @@ namespace LunraGames.SubLight.Views
 		bool RestrictVisibiltyInBounds { get; }
 		bool IsInBounds { get; }
 		float RadiusNormal { get; }
-		UniverseScaleAxises ScaleIgnores { get; }
-		UniverseScaleAxises PositionIgnores { get; }
+		UniverseScaleAxises ScaleIgnores { get; set; }
+		UniverseScaleAxises PositionIgnores { get; set; }
 
 		Func<Vector3, float, float> GetRadiusNormalCallback { get; set; }
 		Func<Vector3, float, bool> GetPositionIsInRadiusCallback { get; set; }
