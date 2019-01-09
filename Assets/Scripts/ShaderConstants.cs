@@ -541,6 +541,13 @@ namespace LunraGames.SubLight
 			public const string Rotation = "_Rotation";
 		}
 
+		public static class SkyboxPanoramic
+		{
+			public const string Name = "Skybox/Panoramic";
+			public const string Rotation = "_Rotation";
+			public const string Exposure = "_Exposure";
+		}
+
 		/*
 		public static class SomeShader
 		{

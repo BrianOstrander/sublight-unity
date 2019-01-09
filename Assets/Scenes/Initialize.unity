@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 1040765818}
+  m_SkyboxMaterial: {fileID: 1095473647}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -286,7 +286,65 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!21 &1040765818
+--- !u!114 &1048607349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 114550064048812030, guid: f4c89923c13154bd0b1db6594d11517a,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 71555766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cbc7f0d0df5427aaba03ce41a02061, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skybox: {fileID: 2100000, guid: 3cdadd488d13e4685a4a5bfe0a320bda, type: 2}
+  ambientLight: {r: 1, g: 1, b: 1, a: 1}
+  skyboxRotationSpeedRange:
+    primary: 0
+    secondary: 180
+  skyboxExposureRange:
+    primary: 2
+    secondary: 1
+  skyboxExposureByTimeScalarCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1048607350
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4495475810264188, guid: f4c89923c13154bd0b1db6594d11517a,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 71555766}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2051072388}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &1095473647
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -353,7 +411,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Exposure: 1
+    - _Exposure: 2
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -382,34 +440,6 @@ Material:
     - _SkyTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _Tint: {r: 0.1509434, g: 0.1509434, b: 0.1509434, a: 1}
---- !u!114 &1048607349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114550064048812030, guid: f4c89923c13154bd0b1db6594d11517a,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 71555766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35cbc7f0d0df5427aaba03ce41a02061, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skybox: {fileID: 2100000, guid: 3cdadd488d13e4685a4a5bfe0a320bda, type: 2}
-  ambientLight: {r: 1, g: 1, b: 1, a: 1}
---- !u!4 &1048607350
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 4495475810264188, guid: f4c89923c13154bd0b1db6594d11517a,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 71555766}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2051072388}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1403439392
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,7 +27,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		AnimationCurve gridIntensity;
 
-		float baseVerticalOffset;
+		float baseScrollSpeed;
+		float baseScrollOffset;
 
 		public RenderLayerTextureBlock[] LayerTextures
 		{
@@ -85,6 +86,7 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
+				baseScrollSpeed = baseScrollSpeedRange.x + ((baseScrollSpeedRange.y - baseScrollSpeedRange.x) * TimeScalar);
 				glowMesh.material.SetFloat(ShaderConstants.RoomIrisGlow.Speed, value);
 				timeScalar = value;
 			}
@@ -100,15 +102,15 @@ namespace LunraGames.SubLight.Views
 			HoloColor = Color.white;
 			TimeScalar = 0f;
 
-			baseVerticalOffset = 0f;
+			baseScrollOffset = 0f;
 		}
 
 		protected override void OnIdle(float delta)
 		{
 			base.OnIdle(delta);
-			var currOffsetSpeed = baseScrollSpeedRange.x + ((baseScrollSpeedRange.y - baseScrollSpeedRange.x) * TimeScalar);
-			baseVerticalOffset = (baseVerticalOffset + (currOffsetSpeed * delta)) % 1f;
-			glowMesh.material.SetFloat(ShaderConstants.RoomIrisGlow.VerticalOffset, baseVerticalOffset);
+
+			baseScrollOffset = (baseScrollOffset + (baseScrollSpeed * delta)) % 1f;
+			glowMesh.material.SetFloat(ShaderConstants.RoomIrisGlow.VerticalOffset, baseScrollOffset);
 		}
 	}
 

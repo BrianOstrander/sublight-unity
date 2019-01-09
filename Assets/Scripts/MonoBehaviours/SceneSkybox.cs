@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunraGames.SubLight
@@ -11,23 +9,55 @@ namespace LunraGames.SubLight
 		Material skybox;
 		[SerializeField]
 		Color ambientLight = Color.white;
+		[SerializeField]
+		FloatRange skyboxRotationSpeedRange;
+		[SerializeField]
+		FloatRange skyboxExposureRange;
+		[SerializeField]
+		AnimationCurve skyboxExposureByTimeScalarCurve;
+
+		float skyboxRotationSpeed;
+		float skyboxRotation;
+
+		float timeScalar;
+		public float TimeScalar
+		{
+			set
+			{
+				timeScalar = value;
+				ApplyTimeScalar();
+			}
+			private get { return timeScalar; }
+		}
 
 		void Start()
 		{
-			Apply();
+			ApplyRenderSettings();
 		}
 
-#if UNITY_EDITOR
 		void Update()
 		{
-			if (!Application.isPlaying && DevPrefs.AutoApplySkybox) Apply();	
-		}
-#endif
+			var isPausedEditor = Application.isEditor && !Application.isPlaying;
+			if (isPausedEditor && DevPrefs.AutoApplySkybox) ApplyRenderSettings();
 
-		void Apply()
+			if (isPausedEditor) return;
+
+			skyboxRotation = (skyboxRotation + (skyboxRotationSpeed * Time.deltaTime)) % 360f;
+			RenderSettings.skybox.SetFloat(ShaderConstants.SkyboxPanoramic.Rotation, skyboxRotation);
+		}
+
+		public void ApplyRenderSettings()
 		{
 			RenderSettings.skybox = new Material(skybox);
 			RenderSettings.ambientLight = ambientLight;
+
+			ApplyTimeScalar();
+		}
+
+		void ApplyTimeScalar()
+		{
+			skyboxRotationSpeed = skyboxRotationSpeedRange.Evaluate(TimeScalar);
+			RenderSettings.skybox.SetFloat(ShaderConstants.SkyboxPanoramic.Exposure, skyboxExposureRange.Evaluate(skyboxExposureByTimeScalarCurve.Evaluate(TimeScalar)));
 		}
 	}
 }
