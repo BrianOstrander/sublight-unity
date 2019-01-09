@@ -55,17 +55,21 @@ namespace LunraGames.SubLight.Views
 		Color unlockProgressBarFullColor;
 
 		[SerializeField]
-		AnimationCurve transitDistanceCurve;
-		[SerializeField]
 		AnimationCurve transitTimeCurve;
 		[SerializeField]
 		int transitTimeWarmupDays;
 		[SerializeField]
 		int transitTimeCooldownDays;
 		[SerializeField]
+		float completedEmission;
+
+		[Header("Animation Static")]
+		[SerializeField]
+		AnimationCurve transitDistanceCurve;
+		[SerializeField]
 		AnimationCurve transitVelocityCurve;
 		[SerializeField]
-		float completedEmission;
+		AnimationCurve transitTimeScalarCurve;
 
 		[Header("Animation Ranges")]
 		[SerializeField]
@@ -186,6 +190,7 @@ namespace LunraGames.SubLight.Views
 
 		public AnimationCurve TransitDistanceCurve { get { return transitDistanceCurve; } }
 		public AnimationCurve TransitVelocityCurve { get { return transitVelocityCurve; } }
+		public AnimationCurve TransitTimeScalarCurve { get { return transitTimeScalarCurve; } }
 
 		public float AnimationProgress
 		{
@@ -474,6 +479,7 @@ namespace LunraGames.SubLight.Views
 
 		AnimationCurve TransitDistanceCurve { get; }
 		AnimationCurve TransitVelocityCurve { get; }
+		AnimationCurve TransitTimeScalarCurve { get; }
 
 		void GetTimeProgress(
 			float transitProgress,

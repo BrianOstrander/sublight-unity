@@ -109,6 +109,7 @@ namespace LunraGames.SubLight.Presenters
 
 			transitState.RelativeTimeRemaining = relativeDurationDelta;
 			transitState.RelativeTimeCurrent = transitState.BeginRelativeDayTime;
+			transitState.RelativeTimeScalar = 0f;
 
 			transitState.State = TransitState.States.Active;
 			transitState.Step = TransitState.Steps.Prepare;
@@ -210,10 +211,9 @@ namespace LunraGames.SubLight.Presenters
 						out transitState.RelativeTimeElapsed
 					);
 
-					//transitState.RelativeTimeProgress = View.TransitTimeMinimumCurve.Evaluate(currentStep.Progress);
-					//transitState.RelativeTimeElapsed = transitState.RelativeTimeProgress * transitState.RelativeTimeTotal;
 					transitState.RelativeTimeRemaining = transitState.RelativeTimeTotal - transitState.RelativeTimeElapsed;
 					transitState.RelativeTimeCurrent = transitState.BeginRelativeDayTime + transitState.RelativeTimeElapsed;
+					transitState.RelativeTimeScalar = View.TransitTimeScalarCurve.Evaluate(currentStep.Progress);
 
 					transitState.VelocityProgress = View.TransitVelocityCurve.Evaluate(currentStep.Progress);
 					transitState.VelocityLightYearsCurrent = transitState.VelocityProgress * transitState.VelocityLightYearsMaximum;
@@ -228,6 +228,7 @@ namespace LunraGames.SubLight.Presenters
 					transitState.RelativeTimeElapsed = transitState.RelativeTimeTotal;
 					transitState.RelativeTimeRemaining = RelativeDayTime.Zero;
 					transitState.RelativeTimeCurrent = transitState.EndRelativeDayTime;
+					transitState.RelativeTimeScalar = 0f;
 
 					transitState.VelocityProgress = 1f;
 					transitState.VelocityLightYearsCurrent = 0f;

@@ -164,6 +164,7 @@ namespace LunraGames.SubLight
 		public RelativeDayTime RelativeTimeElapsed;
 		public RelativeDayTime RelativeTimeRemaining;
 		public RelativeDayTime RelativeTimeCurrent;
+		public float RelativeTimeScalar;
 
 		public float VelocityProgress; // Should go from 0 to 1 to 0 again.
 		public float VelocityLightYearsMaximum; // relative to lightspeed.
@@ -202,6 +203,7 @@ namespace LunraGames.SubLight
 				result.RelativeTimeElapsed = RelativeTimeElapsed;
 				result.RelativeTimeRemaining = RelativeTimeRemaining;
 				result.RelativeTimeCurrent = RelativeTimeCurrent;
+				result.RelativeTimeScalar = RelativeTimeScalar;
 
 				result.VelocityProgress = VelocityProgress;
 				result.VelocityLightYearsMaximum = VelocityLightYearsMaximum;

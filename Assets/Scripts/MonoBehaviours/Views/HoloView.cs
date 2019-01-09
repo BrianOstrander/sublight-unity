@@ -15,6 +15,8 @@ namespace LunraGames.SubLight.Views
 		Color baseGlowColor;
 		[SerializeField]
 		Color baseIrisColor;
+		[SerializeField]
+		Vector2 baseScrollSpeedRange;
 
 		[SerializeField]
 		Vector2 glowIntensityRange;
@@ -24,6 +26,8 @@ namespace LunraGames.SubLight.Views
 		Vector2 gridIntensityRange;
 		[SerializeField]
 		AnimationCurve gridIntensity;
+
+		float baseVerticalOffset;
 
 		public RenderLayerTextureBlock[] LayerTextures
 		{
@@ -76,6 +80,17 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		float timeScalar;
+		public float TimeScalar
+		{
+			set
+			{
+				glowMesh.material.SetFloat(ShaderConstants.RoomIrisGlow.Speed, value);
+				timeScalar = value;
+			}
+			private get { return timeScalar; }
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -83,8 +98,18 @@ namespace LunraGames.SubLight.Views
 			GridOffset = Vector2.zero;
 			CameraPitch = 0f;
 			HoloColor = Color.white;
+			TimeScalar = 0f;
+
+			baseVerticalOffset = 0f;
 		}
 
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+			var currOffsetSpeed = baseScrollSpeedRange.x + ((baseScrollSpeedRange.y - baseScrollSpeedRange.x) * TimeScalar);
+			baseVerticalOffset = (baseVerticalOffset + (currOffsetSpeed * delta)) % 1f;
+			glowMesh.material.SetFloat(ShaderConstants.RoomIrisGlow.VerticalOffset, baseVerticalOffset);
+		}
 	}
 
 	public interface IHoloView : IView, IHoloColorView
@@ -93,5 +118,6 @@ namespace LunraGames.SubLight.Views
 		RenderLayerPropertyBlock[] LayerProperties { set; }
 		Vector2 GridOffset { set; }
 		float CameraPitch { set; }
+		float TimeScalar { set; }
 	}
 }

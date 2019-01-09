@@ -478,6 +478,8 @@ namespace LunraGames.SubLight
 			/// </summary>
 			public const string GlowColor = "_GlowColor";
 			public const string GlowIntensity = "_GlowIntensity";
+			public const string VerticalOffset = "_VerticalOffset";
+			public const string Speed = "_Speed";
 		}
 
 		public static class RoomIrisIdle
