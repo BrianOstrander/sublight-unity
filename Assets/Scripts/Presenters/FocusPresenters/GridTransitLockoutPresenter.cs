@@ -54,14 +54,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitState(TransitState transitState)
 		{
-			//var currProg = "\nVelocity: "+transitState.VelocityLightYearsCurrent;
-			//currProg += "\nDistance Remaining: " + transitState.DistanceRemaining;
-			//currProg += "\nRelative Time Remaining: " + transitState.RelativeTimeRemaining;
-
-			//if (transitState.Step == TransitState.Steps.Transit && transitState.CurrentStep.Initializing) Debug.Log("-----------------------v");
-			//Debug.Log("TransitState: " + transitState.State + "." + transitState.Step + "." + (transitState.CurrentStep.Initializing ? "Initializing" : "Normal")+" "+transitState.CurrentStep.Progress+currProg);
-			//if (transitState.Step == TransitState.Steps.Finalize && transitState.CurrentStep.Initializing) Debug.Log("-----------------------^");
-
 			switch (transitState.State)
 			{
 				case TransitState.States.Request:
