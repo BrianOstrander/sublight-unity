@@ -43,6 +43,10 @@ namespace LunraGames.SubLight.Views
 		float unlockStatusLabelListInterval;
 		[SerializeField]
 		float unlockStatusLabelListIntervalDuration;
+		[SerializeField]
+		Color unlockProgressBarEmptyColor;
+		[SerializeField]
+		Color unlockProgressBarFullColor;
 
 		[SerializeField]
 		AnimationCurve transitDistanceCurve;
@@ -129,9 +133,13 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		RectTransform detailToUnlockScale;
 		[SerializeField]
-		CanvasGroup unlockOpacity;
+		CanvasGroup[] unlockOpacities;
 		[SerializeField]
 		RectTransform unlockProgress;
+		[SerializeField]
+		Graphic unlockProgressBarEmpty;
+		[SerializeField]
+		Graphic unlockProgressBarFull;
 		[SerializeField]
 		RectTransform unlockLeftStatusLabelList;
 		[SerializeField]
@@ -185,7 +193,8 @@ namespace LunraGames.SubLight.Views
 
 				detailGroupOpacity.alpha = detailGroupOpacityByScaleCurve.Evaluate(1f - detailToUnlockScaleCurrent);
 
-				unlockOpacity.alpha = unlockOpacityCurve.Evaluate(value);
+				var unlockOpacityCurrent = unlockOpacityCurve.Evaluate(value);
+				foreach (var entry in unlockOpacities) entry.alpha = unlockOpacityCurrent;
 
 				if (unlockProgressAnimationRange.x <= value)
 				{
@@ -211,6 +220,12 @@ namespace LunraGames.SubLight.Views
 						unlockRightProgressLastValue = rightValue;
 						unlockRightStatusListTarget = Mathf.Max(0f, unlockRightStatusListTarget - unlockStatusLabelListInterval);
 						unlockRightStatusListCooldownRemaining = unlockStatusLabelListCooldownRange.x + ((unlockStatusLabelListCooldownRange.y - unlockStatusLabelListCooldownRange.x) * NumberDemon.DemonUtility.NextFloat);
+					}
+
+					if (Mathf.Approximately(leftValue, 0f) && Mathf.Approximately(rightValue, 0f))
+					{
+						unlockProgressBarEmpty.color = unlockProgressBarFullColor;
+						unlockProgressBarFull.color = unlockProgressBarFull.color.NewA(0f);
 					}
 				}
 			}
@@ -370,6 +385,9 @@ namespace LunraGames.SubLight.Views
 
 			unlockLeftStatusListTarget = unlockStatusLabelListRange.x;
 			unlockRightStatusListTarget = unlockStatusLabelListRange.x;
+
+			unlockProgressBarEmpty.color = unlockProgressBarEmptyColor;
+			unlockProgressBarFull.color = unlockProgressBarFullColor;
 		}
 
 		protected override void OnIdle(float delta)

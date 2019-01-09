@@ -402,6 +402,7 @@ GameObject:
   - component: {fileID: 224143265871158110}
   - component: {fileID: 222866696505844986}
   - component: {fileID: 114534828867497930}
+  - component: {fileID: 225570861765991322}
   m_Layer: 15
   m_Name: Background
   m_TagString: Untagged
@@ -1109,6 +1110,7 @@ GameObject:
   - component: {fileID: 224668708741281142}
   - component: {fileID: 222345367236332366}
   - component: {fileID: 114648208881998926}
+  - component: {fileID: 225373004696912746}
   m_Layer: 15
   m_Name: BarBackground
   m_TagString: Untagged
@@ -5096,7 +5098,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.76862746, b: 0.76862746, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5173,7 +5175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.9882353, g: 0.37254903, b: 0.37254903, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6128,6 +6130,8 @@ MonoBehaviour:
   zeroTransitTimeHexColor: '#FFC4C4'
   unlockStatusLabelListInterval: 24
   unlockStatusLabelListIntervalDuration: 0.2
+  unlockProgressBarEmptyColor: {r: 1, g: 0.76862746, b: 0.76862746, a: 1}
+  unlockProgressBarFullColor: {r: 0.9882353, g: 0.37254903, b: 0.37254903, a: 1}
   transitDistanceCurve:
     serializedVersion: 2
     m_Curve:
@@ -6245,7 +6249,7 @@ MonoBehaviour:
   detailPinwheelSpeedRange: {x: 16, y: 650}
   detailToUnlockScaleRange: {x: 0.2, y: 1}
   unlockProgressRange: {x: 416, y: 0}
-  unlockProgressAnimationRange: {x: 2.25, y: 2.75}
+  unlockProgressAnimationRange: {x: 2.32, y: 2.8}
   unlockStatusLabelListRange: {x: 239, y: 0}
   unlockStatusLabelListCooldownRange: {x: 0.2, y: 0.4}
   groupOpacityCurve:
@@ -6288,7 +6292,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 2.75
+      time: 2.9
       value: 1
       inSlope: 0
       outSlope: 0
@@ -6774,7 +6778,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 2.25
+      time: 2.2
       value: 1
       inSlope: 0
       outSlope: 0
@@ -6783,7 +6787,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 2.35
+      time: 2.3
       value: 0
       inSlope: 0
       outSlope: 0
@@ -6885,8 +6889,26 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 3
+      time: 2.86
       value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.9
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 3
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -7324,8 +7346,12 @@ MonoBehaviour:
   detailProgressCover: {fileID: 114335185031261562}
   detailPinWheel: {fileID: 114748088932086948}
   detailToUnlockScale: {fileID: 224779427321306658}
-  unlockOpacity: {fileID: 225818092554601198}
+  unlockOpacities:
+  - {fileID: 225373004696912746}
+  - {fileID: 225570861765991322}
   unlockProgress: {fileID: 224605299266514252}
+  unlockProgressBarEmpty: {fileID: 114648208881998926}
+  unlockProgressBarFull: {fileID: 114692731993335242}
   unlockLeftStatusLabelList: {fileID: 224449829514846990}
   unlockRightStatusLabelList: {fileID: 224650958394072846}
 --- !u!114 &114831589954048442
@@ -7625,7 +7651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8305,7 +8331,7 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1886467070696294}
-  m_CullTransparentMesh: 0
+  m_CullTransparentMesh: 1
 --- !u!222 &222346722973869978
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -8466,7 +8492,7 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1418559428710382}
-  m_CullTransparentMesh: 0
+  m_CullTransparentMesh: 1
 --- !u!222 &222618500502978012
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -8529,7 +8555,7 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1917189818547242}
-  m_CullTransparentMesh: 0
+  m_CullTransparentMesh: 1
 --- !u!222 &222801888717343524
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -10114,6 +10140,28 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1654943505159826}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!225 &225373004696912746
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1886467070696294}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!225 &225570861765991322
+CanvasGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320355853665190}
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 0
