@@ -64,6 +64,8 @@ namespace LunraGames.SubLight.Views
 		int transitTimeCooldownDays;
 		[SerializeField]
 		AnimationCurve transitVelocityCurve;
+		[SerializeField]
+		float completedEmission;
 
 		[Header("Animation Ranges")]
 		[SerializeField]
@@ -150,6 +152,8 @@ namespace LunraGames.SubLight.Views
 		RectTransform unlockLeftStatusLabelList;
 		[SerializeField]
 		RectTransform unlockRightStatusLabelList;
+		[SerializeField]
+		ParticleSystem completeParticles;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float pinwheelRotation;
@@ -165,6 +169,8 @@ namespace LunraGames.SubLight.Views
 		float unlockRightProgressLastValue;
 		float unlockRightStatusListCooldownRemaining;
 		float unlockRightStatusListTarget;
+
+		bool hasCompleteEmitted;
 
 		public float PrepareDuration { get { return prepareDuration; } }
 		public float GetTransitDuration(float scalar = 0f) { return transitCooldownDuration + transitWarmupDuration + (transitDuration.x + ((transitDuration.y - transitDuration.x) * scalar)); }
@@ -234,6 +240,12 @@ namespace LunraGames.SubLight.Views
 						unlockProgressBarFull.color = unlockProgressBarFull.color.NewA(0f);
 					}
 				}
+
+				if (!hasCompleteEmitted && completedEmission <= value)
+				{
+					hasCompleteEmitted = true;
+					completeParticles.Emit(1);
+				}
 			}
 		}
 
@@ -243,8 +255,6 @@ namespace LunraGames.SubLight.Views
 		public string SystemName { set { systemLabel.text = value ?? string.Empty; } }
 		public void SetSystemDescription(string description, string fromSystem)
 		{
-			//AvenirNext - DemiBold SDF
-			Debug.Log("font name is: " + systemDescriptionSystemFont.name);
 			systemDescriptionLabel.text = description + " <font=\""+systemDescriptionSystemFont.name+"\">"+(fromSystem ?? string.Empty)+"</font>";
 		}
 
@@ -405,6 +415,8 @@ namespace LunraGames.SubLight.Views
 
 			unlockProgressBarEmpty.color = unlockProgressBarEmptyColor;
 			unlockProgressBarFull.color = unlockProgressBarFullColor;
+
+			hasCompleteEmitted = false;
 		}
 
 		protected override void OnIdle(float delta)
