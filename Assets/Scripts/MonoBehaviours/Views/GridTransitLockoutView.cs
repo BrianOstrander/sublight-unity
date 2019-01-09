@@ -29,6 +29,12 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		GridTransitLockoutTimeStampLeaf transitTimeStamp;
 		[SerializeField]
+		TextMeshProUGUI systemLabel;
+		[SerializeField]
+		TextMeshProUGUI systemDescriptionLabel;
+		[SerializeField]
+		TMP_FontAsset systemDescriptionSystemFont;
+		[SerializeField]
 		TextMeshProUGUI unlockLeftLabel;
 		[SerializeField]
 		TextMeshProUGUI unlockRightLabel;
@@ -233,6 +239,15 @@ namespace LunraGames.SubLight.Views
 
 		public string TransitTitle { set { transitTitleLabel.text = value ?? string.Empty; } }
 		public string TransitDescription { set { transitDescriptionLabel.text = value ?? string.Empty; } }
+
+		public string SystemName { set { systemLabel.text = value ?? string.Empty; } }
+		public void SetSystemDescription(string description, string fromSystem)
+		{
+			//AvenirNext - DemiBold SDF
+			Debug.Log("font name is: " + systemDescriptionSystemFont.name);
+			systemDescriptionLabel.text = description + " <font=\""+systemDescriptionSystemFont.name+"\">"+(fromSystem ?? string.Empty)+"</font>";
+		}
+
 		public string UnlockLeftTitle { set { unlockLeftLabel.text = value ?? string.Empty; } }
 		public string UnlockRightTitle { set { unlockRightLabel.text = value ?? string.Empty; } }
 
@@ -368,6 +383,8 @@ namespace LunraGames.SubLight.Views
 
 			TransitTitle = string.Empty;
 			TransitDescription = string.Empty;
+			SystemName = string.Empty;
+			SetSystemDescription(string.Empty, string.Empty);
 			UnlockLeftTitle = string.Empty;
 			UnlockRightTitle = string.Empty;
 
@@ -443,6 +460,10 @@ namespace LunraGames.SubLight.Views
 		string TransitTitle { set; }
 		string TransitDescription { set; }
 		void SetTimeStamp(DayTime remaining, DayTime total);
+
+		string SystemName { set; }
+		void SetSystemDescription(string description, string fromSystem);
+
 		string UnlockLeftTitle { set; }
 		string UnlockRightTitle { set; }
 

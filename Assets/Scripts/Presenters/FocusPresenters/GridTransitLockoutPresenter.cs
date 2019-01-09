@@ -284,6 +284,9 @@ namespace LunraGames.SubLight.Presenters
 
 			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
 
+			View.SystemName = transitState.EndSystem.Name.Value;
+			View.SetSystemDescription(language.DescriptionPrefix.Value.Value, transitState.BeginSystem.Name.Value);
+
 			View.UnlockLeftTitle = language.UnlockLeftTitle.Value.Value;
 			View.UnlockRightTitle = language.UnlockRightTitle.Value.Value;
 

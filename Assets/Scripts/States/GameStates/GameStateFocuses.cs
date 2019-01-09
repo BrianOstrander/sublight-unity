@@ -102,6 +102,7 @@ namespace LunraGames.SubLight
 					{
 						TransitTitle = LanguageStringModel.Override("Crew Lockout"),
 						TransitDescription = LanguageStringModel.Override("Interstellar ark is under automated\ncontrol until reaching destination"),
+						DescriptionPrefix = LanguageStringModel.Override("In transit from"),
 						UnlockLeftTitle = LanguageStringModel.Override("Unlocking"),
 						UnlockRightTitle = LanguageStringModel.Override("System Survey"),
 						UnlockLeftStatuses = LanguageStringModel.Overrides(
