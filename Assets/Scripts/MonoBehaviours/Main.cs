@@ -27,6 +27,8 @@ namespace LunraGames.SubLight
 		DefaultShaderGlobals defaultShaderGlobals;
 		[SerializeField]
 		BuildPreferences buildPreferences;
+		[SerializeField]
+		SceneSkybox sceneSkybox;
 
 		App app;
 		
@@ -40,7 +42,8 @@ namespace LunraGames.SubLight
 				audioRoot, 
 				canvasRoot,
 				gameCanvasRoot,
-				overlayCanvasRoot
+				overlayCanvasRoot,
+				sceneSkybox
 			);
 			DontDestroyOnLoad(gameObject);
 			app.Awake();

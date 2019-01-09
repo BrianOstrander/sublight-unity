@@ -62,16 +62,23 @@ namespace LunraGames.SubLight
 	{
 		ILogService logging;
 		CallbackService callbacks;
+		SceneSkybox sceneSkybox;
 
 		SceneRequest current;
 
-		public SceneService(ILogService logging, CallbackService callbacks)
+		public SceneService(
+			ILogService logging,
+			CallbackService callbacks,
+			SceneSkybox sceneSkybox
+		)
 		{
 			if (logging == null) throw new ArgumentNullException("logging");
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
+			if (sceneSkybox == null) throw new ArgumentNullException("sceneSkybox");
 
 			this.logging = logging;
 			this.callbacks = callbacks;
+			this.sceneSkybox = sceneSkybox;
 		}
 
 		public void Request(SceneRequest request)

@@ -107,7 +107,8 @@ namespace LunraGames.SubLight
 			GameObject audioRoot, 
 			Transform canvasRoot,
 			Transform gameCanvasRoot,
-			Transform overlayCanvasRoot
+			Transform overlayCanvasRoot,
+			SceneSkybox sceneSkybox
 		)
 		{
 			instance = this;
@@ -150,7 +151,7 @@ namespace LunraGames.SubLight
 				throw new Exception("Unknown platform");
 			}
 
-			scenes = new SceneService(Logging, Callbacks);
+			scenes = new SceneService(Logging, Callbacks, sceneSkybox);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
 			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
