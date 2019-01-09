@@ -10,27 +10,27 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		Transform origin;
 		[SerializeField]
-		Vector3 begin;
+		float begin;
 		[SerializeField]
-		Vector3 end;
+		float end;
 		[SerializeField]
 		CurveStyleBlock opacity = CurveStyleBlock.Default;
 
 		void Update()
 		{
-			var fromBegin = Vector3.Distance(transform.position, origin.position + begin);
-			var fromEnd = Vector3.Distance(transform.position, origin.position + end);
-			var total = Mathf.Min(Vector3.Distance(begin, end), fromBegin + fromEnd);
+			var fromBegin = Vector3.Distance(origin.position.NewY(transform.position.y), origin.position.NewY(origin.position.y + begin));
+			var fromEnd = Vector3.Distance(origin.position.NewY(transform.position.y), origin.position.NewY(origin.position.y + end));
+			var total = Mathf.Min(Mathf.Abs(begin - end), fromBegin + fromEnd);
 			graphic.color = graphic.color.NewA(opacity.Curve.Evaluate(Mathf.Min(fromBegin, total) / total));
 		}
 
 		void OnDrawGizmosSelected()
 		{
 			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(origin.position + begin, 0.1f);
-			Gizmos.DrawLine(origin.position + begin, origin.position + end);
+			Gizmos.DrawWireSphere(origin.position.NewY(origin.position.y + begin), 0.1f);
+			Gizmos.DrawLine(origin.position.NewY(origin.position.y + begin), origin.position.NewY(origin.position.y + end));
 			Gizmos.color = Color.red;
-			Gizmos.DrawWireSphere(origin.position + end, 0.2f);
+			Gizmos.DrawWireSphere(origin.position.NewY(origin.position.y + end), 0.2f);
 		}
 	}
 }

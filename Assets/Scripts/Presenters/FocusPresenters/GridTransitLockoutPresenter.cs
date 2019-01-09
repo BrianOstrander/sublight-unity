@@ -338,7 +338,8 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnProcessVisualsComplete(TransitState transitState)
 		{
-
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetToolbarSelectionFocus(ToolbarSelections.System)));
+			CloseView(true);
 		}
 		#endregion
 	}

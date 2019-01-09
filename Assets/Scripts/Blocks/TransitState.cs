@@ -46,6 +46,20 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		public static TransitState Default(
+			SystemModel beginSystem,
+			SystemModel endSystem
+		)
+		{
+			return new TransitState
+			{
+				State = States.Complete,
+				Step = Steps.Finalize,
+				BeginSystem = beginSystem,
+				EndSystem = endSystem
+			};
+		}
+
 		public static TransitState Request(
 			bool instant,
 			SystemModel beginSystem,

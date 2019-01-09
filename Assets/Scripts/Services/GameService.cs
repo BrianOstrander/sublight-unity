@@ -96,6 +96,8 @@ namespace LunraGames.SubLight
 
 			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
 
+			game.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
+
 			OnShipReady(game, done);
 		}
 

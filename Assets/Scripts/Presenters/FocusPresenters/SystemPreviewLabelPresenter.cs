@@ -26,6 +26,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.GridScaleOpacity.Changed += OnOpacityStale;
 			model.CelestialSystemState.Changed += OnCelestialSystemState;
+			model.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -34,6 +35,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.GridScaleOpacity.Changed -= OnOpacityStale;
 			model.CelestialSystemState.Changed -= OnCelestialSystemState;
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateDisabled()
@@ -46,6 +48,7 @@ namespace LunraGames.SubLight.Presenters
 			lastOpacity = 0f;
 			View.PushOpacity(() => lastOpacity.Value);
 			View.PushOpacity(() => 1f - model.GridScaleOpacity.Value);
+			View.PushOpacity(() => model.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
 			if (currentSystem != null) View.SetPreview(GetBlock(currentSystem), true);
 		}
 			
@@ -183,6 +186,19 @@ namespace LunraGames.SubLight.Presenters
 
 			currentSystem = newSystem;
 			View.SetPreview(GetBlock(currentSystem));
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			if (!View.Visible) return;
+
+			switch (transitState.State)
+			{
+				case TransitState.States.Request:
+				case TransitState.States.Complete:
+					View.SetOpacityStale();
+					break;
+			}
 		}
 		#endregion
 	}

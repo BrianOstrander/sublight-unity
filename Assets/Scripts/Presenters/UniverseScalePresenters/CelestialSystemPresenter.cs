@@ -84,6 +84,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnGlobalClick(Click click)
 		{
 			if (!click.ClickedNothing) return;
+			if (Model.TransitState.Value.State != TransitState.States.Complete) return;
 			if (App.V.CameraHasMoved) return;
 			if (!Mathf.Approximately(1f, ScaleModel.Opacity.Value)) return;
 

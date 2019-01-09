@@ -34,6 +34,7 @@ namespace LunraGames.SubLight.Presenters
 			model.RelativeDayTime.Changed += OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed += OnVelocity;
+			model.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -43,11 +44,13 @@ namespace LunraGames.SubLight.Presenters
 			model.RelativeDayTime.Changed -= OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.PushOpacity(() => currentOpacity);
+			View.PushOpacity(() => model.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
 
 			View.ReferenceFrame = ReferenceFrames.Ship;
 			View.Configuration = GetConfiguration(IsTransit);
@@ -143,6 +146,19 @@ namespace LunraGames.SubLight.Presenters
 		void OnTitleClick()
 		{
 
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			if (!View.Visible) return;
+
+			switch (transitState.State)
+			{
+				case TransitState.States.Request:
+				case TransitState.States.Complete:
+					View.SetOpacityStale();
+					break;
+			}
 		}
 		#endregion
 	}

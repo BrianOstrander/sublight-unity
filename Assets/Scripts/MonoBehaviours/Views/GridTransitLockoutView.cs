@@ -73,6 +73,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Vector2 groupHorizontalOffsetRange;
 		[SerializeField]
+		Vector2 groupVerticalOffsetRange;
+		[SerializeField]
 		Vector2 detailProgressRange;
 		[SerializeField]
 		Vector2 detailProgressScaleRange;
@@ -96,6 +98,8 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve groupScaleCurve;
 		[SerializeField]
 		AnimationCurve groupHorizontalOffsetCurve;
+		[SerializeField]
+		AnimationCurve groupVerticalOffsetCurve;
 		[SerializeField]
 		AnimationCurve detailOpacityCurve;
 		[SerializeField]
@@ -124,6 +128,8 @@ namespace LunraGames.SubLight.Views
 		Transform groupScale;
 		[SerializeField]
 		Transform groupHorizontalOffset;
+		[SerializeField]
+		Transform groupVerticalOffset;
 		[SerializeField]
 		CanvasGroup detailOpacity;
 		[SerializeField]
@@ -170,6 +176,8 @@ namespace LunraGames.SubLight.Views
 		float unlockRightStatusListCooldownRemaining;
 		float unlockRightStatusListTarget;
 
+		float verticalOffsetCurrent;
+
 		bool hasCompleteEmitted;
 
 		public float PrepareDuration { get { return prepareDuration; } }
@@ -186,6 +194,9 @@ namespace LunraGames.SubLight.Views
 				groupOpacity.alpha = groupOpacityCurve.Evaluate(value);
 				groupScale.localScale = Vector3.one * (groupScaleRange.x + ((groupScaleRange.y - groupScaleRange.x) * groupScaleCurve.Evaluate(value)));
 				groupHorizontalOffset.localPosition = groupHorizontalOffset.localPosition.NewX(groupHorizontalOffsetRange.x + ((groupHorizontalOffsetRange.y - groupHorizontalOffsetRange.x) * groupHorizontalOffsetCurve.Evaluate(value)));
+
+				verticalOffsetCurrent = groupVerticalOffsetRange.x + ((groupVerticalOffsetRange.y - groupVerticalOffsetRange.x) * groupVerticalOffsetCurve.Evaluate(value));
+				groupVerticalOffset.localPosition = groupVerticalOffset.localPosition.NewY(verticalOffsetCurrent);
 
 				detailOpacity.alpha = detailOpacityCurve.Evaluate(value);
 
@@ -416,6 +427,11 @@ namespace LunraGames.SubLight.Views
 			unlockProgressBarEmpty.color = unlockProgressBarEmptyColor;
 			unlockProgressBarFull.color = unlockProgressBarFullColor;
 
+			unlockProgress.offsetMin = new Vector2(unlockProgressRange.x, 0f);
+			unlockProgress.offsetMax = new Vector2(-unlockProgressRange.x, 0f);
+			unlockLeftStatusLabelList.offsetMin = new Vector2(0f, unlockStatusLabelListRange.x);
+			unlockRightStatusLabelList.offsetMin = new Vector2(0f, unlockStatusLabelListRange.x);
+
 			hasCompleteEmitted = false;
 		}
 
@@ -429,6 +445,10 @@ namespace LunraGames.SubLight.Views
 
 			unlockLeftStatusListCooldownRemaining = Mathf.Max(0f, unlockLeftStatusListCooldownRemaining - delta);
 			unlockRightStatusListCooldownRemaining = Mathf.Max(0f, unlockRightStatusListCooldownRemaining - delta);
+
+			var verticalListBase = (groupVerticalOffsetRange.y * 2f) - verticalOffsetCurrent;
+			//unlockLeftStatusLabelList.offsetMin = new Vector2(0f, verticalListBase);
+			//unlockRightStatusLabelList.offsetMin = new Vector2(0f, verticalListBase);
 
 			if (unlockLeftStatusListTarget - unlockLeftStatusLabelList.offsetMin.y < 0f)
 			{
