@@ -393,7 +393,11 @@ namespace LunraGames.SubLight.Presenters
 					return;
 			}
 
-			if (Mathf.Approximately(0f, animationRemaining)) tweenState = TweenStates.Complete;
+			if (Mathf.Approximately(0f, animationRemaining))
+			{
+				tweenState = TweenStates.Complete;
+				SetGrid(); // TODO: Find out why I need to do this... it should not have such problems...
+			}
 
 			model.FocusTransform.Value = transform.Duplicate(
 				zoomTween,
