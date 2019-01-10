@@ -190,8 +190,8 @@ namespace LunraGames.SubLight
 
 		public static UniversePosition operator -(UniversePosition obj0, UniversePosition obj1)
 		{
-			var sector = obj0.Sector - obj1.Sector;
-			var local = obj0.Local - obj1.Local;
+			var sector = obj0.Sector.ApproximateSubtract(obj1.Sector);
+			var local = obj0.Local.ApproximateSubtract(obj1.Local);
 			return new UniversePosition(sector, local);
 		}
 
@@ -242,6 +242,11 @@ namespace LunraGames.SubLight
 		public override string ToString()
 		{
 			return "[ " + Sector.x + ", " + Sector.y + ", " + Sector.z + " ] ( " + Local.x + ", " + Local.y + ", " + Local.z + " )";
+		}
+
+		public string ToByteString()
+		{
+			return "Sector:\n" + Sector.ToBytesString() + "\nLocal:\n" + Local.ToBytesString();
 		}
 	}
 }

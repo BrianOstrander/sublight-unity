@@ -29,8 +29,8 @@ namespace LunraGames.SubLight.Views
 
 		public UniverseScaleAxises ScaleIgnores { get { return scaleIgnores; } set { scaleIgnores = value; } }
 		public UniverseScaleAxises PositionIgnores { get { return positionIgnores; } set { positionIgnores = value; } }
-		protected Transform ScaleArea { get { return scaleArea; } }
-		protected Transform PositionArea { get { return positionArea; } }
+		protected virtual Transform ScaleArea { get { return scaleArea; } }
+		protected virtual Transform PositionArea { get { return positionArea; } }
 
 		protected Vector3 GridOrigin { private set; get; }
 		protected float GridRadius { private set; get; }

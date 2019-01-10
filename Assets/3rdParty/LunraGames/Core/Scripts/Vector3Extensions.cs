@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 namespace LunraGames
 {
@@ -59,6 +61,22 @@ namespace LunraGames
 		static float ApproximateSubtractFloat(float float0, float float1)
 		{
 			return Mathf.Approximately(float0, float1) ? 0f : float0 - float1;
+		}
+
+		public static string ToBytesString(this Vector3 vector3)
+		{
+			var xValue = SingleToBinaryString(vector3.x);
+			var yValue = SingleToBinaryString(vector3.y);
+			var zValue = SingleToBinaryString(vector3.z);
+
+			return vector3+"\n(\n\t" + xValue + "\n\t" + yValue + "\n\t" + zValue + "\n)";
+		}
+
+		public static string SingleToBinaryString(float f)
+		{
+			byte[] b = BitConverter.GetBytes(f);
+			int i = BitConverter.ToInt32(b, 0);
+			return Convert.ToString(i, 2);
 		}
 	}
 }

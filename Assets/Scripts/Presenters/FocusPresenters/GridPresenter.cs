@@ -182,6 +182,8 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Value.Range.Changed += OnTravelRange;
 			model.CelestialSystemState.Changed += OnCelestialSystemState;
 
+			model.TransitState.Changed += OnTransitState;
+
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
@@ -194,6 +196,8 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 			model.Ship.Value.Range.Changed -= OnTravelRange;
 			model.CelestialSystemState.Changed -= OnCelestialSystemState;
+
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -612,6 +616,36 @@ namespace LunraGames.SubLight.Presenters
 					break;
 				case CelestialSystemStateBlock.States.Selected:
 					View.SetGridSelected(true);
+					break;
+			}
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+
+			switch (transitState.State)
+			{
+				case TransitState.States.Request:
+					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
+					break;
+				case TransitState.States.Active:
+					var universePos = transitState.CurrentPosition.NewLocal(transitState.CurrentPosition.Local.NewY(0f));
+
+					switch (transitState.Step)
+					{
+						case TransitState.Steps.Prepare:
+							// Tween to universePos here!
+							break;
+						case TransitState.Steps.Transit:
+							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+							SetGrid();
+							break;
+					}
+
+					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
+					break;
+				case TransitState.States.Complete:
+					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Animation);
 					break;
 			}
 		}
