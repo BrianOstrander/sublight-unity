@@ -32,8 +32,13 @@ namespace LunraGames.SubLight.Models
 
 		public void SetSystem(SystemModel system)
 		{
+			var wasSameSystem = system != null && ActiveSystem.Value != null && ActiveSystem.Value == system;
+
 			HasSystem = system != null;
 			activeSystemListener.Value = system;
+
+			// Kinda hacky, but this ensures that a changed event is called.
+			if (wasSameSystem) activeSystemListener.Changed(activeSystemListener.Value);
 		}
 	}
 }

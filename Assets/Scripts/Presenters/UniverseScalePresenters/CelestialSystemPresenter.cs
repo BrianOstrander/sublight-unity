@@ -72,7 +72,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnActiveSystem(SystemModel activeSystem)
 		{
-			if (activeSystem == null || !ScaleModel.IsVisible)
+			if (activeSystem == null)
 			{
 				if (View.Visible) CloseViewInstant();
 				return;

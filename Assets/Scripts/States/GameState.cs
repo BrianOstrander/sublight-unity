@@ -11,7 +11,7 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		public int LocalSectorOffset = 2; // Not set anywhere else at the moment...
+		public int LocalSectorOffset = 1; // Not set anywhere else at the moment...
 		public int LocalSectorOffsetTotal { get { return (LocalSectorOffset * 2) + 1; } }
 		public int LocalSectorCount { get { return LocalSectorOffsetTotal * LocalSectorOffsetTotal; } }
 
@@ -244,6 +244,11 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		/// <summary>
+		/// Calculates the visible sectors given the specified transform.
+		/// </summary>
+		/// <param name="transform">Transform.</param>
+		/// <param name="force">If set to <c>true</c> force all sectors to be set stale.</param>
 		void OnCalculateLocalSectors(UniverseTransform transform, bool force)
 		{
 			if (Payload.LocalSectorInstances.None()) return;
