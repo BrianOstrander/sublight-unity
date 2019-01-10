@@ -51,13 +51,13 @@ namespace LunraGames.SubLight.Views
 
 		public void SetScale(Vector3 scale, Vector3 rawScale)
 		{
-			if (scaleArea != null) scaleArea.localScale = scale;
+			if (ScaleArea != null) ScaleArea.localScale = scale;
 			OnScale(scale, rawScale);
 		}
 
 		public void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, float radiusNormal)
 		{
-			if (positionArea != null) positionArea.position = position;
+			if (PositionArea != null) PositionArea.position = position;
 			IsInBounds = isInBounds;
 			RadiusNormal = radiusNormal;
 

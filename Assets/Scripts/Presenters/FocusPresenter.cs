@@ -34,8 +34,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (transition.End.Enabled)
 			{
-				if (View.TransitionState == TransitionStates.Closed) ShowInstant();
-				else OnUpdateEnabled();
+				// We check if they're the same, because if we're showing the priority layer we don't want to run logic for already visible stuff...
+				if (transition.Start.Enabled != transition.End.Enabled)
+				{
+					if (View.TransitionState == TransitionStates.Closed) ShowInstant();
+					else OnUpdateEnabled();
+				}
 			}
 			else if (request.LastActive)
 			{

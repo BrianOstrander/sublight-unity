@@ -1,5 +1,6 @@
 ﻿namespace LunraGames.SubLight
 {
+	// I really can't remember why I made this class... I guess it's to let other classes know what the GridPresenter is up to?
 	public struct GridInputRequest
 	{
 		public enum States
