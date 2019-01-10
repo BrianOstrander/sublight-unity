@@ -98,6 +98,8 @@ namespace LunraGames.SubLight.Presenters
 			View.GetPositionIsInRadiusCallback = GetPositionIsInRadius;
 			View.PushOpacity(() => ScaleModel.Opacity.Value);
 
+			SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
+
 			OnShowView();
 
 			if (!onlyReset) ShowView(instant: true);

@@ -102,7 +102,7 @@ namespace LunraGames.SubLight.Presenters
 
 			positionInUniverse = activeSystem.Position.Value;
 
-			SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
+			//SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
 
 			View.Enter = OnEnter;
 			View.Exit = OnExit;

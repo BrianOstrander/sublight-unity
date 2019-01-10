@@ -40,8 +40,7 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
 		{
-			Debug.Log("Setting stale with radius normal " + RadiusNormal);
-			//SetOpacityStale();
+			SetOpacityStale();
 		}
 
 		protected override void OnIdle(float delta)
@@ -61,7 +60,7 @@ namespace LunraGames.SubLight.Views
 			TimeScalar = 0f;
 			AdditionalYOffset = 0f;
 
-			//PushOpacity(() => radiusOpacity.Evaluate(RadiusNormal));
+			PushOpacity(() => radiusOpacity.Evaluate(RadiusNormal));
 		}
 
 		protected override void OnOpacityStack(float opacity)
