@@ -347,10 +347,10 @@ namespace LunraGames.SubLight.Views
 				dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, dragTrailColors.Evaluate(0f));
 
 				var minimizedParticlesMain = minimizedParticles.main;
-				minimizedParticlesMain.startColor = minimizedParticleColors.Evaluate(0f);
+				minimizedParticlesMain.startColor = minimizedParticleColors.Evaluate(0f).NewA(OpacityStack);
 
 				var selectedParticlesMain = selectedParticles.main;
-				selectedParticlesMain.startColor = selectedParticleColors.Evaluate(0f);
+				selectedParticlesMain.startColor = selectedParticleColors.Evaluate(0f).NewA(OpacityStack);
 			}
 		}
 
@@ -464,6 +464,8 @@ namespace LunraGames.SubLight.Views
 					dragTrail.emitting = true;
 				}
 			}
+
+			SetOpacityStale();
 		}
 
 		protected override void OnInBoundsChanged(bool isInBounds)
@@ -553,6 +555,8 @@ namespace LunraGames.SubLight.Views
 			dragTrail.emitting = false;
 			dragTrailDelay = 3;
 			dragTrail.Clear();
+
+			PushOpacity(() => dropLineRadiusOpacity.Evaluate(RadiusNormal));
 		}
 		#endregion
 
@@ -970,10 +974,10 @@ namespace LunraGames.SubLight.Views
 			dragTrail.material.SetColor(ShaderConstants.HoloTextureColorAlphaMasked.PrimaryColor, dragTrailColors.Evaluate(value));
 
 			var minimizedParticlesMain = minimizedParticles.main;
-			minimizedParticlesMain.startColor = minimizedParticleColors.Evaluate(value);
+			minimizedParticlesMain.startColor = minimizedParticleColors.Evaluate(value).NewA(OpacityStack);
 
 			var selectedParticlesMain = selectedParticles.main;
-			selectedParticlesMain.startColor = selectedParticleColors.Evaluate(value);
+			selectedParticlesMain.startColor = selectedParticleColors.Evaluate(value).NewA(OpacityStack);
 		}
 		#endregion
 
@@ -1040,7 +1044,7 @@ namespace LunraGames.SubLight.Views
 
 		void SetMeshAlpha(Material material, string fieldName, float alpha = 1f)
 		{
-			material.SetFloat(fieldName, OpacityStack * alpha * dropLineRadiusOpacity.Evaluate(RadiusNormal));
+			material.SetFloat(fieldName, OpacityStack * alpha);
 		}
 
 		protected override void OnOpacityStack(float opacity)
