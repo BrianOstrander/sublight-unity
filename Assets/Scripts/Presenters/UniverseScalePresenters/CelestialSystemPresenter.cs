@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
@@ -41,6 +43,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.CameraTransform.Changed += OnCameraTransform;
 			Model.GridInput.Changed += OnGridInput;
 			Model.FocusTransform.Changed += OnFocusTransform;
+			Model.Ship.Value.Position.Changed += OnShipPosition;
 		}
 
 		protected override void OnUnBind()
@@ -55,10 +58,23 @@ namespace LunraGames.SubLight.Presenters
 			Model.CameraTransform.Changed -= OnCameraTransform;
 			Model.GridInput.Changed -= OnGridInput;
 			Model.FocusTransform.Changed -= OnFocusTransform;
+			Model.Ship.Value.Position.Changed -= OnShipPosition;
 		}
 
 		void ApplyStates(bool instant = false)
 		{
+			switch (rangeState)
+			{
+				case Celestial.RangeStates.InRange:
+					View.Confirm = language.Confirm.Value;
+					View.ConfirmDescription = language.ConfirmDescription.Value;
+					break;
+				case Celestial.RangeStates.OutOfRange:
+					View.Confirm = language.OutOfRange.Value;
+					View.ConfirmDescription = language.OutOfRangeDescription.Value;
+					break;
+			}
+
 			View.SetStates(
 				highlightState,
 				visitState,
@@ -67,6 +83,19 @@ namespace LunraGames.SubLight.Presenters
 				travelState,
 				instant
 			);
+		}
+
+		Celestial.RangeStates GetRangeState(SystemModel system)
+		{
+			if (system == null) throw new ArgumentNullException("system");
+
+			var result = Celestial.RangeStates.OutOfRange;
+
+			if (UniversePosition.Distance(system.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.Range.Value.Total)
+			{
+				result = Celestial.RangeStates.InRange;
+			}
+			return result;
 		}
 
 		#region Events
@@ -112,13 +141,8 @@ namespace LunraGames.SubLight.Presenters
 
 			if (activeSystem.Position.Value.Equals(Model.Ship.Value.Position.Value)) visitState = Celestial.VisitStates.Current;
 			else visitState = activeSystem.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
-			
-			rangeState = Celestial.RangeStates.OutOfRange;
 
-			if (UniversePosition.Distance(activeSystem.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.Range.Value.Total)
-			{
-				rangeState = Celestial.RangeStates.InRange;
-			}
+			rangeState = GetRangeState(activeSystem);
 
 			switch (Model.CelestialSystemStateLastSelected.Value.State)
 			{
@@ -134,19 +158,6 @@ namespace LunraGames.SubLight.Presenters
 
 			View.DetailsName = activeSystem.Name.Value;
 			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
-
-			switch (rangeState)
-			{
-				case Celestial.RangeStates.InRange:
-					View.Confirm = language.Confirm.Value;
-					View.ConfirmDescription = language.ConfirmDescription.Value;
-					break;
-				case Celestial.RangeStates.OutOfRange:
-					View.Confirm = language.OutOfRange.Value;
-					View.ConfirmDescription = language.OutOfRangeDescription.Value;
-					break;
-			}
-
 
 			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Value.Position.Value, activeSystem.Position.Value));
 			var lightyearText = lightyearDistance < 10f ? lightyearDistance.ToString("N1") : Mathf.RoundToInt(lightyearDistance).ToString("N0");
@@ -270,6 +281,15 @@ namespace LunraGames.SubLight.Presenters
 			if (lastZoomToScale == Scale) return;
 
 			if (View.Visible && !View.IsInBounds) CloseViewInstant();
+		}
+
+		void OnShipPosition(UniversePosition shipPosition)
+		{
+			if (!instanceModel.HasSystem || !View.Visible) return;
+
+			var wasRangeState = rangeState;
+			rangeState = GetRangeState(instanceModel.ActiveSystem.Value);
+			if (wasRangeState != rangeState) ApplyStates(true);
 		}
 		#endregion
 	}
