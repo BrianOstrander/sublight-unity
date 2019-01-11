@@ -27,6 +27,7 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Heartbeat.Update += OnUpdate;
 
+			model.TransitStateRequest.Changed += OnTransitStateRequest;
 			model.TransitState.Changed += OnTransitState;
 		}
 
@@ -34,6 +35,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			App.Heartbeat.Update -= OnUpdate;
 
+			model.TransitStateRequest.Changed -= OnTransitStateRequest;
 			model.TransitState.Changed -= OnTransitState;
 		}
 
@@ -52,20 +54,7 @@ namespace LunraGames.SubLight.Presenters
 			if (model.TransitState.Value != null && model.TransitState.Value.State == TransitState.States.Active) OnProcessState(model.TransitState.Value, delta);
 		}
 
-		void OnTransitState(TransitState transitState)
-		{
-			switch (transitState.State)
-			{
-				case TransitState.States.Request:
-					OnTransitStateRequest(transitState);
-					break;
-			}
-
-			lastState = transitState;
-
-		}
-
-		void OnTransitStateRequest(TransitState transitState)
+		void OnTransitStateRequest(TransitStateRequest transitStateRequest)
 		{
 			if (lastState != null)
 			{
@@ -78,7 +67,14 @@ namespace LunraGames.SubLight.Presenters
 				}
 			}
 
-			transitState = transitState.Duplicate;
+			var transitState = new TransitState
+			{
+				Instant = transitStateRequest.Instant,
+				State = TransitState.States.Request,
+				Step = TransitState.Steps.Prepare,
+				BeginSystem = transitStateRequest.BeginSystem,
+				EndSystem = transitStateRequest.EndSystem
+			};
 
 			transitState.VelocityProgress = 0f;
 			transitState.VelocityLightYearsCurrent = 0f;
@@ -99,7 +95,7 @@ namespace LunraGames.SubLight.Presenters
 
 			transitState.EndRelativeDayTime = model.RelativeDayTime + relativeDurationDelta;
 
-			Debug.Log("--- Begin:\n\n" + transitState.BeginRelativeDayTime + "\n\n--- End:\n\n" + transitState.EndRelativeDayTime);
+			//Debug.Log("--- Begin:\n\n" + transitState.BeginRelativeDayTime + "\n\n--- End:\n\n" + transitState.EndRelativeDayTime);
 
 			transitState.LengthScalar = 0f;
 
@@ -109,13 +105,10 @@ namespace LunraGames.SubLight.Presenters
 			transitState.RelativeTimeCurrent = transitState.BeginRelativeDayTime;
 			transitState.RelativeTimeScalar = 0f;
 
-			transitState.State = TransitState.States.Active;
-			transitState.Step = TransitState.Steps.Prepare;
-
 			transitState.PrepareStep = new TransitState.StepDetails
 			{
 				Step = TransitState.Steps.Prepare,
-				Initializing = true,
+				Initializing = false,
 				Duration = View.PrepareDuration,
 				Elapsed = 0f,
 				Progress = 0f
@@ -139,6 +132,11 @@ namespace LunraGames.SubLight.Presenters
 				Progress = 0f
 			};
 
+			// We have to send a request event to all listeners... kinda redundent but whatever...
+			model.TransitState.Value = transitState;
+
+			transitState = transitState.Duplicate;
+
 			if (transitState.Instant)
 			{
 				transitState.Step = TransitState.Steps.Finalize;
@@ -147,10 +145,22 @@ namespace LunraGames.SubLight.Presenters
 				transitState.TransitStep = CompleteStep(transitState.TransitStep);
 				transitState.FinalizeStep = CompleteStep(transitState.FinalizeStep);
 			}
+			else
+			{
+				transitState.PrepareStep.Initializing = true;
+
+				transitState.State = TransitState.States.Active;
+				transitState.Step = TransitState.Steps.Prepare;
+			}
 
 			model.TransitState.Value = transitState;
 			if (transitState.Instant) OnProcessState(transitState, 1f);
 			else OnProcessVisuals(transitState);
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			lastState = transitState;
 		}
 
 		void OnProcessState(TransitState transitState, float delta)

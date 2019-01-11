@@ -217,7 +217,7 @@ namespace LunraGames.SubLight
 		void OnGameEnd(StateChange change)
 		{
 			model.TransitState.Changed -= OnTransitState;
-			OnTransitState(TransitState.Default(null, null));
+			OnTransitState(TransitState.Default());
 			model = null;
 		}
 

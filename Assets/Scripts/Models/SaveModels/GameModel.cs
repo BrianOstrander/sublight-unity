@@ -131,6 +131,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
 
+		TransitStateRequest transitStateRequest;
+		[JsonIgnore]
+		public ListenerProperty<TransitStateRequest> TransitStateRequest;
 		TransitState transitState;
 		[JsonIgnore]
 		public ListenerProperty<TransitState> TransitState;
@@ -167,6 +170,7 @@ namespace LunraGames.SubLight.Models
 
 			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
 
+			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
 			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
 		}
 

@@ -53,8 +53,6 @@ namespace LunraGames.SubLight
 				initialTime
 			);
 
-			game.RelativeDayTime.Changed += newDayTime => Debug.Log("changed to: " + newDayTime);
-
 			// Ship ---
 			var ship = new ShipModel();
 			ship.SetRangeMinimum(Defaults.TransitRangeMinimum);

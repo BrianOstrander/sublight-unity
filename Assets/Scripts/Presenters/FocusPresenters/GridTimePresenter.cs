@@ -150,6 +150,8 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitState(TransitState transitState)
 		{
+			model.RelativeDayTime.Value = transitState.RelativeTimeCurrent;
+
 			if (!View.Visible) return;
 
 			switch (transitState.State)
