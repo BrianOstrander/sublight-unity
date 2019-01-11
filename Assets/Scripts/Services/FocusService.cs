@@ -20,7 +20,6 @@ namespace LunraGames.SubLight
 
 		Heartbeat heartbeat;
 		CallbackService callbacks;
-		Func<PreferencesModel> currentPreferences;
 		RenderTexture defaultTexture;
 
 		Dictionary<SetFocusLayers, int> camerasPerLayer = new Dictionary<SetFocusLayers, int>();
@@ -38,24 +37,21 @@ namespace LunraGames.SubLight
 
 		public FocusService(
 			Heartbeat heartbeat,
-			CallbackService callbacks,
-			Func<PreferencesModel> currentPreferences
+			CallbackService callbacks
 		)
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
-			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
 
 			this.heartbeat = heartbeat;
 			this.callbacks = callbacks;
-			this.currentPreferences = currentPreferences;
 
 			defaultTexture = null;
 
-			callbacks.SetFocusRequest += OnSetFocusRequest;
-			callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
-			callbacks.StateChange += OnStateChange;
-			heartbeat.Update += OnUpdate;
+			this.callbacks.SetFocusRequest += OnSetFocusRequest;
+			this.callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
+			this.callbacks.StateChange += OnStateChange;
+			this.heartbeat.Update += OnUpdate;
 		}
 
 		public void RegisterLayer(SetFocusLayers layer)

@@ -52,8 +52,6 @@ namespace LunraGames.SubLight.Views
 			return quadrantColorsBySliceLayer[Mathf.Min(sliceLayer, quadrantColorsBySliceLayer.Length - 1)];
 		}
 
-		LabelBlock[] labelBlocks = new LabelBlock[0];
-
 		public GalaxyLabelBlock[] Labels
 		{
 			set
@@ -61,10 +59,8 @@ namespace LunraGames.SubLight.Views
 				labelArea.transform.ClearChildren();
 				if (value == null || value.Length == 0)
 				{
-					labelBlocks = new LabelBlock[0];
 					return;
 				}
-				labelBlocks = new LabelBlock[value.Length];
 
 				for (var i = 0; i < value.Length; i++)
 				{

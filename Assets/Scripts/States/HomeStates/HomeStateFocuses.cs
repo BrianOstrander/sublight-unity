@@ -24,7 +24,6 @@ namespace LunraGames.SubLight
 				var roomCamera = payload.MainCamera;
 				var gantryAnchor = roomCamera.GantryAnchor;
 				var fieldOfView = roomCamera.FieldOfView;
-				var layer = LayerConstants.Get(SetFocusLayers.Home);
 
 				new GenericFocusCameraPresenter<HomeFocusDetails>(gantryAnchor, fieldOfView);
 

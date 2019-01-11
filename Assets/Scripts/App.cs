@@ -168,7 +168,7 @@ namespace LunraGames.SubLight
 				CurrentPreferences
 			);
 
-			focus = new FocusService(Heartbeat, Callbacks, CurrentPreferences);
+			focus = new FocusService(Heartbeat, Callbacks);
 
 			Application.targetFrameRate = BuildPreferences.TargetFrameRate;
 			QualitySettings.vSyncCount = BuildPreferences.VSyncCount;

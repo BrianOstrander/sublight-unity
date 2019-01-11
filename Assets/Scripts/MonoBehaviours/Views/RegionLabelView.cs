@@ -32,7 +32,6 @@ namespace LunraGames.SubLight.Views
 		string currentText;
 		string nextText;
 
-		float transitionBeginOpacity;
 		float transitionRemaining;
 		States state = States.Idle;
 
@@ -57,14 +56,12 @@ namespace LunraGames.SubLight.Views
 			{
 				case States.Idle:
 					nextText = text;
-					transitionBeginOpacity = 1f;
 					transitionRemaining = transitionDuration;
 					state = States.Hiding;
 					break;
 				case States.Revealing:
 					currentText = nextText;
 					nextText = text;
-					transitionBeginOpacity = regionLabel.alpha;
 					transitionRemaining = transitionDuration;
 					state = States.Hiding;
 					break;

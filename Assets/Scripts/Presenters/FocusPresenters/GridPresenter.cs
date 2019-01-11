@@ -326,8 +326,6 @@ namespace LunraGames.SubLight.Presenters
 
 			grid.Alpha = grid.IsActive ? alphaCurve.Evaluate(progress) : 0f;
 
-			var currLightYearsInTile = zoomProgress * unitMap.LightYears;
-
 			scale.Opacity.Value = grid.Alpha;
 			scale.Transform.Value = DefineTransform(unitMap, scaleTransform.UniverseOrigin, zoomScalar);
 

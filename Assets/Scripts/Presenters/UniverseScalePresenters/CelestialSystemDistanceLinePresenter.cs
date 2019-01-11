@@ -83,8 +83,6 @@ namespace LunraGames.SubLight.Presenters
 			var pointInside = beginIsInRadius ? begin : end;
 			var pointOutside = beginIsInRadius ? end : begin;
 
-			var gridRadiusX = GridOrigin.x;
-			var gridRadiesZ = GridOrigin.z;
 			var radius = GridRadius - View.GridRadiusMargin;
 
 			float xDelta, zDelta, A, B, C, det, t;

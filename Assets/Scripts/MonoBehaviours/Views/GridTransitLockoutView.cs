@@ -444,8 +444,6 @@ namespace LunraGames.SubLight.Views
 			unlockLeftStatusListCooldownRemaining = Mathf.Max(0f, unlockLeftStatusListCooldownRemaining - delta);
 			unlockRightStatusListCooldownRemaining = Mathf.Max(0f, unlockRightStatusListCooldownRemaining - delta);
 
-			var verticalListBase = (groupVerticalOffsetRange.y * 2f) - verticalOffsetCurrent;
-
 			if (unlockLeftStatusListTarget - unlockLeftStatusLabelList.offsetMin.y < 0f)
 			{
 				unlockLeftStatusLabelList.offsetMin = new Vector2(0f, Mathf.Max(unlockLeftStatusListTarget, unlockLeftStatusLabelList.offsetMin.y - (delta * unlockStatusLabelListInterval * (1f / unlockStatusLabelListIntervalDuration))));
