@@ -26,15 +26,13 @@ namespace LunraGames.SubLight
 			float distanceLightYear
 		)
 		{
-			var result = new RelativeDayTime();
-
 			var galacticTime = distanceLightYear / velocityLightYear;
-			result.GalacticTime = DayTime.FromYear(galacticTime);
-
 			var shipTime = galacticTime * (1f /(1f / Mathf.Sqrt(1f - (Mathf.Pow(velocityLightYear, 2f) / 1f))));
-			result.ShipTime = DayTime.FromYear(shipTime);
 
-			return result;
+			return new RelativeDayTime(
+				DayTime.FromYear(shipTime),
+				DayTime.FromYear(galacticTime)
+			);
 		}
 	}
 }

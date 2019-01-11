@@ -9,22 +9,12 @@ namespace LunraGames.SubLight
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
-		public static RelativeDayTime Zero
-		{
-			get
-			{
-				return new RelativeDayTime
-				{
-					ShipTime = DayTime.Zero,
-					GalacticTime = DayTime.Zero
-				};
-			}
-		}
+		public static RelativeDayTime Zero { get { return new RelativeDayTime(DayTime.Zero, DayTime.Zero); } }
 
-		public DayTime ShipTime;
-		public DayTime GalacticTime;
+		public readonly DayTime ShipTime;
+		public readonly DayTime GalacticTime;
 
-		RelativeDayTime(
+		public RelativeDayTime(
 			DayTime shipTime,
 			DayTime galacticTime
 		)
@@ -62,34 +52,6 @@ namespace LunraGames.SubLight
 			return obj * value;
 		}
 
-		//public static bool operator <(RelativeDayTime obj0, RelativeDayTime obj1)
-		//{
-		//	if (obj0.Day < obj1.Day) return true;
-		//	if (obj0.Day == obj1.Day && obj0.Time < obj1.Time) return true;
-		//	return false;
-		//}
-
-		//public static bool operator >(RelativeDayTime obj0, RelativeDayTime obj1)
-		//{
-		//	if (obj0.Day > obj1.Day) return true;
-		//	if (obj0.Day == obj1.Day && obj0.Time > obj1.Time) return true;
-		//	return false;
-		//}
-
-		//public static bool operator <=(RelativeDayTime obj0, RelativeDayTime obj1)
-		//{
-		//	if (obj0 < obj1) return true;
-		//	if (obj0 == obj1) return true;
-		//	return false;
-		//}
-
-		//public static bool operator >=(RelativeDayTime obj0, RelativeDayTime obj1)
-		//{
-		//	if (obj0 > obj1) return true;
-		//	if (obj0 == obj1) return true;
-		//	return false;
-		//}
-
 		public bool Equals(RelativeDayTime other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -115,5 +77,10 @@ namespace LunraGames.SubLight
 		}
 
 		public static bool operator !=(RelativeDayTime obj0, RelativeDayTime obj1) { return !(obj0 == obj1); }
+
+		public override string ToString()
+		{
+			return "Ship\n\t" + ShipTime.ToString() + "\nGalactic\n\t" + GalacticTime.ToString();
+		}
 	}
 }

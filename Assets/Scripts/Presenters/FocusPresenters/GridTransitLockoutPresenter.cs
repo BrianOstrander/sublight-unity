@@ -97,11 +97,9 @@ namespace LunraGames.SubLight.Presenters
 
 			var relativeDurationDelta = RelativityUtility.TransitTime(transitState.VelocityLightYearsMaximum, UniversePosition.ToLightYearDistance(transitState.DistanceTotal));
 
-			transitState.EndRelativeDayTime = new RelativeDayTime
-			{
-				ShipTime = transitState.BeginRelativeDayTime.ShipTime + relativeDurationDelta.ShipTime,
-				GalacticTime = transitState.BeginRelativeDayTime.GalacticTime + relativeDurationDelta.GalacticTime
-			};
+			transitState.EndRelativeDayTime = model.RelativeDayTime + relativeDurationDelta;
+
+			Debug.Log("--- Begin:\n\n" + transitState.BeginRelativeDayTime + "\n\n--- End:\n\n" + transitState.EndRelativeDayTime);
 
 			transitState.LengthScalar = 0f;
 

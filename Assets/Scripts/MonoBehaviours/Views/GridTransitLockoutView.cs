@@ -331,17 +331,15 @@ namespace LunraGames.SubLight.Views
 			var warmupMaximum = transitWarmupDuration / totalDuration;
 			var middleMaximum = 1f - (transitCooldownDuration / totalDuration);
 
-			var warmup = new RelativeDayTime
-			{
-				ShipTime = new DayTime(Mathf.Min(transitTimeWarmupDays, duration.ShipTime.TotalTime * 0.3f)),
-				GalacticTime = new DayTime(Mathf.Min(transitTimeWarmupDays, duration.GalacticTime.TotalTime * 0.3f))
-			};
+			var warmup = new RelativeDayTime(
+				new DayTime(Mathf.Min(transitTimeWarmupDays, duration.ShipTime.TotalTime * 0.3f)),
+				new DayTime(Mathf.Min(transitTimeWarmupDays, duration.GalacticTime.TotalTime * 0.3f))
+			);
 
-			var cooldown = new RelativeDayTime
-			{
-				ShipTime = new DayTime(Mathf.Min(transitTimeCooldownDays, duration.ShipTime.TotalTime * 0.3f)),
-				GalacticTime = new DayTime(Mathf.Min(transitTimeCooldownDays, duration.GalacticTime.TotalTime * 0.3f))
-			};
+			var cooldown = new RelativeDayTime(
+				new DayTime(Mathf.Min(transitTimeCooldownDays, duration.ShipTime.TotalTime * 0.3f)),
+				new DayTime(Mathf.Min(transitTimeCooldownDays, duration.GalacticTime.TotalTime * 0.3f))
+			);
 
 			var middle = duration - (warmup + cooldown);
 
