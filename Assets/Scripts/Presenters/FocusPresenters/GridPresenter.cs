@@ -644,6 +644,8 @@ namespace LunraGames.SubLight.Presenters
 						case TransitState.Steps.Finalize:
 							if (transitState.CurrentStep.Initializing)
 							{
+								transitState.BeginSystem.Visited.Value = true;
+
 								model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
 								model.Ship.Value.Position.Value = transitState.EndSystem.Position;
 
