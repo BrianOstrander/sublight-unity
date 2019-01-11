@@ -638,7 +638,11 @@ namespace LunraGames.SubLight.Presenters
 							break;
 						case TransitState.Steps.Transit:
 							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+							model.Ship.Value.Position.Value = transitState.CurrentPosition;
 							SetGrid();
+							break;
+						case TransitState.Steps.Finalize:
+							if (transitState.CurrentStep.Initializing) model.Ship.Value.SetCurrentSystem(transitState.EndSystem);
 							break;
 					}
 

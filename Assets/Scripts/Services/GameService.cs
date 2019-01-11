@@ -92,7 +92,7 @@ namespace LunraGames.SubLight
 			}
 
 			game.Ship.Value.Position.Value = begin;
-			game.Ship.Value.SystemIndex.Value = beginSystem.Index;
+			game.Ship.Value.SetCurrentSystem(beginSystem);
 
 			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
 

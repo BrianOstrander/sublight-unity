@@ -110,7 +110,7 @@ namespace LunraGames.SubLight
 
 		void SetNonSerializedValues(Action done)
 		{
-			Payload.Game.Ship.Value.CurrentSystem.Value = App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex);
+			Payload.Game.Ship.Value.SetCurrentSystem(App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex));
 
 			if (Payload.Game.Ship.Value.CurrentSystem.Value == null) Debug.LogError("Unable to load current system at "+Payload.Game.Ship.Value.Position.Value+" and index "+Payload.Game.Ship.Value.SystemIndex.Value);
 

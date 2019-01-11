@@ -15,6 +15,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			OnPosition(model.Ship.Value.Position.Value);
 
+			model.Ship.Value.Position.Changed += OnPosition;
 			model.TransitState.Changed += OnTransitState;
 		}
 
@@ -22,6 +23,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			base.OnUnBind();
 
+			Model.Ship.Value.Position.Changed -= OnPosition;
 			Model.TransitState.Changed -= OnTransitState;
 		}
 
