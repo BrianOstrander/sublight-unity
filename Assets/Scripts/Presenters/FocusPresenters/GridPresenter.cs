@@ -642,7 +642,11 @@ namespace LunraGames.SubLight.Presenters
 							SetGrid();
 							break;
 						case TransitState.Steps.Finalize:
-							if (transitState.CurrentStep.Initializing) model.Ship.Value.SetCurrentSystem(transitState.EndSystem);
+							if (transitState.CurrentStep.Initializing)
+							{
+								model.Ship.Value.SetCurrentSystem(transitState.EndSystem);
+								model.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.CelestialSystemState.Value.System.Position.Value, model.CelestialSystemState.Value.System);
+							}
 							break;
 					}
 
