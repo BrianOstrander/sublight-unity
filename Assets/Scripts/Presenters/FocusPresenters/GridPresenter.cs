@@ -101,6 +101,8 @@ namespace LunraGames.SubLight.Presenters
 		Vector3 unityPosOnDragLast;
 		UniverseTransform transformOnBeginDrag;
 
+		UniversePosition universeOriginOnTransitPrepareInitialize;
+
 		UniversePosition ShipPositionOnPlane
 		{
 			get
@@ -634,7 +636,13 @@ namespace LunraGames.SubLight.Presenters
 					switch (transitState.Step)
 					{
 						case TransitState.Steps.Prepare:
-							// Tween to universePos here!
+							if (transitState.CurrentStep.Initializing)
+							{
+								universeOriginOnTransitPrepareInitialize = model.ActiveScale.Value.Transform.Value.UniverseOrigin;
+							}
+							var universeCenterPos = UniversePosition.Lerp(View.PositionCenterCurve.Evaluate(transitState.CurrentStep.Progress), universeOriginOnTransitPrepareInitialize, universePos);
+							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universeCenterPos);
+							SetGrid();
 							break;
 						case TransitState.Steps.Transit:
 							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);

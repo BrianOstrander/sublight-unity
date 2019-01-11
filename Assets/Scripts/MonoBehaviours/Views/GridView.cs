@@ -66,6 +66,8 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve positionZoomDownCurve;
 		[SerializeField]
 		AnimationCurve zoomCurve;
+		[SerializeField]
+		AnimationCurve positionCenterCurve;
 
 		[SerializeField]
 		float gridDragRadius;
@@ -101,6 +103,7 @@ namespace LunraGames.SubLight.Views
 		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
 		public AnimationCurve GetPositionCurve(bool zoomingUp) { return zoomingUp ? positionZoomUpCurve : positionZoomDownCurve; }
 		public AnimationCurve ZoomCurve { get { return zoomCurve; } }
+		public AnimationCurve PositionCenterCurve { get { return positionCenterCurve; } }
 
 		public Action DrawGizmos { set; private get; }
 
@@ -339,6 +342,7 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve HideScaleAlpha { get; }
 		AnimationCurve RevealScaleAlpha { get; }
 		AnimationCurve ZoomCurve { get; }
+		AnimationCurve PositionCenterCurve { get; }
 
 		AnimationCurve GetPositionCurve(bool zoomingUp);
 
