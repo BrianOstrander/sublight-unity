@@ -48,7 +48,7 @@ namespace LunraGames.SubLight.Views
 			base.OnIdle(delta);
 
 			verticalBobbing = (verticalBobbing + (verticalBobbingSpeed * delta)) % 1f;
-			var currY = verticalBobbingYRange.Evaluate(verticalBobbingYCurve.Evaluate(verticalBobbing));
+			var currY = (verticalBobbingYRange.Evaluate(verticalBobbingYCurve.Evaluate(verticalBobbing))) * (1f - TimeScalar);
 			verticalBobbingAnchor.localPosition = new Vector3(0f, currY + AdditionalYOffset, 0f);
 
 		}
