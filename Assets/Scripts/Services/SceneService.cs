@@ -203,8 +203,6 @@ namespace LunraGames.SubLight
 					}
 					break;
 			}
-			//if (model == null || model.EncounterState.State.Value == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
-			//OnEnd();
 		}
 
 		void OnGameBegin(StateChange change)

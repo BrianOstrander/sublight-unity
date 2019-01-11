@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -312,10 +311,6 @@ namespace LunraGames.SubLight.Views
 			transitTimeStamp.YearLabel.text = remainingYearsText;
 			transitTimeStamp.MonthLabel.text = remainingMonthsText;
 			transitTimeStamp.DayLabel.text = remainingDaysText;
-
-			//transitTimeStamp.YearLabel.text = totalYears.ToString("N0");
-			//transitTimeStamp.MonthLabel.text = totalMonths.ToString("00");
-			//transitTimeStamp.DayLabel.text = totalDays.ToString("00");
 		}
 
 		public void GetTimeProgress(
@@ -450,8 +445,6 @@ namespace LunraGames.SubLight.Views
 			unlockRightStatusListCooldownRemaining = Mathf.Max(0f, unlockRightStatusListCooldownRemaining - delta);
 
 			var verticalListBase = (groupVerticalOffsetRange.y * 2f) - verticalOffsetCurrent;
-			//unlockLeftStatusLabelList.offsetMin = new Vector2(0f, verticalListBase);
-			//unlockRightStatusLabelList.offsetMin = new Vector2(0f, verticalListBase);
 
 			if (unlockLeftStatusListTarget - unlockLeftStatusLabelList.offsetMin.y < 0f)
 			{

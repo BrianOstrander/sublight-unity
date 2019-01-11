@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class ShipPinView : UniverseScaleView, IShipPinView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float unityScale;
 		[SerializeField]
@@ -20,6 +21,7 @@ namespace LunraGames.SubLight.Views
 		CurveStyleBlock radiusOpacity = CurveStyleBlock.Default;
 		[SerializeField]
 		MeshRenderer[] opacityMeshes;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float verticalBobbingSpeed;
 		float verticalBobbing;

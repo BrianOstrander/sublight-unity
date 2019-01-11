@@ -5,6 +5,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class ButtonEncounterLogView : EntryEncounterLogView, IButtonEncounterLogView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		CanvasGroup group;
 		[SerializeField]
@@ -15,6 +16,7 @@ namespace LunraGames.SubLight.Views
 		GameObject buttonArea;
 		[SerializeField]
 		EncounterButtonLeaf buttonEntryPrefab;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public ButtonLogBlock[] Buttons 
 		{

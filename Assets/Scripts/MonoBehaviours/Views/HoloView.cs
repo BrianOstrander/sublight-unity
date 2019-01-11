@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class HoloView : View, IHoloView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		MeshRenderer projectionMesh;
 		[SerializeField]
@@ -26,6 +27,7 @@ namespace LunraGames.SubLight.Views
 		Vector2 gridIntensityRange;
 		[SerializeField]
 		AnimationCurve gridIntensity;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float baseScrollSpeed;
 		float baseScrollOffset;

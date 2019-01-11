@@ -25,6 +25,7 @@ namespace LunraGames.SubLight.Views
 			public float RangeRadius;
 		}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float zoomAnimationDuration;
 		[SerializeField]
@@ -77,6 +78,7 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		float gridSelectDuration;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		Material[] gridBackgrounds;
 		Material[] gridsHazards;

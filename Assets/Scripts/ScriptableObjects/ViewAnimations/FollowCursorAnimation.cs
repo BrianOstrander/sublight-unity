@@ -4,6 +4,7 @@ namespace LunraGames.SubLight
 {
 	public class FollowCursorAnimation : ViewAnimation
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float distance;
 		[SerializeField]
@@ -12,6 +13,7 @@ namespace LunraGames.SubLight
 		float smoothingScalar;
 		[SerializeField]
 		AnimationCurve distanceSmoothing;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		void Follow(IView view)
 		{

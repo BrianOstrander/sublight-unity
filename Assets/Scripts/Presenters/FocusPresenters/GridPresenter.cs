@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
@@ -205,7 +201,6 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
-			View.DrawGizmos = OnDrawGizmos;
 			View.SetGridSelected(model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected, true);
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
@@ -671,35 +666,6 @@ namespace LunraGames.SubLight.Presenters
 					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Animation);
 					break;
 			}
-		}
-
-		void OnDrawGizmos()
-		{
-#if UNITY_EDITOR
-
-			//var uniOrigin = UniversePosition.Zero;
-			//var oneLightYear = new UniversePosition(new Vector3(0.02f, 0f, 0.02f));
-
-			//var localScale = model.GetScale(UniverseScales.Local);
-			//var interstellarScale = model.GetScale(UniverseScales.Stellar);
-			//var quadrantScale = model.GetScale(UniverseScales.Quadrant);
-			//var galacticScale = model.GetScale(UniverseScales.Galactic);
-			//var clusterScale = model.GetScale(UniverseScales.Cluster);
-
-			//var activeScale = model.ActiveScale.Value;
-
-			//Gizmos.color = Color.green;
-			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
-			//Gizmos.color = Color.yellow;
-			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalaxyOrigin), 0.06f);
-			//Gizmos.color = Color.magenta;
-			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.ClusterOrigin), 0.08f);
-
-			//Gizmos.color = Color.red;
-			//Gizmos.DrawWireSphere(localScale.GetUnityPosition(uniOrigin), 0.02f);
-			//Gizmos.color = Color.blue;
-			//Gizmos.DrawWireSphere(localScale.GetUnityPosition(oneLightYear), 0.1f);
-#endif
 		}
 		#endregion
 	}

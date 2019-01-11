@@ -5,6 +5,7 @@ namespace LunraGames.SubLight
 {
 	public class OpacityByDistance : MonoBehaviour
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Graphic graphic;
 		[SerializeField]
@@ -15,6 +16,7 @@ namespace LunraGames.SubLight
 		float end;
 		[SerializeField]
 		CurveStyleBlock opacity = CurveStyleBlock.Default;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		void Update()
 		{

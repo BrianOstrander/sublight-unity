@@ -221,7 +221,6 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Inventory:
 					throw new NotImplementedException("Inventory logs not supported yet");
 					//OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
-					break;
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
 					break;

@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class MainMenuGalaxyView : View, IMainMenuGalaxyView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Vector3 rotationSpeed;
 		[SerializeField]
@@ -19,6 +20,7 @@ namespace LunraGames.SubLight.Views
 		Color[] previewColors = new Color[0];
 		[SerializeField]
 		MeshRenderer[] previewMeshes = new MeshRenderer[0];
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public Texture2D GalaxyPreview
 		{

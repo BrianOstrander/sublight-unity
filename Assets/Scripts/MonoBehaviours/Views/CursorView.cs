@@ -27,6 +27,7 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Color color = Color.white;
 		[SerializeField]
@@ -37,6 +38,7 @@ namespace LunraGames.SubLight.Views
 		Transform cursorsRoot;
 		[SerializeField]
 		CursorBlock[] cursors = new CursorBlock[0];
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float animationProgress;
 		float transitionProgress;

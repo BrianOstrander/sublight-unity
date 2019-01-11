@@ -13,6 +13,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class MainMenuOptionsView : View, IMainMenuOptionsView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Transform optionsAnchor;
 		[SerializeField]
@@ -53,6 +54,7 @@ namespace LunraGames.SubLight.Views
 		// TODO REMOVE THIS!
 		[SerializeField]
 		MeshRenderer tempIris;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		void SetButtons(LabelButtonBlock[] blocks, bool left)
 		{

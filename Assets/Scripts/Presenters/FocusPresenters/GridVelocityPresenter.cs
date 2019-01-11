@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using UnityEngine;
-
-using LunraGames.SubLight.Models;
+﻿using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters

@@ -7,10 +7,12 @@ namespace LunraGames.SubLight
 	{
 		public static UxHelper Instance;
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		bool listeningInEditMode;
 		[SerializeField]
 		GameObject canvas;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 #if UNITY_EDITOR
 		void OnEnable()

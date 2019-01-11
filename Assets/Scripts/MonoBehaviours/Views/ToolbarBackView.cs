@@ -8,6 +8,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class ToolbarBackView : View, IToolbarBackView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Vector3 rotation;
 		[SerializeField]
@@ -20,6 +21,7 @@ namespace LunraGames.SubLight.Views
 		float opacityInteractionThreshold;
 		[SerializeField]
 		CanvasGroup opacityGroup;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public float AnimationTime { get { return animationTime; } }
 		public string BackText { set { backLabel.text = value ?? string.Empty; } }

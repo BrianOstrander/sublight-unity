@@ -15,7 +15,6 @@ namespace LunraGames.SubLight.Presenters
 		GridTimeLanguageBlock transitLanguage;
 
 		float targetOpacitySpeed = 1f / 0.3f;
-		float beginOpacity;
 		float currentOpacity;
 		float? targetOpacity;
 
@@ -107,7 +106,7 @@ namespace LunraGames.SubLight.Presenters
 			if (!View.Visible) return;
 			if (!targetOpacity.HasValue) return;
 
-			var dir = Mathf.Sign(targetOpacity.Value - beginOpacity);
+			var dir = Mathf.Sign(targetOpacity.Value);
 
 			currentOpacity = Mathf.Max(0f, Mathf.Min(1f, currentOpacity + (delta * targetOpacitySpeed * dir)));
 			if (Mathf.Approximately(currentOpacity, targetOpacity.Value)) targetOpacity = null;

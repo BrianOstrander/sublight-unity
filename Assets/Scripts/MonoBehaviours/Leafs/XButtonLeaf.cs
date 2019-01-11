@@ -13,12 +13,14 @@ namespace LunraGames.SubLight
 		[Serializable]
 		struct MeshRendererEntry
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			[SerializeField]
 			string colorPropertyName;
 			[SerializeField]
 			string alphaPropertyName;
 			[SerializeField]
 			MeshRenderer[] meshRenderers;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 			public void Set(Color color)
 			{

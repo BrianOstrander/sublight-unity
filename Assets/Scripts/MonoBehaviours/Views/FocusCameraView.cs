@@ -4,8 +4,10 @@ namespace LunraGames.SubLight.Views
 {
 	public abstract class FocusCameraView : View, IFocusCameraView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Camera focusCamera;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		protected Camera FocusCamera { get { return focusCamera; } }
 

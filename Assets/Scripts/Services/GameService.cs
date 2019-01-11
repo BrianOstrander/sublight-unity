@@ -102,13 +102,6 @@ namespace LunraGames.SubLight
 
 		void OnShipReady(GameModel game, Action<RequestStatus, GameModel> done)
 		{
-			// Uncomment this to make the goal closer.
-			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
-
-			// Uncomment this to make the void never expand
-			//game.DestructionSpeed.Value = 0f;
-			//game.DestructionSpeedIncrement.Value = 0f;
-
 			modelMediator.Save(game, result => OnSaveGame(result, done));
 		}
 

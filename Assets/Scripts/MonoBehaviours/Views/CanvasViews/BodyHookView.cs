@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class BodyHookView : CanvasView, IBodyHookView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
@@ -21,6 +22,7 @@ namespace LunraGames.SubLight.Views
 		LabelButtonLeaf crewEntryPrefab;
 		[SerializeField]
 		GameObject crewEntryArea;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string Title { set { titleLabel.text = value ?? string.Empty; } }
 		public string Description { set { descriptionLabel.text = value ?? string.Empty; } }

@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class GalaxyView : UniverseScaleView, IGalaxyView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float ySeparation;
 		[SerializeField]
@@ -12,6 +13,7 @@ namespace LunraGames.SubLight.Views
 		Color[] layerColors = new Color[0];
 		[SerializeField]
 		MeshRenderer[] layerMeshes = new MeshRenderer[0];
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		protected float TotalGalaxyHeight { get { return ySeparation * 3f; } }
 

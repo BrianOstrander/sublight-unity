@@ -190,6 +190,7 @@ namespace LunraGames.SubLight
 
 		protected virtual void OnOpacityStack(float opacity) {}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		bool interactable = true;
 		public virtual bool Interactable { get { return interactable; } set { interactable = value; } }
 		[SerializeField, Tooltip("Size of initial pool, entering \"0\" uses ViewMediator defaults.")]
@@ -199,6 +200,7 @@ namespace LunraGames.SubLight
 		[SerializeField, FormerlySerializedAs("_animations")]
 		ViewAnimation[] animations;
 		public virtual ViewAnimation[] ViewAnimations { get { return animations; } }
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string InstanceName 
 		{

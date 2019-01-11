@@ -259,7 +259,6 @@ namespace LunraGames.SubLight.Presenters
 							break;
 						case Celestial.SelectedStates.Selected:
 							Model.TransitStateRequest.Value = TransitStateRequest.Create(Model.Ship.Value.CurrentSystem.Value, instanceModel.ActiveSystem.Value);
-							//Model.TransitState.Value = TransitState.Request(false, Model.Ship.Value.CurrentSystem.Value, instanceModel.ActiveSystem.Value);
 							break;
 					}
 					break;

@@ -7,10 +7,12 @@ namespace LunraGames.SubLight.Views
 {
 	public class GroupRadialLimiter : MonoBehaviour
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		AnimationCurve distanceOpacity;
 		[SerializeField]
 		AnimationCurve normalDotOpacity;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		CanvasGroup target;
 

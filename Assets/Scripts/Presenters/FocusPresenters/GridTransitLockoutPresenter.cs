@@ -95,8 +95,6 @@ namespace LunraGames.SubLight.Presenters
 
 			transitState.EndRelativeDayTime = model.RelativeDayTime + relativeDurationDelta;
 
-			//Debug.Log("--- Begin:\n\n" + transitState.BeginRelativeDayTime + "\n\n--- End:\n\n" + transitState.EndRelativeDayTime);
-
 			transitState.LengthScalar = 0f;
 
 			transitState.RelativeTimeTotal = relativeDurationDelta;
@@ -172,7 +170,6 @@ namespace LunraGames.SubLight.Presenters
 			currentStep.Progress = currentStep.Elapsed / currentStep.Duration;
 
 			transitState.CurrentStep = currentStep;
-			//Debug.Log("now now val " + transitState.CurrentStep.Elapsed+" and "+currentStep.Elapsed);
 
 			var lastStep = currentStep.Step;
 

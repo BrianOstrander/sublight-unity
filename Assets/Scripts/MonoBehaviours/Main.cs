@@ -12,7 +12,7 @@ namespace LunraGames.SubLight
 	/// </remarks>
 	public class Main : MonoBehaviour 
 	{
-
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		GameObject audioRoot;
 		[SerializeField]
@@ -29,6 +29,7 @@ namespace LunraGames.SubLight
 		BuildPreferences buildPreferences;
 		[SerializeField]
 		SceneSkybox sceneSkybox;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		App app;
 		

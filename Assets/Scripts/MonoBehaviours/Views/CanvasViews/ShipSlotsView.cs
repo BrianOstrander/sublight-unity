@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class ShipSlotsView : CanvasView, IShipSlotsView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
@@ -47,6 +48,7 @@ namespace LunraGames.SubLight.Views
 		ShipModuleLeaf moduleEntryPrefab;
 		[SerializeField]
 		GameObject moduleEntryArea;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		[SerializeField]
 		Color entryNormalColor = Color.white;

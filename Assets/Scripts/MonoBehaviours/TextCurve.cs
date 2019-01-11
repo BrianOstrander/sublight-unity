@@ -13,11 +13,14 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct LabelFont
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public GalaxyLabelStyles LabelStyle;
 			public TMP_FontAsset Font;
 			public FontStyles Style;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		string text;
 		[SerializeField]
@@ -47,6 +50,7 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI labelPrefab;
 		[SerializeField]
 		GameObject labelArea;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		Vector3 beginAnchorLocal;
 		Vector3 endAnchorLocal;

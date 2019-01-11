@@ -22,7 +22,7 @@ namespace LunraGames.SubLight.Views
 			public GalaxyLabelBlock Block;
 			public GalaxyLabelLeaf Instance;
 		}
-
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float yMinimum;
 		[SerializeField]
@@ -33,6 +33,7 @@ namespace LunraGames.SubLight.Views
 		GalaxyLabelLeaf labelPrefab;
 		[SerializeField]
 		GameObject labelArea;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		[SerializeField]
 		Color[] galacticColorsBySliceLayer = new Color[0];
