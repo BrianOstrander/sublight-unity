@@ -91,7 +91,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (system == null) throw new ArgumentNullException("system");
 
-			if (system.Position.Value.Equals(Model.Ship.Value.Position.Value)) visitState = Celestial.VisitStates.Current;
+			if (Model.Ship.Value.CurrentSystem.Value == system) visitState = Celestial.VisitStates.Current;
 			else visitState = system.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
 
 			if (UniversePosition.Distance(system.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.Range.Value.Total)
@@ -131,8 +131,6 @@ namespace LunraGames.SubLight.Presenters
 			out bool travelChanged
 		)
 		{
-			if (system == null) throw new ArgumentNullException("system");
-
 			var oldHighlightState = highlightState;
 			var oldVisitState = visitState;
 			var oldRangeState = rangeState;

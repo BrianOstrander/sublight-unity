@@ -644,8 +644,13 @@ namespace LunraGames.SubLight.Presenters
 						case TransitState.Steps.Finalize:
 							if (transitState.CurrentStep.Initializing)
 							{
+								model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+								model.Ship.Value.Position.Value = transitState.EndSystem.Position;
+
 								model.Ship.Value.SetCurrentSystem(transitState.EndSystem);
 								model.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.CelestialSystemState.Value.System.Position.Value, model.CelestialSystemState.Value.System);
+
+								SetGrid();
 							}
 							break;
 					}
