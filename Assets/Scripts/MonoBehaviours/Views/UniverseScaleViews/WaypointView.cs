@@ -65,15 +65,7 @@ namespace LunraGames.SubLight.Views
 
 			if (inRange)
 			{
-				var inRangeParticleOpacity = inRangeParticleOpacityByRadiusNormal.Evaluate(RadiusNormal);
-				var inRangeParticleScale = inRangeParticleScaleByRadiusNormal.Evaluate(RadiusNormal);
-
-				foreach (var renderer in inRangeParticleRenderers)
-				{
-					renderer.material.color = renderer.material.color.NewA(inRangeParticleOpacity);
-					renderer.transform.localScale = Vector3.one * inRangeParticleScale;
-				}
-
+				UpdateInRangeParticleSystems();
 				return;
 			}
 
@@ -85,11 +77,24 @@ namespace LunraGames.SubLight.Views
 		protected override void OnOpacityStack(float opacity)
 		{
 			group.alpha = opacity;
+			if (IsInBounds) UpdateInRangeParticleSystems();
 		}
 
 		protected override void OnInBoundsChanged(bool isInBounds)
 		{
 			inRangeParticleSystemsRoot.gameObject.SetActive(isInBounds);
+		}
+
+		void UpdateInRangeParticleSystems()
+		{
+			var inRangeParticleOpacity = inRangeParticleOpacityByRadiusNormal.Evaluate(RadiusNormal) * OpacityStack;
+			var inRangeParticleScale = inRangeParticleScaleByRadiusNormal.Evaluate(RadiusNormal);
+
+			foreach (var renderer in inRangeParticleRenderers)
+			{
+				renderer.material.color = renderer.material.color.NewA(inRangeParticleOpacity);
+				renderer.transform.localScale = Vector3.one * inRangeParticleScale;
+			}
 		}
 
 		public override void Reset()
