@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 224416545592660230}
   - component: {fileID: 222224391151154370}
   - component: {fileID: 114987160067492568}
+  - component: {fileID: 223632573967037978}
   m_Layer: 12
   m_Name: HintArea
   m_TagString: Untagged
@@ -16200,6 +16201,26 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: -1
+  m_TargetDisplay: 0
+--- !u!223 &223632573967037978
+Canvas:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1089589097878084}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!223 &223932439154751174
 Canvas:
