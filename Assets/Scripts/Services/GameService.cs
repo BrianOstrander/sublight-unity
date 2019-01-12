@@ -48,11 +48,10 @@ namespace LunraGames.SubLight
 			game.FocusTransform.Value = FocusTransform.Default;
 
 			var initialTime = new DayTime((365 * 1057) + (30 * 2) + 5);
-			game.DayTime.Value = new DayTimeBlock
-			{
-				ShipTime = initialTime,
-				GalacticTime = new DayTime(initialTime)
-			};
+			game.RelativeDayTime.Value = new RelativeDayTime(
+				initialTime,
+				initialTime
+			);
 
 			// Ship ---
 			var ship = new ShipModel();
@@ -80,16 +79,53 @@ namespace LunraGames.SubLight
 
 			var galaxy = result.TypedModel;
 
-			var foundBegin = false;
-			var begin = galaxy.GetPlayerBegin(out foundBegin);
-			if (!foundBegin)
+			var beginFound = false;
+			SectorModel beginSector;
+			SystemModel beginSystem;
+			var begin = galaxy.GetPlayerBegin(out beginFound, out beginSector, out beginSystem);
+			if (!beginFound)
 			{
 				Debug.LogError("Provided galaxy has no player begin defined");
 				done(RequestStatus.Failure, null);
 				return;
 			}
 
+			var endFound = false;
+			SectorModel endSector;
+			SystemModel endSystem;
+			var end = galaxy.GetPlayerEnd(out endFound, out endSector, out endSystem);
+			if (!endFound)
+			{
+				Debug.LogError("Provided galaxy has no player end defined");
+				done(RequestStatus.Failure, null);
+				return;
+			}
+
 			game.Ship.Value.Position.Value = begin;
+			game.Ship.Value.SetCurrentSystem(beginSystem);
+			game.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
+
+			//Debug.Log("reenable begin waypoint here");
+			var shipWaypoint = new WaypointModel();
+			shipWaypoint.SetLocation(begin);
+			shipWaypoint.WaypointId.Value = WaypointIds.Ship;
+			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			shipWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
+			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
+			shipWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, begin);
+
+			game.WaypointCollection.AddWaypoint(shipWaypoint);
+
+			//Debug.Log("reenable end waypoint here");
+			var endWaypoint = new WaypointModel();
+			endWaypoint.SetLocation(endSystem);
+			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
+			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
+			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
+			endWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, end);
+
+			game.WaypointCollection.AddWaypoint(endWaypoint);
 
 			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
 
@@ -98,13 +134,6 @@ namespace LunraGames.SubLight
 
 		void OnShipReady(GameModel game, Action<RequestStatus, GameModel> done)
 		{
-			// Uncomment this to make the goal closer.
-			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
-
-			// Uncomment this to make the void never expand
-			//game.DestructionSpeed.Value = 0f;
-			//game.DestructionSpeedIncrement.Value = 0f;
-
 			modelMediator.Save(game, result => OnSaveGame(result, done));
 		}
 

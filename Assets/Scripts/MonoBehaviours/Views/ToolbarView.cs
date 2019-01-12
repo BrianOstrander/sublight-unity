@@ -15,10 +15,12 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct IconEntry
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public SetFocusLayers Layer;
 			public Sprite Icon;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
-		
+
 		class ButtonEntry
 		{
 			public int Index;
@@ -36,6 +38,7 @@ namespace LunraGames.SubLight.Views
 			public Vector3 Forward;
 		}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Transform orbitOrigin;
 		[SerializeField]
@@ -73,6 +76,7 @@ namespace LunraGames.SubLight.Views
 		int previewCount;
 		[SerializeField]
 		float previewButtonDiameter;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		List<ButtonEntry> currentButtons = new List<ButtonEntry>();
 

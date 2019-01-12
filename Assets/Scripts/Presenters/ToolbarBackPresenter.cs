@@ -15,6 +15,13 @@ namespace LunraGames.SubLight.Presenters
 		{
 			this.model = model;
 			this.back = back;
+
+			model.TransitState.Changed += OnTransitState;
+		}
+
+		protected override void OnUnBind()
+		{
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -47,6 +54,15 @@ namespace LunraGames.SubLight.Presenters
 		void OnAnimationDone()
 		{
 			waitingForAnimation = false;
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			if (!View.Visible) return;
+			if (waitingForAnimation) return;
+			if (Mathf.Approximately(0f, model.CameraTransform.Value.PitchValue())) return;
+
+			OnClick();
 		}
 		#endregion
 	}

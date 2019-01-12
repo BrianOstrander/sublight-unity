@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: CelestialSystemDistanceLineBottom
-  m_Shader: {fileID: 4800000, guid: 26bd41afb6e0047628260df2d1e6ef92, type: 3}
+  m_Shader: {fileID: 4800000, guid: 00b672b67134742cf92f9a43786019df, type: 3}
   m_ShaderKeywords: BOOLEAN_D7E37715_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -86,6 +86,7 @@ Material:
     - _RadiusChokeWidth: 0.005
     - _RadiusProgress: 1
     - _Range: 0.5
+    - _RangeFadeFalloff: 1
     - _RangeThreshold: 0.01
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

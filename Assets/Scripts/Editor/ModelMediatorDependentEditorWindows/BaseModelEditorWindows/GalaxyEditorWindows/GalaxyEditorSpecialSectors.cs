@@ -26,7 +26,6 @@ namespace LunraGames.SubLight
 		EditorPrefsInt specifiedSectorsPreviewSize;
 		EditorPrefsBool specifiedSectorsPreviewMinimized;
 		EditorPrefsInt specifiedSectorsSelectedPreview;
-		EditorPrefsFloat specifiedSectorsListScroll;
 		EditorPrefsFloat specifiedSectorsDetailsScroll;
 		EditorPrefsBool specifiedSectorsShowTargets;
 		EditorPrefsBool specifiedSectorsShowDerivedValues;
@@ -44,7 +43,6 @@ namespace LunraGames.SubLight
 			specifiedSectorsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
 			specifiedSectorsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 			specifiedSectorsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
-			specifiedSectorsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			specifiedSectorsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
 			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
 			specifiedSectorsShowDerivedValues = new EditorPrefsBool(currPrefix + "ShowDerivedValues");

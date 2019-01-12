@@ -371,6 +371,7 @@ MonoBehaviour:
   irisMesh: {fileID: 23377314449061674}
   baseGlowColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
   baseIrisColor: {r: 0.30980393, g: 0.30980393, b: 0.30980393, a: 1}
+  baseScrollSpeedRange: {x: 0.05, y: 0.5}
   glowIntensityRange: {x: 0.1, y: 1}
   glowIntensity:
     serializedVersion: 2

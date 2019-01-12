@@ -6,10 +6,12 @@ namespace LunraGames.SubLight.Views
 {
 	public class TextEncounterLogView : EntryEncounterLogView, ITextEncounterLogView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI headerLabel;
 		[SerializeField]
 		TextMeshProUGUI messageLabel;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public Color HeaderColor { set { headerLabel.color = value; } }
 		public string Header { set { headerLabel.text = value ?? string.Empty; } }

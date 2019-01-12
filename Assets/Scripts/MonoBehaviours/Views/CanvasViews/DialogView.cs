@@ -13,10 +13,13 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct DialogEntry
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public DialogTypes DialogType;
 			public GameObject Root;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		CanvasGroup rootGroup;
 
@@ -75,6 +78,7 @@ namespace LunraGames.SubLight.Views
 		XButtonLeaf[] primaryButtons;
 		[SerializeField]
 		XButtonLeaf[] secondaryButtons;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public DialogTypes DialogType
 		{

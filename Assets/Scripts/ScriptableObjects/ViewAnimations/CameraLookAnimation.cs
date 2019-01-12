@@ -5,10 +5,12 @@ namespace LunraGames.SubLight
 {
 	public class CameraLookAnimation : ViewAnimation
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		bool horizontalOnly;
 		[SerializeField]
 		bool idleLook;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		Vector3 LookAtPosition(IView view)
 		{

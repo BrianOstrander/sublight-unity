@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class GalaxyDetailView : UniverseScaleView, IGalaxyDetailView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		bool[] channelEnabled;
 		[SerializeField]
@@ -22,6 +23,7 @@ namespace LunraGames.SubLight.Views
 		float subSliceRange;
 		[SerializeField]
 		GalaxySliceLeaf[] slices;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public void SetGalaxy(
 			Texture2D previewTexture,
@@ -31,7 +33,6 @@ namespace LunraGames.SubLight.Views
 		)
 		{
 			var seperationIndex = 0;
-			var lastYSeparation = 0f;
 			var subYDelta = ySeparation * subSliceRange;
 			var opacityDelta = 1f - sliceOpacityMinimum;
 			for (var i = 0; i < slices.Length; i++)
@@ -65,8 +66,6 @@ namespace LunraGames.SubLight.Views
 						worldRadius
 					);
 				}
-
-				lastYSeparation = nextYSeparation;
 
 				seperationIndex++;
 			}

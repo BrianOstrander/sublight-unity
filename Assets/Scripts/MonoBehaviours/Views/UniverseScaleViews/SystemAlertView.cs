@@ -8,6 +8,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class SystemAlertView : UniverseScaleView, ISystemAlertView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float yHeight;
 		[SerializeField]
@@ -20,6 +21,7 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
 		TextMeshProUGUI detailLabel;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string TitleText { set { titleLabel.text = value ?? string.Empty; } }
 		public string DetailText { set { detailLabel.text = value ?? string.Empty; } }

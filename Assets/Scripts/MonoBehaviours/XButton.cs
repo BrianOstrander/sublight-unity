@@ -24,6 +24,7 @@ namespace LunraGames.SubLight
 		}
 
 		#region Inspector
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		FloatOverrideBlock fadeDuration;
 		[SerializeField]
@@ -55,6 +56,7 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		UnityEvent onDragEnd;
 		public UnityEvent OnDragEnd { get { return onDragEnd; } }
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		#endregion
 
 		float FadeDuration { get { return fadeDuration.Override ? fadeDuration.Value : FadeDurationDefault; } }

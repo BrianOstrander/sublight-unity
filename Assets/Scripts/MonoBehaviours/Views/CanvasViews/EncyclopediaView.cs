@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class EncyclopediaView : CanvasView, IEncyclopediaView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
@@ -19,6 +20,7 @@ namespace LunraGames.SubLight.Views
 		GameObject articleEntryArea;
 		[SerializeField]
 		GameObject sectionEntryArea;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string Title { set { titleLabel.text = value ?? string.Empty; } }
 

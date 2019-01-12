@@ -15,7 +15,7 @@ namespace LunraGames.SubLight.Views
 
 	public abstract class UniverseScaleView : View, IUniverseScaleView
 	{
-
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		UniverseScaleAxises scaleIgnores = UniverseScaleAxises.Y;
 		[SerializeField]
@@ -24,13 +24,14 @@ namespace LunraGames.SubLight.Views
 		Transform scaleArea;
 		[SerializeField]
 		Transform positionArea;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		bool? wasInBounds;
 
-		public UniverseScaleAxises ScaleIgnores { get { return scaleIgnores; } }
-		public UniverseScaleAxises PositionIgnores { get { return positionIgnores; } }
-		protected Transform ScaleArea { get { return scaleArea; } }
-		protected Transform PositionArea { get { return positionArea; } }
+		public UniverseScaleAxises ScaleIgnores { get { return scaleIgnores; } set { scaleIgnores = value; } }
+		public UniverseScaleAxises PositionIgnores { get { return positionIgnores; } set { positionIgnores = value; } }
+		protected virtual Transform ScaleArea { get { return scaleArea; } }
+		protected virtual Transform PositionArea { get { return positionArea; } }
 
 		protected Vector3 GridOrigin { private set; get; }
 		protected float GridRadius { private set; get; }
@@ -51,13 +52,13 @@ namespace LunraGames.SubLight.Views
 
 		public void SetScale(Vector3 scale, Vector3 rawScale)
 		{
-			if (scaleArea != null) scaleArea.localScale = scale;
+			if (ScaleArea != null) ScaleArea.localScale = scale;
 			OnScale(scale, rawScale);
 		}
 
 		public void SetPosition(Vector3 position, Vector3 rawPosition, bool isInBounds, float radiusNormal)
 		{
-			if (positionArea != null) positionArea.position = position;
+			if (PositionArea != null) PositionArea.position = position;
 			IsInBounds = isInBounds;
 			RadiusNormal = radiusNormal;
 
@@ -104,8 +105,8 @@ namespace LunraGames.SubLight.Views
 		bool RestrictVisibiltyInBounds { get; }
 		bool IsInBounds { get; }
 		float RadiusNormal { get; }
-		UniverseScaleAxises ScaleIgnores { get; }
-		UniverseScaleAxises PositionIgnores { get; }
+		UniverseScaleAxises ScaleIgnores { get; set; }
+		UniverseScaleAxises PositionIgnores { get; set; }
 
 		Func<Vector3, float, float> GetRadiusNormalCallback { get; set; }
 		Func<Vector3, float, bool> GetPositionIsInRadiusCallback { get; set; }

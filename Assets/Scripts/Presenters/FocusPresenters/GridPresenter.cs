@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
@@ -101,6 +97,8 @@ namespace LunraGames.SubLight.Presenters
 		Vector3 unityPosOnDragLast;
 		UniverseTransform transformOnBeginDrag;
 
+		UniversePosition universeOriginOnTransitPrepareInitialize;
+
 		UniversePosition ShipPositionOnPlane
 		{
 			get
@@ -182,6 +180,8 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Value.Range.Changed += OnTravelRange;
 			model.CelestialSystemState.Changed += OnCelestialSystemState;
 
+			model.TransitState.Changed += OnTransitState;
+
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
@@ -194,12 +194,13 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 			model.Ship.Value.Range.Changed -= OnTravelRange;
 			model.CelestialSystemState.Changed -= OnCelestialSystemState;
+
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
-			View.DrawGizmos = OnDrawGizmos;
 			View.SetGridSelected(model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected, true);
 			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
@@ -325,8 +326,6 @@ namespace LunraGames.SubLight.Presenters
 
 			grid.Alpha = grid.IsActive ? alphaCurve.Evaluate(progress) : 0f;
 
-			var currLightYearsInTile = zoomProgress * unitMap.LightYears;
-
 			scale.Opacity.Value = grid.Alpha;
 			scale.Transform.Value = DefineTransform(unitMap, scaleTransform.UniverseOrigin, zoomScalar);
 
@@ -393,7 +392,11 @@ namespace LunraGames.SubLight.Presenters
 					return;
 			}
 
-			if (Mathf.Approximately(0f, animationRemaining)) tweenState = TweenStates.Complete;
+			if (Mathf.Approximately(0f, animationRemaining))
+			{
+				tweenState = TweenStates.Complete;
+				SetGrid(); // TODO: Find out why I need to do this... it should not have such problems...
+			}
 
 			model.FocusTransform.Value = transform.Duplicate(
 				zoomTween,
@@ -612,33 +615,54 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		void OnDrawGizmos()
+		void OnTransitState(TransitState transitState)
 		{
-#if UNITY_EDITOR
+			switch (transitState.State)
+			{
+				case TransitState.States.Request:
+					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
+					break;
+				case TransitState.States.Active:
+					var universePos = transitState.CurrentPosition.NewLocal(transitState.CurrentPosition.Local.NewY(0f));
 
-			//var uniOrigin = UniversePosition.Zero;
-			//var oneLightYear = new UniversePosition(new Vector3(0.02f, 0f, 0.02f));
+					switch (transitState.Step)
+					{
+						case TransitState.Steps.Prepare:
+							if (transitState.CurrentStep.Initializing)
+							{
+								universeOriginOnTransitPrepareInitialize = model.ActiveScale.Value.Transform.Value.UniverseOrigin;
+							}
+							var universeCenterPos = UniversePosition.Lerp(View.PositionCenterCurve.Evaluate(transitState.CurrentStep.Progress), universeOriginOnTransitPrepareInitialize, universePos);
+							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universeCenterPos);
+							SetGrid();
+							break;
+						case TransitState.Steps.Transit:
+							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+							model.Ship.Value.Position.Value = transitState.CurrentPosition;
+							SetGrid();
+							break;
+						case TransitState.Steps.Finalize:
+							if (transitState.CurrentStep.Initializing)
+							{
+								transitState.BeginSystem.Visited.Value = true;
 
-			//var localScale = model.GetScale(UniverseScales.Local);
-			//var interstellarScale = model.GetScale(UniverseScales.Stellar);
-			//var quadrantScale = model.GetScale(UniverseScales.Quadrant);
-			//var galacticScale = model.GetScale(UniverseScales.Galactic);
-			//var clusterScale = model.GetScale(UniverseScales.Cluster);
+								model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+								model.Ship.Value.Position.Value = transitState.EndSystem.Position;
 
-			//var activeScale = model.ActiveScale.Value;
+								model.Ship.Value.SetCurrentSystem(transitState.EndSystem);
+								model.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.CelestialSystemState.Value.System.Position.Value, model.CelestialSystemState.Value.System);
 
-			//Gizmos.color = Color.green;
-			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Ship.Value.Position), 0.03f);
-			//Gizmos.color = Color.yellow;
-			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.GalaxyOrigin), 0.06f);
-			//Gizmos.color = Color.magenta;
-			//Gizmos.DrawWireSphere(activeScale.Transform.Value.GetUnityPosition(model.Galaxy.ClusterOrigin), 0.08f);
+								SetGrid();
+							}
+							break;
+					}
 
-			//Gizmos.color = Color.red;
-			//Gizmos.DrawWireSphere(localScale.GetUnityPosition(uniOrigin), 0.02f);
-			//Gizmos.color = Color.blue;
-			//Gizmos.DrawWireSphere(localScale.GetUnityPosition(oneLightYear), 0.1f);
-#endif
+					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
+					break;
+				case TransitState.States.Complete:
+					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Animation);
+					break;
+			}
 		}
 		#endregion
 	}

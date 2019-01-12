@@ -10,7 +10,7 @@ namespace LunraGames.SubLight.Models
 	{
 		#region Serialized
 		[JsonProperty] int seed;
-		[JsonProperty] DayTimeBlock dayTime;
+		[JsonProperty] RelativeDayTime relativeDayTime;
 		[JsonProperty] ShipModel ship;
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
@@ -31,6 +31,8 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] EncounterStateModel encounterState = new EncounterStateModel();
 
+		[JsonProperty] WaypointCollectionModel waypointCollection = new WaypointCollectionModel();
+
 		/// <summary>
 		/// The game seed.
 		/// </summary>
@@ -40,7 +42,7 @@ namespace LunraGames.SubLight.Models
 		/// The day time.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<DayTimeBlock> DayTime;
+		public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
 		/// <summary>
 		/// The game ship.
 		/// </summary>
@@ -84,6 +86,8 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public EncounterStateModel EncounterState { get { return encounterState; } }
+		[JsonIgnore]
+		public WaypointCollectionModel WaypointCollection { get { return waypointCollection; } }
 		#endregion
 
 		#region NonSerialized
@@ -130,13 +134,20 @@ namespace LunraGames.SubLight.Models
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 		[JsonIgnore]
 		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
+
+		TransitStateRequest transitStateRequest;
+		[JsonIgnore]
+		public ListenerProperty<TransitStateRequest> TransitStateRequest;
+		TransitState transitState;
+		[JsonIgnore]
+		public ListenerProperty<TransitState> TransitState;
 		#endregion
 
 		public GameModel()
 		{
 			SaveType = SaveTypes.Game;
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
-			DayTime = new ListenerProperty<DayTimeBlock>(value => dayTime = value, () => dayTime);
+			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
@@ -162,6 +173,9 @@ namespace LunraGames.SubLight.Models
 			}
 
 			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
+
+			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
+			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
 		}
 
 		#region Events

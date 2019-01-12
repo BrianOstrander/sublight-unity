@@ -8,6 +8,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class ClusterView : GalaxyView, IClusterView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Transform galaxyNameLabelPositionScaleArea;
 		[SerializeField]
@@ -32,6 +33,7 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI detailNameLabel;
 		[SerializeField]
 		TextMeshProUGUI detailLabel;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string GalaxyName
 		{

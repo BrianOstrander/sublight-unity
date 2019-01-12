@@ -34,7 +34,6 @@ namespace LunraGames.SubLight
 
 		Vector2 lastGesture;
 
-		Vector2 beginScrollGesture;
 		Vector2 beginScrollGestureNormal;
 
 		Vector2 lastScrollGesture;
@@ -136,7 +135,6 @@ namespace LunraGames.SubLight
 			{
 				scrollGestureState = ScrollGesture.States.Begin;
 
-				beginScrollGesture = Vector2.zero;
 				beginScrollGestureNormal = Vector2.zero;
 				callbacks.BeginScrollGesture(new ScrollGesture(currentScrollGestureNormal, IsSecondaryClickInteraction(), delta));
 			}
@@ -257,7 +255,6 @@ namespace LunraGames.SubLight
 
 			// Camera
 			var cameraPosition = GetCameraPosition();
-			var cameraRotation = GetCameraRotation();
 
 			var pointerRotation = GetPointerRotation();
 			callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));

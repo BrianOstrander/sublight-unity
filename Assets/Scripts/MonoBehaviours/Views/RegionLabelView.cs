@@ -14,6 +14,7 @@ namespace LunraGames.SubLight.Views
 			Hiding = 30
 		}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float transitionDuration;
 		[SerializeField, Range(0f, 1f)]
@@ -26,11 +27,11 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI regionLabel;
 		[SerializeField]
 		CanvasGroup labelGroup;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		string currentText;
 		string nextText;
 
-		float transitionBeginOpacity;
 		float transitionRemaining;
 		States state = States.Idle;
 
@@ -55,14 +56,12 @@ namespace LunraGames.SubLight.Views
 			{
 				case States.Idle:
 					nextText = text;
-					transitionBeginOpacity = 1f;
 					transitionRemaining = transitionDuration;
 					state = States.Hiding;
 					break;
 				case States.Revealing:
 					currentText = nextText;
 					nextText = text;
-					transitionBeginOpacity = regionLabel.alpha;
 					transitionRemaining = transitionDuration;
 					state = States.Hiding;
 					break;

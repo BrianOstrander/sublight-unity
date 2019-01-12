@@ -7,6 +7,7 @@ namespace LunraGames.SubLight
 	[ExecuteInEditMode]
 	public class Wind : MonoBehaviour
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float timeScalar;
 		[SerializeField]
@@ -19,6 +20,7 @@ namespace LunraGames.SubLight
 		Vector3 intensityScalar;
 		[SerializeField]
 		float multiplier;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float scalar;
 

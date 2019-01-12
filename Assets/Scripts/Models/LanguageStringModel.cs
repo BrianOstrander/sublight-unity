@@ -18,6 +18,18 @@ namespace LunraGames.SubLight.Models
 			return result;
 		}
 
+		/// <summary>
+		/// Used until an actual language loading system is built.
+		/// </summary>
+		/// <returns>The override.</returns>
+		/// <param name="values">Values.</param>
+		public static LanguageStringModel[] Overrides(params string[] values)
+		{
+			var results = new LanguageStringModel[values.Length];
+			for (var i = 0; i < values.Length; i++) results[i] = Override(values[i]);
+			return results;
+		}
+
 		public static LanguageStringModel Empty
 		{
 			get

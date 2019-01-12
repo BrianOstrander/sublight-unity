@@ -4,12 +4,14 @@ namespace LunraGames.SubLight
 {
 	public class PitchOpacityAnimation : ViewAnimation
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		CurveStyleBlock pitchOpacity = CurveStyleBlock.Default;
 		[SerializeField]
 		float hideRevealDuration;
 		[SerializeField]
 		CurveStyleBlock hideRevealCurve = CurveStyleBlock.Default;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float elapsed;
 

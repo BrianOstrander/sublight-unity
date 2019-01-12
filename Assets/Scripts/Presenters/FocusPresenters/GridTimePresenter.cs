@@ -15,7 +15,6 @@ namespace LunraGames.SubLight.Presenters
 		GridTimeLanguageBlock transitLanguage;
 
 		float targetOpacitySpeed = 1f / 0.3f;
-		float beginOpacity;
 		float currentOpacity;
 		float? targetOpacity;
 
@@ -31,23 +30,26 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Heartbeat.Update += OnUpdate;
 
-			model.DayTime.Changed += OnDayTime;
+			model.RelativeDayTime.Changed += OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed += OnVelocity;
+			model.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Heartbeat.Update -= OnUpdate;
 
-			model.DayTime.Changed -= OnDayTime;
+			model.RelativeDayTime.Changed -= OnDayTime;
 			model.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.PushOpacity(() => currentOpacity);
+			View.PushOpacity(() => model.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
 
 			View.ReferenceFrame = ReferenceFrames.Ship;
 			View.Configuration = GetConfiguration(IsTransit);
@@ -84,14 +86,14 @@ namespace LunraGames.SubLight.Presenters
 				result.DeltaTimes[ReferenceFrames.Ship] = transitDelta.ShipTime;
 				result.DeltaTimes[ReferenceFrames.Galactic] = transitDelta.GalacticTime;
 
-				result.AbsoluteTimes[ReferenceFrames.Ship] = model.DayTime.Value.ShipTime + result.DeltaTimes[ReferenceFrames.Ship];
-				result.AbsoluteTimes[ReferenceFrames.Galactic] = model.DayTime.Value.GalacticTime + result.DeltaTimes[ReferenceFrames.Galactic];
+				result.AbsoluteTimes[ReferenceFrames.Ship] = model.RelativeDayTime.Value.ShipTime + result.DeltaTimes[ReferenceFrames.Ship];
+				result.AbsoluteTimes[ReferenceFrames.Galactic] = model.RelativeDayTime.Value.GalacticTime + result.DeltaTimes[ReferenceFrames.Galactic];
 
 				return result;
 			}
 
-			result.AbsoluteTimes[ReferenceFrames.Ship] = model.DayTime.Value.ShipTime;
-			result.AbsoluteTimes[ReferenceFrames.Galactic] = model.DayTime.Value.GalacticTime;
+			result.AbsoluteTimes[ReferenceFrames.Ship] = model.RelativeDayTime.Value.ShipTime;
+			result.AbsoluteTimes[ReferenceFrames.Galactic] = model.RelativeDayTime.Value.GalacticTime;
 
 			return result;
 		}
@@ -104,14 +106,14 @@ namespace LunraGames.SubLight.Presenters
 			if (!View.Visible) return;
 			if (!targetOpacity.HasValue) return;
 
-			var dir = Mathf.Sign(targetOpacity.Value - beginOpacity);
+			var dir = Mathf.Sign(targetOpacity.Value);
 
 			currentOpacity = Mathf.Max(0f, Mathf.Min(1f, currentOpacity + (delta * targetOpacitySpeed * dir)));
 			if (Mathf.Approximately(currentOpacity, targetOpacity.Value)) targetOpacity = null;
 			View.SetOpacityStale();
 		}
 
-		void OnDayTime(DayTimeBlock dayTime)
+		void OnDayTime(RelativeDayTime relativeDayTime)
 		{
 			if (!View.Visible) return;
 
@@ -143,6 +145,21 @@ namespace LunraGames.SubLight.Presenters
 		void OnTitleClick()
 		{
 
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			model.RelativeDayTime.Value = transitState.RelativeTimeCurrent;
+
+			if (!View.Visible) return;
+
+			switch (transitState.State)
+			{
+				case TransitState.States.Request:
+				case TransitState.States.Complete:
+					View.SetOpacityStale();
+					break;
+			}
 		}
 		#endregion
 	}

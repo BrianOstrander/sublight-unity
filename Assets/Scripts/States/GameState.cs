@@ -11,7 +11,24 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		public int LocalSectorOffset = 2; // Not set anywhere else at the moment...
+		public struct Waypoint
+		{
+			public readonly string WaypointId;
+			public readonly WaypointModel Model;
+			public readonly WaypointPresenter[] Presenters;
+
+			public Waypoint(
+				WaypointModel model,
+				WaypointPresenter[] presenters
+			)
+			{
+				WaypointId = model.WaypointId.Value;
+				Model = model;
+				Presenters = presenters;
+			}
+		}
+
+		public int LocalSectorOffset = 1; // Not set anywhere else at the moment...
 		public int LocalSectorOffsetTotal { get { return (LocalSectorOffset * 2) + 1; } }
 		public int LocalSectorCount { get { return LocalSectorOffsetTotal * LocalSectorOffsetTotal; } }
 
@@ -27,6 +44,8 @@ namespace LunraGames.SubLight
 		public UniverseScales LastUniverseFocusToScale;
 
 		public UniverseScaleModel LastActiveScale;
+
+		public List<Waypoint> Waypoints = new List<Waypoint>();
 	}
 
 	public partial class GameState : State<GamePayload>
@@ -50,6 +69,7 @@ namespace LunraGames.SubLight
 			*/
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(LoadModelDependencies);
+			App.SM.PushBlocking(SetNonSerializedValues);
 			App.SM.PushBlocking(InitializeInput);
 			App.SM.PushBlocking(InitializeCallbacks);
 			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
@@ -107,6 +127,37 @@ namespace LunraGames.SubLight
 			done();
 		}
 
+		void SetNonSerializedValues(Action done)
+		{
+			Payload.Game.Ship.Value.SetCurrentSystem(App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex));
+			if (Payload.Game.Ship.Value.CurrentSystem.Value == null) Debug.LogError("Unable to load current system at "+Payload.Game.Ship.Value.Position.Value+" and index "+Payload.Game.Ship.Value.SystemIndex.Value);
+
+			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
+			{
+				switch (waypoint.WaypointId.Value)
+				{
+					case WaypointIds.Ship:
+						waypoint.Name.Value = "Ark"; 
+						break;
+					case WaypointIds.EndSystem:
+						waypoint.Name.Value = "Sagittarius A*";
+						break;
+				}
+
+				if (!waypoint.Location.Value.IsSystem) continue;
+
+				var currWaypointSystem = App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, waypoint.Location.Value.Position, waypoint.Location.Value.SystemIndex);
+				if (currWaypointSystem == null)
+				{
+					Debug.LogError("Unable to load waypoint system ( WaypointId: "+waypoint.WaypointId.Value+" , Name: "+waypoint.Name.Value+" ) at\n" + waypoint.Location.Value.Position + " and index " + waypoint.Location.Value.SystemIndex);
+					continue;
+				}
+				waypoint.SetLocation(currWaypointSystem);
+			}
+
+			done();
+		}
+
 		void InitializeInput(Action done)
 		{
 			App.Input.SetEnabled(true);
@@ -118,6 +169,9 @@ namespace LunraGames.SubLight
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
+
+			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
+			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
 
 			done();
 		}
@@ -179,6 +233,9 @@ namespace LunraGames.SubLight
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
 
+			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
+			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
+
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
 			{
 				scaleTransformProperty.Changed -= OnScaleTransform;
@@ -234,6 +291,11 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		/// <summary>
+		/// Calculates the visible sectors given the specified transform.
+		/// </summary>
+		/// <param name="transform">Transform.</param>
+		/// <param name="force">If set to <c>true</c> force all sectors to be set stale.</param>
 		void OnCalculateLocalSectors(UniverseTransform transform, bool force)
 		{
 			if (Payload.LocalSectorInstances.None()) return;
@@ -345,6 +407,25 @@ namespace LunraGames.SubLight
 
 			// TODO: Add language support for this.
 			targetProperty.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override(closestLabel.Name.Value));
+		}
+
+		void OnWaypoints(WaypointModel[] waypoints)
+		{
+			Debug.LogError("Waypoint binding not done yet!");
+		}
+
+		void OnShipPosition(UniversePosition position)
+		{
+			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
+			{
+				switch (waypoint.WaypointId.Value)
+				{
+					case WaypointIds.Ship:
+						waypoint.SetLocation(position);
+						break;
+				}
+				waypoint.Distance.Value = UniversePosition.Distance(position, waypoint.Location.Value.Position);
+			}
 		}
 		#endregion
 	}

@@ -69,7 +69,6 @@ namespace LunraGames.SubLight.Views
 		PreviewSystemBlock currentBlock;
 		PreviewSystemBlock nextBlock;
 
-		float transitionBeginOpacity;
 		float transitionRemaining;
 		States state = States.Idle;
 
@@ -90,14 +89,12 @@ namespace LunraGames.SubLight.Views
 			{
 				case States.Idle:
 					nextBlock = block;
-					transitionBeginOpacity = 1f;
 					transitionRemaining = transitionDuration;
 					state = States.Hiding;
 					break;
 				case States.Revealing:
 					currentBlock = nextBlock;
 					nextBlock = block;
-					transitionBeginOpacity = previewGroup.alpha;
 					transitionRemaining = transitionDuration;
 					state = States.Hiding;
 					break;

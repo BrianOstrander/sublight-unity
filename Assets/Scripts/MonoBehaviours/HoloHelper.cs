@@ -9,6 +9,7 @@ namespace LunraGames.SubLight
 {
 	public class HoloHelper : MonoBehaviour
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		AnimationCurve radiusCurve;
 		[SerializeField]
@@ -17,6 +18,7 @@ namespace LunraGames.SubLight
 		int segments = 2;
 		[SerializeField, Range(0f, 1f)]
 		float alpha = 1f;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		void OnDrawGizmos()
 		{

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using UnityEngine;
-
-using LunraGames.SubLight.Models;
+﻿using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
@@ -22,11 +17,13 @@ namespace LunraGames.SubLight.Presenters
 			this.language = language;
 
 			model.Ship.Value.Velocity.Changed += OnVelocity;
+			model.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
 		{
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -36,6 +33,8 @@ namespace LunraGames.SubLight.Presenters
 			View.VelocityUnit = language.Velocity.Value.Value;
 			View.ResourceUnit = language.Resource.Value.Value;
 			View.ResourceWarning = language.ResourceWarning.Value.Value;
+
+			View.PushOpacity(() => model.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
 		}
 
 		#region Events
@@ -54,6 +53,19 @@ namespace LunraGames.SubLight.Presenters
 		void OnMultiplierSelection(int index)
 		{
 			model.Ship.Value.SetVelocityMultiplierCurrent(index);
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			if (!View.Visible) return;
+
+			switch (transitState.State)
+			{
+				case TransitState.States.Request:
+				case TransitState.States.Complete:
+					View.SetOpacityStale();
+					break;
+			}
 		}
 		#endregion
 	}

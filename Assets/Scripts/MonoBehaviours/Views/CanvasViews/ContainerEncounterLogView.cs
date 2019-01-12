@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class ContainerEncounterLogView : CanvasView, IContainerEncounterLogView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
@@ -19,6 +20,7 @@ namespace LunraGames.SubLight.Views
 		Transform entryArea;
 		[SerializeField]
 		Scrollbar scrollbar;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string Title { set { titleLabel.text = value ?? string.Empty; } }
 		public float Scroll { set { scrollbar.value = Mathf.Clamp01(value); } }

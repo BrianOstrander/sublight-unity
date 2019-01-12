@@ -13,12 +13,17 @@ namespace LunraGames.SubLight
 		[Serializable]
 		struct MeshRendererEntry
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			[SerializeField]
 			string colorPropertyName;
 			[SerializeField]
 			string alphaPropertyName;
+			[Header("DEPRICATED MeshRenderers -- Move values to Renderers field")]
 			[SerializeField]
 			MeshRenderer[] meshRenderers;
+			[SerializeField]
+			Renderer[] renderers;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 			public void Set(Color color)
 			{
@@ -27,11 +32,24 @@ namespace LunraGames.SubLight
 
 				if (!hasColor && !hasAlpha) return;
 
-				foreach (var renderer in meshRenderers)
+				if (meshRenderers != null)
 				{
-					if (renderer == null) continue;
-					if (hasColor) renderer.material.SetColor(colorPropertyName, color);
-					if (hasAlpha) renderer.material.SetFloat(alphaPropertyName, color.a);
+					foreach (var renderer in meshRenderers)
+					{
+						if (renderer == null) continue;
+						if (hasColor) renderer.material.SetColor(colorPropertyName, color);
+						if (hasAlpha) renderer.material.SetFloat(alphaPropertyName, color.a);
+					}
+				}
+
+				if (renderers != null)
+				{
+					foreach (var renderer in renderers)
+					{
+						if (renderer == null) continue;
+						if (hasColor) renderer.material.SetColor(colorPropertyName, color);
+						if (hasAlpha) renderer.material.SetFloat(alphaPropertyName, color.a);
+					}
 				}
 			}
 		}
@@ -50,6 +68,8 @@ namespace LunraGames.SubLight
 		MeshRendererEntry[] targetMeshRenderers = new MeshRendererEntry[0];
 		[SerializeField]
 		CanvasGroup[] targetGroups = new CanvasGroup[0];
+		[SerializeField]
+		ParticleSystem[] particleSystems = new ParticleSystem[0];
 
 		public XButtonStyleObject GlobalStyle
 		{
@@ -127,6 +147,13 @@ namespace LunraGames.SubLight
 			{
 				if (targetGraphic == null) continue;
 				targetGraphic.color = color;
+			}
+
+			foreach (var particleSystem in particleSystems)
+			{
+				if (particleSystem == null) continue;
+				var particleSystemMain = particleSystem.main;
+				particleSystemMain.startColor = color;
 			}
 
 			if (Application.isPlaying)

@@ -98,6 +98,8 @@ namespace LunraGames.SubLight.Presenters
 			View.GetPositionIsInRadiusCallback = GetPositionIsInRadius;
 			View.PushOpacity(() => ScaleModel.Opacity.Value);
 
+			SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
+
 			OnShowView();
 
 			if (!onlyReset) ShowView(instant: true);
@@ -126,7 +128,11 @@ namespace LunraGames.SubLight.Presenters
 
 		protected float GetRadiusNormal(Vector3 worldPosition, float margin = 0f)
 		{
-			if (Mathf.Approximately(0f, GridRadius)) return 1f;
+			if (Mathf.Approximately(0f, GridRadius))
+			{
+				Debug.LogError("GridRadius is zero, unexpected behaviour may occur");
+				return 1f;
+			}
 			worldPosition = worldPosition.NewY(GridOrigin.y);
 			return Vector3.Distance(GridOrigin, worldPosition) / Mathf.Max(0f, GridRadius - margin);
 		}

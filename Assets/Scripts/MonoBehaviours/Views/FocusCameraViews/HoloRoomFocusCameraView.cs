@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class HoloRoomFocusCameraView : FocusCameraView, IHoloRoomFocusCameraView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		MeshRenderer maskMesh;
 		[SerializeField]
@@ -79,6 +80,7 @@ namespace LunraGames.SubLight.Views
 		bool liveMode;
 		[SerializeField]
 		Vector3 YawPitchRadiusTest;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float yaw;
 		float pitch;

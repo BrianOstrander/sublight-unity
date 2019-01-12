@@ -25,6 +25,7 @@ namespace LunraGames.SubLight.Views
 			public float RangeRadius;
 		}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float zoomAnimationDuration;
 		[SerializeField]
@@ -66,6 +67,8 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve positionZoomDownCurve;
 		[SerializeField]
 		AnimationCurve zoomCurve;
+		[SerializeField]
+		AnimationCurve positionCenterCurve;
 
 		[SerializeField]
 		float gridDragRadius;
@@ -75,6 +78,7 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		float gridSelectDuration;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		Material[] gridBackgrounds;
 		Material[] gridsHazards;
@@ -101,6 +105,7 @@ namespace LunraGames.SubLight.Views
 		public AnimationCurve RevealScaleAlpha { get { return revealScaleAlpha; } }
 		public AnimationCurve GetPositionCurve(bool zoomingUp) { return zoomingUp ? positionZoomUpCurve : positionZoomDownCurve; }
 		public AnimationCurve ZoomCurve { get { return zoomCurve; } }
+		public AnimationCurve PositionCenterCurve { get { return positionCenterCurve; } }
 
 		public Action DrawGizmos { set; private get; }
 
@@ -312,7 +317,7 @@ namespace LunraGames.SubLight.Views
 		}
 		#endregion
 
-		void OnDrawGizmos()
+		void OnDrawGizmosSelected()
 		{
 			if (DrawGizmos != null) DrawGizmos();
 #if UNITY_EDITOR
@@ -339,6 +344,7 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve HideScaleAlpha { get; }
 		AnimationCurve RevealScaleAlpha { get; }
 		AnimationCurve ZoomCurve { get; }
+		AnimationCurve PositionCenterCurve { get; }
 
 		AnimationCurve GetPositionCurve(bool zoomingUp);
 

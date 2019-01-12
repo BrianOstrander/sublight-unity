@@ -8,6 +8,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class GridScaleView : View, IGridScaleView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI scaleNameLabel;
 		[SerializeField]
@@ -55,6 +56,7 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		float selectionFadeDuration;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public float SelectionFadeDuration { get { return selectionFadeDuration; } }
 

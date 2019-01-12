@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
@@ -41,6 +43,8 @@ namespace LunraGames.SubLight.Presenters
 			Model.CameraTransform.Changed += OnCameraTransform;
 			Model.GridInput.Changed += OnGridInput;
 			Model.FocusTransform.Changed += OnFocusTransform;
+			Model.Ship.Value.Position.Changed += OnShipPosition;
+			Model.Ship.Value.CurrentSystem.Changed += OnShipCurrentSystem;
 		}
 
 		protected override void OnUnBind()
@@ -55,10 +59,24 @@ namespace LunraGames.SubLight.Presenters
 			Model.CameraTransform.Changed -= OnCameraTransform;
 			Model.GridInput.Changed -= OnGridInput;
 			Model.FocusTransform.Changed -= OnFocusTransform;
+			Model.Ship.Value.Position.Changed -= OnShipPosition;
+			Model.Ship.Value.CurrentSystem.Changed -= OnShipCurrentSystem;
 		}
 
 		void ApplyStates(bool instant = false)
 		{
+			switch (rangeState)
+			{
+				case Celestial.RangeStates.InRange:
+					View.Confirm = language.Confirm.Value;
+					View.ConfirmDescription = language.ConfirmDescription.Value;
+					break;
+				case Celestial.RangeStates.OutOfRange:
+					View.Confirm = language.OutOfRange.Value;
+					View.ConfirmDescription = language.OutOfRangeDescription.Value;
+					break;
+			}
+
 			View.SetStates(
 				highlightState,
 				visitState,
@@ -69,10 +87,89 @@ namespace LunraGames.SubLight.Presenters
 			);
 		}
 
+		void UpdateStates(SystemModel system)
+		{
+			if (system == null) throw new ArgumentNullException("system");
+
+			if (Model.Ship.Value.CurrentSystem.Value == system) visitState = Celestial.VisitStates.Current;
+			else visitState = system.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
+
+			if (UniversePosition.Distance(system.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.Range.Value.Total)
+			{
+				rangeState = Celestial.RangeStates.InRange;
+			}
+			else rangeState = Celestial.RangeStates.OutOfRange;
+
+			switch (Model.CelestialSystemStateLastSelected.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Selected:
+					selectedState = Model.CelestialSystemStateLastSelected.Value.Position.Equals(system.Position.Value) ? Celestial.SelectedStates.Selected : Celestial.SelectedStates.OtherSelected;
+					break;
+				default:
+					selectedState = Celestial.SelectedStates.NotSelected;
+					break;
+			}
+
+			switch (Model.TransitState.Value.State)
+			{
+				case TransitState.States.Complete:
+					travelState = Celestial.TravelStates.NotTraveling;
+					break;
+				default:
+					highlightState = Celestial.HighlightStates.Idle;
+					travelState = Celestial.TravelStates.Traveling;
+					break;
+			}
+		}
+
+		void UpdateStates(
+			SystemModel system,
+			out bool highlightChanged,
+			out bool visitChanged,
+			out bool rangeChanged,
+			out bool selectedChanged,
+			out bool travelChanged
+		)
+		{
+			var oldHighlightState = highlightState;
+			var oldVisitState = visitState;
+			var oldRangeState = rangeState;
+			var oldSelectedState = selectedState;
+			var oldTravelState = travelState;
+
+			UpdateStates(system);
+
+			highlightChanged = highlightState != oldHighlightState;
+			visitChanged = visitState != oldVisitState;
+			rangeChanged = rangeState != oldRangeState;
+			selectedChanged = selectedState != oldSelectedState;
+			travelChanged = travelState != oldTravelState;
+		}
+
+		void UpdateStates(SystemModel system, out bool anyChanges)
+		{
+			bool highlightChanged;
+			bool visitChanged;
+			bool rangeChanged;
+			bool selectedChanged;
+			bool travelChanged;
+
+			UpdateStates(
+				system,
+				out highlightChanged,
+				out visitChanged,
+				out rangeChanged,
+				out selectedChanged,
+				out travelChanged
+			);
+
+			anyChanges = highlightChanged || visitChanged || rangeChanged || selectedChanged || travelChanged;
+		}
+
 		#region Events
 		void OnActiveSystem(SystemModel activeSystem)
 		{
-			if (activeSystem == null || !ScaleModel.IsVisible)
+			if (activeSystem == null)
 			{
 				if (View.Visible) CloseViewInstant();
 				return;
@@ -84,6 +181,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnGlobalClick(Click click)
 		{
 			if (!click.ClickedNothing) return;
+			if (Model.TransitState.Value.State != TransitState.States.Complete) return;
 			if (App.V.CameraHasMoved) return;
 			if (!Mathf.Approximately(1f, ScaleModel.Opacity.Value)) return;
 
@@ -101,7 +199,7 @@ namespace LunraGames.SubLight.Presenters
 
 			positionInUniverse = activeSystem.Position.Value;
 
-			SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
+			//SetGrid(ScaleModel.Transform.Value.UnityOrigin, ScaleModel.Transform.Value.UnityRadius);
 
 			View.Enter = OnEnter;
 			View.Exit = OnExit;
@@ -109,43 +207,10 @@ namespace LunraGames.SubLight.Presenters
 
 			highlightState = Celestial.HighlightStates.Idle;
 
-			if (activeSystem.Position.Value.Equals(Model.Ship.Value.Position.Value)) visitState = Celestial.VisitStates.Current;
-			else visitState = activeSystem.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
-			
-			rangeState = Celestial.RangeStates.OutOfRange;
-
-			if (UniversePosition.Distance(activeSystem.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.Range.Value.Total)
-			{
-				rangeState = Celestial.RangeStates.InRange;
-			}
-
-			switch (Model.CelestialSystemStateLastSelected.Value.State)
-			{
-				case CelestialSystemStateBlock.States.Selected:
-					selectedState = Model.CelestialSystemStateLastSelected.Value.Position.Equals(activeSystem.Position.Value) ? Celestial.SelectedStates.Selected : Celestial.SelectedStates.OtherSelected;
-					break;
-				default:
-					selectedState = Celestial.SelectedStates.NotSelected;
-					break;
-			}
-
-			travelState = Celestial.TravelStates.NotTraveling;
+			UpdateStates(activeSystem);
 
 			View.DetailsName = activeSystem.Name.Value;
 			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
-
-			switch (rangeState)
-			{
-				case Celestial.RangeStates.InRange:
-					View.Confirm = language.Confirm.Value;
-					View.ConfirmDescription = language.ConfirmDescription.Value;
-					break;
-				case Celestial.RangeStates.OutOfRange:
-					View.Confirm = language.OutOfRange.Value;
-					View.ConfirmDescription = language.OutOfRangeDescription.Value;
-					break;
-			}
-
 
 			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Value.Position.Value, activeSystem.Position.Value));
 			var lightyearText = lightyearDistance < 10f ? lightyearDistance.ToString("N1") : Mathf.RoundToInt(lightyearDistance).ToString("N0");
@@ -191,6 +256,9 @@ namespace LunraGames.SubLight.Presenters
 						case Celestial.SelectedStates.OtherSelected:
 						case Celestial.SelectedStates.NotSelected:
 							Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
+							break;
+						case Celestial.SelectedStates.Selected:
+							Model.TransitStateRequest.Value = TransitStateRequest.Create(Model.Ship.Value.CurrentSystem.Value, instanceModel.ActiveSystem.Value);
 							break;
 					}
 					break;
@@ -266,6 +334,26 @@ namespace LunraGames.SubLight.Presenters
 			if (lastZoomToScale == Scale) return;
 
 			if (View.Visible && !View.IsInBounds) CloseViewInstant();
+		}
+
+		void OnShipPosition(UniversePosition shipPosition)
+		{
+			if (!instanceModel.HasSystem || !View.Visible) return;
+
+			bool anyChange;
+			UpdateStates(instanceModel.ActiveSystem.Value, out anyChange);
+
+			if (anyChange) ApplyStates(true);
+		}
+
+		void OnShipCurrentSystem(SystemModel system)
+		{
+			if (!instanceModel.HasSystem || !View.Visible) return;
+
+			bool anyChange;
+			UpdateStates(instanceModel.ActiveSystem.Value, out anyChange);
+
+			if (anyChange) ApplyStates(true);
 		}
 		#endregion
 	}

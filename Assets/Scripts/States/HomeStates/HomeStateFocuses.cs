@@ -14,6 +14,8 @@ namespace LunraGames.SubLight
 	{
 		public class Focuses : StateFocuses
 		{
+			const float PriorityDimming = 0.25f;
+
 			public static void InitializePresenters(HomeState state, Action done)
 			{
 				var payload = state.Payload;
@@ -22,7 +24,6 @@ namespace LunraGames.SubLight
 				var roomCamera = payload.MainCamera;
 				var gantryAnchor = roomCamera.GantryAnchor;
 				var fieldOfView = roomCamera.FieldOfView;
-				var layer = LayerConstants.Get(SetFocusLayers.Home);
 
 				new GenericFocusCameraPresenter<HomeFocusDetails>(gantryAnchor, fieldOfView);
 
@@ -114,7 +115,7 @@ namespace LunraGames.SubLight
 				var results = GetBaseEnabledFocuses();
 
 				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f, true));
-				results.Add(GetFocus<HomeFocusDetails>(1, false, 0.25f, false));
+				results.Add(GetFocus<HomeFocusDetails>(1, false, PriorityDimming, false));
 
 				return results.ToArray();
 			}

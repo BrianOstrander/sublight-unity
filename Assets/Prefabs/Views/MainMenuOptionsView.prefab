@@ -620,8 +620,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 19b6984b7679e4c37ba950c31e375149, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 19b6984b7679e4c37ba950c31e375149, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -709,6 +709,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114090915731141224}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114002261636147518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -720,8 +721,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 19b6984b7679e4c37ba950c31e375149, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 19b6984b7679e4c37ba950c31e375149, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -809,6 +810,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114977961175134246}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114014739765163960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -922,8 +924,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 557ed5ce235304a22aa1cd9d471b1d7a, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 557ed5ce235304a22aa1cd9d471b1d7a, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1011,6 +1013,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114440896689067490}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114180658108360644
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1490,8 +1493,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 557ed5ce235304a22aa1cd9d471b1d7a, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 557ed5ce235304a22aa1cd9d471b1d7a, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1579,6 +1582,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114228745759188392}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114417190169209028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1657,8 +1661,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: c1fb8ba4c6ca4438fb9726f2df1ab970, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: c1fb8ba4c6ca4438fb9726f2df1ab970, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1746,6 +1750,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114233605915765086}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114544251817988214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1757,8 +1762,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: e149cea96eede46ab9754d04d3c65ff7, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: e149cea96eede46ab9754d04d3c65ff7, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1846,6 +1851,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114083985828314804}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114584680994906306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1873,8 +1879,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: 19b6984b7679e4c37ba950c31e375149, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: 19b6984b7679e4c37ba950c31e375149, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -1962,6 +1968,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114262929618319614}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114734731672087066
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1973,8 +1980,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: e149cea96eede46ab9754d04d3c65ff7, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: e149cea96eede46ab9754d04d3c65ff7, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -2062,6 +2069,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114218253622095662}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114774572807733292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2111,12 +2119,15 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114505490001206460}
   - {fileID: 114335289653833606}
   - {fileID: 114734731672087066}
   - {fileID: 114678096414147516}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 85663210da89d4b3e81615d8d7df2e28, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -2164,8 +2175,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalStyle: {fileID: 11400000, guid: c1fb8ba4c6ca4438fb9726f2df1ab970, type: 2}
-  LocalStyle:
+  globalStyle: {fileID: 11400000, guid: c1fb8ba4c6ca4438fb9726f2df1ab970, type: 2}
+  localStyle:
     DistanceScaleIntensity:
       serializedVersion: 2
       m_Curve:
@@ -2253,6 +2264,7 @@ MonoBehaviour:
   targetGraphics:
   - {fileID: 114283834281783682}
   targetMeshRenderers: []
+  targetGroups: []
 --- !u!114 &114963617427895438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2380,12 +2392,15 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
+  fadeDuration:
+    Override: 0
+    Value: 0
   leafs:
   - {fileID: 114888370278879774}
   - {fileID: 114110041565140796}
   - {fileID: 114544251817988214}
   - {fileID: 114002261636147518}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 85663210da89d4b3e81615d8d7df2e28, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}

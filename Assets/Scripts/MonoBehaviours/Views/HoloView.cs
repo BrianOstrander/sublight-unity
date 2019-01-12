@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class HoloView : View, IHoloView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		MeshRenderer projectionMesh;
 		[SerializeField]
@@ -15,6 +16,8 @@ namespace LunraGames.SubLight.Views
 		Color baseGlowColor;
 		[SerializeField]
 		Color baseIrisColor;
+		[SerializeField]
+		Vector2 baseScrollSpeedRange;
 
 		[SerializeField]
 		Vector2 glowIntensityRange;
@@ -24,6 +27,10 @@ namespace LunraGames.SubLight.Views
 		Vector2 gridIntensityRange;
 		[SerializeField]
 		AnimationCurve gridIntensity;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		float baseScrollSpeed;
+		float baseScrollOffset;
 
 		public RenderLayerTextureBlock[] LayerTextures
 		{
@@ -76,6 +83,18 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		float timeScalar;
+		public float TimeScalar
+		{
+			set
+			{
+				baseScrollSpeed = baseScrollSpeedRange.x + ((baseScrollSpeedRange.y - baseScrollSpeedRange.x) * TimeScalar);
+				glowMesh.material.SetFloat(ShaderConstants.RoomIrisGlow.Speed, value);
+				timeScalar = value;
+			}
+			private get { return timeScalar; }
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -83,8 +102,18 @@ namespace LunraGames.SubLight.Views
 			GridOffset = Vector2.zero;
 			CameraPitch = 0f;
 			HoloColor = Color.white;
+			TimeScalar = 0f;
+
+			baseScrollOffset = 0f;
 		}
 
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+			baseScrollOffset = (baseScrollOffset + (baseScrollSpeed * delta)) % 1f;
+			glowMesh.material.SetFloat(ShaderConstants.RoomIrisGlow.VerticalOffset, baseScrollOffset);
+		}
 	}
 
 	public interface IHoloView : IView, IHoloColorView
@@ -93,5 +122,6 @@ namespace LunraGames.SubLight.Views
 		RenderLayerPropertyBlock[] LayerProperties { set; }
 		Vector2 GridOffset { set; }
 		float CameraPitch { set; }
+		float TimeScalar { set; }
 	}
 }

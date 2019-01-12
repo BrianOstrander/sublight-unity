@@ -117,7 +117,6 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Inventory:
 					//OnInventoryLog(infoModel, model as InventoryEncounterLogModel);
 					throw new NotImplementedException("Inventory log not implimented yet");
-					break;
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(infoModel, model as SwitchEncounterLogModel);
 					break;

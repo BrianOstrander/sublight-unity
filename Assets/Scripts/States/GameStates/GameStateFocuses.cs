@@ -14,6 +14,8 @@ namespace LunraGames.SubLight
 	{
 		public class Focuses : StateFocuses
 		{
+			const float PriorityDimming = 0.25f;
+
 			public static void InitializePresenters(GameState state, Action done)
 			{
 				var payload = state.Payload;
@@ -87,10 +89,47 @@ namespace LunraGames.SubLight
 
 				new GridVelocityPresenter(
 					payload.Game,
-					new GridVelocityLanguageBlock {
+					new GridVelocityLanguageBlock
+					{
 						Velocity = LanguageStringModel.Override("Velocity"),
 						Resource = LanguageStringModel.Override("Propellant"),
 						ResourceWarning = LanguageStringModel.Override("Insufficient Propellant")
+					}
+				);
+
+				new GridTransitLockoutPresenter(
+					payload.Game,
+					new GridTransitLockoutLanguageBlock
+					{
+						TransitTitle = LanguageStringModel.Override("Crew Lockout"),
+						TransitDescription = LanguageStringModel.Override("Interstellar ark is under automated\ncontrol until reaching destination"),
+						DescriptionPrefix = LanguageStringModel.Override("In transit from"),
+						UnlockLeftTitle = LanguageStringModel.Override("Unlocking"),
+						UnlockRightTitle = LanguageStringModel.Override("System Survey"),
+						UnlockLeftStatuses = LanguageStringModel.Overrides(
+							"Restarting Crew Control System <b>Success</b>",
+							"Confirming Subsystem Integrity <b>Success</b>",
+							"Generating Administrator Privileges <b>Passed</b>",
+							"Confirming Admin Identities <b>Validated</b>",
+							"Unlocking Engine Control Systems <b>Success</b>",
+							"Flushing Life Support Mechanisms <b>Vented</b>",
+							"Updating Hull Damage Manifest <b>Recorded</b>",
+							"Aligning Astrogation Sensors <b>Calibrated</b>",
+							"Locating Tracer From Terra <b>Failed</b>",
+							"Downloading Database Deltas <b>Disconnected</b>"
+						),
+						UnlockRightStatuses = LanguageStringModel.Overrides(
+							"<b>Waking</b> Probe Bay",
+							"<b>Scanning</b> Surface Of Primary Bodies",
+							"<b>Running</b> Chemical Analysis",
+							"<b>Collating</b> Results Of Scans",
+							"<b>Processing</b> Atmospheric Data",
+							"<b>Rendering</b> Orbital Anomalies",
+							"<b>Sweeping</b> Debris Fields For Impacts",
+							"<b>Integrating</b> Collected Data From Databases",
+							"<b>Rewriting</b> Known System Entries",
+							"<b>Assigning</b> Targets For Further Study"
+						)
 					}
 				);
 
@@ -119,6 +158,7 @@ namespace LunraGames.SubLight
 				new ShipPinPresenter(payload.Game, UniverseScales.Galactic);
 				new ShipPinPresenter(payload.Game, UniverseScales.Quadrant);
 				new ShipPinPresenter(payload.Game, UniverseScales.Stellar);
+				new ShipPinPresenter(payload.Game, UniverseScales.Local);
 
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Galactic, UniverseScales.Galactic);
 				new GalaxyLabelsPresenter(payload.Game, UniverseScales.Quadrant, UniverseScales.Quadrant);
@@ -180,6 +220,47 @@ namespace LunraGames.SubLight
 				};
 
 				new SystemPreviewLabelPresenter(payload.Game, systemPreviewLanguageBlock);
+
+				var scalesWithWaypoints = new UniverseScales[] {
+					UniverseScales.Local,
+					UniverseScales.Stellar,
+					UniverseScales.Quadrant
+				};
+
+				var waypointUnits = new UnitLanguageBlock
+				{
+					ThousandUnit = LanguageStringModel.Override("k"),
+					MillionUnit = LanguageStringModel.Override("m"),
+					Unit = new PluralLanguageStringBlock(LanguageStringModel.Override("Light\nYear"), LanguageStringModel.Override("Light\nYears"))
+				};
+
+				var waypointEntries = new List<GamePayload.Waypoint>();
+				foreach (var waypoint in payload.Game.WaypointCollection.Waypoints.Value)
+				{
+					var waypointLanguage = new WaypointLanguageBlock
+					{
+						Unit = waypointUnits
+					};
+
+					var waypointPresenters = new List<WaypointPresenter>();
+					foreach (var scale in scalesWithWaypoints)
+					{
+						waypointPresenters.Add(
+							new WaypointPresenter(
+								payload.Game,
+								waypoint,
+								waypointLanguage,
+								scale
+							)
+						);
+					}
+					waypointEntries.Add(
+						new GamePayload.Waypoint(
+							waypoint,
+							waypointPresenters.ToArray()
+						)
+					);
+				}
 
 				done();
 			}
@@ -254,13 +335,32 @@ namespace LunraGames.SubLight
 				return results.ToArray();
 			}
 
-			public static SetFocusBlock[] GetPriorityFocus()
+			public static SetFocusBlock[] GetPriorityFocus(ToolbarSelections selection)
 			{
 				var results = GetBaseEnabledFocuses();
 
 				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f, true));
-				// todo: ability to dim already opened ones...
-				//results.Add(GetFocus<HomeFocusDetails>(1, false, 0.25f, false));
+
+				results.Add(GetFocus<ToolbarFocusDetails>(1, true, PriorityDimming, false));
+
+				switch (selection)
+				{
+					case ToolbarSelections.System:
+						results.Add(GetFocus<SystemFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					case ToolbarSelections.Ship:
+						results.Add(GetFocus<ShipFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					case ToolbarSelections.Communications:
+						results.Add(GetFocus<CommunicationsFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					case ToolbarSelections.Encyclopedia:
+						results.Add(GetFocus<EncyclopediaFocusDetails>(1, true, PriorityDimming, false));
+						break;
+					default:
+						Debug.LogError("Unrecognized selection: " + selection);
+						break;
+				}
 
 				return results.ToArray();
 			}

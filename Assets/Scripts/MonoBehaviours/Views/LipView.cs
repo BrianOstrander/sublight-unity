@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class LipView : View, ILipView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		AnimationCurve MinLipAnimation;
 		[SerializeField]
@@ -13,6 +14,7 @@ namespace LunraGames.SubLight.Views
 		MeshRenderer lipMesh;
 		[SerializeField]
 		int renderQueue;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public void SetLips(float scalar, bool showing)
 		{

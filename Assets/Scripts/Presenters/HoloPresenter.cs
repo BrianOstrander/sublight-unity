@@ -27,6 +27,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.ActiveScale.Changed += OnActiveScale;
 			OnActiveScale(model.ActiveScale.Value);
+			model.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -39,6 +40,7 @@ namespace LunraGames.SubLight.Presenters
 
 			if (lastActiveScale != null) lastActiveScale.Transform.Changed -= OnActiveScaleTransform;
 			model.ActiveScale.Changed -= OnActiveScale;
+			model.TransitState.Changed -= OnTransitState;
 		}
 
 		#region Events
@@ -125,7 +127,7 @@ namespace LunraGames.SubLight.Presenters
 			View.LayerTextures = textures.ToArray();
 			View.LayerProperties = properties.ToArray();
 
-			//OnTransitionFocusActiveUpdate(request);
+			if (model != null) View.TimeScalar = model.TransitState.Value.RelativeTimeScalar;
 
 			if (wasClosed) ShowView(instant: true);
 		}
@@ -141,6 +143,12 @@ namespace LunraGames.SubLight.Presenters
 				properties.Add(new RenderLayerPropertyBlock(order, weight));
 			}
 			View.LayerProperties = properties.ToArray();
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			if (!View.Visible) return;
+			View.TimeScalar = model.TransitState.Value.RelativeTimeScalar;
 		}
 		#endregion
 	}

@@ -21,7 +21,9 @@ namespace LunraGames.SubLight
 		GameModel model;
 		EncounterInfoModel encounter;
 		SystemModel system;
+#pragma warning disable CS0414 // Field is assigned but its value is never used
 		BodyModel body;
+#pragma warning restore CS0414 // Field is assigned but its value is never used
 
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
@@ -52,10 +54,9 @@ namespace LunraGames.SubLight
 			this.universeService = universeService;
 			this.currentPreferences = currentPreferences;
 
-			callbacks.EncounterRequest += OnEncounter;
-			//callbacks.FocusRequest += OnFocus;
-			callbacks.StateChange += OnStateChange;
-			heartbeat.Update += OnUpdate;
+			this.callbacks.EncounterRequest += OnEncounter;
+			this.callbacks.StateChange += OnStateChange;
+			this.heartbeat.Update += OnUpdate;
 		}
 
 		#region Events
@@ -221,7 +222,6 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Inventory:
 					throw new NotImplementedException("Inventory logs not supported yet");
 					//OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
-					break;
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
 					break;
