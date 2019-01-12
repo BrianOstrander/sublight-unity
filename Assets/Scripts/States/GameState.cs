@@ -170,6 +170,9 @@ namespace LunraGames.SubLight
 			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
+			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
+			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
+
 			done();
 		}
 
@@ -229,6 +232,9 @@ namespace LunraGames.SubLight
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
+
+			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
+			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
 
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
 			{
@@ -401,6 +407,19 @@ namespace LunraGames.SubLight
 
 			// TODO: Add language support for this.
 			targetProperty.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override(closestLabel.Name.Value));
+		}
+
+		void OnWaypoints(WaypointModel[] waypoints)
+		{
+			Debug.LogError("Waypoint binding not done yet!");
+		}
+
+		void OnShipPosition(UniversePosition position)
+		{
+			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
+			{
+				waypoint.Distance.Value = UniversePosition.Distance(position, waypoint.Location.Value.Position);
+			}
 		}
 		#endregion
 	}

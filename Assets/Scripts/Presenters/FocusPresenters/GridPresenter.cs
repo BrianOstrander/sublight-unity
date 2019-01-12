@@ -617,7 +617,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitState(TransitState transitState)
 		{
-
 			switch (transitState.State)
 			{
 				case TransitState.States.Request:

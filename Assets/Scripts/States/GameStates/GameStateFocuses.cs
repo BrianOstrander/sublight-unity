@@ -89,7 +89,8 @@ namespace LunraGames.SubLight
 
 				new GridVelocityPresenter(
 					payload.Game,
-					new GridVelocityLanguageBlock {
+					new GridVelocityLanguageBlock
+					{
 						Velocity = LanguageStringModel.Override("Velocity"),
 						Resource = LanguageStringModel.Override("Propellant"),
 						ResourceWarning = LanguageStringModel.Override("Insufficient Propellant")
@@ -226,11 +227,33 @@ namespace LunraGames.SubLight
 					UniverseScales.Quadrant
 				};
 
+				var waypointUnits = new UnitLanguageBlock
+				{
+					ThousandUnit = LanguageStringModel.Override("k"),
+					MillionUnit = LanguageStringModel.Override("m"),
+					Unit = new PluralLanguageStringBlock(LanguageStringModel.Override("Light\nYear"), LanguageStringModel.Override("Light\nYears"))
+				};
+
 				var waypointEntries = new List<GamePayload.Waypoint>();
 				foreach (var waypoint in payload.Game.WaypointCollection.Waypoints.Value)
 				{
+					var waypointLanguage = new WaypointLanguageBlock
+					{
+						Unit = waypointUnits
+					};
+
 					var waypointPresenters = new List<WaypointPresenter>();
-					foreach (var scale in scalesWithWaypoints) waypointPresenters.Add(new WaypointPresenter(payload.Game, waypoint, scale));
+					foreach (var scale in scalesWithWaypoints)
+					{
+						waypointPresenters.Add(
+							new WaypointPresenter(
+								payload.Game,
+								waypoint,
+								waypointLanguage,
+								scale
+							)
+						);
+					}
 					waypointEntries.Add(
 						new GamePayload.Waypoint(
 							waypoint,

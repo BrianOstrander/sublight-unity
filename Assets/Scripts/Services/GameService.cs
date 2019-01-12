@@ -93,7 +93,7 @@ namespace LunraGames.SubLight
 			var endFound = false;
 			SectorModel endSector;
 			SystemModel endSystem;
-			galaxy.GetPlayerEnd(out endFound, out endSector, out endSystem);
+			var end = galaxy.GetPlayerEnd(out endFound, out endSector, out endSystem);
 			if (!endFound)
 			{
 				Debug.LogError("Provided galaxy has no player end defined");
@@ -105,24 +105,26 @@ namespace LunraGames.SubLight
 			game.Ship.Value.SetCurrentSystem(beginSystem);
 			game.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
 
-			var beginWaypoint = new WaypointModel();
-			beginWaypoint.SetLocation(beginSystem);
-			beginWaypoint.WaypointId.Value = WaypointIds.BeginSystem;
-			beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
-			beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
-			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
+			Debug.Log("reenable begin waypoint here");
+			//var beginWaypoint = new WaypointModel();
+			//beginWaypoint.SetLocation(beginSystem);
+			//beginWaypoint.WaypointId.Value = WaypointIds.BeginSystem;
+			//beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			//beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
+			//beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
+			//beginWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, begin);
 
-			game.WaypointCollection.AddWaypoint(beginWaypoint);
+			//game.WaypointCollection.AddWaypoint(beginWaypoint);
 
-			Debug.Log("reenable end waypoint herer");
-			//var endWaypoint = new WaypointModel();
-			//endWaypoint.SetLocation(endSystem);
-			//endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
-			//endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
-			//endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
-			//endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
+			var endWaypoint = new WaypointModel();
+			endWaypoint.SetLocation(endSystem);
+			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
+			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
+			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
+			endWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, end);
 
-			//game.WaypointCollection.AddWaypoint(endWaypoint);
+			game.WaypointCollection.AddWaypoint(endWaypoint);
 
 			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
 
