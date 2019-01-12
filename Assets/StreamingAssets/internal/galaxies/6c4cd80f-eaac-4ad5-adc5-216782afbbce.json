@@ -506,7 +506,7 @@
       "seed": 528735376,
       "specified": true,
       "position": {
-        "Sector": {"x":100.0,"z":100.0}
+        "Sector": {"x":83.0,"z":26.0}
       },
       "systemCount": 1,
       "systems": [
@@ -515,10 +515,14 @@
           "specified": true,
           "playerEnd": true,
           "position": {
-            "Sector": {"x":100.0,"z":100.0},
+            "Sector": {"x":83.0,"z":26.0},
             "Local": {"x":0.5,"z":0.5}
           },
           "name": "Sagittarius A*",
+          "primaryClassification": "Degenerate",
+          "secondaryClassification": "Super Massive Black Hole",
+          "iconColor": {"r":1.0,"g":1.0,"b":1.0,"a":1.0},
+          "iconScale": 1.0,
           "encounterBodyId": -1,
           "bodies": []
         }

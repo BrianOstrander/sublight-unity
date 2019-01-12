@@ -105,17 +105,18 @@ namespace LunraGames.SubLight
 			game.Ship.Value.SetCurrentSystem(beginSystem);
 			game.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
 
-			Debug.Log("reenable begin waypoint here");
-			//var beginWaypoint = new WaypointModel();
-			//beginWaypoint.SetLocation(beginSystem);
-			//beginWaypoint.WaypointId.Value = WaypointIds.BeginSystem;
-			//beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
-			//beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
-			//beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
-			//beginWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, begin);
+			//Debug.Log("reenable begin waypoint here");
+			var shipWaypoint = new WaypointModel();
+			shipWaypoint.SetLocation(begin);
+			shipWaypoint.WaypointId.Value = WaypointIds.Ship;
+			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			shipWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
+			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
+			shipWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, begin);
 
-			//game.WaypointCollection.AddWaypoint(beginWaypoint);
+			game.WaypointCollection.AddWaypoint(shipWaypoint);
 
+			//Debug.Log("reenable end waypoint here");
 			var endWaypoint = new WaypointModel();
 			endWaypoint.SetLocation(endSystem);
 			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;

@@ -16,14 +16,9 @@ namespace LunraGames.SubLight
 		CurveStyleBlock opacity = CurveStyleBlock.Default;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		//[SerializeField, Range(-1f, 1f)]
-		//float lolDot;
-
 		void Update()
 		{
-			//if (!App.V.CameraHasMoved) return;
 			var currentOpacity = opacity.Evaluate(range.Progress(Vector3.Dot(App.V.CameraForward.FlattenY(), origin.up)));
-			//var currentOpacity = opacity.Evaluate(range.Evaluate(lolDot));
 			foreach (var graphic in graphics) graphic.color = graphic.color.NewA(currentOpacity);
 		}
 

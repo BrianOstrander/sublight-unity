@@ -24,6 +24,8 @@ namespace LunraGames.SubLight.Presenters
 			this.waypoint = waypoint;
 			this.language = language;
 
+			waypoint.Location.Changed += OnWaypointLocation;
+
 			ScaleModel.Transform.Changed += OnScaleTransform;
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -31,6 +33,8 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
+
+			waypoint.Location.Changed -= OnWaypointLocation;
 
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
@@ -70,7 +74,6 @@ namespace LunraGames.SubLight.Presenters
 		void OnScaleTransform(UniverseTransform universeTransform)
 		{
 			if (!View.Visible) return;
-
 			UpdateDistance();
 		}
 
@@ -78,6 +81,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible) return;
 			View.SetOpacityStale();
+		}
+
+		void OnWaypointLocation(WaypointModel.LocationDetails location)
+		{
+			if (!View.Visible) return;
+			UpdateDistance();
 		}
 		#endregion
 	}

@@ -136,8 +136,8 @@ namespace LunraGames.SubLight
 			{
 				switch (waypoint.WaypointId.Value)
 				{
-					case WaypointIds.BeginSystem:
-						waypoint.Name.Value = "Origin"; 
+					case WaypointIds.Ship:
+						waypoint.Name.Value = "Ark"; 
 						break;
 					case WaypointIds.EndSystem:
 						waypoint.Name.Value = "Sagittarius A*";
@@ -418,6 +418,12 @@ namespace LunraGames.SubLight
 		{
 			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
 			{
+				switch (waypoint.WaypointId.Value)
+				{
+					case WaypointIds.Ship:
+						waypoint.SetLocation(position);
+						break;
+				}
 				waypoint.Distance.Value = UniversePosition.Distance(position, waypoint.Location.Value.Position);
 			}
 		}

@@ -22,23 +22,30 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		GameObject hintArea;
 		[SerializeField]
+		RectTransform yawArea;
+		[SerializeField]
+		CanvasGroup pointerGroup;
+		[SerializeField]
 		CanvasGroup group;
+
+		[SerializeField]
+		AnimationCurve inRangeParticleOpacityByRadiusNormal;
+		[SerializeField]
+		AnimationCurve inRangeParticleScaleByRadiusNormal;
+
+		[SerializeField]
+		Renderer[] inRangeParticleRenderers;
+		[SerializeField]
+		Transform inRangeParticleSystemsRoot;
 
 		[SerializeField]
 		OpacityByDirection[] directions;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		string waypointName;
+		bool wasInRange;
 
 		public bool HintVisible { set { hintArea.SetActive(value); } }
-
-		public float Orbit
-		{
-			set
-			{
-
-			}
-		}
 
 		public void SetDetails(string name, string distance, string units)
 		{
@@ -51,12 +58,38 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
 		{
+			var positionOnPlane = position.NewY(Root.position.y);
+			var inRange = Vector3.Distance(positionOnPlane, Root.position) < lipRadius;
 
+			pointerGroup.alpha = inRange ? 0f : 1f;
+
+			if (inRange)
+			{
+				var inRangeParticleOpacity = inRangeParticleOpacityByRadiusNormal.Evaluate(RadiusNormal);
+				var inRangeParticleScale = inRangeParticleScaleByRadiusNormal.Evaluate(RadiusNormal);
+
+				foreach (var renderer in inRangeParticleRenderers)
+				{
+					renderer.material.color = renderer.material.color.NewA(inRangeParticleOpacity);
+					renderer.transform.localScale = Vector3.one * inRangeParticleScale;
+				}
+
+				return;
+			}
+
+         	var dir = (positionOnPlane - Root.position).normalized;
+			var angle = Mathf.Atan2(dir.z, -1f * dir.x) * Mathf.Rad2Deg;
+			yawArea.rotation = Quaternion.AngleAxis(angle, Vector3.up);
 		}
 
 		protected override void OnOpacityStack(float opacity)
 		{
 			group.alpha = opacity;
+		}
+
+		protected override void OnInBoundsChanged(bool isInBounds)
+		{
+			inRangeParticleSystemsRoot.gameObject.SetActive(isInBounds);
 		}
 
 		public override void Reset()
@@ -104,7 +137,6 @@ namespace LunraGames.SubLight.Views
 	public interface IWaypointView : IUniverseScaleView
 	{
 		bool HintVisible { set; }
-		float Orbit { set; }
 		void SetDetails(string name, string distance, string units);
 	}
 }
