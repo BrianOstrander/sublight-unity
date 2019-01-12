@@ -220,6 +220,25 @@ namespace LunraGames.SubLight
 
 				new SystemPreviewLabelPresenter(payload.Game, systemPreviewLanguageBlock);
 
+				var scalesWithWaypoints = new UniverseScales[] {
+					UniverseScales.Local,
+					UniverseScales.Stellar,
+					UniverseScales.Quadrant
+				};
+
+				var waypointEntries = new List<GamePayload.Waypoint>();
+				foreach (var waypoint in payload.Game.WaypointCollection.Waypoints.Value)
+				{
+					var waypointPresenters = new List<WaypointPresenter>();
+					foreach (var scale in scalesWithWaypoints) waypointPresenters.Add(new WaypointPresenter(payload.Game, waypoint, scale));
+					waypointEntries.Add(
+						new GamePayload.Waypoint(
+							waypoint,
+							waypointPresenters.ToArray()
+						)
+					);
+				}
+
 				done();
 			}
 

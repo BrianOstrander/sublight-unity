@@ -317,7 +317,7 @@ namespace LunraGames.SubLight.Views
 		}
 		#endregion
 
-		void OnDrawGizmos()
+		void OnDrawGizmosSelected()
 		{
 			if (DrawGizmos != null) DrawGizmos();
 #if UNITY_EDITOR

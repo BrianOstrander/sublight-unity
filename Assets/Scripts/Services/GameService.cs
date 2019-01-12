@@ -114,14 +114,15 @@ namespace LunraGames.SubLight
 
 			game.WaypointCollection.AddWaypoint(beginWaypoint);
 
-			var endWaypoint = new WaypointModel();
-			endWaypoint.SetLocation(endSystem);
-			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
-			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
-			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
-			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
+			Debug.Log("reenable end waypoint herer");
+			//var endWaypoint = new WaypointModel();
+			//endWaypoint.SetLocation(endSystem);
+			//endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
+			//endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			//endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
+			//endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
 
-			game.WaypointCollection.AddWaypoint(endWaypoint);
+			//game.WaypointCollection.AddWaypoint(endWaypoint);
 
 			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
 
