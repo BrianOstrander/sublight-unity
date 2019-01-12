@@ -24,8 +24,6 @@ namespace LunraGames.SubLight.Presenters
 			this.waypoint = waypoint;
 			this.language = language;
 
-			//waypoint.Distance.Changed += OnWaypointDistance;
-
 			ScaleModel.Transform.Changed += OnScaleTransform;
 			ScaleModel.Opacity.Changed += OnScaleOpacity;
 		}
@@ -33,8 +31,6 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
-
-			//waypoint.Distance.Changed -= OnWaypointDistance;
 
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 			ScaleModel.Opacity.Changed -= OnScaleOpacity;
@@ -44,14 +40,20 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.HintVisible = Scale == UniverseScales.Local;
 
-			//string distance;
-			//string unit;
-
-			//CalculateDistance(waypoint.Distance.Value, out distance, out unit);
-
-			//View.SetDetails(waypoint.Name.Value, distance, unit);
+			UpdateDistance();
 
 			View.PushOpacity(() => ScaleModel.Opacity.Value);
+		}
+
+		void UpdateDistance()
+		{
+			string distance;
+			string unit;
+
+			var positionOnPlane = waypoint.Location.Value.Position.NewLocal(waypoint.Location.Value.Position.Local.NewY(0f));
+			CalculateDistance(UniversePosition.Distance(ScaleModel.Transform.Value.UniverseOrigin, positionOnPlane), out distance, out unit);
+
+			View.SetDetails(waypoint.Name.Value, distance, unit);
 		}
 
 		void CalculateDistance(float distance, out string distanceValue, out string unitValue)
@@ -67,9 +69,9 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnScaleTransform(UniverseTransform universeTransform)
 		{
-
-
 			if (!View.Visible) return;
+
+			UpdateDistance();
 		}
 
 		void OnScaleOpacity(float opacity)
@@ -77,18 +79,6 @@ namespace LunraGames.SubLight.Presenters
 			if (!View.Visible) return;
 			View.SetOpacityStale();
 		}
-
-		//void OnWaypointDistance(float distance)
-		//{
-		//	if (!View.Visible) return;
-
-		//	string distanceValue;
-		//	string unitValue;
-
-		//	CalculateDistance(waypoint.Distance.Value, out distanceValue, out unitValue);
-
-		//	View.SetDetails(waypoint.Name.Value, distanceValue, unitValue);
-		//}
 		#endregion
 	}
 }
