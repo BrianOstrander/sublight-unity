@@ -31,6 +31,8 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] EncounterStateModel encounterState = new EncounterStateModel();
 
+		[JsonProperty] WaypointCollectionModel waypointCollection = new WaypointCollectionModel();
+
 		/// <summary>
 		/// The game seed.
 		/// </summary>
@@ -84,6 +86,8 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public EncounterStateModel EncounterState { get { return encounterState; } }
+		[JsonIgnore]
+		public WaypointCollectionModel WaypointCollection { get { return waypointCollection; } }
 		#endregion
 
 		#region NonSerialized

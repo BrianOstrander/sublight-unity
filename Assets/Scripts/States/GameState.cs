@@ -111,8 +111,30 @@ namespace LunraGames.SubLight
 		void SetNonSerializedValues(Action done)
 		{
 			Payload.Game.Ship.Value.SetCurrentSystem(App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex));
-
 			if (Payload.Game.Ship.Value.CurrentSystem.Value == null) Debug.LogError("Unable to load current system at "+Payload.Game.Ship.Value.Position.Value+" and index "+Payload.Game.Ship.Value.SystemIndex.Value);
+
+			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
+			{
+				switch (waypoint.WaypointId.Value)
+				{
+					case WaypointIds.BeginSystem:
+						waypoint.Name.Value = "Origin"; 
+						break;
+					case WaypointIds.EndSystem:
+						waypoint.Name.Value = "Sagittarius A*";
+						break;
+				}
+
+				if (!waypoint.Location.Value.IsSystem) continue;
+
+				var currWaypointSystem = App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, waypoint.Location.Value.Position, waypoint.Location.Value.SystemIndex);
+				if (currWaypointSystem == null)
+				{
+					Debug.LogError("Unable to load waypoint system ( WaypointId: "+waypoint.WaypointId.Value+" , Name: "+waypoint.Name.Value+" ) at\n" + waypoint.Location.Value.Position + " and index " + waypoint.Location.Value.SystemIndex);
+					continue;
+				}
+				waypoint.SetLocation(currWaypointSystem);
+			}
 
 			done();
 		}
