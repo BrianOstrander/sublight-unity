@@ -12,30 +12,41 @@ namespace LunraGames.SubLight.Views
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
-		TextMeshProUGUI nameLabel;
+		TextMeshProUGUI[] nameLabels;
 		[SerializeField]
-		TextMeshProUGUI distanceLabel;
+		TextMeshProUGUI[] distanceLabels;
 		[SerializeField]
-		TextMeshProUGUI unitLabel;
+		TextMeshProUGUI[] unitLabels;
 		[SerializeField]
 		float lipRadius;
 		[SerializeField]
 		GameObject hintArea;
 		[SerializeField]
 		CanvasGroup group;
+
+		[SerializeField]
+		OpacityByDirection[] directions;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		string waypointName;
 
 		public bool HintVisible { set { hintArea.SetActive(value); } }
 
+		public float Orbit
+		{
+			set
+			{
+
+			}
+		}
+
 		public void SetDetails(string name, string distance, string units)
 		{
 			waypointName = name ?? "< Null >";
 
-			nameLabel.text = name ?? string.Empty;
-			distanceLabel.text = distance ?? string.Empty;
-			unitLabel.text = units ?? string.Empty;
+			foreach (var label in nameLabels) label.text = name ?? string.Empty;
+			foreach (var label in distanceLabels) label.text = distance ?? string.Empty;
+			foreach (var label in unitLabels) label.text = units ?? string.Empty;
 		}
 
 		protected override void OnPosition(Vector3 position, Vector3 rawPosition)
@@ -54,17 +65,19 @@ namespace LunraGames.SubLight.Views
 
 			SetDetails(null, null, null);
 			HintVisible = false;
+
+			foreach (var direction in directions) direction.enabled = false;
 		}
 
 		#region Events
 		public void OnEnter()
 		{
-
+			foreach (var direction in directions) direction.enabled = true;
 		}
 
 		public void OnExit()
 		{
-
+			foreach (var direction in directions) direction.enabled = false;
 		}
 
 		public void OnClick()
@@ -91,7 +104,7 @@ namespace LunraGames.SubLight.Views
 	public interface IWaypointView : IUniverseScaleView
 	{
 		bool HintVisible { set; }
-
+		float Orbit { set; }
 		void SetDetails(string name, string distance, string units);
 	}
 }

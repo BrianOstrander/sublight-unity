@@ -6,6 +6,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
+	// TODO: Make this class use UnitLanguageBlock
 	public struct GridInfoBlock
 	{
 		public LanguageStringModel Scale;
