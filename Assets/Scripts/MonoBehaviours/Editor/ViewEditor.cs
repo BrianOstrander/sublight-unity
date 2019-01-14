@@ -23,7 +23,7 @@ namespace LunraGames.SubLight
 		{
 			var prefabObject = PrefabUtility.GetCorrespondingObjectFromSource(target);
 
-			if (prefabObject == null && PrefabUtility.GetPrefabObject(target) != null) prefabObject = target;
+			if (prefabObject == null && PrefabUtility.GetPrefabInstanceHandle(target) != null) prefabObject = target;
 
 			if (prefabObject == null)
 			{
