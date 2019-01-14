@@ -47,6 +47,8 @@ namespace LunraGames
 			return entries.ElementAt(UnityEngine.Random.Range(0, entries.Count()));
 		}
 
+#if !CSHARP_7_3_OR_NEWER
+		
 		public static IEnumerable<T> Append<T>(this IEnumerable<T> entries, T element)
 		{
 			if (entries == null) throw new ArgumentNullException("entries");
@@ -58,6 +60,8 @@ namespace LunraGames
 			if (entries == null) throw new ArgumentNullException("entries");
 			return ConcatIterator(entries, element, true);
 		}
+
+#endif
 
 		static IEnumerable<T> ConcatIterator<T>(IEnumerable<T> entries, T element, bool start)
 		{
