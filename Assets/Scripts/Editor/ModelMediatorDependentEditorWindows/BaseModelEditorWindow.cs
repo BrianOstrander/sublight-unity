@@ -99,7 +99,13 @@ namespace LunraGames.SubLight
 				case RequestStatus.Unknown:
 					return;
 			}
-			if (string.IsNullOrEmpty(modelSelectedPath.Value)) return;
+
+			if (string.IsNullOrEmpty(modelSelectedPath.Value))
+			{
+				selectedStatus = RequestStatus.Failure;
+				modelSelectionState.Value = ModelSelectionStates.Browsing;
+				return;
+			}
 
 			switch (selectedStatus)
 			{
@@ -139,7 +145,7 @@ namespace LunraGames.SubLight
 		void OnLoadList()
 		{
 			modelListStatus = RequestStatus.Unknown;
-			SaveLoadService.List<GalaxyInfoModel>(OnLoadListDone);
+			SaveLoadService.List<M>(OnLoadListDone);
 		}
 
 		void OnLoadListDone(SaveLoadArrayRequest<SaveModel> result)
@@ -207,7 +213,8 @@ namespace LunraGames.SubLight
 
 			OnModelCheckStatus();
 
-			if (modelListStatus != RequestStatus.Success || selectedStatus != RequestStatus.Success) return;
+			if (modelListStatus != RequestStatus.Success) return;
+			if (selectedStatus != RequestStatus.Success && modelSelectionState.Value == ModelSelectionStates.Selected) return;
 
 			GUILayout.BeginHorizontal();
 			{
