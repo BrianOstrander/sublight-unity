@@ -23,7 +23,7 @@ namespace LunraGames.SubLight
 			Action<bool> done,
 			ValueFilterModel filter,
 			GameModel model,
-			EncounterInfoModel encounterModel = null
+			EncounterInfoModel encounterModel
 		)
 		{
 			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();

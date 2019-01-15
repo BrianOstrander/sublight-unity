@@ -408,7 +408,8 @@ namespace LunraGames.SubLight
 			valueFilter.Filter(
 				filterResult => OnSwitchLogFilter(filterResult, nextId, remaining, done),
 				next.Filtering,
-				model
+				model,
+				encounter
 			);
 		}
 
@@ -577,7 +578,8 @@ namespace LunraGames.SubLight
 			valueFilter.Filter(
 				filterResult => OnButtonLogEnabledFiltering(filterResult, edge, possibleResult, nextDone),
 				edge.EnabledFiltering,
-				model
+				model,
+				encounter
 			);
 		}
 
@@ -601,7 +603,8 @@ namespace LunraGames.SubLight
 				valueFilter.Filter(
 					filterResult => OnButtonLogInteractableFiltering(filterResult, edge, possibleResult, nextDone),
 					edge.InteractableFiltering,
-					model
+					model,
+					encounter
 				);
 			}
 			else
@@ -631,7 +634,8 @@ namespace LunraGames.SubLight
 				valueFilter.Filter(
 					filterResult => OnButtonLogUsedFiltering(filterResult, edge, possibleResult, nextDone),
 					edge.UsedFiltering,
-					model
+					model,
+					encounter
 				);
 			}
 			else
