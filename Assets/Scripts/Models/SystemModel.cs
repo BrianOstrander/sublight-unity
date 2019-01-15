@@ -31,6 +31,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int encounterBodyId = -1;
 		[JsonProperty] BodyModel[] bodies = new BodyModel[0];
 
+		[JsonProperty] string specifiedEncounterId;
+
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Index;
 		[JsonIgnore]
@@ -63,6 +65,9 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<BodyModel[]> Bodies;
 
 		[JsonIgnore]
+		public readonly ListenerProperty<string> SpecifiedEncounterId;
+
+		[JsonIgnore]
 		public bool IsGenerated { get; set; }
 
 		public SystemModel()
@@ -82,6 +87,8 @@ namespace LunraGames.SubLight.Models
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			EncounterBodyId = new ListenerProperty<int>(value => encounterBodyId = value, () => encounterBodyId);
 			Bodies = new ListenerProperty<BodyModel[]>(value => bodies = value, () => bodies);
+
+			SpecifiedEncounterId = new ListenerProperty<string>(value => specifiedEncounterId = value, () => specifiedEncounterId);
 		}
 
 		#region Utility

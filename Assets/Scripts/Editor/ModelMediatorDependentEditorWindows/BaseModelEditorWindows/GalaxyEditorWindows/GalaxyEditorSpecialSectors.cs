@@ -513,6 +513,8 @@ namespace LunraGames.SubLight
 
 			var localPos = new UniversePosition(EditorGUILayout.Vector3Field("Local Position", system.Position.Value.Local));
 			system.Position.Value = new UniversePosition(sector.Position.Value.SectorInteger, localPos.Local);
+
+			system.SpecifiedEncounterId.Value = EditorGUILayout.TextField("Specified Encounter Id", system.SpecifiedEncounterId.Value);
 		}
 
 		void SpecifiedSectorsCreateSystem(GalaxyInfoModel model, SectorModel sector)

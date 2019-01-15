@@ -1,0 +1,39 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "encounterId": "3f3d657b-af0b-486d-8e33-f22d5c42e367",
+  "name": "Engage Test",
+  "trigger": "Automatic",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": [],
+    "inventoryIds": [],
+    "inventoryTags": []
+  },
+  "logs": {
+    "textLogs": [
+      {
+        "message": "Test test!",
+        "beginning": true,
+        "ending": true,
+        "logId": "73c0878a-cf30-4119-b595-dff3ff925f71",
+        "name": "Test"
+      }
+    ],
+    "keyValueLogs": [],
+    "inventoryLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": []
+  },
+  "version": 7,
+  "meta": "Engage Test",
+  "metaKeyValues": {
+    "EncounterId": "3f3d657b-af0b-486d-8e33-f22d5c42e367"
+  },
+  "created": "2019-01-14T15:59:13.141047-08:00",
+  "modified": "2019-01-14T15:59:13.141047-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}
