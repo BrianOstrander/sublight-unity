@@ -34,10 +34,18 @@ namespace LunraGames.SubLight
 				new HoloPresenter(payload.Game);
 
 				// All other presenters for this state...
+
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
 				payload.ShowOnIdle.Add(new ToolbarBackPresenter(payload.Game, LanguageStringModel.Override("Back")));
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
+
+				InitializeSystemPresenters(state, done);
+			}
+
+			static void InitializeSystemPresenters(GameState state, Action done)
+			{
+				var payload = state.Payload;
 
 				// GRID INFO BEGIN
 				var gridInfo = new GridInfoBlock();
@@ -262,6 +270,22 @@ namespace LunraGames.SubLight
 					);
 				}
 
+				InitializeShipPresenters(state, done);
+			}
+
+			static void InitializeShipPresenters(GameState state, Action done)
+			{
+				InitializeCommunicationPresenters(state, done);
+			}
+
+			static void InitializeCommunicationPresenters(GameState state, Action done)
+			{
+
+				InitializeEncyclopediaPresenters(state, done);
+			}
+
+			static void InitializeEncyclopediaPresenters(GameState state, Action done)
+			{
 				done();
 			}
 
