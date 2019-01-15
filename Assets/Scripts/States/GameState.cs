@@ -223,6 +223,12 @@ namespace LunraGames.SubLight
 		void OnIdleShowFocusDone()
 		{
 			foreach (var presenter in Payload.ShowOnIdle) presenter.Show();
+			App.Heartbeat.Wait(OnPresentersShown, 0.21f);
+		}
+
+		void OnPresentersShown()
+		{
+			Debug.Log("lol check encounters here");
 		}
 		#endregion
 
