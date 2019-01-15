@@ -12,10 +12,6 @@
 		// -- EncounterInteractions
 		EncounterInteraction = 100,
 
-		// -- Inventory
-		InventoryId = 200,
-		InventoryTag = 210
-
 		// -- Something else
 		// SomethingElseBoolean = 300
 	}

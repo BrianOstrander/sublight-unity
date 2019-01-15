@@ -83,12 +83,6 @@ namespace LunraGames.SubLight
 					case ValueFilterTypes.EncounterInteraction:
 						Create<EncounterInteractionFilterEntryModel>(model, filterCount, group);
 						break;
-					case ValueFilterTypes.InventoryId:
-						Create<IdInventoryFilterEntryModel>(model, filterCount, group);
-						break;
-					case ValueFilterTypes.InventoryTag:
-						Create<TagInventoryFilterEntryModel>(model, filterCount, group);
-						break;
 					default:
 						Debug.LogError("Unrecognized FilterType: " + result);
 						break;
@@ -119,12 +113,6 @@ namespace LunraGames.SubLight
 									break;
 								case ValueFilterTypes.EncounterInteraction:
 									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
-									break;
-								case ValueFilterTypes.InventoryId:
-									OnHandle(filter as IdInventoryFilterEntryModel, ref deleted);
-									break;
-								case ValueFilterTypes.InventoryTag:
-									OnHandle(filter as TagInventoryFilterEntryModel, ref deleted);
 									break;
 								default:
 									EditorGUILayout.HelpBox("Unrecognized FilterType: " + filter.FilterType, MessageType.Error);
@@ -216,36 +204,8 @@ namespace LunraGames.SubLight
 			}
 			OnOneLineHandleEnd(model, ref deleted);
 
-			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("An EncounterId must be specified.", MessageType.Error);
+			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("An empty EncounterId field will test for the current encounter.", MessageType.Info);
 			if (model.Operation.Value == EncounterInteractionFilterOperations.Unknown) EditorGUILayout.HelpBox("An operation must be specified.", MessageType.Error);
-		}
-
-		static void OnHandle(IdInventoryFilterEntryModel model, ref string deleted)
-		{
-			OnOneLineHandleBegin(model);
-			{
-				GUILayout.Label(new GUIContent("InventoryId", "The Id of the inventory reference."), GUILayout.ExpandWidth(false));
-				model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
-				model.InventoryFilterType.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Target -", model.InventoryFilterType.Value, guiOptions: GUILayout.ExpandWidth(false));
-			}
-			OnOneLineHandleEnd(model, ref deleted);
-
-			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("An InventoryId must be specified.", MessageType.Error);
-			if (model.InventoryFilterType.Value == InventoryFilterTypes.Unknown) EditorGUILayout.HelpBox("A inventory target must be specified.", MessageType.Error);
-		}
-
-		static void OnHandle(TagInventoryFilterEntryModel model, ref string deleted)
-		{
-			OnOneLineHandleBegin(model);
-			{
-				GUILayout.Label(new GUIContent("Tag", "The name of the tag for this filter."), GUILayout.ExpandWidth(false));
-				model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
-				model.InventoryFilterType.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Target -", model.InventoryFilterType.Value, guiOptions: GUILayout.ExpandWidth(false));
-			}
-			OnOneLineHandleEnd(model, ref deleted);
-
-			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("A tag must be specified.", MessageType.Error);
-			if (model.InventoryFilterType.Value == InventoryFilterTypes.Unknown) EditorGUILayout.HelpBox("A inventory target must be specified.", MessageType.Error);
 		}
 		#endregion
 	}
