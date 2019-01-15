@@ -437,7 +437,12 @@ namespace LunraGames.SubLight
 		void OnTransitComplete()
 		{
 			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
-			if (string.IsNullOrEmpty(encounterId)) return;
+
+			if (string.IsNullOrEmpty(encounterId))
+			{
+				Debug.Log("Check for non-specified encounters here!");
+				return;
+			}
 
 			var encounter = App.Encounters.GetEncounter(encounterId);
 
@@ -449,16 +454,40 @@ namespace LunraGames.SubLight
 
 			switch (encounter.Trigger.Value)
 			{
+				case EncounterTriggers.NavigationSelect:
+					break;
 				case EncounterTriggers.TransitComplete:
-					App.Callbacks.EncounterRequest(
-						EncounterRequest.Request(
-							Payload.Game,
-							encounter
-						)
+					App.ValueFilter.Filter(
+						valid => OnTransitCompleteFiltered(valid, encounter),
+						encounter.Filtering,
+						Payload.Game,
+						encounter
 					);
-					Debug.Log("actually hook up an encounter presenter to listen to this request...");
+					//App.Callbacks.EncounterRequest(
+					//	EncounterRequest.Request(
+					//		Payload.Game,
+					//		encounter
+					//	)
+					//);
+					//Debug.Log("actually hook up an encounter presenter to listen to this request...");
+					break;
+				default:
+					Debug.LogError("Unrecognized encounter trigger: " + encounter.Trigger.Value);
 					break;
 			}
+		}
+
+		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter)
+		{
+			if (!valid) return;
+
+			App.Callbacks.EncounterRequest(
+				EncounterRequest.Request(
+					Payload.Game,
+					encounter
+				)
+			);
+			Debug.Log("actually hook up an encounter presenter to listen to this request...");
 		}
 		#endregion
 	}

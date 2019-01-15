@@ -7,9 +7,14 @@
     "showValues": true,
     "booleanKeyValues": [],
     "stringKeyValues": [],
-    "encounterInteractions": [],
-    "inventoryIds": [],
-    "inventoryTags": []
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "e0d599e5-9b14-4a99-ba8f-abc0af2c640f",
+        "group": "All",
+        "filterValue": ""
+      }
+    ]
   },
   "logs": {
     "textLogs": [
