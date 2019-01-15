@@ -228,7 +228,7 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			Debug.Log("lol check encounters here");
+			OnTransitComplete();
 		}
 		#endregion
 
@@ -431,6 +431,35 @@ namespace LunraGames.SubLight
 						break;
 				}
 				waypoint.Distance.Value = UniversePosition.Distance(position, waypoint.Location.Value.Position);
+			}
+		}
+
+		void OnTransitComplete()
+		{
+			var specifiedEncounter = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
+			if (string.IsNullOrEmpty(specifiedEncounter)) return;
+
+			var encounter = App.Encounters.GetEncounter(specifiedEncounter);
+
+			if (encounter == null)
+			{
+				Debug.LogError("Unable to find specified encounter: " + specifiedEncounter);
+				return;
+			}
+
+			switch (encounter.Trigger.Value)
+			{
+				case EncounterTriggers.TransitComplete:
+					App.Callbacks.EncounterRequest(
+						EncounterRequest.Request(
+							Payload.Game,
+							specifiedEncounter,
+							Payload.Game.Ship.Value.CurrentSystem.Value.Position.Value,
+							Payload.Game.Ship.Value.CurrentSystem.Value.Index.Value
+						)
+					);
+					Debug.Log("actually hook up an encounter presenter to listen to this request...");
+					break;
 			}
 		}
 		#endregion
