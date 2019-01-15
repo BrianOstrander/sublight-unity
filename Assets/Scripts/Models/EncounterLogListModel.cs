@@ -13,7 +13,6 @@ namespace LunraGames.SubLight.Models
 		#region Assigned Values
 		[JsonProperty] TextEncounterLogModel[] textLogs = new TextEncounterLogModel[0];
 		[JsonProperty] KeyValueEncounterLogModel[] keyValueLogs = new KeyValueEncounterLogModel[0];
-		[JsonProperty] InventoryEncounterLogModel[] inventoryLogs = new InventoryEncounterLogModel[0];
 		[JsonProperty] SwitchEncounterLogModel[] switchLogs = new SwitchEncounterLogModel[0];
 		[JsonProperty] ButtonEncounterLogModel[] buttonLogs = new ButtonEncounterLogModel[0];
 		[JsonProperty] EncyclopediaEncounterLogModel[] encyclopediaLogs = new EncyclopediaEncounterLogModel[0];
@@ -93,7 +92,6 @@ namespace LunraGames.SubLight.Models
 		{
 			var textList = new List<TextEncounterLogModel>();
 			var keyValueList = new List<KeyValueEncounterLogModel>();
-			var inventoryList = new List<InventoryEncounterLogModel>();
 			var switchList = new List<SwitchEncounterLogModel>();
 			var buttonList = new List<ButtonEncounterLogModel>();
 			var encyclopediaList = new List<EncyclopediaEncounterLogModel>();
@@ -107,9 +105,6 @@ namespace LunraGames.SubLight.Models
 						break;
 					case EncounterLogTypes.KeyValue:
 						keyValueList.Add(log as KeyValueEncounterLogModel);
-						break;
-					case EncounterLogTypes.Inventory:
-						inventoryList.Add(log as InventoryEncounterLogModel);
 						break;
 					case EncounterLogTypes.Switch:
 						switchList.Add(log as SwitchEncounterLogModel);
@@ -128,7 +123,6 @@ namespace LunraGames.SubLight.Models
 
 			textLogs = textList.ToArray();
 			keyValueLogs = keyValueList.ToArray();
-			inventoryLogs = inventoryList.ToArray();
 			switchLogs = switchList.ToArray();
 			buttonLogs = buttonList.ToArray();
 			encyclopediaLogs = encyclopediaList.ToArray();
@@ -137,7 +131,6 @@ namespace LunraGames.SubLight.Models
 		EncounterLogModel[] OnGetLogs()
 		{
 			return textLogs.Cast<EncounterLogModel>().Concat(keyValueLogs)
-													 .Concat(inventoryLogs)
 													 .Concat(switchLogs)
 													 .Concat(buttonLogs)
 													 .Concat(encyclopediaLogs)

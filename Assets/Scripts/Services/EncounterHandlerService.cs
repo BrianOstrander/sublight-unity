@@ -206,9 +206,6 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
 					break;
-				case EncounterLogTypes.Inventory:
-					throw new NotImplementedException("Inventory logs not supported yet");
-					//OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
 					break;
@@ -292,83 +289,6 @@ namespace LunraGames.SubLight
 			progress++;
 			if (total == progress) done();
 		}
-
-		/*
-		void OnInventoryLog(InventoryEncounterLogModel logModel, Action done)
-		{
-			var total = logModel.Operations.Value.Length;
-
-			if (total == 0)
-			{
-				done();
-				return;
-			}
-
-			var progress = 0;
-
-			foreach (var entry in logModel.Operations.Value)
-			{
-				switch (entry.Operation)
-				{
-					case InventoryOperations.AddResources:
-						var addResource = entry as AddResourceOperationModel;
-						var currentResources = model.Ship.Value.Inventory.AllResources.Duplicate;
-						model.Ship.Value.Inventory.AllResources.Assign(currentResources.Add(addResource.Value).ClampNegatives());
-						OnInventoryLogDone(total, ref progress, done);
-						break;
-					case InventoryOperations.AddInstance:
-						var addInstance = entry as AddInstanceOperationModel;
-						inventoryReferences.CreateInstance(
-							addInstance.InventoryId,
-							InventoryReferenceContext.Current(model),
-							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
-						);
-						break;
-					case InventoryOperations.AddRandomInstance:
-						var addRandomInstance = entry as AddRandomInstanceOperationModel;
-						inventoryReferences.CreateRandomInstance(
-							addRandomInstance.Filtering,
-							model,
-							InventoryReferenceContext.Current(model),
-							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
-						);
-						break;
-					default:
-						Debug.LogError("Unrecognized InventoryOperation: " + entry.Operation);
-						done();
-						return;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Called when a inventory reference is created explicitly or randomly.
-		/// </summary>
-		/// <param name="result">Result.</param>
-		/// <param name="total">Total.</param>
-		/// <param name="progress">Progress.</param>
-		/// <param name="done">Done.</param>
-		void OnInventoryLogCreateInstance(InventoryReferenceRequest<InventoryModel> result, int total, ref int progress, Action done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Creating instance from reference returned with status: " + result.Status + " and error:\n" + result.Error);
-				Debug.LogWarning("Continuing after this failure may result in unpredictable behaviour.");
-			}
-			else
-			{
-				model.Ship.Value.Inventory.Add(result.Instance);
-			}
-
-			OnInventoryLogDone(total, ref progress, done);
-		}
-
-		void OnInventoryLogDone(int total, ref int progress, Action done)
-		{
-			progress++;
-			if (total == progress) done();
-		}
-		*/
 
 		void OnSwitchLog(SwitchEncounterLogModel logModel, Action<string> done)
 		{

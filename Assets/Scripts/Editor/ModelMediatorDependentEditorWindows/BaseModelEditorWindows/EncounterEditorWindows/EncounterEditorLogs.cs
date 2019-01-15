@@ -154,8 +154,6 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<TextEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.KeyValue:
 					return NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
-				case EncounterLogTypes.Inventory:
-					return NewEncounterLog<InventoryEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Switch:
 					return NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Button:
@@ -280,9 +278,6 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel);
 					break;
-				case EncounterLogTypes.Inventory:
-					//OnInventoryLog(infoModel, model as InventoryEncounterLogModel);
-					throw new NotImplementedException("Inventory log not implimented yet");
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(infoModel, model as SwitchEncounterLogModel);
 					break;
@@ -465,141 +460,6 @@ namespace LunraGames.SubLight
 					break;
 			}
 		}
-		#endregion
-
-		#region Inventory Logs
-		/*
-		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model)
-		{
-			var selection = InventoryOperations.Unknown;
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("Append New Inventory Operation: ", GUILayout.ExpandWidth(false));
-				selection = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", selection);
-			}
-			GUILayout.EndHorizontal();
-
-			if (selection != InventoryOperations.Unknown) OnInventoryLogSpawn(infoModel, model, selection);
-
-			var deleted = string.Empty;
-			var isAlternate = false;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(16f);
-				GUILayout.BeginVertical();
-				{
-					foreach (var operation in model.Operations.Value)
-					{
-						isAlternate = !isAlternate;
-
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
-							if (OnInventoryLogHeader(infoModel, model, operation)) deleted = operation.OperationId.Value;
-							switch (operation.Operation)
-							{
-								case InventoryOperations.AddResources:
-									OnInventoryLogAddResource(infoModel, model, operation as AddResourceOperationModel);
-									break;
-								case InventoryOperations.AddInstance:
-									OnInventoryLogAddInstance(infoModel, model, operation as AddInstanceOperationModel);
-									break;
-								case InventoryOperations.AddRandomInstance:
-									OnInventoryLogAddRandomInstance(infoModel, model, operation as AddRandomInstanceOperationModel);
-									break;
-								default:
-									Debug.LogError("Unrecognized InventoryOperation: " + operation.Operation);
-									break;
-							}
-						}
-						EditorGUILayoutExtensions.EndVertical();
-					}
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-
-			if (!string.IsNullOrEmpty(deleted))
-			{
-				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
-			}
-
-			OnLinearLog(infoModel, model);
-		}
-
-		bool OnInventoryLogHeader(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			InventoryOperationModel operation
-		)
-		{
-			var deleted = false;
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label(operation.Operation.ToString(), EditorStyles.boldLabel);
-				deleted = EditorGUILayoutExtensions.XButton();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
-		}
-
-		void OnInventoryLogAddResource(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			AddResourceOperationModel operation
-		)
-		{
-			EditorGUILayoutResource.Values(operation.Value);
-		}
-		
-		void OnInventoryLogAddInstance(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			AddInstanceOperationModel operation
-		)
-		{
-			operation.InventoryId.Value = EditorGUILayout.TextField("Inventory Id", operation.InventoryId);
-		}
-
-		void OnInventoryLogAddRandomInstance(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			AddRandomInstanceOperationModel operation
-		)
-		{
-			EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "Constraints for the selected inventory reference."), operation.Filtering);
-		}
-
-		void OnInventoryLogSpawn(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			InventoryOperations operation
-		)
-		{
-			var guid = Guid.NewGuid().ToString();
-			switch (operation)
-			{
-				case InventoryOperations.AddResources:
-					var addResource = new AddResourceOperationModel();
-					addResource.OperationId.Value = guid;
-					model.Operations.Value = model.Operations.Value.Append(addResource).ToArray();
-					break;
-				case InventoryOperations.AddInstance:
-					var addInstance = new AddInstanceOperationModel();
-					addInstance.OperationId.Value = guid;
-					model.Operations.Value = model.Operations.Value.Append(addInstance).ToArray();
-					break;
-				case InventoryOperations.AddRandomInstance:
-					var addRandomInstance = new AddRandomInstanceOperationModel();
-					addRandomInstance.OperationId.Value = guid;
-					model.Operations.Value = model.Operations.Value.Append(addRandomInstance).ToArray();
-					break;
-				default:
-					Debug.LogError("Unrecognized InventoryOperation: " + operation);
-					break;
-			}
-		}
-		*/
 		#endregion
 
 		#region Switch Logs

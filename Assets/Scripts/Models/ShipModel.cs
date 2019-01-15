@@ -16,9 +16,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore] ListenerProperty<TransitVelocity> velocityListener;
 		[JsonIgnore] public readonly ReadonlyProperty<TransitVelocity> Velocity;
 
-		[JsonProperty] InventoryListModel inventory = new InventoryListModel();
-		[JsonIgnore] public InventoryListModel Inventory { get { return inventory; } }
-		
 		[JsonProperty] int systemIndex;
 		readonly ListenerProperty<int> systemIndexListener;
 		[JsonIgnore] public readonly ReadonlyProperty<int> SystemIndex;

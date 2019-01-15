@@ -98,11 +98,6 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<KeyValueRequest> KeyValueRequest = ActionExtensions.GetEmpty<KeyValueRequest>();
 		/// <summary>
-		/// Called when the inventory should be cleared of unusable items and
-		/// resources.
-		/// </summary>
-		public Action<ClearInventoryRequest> ClearInventoryRequest = ActionExtensions.GetEmpty<ClearInventoryRequest>();
-		/// <summary>
 		/// Called when requesting, updating, or completing an encounter.
 		/// </summary>
 		public Action<EncounterRequest> EncounterRequest = ActionExtensions.GetEmpty<EncounterRequest>();
