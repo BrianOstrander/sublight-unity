@@ -170,12 +170,6 @@ namespace LunraGames.SubLight
 		#region Utility
 		public void AssignBestEncounter(Action<AssignBestEncounter> done, GameModel model, SystemModel system)
 		{
-			// TODO: Check if old encounters are still valid here?
-			if (system.HasEncounter)
-			{
-				OnAssignBestEncounterResult(done, GetEncounter(system.EncounterId), system);
-				return;
-			}
 			// Required checks
 			var remaining = encounters.Where(
 				e =>
@@ -272,7 +266,6 @@ namespace LunraGames.SubLight
 			}
 
 			model.EncounterState.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
-			system.EncounterId.Value = chosen.EncounterId;
 
 			var interaction = GetEncounterInteraction(chosen.EncounterId);
 			interaction.TimesSeen.Value++;
@@ -283,15 +276,6 @@ namespace LunraGames.SubLight
 
 		void OnFilterEncountersDone(Action<AssignBestEncounter> done, EncounterInfoModel encounter, SystemModel system)
 		{
-			system.EncounterId.Value = encounter.EncounterId.Value;
-
-			if (encounter.AssignedToBody.Value)
-			{
-				var bodies = system.Bodies.Value;
-				var assignedBody = bodies.OrderBy(b => b.EncounterWeight.Value).First();
-				system.EncounterBodyId.Value = assignedBody.BodyId.Value;
-			}
-
 			OnAssignBestEncounterResult(done, encounter, system);
 		}
 
@@ -299,10 +283,10 @@ namespace LunraGames.SubLight
 		{
 			if (encounter == null)
 			{
-				done(SubLight.AssignBestEncounter.NoEncounterResult(system));
+				done(SubLight.AssignBestEncounter.NoEncounterResult());
 				return;
 			}
-			done(SubLight.AssignBestEncounter.EncounterResult(system, encounter, system.BodyWithEncounter));
+			done(SubLight.AssignBestEncounter.EncounterResult(encounter));
 		}
 
 		void OnSaveRequest(SaveRequest request)

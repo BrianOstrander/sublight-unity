@@ -20,10 +20,6 @@ namespace LunraGames.SubLight
 
 		GameModel model;
 		EncounterInfoModel encounter;
-		SystemModel system;
-#pragma warning disable CS0414 // Field is assigned but its value is never used
-		BodyModel body;
-#pragma warning restore CS0414 // Field is assigned but its value is never used
 
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
@@ -67,9 +63,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Request:
 					OnBegin(
 						request.GameModel,
-						request.EncounterId,
-						request.SectorPosition,
-						request.SystemIndex
+						request.Encounter
 					);
 					break;
 				case EncounterRequest.States.Next:
@@ -81,7 +75,6 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Complete:
 					encounterService.GetEncounterInteraction(encounter.EncounterId).TimesCompleted.Value++;
 					model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
-					var toFocus = system.Position.Value;
 
 					model.EncounterState.State.Value = EncounterStateModel.States.Ending;
 
@@ -148,9 +141,7 @@ namespace LunraGames.SubLight
 
 		void OnBegin(
 			GameModel model,
-			string encounterId,
-			UniversePosition sectorPosition,
-			int systemIndex
+			EncounterInfoModel encounter
 		)
 		{
 			if (model.EncounterState.State.Value != EncounterStateModel.States.Complete)
@@ -161,10 +152,8 @@ namespace LunraGames.SubLight
 			model.EncounterState.State.Value = EncounterStateModel.States.Processing;
 
 			this.model = model;
+			this.encounter = encounter;
 
-			encounter = encounterService.GetEncounter(encounterId);
-			system = universeService.GetSystem(model.Galaxy, model.Universe, sectorPosition, systemIndex);
-			body = system.BodyWithEncounter;
 			model.EncounterState.RegisterKeyValueListener(keyValueService);
 
 			callbacks.SaveRequest(SaveRequest.Request(OnBeginSaved));
@@ -189,8 +178,6 @@ namespace LunraGames.SubLight
 
 			model = null;
 			encounter = null;
-			system = null;
-			body = null;
 
 			nextLog = null;
 			nextLogDelay = null;

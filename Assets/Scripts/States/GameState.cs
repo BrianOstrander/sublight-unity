@@ -436,14 +436,14 @@ namespace LunraGames.SubLight
 
 		void OnTransitComplete()
 		{
-			var specifiedEncounter = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
-			if (string.IsNullOrEmpty(specifiedEncounter)) return;
+			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
+			if (string.IsNullOrEmpty(encounterId)) return;
 
-			var encounter = App.Encounters.GetEncounter(specifiedEncounter);
+			var encounter = App.Encounters.GetEncounter(encounterId);
 
 			if (encounter == null)
 			{
-				Debug.LogError("Unable to find specified encounter: " + specifiedEncounter);
+				Debug.LogError("Unable to find specified encounter: " + encounterId);
 				return;
 			}
 
@@ -453,9 +453,7 @@ namespace LunraGames.SubLight
 					App.Callbacks.EncounterRequest(
 						EncounterRequest.Request(
 							Payload.Game,
-							specifiedEncounter,
-							Payload.Game.Ship.Value.CurrentSystem.Value.Position.Value,
-							Payload.Game.Ship.Value.CurrentSystem.Value.Index.Value
+							encounter
 						)
 					);
 					Debug.Log("actually hook up an encounter presenter to listen to this request...");
