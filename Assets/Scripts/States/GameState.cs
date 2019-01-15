@@ -167,6 +167,8 @@ namespace LunraGames.SubLight
 		void InitializeCallbacks(Action done)
 		{
 			App.Callbacks.DialogRequest += OnDialogRequest;
+			App.Callbacks.EncounterRequest += OnEncounterRequest;
+
 			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
@@ -236,6 +238,8 @@ namespace LunraGames.SubLight
 		protected override void End()
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
+			App.Callbacks.EncounterRequest -= OnEncounterRequest;
+
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
 
@@ -489,6 +493,16 @@ namespace LunraGames.SubLight
 			);
 			Debug.Log("actually hook up an encounter presenter to listen to this request...");
 		}
+
+		void OnEncounterRequest(EncounterRequest request)
+		{
+			switch (request.State)
+			{
+				case EncounterRequest.States.Handle:
+					break;
+			}
+		}
+
 		#endregion
 	}
 }
