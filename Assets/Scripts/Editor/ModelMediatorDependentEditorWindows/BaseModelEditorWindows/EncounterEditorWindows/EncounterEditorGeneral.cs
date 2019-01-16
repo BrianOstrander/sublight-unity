@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 	{
 		void GeneralConstruct()
 		{
-			var currPrefix = KeyPrefix + "General";
+			//var currPrefix = KeyPrefix + "General";
 
 			RegisterToolbar("General", GeneralToolbar);
 		}

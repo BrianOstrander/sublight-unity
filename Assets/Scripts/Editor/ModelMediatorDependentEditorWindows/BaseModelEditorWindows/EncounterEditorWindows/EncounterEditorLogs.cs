@@ -641,20 +641,46 @@ namespace LunraGames.SubLight
 		)
 		{
 			var entry = edge.Entry;
-			entry.EncounterEvent.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Event"), "- Select An Event -", entry.EncounterEvent.Value);
+
+			GUILayout.BeginHorizontal();
+			{
+				entry.EncounterEvent.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Event"), "- Select An Event -", entry.EncounterEvent.Value);
+				EditorGUILayoutExtensions.PushColor(Color.red);
+				if (GUILayout.Button("Clear"))
+				{
+					entry.KeyValues.Clear();
+					Debug.Log("Event Key Values Cleared");
+				}
+				EditorGUILayoutExtensions.PopColor();
+			}
+			GUILayout.EndHorizontal();
 
 			switch (entry.EncounterEvent.Value)
 			{
-				case EncounterEvents.Unknown:
+				case EncounterEvents.Types.Unknown:
 					EditorGUILayout.HelpBox("No event type has been specified.", MessageType.Error);
 					break;
-				case EncounterEvents.Custom:
+				case EncounterEvents.Types.Custom:
 					EditorGUILayout.HelpBox("Editing custom events is not supported yet.", MessageType.Warning);
 					break;
-				case EncounterEvents.ToolbarSelection:
-					EditorGUILayout.HelpBox("TODOLOLWTF.", MessageType.Warning);
+				case EncounterEvents.Types.ToolbarSelection:
+					OnEncounterEventLogEdgeToolbarSelection(entry);
 					break;
 			}
+		}
+
+		void OnEncounterEventLogEdgeToolbarSelection(
+			EncounterEventEntryModel entry
+		)
+		{
+			entry.KeyValues.SetEnum(
+				EncounterEvents.ToolbarSelection.IntegerKeys.Selection,
+				EditorGUILayoutExtensions.HelpfulEnumPopup(
+					new GUIContent("Selection"),
+					"- Select A Toolbar -",
+					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.IntegerKeys.Selection)
+				)
+			);
 		}
 		#endregion
 
