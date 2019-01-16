@@ -468,7 +468,9 @@ namespace LunraGames.SubLight
 						onDraw = toolbars.First().Callback;
 						break;
 					default:
+						var modelSelectedToolbarPrevious = modelSelectedToolbar.Value;
 						modelSelectedToolbar.Value = GUILayout.Toolbar(Mathf.Min(modelSelectedToolbar, toolbars.Count - 1), toolbars.Select(t => t.Name).ToArray());
+						if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) GUIUtility.keyboardControl = 0;
 						onDraw = toolbars[modelSelectedToolbar].Callback;
 						break;
 				}

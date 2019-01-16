@@ -8,11 +8,11 @@ namespace LunraGames.SubLight
 		{
 			Unknown = 0,
 			Custom = 10,
-			DebugLog = 20,
+			Debug = 20,
 			ToolbarSelection = 30
 		}
 
-		public static class DebugLog
+		public static class Debug
 		{
 			public enum Severities
 			{

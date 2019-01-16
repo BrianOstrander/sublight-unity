@@ -42,7 +42,7 @@ namespace LunraGames.SubLight
 
 						switch (entry.EncounterEvent.Value)
 						{
-							case EncounterEvents.Types.DebugLog:
+							case EncounterEvents.Types.Debug:
 								OnHandleEventDebugLog(payload, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.ToolbarSelection:
@@ -69,22 +69,22 @@ namespace LunraGames.SubLight
 				Action done
 			)
 			{
-				var severity = entry.KeyValues.GetEnum(EncounterEvents.DebugLog.EnumKeys.Severity, EncounterEvents.DebugLog.Severities.Error);
-				var message = entry.KeyValues.GetString(EncounterEvents.DebugLog.StringKeys.Message);
+				var severity = entry.KeyValues.GetEnum(EncounterEvents.Debug.EnumKeys.Severity, EncounterEvents.Debug.Severities.Error);
+				var message = entry.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message);
 				if (string.IsNullOrEmpty(message)) message = "< no message was provided >";
 
 				switch (severity)
 				{
-					case EncounterEvents.DebugLog.Severities.Normal:
+					case EncounterEvents.Debug.Severities.Normal:
 						Debug.Log(message);
 						break;
-					case EncounterEvents.DebugLog.Severities.Warning:
+					case EncounterEvents.Debug.Severities.Warning:
 						Debug.LogWarning(message);
 						break;
-					case EncounterEvents.DebugLog.Severities.Error:
+					case EncounterEvents.Debug.Severities.Error:
 						Debug.LogError(message);
 						break;
-					case EncounterEvents.DebugLog.Severities.Break:
+					case EncounterEvents.Debug.Severities.Break:
 						if (Application.isEditor)
 						{
 							Debug.LogWarning("Encounter Break: " + message);

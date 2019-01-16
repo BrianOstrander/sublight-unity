@@ -503,13 +503,6 @@ namespace LunraGames.SubLight
 						Payload.Game,
 						encounter
 					);
-					//App.Callbacks.EncounterRequest(
-					//	EncounterRequest.Request(
-					//		Payload.Game,
-					//		encounter
-					//	)
-					//);
-					//Debug.Log("actually hook up an encounter presenter to listen to this request...");
 					break;
 				default:
 					Debug.LogError("Unrecognized encounter trigger: " + encounter.Trigger.Value);
