@@ -513,8 +513,6 @@ namespace LunraGames.SubLight
 			switch (encounter.Trigger.Value)
 			{
 				case EncounterTriggers.NavigationSelect:
-					Debug.Log("todo nav select");
-					return true;
 				case EncounterTriggers.TransitComplete:
 					App.ValueFilter.Filter(
 						valid => OnTransitCompleteFiltered(valid, encounter),
@@ -609,7 +607,7 @@ namespace LunraGames.SubLight
 		{
 			if (block.System == null || block.State != CelestialSystemStateBlock.States.Selected) return;
 
-			Debug.Log("selected " + block.System.Name.Value);
+			OnCheckSpecifiedEncounter(block.System.SpecifiedEncounterId.Value, EncounterTriggers.NavigationSelect);
 		}
 		#endregion
 	}

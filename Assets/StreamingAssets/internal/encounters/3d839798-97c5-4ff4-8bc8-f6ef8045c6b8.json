@@ -4,9 +4,16 @@
   "name": "Navigation Select Test",
   "trigger": "NavigationSelect",
   "filtering": {
+    "showValues": true,
     "booleanKeyValues": [],
     "stringKeyValues": [],
-    "encounterInteractions": []
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "8b8c95b4-4522-42fe-aa64-1881539c20c4",
+        "group": "All"
+      }
+    ]
   },
   "logs": {
     "textLogs": [],

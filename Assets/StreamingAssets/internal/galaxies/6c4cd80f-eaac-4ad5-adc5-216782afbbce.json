@@ -76,9 +76,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -112,9 +110,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -148,9 +144,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -197,9 +191,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -233,9 +225,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -269,9 +259,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -305,9 +293,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -353,9 +339,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     },
     {
@@ -401,9 +385,7 @@
       "filtering": {
         "booleanKeyValues": [],
         "stringKeyValues": [],
-        "encounterInteractions": [],
-        "inventoryIds": [],
-        "inventoryTags": []
+        "encounterInteractions": []
       }
     }
   ],
@@ -430,7 +412,6 @@
           "secondaryClassification": "Yellow Dwarf",
           "iconColor": {"r":1.0,"g":0.85,"b":0.4705882,"a":1.0},
           "iconScale": 0.475,
-          "encounterBodyId": -1,
           "bodies": [],
           "specifiedEncounterId": "c38eb01b-32f5-4c53-b635-4f4fae54c645"
         },
@@ -447,7 +428,6 @@
           "secondaryClassification": "Yellow Dwarf",
           "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
           "iconScale": 0.236,
-          "encounterBodyId": -1,
           "bodies": []
         },
         {
@@ -465,7 +445,6 @@
           "secondaryClassification": "Red Dwarf",
           "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
           "iconScale": 0.238,
-          "encounterBodyId": -1,
           "bodies": [],
           "specifiedEncounterId": "3f3d657b-af0b-486d-8e33-f22d5c42e367"
         },
@@ -482,9 +461,8 @@
           "secondaryClassification": "Dwarf",
           "iconColor": {"r":0.470000029,"g":0.743833363,"b":1.0,"a":1.0},
           "iconScale": 0.797,
-          "encounterBodyId": -1,
           "bodies": [],
-          "specifiedEncounterId": "ebf67d16-e035-4e76-a606-42823115abea"
+          "specifiedEncounterId": ""
         },
         {
           "index": 4,
@@ -499,7 +477,6 @@
           "secondaryClassification": "Red Dwarf",
           "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
           "iconScale": 0.079,
-          "encounterBodyId": -1,
           "bodies": []
         }
       ]
@@ -526,7 +503,6 @@
           "secondaryClassification": "Super Massive Black Hole",
           "iconColor": {"r":1.0,"g":1.0,"b":1.0,"a":1.0},
           "iconScale": 1.0,
-          "encounterBodyId": -1,
           "bodies": []
         }
       ]
