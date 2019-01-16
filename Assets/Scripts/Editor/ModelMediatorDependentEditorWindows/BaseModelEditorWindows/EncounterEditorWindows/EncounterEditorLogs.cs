@@ -673,7 +673,7 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.Custom:
 					EditorGUILayout.HelpBox("Editing custom events is not supported yet.", MessageType.Warning);
 					break;
-				case EncounterEvents.Types.DebugLog:
+				case EncounterEvents.Types.Debug:
 					OnEncounterEventLogEdgeDebugLog(entry);
 					break;
 				case EncounterEvents.Types.ToolbarSelection:
@@ -699,16 +699,16 @@ namespace LunraGames.SubLight
 		)
 		{
 			entry.KeyValues.SetEnum(
-				EncounterEvents.DebugLog.EnumKeys.Severity,
+				EncounterEvents.Debug.EnumKeys.Severity,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Severity"),
 					"- Select A Severity -",
-					entry.KeyValues.GetEnum<EncounterEvents.DebugLog.Severities>(EncounterEvents.DebugLog.EnumKeys.Severity)
+					entry.KeyValues.GetEnum<EncounterEvents.Debug.Severities>(EncounterEvents.Debug.EnumKeys.Severity)
 				)
 			);
 			entry.KeyValues.SetString(
-				EncounterEvents.DebugLog.StringKeys.Message,
-				EditorGUILayout.TextField(entry.KeyValues.GetString(EncounterEvents.DebugLog.StringKeys.Message))
+				EncounterEvents.Debug.StringKeys.Message,
+				EditorGUILayout.TextField(entry.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message))
 			);
 		}
 

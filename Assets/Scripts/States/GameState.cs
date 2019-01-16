@@ -176,6 +176,8 @@ namespace LunraGames.SubLight
 			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
 			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
 
+			Payload.Game.CelestialSystemState.Changed += OnCelestialSystemState;
+
 			done();
 		}
 
@@ -247,6 +249,8 @@ namespace LunraGames.SubLight
 
 			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
 			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
+
+			Payload.Game.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
 			{
@@ -484,18 +488,31 @@ namespace LunraGames.SubLight
 				return;
 			}
 
+			OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete);
+		}
+
+		bool OnCheckSpecifiedEncounter(string encounterId, EncounterTriggers trigger)
+		{
+			if (string.IsNullOrEmpty(encounterId)) return false;
+			if (trigger == EncounterTriggers.Unknown)
+			{
+				Debug.LogError("Specifying a trigger of type " + EncounterTriggers.Unknown + " is not supported");
+				return false;
+			}
+
 			var encounter = App.Encounters.GetEncounter(encounterId);
 
 			if (encounter == null)
 			{
 				Debug.LogError("Unable to find specified encounter: " + encounterId);
-				return;
+				return false;
 			}
+
+			if (encounter.Trigger.Value != trigger) return false;
 
 			switch (encounter.Trigger.Value)
 			{
 				case EncounterTriggers.NavigationSelect:
-					break;
 				case EncounterTriggers.TransitComplete:
 					App.ValueFilter.Filter(
 						valid => OnTransitCompleteFiltered(valid, encounter),
@@ -503,17 +520,10 @@ namespace LunraGames.SubLight
 						Payload.Game,
 						encounter
 					);
-					//App.Callbacks.EncounterRequest(
-					//	EncounterRequest.Request(
-					//		Payload.Game,
-					//		encounter
-					//	)
-					//);
-					//Debug.Log("actually hook up an encounter presenter to listen to this request...");
-					break;
+					return true;
 				default:
 					Debug.LogError("Unrecognized encounter trigger: " + encounter.Trigger.Value);
-					break;
+					return false;
 			}
 		}
 
@@ -591,6 +601,13 @@ namespace LunraGames.SubLight
 			}
 
 			App.Callbacks.SaveRequest(SaveRequest.Success(request));
+		}
+
+		void OnCelestialSystemState(CelestialSystemStateBlock block)
+		{
+			if (block.System == null || block.State != CelestialSystemStateBlock.States.Selected) return;
+
+			OnCheckSpecifiedEncounter(block.System.SpecifiedEncounterId.Value, EncounterTriggers.NavigationSelect);
 		}
 		#endregion
 	}

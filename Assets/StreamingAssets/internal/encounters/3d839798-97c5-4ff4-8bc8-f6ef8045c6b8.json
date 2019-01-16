@@ -4,26 +4,54 @@
   "name": "Navigation Select Test",
   "trigger": "NavigationSelect",
   "filtering": {
+    "showValues": true,
     "booleanKeyValues": [],
     "stringKeyValues": [],
-    "encounterInteractions": [],
-    "inventoryIds": [],
-    "inventoryTags": []
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "8b8c95b4-4522-42fe-aa64-1881539c20c4",
+        "group": "All"
+      }
+    ]
   },
   "logs": {
-    "textLogs": [
-      {
-        "message": "You selected me in the nav view!",
-        "beginning": true,
-        "ending": true,
-        "logId": "8a5c8a61-1791-4cdd-85b5-137a2109ed90"
-      }
-    ],
+    "textLogs": [],
     "keyValueLogs": [],
-    "inventoryLogs": [],
     "switchLogs": [],
     "buttonLogs": [],
-    "encyclopediaLogs": []
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "eventId": "e8b11b4d-f3b7-4ddb-bffc-a4b78b78b875",
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "You clicked on me!!!"
+                },
+                "enums": {
+                  "severity": 20
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              }
+            }
+          }
+        ],
+        "index": 1,
+        "beginning": true,
+        "ending": true,
+        "logId": "1d056b7b-80ee-4351-a8ff-133c7fd01a1f"
+      }
+    ]
   },
   "version": 7,
   "meta": "Navigation Select Test",
