@@ -27,9 +27,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string secondaryClassification;
 		[JsonProperty] Color iconColor;
 		[JsonProperty] float iconScale;
-		[JsonProperty] string encounterId;
-		[JsonProperty] int encounterBodyId = -1;
 		[JsonProperty] BodyModel[] bodies = new BodyModel[0];
+
+		[JsonProperty] string specifiedEncounterId;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Index;
@@ -56,11 +56,10 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> IconScale;
 		[JsonIgnore]
-		public readonly ListenerProperty<string> EncounterId; // TODO: probably delete this?
-		[JsonIgnore]
-		public readonly ListenerProperty<int> EncounterBodyId; // TODO: probably delete this?
-		[JsonIgnore]
 		public readonly ListenerProperty<BodyModel[]> Bodies;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<string> SpecifiedEncounterId;
 
 		[JsonIgnore]
 		public bool IsGenerated { get; set; }
@@ -79,26 +78,13 @@ namespace LunraGames.SubLight.Models
 			SecondaryClassification = new ListenerProperty<string>(value => secondaryClassification = value, () => secondaryClassification);
 			IconColor = new ListenerProperty<Color>(value => iconColor = value, () => iconColor);
 			IconScale = new ListenerProperty<float>(value => iconScale = value, () => iconScale);
-			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
-			EncounterBodyId = new ListenerProperty<int>(value => encounterBodyId = value, () => encounterBodyId);
 			Bodies = new ListenerProperty<BodyModel[]>(value => bodies = value, () => bodies);
+
+			SpecifiedEncounterId = new ListenerProperty<string>(value => specifiedEncounterId = value, () => specifiedEncounterId);
 		}
 
 		#region Utility
-		[JsonIgnore]
-		public bool HasEncounter { get { return !string.IsNullOrEmpty(EncounterId); } }
-		[JsonIgnore]
-		public bool HasBodyEncounter { get { return HasEncounter && EncounterBodyId.Value != -1; } }
-		[JsonIgnore]
-		public BodyModel BodyWithEncounter
-		{
-			get
-			{
-				if (!HasBodyEncounter) return null;
-				// This should never return null...
-				return Bodies.Value.FirstOrDefault(b => b.BodyId.Value == EncounterBodyId.Value);
-			}
-		}
+
 		#endregion
 	}
 }

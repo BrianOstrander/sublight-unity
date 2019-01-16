@@ -66,7 +66,7 @@ namespace LunraGames.SubLight
 			else camerasPerLayer[layer] = 0;
 		}
 
-		public void SetOnTransitionFocusRequestLast()
+		void SetOnTransitionFocusRequestLast()
 		{
 			// This is kind of hacky...
 			callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;

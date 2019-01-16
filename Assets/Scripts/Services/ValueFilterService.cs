@@ -19,12 +19,12 @@ namespace LunraGames.SubLight
 			this.callbacks = callbacks;
 		}
 
-		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model)
-		{
-			Filter(done, filter, model, null);
-		}
-
-		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model, InventoryModuleModel inventoryModel)
+		public void Filter(
+			Action<bool> done,
+			ValueFilterModel filter,
+			GameModel model,
+			EncounterInfoModel encounterModel
+		)
 		{
 			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();
 
@@ -38,7 +38,15 @@ namespace LunraGames.SubLight
 			bool? allResult = null;
 			bool? noneResult = null;
 
-			OnFilter(done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
+			OnFilter(
+				done,
+				anyResult,
+				allResult,
+				noneResult,
+				remaining,
+				model,
+				encounterModel
+			);
 		}
 
 		void OnFilter(
@@ -48,7 +56,7 @@ namespace LunraGames.SubLight
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
 			GameModel model,
-			InventoryModuleModel inventoryModel
+			EncounterInfoModel encounterModel
 		)
 		{
 			if (remaining.Count == 0)
@@ -65,7 +73,18 @@ namespace LunraGames.SubLight
 
 			Action<ValueFilterGroups, bool> filterDone = (group, result) =>
 			{
-				OnFilterResult(group, result, current.FilterNegate, done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
+				OnFilterResult(
+					group,
+					result,
+					current.FilterNegate,
+					done,
+					anyResult,
+					allResult,
+					noneResult,
+					remaining,
+					model,
+					encounterModel
+				);
 			};
 
 			switch (current.FilterType)
@@ -77,17 +96,11 @@ namespace LunraGames.SubLight
 					OnHandle(current as StringKeyValueFilterEntryModel, filterDone);
 					break;
 				case ValueFilterTypes.EncounterInteraction:
-					OnHandle(current as EncounterInteractionFilterEntryModel, model, filterDone);
-					break;
-				case ValueFilterTypes.InventoryId:
-					OnHandle(current as IdInventoryFilterEntryModel, model, inventoryModel, filterDone);
-					break;
-				case ValueFilterTypes.InventoryTag:
-					OnHandle(current as TagInventoryFilterEntryModel, model, inventoryModel, filterDone);
+					OnHandle(current as EncounterInteractionFilterEntryModel, model, encounterModel, filterDone);
 					break;
 				default:
 					Debug.LogError("Unrecognized FilterType: " + current.FilterType + ", skipping...");
-					OnFilter(done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
+					OnFilter(done, anyResult, allResult, noneResult, remaining, model, encounterModel);
 					break;
 			}
 		}
@@ -102,7 +115,7 @@ namespace LunraGames.SubLight
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
 			GameModel model,
-			InventoryModuleModel inventoryModel
+			EncounterInfoModel encounterModel
 		)
 		{
 			result = negated ? !result : result;
@@ -122,7 +135,15 @@ namespace LunraGames.SubLight
 					Debug.LogError("Unrecognized group: " + group + ", skipping...");
 					break;
 			}
-			OnFilter(done, anyResult, allResult, noneResult, remaining, model, inventoryModel);
+			OnFilter(
+				done,
+				anyResult,
+				allResult,
+				noneResult,
+				remaining,
+				model,
+				encounterModel
+			);
 		}
 
 		#region Handling
@@ -169,10 +190,16 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		void OnHandle(EncounterInteractionFilterEntryModel filter, GameModel model, Action<ValueFilterGroups, bool> done)
+		void OnHandle(
+			EncounterInteractionFilterEntryModel filter,
+			GameModel model,
+			EncounterInfoModel encounterModel,
+			Action<ValueFilterGroups, bool> done
+		)
 		{
+			var encounterId = string.IsNullOrEmpty(filter.FilterValue.Value) ? (encounterModel == null ? null : encounterModel.EncounterId.Value) : filter.FilterValue.Value;
 			var operation = filter.Operation.Value;
-			var encounterInteraction = model.EncounterState.GetEncounterStatus(filter.FilterValue.Value);
+			var encounterInteraction = model.EncounterState.GetEncounterStatus(encounterId);
 			var result = false;
 
 			if (operation == EncounterInteractionFilterOperations.NotCompleted)
@@ -197,67 +224,6 @@ namespace LunraGames.SubLight
 						Debug.LogError("Unrecognized EncounterInteraction: " + encounterInteraction.State);
 						break;
 				}
-			}
-
-			done(filter.Group.Value, result);
-		}
-
-		void OnHandle(
-			IdInventoryFilterEntryModel filter,
-			GameModel model,
-			InventoryModuleModel inventoryModel,
-			Action<ValueFilterGroups, bool> done)
-		{
-			var result = false;
-
-			switch (filter.InventoryFilterType.Value)
-			{
-				case InventoryFilterTypes.Inventory:
-					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
-					//result = model.Ship.Value.Inventory.HasInventory(filter.FilterValue.Value);
-					throw new NotImplementedException("Inventory filtering not implimented yet");
-				case InventoryFilterTypes.References:
-					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");
-					else result = inventoryModel.InventoryId.Value == filter.FilterValue.Value;
-					break;
-				default:
-					Debug.LogError("Unrecognized InventoryFilterType: " + filter.InventoryFilterType.Value);
-					break;
-			}
-
-			done(filter.Group.Value, result);
-		}
-
-		void OnHandle(
-			TagInventoryFilterEntryModel filter,
-			GameModel model,
-			InventoryModuleModel inventoryModel,
-			Action<ValueFilterGroups, bool> done)
-		{
-			var result = false;
-			
-			var smoothed = filter.FilterValue.Value;
-			if (string.IsNullOrEmpty(smoothed))
-			{
-				Debug.LogError("FilterValue was null or empty.");
-				done(filter.Group.Value, result);
-				return;
-			}
-			smoothed = smoothed.ToLower();
-
-			switch (filter.InventoryFilterType.Value)
-			{
-				case InventoryFilterTypes.Inventory:
-					if (inventoryModel != null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but an inventoryModel was provided.");
-					//result = model.Ship.Value.Inventory.HasInventory(i => i.Tags.Value.Any(t => t.ToLower() == smoothed));
-					throw new NotImplementedException("Inventory filtering not implimented yet");
-				case InventoryFilterTypes.References:
-					if (inventoryModel == null) Debug.LogError("InventoryFilterType is " + filter.InventoryFilterType.Value + " but no inventoryModel was provided.");
-					else result = inventoryModel.Tags.Value.Any(t => t.ToLower() == smoothed);
-					break;
-				default:
-					Debug.LogError("Unrecognized InventoryFilterType: " + filter.InventoryFilterType.Value);
-					break;
 			}
 
 			done(filter.Group.Value, result);

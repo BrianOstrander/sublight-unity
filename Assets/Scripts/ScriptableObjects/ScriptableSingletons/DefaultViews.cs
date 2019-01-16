@@ -47,7 +47,20 @@ namespace LunraGames.SubLight
 		public bool Contains(Object prefab)
 		{
 			prefabs = prefabs ?? new List<Object>();
-			return prefabs.FirstOrDefault(g => g != null && g.GetInstanceID() == prefab.GetInstanceID()) != null;
+			//return prefabs.FirstOrDefault(g => g != null && g.GetInstanceID() == prefab.GetInstanceID()) != null;
+			return prefabs.FirstOrDefault(p => IsPrefabEqual(p, prefab)) != null;
+		}
+
+		bool IsPrefabEqual(Object prefab0, Object prefab1)
+		{
+			if (prefab0 == null || prefab1 == null) return false;
+			if (prefab0.GetInstanceID() == prefab1.GetInstanceID()) return true;
+
+#if UNITY_EDITOR
+			return UnityEditor.PrefabUtility.GetPrefabInstanceHandle(prefab0) == UnityEditor.PrefabUtility.GetPrefabInstanceHandle(prefab1);
+#else
+			return false;
+#endif
 		}
 
 		void SetConfigDirty()

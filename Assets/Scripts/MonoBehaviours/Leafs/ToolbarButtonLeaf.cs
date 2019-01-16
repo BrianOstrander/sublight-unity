@@ -7,6 +7,8 @@ namespace LunraGames.SubLight.Views
 {
 	public class ToolbarButtonLeaf : MonoBehaviour
 	{
+		public RectTransform LayoutArea;
+
 		public GameObject ButtonLabelArea;
 		public TextMeshProUGUI ButtonLabel;
 		public XButton Button;

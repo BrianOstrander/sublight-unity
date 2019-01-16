@@ -88,6 +88,8 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		Heartbeat heartbeat;
+
 		IState[] stateEntries;
 
 		IState currentState;
@@ -124,7 +126,9 @@ namespace LunraGames.SubLight
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
 
+			this.heartbeat = heartbeat;
 			stateEntries = states;
+
 			heartbeat.Update += Update;
 		}
 
@@ -206,17 +210,12 @@ namespace LunraGames.SubLight
 			return null;
 		}
 
-		public void Push(Action action, bool repeating)
+		public void Push(Action action, bool repeating = false)
 		{
-			Push(action, currentState.HandledState, currentEvent, repeating);
+			OnPush(action, currentState.HandledState, currentEvent, repeating);
 		}
 
-		public void PushBlocking(Action<Action> action)
-		{
-			PushBlocking(action, currentState.HandledState, currentEvent);
-		}
-
-		public void Push(Action action, States state, Events stateEvent, bool repeating)
+		void OnPush(Action action, States state, Events stateEvent, bool repeating)
 		{
 			if (action == null) throw new ArgumentNullException("action");
 			if (state == States.Unknown) throw new ArgumentException("Cannot bind to States.Unknown");
@@ -224,8 +223,23 @@ namespace LunraGames.SubLight
 
 			queued.Add(new NonBlockingEntry(action, state, stateEvent, repeating));
 		}
+		
+		public void PushBlocking(Action<Action> action)
+		{
+			OnPushBlocking(action, currentState.HandledState, currentEvent);
+		}
 
-		public void PushBlocking(Action<Action> action, States state, Events stateEvent)
+		public void PushBlocking(Action action, Func<bool> condition)
+		{
+			Action<Action> waiter = done =>
+			{
+				action();
+				heartbeat.Wait(done, condition);
+			};
+			OnPushBlocking(waiter, currentState.HandledState, currentEvent);
+		}
+
+		void OnPushBlocking(Action<Action> action, States state, Events stateEvent)
 		{
 			if (action == null) throw new ArgumentNullException("action");
 			if (state == States.Unknown) throw new ArgumentException("Cannot bind to States.Unknown");

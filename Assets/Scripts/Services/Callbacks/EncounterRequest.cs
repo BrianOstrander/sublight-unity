@@ -17,9 +17,9 @@ namespace LunraGames.SubLight
 			Complete = 60
 		}
 
-		public static EncounterRequest Request(GameModel gameModel, string encounterId, UniversePosition sectorPosition, int systemIndex)
+		public static EncounterRequest Request(GameModel gameModel, EncounterInfoModel encounter)
 		{
-			return new EncounterRequest(States.Request, gameModel, encounterId, sectorPosition, systemIndex);
+			return new EncounterRequest(States.Request, gameModel, encounter);
 		}
 
 		public static EncounterRequest Handle<T>(T model) where T : IEncounterHandlerModel
@@ -49,9 +49,7 @@ namespace LunraGames.SubLight
 
 		public readonly States State;
 		public readonly GameModel GameModel;
-		public readonly string EncounterId;
-		public readonly UniversePosition SectorPosition;
-		public readonly int SystemIndex;
+		public readonly EncounterInfoModel Encounter;
 		public readonly Type ModelType;
 		public readonly IEncounterHandlerModel Model;
 		public readonly bool NextControl;
@@ -60,9 +58,7 @@ namespace LunraGames.SubLight
 		public EncounterRequest(
 			States state,
 			GameModel gameModel = null,
-			string encounterId = null,
-			UniversePosition sectorPosition = default(UniversePosition),
-			int systemIndex = -1,
+			EncounterInfoModel encounter = null,
 			Type modelType = null,
 			IEncounterHandlerModel model = null,
 			bool next = false,
@@ -71,9 +67,7 @@ namespace LunraGames.SubLight
 		{
 			State = state;
 			GameModel = gameModel;
-			EncounterId = encounterId;
-			SectorPosition = sectorPosition;
-			SystemIndex = systemIndex;
+			Encounter = encounter;
 			ModelType = modelType;
 			Model = model;
 			NextControl = next;

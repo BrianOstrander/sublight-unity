@@ -164,7 +164,6 @@ namespace LunraGames.SubLight
 				Encounters,
 				KeyValues,
 				ValueFilter,
-				Universe,
 				CurrentPreferences
 			);
 

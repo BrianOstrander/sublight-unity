@@ -167,7 +167,10 @@ namespace LunraGames.SubLight
 		void InitializeCallbacks(Action done)
 		{
 			App.Callbacks.DialogRequest += OnDialogRequest;
-			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
+			App.Callbacks.EncounterRequest += OnEncounterRequest;
+			App.Callbacks.SaveRequest += OnSaveRequest;
+
+			Payload.Game.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
@@ -223,6 +226,12 @@ namespace LunraGames.SubLight
 		void OnIdleShowFocusDone()
 		{
 			foreach (var presenter in Payload.ShowOnIdle) presenter.Show();
+			App.Heartbeat.Wait(OnPresentersShown, 0.21f);
+		}
+
+		void OnPresentersShown()
+		{
+			OnTransitComplete();
 		}
 		#endregion
 
@@ -230,7 +239,10 @@ namespace LunraGames.SubLight
 		protected override void End()
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
-			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
+			App.Callbacks.EncounterRequest -= OnEncounterRequest;
+			App.Callbacks.SaveRequest -= OnSaveRequest;
+
+			Payload.Game.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
@@ -261,9 +273,43 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnToolbarSelection(ToolbarSelections selection)
+		void OnToolbarSelectionRequest(ToolbarSelectionRequest request)
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(selection)));
+			if (request.Selection == ToolbarSelections.Unknown)
+			{
+				throw new Exception("Unable to set toolbar to selection: " + request.Selection);
+			}
+			
+			if (request.Selection == Payload.Game.ToolbarSelection.Value)
+			{
+				if (request.Done != null) request.Done();
+				return;
+			}
+
+			if (request.Instant)
+			{
+				App.Callbacks.SetFocusRequest(
+					SetFocusRequest.RequestInstant(
+						Focuses.GetToolbarSelectionFocus(request.Selection),
+						() => OnToolbarSelectionRequestDone(request)
+					)
+				);
+			}
+			else
+			{
+				App.Callbacks.SetFocusRequest(
+					SetFocusRequest.Request(
+						Focuses.GetToolbarSelectionFocus(request.Selection),
+						() => OnToolbarSelectionRequestDone(request)
+					)
+				);
+			}
+		}
+
+		void OnToolbarSelectionRequestDone(ToolbarSelectionRequest request)
+		{
+			Payload.Game.ToolbarSelection.Value = request.Selection;
+			if (request.Done != null) request.Done();
 		}
 
 		void OnCelestialSystemsTransform(UniverseTransform transform)
@@ -426,6 +472,125 @@ namespace LunraGames.SubLight
 				}
 				waypoint.Distance.Value = UniversePosition.Distance(position, waypoint.Location.Value.Position);
 			}
+		}
+
+		void OnTransitComplete()
+		{
+			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
+
+			if (string.IsNullOrEmpty(encounterId))
+			{
+				Debug.Log("Check for non-specified encounters here!");
+				return;
+			}
+
+			var encounter = App.Encounters.GetEncounter(encounterId);
+
+			if (encounter == null)
+			{
+				Debug.LogError("Unable to find specified encounter: " + encounterId);
+				return;
+			}
+
+			switch (encounter.Trigger.Value)
+			{
+				case EncounterTriggers.NavigationSelect:
+					break;
+				case EncounterTriggers.TransitComplete:
+					App.ValueFilter.Filter(
+						valid => OnTransitCompleteFiltered(valid, encounter),
+						encounter.Filtering,
+						Payload.Game,
+						encounter
+					);
+					//App.Callbacks.EncounterRequest(
+					//	EncounterRequest.Request(
+					//		Payload.Game,
+					//		encounter
+					//	)
+					//);
+					//Debug.Log("actually hook up an encounter presenter to listen to this request...");
+					break;
+				default:
+					Debug.LogError("Unrecognized encounter trigger: " + encounter.Trigger.Value);
+					break;
+			}
+		}
+
+		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter)
+		{
+			if (!valid) return;
+
+			App.Callbacks.EncounterRequest(
+				EncounterRequest.Request(
+					Payload.Game,
+					encounter
+				)
+			);
+		}
+
+		void OnEncounterRequest(EncounterRequest request)
+		{
+			switch (request.State)
+			{
+				case EncounterRequest.States.Request:
+					break;
+				case EncounterRequest.States.Handle:
+					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(Payload, handler))) break;
+					Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.ModelType.FullName);
+					break;
+				case EncounterRequest.States.Controls:
+					// I don't think there's anything else I need to do here...
+					if (request.DoneControl)
+					{
+						App.Callbacks.EncounterRequest(EncounterRequest.Done());
+					}
+					else if (request.NextControl)
+					{
+						App.Callbacks.EncounterRequest(EncounterRequest.Next());
+					}
+					else Debug.LogError("Unexpected behaviour: Done and Next are both false");
+					break;
+				case EncounterRequest.States.Next:
+					// I don't think I need to do anything here... maybe cleanup messages and stuff?
+					break;
+				case EncounterRequest.States.Done:
+					// I don't think I need to do anything here...
+					break;
+				case EncounterRequest.States.Complete:
+					// I don't think I need to do anything here...
+					break;
+				default:
+					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);
+					break;
+			}
+		}
+
+		void OnSaveRequest(SaveRequest request)
+		{
+			switch (request.State)
+			{
+				case SaveRequest.States.Request:
+					App.M.Save(Payload.Game, result => OnSaveDone(result, request));
+					break;
+				case SaveRequest.States.Complete:
+					if (request.Done != null) request.Done(request);
+					break;
+				default:
+					Debug.LogError("Unrecognized SaveRequest state " + request.State);
+					break;
+			}
+		}
+
+		void OnSaveDone(SaveLoadRequest<GameModel> result, SaveRequest request)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Save game returned " + result.Status + " with error: " + result.Error);
+				return;
+			}
+
+			App.Callbacks.SaveRequest(SaveRequest.Success(request));
 		}
 		#endregion
 	}

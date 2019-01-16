@@ -154,14 +154,14 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<TextEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.KeyValue:
 					return NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
-				case EncounterLogTypes.Inventory:
-					return NewEncounterLog<InventoryEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Switch:
 					return NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Button:
 					return NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Encyclopedia:
 					return NewEncounterLog<EncyclopediaEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Event:
+					return NewEncounterLog<EncounterEventEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType:" + logType);
 					break;
@@ -280,9 +280,6 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel);
 					break;
-				case EncounterLogTypes.Inventory:
-					//OnInventoryLog(infoModel, model as InventoryEncounterLogModel);
-					throw new NotImplementedException("Inventory log not implimented yet");
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(infoModel, model as SwitchEncounterLogModel);
 					break;
@@ -291,6 +288,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Encyclopedia:
 					OnEncyclopediaLog(infoModel, model as EncyclopediaEncounterLogModel);
+					break;
+				case EncounterLogTypes.Event:
+					OnEncounterEventLog(infoModel, model as EncounterEventEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -467,141 +467,6 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		#region Inventory Logs
-		/*
-		void OnInventoryLog(EncounterInfoModel infoModel, InventoryEncounterLogModel model)
-		{
-			var selection = InventoryOperations.Unknown;
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("Append New Inventory Operation: ", GUILayout.ExpandWidth(false));
-				selection = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", selection);
-			}
-			GUILayout.EndHorizontal();
-
-			if (selection != InventoryOperations.Unknown) OnInventoryLogSpawn(infoModel, model, selection);
-
-			var deleted = string.Empty;
-			var isAlternate = false;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(16f);
-				GUILayout.BeginVertical();
-				{
-					foreach (var operation in model.Operations.Value)
-					{
-						isAlternate = !isAlternate;
-
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
-							if (OnInventoryLogHeader(infoModel, model, operation)) deleted = operation.OperationId.Value;
-							switch (operation.Operation)
-							{
-								case InventoryOperations.AddResources:
-									OnInventoryLogAddResource(infoModel, model, operation as AddResourceOperationModel);
-									break;
-								case InventoryOperations.AddInstance:
-									OnInventoryLogAddInstance(infoModel, model, operation as AddInstanceOperationModel);
-									break;
-								case InventoryOperations.AddRandomInstance:
-									OnInventoryLogAddRandomInstance(infoModel, model, operation as AddRandomInstanceOperationModel);
-									break;
-								default:
-									Debug.LogError("Unrecognized InventoryOperation: " + operation.Operation);
-									break;
-							}
-						}
-						EditorGUILayoutExtensions.EndVertical();
-					}
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-
-			if (!string.IsNullOrEmpty(deleted))
-			{
-				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
-			}
-
-			OnLinearLog(infoModel, model);
-		}
-
-		bool OnInventoryLogHeader(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			InventoryOperationModel operation
-		)
-		{
-			var deleted = false;
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label(operation.Operation.ToString(), EditorStyles.boldLabel);
-				deleted = EditorGUILayoutExtensions.XButton();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
-		}
-
-		void OnInventoryLogAddResource(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			AddResourceOperationModel operation
-		)
-		{
-			EditorGUILayoutResource.Values(operation.Value);
-		}
-		
-		void OnInventoryLogAddInstance(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			AddInstanceOperationModel operation
-		)
-		{
-			operation.InventoryId.Value = EditorGUILayout.TextField("Inventory Id", operation.InventoryId);
-		}
-
-		void OnInventoryLogAddRandomInstance(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			AddRandomInstanceOperationModel operation
-		)
-		{
-			EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "Constraints for the selected inventory reference."), operation.Filtering);
-		}
-
-		void OnInventoryLogSpawn(
-			EncounterInfoModel infoModel,
-			InventoryEncounterLogModel model,
-			InventoryOperations operation
-		)
-		{
-			var guid = Guid.NewGuid().ToString();
-			switch (operation)
-			{
-				case InventoryOperations.AddResources:
-					var addResource = new AddResourceOperationModel();
-					addResource.OperationId.Value = guid;
-					model.Operations.Value = model.Operations.Value.Append(addResource).ToArray();
-					break;
-				case InventoryOperations.AddInstance:
-					var addInstance = new AddInstanceOperationModel();
-					addInstance.OperationId.Value = guid;
-					model.Operations.Value = model.Operations.Value.Append(addInstance).ToArray();
-					break;
-				case InventoryOperations.AddRandomInstance:
-					var addRandomInstance = new AddRandomInstanceOperationModel();
-					addRandomInstance.OperationId.Value = guid;
-					model.Operations.Value = model.Operations.Value.Append(addRandomInstance).ToArray();
-					break;
-				default:
-					Debug.LogError("Unrecognized InventoryOperation: " + operation);
-					break;
-			}
-		}
-		*/
-		#endregion
-
 		#region Switch Logs
 		void OnSwitchLog(
 			EncounterInfoModel infoModel,
@@ -751,6 +616,117 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
+		#region Event Logs
+		void OnEncounterEventLog(
+			EncounterInfoModel infoModel,
+			EncounterEventEncounterLogModel model
+		)
+		{
+			if (model.AlwaysHalting.Value || model.Edges.Any(e => e.Entry.IsHalting.Value))
+			{
+				EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
+			}
+
+			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
+				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
+				model.AlwaysHalting.Value
+			);
+
+			if (GUILayout.Button("Append New Event")) OnEdgedLogSpawn(model, OnEncounterEventLogSpawn);
+
+			OnEdgedLog<EncounterEventEncounterLogModel, EncounterEventEdgeModel>(infoModel, model, OnEncounterEventLogEdge);
+		}
+
+		void OnEncounterEventLogSpawn(
+			EncounterEventEdgeModel edge
+		)
+		{
+			// Nothing to do...
+		}
+
+		void OnEncounterEventLogEdge(
+			EncounterInfoModel infoModel,
+			EncounterEventEncounterLogModel model,
+			EncounterEventEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			GUILayout.BeginHorizontal();
+			{
+				entry.EncounterEvent.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Event"), "- Select An Event -", entry.EncounterEvent.Value);
+				EditorGUILayoutExtensions.PushColor(Color.red);
+				if (GUILayout.Button("Clear"))
+				{
+					entry.KeyValues.Clear();
+					Debug.Log("Event Key Values Cleared");
+				}
+				EditorGUILayoutExtensions.PopColor();
+			}
+			GUILayout.EndHorizontal();
+
+			switch (entry.EncounterEvent.Value)
+			{
+				case EncounterEvents.Types.Unknown:
+					EditorGUILayout.HelpBox("No event type has been specified.", MessageType.Error);
+					break;
+				case EncounterEvents.Types.Custom:
+					EditorGUILayout.HelpBox("Editing custom events is not supported yet.", MessageType.Warning);
+					break;
+				case EncounterEvents.Types.DebugLog:
+					OnEncounterEventLogEdgeDebugLog(entry);
+					break;
+				case EncounterEvents.Types.ToolbarSelection:
+					OnEncounterEventLogEdgeToolbarSelection(entry);
+					break;
+			}
+
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "These conditions must be met or the event will not be called"),
+				entry.Filtering
+			);
+
+			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PushColor(Color.gray);
+			entry.IsHalting.Value = EditorGUILayout.Toggle(
+				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
+				entry.IsHalting.Value
+			);
+			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PopColor();
+		}
+
+		void OnEncounterEventLogEdgeDebugLog(
+			EncounterEventEntryModel entry
+		)
+		{
+			entry.KeyValues.SetEnum(
+				EncounterEvents.DebugLog.EnumKeys.Severity,
+				EditorGUILayoutExtensions.HelpfulEnumPopup(
+					new GUIContent("Severity"),
+					"- Select A Severity -",
+					entry.KeyValues.GetEnum<EncounterEvents.DebugLog.Severities>(EncounterEvents.DebugLog.EnumKeys.Severity)
+				)
+			);
+			entry.KeyValues.SetString(
+				EncounterEvents.DebugLog.StringKeys.Message,
+				EditorGUILayout.TextField(entry.KeyValues.GetString(EncounterEvents.DebugLog.StringKeys.Message))
+			);
+		}
+
+		void OnEncounterEventLogEdgeToolbarSelection(
+			EncounterEventEntryModel entry
+		)
+		{
+			entry.KeyValues.SetEnum(
+				EncounterEvents.ToolbarSelection.EnumKeys.Selection,
+				EditorGUILayoutExtensions.HelpfulEnumPopup(
+					new GUIContent("Selection"),
+					"- Select A Toolbar -",
+					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
+				)
+			);
+		}
+		#endregion
+
 		#region Edged Logs
 		void OnEdgedLog<L, E>(
 			EncounterInfoModel infoModel,
@@ -777,6 +753,23 @@ namespace LunraGames.SubLight
 				GUILayout.Space(16f);
 				GUILayout.BeginVertical();
 				{
+					var hasDuplicateIds = false; 
+					var existingEdgeIds = new List<string>();
+					foreach (var curr in sorted)
+					{
+						if (existingEdgeIds.Contains(curr.EdgeId))
+						{
+							hasDuplicateIds = true;
+							break;
+						}
+						existingEdgeIds.Add(curr.EdgeId);
+					}
+
+					if (hasDuplicateIds)
+					{
+						EditorGUILayout.HelpBox("There are edges with duplicate Ids, unexpected behaviour may occur.", MessageType.Error);
+					}
+
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var current = sorted[i];

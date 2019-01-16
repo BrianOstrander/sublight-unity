@@ -7,17 +7,17 @@ namespace LunraGames.SubLight
 	{
 		public static AssignBestEncounter ErrorResult(string error)
 		{
-			return new AssignBestEncounter(RequestStatus.Failure, error, false, null, null, null);
+			return new AssignBestEncounter(RequestStatus.Failure, error, false, null);
 		}
 
-		public static AssignBestEncounter NoEncounterResult(SystemModel system)
+		public static AssignBestEncounter NoEncounterResult()
 		{
-			return new AssignBestEncounter(RequestStatus.Success, null, false, null, system, null);
+			return new AssignBestEncounter(RequestStatus.Success, null, false, null);
 		}
 
-		public static AssignBestEncounter EncounterResult(SystemModel system, EncounterInfoModel encounter, BodyModel body)
+		public static AssignBestEncounter EncounterResult(EncounterInfoModel encounter)
 		{
-			return new AssignBestEncounter(RequestStatus.Success, null, true, encounter, system, body);
+			return new AssignBestEncounter(RequestStatus.Success, null, true, encounter);
 		}
 
 		public readonly RequestStatus Status;
@@ -25,16 +25,12 @@ namespace LunraGames.SubLight
 
 		public readonly bool EncounterAssigned;
 		public readonly EncounterInfoModel Encounter;
-		public readonly SystemModel System;
-		public readonly BodyModel Body;
 
 		public AssignBestEncounter(
 			RequestStatus status,
 			string error,
 			bool encounterAssigned,
-			EncounterInfoModel encounter,
-			SystemModel system,
-			BodyModel body
+			EncounterInfoModel encounter
 		)
 		{
 			Status = status;
@@ -42,8 +38,6 @@ namespace LunraGames.SubLight
 
 			EncounterAssigned = encounterAssigned;
 			Encounter = encounter;
-			System = system;
-			Body = body;
 		}
 	}
 }

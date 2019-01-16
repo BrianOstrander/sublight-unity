@@ -17,8 +17,5 @@
 		GalaxyPreview = 60,
 		GalaxyDistant = 62,
 		GalaxyInfo = 64,
-
-		// Inventory References
-		InventoryModule = 200
 	}
 }

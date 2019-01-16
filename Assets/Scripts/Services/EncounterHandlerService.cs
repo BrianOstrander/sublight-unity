@@ -15,15 +15,10 @@ namespace LunraGames.SubLight
 		EncounterService encounterService;
 		KeyValueService keyValueService;
 		ValueFilterService valueFilter;
-		IUniverseService universeService;
 		Func<PreferencesModel> currentPreferences;
 
 		GameModel model;
 		EncounterInfoModel encounter;
-		SystemModel system;
-#pragma warning disable CS0414 // Field is assigned but its value is never used
-		BodyModel body;
-#pragma warning restore CS0414 // Field is assigned but its value is never used
 
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
@@ -34,7 +29,6 @@ namespace LunraGames.SubLight
 			EncounterService encounterService,
 			KeyValueService keyValueService,
 			ValueFilterService valueFilter,
-			IUniverseService universeService,
 			Func<PreferencesModel> currentPreferences
 		)
 		{
@@ -43,7 +37,6 @@ namespace LunraGames.SubLight
 			if (encounterService == null) throw new ArgumentNullException("encounterService");
 			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
-			if (universeService == null) throw new ArgumentNullException("universeService");
 			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
 
 			this.heartbeat = heartbeat;
@@ -51,7 +44,6 @@ namespace LunraGames.SubLight
 			this.encounterService = encounterService;
 			this.keyValueService = keyValueService;
 			this.valueFilter = valueFilter;
-			this.universeService = universeService;
 			this.currentPreferences = currentPreferences;
 
 			this.callbacks.EncounterRequest += OnEncounter;
@@ -59,17 +51,24 @@ namespace LunraGames.SubLight
 			this.heartbeat.Update += OnUpdate;
 		}
 
+		void SetOnEncoutnerLast()
+		{
+			// This is kind of hacky...
+			callbacks.EncounterRequest -= OnEncounter;
+			callbacks.EncounterRequest += OnEncounter;
+		}
+
 		#region Events
 		void OnEncounter(EncounterRequest request)
 		{
+			SetOnEncoutnerLast();
+
 			switch (request.State)
 			{
 				case EncounterRequest.States.Request:
 					OnBegin(
 						request.GameModel,
-						request.EncounterId,
-						request.SectorPosition,
-						request.SystemIndex
+						request.Encounter
 					);
 					break;
 				case EncounterRequest.States.Next:
@@ -81,52 +80,13 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Complete:
 					encounterService.GetEncounterInteraction(encounter.EncounterId).TimesCompleted.Value++;
 					model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(encounter.EncounterId));
-					var toFocus = system.Position.Value;
 
 					model.EncounterState.State.Value = EncounterStateModel.States.Ending;
 
-					Debug.LogWarning("TODO: Logic upon completing encounter!");
-					//callbacks.FocusRequest(
-					//	new SystemsFocusRequest(
-					//		toFocus.SystemZero,
-					//		toFocus
-					//	)
-					//);
-					break;
-			}
-		}
-
-		/*
-		 * TODO: Update this to use the new focus system.
-		void OnFocus(FocusRequest focus)
-		{
-			switch (focus.Focus)
-			{
-				case FocusRequest.Focuses.Encounter:
-					// We only begin the encounter once the focus is complete.
-					if (focus.State != FocusRequest.States.Complete) return;
-
-					nextLog = encounter.Logs.Beginning;
-					if (nextLog == null)
-					{
-						Debug.LogError("No beginning found for encounter " + encounter.EncounterId.Value);
-
-						callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
-						break;
-					}
-					nextLogDelay = 0f;
-					break;
-				default:
-					if (state != States.Ending) break;
-					// We only save once we've completely moved to the next focus.
-					if (focus.State != FocusRequest.States.Complete) return;
-					model.SaveState.Value = SaveStateBlock.Savable();
 					OnEnd();
-					callbacks.SaveRequest(SaveRequest.Request());
 					break;
 			}
 		}
-		*/
 
 		void OnStateChange(StateChange change)
 		{
@@ -148,9 +108,7 @@ namespace LunraGames.SubLight
 
 		void OnBegin(
 			GameModel model,
-			string encounterId,
-			UniversePosition sectorPosition,
-			int systemIndex
+			EncounterInfoModel encounter
 		)
 		{
 			if (model.EncounterState.State.Value != EncounterStateModel.States.Complete)
@@ -161,10 +119,8 @@ namespace LunraGames.SubLight
 			model.EncounterState.State.Value = EncounterStateModel.States.Processing;
 
 			this.model = model;
+			this.encounter = encounter;
 
-			encounter = encounterService.GetEncounter(encounterId);
-			system = universeService.GetSystem(model.Galaxy, model.Universe, sectorPosition, systemIndex);
-			body = system.BodyWithEncounter;
 			model.EncounterState.RegisterKeyValueListener(keyValueService);
 
 			callbacks.SaveRequest(SaveRequest.Request(OnBeginSaved));
@@ -179,24 +135,31 @@ namespace LunraGames.SubLight
 
 			model.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlyInEncounter);
 
-			Debug.LogWarning("TODO: Start enncounter here.");
-			//callbacks.FocusRequest(EncounterFocusRequest.Encounter());
+			nextLog = encounter.Logs.Beginning;
+			if (nextLog == null)
+			{
+				Debug.LogError("No beginning found for encounter " + encounter.EncounterId.Value);
+
+				callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
+				return;
+			}
+			nextLogDelay = 0f;
 		}
 
 		void OnEnd()
 		{
+			model.SaveState.Value = SaveStateBlock.Savable();
+
 			var oldModel = model;
 
 			model = null;
 			encounter = null;
-			system = null;
-			body = null;
 
 			nextLog = null;
 			nextLogDelay = null;
 
+			oldModel.EncounterState.UnRegisterKeyValueListener(); // This used to be below the other one, but I think that was wrong...
 			oldModel.EncounterState.State.Value = EncounterStateModel.States.Complete;
-			oldModel.EncounterState.UnRegisterKeyValueListener();
 		}
 
 		void OnShowLog(EncounterLogModel logModel)
@@ -219,9 +182,6 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(logModel as KeyValueEncounterLogModel, linearDone);
 					break;
-				case EncounterLogTypes.Inventory:
-					throw new NotImplementedException("Inventory logs not supported yet");
-					//OnInventoryLog(logModel as InventoryEncounterLogModel, linearDone);
 				case EncounterLogTypes.Switch:
 					OnSwitchLog(logModel as SwitchEncounterLogModel, nonLinearDone);
 					break;
@@ -230,6 +190,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Encyclopedia:
 					OnEncyclopediaLog(logModel as EncyclopediaEncounterLogModel, linearDone);
+					break;
+				case EncounterLogTypes.Event:
+					OnEncounterEventLog(logModel as EncounterEventEncounterLogModel, linearDone);
 					break;
 				default:
 					Debug.LogError("Unrecognized LogType: " + logModel.LogType + ", skipping...");
@@ -306,83 +269,6 @@ namespace LunraGames.SubLight
 			if (total == progress) done();
 		}
 
-		/*
-		void OnInventoryLog(InventoryEncounterLogModel logModel, Action done)
-		{
-			var total = logModel.Operations.Value.Length;
-
-			if (total == 0)
-			{
-				done();
-				return;
-			}
-
-			var progress = 0;
-
-			foreach (var entry in logModel.Operations.Value)
-			{
-				switch (entry.Operation)
-				{
-					case InventoryOperations.AddResources:
-						var addResource = entry as AddResourceOperationModel;
-						var currentResources = model.Ship.Value.Inventory.AllResources.Duplicate;
-						model.Ship.Value.Inventory.AllResources.Assign(currentResources.Add(addResource.Value).ClampNegatives());
-						OnInventoryLogDone(total, ref progress, done);
-						break;
-					case InventoryOperations.AddInstance:
-						var addInstance = entry as AddInstanceOperationModel;
-						inventoryReferences.CreateInstance(
-							addInstance.InventoryId,
-							InventoryReferenceContext.Current(model),
-							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
-						);
-						break;
-					case InventoryOperations.AddRandomInstance:
-						var addRandomInstance = entry as AddRandomInstanceOperationModel;
-						inventoryReferences.CreateRandomInstance(
-							addRandomInstance.Filtering,
-							model,
-							InventoryReferenceContext.Current(model),
-							result => OnInventoryLogCreateInstance(result, total, ref progress, done)
-						);
-						break;
-					default:
-						Debug.LogError("Unrecognized InventoryOperation: " + entry.Operation);
-						done();
-						return;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Called when a inventory reference is created explicitly or randomly.
-		/// </summary>
-		/// <param name="result">Result.</param>
-		/// <param name="total">Total.</param>
-		/// <param name="progress">Progress.</param>
-		/// <param name="done">Done.</param>
-		void OnInventoryLogCreateInstance(InventoryReferenceRequest<InventoryModel> result, int total, ref int progress, Action done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Creating instance from reference returned with status: " + result.Status + " and error:\n" + result.Error);
-				Debug.LogWarning("Continuing after this failure may result in unpredictable behaviour.");
-			}
-			else
-			{
-				model.Ship.Value.Inventory.Add(result.Instance);
-			}
-
-			OnInventoryLogDone(total, ref progress, done);
-		}
-
-		void OnInventoryLogDone(int total, ref int progress, Action done)
-		{
-			progress++;
-			if (total == progress) done();
-		}
-		*/
-
 		void OnSwitchLog(SwitchEncounterLogModel logModel, Action<string> done)
 		{
 			var switches = logModel.Switches.Value.Where(e => !e.Ignore.Value && !string.IsNullOrEmpty(e.NextLogId.Value)).OrderBy(e => e.Index.Value).ToList();
@@ -421,7 +307,8 @@ namespace LunraGames.SubLight
 			valueFilter.Filter(
 				filterResult => OnSwitchLogFilter(filterResult, nextId, remaining, done),
 				next.Filtering,
-				model
+				model,
+				encounter
 			);
 		}
 
@@ -590,7 +477,8 @@ namespace LunraGames.SubLight
 			valueFilter.Filter(
 				filterResult => OnButtonLogEnabledFiltering(filterResult, edge, possibleResult, nextDone),
 				edge.EnabledFiltering,
-				model
+				model,
+				encounter
 			);
 		}
 
@@ -614,7 +502,8 @@ namespace LunraGames.SubLight
 				valueFilter.Filter(
 					filterResult => OnButtonLogInteractableFiltering(filterResult, edge, possibleResult, nextDone),
 					edge.InteractableFiltering,
-					model
+					model,
+					encounter
 				);
 			}
 			else
@@ -644,7 +533,8 @@ namespace LunraGames.SubLight
 				valueFilter.Filter(
 					filterResult => OnButtonLogUsedFiltering(filterResult, edge, possibleResult, nextDone),
 					edge.UsedFiltering,
-					model
+					model,
+					encounter
 				);
 			}
 			else
@@ -760,6 +650,86 @@ namespace LunraGames.SubLight
 			model.Encyclopedia.Add(logModel.Entries.Value.Select(e => e.Entry.Duplicate).ToArray());
 
 			done();
+		}
+
+		void OnEncounterEventLog(EncounterEventEncounterLogModel logModel, Action done)
+		{
+			var events = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
+
+			Action<RequestStatus, List<EncounterEventEntryModel>> filteringDone = (status, filtered) => OnEncounterEventLogDone(status, filtered, logModel, done);
+
+			OnEncounterEventLogFilter(
+				null,
+				events,
+				new List<EncounterEventEntryModel>(),
+				filteringDone
+			);
+		}
+
+		void OnEncounterEventLogFilter(
+			EncounterEventEntryModel result,
+			List<EncounterEventEntryModel> remaining,
+			List<EncounterEventEntryModel> filtered,
+			Action<RequestStatus, List<EncounterEventEntryModel>> filteringDone
+		)
+		{
+			if (result != null) filtered.Add(result);
+
+			if (remaining.None())
+			{
+				// No remaining to filter.
+				if (filtered.Any()) filteringDone(RequestStatus.Success, filtered); // There are callable events.
+				else filteringDone(RequestStatus.Failure, null); // There are no callable events.
+				return;
+			}
+
+			Action<EncounterEventEntryModel> nextDone = filterResult => OnEncounterEventLogFilter(filterResult, remaining, filtered, filteringDone);
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+
+			valueFilter.Filter(
+				filterResult => OnEncounterEventLogFiltering(filterResult, next, nextDone),
+				next.Filtering,
+				model,
+				encounter
+			);
+		}
+
+		void OnEncounterEventLogFiltering(
+			bool filteringResult,
+			EncounterEventEntryModel possibleResult,
+			Action<EncounterEventEntryModel> nextDone
+		)
+		{
+			if (filteringResult) nextDone(possibleResult);
+			else nextDone(null);
+		}
+
+		void OnEncounterEventLogDone(
+			RequestStatus status,
+			List<EncounterEventEntryModel> events,
+			EncounterEventEncounterLogModel logModel,
+			Action done
+		)
+		{
+			if (status != RequestStatus.Success)
+			{
+				// No enabled and callable events found.
+				done();
+				return;
+			}
+
+			var result = new EncounterEventHandlerModel();
+			result.Log.Value = logModel;
+			result.Events.Value = events.ToArray();
+			result.AlwaysHalting.Value = logModel.AlwaysHalting.Value;
+			result.HasHaltingEvents.Value = events.Any(e => e.IsHalting.Value);
+
+			if (result.AlwaysHaltingOrHasHaltingEvents) result.HaltingDone.Value = done;
+
+			callbacks.EncounterRequest(EncounterRequest.Handle(result));
+
+			if (!result.AlwaysHaltingOrHasHaltingEvents) done();
 		}
 
 		void OnHandledLog(EncounterLogModel logModel, string nextLogId)

@@ -11,9 +11,7 @@ namespace LunraGames.SubLight
 				return new Dictionary<SaveTypes, bool>
 				{
 					{ SaveTypes.EncounterInfo, true },
-					{ SaveTypes.GalaxyInfo, true },
-					// -- Inventory References
-					{ SaveTypes.InventoryModule, true }
+					{ SaveTypes.GalaxyInfo, true }
 					// --
 				};
 			}

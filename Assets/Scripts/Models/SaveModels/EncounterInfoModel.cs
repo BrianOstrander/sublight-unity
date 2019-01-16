@@ -15,7 +15,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string hook;
 		[JsonProperty] EncounterTriggers trigger;
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
-		[JsonProperty] bool assignedToBody;
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
 		/// <summary>
@@ -62,12 +61,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<EncounterTriggers> Trigger;
-		/// <summary>
-		/// If true, this encounter gets associated with a specific body in a
-		/// system.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> AssignedToBody;
 
 		#region Shortcuts
 		[JsonIgnore]
@@ -92,7 +85,6 @@ namespace LunraGames.SubLight.Models
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Hook = new ListenerProperty<string>(value => hook = value, () => hook);
 			Trigger = new ListenerProperty<EncounterTriggers>(value => trigger = value, () => trigger);
-			AssignedToBody = new ListenerProperty<bool>(value => assignedToBody = value, () => assignedToBody);
 		}
 	}
 }

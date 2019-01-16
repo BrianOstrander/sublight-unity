@@ -3,7 +3,7 @@
 	public enum EncounterTriggers
 	{
 		Unknown = 0,
-		Automatic = 10,
-		BodyAlert = 20
+		TransitComplete = 10,
+		NavigationSelect = 20
 	}
 }

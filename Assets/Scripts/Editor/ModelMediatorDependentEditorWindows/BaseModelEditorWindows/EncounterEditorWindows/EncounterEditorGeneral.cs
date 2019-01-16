@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 	{
 		void GeneralConstruct()
 		{
-			var currPrefix = KeyPrefix + "General";
+			//var currPrefix = KeyPrefix + "General";
 
 			RegisterToolbar("General", GeneralToolbar);
 		}
@@ -39,7 +39,6 @@ namespace LunraGames.SubLight
 
 				model.Trigger.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Trigger", "What triggers this encounter to appear upon entering a system with it."), "- Select a Trigger -", model.Trigger.Value);
 				if (model.Trigger.Value == EncounterTriggers.Unknown) EditorGUILayout.HelpBox("A trigger for this encounter must be selected.", MessageType.Error);
-				model.AssignedToBody.Value = EditorGUILayoutExtensions.ToggleButton(new GUIContent("Assigned To Body", "If true, this encounter is associated with a specific body in the specified system."), model.AssignedToBody.Value);
 
 				var alternateColor = Color.grey;
 
