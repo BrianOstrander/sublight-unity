@@ -74,11 +74,6 @@ namespace LunraGames.SubLight
 				}
 
 				payload.Game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(targetSelection, done);
-
-
-				//Focuses.GetToolbarSelectionFocus
-				//if (payload.Game.ToolbarSelection.Value == entry.KeyValues)
-				//entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
 			}
 		}
 	}

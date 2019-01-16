@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -132,6 +133,7 @@ namespace LunraGames.SubLight.Views
 					else if (isSelected && !wasSelected)
 					{
 						// Now selected.
+						UpdateButton(button, 0f);
 						button.Leaf.HaloLeaf.GlobalStyle = selectedHaloStyle;
 						button.Leaf.BackgroundLeaf.GlobalStyle = selectedBackgroundStyle;
 					}

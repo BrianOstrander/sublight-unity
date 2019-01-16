@@ -202,6 +202,7 @@ namespace LunraGames.SubLight.Views
 				}
 			}
 
+			// TODO: Probably shouldn't force all canvases to update...
 			Canvas.ForceUpdateCanvases();
 
 			var labelWidths = new List<float>();

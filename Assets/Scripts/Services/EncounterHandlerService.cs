@@ -15,7 +15,6 @@ namespace LunraGames.SubLight
 		EncounterService encounterService;
 		KeyValueService keyValueService;
 		ValueFilterService valueFilter;
-		IUniverseService universeService;
 		Func<PreferencesModel> currentPreferences;
 
 		GameModel model;
@@ -30,7 +29,6 @@ namespace LunraGames.SubLight
 			EncounterService encounterService,
 			KeyValueService keyValueService,
 			ValueFilterService valueFilter,
-			IUniverseService universeService,
 			Func<PreferencesModel> currentPreferences
 		)
 		{
@@ -39,7 +37,6 @@ namespace LunraGames.SubLight
 			if (encounterService == null) throw new ArgumentNullException("encounterService");
 			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
-			if (universeService == null) throw new ArgumentNullException("universeService");
 			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
 
 			this.heartbeat = heartbeat;
@@ -47,7 +44,6 @@ namespace LunraGames.SubLight
 			this.encounterService = encounterService;
 			this.keyValueService = keyValueService;
 			this.valueFilter = valueFilter;
-			this.universeService = universeService;
 			this.currentPreferences = currentPreferences;
 
 			this.callbacks.EncounterRequest += OnEncounter;
@@ -55,9 +51,18 @@ namespace LunraGames.SubLight
 			this.heartbeat.Update += OnUpdate;
 		}
 
+		void SetOnEncoutnerLast()
+		{
+			// This is kind of hacky...
+			callbacks.EncounterRequest -= OnEncounter;
+			callbacks.EncounterRequest += OnEncounter;
+		}
+
 		#region Events
 		void OnEncounter(EncounterRequest request)
 		{
+			SetOnEncoutnerLast();
+
 			switch (request.State)
 			{
 				case EncounterRequest.States.Request:
@@ -78,48 +83,10 @@ namespace LunraGames.SubLight
 
 					model.EncounterState.State.Value = EncounterStateModel.States.Ending;
 
-					Debug.LogWarning("TODO: Logic upon completing encounter!");
-					//callbacks.FocusRequest(
-					//	new SystemsFocusRequest(
-					//		toFocus.SystemZero,
-					//		toFocus
-					//	)
-					//);
-					break;
-			}
-		}
-
-		/*
-		 * TODO: Update this to use the new focus system.
-		void OnFocus(FocusRequest focus)
-		{
-			switch (focus.Focus)
-			{
-				case FocusRequest.Focuses.Encounter:
-					// We only begin the encounter once the focus is complete.
-					if (focus.State != FocusRequest.States.Complete) return;
-
-					nextLog = encounter.Logs.Beginning;
-					if (nextLog == null)
-					{
-						Debug.LogError("No beginning found for encounter " + encounter.EncounterId.Value);
-
-						callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
-						break;
-					}
-					nextLogDelay = 0f;
-					break;
-				default:
-					if (state != States.Ending) break;
-					// We only save once we've completely moved to the next focus.
-					if (focus.State != FocusRequest.States.Complete) return;
-					model.SaveState.Value = SaveStateBlock.Savable();
 					OnEnd();
-					callbacks.SaveRequest(SaveRequest.Request());
 					break;
 			}
 		}
-		*/
 
 		void OnStateChange(StateChange change)
 		{
@@ -181,6 +148,8 @@ namespace LunraGames.SubLight
 
 		void OnEnd()
 		{
+			model.SaveState.Value = SaveStateBlock.Savable();
+
 			var oldModel = model;
 
 			model = null;
@@ -189,8 +158,8 @@ namespace LunraGames.SubLight
 			nextLog = null;
 			nextLogDelay = null;
 
+			oldModel.EncounterState.UnRegisterKeyValueListener(); // This used to be below the other one, but I think that was wrong...
 			oldModel.EncounterState.State.Value = EncounterStateModel.States.Complete;
-			oldModel.EncounterState.UnRegisterKeyValueListener();
 		}
 
 		void OnShowLog(EncounterLogModel logModel)

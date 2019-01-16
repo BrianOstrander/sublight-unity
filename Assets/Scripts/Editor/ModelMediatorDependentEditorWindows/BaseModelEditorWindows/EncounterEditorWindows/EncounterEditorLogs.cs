@@ -732,7 +732,23 @@ namespace LunraGames.SubLight
 				GUILayout.Space(16f);
 				GUILayout.BeginVertical();
 				{
-					EditorGUILayout.HelpBox("check for duplicate or null edge ids here 1337HA", MessageType.Warning);
+					var hasDuplicateIds = false; 
+					var existingEdgeIds = new List<string>();
+					foreach (var curr in sorted)
+					{
+						if (existingEdgeIds.Contains(curr.EdgeId))
+						{
+							hasDuplicateIds = true;
+							break;
+						}
+						existingEdgeIds.Add(curr.EdgeId);
+					}
+
+					if (hasDuplicateIds)
+					{
+						EditorGUILayout.HelpBox("There are edges with duplicate Ids, unexpected behaviour may occur.", MessageType.Error);
+					}
+
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var current = sorted[i];

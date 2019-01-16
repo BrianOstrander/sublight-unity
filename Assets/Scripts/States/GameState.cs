@@ -533,11 +533,32 @@ namespace LunraGames.SubLight
 		{
 			switch (request.State)
 			{
+				case EncounterRequest.States.Request:
+					break;
 				case EncounterRequest.States.Handle:
 					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(Payload, handler))) break;
 					Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.ModelType.FullName);
 					break;
-				case EncounterRequest.States.Request:
+				case EncounterRequest.States.Controls:
+					// I don't think there's anything else I need to do here...
+					if (request.DoneControl)
+					{
+						App.Callbacks.EncounterRequest(EncounterRequest.Done());
+					}
+					else if (request.NextControl)
+					{
+						App.Callbacks.EncounterRequest(EncounterRequest.Next());
+					}
+					else Debug.LogError("Unexpected behaviour: Done and Next are both false");
+					break;
+				case EncounterRequest.States.Next:
+					// I don't think I need to do anything here... maybe cleanup messages and stuff?
+					break;
+				case EncounterRequest.States.Done:
+					// I don't think I need to do anything here...
+					break;
+				case EncounterRequest.States.Complete:
+					// I don't think I need to do anything here...
 					break;
 				default:
 					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);
