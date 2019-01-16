@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Presenters
 	{
 		GameModel model;
 		TransitionFocusRequest lastTransition;
+		ToolbarSelections lastSelection;
 
 		bool CanTransition { get { return lastTransition.State == TransitionFocusRequest.States.Complete; } }
 
@@ -50,6 +51,8 @@ namespace LunraGames.SubLight.Presenters
 			if (!View.Visible) return;
 
 			CloseView(instant);
+
+			lastSelection = ToolbarSelections.Unknown;
 		}
 
 		#region Events
@@ -60,6 +63,8 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnToolbarSelection(ToolbarSelections selection)
 		{
+			if (lastSelection == selection) return;
+
 			switch (selection)
 			{
 				case ToolbarSelections.System: View.Selection = 0; break;
@@ -70,13 +75,15 @@ namespace LunraGames.SubLight.Presenters
 					Debug.LogError("Unrecognized selection: " + model.ToolbarSelection.Value);
 					break;
 			}
+			lastSelection = selection;
 		}
 
 		void OnTransitionClick(ToolbarSelections selection)
 		{
 			if (!CanTransition || selection == model.ToolbarSelection.Value) return;
 
-			model.ToolbarSelection.Value = selection;
+			OnToolbarSelection(selection);
+			model.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(selection);
 		}
 		#endregion
 	}

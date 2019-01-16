@@ -32,6 +32,7 @@
     "encyclopediaLogs": [],
     "eventLogs": [
       {
+        "alwaysHalting": true,
         "entries": [
           {
             "entry": {

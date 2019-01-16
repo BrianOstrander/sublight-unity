@@ -622,14 +622,14 @@ namespace LunraGames.SubLight
 			EncounterEventEncounterLogModel model
 		)
 		{
-			if (model.IsHalting.Value || model.Edges.Any(e => e.Entry.IsHalting.Value))
+			if (model.AlwaysHalting.Value || model.Edges.Any(e => e.Entry.IsHalting.Value))
 			{
 				EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
 			}
 
-			model.IsHalting.Value = EditorGUILayout.Toggle(
+			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
 				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
-				model.IsHalting.Value
+				model.AlwaysHalting.Value
 			);
 
 			if (GUILayout.Button("Append New Event")) OnEdgedLogSpawn(model, OnEncounterEventLogSpawn);
@@ -683,12 +683,12 @@ namespace LunraGames.SubLight
 				entry.Filtering
 			);
 
-			if (model.IsHalting.Value) EditorGUILayoutExtensions.PushColor(Color.gray);
+			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PushColor(Color.gray);
 			entry.IsHalting.Value = EditorGUILayout.Toggle(
 				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
 				entry.IsHalting.Value
 			);
-			if (model.IsHalting.Value) EditorGUILayoutExtensions.PopColor();
+			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PopColor();
 		}
 
 		void OnEncounterEventLogEdgeToolbarSelection(
@@ -732,6 +732,7 @@ namespace LunraGames.SubLight
 				GUILayout.Space(16f);
 				GUILayout.BeginVertical();
 				{
+					EditorGUILayout.HelpBox("check for duplicate or null edge ids here 1337HA", MessageType.Warning);
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var current = sorted[i];

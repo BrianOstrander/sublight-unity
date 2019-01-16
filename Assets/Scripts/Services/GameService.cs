@@ -64,6 +64,7 @@ namespace LunraGames.SubLight
 			// --------
 
 			game.ToolbarSelection.Value = ToolbarSelections.System;
+			game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(game.ToolbarSelection.Value);
 
 			App.M.Load<GalaxyInfoModel>(game.GalaxyId, result => OnGalaxyLoaded(result, game, done));
 		}

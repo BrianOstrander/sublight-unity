@@ -10,21 +10,31 @@ namespace LunraGames.SubLight.Models
 		where T : EncounterLogModel
 	{
 		[JsonProperty] T log;
-		[JsonProperty] bool isHalting;
+		[JsonProperty] bool alwaysHalting;
+		[JsonProperty] bool hasHaltingEvents;
 
 		Action haltingDone;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<T> Log;
+		/// <summary>
+		/// True if the entire event was marked as halting or any of its entries.
+		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<bool> IsHalting;
+		public readonly ListenerProperty<bool> AlwaysHalting;
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> HasHaltingEvents;
 		[JsonIgnore]
 		public readonly ListenerProperty<Action> HaltingDone;
+
+		[JsonIgnore]
+		public bool AlwaysHaltingOrHasHaltingEvents { get { return AlwaysHalting.Value || HasHaltingEvents.Value; } }
 
 		public EncounterHandlerModel()
 		{
 			Log = new ListenerProperty<T>(value => log = value, () => log);
-			IsHalting = new ListenerProperty<bool>(value => isHalting = value, () => isHalting);
+			AlwaysHalting = new ListenerProperty<bool>(value => alwaysHalting = value, () => alwaysHalting);
+			HasHaltingEvents = new ListenerProperty<bool>(value => hasHaltingEvents = value, () => hasHaltingEvents);
 			HaltingDone = new ListenerProperty<Action>(value => haltingDone = value, () => haltingDone);
 		}
 	}

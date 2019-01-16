@@ -170,7 +170,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 			App.Callbacks.SaveRequest += OnSaveRequest;
 
-			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
+			Payload.Game.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
@@ -242,7 +242,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 
-			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
+			Payload.Game.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
@@ -273,9 +273,43 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnToolbarSelection(ToolbarSelections selection)
+		void OnToolbarSelectionRequest(ToolbarSelectionRequest request)
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(selection)));
+			if (request.Selection == ToolbarSelections.Unknown)
+			{
+				throw new Exception("Unable to set toolbar to selection: " + request.Selection);
+			}
+			
+			if (request.Selection == Payload.Game.ToolbarSelection.Value)
+			{
+				if (request.Done != null) request.Done();
+				return;
+			}
+
+			if (request.Instant)
+			{
+				App.Callbacks.SetFocusRequest(
+					SetFocusRequest.RequestInstant(
+						Focuses.GetToolbarSelectionFocus(request.Selection),
+						() => OnToolbarSelectionRequestDone(request)
+					)
+				);
+			}
+			else
+			{
+				App.Callbacks.SetFocusRequest(
+					SetFocusRequest.Request(
+						Focuses.GetToolbarSelectionFocus(request.Selection),
+						() => OnToolbarSelectionRequestDone(request)
+					)
+				);
+			}
+		}
+
+		void OnToolbarSelectionRequestDone(ToolbarSelectionRequest request)
+		{
+			Payload.Game.ToolbarSelection.Value = request.Selection;
+			if (request.Done != null) request.Done();
 		}
 
 		void OnCelestialSystemsTransform(UniverseTransform transform)
@@ -500,7 +534,7 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case EncounterRequest.States.Handle:
-					if (request.TryHandle<EncounterEventHandlerModel>(OnEncounterRequestHandleEvent)) break;
+					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(Payload, handler))) break;
 					Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.ModelType.FullName);
 					break;
 				case EncounterRequest.States.Request:
@@ -509,25 +543,6 @@ namespace LunraGames.SubLight
 					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);
 					break;
 			}
-		}
-
-		void OnEncounterRequestHandleEvent(EncounterEventHandlerModel handler)
-		{
-			foreach (var entry in handler.Events.Value)
-			{
-				switch (entry.EncounterEvent.Value)
-				{
-					case EncounterEvents.Types.ToolbarSelection:
-						Debug.Log("we wanna go to " + entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection));
-						break;
-					default:
-						Debug.LogError("Unrecognized Encounter EventType " + entry.EncounterEvent.Value);
-						break;
-				}
-			}
-
-			Debug.Log("add real halt checking!!!");
-			if (handler.IsHalting.Value && handler.HaltingDone.Value != null) handler.HaltingDone.Value();
 		}
 
 		void OnSaveRequest(SaveRequest request)

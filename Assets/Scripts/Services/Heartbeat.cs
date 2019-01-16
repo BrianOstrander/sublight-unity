@@ -5,8 +5,8 @@ namespace LunraGames.SubLight
 {
 	public class Heartbeat 
 	{
-		public Action<float> Update = delta => {};
-		public Action<float> LateUpdate = delta => {};
+		public Action<float> Update = ActionExtensions.GetEmpty<float>();
+		public Action<float> LateUpdate = ActionExtensions.GetEmpty<float>();
 
 		public void TriggerUpdate(float delta) 
 		{
@@ -18,20 +18,20 @@ namespace LunraGames.SubLight
 			LateUpdate(delta);
 		}
 
-		public void Wait(Action done, float seconds)
+		public void Wait(Action done, float seconds, bool checkInstantly = false)
 		{
 			if (done == null) throw new ArgumentNullException("done");
 			if (seconds < 0f) throw new ArgumentOutOfRangeException("seconds", "Cannot be less than zero.");
 			var endtime = DateTime.Now.AddSeconds(seconds);
-			Wait(done, () => endtime < DateTime.Now);
+			Wait(done, () => endtime < DateTime.Now, checkInstantly);
 		}
 
-		public void Wait(Action done, Func<bool> condition)
+		public void Wait(Action done, Func<bool> condition, bool checkInstantly = false)
 		{
 			if (done == null) throw new ArgumentNullException("done");
 			if (condition == null) throw new ArgumentNullException("condition");
 
-			Wait(status => done(), condition);
+			Wait(status => done(), condition, checkInstantly);
 		}
 
 		/// <summary>
@@ -39,7 +39,8 @@ namespace LunraGames.SubLight
 		/// </summary>
 		/// <param name="done">Done.</param>
 		/// <param name="condition">Condition.</param>
-		public Action Wait(Action<RequestStatus> done, Func<bool> condition)
+		/// <param name="checkInstantly">Runs the event this frame, instead of waiting a frame for the first time it's called.</param>
+		public Action Wait(Action<RequestStatus> done, Func<bool> condition, bool checkInstantly = false)
 		{
 			if (done == null) throw new ArgumentNullException("done");
 			if (condition == null) throw new ArgumentNullException("condition");
@@ -77,6 +78,8 @@ namespace LunraGames.SubLight
 			};
 
 			Update += waiter;
+
+			if (checkInstantly) waiter(0f);
 
 			return onCancel;
 		}

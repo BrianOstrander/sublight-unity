@@ -753,13 +753,14 @@ namespace LunraGames.SubLight
 			var result = new EncounterEventHandlerModel();
 			result.Log.Value = logModel;
 			result.Events.Value = events.ToArray();
-			result.IsHalting.Value = logModel.IsHalting.Value || events.Any(e => e.IsHalting.Value);
+			result.AlwaysHalting.Value = logModel.AlwaysHalting.Value;
+			result.HasHaltingEvents.Value = events.Any(e => e.IsHalting.Value);
 
-			if (result.IsHalting.Value) result.HaltingDone.Value = done;
+			if (result.AlwaysHaltingOrHasHaltingEvents) result.HaltingDone.Value = done;
 
 			callbacks.EncounterRequest(EncounterRequest.Handle(result));
 
-			if (!result.IsHalting.Value) done();
+			if (!result.AlwaysHaltingOrHasHaltingEvents) done();
 		}
 
 		void OnHandledLog(EncounterLogModel logModel, string nextLogId)

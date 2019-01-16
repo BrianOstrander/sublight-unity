@@ -141,6 +141,10 @@ namespace LunraGames.SubLight.Models
 		TransitState transitState;
 		[JsonIgnore]
 		public ListenerProperty<TransitState> TransitState;
+
+		ToolbarSelectionRequest toolbarSelectionRequest;
+		[JsonIgnore]
+		public ListenerProperty<ToolbarSelectionRequest> ToolbarSelectionRequest;
 		#endregion
 
 		public GameModel()
@@ -176,6 +180,8 @@ namespace LunraGames.SubLight.Models
 
 			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
 			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
+
+			ToolbarSelectionRequest = new ListenerProperty<ToolbarSelectionRequest>(value => toolbarSelectionRequest = value, () => toolbarSelectionRequest);
 		}
 
 		#region Events
