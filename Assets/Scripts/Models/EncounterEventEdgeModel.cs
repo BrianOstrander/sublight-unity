@@ -19,7 +19,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> Ignore;
 
-
 		public EncounterEventEdgeModel()
 		{
 			Index = new ListenerProperty<int>(value => index = value, () => index);

@@ -222,6 +222,9 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Encyclopedia:
 					OnEncyclopediaLog(logModel as EncyclopediaEncounterLogModel, linearDone);
 					break;
+				case EncounterLogTypes.Event:
+					OnEncounterEventLog(logModel as EncounterEventEncounterLogModel, linearDone);
+					break;
 				default:
 					Debug.LogError("Unrecognized LogType: " + logModel.LogType + ", skipping...");
 					linearDone();
@@ -678,6 +681,85 @@ namespace LunraGames.SubLight
 			model.Encyclopedia.Add(logModel.Entries.Value.Select(e => e.Entry.Duplicate).ToArray());
 
 			done();
+		}
+
+		void OnEncounterEventLog(EncounterEventEncounterLogModel logModel, Action done)
+		{
+			var events = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
+
+			Action<RequestStatus, List<EncounterEventEntryModel>> filteringDone = (status, filtered) => OnEncounterEventLogDone(status, filtered, logModel, done);
+
+			OnEncounterEventLogFilter(
+				null,
+				events,
+				new List<EncounterEventEntryModel>(),
+				filteringDone
+			);
+		}
+
+		void OnEncounterEventLogFilter(
+			EncounterEventEntryModel result,
+			List<EncounterEventEntryModel> remaining,
+			List<EncounterEventEntryModel> filtered,
+			Action<RequestStatus, List<EncounterEventEntryModel>> filteringDone
+		)
+		{
+			if (result != null) filtered.Add(result);
+
+			if (remaining.None())
+			{
+				// No remaining to filter.
+				if (filtered.Any()) filteringDone(RequestStatus.Success, filtered); // There are callable events.
+				else filteringDone(RequestStatus.Failure, null); // There are no callable events.
+				return;
+			}
+
+			Action<EncounterEventEntryModel> nextDone = filterResult => OnEncounterEventLogFilter(filterResult, remaining, filtered, filteringDone);
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+
+			valueFilter.Filter(
+				filterResult => OnEncounterEventLogFiltering(filterResult, next, nextDone),
+				next.Filtering,
+				model,
+				encounter
+			);
+		}
+
+		void OnEncounterEventLogFiltering(
+			bool filteringResult,
+			EncounterEventEntryModel possibleResult,
+			Action<EncounterEventEntryModel> nextDone
+		)
+		{
+			if (filteringResult) nextDone(possibleResult);
+			else nextDone(null);
+		}
+
+		void OnEncounterEventLogDone(
+			RequestStatus status,
+			List<EncounterEventEntryModel> events,
+			EncounterEventEncounterLogModel logModel,
+			Action done
+		)
+		{
+			if (status != RequestStatus.Success)
+			{
+				// No enabled and callable events found.
+				done();
+				return;
+			}
+
+			var result = new EncounterEventHandlerModel();
+			result.Log.Value = logModel;
+			result.Events.Value = events.ToArray();
+			result.IsHalting.Value = logModel.IsHalting.Value || events.Any(e => e.IsHalting.Value);
+
+			if (result.IsHalting.Value) result.HaltingDone.Value = done;
+
+			callbacks.EncounterRequest(EncounterRequest.Handle(result));
+
+			if (!result.IsHalting.Value) done();
 		}
 
 		void OnHandledLog(EncounterLogModel logModel, string nextLogId)

@@ -44,6 +44,11 @@
                 "enums": {
                   "selection": 30
                 }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
               }
             }
           }

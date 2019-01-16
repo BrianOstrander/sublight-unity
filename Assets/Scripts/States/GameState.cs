@@ -500,13 +500,35 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case EncounterRequest.States.Handle:
-					Debug.Log("actually hook up an encounter presenter to listen to this request...");
-					//if (request.TryHandle<e>)
+					if (request.TryHandle<EncounterEventHandlerModel>(OnEncounterRequestHandleEvent)) break;
+					Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.ModelType.FullName);
+					break;
+				case EncounterRequest.States.Request:
+					break;
+				default:
+					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);
 					break;
 			}
 		}
 
-		//void OnEncounterRequestHandleEvent(EncounterEventEdgeModel)
+		void OnEncounterRequestHandleEvent(EncounterEventHandlerModel handler)
+		{
+			foreach (var entry in handler.Events.Value)
+			{
+				switch (entry.EncounterEvent.Value)
+				{
+					case EncounterEvents.Types.ToolbarSelection:
+						Debug.Log("we wanna go to " + entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection));
+						break;
+					default:
+						Debug.LogError("Unrecognized Encounter EventType " + entry.EncounterEvent.Value);
+						break;
+				}
+			}
+
+			Debug.Log("add real halt checking!!!");
+			if (handler.IsHalting.Value && handler.HaltingDone.Value != null) handler.HaltingDone.Value();
+		}
 
 		void OnSaveRequest(SaveRequest request)
 		{

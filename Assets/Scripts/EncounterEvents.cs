@@ -13,7 +13,7 @@ namespace LunraGames.SubLight
 
 		public static class ToolbarSelection
 		{
-			public static class IntegerKeys
+			public static class EnumKeys
 			{
 				public const string Selection = "Selection";
 			}

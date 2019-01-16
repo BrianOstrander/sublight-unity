@@ -5,8 +5,11 @@ namespace LunraGames.SubLight.Models
 	// What a name...
 	public class EncounterEventEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<EncounterEventEdgeModel>
 	{
+		[JsonProperty] bool isHalting;
 		[JsonProperty] EncounterEventEdgeModel[] entries = new EncounterEventEdgeModel[0];
 
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> IsHalting;
 		[JsonIgnore]
 		public readonly ListenerProperty<EncounterEventEdgeModel[]> Entries;
 
@@ -16,6 +19,7 @@ namespace LunraGames.SubLight.Models
 
 		public EncounterEventEncounterLogModel()
 		{
+			IsHalting = new ListenerProperty<bool>(value => isHalting = value, () => isHalting);
 			Entries = new ListenerProperty<EncounterEventEdgeModel[]>(value => entries = value, () => entries);
 		}
 

@@ -622,6 +622,16 @@ namespace LunraGames.SubLight
 			EncounterEventEncounterLogModel model
 		)
 		{
+			if (model.IsHalting.Value || model.Edges.Any(e => e.Entry.IsHalting.Value))
+			{
+				EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
+			}
+
+			model.IsHalting.Value = EditorGUILayout.Toggle(
+				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
+				model.IsHalting.Value
+			);
+
 			if (GUILayout.Button("Append New Event")) OnEdgedLogSpawn(model, OnEncounterEventLogSpawn);
 
 			OnEdgedLog<EncounterEventEncounterLogModel, EncounterEventEdgeModel>(infoModel, model, OnEncounterEventLogEdge);
@@ -667,6 +677,18 @@ namespace LunraGames.SubLight
 					OnEncounterEventLogEdgeToolbarSelection(entry);
 					break;
 			}
+
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "These conditions must be met or the event will not be called"),
+				entry.Filtering
+			);
+
+			if (model.IsHalting.Value) EditorGUILayoutExtensions.PushColor(Color.gray);
+			entry.IsHalting.Value = EditorGUILayout.Toggle(
+				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
+				entry.IsHalting.Value
+			);
+			if (model.IsHalting.Value) EditorGUILayoutExtensions.PopColor();
 		}
 
 		void OnEncounterEventLogEdgeToolbarSelection(
@@ -674,11 +696,11 @@ namespace LunraGames.SubLight
 		)
 		{
 			entry.KeyValues.SetEnum(
-				EncounterEvents.ToolbarSelection.IntegerKeys.Selection,
+				EncounterEvents.ToolbarSelection.EnumKeys.Selection,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Selection"),
 					"- Select A Toolbar -",
-					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.IntegerKeys.Selection)
+					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
 				)
 			);
 		}
