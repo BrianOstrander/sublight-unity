@@ -168,8 +168,15 @@ namespace LunraGames.SubLight
 
 			model.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlyInEncounter);
 
-			Debug.LogWarning("TODO: Start enncounter here.");
-			//callbacks.FocusRequest(EncounterFocusRequest.Encounter());
+			nextLog = encounter.Logs.Beginning;
+			if (nextLog == null)
+			{
+				Debug.LogError("No beginning found for encounter " + encounter.EncounterId.Value);
+
+				callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
+				return;
+			}
+			nextLogDelay = 0f;
 		}
 
 		void OnEnd()

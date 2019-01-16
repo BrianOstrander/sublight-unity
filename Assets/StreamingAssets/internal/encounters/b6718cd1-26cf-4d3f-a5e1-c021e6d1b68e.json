@@ -21,7 +21,6 @@
       {
         "message": "The game was started and I was shown!",
         "nextLogId": "9483326d-0aa6-4f1a-b244-7df5aa1072c7",
-        "beginning": true,
         "ending": true,
         "logId": "73c0878a-cf30-4119-b595-dff3ff925f71",
         "name": "Test"
@@ -50,6 +49,7 @@
           }
         ],
         "index": 1,
+        "beginning": true,
         "ending": true,
         "logId": "9483326d-0aa6-4f1a-b244-7df5aa1072c7"
       }

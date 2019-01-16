@@ -168,6 +168,7 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
+			App.Callbacks.SaveRequest += OnSaveRequest;
 
 			Payload.Game.ToolbarSelection.Changed += OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
@@ -239,6 +240,7 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
+			App.Callbacks.SaveRequest -= OnSaveRequest;
 
 			Payload.Game.ToolbarSelection.Changed -= OnToolbarSelection;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
@@ -491,7 +493,6 @@ namespace LunraGames.SubLight
 					encounter
 				)
 			);
-			Debug.Log("actually hook up an encounter presenter to listen to this request...");
 		}
 
 		void OnEncounterRequest(EncounterRequest request)
@@ -499,10 +500,40 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case EncounterRequest.States.Handle:
+					Debug.Log("actually hook up an encounter presenter to listen to this request...");
+					//if (request.TryHandle<e>)
 					break;
 			}
 		}
 
+		//void OnEncounterRequestHandleEvent(EncounterEventEdgeModel)
+
+		void OnSaveRequest(SaveRequest request)
+		{
+			switch (request.State)
+			{
+				case SaveRequest.States.Request:
+					App.M.Save(Payload.Game, result => OnSaveDone(result, request));
+					break;
+				case SaveRequest.States.Complete:
+					if (request.Done != null) request.Done(request);
+					break;
+				default:
+					Debug.LogError("Unrecognized SaveRequest state " + request.State);
+					break;
+			}
+		}
+
+		void OnSaveDone(SaveLoadRequest<GameModel> result, SaveRequest request)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Save game returned " + result.Status + " with error: " + result.Error);
+				return;
+			}
+
+			App.Callbacks.SaveRequest(SaveRequest.Success(request));
+		}
 		#endregion
 	}
 }
