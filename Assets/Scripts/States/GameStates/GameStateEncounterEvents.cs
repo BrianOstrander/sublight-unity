@@ -42,6 +42,9 @@ namespace LunraGames.SubLight
 
 						switch (entry.EncounterEvent.Value)
 						{
+							case EncounterEvents.Types.DebugLog:
+								OnHandleEventDebugLog(payload, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.ToolbarSelection:
 								OnHandleEventToolbarSelection(payload, entry, currOnEventDone);
 								break;
@@ -58,6 +61,46 @@ namespace LunraGames.SubLight
 
 				App.SM.PushBlocking(onCallEvents, onHaltingCondition);
 				App.SM.Push(onHaltingDone);
+			}
+
+			static void OnHandleEventDebugLog(
+				GamePayload payload,
+				EncounterEventEntryModel entry,
+				Action done
+			)
+			{
+				var severity = entry.KeyValues.GetEnum(EncounterEvents.DebugLog.EnumKeys.Severity, EncounterEvents.DebugLog.Severities.Error);
+				var message = entry.KeyValues.GetString(EncounterEvents.DebugLog.StringKeys.Message);
+				if (string.IsNullOrEmpty(message)) message = "< no message was provided >";
+
+				switch (severity)
+				{
+					case EncounterEvents.DebugLog.Severities.Normal:
+						Debug.Log(message);
+						break;
+					case EncounterEvents.DebugLog.Severities.Warning:
+						Debug.LogWarning(message);
+						break;
+					case EncounterEvents.DebugLog.Severities.Error:
+						Debug.LogError(message);
+						break;
+					case EncounterEvents.DebugLog.Severities.Break:
+						if (Application.isEditor)
+						{
+							Debug.LogWarning("Encounter Break: " + message);
+							Debug.Break();
+						}
+						else
+						{
+							Debug.LogError("Encounter tried to call a break outside the editor with this message: " + message);
+						}
+						break;
+					default:
+						Debug.LogError("Unrecognized severity: " + severity);
+						break;
+				}
+
+				done();
 			}
 
 			static void OnHandleEventToolbarSelection(
