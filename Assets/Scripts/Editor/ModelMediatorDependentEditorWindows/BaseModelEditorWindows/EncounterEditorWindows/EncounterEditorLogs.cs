@@ -160,6 +160,8 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Encyclopedia:
 					return NewEncounterLog<EncyclopediaEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Event:
+					return NewEncounterLog<EncounterEventEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType:" + logType);
 					break;
@@ -286,6 +288,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Encyclopedia:
 					OnEncyclopediaLog(infoModel, model as EncyclopediaEncounterLogModel);
+					break;
+				case EncounterLogTypes.Event:
+					OnEncounterEventLog(infoModel, model as EncounterEventEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -608,6 +613,48 @@ namespace LunraGames.SubLight
 			entry.Body.Value = EditorGUILayoutExtensions.TextDynamic("Body", entry.Body.Value);
 			entry.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), entry.Priority.Value);
 			entry.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), entry.OrderWeight.Value);
+		}
+		#endregion
+
+		#region Event Logs
+		void OnEncounterEventLog(
+			EncounterInfoModel infoModel,
+			EncounterEventEncounterLogModel model
+		)
+		{
+			if (GUILayout.Button("Append New Event")) OnEdgedLogSpawn(model, OnEncounterEventLogSpawn);
+
+			OnEdgedLog<EncounterEventEncounterLogModel, EncounterEventEdgeModel>(infoModel, model, OnEncounterEventLogEdge);
+		}
+
+		void OnEncounterEventLogSpawn(
+			EncounterEventEdgeModel edge
+		)
+		{
+			// Nothing to do...
+		}
+
+		void OnEncounterEventLogEdge(
+			EncounterInfoModel infoModel,
+			EncounterEventEncounterLogModel model,
+			EncounterEventEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+			entry.EncounterEvent.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Event"), "- Select An Event -", entry.EncounterEvent.Value);
+
+			switch (entry.EncounterEvent.Value)
+			{
+				case EncounterEvents.Unknown:
+					EditorGUILayout.HelpBox("No event type has been specified.", MessageType.Error);
+					break;
+				case EncounterEvents.Custom:
+					EditorGUILayout.HelpBox("Editing custom events is not supported yet.", MessageType.Warning);
+					break;
+				case EncounterEvents.ToolbarSelection:
+					EditorGUILayout.HelpBox("TODOLOLWTF.", MessageType.Warning);
+					break;
+			}
 		}
 		#endregion
 
