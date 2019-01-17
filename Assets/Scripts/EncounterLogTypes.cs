@@ -8,6 +8,7 @@
 		Switch = 30,
 		Button = 40,
 		Encyclopedia = 50,
-		Event = 60
+		Event = 60,
+		Dialog = 70
 	}
 }

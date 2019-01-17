@@ -21,37 +21,7 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [
-      {
-        "entries": [
-          {
-            "entry": {
-              "eventId": "e8b11b4d-f3b7-4ddb-bffc-a4b78b78b875",
-              "encounterEvent": "Debug",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {
-                  "message": "You clicked on me!!!"
-                },
-                "enums": {
-                  "severity": 20
-                }
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              }
-            }
-          }
-        ],
-        "index": 1,
-        "beginning": true,
-        "ending": true,
-        "logId": "1d056b7b-80ee-4351-a8ff-133c7fd01a1f"
-      }
-    ]
+    "eventLogs": []
   },
   "version": 7,
   "meta": "Navigation Select Test",

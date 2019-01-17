@@ -271,7 +271,7 @@ namespace LunraGames.SubLight
 
 		void OnSwitchLog(SwitchEncounterLogModel logModel, Action<string> done)
 		{
-			var switches = logModel.Switches.Value.Where(e => !e.Ignore.Value && !string.IsNullOrEmpty(e.NextLogId.Value)).OrderBy(e => e.Index.Value).ToList();
+			var switches = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).Where(e => !string.IsNullOrEmpty(e.NextLogId.Value)).ToList();
 
 			OnSwitchLogFilter(
 				null,
@@ -284,7 +284,7 @@ namespace LunraGames.SubLight
 		void OnSwitchLogFilter(
 			bool? result,
 			string resultId,
-			List<SwitchEdgeModel> remaining,
+			List<SwitchEntryModel> remaining,
 			Action<RequestStatus, string> done
 		)
 		{

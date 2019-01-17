@@ -493,7 +493,7 @@ namespace LunraGames.SubLight
 			string targetLogId
 		)
 		{
-			edge.NextLogId.Value = targetLogId;
+			edge.Entry.NextLogId.Value = targetLogId;
 		}
 
 		void OnSwitchLogEdge(
@@ -502,20 +502,22 @@ namespace LunraGames.SubLight
 			SwitchEdgeModel edge
 		)
 		{
+			var entry = edge.Entry;
+
 			EditorGUILayoutEncounter.LogPopup(
 				"Target Log: ",
-				edge.NextLogId.Value,
+				entry.NextLogId.Value,
 				infoModel,
 				model,
-				existingSelection => edge.NextLogId.Value = existingSelection,
-				newSelection => edge.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				existingSelection => entry.NextLogId.Value = existingSelection,
+				newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 				EncounterLogBlankHandling.Error,
 				"- Select Target Log -"
 			);
 
 			EditorGUILayoutValueFilter.Field(
 				new GUIContent("Filtering", "Passing this filter is required to continue to the target log."),
-				edge.Filtering
+				entry.Filtering
 			);
 		}
 		#endregion

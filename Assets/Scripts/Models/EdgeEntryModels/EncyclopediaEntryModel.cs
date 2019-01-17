@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncyclopediaEntryModel : Model
+	public class EncyclopediaEntryModel : EdgeEntryModel
 	{
 		[JsonProperty] string encyclopediaId;
 		[JsonProperty] string title;
@@ -16,7 +16,7 @@ namespace LunraGames.SubLight.Models
 		/// <summary>
 		/// The encyclopedia identifier, used mostly internally for production
 		/// purposes. Two entries may be the exact same despite having different
-		/// EncyclopediaIds.
+		/// EncyclopediaIds. (uhhh... why?)
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncyclopediaId;
