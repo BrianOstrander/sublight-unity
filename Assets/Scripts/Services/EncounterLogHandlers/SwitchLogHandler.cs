@@ -18,50 +18,18 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var switches = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).Where(e => !string.IsNullOrEmpty(e.NextLogId.Value)).ToList();
+			var switches = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).Where(e => !string.IsNullOrEmpty(e.NextLogId.Value)).ToArray();
 
-			OnFilter(
-				null,
-				null,
-				switches,
-				(status, result) => OnDone(status, result, logModel, nonLinearDone)
+			FilterFirst(
+				(status, result) => OnDone(status, result, logModel, nonLinearDone),
+				entry => entry.Filtering,
+				switches
 			);
 		}
 
-		void OnFilter(
-			bool? result,
-			string resultId,
-			List<SwitchEntryModel> remaining,
-			Action<RequestStatus, string> done
-		)
+		void OnDone(RequestStatus status, SwitchEntryModel entry, SwitchEncounterLogModel logModel, Action<string> done)
 		{
-			if (result.HasValue && result.Value)
-			{
-				done(RequestStatus.Success, resultId);
-				return;
-			}
-
-			if (!remaining.Any())
-			{
-				done(RequestStatus.Failure, null);
-				return;
-			}
-
-			var next = remaining.First();
-			var nextId = next.NextLogId.Value;
-			remaining.RemoveAt(0);
-
-			Configuration.ValueFilter.Filter(
-				filterResult => OnFilter(filterResult, nextId, remaining, done),
-				next.Filtering,
-				Configuration.Model,
-				Configuration.Encounter
-			);
-		}
-
-		void OnDone(RequestStatus status, string nextLogId, SwitchEncounterLogModel logModel, Action<string> done)
-		{
-			if (status == RequestStatus.Success) done(nextLogId);
+			if (status == RequestStatus.Success) done(entry.NextLogId.Value);
 			else done(logModel.NextLog);
 		}
 	}

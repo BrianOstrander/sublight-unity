@@ -19,7 +19,38 @@
   "logs": {
     "textLogs": [],
     "keyValueLogs": [],
-    "switchLogs": [],
+    "switchLogs": [
+      {
+        "switches": [
+          {
+            "entry": {
+              "nextLogId": "1a486c66-baad-418b-9be3-5f7fcd949b84",
+              "filtering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "130cfa63-6441-47c5-8043-6902bc3d8d8d"
+            }
+          },
+          {
+            "entry": {
+              "nextLogId": "9ed94471-6840-4bac-830f-7b16ee1a5b25",
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "ffcd3c93-cc36-4b1e-8068-9dca29d3d97d"
+            },
+            "index": 1
+          }
+        ],
+        "index": 2,
+        "logId": "5da67f8a-7e37-4f6b-adb2-364d33947246"
+      }
+    ],
     "buttonLogs": [],
     "encyclopediaLogs": [],
     "eventLogs": [
@@ -47,9 +78,67 @@
             }
           }
         ],
-        "nextLogId": "7fca8b67-569b-40d6-9fdc-d5a527a491cc",
+        "nextLogId": "5da67f8a-7e37-4f6b-adb2-364d33947246",
         "beginning": true,
         "logId": "059e21e8-ec5d-4e29-8aa6-19485c9260ed"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "First chosen"
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a6ee62be-5be2-4ecf-9413-d2bd6888b48b"
+            }
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "1a486c66-baad-418b-9be3-5f7fcd949b84",
+        "name": "first"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Second chosen"
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "cc1f2a68-7a3b-406c-9c6b-d713b4915750"
+            }
+          }
+        ],
+        "index": 4,
+        "ending": true,
+        "logId": "9ed94471-6840-4bac-830f-7b16ee1a5b25",
+        "name": "second"
       }
     ],
     "dialogLogs": [

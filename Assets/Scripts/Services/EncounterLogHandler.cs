@@ -68,6 +68,114 @@ namespace LunraGames.SubLight
 			Action linearDone,
 			Action<string> nonLinearDone
 		);
+
+		protected void FilterFirst<E>(
+			Action<RequestStatus, E> done,
+			Func<E, ValueFilterModel> getFilter,
+			params E[] remaining
+		)
+		{
+			if (done == null) throw new ArgumentNullException("done");
+			if (getFilter == null) throw new ArgumentNullException("getFilter");
+
+			if (remaining == null || remaining.Length == 0)
+			{
+				done(RequestStatus.Failure, default(E));
+				return;
+			}
+
+			OnFilterFirst(
+				done,
+				getFilter,
+				remaining.ToList()
+			);
+		}
+
+		void OnFilterFirst<E>(
+			Action<RequestStatus, E> done,
+			Func<E, ValueFilterModel> getFilter,
+			List<E> remaining,
+			E target = default(E),
+			bool? result = null
+		)
+		{
+			if (result.HasValue && result.Value)
+			{
+				done(RequestStatus.Success, target);
+				return;
+			}
+
+			if (remaining.None())
+			{
+				done(RequestStatus.Failure, default(E));
+				return;
+			}
+
+			target = remaining.First();
+			remaining.RemoveAt(0);
+
+			Configuration.ValueFilter.Filter(
+				filterResult => OnFilterFirst(done, getFilter, remaining, target, filterResult),
+				getFilter(target),
+				Configuration.Model,
+				Configuration.Encounter
+			);
+		}
+
+		protected void FilterAll<E>(
+			Action<RequestStatus, E[]> done,
+			Func<E, ValueFilterModel> getFilter,
+			params E[] remaining
+		)
+		{
+			if (done == null) throw new ArgumentNullException("done");
+			if (getFilter == null) throw new ArgumentNullException("getFilter");
+
+			if (remaining == null || remaining.Length == 0)
+			{
+				done(RequestStatus.Failure, new E[0]);
+				return;
+			}
+
+			OnFilterAll(
+				done,
+				getFilter,
+				remaining.ToList(),
+				new List<E>()
+			);
+		}
+
+		void OnFilterAll<E>(
+			Action<RequestStatus, E[]> done,
+			Func<E, ValueFilterModel> getFilter,
+			List<E> remaining,
+			List<E> passed,
+			E target = default(E),
+			bool? result = null
+		)
+		{
+			if (result.HasValue && result.Value)
+			{
+				passed.Add(target);
+			}
+
+			if (remaining.None())
+			{
+				if (0 < passed.Count) done(RequestStatus.Success, passed.ToArray());
+				else done(RequestStatus.Failure, new E[0]);
+				return;
+			}
+
+			target = remaining.First();
+			remaining.RemoveAt(0);
+
+			Configuration.ValueFilter.Filter(
+				filterResult => OnFilterAll(done, getFilter, remaining, passed, target, filterResult),
+				getFilter(target),
+				Configuration.Model,
+				Configuration.Encounter
+			);
+		}
 	}
 
 	public interface IEncounterLogHandler
