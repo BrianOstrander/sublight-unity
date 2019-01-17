@@ -47,9 +47,32 @@
             }
           }
         ],
+        "nextLogId": "7fca8b67-569b-40d6-9fdc-d5a527a491cc",
         "beginning": true,
-        "ending": true,
         "logId": "059e21e8-ec5d-4e29-8aa6-19485c9260ed"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "dialogType": "Confirm",
+              "dialogStyle": "Neutral",
+              "successText": "",
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "90082530-0c79-49da-af11-72e7794ea5cf"
+            }
+          }
+        ],
+        "nextLogId": "6d62fb4d-28b2-4b3d-911a-82ad734be146",
+        "index": 1,
+        "ending": true,
+        "logId": "7fca8b67-569b-40d6-9fdc-d5a527a491cc"
       }
     ]
   },

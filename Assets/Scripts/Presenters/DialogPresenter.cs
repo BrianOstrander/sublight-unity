@@ -60,16 +60,16 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (lastRequest.DialogType)
 			{
-				case DialogTypes.Alert:
+				case DialogTypes.Confirm:
 					defaultTitle = alertTitle;
 					defaultSuccess = okayDefault;
 					break;
-				case DialogTypes.CancelConfirm:
+				case DialogTypes.ConfirmDeny:
 					defaultTitle = confirmTitle;
 					defaultSuccess = yesDefault;
 					defaultFailure = noDefault;
 					break;
-				case DialogTypes.CancelDenyConfirm:
+				case DialogTypes.ConfirmDenyCancel:
 					defaultTitle = confirmTitle;
 					defaultSuccess = yesDefault;
 					defaultFailure = noDefault;

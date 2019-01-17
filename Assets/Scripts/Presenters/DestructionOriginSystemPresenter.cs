@@ -29,7 +29,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(Strings.HomeInfo), title: LanguageStringModel.Override(Strings.HomeInfoTitle)));
+			App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override(Strings.HomeInfo), title: LanguageStringModel.Override(Strings.HomeInfoTitle)));
 		}
 		#endregion
 	}

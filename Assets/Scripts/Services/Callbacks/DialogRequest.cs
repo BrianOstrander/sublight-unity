@@ -35,7 +35,7 @@ namespace LunraGames.SubLight
 		/// <param name="message">Message.</param>
 		/// <param name="title">Title.</param>
 		/// <param name="done">Done.</param>
-		public static DialogRequest Alert(
+		public static DialogRequest Confirm(
 			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
@@ -44,7 +44,7 @@ namespace LunraGames.SubLight
 		{
 			return new DialogRequest(
 				States.Request,
-				DialogTypes.Alert,
+				DialogTypes.Confirm,
 				style,
 				title,
 				message,
@@ -61,7 +61,7 @@ namespace LunraGames.SubLight
 		/// <param name="cancel">Cancel.</param>
 		/// <param name="confirm">Confirm.</param>
 		/// <param name="done">Done.</param>
-		public static DialogRequest CancelConfirm(
+		public static DialogRequest ConfirmDeny(
 			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
@@ -72,7 +72,7 @@ namespace LunraGames.SubLight
 		{
 			return new DialogRequest(
 				States.Request,
-				DialogTypes.CancelConfirm,
+				DialogTypes.ConfirmDeny,
 				style,
 				title,
 				message,
@@ -92,7 +92,7 @@ namespace LunraGames.SubLight
 		/// <param name="deny">Deny.</param>
 		/// <param name="confirm">Confirm.</param>
 		/// <param name="done">Done.</param>
-		public static DialogRequest CancelDenyConfirm(
+		public static DialogRequest ConfirmDenyCancel(
 			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
@@ -107,7 +107,7 @@ namespace LunraGames.SubLight
 		{
 			return new DialogRequest(
 				States.Request,
-				DialogTypes.CancelDenyConfirm,
+				DialogTypes.ConfirmDenyCancel,
 				style,
 				title,
 				message,

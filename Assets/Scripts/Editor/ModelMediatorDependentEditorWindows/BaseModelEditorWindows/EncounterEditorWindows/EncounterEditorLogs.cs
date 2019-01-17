@@ -162,6 +162,8 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<EncyclopediaEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Event:
 					return NewEncounterLog<EncounterEventEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Dialog:
+					return NewEncounterLog<DialogEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType:" + logType);
 					break;
@@ -291,6 +293,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Event:
 					OnEncounterEventLog(infoModel, model as EncounterEventEncounterLogModel);
+					break;
+				case EncounterLogTypes.Dialog:
+					OnDialogLog(infoModel, model as DialogEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -729,6 +734,213 @@ namespace LunraGames.SubLight
 				)
 			);
 		}
+		#endregion
+
+		#region Dialog Logs
+		void OnDialogLog(
+			EncounterInfoModel infoModel,
+			DialogEncounterLogModel model
+		)
+		{
+			if (GUILayout.Button("Append New Dialog")) OnEdgedLogSpawn(model, OnDialogLogSpawn);
+
+			OnEdgedLog<DialogEncounterLogModel, DialogEdgeModel>(infoModel, model, OnDialogLogEdge);
+		}
+
+		void OnDialogLogSpawn(
+			DialogEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			entry.DialogType.Value = DialogTypes.Confirm;
+			entry.DialogStyle.Value = DialogStyles.Neutral;
+			// Nothing to do...
+		}
+
+		void OnDialogLogEdge(
+			EncounterInfoModel infoModel,
+			DialogEncounterLogModel model,
+			DialogEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.PrefixLabel("Configuration");
+				entry.DialogType.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+					//new GUIContent("Type"),
+					GUIContent.none,
+					"- Select A Type -",
+					entry.DialogType.Value
+				);
+				
+				entry.DialogStyle.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+					//new GUIContent("Style"),
+					GUIContent.none,
+					"- Select A Style -",
+					entry.DialogStyle.Value
+				);
+			}
+			GUILayout.EndHorizontal();
+
+			switch (entry.DialogType.Value)
+			{
+				case DialogTypes.Confirm:
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Success
+					);
+					break;
+				case DialogTypes.ConfirmDeny:
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Success
+					);
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Failure
+					);
+					break;
+				case DialogTypes.ConfirmDenyCancel:
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Success
+					);
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Failure
+					);
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Cancel
+					);
+					break;
+				case DialogTypes.Unknown:
+					EditorGUILayout.HelpBox("A valid DialogType must be specified.", MessageType.Error);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized DialogType " + entry.DialogType.Value, MessageType.Error);
+					break;
+			}
+
+		}
+
+		void OnDialogLogEdgeOption(
+			EncounterInfoModel infoModel,
+			DialogEncounterLogModel model,
+			DialogEdgeModel edge,
+			RequestStatus option
+		)
+		{
+			var entry = edge.Entry;
+
+			GUILayout.BeginVertical(EditorStyles.helpBox);
+			{
+				var entryName = "Unknown";
+				switch (option)
+				{
+					case RequestStatus.Success: entryName = "Confirm"; break;
+					case RequestStatus.Failure: entryName = "Deny"; break;
+					case RequestStatus.Cancel: entryName = "Cancel"; break;
+				}
+
+				GUILayout.Label(entryName + " Button", EditorStyles.boldLabel);
+				ListenerProperty<string> text = null;
+				ListenerProperty<string> nextId = null;
+
+				switch (option)
+				{
+					case RequestStatus.Success:
+						text = entry.SuccessText;
+						nextId = entry.SuccessLogId;
+						break;
+					case RequestStatus.Failure:
+						text = entry.FailureText;
+						nextId = entry.FailureLogId;
+						break;
+					case RequestStatus.Cancel:
+						text = entry.CancelText;
+						nextId = entry.CancelLogId;
+						break;
+				}
+
+				if (text == null || nextId == null)
+				{
+					EditorGUILayout.HelpBox("Unrecognized RequestStatus: " + option, MessageType.Error);
+				}
+				else
+				{
+					GUILayout.BeginHorizontal();
+					{
+						text.Value = EditorGUILayout.TextField("Text", text.Value);
+						var noText = string.IsNullOrEmpty(text.Value);
+						if (noText) EditorGUILayoutExtensions.PushColor(Color.gray);
+						GUILayout.Label(new GUIContent(noText ? "Not Overriding" : "Overriding", "Leave blank to use the default values for dialog button text."), GUILayout.ExpandWidth(false));
+						if (noText) EditorGUILayoutExtensions.PopColor();
+					}
+					GUILayout.EndHorizontal();
+					EditorGUILayoutEncounter.LogPopup(
+						"Target Log: ",
+						nextId.Value,
+						infoModel,
+						model,
+						existingSelection => nextId.Value = existingSelection,
+						newSelection => nextId.Value = AppendNewLog(newSelection, infoModel),
+						EncounterLogBlankHandling.FallsThrough,
+						"- Select Target Log -"
+					);
+				}
+			}
+			GUILayout.EndVertical();
+
+			//EditorGUILayoutEncounter.LogPopup(
+			//	"Target Log: ",
+			//	entry.NextLogId.Value,
+			//	infoModel,
+			//	model,
+			//	existingSelection => entry.NextLogId.Value = existingSelection,
+			//	newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+			//	EncounterLogBlankHandling.Error,
+			//	"- Select Target Log -"
+			//);
+		}
+
+		/*
+		void OnDialogLogEdgeAlert(
+			DialogEntryModel entry
+		)
+		{
+
+		}
+
+		void OnDialogLogEdgeCancelConfirm(
+			DialogEntryModel entry
+		)
+		{
+
+		}
+
+		void OnDialogLogEdgeCancelConfirmDeny(
+			DialogEntryModel entry
+		)
+		{
+
+		}
+		*/
 		#endregion
 
 		#region Edged Logs
