@@ -22,7 +22,36 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": []
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Init encounter run!"
+                },
+                "enums": {
+                  "severity": 20
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d31a7e90-7a3a-4884-9455-7a0f109def4d"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "059e21e8-ec5d-4e29-8aa6-19485c9260ed"
+      }
+    ]
   },
   "version": 7,
   "meta": "Game Start Test",

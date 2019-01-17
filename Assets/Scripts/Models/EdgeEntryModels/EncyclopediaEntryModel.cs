@@ -16,7 +16,7 @@ namespace LunraGames.SubLight.Models
 		/// <summary>
 		/// The encyclopedia identifier, used mostly internally for production
 		/// purposes. Two entries may be the exact same despite having different
-		/// EncyclopediaIds. (uhhh... why?)
+		/// EncyclopediaIds. (uhhh... why? Should this just use EntryId?)
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<string> EncyclopediaId;
