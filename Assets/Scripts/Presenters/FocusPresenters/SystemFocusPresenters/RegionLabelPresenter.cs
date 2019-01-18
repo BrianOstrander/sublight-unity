@@ -5,7 +5,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class RegionLabelPresenter : FocusPresenter<IRegionLabelView, SystemFocusDetails>
+	public class RegionLabelPresenter : SystemFocusPresenter<IRegionLabelView>
 	{
 		GameModel model;
 		UniverseScales scale;

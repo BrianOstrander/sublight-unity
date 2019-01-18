@@ -3,7 +3,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class GridVelocityPresenter : FocusPresenter<IGridVelocityView, SystemFocusDetails>
+	public class GridVelocityPresenter : SystemFocusPresenter<IGridVelocityView>
 	{
 		GameModel model;
 		GridVelocityLanguageBlock language;

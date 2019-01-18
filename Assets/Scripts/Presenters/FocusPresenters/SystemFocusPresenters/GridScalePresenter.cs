@@ -5,7 +5,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class GridScalePresenter : FocusPresenter<IGridScaleView, SystemFocusDetails>
+	public class GridScalePresenter : SystemFocusPresenter<IGridScaleView>
 	{
 		GameModel model;
 		LanguageStringModel scaleText;

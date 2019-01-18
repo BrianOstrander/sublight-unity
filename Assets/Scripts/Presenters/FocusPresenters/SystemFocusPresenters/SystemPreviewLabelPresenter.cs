@@ -5,7 +5,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class SystemPreviewLabelPresenter : FocusPresenter<ISystemPreviewLabelView, SystemFocusDetails>
+	public class SystemPreviewLabelPresenter : SystemFocusPresenter<ISystemPreviewLabelView>
 	{
 		GameModel model;
 		SystemPreviewLanguageBlock language;

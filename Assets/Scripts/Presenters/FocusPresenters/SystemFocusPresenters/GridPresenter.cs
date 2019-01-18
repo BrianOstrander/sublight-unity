@@ -9,7 +9,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class GridPresenter : FocusPresenter<IGridView, SystemFocusDetails>
+	public class GridPresenter : SystemFocusPresenter<IGridView>
 	{
 		const float Tiling = 8f;
 
