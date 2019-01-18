@@ -20,7 +20,7 @@ TagManager:
   - HoloRoom
   - HoloToolbar
   - HoloSystem
-  - HoloCommunications
+  - HoloCommunication
   - HoloHome
   - HoloPriority
   - HoloShip

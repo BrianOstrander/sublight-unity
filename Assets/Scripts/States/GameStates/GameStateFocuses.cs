@@ -27,7 +27,7 @@ namespace LunraGames.SubLight
 
 				new GenericFocusCameraPresenter<ToolbarFocusDetails>(gantryAnchor, fieldOfView);
 				new GenericFocusCameraPresenter<SystemFocusDetails>(gantryAnchor, fieldOfView);
-				new GenericFocusCameraPresenter<CommunicationsFocusDetails>(gantryAnchor, fieldOfView);
+				new GenericFocusCameraPresenter<CommunicationFocusDetails>(gantryAnchor, fieldOfView);
 				new GenericFocusCameraPresenter<ShipFocusDetails>(gantryAnchor, fieldOfView);
 				new GenericFocusCameraPresenter<EncyclopediaFocusDetails>(gantryAnchor, fieldOfView);
 
@@ -38,7 +38,7 @@ namespace LunraGames.SubLight
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
 				payload.ShowOnIdle.Add(new ToolbarBackPresenter(payload.Game, LanguageStringModel.Override("Back")));
 
-				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communications, SetFocusLayers.Encyclopedia);
+				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
 				InitializeSystemPresenters(state, done);
 			}
@@ -302,7 +302,7 @@ namespace LunraGames.SubLight
 						case SetFocusLayers.Priority: results.Add(GetFocus<PriorityFocusDetails>()); break;
 						case SetFocusLayers.Toolbar: results.Add(GetFocus<ToolbarFocusDetails>()); break;
 						case SetFocusLayers.System: results.Add(GetFocus<SystemFocusDetails>()); break;
-						case SetFocusLayers.Communications: results.Add(GetFocus<CommunicationsFocusDetails>()); break;
+						case SetFocusLayers.Communication: results.Add(GetFocus<CommunicationFocusDetails>()); break;
 						case SetFocusLayers.Ship: results.Add(GetFocus<ShipFocusDetails>()); break;
 						case SetFocusLayers.Encyclopedia: results.Add(GetFocus<EncyclopediaFocusDetails>()); break;
 						case SetFocusLayers.Home:
@@ -345,8 +345,8 @@ namespace LunraGames.SubLight
 					case ToolbarSelections.Ship:
 						results.Add(GetFocus<ShipFocusDetails>(1, true, 1f, true));
 						break;
-					case ToolbarSelections.Communications:
-						results.Add(GetFocus<CommunicationsFocusDetails>(1, true, 1f, true));
+					case ToolbarSelections.Communication:
+						results.Add(GetFocus<CommunicationFocusDetails>(1, true, 1f, true));
 						break;
 					case ToolbarSelections.Encyclopedia:
 						results.Add(GetFocus<EncyclopediaFocusDetails>(1, true, 1f, true));
@@ -375,8 +375,8 @@ namespace LunraGames.SubLight
 					case ToolbarSelections.Ship:
 						results.Add(GetFocus<ShipFocusDetails>(1, true, PriorityDimming, false));
 						break;
-					case ToolbarSelections.Communications:
-						results.Add(GetFocus<CommunicationsFocusDetails>(1, true, PriorityDimming, false));
+					case ToolbarSelections.Communication:
+						results.Add(GetFocus<CommunicationFocusDetails>(1, true, PriorityDimming, false));
 						break;
 					case ToolbarSelections.Encyclopedia:
 						results.Add(GetFocus<EncyclopediaFocusDetails>(1, true, PriorityDimming, false));

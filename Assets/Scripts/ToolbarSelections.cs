@@ -5,7 +5,7 @@
 		Unknown = 0,
 		System = 10,
 		Ship = 20,
-		Communications = 30,
+		Communication = 30,
 		Encyclopedia = 40
 	}
 }

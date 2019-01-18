@@ -16,7 +16,7 @@ namespace LunraGames.SubLight
 			if (type == typeof(HomeFocusDetails)) return SetFocusLayers.Home;
 			if (type == typeof(ToolbarFocusDetails)) return SetFocusLayers.Toolbar;
 			if (type == typeof(SystemFocusDetails)) return SetFocusLayers.System;
-			if (type == typeof(CommunicationsFocusDetails)) return SetFocusLayers.Communications;
+			if (type == typeof(CommunicationFocusDetails)) return SetFocusLayers.Communication;
 			if (type == typeof(ShipFocusDetails)) return SetFocusLayers.Ship;
 			if (type == typeof(EncyclopediaFocusDetails)) return SetFocusLayers.Encyclopedia;
 

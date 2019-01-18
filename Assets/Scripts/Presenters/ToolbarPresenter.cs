@@ -39,7 +39,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				new ToolbarButtonBlock(LanguageStringModel.Override("Navigation"), View.GetIcon(SetFocusLayers.System), () => OnTransitionClick(ToolbarSelections.System)),
 				new ToolbarButtonBlock(LanguageStringModel.Override("Logistics"), View.GetIcon(SetFocusLayers.Ship), () => OnTransitionClick(ToolbarSelections.Ship)),
-				new ToolbarButtonBlock(LanguageStringModel.Override("Communications"), View.GetIcon(SetFocusLayers.Communications), () => OnTransitionClick(ToolbarSelections.Communications)),
+				new ToolbarButtonBlock(LanguageStringModel.Override("Communications"), View.GetIcon(SetFocusLayers.Communication), () => OnTransitionClick(ToolbarSelections.Communication)),
 				new ToolbarButtonBlock(LanguageStringModel.Override("Encyclopedia"), View.GetIcon(SetFocusLayers.Encyclopedia), () => OnTransitionClick(ToolbarSelections.Encyclopedia))
 			};
 
@@ -69,7 +69,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				case ToolbarSelections.System: View.Selection = 0; break;
 				case ToolbarSelections.Ship: View.Selection = 1; break;
-				case ToolbarSelections.Communications: View.Selection = 2; break;
+				case ToolbarSelections.Communication: View.Selection = 2; break;
 				case ToolbarSelections.Encyclopedia: View.Selection = 3; break;
 				default:
 					Debug.LogError("Unrecognized selection: " + model.ToolbarSelection.Value);

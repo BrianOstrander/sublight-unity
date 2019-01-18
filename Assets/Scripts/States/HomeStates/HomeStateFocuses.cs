@@ -73,7 +73,7 @@ namespace LunraGames.SubLight
 						case SetFocusLayers.Home: results.Add(GetFocus<HomeFocusDetails>()); break;
 						case SetFocusLayers.Toolbar:
 						case SetFocusLayers.System:
-						case SetFocusLayers.Communications:
+						case SetFocusLayers.Communication:
 						case SetFocusLayers.Ship:
 						case SetFocusLayers.Encyclopedia:
 							// I dunno why I do this...
