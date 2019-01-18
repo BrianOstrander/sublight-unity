@@ -35,6 +35,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			base.OnUnBind();
+
 			App.Heartbeat.Update -= OnUpdate;
 
 			model.RelativeDayTime.Changed -= OnDayTime;

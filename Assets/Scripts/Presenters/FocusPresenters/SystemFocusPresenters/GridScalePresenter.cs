@@ -33,6 +33,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			base.OnUnBind();
+
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Heartbeat.Update -= OnUpdate;
 			model.FocusTransform.Changed -= OnZoom;

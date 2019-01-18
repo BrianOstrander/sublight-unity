@@ -22,6 +22,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			base.OnUnBind();
+
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
 			model.TransitState.Changed -= OnTransitState;
 		}

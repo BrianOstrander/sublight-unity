@@ -1,18 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BustPresenter : MonoBehaviour
+using LunraGames.SubLight.Models;
+using LunraGames.SubLight.Views;
+
+namespace LunraGames.SubLight.Presenters
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public class BustPresenter : CommunicationFocusPresenter<IBustView>
+	{
+		GameModel model;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+		public BustPresenter(GameModel model)
+		{
+			this.model = model;
+		}
+
+		protected override void OnUnBind()
+		{
+			base.OnUnBind();
+
+		}
+
+		protected override void OnUpdateEnabled()
+		{
+			//OnLabel(labelProperty.Value);
+			//View.PushOpacity(() => scaleModel.Opacity.Value);
+			//View.PushOpacity(() => model.GridScaleOpacity.Value);
+		}
+
+		#region Events
+
+		#endregion
+	}
 }

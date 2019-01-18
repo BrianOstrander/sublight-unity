@@ -39,6 +39,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			base.OnUnBind();
+
 			model.GetScale(scale).Opacity.Changed -= OnOpacityStale;
 			model.GridScaleOpacity.Changed -= OnOpacityStale;
 
