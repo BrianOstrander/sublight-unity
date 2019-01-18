@@ -42,8 +42,7 @@ namespace LunraGames.SubLight
 			var failureId = GetValidId(entry.FailureLogId.Value, fallthroughId);
 			var cancelId = GetValidId(entry.CancelLogId.Value, fallthroughId);
 
-			Action successClick = () => { Debug.Log("uhhh??: "+successId); done(successId); };
-			//Action successClick = () => done(successId);
+			Action successClick = () => done(successId);
 			Action failureClick = () => done(failureId);
 			Action cancelClick = () => done(cancelId);
 

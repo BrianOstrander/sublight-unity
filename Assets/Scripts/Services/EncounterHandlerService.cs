@@ -115,7 +115,6 @@ namespace LunraGames.SubLight
 		void OnUpdate(float delta)
 		{
 			if (!nextLogDelay.HasValue) return;
-			if (callbacks.LastPlayState.State != PlayState.States.Playing) return;
 
 			if (currentPreferences().EncounterLogsAutoNext.Value) nextLogDelay = Mathf.Max(0f, nextLogDelay.Value - delta);
 
@@ -136,8 +135,8 @@ namespace LunraGames.SubLight
 
 			model.EncounterState.State.Value = EncounterStateModel.States.Processing;
 
-			this.configuration.Model = model;
-			this.configuration.Encounter = encounter;
+			configuration.Model = model;
+			configuration.Encounter = encounter;
 
 			model.EncounterState.RegisterKeyValueListener(keyValueService);
 

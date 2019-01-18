@@ -39,8 +39,6 @@ namespace LunraGames.SubLight
 
 		protected override void Idle()
 		{
-			App.Callbacks.PlayState(PlayState.Playing);
-
 			var mainCamera = (Payload.HomeStatePayload.MainCamera = new HoloRoomFocusCameraPresenter());
 
 			App.P.AddGlobals(

@@ -25,7 +25,7 @@ namespace LunraGames.SubLight.Models
 		{
 			this.log = log;
 
-			Log = new ListenerProperty<T>(value => log = value, () => log);
+			Log = new ListenerProperty<T>(value => this.log = value, () => this.log);
 		}
 	}
 }

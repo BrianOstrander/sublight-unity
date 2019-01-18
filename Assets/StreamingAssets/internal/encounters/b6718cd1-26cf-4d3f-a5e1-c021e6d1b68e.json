@@ -183,6 +183,7 @@
               "successLogId": "1a486c66-baad-418b-9be3-5f7fcd949b84",
               "successText": "",
               "filtering": {
+                "falseByDefault": true,
                 "booleanKeyValues": [],
                 "stringKeyValues": [],
                 "encounterInteractions": []
@@ -192,10 +193,15 @@
           },
           {
             "entry": {
+              "title": "Dank Alert",
+              "message": "This alert called by a hella dank encounter system.",
               "dialogType": "ConfirmDenyCancel",
-              "dialogStyle": "Warning",
+              "dialogStyle": "Error",
               "successLogId": "1a486c66-baad-418b-9be3-5f7fcd949b84",
               "failureLogId": "9ed94471-6840-4bac-830f-7b16ee1a5b25",
+              "successText": "Dank",
+              "failureText": "Daank",
+              "cancelText": "Daaank",
               "filtering": {
                 "booleanKeyValues": [],
                 "stringKeyValues": [],

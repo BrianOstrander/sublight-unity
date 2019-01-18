@@ -48,7 +48,6 @@ namespace LunraGames.SubLight.Presenters
 		void Show()
 		{
 			if (View.Visible) return;
-			if (App.Callbacks.LastPlayState.State != PlayState.States.Paused) App.Callbacks.PlayState(PlayState.Paused);
 
 			View.Reset();
 

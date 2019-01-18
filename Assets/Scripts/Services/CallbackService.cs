@@ -89,11 +89,6 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<SaveRequest> SaveRequest = ActionExtensions.GetEmpty<SaveRequest>();
 		/// <summary>
-		/// The state of game. Dialogs and similar UI will pause the game. This 
-		/// is separate from pausing the ingame time.
-		/// </summary>
-		public Action<PlayState> PlayState = ActionExtensions.GetEmpty<PlayState>();
-		/// <summary>
 		/// Any key value requests are handled through here.
 		/// </summary>
 		public Action<KeyValueRequest> KeyValueRequest = ActionExtensions.GetEmpty<KeyValueRequest>();
@@ -144,7 +139,6 @@ namespace LunraGames.SubLight
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
-		public PlayState LastPlayState;
 		public HoloColorRequest LastHoloColorRequest;
 		#endregion
 
@@ -162,7 +156,6 @@ namespace LunraGames.SubLight
 			CurrentGesture += gesture => LastGesture = gesture;
 			DayTimeDelta += delta => LastDayTimeDelta = delta;
 			SpeedRequest += speedRequest => LastSpeedRequest = speedRequest;
-			PlayState += state => LastPlayState = state;
 			HoloColorRequest += request => LastHoloColorRequest = request;
 		}
 	}

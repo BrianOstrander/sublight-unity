@@ -258,7 +258,13 @@ namespace LunraGames.SubLight.Presenters
 							Model.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
 							break;
 						case Celestial.SelectedStates.Selected:
-							Model.TransitStateRequest.Value = TransitStateRequest.Create(Model.Ship.Value.CurrentSystem.Value, instanceModel.ActiveSystem.Value);
+							switch (visitState)
+							{
+								case Celestial.VisitStates.Current: break;
+								default:
+									Model.TransitStateRequest.Value = TransitStateRequest.Create(Model.Ship.Value.CurrentSystem.Value, instanceModel.ActiveSystem.Value);
+									break;
+							}
 							break;
 					}
 					break;
