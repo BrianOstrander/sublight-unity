@@ -16,8 +16,9 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var result = new TextHandlerModel();
-			result.Log.Value = logModel;
+			var result = new TextHandlerModel(
+				logModel
+			);
 			result.Message.Value = logModel.Message;
 
 			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));

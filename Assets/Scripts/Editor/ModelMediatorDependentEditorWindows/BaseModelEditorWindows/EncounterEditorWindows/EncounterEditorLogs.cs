@@ -205,7 +205,7 @@ namespace LunraGames.SubLight
 					EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
 					var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId");
 
-					GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
+					GUILayout.Label(new GUIContent(header, model.LogId.Value), EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
 					EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
 					EditorGUILayoutExtensions.PopColor();
 					if (isMoving)
@@ -785,6 +785,9 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
+			entry.Title.Value = EditorGUILayout.TextField("Title", entry.Title.Value);
+			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", entry.Message.Value);
+
 			switch (entry.DialogType.Value)
 			{
 				case DialogTypes.Confirm:
@@ -837,6 +840,10 @@ namespace LunraGames.SubLight
 					break;
 			}
 
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "The first dialog to meet these conditions will be shown"),
+				entry.Filtering
+			);
 		}
 
 		void OnDialogLogEdgeOption(
@@ -906,41 +913,7 @@ namespace LunraGames.SubLight
 				}
 			}
 			GUILayout.EndVertical();
-
-			//EditorGUILayoutEncounter.LogPopup(
-			//	"Target Log: ",
-			//	entry.NextLogId.Value,
-			//	infoModel,
-			//	model,
-			//	existingSelection => entry.NextLogId.Value = existingSelection,
-			//	newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
-			//	EncounterLogBlankHandling.Error,
-			//	"- Select Target Log -"
-			//);
 		}
-
-		/*
-		void OnDialogLogEdgeAlert(
-			DialogEntryModel entry
-		)
-		{
-
-		}
-
-		void OnDialogLogEdgeCancelConfirm(
-			DialogEntryModel entry
-		)
-		{
-
-		}
-
-		void OnDialogLogEdgeCancelConfirmDeny(
-			DialogEntryModel entry
-		)
-		{
-
-		}
-		*/
 		#endregion
 
 		#region Edged Logs

@@ -2,7 +2,7 @@
   "randomWeightMultiplier": 1.0,
   "encounterId": "3f3d657b-af0b-486d-8e33-f22d5c42e367",
   "name": "Game Start Test",
-  "trigger": "TransitComplete",
+  "trigger": "NavigationSelect",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -10,6 +10,7 @@
     "encounterInteractions": [
       {
         "operation": "NotCompleted",
+        "ignore": true,
         "filterId": "e0d599e5-9b14-4a99-ba8f-abc0af2c640f",
         "group": "All",
         "filterValue": ""
@@ -47,8 +48,10 @@
             "index": 1
           }
         ],
+        "nextLogId": "05b6f52a-4a89-4682-8730-86d7d7197978",
         "index": 2,
-        "logId": "5da67f8a-7e37-4f6b-adb2-364d33947246"
+        "logId": "5da67f8a-7e37-4f6b-adb2-364d33947246",
+        "name": "switch"
       }
     ],
     "buttonLogs": [],
@@ -78,7 +81,7 @@
             }
           }
         ],
-        "nextLogId": "5da67f8a-7e37-4f6b-adb2-364d33947246",
+        "nextLogId": "7fca8b67-569b-40d6-9fdc-d5a527a491cc",
         "beginning": true,
         "logId": "059e21e8-ec5d-4e29-8aa6-19485c9260ed"
       },
@@ -139,6 +142,35 @@
         "ending": true,
         "logId": "9ed94471-6840-4bac-830f-7b16ee1a5b25",
         "name": "second"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Fell through..."
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "20a274f6-3ae5-49c0-954b-a9857f4227e4"
+            }
+          }
+        ],
+        "index": 5,
+        "ending": true,
+        "logId": "05b6f52a-4a89-4682-8730-86d7d7197978",
+        "name": "fall through"
       }
     ],
     "dialogLogs": [
@@ -148,6 +180,7 @@
             "entry": {
               "dialogType": "Confirm",
               "dialogStyle": "Neutral",
+              "successLogId": "1a486c66-baad-418b-9be3-5f7fcd949b84",
               "successText": "",
               "filtering": {
                 "booleanKeyValues": [],
@@ -156,12 +189,27 @@
               },
               "entryId": "90082530-0c79-49da-af11-72e7794ea5cf"
             }
+          },
+          {
+            "entry": {
+              "dialogType": "ConfirmDenyCancel",
+              "dialogStyle": "Warning",
+              "successLogId": "1a486c66-baad-418b-9be3-5f7fcd949b84",
+              "failureLogId": "9ed94471-6840-4bac-830f-7b16ee1a5b25",
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "269f1995-c7e1-4fd0-98e0-8a8a6406214b"
+            },
+            "index": 1
           }
         ],
-        "nextLogId": "6d62fb4d-28b2-4b3d-911a-82ad734be146",
+        "nextLogId": "05b6f52a-4a89-4682-8730-86d7d7197978",
         "index": 1,
-        "ending": true,
-        "logId": "7fca8b67-569b-40d6-9fdc-d5a527a491cc"
+        "logId": "7fca8b67-569b-40d6-9fdc-d5a527a491cc",
+        "name": "dialog"
       }
     ]
   },

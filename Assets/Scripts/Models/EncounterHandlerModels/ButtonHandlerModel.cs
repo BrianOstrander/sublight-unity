@@ -9,7 +9,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<ButtonLogBlock[]> Buttons;
 
-		public ButtonHandlerModel()
+		public ButtonHandlerModel(ButtonEncounterLogModel log) : base(log)
 		{
 			Buttons = new ListenerProperty<ButtonLogBlock[]>(value => buttons = value, () => buttons);
 		}

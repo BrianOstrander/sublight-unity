@@ -268,7 +268,9 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var result = new ButtonHandlerModel();
+			var result = new ButtonHandlerModel(
+				logModel
+			);
 			result.Log.Value = logModel;
 			result.Buttons.Value = buttons.ToArray();
 

@@ -25,7 +25,5 @@ namespace LunraGames.SubLight.Models
 			get { return Dialogs.Value; }
 			set { Dialogs.Value = value; }
 		}
-		[JsonIgnore]
-		public bool IsLinear { get { return true; } }
 	}
 }

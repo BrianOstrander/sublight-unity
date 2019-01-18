@@ -29,7 +29,5 @@ namespace LunraGames.SubLight.Models
 			get { return Entries.Value; }
 			set { Entries.Value = value; }
 		}
-		[JsonIgnore]
-		public bool IsLinear { get { return true; } }
 	}
 }

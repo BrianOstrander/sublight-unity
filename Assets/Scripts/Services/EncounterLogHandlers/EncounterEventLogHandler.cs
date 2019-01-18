@@ -83,7 +83,9 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var result = new EncounterEventHandlerModel();
+			var result = new EncounterEventHandlerModel(
+				logModel
+			);
 			result.Log.Value = logModel;
 			result.Events.Value = events.ToArray();
 			result.AlwaysHalting.Value = logModel.AlwaysHalting.Value;

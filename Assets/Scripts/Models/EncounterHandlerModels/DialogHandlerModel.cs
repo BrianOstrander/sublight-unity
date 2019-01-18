@@ -9,7 +9,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<DialogLogBlock> Dialog;
 
-		public DialogHandlerModel()
+		public DialogHandlerModel(DialogEncounterLogModel log) : base(log)
 		{
 			Dialog = new ListenerProperty<DialogLogBlock>(value => dialog = value, () => dialog);
 		}

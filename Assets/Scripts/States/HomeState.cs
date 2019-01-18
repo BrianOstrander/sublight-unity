@@ -220,7 +220,7 @@ namespace LunraGames.SubLight
 		#region Events Main Menu
 		void OnNewGameClick()
 		{
-			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), confirm: OnNewGameStart));
+			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), OnNewGameStart));
 			else OnNewGameStart();
 		}
 
@@ -236,7 +236,7 @@ namespace LunraGames.SubLight
 
 		void OnSettingsClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Testing sounds."), style: DialogStyles.Warning));
+			App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Testing sounds."), DialogStyles.Warning));
 			//OnNotImplimentedClick();
 		}
 

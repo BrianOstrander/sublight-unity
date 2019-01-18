@@ -267,12 +267,10 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case DialogRequest.States.Request:
-					Debug.LogError("Todo reuqest logic");
-					//App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus()));
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus(Payload.Game.ToolbarSelection.Value)));
 					break;
 				case DialogRequest.States.Completing:
-					Debug.LogError("Todo completing logic");
-					//App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(Payload.Game.ToolbarSelection.Value)));
 					break;
 			}
 		}
@@ -547,7 +545,15 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Handle:
 					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(Payload, handler))) break;
-					Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.ModelType.FullName);
+					// The list below is used mainly for when you're making a new log type and need to catch unhandled ones.
+					// Any in the switch below should be handled by an existing presenter, or something...
+					switch (request.LogType)
+					{
+						case EncounterLogTypes.Dialog: break;
+						default:
+							Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.LogType);
+							break;
+					}
 					break;
 				case EncounterRequest.States.Controls:
 					// I don't think there's anything else I need to do here...

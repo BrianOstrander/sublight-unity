@@ -6,19 +6,6 @@ namespace LunraGames.SubLight
 {
 	public struct DialogRequest
 	{
-		/*
-		static class Defaults
-		{
-			public const string AlertTitle = "Alert";
-			public const string CancelConfirmTitle = "Confirm";
-			public const string CancelDenyConfirmTitle = "Confirm";
-
-			public const string Cancel = "Cancel";
-			public const string Failure = "Deny";
-			public const string Success = "Okay";
-		}
-		*/
-
 		public enum States
 		{
 			Unknown = 0,
@@ -34,12 +21,12 @@ namespace LunraGames.SubLight
 		/// <returns>The alert.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="title">Title.</param>
-		/// <param name="done">Done.</param>
+		/// <param name="confirmClick">Done.</param>
 		public static DialogRequest Confirm(
 			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
-			Action done = null
+			Action confirmClick = null
 		)
 		{
 			return new DialogRequest(
@@ -48,7 +35,7 @@ namespace LunraGames.SubLight
 				style,
 				title,
 				message,
-				success: done
+				success: confirmClick
 			);
 		}
 
@@ -58,15 +45,15 @@ namespace LunraGames.SubLight
 		/// <returns>The confirm.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="title">Title.</param>
-		/// <param name="cancel">Cancel.</param>
-		/// <param name="confirm">Confirm.</param>
+		/// <param name="denyClick">Cancel.</param>
+		/// <param name="confirmClick">Confirm.</param>
 		/// <param name="done">Done.</param>
 		public static DialogRequest ConfirmDeny(
 			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
-			Action cancel = null,
-			Action confirm = null,
+			Action confirmClick = null,
+			Action denyClick = null,
 			Action<RequestStatus> done = null
 		)
 		{
@@ -76,8 +63,8 @@ namespace LunraGames.SubLight
 				style,
 				title,
 				message,
-				cancel: cancel,
-				success: confirm,
+				cancel: denyClick,
+				success: confirmClick,
 				done: done
 			);
 		}
@@ -88,17 +75,17 @@ namespace LunraGames.SubLight
 		/// <returns>The deny confirm.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="title">Title.</param>
-		/// <param name="cancel">Cancel.</param>
-		/// <param name="deny">Deny.</param>
-		/// <param name="confirm">Confirm.</param>
+		/// <param name="cancelClick">Cancel.</param>
+		/// <param name="denyClick">Deny.</param>
+		/// <param name="confirmClick">Confirm.</param>
 		/// <param name="done">Done.</param>
 		public static DialogRequest ConfirmDenyCancel(
 			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
-			Action cancel = null,
-			Action deny = null,
-			Action confirm = null,
+			Action confirmClick = null,
+			Action denyClick = null,
+			Action cancelClick = null,
 			LanguageStringModel cancelText = null,
 			LanguageStringModel denyText = null,
 			LanguageStringModel confirmText = null,
@@ -114,9 +101,9 @@ namespace LunraGames.SubLight
 				cancelText: cancelText,
 				failureText: denyText,
 				successText: confirmText,
-				cancel: cancel,
-				failure: deny,
-				success: confirm,
+				cancel: cancelClick,
+				failure: denyClick,
+				success: confirmClick,
 				done: done
 			);
 		}
@@ -134,7 +121,7 @@ namespace LunraGames.SubLight
 		public readonly Action Success;
 		public readonly Action<RequestStatus> Done;
 
-		DialogRequest(
+		public DialogRequest(
 			States state,
 			DialogTypes dialogType,
 			DialogStyles style,
