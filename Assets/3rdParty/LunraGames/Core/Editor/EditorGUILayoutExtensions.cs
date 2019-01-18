@@ -342,10 +342,11 @@ namespace LunraGamesEditor
 					if (nullContent) value = EditorGUILayout.TextField(value);
 					else value = EditorGUILayout.TextField(content, value);
 					PushEnabled(value != null);
-					if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+					if (GUILayout.Button("Set Null", GUILayout.Width(54f), GUILayout.Height(14f))) value = null;
 					PopEnabled();
 				}
 				GUILayout.EndHorizontal();
+				GUILayout.Space(3f);
 			}
 			else
 			{
@@ -356,7 +357,7 @@ namespace LunraGamesEditor
 					{
 						if (!nullContent) GUILayout.Label(content);
 						PushEnabled(value != null);
-						if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+						if (GUILayout.Button("Set Null", GUILayout.Width(54f), GUILayout.Height(14f))) value = null;
 						PopEnabled();
 					}
 					GUILayout.EndHorizontal();

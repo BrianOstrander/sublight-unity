@@ -36,17 +36,18 @@ namespace LunraGames.SubLight.Presenters
 			this.cancelDefault = cancelDefault;
 
 			App.Callbacks.DialogRequest += OnDialogRequest;
+			App.Callbacks.EncounterRequest += OnEncounterRequest;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
+			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
 
 		void Show()
 		{
 			if (View.Visible) return;
-			if (App.Callbacks.LastPlayState.State != PlayState.States.Paused) App.Callbacks.PlayState(PlayState.Paused);
 
 			View.Reset();
 
@@ -60,16 +61,16 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (lastRequest.DialogType)
 			{
-				case DialogTypes.Alert:
+				case DialogTypes.Confirm:
 					defaultTitle = alertTitle;
 					defaultSuccess = okayDefault;
 					break;
-				case DialogTypes.CancelConfirm:
+				case DialogTypes.ConfirmDeny:
 					defaultTitle = confirmTitle;
 					defaultSuccess = yesDefault;
 					defaultFailure = noDefault;
 					break;
-				case DialogTypes.CancelDenyConfirm:
+				case DialogTypes.ConfirmDenyCancel:
 					defaultTitle = confirmTitle;
 					defaultSuccess = yesDefault;
 					defaultFailure = noDefault;
@@ -110,6 +111,31 @@ namespace LunraGames.SubLight.Presenters
 					Show();
 					break;
 			}
+		}
+
+		void OnEncounterRequest(EncounterRequest request)
+		{
+			if (request.State != EncounterRequest.States.Handle || request.LogType != EncounterLogTypes.Dialog) return;
+			if (!request.TryHandle<DialogHandlerModel>(OnEncounterDialogHandle)) Debug.LogError("Unable to handle specified model");
+		}
+
+		void OnEncounterDialogHandle(DialogHandlerModel handler)
+		{
+			var dialog = handler.Dialog.Value;
+
+			App.Callbacks.DialogRequest(new DialogRequest(
+				DialogRequest.States.Request,
+				dialog.DialogType,
+				dialog.DialogStyle,
+				string.IsNullOrEmpty(dialog.Title) ? null : LanguageStringModel.Override(dialog.Title),
+				string.IsNullOrEmpty(dialog.Message) ? null : LanguageStringModel.Override(dialog.Message),
+				string.IsNullOrEmpty(dialog.CancelText) ? null : LanguageStringModel.Override(dialog.CancelText),
+				string.IsNullOrEmpty(dialog.FailureText) ? null : LanguageStringModel.Override(dialog.FailureText),
+				string.IsNullOrEmpty(dialog.SuccessText) ? null : LanguageStringModel.Override(dialog.SuccessText),
+				dialog.CancelClick,
+				dialog.FailureClick,
+				dialog.SuccessClick
+			));
 		}
 
 		void OnCancelClick()

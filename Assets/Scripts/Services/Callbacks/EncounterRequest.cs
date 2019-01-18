@@ -55,6 +55,8 @@ namespace LunraGames.SubLight
 		public readonly bool NextControl;
 		public readonly bool DoneControl;
 
+		public EncounterLogTypes LogType { get { return Model == null ? EncounterLogTypes.Unknown : Model.LogType; } }
+
 		public EncounterRequest(
 			States state,
 			GameModel gameModel = null,

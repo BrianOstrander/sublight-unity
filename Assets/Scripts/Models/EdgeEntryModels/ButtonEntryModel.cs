@@ -2,11 +2,8 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEdgeModel : Model, IEdgeModel
+	public class ButtonEntryModel : EdgeEntryModel
 	{
-		[JsonProperty] string buttonId;
-		[JsonProperty] int index;
-		[JsonProperty] bool ignore;
 		[JsonProperty] string message;
 		[JsonProperty] string nextLogId;
 		[JsonProperty] bool notAutoUsed;
@@ -16,12 +13,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ValueFilterModel interactableFiltering = ValueFilterModel.Default();
 		[JsonProperty] ValueFilterModel enabledFiltering = ValueFilterModel.Default();
 
-		[JsonIgnore]
-		public readonly ListenerProperty<string> ButtonId;
-		[JsonIgnore]
-		public readonly ListenerProperty<int> Index;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> Ignore;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Message;
 		[JsonIgnore]
@@ -72,37 +63,19 @@ namespace LunraGames.SubLight.Models
 		public ValueFilterModel EnabledFiltering { get { return enabledFiltering; } }
 
 		[JsonIgnore]
-		public string AutoDisabledKey { get { return "AutoDisabled_" + ButtonId.Value; } }
+		public string AutoDisabledKey { get { return "AutoDisabled_" + EntryId.Value; } }
 		[JsonIgnore]
-		public string AutoDisabledInteractionsKey { get { return "AutoDisabledInteractions_" + ButtonId.Value; } }
+		public string AutoDisabledInteractionsKey { get { return "AutoDisabledInteractions_" + EntryId.Value; } }
 		[JsonIgnore]
-		public string AutoUsedKey { get { return "AutoUsed_" + ButtonId.Value; } }
+		public string AutoUsedKey { get { return "AutoUsed_" + EntryId.Value; } }
 
-		public ButtonEdgeModel()
+		public ButtonEntryModel()
 		{
-			ButtonId = new ListenerProperty<string>(value => buttonId = value, () => buttonId);
-			Index = new ListenerProperty<int>(value => index = value, () => index);
-			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			Message = new ListenerProperty<string>(value => message = value, () => message);
 			NextLogId = new ListenerProperty<string>(value => nextLogId = value, () => nextLogId);
 			NotAutoUsed = new ListenerProperty<bool>(value => notAutoUsed = value, () => notAutoUsed);
 			AutoDisableInteractions = new ListenerProperty<bool>(value => autoDisableInteractions = value, () => autoDisableInteractions);
 			AutoDisableEnabled = new ListenerProperty<bool>(value => autoDisableEnabled = value, () => autoDisableEnabled);
-		}
-
-		[JsonIgnore]
-		public string EdgeName { get { return "Button"; } }
-		[JsonIgnore]
-		public int EdgeIndex
-		{
-			get { return Index.Value; }
-			set { Index.Value = value; }
-		}
-		[JsonIgnore]
-		public string EdgeId
-		{
-			get { return ButtonId.Value; }
-			set { ButtonId.Value = value; }
 		}
 	}
 }

@@ -9,7 +9,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Message;
 
-		public TextHandlerModel()
+		public TextHandlerModel(TextEncounterLogModel log) : base(log)
 		{
 			Message = new ListenerProperty<string>(value => message = value, () => message);
 		}

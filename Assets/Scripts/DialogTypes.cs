@@ -3,9 +3,9 @@
 	public enum DialogTypes
 	{
 		Unknown = 0,
-		Alert = 10,
-		CancelConfirm = 20,
-		CancelDenyConfirm = 30
+		Confirm = 10,
+		ConfirmDeny = 20,
+		ConfirmDenyCancel = 30
 	}
 
 	public enum DialogStyles

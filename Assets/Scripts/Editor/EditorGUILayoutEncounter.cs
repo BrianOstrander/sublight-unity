@@ -16,7 +16,8 @@ namespace LunraGames.SubLight
 		None = 10,
 		Warning = 20,
 		Error = 30,
-		SpecifiedByModel = 40
+		SpecifiedByModel = 40,
+		FallsThrough = 50,
 	}
 
 	public static class EditorGUILayoutEncounter
@@ -142,10 +143,11 @@ namespace LunraGames.SubLight
 			if (blankHandling != EncounterLogBlankHandling.None && (string.IsNullOrEmpty(current) || hasMissingId))
 			{
 				var blankMessage = string.Empty;
-				var blankType = MessageType.Info;
+				var blankType = MessageType.None;
 				
 				const string BlankWarning = "Specifying no log may cause unpredictable behaviour.";
 				const string BlankError = "A log must be specified.";
+				const string FallsThroughInfo = "Specifying no log will fall through to the current log's \"Next Log\".";
 
 				switch (blankHandling)
 				{
@@ -170,9 +172,13 @@ namespace LunraGames.SubLight
 							blankType = MessageType.Warning;
 						}
 						break;
+					case EncounterLogBlankHandling.FallsThrough:
+						blankMessage = FallsThroughInfo;
+						blankType = MessageType.Info;
+						break;
 				}
 
-				if (blankType != MessageType.Info) EditorGUILayout.HelpBox(blankMessage, blankType);
+				if (blankType != MessageType.None) EditorGUILayout.HelpBox(blankMessage, blankType);
 			}
 
 			if (startIndex == index) return;

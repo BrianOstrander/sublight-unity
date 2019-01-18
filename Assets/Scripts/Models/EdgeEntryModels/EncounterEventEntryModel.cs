@@ -2,14 +2,11 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncounterEventEntryModel : Model
+	public class EncounterEventEntryModel : EdgeEntryModel
 	{
-		[JsonProperty] string eventId;
 		[JsonProperty] EncounterEvents.Types encounterEvent;
 		[JsonProperty] bool isHalting;
 
-		[JsonIgnore]
-		public readonly ListenerProperty<string> EventId;
 		[JsonIgnore]
 		public readonly ListenerProperty<EncounterEvents.Types> EncounterEvent;
 		[JsonIgnore]
@@ -25,7 +22,6 @@ namespace LunraGames.SubLight.Models
 
 		public EncounterEventEntryModel()
 		{
-			EventId = new ListenerProperty<string>(value => eventId = value, () => eventId);
 			EncounterEvent = new ListenerProperty<EncounterEvents.Types>(value => encounterEvent = value, () => encounterEvent);
 			IsHalting = new ListenerProperty<bool>(value => isHalting = value, () => isHalting);
 		}

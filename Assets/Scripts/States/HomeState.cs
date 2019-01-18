@@ -220,7 +220,7 @@ namespace LunraGames.SubLight
 		#region Events Main Menu
 		void OnNewGameClick()
 		{
-			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.CancelConfirm(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), confirm: OnNewGameStart));
+			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), OnNewGameStart));
 			else OnNewGameStart();
 		}
 
@@ -236,7 +236,7 @@ namespace LunraGames.SubLight
 
 		void OnSettingsClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.CancelConfirm(LanguageStringModel.Override("Testing sounds."), style: DialogStyles.Warning));
+			App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Testing sounds."), DialogStyles.Warning));
 			//OnNotImplimentedClick();
 		}
 
@@ -253,14 +253,14 @@ namespace LunraGames.SubLight
 
 		void OnNotImplimentedClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
+			App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
 		}
 
 		void OnNewGameCreated(RequestStatus result, GameModel model)
 		{
 			if (result != RequestStatus.Success)
 			{
-				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override("Creating new game returned with result " + result), style: DialogStyles.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override("Creating new game returned with result " + result), style: DialogStyles.Error));
 				return;
 			}
 			App.M.Save(model, OnSaveGame);
@@ -271,7 +271,7 @@ namespace LunraGames.SubLight
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
 				return;
 			}
 			App.M.Save(result.TypedModel, OnSaveGame);
@@ -282,7 +282,7 @@ namespace LunraGames.SubLight
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Alert(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
+				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
 				return;
 			}
 			OnStartGame(result.TypedModel);

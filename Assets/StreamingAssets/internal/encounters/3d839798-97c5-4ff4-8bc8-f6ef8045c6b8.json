@@ -26,13 +26,12 @@
         "entries": [
           {
             "entry": {
-              "eventId": "e8b11b4d-f3b7-4ddb-bffc-a4b78b78b875",
               "encounterEvent": "Debug",
               "keyValues": {
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "message": "You clicked on me!!!"
+                  "message": "Clicked!"
                 },
                 "enums": {
                   "severity": 20
@@ -42,14 +41,14 @@
                 "booleanKeyValues": [],
                 "stringKeyValues": [],
                 "encounterInteractions": []
-              }
+              },
+              "entryId": "dd929112-3e39-449b-82b4-0ac850992dff"
             }
           }
         ],
-        "index": 1,
         "beginning": true,
         "ending": true,
-        "logId": "1d056b7b-80ee-4351-a8ff-133c7fd01a1f"
+        "logId": "e10b60d6-aaae-4058-806a-08bee06b6341"
       }
     ]
   },

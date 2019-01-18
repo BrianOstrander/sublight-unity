@@ -15,5 +15,8 @@ namespace LunraGames.SubLight.Models
 		{
 			NextLogId = new ListenerProperty<string>(value => nextLogId = value, () => nextLogId);
 		}
+
+		[JsonIgnore]
+		public bool IsLinear { get { return true; } }
 	}
 }

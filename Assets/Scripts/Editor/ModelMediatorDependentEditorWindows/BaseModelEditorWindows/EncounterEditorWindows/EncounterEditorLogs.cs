@@ -162,6 +162,8 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<EncyclopediaEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Event:
 					return NewEncounterLog<EncounterEventEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Dialog:
+					return NewEncounterLog<DialogEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType:" + logType);
 					break;
@@ -203,7 +205,7 @@ namespace LunraGames.SubLight
 					EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
 					var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId");
 
-					GUILayout.Label(header, EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
+					GUILayout.Label(new GUIContent(header, model.LogId.Value), EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
 					EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
 					EditorGUILayoutExtensions.PopColor();
 					if (isMoving)
@@ -291,6 +293,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Event:
 					OnEncounterEventLog(infoModel, model as EncounterEventEncounterLogModel);
+					break;
+				case EncounterLogTypes.Dialog:
+					OnDialogLog(infoModel, model as DialogEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -493,7 +498,7 @@ namespace LunraGames.SubLight
 			string targetLogId
 		)
 		{
-			edge.NextLogId.Value = targetLogId;
+			edge.Entry.NextLogId.Value = targetLogId;
 		}
 
 		void OnSwitchLogEdge(
@@ -502,20 +507,22 @@ namespace LunraGames.SubLight
 			SwitchEdgeModel edge
 		)
 		{
+			var entry = edge.Entry;
+
 			EditorGUILayoutEncounter.LogPopup(
 				"Target Log: ",
-				edge.NextLogId.Value,
+				entry.NextLogId.Value,
 				infoModel,
 				model,
-				existingSelection => edge.NextLogId.Value = existingSelection,
-				newSelection => edge.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				existingSelection => entry.NextLogId.Value = existingSelection,
+				newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 				EncounterLogBlankHandling.Error,
 				"- Select Target Log -"
 			);
 
 			EditorGUILayoutValueFilter.Field(
 				new GUIContent("Filtering", "Passing this filter is required to continue to the target log."),
-				edge.Filtering
+				entry.Filtering
 			);
 		}
 		#endregion
@@ -546,7 +553,7 @@ namespace LunraGames.SubLight
 			string targetLogId
 		)
 		{
-			edge.NextLogId.Value = targetLogId;
+			edge.Entry.NextLogId.Value = targetLogId;
 		}
 
 		void OnButtonLogEdge(
@@ -555,30 +562,32 @@ namespace LunraGames.SubLight
 			ButtonEdgeModel edge
 		)
 		{
+			var entry = edge.Entry;
+
 			EditorGUILayoutEncounter.LogPopup(
 				"Target Log: ",
-				edge.NextLogId.Value,
+				entry.NextLogId.Value,
 				infoModel,
 				model,
-				existingSelection => edge.NextLogId.Value = existingSelection,
-				newSelection => edge.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				existingSelection => entry.NextLogId.Value = existingSelection,
+				newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 				EncounterLogBlankHandling.Error,
 				"- Select Target Log -"
 			);
 
-			edge.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", edge.Message.Value);
+			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", entry.Message.Value);
 
 			GUILayout.BeginHorizontal();
 			{
-				edge.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !edge.NotAutoUsed.Value, GUILayout.Width(74f));
-				edge.AutoDisableInteractions.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable Interactions", "When this button is pressed, automatically disable future interactions the next time around."), edge.AutoDisableInteractions.Value, GUILayout.Width(152f));
-				edge.AutoDisableEnabled.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable", "When this button is pressed, automatically set this button to be disabled and invisible the next time around."), edge.AutoDisableEnabled.Value, GUILayout.Width(90f));
+				entry.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !entry.NotAutoUsed.Value, GUILayout.Width(74f));
+				entry.AutoDisableInteractions.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable Interactions", "When this button is pressed, automatically disable future interactions the next time around."), entry.AutoDisableInteractions.Value, GUILayout.Width(152f));
+				entry.AutoDisableEnabled.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable", "When this button is pressed, automatically set this button to be disabled and invisible the next time around."), entry.AutoDisableEnabled.Value, GUILayout.Width(90f));
 			}
 			GUILayout.EndHorizontal();
 
-			EditorGUILayoutValueFilter.Field(new GUIContent("Used Filtering", "If this filter returns true, the button will appear used."), edge.UsedFiltering);
-			EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), edge.InteractableFiltering);
-			EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), edge.EnabledFiltering);
+			EditorGUILayoutValueFilter.Field(new GUIContent("Used Filtering", "If this filter returns true, the button will appear used."), entry.UsedFiltering);
+			EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), entry.InteractableFiltering);
+			EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), entry.EnabledFiltering);
 
 		}
 		#endregion
@@ -724,6 +733,186 @@ namespace LunraGames.SubLight
 					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
 				)
 			);
+		}
+		#endregion
+
+		#region Dialog Logs
+		void OnDialogLog(
+			EncounterInfoModel infoModel,
+			DialogEncounterLogModel model
+		)
+		{
+			if (GUILayout.Button("Append New Dialog")) OnEdgedLogSpawn(model, OnDialogLogSpawn);
+
+			OnEdgedLog<DialogEncounterLogModel, DialogEdgeModel>(infoModel, model, OnDialogLogEdge);
+		}
+
+		void OnDialogLogSpawn(
+			DialogEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			entry.DialogType.Value = DialogTypes.Confirm;
+			entry.DialogStyle.Value = DialogStyles.Neutral;
+			// Nothing to do...
+		}
+
+		void OnDialogLogEdge(
+			EncounterInfoModel infoModel,
+			DialogEncounterLogModel model,
+			DialogEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.PrefixLabel("Configuration");
+				entry.DialogType.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+					//new GUIContent("Type"),
+					GUIContent.none,
+					"- Select A Type -",
+					entry.DialogType.Value
+				);
+				
+				entry.DialogStyle.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+					//new GUIContent("Style"),
+					GUIContent.none,
+					"- Select A Style -",
+					entry.DialogStyle.Value
+				);
+			}
+			GUILayout.EndHorizontal();
+
+			entry.Title.Value = EditorGUILayout.TextField("Title", entry.Title.Value);
+			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", entry.Message.Value);
+
+			switch (entry.DialogType.Value)
+			{
+				case DialogTypes.Confirm:
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Success
+					);
+					break;
+				case DialogTypes.ConfirmDeny:
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Success
+					);
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Failure
+					);
+					break;
+				case DialogTypes.ConfirmDenyCancel:
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Success
+					);
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Failure
+					);
+					OnDialogLogEdgeOption(
+						infoModel,
+						model,
+						edge,
+						RequestStatus.Cancel
+					);
+					break;
+				case DialogTypes.Unknown:
+					EditorGUILayout.HelpBox("A valid DialogType must be specified.", MessageType.Error);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized DialogType " + entry.DialogType.Value, MessageType.Error);
+					break;
+			}
+
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "The first dialog to meet these conditions will be shown"),
+				entry.Filtering
+			);
+		}
+
+		void OnDialogLogEdgeOption(
+			EncounterInfoModel infoModel,
+			DialogEncounterLogModel model,
+			DialogEdgeModel edge,
+			RequestStatus option
+		)
+		{
+			var entry = edge.Entry;
+
+			GUILayout.BeginVertical(EditorStyles.helpBox);
+			{
+				var entryName = "Unknown";
+				switch (option)
+				{
+					case RequestStatus.Success: entryName = "Confirm"; break;
+					case RequestStatus.Failure: entryName = "Deny"; break;
+					case RequestStatus.Cancel: entryName = "Cancel"; break;
+				}
+
+				GUILayout.Label(entryName + " Button", EditorStyles.boldLabel);
+				ListenerProperty<string> text = null;
+				ListenerProperty<string> nextId = null;
+
+				switch (option)
+				{
+					case RequestStatus.Success:
+						text = entry.SuccessText;
+						nextId = entry.SuccessLogId;
+						break;
+					case RequestStatus.Failure:
+						text = entry.FailureText;
+						nextId = entry.FailureLogId;
+						break;
+					case RequestStatus.Cancel:
+						text = entry.CancelText;
+						nextId = entry.CancelLogId;
+						break;
+				}
+
+				if (text == null || nextId == null)
+				{
+					EditorGUILayout.HelpBox("Unrecognized RequestStatus: " + option, MessageType.Error);
+				}
+				else
+				{
+					GUILayout.BeginHorizontal();
+					{
+						text.Value = EditorGUILayout.TextField("Text", text.Value);
+						var noText = string.IsNullOrEmpty(text.Value);
+						if (noText) EditorGUILayoutExtensions.PushColor(Color.gray);
+						GUILayout.Label(new GUIContent(noText ? "Not Overriding" : "Overriding", "Leave blank to use the default values for dialog button text."), GUILayout.ExpandWidth(false));
+						if (noText) EditorGUILayoutExtensions.PopColor();
+					}
+					GUILayout.EndHorizontal();
+					EditorGUILayoutEncounter.LogPopup(
+						"Target Log: ",
+						nextId.Value,
+						infoModel,
+						model,
+						existingSelection => nextId.Value = existingSelection,
+						newSelection => nextId.Value = AppendNewLog(newSelection, infoModel),
+						EncounterLogBlankHandling.FallsThrough,
+						"- Select Target Log -"
+					);
+				}
+			}
+			GUILayout.EndVertical();
 		}
 		#endregion
 
