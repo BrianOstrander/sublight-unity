@@ -7,5 +7,7 @@
 		public int GalaxySeed;
 		public string GalaxyId;
 		public string GalaxyTargetId;
+
+		public ToolbarSelections ToolbarSelection;
 	}
 }

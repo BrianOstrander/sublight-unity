@@ -22,15 +22,21 @@ namespace LunraGames.SubLight.Views
 		public string PlacardName;
 		public string PlacardDescription;
 
-		public Texture AvatarStaticImage;
+		public int AvatarStaticIndex;
 	}
 
 	public class BustView : View, IBustView
 	{
-
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+		[SerializeField]
+		Transform lookAtArea;
 
+		[SerializeField]
+		public Texture2D[] AvatarsStatic;
+		[SerializeField]
+		public GameObject[] SignalStrengths;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -46,6 +52,13 @@ namespace LunraGames.SubLight.Views
 		public void FocusBust(string bustId)
 		{
 			Debug.Log("lol todo");
+		}
+
+		protected override void OnLateIdle(float delta)
+		{
+			base.OnLateIdle(delta);
+
+			lookAtArea.LookAt(lookAtArea.position + (lookAtArea.position - App.V.CameraPosition).FlattenY());
 		}
 
 		#region Events

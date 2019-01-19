@@ -19,6 +19,23 @@ namespace LunraGamesEditor
 		static Stack<TextAnchor> ButtonTextAnchorStack = new Stack<TextAnchor>();
 
 		public static T HelpfulEnumPopup<T>(
+			string label,
+			string primaryReplacement,
+			T value,
+			T[] options = null,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			return HelpfulEnumPopup(
+				new GUIContent(label),
+				primaryReplacement,
+				value,
+				options = null,
+				guiOptions
+			);
+		}
+
+		public static T HelpfulEnumPopup<T>(
 			GUIContent content,
 			string primaryReplacement,
 			T value,

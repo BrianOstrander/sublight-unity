@@ -17,6 +17,7 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsInt GameSeed = new DevPrefsInt(ProjectConstants.PrefsPrefix + "GameSeed");
 		public static readonly DevPrefsInt GalaxySeed = new DevPrefsInt(ProjectConstants.PrefsPrefix + "GalaxySeed");
 		public static readonly DevPrefsString GalaxyId = new DevPrefsString(ProjectConstants.PrefsPrefix + "GalaxyId");
+		public static readonly DevPrefsEnum<ToolbarSelections> ToolbarSelection = new DevPrefsEnum<ToolbarSelections>(ProjectConstants.PrefsPrefix + "ToolbarSelection");
 
 		/// <summary>
 		/// Gets a created game block using the dev preferences.
@@ -30,7 +31,8 @@ namespace LunraGames.SubLight
 				{
 					GameSeed = GameSeed.Value,
 					GalaxySeed = GalaxySeed.Value,
-					GalaxyId = GalaxyId.Value
+					GalaxyId = GalaxyId.Value,
+					ToolbarSelection = ToolbarSelection.Value
 				};
 			}
 		}
