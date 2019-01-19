@@ -1,44 +1,57 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
 
-using LunraGames.Singletonnes;
+using Object = UnityEngine.Object;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace LunraGames.SubLight
 {
-	public class DefaultViews : ScriptableSingleton<DefaultViews>
+	public class DefaultViews : Singletonnes.ScriptableSingleton<DefaultViews>
 	{
-		[SerializeField]
-		List<Object> prefabs = new List<Object>();
+		[Serializable]
+		public class Entry
+		{
+			public GameObject PrefabRoot;
+		}
 
-		public List<GameObject> Prefabs { get { return prefabs.Where(p => p != null).Cast<MonoBehaviour>().Select(m => m.gameObject).ToList(); } }
+		[SerializeField, HideInInspector]
+		List<Entry> entries = new List<Entry>();
+
+		public List<GameObject> Prefabs { get { return entries.Where(e => e != null && e.PrefabRoot != null).Select(e => e.PrefabRoot).ToList(); } }
+
+#if UNITY_EDITOR
+		public List<Entry> Entries
+		{
+			get { return entries; }
+			set { entries = value; }
+		}
 
 		public void Add(Object prefab)
 		{
-			if (!Application.isEditor)
-			{
-				Debug.LogError("Adding default views should not occur outside the editor");
-				return;
-			}
 			if (Contains(prefab)) Debug.Log("Prefab already added to DefaultViews");
 			else
 			{
-				prefabs.Add(prefab);
+				entries.Add(
+					new Entry
+					{
+						PrefabRoot = (prefab as Component).transform.root.gameObject
+					}
+				);
 				SetConfigDirty();
 			}
 		}
 
 		public void Remove(Object prefab)
 		{
-			if (!Application.isEditor)
-			{
-				Debug.LogError("Removing default views should not occur outside the editor");
-				return;
-			}
 			if (Contains(prefab))
 			{
-				prefabs.RemoveAll(g => g.GetInstanceID() == prefab.GetInstanceID());
+				entries.RemoveAll(e => e.PrefabRoot.GetInstanceID() == (prefab as Component).transform.root.gameObject.GetInstanceID());
 				SetConfigDirty();
 			}
 			else Debug.Log("Prefab is not listed in DefaultViews");
@@ -46,30 +59,13 @@ namespace LunraGames.SubLight
 
 		public bool Contains(Object prefab)
 		{
-			prefabs = prefabs ?? new List<Object>();
-			//return prefabs.FirstOrDefault(g => g != null && g.GetInstanceID() == prefab.GetInstanceID()) != null;
-			return prefabs.FirstOrDefault(p => IsPrefabEqual(p, prefab)) != null;
-		}
-
-		bool IsPrefabEqual(Object prefab0, Object prefab1)
-		{
-			if (prefab0 == null || prefab1 == null) return false;
-			if (prefab0.GetInstanceID() == prefab1.GetInstanceID()) return true;
-
-#if UNITY_EDITOR
-			return UnityEditor.PrefabUtility.GetPrefabInstanceHandle(prefab0) == UnityEditor.PrefabUtility.GetPrefabInstanceHandle(prefab1);
-#else
-			return false;
-#endif
+			return entries.FirstOrDefault(e => e.PrefabRoot.GetInstanceID() == (prefab as Component).transform.root.gameObject.GetInstanceID()) != null;
 		}
 
 		void SetConfigDirty()
 		{
-#if UNITY_EDITOR
-			UnityEditor.EditorUtility.SetDirty(Instance);
-#else
-	Debug.LogError("Setting dirty should not occur outside the editor");
-#endif
+			EditorUtility.SetDirty(Instance);
 		}
+#endif
 	}
 }

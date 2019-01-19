@@ -16,7 +16,7 @@ namespace LunraGames.SubLight
 
 		void OnNoDefaultViews()
 		{
-			EditorGUILayout.HelpBox("The scriptable object for default views cannot be found", MessageType.Error);
+			EditorGUILayout.HelpBox("The scriptable object for default views cannot be found.", MessageType.Error);
 		}
 
 		void OnDefaultViews()
@@ -27,13 +27,14 @@ namespace LunraGames.SubLight
 
 			if (prefabObject == null)
 			{
-				EditorGUILayout.HelpBox("This view must be a prefab before it can be added to the list of default views", MessageType.Warning);
+				EditorGUILayout.HelpBox("This view must be a prefab before it can be added to the list of default views.", MessageType.Warning);
 				return;
 			}
+
 			var isListed = DefaultViews.Instance.Contains(prefabObject);
 
 			if (isListed) GUILayout.Label("This view is already a default view");
-			else EditorGUILayout.HelpBox("Adding this view to the list of default views makes it accessable at runtime", MessageType.Warning);
+			else EditorGUILayout.HelpBox("Adding this view to the list of default views makes it accessable at runtime.", MessageType.Warning);
 
 			GUILayout.BeginHorizontal();
 			{

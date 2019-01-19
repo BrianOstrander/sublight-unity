@@ -280,6 +280,10 @@ namespace LunraGames.SubLight
 
 			static void InitializeCommunicationPresenters(GameState state, Action done)
 			{
+				var payload = state.Payload;
+
+				new BustPresenter(payload.Game);
+
 
 				InitializeEncyclopediaPresenters(state, done);
 			}
