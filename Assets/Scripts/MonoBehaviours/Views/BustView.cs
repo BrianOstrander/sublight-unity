@@ -81,13 +81,17 @@ namespace LunraGames.SubLight.Views
 			bustPrefab.gameObject.SetActive(false);
 		}
 
-		public void InitializeBusts(params BustBlock[] busts)
+		public void InitializeBusts(params BustBlock[] blocks)
 		{
-			foreach (var bust in busts)
+			foreach (var block in blocks)
 			{
 				var entry = new BustEntry();
-				entry.Block = bust;
+				entry.Block = block;
 				entry.Instance = bustArea.InstantiateChild(bustPrefab);
+
+				entry.Instance.AvatarStaticImage.material = new Material(entry.Instance.AvatarStaticImage.material);
+
+				ApplyBustBlock(entry, block);
 
 				entries.Add(entry);
 
@@ -108,6 +112,8 @@ namespace LunraGames.SubLight.Views
 				{
 					if (bust.State != BustEntry.States.Hidden) bust.State = BustEntry.States.Hiding;
 				}
+
+				if (instant) ApplyBust(bust);
 			}
 		}
 

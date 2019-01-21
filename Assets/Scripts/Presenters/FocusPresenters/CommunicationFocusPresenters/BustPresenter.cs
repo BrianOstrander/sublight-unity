@@ -27,7 +27,22 @@ namespace LunraGames.SubLight.Presenters
 			//View.PushOpacity(() => scaleModel.Opacity.Value);
 			//View.PushOpacity(() => model.GridScaleOpacity.Value);
 
-			Debug.Log("lol");
+			View.InitializeBusts(
+				new BustBlock
+				{
+					BustId = "lol",
+					TitleSource = "Some",
+					TitleClassification = "Ark",
+					TransmitionType = "Transmission",
+					TransmitionStrength = "Strong",
+					TransmitionStrengthIndex = 0,
+					PlacardName = "S. Cap",
+					PlacardDescription = "Captain",
+					AvatarStaticIndex = 1
+				}
+			);
+
+			App.Heartbeat.Wait(() => View.FocusBust("lol"), 0.5f);
 		}
 
 		#region Events

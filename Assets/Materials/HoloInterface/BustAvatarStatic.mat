@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BustAvatarStatic0
+  m_Name: BustAvatarStatic
   m_Shader: {fileID: 4800000, guid: 3a45d7f2f8b56447d9afb90ffa45780c, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
