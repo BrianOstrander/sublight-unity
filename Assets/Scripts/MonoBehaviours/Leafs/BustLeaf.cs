@@ -22,5 +22,6 @@ namespace LunraGames.SubLight.Views
 		public CanvasGroup PlacardGroup;
 
 		public Transform AvatarAnchor;
+		public Transform AvatarDepthAnchor;
 	}
 }

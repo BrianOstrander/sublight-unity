@@ -555,6 +555,12 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloBustAvatarStatic
+		{
+			public const string Name = "SubLight/Holo/Bust/AvatarStatic";
+			public const string ColorMap = "_ColorMap";
+		}
+
 		#region NonSubLight Shaders
 		public static class SkyboxPanoramic
 		{

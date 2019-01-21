@@ -26,6 +26,8 @@ namespace LunraGames.SubLight.Presenters
 			//OnLabel(labelProperty.Value);
 			//View.PushOpacity(() => scaleModel.Opacity.Value);
 			//View.PushOpacity(() => model.GridScaleOpacity.Value);
+
+			Debug.Log("lol");
 		}
 
 		#region Events

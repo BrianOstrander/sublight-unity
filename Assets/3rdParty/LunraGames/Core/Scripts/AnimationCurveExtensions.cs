@@ -96,5 +96,15 @@ namespace LunraGames
 		{
 			return AnimationCurve.Linear(0f, value, 1f, value);
 		}
+
+		public static AnimationCurve LinearNormal()
+		{
+			return AnimationCurve.Linear(0f, 0f, 1f, 1f);
+		}
+
+		public static AnimationCurve LinearInverseNormal()
+		{
+			return AnimationCurve.Linear(1f, 1f, 0f, 0f);
+		}
 	}
 }
