@@ -113,7 +113,11 @@ namespace LunraGames.SubLight.Views
 					if (bust.State != BustEntry.States.Hidden) bust.State = BustEntry.States.Hiding;
 				}
 
-				if (instant) ApplyBust(bust);
+				if (instant)
+				{
+					bust.Progress = bust.State == BustEntry.States.Showing ? hideShowDuration : 0f;
+					ApplyBust(bust);
+				}
 			}
 		}
 
