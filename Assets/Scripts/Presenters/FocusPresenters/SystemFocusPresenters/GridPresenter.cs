@@ -181,8 +181,6 @@ namespace LunraGames.SubLight.Presenters
 			model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			model.TransitState.Changed += OnTransitState;
-
-			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
 		protected override void OnUnBind()
@@ -204,7 +202,6 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.Dragging = OnDragging;
 			View.SetGridSelected(model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected, true);
-			BeginZoom(model.FocusTransform.Value.Zoom, true);
 		}
 
 		void SetGrid()
@@ -355,9 +352,17 @@ namespace LunraGames.SubLight.Presenters
 			);
 		}
 
+		protected override void OnTransitionActive(TransitionFocusRequest request, SetFocusTransition transition, SystemFocusDetails startDetails, SystemFocusDetails endDetails)
+		{
+			// TODO: This needs to be called multiple times while focusing and I don't know why.
+			if (transition.End.Enabled && (request.FirstActive || request.LastActive)) BeginZoom(model.FocusTransform.Value.Zoom, true);
+		}
+
 		#region
 		void OnUpdate(float delta)
 		{
+			if (!View.Visible) return;
+
 			OnCheckTween(model.FocusTransform.Value, delta);
 
 			OnCheckDragging(delta);
