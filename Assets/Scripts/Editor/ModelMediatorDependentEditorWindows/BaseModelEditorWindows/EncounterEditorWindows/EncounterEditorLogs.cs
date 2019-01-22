@@ -957,24 +957,32 @@ namespace LunraGames.SubLight
 				EditorGUILayout.HelpBox("This log will halt until all busts are focused.", MessageType.Info);
 			}
 
-			//var rawAppendOptions = new List<string>
-			//{
-			//	"- Append New Bust Event -",
-			//	""
-			//};
-
-			var appendResult = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				new GUIContent("Append New Bust Event"),
-				"- Select Bust Event -",
-				BustEntryModel.Events.Unknown
-			);
-
-			switch (appendResult)
+			var appendOptions = new List<string>
 			{
-				//case BustEntryModel.Events.Initialize: OnEdgedLogSpawn(model, OnBustLogSpawnInitialize); break;
-				case BustEntryModel.Events.Initialize: OnBustLogEdgeNameNewInitialize(infoModel, model); break;
-				case BustEntryModel.Events.Focus: OnEdgedLogSpawn(model, OnBustLogSpawnFocus); break;
+				"- Select Bust Event -",
+				BustEntryModel.Events.Initialize.ToString(),
+				"--- Focus ---"
+			};
+			var appendOptionsRaw = new List<string>(appendOptions);
+
+			var initializeIndex = 1;
+			var focusBeginIndex = appendOptions.Count();
+
+			foreach (var bustId in logCache.BustIdsInitialized.OrderBy(i => i))
+			{
+				appendOptions.Add(bustId+".Focus");
+				appendOptionsRaw.Add(bustId);
 			}
+			foreach (var bustId in logCache.BustIdsMissingInitialization.OrderBy(i => i))
+			{
+				appendOptions.Add(bustId + ".Focus < Not Initialized >");
+				appendOptionsRaw.Add(bustId);
+			}
+
+			var appendResult = EditorGUILayout.Popup(0, appendOptions.ToArray());
+
+			if (appendResult == initializeIndex) OnBustLogEdgeNameNewInitialize(infoModel, model);
+			else if (focusBeginIndex <= appendResult) OnEdgedLogSpawn(model, edge => OnBustLogSpawnFocus(appendOptionsRaw[appendResult], edge));
 
 			OnEdgedLog<BustEncounterLogModel, BustEdgeModel>(infoModel, model, OnBustLogEdge);
 		}
@@ -1018,9 +1026,11 @@ namespace LunraGames.SubLight
 		}
 
 		void OnBustLogSpawnFocus(
+			string bustId,
 			BustEdgeModel edge
 		)
 		{
+			edge.Entry.BustId.Value = bustId;
 			edge.Entry.BustEvent.Value = BustEntryModel.Events.Focus;
 			edge.Entry.FocusInfo.Value = BustEntryModel.FocusBlock.Default;
 		}
@@ -1033,19 +1043,34 @@ namespace LunraGames.SubLight
 		{
 			var entry = edge.Entry;
 
-			if (1 < model.Edges.Select(e => e.Entry).Where(e => e.BustId.Value == entry.BustId.Value && e.BustEvent.Value == BustEntryModel.Events.Initialize).Count())
+			if (entry.BustEvent.Value == BustEntryModel.Events.Initialize)
 			{
-				EditorGUILayout.HelpBox("This Bust Id is initialized multiple times within the same log.", MessageType.Error);
+				if (1 < model.Edges.Select(e => e.Entry).Where(e => e.BustId.Value == entry.BustId.Value && e.BustEvent.Value == BustEntryModel.Events.Initialize).Count())
+				{
+					EditorGUILayout.HelpBox("This Bust Id is initialized multiple times within the same log.", MessageType.Error);
+				}
+			}
+
+			var targetOptions = new List<string> { logCache.BustIdsInitialized.Contains(entry.BustId.Value) ? entry.BustId.Value : entry.BustId.Value + " < Not Initialized >" };
+			var targetOptionsRaw = new List<string> { entry.BustId.Value };
+
+			foreach (var bustId in logCache.BustIdsInitialized.OrderBy(i => i))
+			{
+				if (bustId == entry.BustId.Value) continue;
+				targetOptions.Add(bustId);
+				targetOptionsRaw.Add(bustId);
+			}
+			foreach (var bustId in logCache.BustIdsMissingInitialization.OrderBy(i => i))
+			{
+				if (bustId == entry.BustId.Value) continue;
+				targetOptions.Add(bustId + " < Not Initialized >");
+				targetOptionsRaw.Add(bustId);
 			}
 
 			GUILayout.BeginHorizontal();
 			{
-				EditorGUILayoutExtensions.PushEnabled(false);
-				{
-					entry.BustId.Value = EditorGUILayout.TextField("Bust Id", entry.BustId.Value);
-				}
-				EditorGUILayoutExtensions.PopEnabled();
-
+				var targetResult = EditorGUILayout.Popup(new GUIContent("Bust Id"), 0, targetOptions.ToArray());
+				if (targetResult != 0) entry.BustId.Value = targetOptionsRaw[targetResult];
 				if (GUILayout.Button("Rename", GUILayout.ExpandWidth(false))) OnBustLogEdgeRenameBustId(infoModel, entry.BustId.Value);
 			}
 			GUILayout.EndHorizontal();
@@ -1328,6 +1353,7 @@ namespace LunraGames.SubLight
 
 		string[] GetAllBustIdsNormalized(EncounterInfoModel infoModel)
 		{
+			//return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Where(e => e.Entry.BustId.Value != null).Select(e => e.Entry.BustId.Value.ToLower()).Distinct().ToArray();
 			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value.ToLower()).Distinct().ToArray();
 		}
 
