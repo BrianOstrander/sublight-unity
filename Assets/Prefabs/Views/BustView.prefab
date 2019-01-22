@@ -449,8 +449,8 @@ MonoBehaviour:
   bustArea: {fileID: 6237511861366490502}
   bustPrefab: {fileID: 8947581269557225889}
   avatarsStatic:
-  - {fileID: 2800000, guid: abae4b44d4f424702ba44530f5d6f1be, type: 3}
   - {fileID: 2800000, guid: 119b1f966b73a4dfdbf42e7e0026217c, type: 3}
+  - {fileID: 2800000, guid: abae4b44d4f424702ba44530f5d6f1be, type: 3}
   hideShowDuration: 0.3
   avatarDepth:
     range:

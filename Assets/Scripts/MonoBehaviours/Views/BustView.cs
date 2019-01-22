@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -46,6 +47,8 @@ namespace LunraGames.SubLight.Views
 			public States State = States.Hidden;
 			public float Progress;
 			public bool? IsEnabled;
+
+			public Action<string> OnFocus;
 		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
@@ -85,39 +88,50 @@ namespace LunraGames.SubLight.Views
 		{
 			foreach (var block in blocks)
 			{
-				var entry = new BustEntry();
+				var entry = entries.FirstOrDefault(e => e.Block.BustId == block.BustId);
+
+				if (entry == null)
+				{
+					entry = new BustEntry();
+					entry.Instance = bustArea.InstantiateChild(bustPrefab);
+					entry.Instance.AvatarStaticImage.material = new Material(entry.Instance.AvatarStaticImage.material);
+					entries.Add(entry);
+				}
+
 				entry.Block = block;
-				entry.Instance = bustArea.InstantiateChild(bustPrefab);
-
-				entry.Instance.AvatarStaticImage.material = new Material(entry.Instance.AvatarStaticImage.material);
-
 				ApplyBustBlock(entry, block);
-
-				entries.Add(entry);
 
 				ApplyBust(entry);
 			}
 		}
 
-		public void FocusBust(string bustId, bool instant = false)
+		public void FocusBust(string bustId, bool instant = false, Action<string> onFocus = null)
 		{
-			foreach (var bust in entries)
+			var wasFound = false;
+			foreach (var entry in entries)
 			{
-				var isTarget = bust.Block.BustId == bustId;
+				var isTarget = entry.Block.BustId == bustId;
 				if (isTarget)
 				{
-					if (bust.State != BustEntry.States.Shown) bust.State = BustEntry.States.Showing;
+					wasFound = true;
+					entry.OnFocus = onFocus;
+					if (entry.State != BustEntry.States.Shown) entry.State = instant ? BustEntry.States.Shown : BustEntry.States.Showing;
 				}
 				else
 				{
-					if (bust.State != BustEntry.States.Hidden) bust.State = BustEntry.States.Hiding;
+					if (entry.State != BustEntry.States.Hidden) entry.State = instant ? BustEntry.States.Hidden : BustEntry.States.Hiding;
 				}
 
 				if (instant)
 				{
-					bust.Progress = bust.State == BustEntry.States.Showing ? hideShowDuration : 0f;
-					ApplyBust(bust);
+					entry.Progress = entry.State == BustEntry.States.Shown ? hideShowDuration : 0f;
+					ApplyBust(entry);
 				}
+			}
+			if (!wasFound)
+			{
+				Debug.LogError("No Bust Id " + bustId + " was ever initialized, calling onFocus anyways.");
+				if (onFocus != null) onFocus(bustId);
 			}
 		}
 
@@ -135,13 +149,14 @@ namespace LunraGames.SubLight.Views
 			foreach (var entry in entries) UpdateBust(entry, delta);
 		}
 
-		void UpdateBust(BustEntry bust, float delta)
+		void UpdateBust(BustEntry bust, float delta, bool forced = false)
 		{
 			switch (bust.State)
 			{
 				case BustEntry.States.Hidden:
 				case BustEntry.States.Shown:
-					return;
+					if (!forced) return;
+					break;
 				case BustEntry.States.Hiding:
 					bust.Progress = Mathf.Max(0f, bust.Progress - delta);
 					if (Mathf.Approximately(0f, bust.Progress)) bust.State = BustEntry.States.Hidden;
@@ -192,6 +207,13 @@ namespace LunraGames.SubLight.Views
 
 				instance.gameObject.SetActive(desiredEnabledState);
 			}
+
+			if (bust.State == BustEntry.States.Shown)
+			{
+				var onFocus = bust.OnFocus;
+				bust.OnFocus = null;
+				if (onFocus != null) onFocus(bust.Block.BustId);
+			}
 		}
 
 		void ApplyBustBlock(BustEntry bust, BustBlock block)
@@ -230,6 +252,6 @@ namespace LunraGames.SubLight.Views
 	public interface IBustView : IView
 	{
 		void InitializeBusts(params BustBlock[] busts);
-		void FocusBust(string bustId, bool instant = false);
+		void FocusBust(string bustId, bool instant = false, Action<string> onFocus = null);
 	}
 }

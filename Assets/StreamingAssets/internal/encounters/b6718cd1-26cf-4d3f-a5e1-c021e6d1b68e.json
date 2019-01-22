@@ -48,6 +48,35 @@
         "nextLogId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
         "beginning": true,
         "logId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Done showing busts!"
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "7c4e17cd-e140-4585-922b-e8a3cb693b6e"
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
+        "name": "Last"
       }
     ],
     "dialogLogs": [],
@@ -59,18 +88,29 @@
               "bustId": "TestBust0",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "TitleSource": "Yippy",
                 "TitleClassification": "Interstellar Ark",
                 "TransmitionType": "Transmission",
                 "TransmitionStrength": "Strong",
                 "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "MyName",
+                "PlacardDescription": "HeheDesc",
                 "AvatarType": "Static"
               },
               "entryId": "9a8e7dd7-3dae-43ed-b0a9-11457b15a6c9"
             }
+          },
+          {
+            "entry": {
+              "bustId": "TestBust0",
+              "bustEvent": "Focus",
+              "entryId": "0f93ad85-ac81-430f-bedc-310d8c47d9be"
+            },
+            "index": 1
           }
         ],
+        "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
         "index": 1,
-        "ending": true,
         "logId": "e10c9828-e0dc-48eb-89e5-c2200593268f"
       }
     ]

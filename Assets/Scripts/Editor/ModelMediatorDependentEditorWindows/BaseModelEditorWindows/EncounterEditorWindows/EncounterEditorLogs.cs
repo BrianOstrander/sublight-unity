@@ -952,6 +952,10 @@ namespace LunraGames.SubLight
 			BustEncounterLogModel model
 		)
 		{
+			if (1 < model.Edges.Count(e => e.Entry.BustEvent.Value == BustEntryModel.Events.Focus))
+			{
+				EditorGUILayout.HelpBox("Multiple Focus events will cause halting issues.", MessageType.Error);
+			}
 			if (model.Edges.Any(e => e.Entry.BustEvent.Value == BustEntryModel.Events.Focus && !e.Entry.FocusInfo.Value.Instant))
 			{
 				EditorGUILayout.HelpBox("This log will halt until all busts are focused.", MessageType.Info);
@@ -1145,7 +1149,53 @@ namespace LunraGames.SubLight
 			BustEntryModel entry
 		)
 		{
-			GUILayout.Label("todo initialize");
+			var block = entry.InitializeInfo.Value;
+
+			GUILayout.Label("Title", EditorStyles.boldLabel);
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				block.TitleSource = EditorGUILayout.TextField("Source", block.TitleSource);
+				block.TitleClassification = EditorGUILayout.TextField("Classification", block.TitleClassification);
+			}
+			EditorGUILayoutExtensions.PopIndent();
+
+			GUILayout.Label("Transmission", EditorStyles.boldLabel);
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				block.TransmitionType = EditorGUILayout.TextField("Type", block.TransmitionType);
+				block.TransmitionStrength = EditorGUILayout.TextField("Strength", block.TransmitionStrength);
+				block.TransmitionStrengthIcon = EditorGUILayoutExtensions.HelpfulEnumPopup("Strength Bar", "- Select Strength -", block.TransmitionStrengthIcon);
+			}
+			EditorGUILayoutExtensions.PopIndent();
+
+			GUILayout.Label("Placard", EditorStyles.boldLabel);
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				block.PlacardName = EditorGUILayout.TextField("Name", block.PlacardName);
+				block.PlacardDescription = EditorGUILayout.TextField("Description", block.PlacardDescription);
+			}
+			EditorGUILayoutExtensions.PopIndent();
+
+			GUILayout.Label("Avatar", EditorStyles.boldLabel);
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				block.AvatarType = EditorGUILayoutExtensions.HelpfulEnumPopup("Type", "- Select Avatar Type -", block.AvatarType);
+				switch (block.AvatarType)
+				{
+					case BustEntryModel.AvatarTypes.Unknown: EditorGUILayout.HelpBox("An Avatar Type must be specified.", MessageType.Error); break;
+					case BustEntryModel.AvatarTypes.Static: block = OnBustLogEdgeInitializeAvatarStatic(block); break;
+					default: EditorGUILayout.HelpBox("Unrecognized AvatarType: " + block.AvatarType, MessageType.Error); break;
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
+
+			entry.InitializeInfo.Value = block;
+		}
+
+		BustEntryModel.InitializeBlock OnBustLogEdgeInitializeAvatarStatic(BustEntryModel.InitializeBlock block)
+		{
+			block.AvatarStaticIndex = Mathf.Max(0, EditorGUILayout.IntField("Index", block.AvatarStaticIndex));
+			return block;
 		}
 
 		void OnBustLogEdgeFocus(

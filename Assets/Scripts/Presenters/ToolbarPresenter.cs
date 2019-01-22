@@ -11,19 +11,28 @@ namespace LunraGames.SubLight.Presenters
 		TransitionFocusRequest lastTransition;
 		ToolbarSelections lastSelection;
 
-		bool CanTransition { get { return lastTransition.State == TransitionFocusRequest.States.Complete; } }
+		bool CanTransition
+		{
+			get
+			{
+				return lastTransition.State == TransitionFocusRequest.States.Complete
+									 && model.EncounterState.State.Value == EncounterStateModel.States.Complete;
+			}
+		}
 
 		public ToolbarPresenter(GameModel model)
 		{
 			this.model = model;
 
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
+
 			model.ToolbarSelection.Changed += OnToolbarSelection;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
+
 			model.ToolbarSelection.Changed -= OnToolbarSelection;
 		}
 
