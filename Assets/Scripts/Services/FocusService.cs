@@ -167,7 +167,13 @@ namespace LunraGames.SubLight
 				case TransitionFocusRequest.States.Request:
 					state = States.Active;
 					SetOnTransitionFocusRequestLast();
-					callbacks.TransitionFocusRequest(request.Duplicate(TransitionFocusRequest.States.Active, request.Instant ? 1f : 0f));
+					callbacks.TransitionFocusRequest(
+						request.Duplicate(
+							true,
+							TransitionFocusRequest.States.Active,
+							request.Instant ? 1f : 0f
+						)
+					);
 					break;
 				case TransitionFocusRequest.States.Active:
 					OnTransitionActive(request);
@@ -192,7 +198,7 @@ namespace LunraGames.SubLight
 			if (state == States.Complete || lastTransition.State != TransitionFocusRequest.States.Active) return;
 
 			var currentProgress = Mathf.Clamp01((float)((DateTime.Now - lastTransition.StartTime).TotalSeconds / lastTransition.Duration.TotalSeconds));
-			callbacks.TransitionFocusRequest(lastTransition.Duplicate(progress: currentProgress));
+			callbacks.TransitionFocusRequest(lastTransition.Duplicate(false, progress: currentProgress));
 		}
 
 		void OnTransitionActive(TransitionFocusRequest transition)
@@ -200,7 +206,7 @@ namespace LunraGames.SubLight
 			if (Mathf.Approximately(1f, transition.Progress))
 			{
 				// We're done here...
-				callbacks.TransitionFocusRequest(transition.Duplicate(TransitionFocusRequest.States.Complete));
+				callbacks.TransitionFocusRequest(transition.Duplicate(false, TransitionFocusRequest.States.Complete));
 			}
 		}
 

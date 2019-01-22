@@ -18,6 +18,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] EncyclopediaEncounterLogModel[] encyclopediaLogs = new EncyclopediaEncounterLogModel[0];
 		[JsonProperty] EncounterEventEncounterLogModel[] eventLogs = new EncounterEventEncounterLogModel[0];
 		[JsonProperty] DialogEncounterLogModel[] dialogLogs = new DialogEncounterLogModel[0];
+		[JsonProperty] BustEncounterLogModel[] bustLogs = new BustEncounterLogModel[0];
 		#endregion
 
 		#region Derived Values
@@ -99,6 +100,7 @@ namespace LunraGames.SubLight.Models
 			var encyclopediaList = new List<EncyclopediaEncounterLogModel>();
 			var eventList = new List<EncounterEventEncounterLogModel>();
 			var dialogList = new List<DialogEncounterLogModel>();
+			var bustList = new List<BustEncounterLogModel>();
 
 			foreach (var log in newLogs)
 			{
@@ -125,6 +127,9 @@ namespace LunraGames.SubLight.Models
 					case EncounterLogTypes.Dialog:
 						dialogList.Add(log as DialogEncounterLogModel);
 						break;
+					case EncounterLogTypes.Bust:
+						bustList.Add(log as BustEncounterLogModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized EncounterLogType: " + log.LogType);
 						break;
@@ -138,6 +143,7 @@ namespace LunraGames.SubLight.Models
 			encyclopediaLogs = encyclopediaList.ToArray();
 			eventLogs = eventList.ToArray();
 			dialogLogs = dialogList.ToArray();
+			bustLogs = bustList.ToArray();
 		}
 
 		EncounterLogModel[] OnGetLogs()
@@ -148,6 +154,7 @@ namespace LunraGames.SubLight.Models
 													 .Concat(encyclopediaLogs)
 				           							 .Concat(eventLogs)
 				           							 .Concat(dialogLogs)
+				           							 .Concat(bustLogs)
 													 .ToArray();
 		}
 		#endregion

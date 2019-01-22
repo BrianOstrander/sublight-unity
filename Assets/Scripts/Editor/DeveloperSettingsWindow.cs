@@ -143,7 +143,6 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginVertical();
 				{
-					DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
 					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
 					DevPrefs.SkipMainMenuAnimations.Value = GUILayout.Toggle(DevPrefs.SkipMainMenuAnimations, "Skip Main Menu Animations");
 				}
@@ -160,11 +159,20 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			GUILayout.Label("Auto Create Game Block", EditorStyles.boldLabel);
+			DevPrefs.AutoNewGame.Value = EditorGUILayout.ToggleLeft("Auto New Game", DevPrefs.AutoNewGame, EditorStyles.boldLabel);
 
-			DevPrefs.GameSeed.Value = EditorGUILayout.IntField("Game Seed", DevPrefs.GameSeed.Value);
-			DevPrefs.GalaxySeed.Value = EditorGUILayout.IntField("Galaxy Seed", DevPrefs.GalaxySeed.Value);
-			DevPrefs.GalaxyId.Value = EditorGUILayout.TextField("Galaxy Id", DevPrefs.GalaxyId.Value);
+			EditorGUILayoutExtensions.PushEnabled(DevPrefs.AutoNewGame.Value);
+			{
+				EditorGUILayoutExtensions.PushIndent();
+				{
+					DevPrefs.GameSeed.Value = EditorGUILayout.IntField("Game Seed", DevPrefs.GameSeed.Value);
+					DevPrefs.GalaxySeed.Value = EditorGUILayout.IntField("Galaxy Seed", DevPrefs.GalaxySeed.Value);
+					DevPrefs.GalaxyId.Value = EditorGUILayout.TextField("Galaxy Id", DevPrefs.GalaxyId.Value);
+					DevPrefs.ToolbarSelection.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("Toolbar Selection", "- Select an Override -", DevPrefs.ToolbarSelection.Value);
+				}
+				EditorGUILayoutExtensions.PopIndent();
+			}
+			EditorGUILayoutExtensions.PopEnabled();
 		}
 
 		void OnLocalTab()

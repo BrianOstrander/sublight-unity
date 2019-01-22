@@ -23,8 +23,6 @@ namespace LunraGames.SubLight.Presenters
 			Model.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Transform.Changed += OnScaleTransform;
-
-			ShowViewInstant();
 		}
 
 		protected override void OnUnBind()

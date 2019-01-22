@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using LunraGames.SubLight.Models;
-using LunraGames.SubLight.Views;
-using LunraGames.SubLight.Presenters;
 
 namespace LunraGames.SubLight
 {

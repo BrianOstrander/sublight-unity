@@ -550,6 +550,7 @@ namespace LunraGames.SubLight
 					switch (request.LogType)
 					{
 						case EncounterLogTypes.Dialog: break;
+						case EncounterLogTypes.Bust: break;
 						default:
 							Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.LogType);
 							break;

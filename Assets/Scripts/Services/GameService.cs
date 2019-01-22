@@ -16,6 +16,8 @@ namespace LunraGames.SubLight
 			{
 				public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089"; // Milkyway
 				public const string GalaxyTargetId = "a6603c5e-f151-45aa-96bb-30905e781573"; // Andromeda
+
+				public const ToolbarSelections ToolbarSelection = ToolbarSelections.System;
 			}
 
 			public const float TransitRangeMinimum = 1f; // In universe units.
@@ -63,7 +65,7 @@ namespace LunraGames.SubLight
 			game.Ship.Value = ship;
 			// --------
 
-			game.ToolbarSelection.Value = ToolbarSelections.System;
+			game.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
 			game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(game.ToolbarSelection.Value);
 
 			App.M.Load<GalaxyInfoModel>(game.GalaxyId, result => OnGalaxyLoaded(result, game, done));

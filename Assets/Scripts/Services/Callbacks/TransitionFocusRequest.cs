@@ -30,6 +30,7 @@ namespace LunraGames.SubLight
 				endTime,
 				endTime - startTime,
 				0f,
+				false,
 				false
 			);
 		}
@@ -47,7 +48,8 @@ namespace LunraGames.SubLight
 				DateTime.MinValue,
 				TimeSpan.MinValue,
 				0f,
-				true
+				true,
+				false
 			);
 		}
 
@@ -59,6 +61,10 @@ namespace LunraGames.SubLight
 		public readonly TimeSpan Duration;
 		public readonly float Progress;
 		public readonly bool Instant;
+		/// <summary>
+		/// The first active called, not garaunteed to have a progress of 0.
+		/// </summary>
+		public readonly bool FirstActive;
 		/// <summary>
 		/// Every transition, instant or not, is garaunteed to end with at least
 		/// one last call where progress equals 1. There is no garauntee one
@@ -74,7 +80,8 @@ namespace LunraGames.SubLight
 			DateTime endTime,
 			TimeSpan duration,
 			float progress,
-			bool instant
+			bool instant,
+			bool firstActive
 		)
 		{
 			State = state;
@@ -86,10 +93,12 @@ namespace LunraGames.SubLight
 			Progress = progress;
 			Instant = instant;
 
+			FirstActive = State == States.Active && (instant || firstActive);
 			LastActive = State == States.Active && Mathf.Approximately(1f, progress);
 		}
 
 		public TransitionFocusRequest Duplicate(
+			bool firstActive,
 			States state = States.Unknown,
 			float? progress = null
 		)
@@ -102,7 +111,8 @@ namespace LunraGames.SubLight
 				EndTime,
 				Duration,
 				progress.HasValue ? progress.Value : Progress,
-				Instant
+				Instant,
+				firstActive
 			);
 		}
 
@@ -116,6 +126,11 @@ namespace LunraGames.SubLight
 			}
 			result = Transitions.FirstOrDefault(t => t.Layer == layer);
 			return !result.NoTransition;
+		}
+
+		internal TransitionFocusRequest Duplicate(States complete)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

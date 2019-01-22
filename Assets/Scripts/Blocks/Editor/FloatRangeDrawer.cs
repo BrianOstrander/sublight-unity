@@ -12,10 +12,6 @@ namespace LunraGames.SubLight
 		const float RowHeight = 16f;
 		const float RowSpacing = 2f;
 
-		//const float ToggleWidth = 16f;
-		//const float ColumnSpacing = 2f;
-		//const float ToggleTotalWidth = ToggleWidth + ColumnSpacing;
-
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			return (RowHeight * 1f) + RowSpacing;
@@ -45,17 +41,5 @@ namespace LunraGames.SubLight
 
 			EditorGUI.EndProperty();
 		}
-
-		//void DrawField(SerializedProperty property, Rect overrideRect, Rect valueRect, string overrideName, string valueName)
-		//{
-		//	var overrideProperty = property.FindPropertyRelative(overrideName);
-
-		//	var wasEnabled = GUI.enabled;
-		//	GUI.enabled = overrideProperty.boolValue;
-		//	EditorGUI.PropertyField(valueRect, property.FindPropertyRelative(valueName), new GUIContent(property.displayName, property.tooltip));
-		//	GUI.enabled = wasEnabled;
-
-		//	EditorGUI.PropertyField(overrideRect, overrideProperty, GUIContent.none);
-		//}
 	}
 }

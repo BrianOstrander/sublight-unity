@@ -3,7 +3,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class GridVelocityPresenter : FocusPresenter<IGridVelocityView, SystemFocusDetails>
+	public class GridVelocityPresenter : SystemFocusPresenter<IGridVelocityView>
 	{
 		GameModel model;
 		GridVelocityLanguageBlock language;
@@ -22,6 +22,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			base.OnUnBind();
+
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
 			model.TransitState.Changed -= OnTransitState;
 		}

@@ -9,6 +9,7 @@
 		Button = 40,
 		Encyclopedia = 50,
 		Event = 60,
-		Dialog = 70
+		Dialog = 70,
+		Bust = 80
 	}
 }

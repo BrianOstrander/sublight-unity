@@ -61,6 +61,8 @@ namespace LunraGames.SubLight.Presenters
 		void OnActiveScaleTransform(UniverseTransform transform)
 		{
 			var offset = transform.GetGridOffset(transform.UnityToUniverse.x); // Lol don't know what i'm doing...
+			if (float.IsNaN(offset.x)) offset = offset.NewX(0f);
+			if (float.IsNaN(offset.z)) offset = offset.NewZ(0f);
 			View.GridOffset = new Vector2(offset.x, offset.z);
 		}
 

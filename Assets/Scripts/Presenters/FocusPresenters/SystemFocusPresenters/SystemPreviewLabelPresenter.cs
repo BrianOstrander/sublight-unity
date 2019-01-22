@@ -5,7 +5,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class SystemPreviewLabelPresenter : FocusPresenter<ISystemPreviewLabelView, SystemFocusDetails>
+	public class SystemPreviewLabelPresenter : SystemFocusPresenter<ISystemPreviewLabelView>
 	{
 		GameModel model;
 		SystemPreviewLanguageBlock language;
@@ -31,6 +31,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			base.OnUnBind();
+
 			App.Heartbeat.Update -= OnUpdate;
 
 			model.GridScaleOpacity.Changed -= OnOpacityStale;

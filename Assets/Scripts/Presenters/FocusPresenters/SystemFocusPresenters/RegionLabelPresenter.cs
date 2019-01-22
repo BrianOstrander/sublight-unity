@@ -5,7 +5,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class RegionLabelPresenter : FocusPresenter<IRegionLabelView, SystemFocusDetails>
+	public class RegionLabelPresenter : SystemFocusPresenter<IRegionLabelView>
 	{
 		GameModel model;
 		UniverseScales scale;
@@ -39,6 +39,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
+			base.OnUnBind();
+
 			model.GetScale(scale).Opacity.Changed -= OnOpacityStale;
 			model.GridScaleOpacity.Changed -= OnOpacityStale;
 
