@@ -18,7 +18,7 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonIgnore]
-		public KeyValueListModel KeyValues { get { return KeyValues; } }
+		public KeyValueListModel KeyValues { get { return keyValues; } }
 
 		public BustAvatarModel()
 		{
