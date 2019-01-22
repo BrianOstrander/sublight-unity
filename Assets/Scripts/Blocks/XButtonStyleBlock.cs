@@ -1,7 +1,6 @@
 using System;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace LunraGames.SubLight
 {
@@ -15,5 +14,20 @@ namespace LunraGames.SubLight
 		public XButtonColorBlock Colors = XButtonColorBlock.Default;
 		public XButtonToggleBlock Toggles = XButtonToggleBlock.Default;
 		public AnimationCurve ClickDistanceDelta = AnimationCurve.Linear(0f, 0f, 1f, 0f);
+
+		public XButtonStyleBlock Duplicate
+		{
+			get
+			{
+				return new XButtonStyleBlock
+				{
+					DistanceScaleIntensity = new AnimationCurve(DistanceScaleIntensity.keys),
+					ClickScaleDelta = new AnimationCurve(ClickScaleDelta.keys),
+					Colors = Colors.Duplicate,
+					Toggles = Toggles.Duplicate,
+					ClickDistanceDelta = new AnimationCurve(ClickDistanceDelta.keys)
+				};
+			}
+		}
 	}
 }
