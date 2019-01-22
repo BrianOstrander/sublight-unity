@@ -39,10 +39,25 @@ namespace LunraGames.SubLight.Presenters
 					PlacardName = "S. Cap",
 					PlacardDescription = "Captain",
 					AvatarStaticIndex = 1
+				},
+				new BustBlock
+				{
+					BustId = "lol2",
+					TitleSource = "Other",
+					TitleClassification = "Ark",
+					TransmitionType = "Transmission",
+					TransmitionStrength = "Weak",
+					TransmitionStrengthIndex = 2,
+					PlacardName = "S. Caap",
+					PlacardDescription = "Captain'",
+					AvatarStaticIndex = 0
 				}
 			);
 
-			App.Heartbeat.Wait(() => View.FocusBust("lol"), 0.5f);
+			View.FocusBust("lol", true);
+
+			App.Heartbeat.Wait(() => View.FocusBust("lol2"), 0.5f);
+			App.Heartbeat.Wait(() => View.FocusBust("lol"), 1f);
 		}
 
 		#region Events

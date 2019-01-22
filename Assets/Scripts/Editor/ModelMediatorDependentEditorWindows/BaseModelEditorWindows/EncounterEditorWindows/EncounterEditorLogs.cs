@@ -13,7 +13,16 @@ namespace LunraGames.SubLight
 {
 	public partial class EncounterEditorWindow
 	{
+		class EncounterEditorLogCache
+		{
+			public string[] BustIdsInitialized;
+			public string[] BustIdsMissingInitialization;
+			public bool BustIdsNormalizationMismatch;
+		}
+
 		EditorPrefsFloat logsListScroll;
+
+		EncounterEditorLogCache logCache;
 
 		void LogsConstruct()
 		{
@@ -25,6 +34,21 @@ namespace LunraGames.SubLight
 		}
 
 		void LogsToolbar(EncounterInfoModel model)
+		{
+			if (ModelSelectionModified || logCache == null)
+			{
+				logCache = new EncounterEditorLogCache
+				{
+					BustIdsInitialized = GetAllBustIdsInitialized(model),
+					BustIdsMissingInitialization = GetAllBustIdsMissingInitialization(model),
+					BustIdsNormalizationMismatch = GetAllBustIds(model).Length != GetAllBustIdsNormalized(model).Length
+				};
+			}
+
+			DrawLogsToolbar(model);
+		}
+
+		void DrawLogsToolbar(EncounterInfoModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
@@ -45,6 +69,7 @@ namespace LunraGames.SubLight
 				{
 					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
 				}
+				if (logCache.BustIdsNormalizationMismatch) EditorGUILayout.HelpBox("Duplicate Bust Ids are detected when normalizing all Ids.", MessageType.Error);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
 
@@ -164,8 +189,10 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<EncounterEventEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Dialog:
 					return NewEncounterLog<DialogEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Bust:
+					return NewEncounterLog<BustEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				default:
-					Debug.LogError("Unrecognized EncounterLogType:" + logType);
+					Debug.LogError("Unrecognized EncounterLogType: " + logType);
 					break;
 			}
 			return null;
@@ -296,6 +323,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Dialog:
 					OnDialogLog(infoModel, model as DialogEncounterLogModel);
+					break;
+				case EncounterLogTypes.Bust:
+					OnBustLog(infoModel, model as BustEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -637,7 +667,7 @@ namespace LunraGames.SubLight
 			}
 
 			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
-				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
+				new GUIContent("Is Halting", "Does the handler wait for the event to complete before it continues?"),
 				model.AlwaysHalting.Value
 			);
 
@@ -697,7 +727,7 @@ namespace LunraGames.SubLight
 
 			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PushColor(Color.gray);
 			entry.IsHalting.Value = EditorGUILayout.Toggle(
-				new GUIContent("IsHalting", "Does the handler wait for the event to complete before it continues?"),
+				new GUIContent("Is Halting", "Does the handler wait for the event to complete before it continues?"),
 				entry.IsHalting.Value
 			);
 			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PopColor();
@@ -775,7 +805,7 @@ namespace LunraGames.SubLight
 					"- Select A Type -",
 					entry.DialogType.Value
 				);
-				
+
 				entry.DialogStyle.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
 					//new GUIContent("Style"),
 					GUIContent.none,
@@ -916,6 +946,195 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
+		#region Bust Logs
+		void OnBustLog(
+			EncounterInfoModel infoModel,
+			BustEncounterLogModel model
+		)
+		{
+			if (model.Edges.Any(e => e.Entry.BustEvent.Value == BustEntryModel.Events.Focus && !e.Entry.FocusInfo.Value.Instant))
+			{
+				EditorGUILayout.HelpBox("This log will halt until all busts are focused.", MessageType.Info);
+			}
+
+			//var rawAppendOptions = new List<string>
+			//{
+			//	"- Append New Bust Event -",
+			//	""
+			//};
+
+			var appendResult = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				new GUIContent("Append New Bust Event"),
+				"- Select Bust Event -",
+				BustEntryModel.Events.Unknown
+			);
+
+			switch (appendResult)
+			{
+				//case BustEntryModel.Events.Initialize: OnEdgedLogSpawn(model, OnBustLogSpawnInitialize); break;
+				case BustEntryModel.Events.Initialize: OnBustLogEdgeNameNewInitialize(infoModel, model); break;
+				case BustEntryModel.Events.Focus: OnEdgedLogSpawn(model, OnBustLogSpawnFocus); break;
+			}
+
+			OnEdgedLog<BustEncounterLogModel, BustEdgeModel>(infoModel, model, OnBustLogEdge);
+		}
+
+		void OnBustLogEdgeNameNewInitialize(
+			EncounterInfoModel infoModel,
+			BustEncounterLogModel model
+		)
+		{
+			TextDialogPopup.Show(
+				"New Bust Initialization",
+				value =>
+				{
+					if (string.IsNullOrEmpty(value))
+					{
+						Debug.LogError("Null or empty BustIds are not allowed.");
+						return;
+					}
+					if (logCache.BustIdsInitialized.Contains(value)) Debug.LogWarning("Creating duplicate Bust initialization for Bust Id: " + value);
+					else if (GetAllBustIdsNormalized(infoModel).Contains(value.ToLower()))
+					{
+						Debug.LogError("BustIds that are duplicates after normalization of casing are not allowed.");
+						return;
+					}
+					OnEdgedLogSpawn(model, edge => OnBustLogSpawnInitialize(value, edge));
+				},
+				doneText: "Create",
+				description: "Enter a unique name for this Bust. Reminder: Busts should idealy be initialized only once per encounter."
+			);
+		}
+
+		void OnBustLogSpawnInitialize(
+			string bustId,
+			BustEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+			entry.BustId.Value = bustId;
+			entry.BustEvent.Value = BustEntryModel.Events.Initialize;
+			entry.InitializeInfo.Value = BustEntryModel.InitializeBlock.Default;
+		}
+
+		void OnBustLogSpawnFocus(
+			BustEdgeModel edge
+		)
+		{
+			edge.Entry.BustEvent.Value = BustEntryModel.Events.Focus;
+			edge.Entry.FocusInfo.Value = BustEntryModel.FocusBlock.Default;
+		}
+
+		void OnBustLogEdge(
+			EncounterInfoModel infoModel,
+			BustEncounterLogModel model,
+			BustEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			if (1 < model.Edges.Select(e => e.Entry).Where(e => e.BustId.Value == entry.BustId.Value && e.BustEvent.Value == BustEntryModel.Events.Initialize).Count())
+			{
+				EditorGUILayout.HelpBox("This Bust Id is initialized multiple times within the same log.", MessageType.Error);
+			}
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushEnabled(false);
+				{
+					entry.BustId.Value = EditorGUILayout.TextField("Bust Id", entry.BustId.Value);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+
+				if (GUILayout.Button("Rename", GUILayout.ExpandWidth(false))) OnBustLogEdgeRenameBustId(infoModel, entry.BustId.Value);
+			}
+			GUILayout.EndHorizontal();
+			if (string.IsNullOrEmpty(entry.BustId.Value)) EditorGUILayout.HelpBox("A Bust Id must be specified.", MessageType.Error);
+
+			switch (entry.BustEvent.Value)
+			{
+				case BustEntryModel.Events.Initialize: OnBustLogEdgeInitialize(entry); break;
+				case BustEntryModel.Events.Focus: OnBustLogEdgeFocus(entry); break;
+				default: EditorGUILayout.HelpBox("Unrecognized BustEvent: " + entry.BustEvent.Value, MessageType.Error); break;
+			}
+		}
+
+		void OnBustLogEdgeRenameBustId(
+			EncounterInfoModel infoModel,
+			string bustId
+		)
+		{
+			var changeCount = GetBustIdCount(infoModel, bustId);
+			TextDialogPopup.Show(
+				"Rename Bust Id: "+bustId,
+				value =>
+				{
+					if (bustId == value)
+					{
+						Debug.LogWarning("Bust Id is already " + bustId);
+						return;
+					}
+					if (string.IsNullOrEmpty(value))
+					{
+						Debug.LogError("Null or empty BustIds are not allowed.");
+						return;
+					}
+					var collisionCount = GetBustIdCount(infoModel, value);
+					if (0 < collisionCount)
+					{
+						var collisionConfirm = EditorUtility.DisplayDialog(
+							"Bust Id Collision Detected", "A Bust Id \"" + value + "\" already exists, with " + collisionCount + " entry(s). Are you sure you went to continue renaming this Bust Id?",
+							"Yes",
+							"No"
+						);
+						if (collisionConfirm) OnBustLogEdgeRenameBustIdComplete(infoModel, bustId, value, changeCount);
+						return;
+					}
+					if (bustId.ToLower() != value.ToLower() && GetAllBustIdsNormalized(infoModel).Contains(value.ToLower()))
+					{
+						Debug.LogError("BustIds that are duplicates after normalization of casing are not allowed.");
+						return;
+					}
+					OnBustLogEdgeRenameBustIdComplete(infoModel, bustId, value, changeCount);
+				},
+				doneText: "Rename",
+				description: "Renaming this Bust Id will affect "+changeCount+" Bust events."
+			);
+		}
+
+		void OnBustLogEdgeRenameBustIdComplete(
+			EncounterInfoModel infoModel,
+			string oldBustId,
+			string newBustId,
+			int count
+		)
+		{
+			foreach (var bust in infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(b => b.Entries.Value).Select(e => e.Entry).Where(e => e.BustId.Value == oldBustId))
+			{
+				bust.BustId.Value = newBustId;
+			}
+			Debug.Log("Renamed " + count + " Bust event(s) from \"" + oldBustId + "\" to \"" + newBustId + "\"");
+		}
+
+		void OnBustLogEdgeInitialize(
+			BustEntryModel entry
+		)
+		{
+			GUILayout.Label("todo initialize");
+		}
+
+		void OnBustLogEdgeFocus(
+			BustEntryModel entry
+		)
+		{
+			var block = entry.FocusInfo.Value;
+
+			block.Instant = EditorGUILayout.Toggle(new GUIContent("Instant", "Determines if the bust is shown instantly. If so, this encounter log will not halt."), block.Instant);
+
+			entry.FocusInfo.Value = block;
+		}
+		#endregion
+
 		#region Edged Logs
 		void OnEdgedLog<L, E>(
 			EncounterInfoModel infoModel,
@@ -942,7 +1161,7 @@ namespace LunraGames.SubLight
 				GUILayout.Space(16f);
 				GUILayout.BeginVertical();
 				{
-					var hasDuplicateIds = false; 
+					var hasDuplicateIds = false;
 					var existingEdgeIds = new List<string>();
 					foreach (var curr in sorted)
 					{
@@ -1100,5 +1319,34 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 		}
+
+		#region Utility
+		string[] GetAllBustIds(EncounterInfoModel infoModel)
+		{
+			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value).Distinct().ToArray();
+		}
+
+		string[] GetAllBustIdsNormalized(EncounterInfoModel infoModel)
+		{
+			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value.ToLower()).Distinct().ToArray();
+		}
+
+		string[] GetAllBustIdsInitialized(EncounterInfoModel infoModel)
+		{
+			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Where(e => e.Entry.BustEvent.Value == BustEntryModel.Events.Initialize).Select(e => e.Entry.BustId.Value).Distinct().ToArray();
+		}
+
+		string[] GetAllBustIdsMissingInitialization(EncounterInfoModel infoModel)
+		{
+			var allIds = GetAllBustIds(infoModel);
+			var allInitializedIds = GetAllBustIdsInitialized(infoModel);
+			return allIds.Where(i => !allInitializedIds.Contains(i)).ToArray();
+		}
+
+		int GetBustIdCount(EncounterInfoModel infoModel, string bustId)
+		{
+			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value).Count(i => i == bustId);
+		}
+  		#endregion
 	}
 }
