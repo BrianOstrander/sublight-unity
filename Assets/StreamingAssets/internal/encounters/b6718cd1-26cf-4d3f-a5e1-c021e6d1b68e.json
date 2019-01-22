@@ -20,7 +20,42 @@
     "textLogs": [],
     "keyValueLogs": [],
     "switchLogs": [],
-    "buttonLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Continue",
+              "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "bf7935c5-b2d5-4506-9cab-17b517966887"
+            }
+          }
+        ],
+        "style": "Bust",
+        "bustStyle": {
+          "Theme": "Foreigner"
+        },
+        "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
+        "index": 2,
+        "logId": "836ed19e-b734-4673-b258-b8db200a85cd"
+      }
+    ],
     "encyclopediaLogs": [],
     "eventLogs": [
       {
@@ -73,7 +108,7 @@
             }
           }
         ],
-        "index": 2,
+        "index": 4,
         "ending": true,
         "logId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
         "name": "Last"
@@ -109,7 +144,7 @@
             "index": 1
           }
         ],
-        "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
+        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "index": 1,
         "logId": "e10c9828-e0dc-48eb-89e5-c2200593268f"
       }

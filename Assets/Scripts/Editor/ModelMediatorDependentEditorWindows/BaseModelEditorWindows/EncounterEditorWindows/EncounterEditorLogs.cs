@@ -230,7 +230,7 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
-					var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId");
+					var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId:");
 
 					GUILayout.Label(new GUIContent(header, model.LogId.Value), EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
 					EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
@@ -274,7 +274,7 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndVertical();
 
-			model.Name.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Name", "Internal name for production."), model.Name.Value);
+			model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "Internal name for production."), model.Name.Value);
 
 			EditorGUIExtensions.PauseChangeCheck();
 			{
@@ -563,6 +563,45 @@ namespace LunraGames.SubLight
 			ButtonEncounterLogModel model
 		)
 		{
+			var wasStyle = model.Style.Value;
+			var newStyle = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				"Style",
+				"- Select Button Style -",
+				model.Style.Value
+			);
+
+			if (wasStyle != newStyle)
+			{
+				if (wasStyle != ButtonEncounterLogModel.Styles.Unknown)
+				{
+					// Value has changed, and not to Unknown, so we warn the user data may be lost.
+					if (EditorUtility.DisplayDialog(
+						"Overwrite Button Style",
+						"Changing the button style will overwrite style specific data, and cannot be recovered.",
+						"Continue",
+						"Cancel"
+					))
+					{
+						OnButtonLogApplyStyle(infoModel, model, newStyle);
+					}
+					throw new ExitGUIException(); // We do this because opening a dialog messes everything up for some reason...
+				}
+				OnButtonLogApplyStyle(infoModel, model, newStyle);
+			}
+
+			switch (model.Style.Value)
+			{
+				case ButtonEncounterLogModel.Styles.Bust:
+					OnButtonLogBustStyle(infoModel, model);
+					break;
+				case ButtonEncounterLogModel.Styles.Unknown:
+					EditorGUILayout.HelpBox("A style must be specified for this button.", MessageType.Error);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized Style: " + model.Style.Value, MessageType.Error);
+					break;
+			}
+
 			EditorGUILayoutEncounter.LogPopup(
 				"Append New Button: ",
 				null,
@@ -576,6 +615,56 @@ namespace LunraGames.SubLight
 			);
 
 			OnEdgedLog<ButtonEncounterLogModel, ButtonEdgeModel>(infoModel, model, OnButtonLogEdge);
+		}
+
+		void OnButtonLogBustStyle(
+			EncounterInfoModel infoModel,
+			ButtonEncounterLogModel model
+		)
+		{
+			var style = model.BustStyle.Value;
+
+			style.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				"Theme",
+				"- Select Button Theme -",
+				style.Theme
+			);
+
+			if (style.Theme == ButtonEncounterLogModel.BustStyleBlock.Themes.Unknown) EditorGUILayout.HelpBox("A theme must be specified.", MessageType.Error);
+
+			model.BustStyle.Value = style;
+		}
+
+		void OnButtonLogApplyStyle(
+			EncounterInfoModel infoModel,
+			ButtonEncounterLogModel model,
+			ButtonEncounterLogModel.Styles style
+		)
+		{
+			var styleApplied = true;
+			Action onApplyStyle = null;
+
+			switch (style)
+			{
+				case ButtonEncounterLogModel.Styles.Bust:
+					onApplyStyle = () => model.BustStyle.Value = ButtonEncounterLogModel.BustStyleBlock.Default;
+					break;
+				default:
+					Debug.LogError("Unrecognized Style: " + style);
+					styleApplied = false;
+					break;
+			}
+
+			if (styleApplied)
+			{
+				// Reset other styles here.
+				model.BustStyle.Value = default(ButtonEncounterLogModel.BustStyleBlock);
+
+				if (onApplyStyle == null) Debug.LogError("onApplyStyle cannot be null");
+				else onApplyStyle();
+
+				model.Style.Value = style;
+			}
 		}
 
 		void OnButtonLogSpawn(
@@ -594,31 +683,38 @@ namespace LunraGames.SubLight
 		{
 			var entry = edge.Entry;
 
-			EditorGUILayoutEncounter.LogPopup(
-				"Target Log: ",
-				entry.NextLogId.Value,
-				infoModel,
-				model,
-				existingSelection => entry.NextLogId.Value = existingSelection,
-				newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
-				EncounterLogBlankHandling.Error,
-				"- Select Target Log -"
-			);
-
-			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", entry.Message.Value);
+			entry.Message.Value = EditorGUILayout.TextField("Message", entry.Message.Value);
 
 			GUILayout.BeginHorizontal();
 			{
+				EditorGUILayoutEncounter.LogPopup(
+					"Target Log: ",
+					entry.NextLogId.Value,
+					infoModel,
+					model,
+					existingSelection => entry.NextLogId.Value = existingSelection,
+					newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+					EncounterLogBlankHandling.Error,
+					"- Select Target Log -"
+				);
 				entry.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !entry.NotAutoUsed.Value, GUILayout.Width(74f));
 				entry.AutoDisableInteractions.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable Interactions", "When this button is pressed, automatically disable future interactions the next time around."), entry.AutoDisableInteractions.Value, GUILayout.Width(152f));
 				entry.AutoDisableEnabled.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable", "When this button is pressed, automatically set this button to be disabled and invisible the next time around."), entry.AutoDisableEnabled.Value, GUILayout.Width(90f));
 			}
 			GUILayout.EndHorizontal();
 
-			EditorGUILayoutValueFilter.Field(new GUIContent("Used Filtering", "If this filter returns true, the button will appear used."), entry.UsedFiltering);
-			EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), entry.InteractableFiltering);
-			EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), entry.EnabledFiltering);
+			EditorGUIExtensions.PauseChangeCheck();
+			{
+				edge.ShowFiltering.Value = EditorGUILayout.Foldout(edge.ShowFiltering.Value, "Filtering");
+			}
+			EditorGUIExtensions.UnPauseChangeCheck();
 
+			if (edge.ShowFiltering.Value)
+			{
+				EditorGUILayoutValueFilter.Field(new GUIContent("Used Filtering", "If this filter returns true, the button will appear used."), entry.UsedFiltering);
+				EditorGUILayoutValueFilter.Field(new GUIContent("Interactable Filtering", "If this filter returns true, the button will be interactable."), entry.InteractableFiltering);
+				EditorGUILayoutValueFilter.Field(new GUIContent("Enabled Filtering", "If this filter returns true, the button will be enabled and visible."), entry.EnabledFiltering);
+			}
 		}
 		#endregion
 
@@ -1112,7 +1208,8 @@ namespace LunraGames.SubLight
 					if (0 < collisionCount)
 					{
 						var collisionConfirm = EditorUtility.DisplayDialog(
-							"Bust Id Collision Detected", "A Bust Id \"" + value + "\" already exists, with " + collisionCount + " entry(s). Are you sure you went to continue renaming this Bust Id?",
+							"Bust Id Collision Detected",
+							"A Bust Id \"" + value + "\" already exists, with " + collisionCount + " entry(s). Are you sure you went to continue renaming this Bust Id?",
 							"Yes",
 							"No"
 						);

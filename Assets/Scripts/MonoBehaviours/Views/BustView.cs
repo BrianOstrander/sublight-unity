@@ -5,10 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-using TMPro;
-
-using LunraGames.SubLight.Models;
-
 namespace LunraGames.SubLight.Views
 {
 	public struct BustBlock

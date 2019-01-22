@@ -14,6 +14,7 @@ namespace LunraGamesEditor
 	{
 		static Stack<Color> ColorStack = new Stack<Color>();
 		static Stack<Color> BackgroundColorStack = new Stack<Color>();
+		static Stack<Color> ContentColorStack = new Stack<Color>();
 		static Stack<bool> EnabledStack = new Stack<bool>();
 		static Stack<bool> TextAreaWordWrapStack = new Stack<bool>();
 		static Stack<TextAnchor> ButtonTextAnchorStack = new Stack<TextAnchor>();
@@ -113,6 +114,18 @@ namespace LunraGamesEditor
 		{
 			if (BackgroundColorStack.Count == 0) return;
 			GUI.backgroundColor = BackgroundColorStack.Pop();
+		}
+
+		public static void PushContentColor(Color color)
+		{
+			ContentColorStack.Push(GUI.contentColor);
+			GUI.contentColor = color;
+		}
+
+		public static void PopContentColor()
+		{
+			if (ContentColorStack.Count == 0) return;
+			GUI.contentColor = ContentColorStack.Pop();
 		}
 
 		public static void PushEnabled(bool enabled)
@@ -388,7 +401,14 @@ namespace LunraGamesEditor
 		public static bool ToggleButtonValue(bool value, string trueText = "True", string falseText = "False", params GUILayoutOption[] options)
 		{
 			options = options.Prepend(GUILayout.Width(48f)).ToArray();
-			if (GUILayout.Button(value ? trueText : falseText, options)) value = !value;
+			var wasValue = value;
+
+			if (!wasValue) PushContentColor(Color.red.NewS(0.4f));
+			{
+				if (GUILayout.Button(value ? trueText : falseText, options)) value = !value;
+			}
+			if (!wasValue) PopContentColor();
+
 			return value;
 		}
 

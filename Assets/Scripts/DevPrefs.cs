@@ -10,6 +10,7 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsBool SkipMainMenuAnimations = new DevPrefsBool(ProjectConstants.PrefsPrefix + "SkipMainMenuAnimations");
 		public static readonly DevPrefsBool ShowHoloHelper = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ShowHoloHelper");
 		public static readonly DevPrefsBool ShowUxHelper = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ShowUxHelper");
+		public static readonly DevPrefsBool IgnoreGuiExitExceptions = new DevPrefsBool(ProjectConstants.PrefsPrefix + "IgnoreGuiExitExceptions");
 
 		public static readonly DevPrefsBool AutoNewGame = new DevPrefsBool(ProjectConstants.PrefsPrefix + "AutoNewGame");
 		public static readonly DevPrefsBool WipeGameSavesOnStart = new DevPrefsBool(ProjectConstants.PrefsPrefix + "WipeGameSavesOnStart");
