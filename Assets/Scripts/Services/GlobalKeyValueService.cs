@@ -15,7 +15,6 @@ namespace LunraGames.SubLight
 		ILogService logger;
 
 		GlobalKeyValuesModel globalKeyValues;
-		KeyValueListener keyValueListener;
 		bool currentlySaving;
 
 		public GlobalKeyValueService(CallbackService callbacks, IModelMediator modelMediator, KeyValueService keyValues, ILogService logger)
@@ -110,7 +109,8 @@ namespace LunraGames.SubLight
 			callbacks.StateChange += OnStateChange;
 			callbacks.SaveRequest += OnSaveRequest;
 
-			keyValueListener = new KeyValueListener(KeyValueTargets.Global, globalKeyValues.KeyValues, keyValues).Register();
+			// Keyvalue listener is created here and just floats about... never being unregistered... so keep that in mind I guess...
+			new KeyValueListener(KeyValueTargets.Global, globalKeyValues.KeyValues, keyValues).Register();
 
 			done(RequestStatus.Success);
 		}

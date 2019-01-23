@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -173,7 +172,6 @@ namespace LunraGames.SubLight.Views
 
 		public Action<Action> Click { set; private get; }
 
-		ConversationButtonThemeBlock activeTheme;
 		List<ButtonEntry> entries = new List<ButtonEntry>();
 
 		bool hasClicked;
@@ -182,8 +180,6 @@ namespace LunraGames.SubLight.Views
 		{
 			buttonArea.transform.ClearChildren();
 			entries.Clear();
-
-			activeTheme = theme;
 
 			var index = 0;
 			var count = blocks.Length;

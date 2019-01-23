@@ -93,3 +93,5 @@ MonoBehaviour:
       type: 3}
   - PrefabRoot: {fileID: 7607892854509786236, guid: 4d0474b2c211a41bca3bb13312cff046,
       type: 3}
+  - PrefabRoot: {fileID: 5819598802345688708, guid: 8b3eb3a06b25a49f7a7c562ddb27f210,
+      type: 3}
