@@ -361,6 +361,14 @@ namespace LunraGames.SubLight
 				{
 					DrawAll();
 				}
+				catch (ExitGUIException exitGuiException)
+				{
+					if (!DevPrefs.IgnoreGuiExitExceptions)
+					{
+						innerException = exitGuiException;
+						throw exitGuiException;
+					}
+				}
 				catch (Exception originalException)
 				{
 					innerException = originalException;

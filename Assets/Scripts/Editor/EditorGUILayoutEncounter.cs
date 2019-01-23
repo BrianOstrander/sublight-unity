@@ -45,6 +45,30 @@ namespace LunraGames.SubLight
 			);
 		}
 
+		public static void LogPopup(
+			string label,
+			string current,
+			EncounterInfoModel infoModel,
+			EncounterLogModel model,
+			Action<string> existingSelection,
+			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankHandling blankHandling,
+			out bool isBlankOrMissing,
+			params string[] preAppend
+		)
+		{
+			LogPopup(
+				new GUIContent(label),
+				current,
+				infoModel,
+				model,
+				existingSelection,
+				newSelection,
+				blankHandling,
+				out isBlankOrMissing,
+				preAppend
+			);
+		}
 
 		public static void LogPopup(
 			GUIContent content,
@@ -54,6 +78,32 @@ namespace LunraGames.SubLight
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
 			EncounterLogBlankHandling blankHandling,
+			params string[] preAppend
+		)
+		{
+			var isBlankOrMissing = false;
+			LogPopup(
+				content,
+				current,
+				infoModel,
+				model,
+				existingSelection,
+				newSelection,
+				blankHandling,
+				out isBlankOrMissing,
+				preAppend
+			);
+		}
+
+		public static void LogPopup(
+			GUIContent content,
+			string current,
+			EncounterInfoModel infoModel,
+			EncounterLogModel model,
+			Action<string> existingSelection,
+			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankHandling blankHandling,
+			out bool isBlankOrMissing,
 			params string[] preAppend
 		)
 		{
@@ -140,7 +190,8 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			if (blankHandling != EncounterLogBlankHandling.None && (string.IsNullOrEmpty(current) || hasMissingId))
+			isBlankOrMissing = string.IsNullOrEmpty(current) || hasMissingId;
+        	if (blankHandling != EncounterLogBlankHandling.None && isBlankOrMissing)
 			{
 				var blankMessage = string.Empty;
 				var blankType = MessageType.None;

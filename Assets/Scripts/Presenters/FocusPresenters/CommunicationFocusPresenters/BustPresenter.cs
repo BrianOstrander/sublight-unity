@@ -10,11 +10,11 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class BustPresenter : CommunicationFocusPresenter<IBustView>
 	{
-		GameModel model;
+		//GameModel model;
 
 		public BustPresenter(GameModel model)
 		{
-			this.model = model;
+			//this.model = model;
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 		}

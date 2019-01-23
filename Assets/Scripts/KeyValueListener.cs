@@ -17,7 +17,7 @@ namespace LunraGames.SubLight
 			this.keyValueService = keyValueService;
 		}
 
-		public void Register()
+		public KeyValueListener Register()
 		{
 			keyValueService.RegisterGet(target, OnGetBoolean);
 			keyValueService.RegisterGet(target, OnGetInteger);
@@ -26,9 +26,11 @@ namespace LunraGames.SubLight
 			keyValueService.RegisterSet(target, OnSetBoolean);
 			keyValueService.RegisterSet(target, OnSetInteger);
 			keyValueService.RegisterSet(target, OnSetString);
+
+			return this;
 		}
 
-		public void UnRegister()
+		public KeyValueListener UnRegister()
 		{
 			keyValueService.UnRegisterGet(target, OnGetBoolean);
 			keyValueService.UnRegisterGet(target, OnGetInteger);
@@ -37,6 +39,8 @@ namespace LunraGames.SubLight
 			keyValueService.UnRegisterSet(target, OnSetBoolean);
 			keyValueService.UnRegisterSet(target, OnSetInteger);
 			keyValueService.UnRegisterSet(target, OnSetString);
+
+			return this;
 		}
 
 		KeyValueResult<T> Result<T>(string key, T value) where T : IConvertible

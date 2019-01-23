@@ -267,15 +267,15 @@ namespace LunraGames.SubLight.Views
 		RectTransform detailsContainer;
 
 		[SerializeField]
-		HsvMultiplier iconPrimaryModifiers;
+		HsvOperator iconPrimaryModifiers;
 		[SerializeField]
-		HsvMultiplier iconSecondaryModifiers;
+		HsvOperator iconSecondaryModifiers;
 		[SerializeField]
-		HsvMultiplier iconShiftedPrimaryModifiers;
+		HsvOperator iconShiftedPrimaryModifiers;
 		[SerializeField]
-		HsvMultiplier iconShiftedSecondaryModifiers;
+		HsvOperator iconShiftedSecondaryModifiers;
 		[SerializeField]
-		HsvMultiplier dropLineModifiers;
+		HsvOperator dropLineModifiers;
 		[SerializeField]
 		AnimationCurve iconScale;
 		[SerializeField]
@@ -315,11 +315,11 @@ namespace LunraGames.SubLight.Views
 		{
 			set
 			{
-				var primaryColor = iconPrimaryModifiers.Apply(value);
-				var secondaryColor = iconSecondaryModifiers.Apply(value);
+				var primaryColor = iconPrimaryModifiers.ApplyMultiplier(value);
+				var secondaryColor = iconSecondaryModifiers.ApplyMultiplier(value);
 
-				var shiftedPrimaryColor = iconShiftedPrimaryModifiers.Apply(value);
-				var shiftedSecondaryColor = iconShiftedSecondaryModifiers.Apply(value);
+				var shiftedPrimaryColor = iconShiftedPrimaryModifiers.ApplyMultiplier(value);
+				var shiftedSecondaryColor = iconShiftedSecondaryModifiers.ApplyMultiplier(value);
 
 				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.PrimaryColor, primaryColor);
 				colorGraphic.material.SetColor(ShaderConstants.HoloCelestialSystemIconColor.SecondaryColor, secondaryColor);
@@ -338,7 +338,7 @@ namespace LunraGames.SubLight.Views
 
 				// Shiftables 
 
-				dropLineColors = new ColorShift(dropLineModifiers.Apply(value), shiftedSecondaryColor);
+				dropLineColors = new ColorShift(dropLineModifiers.ApplyMultiplier(value), shiftedSecondaryColor);
 				dragTrailColors = new ColorShift(secondaryColor, shiftedSecondaryColor);
 				selectedParticleColors = new ColorShift(primaryColor, shiftedPrimaryColor);
 				minimizedParticleColors = new ColorShift(primaryColor, shiftedPrimaryColor);

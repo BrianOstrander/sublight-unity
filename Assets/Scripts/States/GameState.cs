@@ -59,14 +59,6 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
-			/*
-			Payload.Game.ScaleLabelSystem.Changed += value => Debug.Log("System label is now " + value.Name.Value);
-			Payload.Game.ScaleLabelLocal.Changed += value => Debug.Log("Local label is now " + value.Name.Value);
-			Payload.Game.ScaleLabelStellar.Changed += value => Debug.Log("Stellar label is now " + value.Name.Value);
-			Payload.Game.ScaleLabelQuadrant.Changed += value => Debug.Log("Quadrant label is now " + value.Name.Value);
-			Payload.Game.ScaleLabelGalactic.Changed += value => Debug.Log("Galactic label is now " + value.Name.Value);
-			Payload.Game.ScaleLabelCluster.Changed += value => Debug.Log("Cluster label is now " + value.Name.Value);
-			*/
 			App.SM.PushBlocking(LoadScenes);
 			App.SM.PushBlocking(LoadModelDependencies);
 			App.SM.PushBlocking(SetNonSerializedValues);
@@ -551,6 +543,7 @@ namespace LunraGames.SubLight
 					{
 						case EncounterLogTypes.Dialog: break;
 						case EncounterLogTypes.Bust: break;
+						case EncounterLogTypes.Button: break;
 						default:
 							Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.LogType);
 							break;

@@ -97,11 +97,12 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndVertical();
 
-				//GUILayout.BeginVertical();
-				//{
-				//	// second column of controlls here
-				//}
-				//GUILayout.EndVertical();
+				GUILayout.BeginVertical();
+				{
+					// second column of controlls here
+					DevPrefs.IgnoreGuiExitExceptions.Value = GUILayout.Toggle(DevPrefs.IgnoreGuiExitExceptions, "Ignore GuiExit Exceptions");
+				}
+				GUILayout.EndVertical();
 
 				GUILayout.FlexibleSpace();
 			}

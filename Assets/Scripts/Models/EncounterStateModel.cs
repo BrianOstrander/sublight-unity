@@ -43,7 +43,7 @@ namespace LunraGames.SubLight.Models
 
 			keyValues = keyValues ?? new KeyValueListModel();
 
-			return (KeyValueListener = new KeyValueListener(KeyValueTargets.Encounter, keyValues, keyValueService));
+			return (KeyValueListener = new KeyValueListener(KeyValueTargets.Encounter, keyValues, keyValueService).Register());
 		}
 
 		public void UnRegisterKeyValueListener()
