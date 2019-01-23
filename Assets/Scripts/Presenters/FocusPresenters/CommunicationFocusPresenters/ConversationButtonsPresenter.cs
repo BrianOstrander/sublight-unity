@@ -8,11 +8,11 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class BustButtonsPresenter : CommunicationFocusPresenter<IBustButtonsView>
+	public class ConversationButtonsPresenter : CommunicationFocusPresenter<IConversationButtonsView>
 	{
 		//GameModel model;
 
-		public BustButtonsPresenter(GameModel model)
+		public ConversationButtonsPresenter(GameModel model)
 		{
 			//this.model = model;
 
@@ -71,25 +71,25 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnHandleButtons(ButtonHandlerModel handler)
 		{
-			if (handler.Log.Value.Style.Value != ButtonEncounterLogModel.Styles.Bust) return;
+			if (handler.Log.Value.Style.Value != ButtonEncounterLogModel.Styles.Conversation) return;
 
-			var style = handler.Log.Value.BustStyle.Value;
+			var style = handler.Log.Value.ConversationStyle.Value;
 			var theme = View.DefaultTheme;
 
 			switch (style.Theme)
 			{
-				case ButtonEncounterLogModel.BustStyleBlock.Themes.Crew: theme = View.CrewTheme; break;
-				case ButtonEncounterLogModel.BustStyleBlock.Themes.AwayTeam: theme = View.AwayTeamTheme; break;
-				case ButtonEncounterLogModel.BustStyleBlock.Themes.Foreigner: theme = View.ForeignerTheme; break;
-				case ButtonEncounterLogModel.BustStyleBlock.Themes.Downlink: theme = View.DownlinkTheme; break;
+				case ButtonEncounterLogModel.ConversationStyleBlock.Themes.Crew: theme = View.CrewTheme; break;
+				case ButtonEncounterLogModel.ConversationStyleBlock.Themes.AwayTeam: theme = View.AwayTeamTheme; break;
+				case ButtonEncounterLogModel.ConversationStyleBlock.Themes.Foreigner: theme = View.ForeignerTheme; break;
+				case ButtonEncounterLogModel.ConversationStyleBlock.Themes.Downlink: theme = View.DownlinkTheme; break;
 				default: Debug.LogError("Unrecognized Theme: " + style.Theme); break;
 			}
 
-			var buttonBlocks = new List<BustButtonBlock>();
+			var buttonBlocks = new List<ConversationButtonBlock>();
 
 			foreach (var entry in handler.Buttons.Value)
 			{
-				var block = new BustButtonBlock();
+				var block = new ConversationButtonBlock();
 				block.Message = entry.Message;
 				block.Used = entry.Used;
 				block.Interactable = entry.Interactable;

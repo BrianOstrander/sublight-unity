@@ -1278,7 +1278,7 @@ GameObject:
   - component: {fileID: 7607892854509786237}
   - component: {fileID: 4805838404457657058}
   m_Layer: 13
-  m_Name: BustButtonsView
+  m_Name: ConversationButtonsView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -97,8 +97,8 @@
             "index": 2
           }
         ],
-        "style": "Bust",
-        "bustStyle": {
+        "style": "Conversation",
+        "conversationStyle": {
           "Theme": "Foreigner"
         },
         "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",

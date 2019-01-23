@@ -4,7 +4,7 @@ using TMPro;
 
 namespace LunraGames.SubLight.Views
 {
-	public class BustButtonLeaf : MonoBehaviour
+	public class ConversationButtonLeaf : MonoBehaviour
 	{
 		public XButton Button;
 

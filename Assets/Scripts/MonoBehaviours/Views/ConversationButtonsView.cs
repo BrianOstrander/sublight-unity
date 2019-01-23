@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 namespace LunraGames.SubLight.Views
 {
-	public struct BustButtonBlock
+	public struct ConversationButtonBlock
 	{
 		public string Message;
 		public bool Used;
@@ -16,7 +16,7 @@ namespace LunraGames.SubLight.Views
 		public Action Click;
 	}
 
-	public struct BustButtonThemeBlock
+	public struct ConversationButtonThemeBlock
 	{
 		public struct State
 		{
@@ -32,19 +32,19 @@ namespace LunraGames.SubLight.Views
 		public State Selected;
 	}
 
-	public class BustButtonsView : View, IBustButtonsView
+	public class ConversationButtonsView : View, IConversationButtonsView
 	{
 		class ButtonEntry
 		{
-			public BustButtonBlock Block;
-			public BustButtonLeaf Instance;
+			public ConversationButtonBlock Block;
+			public ConversationButtonLeaf Instance;
 
 			public float IndexNormal;
 			public bool IsSelection;
 		}
 
 		[Serializable]
-		struct BustButtonStyleBlock
+		struct StyleBlock
 		{
 			[Serializable]
 			public struct State
@@ -98,7 +98,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		GameObject buttonArea;
 		[SerializeField]
-		BustButtonLeaf buttonPrefab;
+		ConversationButtonLeaf buttonPrefab;
 		[SerializeField]
 		GameObject spacerPrefab;
 		[SerializeField]
@@ -114,7 +114,7 @@ namespace LunraGames.SubLight.Views
 
 		[Header("Themes")]
 		[SerializeField]
-		BustButtonStyleBlock defaultTheme;
+		StyleBlock defaultTheme;
 		[SerializeField]
 		ThemeModifier crewModifier;
 		[SerializeField]
@@ -143,9 +143,9 @@ namespace LunraGames.SubLight.Views
 			return result;
 		}
 
-		BustButtonThemeBlock.State GetModifiedStateTheme(BustButtonStyleBlock.State baseState, ThemeModifier modifier)
+		ConversationButtonThemeBlock.State GetModifiedStateTheme(StyleBlock.State baseState, ThemeModifier modifier)
 		{
-			return new BustButtonThemeBlock.State
+			return new ConversationButtonThemeBlock.State
 			{
 				LabelStyle = GetModifiedStateTheme(baseState.LabelStyle, modifier),
 				BulletStyle = GetModifiedStateTheme(baseState.BulletStyle, modifier),
@@ -154,9 +154,9 @@ namespace LunraGames.SubLight.Views
 			};
 		}
 
-		BustButtonThemeBlock GetModifiedTheme(BustButtonStyleBlock baseTheme, ThemeModifier modifier)
+		ConversationButtonThemeBlock GetModifiedTheme(StyleBlock baseTheme, ThemeModifier modifier)
 		{
-			return new BustButtonThemeBlock
+			return new ConversationButtonThemeBlock
 			{
 				Normal = GetModifiedStateTheme(baseTheme.Normal, modifier),
 				Used = GetModifiedStateTheme(baseTheme.Used, modifier),
@@ -165,20 +165,20 @@ namespace LunraGames.SubLight.Views
 			};
 		}
 
-		public BustButtonThemeBlock DefaultTheme { get { return GetModifiedTheme(defaultTheme, new ThemeModifier { Hue = Color.white, Multiplier = new HsvOperator() }); } }
-		public BustButtonThemeBlock CrewTheme { get { return GetModifiedTheme(defaultTheme, crewModifier); } }
-		public BustButtonThemeBlock AwayTeamTheme { get { return GetModifiedTheme(defaultTheme, awayTeamModifier); } }
-		public BustButtonThemeBlock ForeignerTheme { get { return GetModifiedTheme(defaultTheme, foreignerModifier); } }
-		public BustButtonThemeBlock DownlinkTheme { get { return GetModifiedTheme(defaultTheme, downlinkModifier); } }
+		public ConversationButtonThemeBlock DefaultTheme { get { return GetModifiedTheme(defaultTheme, new ThemeModifier { Hue = Color.white, Multiplier = new HsvOperator() }); } }
+		public ConversationButtonThemeBlock CrewTheme { get { return GetModifiedTheme(defaultTheme, crewModifier); } }
+		public ConversationButtonThemeBlock AwayTeamTheme { get { return GetModifiedTheme(defaultTheme, awayTeamModifier); } }
+		public ConversationButtonThemeBlock ForeignerTheme { get { return GetModifiedTheme(defaultTheme, foreignerModifier); } }
+		public ConversationButtonThemeBlock DownlinkTheme { get { return GetModifiedTheme(defaultTheme, downlinkModifier); } }
 
 		public Action<Action> Click { set; private get; }
 
-		BustButtonThemeBlock activeTheme;
+		ConversationButtonThemeBlock activeTheme;
 		List<ButtonEntry> entries = new List<ButtonEntry>();
 
 		bool hasClicked;
 
-		public void SetButtons(BustButtonThemeBlock theme, params BustButtonBlock[] blocks)
+		public void SetButtons(ConversationButtonThemeBlock theme, params ConversationButtonBlock[] blocks)
 		{
 			buttonArea.transform.ClearChildren();
 			entries.Clear();
@@ -229,7 +229,7 @@ namespace LunraGames.SubLight.Views
 			hasClicked = false;
 
 			Click = ActionExtensions.GetEmpty<Action>();
-			SetButtons(default(BustButtonThemeBlock));
+			SetButtons(default(ConversationButtonThemeBlock));
 		}
 
 		protected override void OnPrepare()
@@ -293,24 +293,18 @@ namespace LunraGames.SubLight.Views
 			else Click(entry.Block.Click);
 		}
 		#endregion
-
-		void OnDrawGizmos()
-		{
-			//Gizmos.color = Color.red;
-			//Gizmos.DrawLine(bustPrefab.AvatarAnchor.position, bustPrefab.AvatarDepthAnchor.position);
-		}
 	}
 
-	public interface IBustButtonsView : IView
+	public interface IConversationButtonsView : IView
 	{
-		BustButtonThemeBlock DefaultTheme { get; }
-		BustButtonThemeBlock CrewTheme { get; }
-		BustButtonThemeBlock AwayTeamTheme { get; }
-		BustButtonThemeBlock ForeignerTheme { get; }
-		BustButtonThemeBlock DownlinkTheme { get; }
+		ConversationButtonThemeBlock DefaultTheme { get; }
+		ConversationButtonThemeBlock CrewTheme { get; }
+		ConversationButtonThemeBlock AwayTeamTheme { get; }
+		ConversationButtonThemeBlock ForeignerTheme { get; }
+		ConversationButtonThemeBlock DownlinkTheme { get; }
 
 		Action<Action> Click { set; }
 
-		void SetButtons(BustButtonThemeBlock theme, params BustButtonBlock[] blocks);
+		void SetButtons(ConversationButtonThemeBlock theme, params ConversationButtonBlock[] blocks);
 	}
 }
