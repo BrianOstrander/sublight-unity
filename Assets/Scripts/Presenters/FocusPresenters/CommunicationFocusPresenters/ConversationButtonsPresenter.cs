@@ -14,7 +14,7 @@ namespace LunraGames.SubLight.Presenters
 
 		bool isProcessingButtons;
 
-		protected override bool CanReset() { return false; }
+		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
 		protected override bool CanShow()
 		{
@@ -35,55 +35,20 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
 
-		protected override void OnUpdateEnabled()
-		{
-			/*
-			View.SetButtons(
-				View.DownlinkTheme,
-				new BustButtonBlock
-				{
-					Message = "First Button",
-					Used = false,
-					Interactable = true,
-					Click = () => Debug.Log("Clicked first")
-				},
-				new BustButtonBlock
-				{
-					Message = "Second Button",
-					Used = true,
-					Interactable = true,
-					Click = () => Debug.Log("Clicked second")
-				},
-				new BustButtonBlock
-				{
-					Message = "Third Button",
-					Used = false,
-					Interactable = false,
-					Click = () => Debug.Log("Clicked third")
-				},
-				new BustButtonBlock
-				{
-					Message = "Fourth Button",
-					Used = true,
-					Interactable = false,
-					Click = () => Debug.Log("Clicked fourth")
-				}
-			);
-			*/
-		}
-
 		#region Events
 		void OnEncounterRequest(EncounterRequest request)
 		{
 			switch (request.State)
 			{
+				case EncounterRequest.States.Request:
+					View.Reset();
+					break;
 				case EncounterRequest.States.Handle:
 					request.TryHandle<ButtonHandlerModel>(OnHandleButtons);
 					break;
 				case EncounterRequest.States.Done:
 					isProcessingButtons = false;
 					if (View.Visible) CloseView();
-					View.Reset();
 					break;
 			}
 		}

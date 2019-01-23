@@ -21,11 +21,11 @@ namespace LunraGames.SubLight.Views
 			if (!showing) scalar += 1f;
 
 			lipMesh.material.renderQueue = renderQueue;
-			lipMesh.material.SetFloat(ShaderConstants.HoloLip.LipMin, MinLipAnimation.Evaluate(scalar));
-			lipMesh.material.SetFloat(ShaderConstants.HoloLip.LipMax, MaxLipAnimation.Evaluate(scalar));
+			lipMesh.material.SetFloat(ShaderConstants.HoloLipAdditive.LipMin, MinLipAnimation.Evaluate(scalar));
+			lipMesh.material.SetFloat(ShaderConstants.HoloLipAdditive.LipMax, MaxLipAnimation.Evaluate(scalar));
 		}
 
-		public Color HoloColor { set { lipMesh.material.SetColor(ShaderConstants.HoloLip.LipColor, value); } }
+		public Color HoloColor { set { lipMesh.material.SetColor(ShaderConstants.HoloLipAdditive.LipColor, value); } }
 
 		public override void Reset()
 		{

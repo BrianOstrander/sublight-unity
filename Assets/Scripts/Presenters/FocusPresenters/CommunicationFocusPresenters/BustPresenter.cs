@@ -14,7 +14,7 @@ namespace LunraGames.SubLight.Presenters
 
 		BustEntryModel lastFocus;
 
-		protected override bool CanReset() { return false; } // Only on encounter ends should we reset.
+		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
 		protected override bool CanShow()
 		{
@@ -35,23 +35,20 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
 
-		protected override void OnUpdateEnabled()
-		{
-			//View.FocusBust(lastFocus.BustId.Value, true);
-		}
-
 		#region Events
 		void OnEncounterRequest(EncounterRequest request)
 		{
 			switch (request.State)
 			{
+				case EncounterRequest.States.Request:
+					View.Reset();
+					break;
 				case EncounterRequest.States.Handle:
 					request.TryHandle<BustHandlerModel>(OnHandleBust);
 					break;
 				case EncounterRequest.States.Done:
 					lastFocus = null;
 					if (View.Visible) CloseView();
-					View.Reset();
 					break;
 			}
 		}

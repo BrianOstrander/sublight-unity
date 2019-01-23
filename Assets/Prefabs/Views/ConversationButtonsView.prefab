@@ -1319,6 +1319,7 @@ MonoBehaviour:
     CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
+  - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
   lookAtArea: {fileID: 7607892853870621929}
   buttonArea: {fileID: 7607892855131830054}
   buttonPrefab: {fileID: 7607892853934669203}
