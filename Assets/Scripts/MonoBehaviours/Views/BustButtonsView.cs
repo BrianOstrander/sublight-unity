@@ -86,7 +86,7 @@ namespace LunraGames.SubLight.Views
 		struct ThemeModifier
 		{
 			public Color Hue;
-			public HsvMultiplier Multiplier;
+			public HsvOperator Multiplier;
 		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
@@ -117,7 +117,7 @@ namespace LunraGames.SubLight.Views
 		Color GetModifiedStateThemeColor(Color baseColor, ThemeModifier modifier)
 		{
 			// Finally...
-			return modifier.Multiplier.Apply(baseColor.NewH(modifier.Hue.GetH()));
+			return modifier.Multiplier.ApplyAddition(baseColor).NewH(modifier.Hue.GetH());
 		}
 
 		XButtonStyleBlock GetModifiedStateTheme(XButtonStyleObject baseObject, ThemeModifier modifier)
@@ -154,7 +154,7 @@ namespace LunraGames.SubLight.Views
 			};
 		}
 
-		public BustButtonThemeBlock DefaultTheme { get { return GetModifiedTheme(defaultTheme, new ThemeModifier { Hue = Color.white, Multiplier = new HsvMultiplier() }); } }
+		public BustButtonThemeBlock DefaultTheme { get { return GetModifiedTheme(defaultTheme, new ThemeModifier { Hue = Color.white, Multiplier = new HsvOperator() }); } }
 		public BustButtonThemeBlock CrewTheme { get { return GetModifiedTheme(defaultTheme, crewModifier); } }
 		public BustButtonThemeBlock AwayTeamTheme { get { return GetModifiedTheme(defaultTheme, awayTeamModifier); } }
 		public BustButtonThemeBlock ForeignerTheme { get { return GetModifiedTheme(defaultTheme, foreignerModifier); } }

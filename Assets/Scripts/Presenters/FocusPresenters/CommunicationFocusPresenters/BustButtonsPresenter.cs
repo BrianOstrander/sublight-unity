@@ -29,7 +29,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUpdateEnabled()
 		{
 			View.SetButtons(
-				View.DefaultTheme,
+				View.DownlinkTheme,
 				new BustButtonBlock
 				{
 					Message = "First Button",

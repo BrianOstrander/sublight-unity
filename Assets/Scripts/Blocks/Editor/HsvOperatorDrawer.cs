@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	[CustomPropertyDrawer(typeof(HsvMultiplier))]
-	public class HsvMultiplierDrawer : PropertyDrawer
+	[CustomPropertyDrawer(typeof(HsvOperator))]
+	public class HsvOperatorDrawer : PropertyDrawer
 	{
 		const float RowHeight = 16f;
 		const float RowSpacing = 2f;
