@@ -73,6 +73,7 @@ namespace LunraGames.SubLight
 
 				switch (severity)
 				{
+					case EncounterEvents.Debug.Severities.Unknown:
 					case EncounterEvents.Debug.Severities.Normal:
 						Debug.Log(message);
 						break;
@@ -107,14 +108,28 @@ namespace LunraGames.SubLight
 				Action done
 			)
 			{
-				var targetSelection = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.Selection, payload.Game.ToolbarSelection.Value);
-				if (payload.Game.ToolbarSelection.Value == targetSelection)
+				var currentSelection = payload.Game.ToolbarSelection.Value;
+				var targetSelection = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
+
+				if (targetSelection == ToolbarSelections.Unknown) targetSelection = currentSelection;
+
+				var currentLocking = payload.Game.ToolbarLocking.Value ? EncounterEvents.ToolbarSelection.LockStates.Lock : EncounterEvents.ToolbarSelection.LockStates.UnLock;
+				var targetLocking = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
+
+				if (targetLocking == EncounterEvents.ToolbarSelection.LockStates.Unknown) targetLocking = currentLocking;
+
+				if (currentSelection == targetSelection && currentLocking == targetLocking)
 				{
 					done();
 					return;
 				}
 
-				payload.Game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(targetSelection, done);
+				payload.Game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+					targetSelection,
+					targetLocking == EncounterEvents.ToolbarSelection.LockStates.Lock,
+					ToolbarSelectionRequest.Sources.Encounter,
+					done
+				);
 			}
 		}
 	}

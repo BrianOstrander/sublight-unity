@@ -10,11 +10,20 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class BustPresenter : CommunicationFocusPresenter<IBustView>
 	{
-		//GameModel model;
+		GameModel model;
+
+		BustEntryModel lastFocus;
+
+		protected override bool CanReset() { return false; } // Only on encounter ends should we reset.
+
+		protected override bool CanShow()
+		{
+			return model.EncounterState.State.Value == EncounterStateModel.States.Processing && lastFocus != null;
+		}
 
 		public BustPresenter(GameModel model)
 		{
-			//this.model = model;
+			this.model = model;
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 		}
@@ -28,49 +37,23 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			//OnLabel(labelProperty.Value);
-			//View.PushOpacity(() => scaleModel.Opacity.Value);
-			//View.PushOpacity(() => model.GridScaleOpacity.Value);
-
-			/*
-			View.InitializeBusts(
-				new BustBlock
-				{
-					BustId = "lol",
-					TitleSource = "Some",
-					TitleClassification = "Ark",
-					TransmitionType = "Transmission",
-					TransmitionStrength = "Strong",
-					TransmitionStrengthIndex = 0,
-					PlacardName = "S. Cap",
-					PlacardDescription = "Captain",
-					AvatarStaticIndex = 1
-				},
-				new BustBlock
-				{
-					BustId = "lol2",
-					TitleSource = "Other",
-					TitleClassification = "Ark",
-					TransmitionType = "Transmission",
-					TransmitionStrength = "Weak",
-					TransmitionStrengthIndex = 2,
-					PlacardName = "S. Caap",
-					PlacardDescription = "Captain'",
-					AvatarStaticIndex = 0
-				}
-			);
-
-			View.FocusBust("lol", true);
-
-			App.Heartbeat.Wait(() => View.FocusBust("lol2", onFocus: id => Debug.Log("Id "+id+" shown")), 0.5f);
-			App.Heartbeat.Wait(() => View.FocusBust("lol", true, id => Debug.Log("Id " + id + " shown instantly")), 1f);
-			*/
+			//View.FocusBust(lastFocus.BustId.Value, true);
 		}
 
 		#region Events
 		void OnEncounterRequest(EncounterRequest request)
 		{
-			if (request.State == EncounterRequest.States.Handle) request.TryHandle<BustHandlerModel>(OnHandleBust);
+			switch (request.State)
+			{
+				case EncounterRequest.States.Handle:
+					request.TryHandle<BustHandlerModel>(OnHandleBust);
+					break;
+				case EncounterRequest.States.Done:
+					lastFocus = null;
+					if (View.Visible) CloseView();
+					View.Reset();
+					break;
+			}
 		}
 
 		void OnHandleBust(BustHandlerModel handler)
@@ -108,6 +91,16 @@ namespace LunraGames.SubLight.Presenters
 				onHaltingDone();
 				return;
 			}
+
+			if (model.ToolbarSelection.Value != ToolbarSelections.Communication)
+			{
+				Debug.LogError("Cannot focus the bust view when player is not on the Communication focus!");
+				return;
+			}
+
+			if (View.TransitionState != TransitionStates.Shown) ShowView(instant: true);
+
+			lastFocus = focusEntry;
 
 			var focusCompleted = false;
 			Func<bool> onHaltingCondition = () => focusCompleted;

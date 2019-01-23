@@ -15,6 +15,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonProperty] ToolbarSelections toolbarSelection;
+		[JsonProperty] bool toolbarLocking;
 
 		[JsonProperty] FocusTransform focusTransform;
 
@@ -51,6 +52,9 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
+
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> ToolbarLocking;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<FocusTransform> FocusTransform;
@@ -154,6 +158,7 @@ namespace LunraGames.SubLight.Models
 			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
+			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);

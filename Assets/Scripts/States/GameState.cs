@@ -269,12 +269,9 @@ namespace LunraGames.SubLight
 
 		void OnToolbarSelectionRequest(ToolbarSelectionRequest request)
 		{
-			if (request.Selection == ToolbarSelections.Unknown)
-			{
-				throw new Exception("Unable to set toolbar to selection: " + request.Selection);
-			}
-			
-			if (request.Selection == Payload.Game.ToolbarSelection.Value)
+			Payload.Game.ToolbarLocking.Value = request.Locked;
+
+			if (request.Selection == ToolbarSelections.Unknown || request.Selection == Payload.Game.ToolbarSelection.Value)
 			{
 				if (request.Done != null) request.Done();
 				return;
@@ -568,7 +565,12 @@ namespace LunraGames.SubLight
 					// I don't think I need to do anything here...
 					break;
 				case EncounterRequest.States.Complete:
-					// I don't think I need to do anything here...
+					// Unlocking the toolbar incase it was locked during the encounter.
+					Payload.Game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+						Payload.Game.ToolbarSelection.Value,
+						false,
+						ToolbarSelectionRequest.Sources.Encounter
+					);
 					break;
 				default:
 					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);

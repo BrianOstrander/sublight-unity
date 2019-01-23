@@ -766,6 +766,10 @@ namespace LunraGames.SubLight
 			{
 				EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
 			}
+			else if (model.Ending.Value)
+			{
+				EditorGUILayout.HelpBox("This log is non-halting and also the end log, events may complete after the encounter is complete.", MessageType.Warning);
+			}
 
 			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
 				new GUIContent("Is Halting", "Does the handler wait for the event to complete before it continues?"),
@@ -860,8 +864,17 @@ namespace LunraGames.SubLight
 				EncounterEvents.ToolbarSelection.EnumKeys.Selection,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Selection"),
-					"- Select A Toolbar -",
+					"- No Change -",
 					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
+				)
+			);
+
+			entry.KeyValues.SetEnum(
+				EncounterEvents.ToolbarSelection.EnumKeys.LockState,
+				EditorGUILayoutExtensions.HelpfulEnumPopup(
+					new GUIContent("Locking"),
+					"- No Change -",
+					entry.KeyValues.GetEnum<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
 				)
 			);
 		}

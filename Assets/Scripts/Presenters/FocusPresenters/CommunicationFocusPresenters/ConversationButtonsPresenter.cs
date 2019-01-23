@@ -10,11 +10,20 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class ConversationButtonsPresenter : CommunicationFocusPresenter<IConversationButtonsView>
 	{
-		//GameModel model;
+		GameModel model;
+
+		bool isProcessingButtons;
+
+		protected override bool CanReset() { return false; }
+
+		protected override bool CanShow()
+		{
+			return model.EncounterState.State.Value == EncounterStateModel.States.Processing && isProcessingButtons;
+		}
 
 		public ConversationButtonsPresenter(GameModel model)
 		{
-			//this.model = model;
+			this.model = model;
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 		}
@@ -66,12 +75,24 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnEncounterRequest(EncounterRequest request)
 		{
-			if (request.State == EncounterRequest.States.Handle) request.TryHandle<ButtonHandlerModel>(OnHandleButtons);
+			switch (request.State)
+			{
+				case EncounterRequest.States.Handle:
+					request.TryHandle<ButtonHandlerModel>(OnHandleButtons);
+					break;
+				case EncounterRequest.States.Done:
+					isProcessingButtons = false;
+					if (View.Visible) CloseView();
+					View.Reset();
+					break;
+			}
 		}
 
 		void OnHandleButtons(ButtonHandlerModel handler)
 		{
 			if (handler.Log.Value.Style.Value != ButtonEncounterLogModel.Styles.Conversation) return;
+
+			isProcessingButtons = true;
 
 			var style = handler.Log.Value.ConversationStyle.Value;
 			var theme = View.DefaultTheme;
@@ -116,6 +137,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnReadyForClick(Action click)
 		{
+			isProcessingButtons = false;
 			if (click == null) Debug.LogError("Null clicks are unhandled");
 			else click();
 		}
