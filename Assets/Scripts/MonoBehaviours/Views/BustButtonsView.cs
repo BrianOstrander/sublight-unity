@@ -181,7 +181,7 @@ namespace LunraGames.SubLight.Views
 
 				entry.Instance.Button.OnClick.AddListener(new UnityAction(() => OnClick(entry)));
 				entry.Instance.MessageLabel.text = block.Message ?? string.Empty;
-				entry.Instance.Group.alpha = 0f;
+				//entry.Instance.Group.alpha = 0f;
 
 				var style = theme.Normal;
 
@@ -190,8 +190,12 @@ namespace LunraGames.SubLight.Views
 
 				entry.Instance.LabelArea.LocalStyle = style.LabelStyle;
 				entry.Instance.BulletArea.LocalStyle = style.BulletStyle;
+				entry.Instance.BulletDisabledArea.LocalStyle = style.BulletStyle;
 				entry.Instance.UnderlineArea.LocalStyle = style.UnderlineStyle;
 				entry.Instance.BackgroundArea.LocalStyle = style.BackgroundStyle;
+
+				entry.Instance.BulletArea.gameObject.SetActive(block.Interactable);
+				entry.Instance.BulletDisabledArea.gameObject.SetActive(!block.Interactable);
 
 				index++;
 			}

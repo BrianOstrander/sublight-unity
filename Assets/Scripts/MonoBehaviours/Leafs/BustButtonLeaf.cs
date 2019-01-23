@@ -14,6 +14,7 @@ namespace LunraGames.SubLight.Views
 
 		public XButtonLeaf LabelArea;
 		public XButtonLeaf BulletArea;
+		public XButtonLeaf BulletDisabledArea;
 		public XButtonLeaf UnderlineArea;
 		public XButtonLeaf BackgroundArea;
 	}
