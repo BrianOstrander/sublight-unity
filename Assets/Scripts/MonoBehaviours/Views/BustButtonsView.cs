@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 
 namespace LunraGames.SubLight.Views
@@ -54,6 +55,7 @@ namespace LunraGames.SubLight.Views
 				public XButtonStyleObject BackgroundStyle;
 			}
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			[SerializeField]
 			State normal;
 			[Header("Leave fields in the following states blank to default to the normal style")]
@@ -63,6 +65,7 @@ namespace LunraGames.SubLight.Views
 			State notInteractable;
 			[SerializeField]
 			State selected;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 			State GetNormalized(State target)
 			{
@@ -96,10 +99,18 @@ namespace LunraGames.SubLight.Views
 		GameObject buttonArea;
 		[SerializeField]
 		BustButtonLeaf buttonPrefab;
+		[SerializeField]
+		GameObject spacerPrefab;
+		[SerializeField]
+		int minimumButtonsForSpacer;
 
-		[Header("Button Animations ( 0 is hidden 1 is shown )")]
+		[Header("Button Animations")]
 		[SerializeField]
 		AnimationCurve buttonOpacityByOrder;
+		[SerializeField]
+		AnimationCurve buttonOpacityOnClose;
+		[SerializeField]
+		AnimationCurve buttonSelectedOpacityOnClose;
 
 		[Header("Themes")]
 		[SerializeField]
@@ -160,12 +171,16 @@ namespace LunraGames.SubLight.Views
 		public BustButtonThemeBlock ForeignerTheme { get { return GetModifiedTheme(defaultTheme, foreignerModifier); } }
 		public BustButtonThemeBlock DownlinkTheme { get { return GetModifiedTheme(defaultTheme, downlinkModifier); } }
 
+		public Action<Action> Click { set; private get; }
+
 		BustButtonThemeBlock activeTheme;
 		List<ButtonEntry> entries = new List<ButtonEntry>();
 
+		bool hasClicked;
+
 		public void SetButtons(BustButtonThemeBlock theme, params BustButtonBlock[] blocks)
 		{
-			buttonArea.transform.ClearChildren<BustButtonLeaf>();
+			buttonArea.transform.ClearChildren();
 			entries.Clear();
 
 			activeTheme = theme;
@@ -181,7 +196,7 @@ namespace LunraGames.SubLight.Views
 
 				entry.Instance.Button.OnClick.AddListener(new UnityAction(() => OnClick(entry)));
 				entry.Instance.MessageLabel.text = block.Message ?? string.Empty;
-				//entry.Instance.Group.alpha = 0f;
+				entry.Instance.Group.alpha = 0f;
 
 				var style = theme.Normal;
 
@@ -197,8 +212,12 @@ namespace LunraGames.SubLight.Views
 				entry.Instance.BulletArea.gameObject.SetActive(block.Interactable);
 				entry.Instance.BulletDisabledArea.gameObject.SetActive(!block.Interactable);
 
+				entries.Add(entry);
+
 				index++;
 			}
+
+			if (count <= minimumButtonsForSpacer) buttonArea.InstantiateChildObject(spacerPrefab, setActive: true);
 		}
 
 		public override void Reset()
@@ -206,8 +225,53 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			buttonPrefab.gameObject.SetActive(false);
+			spacerPrefab.SetActive(false);
+			hasClicked = false;
 
+			Click = ActionExtensions.GetEmpty<Action>();
 			SetButtons(default(BustButtonThemeBlock));
+		}
+
+		protected override void OnPrepare()
+		{
+			base.OnPrepare();
+
+			LayoutRebuilder.ForceRebuildLayoutImmediate(buttonArea.GetComponent<RectTransform>());
+		}
+
+		protected override void OnShowing(float scalar)
+		{
+			base.OnShowing(scalar);
+
+			foreach (var entry in entries)
+			{
+				var opacityBias = 1f + buttonOpacityByOrder.Evaluate(entry.IndexNormal); // Approaches 2.0f
+				entry.Instance.Group.alpha = opacityBias * scalar;
+			}
+		}
+
+		protected override void OnShown()
+		{
+			base.OnShown();
+
+			foreach (var entry in entries) entry.Instance.Group.alpha = 1f;
+		}
+
+		protected override void OnClosing(float scalar)
+		{
+			base.OnClosing(scalar);
+
+			foreach (var entry in entries)
+			{
+				entry.Instance.Group.alpha = entry.IsSelection ? buttonSelectedOpacityOnClose.Evaluate(scalar) : buttonOpacityOnClose.Evaluate(scalar);
+			}
+		}
+
+		protected override void OnClosed()
+		{
+			base.OnClosed();
+
+			foreach (var entry in entries) entry.Instance.Group.alpha = 1f;
 		}
 
 		protected override void OnLateIdle(float delta)
@@ -220,7 +284,13 @@ namespace LunraGames.SubLight.Views
 		#region Events
 		void OnClick(ButtonEntry entry)
 		{
-			Debug.Log("clicked: " + entry.Block.Message);
+			if (hasClicked || !entry.Block.Interactable) return;
+
+			hasClicked = true;
+
+			entry.IsSelection = true;
+			if (Click == null) Debug.LogError("A null Click was given, unable to complete...");
+			else Click(entry.Block.Click);
 		}
 		#endregion
 
@@ -238,6 +308,8 @@ namespace LunraGames.SubLight.Views
 		BustButtonThemeBlock AwayTeamTheme { get; }
 		BustButtonThemeBlock ForeignerTheme { get; }
 		BustButtonThemeBlock DownlinkTheme { get; }
+
+		Action<Action> Click { set; }
 
 		void SetButtons(BustButtonThemeBlock theme, params BustButtonBlock[] blocks);
 	}

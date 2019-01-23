@@ -18,28 +18,15 @@
   },
   "logs": {
     "textLogs": [],
-    "keyValueLogs": [
-      {
-        "setStrings": [],
-        "setBooleans": [
-          {
-            "operationId": "f471dbac-ae26-41b9-b690-4e80783f2fb5",
-            "target": "Encounter",
-            "key": "AutoUsed_bf7935c5-b2d5-4506-9cab-17b517966887"
-          }
-        ],
-        "nextLogId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0",
-        "beginning": true,
-        "logId": "aa19c76d-f58f-4460-b660-9fe95f3aa672"
-      }
-    ],
+    "keyValueLogs": [],
     "switchLogs": [],
     "buttonLogs": [
       {
         "buttons": [
           {
+            "showFiltering": true,
             "entry": {
-              "message": "Continue",
+              "message": "What a wild option we have here!",
               "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -59,6 +46,55 @@
               },
               "entryId": "bf7935c5-b2d5-4506-9cab-17b517966887"
             }
+          },
+          {
+            "showFiltering": true,
+            "entry": {
+              "message": "Yeah it's pretty rad",
+              "nextLogId": "488d6e32-ca5e-440d-a27e-8c5690a4d72e",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9819b18b-fad5-4162-8c0d-82c0be54bad1"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "Eh whatever...",
+              "nextLogId": "488d6e32-ca5e-440d-a27e-8c5690a4d72e",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1b140f73-cd27-46a4-9c44-5bfc78cacc2d"
+            },
+            "index": 2
           }
         ],
         "style": "Bust",
@@ -67,7 +103,8 @@
         },
         "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
         "index": 3,
-        "logId": "836ed19e-b734-4673-b258-b8db200a85cd"
+        "logId": "836ed19e-b734-4673-b258-b8db200a85cd",
+        "name": "Buttons"
       }
     ],
     "encyclopediaLogs": [],
@@ -96,6 +133,7 @@
         ],
         "nextLogId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
         "index": 1,
+        "beginning": true,
         "logId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0"
       },
       {
@@ -107,7 +145,7 @@
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "message": "Done showing busts!"
+                  "message": "0 Clicked!"
                 },
                 "enums": {
                   "severity": 10
@@ -122,10 +160,39 @@
             }
           }
         ],
+        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "index": 4,
-        "ending": true,
         "logId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
-        "name": "Last"
+        "name": "Last0"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "1 Clicked!"
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "86cc2787-5c0b-429c-bdf1-7decc6300121"
+            }
+          }
+        ],
+        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
+        "index": 5,
+        "logId": "488d6e32-ca5e-440d-a27e-8c5690a4d72e",
+        "name": "Last1"
       }
     ],
     "dialogLogs": [],

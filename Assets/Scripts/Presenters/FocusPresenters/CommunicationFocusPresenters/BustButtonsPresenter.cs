@@ -28,6 +28,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
+			/*
 			View.SetButtons(
 				View.DownlinkTheme,
 				new BustButtonBlock
@@ -59,6 +60,7 @@ namespace LunraGames.SubLight.Presenters
 					Click = () => Debug.Log("Clicked fourth")
 				}
 			);
+			*/
 		}
 
 		#region Events
@@ -71,7 +73,51 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (handler.Log.Value.Style.Value != ButtonEncounterLogModel.Styles.Bust) return;
 
-			Debug.Log("todo: handl buttons");
+			var style = handler.Log.Value.BustStyle.Value;
+			var theme = View.DefaultTheme;
+
+			switch (style.Theme)
+			{
+				case ButtonEncounterLogModel.BustStyleBlock.Themes.Crew: theme = View.CrewTheme; break;
+				case ButtonEncounterLogModel.BustStyleBlock.Themes.AwayTeam: theme = View.AwayTeamTheme; break;
+				case ButtonEncounterLogModel.BustStyleBlock.Themes.Foreigner: theme = View.ForeignerTheme; break;
+				case ButtonEncounterLogModel.BustStyleBlock.Themes.Downlink: theme = View.DownlinkTheme; break;
+				default: Debug.LogError("Unrecognized Theme: " + style.Theme); break;
+			}
+
+			var buttonBlocks = new List<BustButtonBlock>();
+
+			foreach (var entry in handler.Buttons.Value)
+			{
+				var block = new BustButtonBlock();
+				block.Message = entry.Message;
+				block.Used = entry.Used;
+				block.Interactable = entry.Interactable;
+				block.Click = entry.Click;
+
+				buttonBlocks.Add(block);
+			}
+
+			if (View.Visible) CloseView(true);
+			View.Reset();
+
+			View.Click = OnClick;
+			View.SetButtons(theme, buttonBlocks.ToArray());
+
+			ShowView();
+		}
+
+		void OnClick(Action click)
+		{
+			View.Closed += () => OnReadyForClick(click);
+
+			CloseView();
+		}
+
+		void OnReadyForClick(Action click)
+		{
+			if (click == null) Debug.LogError("Null clicks are unhandled");
+			else click();
 		}
 		#endregion
 	}

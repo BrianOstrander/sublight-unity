@@ -685,6 +685,7 @@ namespace LunraGames.SubLight
 
 			entry.Message.Value = EditorGUILayout.TextField("Message", entry.Message.Value);
 
+			var hasBlankOrMissingNextId = false;
 			GUILayout.BeginHorizontal();
 			{
 				EditorGUILayoutEncounter.LogPopup(
@@ -694,14 +695,18 @@ namespace LunraGames.SubLight
 					model,
 					existingSelection => entry.NextLogId.Value = existingSelection,
 					newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
-					EncounterLogBlankHandling.Error,
+					EncounterLogBlankHandling.None,
+					out hasBlankOrMissingNextId,
 					"- Select Target Log -"
 				);
+
 				entry.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !entry.NotAutoUsed.Value, GUILayout.Width(74f));
 				entry.AutoDisableInteractions.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable Interactions", "When this button is pressed, automatically disable future interactions the next time around."), entry.AutoDisableInteractions.Value, GUILayout.Width(152f));
 				entry.AutoDisableEnabled.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable", "When this button is pressed, automatically set this button to be disabled and invisible the next time around."), entry.AutoDisableEnabled.Value, GUILayout.Width(90f));
 			}
 			GUILayout.EndHorizontal();
+
+			if (hasBlankOrMissingNextId) EditorGUILayout.HelpBox("A log must be specified.", MessageType.Error);
 
 			EditorGUIExtensions.PauseChangeCheck();
 			{
