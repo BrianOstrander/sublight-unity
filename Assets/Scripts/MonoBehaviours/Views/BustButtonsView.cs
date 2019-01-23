@@ -163,11 +163,7 @@ namespace LunraGames.SubLight.Views
 		BustButtonThemeBlock activeTheme;
 		List<ButtonEntry> entries = new List<ButtonEntry>();
 
-		public void SetButtons(
-			BustButtonThemeBlock theme,
-			bool instant,
-			params BustButtonBlock[] blocks
-		)
+		public void SetButtons(BustButtonThemeBlock theme, params BustButtonBlock[] blocks)
 		{
 			buttonArea.transform.ClearChildren<BustButtonLeaf>();
 			entries.Clear();
@@ -199,8 +195,6 @@ namespace LunraGames.SubLight.Views
 
 				index++;
 			}
-
-			if (instant) Debug.LogError("TODO INSTANT");
 		}
 
 		public override void Reset()
@@ -209,7 +203,7 @@ namespace LunraGames.SubLight.Views
 
 			buttonPrefab.gameObject.SetActive(false);
 
-			SetButtons(default(BustButtonThemeBlock), true);
+			SetButtons(default(BustButtonThemeBlock));
 		}
 
 		protected override void OnLateIdle(float delta)
@@ -241,10 +235,6 @@ namespace LunraGames.SubLight.Views
 		BustButtonThemeBlock ForeignerTheme { get; }
 		BustButtonThemeBlock DownlinkTheme { get; }
 
-		void SetButtons(
-			BustButtonThemeBlock theme,
-			bool instant,
-			params BustButtonBlock[] blocks
-		);
+		void SetButtons(BustButtonThemeBlock theme, params BustButtonBlock[] blocks);
 	}
 }

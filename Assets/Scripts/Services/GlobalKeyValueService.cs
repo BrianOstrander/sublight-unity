@@ -110,8 +110,7 @@ namespace LunraGames.SubLight
 			callbacks.StateChange += OnStateChange;
 			callbacks.SaveRequest += OnSaveRequest;
 
-			keyValueListener = new KeyValueListener(KeyValueTargets.Global, globalKeyValues.KeyValues, keyValues);
-			keyValueListener.Register();
+			keyValueListener = new KeyValueListener(KeyValueTargets.Global, globalKeyValues.KeyValues, keyValues).Register();
 
 			done(RequestStatus.Success);
 		}

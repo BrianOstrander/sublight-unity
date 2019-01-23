@@ -18,7 +18,21 @@
   },
   "logs": {
     "textLogs": [],
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "setStrings": [],
+        "setBooleans": [
+          {
+            "operationId": "f471dbac-ae26-41b9-b690-4e80783f2fb5",
+            "target": "Encounter",
+            "key": "AutoUsed_bf7935c5-b2d5-4506-9cab-17b517966887"
+          }
+        ],
+        "nextLogId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0",
+        "beginning": true,
+        "logId": "aa19c76d-f58f-4460-b660-9fe95f3aa672"
+      }
+    ],
     "switchLogs": [],
     "buttonLogs": [
       {
@@ -52,7 +66,7 @@
           "Theme": "Foreigner"
         },
         "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
-        "index": 2,
+        "index": 3,
         "logId": "836ed19e-b734-4673-b258-b8db200a85cd"
       }
     ],
@@ -81,7 +95,7 @@
           }
         ],
         "nextLogId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
-        "beginning": true,
+        "index": 1,
         "logId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0"
       },
       {
@@ -145,7 +159,7 @@
           }
         ],
         "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
-        "index": 1,
+        "index": 2,
         "logId": "e10c9828-e0dc-48eb-89e5-c2200593268f"
       }
     ]
