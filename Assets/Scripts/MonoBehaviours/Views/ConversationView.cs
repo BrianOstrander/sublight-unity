@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
+using UnityEngine.Assertions;
 
 //#if UNITY_EDITOR
 //using UnityEditor;
@@ -30,15 +30,35 @@ namespace LunraGames.SubLight.Views
 	{
 		class Entry
 		{
+			public enum Alignments
+			{
+				Unknown = 0,
+				Incoming = 10,
+				Outgoing = 20
+			}
+
 			public IConversationBlock Block;
 			public ConversationLeaf Instance;
+
 			/// <summary>
 			/// Called when the Instance is active for the first time.
 			/// </summary>
 			/// <remarks>
 			/// This will be null once it is run once.
 			/// </remarks>
-			public Action InitializeLayout;
+			public Action<Entry> InitializeLayout;
+
+			#region Set on InitializeLayout
+			public bool IsInitialized;
+			/// <summary>
+			/// The height in unity world units.
+			/// </summary>
+			/// <remarks>
+			/// Layout must be initialized before this is valid.
+			/// </remarks>
+			public float Height;
+			public Alignments Alignment;
+   			#endregion
 		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
@@ -70,7 +90,7 @@ namespace LunraGames.SubLight.Views
 			foreach (var block in blocks)
 			{
 				ConversationLeaf instance;
-				Action initializeLayout;
+				Action<Entry> initializeLayout;
 				if (!InstantiatePrefab(block, out instance, out initializeLayout)) continue;
 
 				var entry = new Entry();
@@ -78,14 +98,16 @@ namespace LunraGames.SubLight.Views
 				entry.Instance = instance;
 				entry.InitializeLayout = initializeLayout;
 
+				if (instance.gameObject.activeInHierarchy) entry.InitializeLayout(entry);
+
 				entries.Add(entry);
 			}
 		}
 
-		public bool InstantiatePrefab(
+		bool InstantiatePrefab(
 			IConversationBlock block,
 			out ConversationLeaf instance,
-			out Action initializeLayout
+			out Action<Entry> initializeLayout
 		)
 		{
 			instance = null;
@@ -93,16 +115,10 @@ namespace LunraGames.SubLight.Views
 
 			switch (block.Type)
 			{
-				case ConversationTypes.MessageIncoming:
-					instance = ApplyConversation(
-						conversationArea.InstantiateChild(messageIncomingPrefab, localScale: messageIncomingPrefab.transform.localScale),
-						(MessageConversationBlock)block,
-						out initializeLayout
-					);
-					return true;
 				case ConversationTypes.MessageOutgoing:
-					instance = ApplyConversation(
-						conversationArea.InstantiateChild(messageOutgoingPrefab, localScale: messageOutgoingPrefab.transform.localScale),
+				case ConversationTypes.MessageIncoming:
+					instance = OnInstantiatePrefab(
+						block.Type == ConversationTypes.MessageOutgoing ? messageOutgoingPrefab : messageIncomingPrefab,
 						(MessageConversationBlock)block,
 						out initializeLayout
 					);
@@ -113,39 +129,80 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public ConversationLeaf ApplyConversation(
-			MessageConversationLeaf instance,
-			MessageConversationBlock block,
-			out Action initializeLayout
+		ConversationLeaf OnInstantiatePrefab(
+			MessageConversationLeaf prefab,
+			MessageConversationBlock block, // This may be needed for ather instantiators, leave it...
+			out Action<Entry> initializeLayout
 		)
 		{
-			initializeLayout = null;
+			var instance = conversationArea.InstantiateChild(
+				prefab,
+				localScale: prefab.transform.localScale
+			);
 
-			instance.gameObject.SetActive(true);
-			instance.transform.position = block.Type == ConversationTypes.MessageIncoming ? bottomAnchor.position : OutgoingBottomPosition;
-			instance.transform.LookAt(instance.transform.position - lookOffset);
-
-			instance.MessageLabel.text = block.Message;
-
-			Action onInitializeLayout = () =>
+			initializeLayout = entry =>
 			{
-				if (instance.RootArea == null) Debug.LogError("No RootArea specified", instance);
-				LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootArea);
-				instance.MessageLabel.ForceMeshUpdate(false);
+				OnInitializeEntry(entry, instance);
 
 				var isSmall = instance.MessageLabel.textInfo.lineCount < 5;
 
 				instance.BackgroundSmall.SetActive(isSmall);
 				instance.BackgroundLarge.SetActive(!isSmall);
-
-				//Debug.Log("after Y: " + instance.SizeArea.WorldCornerSize().y);
-				//Debug.Log("after Lines: " + instance.MessageLabel.textInfo.lineCount);
 			};
 
-			if (instance.gameObject.activeInHierarchy) onInitializeLayout();
-			else initializeLayout = onInitializeLayout;
-
 			return instance;
+		}
+
+		void OnInitializeEntry(Entry entry, ConversationLeaf instance)
+		{
+			Assert.IsNotNull(entry, "A ConversationView.Entry must be specified");
+			Assert.IsNotNull(instance, "ConversationLeaf Instance must be specified");
+			Assert.IsFalse(entry.IsInitialized, "Entry has already been initialized");
+
+			Assert.IsNotNull(instance.MessageLabel, "MessageLabel cannot be null");
+			Assert.IsNotNull(instance.RootArea, "RootArea cannot be null");
+			Assert.IsNotNull(instance.SizeArea, "SizeArea cannot be null");
+			Assert.IsNotNull(instance.Group, "Group cannot be null");
+
+			Assert.IsFalse(instance.gameObject.activeInHierarchy, "Unpredictable behaviour occurs when initializing inactive ConversationLeaf instance.");
+
+			entry.IsInitialized = true;
+
+			switch (entry.Block.Type)
+			{
+				case ConversationTypes.MessageIncoming:
+					entry.Alignment = Entry.Alignments.Incoming;
+					break;
+				case ConversationTypes.MessageOutgoing:
+					entry.Alignment = Entry.Alignments.Outgoing;
+					break;
+				default:
+					Debug.LogError("Unrecognized ConversationType: " + entry.Block.Type);
+					break;
+			}
+
+			instance.gameObject.SetActive(true);
+
+			var beginPosition = Vector3.zero;
+
+			switch (entry.Alignment)
+			{
+				case Entry.Alignments.Incoming: beginPosition = bottomAnchor.position; break;
+				case Entry.Alignments.Outgoing: beginPosition = OutgoingBottomPosition; break;
+				default:
+					Debug.LogError("Unrecognized Alignment: " + entry.Alignment);
+					break;
+			}
+
+			instance.transform.position = beginPosition;
+			instance.transform.LookAt(instance.transform.position - lookOffset);
+
+			instance.MessageLabel.text = entry.Block.Message;
+
+			LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootArea);
+			instance.MessageLabel.ForceMeshUpdate(false);
+
+			entry.Height = Mathf.Abs(instance.SizeArea.WorldCornerSize().y);
 		}
 
 		public override void Reset()
@@ -163,13 +220,10 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnPrepare();
 
-			foreach (var entry in entries)
+			foreach (var entry in entries.Where(e => !e.IsInitialized))
 			{
-				if (entry.InitializeLayout != null)
-				{
-					entry.InitializeLayout();
-					entry.InitializeLayout = null;
-				}
+				if (entry.InitializeLayout == null) Debug.LogError("Cannot initialize an entry with no InitializeLayout specified", entry.Instance);
+				else entry.InitializeLayout(entry);
 			}
 		}
 
