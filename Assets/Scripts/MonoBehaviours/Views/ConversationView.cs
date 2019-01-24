@@ -28,10 +28,17 @@ namespace LunraGames.SubLight.Views
 
 	public class ConversationView : View, IConversationView
 	{
-		struct Entry
+		class Entry
 		{
 			public IConversationBlock Block;
 			public ConversationLeaf Instance;
+			/// <summary>
+			/// Called when the Instance is active for the first time.
+			/// </summary>
+			/// <remarks>
+			/// This will be null once it is run once.
+			/// </remarks>
+			public Action InitializeLayout;
 		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
@@ -62,41 +69,75 @@ namespace LunraGames.SubLight.Views
 		{
 			foreach (var block in blocks)
 			{
+				ConversationLeaf instance;
+				Action initializeLayout;
+				if (!InstantiatePrefab(block, out instance, out initializeLayout)) continue;
+
 				var entry = new Entry();
 				entry.Block = block;
-				entry.Instance = InstantiatePrefab(block);
-				if (entry.Instance == null) continue;
+				entry.Instance = instance;
+				entry.InitializeLayout = initializeLayout;
 
+				entries.Add(entry);
 			}
 		}
 
-		public ConversationLeaf InstantiatePrefab(IConversationBlock block)
+		public bool InstantiatePrefab(
+			IConversationBlock block,
+			out ConversationLeaf instance,
+			out Action initializeLayout
+		)
 		{
+			instance = null;
+			initializeLayout = null;
+
 			switch (block.Type)
 			{
 				case ConversationTypes.MessageIncoming:
-					return ApplyConversation(
+					instance = ApplyConversation(
 						conversationArea.InstantiateChild(messageIncomingPrefab, localScale: messageIncomingPrefab.transform.localScale),
-						(MessageConversationBlock)block
+						(MessageConversationBlock)block,
+						out initializeLayout
 					);
+					return true;
 				case ConversationTypes.MessageOutgoing:
-					return ApplyConversation(
+					instance = ApplyConversation(
 						conversationArea.InstantiateChild(messageOutgoingPrefab, localScale: messageOutgoingPrefab.transform.localScale),
-						(MessageConversationBlock)block
+						(MessageConversationBlock)block,
+						out initializeLayout
 					);
+					return true;
 				default:
 					Debug.LogError("Unrecognized ConversationType: " + block.Type);
-					return null;
+					return false;
 			}
 		}
 
-		public ConversationLeaf ApplyConversation(MessageConversationLeaf instance, MessageConversationBlock block)
+		public ConversationLeaf ApplyConversation(
+			MessageConversationLeaf instance,
+			MessageConversationBlock block,
+			out Action initializeLayout
+		)
 		{
+			initializeLayout = null;
+
 			instance.gameObject.SetActive(true);
 			instance.transform.position = block.Type == ConversationTypes.MessageIncoming ? bottomAnchor.position : OutgoingBottomPosition;
 			instance.transform.LookAt(instance.transform.position - lookOffset);
+
 			instance.MessageLabel.text = block.Message;
-			LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootArea);
+
+			Action onInitializeLayout = () =>
+			{
+				if (instance.RootArea == null) Debug.LogError("No RootArea specified", instance);
+				LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootArea);
+				instance.MessageLabel.ForceMeshUpdate(false);
+				Debug.Log("after Y: " + instance.SizeArea.WorldCornerSize().y);
+				Debug.Log("after Lines: " + instance.MessageLabel.textInfo.lineCount);
+			};
+
+			if (instance.gameObject.activeInHierarchy) onInitializeLayout();
+			else initializeLayout = onInitializeLayout;
 
 			return instance;
 		}
@@ -110,6 +151,20 @@ namespace LunraGames.SubLight.Views
 
 			messageIncomingPrefab.gameObject.SetActive(false);
 			messageOutgoingPrefab.gameObject.SetActive(false);
+		}
+
+		protected override void OnPrepare()
+		{
+			base.OnPrepare();
+
+			foreach (var entry in entries)
+			{
+				if (entry.InitializeLayout != null)
+				{
+					entry.InitializeLayout();
+					entry.InitializeLayout = null;
+				}
+			}
 		}
 
 		protected override void OnLateIdle(float delta)

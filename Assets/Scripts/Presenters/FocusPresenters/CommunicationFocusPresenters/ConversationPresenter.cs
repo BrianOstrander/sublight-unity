@@ -38,19 +38,35 @@ namespace LunraGames.SubLight.Presenters
 			//Debug.Log("lol running");
 
 			var shortIncoming = new MessageConversationBlock();
-
 			shortIncoming.Type = ConversationTypes.MessageIncoming;
 			shortIncoming.Message = "Some short incoming message.";
 
-			var shortOutgoing = new MessageConversationBlock();
+			var mediumIncoming = new MessageConversationBlock();
+			mediumIncoming.Type = ConversationTypes.MessageIncoming;
+			mediumIncoming.Message = "Some medium incoming message.\nline";
 
+			var longIncoming = new MessageConversationBlock();
+			longIncoming.Type = ConversationTypes.MessageIncoming;
+			longIncoming.Message = "Some long incoming message.\nline\nline\nline\nline";
+
+			// --
+
+			var shortOutgoing = new MessageConversationBlock();
 			shortOutgoing.Type = ConversationTypes.MessageOutgoing;
 			shortOutgoing.Message = "Some short outgoing message.";
 
+			var mediumOutgoing = new MessageConversationBlock();
+			mediumOutgoing.Type = ConversationTypes.MessageOutgoing;
+			mediumOutgoing.Message = "Some medium outgoing message.\nline";
+
+			var longOutgoing = new MessageConversationBlock();
+			longOutgoing.Type = ConversationTypes.MessageOutgoing;
+			longOutgoing.Message = "Some long outgoing message.\nline\nline\nline\nline";
+
 			View.AddToConversation(
 				true,
-				shortIncoming,
-				shortOutgoing
+				//shortIncoming
+				mediumIncoming
 			);
 		}
 

@@ -27,6 +27,11 @@ namespace LunraGames
 			max = transform.WorldCorner(3);
 		}
 
+		/// <summary>
+		/// Gets the distance between the top left and bottom right corners in world space.
+		/// </summary>
+		/// <returns>The corner size.</returns>
+		/// <param name="transform">Transform.</param>
 		public static Vector3 WorldCornerSize(this RectTransform transform)
 		{
 			Vector3 min;
