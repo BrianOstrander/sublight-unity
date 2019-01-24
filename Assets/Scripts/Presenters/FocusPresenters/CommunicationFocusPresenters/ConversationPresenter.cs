@@ -33,6 +33,27 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
 
+		protected override void OnUpdateEnabled()
+		{
+			//Debug.Log("lol running");
+
+			var shortIncoming = new MessageConversationBlock();
+
+			shortIncoming.Type = ConversationTypes.MessageIncoming;
+			shortIncoming.Message = "Some short incoming message.";
+
+			var shortOutgoing = new MessageConversationBlock();
+
+			shortOutgoing.Type = ConversationTypes.MessageOutgoing;
+			shortOutgoing.Message = "Some short outgoing message.";
+
+			View.AddToConversation(
+				true,
+				shortIncoming,
+				shortOutgoing
+			);
+		}
+
 		#region Events
 		void OnEncounterRequest(EncounterRequest request)
 		{
