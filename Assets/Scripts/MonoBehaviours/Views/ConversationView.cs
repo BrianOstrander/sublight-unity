@@ -132,8 +132,14 @@ namespace LunraGames.SubLight.Views
 				if (instance.RootArea == null) Debug.LogError("No RootArea specified", instance);
 				LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootArea);
 				instance.MessageLabel.ForceMeshUpdate(false);
-				Debug.Log("after Y: " + instance.SizeArea.WorldCornerSize().y);
-				Debug.Log("after Lines: " + instance.MessageLabel.textInfo.lineCount);
+
+				var isSmall = instance.MessageLabel.textInfo.lineCount < 5;
+
+				instance.BackgroundSmall.SetActive(isSmall);
+				instance.BackgroundLarge.SetActive(!isSmall);
+
+				//Debug.Log("after Y: " + instance.SizeArea.WorldCornerSize().y);
+				//Debug.Log("after Lines: " + instance.MessageLabel.textInfo.lineCount);
 			};
 
 			if (instance.gameObject.activeInHierarchy) onInitializeLayout();

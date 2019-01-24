@@ -47,7 +47,7 @@ namespace LunraGames.SubLight.Presenters
 
 			var longIncoming = new MessageConversationBlock();
 			longIncoming.Type = ConversationTypes.MessageIncoming;
-			longIncoming.Message = "Some long incoming message.\nline\nline\nline\nline";
+			longIncoming.Message = "Some long incoming message that should be broken up across multiple lines with some other text below it.\nline\nline\nline\nline";
 
 			// --
 
@@ -61,12 +61,17 @@ namespace LunraGames.SubLight.Presenters
 
 			var longOutgoing = new MessageConversationBlock();
 			longOutgoing.Type = ConversationTypes.MessageOutgoing;
-			longOutgoing.Message = "Some long outgoing message.\nline\nline\nline\nline";
+			longOutgoing.Message = "Some long outgoing message that should be broken up across multiple lines with some other text below it.\nline\nline\nline\nline";
 
 			View.AddToConversation(
 				true,
 				//shortIncoming
-				mediumIncoming
+				//mediumIncoming
+				//longIncoming
+			
+				shortOutgoing
+				//mediumIncoming
+				//longIncoming
 			);
 		}
 

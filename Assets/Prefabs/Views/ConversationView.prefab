@@ -157,6 +157,8 @@ MonoBehaviour:
   RootArea: {fileID: 0}
   SizeArea: {fileID: 6706371288974071974}
   Group: {fileID: 967522837511980111}
+  BackgroundSmall: {fileID: 0}
+  BackgroundLarge: {fileID: 0}
 --- !u!223 &7669997506843599373
 Canvas:
   m_ObjectHideFlags: 0
@@ -947,9 +949,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7380683600148698621}
-  - {fileID: 786472645831460251}
-  - {fileID: 7559317445059184079}
   - {fileID: 5060303890565710575}
+  - {fileID: 7559317445059184079}
   m_Father: {fileID: 1274896550400560866}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1650,7 +1651,7 @@ RectTransform:
   m_Children:
   - {fileID: 7956437095008940381}
   m_Father: {fileID: 7967731762926128843}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2741,6 +2742,8 @@ MonoBehaviour:
   RootArea: {fileID: 0}
   SizeArea: {fileID: 3277100811011683247}
   Group: {fileID: 2412327951084649685}
+  BackgroundSmall: {fileID: 0}
+  BackgroundLarge: {fileID: 0}
 --- !u!223 &2928144819241535296
 Canvas:
   m_ObjectHideFlags: 0
@@ -3941,7 +3944,7 @@ RectTransform:
   - {fileID: 3585506696011001084}
   - {fileID: 1284169489379441313}
   m_Father: {fileID: 7967731762926128843}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -4091,8 +4094,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5506527054371357300}
-  - {fileID: 2304313735790505381}
   - {fileID: 3801698040068354157}
+  - {fileID: 2304313735790505381}
   m_Father: {fileID: 8953644173650548176}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4184,6 +4187,8 @@ MonoBehaviour:
   RootArea: {fileID: 0}
   SizeArea: {fileID: 2238689995578611681}
   Group: {fileID: 8290793028062167926}
+  BackgroundSmall: {fileID: 0}
+  BackgroundLarge: {fileID: 0}
 --- !u!223 &1331818752379357523
 Canvas:
   m_ObjectHideFlags: 0
@@ -4334,6 +4339,8 @@ MonoBehaviour:
   RootArea: {fileID: 5890766702856300695}
   SizeArea: {fileID: 7380683600148698621}
   Group: {fileID: 4375283234929494008}
+  BackgroundSmall: {fileID: 7492612405496640244}
+  BackgroundLarge: {fileID: 507202636351946857}
 --- !u!223 &4971950180964533248
 Canvas:
   m_ObjectHideFlags: 0
@@ -4420,7 +4427,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 2
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -4594,6 +4601,8 @@ MonoBehaviour:
   RootArea: {fileID: 0}
   SizeArea: {fileID: 6929527324046304641}
   Group: {fileID: 1809146236835067142}
+  BackgroundSmall: {fileID: 0}
+  BackgroundLarge: {fileID: 0}
 --- !u!223 &7015377652640963659
 Canvas:
   m_ObjectHideFlags: 0
@@ -4686,80 +4695,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
---- !u!1 &6998171273923200982
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 786472645831460251}
-  - component: {fileID: 5343946252412099561}
-  - component: {fileID: 4870708797501344365}
-  m_Layer: 13
-  m_Name: Shadow
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &786472645831460251
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6998171273923200982}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 465961047832877239}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.30993652, y: 0}
-  m_SizeDelta: {x: 184.8, y: 161}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &5343946252412099561
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6998171273923200982}
-  m_CullTransparentMesh: 1
---- !u!114 &4870708797501344365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6998171273923200982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 0
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 8460087109f6748d997df620c61de4ed, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
 --- !u!1 &7081857188182330237
 GameObject:
   m_ObjectHideFlags: 0
@@ -5297,12 +5232,12 @@ RectTransform:
   - {fileID: 3975510890653635420}
   - {fileID: 1781381392719162505}
   m_Father: {fileID: 465961047832877239}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 21.200134, y: -0.000030517578}
-  m_SizeDelta: {x: 1642.69, y: 222.59}
+  m_SizeDelta: {x: 397.19995, y: 157}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6029243907203579312
 MonoBehaviour:
@@ -5622,6 +5557,8 @@ MonoBehaviour:
   RootArea: {fileID: 3108997793122355259}
   SizeArea: {fileID: 5506527054371357300}
   Group: {fileID: 8780521791910561171}
+  BackgroundSmall: {fileID: 5906492904181802987}
+  BackgroundLarge: {fileID: 3027517938669658817}
 --- !u!223 &739045304782980457
 Canvas:
   m_ObjectHideFlags: 0
@@ -6013,7 +5950,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 2
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
