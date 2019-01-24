@@ -8,7 +8,7 @@ namespace LunraGames.SubLight.Views
 	{
 		public TextMeshProUGUI MessageLabel;
 
-		public RectTransform RootArea;
+		public RectTransform RootCanvas;
 		public RectTransform SizeArea;
 		public CanvasGroup Group;
 	}

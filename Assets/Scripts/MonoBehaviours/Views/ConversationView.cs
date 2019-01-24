@@ -37,6 +37,7 @@ namespace LunraGames.SubLight.Views
 				Outgoing = 20
 			}
 
+			public Entry NextEntry;
 			public IConversationBlock Block;
 			public ConversationLeaf Instance;
 
@@ -72,6 +73,8 @@ namespace LunraGames.SubLight.Views
 		Transform outgoingAnchor;
 		[SerializeField]
 		Vector3 lookOffset;
+		[SerializeField]
+		float spacing;
 
 		[SerializeField]
 		MessageConversationLeaf messageIncomingPrefab;
@@ -81,12 +84,14 @@ namespace LunraGames.SubLight.Views
 		AttachmentConversationLeaf attachmentIncomingPrefab;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		List<Entry> entries = new List<Entry>();
-
 		Vector3 OutgoingBottomPosition { get { return outgoingAnchor.position + (bottomAnchor.position - topAnchor.position); } }
+
+		List<Entry> entries = new List<Entry>();
+		float verticalOffset;
 
 		public void AddToConversation(bool instant, params IConversationBlock[] blocks)
 		{
+			Entry nextEntry = entries.LastOrDefault();
 			foreach (var block in blocks)
 			{
 				ConversationLeaf instance;
@@ -94,6 +99,7 @@ namespace LunraGames.SubLight.Views
 				if (!InstantiatePrefab(block, out instance, out initializeLayout)) continue;
 
 				var entry = new Entry();
+				entry.NextEntry = nextEntry;
 				entry.Block = block;
 				entry.Instance = instance;
 				entry.InitializeLayout = initializeLayout;
@@ -101,6 +107,8 @@ namespace LunraGames.SubLight.Views
 				if (instance.gameObject.activeInHierarchy) entry.InitializeLayout(entry);
 
 				entries.Add(entry);
+
+				nextEntry = entry;
 			}
 		}
 
@@ -135,10 +143,7 @@ namespace LunraGames.SubLight.Views
 			out Action<Entry> initializeLayout
 		)
 		{
-			var instance = conversationArea.InstantiateChild(
-				prefab,
-				localScale: prefab.transform.localScale
-			);
+			var instance = conversationArea.InstantiateChild(prefab);
 
 			initializeLayout = entry =>
 			{
@@ -160,7 +165,7 @@ namespace LunraGames.SubLight.Views
 			Assert.IsFalse(entry.IsInitialized, "Entry has already been initialized");
 
 			Assert.IsNotNull(instance.MessageLabel, "MessageLabel cannot be null");
-			Assert.IsNotNull(instance.RootArea, "RootArea cannot be null");
+			Assert.IsNotNull(instance.RootCanvas, "RootArea cannot be null");
 			Assert.IsNotNull(instance.SizeArea, "SizeArea cannot be null");
 			Assert.IsNotNull(instance.Group, "Group cannot be null");
 
@@ -199,7 +204,7 @@ namespace LunraGames.SubLight.Views
 
 			instance.MessageLabel.text = entry.Block.Message;
 
-			LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootArea);
+			LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootCanvas);
 			instance.MessageLabel.ForceMeshUpdate(false);
 
 			entry.Height = Mathf.Abs(instance.SizeArea.WorldCornerSize().y);
@@ -211,6 +216,8 @@ namespace LunraGames.SubLight.Views
 
 			entries.Clear();
 			conversationArea.transform.ClearChildren();
+
+			verticalOffset = 0f;
 
 			messageIncomingPrefab.gameObject.SetActive(false);
 			messageOutgoingPrefab.gameObject.SetActive(false);

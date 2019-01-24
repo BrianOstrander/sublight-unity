@@ -67,9 +67,9 @@ namespace LunraGames.SubLight.Presenters
 				true,
 				//shortIncoming
 				//mediumIncoming
-				longIncoming
+				longIncoming,
 			
-				//shortOutgoing
+				shortOutgoing
 				//mediumIncoming
 				//longIncoming
 			);
