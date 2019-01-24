@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+//#if UNITY_EDITOR
+//using UnityEditor;
+//#endif
+
 using TMPro;
 
 namespace LunraGames.SubLight.Views
@@ -14,9 +18,22 @@ namespace LunraGames.SubLight.Views
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
-		Transform lookAtArea;
-		[SerializeField]
 		GameObject conversationArea;
+		[SerializeField]
+		Transform topAnchor;
+		[SerializeField]
+		Transform bottomAnchor;
+		[SerializeField]
+		Transform outgoingAnchor;
+		[SerializeField]
+		Vector3 lookOffset;
+
+		[SerializeField]
+		MessageConversationLeaf messageIncomingPrefab;
+		[SerializeField]
+		MessageConversationLeaf messageOutgoingPrefab;
+		[SerializeField]
+		AttachmentConversationLeaf attachmentIncomingPrefab;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public override void Reset()
@@ -33,6 +50,22 @@ namespace LunraGames.SubLight.Views
 
 		#region Events
 		#endregion
+
+		void OnDrawGizmos()
+		{
+			Gizmos.color = Color.green;
+			Gizmos.DrawWireSphere(bottomAnchor.position, 0.05f);
+			Gizmos.color = Color.red;
+			Gizmos.DrawWireSphere(topAnchor.position, 0.05f);
+			Gizmos.DrawLine(topAnchor.position, topAnchor.position + lookOffset);
+			Gizmos.DrawLine(topAnchor.position, outgoingAnchor.position);
+
+			//#if UNITY_EDITOR
+			//lookOffset = lookOffset.normalized;
+			//Handles.color = Color.red;
+			//Handles.Label(topAnchor.position + lookOffset, "( "+lookNormal.x.ToString("N3")+" , "+lookNormal.y.ToString("N3")+" , "+lookNormal.z.ToString("N3")+" )");
+			//#endif
+		}
 	}
 
 	public interface IConversationView : IView
