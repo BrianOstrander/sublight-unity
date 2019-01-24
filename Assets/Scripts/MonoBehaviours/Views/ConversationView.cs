@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+using TMPro;
+
 namespace LunraGames.SubLight.Views
 {
 	public class ConversationView : View, IConversationView
