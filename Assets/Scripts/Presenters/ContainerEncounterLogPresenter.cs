@@ -82,7 +82,7 @@ namespace LunraGames.SubLight.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			CloseView();
-			App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete());
+			//App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete()); // <-- had to comment this out, not originally this way
 		}
 
 		void OnNextClick()

@@ -17,20 +17,35 @@ namespace LunraGames.SubLight
 		public void Push(
 			Action action,
 			string description,
-			bool repeating = false
+			bool repeating = false,
+			string synchronizedId = null
 		)
 		{
-			App.SM.Push(action, type, description, repeating);
+			App.SM.Push(action, type, description, repeating, synchronizedId);
 		}
 
-		public void PushBlocking(Action<Action> action, string description)
+		public void PushBlocking(
+			Action<Action> action,
+			string description,
+			string synchronizedId = null
+		)
 		{
-			App.SM.PushBlocking(action, type, description);
+			App.SM.PushBlocking(action, type, description, synchronizedId);
 		}
 
-		public void PushBlocking(Action action, Func<bool> condition, string description)
+		public void PushBlocking(
+			Action action,
+			Func<bool> condition,
+			string description,
+			string synchronizedId = null
+		)
 		{
-			App.SM.PushBlocking(action, condition, type, description);
+			App.SM.PushBlocking(action, condition, type, description, synchronizedId);
+		}
+
+		public void PushBreak()
+		{
+			App.SM.PushBreak();
 		}
 		#endregion
 	}

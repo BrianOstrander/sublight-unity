@@ -43,7 +43,7 @@ namespace LunraGames.SubLight
 			Events Event { get; }
 			string Description { get; }
 			bool IsRepeating { get; }
-
+			string SynchronizedId { get; }
 			EntryStates EntryState { get; }
 		}
 
@@ -60,6 +60,7 @@ namespace LunraGames.SubLight
 			public Events Event { get; protected set; }
 			public string Description { get; protected set; }
 			public bool IsRepeating { get; protected set; }
+			public string SynchronizedId { get; protected set; }
 			public abstract bool Trigger();
 
 			#region Debug Values
@@ -77,7 +78,8 @@ namespace LunraGames.SubLight
 				Action<Action> action,
 				States state,
 				Events stateEvent,
-				string description
+				string description,
+				string synchronizedId
 			)
 			{
 				this.action = action;
@@ -85,6 +87,7 @@ namespace LunraGames.SubLight
 				Event = stateEvent;
 				Description = description;
 				IsRepeating = false;
+				SynchronizedId = string.IsNullOrEmpty(synchronizedId) ? null : synchronizedId;
 			}
 
 			public override bool Trigger()
@@ -112,7 +115,8 @@ namespace LunraGames.SubLight
 				States state,
 				Events stateEvent,
 				string description,
-				bool repeating
+				bool repeating,
+				string synchronizedId
 			)
 			{
 				this.action = action;
@@ -120,6 +124,7 @@ namespace LunraGames.SubLight
 				Event = stateEvent;
 				Description = description;
 				IsRepeating = repeating;
+				SynchronizedId = string.IsNullOrEmpty(synchronizedId) ? null : synchronizedId;
 			}
 
 			public override bool Trigger()
@@ -179,10 +184,13 @@ namespace LunraGames.SubLight
 			queued.Clear();
 			var persisted = new List<IEntry>();
 			var isBlocked = false;
+			string blockingSynchronizedId = null;
+
 			foreach (var entry in entries)
 			{
-				if (isBlocked)
+				if (isBlocked && (string.IsNullOrEmpty(blockingSynchronizedId) || entry.SynchronizedId != blockingSynchronizedId))
 				{
+					blockingSynchronizedId = null;
 					entry.EntryState = EntryStates.Blocked;
 					persisted.Add(entry);
 					continue;
@@ -198,20 +206,24 @@ namespace LunraGames.SubLight
 					continue;
 				}
 
+				var currentIsBlocking = false;
+
 				entry.EntryState = EntryStates.Calling;
 				if (entry.IsRepeating) persisted.Add(entry);
 				try 
 				{
-					isBlocked = !entry.Trigger();
+					currentIsBlocking = !entry.Trigger();
 				}
 				catch (Exception exception) { Debug.LogException(exception); }
 				finally
 				{
-					if (!entry.IsRepeating && isBlocked)
+					if (!entry.IsRepeating && currentIsBlocking)
 					{
+						blockingSynchronizedId = entry.SynchronizedId;
 						entry.EntryState = EntryStates.Blocking;
 						persisted.Add(entry);
 					}
+					isBlocked |= currentIsBlocking;
 				}
 			}
 			entries = persisted;
@@ -299,7 +311,8 @@ namespace LunraGames.SubLight
 			Action action,
 			Type type,
 			string description,
-			bool repeating = false
+			bool repeating = false,
+			string synchronizedId = null
 		)
 		{
 			OnPush(
@@ -308,14 +321,16 @@ namespace LunraGames.SubLight
 				currentEvent,
 				type,
 				description,
-				repeating
+				repeating,
+				synchronizedId
 			);
 		}
 
 		public void PushBlocking(
 			Action<Action> action,
 			Type type,
-			string description
+			string description,
+			string synchronizedId = null
 		)
 		{
 			OnPushBlocking(
@@ -323,7 +338,8 @@ namespace LunraGames.SubLight
 				currentState.HandledState,
 				currentEvent,
 				type,
-				description
+				description,
+				synchronizedId
 			);
 		}
 
@@ -331,7 +347,8 @@ namespace LunraGames.SubLight
 			Action action,
 			Func<bool> condition,
 			Type type,
-			string description
+			string description,
+			string synchronizedId = null
 		)
 		{
 			Action<Action> waiter = done =>
@@ -345,7 +362,8 @@ namespace LunraGames.SubLight
 				currentState.HandledState,
 				currentEvent,
 				type,
-				description
+				description,
+				synchronizedId
 			);
 		}
 		#endregion
@@ -357,7 +375,8 @@ namespace LunraGames.SubLight
 			Events stateEvent,
 			Type type,
 			string description,
-			bool repeating
+			bool repeating,
+			string synchronizedId
 		)
 		{
 			if (action == null) throw new ArgumentNullException("action");
@@ -371,7 +390,8 @@ namespace LunraGames.SubLight
 					state,
 					stateEvent,
 					type == null ? "< Unspecified >." + description : type.Name + "." + description,
-					repeating
+					repeating,
+					synchronizedId
 				)
 				{
 					EntryState = EntryStates.Queued
@@ -384,7 +404,8 @@ namespace LunraGames.SubLight
 			States state,
 			Events stateEvent,
 			Type type,
-			string description
+			string description,
+			string synchronizedId
 		)
 		{
 			if (action == null) throw new ArgumentNullException("action");
@@ -396,7 +417,8 @@ namespace LunraGames.SubLight
 				new BlockingEntry(
 					action, state,
 					stateEvent,
-					type == null ? "< Unspecified >." + description : type.Name + "." + description
+					type == null ? "< Unspecified >." + description : type.Name + "." + description,
+					synchronizedId
 				)
 				{
 					EntryState = EntryStates.Queued

@@ -37,9 +37,9 @@ namespace LunraGames.SubLight
 			return new EncounterRequest(States.Next);
 		}
 
-		public static EncounterRequest PrepareComplete()
+		public static EncounterRequest PrepareComplete(string synchronizedId)
 		{
-			return new EncounterRequest(States.PrepareComplete);
+			return new EncounterRequest(States.PrepareComplete, synchronizedId: synchronizedId);
 		}
 
 		public static EncounterRequest Complete()
@@ -54,6 +54,7 @@ namespace LunraGames.SubLight
 		public readonly IEncounterHandlerModel Model;
 		public readonly bool NextControl;
 		public readonly bool PrepareCompleteControl;
+		public readonly string SynchronizedId;
 
 		public EncounterLogTypes LogType { get { return Model == null ? EncounterLogTypes.Unknown : Model.LogType; } }
 
@@ -64,7 +65,8 @@ namespace LunraGames.SubLight
 			Type modelType = null,
 			IEncounterHandlerModel model = null,
 			bool next = false,
-			bool prepareCompleteControl = false
+			bool prepareCompleteControl = false,
+			string synchronizedId = null
 		)
 		{
 			State = state;
@@ -74,6 +76,7 @@ namespace LunraGames.SubLight
 			Model = model;
 			NextControl = next;
 			PrepareCompleteControl = prepareCompleteControl;
+			SynchronizedId = synchronizedId;
 		}
 
 		/// <summary>

@@ -26,6 +26,16 @@ namespace LunraGames.SubLight
 		protected override void Begin()
 		{
 			Payload.ShaderGlobals.Apply();
+
+			//SM.Push(() => Debug.Log("started..."), "runonce");
+			//SM.PushBlocking(done => Debug.Log("I'll get called but never complete..."), "never done", "sync0");
+			//SM.PushBlocking(done => Debug.Log("I'll run, whatever, won't give a callback tho"), "never done2", "sync0");
+			//SM.PushBlocking(done => { Debug.Log("I'll run, and callback"); done(); }, "never done3", "sync0");
+			//SM.Push(() => Debug.Log("I should get called too now!"), "not done either", synchronizedId: "sync0");
+			//SM.Push(() => Debug.Log("as shall i"), "not done either2", synchronizedId: "sync0");
+			//SM.Push(() => Debug.Log("never called! oh no..."), "runonce2");
+			//SM.Push(() => Debug.Log("naughty, should not be called..."), "runonce3", synchronizedId: "sync0");
+
 			SM.PushBlocking(InitializeModels, "InitializeModels");
 			SM.PushBlocking(InitializeViews, "InitializeViews");
 			SM.PushBlocking(InitializePresenters, "InitializePresenters");

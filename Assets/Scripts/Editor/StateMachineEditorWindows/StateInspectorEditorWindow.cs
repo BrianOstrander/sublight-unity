@@ -103,6 +103,8 @@ namespace LunraGames.SubLight
 						}
 						EditorGUILayout.EndHorizontal();
 
+						GUILayout.Label("Syncronized Id: " + (entry.SynchronizedId ?? "< null >"));
+
 						if (isUnrecognizedState) EditorGUILayout.HelpBox("Unrecognized EntryState: " + entry.EntryState, MessageType.Error);
 					}
 					EditorGUILayout.EndHorizontal();

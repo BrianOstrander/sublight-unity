@@ -18,7 +18,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override bool CanShow()
 		{
-			return model.EncounterState.State.Value == EncounterStateModel.States.Processing && lastFocus != null;
+			return model.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && lastFocus != null;
 		}
 
 		public BustPresenter(GameModel model)
@@ -48,7 +48,18 @@ namespace LunraGames.SubLight.Presenters
 					break;
 				case EncounterRequest.States.PrepareComplete:
 					lastFocus = null;
-					if (View.Visible) CloseView();
+					if (View.Visible)
+					{
+						View.Closed += () => Debug.Log("bust view closed");
+						CloseView();
+						Debug.Log("prepairing to close bust with syncId: " + request.SynchronizedId);
+						SM.PushBlocking(
+							() => CloseView(),
+							() => View.TransitionState == TransitionStates.Closed,
+							"CloseView",
+							request.SynchronizedId
+						);
+					}
 					break;
 			}
 		}

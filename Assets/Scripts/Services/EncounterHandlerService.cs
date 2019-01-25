@@ -98,15 +98,20 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Next:
 					if (nextLogDelay.HasValue) nextLogDelay = 0f;
+					//Debug.Break();
 					break;
 				case EncounterRequest.States.PrepareComplete:
-					callbacks.EncounterRequest(EncounterRequest.Complete());
+					sm.Push(
+						() => { Debug.Log("About to call complete from service!"); callbacks.EncounterRequest(EncounterRequest.Complete()); },
+						"CallComplete"
+					);
 					break;
 				case EncounterRequest.States.Complete:
+					Debug.Log("Encounter Handler Service Complete!!!");
 					encounterService.GetEncounterInteraction(configuration.Encounter.EncounterId).TimesCompleted.Value++;
 					configuration.Model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.EncounterId));
 
-					configuration.Model.EncounterState.State.Value = EncounterStateModel.States.Ending;
+					configuration.Model.EncounterState.Current.Value = configuration.Model.EncounterState.Current.Value.NewState(EncounterStateModel.States.Ending);
 
 					OnEnd();
 					break;
@@ -115,7 +120,7 @@ namespace LunraGames.SubLight
 
 		void OnStateChange(StateChange change)
 		{
-			if (configuration.Model == null || configuration.Model.EncounterState.State.Value == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
+			if (configuration.Model == null || configuration.Model.EncounterState.Current.Value.State == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
 			OnEnd();
 		}
 
@@ -135,12 +140,12 @@ namespace LunraGames.SubLight
 			EncounterInfoModel encounter
 		)
 		{
-			if (model.EncounterState.State.Value != EncounterStateModel.States.Complete)
+			if (model.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
 			{
 				Debug.LogError("Beginning an encounter while one is not complete, may cause unpredictable behaviour.");
 			}
 
-			model.EncounterState.State.Value = EncounterStateModel.States.Processing;
+			model.EncounterState.Current.Value = new EncounterStateModel.Details(EncounterStateModel.States.Processing, encounter.EncounterId.Value);
 
 			configuration.Model = model;
 			configuration.Encounter = encounter;
@@ -183,7 +188,7 @@ namespace LunraGames.SubLight
 			nextLogDelay = null;
 
 			oldModel.EncounterState.UnRegisterKeyValueListener(); // This used to be below the other one, but I think that was wrong...
-			oldModel.EncounterState.State.Value = EncounterStateModel.States.Complete;
+			oldModel.EncounterState.Current.Value = oldModel.EncounterState.Current.Value.NewState(EncounterStateModel.States.Complete);
 		}
 
 		void OnNextLog(EncounterLogModel logModel)
