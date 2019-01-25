@@ -14,6 +14,14 @@ namespace LunraGames.SubLight
 
 		public static bool HasInstance { get { return instance != null; } }
 
+		/// <summary>
+		/// Called when the App instance is done being constructed.
+		/// </summary>
+		/// <remarks>
+		/// Idealy nothing should use this except editor time scripts.
+		/// </remarks>
+		public static Action<App> Instantiated = ActionExtensions.GetEmpty<App>();
+
 		Main main;
 		public static Main Main { get { return instance.main; } }
 
@@ -164,13 +172,16 @@ namespace LunraGames.SubLight
 				Encounters,
 				KeyValues,
 				ValueFilter,
-				CurrentPreferences
+				CurrentPreferences,
+				SM
 			);
 
 			focus = new FocusService(Heartbeat, Callbacks);
 
 			Application.targetFrameRate = BuildPreferences.TargetFrameRate;
 			QualitySettings.vSyncCount = BuildPreferences.VSyncCount;
+
+			Instantiated(this);
 		}
 
 		public static void Restart(string message)

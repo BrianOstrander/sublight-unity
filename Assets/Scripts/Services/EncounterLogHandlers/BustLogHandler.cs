@@ -23,12 +23,9 @@ namespace LunraGames.SubLight
 			// If there are any non-instant focuses this event is halting.
 			result.HasHaltingEvents.Value = bustEvents.Any(b => b.BustEvent.Value == BustEntryModel.Events.Focus && !b.FocusInfo.Value.Instant);
 			result.Entries.Value = bustEvents;
-
-			if (result.HasHaltingEvents.Value) result.HaltingDone.Value = linearDone;
+			result.HaltingDone.Value = linearDone;
 
 			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
-
-			if (!result.HasHaltingEvents.Value) linearDone();
 		}
 	}
 }

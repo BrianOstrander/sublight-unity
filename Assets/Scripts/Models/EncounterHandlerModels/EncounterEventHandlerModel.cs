@@ -24,9 +24,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<Action> HaltingDone;
 
-		[JsonIgnore]
-		public bool AlwaysHaltingOrHasHaltingEvents { get { return AlwaysHalting.Value || HasHaltingEvents.Value; } }
-
 		public EncounterEventHandlerModel(EncounterEventEncounterLogModel log) : base(log)
 		{
 			Events = new ListenerProperty<EncounterEventEntryModel[]>(value => events = value, () => events);

@@ -18,7 +18,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override bool CanShow()
 		{
-			return model.EncounterState.State.Value == EncounterStateModel.States.Processing && lastFocus != null;
+			return model.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && lastFocus != null;
 		}
 
 		public BustPresenter(GameModel model)
@@ -46,9 +46,18 @@ namespace LunraGames.SubLight.Presenters
 				case EncounterRequest.States.Handle:
 					request.TryHandle<BustHandlerModel>(OnHandleBust);
 					break;
-				case EncounterRequest.States.Done:
+				case EncounterRequest.States.PrepareComplete:
 					lastFocus = null;
-					if (View.Visible) CloseView();
+					if (View.Visible)
+					{
+						CloseView();
+						SM.PushBlocking(
+							() => CloseView(),
+							() => View.TransitionState == TransitionStates.Closed,
+							"CloseView",
+							request.SynchronizedId
+						);
+					}
 					break;
 			}
 		}
@@ -61,7 +70,7 @@ namespace LunraGames.SubLight.Presenters
 
 			Action onHaltingDone = () =>
 			{
-				if (handler.HasHaltingEvents.Value && handler.HaltingDone.Value != null) handler.HaltingDone.Value();
+				if (handler.HaltingDone.Value != null) handler.HaltingDone.Value();
 			};
 
 			foreach (var entry in handler.Entries.Value)
@@ -103,8 +112,8 @@ namespace LunraGames.SubLight.Presenters
 			Func<bool> onHaltingCondition = () => focusCompleted;
 			Action onCallFocus = () => View.FocusBust(focusEntry.BustId.Value, focusEntry.FocusInfo.Value.Instant, focusBustId => focusCompleted = true);
 
-			App.SM.PushBlocking(onCallFocus, onHaltingCondition);
-			App.SM.Push(onHaltingDone);
+			SM.PushBlocking(onCallFocus, onHaltingCondition, "FocusingBust");
+			SM.Push(onHaltingDone, "HaltingDone");
 		}
 
 		BustBlock OnInitializeInfoToBlock(string bustId, BustEntryModel.InitializeBlock info)

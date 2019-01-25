@@ -54,11 +54,11 @@ namespace LunraGames.SubLight
 				};
 				Action onHaltingDone = () =>
 				{
-					if (handler.AlwaysHaltingOrHasHaltingEvents && handler.HaltingDone.Value != null) handler.HaltingDone.Value();
+					if (handler.HaltingDone.Value != null) handler.HaltingDone.Value();
 				};
 
-				App.SM.PushBlocking(onCallEvents, onHaltingCondition);
-				App.SM.Push(onHaltingDone);
+				App.SM.PushBlocking<GameState>(onCallEvents, onHaltingCondition, "CallEncounterEvents");
+				App.SM.Push<GameState>(onHaltingDone, "CallEncounterEventsDone");
 			}
 
 			static void OnHandleEventDebugLog(

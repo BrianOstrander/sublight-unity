@@ -59,15 +59,15 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
-			App.SM.PushBlocking(LoadScenes);
-			App.SM.PushBlocking(LoadModelDependencies);
-			App.SM.PushBlocking(SetNonSerializedValues);
-			App.SM.PushBlocking(InitializeInput);
-			App.SM.PushBlocking(InitializeCallbacks);
-			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
-			App.SM.PushBlocking(InitializeScaleTransforms);
-			App.SM.PushBlocking(InitializeFocus);
-			App.SM.PushBlocking(InitializeCelestialSystems);
+			SM.PushBlocking(LoadScenes, "LoadScenes");
+			SM.PushBlocking(LoadModelDependencies, "LoadModelDependencies");
+			SM.PushBlocking(SetNonSerializedValues, "SetNonSerializedValues");
+			SM.PushBlocking(InitializeInput, "InitializeInput");
+			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
+			SM.PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
+			SM.PushBlocking(InitializeScaleTransforms, "InitializeScaleTransforms");
+			SM.PushBlocking(InitializeFocus, "InitializeFocus");
+			SM.PushBlocking(InitializeCelestialSystems, "InitializeCelestialSystems");
 		}
 
 		void LoadScenes(Action done)
@@ -548,9 +548,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Controls:
 					// I don't think there's anything else I need to do here...
-					if (request.DoneControl)
+					if (request.PrepareCompleteControl)
 					{
-						App.Callbacks.EncounterRequest(EncounterRequest.Done());
+						App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete(Payload.Game.EncounterState.Current.Value.EncounterId));
 					}
 					else if (request.NextControl)
 					{
@@ -561,7 +561,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Next:
 					// I don't think I need to do anything here... maybe cleanup messages and stuff?
 					break;
-				case EncounterRequest.States.Done:
+				case EncounterRequest.States.PrepareComplete:
 					// I don't think I need to do anything here...
 					break;
 				case EncounterRequest.States.Complete:

@@ -26,11 +26,13 @@ namespace LunraGames.SubLight
 
 		public object PayloadObject { get; set; }
 
+		protected StateMachineWrapper SM;
+
 		public virtual bool AcceptsPayload(object payload, bool throws = false)
 		{
 			Exception exception = null;
 			if (payload == null) exception = new ArgumentNullException("payload");
-			else if (payload.GetType() != PayloadType) exception = new ArgumentException("payload of type "+payload.GetType()+" is not supported by this state");
+			else if (payload.GetType() != PayloadType) exception = new ArgumentException("payload of type " + payload.GetType() + " is not supported by this state");
 
 			var accepts = exception == null;
 			if (throws && !accepts) throw exception;
@@ -41,6 +43,7 @@ namespace LunraGames.SubLight
 		{
 			AcceptsPayload(payload, true);
 			PayloadObject = payload;
+			SM = SM ?? new StateMachineWrapper(App.SM, GetType());
 		}
 
 		public virtual void UpdateState(StateMachine.States state, StateMachine.Events stateEvent, object payload)
@@ -62,9 +65,9 @@ namespace LunraGames.SubLight
 			App.Callbacks.StateChange(new StateChange(state, stateEvent, payload));
 		}
 
-		protected virtual void Begin() {}
-		protected virtual void End() {}
-		protected virtual void Idle() {}
+		protected virtual void Begin() { }
+		protected virtual void End() { }
+		protected virtual void Idle() { }
 	}
 
 	public abstract class State<P> : BaseState, IStateTyped<P>

@@ -17,15 +17,30 @@ namespace LunraGames.SubLight.Models
 			Complete = 30
 		}
 
+		[Serializable]
+		public struct Details
+		{
+			public static Details Default { get { return new Details(States.Complete, null); } }
+
+			public States State;
+			public string EncounterId;
+
+			public Details(States state, string encounterId)
+			{
+				State = state;
+				EncounterId = encounterId;
+			}
+
+			public Details NewState(States state) { return new Details { State = state, EncounterId = EncounterId }; }
+		}
+
+
 		#region Serialized Listeners
-		[JsonProperty] States state = States.Complete;
+		[JsonProperty] Details current = Details.Default;
 		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
 
-		// TODO: Move this into some kind of block so the state and id have to be modified at the same time...
 		[JsonIgnore]
-		public readonly ListenerProperty<States> State;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> CurrentEncounter;
+		public readonly ListenerProperty<Details> Current;
 		/// <summary>
 		/// The encounters seen, completed or otherwise.
 		/// </summary>
@@ -58,7 +73,7 @@ namespace LunraGames.SubLight.Models
 
 		public EncounterStateModel()
 		{
-			State = new ListenerProperty<States>(value => state = value, () => state);
+			Current = new ListenerProperty<Details>(value => current = value, () => current);
 			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 		}
 
