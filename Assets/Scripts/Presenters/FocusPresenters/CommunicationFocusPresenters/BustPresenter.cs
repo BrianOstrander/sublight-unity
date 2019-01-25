@@ -50,9 +50,7 @@ namespace LunraGames.SubLight.Presenters
 					lastFocus = null;
 					if (View.Visible)
 					{
-						View.Closed += () => Debug.Log("bust view closed");
 						CloseView();
-						Debug.Log("prepairing to close bust with syncId: " + request.SynchronizedId);
 						SM.PushBlocking(
 							() => CloseView(),
 							() => View.TransitionState == TransitionStates.Closed,
@@ -72,7 +70,7 @@ namespace LunraGames.SubLight.Presenters
 
 			Action onHaltingDone = () =>
 			{
-				if (handler.HasHaltingEvents.Value && handler.HaltingDone.Value != null) handler.HaltingDone.Value();
+				if (handler.HaltingDone.Value != null) handler.HaltingDone.Value();
 			};
 
 			foreach (var entry in handler.Entries.Value)

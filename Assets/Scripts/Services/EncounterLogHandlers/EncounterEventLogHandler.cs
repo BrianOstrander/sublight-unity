@@ -90,12 +90,9 @@ namespace LunraGames.SubLight
 			result.Events.Value = events.ToArray();
 			result.AlwaysHalting.Value = logModel.AlwaysHalting.Value;
 			result.HasHaltingEvents.Value = events.Any(e => e.IsHalting.Value);
-
-			if (result.AlwaysHaltingOrHasHaltingEvents) result.HaltingDone.Value = done;
+			result.HaltingDone.Value = done;
 
 			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
-
-			if (!result.AlwaysHaltingOrHasHaltingEvents) done();
 		}
 	}
 }

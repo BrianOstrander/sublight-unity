@@ -98,16 +98,14 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Next:
 					if (nextLogDelay.HasValue) nextLogDelay = 0f;
-					//Debug.Break();
 					break;
 				case EncounterRequest.States.PrepareComplete:
 					sm.Push(
-						() => { Debug.Log("About to call complete from service!"); callbacks.EncounterRequest(EncounterRequest.Complete()); },
+						() => callbacks.EncounterRequest(EncounterRequest.Complete()),
 						"CallComplete"
 					);
 					break;
 				case EncounterRequest.States.Complete:
-					Debug.Log("Encounter Handler Service Complete!!!");
 					encounterService.GetEncounterInteraction(configuration.Encounter.EncounterId).TimesCompleted.Value++;
 					configuration.Model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.EncounterId));
 
