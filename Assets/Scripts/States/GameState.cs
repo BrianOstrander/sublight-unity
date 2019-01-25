@@ -59,15 +59,15 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
-			App.SM.PushBlocking(LoadScenes);
-			App.SM.PushBlocking(LoadModelDependencies);
-			App.SM.PushBlocking(SetNonSerializedValues);
-			App.SM.PushBlocking(InitializeInput);
-			App.SM.PushBlocking(InitializeCallbacks);
-			App.SM.PushBlocking(done => Focuses.InitializePresenters(this, done));
-			App.SM.PushBlocking(InitializeScaleTransforms);
-			App.SM.PushBlocking(InitializeFocus);
-			App.SM.PushBlocking(InitializeCelestialSystems);
+			PushBlocking(LoadScenes, "LoadScenes");
+			PushBlocking(LoadModelDependencies, "LoadModelDependencies");
+			PushBlocking(SetNonSerializedValues, "SetNonSerializedValues");
+			PushBlocking(InitializeInput, "InitializeInput");
+			PushBlocking(InitializeCallbacks, "InitializeCallbacks");
+			PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
+			PushBlocking(InitializeScaleTransforms, "InitializeScaleTransforms");
+			PushBlocking(InitializeFocus, "InitializeFocus");
+			PushBlocking(InitializeCelestialSystems, "InitializeCelestialSystems");
 		}
 
 		void LoadScenes(Action done)

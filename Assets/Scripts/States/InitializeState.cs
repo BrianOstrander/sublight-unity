@@ -26,15 +26,15 @@ namespace LunraGames.SubLight
 		protected override void Begin()
 		{
 			Payload.ShaderGlobals.Apply();
-			App.SM.PushBlocking(InitializeModels);
-			App.SM.PushBlocking(InitializeViews);
-			App.SM.PushBlocking(InitializePresenters);
-			App.SM.PushBlocking(InitializePreferences);
-			App.SM.PushBlocking(InitializeEncounters);
-			App.SM.PushBlocking(InitializeListeners);
-			App.SM.PushBlocking(InitializeGlobalKeyValues);
+			PushBlocking(InitializeModels, "InitializeModels");
+			PushBlocking(InitializeViews, "InitializeViews");
+			PushBlocking(InitializePresenters, "InitializePresenters");
+			PushBlocking(InitializePreferences, "InitializePreferences");
+			PushBlocking(InitializeEncounters, "InitializeEncounters");
+			PushBlocking(InitializeListeners, "InitializeListeners");
+			PushBlocking(InitializeGlobalKeyValues, "InitializeGlobalkeyValues");
 
-			if (DevPrefs.WipeGameSavesOnStart) App.SM.PushBlocking(WipeGameSaves);
+			if (DevPrefs.WipeGameSavesOnStart) PushBlocking(WipeGameSaves, "WipeGameSaves");
 		}
 
 		protected override void Idle()

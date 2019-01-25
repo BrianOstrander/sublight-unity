@@ -69,5 +69,26 @@ namespace LunraGames.SubLight
 		{
 			App.V.Close(View, instant);
 		}
+
+		#region StateMachine Helper Methods
+		protected void Push(
+			Action action,
+			string description,
+			bool repeating = false
+		)
+		{
+			App.SM.Push(action, GetType(), description, repeating);
+		}
+
+		protected void PushBlocking(Action<Action> action, string description)
+		{
+			App.SM.PushBlocking(action, GetType(), description);
+		}
+
+		protected void PushBlocking(Action action, Func<bool> condition, string description)
+		{
+			App.SM.PushBlocking(action, condition, GetType(), description);
+		}
+		#endregion
 	}
 }

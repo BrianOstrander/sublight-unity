@@ -30,7 +30,7 @@ namespace LunraGames.SubLight
 		{
 			Exception exception = null;
 			if (payload == null) exception = new ArgumentNullException("payload");
-			else if (payload.GetType() != PayloadType) exception = new ArgumentException("payload of type "+payload.GetType()+" is not supported by this state");
+			else if (payload.GetType() != PayloadType) exception = new ArgumentException("payload of type " + payload.GetType() + " is not supported by this state");
 
 			var accepts = exception == null;
 			if (throws && !accepts) throw exception;
@@ -62,9 +62,30 @@ namespace LunraGames.SubLight
 			App.Callbacks.StateChange(new StateChange(state, stateEvent, payload));
 		}
 
-		protected virtual void Begin() {}
-		protected virtual void End() {}
-		protected virtual void Idle() {}
+		protected virtual void Begin() { }
+		protected virtual void End() { }
+		protected virtual void Idle() { }
+
+		#region StateMachine Helper Methods
+		protected void Push(
+			Action action,
+			string description,
+			bool repeating = false
+		)
+		{
+			App.SM.Push(action, GetType(), description, repeating);
+		}
+
+		protected void PushBlocking(Action<Action> action, string description)
+		{
+			App.SM.PushBlocking(action, GetType(), description);
+		}
+
+		protected void PushBlocking(Action action, Func<bool> condition, string description)
+		{
+			App.SM.PushBlocking(action, condition, GetType(), description);
+		}
+		#endregion
 	}
 
 	public abstract class State<P> : BaseState, IStateTyped<P>
