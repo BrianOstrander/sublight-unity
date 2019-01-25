@@ -46,7 +46,7 @@ namespace LunraGames.SubLight.Presenters
 				case EncounterRequest.States.Handle:
 					request.TryHandle<BustHandlerModel>(OnHandleBust);
 					break;
-				case EncounterRequest.States.Done:
+				case EncounterRequest.States.PrepareComplete:
 					lastFocus = null;
 					if (View.Visible) CloseView();
 					break;

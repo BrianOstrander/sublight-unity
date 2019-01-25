@@ -82,7 +82,7 @@ namespace LunraGames.SubLight.Presenters
 			if (View.TransitionState != TransitionStates.Shown) return;
 
 			CloseView();
-			App.Callbacks.EncounterRequest(EncounterRequest.Done());
+			App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete());
 		}
 
 		void OnNextClick()
@@ -101,7 +101,7 @@ namespace LunraGames.SubLight.Presenters
 					break;
 				case EncounterRequest.States.Controls:
 					View.NextEnabled = request.NextControl;
-					View.DoneEnabled = request.DoneControl;
+					View.DoneEnabled = request.PrepareCompleteControl;
 					break;
 			}
 		}

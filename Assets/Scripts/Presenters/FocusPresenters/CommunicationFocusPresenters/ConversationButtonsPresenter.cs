@@ -46,7 +46,7 @@ namespace LunraGames.SubLight.Presenters
 				case EncounterRequest.States.Handle:
 					request.TryHandle<ButtonHandlerModel>(OnHandleButtons);
 					break;
-				case EncounterRequest.States.Done:
+				case EncounterRequest.States.PrepareComplete:
 					isProcessingButtons = false;
 					if (View.Visible) CloseView();
 					break;

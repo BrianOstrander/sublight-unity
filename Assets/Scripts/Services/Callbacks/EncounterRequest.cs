@@ -13,7 +13,7 @@ namespace LunraGames.SubLight
 			Handle = 20,
 			Controls = 30,
 			Next = 40,
-			Done = 50,
+			PrepareComplete = 50,
 			Complete = 60
 		}
 
@@ -27,9 +27,9 @@ namespace LunraGames.SubLight
 			return new EncounterRequest(States.Handle, modelType: typeof(T), model: model);
 		}
 
-		public static EncounterRequest Controls(bool next, bool done)
+		public static EncounterRequest Controls(bool next, bool prepareCompleteControl)
 		{
-			return new EncounterRequest(States.Controls, next: next, done: done);
+			return new EncounterRequest(States.Controls, next: next, prepareCompleteControl: prepareCompleteControl);
 		}
 
 		public static EncounterRequest Next()
@@ -37,9 +37,9 @@ namespace LunraGames.SubLight
 			return new EncounterRequest(States.Next);
 		}
 
-		public static EncounterRequest Done()
+		public static EncounterRequest PrepareComplete()
 		{
-			return new EncounterRequest(States.Done);
+			return new EncounterRequest(States.PrepareComplete);
 		}
 
 		public static EncounterRequest Complete()
@@ -53,7 +53,7 @@ namespace LunraGames.SubLight
 		public readonly Type ModelType;
 		public readonly IEncounterHandlerModel Model;
 		public readonly bool NextControl;
-		public readonly bool DoneControl;
+		public readonly bool PrepareCompleteControl;
 
 		public EncounterLogTypes LogType { get { return Model == null ? EncounterLogTypes.Unknown : Model.LogType; } }
 
@@ -64,7 +64,7 @@ namespace LunraGames.SubLight
 			Type modelType = null,
 			IEncounterHandlerModel model = null,
 			bool next = false,
-			bool done = false
+			bool prepareCompleteControl = false
 		)
 		{
 			State = state;
@@ -73,7 +73,7 @@ namespace LunraGames.SubLight
 			ModelType = modelType;
 			Model = model;
 			NextControl = next;
-			DoneControl = done;
+			PrepareCompleteControl = prepareCompleteControl;
 		}
 
 		/// <summary>

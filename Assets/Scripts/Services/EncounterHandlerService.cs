@@ -93,7 +93,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Next:
 					if (nextLogDelay.HasValue) nextLogDelay = 0f;
 					break;
-				case EncounterRequest.States.Done:
+				case EncounterRequest.States.PrepareComplete:
 					callbacks.EncounterRequest(EncounterRequest.Complete());
 					break;
 				case EncounterRequest.States.Complete:

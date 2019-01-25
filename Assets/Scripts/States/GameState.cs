@@ -548,9 +548,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Controls:
 					// I don't think there's anything else I need to do here...
-					if (request.DoneControl)
+					if (request.PrepareCompleteControl)
 					{
-						App.Callbacks.EncounterRequest(EncounterRequest.Done());
+						App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete());
 					}
 					else if (request.NextControl)
 					{
@@ -561,7 +561,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Next:
 					// I don't think I need to do anything here... maybe cleanup messages and stuff?
 					break;
-				case EncounterRequest.States.Done:
+				case EncounterRequest.States.PrepareComplete:
 					// I don't think I need to do anything here...
 					break;
 				case EncounterRequest.States.Complete:
