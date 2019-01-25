@@ -64,7 +64,7 @@ namespace LunraGames.SubLight.Presenters
 			longOutgoing.Message = "Some long outgoing message that should be broken up across multiple lines with some other text below it.\nline\nline\nline\nline";
 
 			View.AddToConversation(
-				true,
+				false,
 				//shortIncoming
 				//mediumIncoming
 				//longIncoming,
@@ -73,10 +73,15 @@ namespace LunraGames.SubLight.Presenters
 				//mediumIncoming
 				//longIncoming
 
-				shortIncoming,
-				mediumOutgoing,
-				longIncoming,
-				shortOutgoing
+				//shortIncoming,
+				//mediumOutgoing,
+				//longIncoming,
+				//shortOutgoing
+
+				new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "First: Should appear on top" }
+				//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Second" },
+				//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Third" },
+				//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Fourth: Should appear on Bottom" }
 			);
 		}
 

@@ -37,8 +37,7 @@ namespace LunraGames.SubLight.Views
 				Outgoing = 20
 			}
 
-			public Entry NextEntry;
-			public bool Instant;
+			public Entry PreviousEntry;
 			public IConversationBlock Block;
 			public ConversationLeaf Instance;
 
@@ -60,6 +59,7 @@ namespace LunraGames.SubLight.Views
 			/// </remarks>
 			public float Height;
 			public Alignments Alignment;
+			public Vector3 ColumnPosition;
 			#endregion
 
 			/// <summary>
@@ -79,6 +79,8 @@ namespace LunraGames.SubLight.Views
 		Vector3 lookOffset;
 		[SerializeField]
 		float verticalSpacing;
+		[SerializeField]
+		float verticalScrollDuration;
 
 		[SerializeField]
 		MessageConversationLeaf messageIncomingPrefab;
@@ -91,11 +93,22 @@ namespace LunraGames.SubLight.Views
 		//Vector3 OutgoingBottomPosition { get { return outgoingAnchor.position + (bottomAnchor.position - topAnchor.position); } }
 
 		List<Entry> entries = new List<Entry>();
-		float verticalScrollOffset;
+		float verticalScrollCurrent;
+		float verticalScrollCurrentAtStartOfAnimation;
+		float? verticalScrollTarget;
+		bool waitingForInstantScroll;
+		float verticalScrollRemaining;
 
 		public void AddToConversation(bool instant, params IConversationBlock[] blocks)
 		{
-			Entry nextEntry = entries.LastOrDefault();
+			waitingForInstantScroll = instant;
+			if (!instant)
+			{
+				verticalScrollCurrentAtStartOfAnimation = verticalScrollCurrent;
+				verticalScrollRemaining = verticalScrollDuration;
+			}
+
+			Entry previousEntry = entries.LastOrDefault();
 			foreach (var block in blocks)
 			{
 				ConversationLeaf instance;
@@ -103,8 +116,7 @@ namespace LunraGames.SubLight.Views
 				if (!InstantiatePrefab(block, out instance, out initializeLayout)) continue;
 
 				var entry = new Entry();
-				entry.NextEntry = nextEntry;
-				entry.Instant = instant;
+				entry.PreviousEntry = previousEntry;
 				entry.Block = block;
 				entry.Instance = instance;
 				entry.InitializeLayout = initializeLayout;
@@ -113,7 +125,7 @@ namespace LunraGames.SubLight.Views
 
 				entries.Add(entry);
 
-				nextEntry = entry;
+				previousEntry = entry;
 			}
 		}
 
@@ -193,12 +205,10 @@ namespace LunraGames.SubLight.Views
 
 			instance.gameObject.SetActive(true);
 
-			var columnPosition = Vector3.zero;
-
 			switch (entry.Alignment)
 			{
-				case Entry.Alignments.Incoming: columnPosition = incomingAnchor.position; break;
-				case Entry.Alignments.Outgoing: columnPosition = outgoingAnchor.position; break;
+				case Entry.Alignments.Incoming: entry.ColumnPosition = incomingAnchor.position; break;
+				case Entry.Alignments.Outgoing: entry.ColumnPosition = outgoingAnchor.position; break;
 				default:
 					Debug.LogError("Unrecognized Alignment: " + entry.Alignment);
 					break;
@@ -211,11 +221,23 @@ namespace LunraGames.SubLight.Views
 
 			entry.Height = Mathf.Abs(instance.SizeArea.WorldCornerSize().y);
 
-			if (entry.NextEntry == null) entry.VerticalOffset = 0f;
-			else entry.VerticalOffset = entry.NextEntry.VerticalOffset - (entry.NextEntry.Height + verticalSpacing);
+			float? scrollDelta = null;
 
-			instance.transform.position = columnPosition.NewY(columnPosition.y + entry.VerticalOffset);
+			if (entry.PreviousEntry == null) entry.VerticalOffset = 0f;
+			else
+			{
+				scrollDelta = verticalSpacing + entry.Height;
+				entry.VerticalOffset = entry.PreviousEntry.VerticalOffset - scrollDelta.Value;
+			}
+
+			UpdateVerticalScroll(entry);
+
 			instance.transform.LookAt(instance.transform.position - lookOffset);
+
+			if (scrollDelta.HasValue)
+			{
+				verticalScrollTarget = (verticalScrollTarget ?? 0f) + scrollDelta.Value;
+			}
 		}
 
 		public override void Reset()
@@ -223,9 +245,13 @@ namespace LunraGames.SubLight.Views
 			base.Reset();
 
 			entries.Clear();
-			conversationArea.transform.ClearChildren();
+			verticalScrollCurrent = 0f;
+			verticalScrollCurrentAtStartOfAnimation = 0f;
+			verticalScrollTarget = null;
+			waitingForInstantScroll = false;
+			verticalScrollRemaining = 0f;
 
-			verticalScrollOffset = 0f;
+			conversationArea.transform.ClearChildren();
 
 			messageIncomingPrefab.gameObject.SetActive(false);
 			messageOutgoingPrefab.gameObject.SetActive(false);
@@ -242,11 +268,36 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		protected override void OnLateIdle(float delta)
+		protected override void OnIdle(float delta)
 		{
-			base.OnLateIdle(delta);
+			base.OnIdle(delta);
 
-			//lookAtArea.LookAt(lookAtArea.position + (lookAtArea.position - App.V.CameraPosition).FlattenY());
+			if (!verticalScrollTarget.HasValue) return;
+
+			if (waitingForInstantScroll)
+			{
+				verticalScrollCurrent += verticalScrollTarget.Value;
+				verticalScrollTarget = null;
+				waitingForInstantScroll = false;
+			}
+			else
+			{
+				verticalScrollRemaining = Mathf.Max(0f, verticalScrollRemaining - delta);
+
+				var currDistance = verticalScrollTarget.Value;
+
+				if (Mathf.Approximately(0f, verticalScrollRemaining)) verticalScrollTarget = null;
+				else currDistance = currDistance * (1f - (verticalScrollRemaining / verticalScrollDuration));
+
+				verticalScrollCurrent = verticalScrollCurrentAtStartOfAnimation + currDistance;
+			}
+
+			foreach (var entry in entries) UpdateVerticalScroll(entry);
+		}
+
+		void UpdateVerticalScroll(Entry entry)
+		{
+			entry.Instance.transform.position = entry.ColumnPosition.NewY(entry.ColumnPosition.y + entry.VerticalOffset + verticalScrollCurrent);
 		}
 
 		#region Events
@@ -254,8 +305,11 @@ namespace LunraGames.SubLight.Views
 
 		void OnDrawGizmos()
 		{
-			//Gizmos.color = Color.green;
-			//Gizmos.DrawWireSphere(bottomAnchor.position, 0.05f);
+			if (verticalScrollTarget.HasValue)
+			{
+				Gizmos.color = Color.green;
+				Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + (Vector3.up * verticalScrollTarget.Value));
+			}
 
 			Gizmos.color = Color.red;
 			Gizmos.DrawWireSphere(incomingAnchor.position, 0.05f);
