@@ -38,6 +38,7 @@ namespace LunraGames.SubLight.Views
 			}
 
 			public Entry NextEntry;
+			public bool Instant;
 			public IConversationBlock Block;
 			public ConversationLeaf Instance;
 
@@ -59,22 +60,25 @@ namespace LunraGames.SubLight.Views
 			/// </remarks>
 			public float Height;
 			public Alignments Alignment;
-   			#endregion
+			#endregion
+
+			/// <summary>
+			/// The vertical offset without any scrolling.
+			/// </summary>
+			public float VerticalOffset;
 		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		GameObject conversationArea;
 		[SerializeField]
-		Transform topAnchor;
-		[SerializeField]
-		Transform bottomAnchor;
+		Transform incomingAnchor;
 		[SerializeField]
 		Transform outgoingAnchor;
 		[SerializeField]
 		Vector3 lookOffset;
 		[SerializeField]
-		float spacing;
+		float verticalSpacing;
 
 		[SerializeField]
 		MessageConversationLeaf messageIncomingPrefab;
@@ -84,10 +88,10 @@ namespace LunraGames.SubLight.Views
 		AttachmentConversationLeaf attachmentIncomingPrefab;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		Vector3 OutgoingBottomPosition { get { return outgoingAnchor.position + (bottomAnchor.position - topAnchor.position); } }
+		//Vector3 OutgoingBottomPosition { get { return outgoingAnchor.position + (bottomAnchor.position - topAnchor.position); } }
 
 		List<Entry> entries = new List<Entry>();
-		float verticalOffset;
+		float verticalScrollOffset;
 
 		public void AddToConversation(bool instant, params IConversationBlock[] blocks)
 		{
@@ -100,6 +104,7 @@ namespace LunraGames.SubLight.Views
 
 				var entry = new Entry();
 				entry.NextEntry = nextEntry;
+				entry.Instant = instant;
 				entry.Block = block;
 				entry.Instance = instance;
 				entry.InitializeLayout = initializeLayout;
@@ -188,19 +193,16 @@ namespace LunraGames.SubLight.Views
 
 			instance.gameObject.SetActive(true);
 
-			var beginPosition = Vector3.zero;
+			var columnPosition = Vector3.zero;
 
 			switch (entry.Alignment)
 			{
-				case Entry.Alignments.Incoming: beginPosition = bottomAnchor.position; break;
-				case Entry.Alignments.Outgoing: beginPosition = OutgoingBottomPosition; break;
+				case Entry.Alignments.Incoming: columnPosition = incomingAnchor.position; break;
+				case Entry.Alignments.Outgoing: columnPosition = outgoingAnchor.position; break;
 				default:
 					Debug.LogError("Unrecognized Alignment: " + entry.Alignment);
 					break;
 			}
-
-			instance.transform.position = beginPosition;
-			instance.transform.LookAt(instance.transform.position - lookOffset);
 
 			instance.MessageLabel.text = entry.Block.Message;
 
@@ -208,6 +210,12 @@ namespace LunraGames.SubLight.Views
 			instance.MessageLabel.ForceMeshUpdate(false);
 
 			entry.Height = Mathf.Abs(instance.SizeArea.WorldCornerSize().y);
+
+			if (entry.NextEntry == null) entry.VerticalOffset = 0f;
+			else entry.VerticalOffset = entry.NextEntry.VerticalOffset - (entry.NextEntry.Height + verticalSpacing);
+
+			instance.transform.position = columnPosition.NewY(columnPosition.y + entry.VerticalOffset);
+			instance.transform.LookAt(instance.transform.position - lookOffset);
 		}
 
 		public override void Reset()
@@ -217,7 +225,7 @@ namespace LunraGames.SubLight.Views
 			entries.Clear();
 			conversationArea.transform.ClearChildren();
 
-			verticalOffset = 0f;
+			verticalScrollOffset = 0f;
 
 			messageIncomingPrefab.gameObject.SetActive(false);
 			messageOutgoingPrefab.gameObject.SetActive(false);
@@ -246,12 +254,13 @@ namespace LunraGames.SubLight.Views
 
 		void OnDrawGizmos()
 		{
-			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(bottomAnchor.position, 0.05f);
+			//Gizmos.color = Color.green;
+			//Gizmos.DrawWireSphere(bottomAnchor.position, 0.05f);
+
 			Gizmos.color = Color.red;
-			Gizmos.DrawWireSphere(topAnchor.position, 0.05f);
-			Gizmos.DrawLine(topAnchor.position, topAnchor.position + lookOffset);
-			Gizmos.DrawLine(topAnchor.position, outgoingAnchor.position);
+			Gizmos.DrawWireSphere(incomingAnchor.position, 0.05f);
+			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + lookOffset);
+			Gizmos.DrawLine(incomingAnchor.position, outgoingAnchor.position);
 
 			//#if UNITY_EDITOR
 			//lookOffset = lookOffset.normalized;

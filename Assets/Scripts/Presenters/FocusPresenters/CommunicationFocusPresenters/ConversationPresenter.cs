@@ -67,11 +67,16 @@ namespace LunraGames.SubLight.Presenters
 				true,
 				//shortIncoming
 				//mediumIncoming
-				longIncoming,
-			
-				shortOutgoing
+				//longIncoming,
+
+				//shortOutgoing
 				//mediumIncoming
 				//longIncoming
+
+				shortIncoming,
+				mediumOutgoing,
+				longIncoming,
+				shortOutgoing
 			);
 		}
 
