@@ -221,23 +221,16 @@ namespace LunraGames.SubLight.Views
 
 			entry.Height = Mathf.Abs(instance.SizeArea.WorldCornerSize().y);
 
-			float? scrollDelta = null;
+			var scrollDelta = verticalSpacing + entry.Height;
 
-			if (entry.PreviousEntry == null) entry.VerticalOffset = 0f;
-			else
-			{
-				scrollDelta = verticalSpacing + entry.Height;
-				entry.VerticalOffset = entry.PreviousEntry.VerticalOffset - scrollDelta.Value;
-			}
+			if (entry.PreviousEntry == null) entry.VerticalOffset = -scrollDelta;
+			else entry.VerticalOffset = entry.PreviousEntry.VerticalOffset - scrollDelta;
 
 			UpdateVerticalScroll(entry);
 
 			instance.transform.LookAt(instance.transform.position - lookOffset);
 
-			if (scrollDelta.HasValue)
-			{
-				verticalScrollTarget = (verticalScrollTarget ?? 0f) + scrollDelta.Value;
-			}
+			verticalScrollTarget = (verticalScrollTarget ?? 0f) + scrollDelta;
 		}
 
 		public override void Reset()
