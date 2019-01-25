@@ -88,6 +88,17 @@ namespace LunraGames.SubLight.Views
 		MessageConversationLeaf messageOutgoingPrefab;
 		[SerializeField]
 		AttachmentConversationLeaf attachmentIncomingPrefab;
+
+		[SerializeField]
+		AnimationCurve scrollCurve;
+
+		[Header("Entry Animation: Bottom")]
+		[SerializeField]
+		float bottomOffsetThreshold;
+		[SerializeField]
+		AnimationCurve bottomOffsetOpacityCurve;
+		[SerializeField]
+		AnimationCurve bottomOffsetScaleCurve;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		//Vector3 OutgoingBottomPosition { get { return outgoingAnchor.position + (bottomAnchor.position - topAnchor.position); } }
@@ -160,13 +171,13 @@ namespace LunraGames.SubLight.Views
 			out Action<Entry> initializeLayout
 		)
 		{
-			var instance = conversationArea.InstantiateChild(prefab);
+			var instance = conversationArea.InstantiateChild(prefab, setActive: true);
 
 			initializeLayout = entry =>
 			{
 				OnInitializeEntry(entry, instance);
 
-				var isSmall = instance.MessageLabel.textInfo.lineCount < 5;
+				var isSmall = instance.MessageLabel.textInfo.lineCount < 4;
 
 				instance.BackgroundSmall.SetActive(isSmall);
 				instance.BackgroundLarge.SetActive(!isSmall);
@@ -186,7 +197,7 @@ namespace LunraGames.SubLight.Views
 			Assert.IsNotNull(instance.SizeArea, "SizeArea cannot be null");
 			Assert.IsNotNull(instance.Group, "Group cannot be null");
 
-			Assert.IsFalse(instance.gameObject.activeInHierarchy, "Unpredictable behaviour occurs when initializing inactive ConversationLeaf instance.");
+			Assert.IsTrue(instance.gameObject.activeInHierarchy, "Unpredictable behaviour occurs when initializing inactive ConversationLeaf instance.");
 
 			entry.IsInitialized = true;
 
@@ -202,8 +213,6 @@ namespace LunraGames.SubLight.Views
 					Debug.LogError("Unrecognized ConversationType: " + entry.Block.Type);
 					break;
 			}
-
-			instance.gameObject.SetActive(true);
 
 			switch (entry.Alignment)
 			{
@@ -280,7 +289,7 @@ namespace LunraGames.SubLight.Views
 				var currDistance = verticalScrollTarget.Value;
 
 				if (Mathf.Approximately(0f, verticalScrollRemaining)) verticalScrollTarget = null;
-				else currDistance = currDistance * (1f - (verticalScrollRemaining / verticalScrollDuration));
+				else currDistance = currDistance * scrollCurve.Evaluate(1f - (verticalScrollRemaining / verticalScrollDuration));
 
 				verticalScrollCurrent = verticalScrollCurrentAtStartOfAnimation + currDistance;
 			}
@@ -290,7 +299,28 @@ namespace LunraGames.SubLight.Views
 
 		void UpdateVerticalScroll(Entry entry)
 		{
-			entry.Instance.transform.position = entry.ColumnPosition.NewY(entry.ColumnPosition.y + entry.VerticalOffset + verticalScrollCurrent);
+			var offset = entry.VerticalOffset + verticalScrollCurrent;
+
+			var opacity = 0f;
+			var scale = 0.001f;
+
+			if (0f <= offset)
+			{
+				opacity = 1f;
+				scale = 1f;
+			}
+			else if (bottomOffsetThreshold <= offset)
+			{
+				var progress = 1f - (Mathf.Abs(offset) / Mathf.Abs(bottomOffsetThreshold));
+				opacity = bottomOffsetOpacityCurve.Evaluate(progress);
+				scale = scale + (bottomOffsetScaleCurve.Evaluate(progress) * (1f - scale));
+			}
+
+			opacity *= OpacityStack;
+
+			entry.Instance.transform.position = entry.ColumnPosition.NewY(entry.ColumnPosition.y + offset);
+			entry.Instance.transform.localScale = Vector3.one * scale;
+			entry.Instance.Group.alpha = opacity;
 		}
 
 		#region Events

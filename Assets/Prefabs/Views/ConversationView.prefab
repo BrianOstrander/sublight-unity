@@ -1491,10 +1491,92 @@ MonoBehaviour:
   outgoingAnchor: {fileID: 1152226604047862770}
   lookOffset: {x: -0.124, y: 0, z: -0.992}
   verticalSpacing: 0.12
-  verticalScrollDuration: 3
+  verticalScrollDuration: 1
   messageIncomingPrefab: {fileID: 7626323115396521109}
   messageOutgoingPrefab: {fileID: 5868936660454624424}
   attachmentIncomingPrefab: {fileID: 0}
+  scrollCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.69785357
+      value: 1.0613393
+      inSlope: 0.08673529
+      outSlope: 0.08673529
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.16841474
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  bottomOffsetThreshold: -0.1
+  bottomOffsetOpacityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  bottomOffsetScaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.588562
+      inSlope: 0.9538117
+      outSlope: 0.9538117
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.03773222
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.009700977
+      outSlope: -0.009700977
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.043697476
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5906492904181802987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1531,8 +1613,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -21.200073, y: -0.00008773804}
-  m_SizeDelta: {x: 397.19995, y: 157}
+  m_AnchoredPosition: {x: -34.700073, y: -0.00008773804}
+  m_SizeDelta: {x: 370.19995, y: 157}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3808893871998149060
 MonoBehaviour:
@@ -2050,8 +2132,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 21.200134, y: -0.000030517578}
-  m_SizeDelta: {x: 397.19995, y: 157}
+  m_AnchoredPosition: {x: 34.70015, y: -0.000030517578}
+  m_SizeDelta: {x: 370.1999, y: 157}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6029243907203579312
 MonoBehaviour:

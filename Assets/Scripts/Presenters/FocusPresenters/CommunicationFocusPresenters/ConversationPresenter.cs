@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -35,8 +36,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			//Debug.Log("lol running");
-
+			/*
 			var shortIncoming = new MessageConversationBlock();
 			shortIncoming.Type = ConversationTypes.MessageIncoming;
 			shortIncoming.Message = "Some short incoming message.";
@@ -62,27 +62,58 @@ namespace LunraGames.SubLight.Presenters
 			var longOutgoing = new MessageConversationBlock();
 			longOutgoing.Type = ConversationTypes.MessageOutgoing;
 			longOutgoing.Message = "Some long outgoing message that should be broken up across multiple lines with some other text below it.\nline\nline\nline\nline";
+			*/
 
-			View.AddToConversation(
-				false,
-				//shortIncoming
-				//mediumIncoming
-				//longIncoming,
+			//View.AddToConversation(
+			//	false,
+			//	//shortIncoming
+			//	//mediumIncoming
+			//	//longIncoming,
 
-				//shortOutgoing
-				//mediumIncoming
-				//longIncoming
+			//	//shortOutgoing
+			//	//mediumIncoming
+			//	//longIncoming
 
-				//shortIncoming,
-				//mediumOutgoing,
-				//longIncoming,
-				//shortOutgoing
+			//	//shortIncoming,
+			//	//mediumOutgoing,
+			//	//longIncoming,
+			//	//shortOutgoing
 
-				new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "First: Should appear on top" }
-				//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Second" },
-				//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Third" },
-				//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Fourth: Should appear on Bottom" }
-			);
+			//	new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "First: Should appear on top" }
+			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Second" },
+			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Third" },
+			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Fourth: Should appear on Bottom" }
+			//);
+			AddRandom();
+		}
+
+		void AddRandom()
+		{
+			var block = new MessageConversationBlock();
+			block.Type = NumberDemon.DemonUtility.NextBool ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
+
+			var options = new string[]
+			{
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+				"Cras eu nibh tincidunt, volutpat leo sed, vestibulum lacus.",
+				"Duis et sem auctor, sollicitudin nisl in, hendrerit neque.",
+				"Donec egestas erat ut lacus cursus, a ultrices massa efficitur.",
+				"Cras vitae dui eu ipsum faucibus gravida eu ac est.",
+				"Aliquam in leo ac risus vestibulum porta et nec leo.",
+				"Phasellus vitae metus eu augue pretium tincidunt.",
+				"Cras consequat eros nec varius placerat.",
+				"Suspendisse vel leo ultricies, rutrum enim id, imperdiet neque.",
+			};
+
+			var chosen = string.Empty;
+
+			for (var i = 0; i < NumberDemon.DemonUtility.GetNextInteger(1, 5); i++) chosen += options.Where(o => !chosen.Contains(o)).Random()+" ";
+
+			block.Message = chosen;
+
+			View.AddToConversation(false, block);
+
+			App.Heartbeat.Wait(AddRandom, 2f);
 		}
 
 		#region Events
