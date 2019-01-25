@@ -103,8 +103,8 @@ namespace LunraGames.SubLight.Presenters
 			Func<bool> onHaltingCondition = () => focusCompleted;
 			Action onCallFocus = () => View.FocusBust(focusEntry.BustId.Value, focusEntry.FocusInfo.Value.Instant, focusBustId => focusCompleted = true);
 
-			PushBlocking(onCallFocus, onHaltingCondition, "FocusingBust");
-			Push(onHaltingDone, "HaltingDone");
+			SM.PushBlocking(onCallFocus, onHaltingCondition, "FocusingBust");
+			SM.Push(onHaltingDone, "HaltingDone");
 		}
 
 		BustBlock OnInitializeInfoToBlock(string bustId, BustEntryModel.InitializeBlock info)

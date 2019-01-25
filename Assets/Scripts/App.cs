@@ -172,7 +172,8 @@ namespace LunraGames.SubLight
 				Encounters,
 				KeyValues,
 				ValueFilter,
-				CurrentPreferences
+				CurrentPreferences,
+				SM
 			);
 
 			focus = new FocusService(Heartbeat, Callbacks);

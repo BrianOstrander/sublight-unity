@@ -39,13 +39,13 @@ namespace LunraGames.SubLight
 		{
 			Payload.MenuAnimationMultiplier = DevPrefs.SkipMainMenuAnimations ? 0f : 1f;
 
-			PushBlocking(LoadScenes, "LoadScenes");
-			PushBlocking(InitializeInput, "InitializeInput");
-			PushBlocking(InitializeCallbacks, "InitializeCallbacks");
-			PushBlocking(InitializeLoadSaves, "InitializeLoadSaves");
-			PushBlocking(InitializeLoadGalaxy, "InitializeLoadGalaxy");
-			PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
-			PushBlocking(InitializeFocus, "InitializeFocus");
+			SM.PushBlocking(LoadScenes, "LoadScenes");
+			SM.PushBlocking(InitializeInput, "InitializeInput");
+			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
+			SM.PushBlocking(InitializeLoadSaves, "InitializeLoadSaves");
+			SM.PushBlocking(InitializeLoadGalaxy, "InitializeLoadGalaxy");
+			SM.PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
+			SM.PushBlocking(InitializeFocus, "InitializeFocus");
 		}
 
 		void LoadScenes(Action done)
@@ -185,8 +185,8 @@ namespace LunraGames.SubLight
 
 			App.Input.SetEnabled(false);
 
-			PushBlocking(UnBind, "UnBind");
-			PushBlocking(UnLoadScenes, "UnLoadScenes");
+			SM.PushBlocking(UnBind, "UnBind");
+			SM.PushBlocking(UnLoadScenes, "UnLoadScenes");
 		}
 
 		void UnLoadScenes(Action done)

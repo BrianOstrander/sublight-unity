@@ -15,6 +15,8 @@ namespace LunraGames.SubLight
 		ValueFilterService valueFilter;
 		Func<PreferencesModel> currentPreferences;
 
+		StateMachineWrapper sm;
+
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
 
@@ -27,7 +29,8 @@ namespace LunraGames.SubLight
 			EncounterService encounterService,
 			KeyValueService keyValueService,
 			ValueFilterService valueFilter,
-			Func<PreferencesModel> currentPreferences
+			Func<PreferencesModel> currentPreferences,
+			StateMachine stateMachine
 		)
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
@@ -36,6 +39,9 @@ namespace LunraGames.SubLight
 			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
 			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
+			if (stateMachine == null) throw new ArgumentNullException("stateMachine");
+
+			sm = new StateMachineWrapper(stateMachine, GetType());
 
 			this.heartbeat = heartbeat;
 			this.callbacks = callbacks;

@@ -26,6 +26,8 @@ namespace LunraGames.SubLight
 
 		public object PayloadObject { get; set; }
 
+		protected StateMachineWrapper SM;
+
 		public virtual bool AcceptsPayload(object payload, bool throws = false)
 		{
 			Exception exception = null;
@@ -41,6 +43,7 @@ namespace LunraGames.SubLight
 		{
 			AcceptsPayload(payload, true);
 			PayloadObject = payload;
+			SM = SM ?? new StateMachineWrapper(App.SM, GetType());
 		}
 
 		public virtual void UpdateState(StateMachine.States state, StateMachine.Events stateEvent, object payload)
@@ -65,27 +68,6 @@ namespace LunraGames.SubLight
 		protected virtual void Begin() { }
 		protected virtual void End() { }
 		protected virtual void Idle() { }
-
-		#region StateMachine Helper Methods
-		protected void Push(
-			Action action,
-			string description,
-			bool repeating = false
-		)
-		{
-			App.SM.Push(action, GetType(), description, repeating);
-		}
-
-		protected void PushBlocking(Action<Action> action, string description)
-		{
-			App.SM.PushBlocking(action, GetType(), description);
-		}
-
-		protected void PushBlocking(Action action, Func<bool> condition, string description)
-		{
-			App.SM.PushBlocking(action, condition, GetType(), description);
-		}
-		#endregion
 	}
 
 	public abstract class State<P> : BaseState, IStateTyped<P>
