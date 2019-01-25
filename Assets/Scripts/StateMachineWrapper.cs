@@ -43,6 +43,15 @@ namespace LunraGames.SubLight
 			App.SM.PushBlocking(action, condition, type, description, synchronizedId);
 		}
 
+		public void PushBlocking(
+			Func<bool> condition,
+			string description,
+			string synchronizedId = null
+		)
+		{
+			App.SM.PushBlocking(ActionExtensions.Empty, condition, type, description, synchronizedId);
+		}
+
 		public void PushBreak()
 		{
 			App.SM.PushBreak();

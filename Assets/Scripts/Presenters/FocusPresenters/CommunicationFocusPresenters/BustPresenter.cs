@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -13,6 +14,9 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 
 		BustEntryModel lastFocus;
+		ConversationInstanceModel lastConversationFocus;
+
+		List<ConversationInstanceModel> conversationInstances = new List<ConversationInstanceModel>();
 
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
@@ -48,6 +52,20 @@ namespace LunraGames.SubLight.Presenters
 					break;
 				case EncounterRequest.States.PrepareComplete:
 					lastFocus = null;
+					lastConversationFocus = null;
+
+					foreach (var conversationInstance in conversationInstances)
+					{
+						SM.PushBlocking(
+							conversationInstance.Destroy,
+							conversationInstance.IsDestroyed,
+							"DestroyingConversation."+conversationInstance.BustId.Value,
+							request.SynchronizedId
+						);
+					}
+
+					conversationInstances.Clear();
+
 					if (View.Visible)
 					{
 						CloseView();
@@ -67,6 +85,7 @@ namespace LunraGames.SubLight.Presenters
 			var hadMultipleFocuses = false;
 			BustEntryModel focusEntry = null;
 			var initializeBlocks = new List<BustBlock>();
+			var initializeConversationIds = new List<string>();
 
 			Action onHaltingDone = () =>
 			{
@@ -77,7 +96,10 @@ namespace LunraGames.SubLight.Presenters
 			{
 				switch (entry.BustEvent.Value)
 				{
-					case BustEntryModel.Events.Initialize: initializeBlocks.Add(OnInitializeInfoToBlock(entry.BustId.Value, entry.InitializeInfo.Value)); break;
+					case BustEntryModel.Events.Initialize:
+						initializeBlocks.Add(OnInitializeInfoToBlock(entry.BustId.Value, entry.InitializeInfo.Value));
+						initializeConversationIds.Add(entry.BustId.Value);
+						break;
 					case BustEntryModel.Events.Focus:
 						if (focusEntry != null) hadMultipleFocuses = true;
 						focusEntry = entry;
@@ -91,6 +113,8 @@ namespace LunraGames.SubLight.Presenters
 			if (hadMultipleFocuses) Debug.LogError("Bust EncounterLog " + handler.Log.Value.LogId.Value + " contained multiple focuses, the last one was used");
 
 			View.InitializeBusts(initializeBlocks.ToArray());
+
+			foreach (var bustId in initializeConversationIds) OnInitializeConversation(bustId);
 
 			if (focusEntry == null)
 			{
@@ -107,10 +131,22 @@ namespace LunraGames.SubLight.Presenters
 			if (View.TransitionState != TransitionStates.Shown) ShowView(instant: true);
 
 			lastFocus = focusEntry;
+			var newConversationFocus = conversationInstances.First(i => i.BustId.Value == focusEntry.BustId.Value);
+			if (lastConversationFocus != null && lastConversationFocus.BustId.Value != focusEntry.BustId.Value) lastConversationFocus.IsFocused.Value = false;
+			lastConversationFocus = newConversationFocus;
+			lastConversationFocus.IsFocused.Value = true;
 
 			var focusCompleted = false;
-			Func<bool> onHaltingCondition = () => focusCompleted;
-			Action onCallFocus = () => View.FocusBust(focusEntry.BustId.Value, focusEntry.FocusInfo.Value.Instant, focusBustId => focusCompleted = true);
+			Func<bool> onHaltingCondition = () => focusCompleted && newConversationFocus.IsShown.Value();
+			Action onCallFocus = () =>
+			{
+				View.FocusBust(
+					focusEntry.BustId.Value,
+					focusEntry.FocusInfo.Value.Instant,
+					focusBustId => focusCompleted = true
+				);
+				lastConversationFocus.Show.Value(false);
+			};
 
 			SM.PushBlocking(onCallFocus, onHaltingCondition, "FocusingBust");
 			SM.Push(onHaltingDone, "HaltingDone");
@@ -153,6 +189,16 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			return result;
+		}
+
+		void OnInitializeConversation(string bustId)
+		{
+			if (conversationInstances.Any(i => i.BustId.Value == bustId)) return;
+			var conversationModel = new ConversationInstanceModel();
+			conversationModel.BustId.Value = bustId;
+			new ConversationPresenter(model, conversationModel);
+
+			conversationInstances.Add(conversationModel);
 		}
 
 		BustBlock OnInitializeInfoToBlockStaticAvatar(BustBlock block, BustEntryModel.InitializeBlock info)

@@ -12,17 +12,30 @@ namespace LunraGames.SubLight.Presenters
 	public class ConversationPresenter : CommunicationFocusPresenter<IConversationView>
 	{
 		GameModel model;
+		ConversationInstanceModel instanceModel;
 
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
 		protected override bool CanShow()
 		{
-			return model.EncounterState.Current.Value.State == EncounterStateModel.States.Processing;
+			return model.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && instanceModel.IsFocused.Value;
 		}
 
-		public ConversationPresenter(GameModel model)
+		public ConversationPresenter(
+			GameModel model,
+			ConversationInstanceModel instanceModel
+		)
 		{
 			this.model = model;
+			this.instanceModel = instanceModel;
+
+			this.instanceModel.Show.Value = OnShowInstance;
+			this.instanceModel.Close.Value = OnCloseInstance;
+			this.instanceModel.Destroy.Value = OnDestroyInstance;
+
+			this.instanceModel.IsShown.Value = () => View.TransitionState == TransitionStates.Shown;
+			this.instanceModel.IsClosed.Value = () => View.TransitionState == TransitionStates.Closed;
+			this.instanceModel.IsDestroyed.Value = () => UnBinded;
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 		}
@@ -34,59 +47,9 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
 
+		/*
 		protected override void OnUpdateEnabled()
 		{
-			/*
-			var shortIncoming = new MessageConversationBlock();
-			shortIncoming.Type = ConversationTypes.MessageIncoming;
-			shortIncoming.Message = "Some short incoming message.";
-
-			var mediumIncoming = new MessageConversationBlock();
-			mediumIncoming.Type = ConversationTypes.MessageIncoming;
-			mediumIncoming.Message = "Some medium incoming message.\nline";
-
-			var longIncoming = new MessageConversationBlock();
-			longIncoming.Type = ConversationTypes.MessageIncoming;
-			longIncoming.Message = "Some long incoming message that should be broken up across multiple lines with some other text below it.\nline\nline\nline\nline";
-
-			// --
-
-			var shortOutgoing = new MessageConversationBlock();
-			shortOutgoing.Type = ConversationTypes.MessageOutgoing;
-			shortOutgoing.Message = "Some short outgoing message.";
-
-			var mediumOutgoing = new MessageConversationBlock();
-			mediumOutgoing.Type = ConversationTypes.MessageOutgoing;
-			mediumOutgoing.Message = "Some medium outgoing message.\nline";
-
-			var longOutgoing = new MessageConversationBlock();
-			longOutgoing.Type = ConversationTypes.MessageOutgoing;
-			longOutgoing.Message = "Some long outgoing message that should be broken up across multiple lines with some other text below it.\nline\nline\nline\nline";
-			*/
-
-			//View.AddToConversation(
-			//	false,
-			//	//shortIncoming
-			//	//mediumIncoming
-			//	//longIncoming,
-
-			//	//shortOutgoing
-			//	//mediumIncoming
-			//	//longIncoming
-
-			//	//shortIncoming,
-			//	//mediumOutgoing,
-			//	//longIncoming,
-			//	//shortOutgoing
-
-			//	new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "First: Should appear on top" }
-			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Second" },
-			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Third" },
-			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Fourth: Should appear on Bottom" }
-			//);
-
-			//AddRandom();
-
 			AddProcedural();
 		}
 
@@ -181,8 +144,24 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Heartbeat.Wait(AddRandom, 2f);
 		}
+		*/
 
 		#region Events
+		void OnShowInstance(bool instant)
+		{
+			if (View.TransitionState != TransitionStates.Shown) ShowView(instant: instant);
+		}
+
+		void OnCloseInstance(bool instant)
+		{
+			if (View.TransitionState != TransitionStates.Closed) CloseView(instant);
+		}
+
+		void OnDestroyInstance()
+		{
+			App.P.UnRegister(this);
+		}
+
 		void OnEncounterRequest(EncounterRequest request)
 		{
 			switch (request.State)
