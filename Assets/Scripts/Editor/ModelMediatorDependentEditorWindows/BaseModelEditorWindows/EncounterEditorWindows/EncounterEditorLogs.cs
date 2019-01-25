@@ -591,7 +591,7 @@ namespace LunraGames.SubLight
 
 			switch (model.Style.Value)
 			{
-				case ButtonEncounterLogModel.Styles.Bust:
+				case ButtonEncounterLogModel.Styles.Conversation:
 					OnButtonLogBustStyle(infoModel, model);
 					break;
 				case ButtonEncounterLogModel.Styles.Unknown:
@@ -622,7 +622,7 @@ namespace LunraGames.SubLight
 			ButtonEncounterLogModel model
 		)
 		{
-			var style = model.BustStyle.Value;
+			var style = model.ConversationStyle.Value;
 
 			style.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(
 				"Theme",
@@ -630,9 +630,9 @@ namespace LunraGames.SubLight
 				style.Theme
 			);
 
-			if (style.Theme == ButtonEncounterLogModel.BustStyleBlock.Themes.Unknown) EditorGUILayout.HelpBox("A theme must be specified.", MessageType.Error);
+			if (style.Theme == ButtonEncounterLogModel.ConversationStyleBlock.Themes.Unknown) EditorGUILayout.HelpBox("A theme must be specified.", MessageType.Error);
 
-			model.BustStyle.Value = style;
+			model.ConversationStyle.Value = style;
 		}
 
 		void OnButtonLogApplyStyle(
@@ -646,8 +646,8 @@ namespace LunraGames.SubLight
 
 			switch (style)
 			{
-				case ButtonEncounterLogModel.Styles.Bust:
-					onApplyStyle = () => model.BustStyle.Value = ButtonEncounterLogModel.BustStyleBlock.Default;
+				case ButtonEncounterLogModel.Styles.Conversation:
+					onApplyStyle = () => model.ConversationStyle.Value = ButtonEncounterLogModel.ConversationStyleBlock.Default;
 					break;
 				default:
 					Debug.LogError("Unrecognized Style: " + style);
@@ -658,7 +658,7 @@ namespace LunraGames.SubLight
 			if (styleApplied)
 			{
 				// Reset other styles here.
-				model.BustStyle.Value = default(ButtonEncounterLogModel.BustStyleBlock);
+				model.ConversationStyle.Value = default(ButtonEncounterLogModel.ConversationStyleBlock);
 
 				if (onApplyStyle == null) Debug.LogError("onApplyStyle cannot be null");
 				else onApplyStyle();
@@ -766,6 +766,10 @@ namespace LunraGames.SubLight
 			{
 				EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
 			}
+			else if (model.Ending.Value)
+			{
+				EditorGUILayout.HelpBox("This log is non-halting and also the end log, events may complete after the encounter is complete.", MessageType.Warning);
+			}
 
 			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
 				new GUIContent("Is Halting", "Does the handler wait for the event to complete before it continues?"),
@@ -860,8 +864,17 @@ namespace LunraGames.SubLight
 				EncounterEvents.ToolbarSelection.EnumKeys.Selection,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Selection"),
-					"- Select A Toolbar -",
+					"- No Change -",
 					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
+				)
+			);
+
+			entry.KeyValues.SetEnum(
+				EncounterEvents.ToolbarSelection.EnumKeys.LockState,
+				EditorGUILayoutExtensions.HelpfulEnumPopup(
+					new GUIContent("Locking"),
+					"- No Change -",
+					entry.KeyValues.GetEnum<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
 				)
 			);
 		}

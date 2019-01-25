@@ -15,8 +15,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			get
 			{
-				return lastTransition.State == TransitionFocusRequest.States.Complete
-									 && model.EncounterState.State.Value == EncounterStateModel.States.Complete;
+				return lastTransition.State == TransitionFocusRequest.States.Complete && !model.ToolbarLocking.Value;
 			}
 		}
 
@@ -92,7 +91,11 @@ namespace LunraGames.SubLight.Presenters
 			if (!CanTransition || selection == model.ToolbarSelection.Value) return;
 
 			OnToolbarSelection(selection);
-			model.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(selection);
+			model.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+				selection,
+				false,
+				ToolbarSelectionRequest.Sources.Player
+			);
 		}
 		#endregion
 	}

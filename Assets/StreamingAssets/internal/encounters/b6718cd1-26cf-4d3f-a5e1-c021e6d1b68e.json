@@ -75,7 +75,7 @@
           {
             "entry": {
               "message": "Eh whatever...",
-              "nextLogId": "488d6e32-ca5e-440d-a27e-8c5690a4d72e",
+              "nextLogId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -97,8 +97,8 @@
             "index": 2
           }
         ],
-        "style": "Bust",
-        "bustStyle": {
+        "style": "Conversation",
+        "conversationStyle": {
           "Theme": "Foreigner"
         },
         "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
@@ -114,12 +114,14 @@
           {
             "entry": {
               "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
               "keyValues": {
                 "booleans": {},
                 "integers": {},
                 "strings": {},
                 "enums": {
-                  "selection": 30
+                  "selection": 30,
+                  "lockstate": 0
                 }
               },
               "filtering": {
@@ -132,7 +134,6 @@
           }
         ],
         "nextLogId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
-        "index": 1,
         "beginning": true,
         "logId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0"
       },
@@ -193,6 +194,35 @@
         "index": 5,
         "logId": "488d6e32-ca5e-440d-a27e-8c5690a4d72e",
         "name": "Last1"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Ending..."
+                },
+                "enums": {
+                  "severity": 0
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "81d82d6f-5294-4836-93ae-7b6118b295e0"
+            }
+          }
+        ],
+        "index": 6,
+        "ending": true,
+        "logId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
+        "name": "Ending"
       }
     ],
     "dialogLogs": [],

@@ -68,7 +68,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!CanShow()) return;
 
-			View.Reset();
+			if (CanReset()) View.Reset();
 
 			OnUpdateEnabled();
 
@@ -100,6 +100,7 @@ namespace LunraGames.SubLight.Presenters
 		#endregion
 
 		#region Overridable Events
+		protected virtual bool CanReset() { return true; }
 		protected virtual bool CanShow() { return true; }
 		protected virtual bool CanClose() { return true; }
 

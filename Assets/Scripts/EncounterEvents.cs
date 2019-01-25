@@ -36,9 +36,17 @@ namespace LunraGames.SubLight
 
 		public static class ToolbarSelection
 		{
+			public enum LockStates
+			{
+				Unknown = 0,
+				Lock = 10,
+				UnLock = 20
+			}
+
 			public static class EnumKeys
 			{
 				public const string Selection = "Selection";
+				public const string LockState = "LockState";
 			}
 		}
 	}

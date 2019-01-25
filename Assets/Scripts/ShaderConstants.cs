@@ -36,12 +36,12 @@ namespace LunraGames.SubLight
 			public const string VoidInterior = "_VoidInterior";
 		}
 
-		public static class HoloLip
+		public static class HoloLipAdditive
 		{
 			/// <summary>
 			/// The name of the shader.
 			/// </summary>
-			public const string Name = "SubLight/Holo/Lip";
+			public const string Name = "SubLight/Holo/LipAdditive";
 			/// <summary>
 			/// The color of the lip.
 			/// </summary>
@@ -54,6 +54,28 @@ namespace LunraGames.SubLight
 			/// The maximum radius.
 			/// </summary>
 			public const string LipMax = "_LipMax";
+			public const string Alpha = "_Alpha";
+		}
+
+		public static class HoloLipAlpha
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/LipAlpha";
+			/// <summary>
+			/// The color of the lip.
+			/// </summary>
+			public const string LipColor = "_LipColor";
+			/// <summary>
+			/// The minimum radius.
+			/// </summary>
+			public const string LipMin = "_LipMin";
+			/// <summary>
+			/// The maximum radius.
+			/// </summary>
+			public const string LipMax = "_LipMax";
+			public const string Alpha = "_Alpha";
 		}
 
 		public static class HoloMask

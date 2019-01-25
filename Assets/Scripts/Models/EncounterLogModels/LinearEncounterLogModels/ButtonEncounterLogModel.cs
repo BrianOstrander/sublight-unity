@@ -9,17 +9,17 @@ namespace LunraGames.SubLight.Models
 		public enum Styles
 		{
 			Unknown = 0,
-			Bust = 10
+			Conversation = 10
 		}
 
 		[Serializable]
-		public struct BustStyleBlock
+		public struct ConversationStyleBlock
 		{
-			public static BustStyleBlock Default
+			public static ConversationStyleBlock Default
 			{
 				get
 				{
-					return new BustStyleBlock
+					return new ConversationStyleBlock
 					{
 						Theme = Themes.Foreigner
 					};
@@ -42,7 +42,7 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] Styles style;
 
-		[JsonProperty] BustStyleBlock bustStyle;
+		[JsonProperty] ConversationStyleBlock conversationStyle;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<ButtonEdgeModel[]> Buttons;
@@ -51,7 +51,7 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<Styles> Style;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<BustStyleBlock> BustStyle;
+		public readonly ListenerProperty<ConversationStyleBlock> ConversationStyle;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Button; } }
 
@@ -64,7 +64,7 @@ namespace LunraGames.SubLight.Models
 
 			Style = new ListenerProperty<Styles>(value => style = value, () => style);
 
-			BustStyle = new ListenerProperty<BustStyleBlock>(value => bustStyle = value, () => bustStyle);
+			ConversationStyle = new ListenerProperty<ConversationStyleBlock>(value => conversationStyle = value, () => conversationStyle);
 		}
 
 		[JsonIgnore]

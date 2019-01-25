@@ -283,8 +283,8 @@ namespace LunraGames.SubLight
 				var payload = state.Payload;
 
 				new BustPresenter(payload.Game);
-				new BustButtonsPresenter(payload.Game);
-
+				new ConversationButtonsPresenter(payload.Game);
+				new ConversationPresenter(payload.Game);
 
 				InitializeEncyclopediaPresenters(state, done);
 			}

@@ -59,6 +59,11 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		float hideShowDuration;
 
+		[SerializeField]
+		CanvasGroup group;
+		[SerializeField]
+		Renderer lip;
+
 		[Header("Bust Animations ( 0 is hidden 1 is shown )")]
 		[SerializeField]
 		CurveRange avatarDepth = CurveRange.Normal;
@@ -73,6 +78,10 @@ namespace LunraGames.SubLight.Views
 		public override void Reset()
 		{
 			base.Reset();
+
+			var newLipMaterials = new List<Material>();
+			foreach (var material in lip.materials) newLipMaterials.Add(new Material(material));
+			lip.materials = newLipMaterials.ToArray();
 
 			bustArea.transform.ClearChildren<BustLeaf>();
 			entries.Clear();
@@ -166,6 +175,12 @@ namespace LunraGames.SubLight.Views
 			ApplyBust(bust);
 		}
 
+		protected override void OnOpacityStack(float opacity)
+		{
+			group.alpha = opacity;
+			foreach (var material in lip.materials) material.SetFloat(ShaderConstants.HoloLipAlpha.Alpha, opacity);
+		}
+
 		void ApplyBust(BustEntry bust)
 		{
 			var instance = bust.Instance;
@@ -235,7 +250,6 @@ namespace LunraGames.SubLight.Views
 		}
 
 		#region Events
-
 		#endregion
 
 		void OnDrawGizmos()
