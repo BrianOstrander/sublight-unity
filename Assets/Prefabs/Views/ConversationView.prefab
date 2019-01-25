@@ -1528,7 +1528,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  bottomOffsetThreshold: -0.1
+  bottomOffsetThreshold: -0.3
   bottomOffsetOpacityCurve:
     serializedVersion: 2
     m_Curve:
@@ -1613,8 +1613,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.700073, y: -0.00008773804}
-  m_SizeDelta: {x: 370.19995, y: 157}
+  m_AnchoredPosition: {x: -9.700073, y: -0.00008773804}
+  m_SizeDelta: {x: 420.19995, y: 157}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3808893871998149060
 MonoBehaviour:
@@ -2132,8 +2132,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 34.70015, y: -0.000030517578}
-  m_SizeDelta: {x: 370.1999, y: 157}
+  m_AnchoredPosition: {x: 9.70015, y: -0.000030517578}
+  m_SizeDelta: {x: 420.1999, y: 157}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6029243907203579312
 MonoBehaviour:

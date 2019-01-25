@@ -84,7 +84,73 @@ namespace LunraGames.SubLight.Presenters
 			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Third" },
 			//	//new MessageConversationBlock { Type = ConversationTypes.MessageIncoming, Message = "Fourth: Should appear on Bottom" }
 			//);
-			AddRandom();
+
+			//AddRandom();
+
+			AddProcedural();
+		}
+
+		int currProcedural;
+
+		ConversationTypes[] proceduralAlignments =  {
+			ConversationTypes.MessageIncoming,
+			ConversationTypes.MessageOutgoing,
+			ConversationTypes.MessageIncoming,
+			ConversationTypes.MessageIncoming,
+			ConversationTypes.MessageOutgoing,
+			ConversationTypes.MessageIncoming,
+			ConversationTypes.MessageOutgoing,
+			ConversationTypes.MessageOutgoing,
+			ConversationTypes.MessageIncoming,
+			ConversationTypes.MessageOutgoing
+		};
+
+		int[] proceduralEntries = {
+			1,
+			2,
+			3,
+			1,
+			1,
+			2,
+			3,
+			2,
+			1,
+			1
+		};
+
+		void AddProcedural()
+		{
+			if (proceduralAlignments.Length != proceduralEntries.Length) Debug.LogError("Whoops, not same size");
+
+			var block = new MessageConversationBlock();
+			block.Type = proceduralAlignments[currProcedural];
+
+			var options = new string[]
+			{
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+				"Cras eu nibh tincidunt, volutpat leo sed, vestibulum lacus.",
+				"Duis et sem auctor, sollicitudin nisl in, hendrerit neque.",
+				"Donec egestas erat ut lacus cursus, a ultrices massa efficitur.",
+				"Cras vitae dui eu ipsum faucibus gravida eu ac est.",
+				"Aliquam in leo ac risus vestibulum porta et nec leo.",
+				"Phasellus vitae metus eu augue pretium tincidunt.",
+				"Cras consequat eros nec varius placerat.",
+				"Suspendisse vel leo ultricies, rutrum enim id, imperdiet neque.",
+			};
+			
+			var chosen = string.Empty;
+
+			for (var i = 0; i < proceduralEntries[currProcedural]; i++) chosen += options.Where(o => !chosen.Contains(o)).Random() + " ";
+
+			block.Message = chosen;
+
+			View.AddToConversation(false, block);
+
+			currProcedural++;
+
+			if (proceduralAlignments.Length <= currProcedural) currProcedural = 0;
+
+			App.Heartbeat.Wait(AddProcedural, 2f);
 		}
 
 		void AddRandom()
@@ -107,7 +173,7 @@ namespace LunraGames.SubLight.Presenters
 
 			var chosen = string.Empty;
 
-			for (var i = 0; i < NumberDemon.DemonUtility.GetNextInteger(1, 5); i++) chosen += options.Where(o => !chosen.Contains(o)).Random()+" ";
+			for (var i = 0; i < NumberDemon.DemonUtility.GetNextInteger(1, 6); i++) chosen += options.Where(o => !chosen.Contains(o)).Random()+" ";
 
 			block.Message = chosen;
 
