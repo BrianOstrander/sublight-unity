@@ -1485,11 +1485,12 @@ MonoBehaviour:
     CloseDuration: 0
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
+  - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
   conversationArea: {fileID: 1523010748602606712}
   incomingAnchor: {fileID: 1847949350994127619}
   outgoingAnchor: {fileID: 1152226604047862770}
   lookOffset: {x: -0.124, y: 0, z: -0.992}
-  verticalSpacing: 0.15
+  verticalSpacing: 0.12
   messageIncomingPrefab: {fileID: 7626323115396521109}
   messageOutgoingPrefab: {fileID: 5868936660454624424}
   attachmentIncomingPrefab: {fileID: 0}
@@ -1680,7 +1681,7 @@ RectTransform:
   m_GameObject: {fileID: 6534028191743615063}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0025, y: 0.0025, z: 0.0025}
+  m_LocalScale: {x: 0.002, y: 0.002, z: 0.002}
   m_Children:
   - {fileID: 1406869326518766890}
   m_Father: {fileID: 5416398542618253809}
@@ -2104,7 +2105,7 @@ RectTransform:
   m_GameObject: {fileID: 8013250576282080635}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0025, y: 0.0025, z: 0.0025}
+  m_LocalScale: {x: 0.002, y: 0.002, z: 0.002}
   m_Children:
   - {fileID: 1715221634036855251}
   m_Father: {fileID: 3419949263662750384}
@@ -2610,7 +2611,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8806305232639703204}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.595, y: 2, z: -0.015}
+  m_LocalPosition: {x: -0.8, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1847949350994127619}

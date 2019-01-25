@@ -446,6 +446,7 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
+  - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
   lookAtArea: {fileID: 2020182191895128187}
   bustArea: {fileID: 6237511861366490502}
   bustPrefab: {fileID: 8947581269557225889}
@@ -1096,7 +1097,7 @@ RectTransform:
   m_GameObject: {fileID: 4738420839193457449}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0025, y: 0.0025, z: 0.0025}
+  m_LocalScale: {x: 0.002, y: 0.002, z: 0.002}
   m_Children:
   - {fileID: 4065047088244136186}
   - {fileID: 4669527092933518660}
@@ -1105,7 +1106,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.94}
+  m_AnchoredPosition: {x: 0, y: 0.752}
   m_SizeDelta: {x: 1024, y: 1024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4488667020956629060
@@ -1299,7 +1300,7 @@ Transform:
   m_GameObject: {fileID: 6308095722279765632}
   m_LocalRotation: {x: 0.63949513, y: -0.014867574, z: -0.01700668, w: 0.7684632}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.26, y: 2.26, z: 2.26}
+  m_LocalScale: {x: 1.808, y: 1.808, z: 1.808}
   m_Children: []
   m_Father: {fileID: 2020182191895128187}
   m_RootOrder: 0

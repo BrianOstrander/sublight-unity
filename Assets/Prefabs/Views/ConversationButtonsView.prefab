@@ -955,7 +955,7 @@ RectTransform:
   m_GameObject: {fileID: 7607892854125706950}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0025, y: 0.0025, z: 0.0025}
+  m_LocalScale: {x: 0.002, y: 0.002, z: 0.002}
   m_Children:
   - {fileID: 7607892853934669164}
   - {fileID: 7607892855131830055}
@@ -1320,6 +1320,7 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
+  - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
   lookAtArea: {fileID: 7607892853870621929}
   buttonArea: {fileID: 7607892855131830054}
   buttonPrefab: {fileID: 7607892853934669203}
