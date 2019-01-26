@@ -10,6 +10,7 @@
 		Encyclopedia = 50,
 		Event = 60,
 		Dialog = 70,
-		Bust = 80
+		Bust = 80,
+		Conversation = 90
 	}
 }

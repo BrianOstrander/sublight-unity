@@ -412,6 +412,11 @@ namespace LunraGamesEditor
 			return value;
 		}
 
+		public static bool ToggleButton(string label, bool value, string trueText = "True", string falseText = "False")
+		{
+			return ToggleButton(new GUIContent(label), value, trueText, falseText);
+		}
+
 		public static bool ToggleButton(GUIContent content, bool value, string trueText = "True", string falseText = "False")
 		{
 			GUILayout.BeginHorizontal();

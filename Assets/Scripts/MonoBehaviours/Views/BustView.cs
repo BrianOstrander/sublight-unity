@@ -113,14 +113,22 @@ namespace LunraGames.SubLight.Views
 		public void FocusBust(string bustId, bool instant = false, Action<string> onFocus = null)
 		{
 			var wasFound = false;
+			var wasAlreadyFocused = false;
 			foreach (var entry in entries)
 			{
 				var isTarget = entry.Block.BustId == bustId;
 				if (isTarget)
 				{
 					wasFound = true;
-					entry.OnFocus = onFocus;
-					if (entry.State != BustEntry.States.Shown) entry.State = instant ? BustEntry.States.Shown : BustEntry.States.Showing;
+					if (entry.State == BustEntry.States.Shown)
+					{
+						wasAlreadyFocused = true;
+					}
+					else
+					{
+						entry.OnFocus = onFocus;
+						entry.State = instant ? BustEntry.States.Shown : BustEntry.States.Showing;
+					}
 				}
 				else
 				{
@@ -133,11 +141,13 @@ namespace LunraGames.SubLight.Views
 					ApplyBust(entry);
 				}
 			}
+
 			if (!wasFound)
 			{
 				Debug.LogError("No Bust Id " + bustId + " was ever initialized, calling onFocus anyways.");
 				if (onFocus != null) onFocus(bustId);
 			}
+			if (wasAlreadyFocused && onFocus != null) onFocus(bustId);
 		}
 
 		protected override void OnLateIdle(float delta)

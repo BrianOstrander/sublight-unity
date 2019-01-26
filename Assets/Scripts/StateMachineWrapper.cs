@@ -21,7 +21,7 @@ namespace LunraGames.SubLight
 			string synchronizedId = null
 		)
 		{
-			App.SM.Push(action, type, description, repeating, synchronizedId);
+			stateMachine.Push(action, type, description, repeating, synchronizedId);
 		}
 
 		public void PushBlocking(
@@ -30,7 +30,7 @@ namespace LunraGames.SubLight
 			string synchronizedId = null
 		)
 		{
-			App.SM.PushBlocking(action, type, description, synchronizedId);
+			stateMachine.PushBlocking(action, type, description, synchronizedId);
 		}
 
 		public void PushBlocking(
@@ -40,12 +40,21 @@ namespace LunraGames.SubLight
 			string synchronizedId = null
 		)
 		{
-			App.SM.PushBlocking(action, condition, type, description, synchronizedId);
+			stateMachine.PushBlocking(action, condition, type, description, synchronizedId);
+		}
+
+		public void PushBlocking(
+			Func<bool> condition,
+			string description,
+			string synchronizedId = null
+		)
+		{
+			stateMachine.PushBlocking(ActionExtensions.Empty, condition, type, description, synchronizedId);
 		}
 
 		public void PushBreak()
 		{
-			App.SM.PushBreak();
+			stateMachine.PushBreak();
 		}
 		#endregion
 	}

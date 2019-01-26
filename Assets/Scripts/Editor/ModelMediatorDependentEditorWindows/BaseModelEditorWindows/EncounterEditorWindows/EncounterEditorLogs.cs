@@ -191,6 +191,8 @@ namespace LunraGames.SubLight
 					return NewEncounterLog<DialogEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				case EncounterLogTypes.Bust:
 					return NewEncounterLog<BustEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.Conversation:
+					return NewEncounterLog<ConversationEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType: " + logType);
 					break;
@@ -326,6 +328,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Bust:
 					OnBustLog(infoModel, model as BustEncounterLogModel);
+					break;
+				case EncounterLogTypes.Conversation:
+					OnConversationLog(infoModel, model as ConversationEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -1322,6 +1327,104 @@ namespace LunraGames.SubLight
 			block.Instant = EditorGUILayout.Toggle(new GUIContent("Instant", "Determines if the bust is shown instantly. If so, this encounter log will not halt."), block.Instant);
 
 			entry.FocusInfo.Value = block;
+		}
+		#endregion
+
+		#region Conversation Logs
+		void OnConversationLog(
+			EncounterInfoModel infoModel,
+			ConversationEncounterLogModel model
+		)
+		{
+			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				GUIContent.none,
+				"- Append a Conversation Entry -",
+				ConversationTypes.Unknown,
+				EnumExtensions.GetValues(ConversationTypes.AttachmentIncoming) // Attachments aren't supported yet...
+			);
+
+			switch (appendSelection)
+			{
+				case ConversationTypes.Unknown: break;
+				case ConversationTypes.MessageIncoming:
+				case ConversationTypes.MessageOutgoing:
+					OnEdgedLogSpawn(model, edge => OnConversationLogSpawnMessage(appendSelection, edge));
+					break;
+				case ConversationTypes.Prompt:
+					OnEdgedLogSpawn(model, OnConversationLogSpawnPrompt);
+					break;
+				default:
+					Debug.LogError("Unrecognized ConversationType: " + appendSelection);
+					break;
+
+			}
+
+			OnEdgedLog<ConversationEncounterLogModel, ConversationEdgeModel>(infoModel, model, OnConversationLogEdge);
+		}
+
+		void OnConversationLogSpawnMessage(
+			ConversationTypes type,
+			ConversationEdgeModel edge
+		)
+		{
+			edge.Entry.ConversationType.Value = type;
+			edge.Entry.MessageInfo.Value = ConversationEntryModel.MessageBlock.Default;
+		}
+
+		void OnConversationLogSpawnPrompt(ConversationEdgeModel edge)
+		{
+			edge.Entry.ConversationType.Value = ConversationTypes.Prompt;
+			edge.Entry.PromptInfo.Value = ConversationEntryModel.PromptBlock.Default;
+		}
+
+		void OnConversationLogEdge(
+			EncounterInfoModel infoModel,
+			ConversationEncounterLogModel model,
+			ConversationEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			switch (entry.ConversationType.Value)
+			{
+				case ConversationTypes.MessageIncoming:
+				case ConversationTypes.MessageOutgoing:
+					OnConversationLogEdgeMessage(entry);
+					break;
+				case ConversationTypes.Prompt:
+					OnConversationLogEdgePrompt(entry);
+					break;
+				default: EditorGUILayout.HelpBox("Unrecognized ConversationEvent: " + entry.ConversationType.Value, MessageType.Error); break;
+			}
+
+			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
+				"Message",
+				entry.Message.Value
+			);
+		}
+
+		void OnConversationLogEdgeMessage(ConversationEntryModel entry)
+		{
+			var block = entry.MessageInfo.Value;
+
+			var isIncoming = entry.ConversationType.Value == ConversationTypes.MessageIncoming;
+
+			if (EditorGUILayoutExtensions.ToggleButton("Alignment", isIncoming, "Incoming", "Outgoing") != isIncoming)
+			{
+				isIncoming = !isIncoming;
+				entry.ConversationType.Value = isIncoming ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
+			}
+
+			entry.MessageInfo.Value = block;
+		}
+
+		void OnConversationLogEdgePrompt(ConversationEntryModel entry)
+		{
+			var block = entry.PromptInfo.Value;
+
+			block.PromptMessage = EditorGUILayout.TextField(new GUIContent("Prompt", "The text that appears on a button which triggers the specified outgoing message."), block.PromptMessage);
+
+			entry.PromptInfo.Value = block;
 		}
 		#endregion
 
