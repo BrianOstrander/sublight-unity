@@ -26,8 +26,8 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "What a wild option we have here!",
-              "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
+              "message": "Print Foo",
+              "nextLogId": "5db8d35e-c091-4878-95d4-69630be1405c",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -50,8 +50,8 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "Yeah it's pretty rad",
-              "nextLogId": "488d6e32-ca5e-440d-a27e-8c5690a4d72e",
+              "message": "Print Bar",
+              "nextLogId": "a23f5260-9f83-4948-a496-9d4e793d8bb7",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -74,7 +74,7 @@
           },
           {
             "entry": {
-              "message": "Eh whatever...",
+              "message": "Exit Encounter",
               "nextLogId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -102,7 +102,7 @@
           "Theme": "Foreigner"
         },
         "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
-        "index": 3,
+        "index": 2,
         "logId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "name": "Buttons"
       }
@@ -146,64 +146,6 @@
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "message": "0 Clicked!"
-                },
-                "enums": {
-                  "severity": 10
-                }
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "7c4e17cd-e140-4585-922b-e8a3cb693b6e"
-            }
-          }
-        ],
-        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
-        "index": 4,
-        "logId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
-        "name": "Last0"
-      },
-      {
-        "entries": [
-          {
-            "entry": {
-              "encounterEvent": "Debug",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {
-                  "message": "1 Clicked!"
-                },
-                "enums": {
-                  "severity": 10
-                }
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "86cc2787-5c0b-429c-bdf1-7decc6300121"
-            }
-          }
-        ],
-        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
-        "index": 5,
-        "logId": "488d6e32-ca5e-440d-a27e-8c5690a4d72e",
-        "name": "Last1"
-      },
-      {
-        "entries": [
-          {
-            "entry": {
-              "encounterEvent": "Debug",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {
                   "message": "Ending..."
                 },
                 "enums": {
@@ -219,7 +161,7 @@
             }
           }
         ],
-        "index": 6,
+        "index": 8,
         "ending": true,
         "logId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
         "name": "Ending"
@@ -234,13 +176,13 @@
               "bustId": "TestBust0",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "TitleSource": "Yippy",
+                "TitleSource": "Foo",
                 "TitleClassification": "Interstellar Ark",
                 "TransmitionType": "Transmission",
                 "TransmitionStrength": "Strong",
                 "TransmitionStrengthIcon": "Strong",
-                "PlacardName": "MyName",
-                "PlacardDescription": "HeheDesc",
+                "PlacardName": "Mx. Foo",
+                "PlacardDescription": "Foo",
                 "AvatarType": "Static"
               },
               "entryId": "9a8e7dd7-3dae-43ed-b0a9-11457b15a6c9"
@@ -248,16 +190,114 @@
           },
           {
             "entry": {
+              "bustId": "TestBust1",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "TitleSource": "Bar",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "Mx. Bar",
+                "PlacardDescription": "Bar",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 1
+              },
+              "entryId": "12a620fa-ac0e-408d-80e1-cd998cebf5cc"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
               "bustId": "TestBust0",
               "bustEvent": "Focus",
-              "entryId": "0f93ad85-ac81-430f-bedc-310d8c47d9be"
+              "entryId": "18bcb2d7-7164-4fe6-b308-74956e687d68"
+            },
+            "index": 2
+          }
+        ],
+        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
+        "index": 1,
+        "logId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
+        "name": "BustInit"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "TestBust0",
+              "bustEvent": "Focus",
+              "entryId": "ca16919d-8f1a-4544-94d3-172a17a370fe"
+            }
+          }
+        ],
+        "nextLogId": "4c43c2cc-887c-4ec6-b360-c67a6548d83c",
+        "index": 3,
+        "logId": "5db8d35e-c091-4878-95d4-69630be1405c",
+        "name": "FocusFooBust"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "TestBust1",
+              "bustEvent": "Focus",
+              "entryId": "4c885efd-e367-4345-8bc5-a2bd00082c35"
+            }
+          }
+        ],
+        "nextLogId": "580765fb-df66-42fc-8a30-b59a4d045163",
+        "index": 4,
+        "logId": "a23f5260-9f83-4948-a496-9d4e793d8bb7",
+        "name": "FocusBarBust"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Foo",
+              "entryId": "408f3dde-0576-4798-a691-85c759001114"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Foo... but over here",
+              "entryId": "361384c8-caca-40b5-a8a1-1ff705573d0d"
             },
             "index": 1
           }
         ],
         "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
-        "index": 2,
-        "logId": "e10c9828-e0dc-48eb-89e5-c2200593268f"
+        "index": 5,
+        "logId": "4c43c2cc-887c-4ec6-b360-c67a6548d83c",
+        "name": "PrintFoo"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Bar",
+              "entryId": "f3056fc1-2a69-4abe-8e24-23cb27dbc230"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Bar... but over here",
+              "entryId": "7a125851-4830-4660-8765-c0a0d2fc260a"
+            },
+            "index": 1
+          }
+        ],
+        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
+        "index": 6,
+        "logId": "580765fb-df66-42fc-8a30-b59a4d045163",
+        "name": "PrintBar"
       }
     ]
   },

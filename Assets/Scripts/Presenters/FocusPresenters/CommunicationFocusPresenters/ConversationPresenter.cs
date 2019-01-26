@@ -47,6 +47,73 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
 
+		#region Events
+		void OnShowInstance(bool instant)
+		{
+			if (View.TransitionState != TransitionStates.Shown) ShowView(instant: instant);
+		}
+
+		void OnCloseInstance(bool instant)
+		{
+			if (View.TransitionState != TransitionStates.Closed) CloseView(instant);
+		}
+
+		void OnDestroyInstance()
+		{
+			App.P.UnRegister(this);
+		}
+
+		void OnEncounterRequest(EncounterRequest request)
+		{
+
+			switch (request.State)
+			{
+				case EncounterRequest.States.Request:
+					View.Reset();
+					break;
+				case EncounterRequest.States.Handle:
+					if (instanceModel.IsFocused.Value) request.TryHandle<ConversationHandlerModel>(OnHandleConversation);
+					break;
+				case EncounterRequest.States.PrepareComplete:
+					if (View.Visible) CloseView();
+					break;
+			}
+		}
+
+		void OnHandleConversation(ConversationHandlerModel handler)
+		{
+			var additions = new List<IConversationBlock>();
+
+			foreach (var entry in handler.Entries.Value)
+			{
+				switch (entry.ConversationType.Value)
+				{
+					case ConversationTypes.MessageIncoming:
+					case ConversationTypes.MessageOutgoing:
+						additions.Add(
+							new MessageConversationBlock
+							{
+								Type = entry.ConversationType.Value,
+								Message = entry.Message.Value
+							}
+						);
+						break;
+					default:
+						Debug.LogError("Unrecognized ConversationType: " + entry.ConversationType.Value + ", skipping...");
+						break;
+				}
+			}
+
+			if (additions.None())
+			{
+				handler.HaltingDone.Value();
+				return;
+			}
+
+			View.AddToConversation(false, handler.HaltingDone.Value, additions.ToArray());
+		}
+		#endregion
+
 		/*
 		protected override void OnUpdateEnabled()
 		{
@@ -100,7 +167,7 @@ namespace LunraGames.SubLight.Presenters
 				"Cras consequat eros nec varius placerat.",
 				"Suspendisse vel leo ultricies, rutrum enim id, imperdiet neque.",
 			};
-			
+
 			var chosen = string.Empty;
 
 			for (var i = 0; i < proceduralEntries[currProcedural]; i++) chosen += options.Where(o => !chosen.Contains(o)).Random() + " ";
@@ -145,38 +212,5 @@ namespace LunraGames.SubLight.Presenters
 			App.Heartbeat.Wait(AddRandom, 2f);
 		}
 		*/
-
-		#region Events
-		void OnShowInstance(bool instant)
-		{
-			if (View.TransitionState != TransitionStates.Shown) ShowView(instant: instant);
-		}
-
-		void OnCloseInstance(bool instant)
-		{
-			if (View.TransitionState != TransitionStates.Closed) CloseView(instant);
-		}
-
-		void OnDestroyInstance()
-		{
-			App.P.UnRegister(this);
-		}
-
-		void OnEncounterRequest(EncounterRequest request)
-		{
-			switch (request.State)
-			{
-				case EncounterRequest.States.Request:
-					View.Reset();
-					break;
-				case EncounterRequest.States.Handle:
-					//request.TryHandle<ButtonHandlerModel>(OnHandleButtons);
-					break;
-				case EncounterRequest.States.PrepareComplete:
-					if (View.Visible) CloseView();
-					break;
-			}
-		}
-		#endregion
 	}
 }

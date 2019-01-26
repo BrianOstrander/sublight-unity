@@ -110,9 +110,16 @@ namespace LunraGames.SubLight.Views
 		bool waitingForInstantScroll;
 		float verticalScrollRemaining;
 
-		public void AddToConversation(bool instant, params IConversationBlock[] blocks)
+		Action addDone;
+
+		public void AddToConversation(
+			bool instant,
+			Action done,
+			params IConversationBlock[] blocks
+		)
 		{
 			waitingForInstantScroll = instant;
+			addDone = done;
 			if (!instant)
 			{
 				verticalScrollCurrentAtStartOfAnimation = verticalScrollCurrent;
@@ -253,6 +260,8 @@ namespace LunraGames.SubLight.Views
 			waitingForInstantScroll = false;
 			verticalScrollRemaining = 0f;
 
+			addDone = null;
+
 			conversationArea.transform.ClearChildren();
 
 			messageIncomingPrefab.gameObject.SetActive(false);
@@ -295,6 +304,13 @@ namespace LunraGames.SubLight.Views
 			}
 
 			foreach (var entry in entries) UpdateVerticalScroll(entry);
+
+			if (!verticalScrollTarget.HasValue && addDone != null)
+			{
+				var oldAddDone = addDone;
+				addDone = null;
+				oldAddDone();
+			}
 		}
 
 		void UpdateVerticalScroll(Entry entry)
@@ -349,6 +365,10 @@ namespace LunraGames.SubLight.Views
 
 	public interface IConversationView : IView
 	{
-		void AddToConversation(bool instant, params IConversationBlock[] blocks);
+		void AddToConversation(
+			bool instant,
+			Action done,
+			params IConversationBlock[] blocks
+		);
 	}
 }

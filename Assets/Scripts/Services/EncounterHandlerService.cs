@@ -72,7 +72,8 @@ namespace LunraGames.SubLight
 				new EncyclopediaLogHandler(configuration),
 				new EncounterEventLogHandler(configuration),
 				new DialogLogHandler(configuration),
-				new BustLogHandler(configuration)
+				new BustLogHandler(configuration),
+				new ConversationLogHandler(configuration)
 			};
 		}
 

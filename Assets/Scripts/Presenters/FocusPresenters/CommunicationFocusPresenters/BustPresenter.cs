@@ -87,10 +87,7 @@ namespace LunraGames.SubLight.Presenters
 			var initializeBlocks = new List<BustBlock>();
 			var initializeConversationIds = new List<string>();
 
-			Action onHaltingDone = () =>
-			{
-				if (handler.HaltingDone.Value != null) handler.HaltingDone.Value();
-			};
+			Action onHaltingDone = handler.HaltingDone.Value;
 
 			foreach (var entry in handler.Entries.Value)
 			{
@@ -132,12 +129,20 @@ namespace LunraGames.SubLight.Presenters
 
 			lastFocus = focusEntry;
 			var newConversationFocus = conversationInstances.First(i => i.BustId.Value == focusEntry.BustId.Value);
+			var oldConversationFocus = lastConversationFocus;
+
 			if (lastConversationFocus != null && lastConversationFocus.BustId.Value != focusEntry.BustId.Value) lastConversationFocus.IsFocused.Value = false;
+			else oldConversationFocus = null;
+
 			lastConversationFocus = newConversationFocus;
 			lastConversationFocus.IsFocused.Value = true;
 
 			var focusCompleted = false;
-			Func<bool> onHaltingCondition = () => focusCompleted && newConversationFocus.IsShown.Value();
+			Func<bool> onHaltingCondition = () =>
+			{
+				return focusCompleted && newConversationFocus.IsShown.Value() && (oldConversationFocus == null || oldConversationFocus.IsClosed.Value());
+			};
+
 			Action onCallFocus = () =>
 			{
 				View.FocusBust(
@@ -146,6 +151,7 @@ namespace LunraGames.SubLight.Presenters
 					focusBustId => focusCompleted = true
 				);
 				lastConversationFocus.Show.Value(false);
+				if (oldConversationFocus != null && !oldConversationFocus.IsClosed.Value()) oldConversationFocus.Close.Value(false);
 			};
 
 			SM.PushBlocking(onCallFocus, onHaltingCondition, "FocusingBust");
