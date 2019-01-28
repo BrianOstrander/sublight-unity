@@ -383,27 +383,28 @@ namespace LunraGames.SubLight.Views
 
 		void UpdateVerticalScroll(Entry entry)
 		{
-			var offset = entry.VerticalOffset + verticalScrollCurrent;
+			var offsetBottom = entry.VerticalOffset + verticalScrollCurrent;
+			var offsetTop = offsetBottom + entry.Height; 
 
 			var opacity = 0f;
 			var scale = 0.001f;
 
-			if (0f <= offset || offset <= topLimit)
+			if (0f <= offsetBottom && offsetTop <= topLimit)
 			{
 				opacity = 1f;
 				scale = 1f;
 			}
-			else if (bottomOffsetThreshold < offset && offset < TopOffsetThreshold)
+			else if (bottomOffsetThreshold < offsetBottom && offsetTop < TopOffsetThreshold)
 			{
-				if (offset < 0f)
+				if (offsetBottom < 0f)
 				{
-					var progress = 1f - (Mathf.Abs(offset) / Mathf.Abs(bottomOffsetThreshold));
+					var progress = 1f - (Mathf.Abs(offsetBottom) / Mathf.Abs(bottomOffsetThreshold));
 					opacity = bottomOffsetOpacityCurve.Evaluate(progress);
 					scale = scale + (bottomOffsetScaleCurve.Evaluate(progress) * (1f - scale));
 				}
 				else
 				{
-					var progress = (offset - topLimit) / topOffsetThresholdDelta;
+					var progress = (offsetTop - topLimit) / topOffsetThresholdDelta;
 					opacity = topOffsetOpacityCurve.Evaluate(progress);
 					scale = scale + (topOffsetScaleCurve.Evaluate(progress) * (1f - scale));
 				}
@@ -411,7 +412,7 @@ namespace LunraGames.SubLight.Views
 
 			entry.Instance.CanvasGroup.alpha = OpacityStack;
 
-			entry.Instance.transform.localPosition = entry.ColumnLocalPosition.NewY(entry.ColumnLocalPosition.y + offset);
+			entry.Instance.transform.localPosition = entry.ColumnLocalPosition.NewY(entry.ColumnLocalPosition.y + offsetBottom);
 			entry.Instance.transform.localScale = Vector3.one * scale;
 			entry.Instance.Group.alpha = opacity;
 		}

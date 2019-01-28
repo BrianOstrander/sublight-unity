@@ -258,7 +258,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Foo",
+              "message": "Foo<br>Line...<br>Line...<br>Line...<br>Line...<br>Line...",
               "entryId": "408f3dde-0576-4798-a691-85c759001114"
             }
           },

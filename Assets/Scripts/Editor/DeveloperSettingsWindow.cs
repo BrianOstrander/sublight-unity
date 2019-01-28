@@ -153,9 +153,15 @@ namespace LunraGames.SubLight
 
 				EditorGUILayoutExtensions.PushEnabled(Application.isPlaying && !Mathf.Approximately(DevPrefs.TimeScaling.Value, Time.timeScale));
 				{
-					if (GUILayout.Button("Apply Once")) Time.timeScale = DevPrefs.TimeScaling;
+					if (GUILayout.Button("Apply Once", EditorStyles.miniButtonLeft)) Time.timeScale = DevPrefs.TimeScaling;
 				}
 				EditorGUILayoutExtensions.PopEnabled();
+
+				if (GUILayout.Button("Reset", EditorStyles.miniButtonRight))
+				{
+					DevPrefs.TimeScaling.Value = 1f;
+					Time.timeScale = 1f;
+				}
 			}
 			GUILayout.EndHorizontal();
 
