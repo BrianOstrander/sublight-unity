@@ -156,6 +156,8 @@ namespace LunraGames.SubLight.Views
 			params IConversationBlock[] blocks
 		)
 		{
+			CullEntries();
+
 			waitingForInstantScroll = instant;
 			addDone = done;
 			if (!instant)
@@ -384,7 +386,7 @@ namespace LunraGames.SubLight.Views
 		void UpdateVerticalScroll(Entry entry)
 		{
 			var offsetBottom = entry.VerticalOffset + verticalScrollCurrent;
-			var offsetTop = offsetBottom + entry.Height; 
+			var offsetTop = offsetBottom + entry.Height;
 
 			var opacity = 0f;
 			var scale = 0.001f;
@@ -415,6 +417,17 @@ namespace LunraGames.SubLight.Views
 			entry.Instance.transform.localPosition = entry.ColumnLocalPosition.NewY(entry.ColumnLocalPosition.y + offsetBottom);
 			entry.Instance.transform.localScale = Vector3.one * scale;
 			entry.Instance.Group.alpha = opacity;
+		}
+
+		void CullEntries()
+		{
+			var persisted = new List<Entry>();
+			foreach (var entry in entries)
+			{
+				if (TopOffsetThreshold < (entry.VerticalOffset + verticalScrollCurrent)) Destroy(entry.Instance.gameObject);
+				else persisted.Add(entry);
+			}
+			entries = persisted;
 		}
 
 		#region Events
