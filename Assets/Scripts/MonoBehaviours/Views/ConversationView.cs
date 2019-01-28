@@ -111,7 +111,19 @@ namespace LunraGames.SubLight.Views
 		AnimationCurve bottomOffsetOpacityCurve;
 		[SerializeField]
 		AnimationCurve bottomOffsetScaleCurve;
+
+		[Header("Entry Animation: Top")]
+		[SerializeField]
+		float topLimit;
+		[SerializeField]
+		float topOffsetThresholdDelta;
+		[SerializeField]
+		AnimationCurve topOffsetOpacityCurve;
+		[SerializeField]
+		AnimationCurve topOffsetScaleCurve;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		float TopOffsetThreshold { get { return topLimit + topOffsetThresholdDelta; } }
 
 		Vector3 GetOffset(
 			float scalar,
@@ -128,8 +140,6 @@ namespace LunraGames.SubLight.Views
 
 		Vector3 GetShowOffset(float scalar) { return GetOffset(scalar, showDepthCurve, showHorizontalOffsetCurve); }
 		Vector3 GetCloseOffset(float scalar) { return GetOffset(scalar, closeDepthCurve, closeHorizontalOffsetCurve); }
-
-		//Vector3 OutgoingBottomPosition { get { return outgoingAnchor.position + (bottomAnchor.position - topAnchor.position); } }
 
 		List<Entry> entries = new List<Entry>();
 		float verticalScrollCurrent;
@@ -378,16 +388,25 @@ namespace LunraGames.SubLight.Views
 			var opacity = 0f;
 			var scale = 0.001f;
 
-			if (0f <= offset)
+			if (0f <= offset || offset <= topLimit)
 			{
 				opacity = 1f;
 				scale = 1f;
 			}
-			else if (bottomOffsetThreshold <= offset)
+			else if (bottomOffsetThreshold < offset && offset < TopOffsetThreshold)
 			{
-				var progress = 1f - (Mathf.Abs(offset) / Mathf.Abs(bottomOffsetThreshold));
-				opacity = bottomOffsetOpacityCurve.Evaluate(progress);
-				scale = scale + (bottomOffsetScaleCurve.Evaluate(progress) * (1f - scale));
+				if (offset < 0f)
+				{
+					var progress = 1f - (Mathf.Abs(offset) / Mathf.Abs(bottomOffsetThreshold));
+					opacity = bottomOffsetOpacityCurve.Evaluate(progress);
+					scale = scale + (bottomOffsetScaleCurve.Evaluate(progress) * (1f - scale));
+				}
+				else
+				{
+					var progress = (offset - topLimit) / topOffsetThresholdDelta;
+					opacity = topOffsetOpacityCurve.Evaluate(progress);
+					scale = scale + (topOffsetScaleCurve.Evaluate(progress) * (1f - scale));
+				}
 			}
 
 			entry.Instance.CanvasGroup.alpha = OpacityStack;
@@ -412,6 +431,10 @@ namespace LunraGames.SubLight.Views
 			Gizmos.DrawWireSphere(incomingAnchor.position, 0.05f);
 			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + lookOffset);
 			Gizmos.DrawLine(incomingAnchor.position, outgoingAnchor.position);
+			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + (Vector3.up * topLimit));
+			Gizmos.color = Color.white;
+			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + (Vector3.up * bottomOffsetThreshold));
+			Gizmos.DrawLine(incomingAnchor.position + (Vector3.up * topLimit), incomingAnchor.position + (Vector3.up * TopOffsetThreshold));
 
 			Gizmos.color = Color.green;
 			Gizmos.DrawLine(incomingAnchor.position + GetShowOffset(0f), incomingAnchor.position + GetShowOffset(1f));

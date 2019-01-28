@@ -119,6 +119,10 @@ namespace LunraGames.SubLight
 			SceneSkybox sceneSkybox
 		)
 		{
+			Time.timeScale = DevPrefs.ApplyTimeScaling.Value ? DevPrefs.TimeScaling.Value : 1f;
+
+			if (DevPrefs.ApplyTimeScaling.Value) Debug.LogWarning("DevPref: Time Scaling to " + DevPrefs.TimeScaling.Value.ToString("N2"));
+
 			instance = this;
 			this.main = main;
 			this.defaultViews = defaultViews;
