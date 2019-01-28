@@ -934,6 +934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3419949263662750384}
   - component: {fileID: 7626323115396521109}
+  - component: {fileID: 1055129912669460534}
   m_Layer: 0
   m_Name: MessageIncomingPrefab
   m_TagString: Untagged
@@ -975,6 +976,25 @@ MonoBehaviour:
   Group: {fileID: 8208419369394758439}
   BackgroundSmall: {fileID: 5906492904181802987}
   BackgroundLarge: {fileID: 3027517938669658817}
+--- !u!114 &1055129912669460534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3117149370777469450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d4f7334dde2945779796680b627a133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listeningGroups:
+  - {fileID: 8780521791910561171}
+  - {fileID: 8208419369394758439}
+  targets:
+  - {fileID: 7967731762926128843}
+  hasInitialized: 0
+  added: []
 --- !u!1 &3132015585335804422
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,14 +1514,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolSize: 0
   ShowCloseDuration:
-    OverrideShow: 0
-    OverrideClose: 0
-    ShowDuration: 0
-    CloseDuration: 0
+    OverrideShow: 1
+    OverrideClose: 1
+    ShowDuration: 0.3
+    CloseDuration: 0.3
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
-  - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
+  - {fileID: 11400000, guid: aa2bbcc956419434e8e780a4cd68d34f, type: 2}
   conversationArea: {fileID: 5620756991963589188}
   conversationAnchor: {fileID: 1523010748602606712}
   incomingAnchor: {fileID: 1847949350994127619}
@@ -2090,6 +2110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5416398542618253809}
   - component: {fileID: 5868936660454624424}
+  - component: {fileID: 1748863337364974534}
   m_Layer: 0
   m_Name: MessageOutgoingPrefab
   m_TagString: Untagged
@@ -2131,6 +2152,25 @@ MonoBehaviour:
   Group: {fileID: 4775322406171608351}
   BackgroundSmall: {fileID: 7492612405496640244}
   BackgroundLarge: {fileID: 507202636351946857}
+--- !u!114 &1748863337364974534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6934637215509723030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d4f7334dde2945779796680b627a133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listeningGroups:
+  - {fileID: 4375283234929494008}
+  - {fileID: 4775322406171608351}
+  targets:
+  - {fileID: 465961047832877239}
+  hasInitialized: 0
+  added: []
 --- !u!1 &7302953811366405668
 GameObject:
   m_ObjectHideFlags: 0

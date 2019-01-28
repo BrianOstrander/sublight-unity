@@ -63,6 +63,8 @@ namespace LunraGames.SubLight.Views
 		CanvasGroup group;
 		[SerializeField]
 		Renderer lip;
+		[SerializeField]
+		ParticleSystem ringTransitionParticles;
 
 		[Header("Bust Animations ( 0 is hidden 1 is shown )")]
 		[SerializeField]
@@ -148,6 +150,8 @@ namespace LunraGames.SubLight.Views
 				if (onFocus != null) onFocus(bustId);
 			}
 			if (wasAlreadyFocused && onFocus != null) onFocus(bustId);
+
+			if (!wasAlreadyFocused && !instant) ringTransitionParticles.Emit(1);
 		}
 
 		protected override void OnLateIdle(float delta)
