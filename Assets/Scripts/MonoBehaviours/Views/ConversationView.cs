@@ -59,7 +59,7 @@ namespace LunraGames.SubLight.Views
 			/// </remarks>
 			public float Height;
 			public Alignments Alignment;
-			public Vector3 ColumnPosition;
+			public Vector3 ColumnLocalPosition;
 			#endregion
 
 			/// <summary>
@@ -71,6 +71,8 @@ namespace LunraGames.SubLight.Views
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		GameObject conversationArea;
+		[SerializeField]
+		GameObject conversationAnchor;
 		[SerializeField]
 		Transform incomingAnchor;
 		[SerializeField]
@@ -92,6 +94,16 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		AnimationCurve scrollCurve;
 
+		[Header("Transition Animation")]
+		[SerializeField]
+		CurveRange showHorizontalOffsetCurve;
+		[SerializeField]
+		CurveRange showDepthCurve;
+		[SerializeField]
+		CurveRange closeHorizontalOffsetCurve;
+		[SerializeField]
+		CurveRange closeDepthCurve;
+
 		[Header("Entry Animation: Bottom")]
 		[SerializeField]
 		float bottomOffsetThreshold;
@@ -100,6 +112,22 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		AnimationCurve bottomOffsetScaleCurve;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		Vector3 GetOffset(
+			float scalar,
+			CurveRange depthCurve,
+			CurveRange horizontalCurve
+		)
+		{
+			return  new Vector3(
+				horizontalCurve.Evaluate(scalar),
+				0f,
+				depthCurve.Evaluate(scalar)
+			);
+		}
+
+		Vector3 GetShowOffset(float scalar) { return GetOffset(scalar, showDepthCurve, showHorizontalOffsetCurve); }
+		Vector3 GetCloseOffset(float scalar) { return GetOffset(scalar, closeDepthCurve, closeHorizontalOffsetCurve); }
 
 		//Vector3 OutgoingBottomPosition { get { return outgoingAnchor.position + (bottomAnchor.position - topAnchor.position); } }
 
@@ -223,8 +251,8 @@ namespace LunraGames.SubLight.Views
 
 			switch (entry.Alignment)
 			{
-				case Entry.Alignments.Incoming: entry.ColumnPosition = incomingAnchor.position; break;
-				case Entry.Alignments.Outgoing: entry.ColumnPosition = outgoingAnchor.position; break;
+				case Entry.Alignments.Incoming: entry.ColumnLocalPosition = incomingAnchor.localPosition; break;
+				case Entry.Alignments.Outgoing: entry.ColumnLocalPosition = outgoingAnchor.localPosition; break;
 				default:
 					Debug.LogError("Unrecognized Alignment: " + entry.Alignment);
 					break;
@@ -266,6 +294,8 @@ namespace LunraGames.SubLight.Views
 
 			messageIncomingPrefab.gameObject.SetActive(false);
 			messageOutgoingPrefab.gameObject.SetActive(false);
+
+			conversationAnchor.transform.localPosition = Vector3.zero;
 		}
 
 		protected override void OnPrepare()
@@ -277,6 +307,29 @@ namespace LunraGames.SubLight.Views
 				if (entry.InitializeLayout == null) Debug.LogError("Cannot initialize an entry with no InitializeLayout specified", entry.Instance);
 				else entry.InitializeLayout(entry);
 			}
+
+			conversationAnchor.transform.localPosition = GetShowOffset(0f);
+		}
+
+		protected override void OnShowing(float scalar)
+		{
+			base.OnShowing(scalar);
+
+			conversationAnchor.transform.localPosition = GetShowOffset(scalar);
+		}
+
+		protected override void OnShown()
+		{
+			base.OnShown();
+
+			conversationAnchor.transform.localPosition = Vector3.zero;
+		}
+
+		protected override void OnClosing(float scalar)
+		{
+			base.OnClosing(scalar);
+
+			conversationAnchor.transform.localPosition = GetCloseOffset(scalar);
 		}
 
 		protected override void OnIdle(float delta)
@@ -339,7 +392,7 @@ namespace LunraGames.SubLight.Views
 
 			entry.Instance.CanvasGroup.alpha = OpacityStack;
 
-			entry.Instance.transform.position = entry.ColumnPosition.NewY(entry.ColumnPosition.y + offset);
+			entry.Instance.transform.localPosition = entry.ColumnLocalPosition.NewY(entry.ColumnLocalPosition.y + offset);
 			entry.Instance.transform.localScale = Vector3.one * scale;
 			entry.Instance.Group.alpha = opacity;
 		}
@@ -351,14 +404,24 @@ namespace LunraGames.SubLight.Views
 		{
 			if (verticalScrollTarget.HasValue)
 			{
-				Gizmos.color = Color.green;
+				Gizmos.color = Color.blue;
 				Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + (Vector3.up * verticalScrollTarget.Value));
 			}
 
-			Gizmos.color = Color.red;
+			Gizmos.color = Color.yellow;
 			Gizmos.DrawWireSphere(incomingAnchor.position, 0.05f);
 			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + lookOffset);
 			Gizmos.DrawLine(incomingAnchor.position, outgoingAnchor.position);
+
+			Gizmos.color = Color.green;
+			Gizmos.DrawLine(incomingAnchor.position + GetShowOffset(0f), incomingAnchor.position + GetShowOffset(1f));
+
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine(incomingAnchor.position + GetCloseOffset(0f), incomingAnchor.position + GetCloseOffset(1f));
+			//var showStart
+
+			//Gizmos.DrawWireSphere(incomingAnchor.position, 0.05f);
+
 
 			//#if UNITY_EDITOR
 			//lookOffset = lookOffset.normalized;
