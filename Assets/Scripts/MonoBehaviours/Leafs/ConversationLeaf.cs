@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Views
 
 		public RectTransform RootCanvas;
 		public RectTransform SizeArea;
+		public CanvasGroup CanvasGroup;
 		public CanvasGroup Group;
 	}
 }

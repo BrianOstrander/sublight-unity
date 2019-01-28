@@ -313,6 +313,11 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		protected override void OnOpacityStack(float opacity)
+		{
+			foreach (var entry in entries) entry.Instance.CanvasGroup.alpha = opacity;
+		}
+
 		void UpdateVerticalScroll(Entry entry)
 		{
 			var offset = entry.VerticalOffset + verticalScrollCurrent;
@@ -332,7 +337,7 @@ namespace LunraGames.SubLight.Views
 				scale = scale + (bottomOffsetScaleCurve.Evaluate(progress) * (1f - scale));
 			}
 
-			opacity *= OpacityStack;
+			entry.Instance.CanvasGroup.alpha = OpacityStack;
 
 			entry.Instance.transform.position = entry.ColumnPosition.NewY(entry.ColumnPosition.y + offset);
 			entry.Instance.transform.localScale = Vector3.one * scale;
