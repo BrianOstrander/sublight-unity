@@ -216,49 +216,54 @@ namespace LunraGames.SubLight
 			if (modelListStatus != RequestStatus.Success) return;
 			if (selectedStatus != RequestStatus.Success && modelSelectionState.Value == ModelSelectionStates.Selected) return;
 
-			GUILayout.BeginHorizontal();
+			if (modelTabState.Value == ModelTabStates.Maximized)
 			{
-				switch (modelTabState.Value)
+				GUILayout.BeginHorizontal();
 				{
-					case ModelTabStates.Minimized:
-						DrawModelSelectorMinimized();
-						break;
-					case ModelTabStates.Maximized:
-						DrawModelSelectorMaximized();
-						break;
-					default:
-						EditorGUILayout.HelpBox("Unrecognized tab state: " + modelTabState.Value, MessageType.Error);
-						break;
-				}
+					DrawSelector();
 
-				GUILayout.BeginVertical();
-				{
-					switch (modelSelectionState.Value)
+					GUILayout.BeginVertical();
 					{
-						case ModelSelectionStates.Browsing:
-							DrawBrowsingEditor();
-							break;
-						case ModelSelectionStates.Selected:
-							DrawSelectedEditor(ModelSelection);
-							break;
-						default:
-							EditorGUILayout.HelpBox("Unrecognized selection state: " + modelSelectionState.Value, MessageType.Error);
-							break;
+						DrawTabs();
 					}
+					GUILayout.EndVertical();
 				}
-				GUILayout.EndVertical();
+				GUILayout.EndHorizontal();
 			}
-			GUILayout.EndHorizontal();
+			else
+			{
+				DrawTabs();
+			}
 		}
 
-		void DrawModelSelectorMinimized()
+		void DrawSelector()
 		{
-			GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(28f));
+			switch (modelTabState.Value)
 			{
-				if (GUILayout.Button("<", GUILayout.Width(24f), GUILayout.Height(24f))) SetTabState(ModelTabStates.Maximized);
-				GUILayout.FlexibleSpace();
+				case ModelTabStates.Minimized: break;
+				case ModelTabStates.Maximized:
+					DrawModelSelectorMaximized();
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized tab state: " + modelTabState.Value, MessageType.Error);
+					break;
 			}
-			GUILayout.EndVertical();
+		}
+
+		void DrawTabs()
+		{
+			switch (modelSelectionState.Value)
+			{
+				case ModelSelectionStates.Browsing:
+					DrawBrowsingEditor();
+					break;
+				case ModelSelectionStates.Selected:
+					DrawSelectedEditor(ModelSelection);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized selection state: " + modelSelectionState.Value, MessageType.Error);
+					break;
+			}
 		}
 
 		void DrawModelSelectorMaximized()
@@ -267,10 +272,11 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginHorizontal();
 				{
-					const float buttonHeight = 24f;
-					if (GUILayout.Button(">", GUILayout.Height(buttonHeight), GUILayout.Width(buttonHeight))) SetTabState(ModelTabStates.Minimized);
-					if (GUILayout.Button("New", GUILayout.Height(buttonHeight))) OnNewModel();
-					if (GUILayout.Button("Refresh", GUILayout.Height(buttonHeight))) OnLoadList();
+					if (GUILayout.Button(GetTabStateLabel(), EditorStyles.miniButton, GUILayout.Width(18f))) ToggleTabState();
+					GUILayout.Label(readableModelName + " Entries");
+					const float modelSelectorWidth = 72f;
+					if (GUILayout.Button("New", EditorStyles.miniButtonLeft, GUILayout.Width(modelSelectorWidth))) OnNewModel();
+					if (GUILayout.Button("Refresh", EditorStyles.miniButtonRight, GUILayout.Width(modelSelectorWidth))) OnLoadList();
 				}
 				GUILayout.EndHorizontal();
 
@@ -439,6 +445,31 @@ namespace LunraGames.SubLight
 			toolbars.Add(new ToolbarEntry { Name = name, Callback = callback });
 		}
 
+		protected GUIContent GetTabStateLabel()
+		{
+			switch (modelTabState.Value)
+			{
+				case ModelTabStates.Minimized:
+					return new GUIContent("<", "Show " + readableModelName + " entries.");
+				case ModelTabStates.Maximized:
+					return new GUIContent(">", "Hide " + readableModelName + " entries.");
+				default:
+					return new GUIContent("?", "Unrecognized TabState: " + modelTabState.Value);
+			}
+		}
+
+		protected void ToggleTabState()
+		{
+			switch (modelTabState.Value)
+			{
+				case ModelTabStates.Minimized: SetTabState(ModelTabStates.Maximized); break;
+				case ModelTabStates.Maximized: SetTabState(ModelTabStates.Minimized); break;
+				default:
+					Debug.LogError("Unrecognized TabState: " + modelTabState.Value);
+					break;
+			}
+		}
+
 		protected void SetTabState(ModelTabStates tabState)
 		{
 			modelTabState.Value = tabState;
@@ -466,6 +497,8 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal(EditorStyles.helpBox);
 			{
+				if (modelTabState.Value == ModelTabStates.Minimized && GUILayout.Button(GetTabStateLabel(), EditorStyles.miniButton, GUILayout.Width(18f))) ToggleTabState();
+
 				var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
 				GUILayout.Label("Editing: " + metaName, GUILayout.ExpandWidth(false));
 

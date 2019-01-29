@@ -1093,7 +1093,7 @@ namespace LunraGames.SubLight
 
 			foreach (var bustId in logCache.BustIdsInitialized.OrderBy(i => i))
 			{
-				appendOptions.Add(bustId+".Focus");
+				appendOptions.Add(bustId + ".Focus");
 				appendOptionsRaw.Add(bustId);
 			}
 			foreach (var bustId in logCache.BustIdsMissingInitialization.OrderBy(i => i))
@@ -1214,7 +1214,7 @@ namespace LunraGames.SubLight
 		{
 			var changeCount = GetBustIdCount(infoModel, bustId);
 			TextDialogPopup.Show(
-				"Rename Bust Id: "+bustId,
+				"Rename Bust Id: " + bustId,
 				value =>
 				{
 					if (bustId == value)
@@ -1247,7 +1247,7 @@ namespace LunraGames.SubLight
 					OnBustLogEdgeRenameBustIdComplete(infoModel, bustId, value, changeCount);
 				},
 				doneText: "Rename",
-				description: "Renaming this Bust Id will affect "+changeCount+" Bust events."
+				description: "Renaming this Bust Id will affect " + changeCount + " Bust events."
 			);
 		}
 
@@ -1646,6 +1646,10 @@ namespace LunraGames.SubLight
 		{
 			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value).Count(i => i == bustId);
 		}
-  		#endregion
+		#endregion
+
+		#region Exposed Utility
+
+		#endregion
 	}
 }
