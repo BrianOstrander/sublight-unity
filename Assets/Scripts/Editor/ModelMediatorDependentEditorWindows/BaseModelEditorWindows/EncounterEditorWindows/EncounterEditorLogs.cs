@@ -85,7 +85,8 @@ namespace LunraGames.SubLight
 					EncounterLogModel indexSwap0 = null;
 					EncounterLogModel indexSwap1 = null;
 
-					var isMoving = Event.current.control;
+					var isMoving = Event.current.shift;
+					var isDeleting = Event.current.control;
 
 					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
 					var sortedCount = sorted.Count;
@@ -96,7 +97,7 @@ namespace LunraGames.SubLight
 						var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
 						int currMoveDelta;
 
-						if (OnLogBegin(i, sortedCount, model, log, isMoving, out currMoveDelta, ref beginning)) deleted = log.LogId;
+						if (OnLogBegin(i, sortedCount, model, log, isMoving, isDeleting, out currMoveDelta, ref beginning)) deleted = log.LogId;
 
 						switch (currMoveDelta)
 						{
@@ -216,6 +217,7 @@ namespace LunraGames.SubLight
 			EncounterInfoModel infoModel,
 			EncounterLogModel model,
 			bool isMoving,
+			bool isDeleting,
 			out int indexDelta,
 			ref string beginning
 		)
@@ -228,53 +230,53 @@ namespace LunraGames.SubLight
 			GUILayout.Space(2f);
 
 			GUILayout.BeginVertical(EditorStyles.miniButton);
-			{
-				GUILayout.BeginHorizontal();
-				{
-					EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
-					var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId:");
 
-					GUILayout.Label(new GUIContent(header, model.LogId.Value), EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
-					EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
-					EditorGUILayoutExtensions.PopColor();
-					if (isMoving)
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
+				var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId:");
+
+				GUILayout.Label(new GUIContent(header, model.LogId.Value), EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
+				EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
+				EditorGUILayoutExtensions.PopColor();
+				if (isMoving)
+				{
+					GUILayout.Space(10f);
+					EditorGUILayoutExtensions.PushEnabled(0 < count);
+					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
 					{
-						GUILayout.Space(10f);
-						EditorGUILayoutExtensions.PushEnabled(0 < count);
-						if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f), GUILayout.Height(18f)))
-						{
-							indexDelta = -1;
-						}
-						if (GUILayout.Button("^^", EditorStyles.miniButtonMid, GUILayout.Width(30f), GUILayout.Height(18f)))
-						{
-							indexDelta = -2;
-						}
-						EditorGUILayoutExtensions.PopEnabled();
-						EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-						if (GUILayout.Button("vv", EditorStyles.miniButtonMid, GUILayout.Width(30f), GUILayout.Height(18f)))
-						{
-							indexDelta = 2;
-						}
-						if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f), GUILayout.Height(18f)))
-						{
-							indexDelta = 1;
-						}
-						EditorGUILayoutExtensions.PopEnabled();
+						indexDelta = -1;
 					}
-					else
+					if (GUILayout.Button("^^", EditorStyles.miniButtonMid, GUILayout.Width(30f)))
 					{
-						if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
-						{
-							beginning = model.LogId;
-						}
-						model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f));
+						indexDelta = -2;
 					}
-					EditorGUILayoutExtensions.PushEnabled(!isMoving);
-					deleted = EditorGUILayoutExtensions.XButton();
+					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+					if (GUILayout.Button("vv", EditorStyles.miniButtonMid, GUILayout.Width(30f)))
+					{
+						indexDelta = 2;
+					}
+					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f)))
+					{
+						indexDelta = 1;
+					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
+				else if (isDeleting)
+				{
+					deleted = EditorGUILayoutExtensions.XButton(true);
+				}
+				else
+				{
+					if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+					{
+						beginning = model.LogId;
+					}
+					model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f));
+				}
 			}
-			GUILayout.EndVertical();
+			GUILayout.EndHorizontal();
 
 			model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "Internal name for production."), model.Name.Value);
 
@@ -804,13 +806,13 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				entry.EncounterEvent.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Event"), "- Select An Event -", entry.EncounterEvent.Value);
-				EditorGUILayoutExtensions.PushColor(Color.red);
-				if (GUILayout.Button("Clear"))
+				EditorGUILayoutExtensions.PushColorCombined(Color.red.NewS(0.25f), Color.red.NewS(0.65f));
+				if (GUILayout.Button(new GUIContent("Reset", "Resets all event data to their default values and cleans up event data unrelated to the currently selected event."), EditorStyles.miniButton, GUILayout.Width(64f)))
 				{
 					entry.KeyValues.Clear();
 					Debug.Log("Event Key Values Cleared");
 				}
-				EditorGUILayoutExtensions.PopColor();
+				EditorGUILayoutExtensions.PopColorCombined();
 			}
 			GUILayout.EndHorizontal();
 
@@ -1194,7 +1196,7 @@ namespace LunraGames.SubLight
 			{
 				var targetResult = EditorGUILayout.Popup(new GUIContent("Bust Id"), 0, targetOptions.ToArray());
 				if (targetResult != 0) entry.BustId.Value = targetOptionsRaw[targetResult];
-				if (GUILayout.Button("Rename", GUILayout.ExpandWidth(false))) OnBustLogEdgeRenameBustId(infoModel, entry.BustId.Value);
+				if (GUILayout.Button("Rename", EditorStyles.miniButton, GUILayout.ExpandWidth(false))) OnBustLogEdgeRenameBustId(infoModel, entry.BustId.Value);
 			}
 			GUILayout.EndHorizontal();
 			if (string.IsNullOrEmpty(entry.BustId.Value)) EditorGUILayout.HelpBox("A Bust Id must be specified.", MessageType.Error);
@@ -1409,7 +1411,7 @@ namespace LunraGames.SubLight
 
 			var isIncoming = entry.ConversationType.Value == ConversationTypes.MessageIncoming;
 
-			if (EditorGUILayoutExtensions.ToggleButton("Alignment", isIncoming, "Incoming", "Outgoing") != isIncoming)
+			if (EditorGUILayoutExtensions.ToggleButtonArray("Alignment", isIncoming, "Incoming", "Outgoing") != isIncoming)
 			{
 				isIncoming = !isIncoming;
 				entry.ConversationType.Value = isIncoming ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
@@ -1559,23 +1561,24 @@ namespace LunraGames.SubLight
 				{
 					GUILayout.Space(10f);
 					EditorGUILayoutExtensions.PushEnabled(0 < count);
-					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(60f), GUILayout.Height(18f)))
+					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
 					{
 						indexDelta = -1;
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(60f), GUILayout.Height(18f)))
+					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f)))
 					{
 						indexDelta = 1;
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
 				EditorGUILayoutExtensions.PushEnabled(!isMoving);
-				deleted = EditorGUILayoutExtensions.XButton();
+				deleted = EditorGUILayoutExtensions.XButton(true);
 				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
+
 			return deleted;
 		}
 		#endregion

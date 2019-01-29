@@ -33,7 +33,7 @@ namespace LunraGames.SubLight
 					if (noFilters) EditorGUILayoutExtensions.PopColor();
 
 					GUILayout.Label("Default", GUILayout.ExpandWidth(false));
-					model.FalseByDefault.Value = !EditorGUILayoutExtensions.ToggleButtonValue(!model.FalseByDefault.Value);
+					model.FalseByDefault.Value = !EditorGUILayoutExtensions.ToggleButtonValue(!model.FalseByDefault.Value, style: EditorStyles.miniButton);
 				}
 				GUILayout.EndHorizontal();
 
