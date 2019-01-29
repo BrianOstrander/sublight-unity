@@ -57,7 +57,7 @@ namespace LunraGames.SubLight
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count() + " |", GUILayout.ExpandWidth(false));
 					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
 					AppendNewLog(EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Log Type -", EncounterLogTypes.Unknown), model);
-					GUILayout.Label("Hold 'Ctrl' to rearrange entries.", GUILayout.ExpandWidth(false));
+					GUILayout.Label("Hold 'Control' to rearrange entries or 'Shift' to delete them.", GUILayout.ExpandWidth(false));
 				}
 				GUILayout.EndHorizontal();
 
@@ -241,7 +241,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PopColor();
 				if (isMoving)
 				{
-					GUILayout.Space(10f);
+					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
 					EditorGUILayoutExtensions.PushEnabled(0 < count);
 					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
 					{
@@ -1450,7 +1450,8 @@ namespace LunraGames.SubLight
 			E indexSwap0 = null;
 			E indexSwap1 = null;
 
-			var isMoving = Event.current.control;
+			var isMoving = Event.current.shift;
+			var isDeleting = Event.current.control;
 
 			var sorted = model.Edges.OrderBy(l => l.EdgeIndex).ToList();
 			var sortedCount = sorted.Count;
@@ -1489,7 +1490,7 @@ namespace LunraGames.SubLight
 						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
 						{
 
-							if (OnEdgedLogEdgeHeader(current.EdgeName, i, sortedCount, isMoving, out currMoveDelta)) deleted = current.EdgeId;
+							if (OnEdgedLogEdgeHeader(current.EdgeName, i, sortedCount, isMoving, isDeleting, out currMoveDelta)) deleted = current.EdgeId;
 
 							if (currMoveDelta != 0)
 							{
@@ -1548,6 +1549,7 @@ namespace LunraGames.SubLight
 			int count,
 			int maxCount,
 			bool isMoving,
+			bool isDeleting,
 			out int indexDelta
 		)
 		{
@@ -1556,10 +1558,10 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("#" + (count + 1) + " | " + label, EditorStyles.boldLabel);
+				GUILayout.Label("#" + (count + 1) + " | " + label);
 				if (isMoving)
 				{
-					GUILayout.Space(10f);
+					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
 					EditorGUILayoutExtensions.PushEnabled(0 < count);
 					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
 					{
@@ -1573,9 +1575,10 @@ namespace LunraGames.SubLight
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
-				EditorGUILayoutExtensions.PushEnabled(!isMoving);
-				deleted = EditorGUILayoutExtensions.XButton(true);
-				EditorGUILayoutExtensions.PopEnabled();
+				else if (isDeleting)
+				{
+					deleted = EditorGUILayoutExtensions.XButton(true);
+				}
 			}
 			GUILayout.EndHorizontal();
 

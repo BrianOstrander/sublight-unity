@@ -19,7 +19,7 @@ namespace LunraGamesEditor
 			return Event.current.mousePosition + (size * 0.5f);
 		}
 
-		Vector2 size;
+		//Vector2 size;
 		Action onGui;
 		Action onClose;
 		Action onLostFocus;
@@ -41,7 +41,7 @@ namespace LunraGamesEditor
 
 			var window = GetWindow(typeof(FlexiblePopupDialog), true, title, true) as FlexiblePopupDialog;
 
-			window.size = size;
+			//window.size = size;
 			window.onGui = onGui;
 
 			window.onClose = onClose;
