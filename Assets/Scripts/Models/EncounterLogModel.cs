@@ -11,7 +11,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] float duration;
 
 		[JsonProperty] string name;
-		[JsonProperty] bool showNotes;
 		[JsonProperty] string notes;
 
 		/// <summary>
@@ -31,8 +30,6 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> ShowNotes;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Notes;
 
@@ -66,7 +63,6 @@ namespace LunraGames.SubLight.Models
 			Duration = new ListenerProperty<float>(value => duration = value, () => duration);
 
 			Name = new ListenerProperty<string>(value => name = value, () => name);
-			ShowNotes = new ListenerProperty<bool>(value => showNotes = value, () => showNotes);
 			Notes = new ListenerProperty<string>(value => notes = value, () => notes);
 		}
 	}

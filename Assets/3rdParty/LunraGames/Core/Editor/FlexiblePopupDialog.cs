@@ -16,7 +16,7 @@ namespace LunraGamesEditor
 
 		static Vector2 GetCursorCenterPosition(Vector2 size)
 		{
-			return Event.current.mousePosition + (size * 0.5f);
+			return GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - (size * 0.5f);
 		}
 
 		//Vector2 size;

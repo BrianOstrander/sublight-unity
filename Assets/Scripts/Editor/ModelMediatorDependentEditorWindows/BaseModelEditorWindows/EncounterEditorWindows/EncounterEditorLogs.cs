@@ -269,6 +269,23 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
+					if (GUILayout.Button(new GUIContent("Name", "Name this log so it can be referred to easily in log dropdowns."), EditorStyles.miniButtonLeft, GUILayout.Width(60f)))
+					{
+						FlexiblePopupDialog.Show(
+							"Editing Log Name",
+							new Vector2(400f, 22f),
+							() => { model.Name.Value = EditorGUILayoutExtensions.TextDynamic(model.Name.Value); }
+						);
+					}
+					if (GUILayout.Button(new GUIContent("Notes", "Add production notes for this log."), EditorStyles.miniButtonRight, GUILayout.Width(60f)))
+					{
+						FlexiblePopupDialog.Show(
+							"Editing Log Notes",
+							new Vector2(400f, 22f),
+							() => { model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value); }
+						);
+					}
+
 					if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
 					{
 						beginning = model.LogId;
@@ -278,25 +295,7 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "Internal name for production."), model.Name.Value);
-
-			EditorGUIExtensions.PauseChangeCheck();
-			{
-				// Pausing checks for foldout, since this shouldn't signal that the object is savable.
-				if (!model.HasNotes) EditorGUILayoutExtensions.PushColor(Color.gray);
-				model.ShowNotes.Value = EditorGUILayout.Foldout(model.ShowNotes.Value, new GUIContent("Notes", "Internal notes for production."), true);
-				if (!model.HasNotes) EditorGUILayoutExtensions.PopColor();
-			}
-			EditorGUIExtensions.UnPauseChangeCheck();
-
-			if (model.ShowNotes.Value)
-			{
-				EditorGUILayoutExtensions.PushIndent();
-				{
-					model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value);
-				}
-				EditorGUILayoutExtensions.PopIndent();
-			}
+			if (model.HasNotes) GUILayout.Label("Notes: " + model.Notes.Value);
 
 			OnLogDuration(infoModel, model);
 
@@ -342,15 +341,8 @@ namespace LunraGames.SubLight
 
 		void OnLogDuration(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
-			EditorGUILayoutExtensions.PushEnabled(model.EditableDuration);
-
-			if (model.EditableDuration)
-			{
-				model.Duration.Value = EditorGUILayout.FloatField("Duration", model.Duration);
-			}
-			else EditorGUILayout.FloatField("Duration", model.TotalDuration);
-
-			EditorGUILayoutExtensions.PopEnabled();
+			if (!model.EditableDuration) return;
+			model.Duration.Value = EditorGUILayout.FloatField("Duration", model.Duration);
 		}
 
 		#region Text Logs
