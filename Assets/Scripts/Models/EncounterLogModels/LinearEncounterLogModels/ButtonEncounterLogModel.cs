@@ -6,12 +6,6 @@ namespace LunraGames.SubLight.Models
 {
 	public class ButtonEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
 	{
-		public enum Styles
-		{
-			Unknown = 0,
-			Conversation = 10
-		}
-
 		[Serializable]
 		public struct ConversationStyleBlock
 		{
@@ -21,26 +15,17 @@ namespace LunraGames.SubLight.Models
 				{
 					return new ConversationStyleBlock
 					{
-						Theme = Themes.Foreigner
+						Theme = ConversationThemes.Foreigner
 					};
 				}
 			}
 
-			public enum Themes
-			{
-				Unknown = 0,
-				Crew = 10,
-				AwayTeam = 20,
-				Foreigner = 30,
-				Downlink = 40
-			}
-
-			public Themes Theme;
+			public ConversationThemes Theme;
 		}
 
 		[JsonProperty] ButtonEdgeModel[] buttons = new ButtonEdgeModel[0];
 
-		[JsonProperty] Styles style;
+		[JsonProperty] ConversationButtonStyles style;
 
 		[JsonProperty] ConversationStyleBlock conversationStyle;
 
@@ -48,7 +33,7 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<ButtonEdgeModel[]> Buttons;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<Styles> Style;
+		public readonly ListenerProperty<ConversationButtonStyles> Style;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<ConversationStyleBlock> ConversationStyle;
@@ -62,7 +47,7 @@ namespace LunraGames.SubLight.Models
 		{
 			Buttons = new ListenerProperty<ButtonEdgeModel[]>(value => buttons = value, () => buttons);
 
-			Style = new ListenerProperty<Styles>(value => style = value, () => style);
+			Style = new ListenerProperty<ConversationButtonStyles>(value => style = value, () => style);
 
 			ConversationStyle = new ListenerProperty<ConversationStyleBlock>(value => conversationStyle = value, () => conversationStyle);
 		}

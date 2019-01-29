@@ -3,6 +3,7 @@
 using UnityEngine;
 
 using Newtonsoft.Json;
+using LunraGames.SubLight.Views; // <- ignore this I guess... i dunno...
 
 namespace LunraGames.SubLight.Models
 {
@@ -18,6 +19,8 @@ namespace LunraGames.SubLight.Models
 		Func<bool> isShown;
 		Func<bool> isClosed;
 		Func<bool> isDestroyed;
+
+		Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock> onPrompt;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> BustId;
@@ -38,6 +41,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<Func<bool>> IsDestroyed;
 
+		[JsonIgnore]
+		public readonly ListenerProperty<Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock>> OnPrompt;
+
 		public ConversationInstanceModel()
 		{
 			BustId = new ListenerProperty<string>(value => bustId = value, () => bustId);
@@ -50,6 +56,8 @@ namespace LunraGames.SubLight.Models
 			IsShown = new ListenerProperty<Func<bool>>(value => isShown = value, () => isShown);
 			IsClosed = new ListenerProperty<Func<bool>>(value => isClosed = value, () => isClosed);
 			IsDestroyed = new ListenerProperty<Func<bool>>(value => isDestroyed = value, () => isDestroyed);
+
+			OnPrompt = new ListenerProperty<Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock>>(value => onPrompt = value, () => onPrompt);
 		}
 	}
 }

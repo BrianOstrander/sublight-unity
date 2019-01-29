@@ -258,7 +258,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Foo",
+              "message": "Foo<br>Line...<br>Line...<br>Line...<br>Line...<br>Line...",
               "entryId": "408f3dde-0576-4798-a691-85c759001114"
             }
           },
@@ -269,6 +269,46 @@
               "entryId": "361384c8-caca-40b5-a8a1-1ff705573d0d"
             },
             "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "uhhh",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "79eccfec-f637-4b3f-be0d-272313da1973"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "said uh, yay!",
+              "entryId": "3f11459d-ec4f-4547-9200-b33c0ae4229b"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "halt again",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "2f5bcfe0-72ce-466d-82fd-5420ff8c027b"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "you halted!",
+              "entryId": "104608e6-30f7-43df-85d1-52c67f6afd64"
+            },
+            "index": 5
           }
         ],
         "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",

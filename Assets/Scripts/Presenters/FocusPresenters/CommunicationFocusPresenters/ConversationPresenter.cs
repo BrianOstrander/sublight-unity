@@ -14,6 +14,9 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 		ConversationInstanceModel instanceModel;
 
+		List<ConversationEntryModel> remainingEntries = new List<ConversationEntryModel>();
+		Action onNoneRemaining;
+
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
 		protected override bool CanShow()
@@ -65,7 +68,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnEncounterRequest(EncounterRequest request)
 		{
-
 			switch (request.State)
 			{
 				case EncounterRequest.States.Request:
@@ -82,35 +84,79 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnHandleConversation(ConversationHandlerModel handler)
 		{
-			var additions = new List<IConversationBlock>();
-
-			foreach (var entry in handler.Entries.Value)
+			if (remainingEntries.Any())
 			{
-				switch (entry.ConversationType.Value)
-				{
-					case ConversationTypes.MessageIncoming:
-					case ConversationTypes.MessageOutgoing:
-						additions.Add(
-							new MessageConversationBlock
-							{
-								Type = entry.ConversationType.Value,
-								Message = entry.Message.Value
-							}
-						);
-						break;
-					default:
-						Debug.LogError("Unrecognized ConversationType: " + entry.ConversationType.Value + ", skipping...");
-						break;
-				}
+				Debug.LogError("Handling conversation before remaining entries have been processed, unpredictable behaviour may occur");
+				remainingEntries.Clear();
 			}
 
-			if (additions.None())
+			remainingEntries.AddRange(handler.Entries.Value);
+			onNoneRemaining = handler.HaltingDone.Value;
+
+			OnHandleRemaining();
+		}
+
+		void OnHandleRemaining()
+		{
+			if (remainingEntries.None())
 			{
-				handler.HaltingDone.Value();
+				var oldOnNoneRemaining = onNoneRemaining;
+				onNoneRemaining = null;
+				oldOnNoneRemaining();
 				return;
 			}
 
-			View.AddToConversation(false, handler.HaltingDone.Value, additions.ToArray());
+			var additions = new List<IConversationBlock>();
+			var newRemainingEntries = new List<ConversationEntryModel>();
+			Action onAdditionsDone = OnHandleRemaining;
+			var isHalting = false;
+
+			foreach (var entry in remainingEntries)
+			{
+				if (isHalting) newRemainingEntries.Add(entry);
+				else
+				{
+					switch (entry.ConversationType.Value)
+					{
+						case ConversationTypes.MessageIncoming:
+						case ConversationTypes.MessageOutgoing:
+							additions.Add(
+								new MessageConversationBlock
+								{
+									Type = entry.ConversationType.Value,
+									Message = entry.Message.Value
+								}
+							);
+							break;
+						case ConversationTypes.Prompt:
+							isHalting = true;
+							onAdditionsDone = () => OnHandlePrompt(entry);
+							break;
+						default:
+							Debug.LogError("Unrecognized ConversationType: " + entry.ConversationType.Value + ", skipping...");
+							break;
+					}
+				}
+			}
+
+			remainingEntries.Clear();
+			remainingEntries.AddRange(newRemainingEntries);
+
+			View.AddToConversation(false, onAdditionsDone, additions.ToArray());
+		}
+
+		void OnHandlePrompt(ConversationEntryModel entry)
+		{
+			instanceModel.OnPrompt.Value(
+				entry.PromptInfo.Value.Style,
+				entry.PromptInfo.Value.Theme,
+				new ConversationButtonBlock
+				{
+					Message = entry.Message,
+					Interactable = true,
+					Click = OnHandleRemaining
+				}
+			);
 		}
 		#endregion
 

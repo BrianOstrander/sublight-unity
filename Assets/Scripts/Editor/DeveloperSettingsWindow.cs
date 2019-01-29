@@ -142,6 +142,31 @@ namespace LunraGames.SubLight
 		{
 			GUILayout.BeginHorizontal();
 			{
+				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PushColor(Color.white.NewV(0.7f));
+				{
+					DevPrefs.TimeScaling.Value = EditorGUILayout.Slider("Time Scale", DevPrefs.TimeScaling.Value, 0f, 1f);
+				}
+				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PopColor();
+
+				DevPrefs.ApplyTimeScaling.Value = EditorGUILayout.Toggle(DevPrefs.ApplyTimeScaling.Value, GUILayout.Width(12f));
+				if (DevPrefs.ApplyTimeScaling.Value && Application.isPlaying) Time.timeScale = DevPrefs.TimeScaling.Value;
+
+				EditorGUILayoutExtensions.PushEnabled(Application.isPlaying && !Mathf.Approximately(DevPrefs.TimeScaling.Value, Time.timeScale));
+				{
+					if (GUILayout.Button("Apply Once", EditorStyles.miniButtonLeft)) Time.timeScale = DevPrefs.TimeScaling;
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+
+				if (GUILayout.Button("Reset", EditorStyles.miniButtonRight))
+				{
+					DevPrefs.TimeScaling.Value = 1f;
+					Time.timeScale = 1f;
+				}
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
 				GUILayout.BeginVertical();
 				{
 					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
