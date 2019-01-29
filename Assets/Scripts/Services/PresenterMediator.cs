@@ -61,6 +61,12 @@ namespace LunraGames.SubLight
 
 		public void UnRegister(IPresenter presenter, Action done = null)
 		{
+			if (presenter.UnBinded)
+			{
+				OnUnRegister(done);
+				return;
+			}
+
 			var entry = registrations.First(p => p.Presenter == presenter);
 			registrations.Remove(entry);
 			switch (entry.GetState())

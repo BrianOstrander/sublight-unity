@@ -18,6 +18,8 @@ namespace LunraGames.SubLight.Presenters
 
 		List<ConversationInstanceModel> conversationInstances = new List<ConversationInstanceModel>();
 
+		List<IButtonsPresenter> buttonPresenters;
+
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
 		protected override bool CanShow()
@@ -30,6 +32,11 @@ namespace LunraGames.SubLight.Presenters
 			this.model = model;
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
+
+			buttonPresenters = new List<IButtonsPresenter>
+			{
+				new ConversationPromptButtonsPresenter()
+			};
 		}
 
 		protected override void OnUnBind()
@@ -37,6 +44,8 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
+
+			foreach (var presenter in buttonPresenters) App.P.UnRegister(presenter);
 		}
 
 		#region Events
@@ -202,6 +211,7 @@ namespace LunraGames.SubLight.Presenters
 			if (conversationInstances.Any(i => i.BustId.Value == bustId)) return;
 			var conversationModel = new ConversationInstanceModel();
 			conversationModel.BustId.Value = bustId;
+			conversationModel.OnPrompt.Value = OnPrompt;
 			new ConversationPresenter(model, conversationModel);
 
 			conversationInstances.Add(conversationModel);
@@ -211,6 +221,20 @@ namespace LunraGames.SubLight.Presenters
 		{
 			block.AvatarStaticIndex = info.AvatarStaticIndex;
 			return block;
+		}
+ 
+		void OnPrompt(ConversationButtonStyles style, ConversationThemes theme, ConversationButtonBlock prompt)
+		{
+			var buttonsPresenter = buttonPresenters.FirstOrDefault(p => p.Style == style);
+
+			if (buttonsPresenter == null)
+			{
+				Debug.LogError("Unrecognized Style: " + style + ", skipping prompt");
+				if (prompt.Click != null) prompt.Click();
+				return;
+			}
+			
+			buttonsPresenter.HandleButtons(theme, prompt);
 		}
 	}
 	#endregion

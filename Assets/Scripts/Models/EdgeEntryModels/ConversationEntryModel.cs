@@ -17,9 +17,20 @@ namespace LunraGames.SubLight.Models
 		[Serializable]
 		public struct PromptBlock
 		{
-			public static PromptBlock Default { get { return new PromptBlock(); } }
+			public static PromptBlock Default
+			{
+				get
+				{
+					return new PromptBlock
+					{
+						Style = ConversationButtonStyles.Conversation,
+						Theme = ConversationThemes.Crew
+					};
+				}
+			}
 
-			public string PromptMessage;
+			public ConversationButtonStyles Style;
+			public ConversationThemes Theme;
 		}
 
 		//[Serializable]

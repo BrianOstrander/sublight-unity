@@ -577,7 +577,7 @@ namespace LunraGames.SubLight
 
 			if (wasStyle != newStyle)
 			{
-				if (wasStyle != ButtonEncounterLogModel.Styles.Unknown)
+				if (wasStyle != ConversationButtonStyles.Unknown)
 				{
 					// Value has changed, and not to Unknown, so we warn the user data may be lost.
 					if (EditorUtility.DisplayDialog(
@@ -596,10 +596,10 @@ namespace LunraGames.SubLight
 
 			switch (model.Style.Value)
 			{
-				case ButtonEncounterLogModel.Styles.Conversation:
+				case ConversationButtonStyles.Conversation:
 					OnButtonLogBustStyle(infoModel, model);
 					break;
-				case ButtonEncounterLogModel.Styles.Unknown:
+				case ConversationButtonStyles.Unknown:
 					EditorGUILayout.HelpBox("A style must be specified for this button.", MessageType.Error);
 					break;
 				default:
@@ -635,7 +635,7 @@ namespace LunraGames.SubLight
 				style.Theme
 			);
 
-			if (style.Theme == ButtonEncounterLogModel.ConversationStyleBlock.Themes.Unknown) EditorGUILayout.HelpBox("A theme must be specified.", MessageType.Error);
+			if (style.Theme == ConversationThemes.Unknown) EditorGUILayout.HelpBox("A theme must be specified.", MessageType.Error);
 
 			model.ConversationStyle.Value = style;
 		}
@@ -643,7 +643,7 @@ namespace LunraGames.SubLight
 		void OnButtonLogApplyStyle(
 			EncounterInfoModel infoModel,
 			ButtonEncounterLogModel model,
-			ButtonEncounterLogModel.Styles style
+			ConversationButtonStyles style
 		)
 		{
 			var styleApplied = true;
@@ -651,7 +651,7 @@ namespace LunraGames.SubLight
 
 			switch (style)
 			{
-				case ButtonEncounterLogModel.Styles.Conversation:
+				case ConversationButtonStyles.Conversation:
 					onApplyStyle = () => model.ConversationStyle.Value = ButtonEncounterLogModel.ConversationStyleBlock.Default;
 					break;
 				default:
@@ -1422,7 +1422,12 @@ namespace LunraGames.SubLight
 		{
 			var block = entry.PromptInfo.Value;
 
-			block.PromptMessage = EditorGUILayout.TextField(new GUIContent("Prompt", "The text that appears on a button which triggers the specified outgoing message."), block.PromptMessage);
+			GUILayout.BeginHorizontal();
+			{
+				block.Style = EditorGUILayoutExtensions.HelpfulEnumPopup("Button Configuration", "- Select Style -", block.Style);
+				block.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(GUIContent.none, "- Select Theme -", block.Theme);
+			}
+			GUILayout.EndHorizontal();
 
 			entry.PromptInfo.Value = block;
 		}
