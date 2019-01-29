@@ -127,21 +127,21 @@ namespace LunraGames.SubLight
 
 		void TargetsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
 		{
-			OptionDialogPopup.Show(
+			OptionPopupDialog.Show(
 				"Set Target",
-				new OptionDialogPopup.Entry[]
+				new OptionPopupDialog.Entry[]
 				{
-					OptionDialogPopup.Entry.Create(
+					OptionPopupDialog.Entry.Create(
 						"Galaxy Origin",
 						() => { model.GalaxyOriginNormal = clickPosition; ModelSelectionModified = true; },
 						color: Color.yellow
 					),
-					OptionDialogPopup.Entry.Create(
+					OptionPopupDialog.Entry.Create(
 						"Player Start",
 						() => TargetsPrimaryClickSetPlayerBegin(model, clickPosition),
 						color: Color.green
 					),
-					OptionDialogPopup.Entry.Create(
+					OptionPopupDialog.Entry.Create(
 						"Game End",
 						() => TargetsPrimaryClickSetPlayerEnd(model, clickPosition),
 						color: Color.red

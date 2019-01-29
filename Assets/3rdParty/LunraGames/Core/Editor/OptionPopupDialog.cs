@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LunraGamesEditor
 {
-	public class OptionDialogPopup : EditorWindow
+	public class OptionPopupDialog : EditorWindow
 	{
 		public struct Entry
 		{
@@ -111,7 +111,7 @@ namespace LunraGamesEditor
 			if (entries == null) throw new ArgumentNullException("entries");
 			if (cancelText == null) throw new ArgumentNullException("cancelText");
 
-			var window = GetWindow(typeof(OptionDialogPopup), true, title, true) as OptionDialogPopup;
+			var window = GetWindow(typeof(OptionPopupDialog), true, title, true) as OptionPopupDialog;
 			window.entries = entries;
 			window.cancel = cancel;
 			window.cancelText = cancelText;

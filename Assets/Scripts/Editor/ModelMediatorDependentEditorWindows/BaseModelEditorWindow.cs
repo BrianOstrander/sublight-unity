@@ -516,17 +516,37 @@ namespace LunraGames.SubLight
 						break;
 				}
 
-				GUILayout.Label("Always Allow Saving", GUILayout.ExpandWidth(false));
-				modelAlwaysAllowSaving.Value = EditorGUILayout.Toggle(modelAlwaysAllowSaving.Value, GUILayout.Width(14f));
-				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified);
+				if (GUILayout.Button("Settings", GUILayout.Width(64f))) ShowSettingsDialog();
+
+				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || Event.current.control);
 				{
-					if (GUILayout.Button("Save", GUILayout.Width(64f))) Save();
+					var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
+					if (GUILayout.Button(saveContent, GUILayout.Width(64f))) Save();
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
 
 			onDraw(model);
+		}
+		#endregion
+
+		#region Settings Events
+		protected void ShowSettingsDialog()
+		{
+			FlexiblePopupDialog.Show(
+				readableModelName + " Editor Settings",
+				GetSettingsDialogSize,
+				OnSettingsGui
+			);
+		}
+
+		protected virtual Vector2 GetSettingsDialogSize { get { return new Vector2(300f, 200f); } }
+
+		protected virtual void OnSettingsGui()
+		{
+			modelAlwaysAllowSaving.Value = EditorGUILayout.Toggle(new GUIContent("Always Allow Saving", "When enabled the 'Save' button always be clickable."), modelAlwaysAllowSaving.Value);
+			SettingsGui();
 		}
 		#endregion
 
@@ -540,6 +560,7 @@ namespace LunraGames.SubLight
 		protected Action BeforeLoadSelection = ActionExtensions.Empty;
 		protected Action<M> AfterLoadSelection = ActionExtensions.GetEmpty<M>();
 		protected Action Deselect = ActionExtensions.Empty;
+		protected Action SettingsGui = ActionExtensions.Empty;
 		#endregion
 	}
 }
