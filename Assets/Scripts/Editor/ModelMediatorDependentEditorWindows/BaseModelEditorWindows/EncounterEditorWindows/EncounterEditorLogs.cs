@@ -508,7 +508,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			EditorGUILayoutEncounter.LogPopup(
-				"Append New Switch: ",
+				new GUIContent("Append New Switch"),
 				null,
 				infoModel,
 				model,
@@ -539,7 +539,7 @@ namespace LunraGames.SubLight
 			var entry = edge.Entry;
 
 			EditorGUILayoutEncounter.LogPopup(
-				"Target Log: ",
+				new GUIContent("Target Log"),
 				entry.NextLogId.Value,
 				infoModel,
 				model,
@@ -602,7 +602,7 @@ namespace LunraGames.SubLight
 			}
 
 			EditorGUILayoutEncounter.LogPopup(
-				"Append New Button: ",
+				new GUIContent("Append New Button"),
 				null,
 				infoModel,
 				model,
@@ -688,7 +688,7 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				EditorGUILayoutEncounter.LogPopup(
-					"Target Log: ",
+					new GUIContent("Target Log"),
 					entry.NextLogId.Value,
 					infoModel,
 					model,
@@ -1044,7 +1044,7 @@ namespace LunraGames.SubLight
 					}
 					GUILayout.EndHorizontal();
 					EditorGUILayoutEncounter.LogPopup(
-						"Target Log: ",
+						new GUIContent("Target Log"),
 						nextId.Value,
 						infoModel,
 						model,
@@ -1584,7 +1584,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			EditorGUILayoutEncounter.LogPopup(
-				"Next Log: ",
+				new GUIContent("Next Log"),
 				model.NextLogId.Value,
 				infoModel,
 				model,

@@ -23,54 +23,6 @@ namespace LunraGames.SubLight
 	public static class EditorGUILayoutEncounter
 	{
 		public static void LogPopup(
-			string label,
-			string current,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			Action<string> existingSelection,
-			Action<EncounterLogTypes> newSelection,
-			EncounterLogBlankHandling blankHandling,
-			params string[] preAppend
-		)
-		{
-			LogPopup(
-				new GUIContent(label),
-				current,
-				infoModel,
-				model,
-				existingSelection,
-				newSelection,
-				blankHandling,
-				preAppend
-			);
-		}
-
-		public static void LogPopup(
-			string label,
-			string current,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			Action<string> existingSelection,
-			Action<EncounterLogTypes> newSelection,
-			EncounterLogBlankHandling blankHandling,
-			out bool isBlankOrMissing,
-			params string[] preAppend
-		)
-		{
-			LogPopup(
-				new GUIContent(label),
-				current,
-				infoModel,
-				model,
-				existingSelection,
-				newSelection,
-				blankHandling,
-				out isBlankOrMissing,
-				preAppend
-			);
-		}
-
-		public static void LogPopup(
 			GUIContent content,
 			string current,
 			EncounterInfoModel infoModel,
