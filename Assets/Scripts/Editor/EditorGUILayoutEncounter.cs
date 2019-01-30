@@ -20,6 +20,13 @@ namespace LunraGames.SubLight
 		FallsThrough = 50,
 	}
 
+	public enum EncounterLogMissingHandling
+	{
+		Unknown = 0,
+		None = 10,
+		Error = 20
+	}
+
 	public static class EditorGUILayoutEncounter
 	{
 		public static void LogPopup(
@@ -30,6 +37,7 @@ namespace LunraGames.SubLight
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
 			EncounterLogBlankHandling blankHandling,
+			EncounterLogMissingHandling missingHandling,
 			params string[] preAppend
 		)
 		{
@@ -42,6 +50,7 @@ namespace LunraGames.SubLight
 				existingSelection,
 				newSelection,
 				blankHandling,
+				missingHandling,
 				out isBlankOrMissing,
 				preAppend
 			);
@@ -55,6 +64,7 @@ namespace LunraGames.SubLight
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
 			EncounterLogBlankHandling blankHandling,
+			EncounterLogMissingHandling missingHandling,
 			out bool isBlankOrMissing,
 			params string[] preAppend
 		)
@@ -143,7 +153,23 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			isBlankOrMissing = string.IsNullOrEmpty(current) || hasMissingId;
-        	if (blankHandling != EncounterLogBlankHandling.None && isBlankOrMissing)
+
+			if (missingHandling != EncounterLogMissingHandling.None && hasMissingId)
+			{
+				var missingMessage = string.Empty;
+				var missingType = MessageType.None;
+
+				switch (missingHandling)
+				{
+					case EncounterLogMissingHandling.Error:
+						missingMessage = "The specified LogId is missing: " + current;
+						missingType = MessageType.Error;
+						break;
+				}
+
+				if (missingType != MessageType.None) EditorGUILayout.HelpBox(missingMessage, missingType);
+			}
+			else if (blankHandling != EncounterLogBlankHandling.None && isBlankOrMissing)
 			{
 				var blankMessage = string.Empty;
 				var blankType = MessageType.None;
@@ -164,7 +190,7 @@ namespace LunraGames.SubLight
 						break;
 					case EncounterLogBlankHandling.SpecifiedByModel:
 						if (model.Ending.Value) break;
-						if (model.RequiresNextLog) 
+						if (model.RequiresFallbackLog) 
 						{
 							blankMessage = BlankError;
 							blankType = MessageType.Error;

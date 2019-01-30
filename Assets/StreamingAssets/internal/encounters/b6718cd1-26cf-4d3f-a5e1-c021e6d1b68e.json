@@ -24,7 +24,6 @@
       {
         "buttons": [
           {
-            "showFiltering": true,
             "entry": {
               "message": "Print Foo",
               "nextLogId": "5db8d35e-c091-4878-95d4-69630be1405c",
@@ -48,7 +47,6 @@
             }
           },
           {
-            "showFiltering": true,
             "entry": {
               "message": "Print Bar",
               "nextLogId": "a23f5260-9f83-4948-a496-9d4e793d8bb7",
@@ -75,7 +73,7 @@
           {
             "entry": {
               "message": "Exit Encounter",
-              "nextLogId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
+              "nextLogId": "431070fe-97e6-455b-b050-edc86e39aa09",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -95,6 +93,28 @@
               "entryId": "1b140f73-cd27-46a4-9c44-5bfc78cacc2d"
             },
             "index": 2
+          },
+          {
+            "entry": {
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "11c65647-175c-4cbc-b247-2e595b05d33d"
+            },
+            "index": 3
           }
         ],
         "style": "Conversation",
@@ -103,7 +123,7 @@
         },
         "index": 2,
         "logId": "836ed19e-b734-4673-b258-b8db200a85cd",
-        "fallbackLogId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
+        "fallbackLogId": "936c7936-eb09-4369-a265-d0d0962f183b",
         "name": "Buttons"
       }
     ],

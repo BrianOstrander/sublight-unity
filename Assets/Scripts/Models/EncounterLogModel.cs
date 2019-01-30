@@ -51,7 +51,7 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		/// <value><c>true</c> if requires next log; otherwise, <c>false</c>.</value>
 		[JsonIgnore]
-		public virtual bool RequiresNextLog { get { return true; } }
+		public virtual bool RequiresFallbackLog { get { return true; } }
 		[JsonIgnore]
 		public virtual bool EditableDuration { get { return true; } }
 		[JsonIgnore]
