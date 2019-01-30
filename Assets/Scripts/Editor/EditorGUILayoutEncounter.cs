@@ -8,6 +8,8 @@ using UnityEditor;
 
 using LunraGames.SubLight.Models;
 
+using LunraGamesEditor;
+
 namespace LunraGames.SubLight
 {
 	public enum EncounterLogBlankHandling
@@ -92,10 +94,11 @@ namespace LunraGames.SubLight
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
 			EncounterLogBlankHandling blankHandling,
-			EncounterLogMissingHandling missingHandling
+			EncounterLogMissingHandling missingHandling,
+			Action<string> jump
 		)
 		{
-			AppendOrSelectLogPopup(
+			AppendSelectOrBlankLogPopup(
 				prefixContent,
 				content,
 				selectedLogId,
@@ -107,11 +110,13 @@ namespace LunraGames.SubLight
 				missingHandling,
 				EncounterLogBlankOptionHandling.Disabled,
 				null,
-				null
+				null,
+				jump
 			);
 		}
 
-		public static void AppendOrSelectLogPopup(
+		// TODO: Point dialogs to this as well
+		public static void AppendSelectOrBlankLogPopup(
 			GUIContent prefixContent,
 			GUIContent content,
 			string selectedLogId,
@@ -123,11 +128,12 @@ namespace LunraGames.SubLight
 			EncounterLogMissingHandling missingHandling,
 			EncounterLogBlankOptionHandling blankOptionHandling,
 			GUIContent noneSelectionContent,
-			Action noneSelection
+			Action noneSelection,
+			Action<string> jump
 		)
 		{
 			var isBlankOrMissing = false;
-			AppendOrSelectLogPopup(
+			AppendSelectOrBlankLogPopup(
 				prefixContent,
 				content,
 				selectedLogId,
@@ -140,11 +146,12 @@ namespace LunraGames.SubLight
 				out isBlankOrMissing,
 				blankOptionHandling,
 				noneSelectionContent,
-				noneSelection
+				noneSelection,
+				jump
 			);
 		}
 
-		public static void AppendOrSelectLogPopup(
+		public static void AppendSelectOrBlankLogPopup(
 			GUIContent prefixContent,
 			GUIContent content,
 			string selectedLogId,
@@ -157,7 +164,8 @@ namespace LunraGames.SubLight
 			out bool isBlankOrMissing,
 			EncounterLogBlankOptionHandling blankOptionHandling,
 			GUIContent noneSelectionContent,
-			Action noneSelection
+			Action noneSelection,
+			Action<string> jump
 		)
 		{
 			if (infoModel == null) throw new ArgumentNullException("infoModel");
@@ -179,90 +187,14 @@ namespace LunraGames.SubLight
 			prefixContent = prefixContent ?? GUIContent.none;
 			var hasPrefixContent = prefixContent != GUIContent.none;
 
-			/*
-			var nextModel = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
-
-			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
-			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
-
-			var optionNamesList = new List<string>();
-			foreach (var logId in rawOptions)
-			{
-				var log = infoModel.Logs.GetLogFirstOrDefault(logId);
-				var logIsMissing = log == null;
-				var logName = logIsMissing ? null : log.Name.Value;
-
-				optionNamesList.Add(
-					GetListName(
-						logId,
-						logName,
-						logIsMissing,
-						logId == nextId
-					)
-				);
-			}
-			var rawOptionNames = optionNamesList.AsEnumerable();
-
-			var rawLogTypes = new List<EncounterLogTypes>().AsEnumerable();
-
-			for (var i = 0; i < rawOptions.Count(); i++) rawLogTypes = rawLogTypes.Append(EncounterLogTypes.Unknown);
-
-			rawOptions = rawOptions.Prepend(null);
-			rawLogTypes = rawLogTypes.Prepend(EncounterLogTypes.Unknown);
-			rawOptionNames = rawOptionNames.Prepend("--- Existing Logs ---");
-
-			foreach (var logType in EnumExtensions.GetValues<EncounterLogTypes>().ExceptOne(EncounterLogTypes.Unknown).Reverse())
-			{
-				rawOptions = rawOptions.Prepend(null);
-				rawLogTypes = rawLogTypes.Prepend(logType);
-				rawOptionNames = rawOptionNames.Prepend(logType.ToString());
-			}
-
-			rawOptions = rawOptions.Prepend(null);
-			rawLogTypes = rawLogTypes.Prepend(EncounterLogTypes.Unknown);
-			rawOptionNames = rawOptionNames.Prepend("--- New Logs ---");
-
-			foreach (var preAppendLabel in preAppend.Reverse())
-			{
-				rawOptions = rawOptions.Prepend(null);
-				rawLogTypes = rawLogTypes.Prepend(EncounterLogTypes.Unknown);
-				rawOptionNames = rawOptionNames.Prepend(preAppendLabel);
-			}
-
-			var options = rawOptions.ToArray();
-			var optionNames = rawOptionNames.ToArray();
-			var logTypes = rawLogTypes.ToArray();
-
-			var index = 0;
-			var wasFound = false;
-			for (var i = 0; i < options.Length; i++)
-			{
-				if (options[i] == current)
-				{
-					index = i;
-					wasFound = true;
-					break;
-				}
-			}
-			var startIndex = index;
-			var hasMissingId = !string.IsNullOrEmpty(current) && !wasFound;
-
-			GUILayout.BeginHorizontal();
-			{
-				EditorGUILayout.PrefixLabel(prefixContent);
-				index = EditorGUILayout.Popup(index, optionNames);
-			}
-			GUILayout.EndHorizontal();
-			*/
-
-			var logs = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value);
-
 			switch (blankOptionHandling)
 			{
 				case EncounterLogBlankOptionHandling.Selectable:
 					content = string.IsNullOrEmpty(selectedLogId) ? noneSelectionContent : content;
 					break;
 			}
+
+			var logs = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value);
 
 			if (!string.IsNullOrEmpty(selectedLogId))
 			{
@@ -279,45 +211,54 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			GUILayout.BeginHorizontal();
+			var isInHorizontalLayout = hasPrefixContent || jump != null;
+
+			if (isInHorizontalLayout) GUILayout.BeginHorizontal();
+
+			if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
+
+			if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
 			{
-				if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
-
-				if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
+				lastMouseOverCallback = () =>
 				{
-					lastMouseOverCallback = () =>
-					{
-						var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+					var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
 
-						ShowSelectOrAppendMenu(
-							model,
-							logs.ToArray(),
-							selectedLogId,
-							nextLog == null ? null : nextLog.LogId.Value,
-							existingSelection,
-							newSelection,
-							blankOptionHandling,
-							noneSelectionContent,
-							noneSelection
-						);
-					};
-				}
-
-				if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null)
-				{
-					var lastRect = GUILayoutUtility.GetLastRect();
-					if (lastRect.Contains(Event.current.mousePosition))
-					{
-						lastMouseOverRect = lastRect;
-						var callback = lastMouseOverCallback;
-						lastMouseOverCallback = null;
-						callback();
-					}
-				}
-
-
+					ShowSelectOrAppendMenu(
+						model,
+						logs.ToArray(),
+						selectedLogId,
+						nextLog == null ? null : nextLog.LogId.Value,
+						existingSelection,
+						newSelection,
+						blankOptionHandling,
+						noneSelectionContent,
+						noneSelection
+					);
+				};
 			}
-			GUILayout.EndHorizontal();
+
+			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null)
+			{
+				var lastRect = GUILayoutUtility.GetLastRect();
+				if (lastRect.Contains(Event.current.mousePosition))
+				{
+					lastMouseOverRect = lastRect;
+					var callback = lastMouseOverCallback;
+					lastMouseOverCallback = null;
+					callback();
+				}
+			}
+
+			if (jump != null)
+			{
+				EditorGUILayoutExtensions.PushEnabled(!string.IsNullOrEmpty(selectedLogId));
+				{
+					if (GUILayout.Button(new GUIContent("Jump", "Focuses the selected log."), EditorStyles.miniButton, GUILayout.Width(48f))) jump(selectedLogId);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+
+			if (isInHorizontalLayout) GUILayout.EndHorizontal();
 
 			var logIds = logs.Select(l => l.LogId.Value);
 			var wasFound = logIds.Contains(selectedLogId);

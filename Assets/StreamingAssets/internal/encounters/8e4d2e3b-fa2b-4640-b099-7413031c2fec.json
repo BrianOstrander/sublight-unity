@@ -34,6 +34,7 @@
         "buttons": [
           {
             "entry": {
+              "nextLogId": "c95f80c6-4104-4bcf-a6c6-6c08a2bd4a49",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -55,7 +56,8 @@
           }
         ],
         "beginning": true,
-        "logId": "2382b0f4-9660-41c4-b15e-6402d920a758"
+        "logId": "2382b0f4-9660-41c4-b15e-6402d920a758",
+        "fallbackLogId": "c95f80c6-4104-4bcf-a6c6-6c08a2bd4a49"
       }
     ],
     "encyclopediaLogs": [],

@@ -559,7 +559,7 @@ namespace LunraGames.SubLight
 			SwitchEncounterLogModel model
 		)
 		{
-			EditorGUILayoutEncounter.AppendOrSelectLogPopup(
+			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Append New Switch"),
 				new GUIContent("- Select Target Log -"),
 				null,
@@ -571,7 +571,8 @@ namespace LunraGames.SubLight
 				EncounterLogMissingHandling.None,
 				EncounterLogBlankOptionHandling.NotSelectable,
 				new GUIContent("< Fallback >"),
-				() => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, null))
+				() => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, null)),
+				null
 			);
 
 			OnEdgedLog<SwitchEncounterLogModel, SwitchEdgeModel>(infoModel, model, OnSwitchLogEdge);
@@ -593,7 +594,7 @@ namespace LunraGames.SubLight
 		{
 			var entry = edge.Entry;
 
-			EditorGUILayoutEncounter.AppendOrSelectLogPopup(
+			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Target Log"),
 				new GUIContent("- Select Target Log -"),
 				entry.NextLogId.Value,
@@ -605,7 +606,8 @@ namespace LunraGames.SubLight
 				EncounterLogMissingHandling.Error,
 				EncounterLogBlankOptionHandling.Selectable,
 				new GUIContent("< Fallback >"),
-				() => entry.NextLogId.Value = null
+				() => entry.NextLogId.Value = null,
+				JumpToLogId
 			);
 
 			EditorGUILayoutValueFilter.Field(
@@ -660,7 +662,7 @@ namespace LunraGames.SubLight
 					break;
 			}
 
-			EditorGUILayoutEncounter.AppendOrSelectLogPopup(
+			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Append New Button"),
 				new GUIContent("- Select Target Log -"),
 				null,
@@ -672,7 +674,8 @@ namespace LunraGames.SubLight
 				EncounterLogMissingHandling.None,
 				EncounterLogBlankOptionHandling.NotSelectable,
 				new GUIContent("< Fallback >"),
-				() => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, null))
+				() => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, null)),
+				null
 			);
 
 			OnEdgedLog<ButtonEncounterLogModel, ButtonEdgeModel>(infoModel, model, OnButtonLogEdge);
@@ -749,7 +752,7 @@ namespace LunraGames.SubLight
 			var hasBlankOrMissingNextId = false;
 			GUILayout.BeginHorizontal();
 			{
-				EditorGUILayoutEncounter.AppendOrSelectLogPopup(
+				EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 					new GUIContent("Target Log"),
 					new GUIContent("- Select Target Log -"),
 					entry.NextLogId.Value,
@@ -762,7 +765,8 @@ namespace LunraGames.SubLight
 					out hasBlankOrMissingNextId,
 					EncounterLogBlankOptionHandling.Selectable,
 					new GUIContent("< Fallback >"),
-					() => entry.NextLogId.Value = null
+					() => entry.NextLogId.Value = null,
+					JumpToLogId
 				);
 
 				entry.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !entry.NotAutoUsed.Value, GUILayout.Width(74f));
@@ -1120,7 +1124,8 @@ namespace LunraGames.SubLight
 						existingSelection => nextId.Value = existingSelection,
 						newSelection => nextId.Value = AppendNewLog(newSelection, infoModel),
 						EncounterLogBlankHandling.FallsThrough,
-						EncounterLogMissingHandling.Error
+						EncounterLogMissingHandling.Error,
+						JumpToLogId
 					);
 				}
 			}
@@ -1650,7 +1655,7 @@ namespace LunraGames.SubLight
 			EncounterLogModel model
 		)
 		{
-			EditorGUILayoutEncounter.AppendOrSelectLogPopup(
+			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent(model.RequiresFallbackLog ? "Next Log" : "Fallback Log", "The encounter will fallthrough to tthis log if not overridden."),
 				new GUIContent(model.RequiresFallbackLog ? "- Select Next Log -" : "- Select Fallback Log -"),
 				model.FallbackLogId.Value,
@@ -1659,7 +1664,11 @@ namespace LunraGames.SubLight
 				existingSelection => model.FallbackLogId.Value = existingSelection,
 				newSelection => model.FallbackLogId.Value = AppendNewLog(newSelection, infoModel),
 				logsShowFallthroughWarnings.Value ? EncounterLogBlankHandling.SpecifiedByModel : EncounterLogBlankHandling.SpecifiedByModelNoWarnings,
-				EncounterLogMissingHandling.Error
+				EncounterLogMissingHandling.Error,
+				EncounterLogBlankOptionHandling.Selectable,
+				new GUIContent("< Blank >"),
+				() => model.FallbackLogId.Value = null,
+				JumpToLogId
 			);
 		}
 
@@ -1695,6 +1704,11 @@ namespace LunraGames.SubLight
 		int GetBustIdCount(EncounterInfoModel infoModel, string bustId)
 		{
 			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value).Count(i => i == bustId);
+		}
+
+		void JumpToLogId(string logId)
+		{
+			Debug.Log("jumping to " + logId);
 		}
 		#endregion
 
