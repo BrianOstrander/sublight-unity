@@ -177,6 +177,7 @@ namespace LunraGames.SubLight
 			}
 
 			prefixContent = prefixContent ?? GUIContent.none;
+			var hasPrefixContent = prefixContent != GUIContent.none;
 
 			/*
 			var nextModel = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
@@ -278,37 +279,45 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard))
+			GUILayout.BeginHorizontal();
 			{
-				lastMouseOverCallback = () =>
-				{
-					var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+				if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
 
-					ShowSelectOrAppendMenu(
-						model,
-						logs.ToArray(),
-						selectedLogId,
-						nextLog == null ? null : nextLog.LogId.Value,
-						existingSelection,
-						newSelection,
-						blankOptionHandling,
-						noneSelectionContent,
-						noneSelection
-					);
-				};
-			}
-
-			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null)
-			{
-				var lastRect = GUILayoutUtility.GetLastRect();
-				if (lastRect.Contains(Event.current.mousePosition))
+				if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
 				{
-					lastMouseOverRect = lastRect;
-					var callback = lastMouseOverCallback;
-					lastMouseOverCallback = null;
-					callback();
+					lastMouseOverCallback = () =>
+					{
+						var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+
+						ShowSelectOrAppendMenu(
+							model,
+							logs.ToArray(),
+							selectedLogId,
+							nextLog == null ? null : nextLog.LogId.Value,
+							existingSelection,
+							newSelection,
+							blankOptionHandling,
+							noneSelectionContent,
+							noneSelection
+						);
+					};
 				}
+
+				if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null)
+				{
+					var lastRect = GUILayoutUtility.GetLastRect();
+					if (lastRect.Contains(Event.current.mousePosition))
+					{
+						lastMouseOverRect = lastRect;
+						var callback = lastMouseOverCallback;
+						lastMouseOverCallback = null;
+						callback();
+					}
+				}
+
+
 			}
+			GUILayout.EndHorizontal();
 
 			var logIds = logs.Select(l => l.LogId.Value);
 			var wasFound = logIds.Contains(selectedLogId);
