@@ -56,7 +56,10 @@ namespace LunraGamesEditor
 			GUILayout.BeginHorizontal();
 			{
 				EditorGUILayout.PrefixLabel(content);
+				var wasIndent = EditorGUI.indentLevel;
+				EditorGUI.indentLevel = 0;
 				result = HelpfulEnumPopupValue(primaryReplacement, value, options, guiOptions);
+				EditorGUI.indentLevel = wasIndent;
 			}
 			GUILayout.EndHorizontal();
 			return result;

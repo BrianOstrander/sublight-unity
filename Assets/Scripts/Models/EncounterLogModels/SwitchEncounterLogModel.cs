@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class SwitchEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<SwitchEdgeModel>
+	public class SwitchEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<SwitchEdgeModel>
 	{
 		[JsonProperty] SwitchEdgeModel[] switches = new SwitchEdgeModel[0];
 

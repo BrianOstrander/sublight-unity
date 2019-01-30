@@ -10,6 +10,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string logId;
 		[JsonProperty] float duration;
 
+		[JsonProperty] string fallbackLogId;
+
 		[JsonProperty] string name;
 		[JsonProperty] string notes;
 
@@ -29,6 +31,9 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<float> Duration;
 
 		[JsonIgnore]
+		public readonly ListenerProperty<string> FallbackLogId;
+
+		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Notes;
@@ -36,7 +41,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public abstract EncounterLogTypes LogType { get; }
 		[JsonIgnore]
-		public abstract string NextLog { get; }
+		public virtual string NextLog { get { return FallbackLogId.Value; } }
+		[JsonIgnore]
+		public virtual bool CanFallback { get { return true; } }
 
 		/// <summary>
 		/// If this value returns true, not having a next log is an error,
@@ -61,6 +68,8 @@ namespace LunraGames.SubLight.Models
 			Ending = new ListenerProperty<bool>(value => ending = value, () => ending);
 			LogId = new ListenerProperty<string>(value => logId = value, () => logId);
 			Duration = new ListenerProperty<float>(value => duration = value, () => duration);
+
+			FallbackLogId = new ListenerProperty<string>(value => fallbackLogId = value, () => fallbackLogId);
 
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Notes = new ListenerProperty<string>(value => notes = value, () => notes);

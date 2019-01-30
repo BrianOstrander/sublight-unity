@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class DialogEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<DialogEdgeModel>
+	public class DialogEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<DialogEdgeModel>
 	{
 		[JsonProperty] DialogEdgeModel[] dialogs = new DialogEdgeModel[0];
 

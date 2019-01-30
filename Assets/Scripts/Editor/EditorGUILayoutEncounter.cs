@@ -137,7 +137,7 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(content, GUILayout.ExpandWidth(false));
+				EditorGUILayout.PrefixLabel(content);
 				index = EditorGUILayout.Popup(index, optionNames);
 			}
 			GUILayout.EndHorizontal();

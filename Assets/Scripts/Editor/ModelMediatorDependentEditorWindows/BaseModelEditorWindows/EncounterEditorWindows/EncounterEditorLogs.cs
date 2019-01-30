@@ -55,7 +55,7 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count() + " |", GUILayout.ExpandWidth(false));
-					GUILayout.Label("Append New Log:", GUILayout.ExpandWidth(false));
+					GUILayout.Label("Append New Log", GUILayout.ExpandWidth(false));
 					AppendNewLog(EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Log Type -", EncounterLogTypes.Unknown), model);
 					GUILayout.Label("Hold 'Control' to rearrange entries or 'Shift' to delete them.", GUILayout.ExpandWidth(false));
 				}
@@ -304,6 +304,8 @@ namespace LunraGames.SubLight
 
 		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
+			if (model.CanFallback) OnFallbackLog(infoModel, model);
+
 			switch (model.LogType)
 			{
 				case EncounterLogTypes.Text:
@@ -348,9 +350,10 @@ namespace LunraGames.SubLight
 		#region Text Logs
 		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
 		{
-			model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header", model.Header.Value);
-			model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
-			OnLinearLog(infoModel, model);
+			EditorGUILayout.HelpBox("delete this", MessageType.Error);
+			//model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header", model.Header.Value);
+			//model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
+			//OnLinearLog(infoModel, model);
 		}
 		#endregion
 
@@ -432,7 +435,7 @@ namespace LunraGames.SubLight
 				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
 			}
 
-			OnLinearLog(infoModel, model);
+			OnFallbackLog(infoModel, model);
 		}
 
 		bool OnKeyValueLogHeader(
@@ -1501,8 +1504,6 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			if (model.IsLinear) OnLinearLog(infoModel, model as LinearEncounterLogModel);
-
 			if (!string.IsNullOrEmpty(deleted))
 			{
 				model.Edges = model.Edges.Where(e => e.EdgeId != deleted).ToArray();
@@ -1578,18 +1579,18 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		void OnLinearLog(
+		void OnFallbackLog(
 			EncounterInfoModel infoModel,
-			LinearEncounterLogModel model
+			EncounterLogModel model
 		)
 		{
 			EditorGUILayoutEncounter.LogPopup(
-				new GUIContent("Next Log"),
-				model.NextLogId.Value,
+				new GUIContent("Fallback Log"),
+				model.FallbackLogId.Value,
 				infoModel,
 				model,
-				existingSelection => model.NextLogId.Value = existingSelection,
-				newSelection => model.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				existingSelection => model.FallbackLogId.Value = existingSelection,
+				newSelection => model.FallbackLogId.Value = AppendNewLog(newSelection, infoModel),
 				EncounterLogBlankHandling.SpecifiedByModel,
 				"- Select Target Log -"
 			);

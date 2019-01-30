@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
+	public class ButtonEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
 	{
 		[Serializable]
 		public struct ConversationStyleBlock

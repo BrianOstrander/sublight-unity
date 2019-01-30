@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class TextEncounterLogModel : LinearEncounterLogModel
+	public class TextEncounterLogModel : EncounterLogModel
 	{
 		[JsonProperty] string header;
 		[JsonProperty] string message;
