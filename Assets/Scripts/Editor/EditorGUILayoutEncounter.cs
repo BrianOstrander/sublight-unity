@@ -30,58 +30,25 @@ namespace LunraGames.SubLight
 
 	public static class EditorGUILayoutEncounter
 	{
-		public static void LogPopup(
-			GUIContent content,
-			string current,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			Action<string> existingSelection,
-			Action<EncounterLogTypes> newSelection,
-			EncounterLogBlankHandling blankHandling,
-			EncounterLogMissingHandling missingHandling,
-			params string[] preAppend
-		)
+		class MenuEntry
 		{
-			var isBlankOrMissing = false;
-			LogPopup(
-				content,
-				current,
-				infoModel,
-				model,
-				existingSelection,
-				newSelection,
-				blankHandling,
-				missingHandling,
-				out isBlankOrMissing,
-				preAppend
-			);
+			public string LogId;
+			public string Name;
+			public bool IsSelected;
+			public bool IsNext;
+			public bool IsDisabled;
+			public bool IsMissing;
+			public Action Select;
 		}
 
-		public static void LogPopup(
+		/*
+		public static string SelectLogPopup(
 			GUIContent content,
-			string current,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			Action<string> existingSelection,
-			Action<EncounterLogTypes> newSelection,
-			EncounterLogBlankHandling blankHandling,
-			EncounterLogMissingHandling missingHandling,
-			out bool isBlankOrMissing,
-			params string[] preAppend
+			string selection,
+			EncounterInfoModel infoModel
 		)
 		{
-			if (infoModel == null) throw new ArgumentNullException("infoModel");
-			if (model == null) throw new ArgumentNullException("model");
-			if (existingSelection == null) throw new ArgumentNullException("existingSelection");
-			if (newSelection == null) throw new ArgumentNullException("newSelection");
-
-			content = content ?? GUIContent.none;
-
-			const string currentAppend = " | Next";
-			var nextModel = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
-
-			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
-			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
+			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.LogId.Value);
 
 			var optionNamesList = new List<string>();
 			foreach (var logId in rawOptions)
@@ -89,7 +56,7 @@ namespace LunraGames.SubLight
 				var log = infoModel.Logs.GetLogFirstOrDefault(logId);
 				if (log == null)
 				{
-					optionNamesList.Add("* Problem Finding Log "+logId+" *");
+					optionNamesList.Add("* Problem Finding Log " + logId + " *");
 					continue;
 				}
 
@@ -99,6 +66,87 @@ namespace LunraGames.SubLight
 
 				if (logId == nextId) shortened += currentAppend;
 				optionNamesList.Add(shortened);
+			}
+			var rawOptionNames = optionNamesList.AsEnumerable();
+		}
+		*/
+
+		public static void AppendOrSelectLogPopup(
+			GUIContent prefixContent,
+			GUIContent content,
+			string selectedLogId,
+			EncounterInfoModel infoModel,
+			EncounterLogModel model,
+			Action<string> existingSelection,
+			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankHandling blankHandling,
+			EncounterLogMissingHandling missingHandling,
+			GUIContent noneSelectionContent = null,
+			Action noneSelection = null
+		)
+		{
+			var isBlankOrMissing = false;
+			AppendOrSelectLogPopup(
+				prefixContent,
+				content,
+				selectedLogId,
+				infoModel,
+				model,
+				existingSelection,
+				newSelection,
+				blankHandling,
+				missingHandling,
+				out isBlankOrMissing
+			);
+		}
+
+		public static void AppendOrSelectLogPopup(
+			GUIContent prefixContent,
+			GUIContent content,
+			string selectedLogId,
+			EncounterInfoModel infoModel,
+			EncounterLogModel model,
+			Action<string> existingSelection,
+			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankHandling blankHandling,
+			EncounterLogMissingHandling missingHandling,
+			out bool isBlankOrMissing,
+			GUIContent noneSelectionContent = null,
+			Action noneSelection = null
+		)
+		{
+			if (infoModel == null) throw new ArgumentNullException("infoModel");
+			if (model == null) throw new ArgumentNullException("model");
+			if (existingSelection == null) throw new ArgumentNullException("existingSelection");
+			if (newSelection == null) throw new ArgumentNullException("newSelection");
+
+			noneSelectionContent = noneSelectionContent ?? GUIContent.none;
+
+			if (noneSelectionContent != GUIContent.none && noneSelection == null) throw new ArgumentNullException("noneSelection", "A noneSelectionContent was specified but noneSelection is null");
+
+			prefixContent = prefixContent ?? GUIContent.none;
+
+			/*
+			var nextModel = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+
+			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
+			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
+
+			var optionNamesList = new List<string>();
+			foreach (var logId in rawOptions)
+			{
+				var log = infoModel.Logs.GetLogFirstOrDefault(logId);
+				var logIsMissing = log == null;
+				var logName = logIsMissing ? null : log.Name.Value;
+
+				optionNamesList.Add(
+					GetListName(
+						logId,
+						logName,
+						logIsMissing,
+						logId == nextId
+					)
+				);
 			}
 			var rawOptionNames = optionNamesList.AsEnumerable();
 
@@ -148,12 +196,35 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal();
 			{
-				EditorGUILayout.PrefixLabel(content);
+				EditorGUILayout.PrefixLabel(prefixContent);
 				index = EditorGUILayout.Popup(index, optionNames);
 			}
 			GUILayout.EndHorizontal();
+			*/
 
-			isBlankOrMissing = string.IsNullOrEmpty(current) || hasMissingId;
+			var logs = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value);
+
+			if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard))
+			{
+				var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+
+				ShowSelectOrAppendMenu(
+					model,
+					logs.ToArray(),
+					selectedLogId,
+					nextLog == null ? null : nextLog.LogId.Value,
+					existingSelection,
+					newSelection,
+					noneSelectionContent,
+					noneSelection
+				);
+			}
+
+			var logIds = logs.Select(l => l.LogId.Value);
+			var wasFound = logIds.Contains(selectedLogId);
+			var hasMissingId = !string.IsNullOrEmpty(selectedLogId) && !wasFound;
+
+			isBlankOrMissing = string.IsNullOrEmpty(selectedLogId) || hasMissingId;
 
 			if (missingHandling != EncounterLogMissingHandling.None && hasMissingId)
 			{
@@ -163,7 +234,7 @@ namespace LunraGames.SubLight
 				switch (missingHandling)
 				{
 					case EncounterLogMissingHandling.Error:
-						missingMessage = "The specified LogId is missing: " + current;
+						missingMessage = "The specified LogId is missing: " + selectedLogId;
 						missingType = MessageType.Error;
 						break;
 				}
@@ -211,14 +282,101 @@ namespace LunraGames.SubLight
 
 				if (blankType != MessageType.None) EditorGUILayout.HelpBox(blankMessage, blankType);
 			}
+		}
 
-			if (startIndex == index) return;
+		static void ShowSelectOrAppendMenu(
+			EncounterLogModel current,
+			EncounterLogModel[] options,
+			string selectedLogId,
+			string nextLogId,
+			Action<string> existingSelection,
+			Action<EncounterLogTypes> newSelection,
+			GUIContent noneSelectionContent,
+			Action noneSelection
+		)
+		{
+			var entries = GetMenuEntries(
+				options,
+				existingSelection,
+				selectedLogId,
+				nextLogId,
+				current.LogId.Value
+			);
 
-			var selectedId = options[index];
-			var selectedLogType = logTypes[index];
+			var menu = new GenericMenu();
+			menu.allowDuplicateNames = true;
 
-			if (selectedLogType == EncounterLogTypes.Unknown) existingSelection(selectedId);
-			else newSelection(selectedLogType);
+			foreach (var logType in EnumExtensions.GetValues(EncounterLogTypes.Unknown).OrderBy(t => t.ToString()))
+			{
+				menu.AddItem(new GUIContent("Create/" + logType.ToString(), "does this appear???"), false, () => newSelection(logType));
+			}
+
+			menu.AddSeparator(string.Empty);
+
+			if (noneSelectionContent != GUIContent.none)
+			{
+				menu.AddItem(noneSelectionContent, string.IsNullOrEmpty(selectedLogId), () => noneSelection());
+				menu.AddSeparator(string.Empty);
+			}
+
+			foreach (var entry in entries)
+			{
+				if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+				else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+			}
+
+			//menu.DropDown(GUILayoutUtility.GetLastRect());
+			menu.ShowAsContext();
+		}
+
+		static List<MenuEntry> GetMenuEntries(
+			EncounterLogModel[] options,
+			Action<string> select,
+			string selectedLogId,
+			string nextLogId = null,
+			params string[] disabledLogIds
+		)
+		{
+			var results = new List<MenuEntry>();
+
+			foreach (var log in options)
+			{
+				var logId = log.LogId.Value; // Not sure if I have to do this anymore to avoid lambda bugs...
+				var isLogIdNullOrEmpty = string.IsNullOrEmpty(logId);
+				var isNext = !isLogIdNullOrEmpty && logId == nextLogId;
+
+				results.Add(
+					new MenuEntry
+					{
+						LogId = logId,
+						Name = GetMenuEntryName(logId, log.Name.Value, isNext: isNext),
+						IsSelected = !isLogIdNullOrEmpty && logId == selectedLogId,
+						IsNext = isNext,
+						IsDisabled = disabledLogIds.Contains(logId),
+						Select = () => select(logId)
+					}
+				);
+			}
+
+			return results;
+		}
+
+		static string GetMenuEntryName(
+			string logId,
+			string name,
+			bool missing = false,
+			bool isNext = false
+		)
+		{
+			if (missing) return "* Problem Finding Log " + (logId == null ? "< null >" : (string.IsNullOrEmpty(logId) ? "< empty >" : logId)) + " *";
+
+			var result = logId.Substring(0, Mathf.Min(8, logId.Length));
+
+			if (!string.IsNullOrEmpty(name)) result = name + " | " + result;
+
+			if (isNext) result += " | Next";
+
+			return result;
 		}
 	}
 }
