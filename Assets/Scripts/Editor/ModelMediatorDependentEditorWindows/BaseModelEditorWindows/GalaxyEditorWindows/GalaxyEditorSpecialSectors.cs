@@ -225,11 +225,11 @@ namespace LunraGames.SubLight
 
 			EditorGUILayoutExtensions.PushColor(positionInPreview ? positionColor : positionColor.NewA(positionColor.a * 0.5f));
 			{
-				GUI.Box(CenteredScreen(positionInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Sector Position"), SubLightEditorConfig.Instance.GalaxyTargetStyle);
+				GUI.Box(CenteredScreen(positionInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Sector Position"), SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyle);
 			}
 			EditorGUILayoutExtensions.PopColor();
 
-			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyTargetStyleSmall);
+			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyleSmall);
 		}
 
 		void SpecifiedSectorsShowAll(
@@ -255,7 +255,7 @@ namespace LunraGames.SubLight
 
 				var selectCurrentArea = CenteredScreen(positionInWindow, new Vector2(16f, 16f));
 
-				if (GUI.Button(selectCurrentArea, new GUIContent(string.Empty, sector.Name.Value), SubLightEditorConfig.Instance.SpecifiedSectorTargetStyle))
+				if (GUI.Button(selectCurrentArea, new GUIContent(string.Empty, sector.Name.Value), SubLightEditorConfig.Instance.GalaxyEditorSpecifiedSectorTargetStyle))
 				{
 					SpecifiedSectorsSelectSpecifiedSector(sector);
 				}
@@ -265,7 +265,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PopColor();
 			}
 
-			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyTargetStyleSmall);
+			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyleSmall);
 		}
 
 		void SpecifiedSectorsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)

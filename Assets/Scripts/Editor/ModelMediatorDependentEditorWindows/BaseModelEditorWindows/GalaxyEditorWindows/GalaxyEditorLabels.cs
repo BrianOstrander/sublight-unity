@@ -462,7 +462,7 @@ namespace LunraGames.SubLight
 
 			EditorGUILayoutExtensions.PushColor(beginInPreview ? beginColor : beginColor.NewA(beginColor.a * 0.5f));
 			{
-				GUI.Box(CenteredScreen(beginAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor Begin"), SubLightEditorConfig.Instance.LabelAnchorStyle);
+				GUI.Box(CenteredScreen(beginAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor Begin"), SubLightEditorConfig.Instance.GalaxyEditorLabelAnchorStyle);
 			}
 			EditorGUILayoutExtensions.PopColor();
 
@@ -474,7 +474,7 @@ namespace LunraGames.SubLight
 					var endColor = labelsLabelState == LabelStates.UpdatingEnd ? Color.magenta.NewS(0.25f) : Color.magenta;
 					EditorGUILayoutExtensions.PushColor(endInPreview ? endColor : endColor.NewA(endColor.a * 0.5f));
 					{
-						GUI.Box(CenteredScreen(endAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor End"), SubLightEditorConfig.Instance.LabelAnchorStyle);
+						GUI.Box(CenteredScreen(endAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor End"), SubLightEditorConfig.Instance.GalaxyEditorLabelAnchorStyle);
 					}
 					EditorGUILayoutExtensions.PopColor();
 					break;
@@ -495,7 +495,7 @@ namespace LunraGames.SubLight
 
 				EditorGUILayoutExtensions.PushColor(Color.yellow);
 				{
-					GUI.Box(CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.LabelCurvePointStyle);
+					GUI.Box(CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.GalaxyEditorLabelCurvePointStyle);
 				}
 				EditorGUILayoutExtensions.PopColor();
 			}
@@ -537,14 +537,14 @@ namespace LunraGames.SubLight
 					var curvePos = previewCurveInfo.Evaluate(currBegin, currEnd, progress, false);
 					var curvePosInWindow = new Vector2(curvePos.x, curvePos.z);
 
-					GUI.Box(CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.LabelCurvePointStyle);
+					GUI.Box(CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.GalaxyEditorLabelCurvePointStyle);
 				}
 
 				var centerPos = previewCurveInfo.Evaluate(currBegin, currEnd, 0.5f, false);
 				var centerPosInWindow = new Vector2(centerPos.x, centerPos.z);
 				var selectCurrentArea = CenteredScreen(centerPosInWindow, new Vector2(16f, 16f));
 
-				if (GUI.Button(selectCurrentArea, new GUIContent(string.Empty, label.Name.Value), SubLightEditorConfig.Instance.LabelCurveCenterStyle))
+				if (GUI.Button(selectCurrentArea, new GUIContent(string.Empty, label.Name.Value), SubLightEditorConfig.Instance.GalaxyEditorLabelCurveCenterStyle))
 				{
 					SelectLabel(label);
 				}

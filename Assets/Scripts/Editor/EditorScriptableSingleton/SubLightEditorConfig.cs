@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEditor;
+
 using LunraGamesEditor.Singletonnes;
 
 namespace LunraGames.SubLight
@@ -7,24 +7,44 @@ namespace LunraGames.SubLight
 	public class SubLightEditorConfig : EditorScriptableSingleton<SubLightEditorConfig>
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+		[Header("Encounter Editor Styles")]
 		[SerializeField]
-		GUIStyle galaxyTargetStyle;
-		public GUIStyle GalaxyTargetStyle { get { return galaxyTargetStyle; } }
+		Color encounterEditorLogBackgroundColor;
+		public Color EncounterEditorLogBackgroundColor { get { return encounterEditorLogBackgroundColor; } }
+		[SerializeField]
+		GUIStyle encounterEditorLogBackground;
+		public GUIStyle EncounterEditorLogBackground { get { return encounterEditorLogBackground; } }
 
 		[SerializeField]
-		GUIStyle labelAnchorStyle;
-		public GUIStyle LabelAnchorStyle { get { return labelAnchorStyle; } }
+		Color encounterEditorLogEntryBackgroundColor;
+		public Color EncounterEditorLogEntryBackgroundColor { get { return encounterEditorLogEntryBackgroundColor; } }
+		[SerializeField]
+		GUIStyle encounterEditorLogEntryBackground;
+		public GUIStyle EncounterEditorLogEntryBackground { get { return encounterEditorLogEntryBackground; } }
 
 		[SerializeField]
-		GUIStyle labelCurvePointStyle;
-		public GUIStyle LabelCurvePointStyle { get { return labelCurvePointStyle; } }
+		GUIStyle encounterEditorLogEntryIndex;
+		public GUIStyle EncounterEditorLogEntryIndex { get { return encounterEditorLogEntryIndex; } }
+
+		[Header("Galaxy Editor Styles")]
+		[SerializeField]
+		GUIStyle galaxyEditorGalaxyTargetStyle;
+		public GUIStyle GalaxyEditorGalaxyTargetStyle { get { return galaxyEditorGalaxyTargetStyle; } }
 
 		[SerializeField]
-		GUIStyle labelCurveCenterStyle;
-		public GUIStyle LabelCurveCenterStyle { get { return labelCurveCenterStyle; } }
+		GUIStyle galaxyEditorLabelAnchorStyle;
+		public GUIStyle GalaxyEditorLabelAnchorStyle { get { return galaxyEditorLabelAnchorStyle; } }
+
+		[SerializeField]
+		GUIStyle galaxyEditorLabelCurvePointStyle;
+		public GUIStyle GalaxyEditorLabelCurvePointStyle { get { return galaxyEditorLabelCurvePointStyle; } }
+
+		[SerializeField]
+		GUIStyle galaxyEditorLabelCurveCenterStyle;
+		public GUIStyle GalaxyEditorLabelCurveCenterStyle { get { return galaxyEditorLabelCurveCenterStyle; } }
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		public GUIStyle SpecifiedSectorTargetStyle { get { return galaxyTargetStyle; } }
-		public GUIStyle GalaxyTargetStyleSmall { get { return labelCurvePointStyle; } }
+		public GUIStyle GalaxyEditorSpecifiedSectorTargetStyle { get { return galaxyEditorGalaxyTargetStyle; } }
+		public GUIStyle GalaxyEditorGalaxyTargetStyleSmall { get { return galaxyEditorLabelCurvePointStyle; } }
 	}
 }

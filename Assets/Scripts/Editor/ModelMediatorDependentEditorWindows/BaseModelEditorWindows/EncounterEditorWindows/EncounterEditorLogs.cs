@@ -75,95 +75,102 @@ namespace LunraGames.SubLight
 
 			logsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, logsListScroll), false, true).y;
 			{
-				EditorGUIExtensions.BeginChangeCheck();
+				EditorGUILayoutExtensions.PushBackgroundColor(SubLightEditorConfig.Instance.EncounterEditorLogBackgroundColor);
+				GUILayout.BeginVertical(SubLightEditorConfig.Instance.EncounterEditorLogBackground);
+				EditorGUILayoutExtensions.PopBackgroundColor();
 				{
-					var deleted = string.Empty;
-					var beginning = string.Empty;
-
-					EncounterLogModel indexToBeginning = null;
-					EncounterLogModel indexToEnding = null;
-					EncounterLogModel indexSwap0 = null;
-					EncounterLogModel indexSwap1 = null;
-
-					var isMoving = Event.current.shift;
-					var isDeleting = Event.current.control;
-
-					var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
-					var sortedCount = sorted.Count;
-					EncounterLogModel lastLog = null;
-					for (var i = 0; i < sortedCount; i++)
+					EditorGUIExtensions.BeginChangeCheck();
 					{
-						var log = sorted[i];
-						var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
-						int currMoveDelta;
+						var deleted = string.Empty;
+						var beginning = string.Empty;
 
-						if (OnLogBegin(i, sortedCount, model, log, isMoving, isDeleting, out currMoveDelta, ref beginning)) deleted = log.LogId;
+						EncounterLogModel indexToBeginning = null;
+						EncounterLogModel indexToEnding = null;
+						EncounterLogModel indexSwap0 = null;
+						EncounterLogModel indexSwap1 = null;
 
-						switch (currMoveDelta)
+						var isMoving = Event.current.shift;
+						var isDeleting = Event.current.control;
+
+						var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
+						var sortedCount = sorted.Count;
+						EncounterLogModel lastLog = null;
+
+						for (var i = 0; i < sortedCount; i++)
 						{
-							case 0:
-								break;
-							case -2:
-								indexToBeginning = log;
-								break;
-							case 2:
-								indexToEnding = log;
-								break;
-							case -1:
-							case 1:
-								indexSwap0 = log;
-								indexSwap1 = currMoveDelta == 1 ? nextLog : lastLog;
-								break;
+							var log = sorted[i];
+							var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
+							int currMoveDelta;
+
+							if (OnLogBegin(i, sortedCount, model, log, isMoving, isDeleting, out currMoveDelta, ref beginning)) deleted = log.LogId;
+
+							switch (currMoveDelta)
+							{
+								case 0:
+									break;
+								case -2:
+									indexToBeginning = log;
+									break;
+								case 2:
+									indexToEnding = log;
+									break;
+								case -1:
+								case 1:
+									indexSwap0 = log;
+									indexSwap1 = currMoveDelta == 1 ? nextLog : lastLog;
+									break;
+							}
+
+							OnLog(model, log);
+							OnLogEnd(model, log);
+
+							lastLog = log;
 						}
 
-						OnLog(model, log);
-						OnLogEnd(model, log);
-
-						lastLog = log;
-					}
-
-					if (!string.IsNullOrEmpty(deleted))
-					{
-						model.Logs.All.Value = model.Logs.All.Value.Where(l => l.LogId != deleted).ToArray();
-					}
-					else if (!string.IsNullOrEmpty(beginning))
-					{
-						foreach (var logs in model.Logs.All.Value)
+						if (!string.IsNullOrEmpty(deleted))
 						{
+							model.Logs.All.Value = model.Logs.All.Value.Where(l => l.LogId != deleted).ToArray();
+						}
+						else if (!string.IsNullOrEmpty(beginning))
+						{
+							foreach (var logs in model.Logs.All.Value)
+							{
 
-							logs.Beginning.Value = logs.LogId.Value == beginning;
+								logs.Beginning.Value = logs.LogId.Value == beginning;
+							}
+						}
+						else if (indexToBeginning != null)
+						{
+							indexToBeginning.Index.Value = 0;
+							var index = 1;
+							foreach (var log in sorted.Where(l => l.LogId.Value != indexToBeginning.LogId.Value))
+							{
+								log.Index.Value = index;
+								index++;
+							}
+						}
+						else if (indexToEnding != null)
+						{
+							indexToEnding.Index.Value = sortedCount;
+							var index = 0;
+							foreach (var log in sorted.Where(l => l.LogId.Value != indexToEnding.LogId.Value))
+							{
+								log.Index.Value = index;
+								index++;
+							}
+						}
+						else if (indexSwap0 != null && indexSwap1 != null)
+						{
+							var swap0 = indexSwap0.Index.Value;
+							var swap1 = indexSwap1.Index.Value;
+
+							indexSwap0.Index.Value = swap1;
+							indexSwap1.Index.Value = swap0;
 						}
 					}
-					else if (indexToBeginning != null)
-					{
-						indexToBeginning.Index.Value = 0;
-						var index = 1;
-						foreach (var log in sorted.Where(l => l.LogId.Value != indexToBeginning.LogId.Value))
-						{
-							log.Index.Value = index;
-							index++;
-						}
-					}
-					else if (indexToEnding != null)
-					{
-						indexToEnding.Index.Value = sortedCount;
-						var index = 0;
-						foreach (var log in sorted.Where(l => l.LogId.Value != indexToEnding.LogId.Value))
-						{
-							log.Index.Value = index;
-							index++;
-						}
-					}
-					else if (indexSwap0 != null && indexSwap1 != null)
-					{
-						var swap0 = indexSwap0.Index.Value;
-						var swap1 = indexSwap1.Index.Value;
-
-						indexSwap0.Index.Value = swap1;
-						indexSwap1.Index.Value = swap0;
-					}
+					EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
 				}
-				EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+				GUILayout.EndVertical();
 			}
 			GUILayout.EndScrollView();
 		}
@@ -226,19 +233,17 @@ namespace LunraGames.SubLight
 			indexDelta = 0;
 			var isAlternate = count % 2 == 0;
 
-			EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.cyan.NewH(0.5f), Color.cyan.NewH(0.6f), isAlternate);
-			GUILayout.Space(2f);
-
-			GUILayout.BeginVertical(EditorStyles.miniButton);
+			EditorGUILayoutExtensions.BeginVertical(
+				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackground,
+				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackgroundColor,
+				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackgroundColor,
+				isAlternate
+			);
 
 			GUILayout.BeginHorizontal();
 			{
-				EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.4f));
-				var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId:");
-
-				GUILayout.Label(new GUIContent(header, model.LogId.Value), EditorStyles.largeLabel, GUILayout.ExpandWidth(false));
-				EditorGUILayout.SelectableLabel(model.HasName ? model.Name.Value : model.LogId.Value, EditorStyles.boldLabel);
-				EditorGUILayoutExtensions.PopColor();
+				var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId:")+ " <b>" + (model.HasName ? model.Name.Value : model.LogId.Value) + "</b>";
+				GUILayout.Label(new GUIContent(header, model.LogId.Value), SubLightEditorConfig.Instance.EncounterEditorLogEntryIndex);
 				if (isMoving)
 				{
 					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
@@ -294,6 +299,9 @@ namespace LunraGames.SubLight
 				}
 			}
 			GUILayout.EndHorizontal();
+
+			if (isDeleting && !isMoving) GUILayout.Space(9f);
+			else GUILayout.Space(8f);
 
 			if (model.HasNotes) GUILayout.Label("Notes: " + model.Notes.Value);
 
@@ -1601,23 +1609,7 @@ namespace LunraGames.SubLight
 
 		void OnLogEnd(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
-			GUILayout.EndVertical();
-			GUILayout.Space(2f);
 			EditorGUILayoutExtensions.EndVertical();
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.FlexibleSpace();
-				EditorGUILayoutExtensions.PushColor(Color.cyan.NewH(0.55f).NewS(0.7f));
-				{
-					GUILayout.Button(GUIContent.none, EditorStyles.radioButton);
-					GUILayout.Button(GUIContent.none, EditorStyles.radioButton);
-					GUILayout.Button(GUIContent.none, EditorStyles.radioButton);
-				}
-				EditorGUILayoutExtensions.PopColor();
-				GUILayout.FlexibleSpace();
-			}
-			GUILayout.EndHorizontal();
 		}
 
 		#region Utility

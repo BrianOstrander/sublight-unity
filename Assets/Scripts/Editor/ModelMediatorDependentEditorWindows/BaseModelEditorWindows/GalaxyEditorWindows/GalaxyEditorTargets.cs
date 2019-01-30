@@ -121,7 +121,7 @@ namespace LunraGames.SubLight
 				targetsPreviewMinimized,
 				true,
 				clickPosition => TargetsPrimaryClickPreview(model, clickPosition),
-				drawOnPreview: displayArea => DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyTargetStyle)
+				drawOnPreview: displayArea => DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyle)
 			);
 		}
 
