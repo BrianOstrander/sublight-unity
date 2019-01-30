@@ -18,11 +18,12 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var buttons = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).Where(e => !string.IsNullOrEmpty(e.NextLogId.Value)).ToList();
+			var buttons = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
 
 			Action<RequestStatus, List<ButtonLogBlock>> filteringDone = (status, filtered) => OnDone(status, filtered, logModel, nonLinearDone);
 
 			OnFilter(
+				logModel.NextLog,
 				null,
 				buttons,
 				new List<ButtonLogBlock>(),
@@ -32,6 +33,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnFilter(
+			string fallbackLogId,
 			ButtonLogBlock? result,
 			List<ButtonEntryModel> remaining,
 			List<ButtonLogBlock> filtered,
@@ -49,14 +51,14 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			Action<ButtonLogBlock?> nextDone = filterResult => OnFilter(filterResult, remaining, filtered, done, filteringDone);
+			Action<ButtonLogBlock?> nextDone = filterResult => OnFilter(fallbackLogId, filterResult, remaining, filtered, done, filteringDone);
 			var next = remaining.First();
 			remaining.RemoveAt(0);
 			var possibleResult = new ButtonLogBlock(
 				next.Message.Value,
 				false,
 				true,
-				() => OnClick(next, () => done(next.NextLogId.Value))
+				() => OnClick(next, () => done(string.IsNullOrEmpty(next.NextLogId.Value) ? fallbackLogId : next.NextLogId.Value))
 			);
 
 			if (next.AutoDisableEnabled.Value)

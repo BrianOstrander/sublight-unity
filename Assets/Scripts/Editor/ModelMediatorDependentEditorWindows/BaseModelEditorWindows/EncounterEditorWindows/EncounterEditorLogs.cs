@@ -46,6 +46,7 @@ namespace LunraGames.SubLight
 		void LogsSettingsGui()
 		{
 			GUILayout.Label("Tips and Warnings", EditorStyles.boldLabel);
+			GUILayout.Label("Unless there are performance problems with the editor, these should be kept enabled.");
 			logsShowHaltingInfo.Value = EditorGUILayout.Toggle(new GUIContent("Halting Info", "Show a tooltip if certain logs cause an encounter to halt gracefully."), logsShowHaltingInfo.Value);
 			logsShowHaltingWarnings.Value = EditorGUILayout.Toggle(new GUIContent("Halting Warnings", "Show a warning if certain logs cause an encounter to halt in possibly dangerous ways."), logsShowHaltingWarnings.Value);
 			logsShowFallthroughInfo.Value = EditorGUILayout.Toggle(new GUIContent("Fallthrough Info", "Show a tooltip if certain logs fallback on a default Log Id (e.g. Buttons, Switches, Dialogs)."), logsShowFallthroughInfo.Value);
