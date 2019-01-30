@@ -17,7 +17,8 @@ namespace LunraGames.SubLight
 		Warning = 20,
 		Error = 30,
 		SpecifiedByModel = 40,
-		FallsThrough = 50,
+		SpecifiedByModelNoWarnings = 50,
+		FallsThrough = 60,
 	}
 
 	public enum EncounterLogMissingHandling
@@ -189,13 +190,14 @@ namespace LunraGames.SubLight
 						blankType = MessageType.Error;
 						break;
 					case EncounterLogBlankHandling.SpecifiedByModel:
+					case EncounterLogBlankHandling.SpecifiedByModelNoWarnings:
 						if (model.Ending.Value) break;
 						if (model.RequiresFallbackLog) 
 						{
 							blankMessage = BlankError;
 							blankType = MessageType.Error;
 						}
-						else
+						else if (blankHandling != EncounterLogBlankHandling.SpecifiedByModelNoWarnings)
 						{
 							blankMessage = BlankWarning;
 							blankType = MessageType.Warning;

@@ -73,7 +73,6 @@
           {
             "entry": {
               "message": "Exit Encounter",
-              "nextLogId": "431070fe-97e6-455b-b050-edc86e39aa09",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -123,7 +122,6 @@
         },
         "index": 2,
         "logId": "836ed19e-b734-4673-b258-b8db200a85cd",
-        "fallbackLogId": "936c7936-eb09-4369-a265-d0d0962f183b",
         "name": "Buttons"
       }
     ],

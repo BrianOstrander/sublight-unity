@@ -21,6 +21,10 @@ namespace LunraGames.SubLight
 		}
 
 		EditorPrefsFloat logsListScroll;
+		EditorPrefsBool logsShowHaltingInfo;
+		EditorPrefsBool logsShowHaltingWarnings;
+		EditorPrefsBool logsShowFallthroughInfo;
+		EditorPrefsBool logsShowFallthroughWarnings;
 
 		EncounterEditorLogCache logCache;
 
@@ -29,8 +33,23 @@ namespace LunraGames.SubLight
 			var currPrefix = KeyPrefix + "Logs";
 
 			logsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
+			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
+			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
+			logsShowFallthroughInfo = new EditorPrefsBool(currPrefix + "ShowFallthroughInfo", true);
+			logsShowFallthroughWarnings = new EditorPrefsBool(currPrefix + "ShowFallthroughWarnings", true);
 
 			RegisterToolbar("Logs", LogsToolbar);
+
+			SettingsGui += LogsSettingsGui;
+		}
+
+		void LogsSettingsGui()
+		{
+			GUILayout.Label("Tips and Warnings", EditorStyles.boldLabel);
+			logsShowHaltingInfo.Value = EditorGUILayout.Toggle(new GUIContent("Halting Info", "Show a tooltip if certain logs cause an encounter to halt gracefully."), logsShowHaltingInfo.Value);
+			logsShowHaltingWarnings.Value = EditorGUILayout.Toggle(new GUIContent("Halting Warnings", "Show a warning if certain logs cause an encounter to halt in possibly dangerous ways."), logsShowHaltingWarnings.Value);
+			logsShowFallthroughInfo.Value = EditorGUILayout.Toggle(new GUIContent("Fallthrough Info", "Show a tooltip if certain logs fallback on a default Log Id (e.g. Buttons, Switches, Dialogs)."), logsShowFallthroughInfo.Value);
+			logsShowFallthroughWarnings.Value = EditorGUILayout.Toggle(new GUIContent("Fallthrough Warning", "Show a warning if certain logs are not configured to fallthrough to a Log Id properly (e.g. Buttons, Switches, Dialogs)."), logsShowFallthroughWarnings.Value);
 		}
 
 		void LogsToolbar(EncounterInfoModel model)
@@ -720,7 +739,10 @@ namespace LunraGames.SubLight
 
 			if (hasBlankOrMissingNextId)
 			{
-				if (string.IsNullOrEmpty(entry.NextLogId.Value)) EditorGUILayout.HelpBox("Specifying no log will fall through to the current log's \"Next Log\".", MessageType.Info);
+				if (string.IsNullOrEmpty(entry.NextLogId.Value))
+				{
+					if (logsShowFallthroughInfo.Value) EditorGUILayout.HelpBox("Specifying no log will fall through to the current log's \"Fallback Log\".", MessageType.Info);
+				}
 				else EditorGUILayout.HelpBox("This button's \"Target Log\" references missing Log Id: "+entry.NextLogId.Value, MessageType.Error);
 			}
 
@@ -780,11 +802,11 @@ namespace LunraGames.SubLight
 		{
 			if (model.AlwaysHalting.Value || model.Edges.Any(e => e.Entry.IsHalting.Value))
 			{
-				EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
+				if (logsShowHaltingInfo.Value) EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
 			}
 			else if (model.Ending.Value)
 			{
-				EditorGUILayout.HelpBox("This log is non-halting and also the end log, events may complete after the encounter is complete.", MessageType.Warning);
+				if (logsShowHaltingWarnings.Value) EditorGUILayout.HelpBox("This log is non-halting and also the end log, events may complete after the encounter is complete.", MessageType.Warning);
 			}
 
 			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
@@ -1084,7 +1106,7 @@ namespace LunraGames.SubLight
 			}
 			if (model.Edges.Any(e => e.Entry.BustEvent.Value == BustEntryModel.Events.Focus && !e.Entry.FocusInfo.Value.Instant))
 			{
-				EditorGUILayout.HelpBox("This log will halt until all busts are focused.", MessageType.Info);
+				if (logsShowHaltingInfo.Value) EditorGUILayout.HelpBox("This log will halt until all busts are focused.", MessageType.Info);
 			}
 
 			var appendOptions = new List<string>
@@ -1601,7 +1623,7 @@ namespace LunraGames.SubLight
 				model,
 				existingSelection => model.FallbackLogId.Value = existingSelection,
 				newSelection => model.FallbackLogId.Value = AppendNewLog(newSelection, infoModel),
-				EncounterLogBlankHandling.SpecifiedByModel,
+				logsShowFallthroughWarnings.Value ? EncounterLogBlankHandling.SpecifiedByModel : EncounterLogBlankHandling.SpecifiedByModelNoWarnings,
 				EncounterLogMissingHandling.Error,
 				model.RequiresFallbackLog ? "- Select Next Log -" : "- Select Fallback Log -"
 			);
