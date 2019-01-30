@@ -569,7 +569,8 @@ namespace LunraGames.SubLight
 				newSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, AppendNewLog(newSelection, infoModel))),
 				EncounterLogBlankHandling.None,
 				EncounterLogMissingHandling.None,
-				new GUIContent("< Blank >"),
+				EncounterLogBlankOptionHandling.NotSelectable,
+				new GUIContent("< Fallback >"),
 				() => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, null))
 			);
 
@@ -601,7 +602,10 @@ namespace LunraGames.SubLight
 				existingSelection => entry.NextLogId.Value = existingSelection,
 				newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 				EncounterLogBlankHandling.FallsThrough,
-				EncounterLogMissingHandling.Error
+				EncounterLogMissingHandling.Error,
+				EncounterLogBlankOptionHandling.Selectable,
+				new GUIContent("< Fallback >"),
+				() => entry.NextLogId.Value = null
 			);
 
 			EditorGUILayoutValueFilter.Field(
@@ -666,7 +670,8 @@ namespace LunraGames.SubLight
 				newSelection => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, AppendNewLog(newSelection, infoModel))),
 				EncounterLogBlankHandling.None,
 				EncounterLogMissingHandling.None,
-				new GUIContent("< Blank >"),
+				EncounterLogBlankOptionHandling.NotSelectable,
+				new GUIContent("< Fallback >"),
 				() => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, null))
 			);
 
@@ -754,7 +759,10 @@ namespace LunraGames.SubLight
 					newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
 					EncounterLogBlankHandling.None,
 					EncounterLogMissingHandling.None,
-					out hasBlankOrMissingNextId
+					out hasBlankOrMissingNextId,
+					EncounterLogBlankOptionHandling.Selectable,
+					new GUIContent("< Fallback >"),
+					() => entry.NextLogId.Value = null
 				);
 
 				entry.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !entry.NotAutoUsed.Value, GUILayout.Width(74f));

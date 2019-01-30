@@ -28,18 +28,30 @@ namespace LunraGames.SubLight
 		Error = 20
 	}
 
+	public enum EncounterLogBlankOptionHandling
+	{
+		Unknown = 0,
+		Disabled = 10, // Never show a < blank > option, and show the default content when null.
+		Selectable = 20, // Can be selected, and show < blank > instead of default content.
+		NotSelectable = 30 // Show the option, but show the default content when null.
+	}
+
 	public static class EditorGUILayoutEncounter
 	{
 		class MenuEntry
 		{
 			public string LogId;
 			public string Name;
+			public bool IsNamed;
 			public bool IsSelected;
 			public bool IsNext;
 			public bool IsDisabled;
 			public bool IsMissing;
 			public Action Select;
 		}
+
+		static Rect lastMouseOverRect;
+		static Action lastMouseOverCallback;
 
 		/*
 		public static string SelectLogPopup(
@@ -80,9 +92,38 @@ namespace LunraGames.SubLight
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
 			EncounterLogBlankHandling blankHandling,
+			EncounterLogMissingHandling missingHandling
+		)
+		{
+			AppendOrSelectLogPopup(
+				prefixContent,
+				content,
+				selectedLogId,
+				infoModel,
+				model,
+				existingSelection,
+				newSelection,
+				blankHandling,
+				missingHandling,
+				EncounterLogBlankOptionHandling.Disabled,
+				null,
+				null
+			);
+		}
+
+		public static void AppendOrSelectLogPopup(
+			GUIContent prefixContent,
+			GUIContent content,
+			string selectedLogId,
+			EncounterInfoModel infoModel,
+			EncounterLogModel model,
+			Action<string> existingSelection,
+			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankHandling blankHandling,
 			EncounterLogMissingHandling missingHandling,
-			GUIContent noneSelectionContent = null,
-			Action noneSelection = null
+			EncounterLogBlankOptionHandling blankOptionHandling,
+			GUIContent noneSelectionContent,
+			Action noneSelection
 		)
 		{
 			var isBlankOrMissing = false;
@@ -96,7 +137,10 @@ namespace LunraGames.SubLight
 				newSelection,
 				blankHandling,
 				missingHandling,
-				out isBlankOrMissing
+				out isBlankOrMissing,
+				blankOptionHandling,
+				noneSelectionContent,
+				noneSelection
 			);
 		}
 
@@ -111,8 +155,9 @@ namespace LunraGames.SubLight
 			EncounterLogBlankHandling blankHandling,
 			EncounterLogMissingHandling missingHandling,
 			out bool isBlankOrMissing,
-			GUIContent noneSelectionContent = null,
-			Action noneSelection = null
+			EncounterLogBlankOptionHandling blankOptionHandling,
+			GUIContent noneSelectionContent,
+			Action noneSelection
 		)
 		{
 			if (infoModel == null) throw new ArgumentNullException("infoModel");
@@ -122,7 +167,14 @@ namespace LunraGames.SubLight
 
 			noneSelectionContent = noneSelectionContent ?? GUIContent.none;
 
-			if (noneSelectionContent != GUIContent.none && noneSelection == null) throw new ArgumentNullException("noneSelection", "A noneSelectionContent was specified but noneSelection is null");
+			switch (blankOptionHandling)
+			{
+				case EncounterLogBlankOptionHandling.Disabled: break;
+				default:
+					if (noneSelectionContent == GUIContent.none) throw new ArgumentException("Cannot have null or none content when blank logs are options", "noneSelectionContent");
+					if (noneSelection == null) throw new ArgumentNullException("noneSelection");
+					break;
+			}
 
 			prefixContent = prefixContent ?? GUIContent.none;
 
@@ -204,20 +256,58 @@ namespace LunraGames.SubLight
 
 			var logs = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value);
 
+			switch (blankOptionHandling)
+			{
+				case EncounterLogBlankOptionHandling.Selectable:
+					content = string.IsNullOrEmpty(selectedLogId) ? noneSelectionContent : content;
+					break;
+			}
+
+			if (!string.IsNullOrEmpty(selectedLogId))
+			{
+				var selectedLog = logs.FirstOrDefault(l => l.LogId.Value == selectedLogId);
+				var selectedLogNull = selectedLog == null;
+				var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+				content = new GUIContent(
+					GetMenuEntryName(
+						selectedLogId,
+						selectedLogNull ? null : selectedLog.Name.Value,
+						selectedLogNull,
+						nextLog != null && nextLog.LogId.Value == selectedLogId
+					)
+				);
+			}
+
 			if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard))
 			{
-				var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+				lastMouseOverCallback = () =>
+				{
+					var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
 
-				ShowSelectOrAppendMenu(
-					model,
-					logs.ToArray(),
-					selectedLogId,
-					nextLog == null ? null : nextLog.LogId.Value,
-					existingSelection,
-					newSelection,
-					noneSelectionContent,
-					noneSelection
-				);
+					ShowSelectOrAppendMenu(
+						model,
+						logs.ToArray(),
+						selectedLogId,
+						nextLog == null ? null : nextLog.LogId.Value,
+						existingSelection,
+						newSelection,
+						blankOptionHandling,
+						noneSelectionContent,
+						noneSelection
+					);
+				};
+			}
+
+			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null)
+			{
+				var lastRect = GUILayoutUtility.GetLastRect();
+				if (lastRect.Contains(Event.current.mousePosition))
+				{
+					lastMouseOverRect = lastRect;
+					var callback = lastMouseOverCallback;
+					lastMouseOverCallback = null;
+					callback();
+				}
 			}
 
 			var logIds = logs.Select(l => l.LogId.Value);
@@ -291,6 +381,7 @@ namespace LunraGames.SubLight
 			string nextLogId,
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankOptionHandling blankOptionHandling,
 			GUIContent noneSelectionContent,
 			Action noneSelection
 		)
@@ -308,25 +399,45 @@ namespace LunraGames.SubLight
 
 			foreach (var logType in EnumExtensions.GetValues(EncounterLogTypes.Unknown).OrderBy(t => t.ToString()))
 			{
-				menu.AddItem(new GUIContent("Create/" + logType.ToString(), "does this appear???"), false, () => newSelection(logType));
+				menu.AddItem(new GUIContent("Create/" + logType.ToString()), false, () => newSelection(logType));
 			}
 
-			menu.AddSeparator(string.Empty);
-
-			if (noneSelectionContent != GUIContent.none)
+			switch (blankOptionHandling)
 			{
-				menu.AddItem(noneSelectionContent, string.IsNullOrEmpty(selectedLogId), () => noneSelection());
+				case EncounterLogBlankOptionHandling.NotSelectable:
+					menu.AddSeparator(string.Empty);
+					menu.AddItem(noneSelectionContent, false, () => noneSelection());
+					break;
+				case EncounterLogBlankOptionHandling.Selectable:
+					menu.AddSeparator(string.Empty);
+					menu.AddItem(noneSelectionContent, string.IsNullOrEmpty(selectedLogId), () => noneSelection());
+					break;
+			}
+
+			var namedEntries = entries.Where(e => e.IsNamed);
+			var unnamedEntries = entries.Where(e => !e.IsNamed);
+
+			if (namedEntries.Any())
+			{
 				menu.AddSeparator(string.Empty);
+				foreach (var entry in namedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
 			}
 
-			foreach (var entry in entries)
+			if (unnamedEntries.Any())
 			{
-				if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
-				else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				menu.AddSeparator(string.Empty);
+				foreach (var entry in unnamedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
 			}
 
-			//menu.DropDown(GUILayoutUtility.GetLastRect());
-			menu.ShowAsContext();
+			menu.DropDown(lastMouseOverRect);
 		}
 
 		static List<MenuEntry> GetMenuEntries(
@@ -350,6 +461,7 @@ namespace LunraGames.SubLight
 					{
 						LogId = logId,
 						Name = GetMenuEntryName(logId, log.Name.Value, isNext: isNext),
+						IsNamed = !string.IsNullOrEmpty(log.Name.Value),
 						IsSelected = !isLogIdNullOrEmpty && logId == selectedLogId,
 						IsNext = isNext,
 						IsDisabled = disabledLogIds.Contains(logId),
@@ -368,15 +480,16 @@ namespace LunraGames.SubLight
 			bool isNext = false
 		)
 		{
-			if (missing) return "* Problem Finding Log " + (logId == null ? "< null >" : (string.IsNullOrEmpty(logId) ? "< empty >" : logId)) + " *";
+			var shortId = string.IsNullOrEmpty(logId) ? "< null or empty >" : logId.Substring(0, Mathf.Min(8, logId.Length));
 
-			var result = logId.Substring(0, Mathf.Min(8, logId.Length));
+			if (missing)
+			{
+				return shortId + " < Missing!";
+			}
 
-			if (!string.IsNullOrEmpty(name)) result = name + " | " + result;
+			var result = string.IsNullOrEmpty(name) ? shortId : name;
 
-			if (isNext) result += " | Next";
-
-			return result;
+			return isNext ? result + " < Next" : result;
 		}
 	}
 }

@@ -1,0 +1,76 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "encounterId": "fa622942-8eac-49e6-9791-b0845a5f19cf",
+  "name": "Some Test",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "booleanKeyValues": [],
+    "stringKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "textLogs": [],
+    "keyValueLogs": [],
+    "switchLogs": [
+      {
+        "switches": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "66cd6d37-ceae-4b3d-bf66-684b0f62322d"
+            }
+          }
+        ],
+        "index": 1,
+        "logId": "c95f80c6-4104-4bcf-a6c6-6c08a2bd4a49"
+      }
+    ],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "4e52655f-abe7-4046-a738-feb19f6772ae"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "2382b0f4-9660-41c4-b15e-6402d920a758"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "Some Test",
+  "metaKeyValues": {
+    "EncounterId": "fa622942-8eac-49e6-9791-b0845a5f19cf"
+  },
+  "created": "2019-01-30T14:13:37.882839-08:00",
+  "modified": "2019-01-30T14:13:37.882839-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}
