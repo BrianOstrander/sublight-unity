@@ -37,7 +37,6 @@ namespace LunraGames.SubLight
 		EditorPrefsFloat logsListScroll;
 		EditorPrefsBool logsShowHaltingInfo;
 		EditorPrefsBool logsShowHaltingWarnings;
-		EditorPrefsBool logsShowFallthroughInfo;
 		EditorPrefsBool logsJumpFromToolbarAppend;
 
 		#region Log Stack Serialization
@@ -75,7 +74,6 @@ namespace LunraGames.SubLight
 			logsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
-			logsShowFallthroughInfo = new EditorPrefsBool(currPrefix + "ShowFallthroughInfo", true);
 			logsJumpFromToolbarAppend = new EditorPrefsBool(currPrefix + "JumpFromToolbarAppend", true);
 
 			logsFocusedLogIdsIndex = new EditorPrefsInt(currPrefix + "FocusedLogsIdsIndex");
@@ -96,7 +94,6 @@ namespace LunraGames.SubLight
 			GUILayout.Label("Unless there are performance problems with the editor, these should be kept enabled.");
 			logsShowHaltingInfo.Value = EditorGUILayout.Toggle(new GUIContent("Halting Info", "Show a tooltip if certain logs cause an encounter to halt gracefully."), logsShowHaltingInfo.Value);
 			logsShowHaltingWarnings.Value = EditorGUILayout.Toggle(new GUIContent("Halting Warnings", "Show a warning if certain logs cause an encounter to halt in possibly dangerous ways."), logsShowHaltingWarnings.Value);
-			logsShowFallthroughInfo.Value = EditorGUILayout.Toggle(new GUIContent("Fallthrough Info", "Show a tooltip if certain logs fallback on a default Log Id (e.g. Buttons, Switches, Dialogs)."), logsShowFallthroughInfo.Value);
 		}
 
 		void LogsToolbar(EncounterInfoModel model)
@@ -909,6 +906,11 @@ namespace LunraGames.SubLight
 			EncounterEventEncounterLogModel model
 		)
 		{
+			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
+				new GUIContent("Is Halting", "Does the handler wait for the event to complete before it continues?"),
+				model.AlwaysHalting.Value
+			);
+
 			if (model.AlwaysHalting.Value || model.Edges.Any(e => e.Entry.IsHalting.Value))
 			{
 				if (logsShowHaltingInfo.Value) EditorGUILayout.HelpBox("This log will halt until all events are complete.", MessageType.Info);
@@ -917,11 +919,6 @@ namespace LunraGames.SubLight
 			{
 				if (logsShowHaltingWarnings.Value) EditorGUILayout.HelpBox("This log is non-halting and also the end log, events may complete after the encounter is complete.", MessageType.Warning);
 			}
-
-			model.AlwaysHalting.Value = EditorGUILayout.Toggle(
-				new GUIContent("Is Halting", "Does the handler wait for the event to complete before it continues?"),
-				model.AlwaysHalting.Value
-			);
 
 			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
 				GUIContent.none,
@@ -941,6 +938,13 @@ namespace LunraGames.SubLight
 		{
 			var entry = edge.Entry;
 			entry.EncounterEvent.Value = type;
+
+			switch (type)
+			{
+				case EncounterEvents.Types.ToolbarSelection:
+					entry.IsHalting.Value = true;
+					break;
+			}
 		}
 
 		void OnEncounterEventLogEdge(
