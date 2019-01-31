@@ -31,7 +31,60 @@ namespace LunraGames.SubLight
 		EditorPrefsBool logsShowFallthroughInfo;
 		EditorPrefsBool logsShowFallthroughWarnings;
 
-		EditorPrefsString logsFocusedLogId;
+		EditorPrefsInt logsFocusedLogIdsIndex;
+		EditorPrefsString logsFocusedLogIds;
+
+		bool LogsIsFocusedOnStack { get { return logsFocusedLogIdsIndex.Value != -1; } }
+
+		List<string> logsFocusedLogIdsStack;
+		IEnumerable<string> LogsFocusedLogIdsStack
+		{
+			get
+			{
+				return logsFocusedLogIdsStack ?? (logsFocusedLogIdsStack = new List<string>((logsFocusedLogIds.Value ?? string.Empty).Split('|').Where(v => !string.IsNullOrEmpty(v))));
+			}
+			set
+			{
+				var serialized = string.Empty;
+				if (value != null)
+				{
+					foreach (var logId in value) serialized += logId + "|";
+				}
+				logsFocusedLogIds.Value = serialized;
+				logsFocusedLogIdsStack = value == null ? null : value.ToList();
+			}
+		}
+
+		string LogsFocusedLogIdsPeek(int? indexOffset = null)
+		{
+			if (indexOffset.HasValue)
+			{
+				throw new NotImplementedException();
+			}
+
+			return LogsFocusedLogIdsStack.LastOrDefault();
+		}
+
+		void LogsFocusedLogIdsPush(string logId, int index)
+		{
+			LogsFocusedLogIdsPop(index);
+			LogsFocusedLogIdsPush(logId);
+		}
+
+		void LogsFocusedLogIdsPush(string logId)
+		{
+			if (string.IsNullOrEmpty(logId)) throw new ArgumentException("logId cannot be null or empty");
+			LogsFocusedLogIdsStack = LogsFocusedLogIdsStack.Append(logId);
+			logsFocusedLogIdsIndex.Value = LogsFocusedLogIdsStack.Count() - 1;
+		}
+
+		void LogsFocusedLogIdsPop(int index = -1)
+		{
+			var newStack = new List<string>();
+			for (var i = 0; i <= index; i++) newStack.Add(LogsFocusedLogIdsStack.ElementAt(i));
+			LogsFocusedLogIdsStack = newStack;
+			logsFocusedLogIdsIndex.Value = index;
+		}
 
 		EncounterEditorLogCache logCache;
 
@@ -45,7 +98,8 @@ namespace LunraGames.SubLight
 			logsShowFallthroughInfo = new EditorPrefsBool(currPrefix + "ShowFallthroughInfo", true);
 			logsShowFallthroughWarnings = new EditorPrefsBool(currPrefix + "ShowFallthroughWarnings", true);
 
-			logsFocusedLogId = new EditorPrefsString(currPrefix + "FocusedLogId");
+			logsFocusedLogIdsIndex = new EditorPrefsInt(currPrefix + "FocusedLogsIdsIndex");
+			logsFocusedLogIds = new EditorPrefsString(currPrefix + "FocusedLogIds");
 
 			RegisterToolbar("Logs", LogsToolbar);
 
@@ -88,7 +142,7 @@ namespace LunraGames.SubLight
 					EditorGUILayoutEncounter.AppendOrSelectLogPopup(
 						null,
 						new GUIContent("- Append or Jump to Log -"),
-						logsFocusedLogId.Value,
+						logsFocusedLogIds.Value,
 						model,
 						null,
 						JumpToLogId,
@@ -111,6 +165,9 @@ namespace LunraGames.SubLight
 					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
 				}
 				if (logCache.BustIdsNormalizationMismatch) EditorGUILayout.HelpBox("Duplicate Bust Ids are detected when normalizing all Ids.", MessageType.Error);
+
+				GUILayout.Label(logsFocusedLogIds.Value);
+				if (GUILayout.Button("Reset Focus")) LogsFocusedLogIdsPop();
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
 
@@ -137,9 +194,18 @@ namespace LunraGames.SubLight
 						var sortedCount = sorted.Count;
 						EncounterLogModel lastLog = null;
 
+						var focusedLogId = string.Empty;
+
+						if (-1 < logsFocusedLogIdsIndex.Value) focusedLogId = LogsFocusedLogIdsStack.ElementAt(logsFocusedLogIdsIndex.Value);
+
+						var checkForFocus = !string.IsNullOrEmpty(focusedLogId);
+
 						for (var i = 0; i < sortedCount; i++)
 						{
 							var log = sorted[i];
+
+							if (checkForFocus && focusedLogId != log.LogId.Value) continue;
+
 							var nextLog = (i + 1 < sortedCount) ? sorted[i + 1] : null;
 							int currMoveDelta;
 
@@ -171,6 +237,7 @@ namespace LunraGames.SubLight
 						if (!string.IsNullOrEmpty(deleted))
 						{
 							model.Logs.All.Value = model.Logs.All.Value.Where(l => l.LogId != deleted).ToArray();
+							LogsFocusedLogIdsPop();
 						}
 						else if (!string.IsNullOrEmpty(beginning))
 						{
@@ -219,6 +286,8 @@ namespace LunraGames.SubLight
 		string AppendNewLog(EncounterLogTypes logType, EncounterInfoModel infoModel)
 		{
 			if (logType == EncounterLogTypes.Unknown) return null;
+
+			ModelSelectionModified = true;
 
 			var isBeginning = infoModel.Logs.All.Value.Length == 0;
 			var nextIndex = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
@@ -287,25 +356,30 @@ namespace LunraGames.SubLight
 				GUILayout.Label(new GUIContent(header, model.LogId.Value), SubLightEditorConfig.Instance.EncounterEditorLogEntryIndex);
 				if (isMoving)
 				{
-					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
-					EditorGUILayoutExtensions.PushEnabled(0 < count);
-					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
+					GUILayout.Label(LogsIsFocusedOnStack ? "Cannot Rearrange While Focused" : "Click to Rearrange", GUILayout.ExpandWidth(false));
+
+					EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
 					{
-						indexDelta = -1;
-					}
-					if (GUILayout.Button("^^", EditorStyles.miniButtonMid, GUILayout.Width(30f)))
-					{
-						indexDelta = -2;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-					if (GUILayout.Button("vv", EditorStyles.miniButtonMid, GUILayout.Width(30f)))
-					{
-						indexDelta = 2;
-					}
-					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f)))
-					{
-						indexDelta = 1;
+						EditorGUILayoutExtensions.PushEnabled(0 < count);
+						if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
+						{
+							indexDelta = -1;
+						}
+						if (GUILayout.Button("^^", EditorStyles.miniButtonMid, GUILayout.Width(30f)))
+						{
+							indexDelta = -2;
+						}
+						EditorGUILayoutExtensions.PopEnabled();
+						EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+						if (GUILayout.Button("vv", EditorStyles.miniButtonMid, GUILayout.Width(30f)))
+						{
+							indexDelta = 2;
+						}
+						if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f)))
+						{
+							indexDelta = 1;
+						}
+						EditorGUILayoutExtensions.PopEnabled();
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
@@ -592,6 +666,8 @@ namespace LunraGames.SubLight
 		{
 			var entry = edge.Entry;
 
+			entry.NextLogId.Changed = newLogId => ModelSelectionModified = true;
+
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Target Log"),
 				new GUIContent("- Select Target Log -"),
@@ -748,6 +824,9 @@ namespace LunraGames.SubLight
 			entry.Message.Value = EditorGUILayout.TextField("Message", entry.Message.Value);
 
 			var hasBlankOrMissingNextId = false;
+
+			entry.NextLogId.Changed = newLogId => ModelSelectionModified = true;
+
 			GUILayout.BeginHorizontal();
 			{
 				EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
@@ -1594,6 +1673,8 @@ namespace LunraGames.SubLight
 		)
 			where E : class, IEdgeModel, new()
 		{
+			ModelSelectionModified = true;
+
 			var index = 0;
 			if (model.Edges.Any())
 			{
@@ -1653,6 +1734,8 @@ namespace LunraGames.SubLight
 			EncounterLogModel model
 		)
 		{
+			model.FallbackLogId.Changed = newLogId => ModelSelectionModified = true;
+
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent(model.RequiresFallbackLog ? "Next Log" : "Fallback Log", "The encounter will fallthrough to tthis log if not overridden."),
 				new GUIContent(model.RequiresFallbackLog ? "- Select Next Log -" : "- Select Fallback Log -"),
@@ -1706,7 +1789,8 @@ namespace LunraGames.SubLight
 
 		void JumpToLogId(string logId)
 		{
-			Debug.Log("jumping to " + logId);
+			LogsFocusedLogIdsPush(logId);
+			Debug.Log("I: "+logsFocusedLogIdsIndex.Value+"\n"+(logsFocusedLogIds.Value ?? "< nothing >").Replace("|","\n"));
 		}
 		#endregion
 

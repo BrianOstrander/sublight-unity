@@ -231,7 +231,11 @@ namespace LunraGames.SubLight
 			{
 				EditorGUILayoutExtensions.PushEnabled(!string.IsNullOrEmpty(selectedLogId));
 				{
-					if (GUILayout.Button(new GUIContent("Jump", "Focuses the selected log."), EditorStyles.miniButton, GUILayout.Width(48f))) jump(selectedLogId);
+					EditorGUIExtensions.PauseChangeCheck();
+					{
+						if (GUILayout.Button(new GUIContent("Jump", "Focuses the selected log."), EditorStyles.miniButton, GUILayout.Width(48f))) jump(selectedLogId);
+					}
+					EditorGUIExtensions.UnPauseChangeCheck();
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			}
