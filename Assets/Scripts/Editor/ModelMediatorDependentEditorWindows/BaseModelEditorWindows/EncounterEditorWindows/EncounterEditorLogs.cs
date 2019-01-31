@@ -38,7 +38,6 @@ namespace LunraGames.SubLight
 		EditorPrefsBool logsShowHaltingInfo;
 		EditorPrefsBool logsShowHaltingWarnings;
 		EditorPrefsBool logsShowFallthroughInfo;
-		EditorPrefsBool logsShowFallthroughWarnings;
 		EditorPrefsBool logsJumpFromToolbarAppend;
 
 		#region Log Stack Serialization
@@ -77,7 +76,6 @@ namespace LunraGames.SubLight
 			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
 			logsShowFallthroughInfo = new EditorPrefsBool(currPrefix + "ShowFallthroughInfo", true);
-			logsShowFallthroughWarnings = new EditorPrefsBool(currPrefix + "ShowFallthroughWarnings", true);
 			logsJumpFromToolbarAppend = new EditorPrefsBool(currPrefix + "JumpFromToolbarAppend", true);
 
 			logsFocusedLogIdsIndex = new EditorPrefsInt(currPrefix + "FocusedLogsIdsIndex");
@@ -99,7 +97,6 @@ namespace LunraGames.SubLight
 			logsShowHaltingInfo.Value = EditorGUILayout.Toggle(new GUIContent("Halting Info", "Show a tooltip if certain logs cause an encounter to halt gracefully."), logsShowHaltingInfo.Value);
 			logsShowHaltingWarnings.Value = EditorGUILayout.Toggle(new GUIContent("Halting Warnings", "Show a warning if certain logs cause an encounter to halt in possibly dangerous ways."), logsShowHaltingWarnings.Value);
 			logsShowFallthroughInfo.Value = EditorGUILayout.Toggle(new GUIContent("Fallthrough Info", "Show a tooltip if certain logs fallback on a default Log Id (e.g. Buttons, Switches, Dialogs)."), logsShowFallthroughInfo.Value);
-			logsShowFallthroughWarnings.Value = EditorGUILayout.Toggle(new GUIContent("Fallthrough Warning", "Show a warning if certain logs are not configured to fallthrough to a Log Id properly (e.g. Buttons, Switches, Dialogs)."), logsShowFallthroughWarnings.Value);
 		}
 
 		void LogsToolbar(EncounterInfoModel model)
@@ -832,8 +829,6 @@ namespace LunraGames.SubLight
 
 			entry.Message.Value = EditorGUILayout.TextField("Message", entry.Message.Value);
 
-			var hasBlankOrMissingNextId = false;
-
 			entry.NextLogId.Changed = newLogId => ModelSelectionModified = true;
 
 			GUILayout.BeginHorizontal();
@@ -846,9 +841,8 @@ namespace LunraGames.SubLight
 					model,
 					existingSelection => entry.NextLogId.Value = existingSelection,
 					newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeAssignment),
-					EncounterLogBlankHandling.None,
-					EncounterLogMissingHandling.None,
-					out hasBlankOrMissingNextId,
+					EncounterLogBlankHandling.FallsThrough,
+					EncounterLogMissingHandling.Error,
 					EncounterLogBlankOptionHandling.Selectable,
 					new GUIContent("< Fallback >"),
 					() => entry.NextLogId.Value = null,
@@ -860,15 +854,6 @@ namespace LunraGames.SubLight
 				entry.AutoDisableEnabled.Value = EditorGUILayout.ToggleLeft(new GUIContent("Auto Disable", "When this button is pressed, automatically set this button to be disabled and invisible the next time around."), entry.AutoDisableEnabled.Value, GUILayout.Width(90f));
 			}
 			GUILayout.EndHorizontal();
-
-			if (hasBlankOrMissingNextId)
-			{
-				if (string.IsNullOrEmpty(entry.NextLogId.Value))
-				{
-					if (logsShowFallthroughInfo.Value) EditorGUILayout.HelpBox("Specifying no log will fall through to the current log's \"Fallback Log\".", MessageType.Info);
-				}
-				else EditorGUILayout.HelpBox("This button's \"Target Log\" references missing Log Id: "+entry.NextLogId.Value, MessageType.Error);
-			}
 
 			EditorGUIExtensions.PauseChangeCheck();
 			{
@@ -1753,7 +1738,7 @@ namespace LunraGames.SubLight
 				model,
 				existingSelection => model.FallbackLogId.Value = existingSelection,
 				newSelection => model.FallbackLogId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.LogFallback),
-				logsShowFallthroughWarnings.Value ? EncounterLogBlankHandling.SpecifiedByModel : EncounterLogBlankHandling.SpecifiedByModelNoWarnings,
+				EncounterLogBlankHandling.SpecifiedByModel,
 				EncounterLogMissingHandling.Error,
 				EncounterLogBlankOptionHandling.Selectable,
 				new GUIContent("< Blank >"),

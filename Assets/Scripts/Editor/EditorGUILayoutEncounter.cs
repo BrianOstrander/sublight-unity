@@ -103,42 +103,6 @@ namespace LunraGames.SubLight
 			Action<string> jump
 		)
 		{
-			var isBlankOrMissing = false;
-			AppendSelectOrBlankLogPopup(
-				prefixContent,
-				content,
-				selectedLogId,
-				infoModel,
-				model,
-				existingSelection,
-				newSelection,
-				blankHandling,
-				missingHandling,
-				out isBlankOrMissing,
-				blankOptionHandling,
-				noneSelectionContent,
-				noneSelection,
-				jump
-			);
-		}
-
-		public static void AppendSelectOrBlankLogPopup(
-			GUIContent prefixContent,
-			GUIContent content,
-			string selectedLogId,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			Action<string> existingSelection,
-			Action<EncounterLogTypes> newSelection,
-			EncounterLogBlankHandling blankHandling,
-			EncounterLogMissingHandling missingHandling,
-			out bool isBlankOrMissing,
-			EncounterLogBlankOptionHandling blankOptionHandling,
-			GUIContent noneSelectionContent,
-			Action noneSelection,
-			Action<string> jump
-		)
-		{
 			if (infoModel == null) throw new ArgumentNullException("infoModel");
 
 			switch (blankHandling)
@@ -194,44 +158,74 @@ namespace LunraGames.SubLight
 
 			if (isInHorizontalLayout) GUILayout.BeginHorizontal();
 
-			if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
-
 			var logIds = logs.Select(l => l.LogId.Value);
 			var wasFound = logIds.Contains(selectedLogId);
-			var hasMissingId = !string.IsNullOrEmpty(selectedLogId) && !wasFound;
-
-			isBlankOrMissing = string.IsNullOrEmpty(selectedLogId) || hasMissingId;
 
 			Color? dropdownColor = null;
+			var issueTooltip = string.Empty;
 
-			if (hasMissingId)
+			if (!string.IsNullOrEmpty(selectedLogId) && !wasFound)
 			{
 				switch (missingHandling)
 				{
 					case EncounterLogMissingHandling.Error:
 					case EncounterLogMissingHandling.ErrorNoHelpBox:
 						dropdownColor = Color.red;
+						issueTooltip = "The specified LogId is missing: " + selectedLogId;
 						break;
 				}
 			}
-			else if (isBlankOrMissing)
+			else if (string.IsNullOrEmpty(selectedLogId))
 			{
+				const string BlankWarning = "Specifying no log may cause unpredictable behaviour.";
+				const string BlankError = "A log must be specified.";
+
 				switch (blankHandling)
 				{
 					case EncounterLogBlankHandling.Error:
 						dropdownColor = Color.red;
+						issueTooltip = BlankError;
 						break;
 					case EncounterLogBlankHandling.Warning:
 						dropdownColor = Color.yellow;
+						issueTooltip = BlankWarning;
 						break;
 					case EncounterLogBlankHandling.SpecifiedByModel:
 					case EncounterLogBlankHandling.SpecifiedByModelNoWarnings:
 						if (model.Ending.Value) break;
-						if (model.RequiresFallbackLog) dropdownColor = Color.red;
-						else if (blankHandling != EncounterLogBlankHandling.SpecifiedByModelNoWarnings) dropdownColor = Color.yellow;
+						if (model.RequiresFallbackLog)
+						{
+							dropdownColor = Color.red;
+							issueTooltip = BlankError;
+						}
+						else if (blankHandling != EncounterLogBlankHandling.SpecifiedByModelNoWarnings)
+						{
+							dropdownColor = Color.yellow;
+							issueTooltip = BlankWarning;
+						}
+						break;
+					case EncounterLogBlankHandling.FallsThrough:
+						dropdownColor = Color.yellow;
+						issueTooltip = "Specifying no log will fall through to the current log's \"Next Log\".";
 						break;
 				}
 			}
+
+			if (!string.IsNullOrEmpty(issueTooltip))
+			{
+				issueTooltip = "* " + issueTooltip + " *";
+
+				if (string.IsNullOrEmpty(content.tooltip)) content.tooltip = issueTooltip;
+				else content.tooltip = issueTooltip + "\n" + content.tooltip;
+
+				if (hasPrefixContent)
+				{
+					if (string.IsNullOrEmpty(prefixContent.tooltip)) prefixContent.tooltip = issueTooltip;
+					else prefixContent.tooltip = issueTooltip + "\n" + prefixContent.tooltip;
+				}
+			}
+
+			if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
 
 			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(dropdownColor.Value.NewS(0.25f), dropdownColor.Value.NewS(0.65f));
 			{
@@ -283,63 +277,6 @@ namespace LunraGames.SubLight
 			}
 
 			if (isInHorizontalLayout) GUILayout.EndHorizontal();
-
-			if (missingHandling != EncounterLogMissingHandling.None && hasMissingId)
-			{
-				var missingMessage = string.Empty;
-				var missingType = MessageType.None;
-
-				switch (missingHandling)
-				{
-					case EncounterLogMissingHandling.Error:
-						missingMessage = "The specified LogId is missing: " + selectedLogId;
-						missingType = MessageType.Error;
-						break;
-				}
-
-				if (missingType != MessageType.None) EditorGUILayout.HelpBox(missingMessage, missingType);
-			}
-			else if (blankHandling != EncounterLogBlankHandling.None && isBlankOrMissing)
-			{
-				var blankMessage = string.Empty;
-				var blankType = MessageType.None;
-				
-				const string BlankWarning = "Specifying no log may cause unpredictable behaviour.";
-				const string BlankError = "A log must be specified.";
-				const string FallsThroughInfo = "Specifying no log will fall through to the current log's \"Next Log\".";
-
-				switch (blankHandling)
-				{
-					case EncounterLogBlankHandling.Warning:
-						blankMessage = BlankWarning;
-						blankType = MessageType.Warning;
-						break;
-					case EncounterLogBlankHandling.Error:
-						blankMessage = BlankError;
-						blankType = MessageType.Error;
-						break;
-					case EncounterLogBlankHandling.SpecifiedByModel:
-					case EncounterLogBlankHandling.SpecifiedByModelNoWarnings:
-						if (model.Ending.Value) break;
-						if (model.RequiresFallbackLog) 
-						{
-							blankMessage = BlankError;
-							blankType = MessageType.Error;
-						}
-						else if (blankHandling != EncounterLogBlankHandling.SpecifiedByModelNoWarnings)
-						{
-							blankMessage = BlankWarning;
-							blankType = MessageType.Warning;
-						}
-						break;
-					case EncounterLogBlankHandling.FallsThrough:
-						blankMessage = FallsThroughInfo;
-						blankType = MessageType.Info;
-						break;
-				}
-
-				if (blankType != MessageType.None) EditorGUILayout.HelpBox(blankMessage, blankType);
-			}
 		}
 
 		static void ShowSelectOrAppendMenu(

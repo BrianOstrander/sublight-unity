@@ -11,31 +11,13 @@
   "logs": {
     "textLogs": [],
     "keyValueLogs": [],
-    "switchLogs": [
-      {
-        "switches": [
-          {
-            "entry": {
-              "nextLogId": "2382b0f4-9660-41c4-b15e-6402d920a758",
-              "filtering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "66cd6d37-ceae-4b3d-bf66-684b0f62322d"
-            }
-          }
-        ],
-        "index": 1,
-        "logId": "c95f80c6-4104-4bcf-a6c6-6c08a2bd4a49",
-        "fallbackLogId": "2382b0f4-9660-41c4-b15e-6402d920a758"
-      }
-    ],
+    "switchLogs": [],
     "buttonLogs": [
       {
         "buttons": [
           {
             "entry": {
+              "nextLogId": "c95f80c6-4104-4bcf-a6c6-6c08a2bd4a49",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -76,6 +58,29 @@
               "entryId": "04bb41db-02ea-4807-b12b-74375249f59a"
             },
             "index": 1
+          },
+          {
+            "entry": {
+              "nextLogId": "27d48f77-fd76-4afc-8ea9-6273ad060c26",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "dafaa3e8-cbfa-4250-9a4e-e58d566e8c11"
+            },
+            "index": 2
           }
         ],
         "beginning": true,
