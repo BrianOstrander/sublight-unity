@@ -86,7 +86,13 @@
     "encyclopediaLogs": [],
     "eventLogs": [],
     "dialogLogs": [],
-    "bustLogs": [],
+    "bustLogs": [
+      {
+        "entries": [],
+        "index": 2,
+        "logId": "27d48f77-fd76-4afc-8ea9-6273ad060c26"
+      }
+    ],
     "conversationLogs": []
   },
   "version": 7,

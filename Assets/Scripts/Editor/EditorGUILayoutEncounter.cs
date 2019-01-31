@@ -183,7 +183,7 @@ namespace LunraGames.SubLight
 					GetMenuEntryName(
 						selectedLogId,
 						selectedLogNull ? null : selectedLog.Name.Value,
-						selectedLogNull,
+						missingHandling != EncounterLogMissingHandling.None && selectedLogNull,
 						nextLog != null && nextLog.LogId.Value == selectedLogId
 					)
 				);

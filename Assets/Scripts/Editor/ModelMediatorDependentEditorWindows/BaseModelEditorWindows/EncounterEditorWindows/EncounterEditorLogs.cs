@@ -25,12 +25,23 @@ namespace LunraGames.SubLight
 			public bool BustIdsNormalizationMismatch;
 		}
 
+		enum LogsAppendSources
+		{
+			Unknown = 0,
+			Toolbar = 10,
+			LogFallback = 20,
+			EdgeSpawn = 30,
+			EdgeAssignment = 40
+		}
+
 		EditorPrefsFloat logsListScroll;
 		EditorPrefsBool logsShowHaltingInfo;
 		EditorPrefsBool logsShowHaltingWarnings;
 		EditorPrefsBool logsShowFallthroughInfo;
 		EditorPrefsBool logsShowFallthroughWarnings;
+		EditorPrefsBool logsJumpFromToolbarAppend;
 
+		#region Log Stack Serialization
 		EditorPrefsInt logsFocusedLogIdsIndex;
 		EditorPrefsString logsFocusedLogIds;
 
@@ -54,37 +65,7 @@ namespace LunraGames.SubLight
 				logsFocusedLogIdsStack = value == null ? null : value.ToList();
 			}
 		}
-
-		string LogsFocusedLogIdsPeek(int? indexOffset = null)
-		{
-			if (indexOffset.HasValue)
-			{
-				throw new NotImplementedException();
-			}
-
-			return LogsFocusedLogIdsStack.LastOrDefault();
-		}
-
-		void LogsFocusedLogIdsPush(string logId, int index)
-		{
-			LogsFocusedLogIdsPop(index);
-			LogsFocusedLogIdsPush(logId);
-		}
-
-		void LogsFocusedLogIdsPush(string logId)
-		{
-			if (string.IsNullOrEmpty(logId)) throw new ArgumentException("logId cannot be null or empty");
-			LogsFocusedLogIdsStack = LogsFocusedLogIdsStack.Append(logId);
-			logsFocusedLogIdsIndex.Value = LogsFocusedLogIdsStack.Count() - 1;
-		}
-
-		void LogsFocusedLogIdsPop(int index = -1)
-		{
-			var newStack = new List<string>();
-			for (var i = 0; i <= index; i++) newStack.Add(LogsFocusedLogIdsStack.ElementAt(i));
-			LogsFocusedLogIdsStack = newStack;
-			logsFocusedLogIdsIndex.Value = index;
-		}
+		#endregion
 
 		EncounterEditorLogCache logCache;
 
@@ -97,6 +78,7 @@ namespace LunraGames.SubLight
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
 			logsShowFallthroughInfo = new EditorPrefsBool(currPrefix + "ShowFallthroughInfo", true);
 			logsShowFallthroughWarnings = new EditorPrefsBool(currPrefix + "ShowFallthroughWarnings", true);
+			logsJumpFromToolbarAppend = new EditorPrefsBool(currPrefix + "JumpFromToolbarAppend", true);
 
 			logsFocusedLogIdsIndex = new EditorPrefsInt(currPrefix + "FocusedLogsIdsIndex");
 			logsFocusedLogIds = new EditorPrefsString(currPrefix + "FocusedLogIds");
@@ -104,10 +86,14 @@ namespace LunraGames.SubLight
 			RegisterToolbar("Logs", LogsToolbar);
 
 			SettingsGui += LogsSettingsGui;
+
+			BeforeLoadSelection += LogsBeforeLoadSelection;
 		}
 
+		#region Events
 		void LogsSettingsGui()
 		{
+			logsJumpFromToolbarAppend.Value = EditorGUILayout.Toggle(new GUIContent("Jump To Log When Created From Toolbar", "When enabled, the editor will focus logs when created from the top toolbar area."), logsJumpFromToolbarAppend.Value);
 			GUILayout.Label("Tips and Warnings", EditorStyles.boldLabel);
 			GUILayout.Label("Unless there are performance problems with the editor, these should be kept enabled.");
 			logsShowHaltingInfo.Value = EditorGUILayout.Toggle(new GUIContent("Halting Info", "Show a tooltip if certain logs cause an encounter to halt gracefully."), logsShowHaltingInfo.Value);
@@ -131,45 +117,43 @@ namespace LunraGames.SubLight
 			DrawLogsToolbar(model);
 		}
 
+		void LogsBeforeLoadSelection()
+		{
+			LogsFocusedLogIdsPop();
+		}
+		#endregion
+
 		void DrawLogsToolbar(EncounterInfoModel model)
 		{
-			EditorGUIExtensions.BeginChangeCheck();
+			GUILayout.BeginHorizontal();
 			{
-				GUILayout.BeginHorizontal();
-				{
-					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count() + " |", GUILayout.ExpandWidth(false));
+				GUILayout.Label("Log Count: " + model.Logs.All.Value.Count() + " |", GUILayout.ExpandWidth(false));
 
-					EditorGUILayoutEncounter.AppendOrSelectLogPopup(
-						null,
-						new GUIContent("- Append or Jump to Log -"),
-						logsFocusedLogIds.Value,
-						model,
-						null,
-						JumpToLogId,
-						newSelection => AppendNewLog(newSelection, model),
-						EncounterLogBlankHandling.None,
-						EncounterLogMissingHandling.None,
-						null
-					);
+				EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
+					null,
+					new GUIContent("- Select or Create Log -"),
+					LogsFocusedLogIdsPeek(),
+					model,
+					null,
+					JumpToLogId,
+					newSelection => AppendNewLog(newSelection, model, LogsAppendSources.Toolbar),
+					EncounterLogBlankHandling.None,
+					EncounterLogMissingHandling.None,
+					EncounterLogBlankOptionHandling.NotSelectable,
+					new GUIContent("Show All Logs"),
+					() => LogsFocusedLogIdsPop(),
+					null
+				);
 
-					GUILayout.Label("Hold 'Control' to rearrange entries or 'Shift' to delete them.", GUILayout.ExpandWidth(false));
-				}
-				GUILayout.EndHorizontal();
-
-				if (model.Logs.All.Value.None(l => l.Beginning.Value))
-				{
-					EditorGUILayout.HelpBox("No \"Beginning\" log has been specified!", MessageType.Error);
-				}
-				if (model.Logs.All.Value.None(l => l.Ending.Value))
-				{
-					EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
-				}
-				if (logCache.BustIdsNormalizationMismatch) EditorGUILayout.HelpBox("Duplicate Bust Ids are detected when normalizing all Ids.", MessageType.Error);
-
-				GUILayout.Label(logsFocusedLogIds.Value);
-				if (GUILayout.Button("Reset Focus")) LogsFocusedLogIdsPop();
+				GUILayout.Label("Hold 'Control' to rearrange entries or 'Shift' to delete them.", GUILayout.ExpandWidth(false));
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("stuff here");
+			}
+			GUILayout.EndHorizontal();
 
 			logsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, logsListScroll), false, true).y;
 			{
@@ -281,9 +265,13 @@ namespace LunraGames.SubLight
 				GUILayout.EndVertical();
 			}
 			GUILayout.EndScrollView();
+
+			if (model.Logs.All.Value.None(l => l.Beginning.Value)) EditorGUILayout.HelpBox("No \"Beginning\" log has been specified!", MessageType.Error);
+			if (model.Logs.All.Value.None(l => l.Ending.Value)) EditorGUILayout.HelpBox("No \"Ending\" log has been specified!", MessageType.Error);
+			if (logCache.BustIdsNormalizationMismatch) EditorGUILayout.HelpBox("Duplicate Bust Ids are detected when normalizing all Ids.", MessageType.Error);
 		}
 
-		string AppendNewLog(EncounterLogTypes logType, EncounterInfoModel infoModel)
+		string AppendNewLog(EncounterLogTypes logType, EncounterInfoModel infoModel, LogsAppendSources source)
 		{
 			if (logType == EncounterLogTypes.Unknown) return null;
 
@@ -291,31 +279,52 @@ namespace LunraGames.SubLight
 
 			var isBeginning = infoModel.Logs.All.Value.Length == 0;
 			var nextIndex = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
+			string result = null;
 			switch (logType)
 			{
 				case EncounterLogTypes.Text:
-					return NewEncounterLog<TextEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<TextEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.KeyValue:
-					return NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.Switch:
-					return NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.Button:
-					return NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.Encyclopedia:
-					return NewEncounterLog<EncyclopediaEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<EncyclopediaEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.Event:
-					return NewEncounterLog<EncounterEventEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<EncounterEventEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.Dialog:
-					return NewEncounterLog<DialogEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<DialogEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.Bust:
-					return NewEncounterLog<BustEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<BustEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				case EncounterLogTypes.Conversation:
-					return NewEncounterLog<ConversationEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = NewEncounterLog<ConversationEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType: " + logType);
 					break;
 			}
-			return null;
+
+			if (!string.IsNullOrEmpty(result))
+			{
+				switch (source)
+				{
+					case LogsAppendSources.Toolbar:
+						if (logsJumpFromToolbarAppend.Value) LogsFocusedLogIdsPush(result);
+						break;
+				}
+			}
+
+			return result;
 		}
 
 		T NewEncounterLog<T>(EncounterInfoModel model, int index, bool isBeginning) where T : EncounterLogModel, new()
@@ -638,7 +647,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, existingSelection)),
-				newSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, AppendNewLog(newSelection, infoModel))),
+				newSelection => OnEdgedLogSpawn(model, result => OnSwitchLogSpawn(result, AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeSpawn))),
 				EncounterLogBlankHandling.None,
 				EncounterLogMissingHandling.None,
 				EncounterLogBlankOptionHandling.NotSelectable,
@@ -675,7 +684,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => entry.NextLogId.Value = existingSelection,
-				newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+				newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeAssignment),
 				EncounterLogBlankHandling.FallsThrough,
 				EncounterLogMissingHandling.Error,
 				EncounterLogBlankOptionHandling.Selectable,
@@ -743,7 +752,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, existingSelection)),
-				newSelection => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, AppendNewLog(newSelection, infoModel))),
+				newSelection => OnEdgedLogSpawn(model, result => OnButtonLogSpawn(result, AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeSpawn))),
 				EncounterLogBlankHandling.None,
 				EncounterLogMissingHandling.None,
 				EncounterLogBlankOptionHandling.NotSelectable,
@@ -836,7 +845,7 @@ namespace LunraGames.SubLight
 					infoModel,
 					model,
 					existingSelection => entry.NextLogId.Value = existingSelection,
-					newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel),
+					newSelection => entry.NextLogId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeAssignment),
 					EncounterLogBlankHandling.None,
 					EncounterLogMissingHandling.None,
 					out hasBlankOrMissingNextId,
@@ -1199,7 +1208,7 @@ namespace LunraGames.SubLight
 						infoModel,
 						model,
 						existingSelection => nextId.Value = existingSelection,
-						newSelection => nextId.Value = AppendNewLog(newSelection, infoModel),
+						newSelection => nextId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeAssignment),
 						EncounterLogBlankHandling.FallsThrough,
 						EncounterLogMissingHandling.Error,
 						JumpToLogId
@@ -1743,7 +1752,7 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				existingSelection => model.FallbackLogId.Value = existingSelection,
-				newSelection => model.FallbackLogId.Value = AppendNewLog(newSelection, infoModel),
+				newSelection => model.FallbackLogId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.LogFallback),
 				logsShowFallthroughWarnings.Value ? EncounterLogBlankHandling.SpecifiedByModel : EncounterLogBlankHandling.SpecifiedByModelNoWarnings,
 				EncounterLogMissingHandling.Error,
 				EncounterLogBlankOptionHandling.Selectable,
@@ -1791,6 +1800,50 @@ namespace LunraGames.SubLight
 		{
 			LogsFocusedLogIdsPush(logId);
 			Debug.Log("I: "+logsFocusedLogIdsIndex.Value+"\n"+(logsFocusedLogIds.Value ?? "< nothing >").Replace("|","\n"));
+		}
+
+		#endregion
+
+		#region Log Stack Utility
+		/// <summary>
+		/// Peeks at the stack at the current index.
+		/// </summary>
+		/// <returns>LogId.</returns>
+		string LogsFocusedLogIdsPeek() { return LogsFocusedLogIdsStack.ElementAtOrDefault(logsFocusedLogIdsIndex.Value); }
+
+		/// <summary>
+		/// Peeks at the stack at the specified index.
+		/// </summary>
+		/// <returns>LogId.</returns>
+		/// <param name="index">Index.</param>
+		string LogsFocusedLogIdsPeekAbsolute(int index) { return LogsFocusedLogIdsStack.ElementAtOrDefault(index); }
+
+		/// <summary>
+		/// Peeks at the stack at the current index + the specified <paramref name="indexOffset"/>.
+		/// </summary>
+		/// <returns>LogId.</returns>
+		/// <param name="indexOffset">Index offset.</param>
+		string LogsFocusedLogIdsPeekRelative(int indexOffset) { return LogsFocusedLogIdsStack.ElementAtOrDefault(logsFocusedLogIdsIndex.Value + indexOffset); }
+
+		void LogsFocusedLogIdsPush(string logId)
+		{
+			LogsFocusedLogIdsPopAndPush(logsFocusedLogIdsIndex.Value, logId);
+		}
+
+		void LogsFocusedLogIdsPopAndPush(int index, string logId)
+		{
+			if (string.IsNullOrEmpty(logId)) throw new ArgumentException("logId cannot be null or empty");
+			LogsFocusedLogIdsPop(Mathf.Clamp(index, -1, LogsFocusedLogIdsStack.Count() - 1));
+			LogsFocusedLogIdsStack = LogsFocusedLogIdsStack.Append(logId);
+			logsFocusedLogIdsIndex.Value = LogsFocusedLogIdsStack.Count() - 1;
+		}
+
+		void LogsFocusedLogIdsPop(int index = -1)
+		{
+			var newStack = new List<string>();
+			for (var i = 0; i <= index; i++) newStack.Add(LogsFocusedLogIdsStack.ElementAt(i));
+			LogsFocusedLogIdsStack = newStack;
+			logsFocusedLogIdsIndex.Value = index;
 		}
 		#endregion
 
