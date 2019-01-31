@@ -135,7 +135,7 @@ namespace LunraGames.SubLight
 					LogsFocusedLogIdsPush,
 					newSelection => AppendNewLog(newSelection, model, LogsAppendSources.Toolbar),
 					EncounterLogBlankHandling.None,
-					EncounterLogMissingHandling.ErrorNoHelpBox,
+					EncounterLogMissingHandling.Error,
 					EncounterLogBlankOptionHandling.NotSelectable,
 					new GUIContent("Show All Logs"),
 					() => LogsFocusedLogIdsPop(),
@@ -1731,7 +1731,7 @@ namespace LunraGames.SubLight
 			model.FallbackLogId.Changed = newLogId => ModelSelectionModified = true;
 
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
-				new GUIContent(model.RequiresFallbackLog ? "Next Log" : "Fallback Log", "The encounter will fallthrough to tthis log if not overridden."),
+				new GUIContent(model.RequiresFallbackLog ? "Next Log" : "Fallback Log", "The encounter will fallthrough to this log if not overridden."),
 				new GUIContent(model.RequiresFallbackLog ? "- Select Next Log -" : "- Select Fallback Log -"),
 				model.FallbackLogId.Value,
 				infoModel,

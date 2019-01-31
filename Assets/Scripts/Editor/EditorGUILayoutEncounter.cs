@@ -19,7 +19,6 @@ namespace LunraGames.SubLight
 		Warning = 20,
 		Error = 30,
 		SpecifiedByModel = 40,
-		SpecifiedByModelNoWarnings = 50,
 		FallsThrough = 60,
 	}
 
@@ -27,8 +26,7 @@ namespace LunraGames.SubLight
 	{
 		Unknown = 0,
 		None = 10,
-		Error = 20,
-		ErrorNoHelpBox = 30
+		Error = 20
 	}
 
 	public enum EncounterLogBlankOptionHandling
@@ -49,7 +47,6 @@ namespace LunraGames.SubLight
 			public bool IsSelected;
 			public bool IsNext;
 			public bool IsDisabled;
-			public bool IsMissing;
 			public Action Select;
 		}
 
@@ -108,7 +105,6 @@ namespace LunraGames.SubLight
 			switch (blankHandling)
 			{
 				case EncounterLogBlankHandling.SpecifiedByModel:
-				case EncounterLogBlankHandling.SpecifiedByModelNoWarnings:
 					if (model == null) throw new ArgumentNullException("model");
 					break;
 			}
@@ -169,7 +165,6 @@ namespace LunraGames.SubLight
 				switch (missingHandling)
 				{
 					case EncounterLogMissingHandling.Error:
-					case EncounterLogMissingHandling.ErrorNoHelpBox:
 						dropdownColor = Color.red;
 						issueTooltip = "The specified LogId is missing: " + selectedLogId;
 						break;
@@ -191,14 +186,13 @@ namespace LunraGames.SubLight
 						issueTooltip = BlankWarning;
 						break;
 					case EncounterLogBlankHandling.SpecifiedByModel:
-					case EncounterLogBlankHandling.SpecifiedByModelNoWarnings:
 						if (model.Ending.Value) break;
 						if (model.RequiresFallbackLog)
 						{
 							dropdownColor = Color.red;
 							issueTooltip = BlankError;
 						}
-						else if (blankHandling != EncounterLogBlankHandling.SpecifiedByModelNoWarnings)
+						else
 						{
 							dropdownColor = Color.yellow;
 							issueTooltip = BlankWarning;
