@@ -26,6 +26,14 @@ namespace LunraGames.SubLight
 		GUIStyle encounterEditorLogEntryIndex;
 		public GUIStyle EncounterEditorLogEntryIndex { get { return encounterEditorLogEntryIndex; } }
 
+		[SerializeField]
+		Texture encounterEditorLogToolbarLastImage;
+		public Texture EncounterEditorLogToolbarLastImage { get { return encounterEditorLogToolbarLastImage; } }
+
+		[SerializeField]
+		Texture encounterEditorLogToolbarNextImage;
+		public Texture EncounterEditorLogToolbarNextImage { get { return encounterEditorLogToolbarNextImage; } }
+
 		[Header("Galaxy Editor Styles")]
 		[SerializeField]
 		GUIStyle galaxyEditorGalaxyTargetStyle;

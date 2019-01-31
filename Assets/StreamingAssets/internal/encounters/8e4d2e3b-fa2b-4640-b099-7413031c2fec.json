@@ -28,7 +28,14 @@
       {
         "entries": [],
         "beginning": true,
-        "logId": "fbbf2151-11c4-44ca-a3ac-1bea7240a938"
+        "logId": "fbbf2151-11c4-44ca-a3ac-1bea7240a938",
+        "fallbackLogId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb"
+      },
+      {
+        "entries": [],
+        "index": 3,
+        "logId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb",
+        "fallbackLogId": "fbbf2151-11c4-44ca-a3ac-1bea7240a938"
       }
     ],
     "conversationLogs": [
@@ -36,6 +43,7 @@
         "entries": [],
         "index": 2,
         "logId": "b2627443-21ed-4466-acd7-f1b39a330436",
+        "fallbackLogId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb",
         "name": "some conversation"
       }
     ]

@@ -35,6 +35,7 @@ namespace LunraGames.SubLight
 		}
 
 		EditorPrefsFloat logsListScroll;
+		EditorPrefsFloat logsStackScroll;
 		EditorPrefsBool logsShowHaltingInfo;
 		EditorPrefsBool logsShowHaltingWarnings;
 		EditorPrefsBool logsJumpFromToolbarAppend;
@@ -72,6 +73,7 @@ namespace LunraGames.SubLight
 			var currPrefix = KeyPrefix + "Logs";
 
 			logsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
+			logsStackScroll = new EditorPrefsFloat(currPrefix + "StackScroll");
 			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
 			logsJumpFromToolbarAppend = new EditorPrefsBool(currPrefix + "JumpFromToolbarAppend", true);
@@ -119,50 +121,70 @@ namespace LunraGames.SubLight
 
 		void DrawLogsToolbar(EncounterInfoModel model)
 		{
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("Log Count: " + model.Logs.All.Value.Count() + " |", GUILayout.ExpandWidth(false));
-
-				EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
-					null,
-					new GUIContent("- Select or Create Log -"),
-					LogsFocusedLogIdsPeek(),
-					model,
-					null,
-					LogsFocusedLogIdsPush,
-					newSelection => AppendNewLog(newSelection, model, LogsAppendSources.Toolbar),
-					EncounterLogBlankHandling.None,
-					EncounterLogMissingHandling.Error,
-					EncounterLogBlankOptionHandling.NotSelectable,
-					new GUIContent("Show All Logs"),
-					() => LogsFocusedLogIdsPop(),
-					null
-				);
-
-				GUILayout.Label("Hold 'Control' to rearrange entries or 'Shift' to delete them.", GUILayout.ExpandWidth(false));
-			}
-			GUILayout.EndHorizontal();
-
-			GUILayout.BeginHorizontal();
+			GUILayout.BeginHorizontal(EditorStyles.toolbar);
 			{
 				EditorGUILayoutExtensions.PushEnabled(LogsIsFocusedOnStack);
 				{
 					EditorGUILayoutExtensions.PushEnabled(0 < logsFocusedLogIdsIndex.Value);
 					{
-						if (GUILayout.Button("<", EditorStyles.miniButtonLeft, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(-1);
+						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarLastImage), EditorStyles.toolbarButton, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(-1);
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 					EditorGUILayoutExtensions.PushEnabled(logsFocusedLogIdsIndex.Value < LogsFocusedLogIdsStack.Count() - 1);
 					{
-						if (GUILayout.Button(">", EditorStyles.miniButtonRight, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(1);
+						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarNextImage), EditorStyles.toolbarButton, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(1);
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 
-					GUILayout.Label("ha");
+					if (!LogsIsFocusedOnStack) GUILayout.Label("Hold 'shift' to rearrange entries or 'control' to delete them.", GUILayout.ExpandWidth(false));
 
-					if (GUILayout.Button("Show All", EditorStyles.miniButton, GUILayout.Width(64f))) LogsFocusedLogIdsPop();
+					logsStackScroll.HorizontalScroll = GUILayout.BeginScrollView(logsStackScroll.HorizontalScroll, GUIStyle.none, GUIStyle.none);
+					{
+						GUILayout.BeginHorizontal();
+						var currLogIdIndex = 0;
+						foreach (var logId in LogsFocusedLogIdsStack)
+						{
+							var logIsFocused = logsFocusedLogIdsIndex.Value == currLogIdIndex;
+							var log = model.Logs.GetLogFirstOrDefault(logId);
+							var logName = EditorGUILayoutEncounter.GetReadableLogName(
+								logId,
+								log == null ? null : log.Name.Value,
+								log == null
+							);
+
+							if (!logIsFocused) EditorGUILayoutExtensions.PushContentColor(Color.white.NewV(0.7f));
+							if (GUILayout.Button(new GUIContent(logName, logIsFocused ? "Log is currently focused." : "Jump to this log."), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+							{
+								logsFocusedLogIdsIndex.Value = currLogIdIndex;
+							}
+							if (!logIsFocused) EditorGUILayoutExtensions.PopContentColor();
+
+							currLogIdIndex++;
+						}
+						GUILayout.EndHorizontal();
+					}
+					GUILayout.EndScrollView();
 				}
 				EditorGUILayoutExtensions.PopEnabled();
+
+				EditorGUILayoutEncounter.SelectLogPopup(
+					LogsFocusedLogIdsPeek(),
+					new GUIContent("Filter"),
+					model,
+					LogsFocusedLogIdsPush,
+					() => LogsFocusedLogIdsPop(),
+					EditorStyles.toolbarDropDown
+				);
+
+				var appendResult = EditorGUILayoutExtensions.HelpfulEnumPopupValue(
+					"Create",
+					EncounterLogTypes.Unknown,
+					EnumExtensions.GetValues(EncounterLogTypes.Unknown).OrderBy(t => t.ToString()).Prepend(EncounterLogTypes.Unknown).ToArray(),
+					EditorStyles.toolbarPopup,
+					GUILayout.Width(48f)
+				);
+
+				if (appendResult != EncounterLogTypes.Unknown) AppendNewLog(appendResult, model, LogsAppendSources.Toolbar);
 			}
 			GUILayout.EndHorizontal();
 
@@ -1826,6 +1848,7 @@ namespace LunraGames.SubLight
 
 		void LogsFocusedLogIdsPush(string logId)
 		{
+			logsStackScroll.Value = float.MaxValue;
 			LogsFocusedLogIdsPopAndPush(logsFocusedLogIdsIndex.Value, logId);
 		}
 

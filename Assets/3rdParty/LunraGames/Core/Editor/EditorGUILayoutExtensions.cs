@@ -58,7 +58,13 @@ namespace LunraGamesEditor
 				EditorGUILayout.PrefixLabel(content);
 				var wasIndent = EditorGUI.indentLevel;
 				EditorGUI.indentLevel = 0;
-				result = HelpfulEnumPopupValue(primaryReplacement, value, options, guiOptions);
+				result = HelpfulEnumPopupValue(
+					primaryReplacement,
+					value,
+					options,
+					null,
+					guiOptions
+				);
 				EditorGUI.indentLevel = wasIndent;
 			}
 			GUILayout.EndHorizontal();
@@ -71,7 +77,28 @@ namespace LunraGamesEditor
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
-			return HelpfulEnumPopupValue(primaryReplacement, value, null, guiOptions);
+			return HelpfulEnumPopupValue<T>(
+				primaryReplacement,
+				value,
+				null,
+				guiOptions
+			);
+		}
+
+		public static T HelpfulEnumPopupValue<T>(
+			string primaryReplacement,
+			T value,
+			T[] options,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			return HelpfulEnumPopupValue(
+				primaryReplacement,
+				value,
+				options,
+				null,
+				guiOptions
+			);
 		}
 
 		/// <summary>
@@ -84,6 +111,7 @@ namespace LunraGamesEditor
 			string primaryReplacement, 
 			T value,
 			T[] options,
+			GUIStyle style,
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
@@ -98,7 +126,8 @@ namespace LunraGamesEditor
 				selection++;
 			}
 			selection = selection == names.Length ? 0 : selection;
-			selection = EditorGUILayout.Popup(selection, names, guiOptions);
+			if (style == null) selection = EditorGUILayout.Popup(selection, names, guiOptions);
+			else selection = EditorGUILayout.Popup(selection, names, style, guiOptions);
 
 			return (T)Enum.Parse(value.GetType(), originalNames[selection]);
 		}
@@ -373,7 +402,11 @@ namespace LunraGamesEditor
 					{
 						GUILayout.Space(16f);
 						GUILayout.Label("[ " + i + " ]", GUILayout.Width(32f));
-						values[i] = HelpfulEnumPopupValue(primaryReplacemnt, values[i], options);
+						values[i] = HelpfulEnumPopupValue(
+							primaryReplacemnt,
+							values[i],
+							options
+						);
 						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();

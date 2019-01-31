@@ -217,6 +217,10 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  encounterEditorLogToolbarLastImage: {fileID: 2800000, guid: 22e222df2fd7f4a359df7c12c614a840,
+    type: 3}
+  encounterEditorLogToolbarNextImage: {fileID: 2800000, guid: d15ecb8cffc1f4b9b90c01a047363eb6,
+    type: 3}
   galaxyEditorGalaxyTargetStyle:
     m_Name: 
     m_Normal:

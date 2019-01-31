@@ -50,6 +50,16 @@ namespace LunraGames.SubLight
 			public Action Select;
 		}
 
+		enum CallbackSources
+		{
+			Unknown = 0,
+			AppendSelectOrBlank = 10,
+			Select = 20
+		}
+
+		const float DropdownButtonOffsetY = -18f;
+
+		static CallbackSources lastCallbackSource;
 		static Rect lastMouseOverRect;
 		static Action lastMouseOverCallback;
 
@@ -141,7 +151,7 @@ namespace LunraGames.SubLight
 				var selectedLogNull = selectedLog == null;
 				var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
 				content = new GUIContent(
-					GetMenuEntryName(
+					GetReadableLogName(
 						selectedLogId,
 						selectedLogNull ? null : selectedLog.Name.Value,
 						missingHandling != EncounterLogMissingHandling.None && selectedLogNull,
@@ -225,6 +235,7 @@ namespace LunraGames.SubLight
 			{
 				if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
 				{
+					lastCallbackSource = CallbackSources.AppendSelectOrBlank;
 					lastMouseOverCallback = () =>
 					{
 						var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
@@ -245,13 +256,14 @@ namespace LunraGames.SubLight
 			}
 			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
 
-			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null)
+			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null && lastCallbackSource == CallbackSources.AppendSelectOrBlank)
 			{
 				var lastRect = GUILayoutUtility.GetLastRect();
 				if (lastRect.Contains(Event.current.mousePosition))
 				{
-					lastMouseOverRect = lastRect;
+					lastMouseOverRect = lastRect.NewY(lastRect.y + DropdownButtonOffsetY);
 					var callback = lastMouseOverCallback;
+					lastCallbackSource = CallbackSources.Unknown;
 					lastMouseOverCallback = null;
 					callback();
 				}
@@ -271,6 +283,96 @@ namespace LunraGames.SubLight
 			}
 
 			if (isInHorizontalLayout) GUILayout.EndHorizontal();
+		}
+
+		public static void SelectLogPopup(
+			string selectedLogId,
+			GUIContent content,
+			EncounterInfoModel infoModel,
+			Action<string> selection,
+			Action noneSelection,
+			GUIStyle buttonStyle = null
+		)
+		{
+			var pressed = false;
+			if (buttonStyle == null) pressed = EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.ExpandWidth(false));
+			else pressed = EditorGUILayout.DropdownButton(content, FocusType.Keyboard, buttonStyle, GUILayout.ExpandWidth(false));
+
+			if (pressed)
+			{
+				lastCallbackSource = CallbackSources.Select;
+				lastMouseOverCallback = () =>
+				{
+					ShowSelectMenu(
+						selectedLogId,
+						infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).ToArray(),
+						selection,
+						noneSelection
+					);
+				};
+			}
+
+			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null && lastCallbackSource == CallbackSources.Select)
+			{
+				var lastRect = GUILayoutUtility.GetLastRect();
+				if (lastRect.Contains(Event.current.mousePosition))
+				{
+					lastMouseOverRect = lastRect.NewY(lastRect.y + DropdownButtonOffsetY);
+					var callback = lastMouseOverCallback;
+					lastCallbackSource = CallbackSources.Unknown;
+					lastMouseOverCallback = null;
+					callback();
+				}
+			}
+		}
+
+		static void ShowSelectMenu(
+			string selectedLogId,
+			EncounterLogModel[] options,
+			Action<string> selection,
+			Action noneSelection
+		)
+		{
+			var entries = GetMenuEntries(
+				options,
+				selection,
+				selectedLogId,
+				null,
+				selectedLogId
+			);
+
+			var menu = new GenericMenu();
+			menu.allowDuplicateNames = true;
+
+			if (string.IsNullOrEmpty(selectedLogId)) menu.AddDisabledItem(new GUIContent("Show All"), true);
+			else menu.AddItem(new GUIContent("Show All"), false, () => noneSelection());
+
+			menu.AddSeparator(string.Empty);
+
+			var namedEntries = entries.Where(e => e.IsNamed);
+			var unnamedEntries = entries.Where(e => !e.IsNamed);
+
+			if (namedEntries.Any())
+			{
+				menu.AddSeparator(string.Empty);
+				foreach (var entry in namedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
+			}
+
+			if (unnamedEntries.Any())
+			{
+				menu.AddSeparator(string.Empty);
+				foreach (var entry in unnamedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
+			}
+
+			menu.DropDown(lastMouseOverRect);
 		}
 
 		static void ShowSelectOrAppendMenu(
@@ -359,7 +461,7 @@ namespace LunraGames.SubLight
 					new MenuEntry
 					{
 						LogId = logId,
-						Name = GetMenuEntryName(logId, log.Name.Value, isNext: isNext),
+						Name = GetReadableLogName(logId, log.Name.Value, isNext: isNext),
 						IsNamed = !string.IsNullOrEmpty(log.Name.Value),
 						IsSelected = !isLogIdNullOrEmpty && logId == selectedLogId,
 						IsNext = isNext,
@@ -372,7 +474,7 @@ namespace LunraGames.SubLight
 			return results;
 		}
 
-		static string GetMenuEntryName(
+		public static string GetReadableLogName(
 			string logId,
 			string name,
 			bool missing = false,
