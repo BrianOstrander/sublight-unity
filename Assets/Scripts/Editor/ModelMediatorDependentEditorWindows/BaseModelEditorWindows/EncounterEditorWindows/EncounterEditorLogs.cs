@@ -31,6 +31,8 @@ namespace LunraGames.SubLight
 		EditorPrefsBool logsShowFallthroughInfo;
 		EditorPrefsBool logsShowFallthroughWarnings;
 
+		EditorPrefsString logsFocusedLogId;
+
 		EncounterEditorLogCache logCache;
 
 		void LogsConstruct()
@@ -42,6 +44,8 @@ namespace LunraGames.SubLight
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
 			logsShowFallthroughInfo = new EditorPrefsBool(currPrefix + "ShowFallthroughInfo", true);
 			logsShowFallthroughWarnings = new EditorPrefsBool(currPrefix + "ShowFallthroughWarnings", true);
+
+			logsFocusedLogId = new EditorPrefsString(currPrefix + "FocusedLogId");
 
 			RegisterToolbar("Logs", LogsToolbar);
 
@@ -80,25 +84,19 @@ namespace LunraGames.SubLight
 				GUILayout.BeginHorizontal();
 				{
 					GUILayout.Label("Log Count: " + model.Logs.All.Value.Count() + " |", GUILayout.ExpandWidth(false));
-					AppendNewLog(EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Append New Log -", EncounterLogTypes.Unknown), model);
 
-					//EditorGUILayoutEncounter.LogPopup()
-					EditorGUILayout.IntPopup(
-						0,
-						new GUIContent[]
-						{
-							new GUIContent("one", "0"),
-							new GUIContent("one", "1"),
-							new GUIContent("two", "2"),
-							new GUIContent("three", "3")
-						},
-						new int[] { 0, 1, 2, 3 }
+					EditorGUILayoutEncounter.AppendOrSelectLogPopup(
+						null,
+						new GUIContent("- Append or Jump to Log -"),
+						logsFocusedLogId.Value,
+						model,
+						null,
+						JumpToLogId,
+						newSelection => AppendNewLog(newSelection, model),
+						EncounterLogBlankHandling.None,
+						EncounterLogMissingHandling.None,
+						null
 					);
-
-					//if (EditorGUILayout.DropdownButton(new GUIContent("huh"), FocusType.Keyboard))
-					//{
-					//	EditorGUILayout.dr
-					//}
 
 					GUILayout.Label("Hold 'Control' to rearrange entries or 'Shift' to delete them.", GUILayout.ExpandWidth(false));
 				}

@@ -55,36 +55,6 @@ namespace LunraGames.SubLight
 		static Rect lastMouseOverRect;
 		static Action lastMouseOverCallback;
 
-		/*
-		public static string SelectLogPopup(
-			GUIContent content,
-			string selection,
-			EncounterInfoModel infoModel
-		)
-		{
-			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.LogId.Value);
-
-			var optionNamesList = new List<string>();
-			foreach (var logId in rawOptions)
-			{
-				var log = infoModel.Logs.GetLogFirstOrDefault(logId);
-				if (log == null)
-				{
-					optionNamesList.Add("* Problem Finding Log " + logId + " *");
-					continue;
-				}
-
-				var shortened = logId.Substring(0, Mathf.Min(8, logId.Length));
-
-				if (log.HasName) shortened = log.Name.Value + " | " + shortened;
-
-				if (logId == nextId) shortened += currentAppend;
-				optionNamesList.Add(shortened);
-			}
-			var rawOptionNames = optionNamesList.AsEnumerable();
-		}
-		*/
-
 		public static void AppendOrSelectLogPopup(
 			GUIContent prefixContent,
 			GUIContent content,
@@ -169,7 +139,15 @@ namespace LunraGames.SubLight
 		)
 		{
 			if (infoModel == null) throw new ArgumentNullException("infoModel");
-			if (model == null) throw new ArgumentNullException("model");
+
+			switch (blankHandling)
+			{
+				case EncounterLogBlankHandling.SpecifiedByModel:
+				case EncounterLogBlankHandling.SpecifiedByModelNoWarnings:
+					if (model == null) throw new ArgumentNullException("model");
+					break;
+			}
+
 			if (existingSelection == null) throw new ArgumentNullException("existingSelection");
 			if (newSelection == null) throw new ArgumentNullException("newSelection");
 
@@ -200,7 +178,7 @@ namespace LunraGames.SubLight
 			{
 				var selectedLog = logs.FirstOrDefault(l => l.LogId.Value == selectedLogId);
 				var selectedLogNull = selectedLog == null;
-				var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+				var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
 				content = new GUIContent(
 					GetMenuEntryName(
 						selectedLogId,
@@ -221,7 +199,7 @@ namespace LunraGames.SubLight
 			{
 				lastMouseOverCallback = () =>
 				{
-					var nextLog = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+					var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
 
 					ShowSelectOrAppendMenu(
 						model,
@@ -341,7 +319,7 @@ namespace LunraGames.SubLight
 				existingSelection,
 				selectedLogId,
 				nextLogId,
-				current.LogId.Value
+				current == null ? null : current.LogId.Value
 			);
 
 			var menu = new GenericMenu();
