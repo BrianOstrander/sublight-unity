@@ -135,10 +135,10 @@ namespace LunraGames.SubLight
 					LogsFocusedLogIdsPeek(),
 					model,
 					null,
-					JumpToLogId,
+					LogsFocusedLogIdsPush,
 					newSelection => AppendNewLog(newSelection, model, LogsAppendSources.Toolbar),
 					EncounterLogBlankHandling.None,
-					EncounterLogMissingHandling.None,
+					EncounterLogMissingHandling.ErrorNoHelpBox,
 					EncounterLogBlankOptionHandling.NotSelectable,
 					new GUIContent("Show All Logs"),
 					() => LogsFocusedLogIdsPop(),
@@ -690,7 +690,7 @@ namespace LunraGames.SubLight
 				EncounterLogBlankOptionHandling.Selectable,
 				new GUIContent("< Fallback >"),
 				() => entry.NextLogId.Value = null,
-				JumpToLogId
+				LogsFocusedLogIdsPush
 			);
 
 			EditorGUILayoutValueFilter.Field(
@@ -852,7 +852,7 @@ namespace LunraGames.SubLight
 					EncounterLogBlankOptionHandling.Selectable,
 					new GUIContent("< Fallback >"),
 					() => entry.NextLogId.Value = null,
-					JumpToLogId
+					LogsFocusedLogIdsPush
 				);
 
 				entry.NotAutoUsed.Value = !EditorGUILayout.ToggleLeft(new GUIContent("Auto Used", "When this button is pressed, automatically set it to appear used the next time around."), !entry.NotAutoUsed.Value, GUILayout.Width(74f));
@@ -1211,7 +1211,7 @@ namespace LunraGames.SubLight
 						newSelection => nextId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeAssignment),
 						EncounterLogBlankHandling.FallsThrough,
 						EncounterLogMissingHandling.Error,
-						JumpToLogId
+						LogsFocusedLogIdsPush
 					);
 				}
 			}
@@ -1758,7 +1758,7 @@ namespace LunraGames.SubLight
 				EncounterLogBlankOptionHandling.Selectable,
 				new GUIContent("< Blank >"),
 				() => model.FallbackLogId.Value = null,
-				JumpToLogId
+				LogsFocusedLogIdsPush
 			);
 		}
 
@@ -1795,13 +1795,6 @@ namespace LunraGames.SubLight
 		{
 			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value).Count(i => i == bustId);
 		}
-
-		void JumpToLogId(string logId)
-		{
-			LogsFocusedLogIdsPush(logId);
-			Debug.Log("I: "+logsFocusedLogIdsIndex.Value+"\n"+(logsFocusedLogIds.Value ?? "< nothing >").Replace("|","\n"));
-		}
-
 		#endregion
 
 		#region Log Stack Utility

@@ -27,7 +27,8 @@ namespace LunraGames.SubLight
 	{
 		Unknown = 0,
 		None = 10,
-		Error = 20
+		Error = 20,
+		ErrorNoHelpBox = 30
 	}
 
 	public enum EncounterLogBlankOptionHandling
@@ -195,25 +196,66 @@ namespace LunraGames.SubLight
 
 			if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
 
-			if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
-			{
-				lastMouseOverCallback = () =>
-				{
-					var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+			var logIds = logs.Select(l => l.LogId.Value);
+			var wasFound = logIds.Contains(selectedLogId);
+			var hasMissingId = !string.IsNullOrEmpty(selectedLogId) && !wasFound;
 
-					ShowSelectOrAppendMenu(
-						model,
-						logs.ToArray(),
-						selectedLogId,
-						nextLog == null ? null : nextLog.LogId.Value,
-						existingSelection,
-						newSelection,
-						blankOptionHandling,
-						noneSelectionContent,
-						noneSelection
-					);
-				};
+			isBlankOrMissing = string.IsNullOrEmpty(selectedLogId) || hasMissingId;
+
+			Color? dropdownColor = null;
+
+			if (hasMissingId)
+			{
+				switch (missingHandling)
+				{
+					case EncounterLogMissingHandling.Error:
+					case EncounterLogMissingHandling.ErrorNoHelpBox:
+						dropdownColor = Color.red;
+						break;
+				}
 			}
+			else if (isBlankOrMissing)
+			{
+				switch (blankHandling)
+				{
+					case EncounterLogBlankHandling.Error:
+						dropdownColor = Color.red;
+						break;
+					case EncounterLogBlankHandling.Warning:
+						dropdownColor = Color.yellow;
+						break;
+					case EncounterLogBlankHandling.SpecifiedByModel:
+					case EncounterLogBlankHandling.SpecifiedByModelNoWarnings:
+						if (model.Ending.Value) break;
+						if (model.RequiresFallbackLog) dropdownColor = Color.red;
+						else if (blankHandling != EncounterLogBlankHandling.SpecifiedByModelNoWarnings) dropdownColor = Color.yellow;
+						break;
+				}
+			}
+
+			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(dropdownColor.Value.NewS(0.25f), dropdownColor.Value.NewS(0.65f));
+			{
+				if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
+				{
+					lastMouseOverCallback = () =>
+					{
+						var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+
+						ShowSelectOrAppendMenu(
+							model,
+							logs.ToArray(),
+							selectedLogId,
+							nextLog == null ? null : nextLog.LogId.Value,
+							existingSelection,
+							newSelection,
+							blankOptionHandling,
+							noneSelectionContent,
+							noneSelection
+						);
+					};
+				}
+			}
+			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
 
 			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null)
 			{
@@ -241,12 +283,6 @@ namespace LunraGames.SubLight
 			}
 
 			if (isInHorizontalLayout) GUILayout.EndHorizontal();
-
-			var logIds = logs.Select(l => l.LogId.Value);
-			var wasFound = logIds.Contains(selectedLogId);
-			var hasMissingId = !string.IsNullOrEmpty(selectedLogId) && !wasFound;
-
-			isBlankOrMissing = string.IsNullOrEmpty(selectedLogId) || hasMissingId;
 
 			if (missingHandling != EncounterLogMissingHandling.None && hasMissingId)
 			{
