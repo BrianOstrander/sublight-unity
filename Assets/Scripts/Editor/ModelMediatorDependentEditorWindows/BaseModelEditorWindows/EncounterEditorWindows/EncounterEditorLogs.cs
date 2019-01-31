@@ -145,7 +145,24 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("stuff here");
+				EditorGUILayoutExtensions.PushEnabled(LogsIsFocusedOnStack);
+				{
+					EditorGUILayoutExtensions.PushEnabled(0 < logsFocusedLogIdsIndex.Value);
+					{
+						if (GUILayout.Button("<", EditorStyles.miniButtonLeft, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(-1);
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUILayoutExtensions.PushEnabled(logsFocusedLogIdsIndex.Value < LogsFocusedLogIdsStack.Count() - 1);
+					{
+						if (GUILayout.Button(">", EditorStyles.miniButtonRight, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(1);
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+
+					GUILayout.Label("ha");
+
+					if (GUILayout.Button("Show All", EditorStyles.miniButton, GUILayout.Width(64f))) LogsFocusedLogIdsPop();
+				}
+				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
 
@@ -1826,6 +1843,11 @@ namespace LunraGames.SubLight
 			for (var i = 0; i <= index; i++) newStack.Add(LogsFocusedLogIdsStack.ElementAt(i));
 			LogsFocusedLogIdsStack = newStack;
 			logsFocusedLogIdsIndex.Value = index;
+		}
+
+		void LogsFocusedLogIdsOffsetIndex(int delta)
+		{
+			logsFocusedLogIdsIndex.Value = Mathf.Clamp(logsFocusedLogIdsIndex.Value + delta, 0, LogsFocusedLogIdsStack.Count() - 1);
 		}
 		#endregion
 
