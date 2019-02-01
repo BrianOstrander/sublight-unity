@@ -10,9 +10,11 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string logId;
 		[JsonProperty] float duration;
 
+		[JsonProperty] string fallbackLogId;
+
 		[JsonProperty] string name;
-		[JsonProperty] bool showNotes;
 		[JsonProperty] string notes;
+		[JsonProperty] bool collapsed;
 
 		/// <summary>
 		/// The order these appear in the editor, not used in game for anything
@@ -30,16 +32,21 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<float> Duration;
 
 		[JsonIgnore]
+		public readonly ListenerProperty<string> FallbackLogId;
+
+		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
-		public readonly ListenerProperty<bool> ShowNotes;
-		[JsonIgnore]
 		public readonly ListenerProperty<string> Notes;
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> Collapsed;
 
 		[JsonIgnore]
 		public abstract EncounterLogTypes LogType { get; }
 		[JsonIgnore]
-		public abstract string NextLog { get; }
+		public virtual string NextLog { get { return FallbackLogId.Value; } }
+		[JsonIgnore]
+		public virtual bool CanFallback { get { return true; } }
 
 		/// <summary>
 		/// If this value returns true, not having a next log is an error,
@@ -47,7 +54,7 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		/// <value><c>true</c> if requires next log; otherwise, <c>false</c>.</value>
 		[JsonIgnore]
-		public virtual bool RequiresNextLog { get { return true; } }
+		public virtual bool RequiresFallbackLog { get { return true; } }
 		[JsonIgnore]
 		public virtual bool EditableDuration { get { return true; } }
 		[JsonIgnore]
@@ -65,9 +72,11 @@ namespace LunraGames.SubLight.Models
 			LogId = new ListenerProperty<string>(value => logId = value, () => logId);
 			Duration = new ListenerProperty<float>(value => duration = value, () => duration);
 
+			FallbackLogId = new ListenerProperty<string>(value => fallbackLogId = value, () => fallbackLogId);
+
 			Name = new ListenerProperty<string>(value => name = value, () => name);
-			ShowNotes = new ListenerProperty<bool>(value => showNotes = value, () => showNotes);
 			Notes = new ListenerProperty<string>(value => notes = value, () => notes);
+			Collapsed = new ListenerProperty<bool>(value => collapsed = value, () => collapsed);
 		}
 	}
 }

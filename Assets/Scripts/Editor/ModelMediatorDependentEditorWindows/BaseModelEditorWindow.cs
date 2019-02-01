@@ -117,14 +117,19 @@ namespace LunraGames.SubLight
 
 		void OnNewModel()
 		{
-			TextDialogPopup.Show(
-				"New "+readableModelName+" Model",
-				value =>
+			AskForSaveIfModifiedBeforeContinuing(
+				() =>
 				{
-					SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
-				},
-				doneText: "Create",
-				description: "Enter a name for this new "+readableModelName+" model. This will also be used for the meta key."
+					TextDialogPopup.Show(
+						"New " + readableModelName + " Model",
+						value =>
+						{
+							SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
+						},
+						doneText: "Create",
+						description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
+					);
+				}
 			);
 		}
 
@@ -216,61 +221,67 @@ namespace LunraGames.SubLight
 			if (modelListStatus != RequestStatus.Success) return;
 			if (selectedStatus != RequestStatus.Success && modelSelectionState.Value == ModelSelectionStates.Selected) return;
 
-			GUILayout.BeginHorizontal();
+			if (modelTabState.Value == ModelTabStates.Maximized)
 			{
-				switch (modelTabState.Value)
+				GUILayout.BeginHorizontal();
 				{
-					case ModelTabStates.Minimized:
-						DrawModelSelectorMinimized();
-						break;
-					case ModelTabStates.Maximized:
-						DrawModelSelectorMaximized();
-						break;
-					default:
-						EditorGUILayout.HelpBox("Unrecognized tab state: " + modelTabState.Value, MessageType.Error);
-						break;
-				}
+					DrawSelector();
 
-				GUILayout.BeginVertical();
-				{
-					switch (modelSelectionState.Value)
+					GUILayout.BeginVertical();
 					{
-						case ModelSelectionStates.Browsing:
-							DrawBrowsingEditor();
-							break;
-						case ModelSelectionStates.Selected:
-							DrawSelectedEditor(ModelSelection);
-							break;
-						default:
-							EditorGUILayout.HelpBox("Unrecognized selection state: " + modelSelectionState.Value, MessageType.Error);
-							break;
+						DrawTabs();
 					}
+					GUILayout.EndVertical();
 				}
-				GUILayout.EndVertical();
+				GUILayout.EndHorizontal();
 			}
-			GUILayout.EndHorizontal();
+			else
+			{
+				DrawTabs();
+			}
 		}
 
-		void DrawModelSelectorMinimized()
+		void DrawSelector()
 		{
-			GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(28f));
+			switch (modelTabState.Value)
 			{
-				if (GUILayout.Button("<", GUILayout.Width(24f), GUILayout.Height(24f))) SetTabState(ModelTabStates.Maximized);
-				GUILayout.FlexibleSpace();
+				case ModelTabStates.Minimized: break;
+				case ModelTabStates.Maximized:
+					DrawModelSelectorMaximized();
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized tab state: " + modelTabState.Value, MessageType.Error);
+					break;
 			}
-			GUILayout.EndVertical();
+		}
+
+		void DrawTabs()
+		{
+			switch (modelSelectionState.Value)
+			{
+				case ModelSelectionStates.Browsing:
+					DrawBrowsingEditor();
+					break;
+				case ModelSelectionStates.Selected:
+					DrawSelectedEditor(ModelSelection);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized selection state: " + modelSelectionState.Value, MessageType.Error);
+					break;
+			}
 		}
 
 		void DrawModelSelectorMaximized()
 		{
-			GUILayout.BeginVertical(EditorStyles.helpBox, GUILayout.Width(300f));
+			EditorGUILayoutExtensions.BeginVertical(SubLightEditorConfig.Instance.SharedModelEditorModelsBackground, SubLightEditorConfig.Instance.SharedModelEditorModelsBackgroundColor, options: GUILayout.Width(300f));
 			{
-				GUILayout.BeginHorizontal();
+				GUILayout.BeginHorizontal(EditorStyles.toolbar);
 				{
-					const float buttonHeight = 24f;
-					if (GUILayout.Button(">", GUILayout.Height(buttonHeight), GUILayout.Width(buttonHeight))) SetTabState(ModelTabStates.Minimized);
-					if (GUILayout.Button("New", GUILayout.Height(buttonHeight))) OnNewModel();
-					if (GUILayout.Button("Refresh", GUILayout.Height(buttonHeight))) OnLoadList();
+					if (GUILayout.Button(GetTabStateLabel(), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) ToggleTabState();
+					GUILayout.Label(readableModelName + " Entries");
+					const float modelSelectorWidth = 72f;
+					if (GUILayout.Button("New", EditorStyles.toolbarButton, GUILayout.Width(modelSelectorWidth))) OnNewModel();
+					if (GUILayout.Button("Refresh", EditorStyles.toolbarButton, GUILayout.Width(modelSelectorWidth))) OnLoadList();
 				}
 				GUILayout.EndHorizontal();
 
@@ -281,54 +292,59 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndScrollView();
 			}
-			GUILayout.EndVertical();
+			EditorGUILayoutExtensions.EndVertical();
 		}
 
 		void OnDrawModel(SaveModel model, ref bool isAlternate)
 		{
 			var isSelected = modelSelectedPath.Value == model.Path.Value;
-			if (isSelected || isAlternate) EditorGUILayoutExtensions.PushBackgroundColor(isSelected ? Color.blue : Color.grey);
-			GUILayout.BeginVertical(EditorStyles.helpBox);
-			if (!isSelected && isAlternate) EditorGUILayoutExtensions.PopBackgroundColor();
-			{
-				var modelPath = model.IsInternal ? model.InternalPath : model.Path;
-				var modelId = GetModelId(model);
-				var modelName = modelId;
-				if (string.IsNullOrEmpty(modelName)) modelName = "< No Id >";
-				else if (20 < modelName.Length) modelName = modelName.Substring(0, 20) + "...";
 
-				GUILayout.BeginHorizontal();
+			EditorGUILayoutExtensions.BeginVertical(isSelected ? SubLightEditorConfig.Instance.SharedModelEditorModelsEntrySelectedBackground : SubLightEditorConfig.Instance.SharedModelEditorModelsEntryBackground, SubLightEditorConfig.Instance.SharedModelEditorModelsEntryBackgroundColor);
+			{
+				if (isSelected) EditorGUILayoutExtensions.PushColorCombined(Color.blue.NewS(0.15f), Color.blue.NewS(0.35f));
 				{
-					GUILayout.BeginVertical();
+					var modelPath = model.IsInternal ? model.InternalPath : model.Path;
+					var modelId = GetModelId(model);
+					var modelName = modelId;
+					if (string.IsNullOrEmpty(modelName)) modelName = "< No Id >";
+					else if (8 < modelName.Length) modelName = modelName.Substring(0, 8) + "...";
+
+					GUILayout.BeginHorizontal();
 					{
 						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
-						if (GUILayout.Button(new GUIContent(modelName, "Copy Id of " + modelPath)))
+						GUILayout.FlexibleSpace();
+						GUILayout.Label(modelName, EditorStyles.boldLabel);
+					}
+					GUILayout.EndHorizontal();
+
+					GUILayout.BeginHorizontal();
+					{
+						if (GUILayout.Button(new GUIContent("Copy Id", "Copy Id of " + modelPath + "."), EditorStyles.miniButtonLeft))
 						{
 							EditorGUIUtility.systemCopyBuffer = modelId;
 							ShowNotification(new GUIContent("Copied Id to Clipboard"));
 						}
-					}
-					GUILayout.EndVertical();
-
-					GUILayout.BeginVertical();
-					{
-						if (GUILayout.Button("Edit"))
-						{
-							BeforeLoadSelection();
-							OnLoadSelection(model);
-						}
-						if (GUILayout.Button("Select In Project"))
+						if (GUILayout.Button(new GUIContent("Reveal", "Selects the model in the project."), EditorStyles.miniButtonMid))
 						{
 							EditorUtility.FocusProjectWindow();
 							Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(model.InternalPath);
 						}
+						if (GUILayout.Button("Edit", EditorStyles.miniButtonRight))
+						{
+							AskForSaveIfModifiedBeforeContinuing(
+								() => 
+								{
+									BeforeLoadSelection();
+									OnLoadSelection(model);
+								}
+							);
+						}
 					}
-					GUILayout.EndVertical();
+					GUILayout.EndHorizontal();
 				}
-				GUILayout.EndHorizontal();
+				if (isSelected) EditorGUILayoutExtensions.PopColorCombined();
 			}
-			GUILayout.EndVertical();
-			if (isSelected) EditorGUILayoutExtensions.PopBackgroundColor();
+			EditorGUILayoutExtensions.EndVertical();
 			isAlternate = !isAlternate;
 		}
 
@@ -345,11 +361,13 @@ namespace LunraGames.SubLight
 			selectedStatus = RequestStatus.Cancel;
 
 			EditorApplication.modifierKeysChanged += OnModelModifierKeysChanged;
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 		}
 
 		void OnModelDisable()
 		{
 			EditorApplication.modifierKeysChanged -= OnModelModifierKeysChanged;
+			EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 		}
 
 		void OnModelGui()
@@ -404,23 +422,33 @@ namespace LunraGames.SubLight
 		}
 
 		// --- SAVING ---
-		void OnModelSave()
+		void OnModelSave(Action<RequestStatus> done)
 		{
-			if (ModelSelection == null) return;
-			SaveLoadService.Save(ModelSelection, OnModelSaveDone, false);
+			if (ModelSelection == null)
+			{
+				if (done != null) done(RequestStatus.Failure);
+				return;
+			}
+			SaveLoadService.Save(
+				ModelSelection,
+				result => OnModelSaveDone(result, done),
+				false
+			);
 		}
 
-		void OnModelSaveDone(SaveLoadRequest<M> result)
+		void OnModelSaveDone(SaveLoadRequest<M> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
+				if (done != null) done(result.Status);
 				return;
 			}
 			AssetDatabase.Refresh();
 			ModelSelection = result.TypedModel;
 			ModelSelectionModified = false;
 			modelListStatus = RequestStatus.Cancel;
+			if (done != null) done(result.Status);
 		}
 		// ------
 
@@ -431,12 +459,56 @@ namespace LunraGames.SubLight
 		{
 			Repaint();
 		}
+
+		void OnPlayModeStateChanged(PlayModeStateChange playModeState)
+		{
+			if (!ModelSelectionModified) return;
+
+			switch (playModeState)
+			{
+				case PlayModeStateChange.ExitingEditMode:
+					if (!EditorApplication.isPlayingOrWillChangePlaymode) break;
+
+					AskForSaveIfModifiedBeforeContinuing(
+						() => EditorApplication.isPlaying = true,
+						() => EditorApplication.isPlaying = false,
+						() => EditorApplication.isPlaying = false
+					);
+
+					break;
+			}
+		}
 		#endregion
 
 		#region Child Utilities
 		protected void RegisterToolbar(string name, Action<M> callback)
 		{
 			toolbars.Add(new ToolbarEntry { Name = name, Callback = callback });
+		}
+
+		protected GUIContent GetTabStateLabel()
+		{
+			switch (modelTabState.Value)
+			{
+				case ModelTabStates.Minimized:
+					return new GUIContent(SubLightEditorConfig.Instance.SharedModelEditorOpenModelsImage, "Show " + readableModelName + " entries.");
+				case ModelTabStates.Maximized:
+					return new GUIContent(SubLightEditorConfig.Instance.SharedModelEditorCloseModelsImage, "Hide " + readableModelName + " entries.");
+				default:
+					return new GUIContent("?", "Unrecognized TabState: " + modelTabState.Value);
+			}
+		}
+
+		protected void ToggleTabState()
+		{
+			switch (modelTabState.Value)
+			{
+				case ModelTabStates.Minimized: SetTabState(ModelTabStates.Maximized); break;
+				case ModelTabStates.Maximized: SetTabState(ModelTabStates.Minimized); break;
+				default:
+					Debug.LogError("Unrecognized TabState: " + modelTabState.Value);
+					break;
+			}
 		}
 
 		protected void SetTabState(ModelTabStates tabState)
@@ -464,36 +536,53 @@ namespace LunraGames.SubLight
 		{
 			Action<M> onDraw = DrawSelectedEditorNotImplemented;
 
-			GUILayout.BeginHorizontal(EditorStyles.helpBox);
+			GUILayout.BeginHorizontal(EditorStyles.toolbar);
 			{
+				if (modelTabState.Value == ModelTabStates.Minimized && GUILayout.Button(GetTabStateLabel(), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) ToggleTabState();
+
 				var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
-				GUILayout.Label("Editing: " + metaName, GUILayout.ExpandWidth(false));
+				GUILayout.Label(metaName, GUILayout.ExpandWidth(false));
 
 				switch (toolbars.Count)
 				{
 					case 0: break;
-					case 1:
-						onDraw = toolbars.First().Callback;
-						break;
-					default:
-						var modelSelectedToolbarPrevious = modelSelectedToolbar.Value;
-						modelSelectedToolbar.Value = GUILayout.Toolbar(Mathf.Min(modelSelectedToolbar, toolbars.Count - 1), toolbars.Select(t => t.Name).ToArray());
-						if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) GUIUtility.keyboardControl = 0;
-						onDraw = toolbars[modelSelectedToolbar].Callback;
-						break;
+					case 1: onDraw = toolbars.First().Callback; break;
+					default: onDraw = OnDrawToolbar(); break;
 				}
 
-				GUILayout.Label("Always Allow Saving", GUILayout.ExpandWidth(false));
-				modelAlwaysAllowSaving.Value = EditorGUILayout.Toggle(modelAlwaysAllowSaving.Value, GUILayout.Width(14f));
-				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified);
+				GUILayout.FlexibleSpace();
+
+				if (GUILayout.Button("Settings", EditorStyles.toolbarButton, GUILayout.Width(64f))) ShowSettingsDialog();
+
+				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || Event.current.control);
 				{
-					if (GUILayout.Button("Save", GUILayout.Width(64f))) Save();
+					var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
+					if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save(null);
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
 
 			onDraw(model);
+		}
+		#endregion
+
+		#region Settings Events
+		protected void ShowSettingsDialog()
+		{
+			FlexiblePopupDialog.Show(
+				readableModelName + " Editor Settings",
+				GetSettingsDialogSize,
+				OnSettingsGui
+			);
+		}
+
+		protected virtual Vector2 GetSettingsDialogSize { get { return new Vector2(500f, 200f); } }
+
+		protected virtual void OnSettingsGui()
+		{
+			modelAlwaysAllowSaving.Value = EditorGUILayout.Toggle(new GUIContent("Always Allow Saving", "When enabled the 'Save' button always be clickable."), modelAlwaysAllowSaving.Value);
+			SettingsGui();
 		}
 		#endregion
 
@@ -507,6 +596,73 @@ namespace LunraGames.SubLight
 		protected Action BeforeLoadSelection = ActionExtensions.Empty;
 		protected Action<M> AfterLoadSelection = ActionExtensions.GetEmpty<M>();
 		protected Action Deselect = ActionExtensions.Empty;
+		protected Action SettingsGui = ActionExtensions.Empty;
 		#endregion
+
+		#region Utility
+		protected virtual Action<M> OnDrawToolbar()
+		{
+			var modelSelectedToolbarPrevious = modelSelectedToolbar.Value;
+			var toolbarIndex = 0;
+			foreach (var option in toolbars.Select(t => t.Name).ToArray())
+			{
+				if (GUILayout.Toggle(toolbarIndex == modelSelectedToolbar.Value, new GUIContent(option), EditorStyles.toolbarButton, GUILayout.MinWidth(72f)))
+				{
+					modelSelectedToolbar.Value = toolbarIndex;
+				}
+				toolbarIndex++;
+			}
+			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) GUIUtility.keyboardControl = 0;
+			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+		}
+
+		void AskForSaveIfModifiedBeforeContinuing(
+			Action done,
+			Action savePrepare = null,
+			Action cancel = null
+		)
+		{
+			if (done == null) throw new ArgumentNullException("done");
+
+			if (!ModelSelectionModified)
+			{
+				done();
+				return;
+			}
+
+			var result = EditorUtility.DisplayDialogComplex(
+				"Unsaved Changes to " + readableModelName,
+				"There are unsaved changes to \"" + ModelSelection.Meta.Value + "\", would you like to save them before continuing?",
+				"Save",
+				"Cancel",
+				"Don't Save"
+			);
+
+			switch (result)
+			{
+				case 0: // Save
+					if (savePrepare != null) savePrepare();
+					Save(
+						saveResult =>
+						{
+							if (saveResult != RequestStatus.Success)
+							{
+								Debug.LogError("Issue saving " + readableModelName + ", unable to continue. Calling cancel if provided.");
+								if (cancel != null) cancel();
+								return;
+							}
+							done();
+						}
+					);
+					break;
+				case 1: // Cancel
+					if (cancel != null) cancel();
+					break;
+				case 2: // Don't Save
+					done();
+					break;
+			}
+		}
+  		#endregion
 	}
 }

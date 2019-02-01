@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class DialogEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<DialogEdgeModel>
+	public class DialogEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<DialogEdgeModel>
 	{
 		[JsonProperty] DialogEdgeModel[] dialogs = new DialogEdgeModel[0];
 
@@ -11,7 +11,7 @@ namespace LunraGames.SubLight.Models
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Dialog; } }
 
-		public override bool RequiresNextLog { get { return false; } }
+		public override bool RequiresFallbackLog { get { return false; } }
 		public override bool EditableDuration { get { return false; } }
 
 		public DialogEncounterLogModel()

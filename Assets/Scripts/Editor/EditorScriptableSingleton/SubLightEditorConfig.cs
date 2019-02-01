@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEditor;
+
 using LunraGamesEditor.Singletonnes;
 
 namespace LunraGames.SubLight
@@ -7,24 +7,92 @@ namespace LunraGames.SubLight
 	public class SubLightEditorConfig : EditorScriptableSingleton<SubLightEditorConfig>
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+		[Header("Shared Model Editor Styles")]
 		[SerializeField]
-		GUIStyle galaxyTargetStyle;
-		public GUIStyle GalaxyTargetStyle { get { return galaxyTargetStyle; } }
+		Texture sharedModelEditorOpenModelsImage;
+		public Texture SharedModelEditorOpenModelsImage { get { return sharedModelEditorOpenModelsImage; } }
 
 		[SerializeField]
-		GUIStyle labelAnchorStyle;
-		public GUIStyle LabelAnchorStyle { get { return labelAnchorStyle; } }
+		Texture sharedModelEditorCloseModelsImage;
+		public Texture SharedModelEditorCloseModelsImage { get { return sharedModelEditorCloseModelsImage; } }
 
 		[SerializeField]
-		GUIStyle labelCurvePointStyle;
-		public GUIStyle LabelCurvePointStyle { get { return labelCurvePointStyle; } }
+		SkinColor sharedModelEditorModelsBackgroundColor = SkinColor.Default;
+		public Color SharedModelEditorModelsBackgroundColor { get { return sharedModelEditorModelsBackgroundColor; } }
+		[SerializeField]
+		GUIStyle sharedModelEditorModelsBackground;
+		public GUIStyle SharedModelEditorModelsBackground { get { return sharedModelEditorModelsBackground; } }
 
 		[SerializeField]
-		GUIStyle labelCurveCenterStyle;
-		public GUIStyle LabelCurveCenterStyle { get { return labelCurveCenterStyle; } }
+		SkinColor sharedModelEditorModelsEntryBackgroundColor = SkinColor.Default;
+		public Color SharedModelEditorModelsEntryBackgroundColor { get { return sharedModelEditorModelsEntryBackgroundColor; } }
+		[SerializeField]
+		GUIStyle sharedModelEditorModelsEntryBackground;
+		public GUIStyle SharedModelEditorModelsEntryBackground { get { return sharedModelEditorModelsEntryBackground; } }
+
+		[SerializeField]
+		GUIStyle sharedModelEditorModelsEntrySelectedBackground;
+		public GUIStyle SharedModelEditorModelsEntrySelectedBackground { get { return sharedModelEditorModelsEntrySelectedBackground; } }
+
+		[Header("Encounter Editor Styles")]
+		[SerializeField]
+		SkinColor encounterEditorLogBackgroundColor = SkinColor.Default;
+		public Color EncounterEditorLogBackgroundColor { get { return encounterEditorLogBackgroundColor; } }
+		[SerializeField]
+		GUIStyle encounterEditorLogBackground;
+		public GUIStyle EncounterEditorLogBackground { get { return encounterEditorLogBackground; } }
+
+		[SerializeField]
+		SkinColor encounterEditorLogEntryBackgroundColor = SkinColor.Default;
+		public Color EncounterEditorLogEntryBackgroundColor { get { return encounterEditorLogEntryBackgroundColor; } }
+		[SerializeField]
+		GUIStyle encounterEditorLogEntryBackground;
+		public GUIStyle EncounterEditorLogEntryBackground { get { return encounterEditorLogEntryBackground; } }
+		[SerializeField]
+		GUIStyle encounterEditorLogEntryCollapsedBackground;
+		public GUIStyle EncounterEditorLogEntryCollapsedBackground { get { return encounterEditorLogEntryCollapsedBackground; } }
+
+		[SerializeField]
+		SkinColor encounterEditorLogEntryIndexTextColor = SkinColor.Default;
+		[SerializeField]
+		GUIStyle encounterEditorLogEntryIndex;
+		public GUIStyle EncounterEditorLogEntryIndex
+		{
+			get
+			{
+				var result = new GUIStyle(encounterEditorLogEntryIndex);
+				result.normal.textColor = encounterEditorLogEntryIndexTextColor;
+				return result;
+			}
+		}
+
+		[SerializeField]
+		Texture encounterEditorLogToolbarLastImage;
+		public Texture EncounterEditorLogToolbarLastImage { get { return encounterEditorLogToolbarLastImage; } }
+
+		[SerializeField]
+		Texture encounterEditorLogToolbarNextImage;
+		public Texture EncounterEditorLogToolbarNextImage { get { return encounterEditorLogToolbarNextImage; } }
+
+		[Header("Galaxy Editor Styles")]
+		[SerializeField]
+		GUIStyle galaxyEditorGalaxyTargetStyle;
+		public GUIStyle GalaxyEditorGalaxyTargetStyle { get { return galaxyEditorGalaxyTargetStyle; } }
+
+		[SerializeField]
+		GUIStyle galaxyEditorLabelAnchorStyle;
+		public GUIStyle GalaxyEditorLabelAnchorStyle { get { return galaxyEditorLabelAnchorStyle; } }
+
+		[SerializeField]
+		GUIStyle galaxyEditorLabelCurvePointStyle;
+		public GUIStyle GalaxyEditorLabelCurvePointStyle { get { return galaxyEditorLabelCurvePointStyle; } }
+
+		[SerializeField]
+		GUIStyle galaxyEditorLabelCurveCenterStyle;
+		public GUIStyle GalaxyEditorLabelCurveCenterStyle { get { return galaxyEditorLabelCurveCenterStyle; } }
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		public GUIStyle SpecifiedSectorTargetStyle { get { return galaxyTargetStyle; } }
-		public GUIStyle GalaxyTargetStyleSmall { get { return labelCurvePointStyle; } }
+		public GUIStyle GalaxyEditorSpecifiedSectorTargetStyle { get { return galaxyEditorGalaxyTargetStyle; } }
+		public GUIStyle GalaxyEditorGalaxyTargetStyleSmall { get { return galaxyEditorLabelCurvePointStyle; } }
 	}
 }

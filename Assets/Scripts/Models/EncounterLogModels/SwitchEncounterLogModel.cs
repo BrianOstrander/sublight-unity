@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class SwitchEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<SwitchEdgeModel>
+	public class SwitchEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<SwitchEdgeModel>
 	{
 		[JsonProperty] SwitchEdgeModel[] switches = new SwitchEdgeModel[0];
 
@@ -11,7 +11,7 @@ namespace LunraGames.SubLight.Models
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Switch; } }
 
-		public override bool RequiresNextLog { get { return false; } }
+		public override bool RequiresFallbackLog { get { return false; } }
 		public override bool EditableDuration { get { return false; } }
 
 		public SwitchEncounterLogModel()

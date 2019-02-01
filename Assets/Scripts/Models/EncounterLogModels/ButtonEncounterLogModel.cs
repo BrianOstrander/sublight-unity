@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
+	public class ButtonEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
 	{
 		[Serializable]
 		public struct ConversationStyleBlock
@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Models
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Button; } }
 
-		public override bool RequiresNextLog { get { return false; } }
+		public override bool RequiresFallbackLog { get { return false; } }
 		public override bool EditableDuration { get { return false; } }
 
 		public ButtonEncounterLogModel()

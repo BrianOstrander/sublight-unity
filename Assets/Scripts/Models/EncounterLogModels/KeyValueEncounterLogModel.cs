@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class KeyValueEncounterLogModel : LinearEncounterLogModel
+	public class KeyValueEncounterLogModel : EncounterLogModel
 	{
 		[JsonProperty] SetStringOperationModel[] setStrings = new SetStringOperationModel[0];
 		[JsonProperty] SetBooleanOperationModel[] setBooleans = new SetBooleanOperationModel[0];

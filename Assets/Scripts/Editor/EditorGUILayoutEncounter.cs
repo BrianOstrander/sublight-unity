@@ -8,6 +8,8 @@ using UnityEditor;
 
 using LunraGames.SubLight.Models;
 
+using LunraGamesEditor;
+
 namespace LunraGames.SubLight
 {
 	public enum EncounterLogBlankHandling
@@ -17,228 +19,499 @@ namespace LunraGames.SubLight
 		Warning = 20,
 		Error = 30,
 		SpecifiedByModel = 40,
-		FallsThrough = 50,
+		FallsThrough = 60,
+	}
+
+	public enum EncounterLogMissingHandling
+	{
+		Unknown = 0,
+		None = 10,
+		Error = 20
+	}
+
+	public enum EncounterLogBlankOptionHandling
+	{
+		Unknown = 0,
+		Disabled = 10, // Never show a < blank > option, and show the default content when null.
+		Selectable = 20, // Can be selected, and show < blank > instead of default content.
+		NotSelectable = 30 // Show the option, but show the default content when null.
 	}
 
 	public static class EditorGUILayoutEncounter
 	{
-		public static void LogPopup(
-			string label,
-			string current,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			Action<string> existingSelection,
-			Action<EncounterLogTypes> newSelection,
-			EncounterLogBlankHandling blankHandling,
-			params string[] preAppend
-		)
+		class MenuEntry
 		{
-			LogPopup(
-				new GUIContent(label),
-				current,
-				infoModel,
-				model,
-				existingSelection,
-				newSelection,
-				blankHandling,
-				preAppend
-			);
+			public string LogId;
+			public string Name;
+			public bool IsNamed;
+			public bool IsSelected;
+			public bool IsNext;
+			public bool IsDisabled;
+			public Action Select;
 		}
 
-		public static void LogPopup(
-			string label,
-			string current,
-			EncounterInfoModel infoModel,
-			EncounterLogModel model,
-			Action<string> existingSelection,
-			Action<EncounterLogTypes> newSelection,
-			EncounterLogBlankHandling blankHandling,
-			out bool isBlankOrMissing,
-			params string[] preAppend
-		)
+		enum CallbackSources
 		{
-			LogPopup(
-				new GUIContent(label),
-				current,
-				infoModel,
-				model,
-				existingSelection,
-				newSelection,
-				blankHandling,
-				out isBlankOrMissing,
-				preAppend
-			);
+			Unknown = 0,
+			AppendSelectOrBlank = 10,
+			Select = 20
 		}
 
-		public static void LogPopup(
+		const float DropdownButtonOffsetY = -18f;
+
+		static CallbackSources lastCallbackSource;
+		static Rect lastMouseOverRect;
+		static Action lastMouseOverCallback;
+
+		public static void AppendOrSelectLogPopup(
+			GUIContent prefixContent,
 			GUIContent content,
-			string current,
+			string selectedLogId,
 			EncounterInfoModel infoModel,
 			EncounterLogModel model,
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
 			EncounterLogBlankHandling blankHandling,
-			params string[] preAppend
+			EncounterLogMissingHandling missingHandling,
+			Action<string> jump
 		)
 		{
-			var isBlankOrMissing = false;
-			LogPopup(
+			AppendSelectOrBlankLogPopup(
+				prefixContent,
 				content,
-				current,
+				selectedLogId,
 				infoModel,
 				model,
 				existingSelection,
 				newSelection,
 				blankHandling,
-				out isBlankOrMissing,
-				preAppend
+				missingHandling,
+				EncounterLogBlankOptionHandling.Disabled,
+				null,
+				null,
+				jump
 			);
 		}
 
-		public static void LogPopup(
+		// TODO: Point dialogs to this as well
+		public static void AppendSelectOrBlankLogPopup(
+			GUIContent prefixContent,
 			GUIContent content,
-			string current,
+			string selectedLogId,
 			EncounterInfoModel infoModel,
 			EncounterLogModel model,
 			Action<string> existingSelection,
 			Action<EncounterLogTypes> newSelection,
 			EncounterLogBlankHandling blankHandling,
-			out bool isBlankOrMissing,
-			params string[] preAppend
+			EncounterLogMissingHandling missingHandling,
+			EncounterLogBlankOptionHandling blankOptionHandling,
+			GUIContent noneSelectionContent,
+			Action noneSelection,
+			Action<string> jump
 		)
 		{
 			if (infoModel == null) throw new ArgumentNullException("infoModel");
-			if (model == null) throw new ArgumentNullException("model");
+
+			switch (blankHandling)
+			{
+				case EncounterLogBlankHandling.SpecifiedByModel:
+					if (model == null) throw new ArgumentNullException("model");
+					break;
+			}
+
 			if (existingSelection == null) throw new ArgumentNullException("existingSelection");
 			if (newSelection == null) throw new ArgumentNullException("newSelection");
 
-			content = content ?? GUIContent.none;
+			noneSelectionContent = noneSelectionContent ?? GUIContent.none;
 
-			const string currentAppend = " | Next";
-			var nextModel = infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
-
-			var nextId = nextModel == null ? string.Empty : nextModel.LogId.Value;
-			var rawOptions = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Where(l => l.LogId != model.LogId).Select(l => l.LogId.Value);
-
-			var optionNamesList = new List<string>();
-			foreach (var logId in rawOptions)
+			switch (blankOptionHandling)
 			{
-				var log = infoModel.Logs.GetLogFirstOrDefault(logId);
-				if (log == null)
-				{
-					optionNamesList.Add("* Problem Finding Log "+logId+" *");
-					continue;
-				}
-
-				var shortened = logId.Substring(0, Mathf.Min(8, logId.Length));
-
-				if (log.HasName) shortened = log.Name.Value + " | " + shortened;
-
-				if (logId == nextId) shortened += currentAppend;
-				optionNamesList.Add(shortened);
-			}
-			var rawOptionNames = optionNamesList.AsEnumerable();
-
-			var rawLogTypes = new List<EncounterLogTypes>().AsEnumerable();
-
-			for (var i = 0; i < rawOptions.Count(); i++) rawLogTypes = rawLogTypes.Append(EncounterLogTypes.Unknown);
-
-			rawOptions = rawOptions.Prepend(null);
-			rawLogTypes = rawLogTypes.Prepend(EncounterLogTypes.Unknown);
-			rawOptionNames = rawOptionNames.Prepend("--- Existing Logs ---");
-
-			foreach (var logType in EnumExtensions.GetValues<EncounterLogTypes>().ExceptOne(EncounterLogTypes.Unknown).Reverse())
-			{
-				rawOptions = rawOptions.Prepend(null);
-				rawLogTypes = rawLogTypes.Prepend(logType);
-				rawOptionNames = rawOptionNames.Prepend(logType.ToString());
-			}
-
-			rawOptions = rawOptions.Prepend(null);
-			rawLogTypes = rawLogTypes.Prepend(EncounterLogTypes.Unknown);
-			rawOptionNames = rawOptionNames.Prepend("--- New Logs ---");
-
-			foreach (var preAppendLabel in preAppend.Reverse())
-			{
-				rawOptions = rawOptions.Prepend(null);
-				rawLogTypes = rawLogTypes.Prepend(EncounterLogTypes.Unknown);
-				rawOptionNames = rawOptionNames.Prepend(preAppendLabel);
-			}
-
-			var options = rawOptions.ToArray();
-			var optionNames = rawOptionNames.ToArray();
-			var logTypes = rawLogTypes.ToArray();
-
-			var index = 0;
-			var wasFound = false;
-			for (var i = 0; i < options.Length; i++)
-			{
-				if (options[i] == current)
-				{
-					index = i;
-					wasFound = true;
+				case EncounterLogBlankOptionHandling.Disabled: break;
+				default:
+					if (noneSelectionContent == GUIContent.none) throw new ArgumentException("Cannot have null or none content when blank logs are options", "noneSelectionContent");
+					if (noneSelection == null) throw new ArgumentNullException("noneSelection");
 					break;
+			}
+
+			prefixContent = prefixContent ?? GUIContent.none;
+			var hasPrefixContent = prefixContent != GUIContent.none;
+
+			switch (blankOptionHandling)
+			{
+				case EncounterLogBlankOptionHandling.Selectable:
+					content = string.IsNullOrEmpty(selectedLogId) ? noneSelectionContent : content;
+					break;
+			}
+
+			var logs = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value);
+
+			if (!string.IsNullOrEmpty(selectedLogId))
+			{
+				var selectedLog = logs.FirstOrDefault(l => l.LogId.Value == selectedLogId);
+				var selectedLogNull = selectedLog == null;
+				var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+				content = new GUIContent(
+					GetReadableLogName(
+						selectedLogId,
+						selectedLogNull ? null : selectedLog.Name.Value,
+						missingHandling != EncounterLogMissingHandling.None && selectedLogNull,
+						nextLog != null && nextLog.LogId.Value == selectedLogId
+					)
+				);
+			}
+
+			var isInHorizontalLayout = hasPrefixContent || jump != null;
+
+			if (isInHorizontalLayout) GUILayout.BeginHorizontal();
+
+			var logIds = logs.Select(l => l.LogId.Value);
+			var wasFound = logIds.Contains(selectedLogId);
+
+			Color? dropdownColor = null;
+			var issueTooltip = string.Empty;
+
+			if (!string.IsNullOrEmpty(selectedLogId) && !wasFound)
+			{
+				switch (missingHandling)
+				{
+					case EncounterLogMissingHandling.Error:
+						dropdownColor = Color.red;
+						issueTooltip = "The specified LogId is missing: " + selectedLogId;
+						break;
 				}
 			}
-			var startIndex = index;
-			var hasMissingId = !string.IsNullOrEmpty(current) && !wasFound;
-
-			GUILayout.BeginHorizontal();
+			else if (string.IsNullOrEmpty(selectedLogId))
 			{
-				GUILayout.Label(content, GUILayout.ExpandWidth(false));
-				index = EditorGUILayout.Popup(index, optionNames);
-			}
-			GUILayout.EndHorizontal();
-
-			isBlankOrMissing = string.IsNullOrEmpty(current) || hasMissingId;
-        	if (blankHandling != EncounterLogBlankHandling.None && isBlankOrMissing)
-			{
-				var blankMessage = string.Empty;
-				var blankType = MessageType.None;
-				
 				const string BlankWarning = "Specifying no log may cause unpredictable behaviour.";
 				const string BlankError = "A log must be specified.";
-				const string FallsThroughInfo = "Specifying no log will fall through to the current log's \"Next Log\".";
 
 				switch (blankHandling)
 				{
-					case EncounterLogBlankHandling.Warning:
-						blankMessage = BlankWarning;
-						blankType = MessageType.Warning;
-						break;
 					case EncounterLogBlankHandling.Error:
-						blankMessage = BlankError;
-						blankType = MessageType.Error;
+						dropdownColor = Color.red;
+						issueTooltip = BlankError;
+						break;
+					case EncounterLogBlankHandling.Warning:
+						dropdownColor = Color.yellow;
+						issueTooltip = BlankWarning;
 						break;
 					case EncounterLogBlankHandling.SpecifiedByModel:
 						if (model.Ending.Value) break;
-						if (model.RequiresNextLog) 
+						if (model.RequiresFallbackLog)
 						{
-							blankMessage = BlankError;
-							blankType = MessageType.Error;
+							dropdownColor = Color.red;
+							issueTooltip = BlankError;
 						}
 						else
 						{
-							blankMessage = BlankWarning;
-							blankType = MessageType.Warning;
+							dropdownColor = Color.yellow;
+							issueTooltip = BlankWarning;
 						}
 						break;
 					case EncounterLogBlankHandling.FallsThrough:
-						blankMessage = FallsThroughInfo;
-						blankType = MessageType.Info;
+						dropdownColor = Color.yellow;
+						issueTooltip = "Specifying no log will fall through to the current log's \"Next Log\".";
 						break;
 				}
-
-				if (blankType != MessageType.None) EditorGUILayout.HelpBox(blankMessage, blankType);
 			}
 
-			if (startIndex == index) return;
+			if (!string.IsNullOrEmpty(issueTooltip))
+			{
+				issueTooltip = "* " + issueTooltip + " *";
 
-			var selectedId = options[index];
-			var selectedLogType = logTypes[index];
+				if (string.IsNullOrEmpty(content.tooltip)) content.tooltip = issueTooltip;
+				else content.tooltip = issueTooltip + "\n" + content.tooltip;
 
-			if (selectedLogType == EncounterLogTypes.Unknown) existingSelection(selectedId);
-			else newSelection(selectedLogType);
+				if (hasPrefixContent)
+				{
+					if (string.IsNullOrEmpty(prefixContent.tooltip)) prefixContent.tooltip = issueTooltip;
+					else prefixContent.tooltip = issueTooltip + "\n" + prefixContent.tooltip;
+				}
+			}
+
+			if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
+
+			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(dropdownColor.Value.NewS(0.25f), dropdownColor.Value.NewS(0.65f));
+			{
+				if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
+				{
+					lastCallbackSource = CallbackSources.AppendSelectOrBlank;
+					lastMouseOverCallback = () =>
+					{
+						var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
+
+						ShowSelectOrAppendMenu(
+							model,
+							logs.ToArray(),
+							selectedLogId,
+							nextLog == null ? null : nextLog.LogId.Value,
+							existingSelection,
+							newSelection,
+							blankOptionHandling,
+							noneSelectionContent,
+							noneSelection
+						);
+					};
+				}
+			}
+			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+
+			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null && lastCallbackSource == CallbackSources.AppendSelectOrBlank)
+			{
+				var lastRect = GUILayoutUtility.GetLastRect();
+				if (lastRect.Contains(Event.current.mousePosition))
+				{
+					lastMouseOverRect = lastRect.NewY(lastRect.y + DropdownButtonOffsetY);
+					var callback = lastMouseOverCallback;
+					lastCallbackSource = CallbackSources.Unknown;
+					lastMouseOverCallback = null;
+					callback();
+				}
+			}
+
+			if (jump != null)
+			{
+				if (GUILayout.Button(new GUIContent("Paste Id", "Pastes the contents of your clipboard if it contains a valid Log Id."), EditorStyles.miniButtonLeft, GUILayout.Width(48f)))
+				{
+					var logIdFromClipboard = EditorGUIUtility.systemCopyBuffer;
+					if (string.IsNullOrEmpty(logIdFromClipboard))
+					{
+						EditorUtility.DisplayDialog("Invalid Log Id", "You specified a null or empty Log Id.", "Okay");
+					}
+					if (100 < logIdFromClipboard.Length)
+					{
+						EditorUtility.DisplayDialog("Log Id Too Long", "The Log Id you specified was over the 100 character limit, this cannot be a valid Log Id.", "Okay");
+					}
+					else if (model != null && logIdFromClipboard == model.LogId.Value)
+					{
+						EditorUtility.DisplayDialog("Recursive Log Id", "You specified a the Log Id of the current Log, this is not supported.", "Okay");
+					}
+					else if (!logIds.Contains(logIdFromClipboard))
+					{
+						EditorUtility.DisplayDialog("Log Id Not Found", "Cannot find any instances of the specified Log Id in this Encounter.\nLog Id: " + logIdFromClipboard, "Okay");
+					}
+					else existingSelection(logIdFromClipboard);
+				}
+				EditorGUILayoutExtensions.PushEnabled(!string.IsNullOrEmpty(selectedLogId));
+				{
+					EditorGUIExtensions.PauseChangeCheck();
+					{
+						if (GUILayout.Button(new GUIContent("Jump", "Focuses the selected log."), EditorStyles.miniButtonRight, GUILayout.Width(48f))) jump(selectedLogId);
+					}
+					EditorGUIExtensions.UnPauseChangeCheck();
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+
+			if (isInHorizontalLayout) GUILayout.EndHorizontal();
+		}
+
+		public static void SelectLogPopup(
+			string selectedLogId,
+			GUIContent content,
+			EncounterInfoModel infoModel,
+			Action<string> selection,
+			Action noneSelection,
+			GUIStyle buttonStyle = null
+		)
+		{
+			var pressed = false;
+			if (buttonStyle == null) pressed = EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.ExpandWidth(false));
+			else pressed = EditorGUILayout.DropdownButton(content, FocusType.Keyboard, buttonStyle, GUILayout.ExpandWidth(false));
+
+			if (pressed)
+			{
+				lastCallbackSource = CallbackSources.Select;
+				lastMouseOverCallback = () =>
+				{
+					ShowSelectMenu(
+						selectedLogId,
+						infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).ToArray(),
+						selection,
+						noneSelection
+					);
+				};
+			}
+
+			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null && lastCallbackSource == CallbackSources.Select)
+			{
+				var lastRect = GUILayoutUtility.GetLastRect();
+				if (lastRect.Contains(Event.current.mousePosition))
+				{
+					lastMouseOverRect = lastRect.NewY(lastRect.y + DropdownButtonOffsetY);
+					var callback = lastMouseOverCallback;
+					lastCallbackSource = CallbackSources.Unknown;
+					lastMouseOverCallback = null;
+					callback();
+				}
+			}
+		}
+
+		static void ShowSelectMenu(
+			string selectedLogId,
+			EncounterLogModel[] options,
+			Action<string> selection,
+			Action noneSelection
+		)
+		{
+			var entries = GetMenuEntries(
+				options,
+				selection,
+				selectedLogId,
+				null,
+				selectedLogId
+			);
+
+			var menu = new GenericMenu();
+			menu.allowDuplicateNames = true;
+
+			if (string.IsNullOrEmpty(selectedLogId)) menu.AddDisabledItem(new GUIContent("Show All"), true);
+			else menu.AddItem(new GUIContent("Show All"), false, () => noneSelection());
+
+			menu.AddSeparator(string.Empty);
+
+			var namedEntries = entries.Where(e => e.IsNamed);
+			var unnamedEntries = entries.Where(e => !e.IsNamed);
+
+			if (namedEntries.Any())
+			{
+				menu.AddSeparator(string.Empty);
+				foreach (var entry in namedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
+			}
+
+			if (unnamedEntries.Any())
+			{
+				menu.AddSeparator(string.Empty);
+				foreach (var entry in unnamedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
+			}
+
+			menu.DropDown(lastMouseOverRect);
+		}
+
+		static void ShowSelectOrAppendMenu(
+			EncounterLogModel current,
+			EncounterLogModel[] options,
+			string selectedLogId,
+			string nextLogId,
+			Action<string> existingSelection,
+			Action<EncounterLogTypes> newSelection,
+			EncounterLogBlankOptionHandling blankOptionHandling,
+			GUIContent noneSelectionContent,
+			Action noneSelection
+		)
+		{
+			var entries = GetMenuEntries(
+				options,
+				existingSelection,
+				selectedLogId,
+				nextLogId,
+				current == null ? null : current.LogId.Value
+			);
+
+			var menu = new GenericMenu();
+			menu.allowDuplicateNames = true;
+
+			foreach (var logType in EnumExtensions.GetValues(EncounterLogTypes.Unknown).OrderBy(t => t.ToString()))
+			{
+				menu.AddItem(new GUIContent("Create/" + logType.ToString()), false, () => newSelection(logType));
+			}
+
+			switch (blankOptionHandling)
+			{
+				case EncounterLogBlankOptionHandling.NotSelectable:
+					menu.AddSeparator(string.Empty);
+					menu.AddItem(noneSelectionContent, false, () => noneSelection());
+					break;
+				case EncounterLogBlankOptionHandling.Selectable:
+					menu.AddSeparator(string.Empty);
+					menu.AddItem(noneSelectionContent, string.IsNullOrEmpty(selectedLogId), () => noneSelection());
+					break;
+			}
+
+			var namedEntries = entries.Where(e => e.IsNamed);
+			var unnamedEntries = entries.Where(e => !e.IsNamed);
+
+			if (namedEntries.Any())
+			{
+				menu.AddSeparator(string.Empty);
+				foreach (var entry in namedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
+			}
+
+			if (unnamedEntries.Any())
+			{
+				menu.AddSeparator(string.Empty);
+				foreach (var entry in unnamedEntries)
+				{
+					if (entry.IsDisabled) menu.AddDisabledItem(new GUIContent(entry.Name), entry.IsSelected);
+					else menu.AddItem(new GUIContent(entry.Name), entry.IsSelected, () => entry.Select());
+				}
+			}
+
+			menu.DropDown(lastMouseOverRect);
+		}
+
+		static List<MenuEntry> GetMenuEntries(
+			EncounterLogModel[] options,
+			Action<string> select,
+			string selectedLogId,
+			string nextLogId = null,
+			params string[] disabledLogIds
+		)
+		{
+			var results = new List<MenuEntry>();
+
+			foreach (var log in options)
+			{
+				var logId = log.LogId.Value; // Not sure if I have to do this anymore to avoid lambda bugs...
+				var isLogIdNullOrEmpty = string.IsNullOrEmpty(logId);
+				var isNext = !isLogIdNullOrEmpty && logId == nextLogId;
+
+				results.Add(
+					new MenuEntry
+					{
+						LogId = logId,
+						Name = GetReadableLogName(logId, log.Name.Value, isNext: isNext),
+						IsNamed = !string.IsNullOrEmpty(log.Name.Value),
+						IsSelected = !isLogIdNullOrEmpty && logId == selectedLogId,
+						IsNext = isNext,
+						IsDisabled = disabledLogIds.Contains(logId),
+						Select = () => select(logId)
+					}
+				);
+			}
+
+			return results;
+		}
+
+		public static string GetReadableLogName(
+			string logId,
+			string name,
+			bool missing = false,
+			bool isNext = false
+		)
+		{
+			var shortId = string.IsNullOrEmpty(logId) ? "< null or empty >" : logId.Substring(0, Mathf.Min(8, logId.Length));
+
+			if (missing)
+			{
+				return shortId + " < Missing!";
+			}
+
+			var result = string.IsNullOrEmpty(name) ? shortId : name;
+
+			return isNext ? result + " < Next" : result;
 		}
 	}
 }

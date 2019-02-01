@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncyclopediaEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<EncyclopediaEdgeModel>
+	public class EncyclopediaEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<EncyclopediaEdgeModel>
 	{
 		[JsonProperty] EncyclopediaEdgeModel[] entries = new EncyclopediaEdgeModel[0];
 

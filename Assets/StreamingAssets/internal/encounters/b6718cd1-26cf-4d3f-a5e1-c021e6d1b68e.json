@@ -24,7 +24,6 @@
       {
         "buttons": [
           {
-            "showFiltering": true,
             "entry": {
               "message": "Print Foo",
               "nextLogId": "5db8d35e-c091-4878-95d4-69630be1405c",
@@ -48,7 +47,6 @@
             }
           },
           {
-            "showFiltering": true,
             "entry": {
               "message": "Print Bar",
               "nextLogId": "a23f5260-9f83-4948-a496-9d4e793d8bb7",
@@ -75,7 +73,6 @@
           {
             "entry": {
               "message": "Exit Encounter",
-              "nextLogId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -95,15 +92,37 @@
               "entryId": "1b140f73-cd27-46a4-9c44-5bfc78cacc2d"
             },
             "index": 2
+          },
+          {
+            "entry": {
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "11c65647-175c-4cbc-b247-2e595b05d33d"
+            },
+            "index": 3
           }
         ],
         "style": "Conversation",
         "conversationStyle": {
           "Theme": "Foreigner"
         },
-        "nextLogId": "2d29fbf6-3273-42f9-8437-aba8661be27c",
         "index": 2,
         "logId": "836ed19e-b734-4673-b258-b8db200a85cd",
+        "fallbackLogId": "fdd2b952-c77e-4d87-877d-fd2b07977d63",
         "name": "Buttons"
       }
     ],
@@ -133,9 +152,9 @@
             }
           }
         ],
-        "nextLogId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
         "beginning": true,
-        "logId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0"
+        "logId": "fcb668fb-83e0-4170-8932-dec9e1b9a4c0",
+        "fallbackLogId": "e10c9828-e0dc-48eb-89e5-c2200593268f"
       },
       {
         "entries": [
@@ -216,9 +235,9 @@
             "index": 2
           }
         ],
-        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "index": 1,
         "logId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
+        "fallbackLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "name": "BustInit"
       },
       {
@@ -231,9 +250,9 @@
             }
           }
         ],
-        "nextLogId": "4c43c2cc-887c-4ec6-b360-c67a6548d83c",
         "index": 3,
         "logId": "5db8d35e-c091-4878-95d4-69630be1405c",
+        "fallbackLogId": "4c43c2cc-887c-4ec6-b360-c67a6548d83c",
         "name": "FocusFooBust"
       },
       {
@@ -246,9 +265,9 @@
             }
           }
         ],
-        "nextLogId": "580765fb-df66-42fc-8a30-b59a4d045163",
         "index": 4,
         "logId": "a23f5260-9f83-4948-a496-9d4e793d8bb7",
+        "fallbackLogId": "580765fb-df66-42fc-8a30-b59a4d045163",
         "name": "FocusBarBust"
       }
     ],
@@ -311,9 +330,9 @@
             "index": 5
           }
         ],
-        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "index": 5,
         "logId": "4c43c2cc-887c-4ec6-b360-c67a6548d83c",
+        "fallbackLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "name": "PrintFoo"
       },
       {
@@ -334,9 +353,9 @@
             "index": 1
           }
         ],
-        "nextLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "index": 6,
         "logId": "580765fb-df66-42fc-8a30-b59a4d045163",
+        "fallbackLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
         "name": "PrintBar"
       }
     ]

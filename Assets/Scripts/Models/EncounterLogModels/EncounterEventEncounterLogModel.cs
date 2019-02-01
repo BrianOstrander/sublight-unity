@@ -3,7 +3,7 @@
 namespace LunraGames.SubLight.Models
 {
 	// What a name...
-	public class EncounterEventEncounterLogModel : LinearEncounterLogModel, IEdgedEncounterLogModel<EncounterEventEdgeModel>
+	public class EncounterEventEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<EncounterEventEdgeModel>
 	{
 		[JsonProperty] bool alwaysHalting;
 		[JsonProperty] EncounterEventEdgeModel[] entries = new EncounterEventEdgeModel[0];
