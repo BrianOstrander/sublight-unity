@@ -52,7 +52,6 @@ namespace LunraGames.SubLight
 				if (GUILayout.Button("Apply Prefab Overrides", EditorStyles.miniButton, GUILayout.Height(24f))) PrefabUtility.ApplyPrefabInstance(targetGameObject, InteractionMode.UserAction);
 			}
 			GUILayout.EndHorizontal();
-
 		}
 	}
 }
