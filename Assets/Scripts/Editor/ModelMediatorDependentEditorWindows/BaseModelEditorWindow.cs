@@ -118,13 +118,13 @@ namespace LunraGames.SubLight
 		void OnNewModel()
 		{
 			TextDialogPopup.Show(
-				"New "+readableModelName+" Model",
+				"New " + readableModelName + " Model",
 				value =>
 				{
 					SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
 				},
 				doneText: "Create",
-				description: "Enter a name for this new "+readableModelName+" model. This will also be used for the meta key."
+				description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
 			);
 		}
 
@@ -500,28 +500,23 @@ namespace LunraGames.SubLight
 				if (modelTabState.Value == ModelTabStates.Minimized && GUILayout.Button(GetTabStateLabel(), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) ToggleTabState();
 
 				var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
-				GUILayout.Label("Editing: " + metaName, GUILayout.ExpandWidth(false));
+				GUILayout.Label(metaName, GUILayout.ExpandWidth(false));
 
 				switch (toolbars.Count)
 				{
 					case 0: break;
-					case 1:
-						onDraw = toolbars.First().Callback;
-						break;
-					default:
-						var modelSelectedToolbarPrevious = modelSelectedToolbar.Value;
-						modelSelectedToolbar.Value = GUILayout.Toolbar(Mathf.Min(modelSelectedToolbar, toolbars.Count - 1), toolbars.Select(t => t.Name).ToArray());
-						if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) GUIUtility.keyboardControl = 0;
-						onDraw = toolbars[modelSelectedToolbar].Callback;
-						break;
+					case 1: onDraw = toolbars.First().Callback; break;
+					default: onDraw = OnDrawToolbar(); break;
 				}
 
-				if (GUILayout.Button("Settings", GUILayout.Width(64f))) ShowSettingsDialog();
+				GUILayout.FlexibleSpace();
+
+				if (GUILayout.Button("Settings", EditorStyles.toolbarButton, GUILayout.Width(64f))) ShowSettingsDialog();
 
 				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || Event.current.control);
 				{
 					var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
-					if (GUILayout.Button(saveContent, GUILayout.Width(64f))) Save();
+					if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save();
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			}
@@ -562,5 +557,23 @@ namespace LunraGames.SubLight
 		protected Action Deselect = ActionExtensions.Empty;
 		protected Action SettingsGui = ActionExtensions.Empty;
 		#endregion
+
+		#region Utility
+		protected virtual Action<M> OnDrawToolbar()
+		{
+			var modelSelectedToolbarPrevious = modelSelectedToolbar.Value;
+			var toolbarIndex = 0;
+			foreach (var option in toolbars.Select(t => t.Name).ToArray())
+			{
+				if (GUILayout.Toggle(toolbarIndex == modelSelectedToolbar.Value, new GUIContent(option), EditorStyles.toolbarButton, GUILayout.MinWidth(72f)))
+				{
+					modelSelectedToolbar.Value = toolbarIndex;
+				}
+				toolbarIndex++;
+			}
+			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) GUIUtility.keyboardControl = 0;
+			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+		}
+  		#endregion
 	}
 }
