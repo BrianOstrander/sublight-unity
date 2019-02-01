@@ -7,6 +7,27 @@ namespace LunraGames.SubLight
 	public class SubLightEditorConfig : EditorScriptableSingleton<SubLightEditorConfig>
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+		[Header("Shared Model Editor Styles")]
+		[SerializeField]
+		Texture sharedModelEditorOpenModelsImage;
+		public Texture SharedModelEditorOpenModelsImage { get { return sharedModelEditorOpenModelsImage; } }
+
+		[SerializeField]
+		Texture sharedModelEditorCloseModelsImage;
+		public Texture SharedModelEditorCloseModelsImage { get { return sharedModelEditorCloseModelsImage; } }
+
+		[SerializeField]
+		GUIStyle sharedModelEditorModelsBackground;
+		public GUIStyle SharedModelEditorModelsBackground { get { return sharedModelEditorModelsBackground; } }
+
+		[SerializeField]
+		GUIStyle sharedModelEditorModelsEntryBackground;
+		public GUIStyle SharedModelEditorModelsEntryBackground { get { return sharedModelEditorModelsEntryBackground; } }
+
+		[SerializeField]
+		GUIStyle sharedModelEditorModelsEntrySelectedBackground;
+		public GUIStyle SharedModelEditorModelsEntrySelectedBackground { get { return sharedModelEditorModelsEntrySelectedBackground; } }
+
 		[Header("Encounter Editor Styles")]
 		[SerializeField]
 		Color encounterEditorLogBackgroundColor;

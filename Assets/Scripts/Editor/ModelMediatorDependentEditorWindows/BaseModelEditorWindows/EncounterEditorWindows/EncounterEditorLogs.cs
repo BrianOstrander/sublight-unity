@@ -127,12 +127,12 @@ namespace LunraGames.SubLight
 				{
 					EditorGUILayoutExtensions.PushEnabled(0 < logsFocusedLogIdsIndex.Value);
 					{
-						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarLastImage), EditorStyles.toolbarButton, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(-1);
+						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarLastImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) LogsFocusedLogIdsOffsetIndex(-1);
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 					EditorGUILayoutExtensions.PushEnabled(logsFocusedLogIdsIndex.Value < LogsFocusedLogIdsStack.Count() - 1);
 					{
-						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarNextImage), EditorStyles.toolbarButton, GUILayout.Width(24f))) LogsFocusedLogIdsOffsetIndex(1);
+						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarNextImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) LogsFocusedLogIdsOffsetIndex(1);
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 
