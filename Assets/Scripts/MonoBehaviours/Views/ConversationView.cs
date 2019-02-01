@@ -125,6 +125,11 @@ namespace LunraGames.SubLight.Views
 
 		float TopOffsetThreshold { get { return topLimit + topOffsetThresholdDelta; } }
 
+		Vector3 TransformOffset(Vector3 worldOffset)
+		{
+			return (incomingAnchor.parent.TransformPoint(incomingAnchor.localPosition + worldOffset) - incomingAnchor.position).normalized;
+		}
+
 		Vector3 GetOffset(
 			float scalar,
 			CurveRange depthCurve,
@@ -140,6 +145,8 @@ namespace LunraGames.SubLight.Views
 
 		Vector3 GetShowOffset(float scalar) { return GetOffset(scalar, showDepthCurve, showHorizontalOffsetCurve); }
 		Vector3 GetCloseOffset(float scalar) { return GetOffset(scalar, closeDepthCurve, closeHorizontalOffsetCurve); }
+
+		Vector3 CurrentLookOffset { get { return TransformOffset(lookOffset); } }
 
 		List<Entry> entries = new List<Entry>();
 		float verticalScrollCurrent;
@@ -284,7 +291,7 @@ namespace LunraGames.SubLight.Views
 
 			UpdateVerticalScroll(entry);
 
-			instance.transform.LookAt(instance.transform.position - lookOffset);
+			instance.transform.LookAt(instance.transform.position - CurrentLookOffset);
 
 			verticalScrollTarget = (verticalScrollTarget ?? 0f) + scrollDelta;
 		}
@@ -443,7 +450,7 @@ namespace LunraGames.SubLight.Views
 
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawWireSphere(incomingAnchor.position, 0.05f);
-			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + lookOffset);
+			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + CurrentLookOffset);
 			Gizmos.DrawLine(incomingAnchor.position, outgoingAnchor.position);
 			Gizmos.DrawLine(incomingAnchor.position, incomingAnchor.position + (Vector3.up * topLimit));
 			Gizmos.color = Color.white;
