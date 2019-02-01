@@ -237,7 +237,7 @@
         ],
         "index": 1,
         "logId": "e10c9828-e0dc-48eb-89e5-c2200593268f",
-        "fallbackLogId": "836ed19e-b734-4673-b258-b8db200a85cd",
+        "fallbackLogId": "4c43c2cc-887c-4ec6-b360-c67a6548d83c",
         "name": "BustInit"
       },
       {
@@ -299,7 +299,8 @@
               },
               "entryId": "79eccfec-f637-4b3f-be0d-272313da1973"
             },
-            "index": 2
+            "index": 2,
+            "ignore": true
           },
           {
             "entry": {
@@ -319,7 +320,8 @@
               },
               "entryId": "2f5bcfe0-72ce-466d-82fd-5420ff8c027b"
             },
-            "index": 4
+            "index": 4,
+            "ignore": true
           },
           {
             "entry": {

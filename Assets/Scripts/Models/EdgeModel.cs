@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Models
 		string EdgeName { get; }
 		int EdgeIndex { get; set; }
 		string EdgeId { get; set; }
+		bool EdgeIgnore { get; set; }
 	}
 
 	public abstract class EdgeModel : Model, IEdgeModel
@@ -52,6 +53,13 @@ namespace LunraGames.SubLight.Models
 				}
 				RawEntry.EntryId.Value = value;
 			}
+		}
+
+		[JsonIgnore]
+		public bool EdgeIgnore
+		{
+			get { return Ignore.Value; }
+			set { Ignore.Value = value; }
 		}
 	}
 }

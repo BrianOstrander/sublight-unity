@@ -1713,7 +1713,7 @@ namespace LunraGames.SubLight
 						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
 						{
 
-							if (OnEdgedLogEdgeHeader(current.EdgeName, i, sortedCount, isMoving, isDeleting, out currMoveDelta)) deleted = current.EdgeId;
+							if (OnEdgedLogEdgeHeader(current, i, sortedCount, isMoving, isDeleting, out currMoveDelta)) deleted = current.EdgeId;
 
 							if (currMoveDelta != 0)
 							{
@@ -1721,7 +1721,7 @@ namespace LunraGames.SubLight
 								indexSwap1 = currMoveDelta == 1 ? next : last;
 							}
 
-							edgeEditor(infoModel, model, current);
+							if (!current.EdgeIgnore) edgeEditor(infoModel, model, current);
 
 							last = current;
 						}
@@ -1767,40 +1767,52 @@ namespace LunraGames.SubLight
 			model.Edges = model.Edges.Append(result).ToArray();
 		}
 
-		bool OnEdgedLogEdgeHeader(
-			string label,
+		bool OnEdgedLogEdgeHeader<E>(
+			E edge,
 			int count,
 			int maxCount,
 			bool isMoving,
 			bool isDeleting,
 			out int indexDelta
 		)
+			where E : class, IEdgeModel
 		{
 			var deleted = false;
 			indexDelta = 0;
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label("#" + (count + 1) + " | " + label);
+				EditorGUILayoutExtensions.PushEnabled(!edge.EdgeIgnore);
+				{
+					GUILayout.Label("#" + (count + 1) + " | " + edge.EdgeName);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
 				if (isMoving)
 				{
 					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
 					EditorGUILayoutExtensions.PushEnabled(0 < count);
-					if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
 					{
-						indexDelta = -1;
-					}
-					EditorGUILayoutExtensions.PopEnabled();
-					EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
-					if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f)))
-					{
-						indexDelta = 1;
+						if (GUILayout.Button("^", EditorStyles.miniButtonLeft, GUILayout.Width(30f)))
+						{
+							indexDelta = -1;
+						}
+						EditorGUILayoutExtensions.PopEnabled();
+						EditorGUILayoutExtensions.PushEnabled(count < maxCount - 1);
+						if (GUILayout.Button("v", EditorStyles.miniButtonRight, GUILayout.Width(30f)))
+						{
+							indexDelta = 1;
+						}
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
 				else if (isDeleting)
 				{
 					deleted = EditorGUILayoutExtensions.XButton(true);
+				}
+				else
+				{
+					GUILayout.Label(new GUIContent("Ignore", "Ignoring this entry will cause encounters to skip it."), GUILayout.ExpandWidth(false));
+					edge.EdgeIgnore = GUILayout.Toggle(edge.EdgeIgnore, GUIContent.none, GUILayout.ExpandWidth(false));
 				}
 			}
 			GUILayout.EndHorizontal();
