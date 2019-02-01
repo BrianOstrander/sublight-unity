@@ -351,11 +351,13 @@ namespace LunraGames.SubLight
 			selectedStatus = RequestStatus.Cancel;
 
 			EditorApplication.modifierKeysChanged += OnModelModifierKeysChanged;
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 		}
 
 		void OnModelDisable()
 		{
 			EditorApplication.modifierKeysChanged -= OnModelModifierKeysChanged;
+			EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 		}
 
 		void OnModelGui()
@@ -410,23 +412,33 @@ namespace LunraGames.SubLight
 		}
 
 		// --- SAVING ---
-		void OnModelSave()
+		void OnModelSave(Action<RequestStatus> done)
 		{
-			if (ModelSelection == null) return;
-			SaveLoadService.Save(ModelSelection, OnModelSaveDone, false);
+			if (ModelSelection == null)
+			{
+				if (done != null) done(RequestStatus.Failure);
+				return;
+			}
+			SaveLoadService.Save(
+				ModelSelection,
+				result => OnModelSaveDone(result, done),
+				false
+			);
 		}
 
-		void OnModelSaveDone(SaveLoadRequest<M> result)
+		void OnModelSaveDone(SaveLoadRequest<M> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
+				if (done != null) done(result.Status);
 				return;
 			}
 			AssetDatabase.Refresh();
 			ModelSelection = result.TypedModel;
 			ModelSelectionModified = false;
 			modelListStatus = RequestStatus.Cancel;
+			if (done != null) done(result.Status);
 		}
 		// ------
 
@@ -436,6 +448,49 @@ namespace LunraGames.SubLight
 		void OnModelModifierKeysChanged()
 		{
 			Repaint();
+		}
+
+		void OnPlayModeStateChanged(PlayModeStateChange playModeState)
+		{
+			if (!ModelSelectionModified) return;
+
+			switch (playModeState)
+			{
+				case PlayModeStateChange.ExitingEditMode:
+					if (!EditorApplication.isPlayingOrWillChangePlaymode) break;
+					var result = EditorUtility.DisplayDialogComplex(
+						"Unsaved Changes to " + readableModelName,
+						"There are unsaved changes to \"" + ModelSelection.Meta.Value + "\", would you like to save them before continuing?",
+						"Save",
+						"Cancel",
+						"Don't Save"
+					);
+
+					switch (result)
+					{
+						case 0: // Save
+							EditorApplication.isPlaying = false;
+							Save(
+								saveResult =>
+								{
+									if (saveResult != RequestStatus.Success)
+									{
+										Debug.LogError("Issue saving " + readableModelName + ", unable to enter playmode.");
+										return;
+									}
+									EditorApplication.isPlaying = true;
+								}
+							);
+							break;
+						case 1: // Cancel
+							EditorApplication.isPlaying = false;
+							break;
+						case 2: // Don't Save
+							break;
+					}
+					break;
+			}
+			//Debug.Log(playModeState);
 		}
 		#endregion
 
@@ -516,7 +571,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || Event.current.control);
 				{
 					var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
-					if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save();
+					if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save(null);
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			}
