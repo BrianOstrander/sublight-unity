@@ -125,7 +125,6 @@ namespace LunraGames.SubLight
 			logging.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
 
 			current.ProcessedScenes.Add(scene.name);
-			SceneManager.SetActiveScene(scene);
 
 			if (current.Scenes.Length != current.ProcessedScenes.Count) return;
 
@@ -151,6 +150,15 @@ namespace LunraGames.SubLight
 			}
 
 			callbacks.SceneLoad -= OnSceneLoaded;
+			callbacks.SceneSetActive += OnAllScenesLoaded;
+
+			SceneManager.SetActiveScene(scene);
+		}
+
+		void OnAllScenesLoaded(Scene currentScene, Scene nextScene)
+		{
+			callbacks.SceneSetActive -= OnAllScenesLoaded;
+			sceneSkybox.ApplyRenderSettings();
 			OnAllScenesProcessed();
 		}
 		#endregion
@@ -178,10 +186,9 @@ namespace LunraGames.SubLight
 			OnAllScenesProcessed();
 		}
 		#endregion
-
 		void OnAllScenesProcessed()
 		{
-			sceneSkybox.ApplyRenderSettings();
+			//sceneSkybox.ApplyRenderSettings();
 			current.State = SceneRequest.States.Complete;
 			if (current.Done != null) current.Done(current);
 		}

@@ -78,7 +78,6 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			DevPrefs.WindInEditMode.Value = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
-			DevPrefs.AutoApplySkybox.Value = GUILayout.Toggle(DevPrefs.AutoApplySkybox, "Auto Apply Skybox");
 			DevPrefs.ApplyXButtonStyleInEditMode.Value = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
 			#endregion
 

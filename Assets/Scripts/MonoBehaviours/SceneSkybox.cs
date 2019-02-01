@@ -1,8 +1,8 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LunraGames.SubLight
 {
-	[ExecuteInEditMode]
 	public class SceneSkybox : MonoBehaviour
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
@@ -18,6 +18,7 @@ namespace LunraGames.SubLight
 		AnimationCurve skyboxExposureByTimeScalarCurve;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
+		Material skyboxInstance;
 		float skyboxRotationSpeed;
 		float skyboxRotation;
 
@@ -32,25 +33,22 @@ namespace LunraGames.SubLight
 			private get { return timeScalar; }
 		}
 
-		void Start()
+		void Awake()
 		{
-			ApplyRenderSettings();
+			skyboxInstance = new Material(skybox);
+
+			//ApplyRenderSettings();
 		}
 
 		void Update()
 		{
-			var isPausedEditor = Application.isEditor && !Application.isPlaying;
-			if (isPausedEditor && DevPrefs.AutoApplySkybox) ApplyRenderSettings();
-
-			if (isPausedEditor) return;
-
 			skyboxRotation = (skyboxRotation + (skyboxRotationSpeed * Time.deltaTime)) % 360f;
-			RenderSettings.skybox.SetFloat(ShaderConstants.SkyboxPanoramic.Rotation, skyboxRotation);
+			//skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Rotation, skyboxRotation);
 		}
 
 		public void ApplyRenderSettings()
 		{
-			RenderSettings.skybox = new Material(skybox);
+			RenderSettings.skybox = skyboxInstance;
 			RenderSettings.ambientLight = ambientLight;
 
 			ApplyTimeScalar();
@@ -59,7 +57,7 @@ namespace LunraGames.SubLight
 		void ApplyTimeScalar()
 		{
 			skyboxRotationSpeed = skyboxRotationSpeedRange.Evaluate(TimeScalar);
-			RenderSettings.skybox.SetFloat(ShaderConstants.SkyboxPanoramic.Exposure, skyboxExposureRange.Evaluate(skyboxExposureByTimeScalarCurve.Evaluate(TimeScalar)));
+			//skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Exposure, skyboxExposureRange.Evaluate(skyboxExposureByTimeScalarCurve.Evaluate(TimeScalar)));
 		}
 	}
 }

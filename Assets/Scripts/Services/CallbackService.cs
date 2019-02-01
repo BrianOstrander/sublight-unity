@@ -21,6 +21,10 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public Action<Scene> SceneUnload = ActionExtensions.GetEmpty<Scene>();
 		/// <summary>
+		/// A scene set active.
+		/// </summary>
+		public Action<Scene, Scene> SceneSetActive = ActionExtensions.GetEmpty<Scene, Scene>();
+		/// <summary>
 		/// The state changed.
 		/// </summary>
 		public Action<StateChange> StateChange = ActionExtensions.GetEmpty<StateChange>();
@@ -151,6 +155,7 @@ namespace LunraGames.SubLight
 		{
 			SceneManager.sceneLoaded += (scene, loadMode) => SceneLoad(scene, loadMode);
 			SceneManager.sceneUnloaded += scene => SceneUnload(scene);
+			SceneManager.activeSceneChanged += (currentScene, nextScene) => SceneSetActive(currentScene, nextScene);
 			PointerOrientation += orientation => LastPointerOrientation = orientation;
 			Highlight += highlight => LastHighlight = highlight;
 			CurrentGesture += gesture => LastGesture = gesture;
