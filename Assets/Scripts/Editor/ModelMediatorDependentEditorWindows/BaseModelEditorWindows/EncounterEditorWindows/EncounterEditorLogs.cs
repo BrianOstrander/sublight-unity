@@ -36,6 +36,7 @@ namespace LunraGames.SubLight
 
 		EditorPrefsFloat logsListScroll;
 		EditorPrefsFloat logsStackScroll;
+		EditorPrefsBool logsShowNameSource;
 		EditorPrefsBool logsShowHaltingInfo;
 		EditorPrefsBool logsShowHaltingWarnings;
 		EditorPrefsBool logsJumpFromToolbarAppend;
@@ -74,6 +75,7 @@ namespace LunraGames.SubLight
 
 			logsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			logsStackScroll = new EditorPrefsFloat(currPrefix + "StackScroll");
+			logsShowNameSource = new EditorPrefsBool(currPrefix + "ShowNameSource");
 			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
 			logsJumpFromToolbarAppend = new EditorPrefsBool(currPrefix + "JumpFromToolbarAppend", true);
@@ -91,6 +93,7 @@ namespace LunraGames.SubLight
 		#region Events
 		void LogsSettingsGui()
 		{
+			logsShowNameSource.Value = EditorGUILayout.Toggle(new GUIContent("Show Source of Log Names", "Prefixes the source of the name for a log, if it's an Id or form the actual Name field."), logsShowNameSource.Value);
 			logsJumpFromToolbarAppend.Value = EditorGUILayout.Toggle(new GUIContent("Jump To Log When Created From Toolbar", "When enabled, the editor will focus logs when created from the top toolbar area."), logsJumpFromToolbarAppend.Value);
 			GUILayout.Label("Tips and Warnings", EditorStyles.boldLabel);
 			GUILayout.Label("Unless there are performance problems with the editor, these should be kept enabled.");
@@ -394,7 +397,8 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal();
 			{
-				var header = "#" + (count + 1) + " | " + model.LogType + (model.HasName ? ".Name:" : ".LogId:")+ " <b>" + (model.HasName ? model.Name.Value : model.LogId.Value) + "</b>";
+				var nameSourcePrefix = logsShowNameSource.Value ? (model.HasName ? ".Name:" : ".LogId:") : ":";
+				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " <b>" + (model.HasName ? model.Name.Value : model.LogId.Value) + "</b>";
 				GUILayout.Label(new GUIContent(header, model.LogId.Value), SubLightEditorConfig.Instance.EncounterEditorLogEntryIndex);
 				if (isMoving)
 				{

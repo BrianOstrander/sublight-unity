@@ -117,14 +117,19 @@ namespace LunraGames.SubLight
 
 		void OnNewModel()
 		{
-			TextDialogPopup.Show(
-				"New " + readableModelName + " Model",
-				value =>
+			AskForSaveIfModifiedBeforeContinuing(
+				() =>
 				{
-					SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
-				},
-				doneText: "Create",
-				description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
+					TextDialogPopup.Show(
+						"New " + readableModelName + " Model",
+						value =>
+						{
+							SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
+						},
+						doneText: "Create",
+						description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
+					);
+				}
 			);
 		}
 
@@ -326,8 +331,13 @@ namespace LunraGames.SubLight
 						}
 						if (GUILayout.Button("Edit", EditorStyles.miniButtonRight))
 						{
-							BeforeLoadSelection();
-							OnLoadSelection(model);
+							AskForSaveIfModifiedBeforeContinuing(
+								() => 
+								{
+									BeforeLoadSelection();
+									OnLoadSelection(model);
+								}
+							);
 						}
 					}
 					GUILayout.EndHorizontal();
@@ -458,39 +468,15 @@ namespace LunraGames.SubLight
 			{
 				case PlayModeStateChange.ExitingEditMode:
 					if (!EditorApplication.isPlayingOrWillChangePlaymode) break;
-					var result = EditorUtility.DisplayDialogComplex(
-						"Unsaved Changes to " + readableModelName,
-						"There are unsaved changes to \"" + ModelSelection.Meta.Value + "\", would you like to save them before continuing?",
-						"Save",
-						"Cancel",
-						"Don't Save"
+
+					AskForSaveIfModifiedBeforeContinuing(
+						() => EditorApplication.isPlaying = true,
+						() => EditorApplication.isPlaying = false,
+						() => EditorApplication.isPlaying = false
 					);
 
-					switch (result)
-					{
-						case 0: // Save
-							EditorApplication.isPlaying = false;
-							Save(
-								saveResult =>
-								{
-									if (saveResult != RequestStatus.Success)
-									{
-										Debug.LogError("Issue saving " + readableModelName + ", unable to enter playmode.");
-										return;
-									}
-									EditorApplication.isPlaying = true;
-								}
-							);
-							break;
-						case 1: // Cancel
-							EditorApplication.isPlaying = false;
-							break;
-						case 2: // Don't Save
-							break;
-					}
 					break;
 			}
-			//Debug.Log(playModeState);
 		}
 		#endregion
 
@@ -628,6 +614,54 @@ namespace LunraGames.SubLight
 			}
 			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) GUIUtility.keyboardControl = 0;
 			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+		}
+
+		void AskForSaveIfModifiedBeforeContinuing(
+			Action done,
+			Action savePrepare = null,
+			Action cancel = null
+		)
+		{
+			if (done == null) throw new ArgumentNullException("done");
+
+			if (!ModelSelectionModified)
+			{
+				done();
+				return;
+			}
+
+			var result = EditorUtility.DisplayDialogComplex(
+				"Unsaved Changes to " + readableModelName,
+				"There are unsaved changes to \"" + ModelSelection.Meta.Value + "\", would you like to save them before continuing?",
+				"Save",
+				"Cancel",
+				"Don't Save"
+			);
+
+			switch (result)
+			{
+				case 0: // Save
+					if (savePrepare != null) savePrepare();
+					Save(
+						saveResult =>
+						{
+							if (saveResult != RequestStatus.Success)
+							{
+								Debug.LogError("Issue saving " + readableModelName + ", unable to continue. Calling cancel if provided.");
+								if (cancel != null) cancel();
+								return;
+							}
+							done();
+						}
+					);
+					break;
+				case 1: // Cancel
+					if (cancel != null) cancel();
+					break;
+				case 2: // Don't Save
+					done();
+					break;
+			}
 		}
   		#endregion
 	}
