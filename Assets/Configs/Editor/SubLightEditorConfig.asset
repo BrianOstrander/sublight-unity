@@ -17,7 +17,7 @@ MonoBehaviour:
   sharedModelEditorCloseModelsImage: {fileID: 2800000, guid: 7f3217e7c924f4b50808445ead650a94,
     type: 3}
   sharedModelEditorModelsBackgroundColor:
-    pro: {r: 1, g: 1, b: 1, a: 1}
+    pro: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 1}
     personal: {r: 0.65699995, g: 0.65699995, b: 0.65699995, a: 1}
   sharedModelEditorModelsBackground:
     m_Name: 
@@ -87,7 +87,7 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   sharedModelEditorModelsEntryBackgroundColor:
-    pro: {r: 1, g: 1, b: 1, a: 1}
+    pro: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     personal: {r: 1, g: 1, b: 1, a: 1}
   sharedModelEditorModelsEntryBackground:
     m_Name: 
