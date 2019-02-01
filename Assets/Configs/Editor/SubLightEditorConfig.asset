@@ -424,12 +424,15 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  encounterEditorLogEntryIndexTextColor:
+    pro: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
+    personal: {r: 1, g: 1, b: 1, a: 1}
   encounterEditorLogEntryIndex:
     m_Name: 
     m_Normal:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []

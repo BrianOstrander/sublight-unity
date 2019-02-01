@@ -47,8 +47,18 @@ namespace LunraGames.SubLight
 		public GUIStyle EncounterEditorLogEntryCollapsedBackground { get { return encounterEditorLogEntryCollapsedBackground; } }
 
 		[SerializeField]
+		SkinColor encounterEditorLogEntryIndexTextColor = SkinColor.Default;
+		[SerializeField]
 		GUIStyle encounterEditorLogEntryIndex;
-		public GUIStyle EncounterEditorLogEntryIndex { get { return encounterEditorLogEntryIndex; } }
+		public GUIStyle EncounterEditorLogEntryIndex
+		{
+			get
+			{
+				var result = new GUIStyle(encounterEditorLogEntryIndex);
+				result.normal.textColor = encounterEditorLogEntryIndexTextColor;
+				return result;
+			}
+		}
 
 		[SerializeField]
 		Texture encounterEditorLogToolbarLastImage;
