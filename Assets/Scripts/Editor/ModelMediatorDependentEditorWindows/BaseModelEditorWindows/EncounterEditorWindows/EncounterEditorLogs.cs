@@ -435,7 +435,8 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					if (GUILayout.Button(new GUIContent("Name", "Name this log so it can be referred to easily in log dropdowns."), EditorStyles.miniButtonLeft, GUILayout.Width(60f)))
+					const float TitleOptionWidth = 42f;
+					if (GUILayout.Button(new GUIContent("Name", "Name this log so it can be referred to easily in log dropdowns."), EditorStyles.miniButtonLeft, GUILayout.Width(TitleOptionWidth)))
 					{
 						FlexiblePopupDialog.Show(
 							"Editing Log Name",
@@ -443,7 +444,7 @@ namespace LunraGames.SubLight
 							() => { model.Name.Value = EditorGUILayoutExtensions.TextDynamic(model.Name.Value); }
 						);
 					}
-					if (GUILayout.Button(new GUIContent("Notes", "Add production notes for this log."), EditorStyles.miniButtonRight, GUILayout.Width(60f)))
+					if (GUILayout.Button(new GUIContent("Notes", "Add production notes for this log."), EditorStyles.miniButtonMid, GUILayout.Width(TitleOptionWidth)))
 					{
 						FlexiblePopupDialog.Show(
 							"Editing Log Notes",
@@ -451,6 +452,14 @@ namespace LunraGames.SubLight
 							() => { model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value); }
 						);
 					}
+					EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
+					{
+						if (GUILayout.Button(new GUIContent("Filter", "Show only this log."), EditorStyles.miniButtonRight, GUILayout.Width(TitleOptionWidth)))
+						{
+							LogsFocusedLogIdsPush(model.LogId.Value);
+						}
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 
 					if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
 					{
