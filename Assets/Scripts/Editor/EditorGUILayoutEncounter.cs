@@ -271,11 +271,32 @@ namespace LunraGames.SubLight
 
 			if (jump != null)
 			{
+				if (GUILayout.Button(new GUIContent("Paste Id", "Pastes the contents of your clipboard if it contains a valid Log Id."), EditorStyles.miniButtonLeft, GUILayout.Width(48f)))
+				{
+					var logIdFromClipboard = EditorGUIUtility.systemCopyBuffer;
+					if (string.IsNullOrEmpty(logIdFromClipboard))
+					{
+						EditorUtility.DisplayDialog("Invalid Log Id", "You specified a null or empty Log Id.", "Okay");
+					}
+					if (100 < logIdFromClipboard.Length)
+					{
+						EditorUtility.DisplayDialog("Log Id Too Long", "The Log Id you specified was over the 100 character limit, this cannot be a valid Log Id.", "Okay");
+					}
+					else if (model != null && logIdFromClipboard == model.LogId.Value)
+					{
+						EditorUtility.DisplayDialog("Recursive Log Id", "You specified a the Log Id of the current Log, this is not supported.", "Okay");
+					}
+					else if (!logIds.Contains(logIdFromClipboard))
+					{
+						EditorUtility.DisplayDialog("Log Id Not Found", "Cannot find any instances of the specified Log Id in this Encounter.\nLog Id: " + logIdFromClipboard, "Okay");
+					}
+					else existingSelection(logIdFromClipboard);
+				}
 				EditorGUILayoutExtensions.PushEnabled(!string.IsNullOrEmpty(selectedLogId));
 				{
 					EditorGUIExtensions.PauseChangeCheck();
 					{
-						if (GUILayout.Button(new GUIContent("Jump", "Focuses the selected log."), EditorStyles.miniButton, GUILayout.Width(48f))) jump(selectedLogId);
+						if (GUILayout.Button(new GUIContent("Jump", "Focuses the selected log."), EditorStyles.miniButtonRight, GUILayout.Width(48f))) jump(selectedLogId);
 					}
 					EditorGUIExtensions.UnPauseChangeCheck();
 				}

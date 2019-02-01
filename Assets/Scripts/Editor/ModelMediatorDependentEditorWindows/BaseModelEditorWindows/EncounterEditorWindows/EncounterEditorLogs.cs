@@ -139,7 +139,7 @@ namespace LunraGames.SubLight
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 
-					if (!LogsIsFocusedOnStack) GUILayout.Label("Hold 'shift' to rearrange entries or 'control' to delete them.", GUILayout.ExpandWidth(false));
+					if (!LogsIsFocusedOnStack) GUILayout.Label("Hold 'control' to rearrange entries or 'alt' to delete them.", GUILayout.ExpandWidth(false));
 
 					logsStackScroll.HorizontalScroll = GUILayout.BeginScrollView(logsStackScroll.HorizontalScroll, GUIStyle.none, GUIStyle.none);
 					{
@@ -207,8 +207,8 @@ namespace LunraGames.SubLight
 						EncounterLogModel indexSwap0 = null;
 						EncounterLogModel indexSwap1 = null;
 
-						var isMoving = Event.current.shift;
-						var isDeleting = Event.current.control;
+						var isMoving = Event.current.control;
+						var isDeleting = Event.current.alt;
 
 						var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
 						var sortedCount = sorted.Count;
@@ -459,18 +459,24 @@ namespace LunraGames.SubLight
 						}
 					}
 
-					EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
+					EditorGUIExtensions.PauseChangeCheck();
 					{
-						EditorGUIExtensions.PauseChangeCheck();
+						if (GUILayout.Button(new GUIContent("Copy Id", "Copies this entry's Log Id to the clipboard."), EditorStyles.miniButtonMid, GUILayout.Width(48f)))
+						{
+							EditorGUIUtility.systemCopyBuffer = model.LogId.Value;
+							//ShowNotification(new GUIContent("Copied Log Id to Clipboard"));
+						}
+
+						EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
 						{
 							if (GUILayout.Button(new GUIContent("Filter", "Show only this log."), EditorStyles.miniButtonRight, GUILayout.Width(TitleOptionWidth)))
 							{
 								LogsFocusedLogIdsPush(model.LogId.Value);
 							}
 						}
-						EditorGUIExtensions.UnPauseChangeCheck();
+						EditorGUILayoutExtensions.PopEnabled();
 					}
-					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUIExtensions.UnPauseChangeCheck();
 
 					if (!isCollapsed)
 					{
@@ -481,19 +487,14 @@ namespace LunraGames.SubLight
 						model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(55f));
 					}
 
-					EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
+					EditorGUIExtensions.PauseChangeCheck();
 					{
-						EditorGUIExtensions.PauseChangeCheck();
+						if (model.Collapsed.Value == EditorGUILayout.Toggle(!model.Collapsed.Value, EditorStyles.foldout, GUILayout.Width(14f)))
 						{
-							if (LogsIsFocusedOnStack) EditorGUILayout.Toggle(true, EditorStyles.foldout, GUILayout.Width(14f));
-							else if (model.Collapsed.Value == EditorGUILayout.Toggle(!model.Collapsed.Value, EditorStyles.foldout, GUILayout.Width(14f)))
-							{
-								model.Collapsed.Value = !model.Collapsed.Value;
-							}
+							model.Collapsed.Value = !model.Collapsed.Value;
 						}
-						EditorGUIExtensions.UnPauseChangeCheck();
 					}
-					EditorGUILayoutExtensions.PopEnabled();
+					EditorGUIExtensions.UnPauseChangeCheck();
 				}
 			}
 			GUILayout.EndHorizontal();
@@ -1675,8 +1676,8 @@ namespace LunraGames.SubLight
 			E indexSwap0 = null;
 			E indexSwap1 = null;
 
-			var isMoving = Event.current.shift;
-			var isDeleting = Event.current.control;
+			var isMoving = Event.current.control;
+			var isDeleting = Event.current.alt;
 
 			var sorted = model.Edges.OrderBy(l => l.EdgeIndex).ToList();
 			var sortedCount = sorted.Count;
@@ -1848,7 +1849,6 @@ namespace LunraGames.SubLight
 
 		string[] GetAllBustIdsNormalized(EncounterInfoModel infoModel)
 		{
-			//return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Where(e => e.Entry.BustId.Value != null).Select(e => e.Entry.BustId.Value.ToLower()).Distinct().ToArray();
 			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value.ToLower()).Distinct().ToArray();
 		}
 

@@ -11,62 +11,123 @@
   "logs": {
     "textLogs": [],
     "keyValueLogs": [],
-    "switchLogs": [],
-    "buttonLogs": [
+    "switchLogs": [
       {
-        "buttons": [],
-        "index": 1,
-        "logId": "1410bc77-cc50-4863-9592-18bb9ffa3c10",
-        "fallbackLogId": "b2627443-21ed-4466-acd7-f1b39a330436",
-        "name": "some buttons"
-      }
-    ],
-    "encyclopediaLogs": [],
-    "eventLogs": [],
-    "dialogLogs": [],
-    "bustLogs": [
-      {
-        "entries": [],
-        "beginning": true,
-        "logId": "fbbf2151-11c4-44ca-a3ac-1bea7240a938",
-        "fallbackLogId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb"
-      },
-      {
-        "entries": [],
-        "index": 3,
-        "logId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb",
-        "fallbackLogId": "fbbf2151-11c4-44ca-a3ac-1bea7240a938",
+        "switches": [],
+        "index": 2,
+        "logId": "c3b60bd7-b573-4f7a-aa46-f503e0ff7a5d",
+        "name": "Some collapsed entry",
         "collapsed": true
       }
     ],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Nevermind...",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "2b44b237-c02b-4303-bf10-ff29e27c8f97"
+            }
+          },
+          {
+            "entry": {
+              "message": "Tell me more!",
+              "nextLogId": "d148c468-4f5c-4040-8937-688004f51593",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "609fc6bd-e9ba-43e6-85c4-4a8c82f1aada"
+            },
+            "index": 1
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Foreigner"
+        },
+        "index": 1,
+        "logId": "208d9c62-c70c-4fe5-a29c-4d39c3f51e80",
+        "name": "Some Rando Buttons",
+        "notes": "Blah blah blah production notes here..."
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Whatever!"
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "8ec82a29-26c5-4bef-bb7a-f56c7a75e792"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "772f3c92-f6cc-40ae-affa-aa168ce047f6",
+        "fallbackLogId": "d148c468-4f5c-4040-8937-688004f51593",
+        "name": "Debug Start"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
     "conversationLogs": [
       {
         "entries": [
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "entryId": "a51b0bb4-c009-4746-9a44-d1959e294266"
+              "message": "Never!",
+              "entryId": "26d45f06-4207-441a-9f73-e5770d80cb64"
             }
-          },
-          {
-            "entry": {
-              "conversationType": "MessageIncoming",
-              "entryId": "40877045-498a-43df-8c79-ebe73819fc04"
-            },
-            "index": 1
-          },
-          {
-            "entry": {
-              "conversationType": "MessageIncoming",
-              "entryId": "7af6cffc-ab70-4b16-a163-bfe6f8f87b25"
-            },
-            "index": 2
           }
         ],
-        "index": 2,
-        "logId": "b2627443-21ed-4466-acd7-f1b39a330436",
-        "fallbackLogId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb",
-        "name": "some conversation"
+        "index": 3,
+        "logId": "d148c468-4f5c-4040-8937-688004f51593",
+        "name": "Main Conversation"
       }
     ]
   },
