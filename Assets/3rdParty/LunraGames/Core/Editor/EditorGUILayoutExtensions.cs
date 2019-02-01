@@ -549,22 +549,22 @@ namespace LunraGamesEditor
 			return value;
 		}
 
-		public static void BeginVertical(GUIStyle style, Color? color, bool useColor = true)
+		public static void BeginVertical(GUIStyle style, Color? color, bool useColor = true, params GUILayoutOption[] options)
 		{
-			BeginVertical(style, color.HasValue ? color.Value : GUI.color, useColor);
+			BeginVertical(style, color.HasValue ? color.Value : GUI.color, useColor, options);
 		}
 
-		public static void BeginVertical(GUIStyle style, Color color, bool useColor = true)
+		public static void BeginVertical(GUIStyle style, Color color, bool useColor = true, params GUILayoutOption[] options)
 		{
 			if (useColor) PushColor(color);
-			GUILayout.BeginVertical(style);
+			GUILayout.BeginVertical(style, options);
 			if (useColor) PopColor();
 		}
 
-		public static void BeginVertical(GUIStyle style, Color primaryColor, Color secondaryColor, bool isPrimary)
+		public static void BeginVertical(GUIStyle style, Color primaryColor, Color secondaryColor, bool isPrimary, params GUILayoutOption[] options)
 		{
 			PushColor(isPrimary ? primaryColor : secondaryColor);
-			GUILayout.BeginVertical(style);
+			GUILayout.BeginVertical(style, options);
 			PopColor();
 		}
 
@@ -573,10 +573,10 @@ namespace LunraGamesEditor
 			GUILayout.EndVertical();
 		}
 
-		public static void BeginHorizontal(GUIStyle style, Color color, bool useColor = true)
+		public static void BeginHorizontal(GUIStyle style, Color color, bool useColor = true, params GUILayoutOption[] options)
 		{
 			if (useColor) PushColor(color);
-			GUILayout.BeginHorizontal(style);
+			GUILayout.BeginHorizontal(style, options);
 			if (useColor) PopColor();
 		}
 

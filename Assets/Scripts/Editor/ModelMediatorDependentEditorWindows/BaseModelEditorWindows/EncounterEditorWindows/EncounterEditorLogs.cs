@@ -155,12 +155,10 @@ namespace LunraGames.SubLight
 								log == null
 							);
 
-							if (!logIsFocused) EditorGUILayoutExtensions.PushContentColor(Color.white.NewV(0.7f));
-							if (GUILayout.Button(new GUIContent(logName, logIsFocused ? "Log is currently focused." : "Jump to this log."), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+							if (logIsFocused != GUILayout.Toggle(logIsFocused, new GUIContent(logName, logIsFocused ? "Log is currently focused." : "Jump to this log."), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)) && !logIsFocused)
 							{
 								logsFocusedLogIdsIndex.Value = currLogIdIndex;
 							}
-							if (!logIsFocused) EditorGUILayoutExtensions.PopContentColor();
 
 							currLogIdIndex++;
 						}
@@ -464,7 +462,6 @@ namespace LunraGames.SubLight
 						if (GUILayout.Button(new GUIContent("Copy Id", "Copies this entry's Log Id to the clipboard."), EditorStyles.miniButtonMid, GUILayout.Width(48f)))
 						{
 							EditorGUIUtility.systemCopyBuffer = model.LogId.Value;
-							//ShowNotification(new GUIContent("Copied Log Id to Clipboard"));
 						}
 
 						EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);

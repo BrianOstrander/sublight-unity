@@ -16,6 +16,9 @@ MonoBehaviour:
     type: 3}
   sharedModelEditorCloseModelsImage: {fileID: 2800000, guid: 7f3217e7c924f4b50808445ead650a94,
     type: 3}
+  sharedModelEditorModelsBackgroundColor:
+    pro: {r: 1, g: 1, b: 1, a: 1}
+    personal: {r: 0.65699995, g: 0.65699995, b: 0.65699995, a: 1}
   sharedModelEditorModelsBackground:
     m_Name: 
     m_Normal:
@@ -53,8 +56,8 @@ MonoBehaviour:
     m_Border:
       m_Left: 2
       m_Right: 8
-      m_Top: 4
-      m_Bottom: 4
+      m_Top: 32
+      m_Bottom: 12
     m_Margin:
       m_Left: 0
       m_Right: 0
@@ -83,6 +86,9 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  sharedModelEditorModelsEntryBackgroundColor:
+    pro: {r: 1, g: 1, b: 1, a: 1}
+    personal: {r: 1, g: 1, b: 1, a: 1}
   sharedModelEditorModelsEntryBackground:
     m_Name: 
     m_Normal:
@@ -120,23 +126,23 @@ MonoBehaviour:
     m_Border:
       m_Left: 12
       m_Right: 12
-      m_Top: 10
+      m_Top: 16
       m_Bottom: 5
     m_Margin:
       m_Left: 0
       m_Right: 0
-      m_Top: 0
+      m_Top: 3
       m_Bottom: 0
     m_Padding:
       m_Left: 14
       m_Right: 14
-      m_Top: 4
-      m_Bottom: 10
+      m_Top: 0
+      m_Bottom: 8
     m_Overflow:
       m_Left: 0
       m_Right: 0
       m_Top: 0
-      m_Bottom: 0
+      m_Bottom: 2
     m_Font: {fileID: 0}
     m_FontSize: 0
     m_FontStyle: 0
@@ -187,23 +193,23 @@ MonoBehaviour:
     m_Border:
       m_Left: 12
       m_Right: 12
-      m_Top: 10
+      m_Top: 16
       m_Bottom: 5
     m_Margin:
       m_Left: 0
       m_Right: 0
-      m_Top: 0
+      m_Top: 3
       m_Bottom: 0
     m_Padding:
       m_Left: 14
       m_Right: 14
-      m_Top: 4
-      m_Bottom: 10
+      m_Top: 0
+      m_Bottom: 8
     m_Overflow:
       m_Left: 0
       m_Right: 0
       m_Top: 0
-      m_Bottom: 0
+      m_Bottom: 2
     m_Font: {fileID: 0}
     m_FontSize: 0
     m_FontStyle: 0
@@ -219,7 +225,7 @@ MonoBehaviour:
     m_StretchHeight: 0
   encounterEditorLogBackgroundColor:
     pro: {r: 0.15686275, g: 0.15686275, b: 0.15686275, a: 1}
-    personal: {r: 1, g: 1, b: 1, a: 1}
+    personal: {r: 0.462, g: 0.462, b: 0.462, a: 1}
   encounterEditorLogBackground:
     m_Name: 
     m_Normal:
@@ -289,7 +295,7 @@ MonoBehaviour:
     m_StretchHeight: 0
   encounterEditorLogEntryBackgroundColor:
     pro: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
-    personal: {r: 1, g: 1, b: 1, a: 1}
+    personal: {r: 0.895, g: 0.895, b: 0.895, a: 1}
   encounterEditorLogEntryBackground:
     m_Name: 
     m_Normal:
@@ -426,7 +432,7 @@ MonoBehaviour:
     m_StretchHeight: 0
   encounterEditorLogEntryIndexTextColor:
     pro: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
-    personal: {r: 1, g: 1, b: 1, a: 1}
+    personal: {r: 0.111999996, g: 0.111999996, b: 0.111999996, a: 1}
   encounterEditorLogEntryIndex:
     m_Name: 
     m_Normal:

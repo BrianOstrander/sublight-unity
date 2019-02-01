@@ -273,7 +273,7 @@ namespace LunraGames.SubLight
 
 		void DrawModelSelectorMaximized()
 		{
-			GUILayout.BeginVertical(SubLightEditorConfig.Instance.SharedModelEditorModelsBackground, GUILayout.Width(300f));
+			EditorGUILayoutExtensions.BeginVertical(SubLightEditorConfig.Instance.SharedModelEditorModelsBackground, SubLightEditorConfig.Instance.SharedModelEditorModelsBackgroundColor, options: GUILayout.Width(300f));
 			{
 				GUILayout.BeginHorizontal(EditorStyles.toolbar);
 				{
@@ -292,14 +292,14 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndScrollView();
 			}
-			GUILayout.EndVertical();
+			EditorGUILayoutExtensions.EndVertical();
 		}
 
 		void OnDrawModel(SaveModel model, ref bool isAlternate)
 		{
 			var isSelected = modelSelectedPath.Value == model.Path.Value;
 
-			GUILayout.BeginVertical(isSelected ? SubLightEditorConfig.Instance.SharedModelEditorModelsEntrySelectedBackground : SubLightEditorConfig.Instance.SharedModelEditorModelsEntryBackground);
+			EditorGUILayoutExtensions.BeginVertical(isSelected ? SubLightEditorConfig.Instance.SharedModelEditorModelsEntrySelectedBackground : SubLightEditorConfig.Instance.SharedModelEditorModelsEntryBackground, SubLightEditorConfig.Instance.SharedModelEditorModelsEntryBackgroundColor);
 			{
 				if (isSelected) EditorGUILayoutExtensions.PushColorCombined(Color.blue.NewS(0.15f), Color.blue.NewS(0.35f));
 				{
@@ -344,7 +344,7 @@ namespace LunraGames.SubLight
 				}
 				if (isSelected) EditorGUILayoutExtensions.PopColorCombined();
 			}
-			GUILayout.EndVertical();
+			EditorGUILayoutExtensions.EndVertical();
 			isAlternate = !isAlternate;
 		}
 

@@ -17,9 +17,15 @@ namespace LunraGames.SubLight
 		public Texture SharedModelEditorCloseModelsImage { get { return sharedModelEditorCloseModelsImage; } }
 
 		[SerializeField]
+		SkinColor sharedModelEditorModelsBackgroundColor = SkinColor.Default;
+		public Color SharedModelEditorModelsBackgroundColor { get { return sharedModelEditorModelsBackgroundColor; } }
+		[SerializeField]
 		GUIStyle sharedModelEditorModelsBackground;
 		public GUIStyle SharedModelEditorModelsBackground { get { return sharedModelEditorModelsBackground; } }
 
+		[SerializeField]
+		SkinColor sharedModelEditorModelsEntryBackgroundColor = SkinColor.Default;
+		public Color SharedModelEditorModelsEntryBackgroundColor { get { return sharedModelEditorModelsEntryBackgroundColor; } }
 		[SerializeField]
 		GUIStyle sharedModelEditorModelsEntryBackground;
 		public GUIStyle SharedModelEditorModelsEntryBackground { get { return sharedModelEditorModelsEntryBackground; } }
