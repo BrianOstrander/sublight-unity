@@ -191,7 +191,7 @@ namespace LunraGames.SubLight
 			logsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, logsListScroll), false, true).y;
 			{
 				EditorGUILayoutExtensions.PushBackgroundColor(SubLightEditorConfig.Instance.EncounterEditorLogBackgroundColor);
-				GUILayout.BeginVertical(SubLightEditorConfig.Instance.EncounterEditorLogBackground);
+				GUILayout.BeginVertical(SubLightEditorConfig.Instance.EncounterEditorLogBackground, GUILayout.ExpandHeight(true));
 				EditorGUILayoutExtensions.PopBackgroundColor();
 				{
 					EditorGUIExtensions.BeginChangeCheck();
