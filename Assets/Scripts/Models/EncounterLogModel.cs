@@ -14,6 +14,7 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] string name;
 		[JsonProperty] string notes;
+		[JsonProperty] bool collapsed;
 
 		/// <summary>
 		/// The order these appear in the editor, not used in game for anything
@@ -37,6 +38,8 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Notes;
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> Collapsed;
 
 		[JsonIgnore]
 		public abstract EncounterLogTypes LogType { get; }
@@ -73,6 +76,7 @@ namespace LunraGames.SubLight.Models
 
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Notes = new ListenerProperty<string>(value => notes = value, () => notes);
+			Collapsed = new ListenerProperty<bool>(value => collapsed = value, () => collapsed);
 		}
 	}
 }

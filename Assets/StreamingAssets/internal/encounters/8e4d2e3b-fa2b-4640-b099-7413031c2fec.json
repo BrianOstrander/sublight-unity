@@ -35,12 +35,34 @@
         "entries": [],
         "index": 3,
         "logId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb",
-        "fallbackLogId": "fbbf2151-11c4-44ca-a3ac-1bea7240a938"
+        "fallbackLogId": "fbbf2151-11c4-44ca-a3ac-1bea7240a938",
+        "collapsed": true
       }
     ],
     "conversationLogs": [
       {
-        "entries": [],
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "entryId": "a51b0bb4-c009-4746-9a44-d1959e294266"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "entryId": "40877045-498a-43df-8c79-ebe73819fc04"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "entryId": "7af6cffc-ab70-4b16-a163-bfe6f8f87b25"
+            },
+            "index": 2
+          }
+        ],
         "index": 2,
         "logId": "b2627443-21ed-4466-acd7-f1b39a330436",
         "fallbackLogId": "b9c77d9c-d699-48f9-bbdf-38dbecf2bcbb",

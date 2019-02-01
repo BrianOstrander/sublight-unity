@@ -42,6 +42,9 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		GUIStyle encounterEditorLogEntryBackground;
 		public GUIStyle EncounterEditorLogEntryBackground { get { return encounterEditorLogEntryBackground; } }
+		[SerializeField]
+		GUIStyle encounterEditorLogEntryCollapsedBackground;
+		public GUIStyle EncounterEditorLogEntryCollapsedBackground { get { return encounterEditorLogEntryCollapsedBackground; } }
 
 		[SerializeField]
 		GUIStyle encounterEditorLogEntryIndex;

@@ -389,7 +389,7 @@ namespace LunraGames.SubLight
 			var isAlternate = count % 2 == 0;
 
 			EditorGUILayoutExtensions.BeginVertical(
-				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackground,
+				model.Collapsed.Value ? SubLightEditorConfig.Instance.EncounterEditorLogEntryCollapsedBackground : SubLightEditorConfig.Instance.EncounterEditorLogEntryBackground,
 				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackgroundColor,
 				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackgroundColor,
 				isAlternate
@@ -436,6 +436,7 @@ namespace LunraGames.SubLight
 				else
 				{
 					const float TitleOptionWidth = 42f;
+
 					if (GUILayout.Button(new GUIContent("Name", "Name this log so it can be referred to easily in log dropdowns."), EditorStyles.miniButtonLeft, GUILayout.Width(TitleOptionWidth)))
 					{
 						FlexiblePopupDialog.Show(
@@ -444,34 +445,62 @@ namespace LunraGames.SubLight
 							() => { model.Name.Value = EditorGUILayoutExtensions.TextDynamic(model.Name.Value); }
 						);
 					}
-					if (GUILayout.Button(new GUIContent("Notes", "Add production notes for this log."), EditorStyles.miniButtonMid, GUILayout.Width(TitleOptionWidth)))
+
+					if (!model.Collapsed.Value)
 					{
-						FlexiblePopupDialog.Show(
-							"Editing Log Notes",
-							new Vector2(400f, 22f),
-							() => { model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value); }
-						);
+						if (GUILayout.Button(new GUIContent("Notes", "Add production notes for this log."), EditorStyles.miniButtonMid, GUILayout.Width(TitleOptionWidth)))
+						{
+							FlexiblePopupDialog.Show(
+								"Editing Log Notes",
+								new Vector2(400f, 22f),
+								() => { model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value); }
+							);
+						}
 					}
+
 					EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
 					{
-						if (GUILayout.Button(new GUIContent("Filter", "Show only this log."), EditorStyles.miniButtonRight, GUILayout.Width(TitleOptionWidth)))
+						EditorGUIExtensions.PauseChangeCheck();
 						{
-							LogsFocusedLogIdsPush(model.LogId.Value);
+							if (GUILayout.Button(new GUIContent("Filter", "Show only this log."), EditorStyles.miniButtonRight, GUILayout.Width(TitleOptionWidth)))
+							{
+								LogsFocusedLogIdsPush(model.LogId.Value);
+							}
 						}
+						EditorGUIExtensions.UnPauseChangeCheck();
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 
-					if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+					if (!model.Collapsed.Value)
 					{
-						beginning = model.LogId;
+						if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+						{
+							beginning = model.LogId;
+						}
+						model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(55f));
 					}
-					model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(60f));
+
+					EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
+					{
+						EditorGUIExtensions.PauseChangeCheck();
+						{
+							if (LogsIsFocusedOnStack) EditorGUILayout.Toggle(true, EditorStyles.foldout, GUILayout.Width(14f));
+							else if (model.Collapsed.Value == EditorGUILayout.Toggle(!model.Collapsed.Value, EditorStyles.foldout, GUILayout.Width(14f)))
+							{
+								model.Collapsed.Value = !model.Collapsed.Value;
+							}
+						}
+						EditorGUIExtensions.UnPauseChangeCheck();
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 				}
 			}
 			GUILayout.EndHorizontal();
 
 			if (isDeleting && !isMoving) GUILayout.Space(9f);
 			else GUILayout.Space(8f);
+
+			if (model.Collapsed.Value) return deleted;
 
 			if (model.HasNotes) GUILayout.Label("Notes: " + model.Notes.Value);
 
@@ -482,6 +511,8 @@ namespace LunraGames.SubLight
 
 		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
+			if (model.Collapsed.Value) return;
+
 			if (model.CanFallback) OnFallbackLog(infoModel, model);
 
 			switch (model.LogType)
