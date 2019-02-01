@@ -30,14 +30,14 @@ namespace LunraGames.SubLight
 
 		[Header("Encounter Editor Styles")]
 		[SerializeField]
-		Color encounterEditorLogBackgroundColor;
+		SkinColor encounterEditorLogBackgroundColor = SkinColor.Default;
 		public Color EncounterEditorLogBackgroundColor { get { return encounterEditorLogBackgroundColor; } }
 		[SerializeField]
 		GUIStyle encounterEditorLogBackground;
 		public GUIStyle EncounterEditorLogBackground { get { return encounterEditorLogBackground; } }
 
 		[SerializeField]
-		Color encounterEditorLogEntryBackgroundColor;
+		SkinColor encounterEditorLogEntryBackgroundColor = SkinColor.Default;
 		public Color EncounterEditorLogEntryBackgroundColor { get { return encounterEditorLogEntryBackgroundColor; } }
 		[SerializeField]
 		GUIStyle encounterEditorLogEntryBackground;
