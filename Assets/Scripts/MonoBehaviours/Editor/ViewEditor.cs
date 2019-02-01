@@ -36,7 +36,7 @@ namespace LunraGames.SubLight
 			if (isListed) GUILayout.Label("This view is already a default view");
 			else EditorGUILayout.HelpBox("Adding this view to the list of default views makes it accessable at runtime.", MessageType.Warning);
 
-			var targetGameObject = (target as View).gameObject;
+			//var targetGameObject = (target as View).gameObject;
 
 			GUILayout.BeginHorizontal();
 			{
@@ -48,8 +48,9 @@ namespace LunraGames.SubLight
 				GUI.enabled = true;
 				if (GUILayout.Button("See all default views", EditorStyles.miniButton, GUILayout.Height(24f))) Selection.activeObject = DefaultViews.Instance;
 
-				GUI.enabled = PrefabUtility.HasPrefabInstanceAnyOverrides(targetGameObject, false);
-				if (GUILayout.Button("Apply Prefab Overrides", EditorStyles.miniButton, GUILayout.Height(24f))) PrefabUtility.ApplyPrefabInstance(targetGameObject, InteractionMode.UserAction);
+				// Can't seem to get this to work...
+				//GUI.enabled = PrefabUtility.HasPrefabInstanceAnyOverrides(targetGameObject, false);
+				//if (GUILayout.Button("Apply Prefab Overrides", EditorStyles.miniButton, GUILayout.Height(24f))) PrefabUtility.ApplyPrefabInstance(targetGameObject, InteractionMode.UserAction);
 			}
 			GUILayout.EndHorizontal();
 		}
