@@ -384,12 +384,13 @@ namespace LunraGames.SubLight
 			ref string beginning
 		)
 		{
+			var isCollapsed = !LogsIsFocusedOnStack && model.Collapsed.Value;
 			var deleted = false;
 			indexDelta = 0;
 			var isAlternate = count % 2 == 0;
 
 			EditorGUILayoutExtensions.BeginVertical(
-				model.Collapsed.Value ? SubLightEditorConfig.Instance.EncounterEditorLogEntryCollapsedBackground : SubLightEditorConfig.Instance.EncounterEditorLogEntryBackground,
+				isCollapsed ? SubLightEditorConfig.Instance.EncounterEditorLogEntryCollapsedBackground : SubLightEditorConfig.Instance.EncounterEditorLogEntryBackground,
 				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackgroundColor,
 				SubLightEditorConfig.Instance.EncounterEditorLogEntryBackgroundColor,
 				isAlternate
@@ -446,7 +447,7 @@ namespace LunraGames.SubLight
 						);
 					}
 
-					if (!model.Collapsed.Value)
+					if (!isCollapsed)
 					{
 						if (GUILayout.Button(new GUIContent("Notes", "Add production notes for this log."), EditorStyles.miniButtonMid, GUILayout.Width(TitleOptionWidth)))
 						{
@@ -471,7 +472,7 @@ namespace LunraGames.SubLight
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 
-					if (!model.Collapsed.Value)
+					if (!isCollapsed)
 					{
 						if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
 						{
@@ -500,7 +501,7 @@ namespace LunraGames.SubLight
 			if (isDeleting && !isMoving) GUILayout.Space(9f);
 			else GUILayout.Space(8f);
 
-			if (model.Collapsed.Value) return deleted;
+			if (isCollapsed) return deleted;
 
 			if (model.HasNotes) GUILayout.Label("Notes: " + model.Notes.Value);
 
@@ -511,7 +512,7 @@ namespace LunraGames.SubLight
 
 		void OnLog(EncounterInfoModel infoModel, EncounterLogModel model)
 		{
-			if (model.Collapsed.Value) return;
+			if (!LogsIsFocusedOnStack && model.Collapsed.Value) return;
 
 			if (model.CanFallback) OnFallbackLog(infoModel, model);
 
