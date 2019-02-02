@@ -11,21 +11,98 @@
   "logs": {
     "keyValueLogs": [
       {
-        "setStrings": [
+        "entries": [
           {
-            "operationId": "cf2e7c44-a7f4-4e91-a656-f9b80184b252",
-            "target": "Encounter"
+            "entry": {
+              "operation": "SetBoolean",
+              "target": "Encounter",
+              "key": "what",
+              "boolValue": true,
+              "entryId": "809b1187-538f-459d-9720-2f156fcb8f28"
+            },
+            "index": 1
           }
         ],
-        "setBooleans": [],
-        "beginning": true,
-        "logId": "63976ed0-03cd-4c3e-a538-d90596a35d35"
+        "index": 1,
+        "logId": "63976ed0-03cd-4c3e-a538-d90596a35d35",
+        "fallbackLogId": "b6226ae8-b296-400c-8779-92fa2681c5f5"
       }
     ],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "What is true"
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [
+                  {
+                    "target": "Encounter",
+                    "key": "what",
+                    "filterId": "fd578685-51e2-4793-b9db-94111ba9cc0c",
+                    "group": "All",
+                    "filterValue": true
+                  }
+                ],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e29a1465-7737-47b8-811a-58909909f6fe"
+            }
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "What is false"
+                },
+                "enums": {
+                  "severity": 10
+                }
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [
+                  {
+                    "target": "Encounter",
+                    "key": "what",
+                    "filterId": "fc22138d-2339-438d-ad45-2ae81c05c883",
+                    "group": "All"
+                  }
+                ],
+                "stringKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "c910e267-2b4a-4fe0-8703-9ed945785c44"
+            },
+            "index": 1
+          }
+        ],
+        "beginning": true,
+        "logId": "b6226ae8-b296-400c-8779-92fa2681c5f5",
+        "fallbackLogId": "63976ed0-03cd-4c3e-a538-d90596a35d35",
+        "name": "What Debugger"
+      }
+    ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": []

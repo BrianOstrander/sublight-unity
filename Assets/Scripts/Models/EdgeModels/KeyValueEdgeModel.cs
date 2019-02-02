@@ -10,12 +10,6 @@ namespace LunraGames.SubLight.Models
 		public KeyValueEntryModel Entry { get { return entry; } }
 
 		public override EdgeEntryModel RawEntry { get { return Entry; } }
-		public override string EdgeName
-		{
-			get
-			{
-				return Entry.Operation.Value.ToString();
-			}
-		}
+		public override string EdgeName { get { return Entry.Operation.Value.ToString(); } }
 	}
 }

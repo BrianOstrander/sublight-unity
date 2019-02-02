@@ -552,8 +552,6 @@ namespace LunraGames.SubLight
 		#region KeyValue Logs
 		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)
 		{
-			EditorGUILayout.HelpBox("Todo: edged keyvalue editor", MessageType.Error);
-			/*
 			var targets = Enum.GetValues(typeof(KeyValueTargets)).Cast<KeyValueTargets>().ToList();
 			var kvTypes = Enum.GetValues(typeof(KeyValueOperations)).Cast<KeyValueOperations>().ToList();
 
@@ -573,7 +571,7 @@ namespace LunraGames.SubLight
 					labels.Add(target + "." + kvType);
 					onSelections.Add(
 						index,
-						() => OnKeyValueLogSpawn(infoModel, model, target, kvType)
+						() => OnEdgedLogSpawn(model, result => OnKeyValueLogSpawn(result, kvType, target))
 					);
 					index++;
 				}
@@ -589,114 +587,42 @@ namespace LunraGames.SubLight
 			Action onSelection;
 			if (onSelections.TryGetValue(selection, out onSelection)) onSelection();
 
-			var deleted = string.Empty;
-			var isAlternate = false;
-
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Space(16f);
-				GUILayout.BeginVertical();
-				{
-					foreach (var operation in model.Operations.Value)
-					{
-						isAlternate = !isAlternate;
-
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
-							if (OnKeyValueLogHeader(infoModel, model, operation)) deleted = operation.OperationId.Value;
-							switch (operation.Operation)
-							{
-								case KeyValueOperations.SetString:
-									OnKeyValueLogSetString(infoModel, model, operation as SetStringOperationModel);
-									break;
-								case KeyValueOperations.SetBoolean:
-									OnKeyValueLogSetBoolean(infoModel, model, operation as SetBooleanOperationModel);
-									break;
-								default:
-									Debug.LogError("Unrecognized KeyValueOperation: " + operation.Operation);
-									break;
-							}
-						}
-						EditorGUILayoutExtensions.EndVertical();
-					}
-				}
-				GUILayout.EndVertical();
-			}
-			GUILayout.EndHorizontal();
-
-			if (!string.IsNullOrEmpty(deleted))
-			{
-				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
-			}
-			*/
-		}
-
-		/*
-		bool OnKeyValueLogHeader(
-			EncounterInfoModel infoModel,
-			KeyValueEncounterLogModel model,
-			KeyValueOperationModel operation
-		)
-		{
-			var deleted = false;
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label(operation.Operation + ":", GUILayout.ExpandWidth(false));
-				operation.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Target -", operation.Target.Value);
-				deleted = EditorGUILayoutExtensions.XButton();
-			}
-			GUILayout.EndHorizontal();
-			return deleted;
-		}
-
-		void OnKeyValueLogSetString(
-			EncounterInfoModel infoModel,
-			KeyValueEncounterLogModel model,
-			SetStringOperationModel operation
-		)
-		{
-			operation.Key.Value = EditorGUILayout.TextField("Key", operation.Key.Value);
-			operation.Value.Value = EditorGUILayoutExtensions.TextDynamic("Value", operation.Value.Value);
-		}
-
-		void OnKeyValueLogSetBoolean(
-			EncounterInfoModel infoModel,
-			KeyValueEncounterLogModel model,
-			SetBooleanOperationModel operation
-		)
-		{
-			operation.Key.Value = EditorGUILayout.TextField("Key", operation.Key.Value);
-			operation.Value.Value = EditorGUILayoutExtensions.ToggleButton(new GUIContent("Value"), operation.Value.Value);
+			OnEdgedLog<KeyValueEncounterLogModel, KeyValueEdgeModel>(infoModel, model, OnKeyValueLogEdge);
 		}
 
 		void OnKeyValueLogSpawn(
-			EncounterInfoModel infoModel,
-			KeyValueEncounterLogModel model,
-			KeyValueTargets target,
-			KeyValueOperations operation
+			KeyValueEdgeModel edge,
+			KeyValueOperations operation,
+			KeyValueTargets target
 		)
 		{
-			var guid = Guid.NewGuid().ToString();
-			switch (operation)
+			edge.Entry.Operation.Value = operation;
+			edge.Entry.Target.Value = target;
+		}
+
+		void OnKeyValueLogEdge(
+			EncounterInfoModel infoModel,
+			KeyValueEncounterLogModel model,
+			KeyValueEdgeModel edge
+		)
+		{
+			var entry = edge.Entry;
+
+			entry.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				new GUIContent("Target", "Determines the target value store to modify."),
+				"- Selecte a Target -",
+				entry.Target.Value
+			);
+
+			entry.Key.Value = EditorGUILayout.TextField(new GUIContent("Key", "The key to change the value of."), entry.Key.Value);
+
+			switch (entry.Operation.Value)
 			{
-				case KeyValueOperations.SetString:
-					var setString = new SetStringOperationModel();
-					setString.OperationId.Value = guid;
-					setString.Target.Value = target;
-					model.Operations.Value = model.Operations.Value.Append(setString).ToArray();
-					break;
-				case KeyValueOperations.SetBoolean:
-					var setBoolean = new SetBooleanOperationModel();
-					setBoolean.OperationId.Value = guid;
-					setBoolean.Target.Value = target;
-					model.Operations.Value = model.Operations.Value.Append(setBoolean).ToArray();
-					break;
-				default:
-					Debug.LogError("Unrecognized KeyValueOperation: " + operation);
-					break;
+				case KeyValueOperations.SetString: entry.StringValue.Value = EditorGUILayout.TextField("Value", entry.StringValue.Value); break;
+				case KeyValueOperations.SetBoolean: entry.BoolValue.Value = EditorGUILayout.Toggle("Value", entry.BoolValue.Value); break;
+				default: EditorGUILayout.HelpBox("Unrecognized Operation: " + entry.Operation.Value, MessageType.Error); break;
 			}
 		}
-		*/
 		#endregion
 
 		#region Switch Logs
