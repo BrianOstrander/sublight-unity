@@ -316,9 +316,6 @@ namespace LunraGames.SubLight
 			string result = null;
 			switch (logType)
 			{
-				case EncounterLogTypes.Text:
-					result = NewEncounterLog<TextEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
-					break;
 				case EncounterLogTypes.KeyValue:
 					result = NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
@@ -516,9 +513,6 @@ namespace LunraGames.SubLight
 
 			switch (model.LogType)
 			{
-				case EncounterLogTypes.Text:
-					OnTextLog(infoModel, model as TextEncounterLogModel);
-					break;
 				case EncounterLogTypes.KeyValue:
 					OnKeyValueLog(infoModel, model as KeyValueEncounterLogModel);
 					break;
@@ -554,16 +548,6 @@ namespace LunraGames.SubLight
 			if (!model.EditableDuration) return;
 			model.Duration.Value = EditorGUILayout.FloatField("Duration", model.Duration);
 		}
-
-		#region Text Logs
-		void OnTextLog(EncounterInfoModel infoModel, TextEncounterLogModel model)
-		{
-			EditorGUILayout.HelpBox("delete this", MessageType.Error);
-			//model.Header.Value = EditorGUILayoutExtensions.TextDynamic("Header", model.Header.Value);
-			//model.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", model.Message.Value);
-			//OnLinearLog(infoModel, model);
-		}
-		#endregion
 
 		#region KeyValue Logs
 		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)

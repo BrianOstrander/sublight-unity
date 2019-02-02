@@ -9,127 +9,26 @@
     "encounterInteractions": []
   },
   "logs": {
-    "textLogs": [],
-    "keyValueLogs": [],
-    "switchLogs": [
+    "keyValueLogs": [
       {
-        "switches": [],
-        "index": 2,
-        "logId": "c3b60bd7-b573-4f7a-aa46-f503e0ff7a5d",
-        "name": "Some collapsed entry",
-        "collapsed": true
-      }
-    ],
-    "buttonLogs": [
-      {
-        "buttons": [
+        "setStrings": [
           {
-            "entry": {
-              "message": "Nevermind...",
-              "usedFiltering": {
-                "falseByDefault": true,
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "interactableFiltering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "enabledFiltering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "2b44b237-c02b-4303-bf10-ff29e27c8f97"
-            }
-          },
-          {
-            "entry": {
-              "message": "Tell me more!",
-              "nextLogId": "d148c468-4f5c-4040-8937-688004f51593",
-              "usedFiltering": {
-                "falseByDefault": true,
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "interactableFiltering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "enabledFiltering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "609fc6bd-e9ba-43e6-85c4-4a8c82f1aada"
-            },
-            "index": 1
+            "operationId": "cf2e7c44-a7f4-4e91-a656-f9b80184b252",
+            "target": "Encounter"
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Foreigner"
-        },
-        "index": 1,
-        "logId": "208d9c62-c70c-4fe5-a29c-4d39c3f51e80",
-        "name": "Some Rando Buttons",
-        "notes": "Blah blah blah production notes here..."
-      }
-    ],
-    "encyclopediaLogs": [],
-    "eventLogs": [
-      {
-        "entries": [
-          {
-            "entry": {
-              "encounterEvent": "Debug",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {
-                  "message": "Whatever!"
-                },
-                "enums": {
-                  "severity": 10
-                }
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "stringKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "8ec82a29-26c5-4bef-bb7a-f56c7a75e792"
-            }
-          }
-        ],
+        "setBooleans": [],
         "beginning": true,
-        "logId": "772f3c92-f6cc-40ae-affa-aa168ce047f6",
-        "fallbackLogId": "d148c468-4f5c-4040-8937-688004f51593",
-        "name": "Debug Start"
+        "logId": "63976ed0-03cd-4c3e-a538-d90596a35d35"
       }
     ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
     "dialogLogs": [],
     "bustLogs": [],
-    "conversationLogs": [
-      {
-        "entries": [
-          {
-            "entry": {
-              "conversationType": "MessageIncoming",
-              "message": "Never!",
-              "entryId": "26d45f06-4207-441a-9f73-e5770d80cb64"
-            }
-          }
-        ],
-        "index": 3,
-        "logId": "d148c468-4f5c-4040-8937-688004f51593",
-        "name": "Main Conversation"
-      }
-    ]
+    "conversationLogs": []
   },
   "version": 7,
   "meta": "Some Test",
