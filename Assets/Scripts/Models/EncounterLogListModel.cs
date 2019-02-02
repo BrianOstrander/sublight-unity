@@ -11,7 +11,6 @@ namespace LunraGames.SubLight.Models
 	public class EncounterLogListModel : Model
 	{
 		#region Assigned Values
-		[JsonProperty] TextEncounterLogModel[] textLogs = new TextEncounterLogModel[0];
 		[JsonProperty] KeyValueEncounterLogModel[] keyValueLogs = new KeyValueEncounterLogModel[0];
 		[JsonProperty] SwitchEncounterLogModel[] switchLogs = new SwitchEncounterLogModel[0];
 		[JsonProperty] ButtonEncounterLogModel[] buttonLogs = new ButtonEncounterLogModel[0];
@@ -94,7 +93,6 @@ namespace LunraGames.SubLight.Models
 		#region Events
 		void OnSetLogs(EncounterLogModel[] newLogs)
 		{
-			var textList = new List<TextEncounterLogModel>();
 			var keyValueList = new List<KeyValueEncounterLogModel>();
 			var switchList = new List<SwitchEncounterLogModel>();
 			var buttonList = new List<ButtonEncounterLogModel>();
@@ -108,9 +106,6 @@ namespace LunraGames.SubLight.Models
 			{
 				switch (log.LogType)
 				{
-					case EncounterLogTypes.Text:
-						textList.Add(log as TextEncounterLogModel);
-						break;
 					case EncounterLogTypes.KeyValue:
 						keyValueList.Add(log as KeyValueEncounterLogModel);
 						break;
@@ -141,7 +136,6 @@ namespace LunraGames.SubLight.Models
 				}
 			}
 
-			textLogs = textList.ToArray();
 			keyValueLogs = keyValueList.ToArray();
 			switchLogs = switchList.ToArray();
 			buttonLogs = buttonList.ToArray();
@@ -154,15 +148,14 @@ namespace LunraGames.SubLight.Models
 
 		EncounterLogModel[] OnGetLogs()
 		{
-			return textLogs.Cast<EncounterLogModel>().Concat(keyValueLogs)
-													 .Concat(switchLogs)
-													 .Concat(buttonLogs)
-													 .Concat(encyclopediaLogs)
-				           							 .Concat(eventLogs)
-				           							 .Concat(dialogLogs)
-				           							 .Concat(bustLogs)
-				           							 .Concat(conversationLogs)
-													 .ToArray();
+			return keyValueLogs.Cast<EncounterLogModel>().Concat(switchLogs)
+														 .Concat(buttonLogs)
+														 .Concat(encyclopediaLogs)
+					           							 .Concat(eventLogs)
+					           							 .Concat(dialogLogs)
+					           							 .Concat(bustLogs)
+					           							 .Concat(conversationLogs)
+														 .ToArray();
 		}
 		#endregion
 	}

@@ -3,14 +3,13 @@
 	public enum EncounterLogTypes
 	{
 		Unknown = 0,
-		Text = 10,
-		KeyValue = 20,
-		Switch = 30,
-		Button = 40,
-		Encyclopedia = 50,
-		Event = 60,
-		Dialog = 70,
-		Bust = 80,
-		Conversation = 90
+		KeyValue = 10,
+		Switch = 20,
+		Button = 30,
+		Encyclopedia = 40,
+		Event = 50,
+		Dialog = 60,
+		Bust = 70,
+		Conversation = 80
 	}
 }

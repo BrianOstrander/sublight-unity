@@ -1,19 +1,13 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-using UnityEngine;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class KeyValueEncounterLogModel : EncounterLogModel
+	public class KeyValueEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<KeyValueEdgeModel>
 	{
-		[JsonProperty] SetStringOperationModel[] setStrings = new SetStringOperationModel[0];
-		[JsonProperty] SetBooleanOperationModel[] setBooleans = new SetBooleanOperationModel[0];
+		[JsonProperty] KeyValueEdgeModel[] entries = new KeyValueEdgeModel[0];
 
 		[JsonIgnore]
-		public readonly ListenerProperty<KeyValueOperationModel[]> Operations;
+		public readonly ListenerProperty<KeyValueEdgeModel[]> Entries;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.KeyValue; } }
 
@@ -21,40 +15,14 @@ namespace LunraGames.SubLight.Models
 
 		public KeyValueEncounterLogModel()
 		{
-			Operations = new ListenerProperty<KeyValueOperationModel[]>(OnSetOperations, OnGetOperations);
+			Entries = new ListenerProperty<KeyValueEdgeModel[]>(value => entries = value, () => entries);
 		}
 
-		#region Events
-		void OnSetOperations(KeyValueOperationModel[] entries)
+		[JsonIgnore]
+		public KeyValueEdgeModel[] Edges
 		{
-			var setStringsList = new List<SetStringOperationModel>();
-			var setBooleanList = new List<SetBooleanOperationModel>();
-
-			foreach (var entry in entries)
-			{
-				switch (entry.Operation)
-				{
-					case KeyValueOperations.SetString:
-						setStringsList.Add(entry as SetStringOperationModel);
-						break;
-					case KeyValueOperations.SetBoolean:
-						setBooleanList.Add(entry as SetBooleanOperationModel);
-						break;
-					default:
-						Debug.LogError("Unrecognized KeyValueOperation: " + entry.Operation);
-						break;
-				}
-			}
-
-			setStrings = setStringsList.ToArray();
-			setBooleans = setBooleanList.ToArray();
+			get { return Entries.Value; }
+			set { Entries.Value = value; }
 		}
-
-		KeyValueOperationModel[] OnGetOperations()
-		{
-			return setStrings.Cast<KeyValueOperationModel>().Concat(setBooleans)
-															.ToArray();
-		}
-		#endregion
 	}
 }

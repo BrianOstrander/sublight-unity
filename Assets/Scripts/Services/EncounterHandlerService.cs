@@ -64,7 +64,6 @@ namespace LunraGames.SubLight
 
 			handlers = new IEncounterLogHandler[]
 			{
-				new TextLogHandler(configuration),
 				new KeyValueLogHandler(configuration),
 				new SwitchLogHandler(configuration),
 				new SwitchLogHandler(configuration),
