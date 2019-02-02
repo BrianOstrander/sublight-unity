@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
@@ -18,7 +19,9 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var total = logModel.Operations.Value.Length;
+			var operations = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToArray();
+
+			var total = operations.Length;
 
 			if (total == 0)
 			{
@@ -28,34 +31,32 @@ namespace LunraGames.SubLight
 
 			var progress = 0;
 
-			foreach (var entry in logModel.Operations.Value)
+			foreach (var operation in operations)
 			{
-				switch (entry.Operation)
+				switch (operation.Operation.Value)
 				{
 					case KeyValueOperations.SetString:
-						var setString = entry as SetStringOperationModel;
 						Configuration.Callbacks.KeyValueRequest(
 							KeyValueRequest.Set(
-								entry.Target.Value,
-								entry.Key.Value,
-								setString.Value.Value,
+								operation.Target.Value,
+								operation.Key.Value,
+								operation.StringValue.Value,
 								result => OnDone(result, total, ref progress, linearDone)
 							)
 						);
 						break;
 					case KeyValueOperations.SetBoolean:
-						var setBoolean = entry as SetBooleanOperationModel;
 						Configuration.Callbacks.KeyValueRequest(
 							KeyValueRequest.Set(
-								entry.Target.Value,
-								entry.Key.Value,
-								setBoolean.Value.Value,
+								operation.Target.Value,
+								operation.Key.Value,
+								operation.BoolValue.Value,
 								result => OnDone(result, total, ref progress, linearDone)
 							)
 						);
 						break;
 					default:
-						Debug.LogError("Unrecognized KeyValueType: " + entry.Operation);
+						Debug.LogError("Unrecognized KeyValueType: " + operation.Operation);
 						linearDone();
 						return;
 				}

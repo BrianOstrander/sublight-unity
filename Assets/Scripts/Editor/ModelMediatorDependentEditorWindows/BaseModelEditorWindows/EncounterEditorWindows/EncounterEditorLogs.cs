@@ -552,6 +552,8 @@ namespace LunraGames.SubLight
 		#region KeyValue Logs
 		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)
 		{
+			EditorGUILayout.HelpBox("Todo: edged keyvalue editor", MessageType.Error);
+			/*
 			var targets = Enum.GetValues(typeof(KeyValueTargets)).Cast<KeyValueTargets>().ToList();
 			var kvTypes = Enum.GetValues(typeof(KeyValueOperations)).Cast<KeyValueOperations>().ToList();
 
@@ -626,8 +628,10 @@ namespace LunraGames.SubLight
 			{
 				model.Operations.Value = model.Operations.Value.Where(kv => kv.OperationId != deleted).ToArray();
 			}
+			*/
 		}
 
+		/*
 		bool OnKeyValueLogHeader(
 			EncounterInfoModel infoModel,
 			KeyValueEncounterLogModel model,
@@ -692,6 +696,7 @@ namespace LunraGames.SubLight
 					break;
 			}
 		}
+		*/
 		#endregion
 
 		#region Switch Logs
