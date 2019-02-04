@@ -34,6 +34,11 @@ namespace LunraGames.SubLight
 			EdgeAssignment = 40
 		}
 
+		EncounterKeys logsEncounterKeys = new EncounterKeys();
+		GameKeys logsGameKeys = new GameKeys();
+		GlobalKeys logsGlobalKeys = new GlobalKeys();
+		PreferencesKeys logsPreferencesKeys = new PreferencesKeys();
+
 		EditorPrefsFloat logsListScroll;
 		EditorPrefsFloat logsStackScroll;
 		EditorPrefsBool logsShowNameSource;
