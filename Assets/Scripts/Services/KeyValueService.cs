@@ -7,7 +7,7 @@ namespace LunraGames.SubLight
 {
 	public class KeyValueService
 	{
-		static string GetNoHandlerError(KeyValueRequest.States state, KeyValueTargets target, KeyValueRequest.ValueTypes valueType)
+		static string GetNoHandlerError(KeyValueRequest.States state, KeyValueTargets target, KeyValueTypes valueType)
 		{
 			return "No "+state+" handler found for " + target + "." + valueType;
 		}
@@ -188,22 +188,22 @@ namespace LunraGames.SubLight
 		{
 			switch (request.ValueType)
 			{
-				case KeyValueRequest.ValueTypes.Boolean:
+				case KeyValueTypes.Boolean:
 					Action<KeyValueRequest, Action<KeyValueResult<bool>>> booleanHandler;
 					if (booleanGetHandlers.TryGetValue(request.Target, out booleanHandler)) booleanHandler(request, request.BooleanDone);
 					else OnError(request.BooleanDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));
 					break;
-				case KeyValueRequest.ValueTypes.Integer:
+				case KeyValueTypes.Integer:
 					Action<KeyValueRequest, Action<KeyValueResult<int>>> integerHandler;
 					if (integerGetHandlers.TryGetValue(request.Target, out integerHandler)) integerHandler(request, request.IntegerDone);
 					else OnError(request.IntegerDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));
 					break;
-				case KeyValueRequest.ValueTypes.String:
+				case KeyValueTypes.String:
 					Action<KeyValueRequest, Action<KeyValueResult<string>>> stringHandler;
 					if (stringGetHandlers.TryGetValue(request.Target, out stringHandler)) stringHandler(request, request.StringDone);
 					else OnError(request.StringDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));
 					break;
-				case KeyValueRequest.ValueTypes.Float:
+				case KeyValueTypes.Float:
 					Action<KeyValueRequest, Action<KeyValueResult<float>>> floatHandler;
 					if (floatGetHandlers.TryGetValue(request.Target, out floatHandler)) floatHandler(request, request.FloatDone);
 					else OnError(request.FloatDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));
@@ -218,22 +218,22 @@ namespace LunraGames.SubLight
 		{
 			switch (request.ValueType)
 			{
-				case KeyValueRequest.ValueTypes.Boolean:
+				case KeyValueTypes.Boolean:
 					Action<KeyValueRequest, Action<KeyValueResult<bool>>> booleanHandler;
 					if (booleanSetHandlers.TryGetValue(request.Target, out booleanHandler)) booleanHandler(request, request.BooleanDone);
 					else OnError(request.BooleanDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));
 					break;
-				case KeyValueRequest.ValueTypes.Integer:
+				case KeyValueTypes.Integer:
 					Action<KeyValueRequest, Action<KeyValueResult<int>>> integerHandler;
 					if (integerSetHandlers.TryGetValue(request.Target, out integerHandler)) integerHandler(request, request.IntegerDone);
 					else OnError(request.IntegerDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));
 					break;
-				case KeyValueRequest.ValueTypes.String:
+				case KeyValueTypes.String:
 					Action<KeyValueRequest, Action<KeyValueResult<string>>> stringHandler;
 					if (stringSetHandlers.TryGetValue(request.Target, out stringHandler)) stringHandler(request, request.StringDone);
 					else OnError(request.StringDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));
 					break;
-				case KeyValueRequest.ValueTypes.Float:
+				case KeyValueTypes.Float:
 					Action<KeyValueRequest, Action<KeyValueResult<float>>> floatHandler;
 					if (floatSetHandlers.TryGetValue(request.Target, out floatHandler)) floatHandler(request, request.FloatDone);
 					else OnError(request.FloatDone, request, GetNoHandlerError(request.State, request.Target, request.ValueType));

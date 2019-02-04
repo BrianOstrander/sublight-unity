@@ -1,5 +1,4 @@
 ﻿using System;
-
 using UnityEngine;
 
 namespace LunraGames.SubLight
@@ -42,16 +41,16 @@ namespace LunraGames.SubLight
 
 			switch(request.ValueType)
 			{
-				case KeyValueRequest.ValueTypes.Boolean:
+				case KeyValueTypes.Boolean:
 					Value = (T)(object)request.BooleanValue;
 					break;
-				case KeyValueRequest.ValueTypes.Integer:
+				case KeyValueTypes.Integer:
 					Value = (T)(object)request.IntegerValue;
 					break;
-				case KeyValueRequest.ValueTypes.String:
+				case KeyValueTypes.String:
 					Value = (T)(object)request.StringValue;
 					break;
-				case KeyValueRequest.ValueTypes.Float:
+				case KeyValueTypes.Float:
 					Value = (T)(object)request.FloatValue;
 					break;
 				default:
@@ -73,133 +72,94 @@ namespace LunraGames.SubLight
 			SetComplete = 40
 		}
 
-		public enum ValueTypes
+		#region Defined Key Get & Set
+		public static KeyValueRequest Set(DefinedKeys.DefinedKeyBoolean definedKey, bool value, Action<KeyValueResult<bool>> done = null)
 		{
-			Unknown = 0,
-			Boolean = 10,
-			Integer = 20,
-			String = 30,
-			Float = 40
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Boolean, booleanValue: value, booleanDone: done);
 		}
 
-		#region Enumerated Key Get & Set
-		/*
-		public static KeyValueRequest Set<T>(KeyValueTargets target, T key, bool value, Action<KeyValueResult<bool>> done = null) 
-			where T : struct, IConvertible
+		public static KeyValueRequest Set(DefinedKeys.DefinedKeyInteger definedKey, int value, Action<KeyValueResult<int>> done = null)
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Set(target, Enum.GetName(typeof(T), key), value, done);
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Integer, integerValue: value, integerDone: done);
 		}
 
-		public static KeyValueRequest Set<T>(KeyValueTargets target, T key, int value, Action<KeyValueResult<int>> done = null)
-			where T : struct, IConvertible
+		public static KeyValueRequest Set(DefinedKeys.DefinedKeyString definedKey, string value, Action<KeyValueResult<string>> done = null)
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Set(target, Enum.GetName(typeof(T), key), value, done);
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.String, stringValue: value, stringDone: done);
 		}
 
-		public static KeyValueRequest Set<T>(KeyValueTargets target, T key, string value, Action<KeyValueResult<string>> done = null)
-			where T : struct, IConvertible
+		public static KeyValueRequest Set(DefinedKeys.DefinedKeyFloat definedKey, float value, Action<KeyValueResult<float>> done = null)
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Set(target, Enum.GetName(typeof(T), key), value, done);
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Float, floatValue: value, floatDone: done);
 		}
 
-		public static KeyValueRequest Set<T>(KeyValueTargets target, T key, float value, Action<KeyValueResult<float>> done = null)
-			where T : struct, IConvertible
+		public static KeyValueRequest Get(DefinedKeys.DefinedKeyBoolean definedKey, Action<KeyValueResult<bool>> done)
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Set(target, Enum.GetName(typeof(T), key), value, done);
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Boolean, booleanDone: done);
 		}
 
-		public static KeyValueRequest Get<T>(KeyValueTargets target, T key, Action<KeyValueResult<bool>> done)
-			where T : struct, IConvertible
+		public static KeyValueRequest Get(DefinedKeys.DefinedKeyInteger definedKey, Action<KeyValueResult<int>> done)
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Get(target, Enum.GetName(typeof(T), key), done);
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Integer, integerDone: done);
 		}
 
-		public static KeyValueRequest Get<T>(KeyValueTargets target, T key, Action<KeyValueResult<int>> done)
-			where T : struct, IConvertible
+		public static KeyValueRequest Get(DefinedKeys.DefinedKeyString definedKey, Action<KeyValueResult<string>> done)
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Get(target, Enum.GetName(typeof(T), key), done);
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.String, stringDone: done);
 		}
 
-		public static KeyValueRequest Get<T>(KeyValueTargets target, T key, Action<KeyValueResult<string>> done)
-			where T : struct, IConvertible
+		public static KeyValueRequest Get(DefinedKeys.DefinedKeyFloat definedKey, Action<KeyValueResult<float>> done)
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Get(target, Enum.GetName(typeof(T), key), done);
+			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Float, floatDone: done);
 		}
-
-		public static KeyValueRequest Get<T>(KeyValueTargets target, T key, Action<KeyValueResult<float>> done)
-			where T : struct, IConvertible
-		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return Get(target, Enum.GetName(typeof(T), key), done);
-		}
-
-		/// <summary>
-		/// Takes an enum value and returns it as a string.
-		/// </summary>
-		/// <returns>The enumerated key.</returns>
-		/// <param name="key">Key.</param>
-		/// <typeparam name="T">Key.</typeparam>
-		static string GetEnumeratedKey<T>(T key)
-		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("Must be an enum.", "key");
-			return 
-		}
-		*/
 		#endregion
 
 		#region String Key Get & Set
 		public static KeyValueRequest Set(KeyValueTargets target, string key, bool value, Action<KeyValueResult<bool>> done = null)
 		{
-			return new KeyValueRequest(target, key, States.SetRequest, ValueTypes.Boolean, booleanValue: value, booleanDone: done);
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.Boolean, booleanValue: value, booleanDone: done);
 		}
 
 		public static KeyValueRequest Set(KeyValueTargets target, string key, int value, Action<KeyValueResult<int>> done = null)
 		{
-			return new KeyValueRequest(target, key, States.SetRequest, ValueTypes.Integer, integerValue: value, integerDone: done);
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.Integer, integerValue: value, integerDone: done);
 		}
 
 		public static KeyValueRequest Set(KeyValueTargets target, string key, string value, Action<KeyValueResult<string>> done = null)
 		{
-			return new KeyValueRequest(target, key, States.SetRequest, ValueTypes.String, stringValue: value, stringDone: done);
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.String, stringValue: value, stringDone: done);
 		}
 
 		public static KeyValueRequest Set(KeyValueTargets target, string key, float value, Action<KeyValueResult<float>> done = null)
 		{
-			return new KeyValueRequest(target, key, States.SetRequest, ValueTypes.Float, floatValue: value, floatDone: done);
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.Float, floatValue: value, floatDone: done);
 		}
 
 		public static KeyValueRequest Get(KeyValueTargets target, string key, Action<KeyValueResult<bool>> done)
 		{
-			return new KeyValueRequest(target, key, States.GetRequest, ValueTypes.Boolean, booleanDone: done);
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.Boolean, booleanDone: done);
 		}
 
 		public static KeyValueRequest Get(KeyValueTargets target, string key, Action<KeyValueResult<int>> done)
 		{
-			return new KeyValueRequest(target, key, States.GetRequest, ValueTypes.Integer, integerDone: done);
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.Integer, integerDone: done);
 		}
 
 		public static KeyValueRequest Get(KeyValueTargets target, string key, Action<KeyValueResult<string>> done) 
 		{ 
-			return new KeyValueRequest(target, key, States.GetRequest, ValueTypes.String, stringDone: done); 
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.String, stringDone: done); 
 		}
 
 		public static KeyValueRequest Get(KeyValueTargets target, string key, Action<KeyValueResult<float>> done)
 		{
-			return new KeyValueRequest(target, key, States.GetRequest, ValueTypes.Float, floatDone: done);
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.Float, floatDone: done);
 		}
 		#endregion
 
 		public readonly KeyValueTargets Target;
 		public readonly string Key;
 		public readonly States State;
-		public readonly ValueTypes ValueType;
+		public readonly KeyValueTypes ValueType;
 
 		public readonly bool BooleanValue;
 		public readonly int IntegerValue;
@@ -215,7 +175,7 @@ namespace LunraGames.SubLight
 			KeyValueTargets target,
 			string key,
 			States state,
-			ValueTypes valueType,
+			KeyValueTypes valueType,
 
 			bool booleanValue = false,
 			int integerValue = 0,
