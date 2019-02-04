@@ -34,10 +34,12 @@ namespace LunraGames.SubLight
 			EdgeAssignment = 40
 		}
 
+#pragma warning disable CS0414 // The private field is assigned but its value is never used.
 		EncounterKeys logsEncounterKeys = new EncounterKeys();
 		GameKeys logsGameKeys = new GameKeys();
 		GlobalKeys logsGlobalKeys = new GlobalKeys();
 		PreferencesKeys logsPreferencesKeys = new PreferencesKeys();
+#pragma warning restore CS0414 // The private field is assigned but its value is never used.
 
 		EditorPrefsFloat logsListScroll;
 		EditorPrefsFloat logsStackScroll;
