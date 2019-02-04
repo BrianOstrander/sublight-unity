@@ -70,8 +70,8 @@ namespace LunraGames.SubLight
 		KeyValueService keyValues;
 		public static KeyValueService KeyValues { get { return instance.keyValues; } }
 
-		GlobalKeyValueService globalKeyValues;
-		public static GlobalKeyValueService GlobalKeyValues { get { return instance.globalKeyValues; } }
+		MetaKeyValueService metaKeyValues;
+		public static MetaKeyValueService MetaKeyValues { get { return instance.metaKeyValues; } }
 
 		ValueFilterService valueFilter;
 		public static ValueFilterService ValueFilter { get { return instance.valueFilter; } }
@@ -166,7 +166,7 @@ namespace LunraGames.SubLight
 			scenes = new SceneService(Logging, Callbacks, sceneSkybox);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
-			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
+			metaKeyValues = new MetaKeyValueService(Callbacks, M, KeyValues, Logging);
 			valueFilter = new ValueFilterService(Callbacks);
 			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
 

@@ -136,7 +136,9 @@ namespace LunraGames.SubLight
 				case SaveTypes.Game: return typeof(GameModel);
 				case SaveTypes.Preferences: return typeof(PreferencesModel);
 				case SaveTypes.EncounterInfo: return typeof(EncounterInfoModel);
+				// -- Meta Key Values
 				case SaveTypes.GlobalKeyValues: return typeof(GlobalKeyValuesModel);
+				case SaveTypes.PreferencesKeyValues: return typeof(PreferencesKeyValuesModel);
 				// -- Galaxies
 				case SaveTypes.GalaxyPreview: return typeof(GalaxyPreviewModel);
 				case SaveTypes.GalaxyDistant: return typeof(GalaxyDistantModel);
@@ -153,7 +155,9 @@ namespace LunraGames.SubLight
 			if (type == typeof(GameModel)) return new SaveTypes[] { SaveTypes.Game };
 			if (type == typeof(PreferencesModel)) return new SaveTypes[] { SaveTypes.Preferences };
 			if (type == typeof(EncounterInfoModel)) return new SaveTypes[] { SaveTypes.EncounterInfo };
+			// -- Meta Key Values
 			if (type == typeof(GlobalKeyValuesModel)) return new SaveTypes[] { SaveTypes.GlobalKeyValues };
+			if (type == typeof(PreferencesKeyValuesModel)) return new SaveTypes[] { SaveTypes.PreferencesKeyValues };
 			// -- Galaxies
 			if (type == typeof(GalaxyPreviewModel) || type == typeof(GalaxyDistantModel) || type == typeof(GalaxyInfoModel))
 			{

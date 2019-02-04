@@ -30,7 +30,9 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, -1 },
 					{ SaveTypes.EncounterInfo, 0 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
+					// -- Meta Key Values
 					{ SaveTypes.GlobalKeyValues, -1 },
+					{ SaveTypes.PreferencesKeyValues, -1 },
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, 7 },
 					{ SaveTypes.GalaxyDistant, 7 },
@@ -50,7 +52,9 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, true },
 					{ SaveTypes.EncounterInfo, false },
 					{ SaveTypes.InteractedEncounterInfoList, true },
+					// -- Meta Key Values
 					{ SaveTypes.GlobalKeyValues, true },
+					{ SaveTypes.PreferencesKeyValues, true },
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, false },
 					{ SaveTypes.GalaxyDistant, false },
@@ -95,7 +99,9 @@ namespace LunraGames.SubLight
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
+				// -- Meta Key Values
 				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
+				case SaveTypes.PreferencesKeyValues: return Path.Combine(ParentPath, "preferences-kv");
 				// -- Galaxies
 				case SaveTypes.GalaxyPreview:
 				case SaveTypes.GalaxyDistant:

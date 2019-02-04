@@ -14,6 +14,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] Dictionary<string, int> integers = new Dictionary<string, int>();
 		[JsonProperty] Dictionary<string, string> strings = new Dictionary<string, string>();
 		[JsonProperty] Dictionary<string, int> enums = new Dictionary<string, int>();
+		[JsonProperty] Dictionary<string, float> floats = new Dictionary<string, float>();
 
 		/// <summary>
 		/// Keys are not case sensitive, so we normalize them here, along with
@@ -51,6 +52,12 @@ namespace LunraGames.SubLight.Models
 			return Enum.GetValues(typeof(T)).Cast<T>().FirstOrDefault(e => Convert.ToInt32(e) == intValue);
 		}
 
+		public float GetFloat(string key, float fallback = 0f)
+		{
+			floats.TryGetValue(NormalizeKey(key), out fallback);
+			return fallback;
+		}
+
 		public bool SetBoolean(string key, bool value)
 		{
 			booleans[NormalizeKey(key)] = value;
@@ -77,12 +84,19 @@ namespace LunraGames.SubLight.Models
 			return value;
 		}
 
+		public float SetFloat(string key, float value)
+		{
+			floats[NormalizeKey(key)] = value;
+			return value;
+		}
+
 		public void Clear()
 		{
 			booleans.Clear();
 			integers.Clear();
 			strings.Clear();
 			enums.Clear();
+			floats.Clear();
 		}
 		#endregion
 	}

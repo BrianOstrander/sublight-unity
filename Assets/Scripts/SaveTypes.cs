@@ -12,7 +12,9 @@
 		// Interactions
 		InteractedEncounterInfoList = 40,
 
+		// Meta Key Values
 		GlobalKeyValues = 50,
+		PreferencesKeyValues = 52,
 
 		GalaxyPreview = 60,
 		GalaxyDistant = 62,

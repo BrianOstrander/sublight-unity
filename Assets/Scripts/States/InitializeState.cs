@@ -32,7 +32,7 @@ namespace LunraGames.SubLight
 			SM.PushBlocking(InitializePreferences, "InitializePreferences");
 			SM.PushBlocking(InitializeEncounters, "InitializeEncounters");
 			SM.PushBlocking(InitializeListeners, "InitializeListeners");
-			SM.PushBlocking(InitializeGlobalKeyValues, "InitializeGlobalkeyValues");
+			SM.PushBlocking(InitializeMetaKeyValues, "InitializeMetakeyValues");
 
 			if (DevPrefs.WipeGameSavesOnStart) SM.PushBlocking(WipeGameSaves, "WipeGameSaves");
 		}
@@ -202,17 +202,17 @@ namespace LunraGames.SubLight
 			done();
 		}
 
-		void InitializeGlobalKeyValues(Action done)
+		void InitializeMetaKeyValues(Action done)
 		{
-			App.GlobalKeyValues.Initialize(
+			App.MetaKeyValues.Initialize(
 				status =>
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("Global KVs Initialized", LogTypes.Initialization);
+						App.Log("Meta KVs Initialized", LogTypes.Initialization);
 						done();
 					}
-					else App.Restart("Initializing Global KVs failed with status " + status);
+					else App.Restart("Initializing Meta KVs failed with status " + status);
 				}
 			);
 		}
