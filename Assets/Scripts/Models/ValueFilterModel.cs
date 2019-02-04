@@ -20,7 +20,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool showValues;
 		[JsonProperty] bool falseByDefault;
 		[JsonProperty] BooleanKeyValueFilterEntryModel[] booleanKeyValues = new BooleanKeyValueFilterEntryModel[0];
+		[JsonProperty] IntegerKeyValueFilterEntryModel[] integerKeyValues = new IntegerKeyValueFilterEntryModel[0];
 		[JsonProperty] StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
+		[JsonProperty] FloatKeyValueFilterEntryModel[] floatKeyValues = new FloatKeyValueFilterEntryModel[0];
 		[JsonProperty] EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
 
 		#endregion
@@ -50,7 +52,9 @@ namespace LunraGames.SubLight.Models
 		void OnSetFilters(IValueFilterEntryModel[] newFilters)
 		{
 			var newBooleanKeyValues = new List<BooleanKeyValueFilterEntryModel>();
+			var newIntegerKeyValues = new List<IntegerKeyValueFilterEntryModel>();
 			var newStringKeyValues = new List<StringKeyValueFilterEntryModel>();
+			var newFloatKeyValues = new List<FloatKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
 
 			foreach (var filter in newFilters)
@@ -60,8 +64,14 @@ namespace LunraGames.SubLight.Models
 					case ValueFilterTypes.KeyValueBoolean:
 						newBooleanKeyValues.Add(filter as BooleanKeyValueFilterEntryModel);
 						break;
+					case ValueFilterTypes.KeyValueInteger:
+						newIntegerKeyValues.Add(filter as IntegerKeyValueFilterEntryModel);
+						break;
 					case ValueFilterTypes.KeyValueString:
 						newStringKeyValues.Add(filter as StringKeyValueFilterEntryModel);
+						break;
+					case ValueFilterTypes.KeyValueFloat:
+						newFloatKeyValues.Add(filter as FloatKeyValueFilterEntryModel);
 						break;
 					case ValueFilterTypes.EncounterInteraction:
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
@@ -73,13 +83,17 @@ namespace LunraGames.SubLight.Models
 			}
 
 			booleanKeyValues = newBooleanKeyValues.ToArray();
+			integerKeyValues = newIntegerKeyValues.ToArray();
 			stringKeyValues = newStringKeyValues.ToArray();
+			floatKeyValues = newFloatKeyValues.ToArray();
 			encounterInteractions = newEncounterInteractions.ToArray();
 		}
 
 		IValueFilterEntryModel[] OnGetFilters()
 		{
-			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(stringKeyValues)
+			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(integerKeyValues)
+															   	  .Concat(stringKeyValues)
+				                   								  .Concat(floatKeyValues)
 																  .Concat(encounterInteractions)
 																  .ToArray();
 		}

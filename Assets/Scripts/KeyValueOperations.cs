@@ -3,7 +3,9 @@
 	public enum KeyValueOperations
 	{
 		Unknown = 0,
-		SetString = 10,
-		SetBoolean = 20
+		SetBoolean = 10,
+		SetInteger = 20,
+		SetString = 30,
+		SetFloat = 40
 	}
 }

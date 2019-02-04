@@ -5,7 +5,9 @@
   "trigger": "TransitComplete",
   "filtering": {
     "booleanKeyValues": [],
+    "integerKeyValues": [],
     "stringKeyValues": [],
+    "floatKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -45,21 +47,41 @@
                 },
                 "enums": {
                   "severity": 10
-                }
+                },
+                "floats": {}
               },
               "filtering": {
                 "showValues": true,
                 "falseByDefault": true,
                 "booleanKeyValues": [
                   {
-                    "target": "Encounter",
-                    "key": "what",
-                    "filterId": "fd578685-51e2-4793-b9db-94111ba9cc0c",
-                    "group": "All",
-                    "filterValue": true
+                    "filterId": "4f5cead2-2f8c-4faf-9e09-987d1f8a02c8",
+                    "group": "All"
                   }
                 ],
-                "stringKeyValues": [],
+                "integerKeyValues": [
+                  {
+                    "index": 1,
+                    "filterId": "dc4deb7a-0413-456b-b1b0-ff7ebed5bffc",
+                    "group": "All",
+                    "filterValue": 121
+                  }
+                ],
+                "stringKeyValues": [
+                  {
+                    "index": 2,
+                    "filterId": "d011d554-76a8-4fb8-bc52-90f1bb155928",
+                    "group": "All"
+                  }
+                ],
+                "floatKeyValues": [
+                  {
+                    "index": 3,
+                    "filterId": "4ce58193-7736-40b2-ac54-249066bd6bc6",
+                    "group": "All",
+                    "filterValue": 0.1
+                  }
+                ],
                 "encounterInteractions": []
               },
               "entryId": "e29a1465-7737-47b8-811a-58909909f6fe"
@@ -76,7 +98,8 @@
                 },
                 "enums": {
                   "severity": 10
-                }
+                },
+                "floats": {}
               },
               "filtering": {
                 "showValues": true,
@@ -89,7 +112,9 @@
                     "group": "All"
                   }
                 ],
+                "integerKeyValues": [],
                 "stringKeyValues": [],
+                "floatKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "c910e267-2b4a-4fe0-8703-9ed945785c44"

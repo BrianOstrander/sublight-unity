@@ -92,8 +92,14 @@ namespace LunraGames.SubLight
 				case ValueFilterTypes.KeyValueBoolean:
 					OnHandle(current as BooleanKeyValueFilterEntryModel, filterDone);
 					break;
+				case ValueFilterTypes.KeyValueInteger:
+					OnHandle(current as IntegerKeyValueFilterEntryModel, filterDone);
+					break;
 				case ValueFilterTypes.KeyValueString:
 					OnHandle(current as StringKeyValueFilterEntryModel, filterDone);
+					break;
+				case ValueFilterTypes.KeyValueFloat:
+					OnHandle(current as FloatKeyValueFilterEntryModel, filterDone);
 					break;
 				case ValueFilterTypes.EncounterInteraction:
 					OnHandle(current as EncounterInteractionFilterEntryModel, model, encounterModel, filterDone);
@@ -159,6 +165,47 @@ namespace LunraGames.SubLight
 			);
 		}
 
+		void OnHandle(IntegerKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
+		{
+			Action<KeyValueResult<int>> onGet = result =>
+			{
+				var passed = false;
+				switch (filter.Operation.Value)
+				{
+					case IntegerFilterOperations.Equals:
+						passed = result.Value == filter.FilterValue.Value;
+						break;
+					case IntegerFilterOperations.NotEquals:
+						passed = result.Value != filter.FilterValue.Value;
+						break;
+					case IntegerFilterOperations.LessThanOrEquals:
+						passed = result.Value <= filter.FilterValue.Value;
+						break;
+					case IntegerFilterOperations.GreaterThanOrEquals:
+						passed = result.Value >= filter.FilterValue.Value;
+						break;
+					case IntegerFilterOperations.LessThan:
+						passed = result.Value < filter.FilterValue.Value;
+						break;
+					case IntegerFilterOperations.GreaterThan:
+						passed = result.Value > filter.FilterValue.Value;
+						break;
+					default:
+						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+						break;
+				}
+				done(filter.Group.Value, passed);
+			};
+
+			callbacks.KeyValueRequest(
+				KeyValueRequest.Get(
+					filter.Target.Value,
+					filter.Key.Value,
+					onGet
+				)
+			);
+		}
+
 		void OnHandle(StringKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
 			callbacks.KeyValueRequest(
@@ -186,6 +233,47 @@ namespace LunraGames.SubLight
 						}
 						done(filter.Group.Value, passed);
 					}
+				)
+			);
+		}
+
+		void OnHandle(FloatKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
+		{
+			Action<KeyValueResult<float>> onGet = result =>
+			{
+				var passed = false;
+				switch (filter.Operation.Value)
+				{
+					case FloatFilterOperations.Equals:
+						passed = Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						break;
+					case FloatFilterOperations.NotEquals:
+						passed = !Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						break;
+					case FloatFilterOperations.LessThanOrEquals:
+						passed = result.Value < filter.FilterValue.Value || Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						break;
+					case FloatFilterOperations.GreaterThanOrEquals:
+						passed = result.Value > filter.FilterValue.Value || Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						break;
+					case FloatFilterOperations.LessThan:
+						passed = result.Value < filter.FilterValue.Value;
+						break;
+					case FloatFilterOperations.GreaterThan:
+						passed = result.Value > filter.FilterValue.Value;
+						break;
+					default:
+						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+						break;
+				}
+				done(filter.Group.Value, passed);
+			};
+
+			callbacks.KeyValueRequest(
+				KeyValueRequest.Get(
+					filter.Target.Value,
+					filter.Key.Value,
+					onGet
 				)
 			);
 		}

@@ -35,6 +35,26 @@ namespace LunraGames.SubLight
 			{
 				switch (operation.Operation.Value)
 				{
+					case KeyValueOperations.SetBoolean:
+						Configuration.Callbacks.KeyValueRequest(
+							KeyValueRequest.Set(
+								operation.Target.Value,
+								operation.Key.Value,
+								operation.BooleanValue.Value,
+								result => OnDone(result, total, ref progress, linearDone)
+							)
+						);
+						break;
+					case KeyValueOperations.SetInteger:
+						Configuration.Callbacks.KeyValueRequest(
+							KeyValueRequest.Set(
+								operation.Target.Value,
+								operation.Key.Value,
+								operation.IntegerValue.Value,
+								result => OnDone(result, total, ref progress, linearDone)
+							)
+						);
+						break;
 					case KeyValueOperations.SetString:
 						Configuration.Callbacks.KeyValueRequest(
 							KeyValueRequest.Set(
@@ -45,12 +65,12 @@ namespace LunraGames.SubLight
 							)
 						);
 						break;
-					case KeyValueOperations.SetBoolean:
+					case KeyValueOperations.SetFloat:
 						Configuration.Callbacks.KeyValueRequest(
 							KeyValueRequest.Set(
 								operation.Target.Value,
 								operation.Key.Value,
-								operation.BoolValue.Value,
+								operation.FloatValue.Value,
 								result => OnDone(result, total, ref progress, linearDone)
 							)
 						);

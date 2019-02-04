@@ -10,8 +10,10 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] KeyValueTargets target;
 		[JsonProperty] string key;
 
+		[JsonProperty] bool booleanValue;
+		[JsonProperty] int integerValue;
 		[JsonProperty] string stringValue;
-		[JsonProperty] bool boolValue;
+		[JsonProperty] float floatValue;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<KeyValueOperations> Operation;
@@ -21,9 +23,13 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<string> Key;
 
 		[JsonIgnore]
+		public readonly ListenerProperty<bool> BooleanValue;
+		[JsonIgnore]
+		public readonly ListenerProperty<int> IntegerValue;
+		[JsonIgnore]
 		public readonly ListenerProperty<string> StringValue;
 		[JsonIgnore]
-		public readonly ListenerProperty<bool> BoolValue;
+		public readonly ListenerProperty<float> FloatValue;
 
 		public KeyValueEntryModel()
 		{
@@ -31,8 +37,10 @@ namespace LunraGames.SubLight.Models
 			Target = new ListenerProperty<KeyValueTargets>(value => target = value, () => target);
 			Key = new ListenerProperty<string>(value => key = value, () => key);
 
+			BooleanValue = new ListenerProperty<bool>(value => booleanValue = value, () => booleanValue);
+			IntegerValue = new ListenerProperty<int>(value => integerValue = value, () => integerValue);
 			StringValue = new ListenerProperty<string>(value => stringValue = value, () => stringValue);
-			BoolValue = new ListenerProperty<bool>(value => boolValue = value, () => boolValue);
+			FloatValue = new ListenerProperty<float>(value => floatValue = value, () => floatValue);
 		}
 	}
 }

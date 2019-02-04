@@ -25,12 +25,24 @@ namespace LunraGames.SubLight
 				{
 					var noFilters = !model.HasFilters;
 					if (noFilters) EditorGUILayoutExtensions.PushColor(Color.gray);
-					EditorGUIExtensions.PauseChangeCheck();
 					{
-						model.ShowValues.Value = EditorGUILayout.Foldout(model.ShowValues.Value, content);
+						EditorGUIExtensions.PauseChangeCheck();
+						{
+							model.ShowValues.Value = EditorGUILayout.Foldout(model.ShowValues.Value, content);
+						}
+						EditorGUIExtensions.UnPauseChangeCheck();
 					}
-					EditorGUIExtensions.UnPauseChangeCheck();
 					if (noFilters) EditorGUILayoutExtensions.PopColor();
+
+					if (model.ShowValues.Value)
+					{
+						//GUILayout.FlexibleSpace();
+						EditorGUILayoutExtensions.PushColor(Color.gray);
+						{
+							GUILayout.Label("Hold 'alt' to delete filters.", GUILayout.ExpandWidth(false));
+						}
+						EditorGUILayoutExtensions.PopColor();
+					}
 
 					GUILayout.Label("Default", GUILayout.ExpandWidth(false));
 					model.FalseByDefault.Value = !EditorGUILayoutExtensions.ToggleButtonValue(!model.FalseByDefault.Value, style: EditorStyles.miniButton);
@@ -77,8 +89,14 @@ namespace LunraGames.SubLight
 					case ValueFilterTypes.KeyValueBoolean:
 						Create<BooleanKeyValueFilterEntryModel>(model, filterCount, group);
 						break;
+					case ValueFilterTypes.KeyValueInteger:
+						Create<IntegerKeyValueFilterEntryModel>(model, filterCount, group);
+						break;
 					case ValueFilterTypes.KeyValueString:
 						Create<StringKeyValueFilterEntryModel>(model, filterCount, group);
+						break;
+					case ValueFilterTypes.KeyValueFloat:
+						Create<FloatKeyValueFilterEntryModel>(model, filterCount, group);
 						break;
 					case ValueFilterTypes.EncounterInteraction:
 						Create<EncounterInteractionFilterEntryModel>(model, filterCount, group);
@@ -108,8 +126,14 @@ namespace LunraGames.SubLight
 								case ValueFilterTypes.KeyValueBoolean:
 									OnHandle(filter as BooleanKeyValueFilterEntryModel, ref deleted);
 									break;
+								case ValueFilterTypes.KeyValueInteger:
+									OnHandle(filter as IntegerKeyValueFilterEntryModel, ref deleted);
+									break;
 								case ValueFilterTypes.KeyValueString:
 									OnHandle(filter as StringKeyValueFilterEntryModel, ref deleted);
+									break;
+								case ValueFilterTypes.KeyValueFloat:
+									OnHandle(filter as FloatKeyValueFilterEntryModel, ref deleted);
 									break;
 								case ValueFilterTypes.EncounterInteraction:
 									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
@@ -141,41 +165,88 @@ namespace LunraGames.SubLight
 		{
 			GUILayout.BeginHorizontal();
 
-			model.FilterIgnore = EditorGUILayout.Toggle(model.FilterIgnore, GUILayout.Width(14f));
 			if (model.FilterIgnore) EditorGUILayoutExtensions.PushColor(Color.gray);
 
+			GUILayout.Button(
+				new GUIContent(string.Empty, ObjectNames.NicifyVariableName(model.FilterType.ToString())),
+				SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIcon,
+				GUILayout.ExpandWidth(false)
+			);
 		}
 
 		static void OnOneLineHandleEnd(IValueFilterEntryModel model, ref string deleted)
 		{
-			if (EditorGUILayoutExtensions.XButton()) deleted = model.FilterIdValue;
 			if (model.FilterIgnore) EditorGUILayoutExtensions.PopColor();
+
+			model.FilterIgnore = EditorGUILayout.Toggle(model.FilterIgnore, GUILayout.Width(14f));
+
+			if (Event.current.alt)
+			{
+				if (EditorGUILayoutExtensions.XButton(true)) deleted = model.FilterIdValue;
+			}
 
 			GUILayout.EndHorizontal();
 		}
 
-		static void OnHandleKeyValueBegin(IKeyValueFilterEntryModel model)
+		static void OnHandleKeyValueBegin(IKeyValueFilterEntryModel model, string prefix = null)
 		{
 			OnOneLineHandleBegin(model);
 
-			model.FilterKeyTarget = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Target -", model.FilterKeyTarget, guiOptions: GUILayout.ExpandWidth(false));
-			model.FilterKey = EditorGUILayout.TextField(model.FilterKey);
+			Color? targetColor = null;
+
+			if (model.FilterKeyTarget == KeyValueTargets.Unknown) targetColor = Color.red;
+
+			if (targetColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(targetColor.Value.NewS(0.25f), targetColor.Value.NewS(0.65f));
+			{
+				model.FilterKeyTarget = EditorGUILayoutExtensions.HelpfulEnumPopupValue(
+					"- Select Target -",
+					model.FilterKeyTarget,
+					guiOptions: GUILayout.Width(100f)
+				);
+			}
+			if (targetColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+
+			Color? keyColor = null;
+
+			if (string.IsNullOrEmpty(model.FilterKey)) keyColor = Color.red;
+
+			if (keyColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(keyColor.Value.NewS(0.25f), keyColor.Value.NewS(0.65f));
+			{
+				model.FilterKey = EditorGUILayout.TextField(model.FilterKey);
+			}
+			if (keyColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
 		}
 
 		static void OnHandleKeyValueEnd(IKeyValueFilterEntryModel model, ref string deleted)
 		{
 			OnOneLineHandleEnd(model, ref deleted);
-
-			if (model.FilterKeyTarget == KeyValueTargets.Unknown) EditorGUILayout.HelpBox("A target must be specified.", MessageType.Error);
-			if (string.IsNullOrEmpty(model.FilterKey)) EditorGUILayout.HelpBox("A key must be specified.", MessageType.Error);
 		}
 
 		static void OnHandle(BooleanKeyValueFilterEntryModel model, ref string deleted)
 		{
 			OnHandleKeyValueBegin(model);
 			{
-				GUILayout.Label("Equals");
-				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButtonValue(model.FilterValue.Value);
+				GUILayout.Label("Equals", GUILayout.ExpandWidth(false));
+				model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButtonValue(model.FilterValue.Value, style: EditorStyles.miniButton);
+			}
+			OnHandleKeyValueEnd(model, ref deleted);
+		}
+
+		static void OnHandle(IntegerKeyValueFilterEntryModel model, ref string deleted)
+		{
+			OnHandleKeyValueBegin(model);
+			{
+				Color? operatorColor = null;
+
+				if (model.Operation.Value == IntegerFilterOperations.Unknown) operatorColor = Color.red;
+
+				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
+				{
+					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value, guiOptions: GUILayout.ExpandWidth(false));
+				}
+				if (operatorColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+
+				model.FilterValue.Value = EditorGUILayout.IntField(model.FilterValue.Value);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
@@ -184,7 +255,16 @@ namespace LunraGames.SubLight
 		{
 			OnHandleKeyValueBegin(model);
 			{
-				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value, guiOptions: GUILayout.ExpandWidth(false));
+				Color? operatorColor = null;
+
+				if (model.Operation.Value == StringFilterOperations.Unknown) operatorColor = Color.red;
+
+				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
+				{
+					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value, guiOptions: GUILayout.ExpandWidth(false));
+				}
+				if (operatorColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+
 				if (model.Operation.Value == StringFilterOperations.Equals)
 				{
 					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
@@ -193,19 +273,57 @@ namespace LunraGames.SubLight
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
 
+		static void OnHandle(FloatKeyValueFilterEntryModel model, ref string deleted)
+		{
+			OnHandleKeyValueBegin(model);
+			{
+				Color? operatorColor = null;
+
+				if (model.Operation.Value == FloatFilterOperations.Unknown) operatorColor = Color.red;
+
+				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
+				{
+					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value, guiOptions: GUILayout.ExpandWidth(false));
+				}
+				if (operatorColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+
+				model.FilterValue.Value = EditorGUILayout.FloatField(model.FilterValue.Value);
+			}
+			OnHandleKeyValueEnd(model, ref deleted);
+		}
+
 		static void OnHandle(EncounterInteractionFilterEntryModel model, ref string deleted)
 		{
 			OnOneLineHandleBegin(model);
 			{
-				GUILayout.Label(new GUIContent("EncounterId", "The Id of the encounter for this filter."), GUILayout.ExpandWidth(false));
+				GUILayout.Label(new GUIContent("Encounter Id", "The Id of the encounter for this filter."), GUILayout.ExpandWidth(false));
+
 				model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
-				GUILayout.Label("Needs To Be");
-				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value);
+
+				if (string.IsNullOrEmpty(model.FilterValue.Value))
+				{
+					const float CurrentLabelOffset = 53f;
+					GUILayout.Space(-CurrentLabelOffset);
+					EditorGUILayoutExtensions.PushColor(Color.gray);
+					{
+						GUILayout.Label("Current", GUILayout.Width(CurrentLabelOffset));
+					}
+					EditorGUILayoutExtensions.PopColor();
+				}
+
+				GUILayout.Label("Needs To Be", GUILayout.ExpandWidth(false));
+
+				Color? operatorColor = null;
+
+				if (model.Operation.Value == EncounterInteractionFilterOperations.Unknown) operatorColor = Color.red;
+
+				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
+				{
+					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select Operation -", model.Operation.Value);
+				}
+				EditorGUILayoutExtensions.PopColorCombined();
 			}
 			OnOneLineHandleEnd(model, ref deleted);
-
-			if (string.IsNullOrEmpty(model.FilterValue.Value)) EditorGUILayout.HelpBox("An empty EncounterId field will test for the current encounter.", MessageType.Info);
-			if (model.Operation.Value == EncounterInteractionFilterOperations.Unknown) EditorGUILayout.HelpBox("An operation must be specified.", MessageType.Error);
 		}
 		#endregion
 	}

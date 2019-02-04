@@ -623,8 +623,10 @@ namespace LunraGames.SubLight
 
 			switch (entry.Operation.Value)
 			{
+				case KeyValueOperations.SetBoolean: entry.BooleanValue.Value = EditorGUILayout.Toggle("Value", entry.BooleanValue.Value); break;
+				case KeyValueOperations.SetInteger: entry.IntegerValue.Value = EditorGUILayout.IntField("Value", entry.IntegerValue.Value); break;
 				case KeyValueOperations.SetString: entry.StringValue.Value = EditorGUILayout.TextField("Value", entry.StringValue.Value); break;
-				case KeyValueOperations.SetBoolean: entry.BoolValue.Value = EditorGUILayout.Toggle("Value", entry.BoolValue.Value); break;
+				case KeyValueOperations.SetFloat: entry.FloatValue.Value = EditorGUILayout.FloatField("Value", entry.FloatValue.Value); break;
 				default: EditorGUILayout.HelpBox("Unrecognized Operation: " + entry.Operation.Value, MessageType.Error); break;
 			}
 		}
