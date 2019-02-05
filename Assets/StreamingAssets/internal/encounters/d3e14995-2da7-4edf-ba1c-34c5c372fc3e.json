@@ -39,6 +39,50 @@
               },
               "entryId": "0f926eaf-573d-4a00-a58f-66f19c4d3db1"
             }
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": null
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "filterId": "10b6bfea-b98f-4f9a-823d-b492c1a9cbb3",
+                    "group": "All"
+                  },
+                  {
+                    "target": "Game",
+                    "key": "distance_from_begin",
+                    "index": 2,
+                    "filterId": "98e5eda2-0f86-4b92-8912-c1e4703db4f1",
+                    "group": "All"
+                  }
+                ],
+                "encounterInteractions": [
+                  {
+                    "index": 2,
+                    "filterId": "15f06457-45d0-4eae-9b17-103c02b8128a",
+                    "group": "All"
+                  }
+                ]
+              },
+              "entryId": "3201df69-4263-4e1a-8294-cd6edd3d2ba1"
+            },
+            "index": 1
           }
         ],
         "beginning": true,

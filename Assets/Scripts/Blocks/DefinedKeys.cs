@@ -1,9 +1,18 @@
 ﻿using System;
-//using System.Collections.Generic;
 
 namespace LunraGames.SubLight
 {
-	public abstract class DefinedKeyTyped<T>
+	public interface IDefinedKey
+	{
+		string Key { get; }
+		KeyValueTargets Target { get; }
+		KeyValueTypes ValueType { get; }
+		string Notes { get; }
+		bool CanRead { get; }
+		bool CanWrite { get; }
+	}
+
+	public abstract class DefinedKeyTyped<T> : IDefinedKey
 	{
 		static ArgumentException GetValueTypeExecption(Type type, KeyValueTypes valueType)
 		{

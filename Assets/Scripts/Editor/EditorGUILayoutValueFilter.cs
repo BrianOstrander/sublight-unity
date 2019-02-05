@@ -12,6 +12,26 @@ namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutValueFilter
 	{
+		static readonly ValueFilterTypes[] LinkableValueFilterTypes = {
+			ValueFilterTypes.KeyValueBoolean,
+			ValueFilterTypes.KeyValueInteger,
+			ValueFilterTypes.KeyValueString,
+			ValueFilterTypes.KeyValueFloat
+		};
+
+		static EncounterKeys Encounter = new EncounterKeys();
+		static GameKeys Game = new GameKeys();
+		static GlobalKeys Global = new GlobalKeys();
+		static PreferencesKeys Preferences = new PreferencesKeys();
+
+		struct DefinedKeyEntry
+		{
+			public bool Current;
+			public KeyValueTargets Target;
+			public string Key;
+			public string Notes;
+		}
+
 		public static void Field(string name, ValueFilterModel model, Color? color = null)
 		{
 			Field(new GUIContent(name), model, color);
@@ -167,11 +187,102 @@ namespace LunraGames.SubLight
 
 			if (model.FilterIgnore) EditorGUILayoutExtensions.PushColor(Color.gray);
 
-			GUILayout.Button(
-				new GUIContent(string.Empty, ObjectNames.NicifyVariableName(model.FilterType.ToString())),
-				SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIcon,
-				GUILayout.ExpandWidth(false)
-			);
+			Action onClick = null;
+			var tooltip = ObjectNames.NicifyVariableName(model.FilterType.ToString());
+			var style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIcon;
+
+			if (LinkableValueFilterTypes.Contains(model.FilterType))
+			{
+				var notes = string.Empty;
+				var options = new DefinedKeyEntry[0];
+
+				OnOneLineHandleBeginLinked(
+					model as IKeyValueFilterEntryModel,
+					out style,
+					out notes,
+					out options
+				);
+
+				tooltip = tooltip + " - Click to link to a defined key value." + (string.IsNullOrEmpty(notes) ? string.Empty : "\n" + notes);
+
+				if (options.Any())
+				{
+					onClick = () => Debug.Log(options.Length+" TODO OPEN A WINDOW!!!");
+				}
+			}
+
+			if (onClick == null) EditorGUIExtensions.PauseChangeCheck();
+			{
+				if (GUILayout.Button(
+					new GUIContent(string.Empty, tooltip),
+					style,
+					GUILayout.ExpandWidth(false)
+				) && onClick != null) onClick();
+			}
+			if (onClick == null) EditorGUIExtensions.UnPauseChangeCheck();
+		}
+
+		static void OnOneLineHandleBeginLinked(
+			IKeyValueFilterEntryModel model,
+			out GUIStyle style,
+			out string help,
+			out DefinedKeyEntry[] options
+		)
+		{
+			style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconNotLinked;
+			help = string.Empty;
+			options = new DefinedKeyEntry[0];
+
+			if (model.FilterKeyTarget == KeyValueTargets.Unknown) return;
+			if (string.IsNullOrEmpty(model.FilterKey)) return;
+
+			DefinedKeys definitions = null;
+
+			switch (model.FilterKeyTarget)
+			{
+				case KeyValueTargets.Encounter: definitions = Encounter; break;
+				case KeyValueTargets.Game: definitions = Game; break;
+				case KeyValueTargets.Global: definitions = Global; break;
+				case KeyValueTargets.Preferences: definitions = Preferences; break;
+				default:
+					Debug.LogError("Unrecognized KeyValueTarget: " + model.FilterKeyTarget);
+					return;
+			}
+
+			IDefinedKey[] keys = null;
+
+			switch (model.FilterType)
+			{
+				case ValueFilterTypes.KeyValueBoolean: keys = definitions.Booleans; break;
+				case ValueFilterTypes.KeyValueInteger: keys = definitions.Integers; break;
+				case ValueFilterTypes.KeyValueString: keys = definitions.Strings; break;
+				case ValueFilterTypes.KeyValueFloat: keys = definitions.Floats; break;
+				default:
+					Debug.LogError("Unrecognized ValueFilterType: " + model.FilterType);
+					return;
+			}
+
+			if (keys == null)
+			{
+				Debug.LogError("Keys should not be null");
+				return;
+			}
+
+			var linkedKey = keys.FirstOrDefault(k => k.Key == model.FilterKey);
+
+			options = keys.Select(
+				k => new DefinedKeyEntry
+				{
+					Current = linkedKey != null && linkedKey.Key == k.Key,
+					Key = k.Key,
+					Notes = k.Notes
+				}
+			).ToArray();
+
+			if (linkedKey == null) return;
+
+			style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconLinked;
+			help = linkedKey.Notes ?? string.Empty;
 		}
 
 		static void OnOneLineHandleEnd(IValueFilterEntryModel model, ref string deleted)
