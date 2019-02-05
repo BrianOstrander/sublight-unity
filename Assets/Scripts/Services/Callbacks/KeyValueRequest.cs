@@ -73,42 +73,42 @@ namespace LunraGames.SubLight
 		}
 
 		#region Defined Key Get & Set
-		public static KeyValueRequest Set(DefinedKeys.Boolean definedKey, bool value, Action<KeyValueResult<bool>> done = null)
+		public static KeyValueRequest SetDefined(DefinedKeys.Boolean definedKey, bool value, Action<KeyValueResult<bool>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Boolean, booleanValue: value, booleanDone: done);
 		}
 
-		public static KeyValueRequest Set(DefinedKeys.Integer definedKey, int value, Action<KeyValueResult<int>> done = null)
+		public static KeyValueRequest SetDefined(DefinedKeys.Integer definedKey, int value, Action<KeyValueResult<int>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Integer, integerValue: value, integerDone: done);
 		}
 
-		public static KeyValueRequest Set(DefinedKeys.String definedKey, string value, Action<KeyValueResult<string>> done = null)
+		public static KeyValueRequest SetDefined(DefinedKeys.String definedKey, string value, Action<KeyValueResult<string>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.String, stringValue: value, stringDone: done);
 		}
 
-		public static KeyValueRequest Set(DefinedKeys.Float definedKey, float value, Action<KeyValueResult<float>> done = null)
+		public static KeyValueRequest SetDefined(DefinedKeys.Float definedKey, float value, Action<KeyValueResult<float>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Float, floatValue: value, floatDone: done);
 		}
 
-		public static KeyValueRequest Get(DefinedKeys.Boolean definedKey, Action<KeyValueResult<bool>> done)
+		public static KeyValueRequest GetDefined(DefinedKeys.Boolean definedKey, Action<KeyValueResult<bool>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Boolean, booleanDone: done);
 		}
 
-		public static KeyValueRequest Get(DefinedKeys.Integer definedKey, Action<KeyValueResult<int>> done)
+		public static KeyValueRequest GetDefined(DefinedKeys.Integer definedKey, Action<KeyValueResult<int>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Integer, integerDone: done);
 		}
 
-		public static KeyValueRequest Get(DefinedKeys.String definedKey, Action<KeyValueResult<string>> done)
+		public static KeyValueRequest GetDefined(DefinedKeys.String definedKey, Action<KeyValueResult<string>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.String, stringDone: done);
 		}
 
-		public static KeyValueRequest Get(DefinedKeys.Float definedKey, Action<KeyValueResult<float>> done)
+		public static KeyValueRequest GetDefined(DefinedKeys.Float definedKey, Action<KeyValueResult<float>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Float, floatDone: done);
 		}
@@ -151,6 +151,48 @@ namespace LunraGames.SubLight
 		}
 
 		public static KeyValueRequest Get(KeyValueTargets target, string key, Action<KeyValueResult<float>> done)
+		{
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.Float, floatDone: done);
+		}
+		#endregion
+
+		#region String Key Get & Set Explicit
+		public static KeyValueRequest SetBoolean(KeyValueTargets target, string key, bool value, Action<KeyValueResult<bool>> done = null)
+		{
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.Boolean, booleanValue: value, booleanDone: done);
+		}
+
+		public static KeyValueRequest SetInteger(KeyValueTargets target, string key, int value, Action<KeyValueResult<int>> done = null)
+		{
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.Integer, integerValue: value, integerDone: done);
+		}
+
+		public static KeyValueRequest SetString(KeyValueTargets target, string key, string value, Action<KeyValueResult<string>> done = null)
+		{
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.String, stringValue: value, stringDone: done);
+		}
+
+		public static KeyValueRequest SetFloat(KeyValueTargets target, string key, float value, Action<KeyValueResult<float>> done = null)
+		{
+			return new KeyValueRequest(target, key, States.SetRequest, KeyValueTypes.Float, floatValue: value, floatDone: done);
+		}
+
+		public static KeyValueRequest GetBoolean(KeyValueTargets target, string key, Action<KeyValueResult<bool>> done)
+		{
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.Boolean, booleanDone: done);
+		}
+
+		public static KeyValueRequest GetInteger(KeyValueTargets target, string key, Action<KeyValueResult<int>> done)
+		{
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.Integer, integerDone: done);
+		}
+
+		public static KeyValueRequest GetString(KeyValueTargets target, string key, Action<KeyValueResult<string>> done)
+		{
+			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.String, stringDone: done);
+		}
+
+		public static KeyValueRequest GetFloat(KeyValueTargets target, string key, Action<KeyValueResult<float>> done)
 		{
 			return new KeyValueRequest(target, key, States.GetRequest, KeyValueTypes.Float, floatDone: done);
 		}

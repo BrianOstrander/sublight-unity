@@ -13,6 +13,8 @@ namespace LunraGames.SubLight
 			this.stateMachine = stateMachine;
 		}
 
+		public string UniqueSynchronizedId { get { return Guid.NewGuid().ToString(); } }
+
 		#region StateMachine Helper Methods
 		public void Push(
 			Action action,

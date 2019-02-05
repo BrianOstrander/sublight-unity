@@ -22,7 +22,7 @@ namespace LunraGames.SubLight
 			keyValueService.RegisterGet(target, OnGetBoolean);
 			keyValueService.RegisterGet(target, OnGetInteger);
 			keyValueService.RegisterGet(target, OnGetString);
-			keyValueService.RegisterGet(target, OnSetFloat);
+			keyValueService.RegisterGet(target, OnGetFloat);
 
 			keyValueService.RegisterSet(target, OnSetBoolean);
 			keyValueService.RegisterSet(target, OnSetInteger);

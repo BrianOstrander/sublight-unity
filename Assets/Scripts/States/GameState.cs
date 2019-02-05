@@ -131,6 +131,9 @@ namespace LunraGames.SubLight
 					case WaypointIds.Ship:
 						waypoint.Name.Value = "Ark"; 
 						break;
+					case WaypointIds.BeginSystem:
+						waypoint.Name.Value = "Origin";
+						break;
 					case WaypointIds.EndSystem:
 						waypoint.Name.Value = "Sagittarius A*";
 						break;
@@ -171,6 +174,8 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
 
 			Payload.Game.CelestialSystemState.Changed += OnCelestialSystemState;
+
+			Payload.Game.TransitState.Changed += OnTransitState;
 
 			done();
 		}
@@ -227,7 +232,7 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			OnTransitComplete();
+			OnTransitComplete(Payload.Game.TransitState.Value);
 		}
 		#endregion
 
@@ -247,6 +252,8 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
 
 			Payload.Game.CelestialSystemState.Changed -= OnCelestialSystemState;
+
+			Payload.Game.TransitState.Changed -= OnTransitState;
 
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
 			{
@@ -469,7 +476,104 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnTransitComplete()
+		void OnTransitState(TransitState transitState)
+		{
+			switch(transitState.State)
+			{
+				case TransitState.States.Complete: OnTransitComplete(transitState); break;
+			}
+		}
+
+		void OnTransitComplete(TransitState transitState)
+		{
+			var synchronizedId = SM.UniqueSynchronizedId;
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.DistanceFromBegin,
+							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateDistanceFromBegin",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.DistanceToEnd,
+							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateDistanceFromEnd",
+				synchronizedId
+			);
+
+			var transitDistance = UniversePosition.Distance(transitState.BeginSystem.Position.Value, transitState.EndSystem.Position.Value);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.GetDefined(
+							App.KeyValues.Game.DistanceTraveled,
+							distanceTraveled =>
+							{
+								App.Callbacks.KeyValueRequest(
+									KeyValueRequest.SetDefined(
+										App.KeyValues.Game.DistanceTraveled,
+										distanceTraveled.Value + transitDistance,
+										setDone => doneBlocking()
+									)
+								);
+							}
+						)
+					);
+				},
+				"UpdateDistanceTraveled",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.GetDefined(
+							App.KeyValues.Game.FurthestTransit,
+							furthestTransit =>
+							{
+								if (furthestTransit.Value < transitDistance)
+								{
+									App.Callbacks.KeyValueRequest(
+										KeyValueRequest.SetDefined(
+											App.KeyValues.Game.FurthestTransit,
+											transitDistance,
+											setDone => doneBlocking()
+										)
+									);
+								}
+								else doneBlocking();
+							}
+						)
+					);
+				},
+				"UpdateFurthestTransit",
+				synchronizedId
+			);
+
+			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
+		}
+
+		void OnTransitCompleteCheckForEncounters()
 		{
 			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
 

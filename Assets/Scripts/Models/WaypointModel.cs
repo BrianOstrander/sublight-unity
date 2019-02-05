@@ -76,6 +76,9 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Priority;
+		/// <summary>
+		/// The distance in universe units.
+		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> Distance;
 		[JsonIgnore]

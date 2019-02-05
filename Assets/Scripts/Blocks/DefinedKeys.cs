@@ -14,12 +14,24 @@ namespace LunraGames.SubLight
 		public KeyValueTargets Target { get; private set; }
 		public KeyValueTypes ValueType { get; private set; }
 		public string Notes { get; private set; }
+		/// <summary>
+		/// If <see langword="true"/>, encounters can read this key value.
+		/// </summary>
+		/// <value><c>true</c> if can read; otherwise, <c>false</c>.</value>
+		public bool CanRead { get; private set; }
+		/// <summary>
+		/// If <see langword="true"/>, encounters can write to this key value.
+		/// </summary>
+		/// <value><c>true</c> if can write; otherwise, <c>false</c>.</value>
+		public bool CanWrite { get; private set; }
 
 		protected DefinedKeyTyped(
 			string key,
 			KeyValueTargets target,
 			KeyValueTypes valueType,
-			string notes
+			string notes,
+			bool canRead,
+			bool canWrite
 		)
 		{
 			var genericType = typeof(T);
@@ -32,6 +44,8 @@ namespace LunraGames.SubLight
 			Target = target;
 			ValueType = valueType;
 			Notes = notes;
+			CanRead = canRead;
+			CanWrite = canWrite;
 		}
 	}
 
@@ -39,22 +53,22 @@ namespace LunraGames.SubLight
 	{
 		public class Boolean : DefinedKeyTyped<bool>
 		{
-			public Boolean(string key, KeyValueTargets target, string notes) : base(key, target, KeyValueTypes.Boolean, notes) { }
+			public Boolean(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.Boolean, notes, canRead, canWrite) { }
 		}
 
 		public class Integer : DefinedKeyTyped<int>
 		{
-			public Integer(string key, KeyValueTargets target, string notes) : base(key, target, KeyValueTypes.Integer, notes) { }
+			public Integer(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.Integer, notes, canRead, canWrite) { }
 		}
 
 		public class String : DefinedKeyTyped<string>
 		{
-			public String(string key, KeyValueTargets target, string notes) : base(key, target, KeyValueTypes.String, notes) { }
+			public String(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.String, notes, canRead, canWrite) { }
 		}
 
 		public class Float : DefinedKeyTyped<float>
 		{
-			public Float(string key, KeyValueTargets target, string notes) : base(key, target, KeyValueTypes.Float, notes) { }
+			public Float(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.Float, notes, canRead, canWrite) { }
 		}
 
 		public KeyValueTargets Target { get; private set; }
@@ -72,37 +86,45 @@ namespace LunraGames.SubLight
 		protected Boolean Create(
 			ref Boolean instance,
 			string key,
-			string notes = null
+			string notes = null,
+			bool canRead = true,
+			bool canWrite = false
 		)
 		{
-			return instance = new Boolean(key, Target, notes);
+			return instance = new Boolean(key, Target, notes, canRead, canWrite);
 		}
 
 		protected Integer Create(
 			ref Integer instance,
 			string key,
-			string notes = null
+			string notes = null,
+			bool canRead = true,
+			bool canWrite = false
 		)
 		{
-			return instance = new Integer(key, Target, notes);
+			return instance = new Integer(key, Target, notes, canRead, canWrite);
 		}
 
 		protected String Create(
 			ref String instance,
 			string key,
-			string notes = null
+			string notes = null,
+			bool canRead = true,
+			bool canWrite = false
 		)
 		{
-			return instance = new String(key, Target, notes);
+			return instance = new String(key, Target, notes, canRead, canWrite);
 		}
 
 		protected Float Create(
 			ref Float instance,
 			string key,
-			string notes = null
+			string notes = null,
+			bool canRead = true,
+			bool canWrite = false
 		)
 		{
-			return instance = new Float(key, Target, notes);
+			return instance = new Float(key, Target, notes, canRead, canWrite);
 		}
 	}
 }

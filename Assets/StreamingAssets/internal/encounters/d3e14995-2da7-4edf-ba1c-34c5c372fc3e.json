@@ -11,35 +11,7 @@
     "encounterInteractions": []
   },
   "logs": {
-    "keyValueLogs": [
-      {
-        "entries": [
-          {
-            "entry": {
-              "operation": "SetBoolean",
-              "target": "Encounter",
-              "key": "huh",
-              "booleanValue": true,
-              "entryId": "ec864b7b-222c-4371-8fa2-fa846a55da1c"
-            }
-          },
-          {
-            "entry": {
-              "operation": "SetString",
-              "target": "Game",
-              "key": "yus",
-              "stringValue": "whaoenstuhaonsteuhanstoeuh",
-              "entryId": "c9be0a87-9efa-4b67-a76b-b302c30cdb61"
-            },
-            "index": 1
-          }
-        ],
-        "index": 1,
-        "beginning": true,
-        "logId": "1c61a1c6-51f4-427d-bee9-3cff1f502012",
-        "fallbackLogId": "e5745efc-3320-490f-ac8a-aa697796b382"
-      }
-    ],
+    "keyValueLogs": [],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
@@ -54,7 +26,7 @@
                 "integers": {},
                 "strings": {},
                 "enums": {
-                  "target": 10
+                  "target": 20
                 },
                 "floats": {}
               },
@@ -69,6 +41,7 @@
             }
           }
         ],
+        "beginning": true,
         "ending": true,
         "logId": "e5745efc-3320-490f-ac8a-aa697796b382"
       }
