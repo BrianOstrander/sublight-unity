@@ -49,7 +49,7 @@ namespace LunraGames.SubLight
 
 			game.FocusTransform.Value = FocusTransform.Default;
 
-			var initialTime = new DayTime((365 * 1057) + (30 * 2) + 5);
+			var initialTime = DayTime.Zero;
 			game.RelativeDayTime.Value = new RelativeDayTime(
 				initialTime,
 				initialTime

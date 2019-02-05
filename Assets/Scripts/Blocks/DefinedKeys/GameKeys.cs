@@ -16,6 +16,10 @@
 		public readonly Float DistanceToEnd;
 		public readonly Float DistanceTraveled;
 		public readonly Float FurthestTransit;
+
+		public readonly Float YearsElapsedGalactic;
+		public readonly Float YearsElapsedShip;
+		public readonly Float YearsElapsedDelta;
 		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
@@ -56,6 +60,22 @@
 					ref FurthestTransit,
 					"furthest_transit",
 					"The farthest distance, in universe units, ever traveled by the player in a single transit."
+				),
+
+				Create(
+					ref YearsElapsedGalactic,
+					"years_elapsed_galactic",
+					"Years elapsed in-game from the galactic reference point."
+				),
+				Create(
+					ref YearsElapsedShip,
+					"years_elapsed_ship",
+					"Years elapsed in-game from the ship reference point."
+				),
+				Create(
+					ref YearsElapsedDelta,
+					"years_elapsed_delta",
+					"The ship time subtracted from the galactic time. This value will always be greater than or equal to zero."
 				)
 			};
 		}

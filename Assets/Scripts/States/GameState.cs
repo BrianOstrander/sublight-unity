@@ -570,6 +570,51 @@ namespace LunraGames.SubLight
 				synchronizedId
 			);
 
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.YearsElapsedGalactic,
+							Payload.Game.RelativeDayTime.Value.GalacticTime.TotalYears,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateYearsElapsedGalactic",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.YearsElapsedShip,
+							Payload.Game.RelativeDayTime.Value.ShipTime.TotalYears,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateYearsElapsedShip",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.YearsElapsedDelta,
+							(Payload.Game.RelativeDayTime.Value.GalacticTime - Payload.Game.RelativeDayTime.Value.ShipTime).TotalYears,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateYearsElapsedDelta",
+				synchronizedId
+			);
+
 			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
 		}
 
