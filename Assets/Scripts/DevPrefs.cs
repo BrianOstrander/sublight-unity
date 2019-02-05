@@ -16,6 +16,17 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsBool AutoNewGame = new DevPrefsBool(ProjectConstants.PrefsPrefix + "AutoNewGame");
 		public static readonly DevPrefsBool WipeGameSavesOnStart = new DevPrefsBool(ProjectConstants.PrefsPrefix + "WipeGameSavesOnStart");
 
+		public static readonly DevPrefsString EncounterIdOverride = new DevPrefsString(ProjectConstants.PrefsPrefix + "EncounterIdOverride");
+		public static readonly DevPrefsBool EncounterIdOverrideIgnore = new DevPrefsBool(ProjectConstants.PrefsPrefix + "EncounterIdOverrideIgnore");
+		public static readonly DevPrefsEnum<EncounterTriggers> EncounterIdOverrideTrigger = new DevPrefsEnum<EncounterTriggers>(ProjectConstants.PrefsPrefix + "EncounterIdOverrideTrigger");
+		public static bool EncounterIdOverrideActive
+		{
+			get
+			{
+				return !string.IsNullOrEmpty(EncounterIdOverride.Value) && !EncounterIdOverrideIgnore.Value && EncounterIdOverrideTrigger.Value != EncounterTriggers.Unknown;
+			}
+		}
+
 		public static readonly DevPrefsInt GameSeed = new DevPrefsInt(ProjectConstants.PrefsPrefix + "GameSeed");
 		public static readonly DevPrefsInt GalaxySeed = new DevPrefsInt(ProjectConstants.PrefsPrefix + "GalaxySeed");
 		public static readonly DevPrefsString GalaxyId = new DevPrefsString(ProjectConstants.PrefsPrefix + "GalaxyId");

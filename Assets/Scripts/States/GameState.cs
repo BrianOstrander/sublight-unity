@@ -469,17 +469,43 @@ namespace LunraGames.SubLight
 		{
 			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
 
-			if (string.IsNullOrEmpty(encounterId))
+			if (!OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete))
 			{
 				Debug.Log("Check for non-specified encounters here!");
 				return;
 			}
-
-			OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete);
 		}
 
+		/// <summary>
+		/// This should be called whenever a trigger happens, even if the
+		/// encounterId is null or empty.
+		/// </summary>
+		/// <returns><c>true</c>, if an encounter was triggered, <c>false</c> otherwise.</returns>
+		/// <param name="encounterId">Encounter identifier.</param>
+		/// <param name="trigger">Trigger.</param>
 		bool OnCheckSpecifiedEncounter(string encounterId, EncounterTriggers trigger)
 		{
+			if (DevPrefs.EncounterIdOverrideActive && trigger == DevPrefs.EncounterIdOverrideTrigger.Value)
+			{
+				var encounterOverride = App.Encounters.GetEncounter(DevPrefs.EncounterIdOverride.Value);
+				if (encounterOverride == null) Debug.LogError("Unable to find specified override encounter: " + DevPrefs.EncounterIdOverride.Value + ", falling through to non-override encounters.");
+				else
+				{
+					App.ValueFilter.Filter(
+						valid =>
+						{
+							if (valid) Debug.Log("Override Encounter is valid, triggering");
+							else Debug.LogWarning("Override Encounter is not valid, triggering anyways");
+							OnTransitCompleteFiltered(true, encounterOverride);
+						},
+						encounterOverride.Filtering,
+						Payload.Game,
+						encounterOverride
+					);
+					return true;
+				}
+			}
+
 			if (string.IsNullOrEmpty(encounterId)) return false;
 			if (trigger == EncounterTriggers.Unknown)
 			{
