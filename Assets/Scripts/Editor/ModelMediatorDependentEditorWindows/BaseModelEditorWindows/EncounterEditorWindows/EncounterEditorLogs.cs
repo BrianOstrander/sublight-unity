@@ -975,6 +975,9 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.ToolbarSelection:
 					OnEncounterEventLogEdgeToolbarSelection(entry);
 					break;
+				case EncounterEvents.Types.DumpKeyValues:
+					OnEncounterEventLogEdgeDumpKeyValues(entry);
+					break;
 			}
 
 			EditorGUILayoutValueFilter.Field(
@@ -1027,6 +1030,20 @@ namespace LunraGames.SubLight
 					new GUIContent("Locking"),
 					"- No Change -",
 					entry.KeyValues.GetEnum<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
+				)
+			);
+		}
+
+		void OnEncounterEventLogEdgeDumpKeyValues(
+			EncounterEventEntryModel entry
+		)
+		{
+			entry.KeyValues.SetEnum(
+				EncounterEvents.DumpKeyValues.EnumKeys.Target,
+				EditorGUILayoutExtensions.HelpfulEnumPopup(
+					new GUIContent("Target"),
+					"All",
+					entry.KeyValues.GetEnum<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
 				)
 			);
 		}

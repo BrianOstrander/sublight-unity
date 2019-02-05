@@ -14,8 +14,8 @@ namespace LunraGames.SubLight
 		KeyValueService keyValues;
 		ILogService logger;
 
-		GlobalKeyValuesModel globalKeyValues;
-		PreferencesKeyValuesModel preferencesKeyValues;
+		public GlobalKeyValuesModel GlobalKeyValues { get; private set; }
+		public PreferencesKeyValuesModel PreferencesKeyValues { get; private set; }
 		bool currentlySaving;
 
 		public MetaKeyValueService(
@@ -142,10 +142,10 @@ namespace LunraGames.SubLight
 			switch (result.Model.SaveType)
 			{
 				case SaveTypes.GlobalKeyValues:
-					globalKeyValues = result.TypedModel as GlobalKeyValuesModel;
+					GlobalKeyValues = result.TypedModel as GlobalKeyValuesModel;
 					break;
 				case SaveTypes.PreferencesKeyValues:
-					preferencesKeyValues = result.TypedModel as PreferencesKeyValuesModel;
+					PreferencesKeyValues = result.TypedModel as PreferencesKeyValuesModel;
 					break;
 			}
 
@@ -167,8 +167,8 @@ namespace LunraGames.SubLight
 			callbacks.SaveRequest += OnSaveRequest;
 
 			// Keyvalue listeners are created here and just float about... never being unregistered... so keep that in mind I guess...
-			new KeyValueListener(KeyValueTargets.Global, globalKeyValues.KeyValues, keyValues).Register();
-			new KeyValueListener(KeyValueTargets.Preferences, preferencesKeyValues.KeyValues, keyValues).Register();
+			new KeyValueListener(KeyValueTargets.Global, GlobalKeyValues.KeyValues, keyValues).Register();
+			new KeyValueListener(KeyValueTargets.Preferences, PreferencesKeyValues.KeyValues, keyValues).Register();
 
 			done(result);
 		}
@@ -194,7 +194,7 @@ namespace LunraGames.SubLight
 			}
 			currentlySaving = true;
 
-			modelMediator.Save(globalKeyValues, OnTrySaveGlobals);
+			modelMediator.Save(GlobalKeyValues, OnTrySaveGlobals);
 		}
 
 		void OnTrySaveGlobals(SaveLoadRequest<GlobalKeyValuesModel> result)
@@ -204,7 +204,7 @@ namespace LunraGames.SubLight
 				Debug.LogError("Trying to save global key values failed with status " + result.Status + "\nError: " + result.Error);
 			}
 
-			modelMediator.Save(preferencesKeyValues, OnTrySavePreferences);
+			modelMediator.Save(PreferencesKeyValues, OnTrySavePreferences);
 		}
 
 		void OnTrySavePreferences(SaveLoadRequest<PreferencesKeyValuesModel> result)

@@ -158,6 +158,8 @@ namespace LunraGames.SubLight
 
 		void InitializeCallbacks(Action done)
 		{
+			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues).Register();
+
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 			App.Callbacks.SaveRequest += OnSaveRequest;
@@ -232,6 +234,8 @@ namespace LunraGames.SubLight
 		#region End
 		protected override void End()
 		{
+			Payload.KeyValueListener.UnRegister();
+
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 			App.Callbacks.SaveRequest -= OnSaveRequest;

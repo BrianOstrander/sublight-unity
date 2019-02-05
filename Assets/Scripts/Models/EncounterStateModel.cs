@@ -49,8 +49,12 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region KeyValues
+		[JsonIgnore]
 		public KeyValueListener KeyValueListener { get; private set; }
+
 		[JsonProperty] KeyValueListModel keyValues;
+		[JsonIgnore]
+		public KeyValueListModel KeyValues { get { return keyValues; } }
 
 		public KeyValueListener RegisterKeyValueListener(KeyValueService keyValueService)
 		{

@@ -1,0 +1,89 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "encounterId": "d0b380f6-dc63-406b-8f98-65e32fd9554d",
+  "name": "Overriding Start Encounter",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "operation": "SetBoolean",
+              "target": "Encounter",
+              "key": "huh",
+              "booleanValue": true,
+              "entryId": "ec864b7b-222c-4371-8fa2-fa846a55da1c"
+            }
+          },
+          {
+            "entry": {
+              "operation": "SetString",
+              "target": "Game",
+              "key": "yus",
+              "stringValue": "whaoenstuhaonsteuhanstoeuh",
+              "entryId": "c9be0a87-9efa-4b67-a76b-b302c30cdb61"
+            },
+            "index": 1
+          }
+        ],
+        "index": 1,
+        "beginning": true,
+        "logId": "1c61a1c6-51f4-427d-bee9-3cff1f502012",
+        "fallbackLogId": "e5745efc-3320-490f-ac8a-aa697796b382"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 10
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0f926eaf-573d-4a00-a58f-66f19c4d3db1"
+            }
+          }
+        ],
+        "ending": true,
+        "logId": "e5745efc-3320-490f-ac8a-aa697796b382"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "Overriding Start Encounter",
+  "metaKeyValues": {
+    "EncounterId": "d0b380f6-dc63-406b-8f98-65e32fd9554d"
+  },
+  "created": "2019-02-04T16:08:22.923203-08:00",
+  "modified": "2019-02-04T16:08:22.923203-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

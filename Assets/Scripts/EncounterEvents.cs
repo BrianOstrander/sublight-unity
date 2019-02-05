@@ -9,7 +9,8 @@ namespace LunraGames.SubLight
 			Unknown = 0,
 			Custom = 10,
 			Debug = 20,
-			ToolbarSelection = 30
+			ToolbarSelection = 30,
+			DumpKeyValues = 40
 		}
 
 		public static class Debug
@@ -47,6 +48,14 @@ namespace LunraGames.SubLight
 			{
 				public const string Selection = "Selection";
 				public const string LockState = "LockState";
+			}
+		}
+
+		public static class DumpKeyValues
+		{
+			public static class EnumKeys
+			{
+				public const string Target = "Target";
 			}
 		}
 	}
