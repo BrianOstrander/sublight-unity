@@ -46,6 +46,9 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.ToolbarSelection:
 								OnHandleEventToolbarSelection(payload, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.DumpKeyValues:
+								OnHandleEventDumpKeyValues(payload, entry, currOnEventDone);
+								break;
 							default:
 								Debug.LogError("Unrecognized Encounter EventType " + entry.EncounterEvent.Value + ". May cause halting issues.");
 								break;
@@ -127,6 +130,52 @@ namespace LunraGames.SubLight
 					ToolbarSelectionRequest.Sources.Encounter,
 					done
 				);
+			}
+
+			static void OnHandleEventDumpKeyValues(
+				GamePayload payload,
+				EncounterEventEntryModel entry,
+				Action done
+			)
+			{
+				var dumpTarget = entry.KeyValues.GetEnum(EncounterEvents.DumpKeyValues.EnumKeys.Target, KeyValueTargets.Unknown);
+
+				var values = EnumExtensions.GetValues(KeyValueTargets.Unknown);
+
+				switch(dumpTarget)
+				{
+					case KeyValueTargets.Unknown: break;
+					default: values = new KeyValueTargets[] { dumpTarget }; break;
+				}
+
+				var result = string.Empty;
+
+				foreach (var target in values)
+				{
+					switch (target)
+					{
+						case KeyValueTargets.Encounter:
+							result += payload.Game.EncounterState.KeyValues.Dump("Encounter");
+							break;
+						case KeyValueTargets.Game:
+							result += payload.Game.KeyValues.Dump("Game");
+							break;
+						case KeyValueTargets.Global:
+							result += App.MetaKeyValues.GlobalKeyValues.KeyValues.Dump("Global");
+							break;
+						case KeyValueTargets.Preferences:
+							result += App.MetaKeyValues.PreferencesKeyValues.KeyValues.Dump("Preferences");
+							break;
+						default:
+							Debug.LogError("Unrecognized Target: " + target);
+							break;
+					}
+					result += "\n---------------\n";
+				}
+
+				Debug.Log("Dumping Key Values...\n" + result);
+
+				done();
 			}
 		}
 	}

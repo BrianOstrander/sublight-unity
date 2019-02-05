@@ -96,6 +96,55 @@ namespace LunraGames.SubLight.Models
 			enums.Clear();
 			floats.Clear();
 		}
+
+		public string Dump(string prefix = null)
+		{
+			prefix = string.IsNullOrEmpty(prefix) ? string.Empty : prefix + ".";
+
+			var result = string.Empty;
+
+			result += prefix + "Booleans:\n";
+
+			if (booleans.Any())
+			{
+				foreach (var kv in booleans) result += "\t" + kv.Key + " , " + kv.Value+"\n";
+			}
+			else result += "\tNone\n";
+
+			result += prefix + "Integers:\n";
+
+			if (integers.Any())
+			{
+				foreach (var kv in integers) result += "\t" + kv.Key + " , " + kv.Value + "\n";
+			}
+			else result += "\tNone\n";
+
+			result += prefix + "Strings:\n";
+
+			if (strings.Any())
+			{
+				foreach (var kv in strings) result += "\t" + kv.Key + " , " + kv.Value + "\n";
+			}
+			else result += "\tNone\n";
+
+			result += prefix + "Enums:\n";
+
+			if (enums.Any())
+			{
+				foreach (var kv in enums) result += "\t" + kv.Key + " , " + kv.Value + "\n";
+			}
+			else result += "\tNone\n";
+
+			result += prefix + "Floats:\n";
+
+			if (floats.Any())
+			{
+				foreach (var kv in floats) result += "\t" + kv.Key + " , " + kv.Value + "\n";
+			}
+			else result += "\tNone\n";
+
+			return result;
+		}
 		#endregion
 	}
 }

@@ -1,0 +1,62 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "encounterId": "d0b380f6-dc63-406b-8f98-65e32fd9554d",
+  "name": "Overriding Start Encounter",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 20
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0f926eaf-573d-4a00-a58f-66f19c4d3db1"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "e5745efc-3320-490f-ac8a-aa697796b382"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "Overriding Start Encounter",
+  "metaKeyValues": {
+    "EncounterId": "d0b380f6-dc63-406b-8f98-65e32fd9554d"
+  },
+  "created": "2019-02-04T16:08:22.923203-08:00",
+  "modified": "2019-02-04T16:08:22.923203-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

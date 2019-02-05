@@ -131,6 +131,9 @@ namespace LunraGames.SubLight
 					case WaypointIds.Ship:
 						waypoint.Name.Value = "Ark"; 
 						break;
+					case WaypointIds.BeginSystem:
+						waypoint.Name.Value = "Origin";
+						break;
 					case WaypointIds.EndSystem:
 						waypoint.Name.Value = "Sagittarius A*";
 						break;
@@ -158,6 +161,8 @@ namespace LunraGames.SubLight
 
 		void InitializeCallbacks(Action done)
 		{
+			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues).Register();
+
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 			App.Callbacks.SaveRequest += OnSaveRequest;
@@ -169,6 +174,8 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
 
 			Payload.Game.CelestialSystemState.Changed += OnCelestialSystemState;
+
+			Payload.Game.TransitState.Changed += OnTransitState;
 
 			done();
 		}
@@ -225,13 +232,15 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			OnTransitComplete();
+			OnTransitComplete(Payload.Game.TransitState.Value);
 		}
 		#endregion
 
 		#region End
 		protected override void End()
 		{
+			Payload.KeyValueListener.UnRegister();
+
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 			App.Callbacks.SaveRequest -= OnSaveRequest;
@@ -243,6 +252,8 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
 
 			Payload.Game.CelestialSystemState.Changed -= OnCelestialSystemState;
+
+			Payload.Game.TransitState.Changed -= OnTransitState;
 
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
 			{
@@ -465,21 +476,189 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnTransitComplete()
+		void OnTransitState(TransitState transitState)
+		{
+			switch(transitState.State)
+			{
+				case TransitState.States.Complete: OnTransitComplete(transitState); break;
+			}
+		}
+
+		void OnTransitComplete(TransitState transitState)
+		{
+			var synchronizedId = SM.UniqueSynchronizedId;
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.DistanceFromBegin,
+							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateDistanceFromBegin",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.DistanceToEnd,
+							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateDistanceFromEnd",
+				synchronizedId
+			);
+
+			var transitDistance = UniversePosition.Distance(transitState.BeginSystem.Position.Value, transitState.EndSystem.Position.Value);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.GetDefined(
+							App.KeyValues.Game.DistanceTraveled,
+							distanceTraveled =>
+							{
+								App.Callbacks.KeyValueRequest(
+									KeyValueRequest.SetDefined(
+										App.KeyValues.Game.DistanceTraveled,
+										distanceTraveled.Value + transitDistance,
+										setDone => doneBlocking()
+									)
+								);
+							}
+						)
+					);
+				},
+				"UpdateDistanceTraveled",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.GetDefined(
+							App.KeyValues.Game.FurthestTransit,
+							furthestTransit =>
+							{
+								if (furthestTransit.Value < transitDistance)
+								{
+									App.Callbacks.KeyValueRequest(
+										KeyValueRequest.SetDefined(
+											App.KeyValues.Game.FurthestTransit,
+											transitDistance,
+											setDone => doneBlocking()
+										)
+									);
+								}
+								else doneBlocking();
+							}
+						)
+					);
+				},
+				"UpdateFurthestTransit",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.YearsElapsedGalactic,
+							Payload.Game.RelativeDayTime.Value.GalacticTime.TotalYears,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateYearsElapsedGalactic",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.YearsElapsedShip,
+							Payload.Game.RelativeDayTime.Value.ShipTime.TotalYears,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateYearsElapsedShip",
+				synchronizedId
+			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							App.KeyValues.Game.YearsElapsedDelta,
+							(Payload.Game.RelativeDayTime.Value.GalacticTime - Payload.Game.RelativeDayTime.Value.ShipTime).TotalYears,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdateYearsElapsedDelta",
+				synchronizedId
+			);
+
+			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
+		}
+
+		void OnTransitCompleteCheckForEncounters()
 		{
 			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
 
-			if (string.IsNullOrEmpty(encounterId))
+			if (!OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete))
 			{
 				Debug.Log("Check for non-specified encounters here!");
 				return;
 			}
-
-			OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete);
 		}
 
+		/// <summary>
+		/// This should be called whenever a trigger happens, even if the
+		/// encounterId is null or empty.
+		/// </summary>
+		/// <returns><c>true</c>, if an encounter was triggered, <c>false</c> otherwise.</returns>
+		/// <param name="encounterId">Encounter identifier.</param>
+		/// <param name="trigger">Trigger.</param>
 		bool OnCheckSpecifiedEncounter(string encounterId, EncounterTriggers trigger)
 		{
+			if (DevPrefs.EncounterIdOverrideActive && trigger == DevPrefs.EncounterIdOverrideTrigger.Value)
+			{
+				var encounterOverride = App.Encounters.GetEncounter(DevPrefs.EncounterIdOverride.Value);
+				if (encounterOverride == null) Debug.LogError("Unable to find specified override encounter: " + DevPrefs.EncounterIdOverride.Value + ", falling through to non-override encounters.");
+				else
+				{
+					App.ValueFilter.Filter(
+						valid =>
+						{
+							if (valid) Debug.Log("Override Encounter is valid, triggering");
+							else Debug.LogWarning("Override Encounter is not valid, triggering anyways");
+							OnTransitCompleteFiltered(true, encounterOverride);
+						},
+						encounterOverride.Filtering,
+						Payload.Game,
+						encounterOverride
+					);
+					return true;
+				}
+			}
+
 			if (string.IsNullOrEmpty(encounterId)) return false;
 			if (trigger == EncounterTriggers.Unknown)
 			{

@@ -198,6 +198,25 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PopIndent();
 			}
 			EditorGUILayoutExtensions.PopEnabled();
+
+			var encounterNotOverriding = !DevPrefs.EncounterIdOverrideActive;
+			if (encounterNotOverriding) EditorGUILayoutExtensions.PushColor(Color.gray);
+			{
+				GUILayout.BeginHorizontal();
+				{
+					EditorGUILayout.PrefixLabel(new GUIContent("Encounter Overriding", "If a valid trigger and Encounter Id are selected, the specified Encounter will run when the appropriate trigger occurs."));
+					DevPrefs.EncounterIdOverrideTrigger.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+						GUIContent.none,
+						"- Select a Trigger -",
+						DevPrefs.EncounterIdOverrideTrigger.Value,
+						guiOptions: GUILayout.Width(120f)
+					);
+					DevPrefs.EncounterIdOverride.Value = EditorGUILayout.TextField(DevPrefs.EncounterIdOverride.Value);
+					DevPrefs.EncounterIdOverrideIgnore.Value = !EditorGUILayout.Toggle(!DevPrefs.EncounterIdOverrideIgnore.Value, GUILayout.Width(18f));
+				}
+				GUILayout.EndHorizontal();
+			}
+			if (encounterNotOverriding) EditorGUILayoutExtensions.PopColor();
 		}
 
 		void OnLocalTab()

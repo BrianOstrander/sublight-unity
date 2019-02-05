@@ -7,9 +7,14 @@ namespace LunraGames.SubLight
 {
 	public class KeyValueService
 	{
+		public EncounterKeys Encounter { get; private set; }
+		public GameKeys Game { get; private set; }
+		public GlobalKeys Global { get; private set; }
+		public PreferencesKeys Preferences { get; private set; }
+
 		static string GetNoHandlerError(KeyValueRequest.States state, KeyValueTargets target, KeyValueTypes valueType)
 		{
-			return "No "+state+" handler found for " + target + "." + valueType;
+			return "No " + state + " handler found for " + target + "." + valueType;
 		}
 
 		CallbackService callbacks;
@@ -29,6 +34,11 @@ namespace LunraGames.SubLight
 
 			this.callbacks = callbacks;
 			this.callbacks.KeyValueRequest += OnKeyValueRequest;
+
+			Encounter = new EncounterKeys();
+			Game = new GameKeys();
+			Global = new GlobalKeys();
+			Preferences = new PreferencesKeys();
 		}
 
 		#region Get Registration

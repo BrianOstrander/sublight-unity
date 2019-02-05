@@ -5,7 +5,9 @@
   "trigger": "TransitComplete",
   "filtering": {
     "booleanKeyValues": [],
+    "integerKeyValues": [],
     "stringKeyValues": [],
+    "floatKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -16,19 +18,80 @@
             "entry": {
               "operation": "SetBoolean",
               "target": "Encounter",
-              "key": "what",
-              "boolValue": true,
-              "entryId": "809b1187-538f-459d-9720-2f156fcb8f28"
+              "key": "bool",
+              "booleanValue": true,
+              "entryId": "9a431b85-89e8-41c7-8be0-dd1b16f23536"
+            }
+          },
+          {
+            "entry": {
+              "operation": "SetInteger",
+              "target": "Encounter",
+              "key": "integer",
+              "integerValue": 10,
+              "entryId": "b7f0fa9c-03fe-451a-97cb-5c948d684f8b"
             },
             "index": 1
+          },
+          {
+            "entry": {
+              "operation": "SetString",
+              "target": "Encounter",
+              "key": "string",
+              "stringValue": "huh",
+              "entryId": "94ca016b-1b37-4bf6-870b-5ead0dc98f8e"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "operation": "SetFloat",
+              "target": "Encounter",
+              "key": "float",
+              "floatValue": 9.0,
+              "entryId": "cf14acd1-1a49-4f8b-a506-e0b9c733245d"
+            },
+            "index": 3
           }
         ],
         "index": 1,
-        "logId": "63976ed0-03cd-4c3e-a538-d90596a35d35",
-        "fallbackLogId": "b6226ae8-b296-400c-8779-92fa2681c5f5"
+        "logId": "cb53a72c-9a52-4453-876a-db0b09e8772d",
+        "fallbackLogId": "f63cd793-355d-4a27-bd55-ffebb3925142",
+        "name": "Value Setter"
       }
     ],
-    "switchLogs": [],
+    "switchLogs": [
+      {
+        "switches": [
+          {
+            "entry": {
+              "nextLogId": "cb53a72c-9a52-4453-876a-db0b09e8772d",
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [
+                  {
+                    "target": "Encounter",
+                    "key": "bool",
+                    "filterId": "63648909-3cf6-4c8c-be98-6e86c0fc3dcc",
+                    "group": "All"
+                  }
+                ],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "584b7860-2bb7-43f9-ad1d-670e31588c43"
+            }
+          }
+        ],
+        "index": 2,
+        "logId": "15a547e3-5b90-415f-85bb-6e52ade5e24b",
+        "fallbackLogId": "720f9287-a293-4804-a98a-2c99d945fc9b",
+        "name": "Switch"
+      }
+    ],
     "buttonLogs": [],
     "encyclopediaLogs": [],
     "eventLogs": [
@@ -41,11 +104,12 @@
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "message": "What is true"
+                  "message": "bool is true"
                 },
                 "enums": {
-                  "severity": 10
-                }
+                  "severity": 0
+                },
+                "floats": {}
               },
               "filtering": {
                 "showValues": true,
@@ -53,17 +117,20 @@
                 "booleanKeyValues": [
                   {
                     "target": "Encounter",
-                    "key": "what",
-                    "filterId": "fd578685-51e2-4793-b9db-94111ba9cc0c",
+                    "key": "bool",
+                    "filterId": "d36f02e3-cc5f-4256-bf0d-f7da1ebd79b6",
                     "group": "All",
                     "filterValue": true
                   }
                 ],
+                "integerKeyValues": [],
                 "stringKeyValues": [],
+                "floatKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "e29a1465-7737-47b8-811a-58909909f6fe"
-            }
+              "entryId": "c57c0bc6-358d-421c-836d-6b38582c261a"
+            },
+            "index": 1
           },
           {
             "entry": {
@@ -72,35 +139,312 @@
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "message": "What is false"
+                  "message": "integer is 10"
                 },
                 "enums": {
-                  "severity": 10
-                }
+                  "severity": 0
+                },
+                "floats": {}
               },
               "filtering": {
                 "showValues": true,
                 "falseByDefault": true,
-                "booleanKeyValues": [
+                "booleanKeyValues": [],
+                "integerKeyValues": [
                   {
+                    "operation": "Equals",
                     "target": "Encounter",
-                    "key": "what",
-                    "filterId": "fc22138d-2339-438d-ad45-2ae81c05c883",
-                    "group": "All"
+                    "key": "integer",
+                    "filterId": "bfa1735d-7c4a-4e80-b147-729cf2d07a2e",
+                    "group": "All",
+                    "filterValue": 10
                   }
                 ],
                 "stringKeyValues": [],
+                "floatKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "c910e267-2b4a-4fe0-8703-9ed945785c44"
+              "entryId": "b6cf5880-5305-4957-90ee-effc10cc2ce0"
             },
-            "index": 1
+            "index": 2
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "integer is less than 20"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [
+                  {
+                    "operation": "LessThan",
+                    "target": "Encounter",
+                    "key": "integer",
+                    "filterId": "704bca46-911d-44e9-8af2-6e1e5865f32e",
+                    "group": "All",
+                    "filterValue": 20
+                  }
+                ],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "950b90d3-d62a-4b3f-9f07-490b1310d082"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "integer is greater than or equal to 5"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [
+                  {
+                    "operation": "GreaterThanOrEquals",
+                    "target": "Encounter",
+                    "key": "integer",
+                    "filterId": "9ea13a2f-9601-4b89-92f2-6e6816ade8d0",
+                    "group": "All",
+                    "filterValue": 5
+                  }
+                ],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "24a26bf8-9b59-4885-84d3-9b467c1c4887"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "integer is 13 (this shouldn't be shown!)"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [
+                  {
+                    "operation": "Equals",
+                    "target": "Encounter",
+                    "key": "integer",
+                    "filterId": "c897d429-0ecb-483b-b62a-e9e4ac1cf30e",
+                    "group": "All",
+                    "filterValue": 13
+                  }
+                ],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e0ffc576-8bad-4ce1-815f-c214692e5dc3"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "string is \"huh\""
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [
+                  {
+                    "operation": "Equals",
+                    "target": "Encounter",
+                    "key": "string",
+                    "filterId": "318ab255-e9b6-452a-af21-25026544fdb0",
+                    "group": "All",
+                    "filterValue": "huh"
+                  }
+                ],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0b526c7b-af7e-47db-97c4-57e72e1f0528"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "float is approximately 9"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "Equals",
+                    "target": "Encounter",
+                    "key": "float",
+                    "filterId": "d44aa81a-e9f0-4c4f-a643-1d8b69b7e3cc",
+                    "group": "All",
+                    "filterValue": 9.0
+                  }
+                ],
+                "encounterInteractions": []
+              },
+              "entryId": "8fb9e25d-abe7-4e8a-b504-56c37acb8f48"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "float is greater than 8"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "GreaterThan",
+                    "target": "Encounter",
+                    "key": "float",
+                    "filterId": "9b8c369a-33d6-44a7-9fcc-33704170cdb4",
+                    "group": "All",
+                    "filterValue": 8.0
+                  }
+                ],
+                "encounterInteractions": []
+              },
+              "entryId": "a4c95eb7-0823-40c8-ba7d-723f866a0809"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "-------------------"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1f75a66d-7c18-410d-a7a0-5d902510cfc3"
+            }
           }
         ],
         "beginning": true,
-        "logId": "b6226ae8-b296-400c-8779-92fa2681c5f5",
-        "fallbackLogId": "63976ed0-03cd-4c3e-a538-d90596a35d35",
-        "name": "What Debugger"
+        "logId": "f63cd793-355d-4a27-bd55-ffebb3925142",
+        "fallbackLogId": "15a547e3-5b90-415f-85bb-6e52ade5e24b",
+        "name": "Debug Checker"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Done!"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0cf97520-c280-4cba-8fda-3e5338d907e5"
+            }
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "720f9287-a293-4804-a98a-2c99d945fc9b",
+        "name": "Complete"
       }
     ],
     "dialogLogs": [],

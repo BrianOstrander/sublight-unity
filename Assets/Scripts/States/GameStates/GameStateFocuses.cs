@@ -269,6 +269,7 @@ namespace LunraGames.SubLight
 						)
 					);
 				}
+				payload.Waypoints = waypointEntries;
 
 				InitializeShipPresenters(state, done);
 			}

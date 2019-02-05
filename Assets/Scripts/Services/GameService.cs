@@ -49,7 +49,7 @@ namespace LunraGames.SubLight
 
 			game.FocusTransform.Value = FocusTransform.Default;
 
-			var initialTime = new DayTime((365 * 1057) + (30 * 2) + 5);
+			var initialTime = DayTime.Zero;
 			game.RelativeDayTime.Value = new RelativeDayTime(
 				initialTime,
 				initialTime
@@ -108,7 +108,6 @@ namespace LunraGames.SubLight
 			game.Ship.Value.SetCurrentSystem(beginSystem);
 			game.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
 
-			//Debug.Log("reenable begin waypoint here");
 			var shipWaypoint = new WaypointModel();
 			shipWaypoint.SetLocation(begin);
 			shipWaypoint.WaypointId.Value = WaypointIds.Ship;
@@ -119,7 +118,16 @@ namespace LunraGames.SubLight
 
 			game.WaypointCollection.AddWaypoint(shipWaypoint);
 
-			//Debug.Log("reenable end waypoint here");
+			var beginWaypoint = new WaypointModel();
+			beginWaypoint.SetLocation(beginSystem);
+			beginWaypoint.WaypointId.Value = WaypointIds.BeginSystem;
+			beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
+			beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Visited;
+			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
+			beginWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, begin);
+
+			game.WaypointCollection.AddWaypoint(beginWaypoint);
+
 			var endWaypoint = new WaypointModel();
 			endWaypoint.SetLocation(endSystem);
 			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
