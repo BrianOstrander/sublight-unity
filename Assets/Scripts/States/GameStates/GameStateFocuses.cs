@@ -40,6 +40,8 @@ namespace LunraGames.SubLight
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
+				new PauseMenuPresenter(payload.Game);
+
 				InitializeSystemPresenters(state, done);
 			}
 
