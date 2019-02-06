@@ -39,54 +39,6 @@
               },
               "entryId": "0f926eaf-573d-4a00-a58f-66f19c4d3db1"
             }
-          },
-          {
-            "entry": {
-              "encounterEvent": "Debug",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {
-                  "message": null
-                },
-                "enums": {
-                  "severity": 0
-                },
-                "floats": {}
-              },
-              "filtering": {
-                "showValues": true,
-                "booleanKeyValues": [],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [
-                  {
-                    "operation": "Equals",
-                    "target": "Game",
-                    "key": "distance_from_begin",
-                    "index": 1,
-                    "filterId": "5cd402e8-842c-440f-b3b2-81c5208aeda9",
-                    "group": "All",
-                    "filterValue": 10.0
-                  },
-                  {
-                    "target": "Game",
-                    "key": "",
-                    "filterId": "4de7cf6b-0ea1-4dd5-a352-96c6c3b0c306",
-                    "group": "All"
-                  }
-                ],
-                "encounterInteractions": [
-                  {
-                    "index": 2,
-                    "filterId": "0ab0dfb2-21d0-4815-bbbf-9fc6e16a9b3e",
-                    "group": "All"
-                  }
-                ]
-              },
-              "entryId": "3201df69-4263-4e1a-8294-cd6edd3d2ba1"
-            },
-            "index": 1
           }
         ],
         "beginning": true,
