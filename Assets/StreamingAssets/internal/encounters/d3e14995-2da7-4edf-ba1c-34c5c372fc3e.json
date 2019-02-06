@@ -61,21 +61,25 @@
                 "stringKeyValues": [],
                 "floatKeyValues": [
                   {
-                    "filterId": "10b6bfea-b98f-4f9a-823d-b492c1a9cbb3",
-                    "group": "All"
+                    "operation": "Equals",
+                    "target": "Game",
+                    "key": "distance_from_begin",
+                    "index": 1,
+                    "filterId": "5cd402e8-842c-440f-b3b2-81c5208aeda9",
+                    "group": "All",
+                    "filterValue": 10.0
                   },
                   {
                     "target": "Game",
-                    "key": "distance_from_begin",
-                    "index": 2,
-                    "filterId": "98e5eda2-0f86-4b92-8912-c1e4703db4f1",
+                    "key": "",
+                    "filterId": "4de7cf6b-0ea1-4dd5-a352-96c6c3b0c306",
                     "group": "All"
                   }
                 ],
                 "encounterInteractions": [
                   {
                     "index": 2,
-                    "filterId": "15f06457-45d0-4eae-9b17-103c02b8128a",
+                    "filterId": "0ab0dfb2-21d0-4815-bbbf-9fc6e16a9b3e",
                     "group": "All"
                   }
                 ]

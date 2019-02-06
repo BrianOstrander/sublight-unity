@@ -46,6 +46,10 @@ namespace LunraGames.SubLight
 		GUIStyle sharedModelEditorModelsFilterEntryIconNotLinked;
 		public GUIStyle SharedModelEditorModelsFilterEntryIconNotLinked { get { return sharedModelEditorModelsFilterEntryIconNotLinked; } }
 
+		[SerializeField]
+		GUIStyle sharedModelEditorModelsFilterEntryDescription;
+		public GUIStyle SharedModelEditorModelsFilterEntryDescription { get { return sharedModelEditorModelsFilterEntryDescription; } }
+
 		[Header("Encounter Editor Styles")]
 		[SerializeField]
 		SkinColor encounterEditorLogBackgroundColor = SkinColor.Default;

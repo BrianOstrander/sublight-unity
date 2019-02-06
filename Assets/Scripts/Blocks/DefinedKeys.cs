@@ -1,12 +1,41 @@
 ﻿using System;
+using System.Linq;
 
 namespace LunraGames.SubLight
 {
+	public static class DefinedKeyInstances
+	{
+//#pragma warning disable CS0414 // The private field is assigned but its value is never used.
+//#pragma warning restore CS0414 // The private field is assigned but its value is never used.
+
+		public static readonly ValueFilterTypes[] SupportedFilterTypes = {
+			ValueFilterTypes.KeyValueBoolean,
+			ValueFilterTypes.KeyValueInteger,
+			ValueFilterTypes.KeyValueString,
+			ValueFilterTypes.KeyValueFloat
+		};
+
+		public static readonly EncounterKeys Encounter = new EncounterKeys();
+		public static readonly GameKeys Game = new GameKeys();
+		public static readonly GlobalKeys Global = new GlobalKeys();
+		public static readonly PreferencesKeys Preferences = new PreferencesKeys();
+
+		public static readonly DefinedKeys[] AllTargets = {
+			Encounter,
+			Game,
+			Global,
+			Preferences
+		};
+
+		public static IDefinedKey[] All { get { return AllTargets.SelectMany(t => t.All).ToArray(); } }
+	}
+
 	public interface IDefinedKey
 	{
 		string Key { get; }
 		KeyValueTargets Target { get; }
 		KeyValueTypes ValueType { get; }
+		ValueFilterTypes FilterType { get; }
 		string Notes { get; }
 		bool CanRead { get; }
 		bool CanWrite { get; }
@@ -22,6 +51,7 @@ namespace LunraGames.SubLight
 		public string Key { get; private set; }
 		public KeyValueTargets Target { get; private set; }
 		public KeyValueTypes ValueType { get; private set; }
+		public ValueFilterTypes FilterType { get; private set; }
 		public string Notes { get; private set; }
 		/// <summary>
 		/// If <see langword="true"/>, encounters can read this key value.
@@ -38,6 +68,7 @@ namespace LunraGames.SubLight
 			string key,
 			KeyValueTargets target,
 			KeyValueTypes valueType,
+			ValueFilterTypes filterType,
 			string notes,
 			bool canRead,
 			bool canWrite
@@ -52,6 +83,7 @@ namespace LunraGames.SubLight
 			Key = key;
 			Target = target;
 			ValueType = valueType;
+			FilterType = filterType;
 			Notes = notes;
 			CanRead = canRead;
 			CanWrite = canWrite;
@@ -62,22 +94,80 @@ namespace LunraGames.SubLight
 	{
 		public class Boolean : DefinedKeyTyped<bool>
 		{
-			public Boolean(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.Boolean, notes, canRead, canWrite) { }
+			public Boolean(
+				string key,
+				KeyValueTargets target,
+				string notes,
+				bool canRead,
+				bool canWrite
+			) : base(
+				key,
+				target,
+				KeyValueTypes.Boolean,
+				ValueFilterTypes.KeyValueBoolean,
+				notes,
+				canRead,
+				canWrite)
+			{ }
 		}
 
 		public class Integer : DefinedKeyTyped<int>
 		{
-			public Integer(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.Integer, notes, canRead, canWrite) { }
+			public Integer(
+				string key,
+				KeyValueTargets target,
+				string notes,
+				bool canRead,
+				bool canWrite
+			) : base(
+				key,
+				target,
+				KeyValueTypes.Integer,
+				ValueFilterTypes.KeyValueInteger,
+				notes,
+				canRead,
+				canWrite)
+			{ }
 		}
 
 		public class String : DefinedKeyTyped<string>
 		{
-			public String(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.String, notes, canRead, canWrite) { }
+			public String(
+				string key,
+				KeyValueTargets target,
+				string notes,
+				bool canRead,
+				bool canWrite
+			) : base(
+				key,
+				target,
+				KeyValueTypes.String,
+				ValueFilterTypes.KeyValueString,
+				notes,
+				canRead,
+				canWrite
+			)
+			{ }
 		}
 
 		public class Float : DefinedKeyTyped<float>
 		{
-			public Float(string key, KeyValueTargets target, string notes, bool canRead, bool canWrite) : base(key, target, KeyValueTypes.Float, notes, canRead, canWrite) { }
+			public Float(
+				string key,
+				KeyValueTargets target,
+				string notes,
+				bool canRead,
+				bool canWrite
+			) : base(
+				key,
+				target,
+				KeyValueTypes.Float,
+				ValueFilterTypes.KeyValueFloat,
+				notes,
+				canRead,
+				canWrite
+			)
+			{ }
 		}
 
 		public KeyValueTargets Target { get; private set; }
@@ -86,6 +176,17 @@ namespace LunraGames.SubLight
 		public Integer[] Integers { get; protected set; }
 		public String[] Strings { get; protected set; }
 		public Float[] Floats { get; protected set; }
+
+		public IDefinedKey[] All
+		{
+			get
+			{
+				return Booleans.Cast<IDefinedKey>().Concat(Integers)
+												   .Concat(Strings)
+												   .Concat(Floats)
+												   .ToArray();
+			}
+		}
 
 		protected DefinedKeys(KeyValueTargets target)
 		{

@@ -493,7 +493,7 @@ namespace LunraGames.SubLight
 				{
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
-							App.KeyValues.Game.DistanceFromBegin,
+							DefinedKeyInstances.Game.DistanceFromBegin,
 							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
 							setDone => doneBlocking()
 						)
@@ -508,7 +508,7 @@ namespace LunraGames.SubLight
 				{
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
-							App.KeyValues.Game.DistanceToEnd,
+							DefinedKeyInstances.Game.DistanceToEnd,
 							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
 							setDone => doneBlocking()
 						)
@@ -525,12 +525,12 @@ namespace LunraGames.SubLight
 				{
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.GetDefined(
-							App.KeyValues.Game.DistanceTraveled,
+							DefinedKeyInstances.Game.DistanceTraveled,
 							distanceTraveled =>
 							{
 								App.Callbacks.KeyValueRequest(
 									KeyValueRequest.SetDefined(
-										App.KeyValues.Game.DistanceTraveled,
+										DefinedKeyInstances.Game.DistanceTraveled,
 										distanceTraveled.Value + transitDistance,
 										setDone => doneBlocking()
 									)
@@ -548,14 +548,14 @@ namespace LunraGames.SubLight
 				{
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.GetDefined(
-							App.KeyValues.Game.FurthestTransit,
+							DefinedKeyInstances.Game.FurthestTransit,
 							furthestTransit =>
 							{
 								if (furthestTransit.Value < transitDistance)
 								{
 									App.Callbacks.KeyValueRequest(
 										KeyValueRequest.SetDefined(
-											App.KeyValues.Game.FurthestTransit,
+											DefinedKeyInstances.Game.FurthestTransit,
 											transitDistance,
 											setDone => doneBlocking()
 										)
@@ -575,7 +575,7 @@ namespace LunraGames.SubLight
 				{
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
-							App.KeyValues.Game.YearsElapsedGalactic,
+							DefinedKeyInstances.Game.YearsElapsedGalactic,
 							Payload.Game.RelativeDayTime.Value.GalacticTime.TotalYears,
 							setDone => doneBlocking()
 						)
@@ -590,7 +590,7 @@ namespace LunraGames.SubLight
 				{
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
-							App.KeyValues.Game.YearsElapsedShip,
+							DefinedKeyInstances.Game.YearsElapsedShip,
 							Payload.Game.RelativeDayTime.Value.ShipTime.TotalYears,
 							setDone => doneBlocking()
 						)
@@ -605,7 +605,7 @@ namespace LunraGames.SubLight
 				{
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
-							App.KeyValues.Game.YearsElapsedDelta,
+							DefinedKeyInstances.Game.YearsElapsedDelta,
 							(Payload.Game.RelativeDayTime.Value.GalacticTime - Payload.Game.RelativeDayTime.Value.ShipTime).TotalYears,
 							setDone => doneBlocking()
 						)

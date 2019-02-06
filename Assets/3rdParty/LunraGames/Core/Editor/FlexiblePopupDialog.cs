@@ -7,19 +7,6 @@ namespace LunraGamesEditor
 {
 	public class FlexiblePopupDialog : EditorWindow
 	{
-		/*
-		static Vector2 GetScreenCenterPosition(Vector2 size)
-		{
-			return (new Vector2(Screen.width * 0.5f, Screen.height * 0.5f)) + (size * 0.5f);
-		}
-		*/
-
-		static Vector2 GetCursorCenterPosition(Vector2 size)
-		{
-			return GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - (size * 0.5f);
-		}
-
-		//Vector2 size;
 		Action onGui;
 		Action onClose;
 		Action onLostFocus;
@@ -48,7 +35,7 @@ namespace LunraGamesEditor
 			window.onLostFocus = onLostFocus;
 			window.lostFocusCloses = lostFocusCloses;
 
-			window.position = new Rect(GetCursorCenterPosition(size), size);
+			window.position = EditorGUIExtensions.GetPositionOnScreen(size);
 
 			window.Show();
 		}
