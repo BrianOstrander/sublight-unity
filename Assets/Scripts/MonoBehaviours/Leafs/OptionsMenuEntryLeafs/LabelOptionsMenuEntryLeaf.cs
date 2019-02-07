@@ -1,9 +1,12 @@
-﻿using TMPro;
+﻿using UnityEngine.UI;
+
+using TMPro;
 
 namespace LunraGames.SubLight.Views
 {
 	public class LabelOptionsMenuEntryLeaf : OptionsMenuEntryLeaf
 	{
 		public TextMeshProUGUI Label;
+		public Image Icon;
 	}
 }

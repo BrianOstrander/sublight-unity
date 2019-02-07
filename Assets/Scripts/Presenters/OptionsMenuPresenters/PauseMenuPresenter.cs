@@ -24,6 +24,16 @@ namespace LunraGames.SubLight.Presenters
 		{
 			// Todo: some checking and stuff...
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetPriorityFocus(model.ToolbarSelection.Value)));
+
+			View.Reset();
+
+			View.SetEntries(
+				OptionsMenuThemes.Neutral,
+				LabelOptionsMenuEntry.CreateTitle("Paused", OptionsMenuIcons.Pause),//, OptionsMenuIcons.Pause),
+				LabelOptionsMenuEntry.CreateHeader("Last saved 5 minutes ago, in the current system"),
+				GenericOptionsMenuEntry.CreateDivider()
+			);
+
 			ShowView();
 		}
 		#endregion

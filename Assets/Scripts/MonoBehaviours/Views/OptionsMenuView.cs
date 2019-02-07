@@ -10,6 +10,23 @@ namespace LunraGames.SubLight.Views
 {
 	public class OptionsMenuView : View, IOptionsMenuView
 	{
+		[Serializable]
+		struct IconEntry
+		{
+			public OptionsMenuIcons Icon;
+			public Sprite Sprite;
+		}
+
+		[Serializable]
+		struct ThemeEntry
+		{
+			public OptionsMenuThemes Theme;
+
+			public ColorStyleBlock PrimaryColor;
+			public ColorStyleBlock SecondaryColor;
+			public ColorStyleBlock TertiaryColor;
+		}
+
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		GameObject entryArea;
@@ -26,31 +43,51 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		OptionsMenuEntryLeaf[] entryPrefabs;
+
+		[SerializeField]
+		ThemeEntry[] themes;
+		[SerializeField]
+		IconEntry[] icons;
+
+		[SerializeField]
+		Graphic[] primaryColorGraphics;
+		[SerializeField]
+		Graphic[] secondaryColorGraphics;
+		[SerializeField]
+		Graphic[] tertiaryColorGraphics;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		public IOptionsMenuEntry[] Entries
+		public void SetEntries(
+			OptionsMenuThemes theme = OptionsMenuThemes.Neutral,
+			params IOptionsMenuEntry[] entries
+		)
 		{
-			set
+			theme = theme == OptionsMenuThemes.Unknown ? OptionsMenuThemes.Neutral : theme;
+
+			var themeEntry = themes.FirstOrDefault(t => t.Theme == theme);
+
+			foreach (var graphic in primaryColorGraphics) graphic.color = themeEntry.PrimaryColor;
+			foreach (var graphic in secondaryColorGraphics) graphic.color = themeEntry.SecondaryColor;
+			foreach (var graphic in tertiaryColorGraphics) graphic.color = themeEntry.TertiaryColor;
+
+			entryArea.transform.ClearChildren<OptionsMenuEntryLeaf>();
+
+			if (entries.None()) return;
+
+			foreach (var entry in entries)
 			{
-				entryArea.transform.ClearChildren<OptionsMenuEntryLeaf>();
-
-				if (value == null) return;
-
-				foreach (var entry in value)
+				var entryType = entry.GetType();
+				if (entryType == typeof(GenericOptionsMenuEntry)) InstantiateEntry<GenericOptionsMenuEntry, OptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
+				else if (entryType == typeof(LabelOptionsMenuEntry)) InstantiateEntry<LabelOptionsMenuEntry, LabelOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
+				else if (entryType == typeof(ButtonOptionsMenuEntry)) InstantiateEntry<ButtonOptionsMenuEntry, ButtonOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
+				else
 				{
-					var entryType = entry.GetType();
-					if (entryType == typeof(GenericOptionsMenuEntry)) InstantiateEntry<GenericOptionsMenuEntry, OptionsMenuEntryLeaf>(entry, ApplyEntry);
-					else if (entryType == typeof(LabelOptionsMenuEntry)) InstantiateEntry<LabelOptionsMenuEntry, LabelOptionsMenuEntryLeaf>(entry, ApplyEntry);
-					else if (entryType == typeof(ButtonOptionsMenuEntry)) InstantiateEntry<ButtonOptionsMenuEntry, ButtonOptionsMenuEntryLeaf>(entry, ApplyEntry);
-					else
-					{
-						Debug.LogError("Unrecognized entry type: " + entryType.FullName);
-					}
+					Debug.LogError("Unrecognized entry type: " + entryType.FullName);
 				}
 			}
 		}
 
-		void InstantiateEntry<E, L>(IOptionsMenuEntry entry, Action<E, L> done)
+		void InstantiateEntry<E, L>(IOptionsMenuEntry entry, ThemeEntry theme, Action<E, L> done)
 			where E : OptionsMenuEntry<L>
 			where L : OptionsMenuEntryLeaf
 		{
@@ -61,7 +98,12 @@ namespace LunraGames.SubLight.Views
 				Debug.LogError("No prefab exists of type " + typeof(L).FullName + " with style " + entry.Style);
 				return;
 			}
-			done(entry as E, entryArea.InstantiateChild(prefab as L, setActive: true));
+			var instance = entryArea.InstantiateChild(prefab as L, setActive: true);
+
+			foreach (var graphic in instance.PrimaryColorGraphics) graphic.color = theme.PrimaryColor;
+			foreach (var graphic in instance.SecondaryColorGraphics) graphic.color = theme.SecondaryColor;
+
+			done(entry as E, instance);
 		}
 
 		void ApplyEntry(
@@ -78,6 +120,26 @@ namespace LunraGames.SubLight.Views
 		)
 		{
 			instance.Label.text = entry.Message;
+
+			if (entry.Icon == OptionsMenuIcons.None)
+			{
+				if (instance.Icon != null) instance.Icon.gameObject.SetActive(false);
+				return;
+			}
+			if (instance.Icon == null)
+			{
+				Debug.LogError("Unable to set icon, ignoring", instance);
+				return;
+			}
+
+			var iconEntry = icons.FirstOrDefault(i => i.Icon == entry.Icon);
+
+			if (iconEntry.Sprite == null)
+			{
+				Debug.LogError("Unrecognized Icon: " + entry.Icon);
+				instance.Icon.gameObject.SetActive(false);
+			}
+			else instance.Icon.sprite = iconEntry.Sprite;
 		}
 
 		void ApplyEntry(
@@ -114,7 +176,7 @@ namespace LunraGames.SubLight.Views
 
 			foreach (var prefab in entryPrefabs) prefab.gameObject.SetActive(false);
 
-			Entries = null;
+			SetEntries();
 		}
 
 		#region Events
@@ -127,7 +189,15 @@ namespace LunraGames.SubLight.Views
 
 	public interface IOptionsMenuView : IView
 	{
-		IOptionsMenuEntry[] Entries { set; }
+		void SetEntries(OptionsMenuThemes theme = OptionsMenuThemes.Neutral, params IOptionsMenuEntry[] entries);
+	}
+
+	public enum OptionsMenuThemes
+	{
+		Unknown = 0,
+		Neutral = 10,
+		Warning = 20,
+		Error = 30
 	}
 
 	public enum OptionsMenuStyles
@@ -137,6 +207,13 @@ namespace LunraGames.SubLight.Views
 		Header = 20,
 		Divider = 30,
 		Button = 40
+	}
+
+	public enum OptionsMenuIcons
+	{
+		Unknown = 0,
+		None = 10,
+		Pause = 20
 	}
 
 	public interface IOptionsMenuEntry
@@ -167,18 +244,24 @@ namespace LunraGames.SubLight.Views
 
 	public class LabelOptionsMenuEntry : OptionsMenuEntry<LabelOptionsMenuEntryLeaf>
 	{
-		public static LabelOptionsMenuEntry CreateTitle(string message) { return new LabelOptionsMenuEntry(OptionsMenuStyles.Title, message); }
+		public static LabelOptionsMenuEntry CreateTitle(string message, OptionsMenuIcons icon = OptionsMenuIcons.None) { return new LabelOptionsMenuEntry(OptionsMenuStyles.Title, message, icon); }
 		public static LabelOptionsMenuEntry CreateHeader(string message) { return new LabelOptionsMenuEntry(OptionsMenuStyles.Header, message); }
 
 		OptionsMenuStyles style;
 		public override OptionsMenuStyles Style { get { return style; } }
 
 		public string Message;
+		public OptionsMenuIcons Icon;
 
-		LabelOptionsMenuEntry(OptionsMenuStyles style, string message)
+		LabelOptionsMenuEntry(
+			OptionsMenuStyles style,
+			string message,
+			OptionsMenuIcons icon = OptionsMenuIcons.None
+		)
 		{
 			this.style = style;
 			Message = message;
+			Icon = icon;
 		}
 	}
 
