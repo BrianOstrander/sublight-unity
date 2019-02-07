@@ -9,5 +9,6 @@ namespace LunraGames.SubLight.Views
 
 		public Graphic[] PrimaryColorGraphics;
 		public Graphic[] SecondaryColorGraphics;
+		public Graphic[] TertiaryColorGraphics;
 	}
 }

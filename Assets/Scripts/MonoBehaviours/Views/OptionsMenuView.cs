@@ -13,18 +13,22 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct IconEntry
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public OptionsMenuIcons Icon;
 			public Sprite Sprite;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
 
 		[Serializable]
 		struct ThemeEntry
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public OptionsMenuThemes Theme;
 
 			public ColorStyleBlock PrimaryColor;
 			public ColorStyleBlock SecondaryColor;
 			public ColorStyleBlock TertiaryColor;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
@@ -77,7 +81,7 @@ namespace LunraGames.SubLight.Views
 			foreach (var entry in entries)
 			{
 				var entryType = entry.GetType();
-				if (entryType == typeof(GenericOptionsMenuEntry)) InstantiateEntry<GenericOptionsMenuEntry, OptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
+				if (entryType == typeof(DividerOptionsMenuEntry)) InstantiateEntry<DividerOptionsMenuEntry, DividerOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
 				else if (entryType == typeof(LabelOptionsMenuEntry)) InstantiateEntry<LabelOptionsMenuEntry, LabelOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
 				else if (entryType == typeof(ButtonOptionsMenuEntry)) InstantiateEntry<ButtonOptionsMenuEntry, ButtonOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
 				else
@@ -102,16 +106,32 @@ namespace LunraGames.SubLight.Views
 
 			foreach (var graphic in instance.PrimaryColorGraphics) graphic.color = theme.PrimaryColor;
 			foreach (var graphic in instance.SecondaryColorGraphics) graphic.color = theme.SecondaryColor;
+			foreach (var graphic in instance.TertiaryColorGraphics) graphic.color = theme.TertiaryColor;
 
 			done(entry as E, instance);
 		}
 
 		void ApplyEntry(
-			GenericOptionsMenuEntry entry,
-			OptionsMenuEntryLeaf instance
+			DividerOptionsMenuEntry entry,
+			DividerOptionsMenuEntryLeaf instance
 		)
 		{
-			// Nothing to do here.
+			instance.DoubleSegmentArea.SetActive(entry.Segment == OptionsMenuDividerSegments.DoubleSegment);
+
+			switch (entry.Segment)
+			{
+				case OptionsMenuDividerSegments.DoubleSegment: break;
+				case OptionsMenuDividerSegments.None:
+					var rectTransform = instance.GetComponent<RectTransform>();
+					rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, 0f);
+					break;
+				default:
+					Debug.LogError("Unrecognized Segment: " + entry.Segment);
+					break;
+			}
+
+			instance.TopArea.SetActive(entry.Fade == OptionsMenuDividerFades.Top || entry.Fade == OptionsMenuDividerFades.All);
+			instance.BottomArea.SetActive(entry.Fade == OptionsMenuDividerFades.Bottom || entry.Fade == OptionsMenuDividerFades.All);
 		}
 
 		void ApplyEntry(
@@ -216,6 +236,22 @@ namespace LunraGames.SubLight.Views
 		Pause = 20
 	}
 
+	public enum OptionsMenuDividerFades
+	{
+		Unknown = 0,
+		None = 10,
+		All = 20,
+		Top = 30,
+		Bottom = 40
+	}
+
+	public enum OptionsMenuDividerSegments
+	{
+		Unknown = 0,
+		None = 10,
+		DoubleSegment = 20
+	}
+
 	public interface IOptionsMenuEntry
 	{
 		OptionsMenuStyles Style { get; }
@@ -229,9 +265,37 @@ namespace LunraGames.SubLight.Views
 		public Type PrefabType { get { return typeof(T); } }
 	}
 
+
+	public class DividerOptionsMenuEntry : OptionsMenuEntry<DividerOptionsMenuEntryLeaf>
+	{
+		public static DividerOptionsMenuEntry CreateDivider(
+			OptionsMenuDividerSegments segment = OptionsMenuDividerSegments.DoubleSegment,
+			OptionsMenuDividerFades fade = OptionsMenuDividerFades.None
+		)
+		{ return new DividerOptionsMenuEntry(OptionsMenuStyles.Divider, segment, fade); }
+
+		OptionsMenuStyles style;
+		public override OptionsMenuStyles Style { get { return style; } }
+
+		public OptionsMenuDividerSegments Segment;
+		public OptionsMenuDividerFades Fade;
+
+		DividerOptionsMenuEntry(
+			OptionsMenuStyles style,
+			OptionsMenuDividerSegments segment = OptionsMenuDividerSegments.DoubleSegment,
+			OptionsMenuDividerFades fade = OptionsMenuDividerFades.None
+		)
+		{
+			this.style = style;
+			Segment = segment;
+			Fade = fade;
+		}
+	}
+
+	/* Currently unused
 	public class GenericOptionsMenuEntry : OptionsMenuEntry<OptionsMenuEntryLeaf>
 	{
-		public static GenericOptionsMenuEntry CreateDivider() { return new GenericOptionsMenuEntry(OptionsMenuStyles.Divider); }
+		//public static GenericOptionsMenuEntry CreateDivider() { return new GenericOptionsMenuEntry(OptionsMenuStyles.Divider); }
 
 		OptionsMenuStyles style;
 		public override OptionsMenuStyles Style { get { return style; } }
@@ -241,6 +305,7 @@ namespace LunraGames.SubLight.Views
 			this.style = style;
 		}
 	}
+	*/
 
 	public class LabelOptionsMenuEntry : OptionsMenuEntry<LabelOptionsMenuEntryLeaf>
 	{
