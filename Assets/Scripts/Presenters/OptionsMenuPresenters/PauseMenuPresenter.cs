@@ -33,7 +33,7 @@ namespace LunraGames.SubLight.Presenters
 				OptionsMenuThemes.Neutral,
 				LabelOptionsMenuEntry.CreateTitle("Paused", OptionsMenuIcons.Pause),
 				LabelOptionsMenuEntry.CreateHeader("Last saved 5 minutes ago, in the current system"),
-				DividerOptionsMenuEntry.CreateDivider(OptionsMenuDividerSegments.None, OptionsMenuDividerFades.Bottom),
+				DividerOptionsMenuEntry.CreateDivider(OptionsMenuDividerSegments.None),
 				ButtonOptionsMenuEntry.CreateButton("Continue", () => Debug.Log("Continue clicked!")),
 				ButtonOptionsMenuEntry.CreateButton("Save", () => Debug.Log("Save clicked!")),
 				ButtonOptionsMenuEntry.CreateButton("Return to Main Menu", () => Debug.Log("Main Menu clicked!")),
