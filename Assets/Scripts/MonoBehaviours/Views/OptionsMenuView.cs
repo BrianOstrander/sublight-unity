@@ -173,44 +173,51 @@ namespace LunraGames.SubLight.Views
 			instance.Label.text = entry.Message;
 			instance.Button.OnClick.AddListener(new UnityEngine.Events.UnityAction(() => OnClick(entry)));
 
-			var backgroundColors = instance.BackgroundArea.LocalStyle.Colors.Duplicate;
-			var highlightColors = instance.HighlightArea.LocalStyle.Colors.Duplicate;
-			var labelColors = instance.LabelArea.LocalStyle.Colors.Duplicate;
+			foreach (var target in instance.DisabledAreas) target.gameObject.SetActive(entry.InteractionState != ButtonOptionsMenuEntry.InteractionStates.Interactable);
+			foreach (var target in instance.EnabledAreas) target.gameObject.SetActive(entry.InteractionState == ButtonOptionsMenuEntry.InteractionStates.Interactable);
+
+			var backgroundTarget = instance.BackgroundAreas.First(a => a.gameObject.activeSelf);
+			var highlightTarget = instance.HighlightAreas.First(a => a.gameObject.activeSelf);
+			var labelTarget = instance.LabelAreas.First(a => a.gameObject.activeSelf);
+
+			var backgroundColors = backgroundTarget.LocalStyle.Colors.Duplicate;
+			var highlightColors = highlightTarget.LocalStyle.Colors.Duplicate;
+			var labelColors = labelTarget.LocalStyle.Colors.Duplicate;
 
 			backgroundColors.NormalColor = theme.SecondaryColor.Color.NewA(backgroundColors.NormalColor.a);
-			backgroundColors.HighlightedColor = theme.SecondaryColor.Color.NewA(backgroundColors.HighlightedColor.a);
+			backgroundColors.HighlightedColor = theme.PrimaryColor.Color.NewA(backgroundColors.HighlightedColor.a);
 			backgroundColors.PressedColor = theme.PrimaryColor.Color.NewA(backgroundColors.PressedColor.a);
 
-			highlightColors.NormalColor = theme.PrimaryColor.Color.NewA(highlightColors.NormalColor.a);
+			highlightColors.NormalColor = theme.SecondaryColor.Color.NewA(highlightColors.NormalColor.a);
 			highlightColors.HighlightedColor = theme.PrimaryColor.Color.NewA(highlightColors.HighlightedColor.a);
 			highlightColors.PressedColor = theme.PrimaryColor.Color.NewA(highlightColors.PressedColor.a);
 
 			labelColors.NormalColor = theme.PrimaryColor.Color.NewA(labelColors.NormalColor.a);
 			labelColors.HighlightedColor = theme.PrimaryColor.Color.NewA(labelColors.HighlightedColor.a);
-			labelColors.PressedColor = theme.TertiaryColor.Color.NewA(labelColors.PressedColor.a);
+			labelColors.PressedColor = theme.SecondaryColor.Color.NewA(labelColors.PressedColor.a);
 
 			switch (entry.InteractionState)
 			{
 				case ButtonOptionsMenuEntry.InteractionStates.Interactable:
 					// todo... theming
-					instance.Button.interactable = true;
 					break;
 				case ButtonOptionsMenuEntry.InteractionStates.LooksNotInteractable:
-					// todo... theming
-					instance.Button.interactable = true;
-					break;
 				case ButtonOptionsMenuEntry.InteractionStates.NotInteractable:
-					// todo... theming
-					instance.Button.interactable = false;
+					//highlightColors.HighlightedColor = theme.SecondaryColor.Color.NewA(highlightColors.HighlightedColor.a);
+					//highlightColors.PressedColor = theme.SecondaryColor.Color.NewA(highlightColors.PressedColor.a);
+
+					labelColors.NormalColor = labelColors.NormalColor.NewA(labelColors.NormalColor.a * 0.5f);
+					labelColors.HighlightedColor = Color.black.NewA(labelColors.HighlightedColor.a);
+					labelColors.PressedColor = Color.black.NewA(labelColors.PressedColor.a);
 					break;
 				default:
 					Debug.LogError("Unrecognized InteractionState: " + entry.InteractionState);
 					break;
 			}
 
-			instance.BackgroundArea.LocalStyle.Colors = backgroundColors;
-			instance.HighlightArea.LocalStyle.Colors = highlightColors;
-			instance.LabelArea.LocalStyle.Colors = labelColors;
+			backgroundTarget.LocalStyle.Colors = backgroundColors;
+			highlightTarget.LocalStyle.Colors = highlightColors;
+			labelTarget.LocalStyle.Colors = labelColors;
 		}
 
 		public override void Reset()

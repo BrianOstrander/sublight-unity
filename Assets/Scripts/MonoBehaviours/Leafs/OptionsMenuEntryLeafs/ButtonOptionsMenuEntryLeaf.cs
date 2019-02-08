@@ -9,8 +9,11 @@ namespace LunraGames.SubLight.Views
 		public TextMeshProUGUI Label;
 		public XButton Button;
 
-		public XButtonLeaf LabelArea;
-		public XButtonLeaf BackgroundArea;
-		public XButtonLeaf HighlightArea;
+		public GameObject[] DisabledAreas;
+		public GameObject[] EnabledAreas;
+
+		public XButtonLeaf[] LabelAreas;
+		public XButtonLeaf[] BackgroundAreas;
+		public XButtonLeaf[] HighlightAreas;
 	}
 }
