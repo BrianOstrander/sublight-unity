@@ -53,7 +53,9 @@ namespace LunraGames.SubLight.Presenters
 		{
 			get
 			{
-				return state == States.Default && lastDialogState == DialogRequest.States.Complete;
+				return state == States.Default &&
+					                  lastDialogState == DialogRequest.States.Complete &&
+					                  model.TransitState.Value.State == TransitState.States.Complete;
 			}
 		}
 
@@ -208,7 +210,7 @@ namespace LunraGames.SubLight.Presenters
 						DialogRequest.Confirm(
 							language.SavingError.Message,
 							DialogStyles.Error,
-							language.SavingTitle,
+							language.SavingError.Title,
 							done,
 							true
 						)
@@ -271,23 +273,110 @@ namespace LunraGames.SubLight.Presenters
 				"WaitingPauseMenuForSavingResult"
 			);
 
-			/*
-			SM.PushBlocking(
-				done =>
-				{
-					View.Closed += done;
-					CloseView();
-				},
-				"ClosingPauseMenuFromSaving"
-			);
-			*/
 			SM.Push(OnCheckSaveResult, "PauseMenuCheckSaveResult");
 		}
 
 		void OnClickSaveDisabled()
 		{
 			if (NotInteractable) return;
-			Debug.Log("click save disabled");
+
+			if (hasSavedSinceOpening)
+			{
+				SM.PushBlocking(
+					done =>
+					{
+						View.Closed += done;
+						CloseView();
+					},
+					"ClosingPauseMenuFromAlreadySavedError"
+				);
+
+				SM.PushBlocking(
+					done =>
+					{
+						App.Callbacks.DialogRequest(
+							DialogRequest.Confirm(
+								language.SaveDisabledAlreadySaved.Message,
+								DialogStyles.Error,
+								language.SaveDisabledAlreadySaved.Title,
+								done,
+								true
+							)
+						);
+					},
+					"ShowingDialogFromAlreadySavedError"
+				);
+
+				SM.Push(
+					() => Show(),
+					"ShowingPauseMenuFromAlreadySavedErrorDialog"
+				);
+
+				return;
+			}
+			if (model.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
+			{
+				SM.PushBlocking(
+					done =>
+					{
+						View.Closed += done;
+						CloseView();
+					},
+					"ClosingPauseMenuFromEncounterSaveError"
+				);
+
+				SM.PushBlocking(
+					done =>
+					{
+						App.Callbacks.DialogRequest(
+							DialogRequest.Confirm(
+								language.SaveDisabledDuringEncounter.Message,
+								DialogStyles.Error,
+								language.SaveDisabledDuringEncounter.Title,
+								done,
+								true
+							)
+						);
+					},
+					"ShowingDialogFromEncounterSaveError"
+				);
+
+				SM.Push(
+					() => Show(),
+					"ShowingPauseMenuFromEncounterSaveError"
+				);
+				return;
+			}
+
+			SM.PushBlocking(
+					done =>
+					{
+						View.Closed += done;
+						CloseView();
+					},
+					"ClosingPauseMenuFromUnknownSaveError"
+				);
+
+			SM.PushBlocking(
+				done =>
+				{
+					App.Callbacks.DialogRequest(
+						DialogRequest.Confirm(
+							language.SaveDisabledUnknown.Message,
+							DialogStyles.Error,
+							language.SaveDisabledUnknown.Title,
+							done,
+							true
+						)
+					);
+				},
+				"ShowingDialogFromUnknownSaveError"
+			);
+
+			SM.Push(
+				() => Show(),
+				"ShowingPauseMenuFromUnknownSaveError"
+			);
 		}
 
 		void OnClickMainMenu()

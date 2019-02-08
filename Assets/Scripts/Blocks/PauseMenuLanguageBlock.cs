@@ -16,8 +16,9 @@ namespace LunraGames.SubLight
 		public LanguageStringModel Resume;
 
 		public LanguageStringModel Save;
-		public DialogEntry SaveDisabledDuringTransit;
 		public DialogEntry SaveDisabledDuringEncounter;
+		public DialogEntry SaveDisabledAlreadySaved;
+		public DialogEntry SaveDisabledUnknown;
 
 		public LanguageStringModel MainMenu;
 		public DialogEntry MainMenuConfirm;

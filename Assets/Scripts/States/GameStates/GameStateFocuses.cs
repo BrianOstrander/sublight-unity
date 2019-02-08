@@ -48,15 +48,20 @@ namespace LunraGames.SubLight
 						Resume = LanguageStringModel.Override("Resume"),
 
 						Save = LanguageStringModel.Override("Save"),
-						SaveDisabledDuringTransit = new PauseMenuLanguageBlock.DialogEntry
-						{
-							Title = LanguageStringModel.Override("Ark In Transit"),
-							Message = LanguageStringModel.Override("Saving is disabled while the ark is in transit.")
-						},
 						SaveDisabledDuringEncounter = new PauseMenuLanguageBlock.DialogEntry
 						{
 							Title = LanguageStringModel.Override("Active Encounter"),
 							Message = LanguageStringModel.Override("Saving is disabled during encounters.")
+						},
+						SaveDisabledAlreadySaved = new PauseMenuLanguageBlock.DialogEntry
+						{
+							Title = LanguageStringModel.Override("Already Saved"),
+							Message = LanguageStringModel.Override("Your latest progress is already saved.")
+						},
+						SaveDisabledUnknown = new PauseMenuLanguageBlock.DialogEntry
+						{
+							Title = LanguageStringModel.Override("Saving Disabled"),
+							Message = LanguageStringModel.Override("Saving has been disabled for an unspecified reason, likely an error.")
 						},
 
 						MainMenu = LanguageStringModel.Override("Main Menu"),
