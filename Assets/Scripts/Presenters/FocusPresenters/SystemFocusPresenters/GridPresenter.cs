@@ -282,8 +282,8 @@ namespace LunraGames.SubLight.Presenters
 				{
 					case UniverseFocuses.None: break;
 					case UniverseFocuses.Ship: endPosition = ShipPositionOnPlane; break;
-					case UniverseFocuses.GalacticOrigin: endPosition = model.Galaxy.GalaxyOrigin; break;
-					case UniverseFocuses.ClusterOrigin: endPosition = model.Galaxy.ClusterOrigin; break;
+					case UniverseFocuses.GalacticOrigin: endPosition = model.Context.Galaxy.GalaxyOrigin; break;
+					case UniverseFocuses.ClusterOrigin: endPosition = model.Context.Galaxy.ClusterOrigin; break;
 					default:
 						Debug.LogError("unrecognized focus: " + focus);
 						break;

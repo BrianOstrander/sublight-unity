@@ -18,7 +18,7 @@ namespace LunraGames.SubLight.Presenters
 
 		public GalaxyLabelsPresenter(GameModel model, UniverseScales scale, params UniverseScales[] scaleLabels) : base(model, scale)
 		{
-			scaleInUniverse = model.Galaxy.GalaxySize;
+			scaleInUniverse = model.Context.Galaxy.GalaxySize;
 			positionInUniverse = UniversePosition.Zero;
 			this.scaleLabels = scaleLabels;
 		}
@@ -33,7 +33,7 @@ namespace LunraGames.SubLight.Presenters
 			var labels = new List<GalaxyLabelBlock>();
 			var transform = ScaleModel.Transform.Value;
 
-			foreach (var label in Model.Galaxy.GetLabels(scaleLabels))
+			foreach (var label in Model.Context.Galaxy.GetLabels(scaleLabels))
 			{
 				var result = new GalaxyLabelBlock();
 				result.Text = label.Name;

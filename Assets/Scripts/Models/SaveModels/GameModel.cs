@@ -11,7 +11,7 @@ namespace LunraGames.SubLight.Models
 	/// </summary>
 	public class GameModel : SaveModel
 	{
-		#region Serialized
+		#region Dynamic Serialized Values
 		[JsonProperty] int seed;
 		/// <summary>
 		/// The game seed.
@@ -41,7 +41,9 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] FocusTransform focusTransform;
 		[JsonIgnore] public readonly ListenerProperty<FocusTransform> FocusTransform;
+		#endregion
 
+		#region Non-Dynamic Serialized Values
 		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
 		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
 		[JsonProperty] UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
@@ -81,9 +83,6 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] UniverseModel universe;
 		[JsonIgnore] public UniverseModel Universe { get { return universe; } set { universe = value; } }
-
-		[JsonIgnore] public GalaxyInfoModel Galaxy { get; set; }
-		[JsonIgnore] public GalaxyInfoModel GalaxyTarget { get; set; }
 		#endregion
 
 		#region NonSerialized
@@ -102,6 +101,7 @@ namespace LunraGames.SubLight.Models
 		public GameModel()
 		{
 			SaveType = SaveTypes.Game;
+
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
 			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);

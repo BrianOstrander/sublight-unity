@@ -193,11 +193,11 @@ namespace LunraGames.SubLight
 					}
 				);
 
-				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
-				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
+				new ClusterPresenter(payload.Game, payload.Game.Context.Galaxy);
+				new ClusterPresenter(payload.Game, payload.Game.Context.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
 				var foundEnd = false;
-				var playerEnd = payload.Game.Galaxy.GetPlayerEnd(out foundEnd);
+				var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
 
 				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
 
@@ -259,8 +259,8 @@ namespace LunraGames.SubLight
 				for (var i = 0; i < payload.LocalSectorCount; i++)
 				{
 					var sector = new SectorInstanceModel();
-					sector.Sector.Value = App.Universe.GetSector(payload.Game.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
-					var systems = new SystemInstanceModel[payload.Game.Galaxy.MaximumSectorSystemCount.Value];
+					sector.Sector.Value = App.Universe.GetSector(payload.Game.Context.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
+					var systems = new SystemInstanceModel[payload.Game.Context.Galaxy.MaximumSectorSystemCount.Value];
 					for (var s = 0; s < systems.Length; s++)
 					{
 						new CelestialSystemPresenter(

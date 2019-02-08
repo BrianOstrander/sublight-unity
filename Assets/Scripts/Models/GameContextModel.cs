@@ -61,6 +61,9 @@ namespace LunraGames.SubLight.Models
 		ToolbarSelectionRequest toolbarSelectionRequest;
 		public ListenerProperty<ToolbarSelectionRequest> ToolbarSelectionRequest;
 
+		public GalaxyInfoModel Galaxy { get; set; }
+		public GalaxyInfoModel GalaxyTarget { get; set; }
+
 		public GameContextModel(GameModel model)
 		{
 			this.model = model;

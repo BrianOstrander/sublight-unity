@@ -94,7 +94,7 @@ namespace LunraGames.SubLight
 				done();
 				return;
 			}
-			Payload.Game.Galaxy = result.TypedModel;
+			Payload.Game.Context.Galaxy = result.TypedModel;
 
 			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))
 			{
@@ -114,14 +114,14 @@ namespace LunraGames.SubLight
 				done();
 				return;
 			}
-			Payload.Game.GalaxyTarget = result.TypedModel;
+			Payload.Game.Context.GalaxyTarget = result.TypedModel;
 
 			done();
 		}
 
 		void SetNonSerializedValues(Action done)
 		{
-			Payload.Game.Ship.Value.SetCurrentSystem(App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex));
+			Payload.Game.Ship.Value.SetCurrentSystem(App.Universe.GetSystem(Payload.Game.Context.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex));
 			if (Payload.Game.Ship.Value.CurrentSystem.Value == null) Debug.LogError("Unable to load current system at "+Payload.Game.Ship.Value.Position.Value+" and index "+Payload.Game.Ship.Value.SystemIndex.Value);
 
 			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
@@ -141,7 +141,7 @@ namespace LunraGames.SubLight
 
 				if (!waypoint.Location.Value.IsSystem) continue;
 
-				var currWaypointSystem = App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, waypoint.Location.Value.Position, waypoint.Location.Value.SystemIndex);
+				var currWaypointSystem = App.Universe.GetSystem(Payload.Game.Context.Galaxy, Payload.Game.Universe, waypoint.Location.Value.Position, waypoint.Location.Value.SystemIndex);
 				if (currWaypointSystem == null)
 				{
 					Debug.LogError("Unable to load waypoint system ( WaypointId: "+waypoint.WaypointId.Value+" , Name: "+waypoint.Name.Value+" ) at\n" + waypoint.Location.Value.Position + " and index " + waypoint.Location.Value.SystemIndex);
@@ -410,7 +410,7 @@ namespace LunraGames.SubLight
 
 		void OnCalculateLocalSectorsUpdateSystems(SectorInstanceModel sectorModel, UniversePosition sectorPosition)
 		{
-			sectorModel.Sector.Value = App.Universe.GetSector(Payload.Game.Galaxy, Payload.Game.Universe, sectorPosition);
+			sectorModel.Sector.Value = App.Universe.GetSector(Payload.Game.Context.Galaxy, Payload.Game.Universe, sectorPosition);
 			var systemCount = sectorModel.Sector.Value.SystemCount.Value;
 			for (var i = 0; i < sectorModel.SystemModels.Value.Length; i++)
 			{
@@ -418,7 +418,7 @@ namespace LunraGames.SubLight
 				if (i < systemCount)
 				{
 					// is active
-					currSystem.SetSystem(App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, sectorModel.Sector, i));
+					currSystem.SetSystem(App.Universe.GetSystem(Payload.Game.Context.Galaxy, Payload.Game.Universe, sectorModel.Sector, i));
 				}
 				else currSystem.SetSystem(null);
 			}
@@ -426,7 +426,7 @@ namespace LunraGames.SubLight
 
 		void OnScaleTransform(UniverseTransform transform)
 		{
-			var labels = Payload.Game.Galaxy.GetLabels();
+			var labels = Payload.Game.Context.Galaxy.GetLabels();
 			var targetProperty = Payload.Game.Context.ScaleLabelSystem;
 
 			switch (transform.Scale)
@@ -435,15 +435,15 @@ namespace LunraGames.SubLight
 					Payload.Game.Context.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
 					return;
 				case UniverseScales.Local:
-					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
+					labels = Payload.Game.Context.Galaxy.GetLabels(UniverseScales.Quadrant);
 					targetProperty = Payload.Game.Context.ScaleLabelLocal;
 					break;
 				case UniverseScales.Stellar:
-					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
+					labels = Payload.Game.Context.Galaxy.GetLabels(UniverseScales.Quadrant);
 					targetProperty = Payload.Game.Context.ScaleLabelStellar;
 					break;
 				case UniverseScales.Quadrant:
-					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Galactic);
+					labels = Payload.Game.Context.Galaxy.GetLabels(UniverseScales.Galactic);
 					targetProperty = Payload.Game.Context.ScaleLabelQuadrant;
 					break;
 				case UniverseScales.Galactic:
@@ -454,7 +454,7 @@ namespace LunraGames.SubLight
 					return;
 			}
 
-			var normalizedPosition = UniversePosition.NormalizedSector(transform.UniverseOrigin, Payload.Game.Galaxy.GalaxySize);
+			var normalizedPosition = UniversePosition.NormalizedSector(transform.UniverseOrigin, Payload.Game.Context.Galaxy.GalaxySize);
 
 			float? proximity = null;
 			GalaxyLabelModel closestLabel = null;
