@@ -28,7 +28,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Heartbeat.Update += OnUpdate;
 			model.FocusTransform.Changed += OnZoom;
-			model.CelestialSystemState.Changed += OnCelestialSystemState;
+			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 		}
 
 		protected override void OnUnBind()
@@ -38,7 +38,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Heartbeat.Update -= OnUpdate;
 			model.FocusTransform.Changed -= OnZoom;
-			model.CelestialSystemState.Changed -= OnCelestialSystemState;
+			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -46,8 +46,8 @@ namespace LunraGames.SubLight.Presenters
 			View.ScaleText = scaleText.Value.Value;
 			OnZoom(model.FocusTransform.Value);
 			OnText(model.FocusTransform.Value);
-			View.PushOpacity(() => model.GridScaleOpacity.Value);
-			OnCelestialSystemState(model.CelestialSystemStateLastSelected);
+			View.PushOpacity(() => model.Context.GridScaleOpacity.Value);
+			OnCelestialSystemState(model.Context.CelestialSystemStateLastSelected);
 		}
 
 		#region
@@ -61,7 +61,7 @@ namespace LunraGames.SubLight.Presenters
 			opacityCurrent = opacityBegin + ((opacityTarget - opacityBegin) * scalar);
 			if (Mathf.Approximately(0f, opacityRemaining.Value)) opacityRemaining = null;
 
-			model.GridScaleOpacity.Value = opacityCurrent;
+			model.Context.GridScaleOpacity.Value = opacityCurrent;
 			View.SetOpacityStale();
 		}
 
@@ -118,7 +118,7 @@ namespace LunraGames.SubLight.Presenters
 					newTarget = 0f;
 					break;
 				case CelestialSystemStateBlock.States.Idle:
-					newTarget = model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected ? 0f : 1f;
+					newTarget = model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected ? 0f : 1f;
 					break;
 				case CelestialSystemStateBlock.States.UnSelected:
 					newTarget = 1f;

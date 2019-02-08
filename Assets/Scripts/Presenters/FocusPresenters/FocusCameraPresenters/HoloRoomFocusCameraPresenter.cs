@@ -86,7 +86,7 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			var cameraTransform = gameModel.CameraTransform.Value;
+			var cameraTransform = gameModel.Context.CameraTransform.Value;
 
 			if (lastTransformedByInput)
 			{
@@ -159,7 +159,7 @@ namespace LunraGames.SubLight.Presenters
 						return;
 					}
 					lastTransformedByInput = false;
-					transformOnAnimationBegin = gameModel.CameraTransform.Value;
+					transformOnAnimationBegin = gameModel.Context.CameraTransform.Value;
 					transformAnimation = transform;
 					animationRemaining = transform.Duration;
 					OnAnimation(0f);
@@ -195,7 +195,7 @@ namespace LunraGames.SubLight.Presenters
 			if (nextTransform.State == CameraTransformRequest.States.Complete) animationRemaining = null;
 			var onDone = transformAnimation.Done;
 
-			gameModel.CameraTransform.Value = nextTransform;
+			gameModel.Context.CameraTransform.Value = nextTransform;
 			App.Callbacks.CameraTransformRequest(nextTransform);
 
 			if (nextTransform.State == CameraTransformRequest.States.Complete && onDone != null) onDone();
@@ -210,7 +210,7 @@ namespace LunraGames.SubLight.Presenters
 					elapsedSinceInput = View.DelayBeforePitchSettle;
 
 					View.Input(transform.Yaw, transform.Pitch, transform.Radius);
-					if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
+					if (gameModel != null) gameModel.Context.CameraTransform.Value = new CameraTransformRequest(
 						CameraTransformRequest.States.Active,
 						CameraTransformRequest.Transforms.Input,
 						View.Yaw,
@@ -219,7 +219,7 @@ namespace LunraGames.SubLight.Presenters
 					);
 					break;
 				case CameraTransformRequest.States.Complete:
-					if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
+					if (gameModel != null) gameModel.Context.CameraTransform.Value = new CameraTransformRequest(
 						CameraTransformRequest.States.Complete,
 						CameraTransformRequest.Transforms.Input,
 						View.Yaw,
@@ -233,7 +233,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnSettleTransform(CameraTransformRequest transform)
 		{
 			View.Input(transform.Yaw, transform.Pitch, transform.Radius);
-			if (gameModel != null) gameModel.CameraTransform.Value = new CameraTransformRequest(
+			if (gameModel != null) gameModel.Context.CameraTransform.Value = new CameraTransformRequest(
 				CameraTransformRequest.States.Complete,
 				CameraTransformRequest.Transforms.Settle,
 				View.Yaw,

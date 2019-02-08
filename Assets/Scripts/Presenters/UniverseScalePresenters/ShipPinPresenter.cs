@@ -16,7 +16,7 @@ namespace LunraGames.SubLight.Presenters
 			OnPosition(model.Ship.Value.Position.Value);
 
 			model.Ship.Value.Position.Changed += OnPosition;
-			model.TransitState.Changed += OnTransitState;
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -24,7 +24,7 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			Model.Ship.Value.Position.Changed -= OnPosition;
-			Model.TransitState.Changed -= OnTransitState;
+			Model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnShowView()
@@ -48,7 +48,7 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 
-			View.TimeScalar = Model.TransitState.Value.RelativeTimeScalar;
+			View.TimeScalar = Model.Context.TransitState.Value.RelativeTimeScalar;
 		}
 
 		#region Events

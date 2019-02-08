@@ -178,9 +178,9 @@ namespace LunraGames.SubLight.Presenters
 			OnShipPosition(model.Ship.Value.Position.Value);
 
 			model.Ship.Value.Range.Changed += OnTravelRange;
-			model.CelestialSystemState.Changed += OnCelestialSystemState;
+			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
-			model.TransitState.Changed += OnTransitState;
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -193,20 +193,20 @@ namespace LunraGames.SubLight.Presenters
 
 			model.Ship.Value.Position.Changed -= OnShipPosition;
 			model.Ship.Value.Range.Changed -= OnTravelRange;
-			model.CelestialSystemState.Changed -= OnCelestialSystemState;
+			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
-			View.SetGridSelected(model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected, true);
+			View.SetGridSelected(model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected, true);
 		}
 
 		void SetGrid()
 		{
-			var activeScale = model.ActiveScale.Value.Scale.Value;
+			var activeScale = model.Context.ActiveScale.Value.Scale.Value;
 			var result = new GridView.Grid[unitMaps.Length];
 
 			for (var i = 0; i < unitMaps.Length; i++)
@@ -509,7 +509,7 @@ namespace LunraGames.SubLight.Presenters
 			scaleTransformsOnBeginAnimation.Clear();
 
 			var origin = ShipPositionOnPlane;
-			var activeScale = model.ActiveScale.Value;
+			var activeScale = model.Context.ActiveScale.Value;
 
 			if (activeScale != null) origin = activeScale.Transform.Value.UniverseOrigin;
 
@@ -549,13 +549,13 @@ namespace LunraGames.SubLight.Presenters
 						wasDragging = false;
 						return;
 					}
-					transformOnBeginDrag = model.ActiveScale.Value.Transform.Value;
+					transformOnBeginDrag = model.Context.ActiveScale.Value.Transform.Value;
 				}
 				else
 				{
 					// end drag logic
 					if (lastgesture.IsSecondary) App.Callbacks.CameraTransformRequest(CameraTransformRequest.InputComplete());
-					else model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
+					else model.Context.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 				}
 				wasDragging = isDragging;
 			}
@@ -580,11 +580,11 @@ namespace LunraGames.SubLight.Presenters
 			var offset = View.GridUnityOrigin + (unityPosOnDragBegin - currUnityDrag);
 			var universePos = transformOnBeginDrag.GetUniversePosition(offset);
 
-			model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+			model.Context.ActiveScale.Value.Transform.Value = model.Context.ActiveScale.Value.Transform.Value.Duplicate(universePos);
 
 			SetGrid();
 
-			model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Input);
+			model.Context.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Input);
 		}
 
 		void OnCheckSecondaryDragging(float delta)
@@ -627,7 +627,7 @@ namespace LunraGames.SubLight.Presenters
 			switch (transitState.State)
 			{
 				case TransitState.States.Request:
-					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
+					model.Context.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
 					break;
 				case TransitState.States.Active:
 					var universePos = transitState.CurrentPosition.NewLocal(transitState.CurrentPosition.Local.NewY(0f));
@@ -637,14 +637,14 @@ namespace LunraGames.SubLight.Presenters
 						case TransitState.Steps.Prepare:
 							if (transitState.CurrentStep.Initializing)
 							{
-								universeOriginOnTransitPrepareInitialize = model.ActiveScale.Value.Transform.Value.UniverseOrigin;
+								universeOriginOnTransitPrepareInitialize = model.Context.ActiveScale.Value.Transform.Value.UniverseOrigin;
 							}
 							var universeCenterPos = UniversePosition.Lerp(View.PositionCenterCurve.Evaluate(transitState.CurrentStep.Progress), universeOriginOnTransitPrepareInitialize, universePos);
-							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universeCenterPos);
+							model.Context.ActiveScale.Value.Transform.Value = model.Context.ActiveScale.Value.Transform.Value.Duplicate(universeCenterPos);
 							SetGrid();
 							break;
 						case TransitState.Steps.Transit:
-							model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+							model.Context.ActiveScale.Value.Transform.Value = model.Context.ActiveScale.Value.Transform.Value.Duplicate(universePos);
 							model.Ship.Value.Position.Value = transitState.CurrentPosition;
 							SetGrid();
 							break;
@@ -653,21 +653,21 @@ namespace LunraGames.SubLight.Presenters
 							{
 								transitState.BeginSystem.Visited.Value = true;
 
-								model.ActiveScale.Value.Transform.Value = model.ActiveScale.Value.Transform.Value.Duplicate(universePos);
+								model.Context.ActiveScale.Value.Transform.Value = model.Context.ActiveScale.Value.Transform.Value.Duplicate(universePos);
 								model.Ship.Value.Position.Value = transitState.EndSystem.Position;
 
 								model.Ship.Value.SetCurrentSystem(transitState.EndSystem);
-								model.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.CelestialSystemState.Value.System.Position.Value, model.CelestialSystemState.Value.System);
+								model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemState.Value.System.Position.Value, model.Context.CelestialSystemState.Value.System);
 
 								SetGrid();
 							}
 							break;
 					}
 
-					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
+					model.Context.GridInput.Value = new GridInputRequest(GridInputRequest.States.Active, GridInputRequest.Transforms.Animation);
 					break;
 				case TransitState.States.Complete:
-					model.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Animation);
+					model.Context.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Animation);
 					break;
 			}
 		}

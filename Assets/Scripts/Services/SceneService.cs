@@ -215,13 +215,13 @@ namespace LunraGames.SubLight
 		void OnGameBegin(StateChange change)
 		{
 			model = (change.Payload as GamePayload).Game;
-			model.TransitState.Changed += OnTransitState;
-			OnTransitState(model.TransitState);
+			model.Context.TransitState.Changed += OnTransitState;
+			OnTransitState(model.Context.TransitState);
 		}
 
 		void OnGameEnd(StateChange change)
 		{
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.TransitState.Changed -= OnTransitState;
 			OnTransitState(TransitState.Default());
 			model = null;
 		}

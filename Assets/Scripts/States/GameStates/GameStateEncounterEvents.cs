@@ -124,7 +124,7 @@ namespace LunraGames.SubLight
 					return;
 				}
 
-				payload.Game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+				payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
 					targetSelection,
 					targetLocking == EncounterEvents.ToolbarSelection.LockStates.Lock,
 					ToolbarSelectionRequest.Sources.Encounter,

@@ -20,7 +20,7 @@ namespace LunraGames.SubLight.Presenters
 			positionInUniverse = Model.Ship.Value.Position;
 
 			Model.Ship.Value.Position.Changed += OnShipPosition;
-			Model.CelestialSystemState.Changed += OnCelestialSystemState;
+			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Transform.Changed += OnScaleTransform;
 		}
@@ -30,7 +30,7 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			Model.Ship.Value.Position.Changed -= OnShipPosition;
-			Model.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 		}
@@ -205,24 +205,24 @@ namespace LunraGames.SubLight.Presenters
 			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
 			UniversePosition? end = null;
-			if (Model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected)
+			if (Model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected)
 			{
-				switch (Model.CelestialSystemState.Value.State)
+				switch (Model.Context.CelestialSystemState.Value.State)
 				{
 					case CelestialSystemStateBlock.States.Highlighted:
-						end = Model.CelestialSystemState.Value.Position;
+						end = Model.Context.CelestialSystemState.Value.Position;
 						break;
 					default:
-						end = Model.CelestialSystemStateLastSelected.Value.Position;
+						end = Model.Context.CelestialSystemStateLastSelected.Value.Position;
 						break;
 				}
 			}
 			else
 			{
-				switch (Model.CelestialSystemState.Value.State)
+				switch (Model.Context.CelestialSystemState.Value.State)
 				{
 					case CelestialSystemStateBlock.States.Highlighted:
-						end = Model.CelestialSystemState.Value.Position;
+						end = Model.Context.CelestialSystemState.Value.Position;
 						break;
 				}
 			}
@@ -238,10 +238,10 @@ namespace LunraGames.SubLight.Presenters
 			{
 				case CelestialSystemStateBlock.States.UnSelected: break;
 				case CelestialSystemStateBlock.States.Highlighted:
-					switch (Model.CelestialSystemStateLastSelected.Value.State)
+					switch (Model.Context.CelestialSystemStateLastSelected.Value.State)
 					{
 						case CelestialSystemStateBlock.States.Selected:
-							end = Model.CelestialSystemStateLastSelected.Value.Position;
+							end = Model.Context.CelestialSystemStateLastSelected.Value.Position;
 							break;
 						default:
 							end = block.Position;
@@ -252,10 +252,10 @@ namespace LunraGames.SubLight.Presenters
 					end = block.Position;
 					break;
 				case CelestialSystemStateBlock.States.Idle:
-					switch (Model.CelestialSystemStateLastSelected.Value.State)
+					switch (Model.Context.CelestialSystemStateLastSelected.Value.State)
 					{
 						case CelestialSystemStateBlock.States.Selected:
-							end = Model.CelestialSystemStateLastSelected.Value.Position;
+							end = Model.Context.CelestialSystemStateLastSelected.Value.Position;
 							break;
 					}
 					break;

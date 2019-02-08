@@ -60,7 +60,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				return state == States.Default &&
 					                  lastDialogState == DialogRequest.States.Complete &&
-					                  model.TransitState.Value.State == TransitState.States.Complete;
+					                  model.Context.TransitState.Value.State == TransitState.States.Complete;
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			get
 			{
-				return model.TransitState.Value.State == TransitState.States.Complete &&
+				return model.Context.TransitState.Value.State == TransitState.States.Complete &&
 					        model.EncounterState.Current.Value.State == EncounterStateModel.States.Complete &&
 					        !hasSavedSinceOpening;
 			}

@@ -167,15 +167,15 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 			App.Callbacks.SaveRequest += OnSaveRequest;
 
-			Payload.Game.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
+			Payload.Game.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
 			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
 
-			Payload.Game.CelestialSystemState.Changed += OnCelestialSystemState;
+			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
-			Payload.Game.TransitState.Changed += OnTransitState;
+			Payload.Game.Context.TransitState.Changed += OnTransitState;
 
 			done();
 		}
@@ -213,7 +213,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 
 			// HACK BEGIN - Probably bad to do and I should feel bad... but oh well...
-			var activeScale = Payload.Game.ActiveScale.Value;
+			var activeScale = Payload.Game.Context.ActiveScale.Value;
 			activeScale.Opacity.Changed(1f);
 			activeScale.Transform.Changed(activeScale.Transform.Value);
 			// HACK END
@@ -232,7 +232,7 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			OnTransitComplete(Payload.Game.TransitState.Value);
+			OnTransitComplete(Payload.Game.Context.TransitState.Value);
 		}
 		#endregion
 
@@ -245,15 +245,15 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 
-			Payload.Game.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
+			Payload.Game.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
 			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
 
-			Payload.Game.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
-			Payload.Game.TransitState.Changed -= OnTransitState;
+			Payload.Game.Context.TransitState.Changed -= OnTransitState;
 
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
 			{
@@ -427,30 +427,30 @@ namespace LunraGames.SubLight
 		void OnScaleTransform(UniverseTransform transform)
 		{
 			var labels = Payload.Game.Galaxy.GetLabels();
-			var targetProperty = Payload.Game.ScaleLabelSystem;
+			var targetProperty = Payload.Game.Context.ScaleLabelSystem;
 
 			switch (transform.Scale)
 			{
 				case UniverseScales.System:
-					Payload.Game.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
+					Payload.Game.Context.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
 					return;
 				case UniverseScales.Local:
 					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
-					targetProperty = Payload.Game.ScaleLabelLocal;
+					targetProperty = Payload.Game.Context.ScaleLabelLocal;
 					break;
 				case UniverseScales.Stellar:
 					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
-					targetProperty = Payload.Game.ScaleLabelStellar;
+					targetProperty = Payload.Game.Context.ScaleLabelStellar;
 					break;
 				case UniverseScales.Quadrant:
 					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Galactic);
-					targetProperty = Payload.Game.ScaleLabelQuadrant;
+					targetProperty = Payload.Game.Context.ScaleLabelQuadrant;
 					break;
 				case UniverseScales.Galactic:
-					Payload.Game.ScaleLabelGalactic.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Milky Way"));
+					Payload.Game.Context.ScaleLabelGalactic.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Milky Way"));
 					return;
 				case UniverseScales.Cluster:
-					Payload.Game.ScaleLabelCluster.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Local Group"));
+					Payload.Game.Context.ScaleLabelCluster.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Local Group"));
 					return;
 			}
 
@@ -769,7 +769,7 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Complete:
 					// Unlocking the toolbar incase it was locked during the encounter.
-					Payload.Game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+					Payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
 						Payload.Game.ToolbarSelection.Value,
 						false,
 						ToolbarSelectionRequest.Sources.Encounter

@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace LunraGames.SubLight.Models
 {
+	/// <summary>
+	/// All data that is serialized about the game.
+	/// </summary>
 	public class GameModel : SaveModel
 	{
 		#region Serialized
@@ -84,55 +87,16 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region NonSerialized
-		// TODO: Figure out if this all should be moved to the payload, or some other model...
-		SaveStateBlock saveState = SaveStateBlock.Savable();
-		[JsonIgnore] public readonly ListenerProperty<SaveStateBlock> SaveState;
-
-		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
-		[JsonIgnore] public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
-
-		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
-		[JsonIgnore] public readonly ListenerProperty<GridInputRequest> GridInput;
-
-		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
-		[JsonIgnore] public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
-
-		UniverseScaleLabelBlock scaleLabelSystem = UniverseScaleLabelBlock.Default;
-		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelSystem;
-
-		UniverseScaleLabelBlock scaleLabelLocal = UniverseScaleLabelBlock.Default;
-		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelLocal;
-
-		UniverseScaleLabelBlock scaleLabelStellar = UniverseScaleLabelBlock.Default;
-		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelStellar;
-
-		UniverseScaleLabelBlock scaleLabelQuadrant = UniverseScaleLabelBlock.Default;
-		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelQuadrant;
-
-		UniverseScaleLabelBlock scaleLabelGalactic = UniverseScaleLabelBlock.Default;
-		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelGalactic;
-
-		UniverseScaleLabelBlock scaleLabelCluster = UniverseScaleLabelBlock.Default;
-		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelCluster;
-
-		float gridScaleOpacity;
-		[JsonIgnore] public readonly ListenerProperty<float> GridScaleOpacity;
-
-		UniverseScaleModel activeScale;
-		ListenerProperty<UniverseScaleModel> activeScaleListener;
-		[JsonIgnore] public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
-
-		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
-		[JsonIgnore] public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
-
-		TransitStateRequest transitStateRequest;
-		[JsonIgnore] public ListenerProperty<TransitStateRequest> TransitStateRequest;
-
-		TransitState transitState;
-		[JsonIgnore] public ListenerProperty<TransitState> TransitState;
-
-		ToolbarSelectionRequest toolbarSelectionRequest;
-		[JsonIgnore] public ListenerProperty<ToolbarSelectionRequest> ToolbarSelectionRequest;
+		/// <summary>
+		/// Gets the context data, non-serialized information relating to game
+		/// data.
+		/// </summary>
+		/// <remarks>
+		/// This should be the only non-serialized data in this model, anything
+		/// else should be inside the context.
+		/// </remarks>
+		/// <value>The context.</value>
+		[JsonIgnore] public readonly GameContextModel Context;
 		#endregion
 
 		public GameModel()
@@ -145,55 +109,7 @@ namespace LunraGames.SubLight.Models
 			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
-			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
-			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
-			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);
-			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
-
-			ScaleLabelSystem = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelSystem = value, () => scaleLabelSystem);
-			ScaleLabelLocal = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelLocal = value, () => scaleLabelLocal);
-			ScaleLabelStellar = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelStellar = value, () => scaleLabelStellar);
-			ScaleLabelQuadrant = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelQuadrant = value, () => scaleLabelQuadrant);
-			ScaleLabelGalactic = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelGalactic = value, () => scaleLabelGalactic);
-			ScaleLabelCluster = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelCluster = value, () => scaleLabelCluster);
-			GridScaleOpacity = new ListenerProperty<float>(value => gridScaleOpacity = value, () => gridScaleOpacity);
-
-			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
-			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
-			{
-				currScale.Opacity.Changed += OnScaleOpacity;
-				if (activeScale == null || activeScale.Opacity.Value < currScale.Opacity.Value) activeScale = currScale;
-			}
-
-			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
-
-			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
-			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
-
-			ToolbarSelectionRequest = new ListenerProperty<ToolbarSelectionRequest>(value => toolbarSelectionRequest = value, () => toolbarSelectionRequest);
+			Context = new GameContextModel(this);
 		}
-
-		#region Events
-		void OnScaleOpacity(float opacity)
-		{
-			var newHighestOpacityScale = activeScale;
-			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
-			{
-				if (newHighestOpacityScale.Opacity.Value < currScale.Opacity.Value) newHighestOpacityScale = currScale;
-			}
-			activeScaleListener.Value = newHighestOpacityScale;
-		}
-
-		void OnCelestialSystemState(CelestialSystemStateBlock block)
-		{
-			switch (block.State)
-			{
-				case CelestialSystemStateBlock.States.UnSelected:
-				case CelestialSystemStateBlock.States.Selected:
-					CelestialSystemStateLastSelected.Value = block;
-					break;
-			}
-		}
-		#endregion
 	}
 }

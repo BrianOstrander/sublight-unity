@@ -16,12 +16,12 @@ namespace LunraGames.SubLight.Presenters
 			this.model = model;
 			this.back = back;
 
-			model.TransitState.Changed += OnTransitState;
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
 		{
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -60,7 +60,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible) return;
 			if (waitingForAnimation) return;
-			if (Mathf.Approximately(0f, model.CameraTransform.Value.PitchValue())) return;
+			if (Mathf.Approximately(0f, model.Context.CameraTransform.Value.PitchValue())) return;
 
 			OnClick();
 		}

@@ -24,9 +24,9 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Heartbeat.Update += OnUpdate;
 
-			model.GridScaleOpacity.Changed += OnOpacityStale;
-			model.CelestialSystemState.Changed += OnCelestialSystemState;
-			model.TransitState.Changed += OnTransitState;
+			model.Context.GridScaleOpacity.Changed += OnOpacityStale;
+			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -35,9 +35,9 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Heartbeat.Update -= OnUpdate;
 
-			model.GridScaleOpacity.Changed -= OnOpacityStale;
-			model.CelestialSystemState.Changed -= OnCelestialSystemState;
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.GridScaleOpacity.Changed -= OnOpacityStale;
+			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
+			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateDisabled()
@@ -49,8 +49,8 @@ namespace LunraGames.SubLight.Presenters
 		{
 			lastOpacity = 0f;
 			View.PushOpacity(() => lastOpacity.Value);
-			View.PushOpacity(() => 1f - model.GridScaleOpacity.Value);
-			View.PushOpacity(() => model.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
+			View.PushOpacity(() => 1f - model.Context.GridScaleOpacity.Value);
+			View.PushOpacity(() => model.Context.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
 			if (currentSystem != null) View.SetPreview(GetBlock(currentSystem), true);
 		}
 			
@@ -174,9 +174,9 @@ namespace LunraGames.SubLight.Presenters
 					newSystem = state.System;
 					break;
 				case CelestialSystemStateBlock.States.Idle:
-					if (model.CelestialSystemStateLastSelected.Value.System != null)
+					if (model.Context.CelestialSystemStateLastSelected.Value.System != null)
 					{
-						newSystem = model.CelestialSystemStateLastSelected.Value.System;
+						newSystem = model.Context.CelestialSystemStateLastSelected.Value.System;
 					}
 					break;
 				case CelestialSystemStateBlock.States.UnSelected:
