@@ -30,13 +30,13 @@ namespace LunraGames.SubLight.Presenters
 			View.Reset();
 
 			View.SetEntries(
-				OptionsMenuThemes.Error,
+				OptionsMenuThemes.Neutral,
 				LabelOptionsMenuEntry.CreateTitle("Paused", OptionsMenuIcons.Pause),
 				LabelOptionsMenuEntry.CreateHeader("Last saved 5 minutes ago, in the current system"),
 				DividerOptionsMenuEntry.CreateDivider(OptionsMenuDividerSegments.None),
 				ButtonOptionsMenuEntry.CreateButton("Continue", () => Debug.Log("Continue clicked!")),
-				ButtonOptionsMenuEntry.CreateButton("Save", () => Debug.Log("Save clicked!"), ButtonOptionsMenuEntry.InteractionStates.LooksNotInteractable),
-				ButtonOptionsMenuEntry.CreateButton("Return to Main Menu", () => Debug.Log("Main Menu clicked!"), ButtonOptionsMenuEntry.InteractionStates.NotInteractable),
+				ButtonOptionsMenuEntry.CreateButton("Save", () => Debug.Log("Save clicked!")),
+				ButtonOptionsMenuEntry.CreateButton("Return to Main Menu", () => Debug.Log("Main Menu clicked!")),
 				ButtonOptionsMenuEntry.CreateButton("Quit to Desktop", () => Debug.Log("Quit clicked!"))
 			);
 

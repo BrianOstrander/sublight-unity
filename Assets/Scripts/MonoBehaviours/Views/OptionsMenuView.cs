@@ -198,14 +198,9 @@ namespace LunraGames.SubLight.Views
 
 			switch (entry.InteractionState)
 			{
-				case ButtonOptionsMenuEntry.InteractionStates.Interactable:
-					// todo... theming
-					break;
+				case ButtonOptionsMenuEntry.InteractionStates.Interactable: break;
 				case ButtonOptionsMenuEntry.InteractionStates.LooksNotInteractable:
 				case ButtonOptionsMenuEntry.InteractionStates.NotInteractable:
-					//highlightColors.HighlightedColor = theme.SecondaryColor.Color.NewA(highlightColors.HighlightedColor.a);
-					//highlightColors.PressedColor = theme.SecondaryColor.Color.NewA(highlightColors.PressedColor.a);
-
 					labelColors.NormalColor = labelColors.NormalColor.NewA(labelColors.NormalColor.a * 0.5f);
 					labelColors.HighlightedColor = Color.black.NewA(labelColors.HighlightedColor.a);
 					labelColors.PressedColor = Color.black.NewA(labelColors.PressedColor.a);
