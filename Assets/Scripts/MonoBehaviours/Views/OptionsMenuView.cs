@@ -215,6 +215,11 @@ namespace LunraGames.SubLight.Views
 			labelTarget.LocalStyle.Colors = labelColors;
 		}
 
+		protected override void OnOpacityStack(float opacity)
+		{
+			rootGroup.alpha = opacity;
+		}
+
 		public override void Reset()
 		{
 			base.Reset();
@@ -227,7 +232,18 @@ namespace LunraGames.SubLight.Views
 		#region Events
 		void OnClick(ButtonOptionsMenuEntry entry)
 		{
-			Debug.LogWarning("Todo, this logic!");
+			switch (entry.InteractionState)
+			{
+				case ButtonOptionsMenuEntry.InteractionStates.NotInteractable: break;
+				case ButtonOptionsMenuEntry.InteractionStates.Interactable:
+				case ButtonOptionsMenuEntry.InteractionStates.LooksNotInteractable:
+					if (entry.Click == null) Debug.LogError("Entry should be clickable, but no event provided");
+					else entry.Click();
+					break;
+				default:
+					Debug.LogError("Unrecognized InteractionState: " + entry.InteractionState);
+					break;
+			}
 		}
 		#endregion
 	}
@@ -258,7 +274,8 @@ namespace LunraGames.SubLight.Views
 	{
 		Unknown = 0,
 		None = 10,
-		Pause = 20
+		Pause = 20,
+		Save = 30
 	}
 
 	public enum OptionsMenuDividerFades

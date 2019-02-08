@@ -2781,6 +2781,7 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: cb7c684165a9746a8b47f7d0879cb4f1, type: 2}
+  - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
   entryArea: {fileID: 7414643356861048210}
   entryBackground: {fileID: 7414643357714537597}
   rootGroup: {fileID: 2988753842647909669}
@@ -2825,6 +2826,8 @@ MonoBehaviour:
   icons:
   - Icon: 20
     Sprite: {fileID: 21300000, guid: b2754852e488543d7ac039667ffdf448, type: 3}
+  - Icon: 30
+    Sprite: {fileID: 21300000, guid: 462c98c0482c243b8b081ca9cadcc583, type: 3}
   primaryColorGraphics:
   - {fileID: 7414643357384007153}
   - {fileID: 9673063455839720}

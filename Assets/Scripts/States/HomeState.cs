@@ -205,6 +205,7 @@ namespace LunraGames.SubLight
 		#region Events
 		void OnDialogRequest(DialogRequest request)
 		{
+			if (request.OverrideFocusHandling) return;
 			switch (request.State)
 			{
 				case DialogRequest.States.Request:

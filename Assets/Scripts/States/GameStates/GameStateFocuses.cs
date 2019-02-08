@@ -40,7 +40,48 @@ namespace LunraGames.SubLight
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
-				new PauseMenuPresenter(payload.Game);
+				new PauseMenuPresenter(
+					payload.Game,
+					new PauseMenuLanguageBlock
+					{
+						Title = LanguageStringModel.Override("Paused"),
+						Resume = LanguageStringModel.Override("Resume"),
+
+						Save = LanguageStringModel.Override("Save"),
+						SaveDisabledDuringTransit = new PauseMenuLanguageBlock.DialogEntry
+						{
+							Title = LanguageStringModel.Override("Ark In Transit"),
+							Message = LanguageStringModel.Override("Saving is disabled while the ark is in transit.")
+						},
+						SaveDisabledDuringEncounter = new PauseMenuLanguageBlock.DialogEntry
+						{
+							Title = LanguageStringModel.Override("Active Encounter"),
+							Message = LanguageStringModel.Override("Saving is disabled during encounters.")
+						},
+
+						MainMenu = LanguageStringModel.Override("Main Menu"),
+						MainMenuConfirm = new PauseMenuLanguageBlock.DialogEntry
+						{
+							Title = LanguageStringModel.Override("Return to Main Menu"),
+							Message = LanguageStringModel.Override("Are you sure you want to leave now? Any progress since your last save will be discarded!")
+						},
+
+						Quit = LanguageStringModel.Override("Quit to Desktop"),
+						QuitConfirm = new PauseMenuLanguageBlock.DialogEntry
+						{
+							Title = LanguageStringModel.Override("Quit to Desktop"),
+							Message = LanguageStringModel.Override("Are you sure you want to quit now? Any progress since your last save will be discarded!")
+						},
+
+						SavingTitle = LanguageStringModel.Override("Saving..."),
+						SavingComplete = LanguageStringModel.Override("Success!"),
+						SavingError = new PauseMenuLanguageBlock.DialogEntry
+						{
+							Title = LanguageStringModel.Override("Error Saving"),
+							Message = LanguageStringModel.Override("An error was encountered while trying to save your game.")
+						}
+					}
+				);
 
 				InitializeSystemPresenters(state, done);
 			}
