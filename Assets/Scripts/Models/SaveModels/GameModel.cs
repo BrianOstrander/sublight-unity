@@ -10,18 +10,34 @@ namespace LunraGames.SubLight.Models
 	{
 		#region Serialized
 		[JsonProperty] int seed;
+		/// <summary>
+		/// The game seed.
+		/// </summary>
+		[JsonIgnore] public readonly ListenerProperty<int> Seed;
+
 		[JsonProperty] RelativeDayTime relativeDayTime;
+		/// <summary>
+		/// The day time.
+		/// </summary>
+		[JsonIgnore] public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
+
 		[JsonProperty] ShipModel ship;
+		/// <summary>
+		/// The game ship.
+		/// </summary>
+		[JsonIgnore] public readonly ListenerProperty<ShipModel> Ship;
+
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
-		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
+		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
+
 		[JsonProperty] ToolbarSelections toolbarSelection;
+		[JsonIgnore] public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
+
 		[JsonProperty] bool toolbarLocking;
+		[JsonIgnore] public readonly ListenerProperty<bool> ToolbarLocking;
 
 		[JsonProperty] FocusTransform focusTransform;
-
-		[JsonProperty] string galaxyId;
-		[JsonProperty] string galaxyTargetId;
-		[JsonProperty] UniverseModel universe;
+		[JsonIgnore] public readonly ListenerProperty<FocusTransform> FocusTransform;
 
 		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
 		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
@@ -29,127 +45,94 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] UniverseScaleModel scaleQuadrant = UniverseScaleModel.Create(UniverseScales.Quadrant);
 		[JsonProperty] UniverseScaleModel scaleGalactic = UniverseScaleModel.Create(UniverseScales.Galactic);
 		[JsonProperty] UniverseScaleModel scaleCluster = UniverseScaleModel.Create(UniverseScales.Cluster);
+		public UniverseScaleModel GetScale(UniverseScales scale)
+		{
+			switch (scale)
+			{
+				case UniverseScales.System: return scaleSystem;
+				case UniverseScales.Local: return scaleLocal;
+				case UniverseScales.Stellar: return scaleStellar;
+				case UniverseScales.Quadrant: return scaleQuadrant;
+				case UniverseScales.Galactic: return scaleGalactic;
+				case UniverseScales.Cluster: return scaleCluster;
+				default:
+					Debug.LogError("Unrecognized scale: " + scale);
+					return null;
+			}
+		}
 
 		[JsonProperty] EncounterStateModel encounterState = new EncounterStateModel();
+		[JsonIgnore] public EncounterStateModel EncounterState { get { return encounterState; } }
 
 		[JsonProperty] WaypointCollectionModel waypointCollection = new WaypointCollectionModel();
+		[JsonIgnore] public WaypointCollectionModel WaypointCollection { get { return waypointCollection; } }
 
-		/// <summary>
-		/// The game seed.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<int> Seed;
-		/// <summary>
-		/// The day time.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
-		/// <summary>
-		/// The game ship.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<ShipModel> Ship;
+		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
+		[JsonIgnore] public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
 
-		[JsonIgnore]
-		public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
+		[JsonProperty] string galaxyId;
+		[JsonIgnore] public string GalaxyId { get { return galaxyId; } set { galaxyId = value; } }
 
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> ToolbarLocking;
+		[JsonProperty] string galaxyTargetId;
+		[JsonIgnore] public string GalaxyTargetId { get { return galaxyTargetId; } set { galaxyTargetId = value; } }
 
-		[JsonIgnore]
-		public readonly ListenerProperty<FocusTransform> FocusTransform;
+		[JsonProperty] UniverseModel universe;
+		[JsonIgnore] public UniverseModel Universe { get { return universe; } set { universe = value; } }
 
-		[JsonIgnore]
-		public KeyValueListModel KeyValues { get { return keyValues; } }
-
-		[JsonIgnore]
-		public UniverseModel Universe
-		{
-			get { return universe; }
-			set { universe = value; }
-		}
-
-		[JsonIgnore]
-		public string GalaxyId
-		{
-			get { return galaxyId; }
-			set { galaxyId = value; }
-		}
-
-		[JsonIgnore]
-		public string GalaxyTargetId
-		{
-			get { return galaxyTargetId; }
-			set { galaxyTargetId = value; }
-		}
-
-		[JsonIgnore]
-		public GalaxyInfoModel Galaxy { get; set; }
-		[JsonIgnore]
-		public GalaxyInfoModel GalaxyTarget { get; set; }
-
-		[JsonIgnore]
-		public EncounterStateModel EncounterState { get { return encounterState; } }
-		[JsonIgnore]
-		public WaypointCollectionModel WaypointCollection { get { return waypointCollection; } }
+		[JsonIgnore] public GalaxyInfoModel Galaxy { get; set; }
+		[JsonIgnore] public GalaxyInfoModel GalaxyTarget { get; set; }
 		#endregion
 
 		#region NonSerialized
 		// TODO: Figure out if this all should be moved to the payload, or some other model...
 		SaveStateBlock saveState = SaveStateBlock.Savable();
-		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
-		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
-		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
-		UniverseScaleLabelBlock scaleLabelSystem = UniverseScaleLabelBlock.Default;
-		UniverseScaleLabelBlock scaleLabelLocal = UniverseScaleLabelBlock.Default;
-		UniverseScaleLabelBlock scaleLabelStellar = UniverseScaleLabelBlock.Default;
-		UniverseScaleLabelBlock scaleLabelQuadrant = UniverseScaleLabelBlock.Default;
-		UniverseScaleLabelBlock scaleLabelGalactic = UniverseScaleLabelBlock.Default;
-		UniverseScaleLabelBlock scaleLabelCluster = UniverseScaleLabelBlock.Default;
-		float gridScaleOpacity;
+		[JsonIgnore] public readonly ListenerProperty<SaveStateBlock> SaveState;
 
-		[JsonIgnore]
-		public readonly ListenerProperty<SaveStateBlock> SaveState;
-		[JsonIgnore]
-		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
-		[JsonIgnore]
-		public readonly ListenerProperty<GridInputRequest> GridInput;
-		[JsonIgnore]
-		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelSystem;
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelLocal;
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelStellar;
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelQuadrant;
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelGalactic;
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelCluster;
-		[JsonIgnore]
-		public readonly ListenerProperty<float> GridScaleOpacity;
+		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
+		[JsonIgnore] public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
+
+		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
+		[JsonIgnore] public readonly ListenerProperty<GridInputRequest> GridInput;
+
+		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
+		[JsonIgnore] public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
+
+		UniverseScaleLabelBlock scaleLabelSystem = UniverseScaleLabelBlock.Default;
+		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelSystem;
+
+		UniverseScaleLabelBlock scaleLabelLocal = UniverseScaleLabelBlock.Default;
+		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelLocal;
+
+		UniverseScaleLabelBlock scaleLabelStellar = UniverseScaleLabelBlock.Default;
+		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelStellar;
+
+		UniverseScaleLabelBlock scaleLabelQuadrant = UniverseScaleLabelBlock.Default;
+		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelQuadrant;
+
+		UniverseScaleLabelBlock scaleLabelGalactic = UniverseScaleLabelBlock.Default;
+		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelGalactic;
+
+		UniverseScaleLabelBlock scaleLabelCluster = UniverseScaleLabelBlock.Default;
+		[JsonIgnore] public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelCluster;
+
+		float gridScaleOpacity;
+		[JsonIgnore] public readonly ListenerProperty<float> GridScaleOpacity;
 
 		UniverseScaleModel activeScale;
 		ListenerProperty<UniverseScaleModel> activeScaleListener;
-		[JsonIgnore]
-		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
+		[JsonIgnore] public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
 
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
-		[JsonIgnore]
-		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
+		[JsonIgnore] public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
 
 		TransitStateRequest transitStateRequest;
-		[JsonIgnore]
-		public ListenerProperty<TransitStateRequest> TransitStateRequest;
+		[JsonIgnore] public ListenerProperty<TransitStateRequest> TransitStateRequest;
+
 		TransitState transitState;
-		[JsonIgnore]
-		public ListenerProperty<TransitState> TransitState;
+		[JsonIgnore] public ListenerProperty<TransitState> TransitState;
 
 		ToolbarSelectionRequest toolbarSelectionRequest;
-		[JsonIgnore]
-		public ListenerProperty<ToolbarSelectionRequest> ToolbarSelectionRequest;
+		[JsonIgnore] public ListenerProperty<ToolbarSelectionRequest> ToolbarSelectionRequest;
 		#endregion
 
 		public GameModel()
@@ -200,30 +183,7 @@ namespace LunraGames.SubLight.Models
 			}
 			activeScaleListener.Value = newHighestOpacityScale;
 		}
-		#endregion
 
-		#region Utility
-		[JsonIgnore]
-		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
-
-		public UniverseScaleModel GetScale(UniverseScales scale)
-		{
-			switch (scale)
-			{
-				case UniverseScales.System: return scaleSystem;
-				case UniverseScales.Local: return scaleLocal;
-				case UniverseScales.Stellar: return scaleStellar;
-				case UniverseScales.Quadrant: return scaleQuadrant;
-				case UniverseScales.Galactic: return scaleGalactic;
-				case UniverseScales.Cluster: return scaleCluster;
-				default:
-					Debug.LogError("Unrecognized scale: " + scale);
-					return null;
-			}
-		}
-		#endregion
-
-		#region Events
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
 		{
 			switch (block.State)
