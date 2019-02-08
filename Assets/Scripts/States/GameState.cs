@@ -261,6 +261,28 @@ namespace LunraGames.SubLight
 			}
 
 			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
+
+			App.Input.SetEnabled(false);
+
+			SM.PushBlocking(
+				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
+				"GameSettingNoFocus"
+			);
+
+			SM.PushBlocking(
+				done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(CameraMaskRequest.DefaultHideDuration, done)),
+				"GameHideMask"
+			);
+
+			SM.PushBlocking(
+				done => App.P.UnRegisterAll(done),
+				"GameUnBind"
+			);
+
+			SM.PushBlocking(
+				done => App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes)),
+				"GameUnLoadScenes"
+			);
 		}
 		#endregion
 

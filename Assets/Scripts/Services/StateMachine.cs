@@ -10,18 +10,19 @@ namespace LunraGames.SubLight
 	{
 		public enum States
 		{
-			Unknown,
-			Initialize,
-			Home,
-			Game
+			Unknown = 0,
+			Initialize = 10,
+			Quit = 20,
+			Home = 30,
+			Game = 40,
 		}
 
 		public enum Events
 		{
-			Unknown,
-			Begin,
-			Idle,
-			End
+			Unknown = 0,
+			Begin = 10,
+			Idle = 20,
+			End = 30
 		}
 
 		public enum EntryStates

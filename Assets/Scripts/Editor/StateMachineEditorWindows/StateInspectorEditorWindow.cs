@@ -53,7 +53,7 @@ namespace LunraGames.SubLight
 
 			EditorGUILayout.BeginHorizontal();
 			{
-				if (isInspecting) GUILayout.Label("Currently " + App.SM.CurrentState + "." + App.SM.CurrentEvent, EditorStyles.boldLabel);
+				if (isInspecting) EditorGUILayout.SelectableLabel("Currently " + App.SM.CurrentState + "." + App.SM.CurrentEvent, EditorStyles.boldLabel);
 				else GUILayout.Label("Enable inspection to view StateMachine updates.");
 
 				isInspecting.Value = EditorGUILayout.Toggle("Is Inspecting", isInspecting.Value, GUILayout.ExpandWidth(false));
@@ -80,7 +80,7 @@ namespace LunraGames.SubLight
 
 						EditorGUILayout.BeginHorizontal();
 						{
-							GUILayout.Label(entry.Description);
+							EditorGUILayout.SelectableLabel(entry.Description);
 							var stateColor = Color.black;
 
 							switch (entry.EntryState)

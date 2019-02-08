@@ -41,6 +41,7 @@ namespace LunraGames.SubLight
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
 				new PauseMenuPresenter(
+					payload,
 					payload.Game,
 					new PauseMenuLanguageBlock
 					{
@@ -84,7 +85,10 @@ namespace LunraGames.SubLight
 						{
 							Title = LanguageStringModel.Override("Error Saving"),
 							Message = LanguageStringModel.Override("An error was encountered while trying to save your game.")
-						}
+						},
+						
+						ReturningToMainMenu = LanguageStringModel.Override("Returning to Main Menu..."),
+						Quiting = LanguageStringModel.Override("Quitting..")
 					}
 				);
 

@@ -80,6 +80,8 @@ namespace LunraGames.SubLight.Views
 		XButtonLeaf[] secondaryButtons;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
+		bool layoutIsStale;
+
 		public DialogTypes DialogType
 		{
 			set
@@ -88,6 +90,7 @@ namespace LunraGames.SubLight.Views
 				{
 					entry.Root.SetActive(entry.DialogType == value);
 				}
+				layoutIsStale = true;
 			}
 		}
 
@@ -136,6 +139,8 @@ namespace LunraGames.SubLight.Views
 
 				foreach (var button in primaryButtons) button.GlobalStyle = primaryButtonStyle;
 				foreach (var button in secondaryButtons) button.GlobalStyle = secondaryButtonStyle;
+
+				layoutIsStale = true;
 			}
 		}
 					
@@ -153,11 +158,14 @@ namespace LunraGames.SubLight.Views
 		{
 			text = text ?? string.Empty;
 			foreach (var label in labels.Where(l => l != null)) label.text = text;
+			layoutIsStale = true;
 		}
 
 		public override void Reset()
 		{
 			base.Reset();
+
+			layoutIsStale = true;
 
 			DialogType = DialogTypes.Unknown;
 			Style = DialogStyles.Unknown;
@@ -170,6 +178,29 @@ namespace LunraGames.SubLight.Views
 			CancelClick = ActionExtensions.Empty;
 			FailureClick = ActionExtensions.Empty;
 			SuccessClick = ActionExtensions.Empty;
+		}
+
+		protected override void OnPrepare()
+		{
+			base.OnPrepare();
+
+			if (layoutIsStale) ForceRebuildLayout();
+		}
+
+		protected override void OnIdle(float delta)
+		{
+			base.OnIdle(delta);
+
+			if (layoutIsStale) ForceRebuildLayout();
+		}
+
+		void ForceRebuildLayout()
+		{
+			layoutIsStale = false;
+			foreach (var entry in entries.Where(e => e.Root != null))
+			{
+				LayoutRebuilder.ForceRebuildLayoutImmediate(entry.Root.GetComponent<RectTransform>());
+			}
 		}
 
 		#region Events

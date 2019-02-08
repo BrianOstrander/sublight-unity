@@ -29,5 +29,8 @@ namespace LunraGames.SubLight
 		public LanguageStringModel SavingTitle;
 		public LanguageStringModel SavingComplete;
 		public DialogEntry SavingError;
+
+		public LanguageStringModel ReturningToMainMenu;
+		public LanguageStringModel Quiting;
 	}
 }

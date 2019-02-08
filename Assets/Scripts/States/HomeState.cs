@@ -13,7 +13,9 @@ namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
+		#region Required
 		public HoloRoomFocusCameraPresenter MainCamera;
+		#endregion
 
 		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public SaveModel[] Saves = new SaveModel[0];
@@ -159,8 +161,7 @@ namespace LunraGames.SubLight
 		protected override void Idle()
 		{
 			App.Callbacks.HoloColorRequest(new HoloColorRequest(new Color(1f, 0.25f, 0.11f)));
-			//App.Callbacks.HoloColorRequest(new HoloColorRequest(new Color(0.259f, 0.0393f, 0f)));
-			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * 0.75f, OnIdleShow));
+			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultRevealDuration, OnIdleShow));
 		}
 
 		void OnIdleShow()
@@ -185,20 +186,15 @@ namespace LunraGames.SubLight
 
 			App.Input.SetEnabled(false);
 
-			SM.PushBlocking(UnBind, "UnBind");
-			SM.PushBlocking(UnLoadScenes, "UnLoadScenes");
-		}
+			SM.PushBlocking(
+				done => App.P.UnRegisterAll(done),
+				"HomeUnBind"
+			);
 
-		void UnLoadScenes(Action done)
-		{
-			App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes));
-		}
-
-		void UnBind(Action done)
-		{
-			// All presenters will have their views closed and unbinded. Events
-			// will also be unbinded.
-			App.P.UnRegisterAll(done);
+			SM.PushBlocking(
+				done => App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes)),
+				"HomeUnLoadScenes"
+			);
 		}
 		#endregion
 
@@ -280,6 +276,7 @@ namespace LunraGames.SubLight
 
 		void OnSaveGame(SaveLoadRequest<GameModel> result)
 		{
+			// TODO: move this and the following events to use the state machine...
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
@@ -310,7 +307,7 @@ namespace LunraGames.SubLight
 
 		void OnReadyTransitionNoFocus(Action done)
 		{
-			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * 0.2f, done));
+			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultHideDuration, done));
 		}
 		#endregion
 	}

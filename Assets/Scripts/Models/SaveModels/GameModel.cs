@@ -95,6 +95,7 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region NonSerialized
+		// TODO: Figure out if this all should be moved to the payload, or some other model...
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
 		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);

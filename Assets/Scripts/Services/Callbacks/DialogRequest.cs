@@ -66,8 +66,8 @@ namespace LunraGames.SubLight
 				style,
 				title,
 				message,
-				cancel: denyClick,
 				success: confirmClick,
+				failure: denyClick,
 				done: done,
 				overrideFocuseHandling: overrideFocuseHandling
 			);

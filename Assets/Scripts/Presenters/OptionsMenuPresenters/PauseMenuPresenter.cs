@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Models;
@@ -14,6 +16,7 @@ namespace LunraGames.SubLight.Presenters
 			Animating = 20
 		}
 
+		GamePayload payload;
 		GameModel model;
 		PauseMenuLanguageBlock language;
 
@@ -24,10 +27,12 @@ namespace LunraGames.SubLight.Presenters
 		SaveRequest? saveResult;
 
 		public PauseMenuPresenter(
+			GamePayload payload,
 			GameModel model,
 			PauseMenuLanguageBlock language
 		)
 		{
+			this.payload = payload;
 			this.model = model;
 			this.language = language;
 
@@ -83,6 +88,74 @@ namespace LunraGames.SubLight.Presenters
 			{
 				return false;
 			}
+		}
+
+		void PushMainMenuRequest()
+		{
+			// Pause menu should be close should already be closed or on the state machine's stack.
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Reset();
+					View.Shown += done;
+					View.SetEntries(
+						OptionsMenuThemes.Neutral,
+						LabelOptionsMenuEntry.CreateTitle(language.ReturningToMainMenu.Value, OptionsMenuIcons.None)
+					);
+					ShowView();
+				},
+				"ShowingPauseMenuReturningToMainMenu"
+			);
+
+			SM.PushBlocking(
+				done => App.Heartbeat.Wait(done, 0.5f),
+				"WaitingPauseMenuForMinimumReturningToMainMenuTime"
+			);
+
+			SM.Push(
+				() =>
+				{
+					var homePayload = new HomePayload();
+					homePayload.MainCamera = payload.MainCamera;
+					App.SM.RequestState(homePayload);
+				},
+				"RequestingMainMenuFromPauseMenu"
+			);
+		}
+
+		void PushQuitRequest()
+		{
+			// Pause menu should be close should already be closed or on the state machine's stack.
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Reset();
+					View.Shown += done;
+					View.SetEntries(
+						OptionsMenuThemes.Error,
+						LabelOptionsMenuEntry.CreateTitle(language.Quiting.Value, OptionsMenuIcons.None)
+					);
+					ShowView();
+				},
+				"ShowingPauseMenuQuitting"
+			);
+
+			SM.PushBlocking(
+				done => App.Heartbeat.Wait(done, 0.5f),
+				"WaitingPauseMenuForMinimumQuittingTime"
+			);
+
+			SM.Push(
+				() =>
+				{
+					var quitPayload = new QuitPayload();
+					quitPayload.Requester = "GamePauseMenu";
+					App.SM.RequestState(quitPayload);
+				},
+				"QuittingFromPauseMenu"
+			);
 		}
 
 		void Show(bool instant = false)
@@ -161,6 +234,7 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(
 				() =>
 				{
+					View.Reset();
 					View.SetEntries(
 						OptionsMenuThemes.Warning,
 						LabelOptionsMenuEntry.CreateTitle(language.SavingComplete.Value, OptionsMenuIcons.Save)
@@ -253,6 +327,7 @@ namespace LunraGames.SubLight.Presenters
 			SM.PushBlocking(
 				done =>
 				{
+					View.Reset();
 					View.Shown += done;
 					View.SetEntries(
 						OptionsMenuThemes.Warning,
@@ -279,6 +354,8 @@ namespace LunraGames.SubLight.Presenters
 		void OnClickSaveDisabled()
 		{
 			if (NotInteractable) return;
+
+			state = States.Animating;
 
 			if (hasSavedSinceOpening)
 			{
@@ -349,13 +426,13 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			SM.PushBlocking(
-					done =>
-					{
-						View.Closed += done;
-						CloseView();
-					},
-					"ClosingPauseMenuFromUnknownSaveError"
-				);
+				done =>
+				{
+					View.Closed += done;
+					CloseView();
+				},
+				"ClosingPauseMenuFromUnknownSaveError"
+			);
 
 			SM.PushBlocking(
 				done =>
@@ -382,13 +459,81 @@ namespace LunraGames.SubLight.Presenters
 		void OnClickMainMenu()
 		{
 			if (NotInteractable) return;
-			Debug.Log("click main menu");
+
+			state = States.Animating;
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Closed += done;
+					CloseView();
+				},
+				"ClosingPauseMenuForMainMenu"
+			);
+
+			if (hasSavedSinceOpening)
+			{
+				PushMainMenuRequest();
+				return;
+			}
+
+			SM.PushBlocking(
+				done =>
+				{
+					App.Callbacks.DialogRequest(
+						DialogRequest.ConfirmDeny(
+							language.MainMenuConfirm.Message,
+							DialogStyles.Error,
+							language.MainMenuConfirm.Title,
+							PushMainMenuRequest,
+							() => Show(),
+							result => done(),
+							true
+						)
+					);
+				},
+				"ShowingDialogFromMainMenuClick"
+			);
 		}
 
 		void OnClickQuit()
 		{
 			if (NotInteractable) return;
-			Debug.Log("click quit");
+
+			state = States.Animating;
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Closed += done;
+					CloseView();
+				},
+				"ClosingPauseMenuForQuit"
+			);
+
+			if (hasSavedSinceOpening)
+			{
+				PushQuitRequest();
+				return;
+			}
+
+			SM.PushBlocking(
+				done =>
+				{
+					App.Callbacks.DialogRequest(
+						DialogRequest.ConfirmDeny(
+							language.QuitConfirm.Message,
+							DialogStyles.Error,
+							language.QuitConfirm.Title,
+							PushQuitRequest,
+							() => Show(),
+							result => done(),
+							true
+						)
+					);
+				},
+				"ShowingDialogFromQuitClick"
+			);
 		}
 		#endregion
 
