@@ -37,7 +37,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		protected override void OnShowView()
 		{
-			var transform = Model.ActiveScale.Value.Transform.Value;
+			var transform = Model.Context.ActiveScale.Value.Transform.Value;
 			//SetGrid(transform.UnityOrigin, transform.UnityRadius);
 			View.SetGalaxy(galaxy.FullPreview);
 			View.GalaxyName = galaxy.Name;

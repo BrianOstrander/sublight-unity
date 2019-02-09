@@ -25,9 +25,9 @@ namespace LunraGames.SubLight.Presenters
 
 			if (model == null) return;
 
-			model.ActiveScale.Changed += OnActiveScale;
-			OnActiveScale(model.ActiveScale.Value);
-			model.TransitState.Changed += OnTransitState;
+			model.Context.ActiveScale.Changed += OnActiveScale;
+			OnActiveScale(model.Context.ActiveScale.Value);
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -39,8 +39,8 @@ namespace LunraGames.SubLight.Presenters
 			if (model == null) return;
 
 			if (lastActiveScale != null) lastActiveScale.Transform.Changed -= OnActiveScaleTransform;
-			model.ActiveScale.Changed -= OnActiveScale;
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.ActiveScale.Changed -= OnActiveScale;
+			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		#region Events
@@ -129,7 +129,7 @@ namespace LunraGames.SubLight.Presenters
 			View.LayerTextures = textures.ToArray();
 			View.LayerProperties = properties.ToArray();
 
-			if (model != null) View.TimeScalar = model.TransitState.Value.RelativeTimeScalar;
+			if (model != null) View.TimeScalar = model.Context.TransitState.Value.RelativeTimeScalar;
 
 			if (wasClosed) ShowView(instant: true);
 		}
@@ -150,7 +150,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnTransitState(TransitState transitState)
 		{
 			if (!View.Visible) return;
-			View.TimeScalar = model.TransitState.Value.RelativeTimeScalar;
+			View.TimeScalar = model.Context.TransitState.Value.RelativeTimeScalar;
 		}
 		#endregion
 	}

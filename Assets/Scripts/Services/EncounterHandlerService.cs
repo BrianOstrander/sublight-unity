@@ -160,7 +160,7 @@ namespace LunraGames.SubLight
 				Debug.LogError("Beginning an encounter without successfully saving first may cause unpredictable behaviour.");
 			}
 
-			configuration.Model.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlyInEncounter);
+			configuration.Model.Context.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlyInEncounter);
 
 			nextLog = configuration.Encounter.Logs.Beginning;
 			if (nextLog == null)
@@ -175,7 +175,7 @@ namespace LunraGames.SubLight
 
 		void OnEnd()
 		{
-			configuration.Model.SaveState.Value = SaveStateBlock.Savable();
+			configuration.Model.Context.SaveState.Value = SaveStateBlock.Savable();
 
 			var oldModel = configuration.Model;
 

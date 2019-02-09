@@ -27,16 +27,16 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Heartbeat.Update += OnUpdate;
 
-			model.TransitStateRequest.Changed += OnTransitStateRequest;
-			model.TransitState.Changed += OnTransitState;
+			model.Context.TransitStateRequest.Changed += OnTransitStateRequest;
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Heartbeat.Update -= OnUpdate;
 
-			model.TransitStateRequest.Changed -= OnTransitStateRequest;
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.TransitStateRequest.Changed -= OnTransitStateRequest;
+			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		TransitState.StepDetails CompleteStep(TransitState.StepDetails step)
@@ -51,7 +51,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnUpdate(float delta)
 		{
-			if (model.TransitState.Value != null && model.TransitState.Value.State == TransitState.States.Active) OnProcessState(model.TransitState.Value, delta);
+			if (model.Context.TransitState.Value != null && model.Context.TransitState.Value.State == TransitState.States.Active) OnProcessState(model.Context.TransitState.Value, delta);
 		}
 
 		void OnTransitStateRequest(TransitStateRequest transitStateRequest)
@@ -131,7 +131,7 @@ namespace LunraGames.SubLight.Presenters
 			};
 
 			// We have to send a request event to all listeners... kinda redundent but whatever...
-			model.TransitState.Value = transitState;
+			model.Context.TransitState.Value = transitState;
 
 			transitState = transitState.Duplicate;
 
@@ -151,7 +151,7 @@ namespace LunraGames.SubLight.Presenters
 				transitState.Step = TransitState.Steps.Prepare;
 			}
 
-			model.TransitState.Value = transitState;
+			model.Context.TransitState.Value = transitState;
 			if (transitState.Instant) OnProcessState(transitState, 1f);
 			else OnProcessVisuals(transitState);
 		}
@@ -241,7 +241,7 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			if (!transitState.Instant) OnProcessVisuals(transitState);
-			model.TransitState.Value = transitState;
+			model.Context.TransitState.Value = transitState;
 		}
 
 		void OnProcessVisuals(TransitState transitState)

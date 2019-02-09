@@ -40,6 +40,58 @@ namespace LunraGames.SubLight
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
+				new PauseMenuPresenter(
+					payload,
+					payload.Game,
+					new PauseMenuLanguageBlock
+					{
+						Title = LanguageStringModel.Override("Paused"),
+						Resume = LanguageStringModel.Override("Resume"),
+
+						Save = LanguageStringModel.Override("Save"),
+						SaveDisabledDuringEncounter = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Active Encounter"),
+							Message = LanguageStringModel.Override("Saving is disabled during encounters.")
+						},
+						SaveDisabledAlreadySaved = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Already Saved"),
+							Message = LanguageStringModel.Override("Your latest progress is already saved.")
+						},
+						SaveDisabledUnknown = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Saving Disabled"),
+							Message = LanguageStringModel.Override("Saving has been disabled for an unspecified reason, likely an error.")
+						},
+
+						MainMenu = LanguageStringModel.Override("Main Menu"),
+						MainMenuConfirm = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Return to Main Menu"),
+							Message = LanguageStringModel.Override("Are you sure you want to leave now? Any progress since your last save will be discarded!")
+						},
+
+						Quit = LanguageStringModel.Override("Quit to Desktop"),
+						QuitConfirm = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Quit to Desktop"),
+							Message = LanguageStringModel.Override("Are you sure you want to quit now? Any progress since your last save will be discarded!")
+						},
+
+						SavingTitle = LanguageStringModel.Override("Saving..."),
+						SavingComplete = LanguageStringModel.Override("Success!"),
+						SavingError = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Error Saving"),
+							Message = LanguageStringModel.Override("An error was encountered while trying to save your game.")
+						},
+						
+						ReturningToMainMenu = LanguageStringModel.Override("Returning to Main Menu..."),
+						Quiting = LanguageStringModel.Override("Quitting..")
+					}
+				);
+
 				InitializeSystemPresenters(state, done);
 			}
 
@@ -141,11 +193,11 @@ namespace LunraGames.SubLight
 					}
 				);
 
-				new ClusterPresenter(payload.Game, payload.Game.Galaxy);
-				new ClusterPresenter(payload.Game, payload.Game.GalaxyTarget, LanguageStringModel.Override("Click for information"));
+				new ClusterPresenter(payload.Game, payload.Game.Context.Galaxy);
+				new ClusterPresenter(payload.Game, payload.Game.Context.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
 				var foundEnd = false;
-				var playerEnd = payload.Game.Galaxy.GetPlayerEnd(out foundEnd);
+				var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
 
 				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
 
@@ -207,8 +259,8 @@ namespace LunraGames.SubLight
 				for (var i = 0; i < payload.LocalSectorCount; i++)
 				{
 					var sector = new SectorInstanceModel();
-					sector.Sector.Value = App.Universe.GetSector(payload.Game.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
-					var systems = new SystemInstanceModel[payload.Game.Galaxy.MaximumSectorSystemCount.Value];
+					sector.Sector.Value = App.Universe.GetSector(payload.Game.Context.Galaxy, payload.Game.Universe, new UniversePosition(new Vector3Int(i, 0, 0)));
+					var systems = new SystemInstanceModel[payload.Game.Context.Galaxy.MaximumSectorSystemCount.Value];
 					for (var s = 0; s < systems.Length; s++)
 					{
 						new CelestialSystemPresenter(

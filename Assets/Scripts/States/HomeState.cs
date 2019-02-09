@@ -13,7 +13,9 @@ namespace LunraGames.SubLight
 {
 	public class HomePayload : IStatePayload 
 	{
+		#region Required
 		public HoloRoomFocusCameraPresenter MainCamera;
+		#endregion
 
 		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public SaveModel[] Saves = new SaveModel[0];
@@ -44,7 +46,7 @@ namespace LunraGames.SubLight
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
 			SM.PushBlocking(InitializeLoadSaves, "InitializeLoadSaves");
 			SM.PushBlocking(InitializeLoadGalaxy, "InitializeLoadGalaxy");
-			SM.PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
+			SM.PushBlocking(done => Focuses.InitializePresenters(Payload, done), "InitializePresenters");
 			SM.PushBlocking(InitializeFocus, "InitializeFocus");
 		}
 
@@ -159,8 +161,7 @@ namespace LunraGames.SubLight
 		protected override void Idle()
 		{
 			App.Callbacks.HoloColorRequest(new HoloColorRequest(new Color(1f, 0.25f, 0.11f)));
-			//App.Callbacks.HoloColorRequest(new HoloColorRequest(new Color(0.259f, 0.0393f, 0f)));
-			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * 0.75f, OnIdleShow));
+			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultRevealDuration, OnIdleShow));
 		}
 
 		void OnIdleShow()
@@ -185,26 +186,22 @@ namespace LunraGames.SubLight
 
 			App.Input.SetEnabled(false);
 
-			SM.PushBlocking(UnBind, "UnBind");
-			SM.PushBlocking(UnLoadScenes, "UnLoadScenes");
-		}
+			SM.PushBlocking(
+				done => App.P.UnRegisterAll(done),
+				"HomeUnBind"
+			);
 
-		void UnLoadScenes(Action done)
-		{
-			App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes));
-		}
-
-		void UnBind(Action done)
-		{
-			// All presenters will have their views closed and unbinded. Events
-			// will also be unbinded.
-			App.P.UnRegisterAll(done);
+			SM.PushBlocking(
+				done => App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes)),
+				"HomeUnLoadScenes"
+			);
 		}
 		#endregion
 
 		#region Events
 		void OnDialogRequest(DialogRequest request)
 		{
+			if (request.OverrideFocusHandling) return;
 			switch (request.State)
 			{
 				case DialogRequest.States.Request:
@@ -214,102 +211,6 @@ namespace LunraGames.SubLight
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
 					break;
 			}
-		}
-		#endregion
-
-		#region Events Main Menu
-		void OnNewGameClick()
-		{
-			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), OnNewGameStart));
-			else OnNewGameStart();
-		}
-
-		void OnNewGameStart()
-		{
-			App.GameService.CreateGame(Payload.NewGameBlock, OnNewGameCreated);
-		}
-
-		void OnContinueGameClick()
-		{
-			App.M.Load<GameModel>(Payload.ContinueSave, OnLoadedGame);
-		}
-
-		void OnSettingsClick()
-		{
-			App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Testing sounds."), DialogStyles.Warning));
-			//OnNotImplimentedClick();
-		}
-
-		void OnCreditsClick()
-		{
-			OnNotImplimentedClick();
-		}
-
-		void OnExitClick()
-		{
-			Debug.Log("Quiting");
-			Application.Quit();
-		}
-
-		void OnNotImplimentedClick()
-		{
-			App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
-		}
-
-		void OnNewGameCreated(RequestStatus result, GameModel model)
-		{
-			if (result != RequestStatus.Success)
-			{
-				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override("Creating new game returned with result " + result), style: DialogStyles.Error));
-				return;
-			}
-			App.M.Save(model, OnSaveGame);
-		}
-
-		void OnLoadedGame(SaveLoadRequest<GameModel> result)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
-				return;
-			}
-			App.M.Save(result.TypedModel, OnSaveGame);
-		}
-
-		void OnSaveGame(SaveLoadRequest<GameModel> result)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
-				return;
-			}
-			OnStartGame(result.TypedModel);
-		}
-
-		void OnStartGame(GameModel model)
-		{
-			OnReadyTransition(() => OnFinallyStartGame(model));
-		}
-
-		void OnFinallyStartGame(GameModel model)
-		{
-			Debug.Log("Starting game...");
-			var payload = new GamePayload();
-			payload.MainCamera = Payload.MainCamera;
-			payload.Game = model;
-			App.SM.RequestState(payload);
-		}
-
-		void OnReadyTransition(Action done)
-		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), () => OnReadyTransitionNoFocus(done)));
-		}
-
-		void OnReadyTransitionNoFocus(Action done)
-		{
-			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * 0.2f, done));
 		}
 		#endregion
 	}

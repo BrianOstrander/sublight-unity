@@ -240,7 +240,7 @@ namespace LunraGames.SubLight
 			App.M.Delete(current, deleteResult => OnWipeGameSavesDelete(deleteResult.Status, deleteResult, remaining, done));
 		}
 
-		void OnAutoNewGame(RequestStatus result, GameModel model)
+		void OnAutoNewGame(RequestResult result, GameModel model)
 		{
 			var payload = new GamePayload();
 			payload.MainCamera = Payload.HomeStatePayload.MainCamera;

@@ -6,6 +6,9 @@ namespace LunraGames.SubLight
 {
 	public struct CameraMaskRequest
 	{
+		public const float DefaultRevealDuration = 0.75f;
+		public const float DefaultHideDuration = 0.2f;
+
 		public enum States
 		{
 			Unknown = 0,

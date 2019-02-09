@@ -17,7 +17,7 @@ namespace LunraGames.SubLight.Presenters
 			this.language = language;
 
 			model.Ship.Value.Velocity.Changed += OnVelocity;
-			model.TransitState.Changed += OnTransitState;
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -25,7 +25,7 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -36,7 +36,7 @@ namespace LunraGames.SubLight.Presenters
 			View.ResourceUnit = language.Resource.Value.Value;
 			View.ResourceWarning = language.ResourceWarning.Value.Value;
 
-			View.PushOpacity(() => model.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
+			View.PushOpacity(() => model.Context.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
 		}
 
 		#region Events

@@ -19,16 +19,16 @@ namespace LunraGames.SubLight.Presenters
 			scaleModel = model.GetScale(scale);
 
 			scaleModel.Opacity.Changed += OnOpacityStale;
-			model.GridScaleOpacity.Changed += OnOpacityStale;
+			model.Context.GridScaleOpacity.Changed += OnOpacityStale;
 
 			switch (scale)
 			{
-				case UniverseScales.System: labelProperty = model.ScaleLabelSystem; break;
-				case UniverseScales.Local: labelProperty = model.ScaleLabelLocal; break;
-				case UniverseScales.Stellar: labelProperty = model.ScaleLabelStellar; break;
-				case UniverseScales.Quadrant: labelProperty = model.ScaleLabelQuadrant; break;
-				case UniverseScales.Galactic: labelProperty = model.ScaleLabelGalactic; break;
-				case UniverseScales.Cluster: labelProperty = model.ScaleLabelCluster; break;
+				case UniverseScales.System: labelProperty = model.Context.ScaleLabelSystem; break;
+				case UniverseScales.Local: labelProperty = model.Context.ScaleLabelLocal; break;
+				case UniverseScales.Stellar: labelProperty = model.Context.ScaleLabelStellar; break;
+				case UniverseScales.Quadrant: labelProperty = model.Context.ScaleLabelQuadrant; break;
+				case UniverseScales.Galactic: labelProperty = model.Context.ScaleLabelGalactic; break;
+				case UniverseScales.Cluster: labelProperty = model.Context.ScaleLabelCluster; break;
 				default:
 					Debug.LogError("Unrecognized scale: " + scale);
 					return;
@@ -42,7 +42,7 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			model.GetScale(scale).Opacity.Changed -= OnOpacityStale;
-			model.GridScaleOpacity.Changed -= OnOpacityStale;
+			model.Context.GridScaleOpacity.Changed -= OnOpacityStale;
 
 			if (labelProperty == null)
 			{
@@ -57,7 +57,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			OnLabel(labelProperty.Value);
 			View.PushOpacity(() => scaleModel.Opacity.Value);
-			View.PushOpacity(() => model.GridScaleOpacity.Value);
+			View.PushOpacity(() => model.Context.GridScaleOpacity.Value);
 		}
 
 		#region Events

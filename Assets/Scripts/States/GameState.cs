@@ -11,6 +11,7 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
+		// TODO: Do we need this???
 		public struct Waypoint
 		{
 			public readonly string WaypointId;
@@ -45,6 +46,7 @@ namespace LunraGames.SubLight
 
 		public UniverseScaleModel LastActiveScale;
 
+		// TODO: Why does this exist???
 		public List<Waypoint> Waypoints = new List<Waypoint>();
 	}
 
@@ -60,8 +62,6 @@ namespace LunraGames.SubLight
 		protected override void Begin()
 		{
 			SM.PushBlocking(LoadScenes, "LoadScenes");
-			SM.PushBlocking(LoadModelDependencies, "LoadModelDependencies");
-			SM.PushBlocking(SetNonSerializedValues, "SetNonSerializedValues");
 			SM.PushBlocking(InitializeInput, "InitializeInput");
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
 			SM.PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
@@ -75,83 +75,7 @@ namespace LunraGames.SubLight
 			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
-		void LoadModelDependencies(Action done)
-		{
-			if (string.IsNullOrEmpty(Payload.Game.GalaxyId))
-			{
-				Debug.LogError("No GalaxyId to load");
-				done();
-				return;
-			}
-			App.M.Load<GalaxyInfoModel>(Payload.Game.GalaxyId, result => OnLoadGalaxy(result, done));
-		}
 
-		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, Action done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Unable to load galaxy, resulted in " + result.Status + " and error: " + result.Error);
-				done();
-				return;
-			}
-			Payload.Game.Galaxy = result.TypedModel;
-
-			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))
-			{
-				Debug.LogError("No GalaxyTargetId to load");
-				done();
-				return;
-			}
-
-			App.M.Load<GalaxyInfoModel>(Payload.Game.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, done));
-		}
-
-		void OnLoadGalaxyTarget(SaveLoadRequest<GalaxyInfoModel> result, Action done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Unable to load galaxy target, resulted in " + result.Status + " and error: " + result.Error);
-				done();
-				return;
-			}
-			Payload.Game.GalaxyTarget = result.TypedModel;
-
-			done();
-		}
-
-		void SetNonSerializedValues(Action done)
-		{
-			Payload.Game.Ship.Value.SetCurrentSystem(App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex));
-			if (Payload.Game.Ship.Value.CurrentSystem.Value == null) Debug.LogError("Unable to load current system at "+Payload.Game.Ship.Value.Position.Value+" and index "+Payload.Game.Ship.Value.SystemIndex.Value);
-
-			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
-			{
-				switch (waypoint.WaypointId.Value)
-				{
-					case WaypointIds.Ship:
-						waypoint.Name.Value = "Ark"; 
-						break;
-					case WaypointIds.BeginSystem:
-						waypoint.Name.Value = "Origin";
-						break;
-					case WaypointIds.EndSystem:
-						waypoint.Name.Value = "Sagittarius A*";
-						break;
-				}
-
-				if (!waypoint.Location.Value.IsSystem) continue;
-
-				var currWaypointSystem = App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, waypoint.Location.Value.Position, waypoint.Location.Value.SystemIndex);
-				if (currWaypointSystem == null)
-				{
-					Debug.LogError("Unable to load waypoint system ( WaypointId: "+waypoint.WaypointId.Value+" , Name: "+waypoint.Name.Value+" ) at\n" + waypoint.Location.Value.Position + " and index " + waypoint.Location.Value.SystemIndex);
-					continue;
-				}
-				waypoint.SetLocation(currWaypointSystem);
-			}
-
-			done();
-		}
 
 		void InitializeInput(Action done)
 		{
@@ -167,15 +91,15 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 			App.Callbacks.SaveRequest += OnSaveRequest;
 
-			Payload.Game.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
+			Payload.Game.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
 			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
 
-			Payload.Game.CelestialSystemState.Changed += OnCelestialSystemState;
+			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
-			Payload.Game.TransitState.Changed += OnTransitState;
+			Payload.Game.Context.TransitState.Changed += OnTransitState;
 
 			done();
 		}
@@ -213,7 +137,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 
 			// HACK BEGIN - Probably bad to do and I should feel bad... but oh well...
-			var activeScale = Payload.Game.ActiveScale.Value;
+			var activeScale = Payload.Game.Context.ActiveScale.Value;
 			activeScale.Opacity.Changed(1f);
 			activeScale.Transform.Changed(activeScale.Transform.Value);
 			// HACK END
@@ -232,7 +156,7 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			OnTransitComplete(Payload.Game.TransitState.Value);
+			OnTransitComplete(Payload.Game.Context.TransitState.Value);
 		}
 		#endregion
 
@@ -245,15 +169,15 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 
-			Payload.Game.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
+			Payload.Game.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
 			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
 
-			Payload.Game.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
-			Payload.Game.TransitState.Changed -= OnTransitState;
+			Payload.Game.Context.TransitState.Changed -= OnTransitState;
 
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
 			{
@@ -261,12 +185,35 @@ namespace LunraGames.SubLight
 			}
 
 			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
+
+			App.Input.SetEnabled(false);
+
+			SM.PushBlocking(
+				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
+				"GameSettingNoFocus"
+			);
+
+			SM.PushBlocking(
+				done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(CameraMaskRequest.DefaultHideDuration, done)),
+				"GameHideMask"
+			);
+
+			SM.PushBlocking(
+				done => App.P.UnRegisterAll(done),
+				"GameUnBind"
+			);
+
+			SM.PushBlocking(
+				done => App.Scenes.Request(SceneRequest.UnLoad(result => done(), Scenes)),
+				"GameUnLoadScenes"
+			);
 		}
 		#endregion
 
 		#region Events
 		void OnDialogRequest(DialogRequest request)
 		{
+			if (request.OverrideFocusHandling) return;
 			switch (request.State)
 			{
 				case DialogRequest.States.Request:
@@ -387,7 +334,7 @@ namespace LunraGames.SubLight
 
 		void OnCalculateLocalSectorsUpdateSystems(SectorInstanceModel sectorModel, UniversePosition sectorPosition)
 		{
-			sectorModel.Sector.Value = App.Universe.GetSector(Payload.Game.Galaxy, Payload.Game.Universe, sectorPosition);
+			sectorModel.Sector.Value = App.Universe.GetSector(Payload.Game.Context.Galaxy, Payload.Game.Universe, sectorPosition);
 			var systemCount = sectorModel.Sector.Value.SystemCount.Value;
 			for (var i = 0; i < sectorModel.SystemModels.Value.Length; i++)
 			{
@@ -395,7 +342,7 @@ namespace LunraGames.SubLight
 				if (i < systemCount)
 				{
 					// is active
-					currSystem.SetSystem(App.Universe.GetSystem(Payload.Game.Galaxy, Payload.Game.Universe, sectorModel.Sector, i));
+					currSystem.SetSystem(App.Universe.GetSystem(Payload.Game.Context.Galaxy, Payload.Game.Universe, sectorModel.Sector, i));
 				}
 				else currSystem.SetSystem(null);
 			}
@@ -403,35 +350,35 @@ namespace LunraGames.SubLight
 
 		void OnScaleTransform(UniverseTransform transform)
 		{
-			var labels = Payload.Game.Galaxy.GetLabels();
-			var targetProperty = Payload.Game.ScaleLabelSystem;
+			var labels = Payload.Game.Context.Galaxy.GetLabels();
+			var targetProperty = Payload.Game.Context.ScaleLabelSystem;
 
 			switch (transform.Scale)
 			{
 				case UniverseScales.System:
-					Payload.Game.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
+					Payload.Game.Context.ScaleLabelSystem.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("System name here..."));
 					return;
 				case UniverseScales.Local:
-					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
-					targetProperty = Payload.Game.ScaleLabelLocal;
+					labels = Payload.Game.Context.Galaxy.GetLabels(UniverseScales.Quadrant);
+					targetProperty = Payload.Game.Context.ScaleLabelLocal;
 					break;
 				case UniverseScales.Stellar:
-					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Quadrant);
-					targetProperty = Payload.Game.ScaleLabelStellar;
+					labels = Payload.Game.Context.Galaxy.GetLabels(UniverseScales.Quadrant);
+					targetProperty = Payload.Game.Context.ScaleLabelStellar;
 					break;
 				case UniverseScales.Quadrant:
-					labels = Payload.Game.Galaxy.GetLabels(UniverseScales.Galactic);
-					targetProperty = Payload.Game.ScaleLabelQuadrant;
+					labels = Payload.Game.Context.Galaxy.GetLabels(UniverseScales.Galactic);
+					targetProperty = Payload.Game.Context.ScaleLabelQuadrant;
 					break;
 				case UniverseScales.Galactic:
-					Payload.Game.ScaleLabelGalactic.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Milky Way"));
+					Payload.Game.Context.ScaleLabelGalactic.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Milky Way"));
 					return;
 				case UniverseScales.Cluster:
-					Payload.Game.ScaleLabelCluster.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Local Group"));
+					Payload.Game.Context.ScaleLabelCluster.Value = UniverseScaleLabelBlock.Create(LanguageStringModel.Override("Local Group"));
 					return;
 			}
 
-			var normalizedPosition = UniversePosition.NormalizedSector(transform.UniverseOrigin, Payload.Game.Galaxy.GalaxySize);
+			var normalizedPosition = UniversePosition.NormalizedSector(transform.UniverseOrigin, Payload.Game.Context.Galaxy.GalaxySize);
 
 			float? proximity = null;
 			GalaxyLabelModel closestLabel = null;
@@ -746,7 +693,7 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Complete:
 					// Unlocking the toolbar incase it was locked during the encounter.
-					Payload.Game.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+					Payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
 						Payload.Game.ToolbarSelection.Value,
 						false,
 						ToolbarSelectionRequest.Sources.Encounter

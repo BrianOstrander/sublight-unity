@@ -26,7 +26,8 @@ namespace LunraGames.SubLight
 			LanguageStringModel message,
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
-			Action confirmClick = null
+			Action confirmClick = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			return new DialogRequest(
@@ -35,7 +36,8 @@ namespace LunraGames.SubLight
 				style,
 				title,
 				message,
-				success: confirmClick
+				success: confirmClick,
+				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
 
@@ -54,7 +56,8 @@ namespace LunraGames.SubLight
 			LanguageStringModel title = null,
 			Action confirmClick = null,
 			Action denyClick = null,
-			Action<RequestStatus> done = null
+			Action<RequestStatus> done = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			return new DialogRequest(
@@ -63,9 +66,10 @@ namespace LunraGames.SubLight
 				style,
 				title,
 				message,
-				cancel: denyClick,
 				success: confirmClick,
-				done: done
+				failure: denyClick,
+				done: done,
+				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
 
@@ -89,7 +93,8 @@ namespace LunraGames.SubLight
 			LanguageStringModel cancelText = null,
 			LanguageStringModel denyText = null,
 			LanguageStringModel confirmText = null,
-			Action<RequestStatus> done = null
+			Action<RequestStatus> done = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			return new DialogRequest(
@@ -104,7 +109,8 @@ namespace LunraGames.SubLight
 				cancel: cancelClick,
 				failure: denyClick,
 				success: confirmClick,
-				done: done
+				done: done,
+				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
 
@@ -120,6 +126,7 @@ namespace LunraGames.SubLight
 		public readonly Action Failure;
 		public readonly Action Success;
 		public readonly Action<RequestStatus> Done;
+		public readonly bool OverrideFocusHandling;
 
 		public DialogRequest(
 			States state,
@@ -133,7 +140,8 @@ namespace LunraGames.SubLight
 			Action cancel = null,
 			Action failure = null,
 			Action success = null,
-			Action<RequestStatus> done = null
+			Action<RequestStatus> done = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			State = state;
@@ -148,6 +156,7 @@ namespace LunraGames.SubLight
 			Cancel = cancel ?? ActionExtensions.Empty;
 			Failure = failure ?? ActionExtensions.Empty;
 			Success = success ?? ActionExtensions.Empty;
+			OverrideFocusHandling = overrideFocuseHandling;
 		}
 
 		public DialogRequest Duplicate(States state = States.Unknown)
@@ -164,7 +173,8 @@ namespace LunraGames.SubLight
 				Cancel,
 				Failure,
 				Success,
-				Done
+				Done,
+				OverrideFocusHandling
 			);
 		}
 	}

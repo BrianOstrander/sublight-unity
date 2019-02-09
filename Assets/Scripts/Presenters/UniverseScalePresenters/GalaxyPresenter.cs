@@ -13,8 +13,8 @@ namespace LunraGames.SubLight.Presenters
 
 		public GalaxyPresenter(GameModel model) : base(model, UniverseScales.Galactic)
 		{
-			scaleInUniverse = model.Galaxy.GalaxySize;
-			positionInUniverse = model.Galaxy.GalaxyOrigin;
+			scaleInUniverse = model.Context.Galaxy.GalaxySize;
+			positionInUniverse = model.Context.Galaxy.GalaxyOrigin;
 		}
 
 		protected override void OnUnBind()
@@ -25,9 +25,9 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		protected override void OnShowView()
 		{
-			var transform = Model.ActiveScale.Value.Transform.Value;
+			var transform = Model.Context.ActiveScale.Value.Transform.Value;
 			//SetGrid(transform.UnityOrigin, transform.UnityRadius);
-			View.SetGalaxy(Model.Galaxy.FullPreview);
+			View.SetGalaxy(Model.Context.Galaxy.FullPreview);
 		}
 		#endregion
 	}

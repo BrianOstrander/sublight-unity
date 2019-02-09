@@ -28,9 +28,9 @@ namespace LunraGames.SubLight.Presenters
 			App.Heartbeat.Update += OnUpdate;
 
 			model.RelativeDayTime.Changed += OnDayTime;
-			model.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
+			model.Context.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed += OnVelocity;
-			model.TransitState.Changed += OnTransitState;
+			model.Context.TransitState.Changed += OnTransitState;
 		}
 
 		protected override void OnUnBind()
@@ -40,20 +40,20 @@ namespace LunraGames.SubLight.Presenters
 			App.Heartbeat.Update -= OnUpdate;
 
 			model.RelativeDayTime.Changed -= OnDayTime;
-			model.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
+			model.Context.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
 			model.Ship.Value.Velocity.Changed -= OnVelocity;
-			model.TransitState.Changed -= OnTransitState;
+			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.PushOpacity(() => currentOpacity);
-			View.PushOpacity(() => model.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
+			View.PushOpacity(() => model.Context.TransitState.Value.State == TransitState.States.Active ? 0f : 1f);
 
 			View.ReferenceFrame = ReferenceFrames.Ship;
 			View.Configuration = GetConfiguration(IsTransit);
 
-			View.TimeStamp = GetTimeStamp(model.CelestialSystemStateLastSelected.Value);
+			View.TimeStamp = GetTimeStamp(model.Context.CelestialSystemStateLastSelected.Value);
 
 			targetOpacity = 1f;
 		}
@@ -97,7 +97,7 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		bool IsTransit { get { return model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected; } }
+		bool IsTransit { get { return model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected; } }
 
 		#region Events
 		void OnUpdate(float delta)
@@ -116,7 +116,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible) return;
 
-			View.TimeStamp = GetTimeStamp(model.CelestialSystemStateLastSelected.Value);
+			View.TimeStamp = GetTimeStamp(model.Context.CelestialSystemStateLastSelected.Value);
 		}
 
 		void OnSelectedSystem(CelestialSystemStateBlock block)
@@ -132,8 +132,8 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible) return;
 
-			View.TimeStamp = GetTimeStamp(model.CelestialSystemStateLastSelected.Value);
-			if (model.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected) View.ReferenceFrameTransition();
+			View.TimeStamp = GetTimeStamp(model.Context.CelestialSystemStateLastSelected.Value);
+			if (model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected) View.ReferenceFrameTransition();
 		}
 
 		void OnReferenceFrameSelection(ReferenceFrames referenceFrame)

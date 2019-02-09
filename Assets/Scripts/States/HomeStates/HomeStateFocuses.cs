@@ -16,10 +16,8 @@ namespace LunraGames.SubLight
 		{
 			const float PriorityDimming = 0.25f;
 
-			public static void InitializePresenters(HomeState state, Action done)
+			public static void InitializePresenters(HomePayload payload, Action done)
 			{
-				var payload = state.Payload;
-
 				// Basics: Cameras, Room, etc
 				var roomCamera = payload.MainCamera;
 				var gantryAnchor = roomCamera.GantryAnchor;
@@ -39,14 +37,37 @@ namespace LunraGames.SubLight
 				payload.DelayedPresenterShows[2f] = new IPresenterCloseShowOptions[]
 				{
 					new MainMenuOptionsPresenter(
-						new LabelButtonBlock[] {
-							new LabelButtonBlock(LanguageStringModel.Override("New Game"), state.OnNewGameClick),
-							new LabelButtonBlock(LanguageStringModel.Override("Continue Game"), state.OnContinueGameClick, payload.CanContinueSave)
-						},
-						new LabelButtonBlock[] {
-							new LabelButtonBlock(LanguageStringModel.Override("Settings"), state.OnSettingsClick),
-							new LabelButtonBlock(LanguageStringModel.Override("Credits"), state.OnCreditsClick),
-							new LabelButtonBlock(LanguageStringModel.Override("Exit"), state.OnExitClick)
+						payload,
+						new MainMenuLanguageBlock
+						{
+							NewGame = LanguageStringModel.Override("New Game"),
+							NewGameOverwriteConfirm = new DialogLanguageBlock
+							{
+								Title = LanguageStringModel.Override("Overwrite Save"),
+								Message = LanguageStringModel.Override("Starting a new game will overwrite your existing one.")
+							},
+							NewGameError = new DialogLanguageBlock
+							{
+								Title = LanguageStringModel.Override("Error"),
+								Message = LanguageStringModel.Override("An error was encountered while trying to create your game.")
+							},
+
+							ContinueGame = LanguageStringModel.Override("Continue Game"),
+							ContinueGameError = new DialogLanguageBlock
+							{
+								Title = LanguageStringModel.Override("Error"),
+								Message = LanguageStringModel.Override("An error was encountered while trying to load your game.")
+							},
+
+							Settings = LanguageStringModel.Override("Settings"),
+							Credits = LanguageStringModel.Override("Credits"),
+
+							Quit = LanguageStringModel.Override("Quit"),
+							QuitConfirm = new DialogLanguageBlock
+							{
+								Title = LanguageStringModel.Override("Quit to Desktop"),
+								Message = LanguageStringModel.Override("Are you sure you want to quit?")
+							},
 						}
 					)
 				};

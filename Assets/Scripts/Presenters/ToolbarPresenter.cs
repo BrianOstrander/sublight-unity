@@ -91,7 +91,7 @@ namespace LunraGames.SubLight.Presenters
 			if (!CanTransition || selection == model.ToolbarSelection.Value) return;
 
 			OnToolbarSelection(selection);
-			model.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
 				selection,
 				false,
 				ToolbarSelectionRequest.Sources.Player
