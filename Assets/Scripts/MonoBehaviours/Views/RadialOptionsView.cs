@@ -56,6 +56,8 @@ namespace LunraGames.SubLight.Views
 		MeshRenderer tempIris;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
+		public bool LongTransition { private get; set; }
+
 		void SetButtons(LabelButtonBlock[] blocks, bool left)
 		{
 			var buttonArea = left ? buttonAreaLeft : buttonAreaRight;
@@ -112,6 +114,8 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
+			LongTransition = true;
+
 			// TODO REMOVE THIS!
 			tempIris.gameObject.SetActive(false);
 
@@ -164,6 +168,8 @@ namespace LunraGames.SubLight.Views
 		}
 
 
+		public override float ShowDuration { get { return LongTransition ? base.ShowDuration : 0.2f; } }
+
 		void OnDrawGizmos()
 		{
 #if UNITY_EDITOR
@@ -190,6 +196,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IRadialOptionsView : IView
 	{
+		bool LongTransition { set; }
 		LabelButtonBlock[] ButtonsLeft { set; }
 		LabelButtonBlock[] ButtonsRight { set; }
 	}

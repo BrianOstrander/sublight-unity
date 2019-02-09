@@ -23,24 +23,7 @@ namespace LunraGames.SubLight.Presenters
 
 		public void Show(Transform parent = null, bool instant = false)
 		{
-			if (View.Visible) return;
-
-			View.Reset();
-
-			View.ButtonsLeft = new LabelButtonBlock[]
-			{
-				new LabelButtonBlock(language.NewGame, CloseThenClick(OnNewGameClick)),
-				new LabelButtonBlock(language.ContinueGame, CloseThenClick(OnContinueGameClick), payload.CanContinueSave)
-			};
-
-			View.ButtonsRight = new LabelButtonBlock[]
-			{
-				new LabelButtonBlock(language.Settings, CloseThenClick(OnNewGameClick)),
-				new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
-				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
-			};
-
-			ShowView(parent, instant);
+			OnShow(true, parent, instant);
 		}
 
 		public void Close(bool instant = false)
@@ -50,13 +33,51 @@ namespace LunraGames.SubLight.Presenters
 			CloseView(instant);
 		}
 
+		void OnShow(bool longTransition, Transform parent = null, bool instant = false)
+		{
+			if (View.Visible) return;
+
+			View.Reset();
+
+			View.LongTransition = longTransition;
+
+			View.ButtonsLeft = new LabelButtonBlock[]
+			{
+				new LabelButtonBlock(language.NewGame, CloseThenClick(OnNewGameClick)),
+				new LabelButtonBlock(language.ContinueGame, CloseThenClick(OnContinueGameClick), payload.CanContinueSave)
+			};
+
+			View.ButtonsRight = new LabelButtonBlock[]
+			{
+				new LabelButtonBlock(language.Settings, CloseThenClick(OnSettingsClick)),
+				new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
+				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
+			};
+
+			ShowView(parent, instant);
+		}
+
+		void PushQuitRequest()
+		{
+			SM.Push(
+				() =>
+				{
+					var quitPayload = new QuitPayload();
+					quitPayload.Requester = "HomeMainMenu";
+					App.SM.RequestState(quitPayload);
+				},
+				"QuittingFromMainMenu"
+			);
+		}
+
 		#region Click Events
 		Action CloseThenClick(Action done)
 		{
 			return () =>
 			{
-				Debug.Log("close menu here...");
-				done();
+				if (View.TransitionState != TransitionStates.Shown) return;
+				View.Closed += done;
+				CloseView();
 			};
 		}
 
@@ -69,7 +90,8 @@ namespace LunraGames.SubLight.Presenters
 						language.NewGameOverwriteConfirm.Message,
 						DialogStyles.Warning,
 						language.NewGameOverwriteConfirm.Title,
-						StartNewGame
+						StartNewGame,
+						() => OnShow(false)
 					)
 				);
 			}
@@ -83,8 +105,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnSettingsClick()
 		{
-			App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Testing sounds."), DialogStyles.Warning));
-			//OnNotImplimentedClick();
+			OnNotImplimentedClick();
 		}
 
 		void OnCreditsClick()
@@ -94,14 +115,14 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnQuitClick()
 		{
-			SM.Push(
-				() =>
-				{
-					var quitPayload = new QuitPayload();
-					quitPayload.Requester = "HomeMainMenu";
-					App.SM.RequestState(quitPayload);
-				},
-				"QuittingFromMainMenu"
+			App.Callbacks.DialogRequest(
+				DialogRequest.ConfirmDeny(
+					language.QuitConfirm.Message,
+					DialogStyles.Warning,
+					language.QuitConfirm.Title,
+					PushQuitRequest,
+					() => OnShow(false)
+				)
 			);
 		}
 
@@ -110,7 +131,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.DialogRequest(
 				DialogRequest.Confirm(
 					LanguageStringModel.Override("This feature is not implemented yet."),
-					DialogStyles.Warning
+					DialogStyles.Warning,
+					confirmClick: () => OnShow(false)
 				)
 			);
 		}
@@ -126,7 +148,14 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (result.IsNotSuccess)
 			{
-				Debug.LogError("todo this!");
+				App.Callbacks.DialogRequest(
+					DialogRequest.Confirm(
+						language.NewGameError.Message,
+						DialogStyles.Error,
+						language.NewGameError.Title,
+						() => OnShow(false)
+					)
+				);
 				return;
 			}
 			StartGame(model);
@@ -136,7 +165,14 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (result.IsNotSuccess)
 			{
-				Debug.LogError("todo this!");
+				App.Callbacks.DialogRequest(
+					DialogRequest.Confirm(
+						language.ContinueGameError.Message,
+						DialogStyles.Error,
+						language.ContinueGameError.Title,
+						() => OnShow(false)
+					)
+				);
 				return;
 			}
 			StartGame(model);
