@@ -308,9 +308,9 @@ namespace LunraGames.SubLight
 			}
 
 			// Return the passed model rather than the save result, since we're keeping the Context data.
-			//done(RequestResult.Success(), model);
+			done(RequestResult.Success(), model);
 
-			done(RequestResult.Failure("Some fake error"), null);
+			//done(RequestResult.Failure("Some fake error"), null);
 		}
 		#endregion
 	}

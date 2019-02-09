@@ -8,13 +8,13 @@ using TMPro;
 
 namespace LunraGames.SubLight.Views
 {
-	public class OptionsMenuView : View, IOptionsMenuView
+	public class VerticalOptionsView : View, IVerticalOptionsView
 	{
 		[Serializable]
 		struct IconEntry
 		{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
-			public OptionsMenuIcons Icon;
+			public VerticalOptionsIcons Icon;
 			public Sprite Sprite;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
@@ -23,7 +23,7 @@ namespace LunraGames.SubLight.Views
 		struct ThemeEntry
 		{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
-			public OptionsMenuThemes Theme;
+			public VerticalOptionsThemes Theme;
 
 			public ColorStyleBlock PrimaryColor;
 			public ColorStyleBlock SecondaryColor;
@@ -46,7 +46,7 @@ namespace LunraGames.SubLight.Views
 		CanvasGroup entryBackgroundGroup;
 
 		[SerializeField]
-		OptionsMenuEntryLeaf[] entryPrefabs;
+		VerticalOptionsEntryLeaf[] entryPrefabs;
 
 		[SerializeField]
 		ThemeEntry[] themes;
@@ -62,11 +62,11 @@ namespace LunraGames.SubLight.Views
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public void SetEntries(
-			OptionsMenuThemes theme = OptionsMenuThemes.Neutral,
-			params IOptionsMenuEntry[] entries
+			VerticalOptionsThemes theme = VerticalOptionsThemes.Neutral,
+			params IVerticalOptionsEntry[] entries
 		)
 		{
-			theme = theme == OptionsMenuThemes.Unknown ? OptionsMenuThemes.Neutral : theme;
+			theme = theme == VerticalOptionsThemes.Unknown ? VerticalOptionsThemes.Neutral : theme;
 
 			var themeEntry = themes.FirstOrDefault(t => t.Theme == theme);
 
@@ -74,16 +74,16 @@ namespace LunraGames.SubLight.Views
 			foreach (var graphic in secondaryColorGraphics) graphic.color = themeEntry.SecondaryColor;
 			foreach (var graphic in tertiaryColorGraphics) graphic.color = themeEntry.TertiaryColor;
 
-			entryArea.transform.ClearChildren<OptionsMenuEntryLeaf>();
+			entryArea.transform.ClearChildren<VerticalOptionsEntryLeaf>();
 
 			if (entries.None()) return;
 
 			foreach (var entry in entries)
 			{
 				var entryType = entry.GetType();
-				if (entryType == typeof(DividerOptionsMenuEntry)) InstantiateEntry<DividerOptionsMenuEntry, DividerOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
-				else if (entryType == typeof(LabelOptionsMenuEntry)) InstantiateEntry<LabelOptionsMenuEntry, LabelOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
-				else if (entryType == typeof(ButtonOptionsMenuEntry)) InstantiateEntry<ButtonOptionsMenuEntry, ButtonOptionsMenuEntryLeaf>(entry, themeEntry, ApplyEntry);
+				if (entryType == typeof(DividerVerticalOptionsEntry)) InstantiateEntry<DividerVerticalOptionsEntry, DividerVerticalOptionsEntryLeaf>(entry, themeEntry, ApplyEntry);
+				else if (entryType == typeof(LabelVerticalOptionsEntry)) InstantiateEntry<LabelVerticalOptionsEntry, LabelVerticalOptionsEntryLeaf>(entry, themeEntry, ApplyEntry);
+				else if (entryType == typeof(ButtonVerticalOptionsEntry)) InstantiateEntry<ButtonVerticalOptionsEntry, ButtonVerticalOptionsEntryLeaf>(entry, themeEntry, ApplyEntry);
 				else
 				{
 					Debug.LogError("Unrecognized entry type: " + entryType.FullName);
@@ -91,9 +91,9 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		void InstantiateEntry<E, L>(IOptionsMenuEntry entry, ThemeEntry theme, Action<E, L, ThemeEntry> done)
-			where E : OptionsMenuEntry<L>
-			where L : OptionsMenuEntryLeaf
+		void InstantiateEntry<E, L>(IVerticalOptionsEntry entry, ThemeEntry theme, Action<E, L, ThemeEntry> done)
+			where E : VerticalOptionsEntry<L>
+			where L : VerticalOptionsEntryLeaf
 		{
 			var prefab = entryPrefabs.FirstOrDefault(p => p.GetType() == typeof(L) && p.Style == entry.Style);
 
@@ -112,17 +112,17 @@ namespace LunraGames.SubLight.Views
 		}
 
 		void ApplyEntry(
-			DividerOptionsMenuEntry entry,
-			DividerOptionsMenuEntryLeaf instance,
+			DividerVerticalOptionsEntry entry,
+			DividerVerticalOptionsEntryLeaf instance,
 			ThemeEntry theme
 		)
 		{
-			instance.DoubleSegmentArea.SetActive(entry.Segment == OptionsMenuDividerSegments.DoubleSegment);
+			instance.DoubleSegmentArea.SetActive(entry.Segment == VerticalOptionsDividerSegments.DoubleSegment);
 
 			switch (entry.Segment)
 			{
-				case OptionsMenuDividerSegments.DoubleSegment: break;
-				case OptionsMenuDividerSegments.None:
+				case VerticalOptionsDividerSegments.DoubleSegment: break;
+				case VerticalOptionsDividerSegments.None:
 					var rectTransform = instance.GetComponent<RectTransform>();
 					rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, 0f);
 					break;
@@ -131,19 +131,19 @@ namespace LunraGames.SubLight.Views
 					break;
 			}
 
-			instance.TopArea.SetActive(entry.Fade == OptionsMenuDividerFades.Top || entry.Fade == OptionsMenuDividerFades.All);
-			instance.BottomArea.SetActive(entry.Fade == OptionsMenuDividerFades.Bottom || entry.Fade == OptionsMenuDividerFades.All);
+			instance.TopArea.SetActive(entry.Fade == VerticalOptionsDividerFades.Top || entry.Fade == VerticalOptionsDividerFades.All);
+			instance.BottomArea.SetActive(entry.Fade == VerticalOptionsDividerFades.Bottom || entry.Fade == VerticalOptionsDividerFades.All);
 		}
 
 		void ApplyEntry(
-			LabelOptionsMenuEntry entry,
-			LabelOptionsMenuEntryLeaf instance,
+			LabelVerticalOptionsEntry entry,
+			LabelVerticalOptionsEntryLeaf instance,
 			ThemeEntry theme
 		)
 		{
 			instance.Label.text = entry.Message;
 
-			if (entry.Icon == OptionsMenuIcons.None)
+			if (entry.Icon == VerticalOptionsIcons.None)
 			{
 				if (instance.Icon != null) instance.Icon.gameObject.SetActive(false);
 				return;
@@ -165,16 +165,16 @@ namespace LunraGames.SubLight.Views
 		}
 
 		void ApplyEntry(
-			ButtonOptionsMenuEntry entry,
-			ButtonOptionsMenuEntryLeaf instance,
+			ButtonVerticalOptionsEntry entry,
+			ButtonVerticalOptionsEntryLeaf instance,
 			ThemeEntry theme
 		)
 		{
 			instance.Label.text = entry.Message;
 			instance.Button.OnClick.AddListener(new UnityEngine.Events.UnityAction(() => OnClick(entry)));
 
-			foreach (var target in instance.DisabledAreas) target.gameObject.SetActive(entry.InteractionState != ButtonOptionsMenuEntry.InteractionStates.Interactable);
-			foreach (var target in instance.EnabledAreas) target.gameObject.SetActive(entry.InteractionState == ButtonOptionsMenuEntry.InteractionStates.Interactable);
+			foreach (var target in instance.DisabledAreas) target.gameObject.SetActive(entry.InteractionState != ButtonVerticalOptionsEntry.InteractionStates.Interactable);
+			foreach (var target in instance.EnabledAreas) target.gameObject.SetActive(entry.InteractionState == ButtonVerticalOptionsEntry.InteractionStates.Interactable);
 
 			var backgroundTarget = instance.BackgroundAreas.First(a => a.gameObject.activeSelf);
 			var highlightTarget = instance.HighlightAreas.First(a => a.gameObject.activeSelf);
@@ -198,9 +198,9 @@ namespace LunraGames.SubLight.Views
 
 			switch (entry.InteractionState)
 			{
-				case ButtonOptionsMenuEntry.InteractionStates.Interactable: break;
-				case ButtonOptionsMenuEntry.InteractionStates.LooksNotInteractable:
-				case ButtonOptionsMenuEntry.InteractionStates.NotInteractable:
+				case ButtonVerticalOptionsEntry.InteractionStates.Interactable: break;
+				case ButtonVerticalOptionsEntry.InteractionStates.LooksNotInteractable:
+				case ButtonVerticalOptionsEntry.InteractionStates.NotInteractable:
 					labelColors.NormalColor = labelColors.NormalColor.NewA(labelColors.NormalColor.a * 0.5f);
 					labelColors.HighlightedColor = Color.black.NewA(labelColors.HighlightedColor.a);
 					labelColors.PressedColor = Color.black.NewA(labelColors.PressedColor.a);
@@ -230,13 +230,13 @@ namespace LunraGames.SubLight.Views
 		}
 
 		#region Events
-		void OnClick(ButtonOptionsMenuEntry entry)
+		void OnClick(ButtonVerticalOptionsEntry entry)
 		{
 			switch (entry.InteractionState)
 			{
-				case ButtonOptionsMenuEntry.InteractionStates.NotInteractable: break;
-				case ButtonOptionsMenuEntry.InteractionStates.Interactable:
-				case ButtonOptionsMenuEntry.InteractionStates.LooksNotInteractable:
+				case ButtonVerticalOptionsEntry.InteractionStates.NotInteractable: break;
+				case ButtonVerticalOptionsEntry.InteractionStates.Interactable:
+				case ButtonVerticalOptionsEntry.InteractionStates.LooksNotInteractable:
 					if (entry.Click == null) Debug.LogError("Entry should be clickable, but no event provided");
 					else entry.Click();
 					break;
@@ -248,12 +248,12 @@ namespace LunraGames.SubLight.Views
 		#endregion
 	}
 
-	public interface IOptionsMenuView : IView
+	public interface IVerticalOptionsView : IView
 	{
-		void SetEntries(OptionsMenuThemes theme = OptionsMenuThemes.Neutral, params IOptionsMenuEntry[] entries);
+		void SetEntries(VerticalOptionsThemes theme = VerticalOptionsThemes.Neutral, params IVerticalOptionsEntry[] entries);
 	}
 
-	public enum OptionsMenuThemes
+	public enum VerticalOptionsThemes
 	{
 		Unknown = 0,
 		Neutral = 10,
@@ -261,7 +261,7 @@ namespace LunraGames.SubLight.Views
 		Error = 30
 	}
 
-	public enum OptionsMenuStyles
+	public enum VerticalOptionsStyles
 	{
 		Unknown = 0,
 		Title = 10,
@@ -270,7 +270,7 @@ namespace LunraGames.SubLight.Views
 		Button = 40
 	}
 
-	public enum OptionsMenuIcons
+	public enum VerticalOptionsIcons
 	{
 		Unknown = 0,
 		None = 10,
@@ -278,7 +278,7 @@ namespace LunraGames.SubLight.Views
 		Save = 30
 	}
 
-	public enum OptionsMenuDividerFades
+	public enum VerticalOptionsDividerFades
 	{
 		Unknown = 0,
 		None = 10,
@@ -287,45 +287,45 @@ namespace LunraGames.SubLight.Views
 		Bottom = 40
 	}
 
-	public enum OptionsMenuDividerSegments
+	public enum VerticalOptionsDividerSegments
 	{
 		Unknown = 0,
 		None = 10,
 		DoubleSegment = 20
 	}
 
-	public interface IOptionsMenuEntry
+	public interface IVerticalOptionsEntry
 	{
-		OptionsMenuStyles Style { get; }
+		VerticalOptionsStyles Style { get; }
 		Type PrefabType { get; }
 	}
 
-	public abstract class OptionsMenuEntry<T> : IOptionsMenuEntry
-		where T : OptionsMenuEntryLeaf
+	public abstract class VerticalOptionsEntry<T> : IVerticalOptionsEntry
+		where T : VerticalOptionsEntryLeaf
 	{
-		public abstract OptionsMenuStyles Style { get; }
+		public abstract VerticalOptionsStyles Style { get; }
 		public Type PrefabType { get { return typeof(T); } }
 	}
 
 
-	public class DividerOptionsMenuEntry : OptionsMenuEntry<DividerOptionsMenuEntryLeaf>
+	public class DividerVerticalOptionsEntry : VerticalOptionsEntry<DividerVerticalOptionsEntryLeaf>
 	{
-		public static DividerOptionsMenuEntry CreateDivider(
-			OptionsMenuDividerSegments segment = OptionsMenuDividerSegments.DoubleSegment,
-			OptionsMenuDividerFades fade = OptionsMenuDividerFades.None
+		public static DividerVerticalOptionsEntry CreateDivider(
+			VerticalOptionsDividerSegments segment = VerticalOptionsDividerSegments.DoubleSegment,
+			VerticalOptionsDividerFades fade = VerticalOptionsDividerFades.None
 		)
-		{ return new DividerOptionsMenuEntry(OptionsMenuStyles.Divider, segment, fade); }
+		{ return new DividerVerticalOptionsEntry(VerticalOptionsStyles.Divider, segment, fade); }
 
-		OptionsMenuStyles style;
-		public override OptionsMenuStyles Style { get { return style; } }
+		VerticalOptionsStyles style;
+		public override VerticalOptionsStyles Style { get { return style; } }
 
-		public OptionsMenuDividerSegments Segment;
-		public OptionsMenuDividerFades Fade;
+		public VerticalOptionsDividerSegments Segment;
+		public VerticalOptionsDividerFades Fade;
 
-		DividerOptionsMenuEntry(
-			OptionsMenuStyles style,
-			OptionsMenuDividerSegments segment = OptionsMenuDividerSegments.DoubleSegment,
-			OptionsMenuDividerFades fade = OptionsMenuDividerFades.None
+		DividerVerticalOptionsEntry(
+			VerticalOptionsStyles style,
+			VerticalOptionsDividerSegments segment = VerticalOptionsDividerSegments.DoubleSegment,
+			VerticalOptionsDividerFades fade = VerticalOptionsDividerFades.None
 		)
 		{
 			this.style = style;
@@ -349,21 +349,21 @@ namespace LunraGames.SubLight.Views
 	}
 	*/
 
-	public class LabelOptionsMenuEntry : OptionsMenuEntry<LabelOptionsMenuEntryLeaf>
+	public class LabelVerticalOptionsEntry : VerticalOptionsEntry<LabelVerticalOptionsEntryLeaf>
 	{
-		public static LabelOptionsMenuEntry CreateTitle(string message, OptionsMenuIcons icon = OptionsMenuIcons.None) { return new LabelOptionsMenuEntry(OptionsMenuStyles.Title, message, icon); }
-		public static LabelOptionsMenuEntry CreateHeader(string message) { return new LabelOptionsMenuEntry(OptionsMenuStyles.Header, message); }
+		public static LabelVerticalOptionsEntry CreateTitle(string message, VerticalOptionsIcons icon = VerticalOptionsIcons.None) { return new LabelVerticalOptionsEntry(VerticalOptionsStyles.Title, message, icon); }
+		public static LabelVerticalOptionsEntry CreateHeader(string message) { return new LabelVerticalOptionsEntry(VerticalOptionsStyles.Header, message); }
 
-		OptionsMenuStyles style;
-		public override OptionsMenuStyles Style { get { return style; } }
+		VerticalOptionsStyles style;
+		public override VerticalOptionsStyles Style { get { return style; } }
 
 		public string Message;
-		public OptionsMenuIcons Icon;
+		public VerticalOptionsIcons Icon;
 
-		LabelOptionsMenuEntry(
-			OptionsMenuStyles style,
+		LabelVerticalOptionsEntry(
+			VerticalOptionsStyles style,
 			string message,
-			OptionsMenuIcons icon = OptionsMenuIcons.None
+			VerticalOptionsIcons icon = VerticalOptionsIcons.None
 		)
 		{
 			this.style = style;
@@ -372,7 +372,7 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
-	public class ButtonOptionsMenuEntry : OptionsMenuEntry<ButtonOptionsMenuEntryLeaf>
+	public class ButtonVerticalOptionsEntry : VerticalOptionsEntry<ButtonVerticalOptionsEntryLeaf>
 	{
 		public enum InteractionStates
 		{
@@ -388,29 +388,29 @@ namespace LunraGames.SubLight.Views
 			LooksNotInteractable = 30
 		}
 
-		public static ButtonOptionsMenuEntry CreateButton(
+		public static ButtonVerticalOptionsEntry CreateButton(
 			string message,
 			Action click,
 			InteractionStates interactionState = InteractionStates.Interactable
 		)
 		{
-			return new ButtonOptionsMenuEntry(
-				OptionsMenuStyles.Button,
+			return new ButtonVerticalOptionsEntry(
+				VerticalOptionsStyles.Button,
 				message,
 				click,
 				interactionState
 			);
 		}
 
-		OptionsMenuStyles style;
-		public override OptionsMenuStyles Style { get { return style; } }
+		VerticalOptionsStyles style;
+		public override VerticalOptionsStyles Style { get { return style; } }
 
 		public string Message;
 		public Action Click;
 		public InteractionStates InteractionState;
 
-		ButtonOptionsMenuEntry(
-			OptionsMenuStyles style,
+		ButtonVerticalOptionsEntry(
+			VerticalOptionsStyles style,
 			string message,
 			Action click,
 			InteractionStates interactionState

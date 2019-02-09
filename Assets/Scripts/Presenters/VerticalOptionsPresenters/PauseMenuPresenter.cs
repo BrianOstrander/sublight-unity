@@ -7,7 +7,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class PauseMenuPresenter : OptionsMenuPresenter
+	public class PauseMenuPresenter : VerticalOptionsPresenter
 	{
 		enum States
 		{
@@ -100,8 +100,8 @@ namespace LunraGames.SubLight.Presenters
 					View.Reset();
 					View.Shown += done;
 					View.SetEntries(
-						OptionsMenuThemes.Neutral,
-						LabelOptionsMenuEntry.CreateTitle(language.ReturningToMainMenu.Value, OptionsMenuIcons.None)
+						VerticalOptionsThemes.Neutral,
+						LabelVerticalOptionsEntry.CreateTitle(language.ReturningToMainMenu.Value, VerticalOptionsIcons.None)
 					);
 					ShowView();
 				},
@@ -134,8 +134,8 @@ namespace LunraGames.SubLight.Presenters
 					View.Reset();
 					View.Shown += done;
 					View.SetEntries(
-						OptionsMenuThemes.Error,
-						LabelOptionsMenuEntry.CreateTitle(language.Quiting.Value, OptionsMenuIcons.None)
+						VerticalOptionsThemes.Error,
+						LabelVerticalOptionsEntry.CreateTitle(language.Quiting.Value, VerticalOptionsIcons.None)
 					);
 					ShowView();
 				},
@@ -168,19 +168,19 @@ namespace LunraGames.SubLight.Presenters
 
 			View.Reset();
 
-			ButtonOptionsMenuEntry saveEntry = null;
+			ButtonVerticalOptionsEntry saveEntry = null;
 
-			if (CanSave) saveEntry = ButtonOptionsMenuEntry.CreateButton(language.Save.Value, OnClickSave);
-			else saveEntry = ButtonOptionsMenuEntry.CreateButton(language.Save.Value, OnClickSaveDisabled, ButtonOptionsMenuEntry.InteractionStates.LooksNotInteractable);
+			if (CanSave) saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSave);
+			else saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSaveDisabled, ButtonVerticalOptionsEntry.InteractionStates.LooksNotInteractable);
 
 			View.SetEntries(
-				OptionsMenuThemes.Neutral,
-				LabelOptionsMenuEntry.CreateTitle(language.Title.Value, OptionsMenuIcons.Pause),
-				LabelOptionsMenuEntry.CreateHeader(SaveMessage),
-				ButtonOptionsMenuEntry.CreateButton(language.Resume.Value, OnClickResume),
+				VerticalOptionsThemes.Neutral,
+				LabelVerticalOptionsEntry.CreateTitle(language.Title.Value, VerticalOptionsIcons.Pause),
+				LabelVerticalOptionsEntry.CreateHeader(SaveMessage),
+				ButtonVerticalOptionsEntry.CreateButton(language.Resume.Value, OnClickResume),
 				saveEntry,
-				ButtonOptionsMenuEntry.CreateButton(language.MainMenu.Value, OnClickMainMenu),
-				ButtonOptionsMenuEntry.CreateButton(language.Quit.Value, OnClickQuit)
+				ButtonVerticalOptionsEntry.CreateButton(language.MainMenu.Value, OnClickMainMenu),
+				ButtonVerticalOptionsEntry.CreateButton(language.Quit.Value, OnClickQuit)
 			);
 
 			ShowView(instant: instant);
@@ -236,8 +236,8 @@ namespace LunraGames.SubLight.Presenters
 				{
 					View.Reset();
 					View.SetEntries(
-						OptionsMenuThemes.Warning,
-						LabelOptionsMenuEntry.CreateTitle(language.SavingComplete.Value, OptionsMenuIcons.Save)
+						VerticalOptionsThemes.Warning,
+						LabelVerticalOptionsEntry.CreateTitle(language.SavingComplete.Value, VerticalOptionsIcons.Save)
 					);
 					ShowView(instant: true);
 				},
@@ -330,8 +330,8 @@ namespace LunraGames.SubLight.Presenters
 					View.Reset();
 					View.Shown += done;
 					View.SetEntries(
-						OptionsMenuThemes.Warning,
-						LabelOptionsMenuEntry.CreateTitle(language.SavingTitle.Value, OptionsMenuIcons.Save)
+						VerticalOptionsThemes.Warning,
+						LabelVerticalOptionsEntry.CreateTitle(language.SavingTitle.Value, VerticalOptionsIcons.Save)
 					);
 					ShowView();
 				},

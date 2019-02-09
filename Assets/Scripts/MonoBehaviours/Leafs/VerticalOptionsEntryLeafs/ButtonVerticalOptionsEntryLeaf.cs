@@ -4,7 +4,7 @@ using TMPro;
 
 namespace LunraGames.SubLight.Views
 {
-	public class ButtonOptionsMenuEntryLeaf : OptionsMenuEntryLeaf
+	public class ButtonVerticalOptionsEntryLeaf : VerticalOptionsEntryLeaf
 	{
 		public TextMeshProUGUI Label;
 		public XButton Button;

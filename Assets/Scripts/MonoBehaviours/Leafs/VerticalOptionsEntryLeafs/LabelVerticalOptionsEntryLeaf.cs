@@ -4,7 +4,7 @@ using TMPro;
 
 namespace LunraGames.SubLight.Views
 {
-	public class LabelOptionsMenuEntryLeaf : OptionsMenuEntryLeaf
+	public class LabelVerticalOptionsEntryLeaf : VerticalOptionsEntryLeaf
 	{
 		public TextMeshProUGUI Label;
 		public Image Icon;

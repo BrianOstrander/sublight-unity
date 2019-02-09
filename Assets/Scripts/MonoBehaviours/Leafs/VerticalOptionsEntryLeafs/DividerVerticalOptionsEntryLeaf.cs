@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Views
 {
-	public class DividerOptionsMenuEntryLeaf : OptionsMenuEntryLeaf
+	public class DividerVerticalOptionsEntryLeaf : VerticalOptionsEntryLeaf
 	{
 		public GameObject DoubleSegmentArea;
 		public GameObject TopArea;
