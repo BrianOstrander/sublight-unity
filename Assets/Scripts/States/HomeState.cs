@@ -46,7 +46,7 @@ namespace LunraGames.SubLight
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
 			SM.PushBlocking(InitializeLoadSaves, "InitializeLoadSaves");
 			SM.PushBlocking(InitializeLoadGalaxy, "InitializeLoadGalaxy");
-			SM.PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
+			SM.PushBlocking(done => Focuses.InitializePresenters(Payload, done), "InitializePresenters");
 			SM.PushBlocking(InitializeFocus, "InitializeFocus");
 		}
 
@@ -211,95 +211,6 @@ namespace LunraGames.SubLight
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
 					break;
 			}
-		}
-		#endregion
-
-		#region Click Events
-		void OnNewGameClick()
-		{
-			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), StartNewGame));
-			else StartNewGame();
-		}
-
-		void OnContinueGameClick()
-		{
-			App.GameService.LoadGame(Payload.ContinueSave, OnLoadGame);
-		}
-
-		void OnSettingsClick()
-		{
-			App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Testing sounds."), DialogStyles.Warning));
-			//OnNotImplimentedClick();
-		}
-
-		void OnCreditsClick()
-		{
-			OnNotImplimentedClick();
-		}
-
-		void OnExitClick()
-		{
-			Debug.Log("Quiting");
-			Application.Quit();
-		}
-
-		void OnNotImplimentedClick()
-		{
-			App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
-		}
-		#endregion
-
-		#region Game Utility
-		void StartNewGame()
-		{
-			App.GameService.CreateGame(Payload.NewGameBlock, OnStartNewGame);
-		}
-
-		void OnStartNewGame(RequestResult result, GameModel model)
-		{
-			if (result.IsNotSuccess)
-			{
-				Debug.LogError("todo this!");
-				return;
-			}
-			StartGame(model);
-		}
-
-		void OnLoadGame(RequestResult result, GameModel model)
-		{
-			if (result.IsNotSuccess)
-			{
-				Debug.LogError("todo this!");
-				return;
-			}
-			StartGame(model);
-		}
-
-		void StartGame(GameModel model)
-		{
-			SM.PushBlocking(
-				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
-				"StartGameSetNoFocus"
-			);
-
-			SM.PushBlocking(
-				done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultHideDuration, done)),
-				"StartGameHideCamera"
-			);
-
-			SM.Push(
-				() => 
-				{
-					Debug.Log("Starting game...");
-					var payload = new GamePayload
-					{
-						MainCamera = Payload.MainCamera,
-						Game = model
-					};
-					App.SM.RequestState(payload);
-				},
-				"StartGameRequestState"
-			);
 		}
 		#endregion
 	}

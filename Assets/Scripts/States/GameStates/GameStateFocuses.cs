@@ -49,31 +49,31 @@ namespace LunraGames.SubLight
 						Resume = LanguageStringModel.Override("Resume"),
 
 						Save = LanguageStringModel.Override("Save"),
-						SaveDisabledDuringEncounter = new PauseMenuLanguageBlock.DialogEntry
+						SaveDisabledDuringEncounter = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Active Encounter"),
 							Message = LanguageStringModel.Override("Saving is disabled during encounters.")
 						},
-						SaveDisabledAlreadySaved = new PauseMenuLanguageBlock.DialogEntry
+						SaveDisabledAlreadySaved = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Already Saved"),
 							Message = LanguageStringModel.Override("Your latest progress is already saved.")
 						},
-						SaveDisabledUnknown = new PauseMenuLanguageBlock.DialogEntry
+						SaveDisabledUnknown = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Saving Disabled"),
 							Message = LanguageStringModel.Override("Saving has been disabled for an unspecified reason, likely an error.")
 						},
 
 						MainMenu = LanguageStringModel.Override("Main Menu"),
-						MainMenuConfirm = new PauseMenuLanguageBlock.DialogEntry
+						MainMenuConfirm = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Return to Main Menu"),
 							Message = LanguageStringModel.Override("Are you sure you want to leave now? Any progress since your last save will be discarded!")
 						},
 
 						Quit = LanguageStringModel.Override("Quit to Desktop"),
-						QuitConfirm = new PauseMenuLanguageBlock.DialogEntry
+						QuitConfirm = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Quit to Desktop"),
 							Message = LanguageStringModel.Override("Are you sure you want to quit now? Any progress since your last save will be discarded!")
@@ -81,7 +81,7 @@ namespace LunraGames.SubLight
 
 						SavingTitle = LanguageStringModel.Override("Saving..."),
 						SavingComplete = LanguageStringModel.Override("Success!"),
-						SavingError = new PauseMenuLanguageBlock.DialogEntry
+						SavingError = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Error Saving"),
 							Message = LanguageStringModel.Override("An error was encountered while trying to save your game.")
