@@ -4,7 +4,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class MainMenuOptionsPresenter : Presenter<IMainMenuOptionsView>, IPresenterCloseShowOptions
+	public class MainMenuOptionsPresenter : Presenter<IRadialOptionsView>, IPresenterCloseShowOptions
 	{
 		LabelButtonBlock[] leftOptions;
 		LabelButtonBlock[] rightOptions;

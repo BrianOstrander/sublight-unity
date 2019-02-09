@@ -11,7 +11,7 @@ using UnityEditor;
 
 namespace LunraGames.SubLight.Views
 {
-	public class MainMenuOptionsView : View, IMainMenuOptionsView
+	public class RadialOptionsView : View, IRadialOptionsView
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
@@ -37,9 +37,9 @@ namespace LunraGames.SubLight.Views
 		GameObject buttonAreaRight;
 
 		[SerializeField]
-		MainMenuButtonLeaf buttonPrefabLeft;
+		ButtonRadialOptionsLeaf buttonPrefabLeft;
 		[SerializeField]
-		MainMenuButtonLeaf buttonPrefabRight;
+		ButtonRadialOptionsLeaf buttonPrefabRight;
 
 		[Header("Test")]
 		[SerializeField]
@@ -48,8 +48,8 @@ namespace LunraGames.SubLight.Views
 		public LabelButtonBlock[] ButtonsLeft { set { SetButtons(value, true); } }
 		public LabelButtonBlock[] ButtonsRight { set { SetButtons(value, false); } }
 
-		MainMenuButtonLeaf[] buttonInstancesLeft = new MainMenuButtonLeaf[0];
-		MainMenuButtonLeaf[] buttonInstancesRight = new MainMenuButtonLeaf[0];
+		ButtonRadialOptionsLeaf[] buttonInstancesLeft = new ButtonRadialOptionsLeaf[0];
+		ButtonRadialOptionsLeaf[] buttonInstancesRight = new ButtonRadialOptionsLeaf[0];
 
 		// TODO REMOVE THIS!
 		[SerializeField]
@@ -62,12 +62,12 @@ namespace LunraGames.SubLight.Views
 
 			buttonArea.transform.ClearChildren<LabelButtonLeaf>();
 
-			if (left) buttonInstancesLeft = new MainMenuButtonLeaf[0];
-			else buttonInstancesRight = new MainMenuButtonLeaf[0];
+			if (left) buttonInstancesLeft = new ButtonRadialOptionsLeaf[0];
+			else buttonInstancesRight = new ButtonRadialOptionsLeaf[0];
 
 			if (blocks == null) return;
 
-			var buttonInstances = new List<MainMenuButtonLeaf>();
+			var buttonInstances = new List<ButtonRadialOptionsLeaf>();
 
 			var buttonPrefab = left ? buttonPrefabLeft : buttonPrefabRight;
 
@@ -140,7 +140,7 @@ namespace LunraGames.SubLight.Views
 			UpdateButtons(shiftedScalar, buttonInstancesRight, false);
 		}
 
-		void UpdateButtons(float scalar, MainMenuButtonLeaf[] buttons, bool left)
+		void UpdateButtons(float scalar, ButtonRadialOptionsLeaf[] buttons, bool left)
 		{
 			var buttonAlpha = optionsButtonAlpha.Evaluate(scalar);
 			var loadingAlpha = optionsLoadingAlpha.Evaluate(scalar);
@@ -188,7 +188,7 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
-	public interface IMainMenuOptionsView : IView
+	public interface IRadialOptionsView : IView
 	{
 		LabelButtonBlock[] ButtonsLeft { set; }
 		LabelButtonBlock[] ButtonsRight { set; }
