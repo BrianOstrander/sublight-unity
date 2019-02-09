@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
 
 using UnityEngine;
 
-using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
@@ -24,6 +22,11 @@ namespace LunraGames.SubLight
 			public const float TransitVelocityMinimum = 0.3f * UniversePosition.LightYearToUniverseScalar; // In universe units. Shouldn't be greater than 1 lightyear...
 		}
 
+		struct LoadInstructions
+		{
+			public bool IsFirstLoad;
+		}
+
 		IModelMediator modelMediator;
 		IUniverseService universeService;
 
@@ -36,21 +39,25 @@ namespace LunraGames.SubLight
 			this.universeService = universeService;
 		}
 
-		public void CreateGame(CreateGameBlock info, Action<RequestStatus, GameModel> done)
+		#region Exposed Utilities
+		/// <summary>
+		/// Creates a new game using the specified info.
+		/// </summary>
+		/// <param name="info">Info.</param>
+		/// <param name="done">Done.</param>
+		public void CreateGame(CreateGameBlock info, Action<RequestResult, GameModel> done)
 		{
 			if (done == null) throw new ArgumentNullException("done");
 
-			var game = modelMediator.Create<GameModel>();
+			var model = modelMediator.Create<GameModel>();
 
-			game.Seed.Value = info.GameSeed;
-			game.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, Defaults.CreateGameBlock.GalaxyId);
-			game.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, Defaults.CreateGameBlock.GalaxyTargetId);
-			game.Universe = universeService.CreateUniverse(info);
-
-			game.FocusTransform.Value = FocusTransform.Default;
+			model.Seed.Value = info.GameSeed;
+			model.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, Defaults.CreateGameBlock.GalaxyId);
+			model.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, Defaults.CreateGameBlock.GalaxyTargetId);
+			model.Universe = universeService.CreateUniverse(info);
 
 			var initialTime = DayTime.Zero;
-			game.RelativeDayTime.Value = new RelativeDayTime(
+			model.RelativeDayTime.Value = new RelativeDayTime(
 				initialTime,
 				initialTime
 			);
@@ -62,51 +69,135 @@ namespace LunraGames.SubLight
 			ship.SetVelocityMultiplierMaximum(7);
 			ship.SetVelocityMultiplierEnabledMaximum(5);
 
-			game.Ship.Value = ship;
+			model.Ship.Value = ship;
 			// --------
 
-			game.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
-			game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(game.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
+			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
+			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
 
-			App.M.Load<GalaxyInfoModel>(game.GalaxyId, result => OnGalaxyLoaded(result, game, done));
+			OnInitializeGame(
+				new LoadInstructions { IsFirstLoad = true },
+				model,
+				done
+			);
 		}
 
-		void OnGalaxyLoaded(SaveLoadRequest<GalaxyInfoModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		/// <summary>
+		/// Loads the specified save and populates the context with required
+		/// values.
+		/// </summary>
+		/// <param name="model">Model.</param>
+		/// <param name="done">Done.</param>
+		public void LoadGame(SaveModel model, Action<RequestResult, GameModel> done)
+		{
+			if (model == null) throw new ArgumentNullException("model");
+			if (done == null) throw new ArgumentNullException("done");
+
+			App.M.Load<GameModel>(
+				model,
+				result =>
+				{
+					if (result.Status != RequestStatus.Success)
+					{
+						done(RequestResult.Failure(result.Error).Log(), null);
+						return;
+					}
+					LoadGame(result.TypedModel, done);
+				}
+			);
+		}
+
+		/// <summary>
+		/// Loads the specified game and populates the context with required
+		/// values.
+		/// </summary>
+		/// <param name="model">Model.</param>
+		/// <param name="done">Done.</param>
+		public void LoadGame(GameModel model, Action<RequestResult, GameModel> done)
+		{
+			if (model == null) throw new ArgumentNullException("model");
+			if (done == null) throw new ArgumentNullException("done");
+
+			OnInitializeGame(
+				new LoadInstructions(),
+				model,
+				done
+			);
+		}
+		#endregion
+
+		#region Initialization
+		void OnInitializeGame(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		{
+			model.FocusTransform.Value = FocusTransform.Default;
+
+			if (string.IsNullOrEmpty(model.GalaxyId))
+			{
+				done(RequestResult.Failure("No GalaxyId to load").Log(), null);
+				return;
+			}
+			App.M.Load<GalaxyInfoModel>(model.GalaxyId, result => OnLoadGalaxy(result, instructions, model, done));
+
+		}
+
+		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
+				done(RequestResult.Failure("Unable to load galaxy, resulted in " + result.Status + " and error: " + result.Error).Log(), null);
+				return;
+			}
+			model.Context.Galaxy = result.TypedModel;
+
+			if (string.IsNullOrEmpty(model.GalaxyTargetId))
+			{
+				done(RequestResult.Failure("No GalaxyTargetId to load").Log(), null);
 				return;
 			}
 
-			var galaxy = result.TypedModel;
+			App.M.Load<GalaxyInfoModel>(model.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, instructions, model, done));
+		}
+
+		void OnLoadGalaxyTarget(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure("Unable to load galaxy target, resulted in " + result.Status + " and error: " + result.Error).Log(), null);
+				return;
+			}
+			model.Context.GalaxyTarget = result.TypedModel;
+
+			if (instructions.IsFirstLoad) OnInitializeFirstLoad(instructions, model, done);
+			else SetContext(instructions, model, done);
+		}
+
+		void OnInitializeFirstLoad(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		{
+			// By this point the galaxy and target galaxy should already be set.
 
 			var beginFound = false;
 			SectorModel beginSector;
 			SystemModel beginSystem;
-			var begin = galaxy.GetPlayerBegin(out beginFound, out beginSector, out beginSystem);
+			var begin = model.Context.Galaxy.GetPlayerBegin(out beginFound, out beginSector, out beginSystem);
 			if (!beginFound)
 			{
-				Debug.LogError("Provided galaxy has no player begin defined");
-				done(RequestStatus.Failure, null);
+				done(RequestResult.Failure("Provided galaxy has no player begin defined").Log(), null);
 				return;
 			}
 
 			var endFound = false;
 			SectorModel endSector;
 			SystemModel endSystem;
-			var end = galaxy.GetPlayerEnd(out endFound, out endSector, out endSystem);
+			var end = model.Context.Galaxy.GetPlayerEnd(out endFound, out endSector, out endSystem);
 			if (!endFound)
 			{
-				Debug.LogError("Provided galaxy has no player end defined");
-				done(RequestStatus.Failure, null);
+				done(RequestResult.Failure("Provided galaxy has no player end defined").Log(), null);
 				return;
 			}
 
-			game.Ship.Value.Position.Value = begin;
-			game.Ship.Value.SetCurrentSystem(beginSystem);
-			game.Context.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
+			model.Ship.Value.Position.Value = begin;
+			model.Ship.Value.SetCurrentSystem(beginSystem);
+			model.Context.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
 
 			var shipWaypoint = new WaypointModel();
 			shipWaypoint.SetLocation(begin);
@@ -114,9 +205,9 @@ namespace LunraGames.SubLight
 			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
 			shipWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
 			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
-			shipWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, begin);
+			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, begin);
 
-			game.WaypointCollection.AddWaypoint(shipWaypoint);
+			model.WaypointCollection.AddWaypoint(shipWaypoint);
 
 			var beginWaypoint = new WaypointModel();
 			beginWaypoint.SetLocation(beginSystem);
@@ -124,9 +215,9 @@ namespace LunraGames.SubLight
 			beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
 			beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Visited;
 			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
-			beginWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, begin);
+			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, begin);
 
-			game.WaypointCollection.AddWaypoint(beginWaypoint);
+			model.WaypointCollection.AddWaypoint(beginWaypoint);
 
 			var endWaypoint = new WaypointModel();
 			endWaypoint.SetLocation(endSystem);
@@ -134,29 +225,93 @@ namespace LunraGames.SubLight
 			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
 			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
 			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
-			endWaypoint.Distance.Value = UniversePosition.Distance(game.Ship.Value.Position.Value, end);
+			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, end);
 
-			game.WaypointCollection.AddWaypoint(endWaypoint);
+			model.WaypointCollection.AddWaypoint(endWaypoint);
 
-			game.Universe.Sectors.Value = galaxy.GetSpecifiedSectors();
+			model.Universe.Sectors.Value = model.Context.Galaxy.GetSpecifiedSectors();
 
-			OnShipReady(game, done);
+			SetContext(instructions, model, done);
 		}
 
-		void OnShipReady(GameModel game, Action<RequestStatus, GameModel> done)
+		void SetContext(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
 		{
-			modelMediator.Save(game, result => OnSaveGame(result, done));
+			// By this point the galaxy and target galaxy should already be set.
+			// Additionally, begin, end, specified sectors, and waypoints should be defined.
+
+			model.Ship.Value.SetCurrentSystem(
+				App.Universe.GetSystem(
+					model.Context.Galaxy,
+					model.Universe,
+					model.Ship.Value.Position,
+					model.Ship.Value.SystemIndex
+				)
+			);
+
+			if (model.Ship.Value.CurrentSystem.Value == null)
+			{
+				done(RequestResult.Failure("Unable to load current system at " + model.Ship.Value.Position.Value + " and index " + model.Ship.Value.SystemIndex.Value).Log(), null);
+				return;
+			}
+
+			foreach (var waypoint in model.WaypointCollection.Waypoints.Value)
+			{
+				switch (waypoint.WaypointId.Value)
+				{
+					case WaypointIds.Ship:
+						waypoint.Name.Value = "Ark";
+						break;
+					case WaypointIds.BeginSystem:
+						waypoint.Name.Value = "Origin";
+						break;
+					case WaypointIds.EndSystem:
+						waypoint.Name.Value = "Sagittarius A*";
+						break;
+				}
+
+				if (!waypoint.Location.Value.IsSystem) continue;
+
+				var currWaypointSystem = App.Universe.GetSystem(
+					model.Context.Galaxy,
+					model.Universe,
+					waypoint.Location.Value.Position,
+					waypoint.Location.Value.SystemIndex
+				);
+
+				if (currWaypointSystem == null)
+				{
+					done(
+						RequestResult.Failure(
+							"Unable to load waypoint system ( WaypointId: " + waypoint.WaypointId.Value + " , Name: " + waypoint.Name.Value + " ) at\n" + waypoint.Location.Value.Position + " and index " + waypoint.Location.Value.SystemIndex
+						).Log(),
+						null
+					);
+					return;
+				}
+				waypoint.SetLocation(currWaypointSystem);
+			}
+
+			modelMediator.Save(model, result => OnSaveGame(result, instructions, model, done));
 		}
 
-		void OnSaveGame(SaveLoadRequest<GameModel> result, Action<RequestStatus, GameModel> done)
+		void OnSaveGame(
+			SaveLoadRequest<GameModel> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
+				done(RequestResult.Failure(result.Error).Log(), null);
 				return;
 			}
-			done(result.Status, result.TypedModel);
+
+			// Return the passed model rather than the save result, since we're keeping the Context data.
+			//done(RequestResult.Success(), model);
+
+			done(RequestResult.Failure("Some fake error"), null);
 		}
+		#endregion
 	}
 }

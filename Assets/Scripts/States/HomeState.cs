@@ -214,21 +214,16 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		#region Events Main Menu
+		#region Click Events
 		void OnNewGameClick()
 		{
-			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), OnNewGameStart));
-			else OnNewGameStart();
-		}
-
-		void OnNewGameStart()
-		{
-			App.GameService.CreateGame(Payload.NewGameBlock, OnNewGameCreated);
+			if (Payload.CanContinueSave) App.Callbacks.DialogRequest(DialogRequest.ConfirmDeny(LanguageStringModel.Override("Starting a new game will overwrite your existing one."), DialogStyles.Warning, LanguageStringModel.Override("Overwrite Game"), StartNewGame));
+			else StartNewGame();
 		}
 
 		void OnContinueGameClick()
 		{
-			App.M.Load<GameModel>(Payload.ContinueSave, OnLoadedGame);
+			App.GameService.LoadGame(Payload.ContinueSave, OnLoadGame);
 		}
 
 		void OnSettingsClick()
@@ -252,62 +247,59 @@ namespace LunraGames.SubLight
 		{
 			App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override("This feature is not implemented yet."), style: DialogStyles.Warning));
 		}
+		#endregion
 
-		void OnNewGameCreated(RequestStatus result, GameModel model)
+		#region Game Utility
+		void StartNewGame()
 		{
-			if (result != RequestStatus.Success)
+			App.GameService.CreateGame(Payload.NewGameBlock, OnStartNewGame);
+		}
+
+		void OnStartNewGame(RequestResult result, GameModel model)
+		{
+			if (result.IsNotSuccess)
 			{
-				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override("Creating new game returned with result " + result), style: DialogStyles.Error));
+				Debug.LogError("todo this!");
 				return;
 			}
-			App.M.Save(model, OnSaveGame);
+			StartGame(model);
 		}
 
-		void OnLoadedGame(SaveLoadRequest<GameModel> result)
+		void OnLoadGame(RequestResult result, GameModel model)
 		{
-			if (result.Status != RequestStatus.Success)
+			if (result.IsNotSuccess)
 			{
-				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
+				Debug.LogError("todo this!");
 				return;
 			}
-			App.M.Save(result.TypedModel, OnSaveGame);
+			StartGame(model);
 		}
 
-		void OnSaveGame(SaveLoadRequest<GameModel> result)
+		void StartGame(GameModel model)
 		{
-			// TODO: move this and the following events to use the state machine...
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				App.Callbacks.DialogRequest(DialogRequest.Confirm(LanguageStringModel.Override(result.Error), style: DialogStyles.Error));
-				return;
-			}
-			OnStartGame(result.TypedModel);
-		}
+			SM.PushBlocking(
+				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
+				"StartGameSetNoFocus"
+			);
 
-		void OnStartGame(GameModel model)
-		{
-			OnReadyTransition(() => OnFinallyStartGame(model));
-		}
+			SM.PushBlocking(
+				done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultHideDuration, done)),
+				"StartGameHideCamera"
+			);
 
-		void OnFinallyStartGame(GameModel model)
-		{
-			Debug.Log("Starting game...");
-			var payload = new GamePayload();
-			payload.MainCamera = Payload.MainCamera;
-			payload.Game = model;
-			App.SM.RequestState(payload);
-		}
-
-		void OnReadyTransition(Action done)
-		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), () => OnReadyTransitionNoFocus(done)));
-		}
-
-		void OnReadyTransitionNoFocus(Action done)
-		{
-			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultHideDuration, done));
+			SM.Push(
+				() => 
+				{
+					Debug.Log("Starting game...");
+					var payload = new GamePayload
+					{
+						MainCamera = Payload.MainCamera,
+						Game = model
+					};
+					App.SM.RequestState(payload);
+				},
+				"StartGameRequestState"
+			);
 		}
 		#endregion
 	}

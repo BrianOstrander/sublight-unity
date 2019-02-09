@@ -39,6 +39,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool toolbarLocking;
 		[JsonIgnore] public readonly ListenerProperty<bool> ToolbarLocking;
 
+		// TODO: Rethink if this should be serialized... actually I really really think it should not be...
 		[JsonProperty] FocusTransform focusTransform;
 		[JsonIgnore] public readonly ListenerProperty<FocusTransform> FocusTransform;
 		#endregion

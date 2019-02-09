@@ -11,6 +11,7 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
+		// TODO: Do we need this???
 		public struct Waypoint
 		{
 			public readonly string WaypointId;
@@ -45,6 +46,7 @@ namespace LunraGames.SubLight
 
 		public UniverseScaleModel LastActiveScale;
 
+		// TODO: Why does this exist???
 		public List<Waypoint> Waypoints = new List<Waypoint>();
 	}
 
@@ -60,8 +62,6 @@ namespace LunraGames.SubLight
 		protected override void Begin()
 		{
 			SM.PushBlocking(LoadScenes, "LoadScenes");
-			SM.PushBlocking(LoadModelDependencies, "LoadModelDependencies");
-			SM.PushBlocking(SetNonSerializedValues, "SetNonSerializedValues");
 			SM.PushBlocking(InitializeInput, "InitializeInput");
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
 			SM.PushBlocking(done => Focuses.InitializePresenters(this, done), "InitializePresenters");
@@ -75,83 +75,7 @@ namespace LunraGames.SubLight
 			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
-		void LoadModelDependencies(Action done)
-		{
-			if (string.IsNullOrEmpty(Payload.Game.GalaxyId))
-			{
-				Debug.LogError("No GalaxyId to load");
-				done();
-				return;
-			}
-			App.M.Load<GalaxyInfoModel>(Payload.Game.GalaxyId, result => OnLoadGalaxy(result, done));
-		}
 
-		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, Action done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Unable to load galaxy, resulted in " + result.Status + " and error: " + result.Error);
-				done();
-				return;
-			}
-			Payload.Game.Context.Galaxy = result.TypedModel;
-
-			if (string.IsNullOrEmpty(Payload.Game.GalaxyTargetId))
-			{
-				Debug.LogError("No GalaxyTargetId to load");
-				done();
-				return;
-			}
-
-			App.M.Load<GalaxyInfoModel>(Payload.Game.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, done));
-		}
-
-		void OnLoadGalaxyTarget(SaveLoadRequest<GalaxyInfoModel> result, Action done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Unable to load galaxy target, resulted in " + result.Status + " and error: " + result.Error);
-				done();
-				return;
-			}
-			Payload.Game.Context.GalaxyTarget = result.TypedModel;
-
-			done();
-		}
-
-		void SetNonSerializedValues(Action done)
-		{
-			Payload.Game.Ship.Value.SetCurrentSystem(App.Universe.GetSystem(Payload.Game.Context.Galaxy, Payload.Game.Universe, Payload.Game.Ship.Value.Position, Payload.Game.Ship.Value.SystemIndex));
-			if (Payload.Game.Ship.Value.CurrentSystem.Value == null) Debug.LogError("Unable to load current system at "+Payload.Game.Ship.Value.Position.Value+" and index "+Payload.Game.Ship.Value.SystemIndex.Value);
-
-			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
-			{
-				switch (waypoint.WaypointId.Value)
-				{
-					case WaypointIds.Ship:
-						waypoint.Name.Value = "Ark"; 
-						break;
-					case WaypointIds.BeginSystem:
-						waypoint.Name.Value = "Origin";
-						break;
-					case WaypointIds.EndSystem:
-						waypoint.Name.Value = "Sagittarius A*";
-						break;
-				}
-
-				if (!waypoint.Location.Value.IsSystem) continue;
-
-				var currWaypointSystem = App.Universe.GetSystem(Payload.Game.Context.Galaxy, Payload.Game.Universe, waypoint.Location.Value.Position, waypoint.Location.Value.SystemIndex);
-				if (currWaypointSystem == null)
-				{
-					Debug.LogError("Unable to load waypoint system ( WaypointId: "+waypoint.WaypointId.Value+" , Name: "+waypoint.Name.Value+" ) at\n" + waypoint.Location.Value.Position + " and index " + waypoint.Location.Value.SystemIndex);
-					continue;
-				}
-				waypoint.SetLocation(currWaypointSystem);
-			}
-
-			done();
-		}
 
 		void InitializeInput(Action done)
 		{
