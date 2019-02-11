@@ -22,7 +22,7 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		/// <remarks>
 		/// This should not be set manually outside of
-		/// GameModel.SetCurrentSystem.
+		/// GameModel.SetCurrentSystem or GameService.
 		/// </remarks>
 		[JsonIgnore] public readonly ListenerProperty<int> SystemIndex;
 		#endregion

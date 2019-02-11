@@ -200,7 +200,7 @@ namespace LunraGames.SubLight
 			}
 
 			model.Ship.Position.Value = begin;
-			model.Context.SetCurrentSystem(beginSystem);
+			model.Ship.SystemIndex.Value = beginSystem.Index.Value;
 
 			model.TransitHistory.Push(TransitHistoryEntry.Begin(instructions.CurrentTime, beginSystem));
 
