@@ -3,6 +3,8 @@ using System.Linq;
 
 using UnityEngine;
 
+using Newtonsoft.Json;
+
 namespace LunraGames.SubLight
 {
 	[Serializable]
@@ -23,57 +25,57 @@ namespace LunraGames.SubLight
 		}
 
 		#region Provided
-		public readonly float VelocityMinimum;
-		public readonly float VelocityShip;
+		[JsonProperty] public readonly float VelocityMinimum;
+		[JsonProperty] public readonly float VelocityShip;
 
 		/// <summary>
 		/// The current multiplier, 0 is base speed, multiplier maximum is max
 		/// speed.
 		/// </summary>
-		public readonly int MultiplierCurrent;
+		[JsonProperty] public readonly int MultiplierCurrent;
 		/// <summary>
 		/// The maximum multiplier possible with the amount of propellent
 		/// available.
 		/// </summary>
-		public readonly int MultiplierMaximum;
+		[JsonProperty] public readonly int MultiplierMaximum;
 		/// <summary>
 		/// The maximum multiplier with the current fuel supply.
 		/// </summary>
-		public readonly int MultiplierEnabledMaximum;
+		[JsonProperty] public readonly int MultiplierEnabledMaximum;
 		#endregion
 
 		#region Calculated
 		/// <summary>
 		/// The velocity minimum and ship velocity combined.
 		/// </summary>
-		public readonly float VelocityBase;
+		[JsonProperty] public readonly float VelocityBase;
 
-		public readonly float VelocityMinimumLightSpeed;
-		public readonly float VelocityShipLightSpeed;
+		[JsonProperty] public readonly float VelocityMinimumLightSpeed;
+		[JsonProperty] public readonly float VelocityShipLightSpeed;
 		/// <summary>
 		/// The velocity minimum and ship velocity combined.
 		/// </summary>
-		public readonly float VelocityBaseLightSpeed;
+		[JsonProperty] public readonly float VelocityBaseLightSpeed;
 
-		public readonly float VelocityCurrent;
-		public readonly float VelocityLightYearsCurrent;
-		public readonly float VelocityNewtonianCurrent;
-		public readonly float VelocityNewtonianLightYearsCurrent;
+		[JsonProperty] public readonly float VelocityCurrent;
+		[JsonProperty] public readonly float VelocityLightYearsCurrent;
+		[JsonProperty] public readonly float VelocityNewtonianCurrent;
+		[JsonProperty] public readonly float VelocityNewtonianLightYearsCurrent;
 
-		public readonly float VelocityRelativityRatioCurrent;
+		[JsonProperty] public readonly float VelocityRelativityRatioCurrent;
 
-		public readonly float[] MultiplierVelocities;
-		public readonly float[] MultiplierVelocitiesLightYears;
+		[JsonProperty] public readonly float[] MultiplierVelocities;
+		[JsonProperty] public readonly float[] MultiplierVelocitiesLightYears;
 
-		public readonly float[] MultiplierVelocitiesNewtonian;
-		public readonly float[] MultiplierVelocitiesNewtonianLightYears;
+		[JsonProperty] public readonly float[] MultiplierVelocitiesNewtonian;
+		[JsonProperty] public readonly float[] MultiplierVelocitiesNewtonianLightYears;
 
-		public readonly float[] VelocityRelativityRatios;
+		[JsonProperty] public readonly float[] VelocityRelativityRatios;
 		/// <summary>
 		/// The velocities, from 0 to 1, between the minimum and maximum
 		/// multiplier speeds.
 		/// </summary>
-		public readonly float[] VelocityNormals;
+		[JsonProperty] public readonly float[] VelocityNormals;
 		#endregion
 
 		TransitVelocity(

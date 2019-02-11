@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Newtonsoft.Json;
+
 namespace LunraGames.SubLight
 {
 	[Serializable]
@@ -11,8 +13,8 @@ namespace LunraGames.SubLight
 	{
 		public static RelativeDayTime Zero { get { return new RelativeDayTime(DayTime.Zero, DayTime.Zero); } }
 
-		public readonly DayTime ShipTime;
-		public readonly DayTime GalacticTime;
+		[JsonProperty] public readonly DayTime ShipTime;
+		[JsonProperty] public readonly DayTime GalacticTime;
 
 		public RelativeDayTime(
 			DayTime shipTime,

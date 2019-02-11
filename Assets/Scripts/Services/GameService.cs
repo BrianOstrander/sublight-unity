@@ -71,7 +71,6 @@ namespace LunraGames.SubLight
 			// --------
 
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
-			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
 
 			OnInitializeGame(
 				new LoadInstructions {
@@ -243,6 +242,16 @@ namespace LunraGames.SubLight
 		{
 			// By this point the galaxy and target galaxy should already be set.
 			// Additionally, begin, end, specified sectors, and waypoints should be defined.
+
+			// Ship ---
+			// TODO: Some of these values should be based on... like... the ship's inventory. Also why do I need to set them here? Why aren't they serialized properly?
+			//model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			//model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			//model.Ship.SetVelocityMultiplierMaximum(7);
+			//model.Ship.SetVelocityMultiplierEnabledMaximum(5);
+			// --------
+
+			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
 
 			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
 

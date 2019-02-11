@@ -1,8 +1,6 @@
-﻿using System.Linq;
+﻿using UnityEngine;
 
 using Newtonsoft.Json;
-
-using UnityEngine;
 
 namespace LunraGames.SubLight.Models
 {

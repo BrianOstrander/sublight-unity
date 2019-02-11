@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Newtonsoft.Json;
+
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
@@ -45,14 +47,14 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		public readonly DateTime EnterTime;
-		public readonly RelativeDayTime RelativeEnterTime;
-		public readonly string SystemName;
-		public readonly UniversePosition SystemPosition;
-		public readonly int SystemIndex;
-		public readonly int TransitCount;
-		public readonly float TransitDistance;
-		public readonly float TotalTransitDistance;
+		[JsonProperty] public readonly DateTime EnterTime;
+		[JsonProperty] public readonly RelativeDayTime RelativeEnterTime;
+		[JsonProperty] public readonly string SystemName;
+		[JsonProperty] public readonly UniversePosition SystemPosition;
+		[JsonProperty] public readonly int SystemIndex;
+		[JsonProperty] public readonly int TransitCount;
+		[JsonProperty] public readonly float TransitDistance;
+		[JsonProperty] public readonly float TotalTransitDistance;
 
 		TransitHistoryEntry(
 			DateTime enterTime,

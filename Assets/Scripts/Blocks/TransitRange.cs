@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Newtonsoft.Json;
+
 namespace LunraGames.SubLight
 {
 	[Serializable]
@@ -7,13 +9,13 @@ namespace LunraGames.SubLight
 	{
 		public static TransitRange Default { get { return new TransitRange(); } }
 
-		public readonly float Minimum;
-		public readonly float Ship;
-		public readonly float Total;
+		[JsonProperty] public readonly float Minimum;
+		[JsonProperty] public readonly float Ship;
+		[JsonProperty] public readonly float Total;
 
-		public readonly float MinimumLightYears;
-		public readonly float ShipLightYears;
-		public readonly float TotalLightYears;
+		[JsonProperty] public readonly float MinimumLightYears;
+		[JsonProperty] public readonly float ShipLightYears;
+		[JsonProperty] public readonly float TotalLightYears;
 
 		TransitRange(
 			float minimum,
