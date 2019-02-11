@@ -75,8 +75,6 @@ namespace LunraGames.SubLight
 			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
-
-
 		void InitializeInput(Action done)
 		{
 			App.Input.SetEnabled(true);
@@ -156,7 +154,7 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			OnTransitComplete(Payload.Game.Context.TransitState.Value);
+			OnTransitCompleteUpdateKeyValues(Payload.Game.Context.TransitState.Value);
 		}
 		#endregion
 
@@ -432,6 +430,21 @@ namespace LunraGames.SubLight
 		}
 
 		void OnTransitComplete(TransitState transitState)
+		{
+			Payload.Game.TransitHistory.Push(
+				TransitHistoryEntry.Create(
+					DateTime.Now,
+					Payload.Game.RelativeDayTime.Value,
+					transitState.BeginSystem,
+					transitState.EndSystem,
+					Payload.Game.TransitHistory.Peek()
+				)
+			);
+
+			OnTransitCompleteUpdateKeyValues(transitState);
+		}
+
+		void OnTransitCompleteUpdateKeyValues(TransitState transitState)
 		{
 			var synchronizedId = SM.UniqueSynchronizedId;
 

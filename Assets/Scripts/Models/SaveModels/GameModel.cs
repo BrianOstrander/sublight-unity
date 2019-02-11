@@ -11,7 +11,7 @@ namespace LunraGames.SubLight.Models
 	/// </summary>
 	public class GameModel : SaveModel
 	{
-		#region Dynamic Serialized Values
+		#region Serialized Values
 		[JsonProperty] int seed;
 		/// <summary>
 		/// The game seed.
@@ -24,9 +24,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore] public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
 
-		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
-		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
-
 		[JsonProperty] ToolbarSelections toolbarSelection;
 		[JsonIgnore] public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
 
@@ -38,7 +35,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore] public readonly ListenerProperty<FocusTransform> FocusTransform;
 		#endregion
 
-		#region Non-Dynamic Serialized Values
+		#region Serialized Models
 		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
 		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
 		[JsonProperty] UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
@@ -61,6 +58,9 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
+		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
+		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
+
 		[JsonProperty] ShipModel ship = new ShipModel();
 		[JsonIgnore] public ShipModel Ship { get { return ship; } }
 
@@ -73,6 +73,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonIgnore] public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
 
+		[JsonProperty] TransitHistoryModel transitHistory = new TransitHistoryModel();
+		[JsonIgnore] public TransitHistoryModel TransitHistory { get { return transitHistory; } }
+
 		[JsonProperty] string galaxyId;
 		[JsonIgnore] public string GalaxyId { get { return galaxyId; } set { galaxyId = value; } }
 
@@ -80,10 +83,18 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore] public string GalaxyTargetId { get { return galaxyTargetId; } set { galaxyTargetId = value; } }
 
 		[JsonProperty] UniverseModel universe;
+		/// <summary>
+		/// Gets or sets the universe.
+		/// </summary>
+		/// <remarks>
+		/// This should only be set upon creation of a new game by the
+		/// UniverseService.
+		/// </remarks>
+		/// <value>The universe.</value>
 		[JsonIgnore] public UniverseModel Universe { get { return universe; } set { universe = value; } }
 		#endregion
 
-		#region NonSerialized
+		#region Non Serialized Models
 		/// <summary>
 		/// Gets the context data, non-serialized information relating to game
 		/// data.

@@ -51,7 +51,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnUpdate(float delta)
 		{
-			if (model.Context.TransitState.Value != null && model.Context.TransitState.Value.State == TransitState.States.Active) OnProcessState(model.Context.TransitState.Value, delta);
+			if (model.Context.TransitState.Value.State == TransitState.States.Active) OnProcessState(model.Context.TransitState.Value, delta);
 		}
 
 		void OnTransitStateRequest(TransitStateRequest transitStateRequest)

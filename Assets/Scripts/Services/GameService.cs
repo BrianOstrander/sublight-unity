@@ -25,6 +25,7 @@ namespace LunraGames.SubLight
 		struct LoadInstructions
 		{
 			public bool IsFirstLoad;
+			public DateTime CurrentTime;
 		}
 
 		IModelMediator modelMediator;
@@ -73,7 +74,10 @@ namespace LunraGames.SubLight
 			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
 
 			OnInitializeGame(
-				new LoadInstructions { IsFirstLoad = true },
+				new LoadInstructions {
+					IsFirstLoad = true,
+					CurrentTime = DateTime.Now
+				},
 				model,
 				done
 			);
@@ -116,7 +120,10 @@ namespace LunraGames.SubLight
 			if (done == null) throw new ArgumentNullException("done");
 
 			OnInitializeGame(
-				new LoadInstructions(),
+				new LoadInstructions
+				{
+					CurrentTime = DateTime.Now
+				},
 				model,
 				done
 			);
@@ -195,6 +202,8 @@ namespace LunraGames.SubLight
 			model.Ship.Position.Value = begin;
 			model.Context.SetCurrentSystem(beginSystem);
 
+			model.TransitHistory.Push(TransitHistoryEntry.Begin(instructions.CurrentTime, beginSystem));
+
 			var shipWaypoint = new WaypointModel();
 			shipWaypoint.SetLocation(begin);
 			shipWaypoint.WaypointId.Value = WaypointIds.Ship;
@@ -237,13 +246,17 @@ namespace LunraGames.SubLight
 
 			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
 
-			if (instructions.IsFirstLoad)
+			if (instructions.IsFirstLoad || model.TransitHistory.Count() == 1)
 			{
 				model.Context.TransitState.Value = TransitState.Default(model.Context.CurrentSystem, model.Context.CurrentSystem);
 			}
 			else
 			{
-				Debug.LogWarning("TODO THIS LOGIC!");
+				var previousSystem = model.TransitHistory.Peek(1);
+				model.Context.TransitState.Value = TransitState.Default(
+					universeService.GetSystem(model.Context.Galaxy, model.Universe, previousSystem.SystemPosition, previousSystem.SystemIndex),
+					model.Context.CurrentSystem
+				);
 			}
 
 			model.Context.SetCurrentSystem(
