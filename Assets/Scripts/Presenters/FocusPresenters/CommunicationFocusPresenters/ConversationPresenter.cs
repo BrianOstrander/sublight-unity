@@ -21,7 +21,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override bool CanShow()
 		{
-			return model.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && instanceModel.IsFocused.Value;
+			return model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && instanceModel.IsFocused.Value;
 		}
 
 		public ConversationPresenter(

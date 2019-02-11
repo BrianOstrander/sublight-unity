@@ -13,7 +13,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override bool CanShow()
 		{
-			return base.CanShow() && model.EncounterState.Current.Value.State == EncounterStateModel.States.Processing;
+			return base.CanShow() && model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Processing;
 		}
 
 		public override ConversationButtonStyles Style { get { return ConversationButtonStyles.Conversation; } }

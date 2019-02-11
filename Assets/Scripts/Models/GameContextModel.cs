@@ -68,6 +68,11 @@ namespace LunraGames.SubLight.Models
 		public ReadonlyProperty<SystemModel> CurrentSystem;
 		#endregion
 
+		#region Read Only Models
+		EncounterStateModel encounterState = new EncounterStateModel();
+		public EncounterStateModel EncounterState { get { return encounterState; } }
+		#endregion
+
 		#region Models
 		public GalaxyInfoModel Galaxy { get; set; }
 		public GalaxyInfoModel GalaxyTarget { get; set; }

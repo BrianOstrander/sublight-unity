@@ -77,7 +77,7 @@ namespace LunraGames.SubLight.Presenters
 			get
 			{
 				return model.Context.TransitState.Value.State == TransitState.States.Complete &&
-					        model.EncounterState.Current.Value.State == EncounterStateModel.States.Complete &&
+					        model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Complete &&
 					        !hasSavedSinceOpening;
 			}
 		}
@@ -391,7 +391,7 @@ namespace LunraGames.SubLight.Presenters
 
 				return;
 			}
-			if (model.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
+			if (model.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
 			{
 				SM.PushBlocking(
 					done =>

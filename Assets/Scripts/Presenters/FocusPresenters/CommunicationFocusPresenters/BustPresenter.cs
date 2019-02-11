@@ -24,7 +24,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override bool CanShow()
 		{
-			return model.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && lastFocus != null;
+			return model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && lastFocus != null;
 		}
 
 		public BustPresenter(GameModel model)

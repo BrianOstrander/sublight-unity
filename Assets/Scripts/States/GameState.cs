@@ -690,7 +690,7 @@ namespace LunraGames.SubLight
 					// I don't think there's anything else I need to do here...
 					if (request.PrepareCompleteControl)
 					{
-						App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete(Payload.Game.EncounterState.Current.Value.EncounterId));
+						App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete(Payload.Game.Context.EncounterState.Current.Value.EncounterId));
 					}
 					else if (request.NextControl)
 					{

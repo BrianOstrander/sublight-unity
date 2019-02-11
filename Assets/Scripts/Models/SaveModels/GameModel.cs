@@ -64,9 +64,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ShipModel ship = new ShipModel();
 		[JsonIgnore] public ShipModel Ship { get { return ship; } }
 
-		[JsonProperty] EncounterStateModel encounterState = new EncounterStateModel();
-		[JsonIgnore] public EncounterStateModel EncounterState { get { return encounterState; } }
-
 		[JsonProperty] WaypointCollectionModel waypointCollection = new WaypointCollectionModel();
 		[JsonIgnore] public WaypointCollectionModel WaypointCollection { get { return waypointCollection; } }
 

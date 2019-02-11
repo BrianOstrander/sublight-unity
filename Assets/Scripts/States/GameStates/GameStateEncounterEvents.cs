@@ -155,7 +155,7 @@ namespace LunraGames.SubLight
 					switch (target)
 					{
 						case KeyValueTargets.Encounter:
-							result += payload.Game.EncounterState.KeyValues.Dump("Encounter");
+							result += payload.Game.Context.EncounterState.KeyValues.Dump("Encounter");
 							break;
 						case KeyValueTargets.Game:
 							result += payload.Game.KeyValues.Dump("Game");
