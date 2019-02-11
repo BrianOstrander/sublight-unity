@@ -55,8 +55,22 @@ namespace LunraGames.SubLight
 				new GenericFocusCameraPresenter<PriorityFocusDetails>(mainCamera.GantryAnchor, mainCamera.FieldOfView)
 			);
 
-			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(DevPrefs.DevCreateGame, OnAutoNewGame);
-			else App.SM.RequestState(Payload.HomeStatePayload);
+			switch (DevPrefs.AutoGameOption.Value)
+			{
+				case AutoGameOptions.None:
+					break;
+				case AutoGameOptions.NewGame:
+					App.GameService.CreateGame(DevPrefs.DevCreateGame, OnAutoNewGame);
+					return;
+				case AutoGameOptions.ContinueGame:
+					App.M.List<GameModel>(OnAutoContinueGame);
+					return;
+				default:
+					Debug.Log("Unrecognized AutoGameOption: " + DevPrefs.AutoGameOption.Value+ ", fallbing back to AutoGameOptions.None behaviour");
+					break;
+			}
+
+			OnRequestHomeState();
 		}
 
 		#region Mediators
@@ -219,6 +233,14 @@ namespace LunraGames.SubLight
 
 		void WipeGameSaves(Action done)
 		{
+			switch (DevPrefs.AutoGameOption.Value)
+			{
+				case AutoGameOptions.ContinueGame:
+					Debug.LogWarning("Auto Continue Game behaviour is selected, canceling wipe save action");
+					done();
+					return;
+			}
+
 			App.M.List<GameModel>(result => OnWipeGameSavesLoad(result, done));
 		}
 
@@ -240,7 +262,59 @@ namespace LunraGames.SubLight
 			App.M.Delete(current, deleteResult => OnWipeGameSavesDelete(deleteResult.Status, deleteResult, remaining, done));
 		}
 
+		void OnRequestHomeState()
+		{
+			App.SM.RequestState(Payload.HomeStatePayload);
+		}
+
 		void OnAutoNewGame(RequestResult result, GameModel model)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Creating game returned status "+result.Status+", falling back to AutoGameOptions.None behaviour");
+				OnRequestHomeState();
+				return;
+			}
+
+			Debug.Log("Auto New Game...");
+			OnRequestGameState(model);
+		}
+
+		void OnAutoContinueGame(SaveLoadArrayRequest<SaveModel> result)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to load a list of saved games, falling back to AutoGameOptions.None behaviour");
+				OnRequestHomeState();
+				return;
+			}
+
+			var continueSave = result.Models.Where(s => s.SupportedVersion.Value).OrderBy(s => s.Modified.Value).LastOrDefault();
+
+			if (continueSave == null)
+			{
+				Debug.LogWarning("No continue save to load, falling back to AutoGameOptions.None behaviour");
+				OnRequestHomeState();
+				return;
+			}
+
+			App.GameService.LoadGame(continueSave, OnAutoContinueGameLoaded);
+		}
+
+		void OnAutoContinueGameLoaded(RequestResult result, GameModel model)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Loading game returned status "+result.Status+", falling back to AutoGameOptions.None behaviour");
+				OnRequestHomeState();
+				return;
+			}
+
+			Debug.Log("Auto Continue Game...");
+			OnRequestGameState(model);
+		}
+
+		void OnRequestGameState(GameModel model)
 		{
 			var payload = new GamePayload();
 			payload.MainCamera = Payload.HomeStatePayload.MainCamera;
