@@ -16,7 +16,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			this.model = model;
 			this.scale = scale;
-			scaleModel = model.GetScale(scale);
+			scaleModel = model.Context.GetScale(scale);
 
 			scaleModel.Opacity.Changed += OnOpacityStale;
 			model.Context.GridScaleOpacity.Changed += OnOpacityStale;
@@ -41,7 +41,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			base.OnUnBind();
 
-			model.GetScale(scale).Opacity.Changed -= OnOpacityStale;
+			model.Context.GetScale(scale).Opacity.Changed -= OnOpacityStale;
 			model.Context.GridScaleOpacity.Changed -= OnOpacityStale;
 
 			if (labelProperty == null)

@@ -90,7 +90,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.SaveRequest += OnSaveRequest;
 
 			Payload.Game.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
-			Payload.Game.FocusTransform.Changed += OnFocusTransform;
+			Payload.Game.Context.FocusTransform.Changed += OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
 			Payload.Game.Ship.Position.Changed += OnShipPosition;
@@ -104,7 +104,7 @@ namespace LunraGames.SubLight
 
 		void InitializeScaleTransforms(Action done)
 		{
-			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
+			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.Context.GetScale(s).Transform))
 			{
 				scaleTransformProperty.Changed += OnScaleTransform;
 			}
@@ -123,7 +123,7 @@ namespace LunraGames.SubLight
 
 		void InitializeCelestialSystems(Action done)
 		{
-			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed += OnCelestialSystemsTransform;
+			Payload.Game.Context.GetScale(UniverseScales.Local).Transform.Changed += OnCelestialSystemsTransform;
 			done();
 		}
 		#endregion
@@ -168,7 +168,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 
 			Payload.Game.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
-			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
+			Payload.Game.Context.FocusTransform.Changed -= OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
 			Payload.Game.Ship.Position.Changed -= OnShipPosition;
@@ -177,12 +177,12 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Context.TransitState.Changed -= OnTransitState;
 
-			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
+			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.Context.GetScale(s).Transform))
 			{
 				scaleTransformProperty.Changed -= OnScaleTransform;
 			}
 
-			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
+			Payload.Game.Context.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
 
 			App.Input.SetEnabled(false);
 
@@ -261,7 +261,7 @@ namespace LunraGames.SubLight
 
 		void OnCelestialSystemsTransform(UniverseTransform transform)
 		{
-			if (transform.UniverseOrigin.SectorEquals(Payload.LastLocalFocus) || Payload.Game.FocusTransform.Value.Zoom.State != TweenStates.Complete)
+			if (transform.UniverseOrigin.SectorEquals(Payload.LastLocalFocus) || Payload.Game.Context.FocusTransform.Value.Zoom.State != TweenStates.Complete)
 			{
 				Payload.LastLocalFocus = transform.UniverseOrigin;
 				return;
@@ -279,7 +279,7 @@ namespace LunraGames.SubLight
  			switch (focusTransform.ToScale)
 			{
 				case UniverseScales.Local:
-					OnCalculateLocalSectors(Payload.Game.GetScale(focusTransform.ToScale).TransformDefault.Value, true);
+					OnCalculateLocalSectors(Payload.Game.Context.GetScale(focusTransform.ToScale).TransformDefault.Value, true);
 					break;
 			}
 		}

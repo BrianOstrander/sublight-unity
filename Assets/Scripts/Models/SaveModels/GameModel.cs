@@ -27,35 +27,9 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] bool toolbarLocking;
 		[JsonIgnore] public readonly ListenerProperty<bool> ToolbarLocking;
-
-		// TODO: Rethink if this should be serialized... actually I really really think it should not be...
-		[JsonProperty] FocusTransform focusTransform;
-		[JsonIgnore] public readonly ListenerProperty<FocusTransform> FocusTransform;
 		#endregion
 
 		#region Serialized Models
-		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
-		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
-		[JsonProperty] UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
-		[JsonProperty] UniverseScaleModel scaleQuadrant = UniverseScaleModel.Create(UniverseScales.Quadrant);
-		[JsonProperty] UniverseScaleModel scaleGalactic = UniverseScaleModel.Create(UniverseScales.Galactic);
-		[JsonProperty] UniverseScaleModel scaleCluster = UniverseScaleModel.Create(UniverseScales.Cluster);
-		public UniverseScaleModel GetScale(UniverseScales scale)
-		{
-			switch (scale)
-			{
-				case UniverseScales.System: return scaleSystem;
-				case UniverseScales.Local: return scaleLocal;
-				case UniverseScales.Stellar: return scaleStellar;
-				case UniverseScales.Quadrant: return scaleQuadrant;
-				case UniverseScales.Galactic: return scaleGalactic;
-				case UniverseScales.Cluster: return scaleCluster;
-				default:
-					Debug.LogError("Unrecognized scale: " + scale);
-					return null;
-			}
-		}
-
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
 
@@ -110,7 +84,6 @@ namespace LunraGames.SubLight.Models
 			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
-			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
 			Context = new GameContextModel(this, Ship);
 		}

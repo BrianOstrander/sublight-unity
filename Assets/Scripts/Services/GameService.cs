@@ -132,7 +132,7 @@ namespace LunraGames.SubLight
 		#region Initialization
 		void OnInitializeGame(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
 		{
-			model.FocusTransform.Value = FocusTransform.Default;
+			model.Context.FocusTransform.Value = FocusTransform.Default;
 
 			if (string.IsNullOrEmpty(model.GalaxyId))
 			{

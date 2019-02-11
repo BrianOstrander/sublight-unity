@@ -169,7 +169,7 @@ namespace LunraGames.SubLight.Presenters
 
 			foreach (var unitMap in unitMaps)
 			{
-				var currTransform = model.GetScale(unitMap.Scale);
+				var currTransform = model.Context.GetScale(unitMap.Scale);
 				currTransform.TransformDefault.Value = DefineTransform(unitMap, UniversePosition.Zero, 1f);
 
 			}
@@ -262,7 +262,7 @@ namespace LunraGames.SubLight.Presenters
 			bool zoomingUp = false
 		)
 		{
-			var scale = model.GetScale(unitMap.Scale);
+			var scale = model.Context.GetScale(unitMap.Scale);
 			var scaleTransform = scale.Transform.Value;
 
 			if (isZooming)
@@ -355,7 +355,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnTransitionActive(TransitionFocusRequest request, SetFocusTransition transition, SystemFocusDetails startDetails, SystemFocusDetails endDetails)
 		{
 			// TODO: This needs to be called multiple times while focusing and I don't know why.
-			if (transition.End.Enabled && (request.FirstActive || request.LastActive)) BeginZoom(model.FocusTransform.Value.Zoom, true);
+			if (transition.End.Enabled && (request.FirstActive || request.LastActive)) BeginZoom(model.Context.FocusTransform.Value.Zoom, true);
 		}
 
 		#region
@@ -363,7 +363,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (!View.Visible) return;
 
-			OnCheckTween(model.FocusTransform.Value, delta);
+			OnCheckTween(model.Context.FocusTransform.Value, delta);
 
 			OnCheckDragging(delta);
 		}
@@ -405,7 +405,7 @@ namespace LunraGames.SubLight.Presenters
 				SetGrid(); // TODO: Find out why I need to do this... it should not have such problems...
 			}
 
-			model.FocusTransform.Value = transform.Duplicate(
+			model.Context.FocusTransform.Value = transform.Duplicate(
 				zoomTween,
 				nudgeTween
 			);
@@ -435,21 +435,21 @@ namespace LunraGames.SubLight.Presenters
 
 			var isUp = 0f < value;
 
-			var targetZoom = model.FocusTransform.Value.Zoom.Current;
+			var targetZoom = model.Context.FocusTransform.Value.Zoom.Current;
 			if (isUp) targetZoom = Mathf.Min(targetZoom + 1f, 5f);
 			else targetZoom = Mathf.Max(0f, targetZoom - 1f);
-			var minOrMaxReached = Mathf.Approximately(targetZoom, model.FocusTransform.Value.Zoom.Current);
+			var minOrMaxReached = Mathf.Approximately(targetZoom, model.Context.FocusTransform.Value.Zoom.Current);
 
 			if (!minOrMaxReached && View.ZoomThreshold < Mathf.Abs(value))
 			{
 				// We're scrolling.
-				BeginZoom(TweenBlock.Create(model.FocusTransform.Value.Zoom.Current, targetZoom));
+				BeginZoom(TweenBlock.Create(model.Context.FocusTransform.Value.Zoom.Current, targetZoom));
 			}
 			else if (minOrMaxReached)
 			{
 				// We're nudging.
 				targetZoom += isUp ? 1f : -1f;
-				BeginNudge(TweenBlock.CreatePingPong(model.FocusTransform.Value.Zoom.Current, targetZoom));
+				BeginNudge(TweenBlock.CreatePingPong(model.Context.FocusTransform.Value.Zoom.Current, targetZoom));
 			}
 		}
 
@@ -476,7 +476,7 @@ namespace LunraGames.SubLight.Presenters
 			info.GetUnitModels(fromGrid.LightYears, info.LightYearUnit, out fromGetUnitCount, out fromUnitType);
 			info.GetUnitModels(toGrid.LightYears, info.LightYearUnit, out toGetUnitCount, out toUnitType);
 
-			var transform = model.FocusTransform.Value.Duplicate(zoomTween, model.FocusTransform.Value.NudgeZoom.DuplicateNoChange());
+			var transform = model.Context.FocusTransform.Value.Duplicate(zoomTween, model.Context.FocusTransform.Value.NudgeZoom.DuplicateNoChange());
 
 			transform.SetLanguage(
 				fromScale,
@@ -499,7 +499,7 @@ namespace LunraGames.SubLight.Presenters
 			InitializeBegin(View.NudgeAnimationDuration);
 
 			tweenState = TweenStates.Nudging;
-			model.FocusTransform.Value = model.FocusTransform.Value.Duplicate(model.FocusTransform.Value.Zoom.DuplicateNoChange(), nudgeTween);
+			model.Context.FocusTransform.Value = model.Context.FocusTransform.Value.Duplicate(model.Context.FocusTransform.Value.Zoom.DuplicateNoChange(), nudgeTween);
 		}
 
 		void InitializeBegin(float duration)
@@ -515,7 +515,7 @@ namespace LunraGames.SubLight.Presenters
 
 			foreach (var scale in EnumExtensions.GetValues(UniverseScales.Unknown))
 			{
-				scaleTransformsOnBeginAnimation.Add(scale, model.GetScale(scale).Transform.Value.Duplicate(origin));
+				scaleTransformsOnBeginAnimation.Add(scale, model.Context.GetScale(scale).Transform.Value.Duplicate(origin));
 			}
 		}
 
@@ -596,7 +596,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnShipPosition(UniversePosition position)
 		{
-			foreach (var transformProperty in unitMaps.Select(u => model.GetScale(u.Scale).TransformDefault))
+			foreach (var transformProperty in unitMaps.Select(u => model.Context.GetScale(u.Scale).TransformDefault))
 			{
 				transformProperty.Value = transformProperty.Value.Duplicate(ShipPositionOnPlane);
 			}

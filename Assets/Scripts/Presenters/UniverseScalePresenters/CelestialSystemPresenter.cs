@@ -42,7 +42,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 			Model.Context.CameraTransform.Changed += OnCameraTransform;
 			Model.Context.GridInput.Changed += OnGridInput;
-			Model.FocusTransform.Changed += OnFocusTransform;
+			Model.Context.FocusTransform.Changed += OnFocusTransform;
 			Model.Ship.Position.Changed += OnShipPosition;
 			Model.Context.CurrentSystem.Changed += OnShipCurrentSystem;
 		}
@@ -58,7 +58,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Model.Context.CameraTransform.Changed -= OnCameraTransform;
 			Model.Context.GridInput.Changed -= OnGridInput;
-			Model.FocusTransform.Changed -= OnFocusTransform;
+			Model.Context.FocusTransform.Changed -= OnFocusTransform;
 			Model.Ship.Position.Changed -= OnShipPosition;
 			Model.Context.CurrentSystem.Changed -= OnShipCurrentSystem;
 		}

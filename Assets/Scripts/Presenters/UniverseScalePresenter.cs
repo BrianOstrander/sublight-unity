@@ -29,9 +29,9 @@ namespace LunraGames.SubLight.Presenters
 		{
 			Model = model;
 			Scale = scale;
-			ScaleModel = model.GetScale(scale);
+			ScaleModel = model.Context.GetScale(scale);
 
-			Model.FocusTransform.Changed += OnFocusTransform;
+			Model.Context.FocusTransform.Changed += OnFocusTransform;
 			ScaleModel.Transform.Changed += OnScaleTransform;
 			ScaleModel.Opacity.Changed += OnOpacity;
 
@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUnBind()
 		{
-			Model.FocusTransform.Changed -= OnFocusTransform;
+			Model.Context.FocusTransform.Changed -= OnFocusTransform;
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 			ScaleModel.Opacity.Changed -= OnOpacity;
 
