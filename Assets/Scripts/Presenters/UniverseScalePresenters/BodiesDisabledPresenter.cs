@@ -8,7 +8,7 @@ namespace LunraGames.SubLight.Presenters
 		LanguageStringModel title;
 		LanguageStringModel description;
 
-		protected override UniversePosition PositionInUniverse { get { return Model.Ship.Value.Position.Value; } }
+		protected override UniversePosition PositionInUniverse { get { return Model.Ship.Position.Value; } }
 
 		public BodiesDisabledPresenter(
 			GameModel model,

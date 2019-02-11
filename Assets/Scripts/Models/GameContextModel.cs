@@ -11,6 +11,7 @@ namespace LunraGames.SubLight.Models
 	public class GameContextModel : Model
 	{
 		GameModel model;
+		ShipModel ship;
 
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
@@ -45,10 +46,6 @@ namespace LunraGames.SubLight.Models
 		float gridScaleOpacity;
 		public readonly ListenerProperty<float> GridScaleOpacity;
 
-		UniverseScaleModel activeScale;
-		ListenerProperty<UniverseScaleModel> activeScaleListener;
-		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
-
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
 
@@ -61,12 +58,28 @@ namespace LunraGames.SubLight.Models
 		ToolbarSelectionRequest toolbarSelectionRequest;
 		public ListenerProperty<ToolbarSelectionRequest> ToolbarSelectionRequest;
 
+		#region Read Only Listeners
+		UniverseScaleModel activeScale;
+		ListenerProperty<UniverseScaleModel> activeScaleListener;
+		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
+
+		SystemModel currentSystem;
+		readonly ListenerProperty<SystemModel> currentSystemListener;
+		public ReadonlyProperty<SystemModel> CurrentSystem;
+		#endregion
+
+		#region Models
 		public GalaxyInfoModel Galaxy { get; set; }
 		public GalaxyInfoModel GalaxyTarget { get; set; }
+		#endregion
 
-		public GameContextModel(GameModel model)
+		public GameContextModel(
+			GameModel model,
+			ShipModel ship
+		)
 		{
 			this.model = model;
+			this.ship = ship;
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 
@@ -82,6 +95,13 @@ namespace LunraGames.SubLight.Models
 			ScaleLabelCluster = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelCluster = value, () => scaleLabelCluster);
 			GridScaleOpacity = new ListenerProperty<float>(value => gridScaleOpacity = value, () => gridScaleOpacity);
 
+			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
+
+			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
+			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
+
+			ToolbarSelectionRequest = new ListenerProperty<ToolbarSelectionRequest>(value => toolbarSelectionRequest = value, () => toolbarSelectionRequest);
+
 			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
 			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(model.GetScale))
 			{
@@ -89,12 +109,7 @@ namespace LunraGames.SubLight.Models
 				if (activeScale == null || activeScale.Opacity.Value < currScale.Opacity.Value) activeScale = currScale;
 			}
 
-			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
-
-			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
-			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
-
-			ToolbarSelectionRequest = new ListenerProperty<ToolbarSelectionRequest>(value => toolbarSelectionRequest = value, () => toolbarSelectionRequest);
+			CurrentSystem = new ReadonlyProperty<SystemModel>(value => currentSystem = value, () => currentSystem, out currentSystemListener);
 		}
 
 		#region Events
@@ -117,6 +132,14 @@ namespace LunraGames.SubLight.Models
 					CelestialSystemStateLastSelected.Value = block;
 					break;
 			}
+		}
+		#endregion
+
+		#region Utility
+		public void SetCurrentSystem(SystemModel system)
+		{
+			currentSystemListener.Value = system;
+			ship.SystemIndex.Value = system == null ? -1 : system.Index.Value;
 		}
 		#endregion
 	}

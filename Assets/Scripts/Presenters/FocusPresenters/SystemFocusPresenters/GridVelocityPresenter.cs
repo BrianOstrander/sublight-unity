@@ -16,7 +16,7 @@ namespace LunraGames.SubLight.Presenters
 			this.model = model;
 			this.language = language;
 
-			model.Ship.Value.Velocity.Changed += OnVelocity;
+			model.Ship.Velocity.Changed += OnVelocity;
 			model.Context.TransitState.Changed += OnTransitState;
 		}
 
@@ -24,13 +24,13 @@ namespace LunraGames.SubLight.Presenters
 		{
 			base.OnUnBind();
 
-			model.Ship.Value.Velocity.Changed -= OnVelocity;
+			model.Ship.Velocity.Changed -= OnVelocity;
 			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
-			OnVelocityForced(model.Ship.Value.Velocity.Value);
+			OnVelocityForced(model.Ship.Velocity.Value);
 			View.MultiplierSelection = OnMultiplierSelection;
 			View.VelocityUnit = language.Velocity.Value.Value;
 			View.ResourceUnit = language.Resource.Value.Value;
@@ -54,7 +54,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnMultiplierSelection(int index)
 		{
-			model.Ship.Value.SetVelocityMultiplierCurrent(index);
+			model.Ship.SetVelocityMultiplierCurrent(index);
 		}
 
 		void OnTransitState(TransitState transitState)

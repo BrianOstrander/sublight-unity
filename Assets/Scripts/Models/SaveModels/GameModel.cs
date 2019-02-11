@@ -24,12 +24,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore] public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
 
-		[JsonProperty] ShipModel ship;
-		/// <summary>
-		/// The game ship.
-		/// </summary>
-		[JsonIgnore] public readonly ListenerProperty<ShipModel> Ship;
-
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
 
@@ -66,6 +60,9 @@ namespace LunraGames.SubLight.Models
 					return null;
 			}
 		}
+
+		[JsonProperty] ShipModel ship = new ShipModel();
+		[JsonIgnore] public ShipModel Ship { get { return ship; } }
 
 		[JsonProperty] EncounterStateModel encounterState = new EncounterStateModel();
 		[JsonIgnore] public EncounterStateModel EncounterState { get { return encounterState; } }
@@ -105,12 +102,11 @@ namespace LunraGames.SubLight.Models
 
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
-			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
 
-			Context = new GameContextModel(this);
+			Context = new GameContextModel(this, Ship);
 		}
 	}
 }

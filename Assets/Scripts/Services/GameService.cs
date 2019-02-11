@@ -63,13 +63,10 @@ namespace LunraGames.SubLight
 			);
 
 			// Ship ---
-			var ship = new ShipModel();
-			ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
-			ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
-			ship.SetVelocityMultiplierMaximum(7);
-			ship.SetVelocityMultiplierEnabledMaximum(5);
-
-			model.Ship.Value = ship;
+			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			model.Ship.SetVelocityMultiplierMaximum(7);
+			model.Ship.SetVelocityMultiplierEnabledMaximum(5);
 			// --------
 
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
@@ -195,9 +192,8 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			model.Ship.Value.Position.Value = begin;
-			model.Ship.Value.SetCurrentSystem(beginSystem);
-			model.Context.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
+			model.Ship.Position.Value = begin;
+			model.Context.SetCurrentSystem(beginSystem);
 
 			var shipWaypoint = new WaypointModel();
 			shipWaypoint.SetLocation(begin);
@@ -205,7 +201,7 @@ namespace LunraGames.SubLight
 			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
 			shipWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
 			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
-			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, begin);
+			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
 			model.WaypointCollection.AddWaypoint(shipWaypoint);
 
@@ -215,7 +211,7 @@ namespace LunraGames.SubLight
 			beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
 			beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Visited;
 			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
-			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, begin);
+			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
 			model.WaypointCollection.AddWaypoint(beginWaypoint);
 
@@ -225,7 +221,7 @@ namespace LunraGames.SubLight
 			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
 			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
 			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
-			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, end);
+			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, end);
 
 			model.WaypointCollection.AddWaypoint(endWaypoint);
 
@@ -239,18 +235,29 @@ namespace LunraGames.SubLight
 			// By this point the galaxy and target galaxy should already be set.
 			// Additionally, begin, end, specified sectors, and waypoints should be defined.
 
-			model.Ship.Value.SetCurrentSystem(
+			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
+
+			if (instructions.IsFirstLoad)
+			{
+				model.Context.TransitState.Value = TransitState.Default(model.Context.CurrentSystem, model.Context.CurrentSystem);
+			}
+			else
+			{
+				Debug.LogWarning("TODO THIS LOGIC!");
+			}
+
+			model.Context.SetCurrentSystem(
 				App.Universe.GetSystem(
 					model.Context.Galaxy,
 					model.Universe,
-					model.Ship.Value.Position,
-					model.Ship.Value.SystemIndex
+					model.Ship.Position,
+					model.Ship.SystemIndex
 				)
 			);
 
-			if (model.Ship.Value.CurrentSystem.Value == null)
+			if (model.Context.CurrentSystem.Value == null)
 			{
-				done(RequestResult.Failure("Unable to load current system at " + model.Ship.Value.Position.Value + " and index " + model.Ship.Value.SystemIndex.Value).Log(), null);
+				done(RequestResult.Failure("Unable to load current system at " + model.Ship.Position.Value + " and index " + model.Ship.SystemIndex.Value).Log(), null);
 				return;
 			}
 

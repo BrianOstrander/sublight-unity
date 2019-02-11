@@ -103,7 +103,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			get
 			{
-				var position = model.Ship.Value.Position.Value;
+				var position = model.Ship.Position.Value;
 				return new UniversePosition(position.Sector, position.Local.NewY(0f));
 			}
 		}
@@ -174,10 +174,10 @@ namespace LunraGames.SubLight.Presenters
 
 			}
 
-			model.Ship.Value.Position.Changed += OnShipPosition;
-			OnShipPosition(model.Ship.Value.Position.Value);
+			model.Ship.Position.Changed += OnShipPosition;
+			OnShipPosition(model.Ship.Position.Value);
 
-			model.Ship.Value.Range.Changed += OnTravelRange;
+			model.Ship.Range.Changed += OnTravelRange;
 			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			model.Context.TransitState.Changed += OnTransitState;
@@ -191,8 +191,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
 
-			model.Ship.Value.Position.Changed -= OnShipPosition;
-			model.Ship.Value.Range.Changed -= OnTravelRange;
+			model.Ship.Position.Changed -= OnShipPosition;
+			model.Ship.Range.Changed -= OnTravelRange;
 			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			model.Context.TransitState.Changed -= OnTransitState;
@@ -298,8 +298,8 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsTarget = isTarget;
 			grid.IsActive = isActive;
 			grid.Progress = progress;
-			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Value.Position.Value);
-			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Value.Range.Value.Total);
+			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Position.Value);
+			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Range.Value.Total);
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
@@ -645,7 +645,7 @@ namespace LunraGames.SubLight.Presenters
 							break;
 						case TransitState.Steps.Transit:
 							model.Context.ActiveScale.Value.Transform.Value = model.Context.ActiveScale.Value.Transform.Value.Duplicate(universePos);
-							model.Ship.Value.Position.Value = transitState.CurrentPosition;
+							model.Ship.Position.Value = transitState.CurrentPosition;
 							SetGrid();
 							break;
 						case TransitState.Steps.Finalize:
@@ -654,9 +654,9 @@ namespace LunraGames.SubLight.Presenters
 								transitState.BeginSystem.Visited.Value = true;
 
 								model.Context.ActiveScale.Value.Transform.Value = model.Context.ActiveScale.Value.Transform.Value.Duplicate(universePos);
-								model.Ship.Value.Position.Value = transitState.EndSystem.Position;
+								model.Ship.Position.Value = transitState.EndSystem.Position;
 
-								model.Ship.Value.SetCurrentSystem(transitState.EndSystem);
+								model.Context.SetCurrentSystem(transitState.EndSystem);
 								model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemState.Value.System.Position.Value, model.Context.CelestialSystemState.Value.System);
 
 								SetGrid();

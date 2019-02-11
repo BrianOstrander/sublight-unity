@@ -29,7 +29,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.RelativeDayTime.Changed += OnDayTime;
 			model.Context.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
-			model.Ship.Value.Velocity.Changed += OnVelocity;
+			model.Ship.Velocity.Changed += OnVelocity;
 			model.Context.TransitState.Changed += OnTransitState;
 		}
 
@@ -41,7 +41,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.RelativeDayTime.Changed -= OnDayTime;
 			model.Context.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
-			model.Ship.Value.Velocity.Changed -= OnVelocity;
+			model.Ship.Velocity.Changed -= OnVelocity;
 			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
@@ -79,8 +79,8 @@ namespace LunraGames.SubLight.Presenters
 
 			if (block.State == CelestialSystemStateBlock.States.Selected)
 			{
-				var distance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(block.Position, model.Ship.Value.Position.Value));
-				var transitDelta = RelativityUtility.TransitTime(model.Ship.Value.Velocity.Value.VelocityLightYearsCurrent, distance);
+				var distance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(block.Position, model.Ship.Position.Value));
+				var transitDelta = RelativityUtility.TransitTime(model.Ship.Velocity.Value.VelocityLightYearsCurrent, distance);
 
 				result.DeltaTimes[ReferenceFrames.Ship] = transitDelta.ShipTime;
 				result.DeltaTimes[ReferenceFrames.Galactic] = transitDelta.GalacticTime;

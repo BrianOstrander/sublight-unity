@@ -95,7 +95,7 @@ namespace LunraGames.SubLight
 			Payload.Game.FocusTransform.Changed += OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
-			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
+			Payload.Game.Ship.Position.Changed += OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
@@ -173,7 +173,7 @@ namespace LunraGames.SubLight
 			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
 
 			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
-			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
+			Payload.Game.Ship.Position.Changed -= OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
@@ -567,7 +567,7 @@ namespace LunraGames.SubLight
 
 		void OnTransitCompleteCheckForEncounters()
 		{
-			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
+			var encounterId = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounterId.Value;
 
 			if (!OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete))
 			{

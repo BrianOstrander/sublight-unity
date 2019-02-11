@@ -43,8 +43,8 @@ namespace LunraGames.SubLight.Presenters
 			Model.Context.CameraTransform.Changed += OnCameraTransform;
 			Model.Context.GridInput.Changed += OnGridInput;
 			Model.FocusTransform.Changed += OnFocusTransform;
-			Model.Ship.Value.Position.Changed += OnShipPosition;
-			Model.Ship.Value.CurrentSystem.Changed += OnShipCurrentSystem;
+			Model.Ship.Position.Changed += OnShipPosition;
+			Model.Context.CurrentSystem.Changed += OnShipCurrentSystem;
 		}
 
 		protected override void OnUnBind()
@@ -59,8 +59,8 @@ namespace LunraGames.SubLight.Presenters
 			Model.Context.CameraTransform.Changed -= OnCameraTransform;
 			Model.Context.GridInput.Changed -= OnGridInput;
 			Model.FocusTransform.Changed -= OnFocusTransform;
-			Model.Ship.Value.Position.Changed -= OnShipPosition;
-			Model.Ship.Value.CurrentSystem.Changed -= OnShipCurrentSystem;
+			Model.Ship.Position.Changed -= OnShipPosition;
+			Model.Context.CurrentSystem.Changed -= OnShipCurrentSystem;
 		}
 
 		void ApplyStates(bool instant = false)
@@ -91,10 +91,10 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (system == null) throw new ArgumentNullException("system");
 
-			if (Model.Ship.Value.CurrentSystem.Value == system) visitState = Celestial.VisitStates.Current;
+			if (Model.Context.CurrentSystem.Value == system) visitState = Celestial.VisitStates.Current;
 			else visitState = system.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
 
-			if (UniversePosition.Distance(system.Position.Value, Model.Ship.Value.Position.Value) <= Model.Ship.Value.Range.Value.Total)
+			if (UniversePosition.Distance(system.Position.Value, Model.Ship.Position.Value) <= Model.Ship.Range.Value.Total)
 			{
 				rangeState = Celestial.RangeStates.InRange;
 			}
@@ -212,7 +212,7 @@ namespace LunraGames.SubLight.Presenters
 			View.DetailsName = activeSystem.Name.Value;
 			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
 
-			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Value.Position.Value, activeSystem.Position.Value));
+			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Position.Value, activeSystem.Position.Value));
 			var lightyearText = lightyearDistance < 10f ? lightyearDistance.ToString("N1") : Mathf.RoundToInt(lightyearDistance).ToString("N0");
 
 			View.Distance = lightyearText;
@@ -234,7 +234,7 @@ namespace LunraGames.SubLight.Presenters
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.NotSelected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Ship.Value.Position, null);
+					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Ship.Position, null);
 					break;
 				case Celestial.SelectedStates.Selected:
 					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(positionInUniverse, instanceModel.ActiveSystem.Value);
@@ -262,7 +262,7 @@ namespace LunraGames.SubLight.Presenters
 							{
 								case Celestial.VisitStates.Current: break;
 								default:
-									Model.Context.TransitStateRequest.Value = TransitStateRequest.Create(Model.Ship.Value.CurrentSystem.Value, instanceModel.ActiveSystem.Value);
+									Model.Context.TransitStateRequest.Value = TransitStateRequest.Create(Model.Context.CurrentSystem.Value, instanceModel.ActiveSystem.Value);
 									break;
 							}
 							break;

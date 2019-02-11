@@ -2,6 +2,13 @@
 
 namespace LunraGames.SubLight.Models
 {
+	/// <summary>
+	/// Stores the serialized information about an instance of the game's
+	/// universe.
+	/// </summary>
+	/// <remarks>
+	/// Use the UniverseService to query sectors and systems in the universe.
+	/// </remarks>
 	public class UniverseModel : Model
 	{
 		[JsonProperty] int seed;
