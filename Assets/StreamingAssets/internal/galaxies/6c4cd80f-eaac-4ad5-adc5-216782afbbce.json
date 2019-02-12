@@ -75,7 +75,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -109,7 +111,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -143,7 +147,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -190,7 +196,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -224,7 +232,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -258,7 +268,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -292,7 +304,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -338,7 +352,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -384,7 +400,9 @@
       },
       "filtering": {
         "booleanKeyValues": [],
+        "integerKeyValues": [],
         "stringKeyValues": [],
+        "floatKeyValues": [],
         "encounterInteractions": []
       }
     }
@@ -446,7 +464,7 @@
           "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
           "iconScale": 0.238,
           "bodies": [],
-          "specifiedEncounterId": "fa622942-8eac-49e6-9791-b0845a5f19cf"
+          "specifiedEncounterId": ""
         },
         {
           "index": 3,
@@ -462,7 +480,7 @@
           "iconColor": {"r":0.470000029,"g":0.743833363,"b":1.0,"a":1.0},
           "iconScale": 0.797,
           "bodies": [],
-          "specifiedEncounterId": ""
+          "specifiedEncounterId": "fa622942-8eac-49e6-9791-b0845a5f19cf"
         },
         {
           "index": 4,

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -27,6 +25,9 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] bool toolbarLocking;
 		[JsonIgnore] public readonly ListenerProperty<bool> ToolbarLocking;
+
+		[JsonProperty] EncounterResume encounterResume = SubLight.EncounterResume.Default;
+		[JsonIgnore] public readonly ListenerProperty<EncounterResume> EncounterResume;
 		#endregion
 
 		#region Serialized Models
@@ -87,6 +88,7 @@ namespace LunraGames.SubLight.Models
 			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
+			EncounterResume = new ListenerProperty<EncounterResume>(value => encounterResume = value, () => encounterResume);
 
 			Context = new GameContextModel(this, Ship);
 		}

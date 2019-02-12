@@ -154,7 +154,19 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			OnTransitCompleteUpdateKeyValues(Payload.Game.Context.TransitState.Value);
+			PushUpdateKeyValues();
+			SM.Push(
+				() =>
+				{
+					if (OnCheckSpecifiedEncounter(null, EncounterTriggers.Load)) return; // We got interrupted by some test encounter.
+					if (!Payload.Game.EncounterResume.Value.CanResume) return; // No encounter to resume.
+					if (!OnCheckSpecifiedEncounter(Payload.Game.EncounterResume.Value.EncounterId, Payload.Game.EncounterResume.Value.Trigger))
+					{
+						Debug.LogError("Unable to resume encounter with id " + Payload.Game.EncounterResume.Value.EncounterId + " and trigger " + Payload.Game.EncounterResume.Value.Trigger);
+					}
+				},
+				"EncounterResumeCheck"
+			);
 		}
 		#endregion
 
@@ -441,10 +453,11 @@ namespace LunraGames.SubLight
 				)
 			);
 
-			OnTransitCompleteUpdateKeyValues(transitState);
+			PushUpdateKeyValues();
+			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
 		}
 
-		void OnTransitCompleteUpdateKeyValues(TransitState transitState)
+		void PushUpdateKeyValues()
 		{
 			var synchronizedId = SM.UniqueSynchronizedId;
 
@@ -478,7 +491,10 @@ namespace LunraGames.SubLight
 				synchronizedId
 			);
 
-			var transitDistance = UniversePosition.Distance(transitState.BeginSystem.Position.Value, transitState.EndSystem.Position.Value);
+			var transitDistance = UniversePosition.Distance(
+				Payload.Game.Context.TransitState.Value.BeginSystem.Position.Value,
+				Payload.Game.Context.TransitState.Value.EndSystem.Position.Value
+			);
 
 			SM.PushBlocking(
 				doneBlocking =>
@@ -574,8 +590,6 @@ namespace LunraGames.SubLight
 				"UpdateYearsElapsedDelta",
 				synchronizedId
 			);
-
-			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
 		}
 
 		void OnTransitCompleteCheckForEncounters()
@@ -609,7 +623,7 @@ namespace LunraGames.SubLight
 						{
 							if (valid) Debug.Log("Override Encounter is valid, triggering");
 							else Debug.LogWarning("Override Encounter is not valid, triggering anyways");
-							OnTransitCompleteFiltered(true, encounterOverride);
+							OnTransitCompleteFiltered(true, encounterOverride, trigger);
 						},
 						encounterOverride.Filtering,
 						Payload.Game,
@@ -641,7 +655,7 @@ namespace LunraGames.SubLight
 				case EncounterTriggers.NavigationSelect:
 				case EncounterTriggers.TransitComplete:
 					App.ValueFilter.Filter(
-						valid => OnTransitCompleteFiltered(valid, encounter),
+						valid => OnTransitCompleteFiltered(valid, encounter, trigger),
 						encounter.Filtering,
 						Payload.Game,
 						encounter
@@ -653,9 +667,11 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter)
+		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter, EncounterTriggers trigger)
 		{
 			if (!valid) return;
+
+			Payload.Game.EncounterResume.Value = new EncounterResume(encounter.EncounterId.Value, trigger);
 
 			App.Callbacks.EncounterRequest(
 				EncounterRequest.Request(
@@ -711,6 +727,8 @@ namespace LunraGames.SubLight
 						false,
 						ToolbarSelectionRequest.Sources.Encounter
 					);
+					// Clear the EncounterResume so it doesn't play again when we open the game.
+					Payload.Game.EncounterResume.Value = EncounterResume.Default;
 					break;
 				default:
 					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);

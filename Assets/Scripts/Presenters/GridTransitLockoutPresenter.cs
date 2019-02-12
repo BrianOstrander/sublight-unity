@@ -16,6 +16,7 @@ namespace LunraGames.SubLight.Presenters
 		GridTransitLockoutLanguageBlock language;
 
 		TransitState lastState;
+		bool isCompleting;
 
 		public GridTransitLockoutPresenter(
 			GameModel model,
@@ -51,6 +52,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnUpdate(float delta)
 		{
+			if (isCompleting) return;
 			if (model.Context.TransitState.Value.State == TransitState.States.Active) OnProcessState(model.Context.TransitState.Value, delta);
 		}
 
@@ -66,6 +68,8 @@ namespace LunraGames.SubLight.Presenters
 						break;
 				}
 			}
+
+			isCompleting = false;
 
 			var transitState = new TransitState
 			{
@@ -240,8 +244,15 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 
-			if (!transitState.Instant) OnProcessVisuals(transitState);
-			model.Context.TransitState.Value = transitState;
+			if (transitState.Instant)
+			{
+				model.Context.TransitState.Value = transitState;
+				return;
+			}
+
+			OnProcessVisuals(transitState);
+
+			if (transitState.State != TransitState.States.Complete) model.Context.TransitState.Value = transitState;
 		}
 
 		void OnProcessVisuals(TransitState transitState)
@@ -268,6 +279,7 @@ namespace LunraGames.SubLight.Presenters
 					View.AnimationProgress = transitState.AnimationProgress;
 					break;
 				default:
+					isCompleting = true;
 					OnProcessVisualsComplete(transitState);
 					break;
 			}
@@ -336,8 +348,13 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnProcessVisualsComplete(TransitState transitState)
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetToolbarSelectionFocus(ToolbarSelections.System)));
 			CloseView(true);
+			App.Callbacks.SetFocusRequest(
+				SetFocusRequest.Request(
+					GameState.Focuses.GetToolbarSelectionFocus(ToolbarSelections.System),
+					() => model.Context.TransitState.Value = transitState
+				)
+			);
 		}
 		#endregion
 	}
