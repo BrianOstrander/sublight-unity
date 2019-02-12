@@ -25,6 +25,7 @@ namespace LunraGames.SubLight
 		struct LoadInstructions
 		{
 			public bool IsFirstLoad;
+			public DateTime CurrentTime;
 		}
 
 		IModelMediator modelMediator;
@@ -63,20 +64,19 @@ namespace LunraGames.SubLight
 			);
 
 			// Ship ---
-			var ship = new ShipModel();
-			ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
-			ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
-			ship.SetVelocityMultiplierMaximum(7);
-			ship.SetVelocityMultiplierEnabledMaximum(5);
-
-			model.Ship.Value = ship;
+			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			model.Ship.SetVelocityMultiplierMaximum(7);
+			model.Ship.SetVelocityMultiplierEnabledMaximum(5);
 			// --------
 
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
-			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
 
 			OnInitializeGame(
-				new LoadInstructions { IsFirstLoad = true },
+				new LoadInstructions {
+					IsFirstLoad = true,
+					CurrentTime = DateTime.Now
+				},
 				model,
 				done
 			);
@@ -119,7 +119,10 @@ namespace LunraGames.SubLight
 			if (done == null) throw new ArgumentNullException("done");
 
 			OnInitializeGame(
-				new LoadInstructions(),
+				new LoadInstructions
+				{
+					CurrentTime = DateTime.Now
+				},
 				model,
 				done
 			);
@@ -129,7 +132,7 @@ namespace LunraGames.SubLight
 		#region Initialization
 		void OnInitializeGame(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
 		{
-			model.FocusTransform.Value = FocusTransform.Default;
+			model.Context.FocusTransform.Value = FocusTransform.Default;
 
 			if (string.IsNullOrEmpty(model.GalaxyId))
 			{
@@ -195,9 +198,10 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			model.Ship.Value.Position.Value = begin;
-			model.Ship.Value.SetCurrentSystem(beginSystem);
-			model.Context.TransitState.Value = TransitState.Default(beginSystem, beginSystem);
+			model.Ship.Position.Value = begin;
+			model.Ship.SystemIndex.Value = beginSystem.Index.Value;
+
+			model.TransitHistory.Push(TransitHistoryEntry.Begin(instructions.CurrentTime, beginSystem));
 
 			var shipWaypoint = new WaypointModel();
 			shipWaypoint.SetLocation(begin);
@@ -205,9 +209,9 @@ namespace LunraGames.SubLight
 			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
 			shipWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
 			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
-			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, begin);
+			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
-			model.WaypointCollection.AddWaypoint(shipWaypoint);
+			model.Waypoints.AddWaypoint(shipWaypoint);
 
 			var beginWaypoint = new WaypointModel();
 			beginWaypoint.SetLocation(beginSystem);
@@ -215,9 +219,9 @@ namespace LunraGames.SubLight
 			beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
 			beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Visited;
 			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
-			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, begin);
+			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
-			model.WaypointCollection.AddWaypoint(beginWaypoint);
+			model.Waypoints.AddWaypoint(beginWaypoint);
 
 			var endWaypoint = new WaypointModel();
 			endWaypoint.SetLocation(endSystem);
@@ -225,9 +229,9 @@ namespace LunraGames.SubLight
 			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
 			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
 			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
-			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Value.Position.Value, end);
+			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, end);
 
-			model.WaypointCollection.AddWaypoint(endWaypoint);
+			model.Waypoints.AddWaypoint(endWaypoint);
 
 			model.Universe.Sectors.Value = model.Context.Galaxy.GetSpecifiedSectors();
 
@@ -239,22 +243,47 @@ namespace LunraGames.SubLight
 			// By this point the galaxy and target galaxy should already be set.
 			// Additionally, begin, end, specified sectors, and waypoints should be defined.
 
-			model.Ship.Value.SetCurrentSystem(
+			// Ship ---
+			// TODO: Some of these values should be based on... like... the ship's inventory. Also why do I need to set them here? Why aren't they serialized properly?
+			//model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			//model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			//model.Ship.SetVelocityMultiplierMaximum(7);
+			//model.Ship.SetVelocityMultiplierEnabledMaximum(5);
+			// --------
+
+			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
+
+			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
+
+			if (instructions.IsFirstLoad || model.TransitHistory.Count() == 1)
+			{
+				model.Context.TransitState.Value = TransitState.Default(model.Context.CurrentSystem, model.Context.CurrentSystem);
+			}
+			else
+			{
+				var previousSystem = model.TransitHistory.Peek(1);
+				model.Context.TransitState.Value = TransitState.Default(
+					universeService.GetSystem(model.Context.Galaxy, model.Universe, previousSystem.SystemPosition, previousSystem.SystemIndex),
+					model.Context.CurrentSystem
+				);
+			}
+
+			model.Context.SetCurrentSystem(
 				App.Universe.GetSystem(
 					model.Context.Galaxy,
 					model.Universe,
-					model.Ship.Value.Position,
-					model.Ship.Value.SystemIndex
+					model.Ship.Position,
+					model.Ship.SystemIndex
 				)
 			);
 
-			if (model.Ship.Value.CurrentSystem.Value == null)
+			if (model.Context.CurrentSystem.Value == null)
 			{
-				done(RequestResult.Failure("Unable to load current system at " + model.Ship.Value.Position.Value + " and index " + model.Ship.Value.SystemIndex.Value).Log(), null);
+				done(RequestResult.Failure("Unable to load current system at " + model.Ship.Position.Value + " and index " + model.Ship.SystemIndex.Value).Log(), null);
 				return;
 			}
 
-			foreach (var waypoint in model.WaypointCollection.Waypoints.Value)
+			foreach (var waypoint in model.Waypoints.Waypoints.Value)
 			{
 				switch (waypoint.WaypointId.Value)
 				{

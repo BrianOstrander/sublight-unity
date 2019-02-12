@@ -62,7 +62,6 @@ namespace LunraGames.SubLight
 		}
 	}
 
-	[Serializable]
 	public struct TweenBlock<T>
 	{
 		/// <summary>

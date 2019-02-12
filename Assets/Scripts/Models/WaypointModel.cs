@@ -9,23 +9,18 @@ namespace LunraGames.SubLight.Models
 		[Serializable]
 		public struct LocationDetails
 		{
-			public readonly UniversePosition Position;
-			public readonly int SystemIndex; // -1 if none
-			[JsonIgnore]
-			public readonly SystemModel System;
+			[JsonProperty] public readonly UniversePosition Position;
+			[JsonProperty] public readonly int SystemIndex; // -1 if none
 
-			[JsonIgnore]
-			public bool IsSystem { get { return SystemIndex != -1; } }
+			[JsonIgnore] public bool IsSystem { get { return SystemIndex != -1; } }
 
 			public LocationDetails(
 				UniversePosition position,
-				int systemIndex,
-				SystemModel system
+				int systemIndex
 			)
 			{
 				Position = position;
 				SystemIndex = systemIndex;
-				System = system;
 			}
 		}
 
@@ -63,35 +58,32 @@ namespace LunraGames.SubLight.Models
 
 		#region Serialized
 		[JsonProperty] string waypointId;
-		[JsonProperty] string name;
-		[JsonProperty] int priority;
-		[JsonProperty] float distance; // In universe units
-		[JsonProperty] VisibilityStates visibilityState;
-		[JsonProperty] VisitStates visitState;
-		[JsonProperty] RangeStates rangeState;
+		[JsonIgnore] public readonly ListenerProperty<string> WaypointId;
 
-		[JsonIgnore]
-		public readonly ListenerProperty<string> WaypointId;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> Name;
-		[JsonIgnore]
-		public readonly ListenerProperty<int> Priority;
+		[JsonProperty] string name;
+		[JsonIgnore] public readonly ListenerProperty<string> Name;
+
+		[JsonProperty] int priority;
+		[JsonIgnore] public readonly ListenerProperty<int> Priority;
+
+		[JsonProperty] float distance;
 		/// <summary>
 		/// The distance in universe units.
 		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Distance;
-		[JsonIgnore]
-		public readonly ListenerProperty<VisibilityStates> VisibilityState;
-		[JsonIgnore]
-		public readonly ListenerProperty<VisitStates> VisitState;
-		[JsonIgnore]
-		public readonly ListenerProperty<RangeStates> RangeState;
+		[JsonIgnore] public readonly ListenerProperty<float> Distance;
+
+		[JsonProperty] VisibilityStates visibilityState;
+		[JsonIgnore] public readonly ListenerProperty<VisibilityStates> VisibilityState;
+
+		[JsonProperty] VisitStates visitState;
+		[JsonIgnore] public readonly ListenerProperty<VisitStates> VisitState;
+
+		[JsonProperty] RangeStates rangeState;
+		[JsonIgnore] public readonly ListenerProperty<RangeStates> RangeState;
 
 		[JsonProperty] LocationDetails location;
 		readonly ListenerProperty<LocationDetails> locationListener;
-		[JsonIgnore]
-		public readonly ReadonlyProperty<LocationDetails> Location;
+		[JsonIgnore] public readonly ReadonlyProperty<LocationDetails> Location;
 		#endregion
 
 		public WaypointModel()
@@ -110,13 +102,13 @@ namespace LunraGames.SubLight.Models
 		#region Utilities
 		public void SetLocation(UniversePosition position)
 		{
-			locationListener.Value = new LocationDetails(position, -1, null);
+			locationListener.Value = new LocationDetails(position, -1);
 		}
 
 		public void SetLocation(SystemModel system)
 		{
 			if (system == null) throw new ArgumentNullException("system");
-			locationListener.Value = new LocationDetails(system.Position.Value, system.Index.Value, system);
+			locationListener.Value = new LocationDetails(system.Position.Value, system.Index.Value);
 		}
 		#endregion
 	}

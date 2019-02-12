@@ -3,7 +3,8 @@
 	public enum EncounterTriggers
 	{
 		Unknown = 0,
-		TransitComplete = 10,
-		NavigationSelect = 20
+		Load = 10,
+		TransitComplete = 20,
+		NavigationSelect = 30
 	}
 }

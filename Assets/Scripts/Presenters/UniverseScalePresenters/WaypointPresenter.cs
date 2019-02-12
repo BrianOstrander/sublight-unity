@@ -14,6 +14,8 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override UniversePosition PositionInUniverse { get { return waypoint.Location.Value.Position; } }
 
+		protected override bool CanShow { get { return waypoint.VisibilityState.Value == WaypointModel.VisibilityStates.Visible; } }
+
 		public WaypointPresenter(
 			GameModel model,
 			WaypointModel waypoint,

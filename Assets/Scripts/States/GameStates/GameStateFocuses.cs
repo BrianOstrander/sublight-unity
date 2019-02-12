@@ -295,7 +295,7 @@ namespace LunraGames.SubLight
 				};
 
 				var waypointEntries = new List<GamePayload.Waypoint>();
-				foreach (var waypoint in payload.Game.WaypointCollection.Waypoints.Value)
+				foreach (var waypoint in payload.Game.Waypoints.Waypoints.Value)
 				{
 					var waypointLanguage = new WaypointLanguageBlock
 					{

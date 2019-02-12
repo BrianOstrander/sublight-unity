@@ -1,8 +1,4 @@
-﻿using System.Linq;
-
-using Newtonsoft.Json;
-
-using UnityEngine;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -11,7 +7,7 @@ namespace LunraGames.SubLight.Models
 	/// </summary>
 	public class GameModel : SaveModel
 	{
-		#region Dynamic Serialized Values
+		#region Serialized Values
 		[JsonProperty] int seed;
 		/// <summary>
 		/// The game seed.
@@ -24,57 +20,34 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore] public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
 
-		[JsonProperty] ShipModel ship;
-		/// <summary>
-		/// The game ship.
-		/// </summary>
-		[JsonIgnore] public readonly ListenerProperty<ShipModel> Ship;
-
-		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
-		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
-
 		[JsonProperty] ToolbarSelections toolbarSelection;
 		[JsonIgnore] public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
 
 		[JsonProperty] bool toolbarLocking;
 		[JsonIgnore] public readonly ListenerProperty<bool> ToolbarLocking;
 
-		// TODO: Rethink if this should be serialized... actually I really really think it should not be...
-		[JsonProperty] FocusTransform focusTransform;
-		[JsonIgnore] public readonly ListenerProperty<FocusTransform> FocusTransform;
+		[JsonProperty] EncounterResume encounterResume = SubLight.EncounterResume.Default;
+		[JsonIgnore] public readonly ListenerProperty<EncounterResume> EncounterResume;
 		#endregion
 
-		#region Non-Dynamic Serialized Values
-		[JsonProperty] UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
-		[JsonProperty] UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
-		[JsonProperty] UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
-		[JsonProperty] UniverseScaleModel scaleQuadrant = UniverseScaleModel.Create(UniverseScales.Quadrant);
-		[JsonProperty] UniverseScaleModel scaleGalactic = UniverseScaleModel.Create(UniverseScales.Galactic);
-		[JsonProperty] UniverseScaleModel scaleCluster = UniverseScaleModel.Create(UniverseScales.Cluster);
-		public UniverseScaleModel GetScale(UniverseScales scale)
-		{
-			switch (scale)
-			{
-				case UniverseScales.System: return scaleSystem;
-				case UniverseScales.Local: return scaleLocal;
-				case UniverseScales.Stellar: return scaleStellar;
-				case UniverseScales.Quadrant: return scaleQuadrant;
-				case UniverseScales.Galactic: return scaleGalactic;
-				case UniverseScales.Cluster: return scaleCluster;
-				default:
-					Debug.LogError("Unrecognized scale: " + scale);
-					return null;
-			}
-		}
+		#region Serialized Models
+		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
+		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
 
-		[JsonProperty] EncounterStateModel encounterState = new EncounterStateModel();
-		[JsonIgnore] public EncounterStateModel EncounterState { get { return encounterState; } }
+		[JsonProperty] ShipModel ship = new ShipModel();
+		[JsonIgnore] public ShipModel Ship { get { return ship; } }
 
-		[JsonProperty] WaypointCollectionModel waypointCollection = new WaypointCollectionModel();
-		[JsonIgnore] public WaypointCollectionModel WaypointCollection { get { return waypointCollection; } }
+		[JsonProperty] WaypointListModel waypoints = new WaypointListModel();
+		[JsonIgnore] public WaypointListModel Waypoints { get { return waypoints; } }
 
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonIgnore] public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
+
+		[JsonProperty] TransitHistoryModel transitHistory = new TransitHistoryModel();
+		[JsonIgnore] public TransitHistoryModel TransitHistory { get { return transitHistory; } }
+
+		[JsonProperty] EncounterStatusListModel encounterStatuses = new EncounterStatusListModel();
+		[JsonIgnore] public EncounterStatusListModel EncounterStatuses { get { return encounterStatuses; } }
 
 		[JsonProperty] string galaxyId;
 		[JsonIgnore] public string GalaxyId { get { return galaxyId; } set { galaxyId = value; } }
@@ -83,10 +56,18 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore] public string GalaxyTargetId { get { return galaxyTargetId; } set { galaxyTargetId = value; } }
 
 		[JsonProperty] UniverseModel universe;
+		/// <summary>
+		/// Gets or sets the universe.
+		/// </summary>
+		/// <remarks>
+		/// This should only be set upon creation of a new game by the
+		/// UniverseService.
+		/// </remarks>
+		/// <value>The universe.</value>
 		[JsonIgnore] public UniverseModel Universe { get { return universe; } set { universe = value; } }
 		#endregion
 
-		#region NonSerialized
+		#region Non Serialized Models
 		/// <summary>
 		/// Gets the context data, non-serialized information relating to game
 		/// data.
@@ -105,12 +86,11 @@ namespace LunraGames.SubLight.Models
 
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
-			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
-			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
+			EncounterResume = new ListenerProperty<EncounterResume>(value => encounterResume = value, () => encounterResume);
 
-			Context = new GameContextModel(this);
+			Context = new GameContextModel(this, Ship);
 		}
 	}
 }

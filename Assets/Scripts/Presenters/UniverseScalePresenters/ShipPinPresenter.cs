@@ -13,9 +13,9 @@ namespace LunraGames.SubLight.Presenters
 
 		public ShipPinPresenter(GameModel model, UniverseScales scale) : base(model, scale)
 		{
-			OnPosition(model.Ship.Value.Position.Value);
+			OnPosition(model.Ship.Position.Value);
 
-			model.Ship.Value.Position.Changed += OnPosition;
+			model.Ship.Position.Changed += OnPosition;
 			model.Context.TransitState.Changed += OnTransitState;
 		}
 
@@ -23,7 +23,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			base.OnUnBind();
 
-			Model.Ship.Value.Position.Changed -= OnPosition;
+			Model.Ship.Position.Changed -= OnPosition;
 			Model.Context.TransitState.Changed -= OnTransitState;
 		}
 

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class WaypointCollectionModel : Model
+	public class WaypointListModel : Model
 	{
 		#region Serialized
 		[JsonProperty] WaypointModel[] waypoints = new WaypointModel[0];
@@ -14,7 +14,7 @@ namespace LunraGames.SubLight.Models
 		public readonly ReadonlyProperty<WaypointModel[]> Waypoints;
 		#endregion
 
-		public WaypointCollectionModel()
+		public WaypointListModel()
 		{
 			Waypoints = new ReadonlyProperty<WaypointModel[]>(value => waypoints = value, () => waypoints, out waypointsListener);
 		}

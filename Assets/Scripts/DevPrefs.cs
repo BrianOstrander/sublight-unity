@@ -13,7 +13,7 @@ namespace LunraGames.SubLight
 
 		public static readonly DevPrefsBool ApplyTimeScaling = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ApplyTimeScaling");
 		public static readonly DevPrefsFloat TimeScaling = new DevPrefsFloat(ProjectConstants.PrefsPrefix + "TimeScaling");
-		public static readonly DevPrefsBool AutoNewGame = new DevPrefsBool(ProjectConstants.PrefsPrefix + "AutoNewGame");
+		public static readonly DevPrefsEnum<AutoGameOptions> AutoGameOption = new DevPrefsEnum<AutoGameOptions>(ProjectConstants.PrefsPrefix + "AutoGameOption", AutoGameOptions.None);
 		public static readonly DevPrefsBool WipeGameSavesOnStart = new DevPrefsBool(ProjectConstants.PrefsPrefix + "WipeGameSavesOnStart");
 
 		public static readonly DevPrefsString EncounterIdOverride = new DevPrefsString(ProjectConstants.PrefsPrefix + "EncounterIdOverride");

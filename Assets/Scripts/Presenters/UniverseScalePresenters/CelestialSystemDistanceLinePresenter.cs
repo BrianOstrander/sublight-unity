@@ -17,9 +17,9 @@ namespace LunraGames.SubLight.Presenters
 			UniverseScales scale
 		) : base(model, scale)
 		{
-			positionInUniverse = Model.Ship.Value.Position;
+			positionInUniverse = Model.Ship.Position;
 
-			Model.Ship.Value.Position.Changed += OnShipPosition;
+			Model.Ship.Position.Changed += OnShipPosition;
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Transform.Changed += OnScaleTransform;
@@ -29,7 +29,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			base.OnUnBind();
 
-			Model.Ship.Value.Position.Changed -= OnShipPosition;
+			Model.Ship.Position.Changed -= OnShipPosition;
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			ScaleModel.Transform.Changed -= OnScaleTransform;
@@ -45,10 +45,10 @@ namespace LunraGames.SubLight.Presenters
 
 			var transform = ScaleModel.Transform.Value;
 
-			end = end ?? Model.Ship.Value.Position;
+			end = end ?? Model.Ship.Position;
 
 			var minOffset = new Vector3(0f, View.YMinimumOffset, 0f);
-			var begin = transform.GetUnityPosition(Model.Ship.Value.Position) + minOffset;
+			var begin = transform.GetUnityPosition(Model.Ship.Position) + minOffset;
 			var endResult = transform.GetUnityPosition(end.Value) + minOffset;
 
 			Vector3? clampedBegin = null;
@@ -61,7 +61,7 @@ namespace LunraGames.SubLight.Presenters
 				clamping,
 				clampedBegin,
 				clampedEnd,
-				transform.GetUnityScale(Model.Ship.Value.Range.Value.Total)
+				transform.GetUnityScale(Model.Ship.Range.Value.Total)
 			);
 		}
 

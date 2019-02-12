@@ -27,7 +27,7 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Heartbeat.Update += OnUpdate;
-			model.FocusTransform.Changed += OnZoom;
+			model.Context.FocusTransform.Changed += OnZoom;
 			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 		}
 
@@ -37,15 +37,15 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Heartbeat.Update -= OnUpdate;
-			model.FocusTransform.Changed -= OnZoom;
+			model.Context.FocusTransform.Changed -= OnZoom;
 			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 		}
 
 		protected override void OnUpdateEnabled()
 		{
 			View.ScaleText = scaleText.Value.Value;
-			OnZoom(model.FocusTransform.Value);
-			OnText(model.FocusTransform.Value);
+			OnZoom(model.Context.FocusTransform.Value);
+			OnText(model.Context.FocusTransform.Value);
 			View.PushOpacity(() => model.Context.GridScaleOpacity.Value);
 			OnCelestialSystemState(model.Context.CelestialSystemStateLastSelected);
 		}

@@ -4,6 +4,10 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
+	/// <summary>
+	/// Transit state. Some of these values may not be initialized when the game
+	/// starts... not sure how I feel about that, but just keep that in mind.
+	/// </summary>
 	public class TransitState
 	{
 		public enum States

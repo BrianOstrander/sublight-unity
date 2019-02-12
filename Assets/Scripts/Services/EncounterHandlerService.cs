@@ -107,18 +107,18 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Complete:
 					encounterService.GetEncounterInteraction(configuration.Encounter.EncounterId).TimesCompleted.Value++;
-					configuration.Model.EncounterState.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.EncounterId));
+					configuration.Model.EncounterStatuses.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.EncounterId));
 
-					configuration.Model.EncounterState.Current.Value = configuration.Model.EncounterState.Current.Value.NewState(EncounterStateModel.States.Ending);
+					configuration.Model.Context.EncounterState.Current.Value = configuration.Model.Context.EncounterState.Current.Value.NewState(EncounterStateModel.States.Ending);
 
-					OnEnd();
+					callbacks.SaveRequest(SaveRequest.Request(OnEndSaved));
 					break;
 			}
 		}
 
 		void OnStateChange(StateChange change)
 		{
-			if (configuration.Model == null || configuration.Model.EncounterState.Current.Value.State == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
+			if (configuration.Model == null || configuration.Model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Complete || !change.Is(StateMachine.States.Game, StateMachine.Events.End)) return;
 			OnEnd();
 		}
 
@@ -138,17 +138,21 @@ namespace LunraGames.SubLight
 			EncounterInfoModel encounter
 		)
 		{
-			if (model.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
+			if (model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Unknown)
+			{
+				Debug.LogError("Encounter state is currently Unknown, may cause unpredictable behaviour.");
+			}
+			else if (model.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
 			{
 				Debug.LogError("Beginning an encounter while one is not complete, may cause unpredictable behaviour.");
 			}
 
-			model.EncounterState.Current.Value = new EncounterStateModel.Details(EncounterStateModel.States.Processing, encounter.EncounterId.Value);
+			model.Context.EncounterState.Current.Value = new EncounterStateModel.Details(EncounterStateModel.States.Processing, encounter.EncounterId.Value);
 
 			configuration.Model = model;
 			configuration.Encounter = encounter;
 
-			model.EncounterState.RegisterKeyValueListener(keyValueService);
+			model.Context.EncounterState.RegisterKeyValueListener(keyValueService);
 
 			callbacks.SaveRequest(SaveRequest.Request(OnBeginSaved));
 		}
@@ -173,6 +177,16 @@ namespace LunraGames.SubLight
 			nextLogDelay = 0f;
 		}
 
+		void OnEndSaved(SaveRequest request)
+		{
+			if (request.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Failed to save upon ending encounter.");
+			}
+
+			OnEnd();
+		}
+
 		void OnEnd()
 		{
 			configuration.Model.Context.SaveState.Value = SaveStateBlock.Savable();
@@ -185,8 +199,8 @@ namespace LunraGames.SubLight
 			nextLog = null;
 			nextLogDelay = null;
 
-			oldModel.EncounterState.UnRegisterKeyValueListener(); // This used to be below the other one, but I think that was wrong...
-			oldModel.EncounterState.Current.Value = oldModel.EncounterState.Current.Value.NewState(EncounterStateModel.States.Complete);
+			oldModel.Context.EncounterState.UnRegisterKeyValueListener(); // This used to be below the other one, but I think that was wrong...
+			oldModel.Context.EncounterState.Current.Value = oldModel.Context.EncounterState.Current.Value.NewState(EncounterStateModel.States.Complete);
 		}
 
 		void OnNextLog(EncounterLogModel logModel)

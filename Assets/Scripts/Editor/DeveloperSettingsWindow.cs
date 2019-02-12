@@ -184,20 +184,33 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			DevPrefs.AutoNewGame.Value = EditorGUILayout.ToggleLeft("Auto New Game", DevPrefs.AutoNewGame, EditorStyles.boldLabel);
+			DevPrefs.AutoGameOption.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				new GUIContent("Auto Game Behaviour"),
+				"- Select Auto Game Behaviour -",
+				DevPrefs.AutoGameOption.Value,
+				EnumExtensions.GetValues(AutoGameOptions.Unknown)
+			);
 
-			EditorGUILayoutExtensions.PushEnabled(DevPrefs.AutoNewGame.Value);
+			switch (DevPrefs.AutoGameOption.Value)
 			{
-				EditorGUILayoutExtensions.PushIndent();
-				{
-					DevPrefs.GameSeed.Value = EditorGUILayout.IntField("Game Seed", DevPrefs.GameSeed.Value);
-					DevPrefs.GalaxySeed.Value = EditorGUILayout.IntField("Galaxy Seed", DevPrefs.GalaxySeed.Value);
-					DevPrefs.GalaxyId.Value = EditorGUILayout.TextField("Galaxy Id", DevPrefs.GalaxyId.Value);
-					DevPrefs.ToolbarSelection.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("Toolbar Selection", "- Select an Override -", DevPrefs.ToolbarSelection.Value);
-				}
-				EditorGUILayoutExtensions.PopIndent();
+				case AutoGameOptions.None: break;
+				case AutoGameOptions.NewGame:
+					EditorGUILayoutExtensions.PushIndent();
+					{
+						DevPrefs.GameSeed.Value = EditorGUILayout.IntField("Game Seed", DevPrefs.GameSeed.Value);
+						DevPrefs.GalaxySeed.Value = EditorGUILayout.IntField("Galaxy Seed", DevPrefs.GalaxySeed.Value);
+						DevPrefs.GalaxyId.Value = EditorGUILayout.TextField("Galaxy Id", DevPrefs.GalaxyId.Value);
+						DevPrefs.ToolbarSelection.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("Toolbar Selection", "- Select an Override -", DevPrefs.ToolbarSelection.Value);
+					}
+					EditorGUILayoutExtensions.PopIndent();
+					break;
+				case AutoGameOptions.ContinueGame:
+					GUILayout.Label("todo");
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized AutoGameOption: " + DevPrefs.AutoGameOption.Value, MessageType.Error);
+					break;
 			}
-			EditorGUILayoutExtensions.PopEnabled();
 
 			var encounterNotOverriding = !DevPrefs.EncounterIdOverrideActive;
 			if (encounterNotOverriding) EditorGUILayoutExtensions.PushColor(Color.gray);

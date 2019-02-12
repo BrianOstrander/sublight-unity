@@ -75,8 +75,6 @@ namespace LunraGames.SubLight
 			App.Scenes.Request(SceneRequest.Load(result => done(), Scenes));
 		}
 
-
-
 		void InitializeInput(Action done)
 		{
 			App.Input.SetEnabled(true);
@@ -92,10 +90,10 @@ namespace LunraGames.SubLight
 			App.Callbacks.SaveRequest += OnSaveRequest;
 
 			Payload.Game.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
-			Payload.Game.FocusTransform.Changed += OnFocusTransform;
+			Payload.Game.Context.FocusTransform.Changed += OnFocusTransform;
 
-			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
-			Payload.Game.Ship.Value.Position.Changed += OnShipPosition;
+			Payload.Game.Waypoints.Waypoints.Changed += OnWaypoints;
+			Payload.Game.Ship.Position.Changed += OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
@@ -106,7 +104,7 @@ namespace LunraGames.SubLight
 
 		void InitializeScaleTransforms(Action done)
 		{
-			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
+			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.Context.GetScale(s).Transform))
 			{
 				scaleTransformProperty.Changed += OnScaleTransform;
 			}
@@ -125,7 +123,7 @@ namespace LunraGames.SubLight
 
 		void InitializeCelestialSystems(Action done)
 		{
-			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed += OnCelestialSystemsTransform;
+			Payload.Game.Context.GetScale(UniverseScales.Local).Transform.Changed += OnCelestialSystemsTransform;
 			done();
 		}
 		#endregion
@@ -156,7 +154,19 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			OnTransitComplete(Payload.Game.Context.TransitState.Value);
+			PushUpdateKeyValues();
+			SM.Push(
+				() =>
+				{
+					if (OnCheckSpecifiedEncounter(null, EncounterTriggers.Load)) return; // We got interrupted by some test encounter.
+					if (!Payload.Game.EncounterResume.Value.CanResume) return; // No encounter to resume.
+					if (!OnCheckSpecifiedEncounter(Payload.Game.EncounterResume.Value.EncounterId, Payload.Game.EncounterResume.Value.Trigger))
+					{
+						Debug.LogError("Unable to resume encounter with id " + Payload.Game.EncounterResume.Value.EncounterId + " and trigger " + Payload.Game.EncounterResume.Value.Trigger);
+					}
+				},
+				"EncounterResumeCheck"
+			);
 		}
 		#endregion
 
@@ -170,21 +180,21 @@ namespace LunraGames.SubLight
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 
 			Payload.Game.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
-			Payload.Game.FocusTransform.Changed -= OnFocusTransform;
+			Payload.Game.Context.FocusTransform.Changed -= OnFocusTransform;
 
-			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
-			Payload.Game.Ship.Value.Position.Changed -= OnShipPosition;
+			Payload.Game.Waypoints.Waypoints.Changed -= OnWaypoints;
+			Payload.Game.Ship.Position.Changed -= OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			Payload.Game.Context.TransitState.Changed -= OnTransitState;
 
-			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.GetScale(s).Transform))
+			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.Context.GetScale(s).Transform))
 			{
 				scaleTransformProperty.Changed -= OnScaleTransform;
 			}
 
-			Payload.Game.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
+			Payload.Game.Context.GetScale(UniverseScales.Local).Transform.Changed -= OnCelestialSystemsTransform;
 
 			App.Input.SetEnabled(false);
 
@@ -263,7 +273,7 @@ namespace LunraGames.SubLight
 
 		void OnCelestialSystemsTransform(UniverseTransform transform)
 		{
-			if (transform.UniverseOrigin.SectorEquals(Payload.LastLocalFocus) || Payload.Game.FocusTransform.Value.Zoom.State != TweenStates.Complete)
+			if (transform.UniverseOrigin.SectorEquals(Payload.LastLocalFocus) || Payload.Game.Context.FocusTransform.Value.Zoom.State != TweenStates.Complete)
 			{
 				Payload.LastLocalFocus = transform.UniverseOrigin;
 				return;
@@ -281,7 +291,7 @@ namespace LunraGames.SubLight
  			switch (focusTransform.ToScale)
 			{
 				case UniverseScales.Local:
-					OnCalculateLocalSectors(Payload.Game.GetScale(focusTransform.ToScale).TransformDefault.Value, true);
+					OnCalculateLocalSectors(Payload.Game.Context.GetScale(focusTransform.ToScale).TransformDefault.Value, true);
 					break;
 			}
 		}
@@ -411,7 +421,7 @@ namespace LunraGames.SubLight
 
 		void OnShipPosition(UniversePosition position)
 		{
-			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
+			foreach (var waypoint in Payload.Game.Waypoints.Waypoints.Value)
 			{
 				switch (waypoint.WaypointId.Value)
 				{
@@ -433,6 +443,22 @@ namespace LunraGames.SubLight
 
 		void OnTransitComplete(TransitState transitState)
 		{
+			Payload.Game.TransitHistory.Push(
+				TransitHistoryEntry.Create(
+					DateTime.Now,
+					Payload.Game.RelativeDayTime.Value,
+					transitState.BeginSystem,
+					transitState.EndSystem,
+					Payload.Game.TransitHistory.Peek()
+				)
+			);
+
+			PushUpdateKeyValues();
+			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
+		}
+
+		void PushUpdateKeyValues()
+		{
 			var synchronizedId = SM.UniqueSynchronizedId;
 
 			SM.PushBlocking(
@@ -441,7 +467,7 @@ namespace LunraGames.SubLight
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
 							DefinedKeyInstances.Game.DistanceFromBegin,
-							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
+							Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
 							setDone => doneBlocking()
 						)
 					);
@@ -456,7 +482,7 @@ namespace LunraGames.SubLight
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
 							DefinedKeyInstances.Game.DistanceToEnd,
-							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
+							Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
 							setDone => doneBlocking()
 						)
 					);
@@ -465,7 +491,10 @@ namespace LunraGames.SubLight
 				synchronizedId
 			);
 
-			var transitDistance = UniversePosition.Distance(transitState.BeginSystem.Position.Value, transitState.EndSystem.Position.Value);
+			var transitDistance = UniversePosition.Distance(
+				Payload.Game.Context.TransitState.Value.BeginSystem.Position.Value,
+				Payload.Game.Context.TransitState.Value.EndSystem.Position.Value
+			);
 
 			SM.PushBlocking(
 				doneBlocking =>
@@ -561,13 +590,11 @@ namespace LunraGames.SubLight
 				"UpdateYearsElapsedDelta",
 				synchronizedId
 			);
-
-			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
 		}
 
 		void OnTransitCompleteCheckForEncounters()
 		{
-			var encounterId = Payload.Game.Ship.Value.CurrentSystem.Value.SpecifiedEncounterId.Value;
+			var encounterId = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounterId.Value;
 
 			if (!OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete))
 			{
@@ -596,7 +623,7 @@ namespace LunraGames.SubLight
 						{
 							if (valid) Debug.Log("Override Encounter is valid, triggering");
 							else Debug.LogWarning("Override Encounter is not valid, triggering anyways");
-							OnTransitCompleteFiltered(true, encounterOverride);
+							OnTransitCompleteFiltered(true, encounterOverride, trigger);
 						},
 						encounterOverride.Filtering,
 						Payload.Game,
@@ -628,7 +655,7 @@ namespace LunraGames.SubLight
 				case EncounterTriggers.NavigationSelect:
 				case EncounterTriggers.TransitComplete:
 					App.ValueFilter.Filter(
-						valid => OnTransitCompleteFiltered(valid, encounter),
+						valid => OnTransitCompleteFiltered(valid, encounter, trigger),
 						encounter.Filtering,
 						Payload.Game,
 						encounter
@@ -640,9 +667,11 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter)
+		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter, EncounterTriggers trigger)
 		{
 			if (!valid) return;
+
+			Payload.Game.EncounterResume.Value = new EncounterResume(encounter.EncounterId.Value, trigger);
 
 			App.Callbacks.EncounterRequest(
 				EncounterRequest.Request(
@@ -677,7 +706,7 @@ namespace LunraGames.SubLight
 					// I don't think there's anything else I need to do here...
 					if (request.PrepareCompleteControl)
 					{
-						App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete(Payload.Game.EncounterState.Current.Value.EncounterId));
+						App.Callbacks.EncounterRequest(EncounterRequest.PrepareComplete(Payload.Game.Context.EncounterState.Current.Value.EncounterId));
 					}
 					else if (request.NextControl)
 					{
@@ -698,6 +727,8 @@ namespace LunraGames.SubLight
 						false,
 						ToolbarSelectionRequest.Sources.Encounter
 					);
+					// Clear the EncounterResume so it doesn't play again when we open the game.
+					Payload.Game.EncounterResume.Value = EncounterResume.Default;
 					break;
 				default:
 					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);

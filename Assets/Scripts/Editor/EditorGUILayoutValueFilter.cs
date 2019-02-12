@@ -14,14 +14,6 @@ namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutValueFilter
 	{
-		struct DefinedKeyEntry
-		{
-			public bool Current;
-			public KeyValueTargets Target;
-			public string Key;
-			public string Notes;
-		}
-
 		static string changedFilterId;
 
 		public static void Field(string name, ValueFilterModel model, Color? color = null)

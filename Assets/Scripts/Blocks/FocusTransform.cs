@@ -4,7 +4,6 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	[Serializable]
 	public struct FocusTransform
 	{
 		public static FocusTransform Default

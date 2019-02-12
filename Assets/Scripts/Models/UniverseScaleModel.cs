@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-
-using Newtonsoft.Json;
-
-namespace LunraGames.SubLight.Models
+﻿namespace LunraGames.SubLight.Models
 {
 	public class UniverseScaleModel : Model
 	{
@@ -14,19 +10,18 @@ namespace LunraGames.SubLight.Models
 			return result;
 		}
 
-		[JsonProperty] UniverseScales scale;
-		[JsonProperty] float opacity;
-		[JsonProperty] UniverseTransform transformDefault;
-		[JsonProperty] UniverseTransform transform;
-
-		[JsonIgnore]
+		UniverseScales scale;
 		public ListenerProperty<UniverseScales> Scale;
-		[JsonIgnore]
+
+		float opacity;
 		public ListenerProperty<float> Opacity;
-		[JsonIgnore]
+
+		UniverseTransform transformDefault;
 		public ListenerProperty<UniverseTransform> TransformDefault;
-		[JsonIgnore]
+
+		UniverseTransform transform;
 		public ListenerProperty<UniverseTransform> Transform;
+
 
 		public UniverseScaleModel()
 		{
@@ -36,7 +31,6 @@ namespace LunraGames.SubLight.Models
 			Transform = new ListenerProperty<UniverseTransform>(value => transform = value, () => transform);
 		}
 
-		[JsonIgnore]
 		public bool IsVisible
 		{
 			get

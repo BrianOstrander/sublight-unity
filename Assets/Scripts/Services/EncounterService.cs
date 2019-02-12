@@ -175,7 +175,7 @@ namespace LunraGames.SubLight
 				e =>
 				{
 					if (e.Ignore.Value) return false;
-					switch (model.EncounterState.GetEncounterStatus(e.EncounterId).State)
+					switch (model.EncounterStatuses.GetEncounterStatus(e.EncounterId).State)
 					{
 						case EncounterStatus.States.Completed:
 						case EncounterStatus.States.Seen:
@@ -265,7 +265,7 @@ namespace LunraGames.SubLight
 				}
 			}
 
-			model.EncounterState.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
+			model.EncounterStatuses.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
 
 			var interaction = GetEncounterInteraction(chosen.EncounterId);
 			interaction.TimesSeen.Value++;

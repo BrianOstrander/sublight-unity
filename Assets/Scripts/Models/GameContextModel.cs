@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 
+using UnityEngine;
+
 namespace LunraGames.SubLight.Models
 {
 	/// <summary>
@@ -10,7 +12,10 @@ namespace LunraGames.SubLight.Models
 	/// </remarks>
 	public class GameContextModel : Model
 	{
+#pragma warning disable CS0414 // The private field is assigned but its value is never used.
 		GameModel model;
+#pragma warning restore CS0414 // The private field is assigned but its value is never used.
+		ShipModel ship;
 
 		SaveStateBlock saveState = SaveStateBlock.Savable();
 		public readonly ListenerProperty<SaveStateBlock> SaveState;
@@ -45,10 +50,6 @@ namespace LunraGames.SubLight.Models
 		float gridScaleOpacity;
 		public readonly ListenerProperty<float> GridScaleOpacity;
 
-		UniverseScaleModel activeScale;
-		ListenerProperty<UniverseScaleModel> activeScaleListener;
-		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
-
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
 
@@ -61,12 +62,58 @@ namespace LunraGames.SubLight.Models
 		ToolbarSelectionRequest toolbarSelectionRequest;
 		public ListenerProperty<ToolbarSelectionRequest> ToolbarSelectionRequest;
 
+		FocusTransform focusTransform;
+		public readonly ListenerProperty<FocusTransform> FocusTransform;
+
+		UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
+		UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
+		UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
+		UniverseScaleModel scaleQuadrant = UniverseScaleModel.Create(UniverseScales.Quadrant);
+		UniverseScaleModel scaleGalactic = UniverseScaleModel.Create(UniverseScales.Galactic);
+		UniverseScaleModel scaleCluster = UniverseScaleModel.Create(UniverseScales.Cluster);
+		public UniverseScaleModel GetScale(UniverseScales scale)
+		{
+			switch (scale)
+			{
+				case UniverseScales.System: return scaleSystem;
+				case UniverseScales.Local: return scaleLocal;
+				case UniverseScales.Stellar: return scaleStellar;
+				case UniverseScales.Quadrant: return scaleQuadrant;
+				case UniverseScales.Galactic: return scaleGalactic;
+				case UniverseScales.Cluster: return scaleCluster;
+				default:
+					Debug.LogError("Unrecognized scale: " + scale);
+					return null;
+			}
+		}
+
+		#region Read Only Listeners
+		UniverseScaleModel activeScale;
+		ListenerProperty<UniverseScaleModel> activeScaleListener;
+		public readonly ReadonlyProperty<UniverseScaleModel> ActiveScale;
+
+		SystemModel currentSystem;
+		readonly ListenerProperty<SystemModel> currentSystemListener;
+		public ReadonlyProperty<SystemModel> CurrentSystem;
+		#endregion
+
+		#region Read Only Models
+		EncounterStateModel encounterState = new EncounterStateModel();
+		public EncounterStateModel EncounterState { get { return encounterState; } }
+		#endregion
+
+		#region Models
 		public GalaxyInfoModel Galaxy { get; set; }
 		public GalaxyInfoModel GalaxyTarget { get; set; }
+		#endregion
 
-		public GameContextModel(GameModel model)
+		public GameContextModel(
+			GameModel model,
+			ShipModel ship
+		)
 		{
 			this.model = model;
+			this.ship = ship;
 
 			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 
@@ -82,26 +129,29 @@ namespace LunraGames.SubLight.Models
 			ScaleLabelCluster = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelCluster = value, () => scaleLabelCluster);
 			GridScaleOpacity = new ListenerProperty<float>(value => gridScaleOpacity = value, () => gridScaleOpacity);
 
-			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
-			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(model.GetScale))
-			{
-				currScale.Opacity.Changed += OnScaleOpacity;
-				if (activeScale == null || activeScale.Opacity.Value < currScale.Opacity.Value) activeScale = currScale;
-			}
-
 			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
 
 			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
 			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
 
 			ToolbarSelectionRequest = new ListenerProperty<ToolbarSelectionRequest>(value => toolbarSelectionRequest = value, () => toolbarSelectionRequest);
+			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
+
+			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
+			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
+			{
+				currScale.Opacity.Changed += OnScaleOpacity;
+				if (activeScale == null || activeScale.Opacity.Value < currScale.Opacity.Value) activeScale = currScale;
+			}
+
+			CurrentSystem = new ReadonlyProperty<SystemModel>(value => currentSystem = value, () => currentSystem, out currentSystemListener);
 		}
 
 		#region Events
 		void OnScaleOpacity(float opacity)
 		{
 			var newHighestOpacityScale = activeScale;
-			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(model.GetScale))
+			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
 			{
 				if (newHighestOpacityScale.Opacity.Value < currScale.Opacity.Value) newHighestOpacityScale = currScale;
 			}
@@ -117,6 +167,14 @@ namespace LunraGames.SubLight.Models
 					CelestialSystemStateLastSelected.Value = block;
 					break;
 			}
+		}
+		#endregion
+
+		#region Utility
+		public void SetCurrentSystem(SystemModel system)
+		{
+			currentSystemListener.Value = system;
+			ship.SystemIndex.Value = system == null ? -1 : system.Index.Value;
 		}
 		#endregion
 	}
