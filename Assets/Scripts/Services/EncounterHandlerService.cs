@@ -107,7 +107,7 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterRequest.States.Complete:
 					encounterService.GetEncounterInteraction(configuration.Encounter.EncounterId).TimesCompleted.Value++;
-					configuration.Model.Context.EncounterState.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.EncounterId));
+					configuration.Model.EncounterStatuses.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.EncounterId));
 
 					configuration.Model.Context.EncounterState.Current.Value = configuration.Model.Context.EncounterState.Current.Value.NewState(EncounterStateModel.States.Ending);
 

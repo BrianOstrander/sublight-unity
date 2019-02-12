@@ -45,6 +45,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] TransitHistoryModel transitHistory = new TransitHistoryModel();
 		[JsonIgnore] public TransitHistoryModel TransitHistory { get { return transitHistory; } }
 
+		[JsonProperty] EncounterStatusListModel encounterStatuses = new EncounterStatusListModel();
+		[JsonIgnore] public EncounterStatusListModel EncounterStatuses { get { return encounterStatuses; } }
+
 		[JsonProperty] string galaxyId;
 		[JsonIgnore] public string GalaxyId { get { return galaxyId; } set { galaxyId = value; } }
 

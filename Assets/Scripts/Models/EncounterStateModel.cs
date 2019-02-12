@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-
-using UnityEngine;
 
 namespace LunraGames.SubLight.Models
 {
@@ -34,12 +31,6 @@ namespace LunraGames.SubLight.Models
 		Details current = Details.Default;
 		public readonly ListenerProperty<Details> Current;
 
-		EncounterStatus[] encounterStatuses = new EncounterStatus[0];
-		/// <summary>
-		/// The encounters seen, completed or otherwise.
-		/// </summary>
-		public readonly ListenerProperty<EncounterStatus[]> EncounterStatuses;
-
 		#region KeyValues
 		public KeyValueListener KeyValueListener { get; private set; }
 		public KeyValueListModel KeyValues { get; private set; }
@@ -66,24 +57,6 @@ namespace LunraGames.SubLight.Models
 		public EncounterStateModel()
 		{
 			Current = new ListenerProperty<Details>(value => current = value, () => current);
-			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
 		}
-
-		#region Utility
-		public void SetEncounterStatus(EncounterStatus status)
-		{
-			if (status.Encounter == null)
-			{
-				Debug.LogError("Cannot update the status of an encounter with a null id, update ignored.");
-				return;
-			}
-			EncounterStatuses.Value = EncounterStatuses.Value.Where(e => e.Encounter != status.Encounter).Append(status).ToArray();
-		}
-
-		public EncounterStatus GetEncounterStatus(string encounterId)
-		{
-			return EncounterStatuses.Value.FirstOrDefault(e => e.Encounter == encounterId);
-		}
-		#endregion
 	}
 }

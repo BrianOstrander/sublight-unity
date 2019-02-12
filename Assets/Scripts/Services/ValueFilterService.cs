@@ -287,7 +287,7 @@ namespace LunraGames.SubLight
 		{
 			var encounterId = string.IsNullOrEmpty(filter.FilterValue.Value) ? (encounterModel == null ? null : encounterModel.EncounterId.Value) : filter.FilterValue.Value;
 			var operation = filter.Operation.Value;
-			var encounterInteraction = model.Context.EncounterState.GetEncounterStatus(encounterId);
+			var encounterInteraction = model.EncounterStatuses.GetEncounterStatus(encounterId);
 			var result = false;
 
 			if (operation == EncounterInteractionFilterOperations.NotCompleted)

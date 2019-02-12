@@ -12,7 +12,9 @@ namespace LunraGames.SubLight.Models
 	/// </remarks>
 	public class GameContextModel : Model
 	{
+#pragma warning disable CS0414 // The private field is assigned but its value is never used.
 		GameModel model;
+#pragma warning restore CS0414 // The private field is assigned but its value is never used.
 		ShipModel ship;
 
 		SaveStateBlock saveState = SaveStateBlock.Savable();
