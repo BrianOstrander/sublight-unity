@@ -20,13 +20,15 @@
         "entries": [
           {
             "entry": {
-              "encounterEvent": "DumpKeyValues",
+              "encounterEvent": "Debug",
               "keyValues": {
                 "booleans": {},
                 "integers": {},
-                "strings": {},
+                "strings": {
+                  "message": "The event was triggered!"
+                },
                 "enums": {
-                  "target": 20
+                  "severity": 0
                 },
                 "floats": {}
               },
@@ -37,13 +39,13 @@
                 "floatKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "0f926eaf-573d-4a00-a58f-66f19c4d3db1"
+              "entryId": "4a0b102d-1bf7-4669-905c-8938dbcf7eef"
             }
           }
         ],
         "beginning": true,
         "ending": true,
-        "logId": "e5745efc-3320-490f-ac8a-aa697796b382"
+        "logId": "593910f5-6472-42d2-9c37-d696f19b97bb"
       }
     ],
     "dialogLogs": [],

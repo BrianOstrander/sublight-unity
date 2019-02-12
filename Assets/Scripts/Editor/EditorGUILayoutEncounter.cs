@@ -63,6 +63,7 @@ namespace LunraGames.SubLight
 		static Rect lastMouseOverRect;
 		static Action lastMouseOverCallback;
 
+		/* Feels like I should be able to delete this... but keeping it here for the moment.
 		public static void AppendOrSelectLogPopup(
 			GUIContent prefixContent,
 			GUIContent content,
@@ -92,8 +93,8 @@ namespace LunraGames.SubLight
 				jump
 			);
 		}
+		*/
 
-		// TODO: Point dialogs to this as well
 		public static void AppendSelectOrBlankLogPopup(
 			GUIContent prefixContent,
 			GUIContent content,

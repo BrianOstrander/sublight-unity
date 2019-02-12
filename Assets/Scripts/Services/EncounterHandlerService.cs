@@ -111,7 +111,7 @@ namespace LunraGames.SubLight
 
 					configuration.Model.Context.EncounterState.Current.Value = configuration.Model.Context.EncounterState.Current.Value.NewState(EncounterStateModel.States.Ending);
 
-					OnEnd();
+					callbacks.SaveRequest(SaveRequest.Request(OnEndSaved));
 					break;
 			}
 		}
@@ -175,6 +175,16 @@ namespace LunraGames.SubLight
 				return;
 			}
 			nextLogDelay = 0f;
+		}
+
+		void OnEndSaved(SaveRequest request)
+		{
+			if (request.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Failed to save upon ending encounter.");
+			}
+
+			OnEnd();
 		}
 
 		void OnEnd()

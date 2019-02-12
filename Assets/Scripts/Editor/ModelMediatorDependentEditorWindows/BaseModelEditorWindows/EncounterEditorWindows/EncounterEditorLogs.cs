@@ -1206,7 +1206,8 @@ namespace LunraGames.SubLight
 						if (noText) EditorGUILayoutExtensions.PopColor();
 					}
 					GUILayout.EndHorizontal();
-					EditorGUILayoutEncounter.AppendOrSelectLogPopup(
+
+					EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 						new GUIContent("Target Log"),
 						new GUIContent("- Select Target Log -"),
 						nextId.Value,
@@ -1216,6 +1217,9 @@ namespace LunraGames.SubLight
 						newSelection => nextId.Value = AppendNewLog(newSelection, infoModel, LogsAppendSources.EdgeAssignment),
 						EncounterLogBlankHandling.FallsThrough,
 						EncounterLogMissingHandling.Error,
+						EncounterLogBlankOptionHandling.Selectable,
+						new GUIContent("< Fallback >"),
+						() => nextId.Value = null,
 						LogsFocusedLogIdsPush
 					);
 				}
