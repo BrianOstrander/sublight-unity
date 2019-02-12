@@ -92,7 +92,7 @@ namespace LunraGames.SubLight
 			Payload.Game.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
 			Payload.Game.Context.FocusTransform.Changed += OnFocusTransform;
 
-			Payload.Game.WaypointCollection.Waypoints.Changed += OnWaypoints;
+			Payload.Game.Waypoints.Waypoints.Changed += OnWaypoints;
 			Payload.Game.Ship.Position.Changed += OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
@@ -170,7 +170,7 @@ namespace LunraGames.SubLight
 			Payload.Game.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 			Payload.Game.Context.FocusTransform.Changed -= OnFocusTransform;
 
-			Payload.Game.WaypointCollection.Waypoints.Changed -= OnWaypoints;
+			Payload.Game.Waypoints.Waypoints.Changed -= OnWaypoints;
 			Payload.Game.Ship.Position.Changed -= OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
@@ -409,7 +409,7 @@ namespace LunraGames.SubLight
 
 		void OnShipPosition(UniversePosition position)
 		{
-			foreach (var waypoint in Payload.Game.WaypointCollection.Waypoints.Value)
+			foreach (var waypoint in Payload.Game.Waypoints.Waypoints.Value)
 			{
 				switch (waypoint.WaypointId.Value)
 				{
@@ -454,7 +454,7 @@ namespace LunraGames.SubLight
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
 							DefinedKeyInstances.Game.DistanceFromBegin,
-							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
+							Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
 							setDone => doneBlocking()
 						)
 					);
@@ -469,7 +469,7 @@ namespace LunraGames.SubLight
 					App.Callbacks.KeyValueRequest(
 						KeyValueRequest.SetDefined(
 							DefinedKeyInstances.Game.DistanceToEnd,
-							Payload.Game.WaypointCollection.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
+							Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
 							setDone => doneBlocking()
 						)
 					);

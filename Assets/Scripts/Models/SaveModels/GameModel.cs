@@ -36,8 +36,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ShipModel ship = new ShipModel();
 		[JsonIgnore] public ShipModel Ship { get { return ship; } }
 
-		[JsonProperty] WaypointCollectionModel waypointCollection = new WaypointCollectionModel();
-		[JsonIgnore] public WaypointCollectionModel WaypointCollection { get { return waypointCollection; } }
+		[JsonProperty] WaypointListModel waypoints = new WaypointListModel();
+		[JsonIgnore] public WaypointListModel Waypoints { get { return waypoints; } }
 
 		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
 		[JsonIgnore] public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }

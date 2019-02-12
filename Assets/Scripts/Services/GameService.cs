@@ -211,7 +211,7 @@ namespace LunraGames.SubLight
 			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
 			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
-			model.WaypointCollection.AddWaypoint(shipWaypoint);
+			model.Waypoints.AddWaypoint(shipWaypoint);
 
 			var beginWaypoint = new WaypointModel();
 			beginWaypoint.SetLocation(beginSystem);
@@ -221,7 +221,7 @@ namespace LunraGames.SubLight
 			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
 			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
-			model.WaypointCollection.AddWaypoint(beginWaypoint);
+			model.Waypoints.AddWaypoint(beginWaypoint);
 
 			var endWaypoint = new WaypointModel();
 			endWaypoint.SetLocation(endSystem);
@@ -231,7 +231,7 @@ namespace LunraGames.SubLight
 			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
 			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, end);
 
-			model.WaypointCollection.AddWaypoint(endWaypoint);
+			model.Waypoints.AddWaypoint(endWaypoint);
 
 			model.Universe.Sectors.Value = model.Context.Galaxy.GetSpecifiedSectors();
 
@@ -283,7 +283,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			foreach (var waypoint in model.WaypointCollection.Waypoints.Value)
+			foreach (var waypoint in model.Waypoints.Waypoints.Value)
 			{
 				switch (waypoint.WaypointId.Value)
 				{
