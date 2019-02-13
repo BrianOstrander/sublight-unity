@@ -101,7 +101,7 @@ namespace LunraGames.SubLight.Presenters
 					View.Shown += done;
 					View.SetEntries(
 						VerticalOptionsThemes.Neutral,
-						LabelVerticalOptionsEntry.CreateTitle(language.ReturningToMainMenu.Value, VerticalOptionsIcons.None)
+						LabelVerticalOptionsEntry.CreateTitle(language.ReturningToMainMenu.Value, VerticalOptionsIcons.Return)
 					);
 					ShowView();
 				},
@@ -135,7 +135,7 @@ namespace LunraGames.SubLight.Presenters
 					View.Shown += done;
 					View.SetEntries(
 						VerticalOptionsThemes.Error,
-						LabelVerticalOptionsEntry.CreateTitle(language.Quiting.Value, VerticalOptionsIcons.None)
+						LabelVerticalOptionsEntry.CreateTitle(language.Quiting.Value, VerticalOptionsIcons.Quit)
 					);
 					ShowView();
 				},

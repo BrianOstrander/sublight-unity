@@ -10,6 +10,7 @@ namespace LunraGames.SubLight
 	public struct CurveRange
 	{
 		public static CurveRange Normal { get { return new CurveRange(FloatRange.Normal, AnimationCurveExtensions.LinearNormal()); } }
+		public static CurveRange InverseNormal { get { return new CurveRange(FloatRange.Normal, AnimationCurveExtensions.LinearInverseNormal()); } }
 
 		[SerializeField]
 		FloatRange range;

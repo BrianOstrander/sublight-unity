@@ -104,7 +104,7 @@ namespace LunraGames
 
 		public static AnimationCurve LinearInverseNormal()
 		{
-			return AnimationCurve.Linear(1f, 1f, 0f, 0f);
+			return AnimationCurve.Linear(0f, 1f, 1f, 0f);
 		}
 	}
 }
