@@ -75,10 +75,6 @@ MonoBehaviour:
       type: 3}
   - PrefabRoot: {fileID: 1876045814234406, guid: 6dff9d6b84f894e629ff652d62bea750,
       type: 3}
-  - PrefabRoot: {fileID: 1282094200204912, guid: c09cc90386c0046429e77194afe1bfa9,
-      type: 3}
-  - PrefabRoot: {fileID: 1540127404563932, guid: b90a7025f54a743af834456613560ac7,
-      type: 3}
   - PrefabRoot: {fileID: 1582818077071690, guid: 8d2c31496dd13414d95a4e7f62bd34c0,
       type: 3}
   - PrefabRoot: {fileID: 1996741994580096, guid: 700f0c2337ac9448f803407fa9f24615,
@@ -92,3 +88,5 @@ MonoBehaviour:
   - PrefabRoot: {fileID: 388, guid: 38baa4268e74d43e18d83b7361f6b7b6, type: 3}
   - PrefabRoot: {fileID: 7414643357562774260, guid: dd6351ded1cc3422d8fca72894e37a0b,
       type: 3}
+  - PrefabRoot: {fileID: 813, guid: b90a7025f54a743af834456613560ac7, type: 3}
+  - PrefabRoot: {fileID: 649, guid: c09cc90386c0046429e77194afe1bfa9, type: 3}

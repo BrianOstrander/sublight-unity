@@ -102,7 +102,7 @@ Material:
     - _AnchorMaximum: 0.75
     - _AnchorMinimum: 0.25
     - _AnchorWidth: 0.02
-    - _BeginU: 0.24
+    - _BeginU: 0.2898
     - _Blend: 0
     - _BumpScale: 1
     - _Cull: 2
@@ -140,4 +140,4 @@ Material:
     - _PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _WidthHeight: {r: 0.2, g: 0.15, b: 0, a: 0}
+    - _WidthHeight: {r: 0.15, g: 0.1125, b: 0, a: 0}
