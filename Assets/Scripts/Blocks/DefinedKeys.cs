@@ -37,8 +37,8 @@ namespace LunraGames.SubLight
 		KeyValueTypes ValueType { get; }
 		ValueFilterTypes FilterType { get; }
 		string Notes { get; }
-		bool CanRead { get; }
 		bool CanWrite { get; }
+		bool CanRead { get; }
 	}
 
 	public abstract class DefinedKeyTyped<T> : IDefinedKey
@@ -54,15 +54,15 @@ namespace LunraGames.SubLight
 		public ValueFilterTypes FilterType { get; private set; }
 		public string Notes { get; private set; }
 		/// <summary>
-		/// If <see langword="true"/>, encounters can read this key value.
-		/// </summary>
-		/// <value><c>true</c> if can read; otherwise, <c>false</c>.</value>
-		public bool CanRead { get; private set; }
-		/// <summary>
 		/// If <see langword="true"/>, encounters can write to this key value.
 		/// </summary>
 		/// <value><c>true</c> if can write; otherwise, <c>false</c>.</value>
 		public bool CanWrite { get; private set; }
+		/// <summary>
+		/// If <see langword="true"/>, encounters can read this key value.
+		/// </summary>
+		/// <value><c>true</c> if can read; otherwise, <c>false</c>.</value>
+		public bool CanRead { get; private set; }
 
 		protected DefinedKeyTyped(
 			string key,
@@ -70,8 +70,8 @@ namespace LunraGames.SubLight
 			KeyValueTypes valueType,
 			ValueFilterTypes filterType,
 			string notes,
-			bool canRead,
-			bool canWrite
+			bool canWrite,
+			bool canRead
 		)
 		{
 			var genericType = typeof(T);
@@ -85,8 +85,8 @@ namespace LunraGames.SubLight
 			ValueType = valueType;
 			FilterType = filterType;
 			Notes = notes;
-			CanRead = canRead;
 			CanWrite = canWrite;
+			CanRead = canRead;
 		}
 	}
 
@@ -98,16 +98,17 @@ namespace LunraGames.SubLight
 				string key,
 				KeyValueTargets target,
 				string notes,
-				bool canRead,
-				bool canWrite
+				bool canWrite,
+				bool canRead
 			) : base(
 				key,
 				target,
 				KeyValueTypes.Boolean,
 				ValueFilterTypes.KeyValueBoolean,
 				notes,
-				canRead,
-				canWrite)
+				canWrite,
+				canRead
+			)
 			{ }
 		}
 
@@ -117,16 +118,17 @@ namespace LunraGames.SubLight
 				string key,
 				KeyValueTargets target,
 				string notes,
-				bool canRead,
-				bool canWrite
+				bool canWrite,
+				bool canRead
 			) : base(
 				key,
 				target,
 				KeyValueTypes.Integer,
 				ValueFilterTypes.KeyValueInteger,
 				notes,
-				canRead,
-				canWrite)
+				canWrite,
+				canRead
+			)
 			{ }
 		}
 
@@ -136,16 +138,16 @@ namespace LunraGames.SubLight
 				string key,
 				KeyValueTargets target,
 				string notes,
-				bool canRead,
-				bool canWrite
+				bool canWrite,
+				bool canRead
 			) : base(
 				key,
 				target,
 				KeyValueTypes.String,
 				ValueFilterTypes.KeyValueString,
 				notes,
-				canRead,
-				canWrite
+				canWrite,
+				canRead
 			)
 			{ }
 		}
@@ -156,16 +158,16 @@ namespace LunraGames.SubLight
 				string key,
 				KeyValueTargets target,
 				string notes,
-				bool canRead,
-				bool canWrite
+				bool canWrite,
+				bool canRead
 			) : base(
 				key,
 				target,
 				KeyValueTypes.Float,
 				ValueFilterTypes.KeyValueFloat,
 				notes,
-				canRead,
-				canWrite
+				canWrite,
+				canRead
 			)
 			{ }
 		}
@@ -197,44 +199,44 @@ namespace LunraGames.SubLight
 			ref Boolean instance,
 			string key,
 			string notes = null,
-			bool canRead = true,
-			bool canWrite = false
+			bool canWrite = false,
+			bool canRead = true
 		)
 		{
-			return instance = new Boolean(key, Target, notes, canRead, canWrite);
+			return instance = new Boolean(key, Target, notes, canWrite, canRead);
 		}
 
 		protected Integer Create(
 			ref Integer instance,
 			string key,
 			string notes = null,
-			bool canRead = true,
-			bool canWrite = false
+			bool canWrite = false,
+			bool canRead = true
 		)
 		{
-			return instance = new Integer(key, Target, notes, canRead, canWrite);
+			return instance = new Integer(key, Target, notes, canWrite, canRead);
 		}
 
 		protected String Create(
 			ref String instance,
 			string key,
 			string notes = null,
-			bool canRead = true,
-			bool canWrite = false
+			bool canWrite = false,
+			bool canRead = true
 		)
 		{
-			return instance = new String(key, Target, notes, canRead, canWrite);
+			return instance = new String(key, Target, notes, canWrite, canRead);
 		}
 
 		protected Float Create(
 			ref Float instance,
 			string key,
 			string notes = null,
-			bool canRead = true,
-			bool canWrite = false
+			bool canWrite = false,
+			bool canRead = true
 		)
 		{
-			return instance = new Float(key, Target, notes, canRead, canWrite);
+			return instance = new Float(key, Target, notes, canWrite, canRead);
 		}
 	}
 }

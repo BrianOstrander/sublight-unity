@@ -155,17 +155,61 @@ namespace LunraGames.SubLight
 		#region Handling
 		void OnHandle(BooleanKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
+			switch (filter.Source.Value)
+			{
+				case KeyValueSources.Value:
+					OnHandle(filter, filter.FilterValue.Value, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.SourceTarget.Value,
+							filter.SourceKey.Value,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					break;
+			}
+		}
+
+		void OnHandle(BooleanKeyValueFilterEntryModel filter, bool value, Action<ValueFilterGroups, bool> done)
+		{
 			callbacks.KeyValueRequest(
 				KeyValueRequest.Get(
 					filter.Target.Value,
 					filter.Key.Value,
 					// If the boolean KV is equal to the result on the filter, the result is true.
-					result => done(filter.Group.Value, result.Value == filter.FilterValue.Value)
+					result => done(filter.Group.Value, result.Value == value)
 				)
 			);
 		}
 
 		void OnHandle(IntegerKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
+		{
+			switch (filter.Source.Value)
+			{
+				case KeyValueSources.Value:
+					OnHandle(filter, filter.FilterValue.Value, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.GetInteger(
+							filter.SourceTarget.Value,
+							filter.SourceKey.Value,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					break;
+			}
+		}
+
+		void OnHandle(IntegerKeyValueFilterEntryModel filter, int value, Action<ValueFilterGroups, bool> done)
 		{
 			Action<KeyValueResult<int>> onGet = result =>
 			{
@@ -173,22 +217,22 @@ namespace LunraGames.SubLight
 				switch (filter.Operation.Value)
 				{
 					case IntegerFilterOperations.Equals:
-						passed = result.Value == filter.FilterValue.Value;
+						passed = result.Value == value;
 						break;
 					case IntegerFilterOperations.NotEquals:
-						passed = result.Value != filter.FilterValue.Value;
+						passed = result.Value != value;
 						break;
 					case IntegerFilterOperations.LessThanOrEquals:
-						passed = result.Value <= filter.FilterValue.Value;
+						passed = result.Value <= value;
 						break;
 					case IntegerFilterOperations.GreaterThanOrEquals:
-						passed = result.Value >= filter.FilterValue.Value;
+						passed = result.Value >= value;
 						break;
 					case IntegerFilterOperations.LessThan:
-						passed = result.Value < filter.FilterValue.Value;
+						passed = result.Value < value;
 						break;
 					case IntegerFilterOperations.GreaterThan:
-						passed = result.Value > filter.FilterValue.Value;
+						passed = result.Value > value;
 						break;
 					default:
 						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
@@ -208,6 +252,28 @@ namespace LunraGames.SubLight
 
 		void OnHandle(StringKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
+			switch (filter.Source.Value)
+			{
+				case KeyValueSources.Value:
+					OnHandle(filter, filter.FilterValue.Value, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.SourceTarget.Value,
+							filter.SourceKey.Value,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					break;
+			}
+		}
+
+		void OnHandle(StringKeyValueFilterEntryModel filter, string value, Action<ValueFilterGroups, bool> done)
+		{
 			callbacks.KeyValueRequest(
 				KeyValueRequest.Get(
 					filter.Target.Value,
@@ -219,7 +285,7 @@ namespace LunraGames.SubLight
 						switch (filter.Operation.Value)
 						{
 							case StringFilterOperations.Equals:
-								passed = result.Value == filter.FilterValue.Value;
+								passed = result.Value == value;
 								break;
 							case StringFilterOperations.IsNullOrEmpty:
 								passed = string.IsNullOrEmpty(result.Value);
@@ -239,28 +305,50 @@ namespace LunraGames.SubLight
 
 		void OnHandle(FloatKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
+			switch (filter.Source.Value)
+			{
+				case KeyValueSources.Value:
+					OnHandle(filter, filter.FilterValue.Value, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.GetFloat(
+							filter.SourceTarget.Value,
+							filter.SourceKey.Value,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					break;
+			}
+		}
+
+		void OnHandle(FloatKeyValueFilterEntryModel filter, float value, Action<ValueFilterGroups, bool> done)
+		{
 			Action<KeyValueResult<float>> onGet = result =>
 			{
 				var passed = false;
 				switch (filter.Operation.Value)
 				{
 					case FloatFilterOperations.Equals:
-						passed = Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						passed = Mathf.Approximately(result.Value, value);
 						break;
 					case FloatFilterOperations.NotEquals:
-						passed = !Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						passed = !Mathf.Approximately(result.Value, value);
 						break;
 					case FloatFilterOperations.LessThanOrEquals:
-						passed = result.Value < filter.FilterValue.Value || Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						passed = result.Value < value || Mathf.Approximately(result.Value, value);
 						break;
 					case FloatFilterOperations.GreaterThanOrEquals:
-						passed = result.Value > filter.FilterValue.Value || Mathf.Approximately(result.Value, filter.FilterValue.Value);
+						passed = result.Value > value || Mathf.Approximately(result.Value, value);
 						break;
 					case FloatFilterOperations.LessThan:
-						passed = result.Value < filter.FilterValue.Value;
+						passed = result.Value < value;
 						break;
 					case FloatFilterOperations.GreaterThan:
-						passed = result.Value > filter.FilterValue.Value;
+						passed = result.Value > value;
 						break;
 					default:
 						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
