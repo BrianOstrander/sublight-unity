@@ -17,8 +17,13 @@ namespace LunraGames.SubLight
 
 		StateMachineWrapper sm;
 
+		DialogLanguageBlock saveDisabledDuringEncounterLanguage;
+
+		#region Dynamic During Encounter
 		EncounterLogModel nextLog;
 		float? nextLogDelay;
+		Action popSaveBlocker;
+		#endregion
 
 		EncounterLogHandlerConfiguration configuration;
 		IEncounterLogHandler[] handlers;
@@ -30,7 +35,8 @@ namespace LunraGames.SubLight
 			KeyValueService keyValueService,
 			ValueFilterService valueFilter,
 			Func<PreferencesModel> currentPreferences,
-			StateMachine stateMachine
+			StateMachine stateMachine,
+			DialogLanguageBlock saveDisabledDuringEncounterLanguage
 		)
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
@@ -49,6 +55,8 @@ namespace LunraGames.SubLight
 			this.keyValueService = keyValueService;
 			this.valueFilter = valueFilter;
 			this.currentPreferences = currentPreferences;
+
+			this.saveDisabledDuringEncounterLanguage = saveDisabledDuringEncounterLanguage;
 
 			this.callbacks.EncounterRequest += OnEncounter;
 			this.callbacks.StateChange += OnStateChange;
@@ -164,7 +172,7 @@ namespace LunraGames.SubLight
 				Debug.LogError("Beginning an encounter without successfully saving first may cause unpredictable behaviour.");
 			}
 
-			configuration.Model.Context.SaveState.Value = SaveStateBlock.NotSavable(Strings.CannotSaveReasons.CurrentlyInEncounter);
+			popSaveBlocker = configuration.Model.Context.SaveBlockers.Push(saveDisabledDuringEncounterLanguage);
 
 			nextLog = configuration.Encounter.Logs.Beginning;
 			if (nextLog == null)
@@ -189,7 +197,7 @@ namespace LunraGames.SubLight
 
 		void OnEnd()
 		{
-			configuration.Model.Context.SaveState.Value = SaveStateBlock.Savable();
+			popSaveBlocker();
 
 			var oldModel = configuration.Model;
 

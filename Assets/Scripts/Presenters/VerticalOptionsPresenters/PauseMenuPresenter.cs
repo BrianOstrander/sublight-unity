@@ -23,8 +23,9 @@ namespace LunraGames.SubLight.Presenters
 		States state = States.Default;
 		DialogRequest.States lastDialogState = DialogRequest.States.Complete;
 
-		bool hasSavedSinceOpening;
 		SaveRequest? saveResult;
+		Action popHasSavedBlock;
+		bool HasSavedSinceOpening { get { return popHasSavedBlock != null; } }
 
 		public PauseMenuPresenter(
 			GamePayload payload,
@@ -69,16 +70,6 @@ namespace LunraGames.SubLight.Presenters
 			get
 			{
 				return state != States.Default || View.TransitionState != TransitionStates.Shown;
-			}
-		}
-
-		bool CanSave
-		{
-			get
-			{
-				return model.Context.TransitState.Value.State == TransitState.States.Complete &&
-					        model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Complete &&
-					        !hasSavedSinceOpening;
 			}
 		}
 
@@ -170,7 +161,7 @@ namespace LunraGames.SubLight.Presenters
 
 			ButtonVerticalOptionsEntry saveEntry = null;
 
-			if (CanSave) saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSave);
+			if (model.Context.SaveBlockers.CanSave) saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSave);
 			else saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSaveDisabled, ButtonVerticalOptionsEntry.InteractionStates.LooksNotInteractable);
 
 			View.SetEntries(
@@ -188,6 +179,8 @@ namespace LunraGames.SubLight.Presenters
 
 		void Close()
 		{
+			if (popHasSavedBlock != null) popHasSavedBlock();
+
 			CloseView();
 
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetToolbarSelectionFocus(model.ToolbarSelection.Value)));
@@ -206,7 +199,6 @@ namespace LunraGames.SubLight.Presenters
 			switch (View.TransitionState)
 			{
 				case TransitionStates.Closed:
-					hasSavedSinceOpening = false;
 					Show();
 					break;
 				case TransitionStates.Shown:
@@ -229,7 +221,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnSaveResultSuccess()
 		{
 			// When this method is called, a "Saving..." message should still be on screen.
-			hasSavedSinceOpening = true;
+			popHasSavedBlock = model.Context.SaveBlockers.Push(language.SaveDisabledAlreadySaved);
 
 			SM.Push(
 				() =>
@@ -357,102 +349,36 @@ namespace LunraGames.SubLight.Presenters
 
 			state = States.Animating;
 
-			if (hasSavedSinceOpening)
-			{
-				SM.PushBlocking(
-					done =>
-					{
-						View.Closed += done;
-						CloseView();
-					},
-					"ClosingPauseMenuFromAlreadySavedError"
-				);
-
-				SM.PushBlocking(
-					done =>
-					{
-						App.Callbacks.DialogRequest(
-							DialogRequest.Confirm(
-								language.SaveDisabledAlreadySaved.Message,
-								DialogStyles.Error,
-								language.SaveDisabledAlreadySaved.Title,
-								done,
-								true
-							)
-						);
-					},
-					"ShowingDialogFromAlreadySavedError"
-				);
-
-				SM.Push(
-					() => Show(),
-					"ShowingPauseMenuFromAlreadySavedErrorDialog"
-				);
-
-				return;
-			}
-			if (model.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
-			{
-				SM.PushBlocking(
-					done =>
-					{
-						View.Closed += done;
-						CloseView();
-					},
-					"ClosingPauseMenuFromEncounterSaveError"
-				);
-
-				SM.PushBlocking(
-					done =>
-					{
-						App.Callbacks.DialogRequest(
-							DialogRequest.Confirm(
-								language.SaveDisabledDuringEncounter.Message,
-								DialogStyles.Error,
-								language.SaveDisabledDuringEncounter.Title,
-								done,
-								true
-							)
-						);
-					},
-					"ShowingDialogFromEncounterSaveError"
-				);
-
-				SM.Push(
-					() => Show(),
-					"ShowingPauseMenuFromEncounterSaveError"
-				);
-				return;
-			}
-
 			SM.PushBlocking(
 				done =>
 				{
 					View.Closed += done;
 					CloseView();
 				},
-				"ClosingPauseMenuFromUnknownSaveError"
+				"ClosingPauseMenuFromSaveDisabled"
 			);
+
+			var currentBlocker = model.Context.SaveBlockers.Peek();
 
 			SM.PushBlocking(
 				done =>
 				{
 					App.Callbacks.DialogRequest(
 						DialogRequest.Confirm(
-							language.SaveDisabledUnknown.Message,
+							currentBlocker.Message,
 							DialogStyles.Error,
-							language.SaveDisabledUnknown.Title,
+							currentBlocker.Title,
 							done,
 							true
 						)
 					);
 				},
-				"ShowingDialogFromUnknownSaveError"
+				"ShowingDialogFromSaveDisabled"
 			);
 
 			SM.Push(
 				() => Show(),
-				"ShowingPauseMenuFromUnknownSaveError"
+				"ShowingPauseMenuFromSaveDisabled"
 			);
 		}
 
@@ -471,7 +397,7 @@ namespace LunraGames.SubLight.Presenters
 				"ClosingPauseMenuForMainMenu"
 			);
 
-			if (hasSavedSinceOpening)
+			if (HasSavedSinceOpening)
 			{
 				PushMainMenuRequest();
 				return;
@@ -511,7 +437,7 @@ namespace LunraGames.SubLight.Presenters
 				"ClosingPauseMenuForQuit"
 			);
 
-			if (hasSavedSinceOpening)
+			if (HasSavedSinceOpening)
 			{
 				PushQuitRequest();
 				return;
