@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: GridHazard
   m_Shader: {fileID: 4800000, guid: 8fcd1a826741d4050b8f6bd21c347581, type: 3}
   m_ShaderKeywords: _GRIDINVERT_ON
@@ -131,8 +132,8 @@ Material:
     - _RadiusUFalloff: 0.5
     - _RadiusUSpeed: 0.02
     - _RadiusV: 2
-    - _RadiusVFalloff: 0.3
-    - _RadiusVTiling: 3
+    - _RadiusVFalloff: 0.2
+    - _RadiusVTiling: 5
     - _RadiusWidth: 0
     - _RangeFalloff: 0.25
     - _RangeRadius: 2

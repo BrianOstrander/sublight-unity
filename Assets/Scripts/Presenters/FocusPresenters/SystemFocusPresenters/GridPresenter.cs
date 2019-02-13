@@ -11,7 +11,7 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class GridPresenter : SystemFocusPresenter<IGridView>
 	{
-		const float Tiling = 8f;
+		const float Tiling = 10f;
 
 		enum UniverseFocuses
 		{
@@ -117,11 +117,11 @@ namespace LunraGames.SubLight.Presenters
 			this.info = info;
 
 			var systemScale = 0.1f;
-			var localScale = 150f;
-			var stellarScale = 1000f;
-			var quadrantScale = 4000f;
-			var galacticScale = 12000f;
-			var clusterScale = 36000f;
+			var localScale = 125f;
+			var stellarScale = 800f;
+			var quadrantScale = 3200f;
+			var galacticScale = 9600f;
+			var clusterScale = 28800f;
 
 			unitMaps = new UnitMap[]
 			{
