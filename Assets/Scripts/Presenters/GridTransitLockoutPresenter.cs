@@ -17,6 +17,7 @@ namespace LunraGames.SubLight.Presenters
 
 		TransitState lastState;
 		bool isCompleting;
+		Action popSaveBlocker;
 
 		public GridTransitLockoutPresenter(
 			GameModel model,
@@ -162,6 +163,16 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitState(TransitState transitState)
 		{
+			switch (transitState.State)
+			{
+				case TransitState.States.Request:
+					popSaveBlocker = model.Context.SaveBlockers.Push(language.SaveDisabledDuringTransit);
+					break;
+				case TransitState.States.Complete:
+					popSaveBlocker();
+					break;
+			}
+
 			lastState = transitState;
 		}
 

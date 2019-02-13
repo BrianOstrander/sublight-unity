@@ -203,6 +203,11 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
+		protected override void OnOpacityStack(float opacity)
+		{
+			rootGroup.alpha = opacity;
+		}
+
 		#region Events
 		public void OnCancelClick()
 		{

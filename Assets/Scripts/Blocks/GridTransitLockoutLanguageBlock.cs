@@ -17,5 +17,7 @@ namespace LunraGames.SubLight
 		public LanguageStringModel[] UnlockLeftStatuses;
 		public LanguageStringModel[] UnlockRightStatuses;
 
+		public DialogLanguageBlock SaveDisabledDuringTransit;
+
 	}
 }

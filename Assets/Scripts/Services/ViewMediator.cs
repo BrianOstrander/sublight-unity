@@ -348,6 +348,7 @@ namespace LunraGames.SubLight
 		public bool CameraHasMoved { get; private set; }
 		public Vector3 CameraPosition { get { return IsCameraMainNull ? Vector3.zero : Camera.main.transform.position; } }
 		public Vector3 CameraForward { get { return IsCameraMainNull ? Vector3.forward : Camera.main.transform.forward; } }
+		public Vector3 CameraUp { get { return IsCameraMainNull ? Vector3.up : Camera.main.transform.up; } }
 		public Quaternion CameraRotation { get { return IsCameraMainNull ? Quaternion.identity : Camera.main.transform.rotation; } }
 		public Ray CameraViewportPointToRay(Vector3 pos) { return IsCameraMainNull ? new Ray(Vector3.zero, Vector3.forward) : Camera.main.ViewportPointToRay(pos); }
 

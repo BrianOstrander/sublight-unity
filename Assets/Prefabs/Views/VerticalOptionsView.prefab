@@ -569,7 +569,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 174, y: 0, z: 24, w: 0}
+  m_margin: {x: 174, y: 0, z: 56.07531, w: 0}
   m_textInfo:
     textComponent: {fileID: 5069747103578665621}
     characterCount: 10
@@ -2525,7 +2525,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7414643356740862262}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -1.88}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7414643357919223592}
@@ -2739,7 +2739,7 @@ GameObject:
   - component: {fileID: 7414643357562774259}
   - component: {fileID: 1622982187878967740}
   m_Layer: 15
-  m_Name: OptionsMenuView
+  m_Name: VerticalOptionsView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2779,9 +2779,8 @@ MonoBehaviour:
     ShowDuration: 0
     CloseDuration: 0
   animations:
-  - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
-  - {fileID: 11400000, guid: cb7c684165a9746a8b47f7d0879cb4f1, type: 2}
   - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
+  - {fileID: 11400000, guid: 92e9f1ad75afb4a42b2c9a6117e78c0a, type: 2}
   entryArea: {fileID: 7414643356861048210}
   entryBackground: {fileID: 7414643357714537597}
   rootGroup: {fileID: 2988753842647909669}
@@ -2828,6 +2827,14 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: b2754852e488543d7ac039667ffdf448, type: 3}
   - Icon: 30
     Sprite: {fileID: 21300000, guid: 462c98c0482c243b8b081ca9cadcc583, type: 3}
+  - Icon: 40
+    Sprite: {fileID: 21300000, guid: 46c7f8d0728d04117ac9fb941bd37294, type: 3}
+  - Icon: 50
+    Sprite: {fileID: 21300000, guid: 53592bee4dcc44232aaf90d9bf20929d, type: 3}
+  - Icon: 1000
+    Sprite: {fileID: 21300000, guid: 96fd7ec2179404f7b8dca2de4e3e08b3, type: 3}
+  - Icon: 1010
+    Sprite: {fileID: 21300000, guid: 6d6fbce7d3fe4484aba7293ff1df4b4f, type: 3}
   primaryColorGraphics:
   - {fileID: 7414643357384007153}
   - {fileID: 9673063455839720}
@@ -2933,7 +2940,7 @@ RectTransform:
   m_GameObject: {fileID: 7414643357919223593}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.003, y: 0.003, z: 0.003}
+  m_LocalScale: {x: 0.00225, y: 0.00225, z: 0.00225}
   m_Children:
   - {fileID: 7414643356436898460}
   m_Father: {fileID: 7414643356740862261}

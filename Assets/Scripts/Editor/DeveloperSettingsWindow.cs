@@ -168,7 +168,6 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginVertical();
 				{
-					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
 					DevPrefs.SkipMainMenuAnimations.Value = GUILayout.Toggle(DevPrefs.SkipMainMenuAnimations, "Skip Main Menu Animations");
 				}
 				GUILayout.EndVertical();

@@ -262,8 +262,8 @@ MonoBehaviour:
     ShowDuration: 0
     CloseDuration: 0
   animations:
-  - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
-  - {fileID: 11400000, guid: cb7c684165a9746a8b47f7d0879cb4f1, type: 2}
+  - {fileID: 11400000, guid: 92e9f1ad75afb4a42b2c9a6117e78c0a, type: 2}
+  - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
   rootGroup: {fileID: 2511}
   neutralPrimaryColor:
     globalStyle: {fileID: 11400000, guid: ceb9b9ccb3be84c5aacf6e28777196b1, type: 2}
@@ -551,7 +551,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.08, z: -1.88}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2029}
@@ -1978,8 +1978,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 430, y: 0}
-  m_SizeDelta: {x: 860, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1632
 CanvasRenderer:
@@ -4235,7 +4235,7 @@ RectTransform:
   m_GameObject: {fileID: 779}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.003, y: 0.003, z: 0.003}
+  m_LocalScale: {x: 0.00225, y: 0.00225, z: 0.00225}
   m_Children:
   - {fileID: 1944}
   m_Father: {fileID: 1215}
@@ -5421,8 +5421,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 430, y: 0}
-  m_SizeDelta: {x: 860, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1590
 CanvasRenderer:
@@ -6306,8 +6306,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 430, y: 0}
-  m_SizeDelta: {x: 860, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1744
 CanvasRenderer:

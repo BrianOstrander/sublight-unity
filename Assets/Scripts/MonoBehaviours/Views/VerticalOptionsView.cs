@@ -275,7 +275,12 @@ namespace LunraGames.SubLight.Views
 		Unknown = 0,
 		None = 10,
 		Pause = 20,
-		Save = 30
+		Save = 30,
+		Return = 40,
+		Quit = 50,
+		// -- Game Icons
+		GameFailure = 1000,
+		GameSuccess = 1010,
 	}
 
 	public enum VerticalOptionsDividerFades

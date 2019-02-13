@@ -178,7 +178,12 @@ namespace LunraGames.SubLight
 				KeyValues,
 				ValueFilter,
 				CurrentPreferences,
-				SM
+				SM,
+				new DialogLanguageBlock
+				{
+					Title = LanguageStringModel.Override("Active Encounter"),
+					Message = LanguageStringModel.Override("Saving is disabled during encounters.")
+				}
 			);
 
 			focus = new FocusService(Heartbeat, Callbacks);

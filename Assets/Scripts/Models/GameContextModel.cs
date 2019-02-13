@@ -17,9 +17,6 @@ namespace LunraGames.SubLight.Models
 #pragma warning restore CS0414 // The private field is assigned but its value is never used.
 		ShipModel ship;
 
-		SaveStateBlock saveState = SaveStateBlock.Savable();
-		public readonly ListenerProperty<SaveStateBlock> SaveState;
-
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
 		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
 
@@ -100,6 +97,9 @@ namespace LunraGames.SubLight.Models
 		#region Read Only Models
 		EncounterStateModel encounterState = new EncounterStateModel();
 		public EncounterStateModel EncounterState { get { return encounterState; } }
+
+		SaveBlockerListModel saveBlockers = new SaveBlockerListModel();
+		public SaveBlockerListModel SaveBlockers { get { return saveBlockers; } }
 		#endregion
 
 		#region Models
@@ -114,8 +114,6 @@ namespace LunraGames.SubLight.Models
 		{
 			this.model = model;
 			this.ship = ship;
-
-			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
 
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
 			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);

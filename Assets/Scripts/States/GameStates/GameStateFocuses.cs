@@ -49,22 +49,11 @@ namespace LunraGames.SubLight
 						Resume = LanguageStringModel.Override("Resume"),
 
 						Save = LanguageStringModel.Override("Save"),
-						SaveDisabledDuringEncounter = new DialogLanguageBlock
-						{
-							Title = LanguageStringModel.Override("Active Encounter"),
-							Message = LanguageStringModel.Override("Saving is disabled during encounters.")
-						},
 						SaveDisabledAlreadySaved = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Already Saved"),
 							Message = LanguageStringModel.Override("Your latest progress is already saved.")
 						},
-						SaveDisabledUnknown = new DialogLanguageBlock
-						{
-							Title = LanguageStringModel.Override("Saving Disabled"),
-							Message = LanguageStringModel.Override("Saving has been disabled for an unspecified reason, likely an error.")
-						},
-
 						MainMenu = LanguageStringModel.Override("Main Menu"),
 						MainMenuConfirm = new DialogLanguageBlock
 						{
@@ -189,7 +178,12 @@ namespace LunraGames.SubLight
 							"<b>Integrating</b> Collected Data From Databases",
 							"<b>Rewriting</b> Known System Entries",
 							"<b>Assigning</b> Targets For Further Study"
-						)
+						),
+						SaveDisabledDuringTransit = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("In Transit"),
+							Message = LanguageStringModel.Override("Saving is disabled during transit.")
+						},
 					}
 				);
 
