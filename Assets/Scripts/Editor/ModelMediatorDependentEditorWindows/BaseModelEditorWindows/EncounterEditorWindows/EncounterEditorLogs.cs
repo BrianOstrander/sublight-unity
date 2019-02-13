@@ -205,8 +205,8 @@ namespace LunraGames.SubLight
 						EncounterLogModel indexSwap0 = null;
 						EncounterLogModel indexSwap1 = null;
 
-						var isMoving = Event.current.control;
-						var isDeleting = Event.current.alt;
+						var isMoving = !Event.current.shift && Event.current.control;
+						var isDeleting = !Event.current.shift && Event.current.alt;
 
 						var sorted = model.Logs.All.Value.OrderBy(l => l.Index.Value).ToList();
 						var sortedCount = sorted.Count;
@@ -1611,8 +1611,8 @@ namespace LunraGames.SubLight
 			E indexSwap0 = null;
 			E indexSwap1 = null;
 
-			var isMoving = Event.current.control;
-			var isDeleting = Event.current.alt;
+			var isMoving = !Event.current.shift && Event.current.control;
+			var isDeleting = !Event.current.shift && Event.current.alt;
 
 			var sorted = model.Edges.OrderBy(l => l.EdgeIndex).ToList();
 			var sortedCount = sorted.Count;

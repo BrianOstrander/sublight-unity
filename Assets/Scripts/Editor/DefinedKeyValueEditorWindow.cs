@@ -6,17 +6,14 @@ using UnityEditor;
 
 using UnityEngine;
 
-using LunraGames.SubLight.Models;
-
 using LunraGamesEditor;
 
 namespace LunraGames.SubLight
 {
 	public class DefinedKeyValueEditorWindow : EditorWindow
 	{
-		public class ReplaceResult
+		public class DefinedState
 		{
-			public IKeyValueFilterEntryModel Previous;
 			public KeyValueTypes ValueType;
 			public ValueFilterTypes FilterType;
 			public KeyValueTargets Target;
@@ -38,8 +35,8 @@ namespace LunraGames.SubLight
 
 		static Color CurrentContentColor = new Color(0.53f, 0.76f, 0.47f).NewS(0.4f).NewV(1f);
 
-		IKeyValueFilterEntryModel current;
-		Action<ReplaceResult> replaced;
+		DefinedState current;
+		Action<DefinedState> selection;
 		Action cancel;
 		string description;
 		DefinedKeyEntry[] entries;
@@ -49,19 +46,19 @@ namespace LunraGames.SubLight
 		bool closeHandled;
 
 		public static void Show(
-			IKeyValueFilterEntryModel current,
-			Action<ReplaceResult> replaced,
+			DefinedState current,
+			Action<DefinedState> selection,
 			string title = null,
 			Action cancel = null
 		)
 		{
-			if (replaced == null) throw new ArgumentNullException("replaced");
+			if (selection == null) throw new ArgumentNullException("replaced");
 
 			title = string.IsNullOrEmpty(title) ? "Select a Defined Key Value" : title;
 
 			var window = GetWindow(typeof(DefinedKeyValueEditorWindow), true, title, true) as DefinedKeyValueEditorWindow;
 			window.current = current;
-			window.replaced = replaced;
+			window.selection = selection;
 			window.cancel = cancel;
 			window.description = "Defined key values are updated or listened to by the event system.";
 
@@ -72,9 +69,10 @@ namespace LunraGames.SubLight
 			if (current != null && current.FilterType != ValueFilterTypes.Unknown)
 			{
 				valueTypeOrder = valueTypeOrder.ExceptOne(current.FilterType).Prepend(current.FilterType).ToArray();
+				window.hiddenValueTypes = EnumExtensions.GetValues(current.ValueType).ToList();
 			}
 
-			var currentKey = current == null ? null : current.FilterKey;
+			var currentKey = current == null ? null : current.Key;
 			var allDefinedKeys = DefinedKeyInstances.All;
 			var entryList = new List<DefinedKeyEntry>();
 
@@ -102,11 +100,20 @@ namespace LunraGames.SubLight
 		{
 			if (!string.IsNullOrEmpty(description)) GUILayout.Label(description);
 
+			var normalColor = GUI.color;
+
 			verticalScroll = new Vector2(0f, GUILayout.BeginScrollView(verticalScroll, false, true).y);
 			{
 				var lastValueType = KeyValueTypes.Unknown;
 				foreach (var entry in entries)
 				{
+					var isEnabled = true;
+					if (current != null)
+					{
+						isEnabled = current.ValueType == entry.ValueType;
+						GUI.color = isEnabled ? normalColor : Color.gray;
+					}
+
 					var entryVisible = !hiddenValueTypes.Contains(entry.ValueType);
 
 					if (lastValueType != entry.ValueType)
@@ -141,10 +148,14 @@ namespace LunraGames.SubLight
 
 							GUILayout.Space(-10f);
 
-							if (entry.IsCurrent != EditorGUILayout.Toggle(GUIContent.none, entry.IsCurrent, GUILayout.Width(32f)) && !entry.IsCurrent)
+							EditorGUILayoutExtensions.PushEnabled(isEnabled);
 							{
-								OnSelection(entry);
+								if (entry.IsCurrent != EditorGUILayout.Toggle(GUIContent.none, entry.IsCurrent, GUILayout.Width(32f)) && !entry.IsCurrent)
+								{
+									OnSelection(entry);
+								}
 							}
+							EditorGUILayoutExtensions.PopEnabled();
 						}
 						GUILayout.EndHorizontal();
 
@@ -167,6 +178,8 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndScrollView();
 
+			GUI.color = normalColor;
+
 			GUILayout.BeginHorizontal(EditorStyles.toolbar);
 			{
 				if (GUILayout.Button("Collapse All", EditorStyles.toolbarButton))
@@ -187,10 +200,9 @@ namespace LunraGames.SubLight
 
 		void OnSelection(DefinedKeyEntry entry)
 		{
-			replaced(
-				new ReplaceResult
+			selection(
+				new DefinedState
 				{
-					Previous = current,
 					ValueType = entry.ValueType,
 					FilterType = entry.FilterType,
 					Target = entry.Target,

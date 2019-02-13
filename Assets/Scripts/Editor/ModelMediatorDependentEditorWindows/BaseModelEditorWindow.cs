@@ -554,7 +554,7 @@ namespace LunraGames.SubLight
 
 				if (GUILayout.Button("Settings", EditorStyles.toolbarButton, GUILayout.Width(64f))) ShowSettingsDialog();
 
-				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || Event.current.control);
+				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || (!Event.current.shift && Event.current.control));
 				{
 					var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
 					if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save(null);

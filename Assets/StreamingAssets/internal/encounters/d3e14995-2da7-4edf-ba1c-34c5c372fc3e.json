@@ -4,6 +4,7 @@
   "name": "Overriding Start Encounter",
   "trigger": "TransitComplete",
   "filtering": {
+    "showValues": true,
     "booleanKeyValues": [],
     "integerKeyValues": [],
     "stringKeyValues": [],
@@ -11,7 +12,50 @@
     "encounterInteractions": []
   },
   "logs": {
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "operation": "SetString",
+              "target": "Encounter",
+              "key": "some_target",
+              "stringValue": "yay",
+              "entryId": "2606224e-272a-47ba-a465-6fa4c96fdfca"
+            }
+          },
+          {
+            "entry": {
+              "operation": "SetString",
+              "target": "Encounter",
+              "key": "some_source",
+              "stringValue": "nay",
+              "entryId": "e82090f1-0100-4287-ad04-4cb41b6c494c"
+            },
+            "index": 1
+          }
+        ],
+        "beginning": true,
+        "logId": "467139ec-08eb-458d-89ae-887e817d9ab1",
+        "fallbackLogId": "593910f5-6472-42d2-9c37-d696f19b97bb"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "operation": "SetString",
+              "target": "Encounter",
+              "key": "some_source",
+              "stringValue": "yay",
+              "entryId": "63ce4c33-90fd-4371-a93b-fea860d6f69f"
+            }
+          }
+        ],
+        "index": 2,
+        "logId": "7b2feee6-fd19-4779-9153-a540756dda87",
+        "fallbackLogId": "593910f5-6472-42d2-9c37-d696f19b97bb"
+      }
+    ],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
@@ -40,12 +84,110 @@
                 "encounterInteractions": []
               },
               "entryId": "4a0b102d-1bf7-4669-905c-8938dbcf7eef"
-            }
+            },
+            "ignore": true
+          },
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 10
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "5020d48a-e8f8-4fe2-9bb6-e1140a32e47f"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Encounter.String.some_target now equals Encounter.String.some_source!"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [
+                  {
+                    "operation": "Equals",
+                    "target": "Encounter",
+                    "key": "some_target",
+                    "source": "KeyValue",
+                    "sourceTarget": "Encounter",
+                    "sourceKey": "some_source",
+                    "filterId": "55fbff46-7b14-436b-ac58-2244736da597",
+                    "group": "All"
+                  }
+                ],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "623ea2d2-7cfd-46a5-8c6b-cf899aa42231"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "some_source EQUALS nay"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [
+                  {
+                    "operation": "Equals",
+                    "target": "Encounter",
+                    "key": "some_source",
+                    "source": "Value",
+                    "filterId": "befceeb9-3776-4567-975f-d2358af1e080",
+                    "group": "All",
+                    "filterValue": "nay"
+                  }
+                ],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "05c54ba8-a2f3-4afd-abe1-47556610a8a1"
+            },
+            "index": 3
           }
         ],
-        "beginning": true,
-        "ending": true,
-        "logId": "593910f5-6472-42d2-9c37-d696f19b97bb"
+        "index": 1,
+        "logId": "593910f5-6472-42d2-9c37-d696f19b97bb",
+        "fallbackLogId": "7b2feee6-fd19-4779-9153-a540756dda87",
+        "name": "Debuggger"
       }
     ],
     "dialogLogs": [],
