@@ -27,21 +27,65 @@ namespace LunraGamesEditor
 		static Stack<bool> TextAreaWordWrapStack = new Stack<bool>();
 		static Stack<TextAnchor> ButtonTextAnchorStack = new Stack<TextAnchor>();
 
-		public static T HelpfulEnumPopup<T>(
-			string label,
+		public static T HelpfulEnumPopupValidation<T>(
+			GUIContent content,
 			string primaryReplacement,
 			T value,
+			Color? defaultValueColor,
 			T[] options = null,
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
-			return HelpfulEnumPopup(
-				new GUIContent(label),
+			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopup(
+				content,
 				primaryReplacement,
 				value,
-				options = null,
+				options,
 				guiOptions
 			);
+			PopColorValidation(defaultValueColor);
+			return result;
+		}
+
+		public static T HelpfulEnumPopupValueValidation<T>(
+			string primaryReplacement,
+			T value,
+			Color? defaultValueColor,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopupValue(
+				primaryReplacement,
+				value,
+				guiOptions
+			);
+			PopColorValidation(defaultValueColor);
+			return result;
+		}
+
+		public static T HelpfulEnumPopupValueValidation<T>(
+			string primaryReplacement,
+			T value,
+			Color? defaultValueColor,
+			T[] options,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopupValue(
+				primaryReplacement,
+				value,
+				options,
+				null,
+				guiOptions
+			);
+			PopColorValidation(defaultValueColor);
+			return result;
 		}
 
 		public static T HelpfulEnumPopup<T>(
@@ -142,6 +186,34 @@ namespace LunraGamesEditor
 		{
 			if (ColorStack.Count == 0) return;
 			GUI.color = ColorStack.Pop();
+		}
+
+		/// <summary>
+		/// Works like PushColorCombined, but handles the tinting automatically.
+		/// </summary>
+		/// <param name="color">Color.</param>
+		public static void PushColorValidation(Color? color)
+		{
+			if (color.HasValue) PushColorValidation(color.Value);
+		}
+
+		public static void PopColorValidation(Color? color)
+		{
+			if (color.HasValue) PopColorValidation();
+		}
+
+		/// <summary>
+		/// Works like PushColorCombined, but handles the tinting automatically.
+		/// </summary>
+		/// <param name="color">Color.</param>
+		public static void PushColorValidation(Color color, bool useColor = true)
+		{
+			if (useColor) PushColorCombined(color.NewS(0.25f), color.NewS(0.65f));
+		}
+
+		public static void PopColorValidation(bool useColor = true)
+		{	
+			if (useColor) PopColorCombined();
 		}
 
 		public static void PushColorCombined(
@@ -249,11 +321,11 @@ namespace LunraGamesEditor
 
 		public static bool XButton(bool small = false)
 		{
-			PushColorCombined(Color.red.NewS(0.25f), Color.red.NewS(0.65f));
+			PushColorValidation(Color.red);
 			var clicked = false;
 			if (small) clicked = GUILayout.Button("x", EditorStyles.miniButton, GUILayout.Width(20f));
 			else clicked = GUILayout.Button("x", GUILayout.Width(20f));
-			PopColorCombined();
+			PopColorValidation();
 			return clicked;
 		}
 
@@ -478,7 +550,7 @@ namespace LunraGamesEditor
 			options = options.Prepend(GUILayout.Width(48f)).ToArray();
 			var wasValue = value;
 
-			if (!wasValue) PushColorCombined(Color.red.NewS(0.25f), Color.red.NewS(0.65f));
+			PushColorValidation(Color.red, !wasValue);
 			{
 				var text = value ? trueText : falseText;
 
@@ -491,7 +563,7 @@ namespace LunraGamesEditor
 					if (GUILayout.Button(text, style, options)) value = !value;
 				}
 			}
-			if (!wasValue) PopColorCombined();
+			PopColorValidation(!wasValue);
 
 			return value;
 		}

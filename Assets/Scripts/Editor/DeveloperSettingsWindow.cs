@@ -199,7 +199,7 @@ namespace LunraGames.SubLight
 						DevPrefs.GameSeed.Value = EditorGUILayout.IntField("Game Seed", DevPrefs.GameSeed.Value);
 						DevPrefs.GalaxySeed.Value = EditorGUILayout.IntField("Galaxy Seed", DevPrefs.GalaxySeed.Value);
 						DevPrefs.GalaxyId.Value = EditorGUILayout.TextField("Galaxy Id", DevPrefs.GalaxyId.Value);
-						DevPrefs.ToolbarSelection.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("Toolbar Selection", "- Select an Override -", DevPrefs.ToolbarSelection.Value);
+						DevPrefs.ToolbarSelection.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Toolbar Selection"), "- Select an Override -", DevPrefs.ToolbarSelection.Value);
 					}
 					EditorGUILayoutExtensions.PopIndent();
 					break;

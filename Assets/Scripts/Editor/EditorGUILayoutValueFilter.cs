@@ -448,31 +448,21 @@ namespace LunraGames.SubLight
 			EditorGUIExtensions.UnPauseChangeCheck();
 			// ----
 
-			Color? targetColor = null;
+			target = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+				"- Target -",
+				target,
+				Color.red,
+				GUILayout.Width(80f)
+			);
 
-			if (target == KeyValueTargets.Unknown) targetColor = Color.red;
-
-			if (targetColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(targetColor.Value.NewS(0.25f), targetColor.Value.NewS(0.65f));
-			{
-				target = EditorGUILayoutExtensions.HelpfulEnumPopupValue(
-					"- Target -",
-					target,
-					guiOptions: GUILayout.Width(80f)
-				);
-			}
-			if (targetColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
-
-			Color? keyColor = null;
-
-			if (string.IsNullOrEmpty(key)) keyColor = Color.red;
-
-			if (keyColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(keyColor.Value.NewS(0.25f), keyColor.Value.NewS(0.65f));
+			var keyIsInvalid = string.IsNullOrEmpty(key);
+			EditorGUILayoutExtensions.PushColorValidation(Color.red, keyIsInvalid);
 			{
 				if (primary) key = EditorGUILayout.TextField(key, GUILayout.Width(KeyValueKeyWidth));
 				else key = EditorGUILayout.TextField(key);
 
 			}
-			if (keyColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+			EditorGUILayoutExtensions.PopColorValidation(keyIsInvalid);
 
 			setTarget(target);
 			setKey(key);
@@ -485,20 +475,13 @@ namespace LunraGames.SubLight
 		/// <param name="model">Model.</param>
 		static bool OnHandleKeyValueSource(IKeyValueFilterEntryModel model)
 		{
-			Color? sourceColor = null;
-
-			if (model.FilterSource == KeyValueSources.Unknown) sourceColor = Color.red;
-
-			if (sourceColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(sourceColor.Value.NewS(0.25f), sourceColor.Value.NewS(0.65f));
-			{
-				model.FilterSource = EditorGUILayoutExtensions.HelpfulEnumPopup(
-					GUIContent.none,
-					"- Source -",
-					model.FilterSource,
-					guiOptions: GUILayout.Width(70f)
-				);
-			}
-			if (sourceColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+			model.FilterSource = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				GUIContent.none,
+				"- Source -",
+				model.FilterSource,
+				Color.red,
+				guiOptions: GUILayout.Width(70f)
+			);
 
 			switch (model.FilterSource)
 			{
@@ -552,19 +535,12 @@ namespace LunraGames.SubLight
 		{
 			OnHandleKeyValueBegin(model);
 			{
-				Color? operatorColor = null;
-
-				if (model.Operation.Value == IntegerFilterOperations.Unknown) operatorColor = Color.red;
-
-				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
-				{
-					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue(
-						"- Select Operation -",
-						model.Operation.Value,
-						guiOptions: GUILayout.Width(OperatorWidth)
-					);
-				}
-				if (operatorColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+					"- Select Operation -",
+					model.Operation.Value,
+					Color.red,
+					GUILayout.Width(OperatorWidth)
+				);
 
 				if (!OnHandleKeyValueSource(model))
 				{
@@ -581,19 +557,12 @@ namespace LunraGames.SubLight
 		{
 			OnHandleKeyValueBegin(model);
 			{
-				Color? operatorColor = null;
-
-				if (model.Operation.Value == StringFilterOperations.Unknown) operatorColor = Color.red;
-
-				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
-				{
-					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue(
-						"- Select Operation -",
-						model.Operation.Value,
-						guiOptions: GUILayout.Width(OperatorWidth)
-					);
-				}
-				if (operatorColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+					"- Select Operation -",
+					model.Operation.Value,
+					Color.red,
+					GUILayout.Width(OperatorWidth)
+				);
 
 				if (model.Operation.Value == StringFilterOperations.Equals)
 				{
@@ -613,19 +582,12 @@ namespace LunraGames.SubLight
 		{
 			OnHandleKeyValueBegin(model);
 			{
-				Color? operatorColor = null;
-
-				if (model.Operation.Value == FloatFilterOperations.Unknown) operatorColor = Color.red;
-
-				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
-				{
-					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue(
-						"- Select Operation -",
-						model.Operation.Value,
-						guiOptions: GUILayout.Width(OperatorWidth)
-					);
-				}
-				if (operatorColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+					"- Select Operation -",
+					model.Operation.Value,
+					Color.red,
+					GUILayout.Width(OperatorWidth)
+				);
 
 				if (!OnHandleKeyValueSource(model))
 				{
@@ -659,18 +621,11 @@ namespace LunraGames.SubLight
 
 				GUILayout.Label("Needs To Be", GUILayout.Width(OperatorWidth));
 
-				Color? operatorColor = null;
-
-				if (model.Operation.Value == EncounterInteractionFilterOperations.Unknown) operatorColor = Color.red;
-
-				if (operatorColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(operatorColor.Value.NewS(0.25f), operatorColor.Value.NewS(0.65f));
-				{
-					model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue(
-						"- Select Operation -",
-						model.Operation.Value
-					);
-				}
-				EditorGUILayoutExtensions.PopColorCombined();
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+					"- Select Operation -",
+					model.Operation.Value,
+					Color.red
+				);
 			}
 			OnOneLineHandleEnd(model, ref deleted);
 		}

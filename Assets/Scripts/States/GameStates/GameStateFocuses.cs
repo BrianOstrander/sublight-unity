@@ -81,6 +81,10 @@ namespace LunraGames.SubLight
 					}
 				);
 
+				new GameCompletePresenter(
+					payload.Game
+				);
+
 				InitializeSystemPresenters(state, done);
 			}
 
