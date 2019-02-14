@@ -2822,6 +2822,16 @@ MonoBehaviour:
     TertiaryColor:
       globalStyle: {fileID: 0}
       color: {r: 0.9882353, g: 0.43581176, b: 0.43581176, a: 1}
+  - Theme: 40
+    PrimaryColor:
+      globalStyle: {fileID: 0}
+      color: {r: 0.7482352, g: 0.9882353, b: 0.5882353, a: 1}
+    SecondaryColor:
+      globalStyle: {fileID: 0}
+      color: {r: 0.813, g: 1, b: 0.69200003, a: 1}
+    TertiaryColor:
+      globalStyle: {fileID: 0}
+      color: {r: 0.6564705, g: 0.9882353, b: 0.43529412, a: 1}
   icons:
   - Icon: 20
     Sprite: {fileID: 21300000, guid: b2754852e488543d7ac039667ffdf448, type: 3}

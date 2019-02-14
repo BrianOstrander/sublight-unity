@@ -258,7 +258,8 @@ namespace LunraGames.SubLight.Views
 		Unknown = 0,
 		Neutral = 10,
 		Warning = 20,
-		Error = 30
+		Error = 30,
+		Success = 40
 	}
 
 	public enum VerticalOptionsStyles

@@ -26,11 +26,11 @@
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "title": null,
-                  "message": null
+                  "title": "",
+                  "message": ""
                 },
                 "enums": {
-                  "condition": 10
+                  "condition": 20
                 },
                 "floats": {}
               },
