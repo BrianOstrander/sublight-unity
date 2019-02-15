@@ -155,36 +155,23 @@ namespace LunraGames.SubLight
 		void OnPresentersShown()
 		{
 			PushUpdateKeyValues();
+
+			var triggers = new List<EncounterTriggers>(Payload.Game.EncounterTriggers.Value);
+
+			if (Payload.Game.EncounterResume.Value.CanResume) triggers.Insert(0, Payload.Game.EncounterResume.Value.Trigger);
+			if (!triggers.Contains(EncounterTriggers.InitializeRules)) triggers.Insert(0, EncounterTriggers.InitializeRules);
+			if (!triggers.Contains(EncounterTriggers.Load)) triggers.Insert(0, EncounterTriggers.Load);
+
 			SM.Push(
 				() =>
 				{
-					OnCheckSpecifiedEncounter(
-						string.Empty,
-						EncounterTriggers.Load,
-						false,
-						OnLoadDevEncounter
+					PushEncounterTriggers(
+						"IdleEncounterCheck",
+						triggers.ToArray()
 					);
 				},
-				"EncounterResumeCheck"
+				"IdleEncounterResumeCheck"
 			);
-		}
-
-		void OnLoadDevEncounter(bool run)
-		{
-			if (run) return; // We got interrupted by some test encounter.
-			if (!Payload.Game.EncounterResume.Value.CanResume) return; // No encounter to resume.
-
-			OnCheckSpecifiedEncounter(
-				Payload.Game.EncounterResume.Value.EncounterId,
-				Payload.Game.EncounterResume.Value.Trigger,
-				true,
-				OnResumeEncounter
-			);
-		}
-
-		void OnResumeEncounter(bool run)
-		{
-			if (!run) Debug.LogError("Unable to resume encounter with id " + Payload.Game.EncounterResume.Value.EncounterId + " and trigger " + Payload.Game.EncounterResume.Value.Trigger);
 		}
 		#endregion
 
@@ -481,14 +468,20 @@ namespace LunraGames.SubLight
 
 			PushUpdateKeyValues();
 
-			Payload.Game.EncounterTriggers.Value = new EncounterTriggers[]
-			{
+			PushEncounterTriggers(
+				"TransitCompleteCheckForEncounters",
 				EncounterTriggers.TransitComplete,
 				EncounterTriggers.ResourceRequest,
+				EncounterTriggers.ResourceConsume,
 				EncounterTriggers.SystemIdle
-			};
+			);
+		}
 
-			SM.Push(OnCheckForEncounters, "TransitCompleteCheckForEncounters");
+		void PushEncounterTriggers(string description, params EncounterTriggers[] triggers)
+		{
+			Payload.Game.EncounterTriggers.Value = triggers;
+
+			SM.Push(OnCheckForEncounters, description);
 		}
 
 		void PushUpdateKeyValues()
@@ -653,21 +646,30 @@ namespace LunraGames.SubLight
 
 			var encounterId = string.Empty;
 
-			var allSpecifiedEncounters = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == target);
-
-			if (1 < allSpecifiedEncounters.Count())
+			if (Payload.Game.EncounterResume.Value.CanResume && Payload.Game.EncounterResume.Value.Trigger == target)
 			{
-				Debug.LogError("Multiple encounters are specified for system " + Payload.Game.Context.CurrentSystem.Name + " with trigger " + target + ", this behaviour is not supported yet, choosing the first one instead.");
+				// Resuming an encounter we were in the middle of...
+				encounterId = Payload.Game.EncounterResume.Value.EncounterId;
 			}
+			else
+			{
+				// Checking if the system has any matching encounter triggers...
+				var allSpecifiedEncounters = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == target);
 
-			encounterId = allSpecifiedEncounters.FirstOrDefault().EncounterId;
+				if (1 < allSpecifiedEncounters.Count())
+				{
+					Debug.LogError("Multiple encounters are specified for system " + Payload.Game.Context.CurrentSystem.Name + " with trigger " + target + ", this behaviour is not supported yet, choosing the first one instead.");
+				}
+
+				encounterId = allSpecifiedEncounters.FirstOrDefault().EncounterId;
+			}
 
 			OnCheckSpecifiedEncounter(encounterId, target, true, run => OnCheckForEncountersSpecified(run, target));
 		}
 
 		void OnCheckForEncountersSpecified(bool run, EncounterTriggers trigger)
 		{
-			if (run) return; // Our override was accepted...
+			if (run) return; // Our override was accepted, any triggers on stack will get checked on encounter completion...
 
 			App.Encounters.GetNextEncounter(
 				OnCheckForEncountersNext,
@@ -915,6 +917,11 @@ namespace LunraGames.SubLight
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
 		{
 			if (block.System == null || block.State != CelestialSystemStateBlock.States.Selected) return;
+			if (Payload.Game.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
+			{
+				Debug.LogWarning("Checking for Navigation Selection events during encounter is not supported, ignoring");
+				return;
+			}
 
 			var allSpecifiedEncounters = block.System.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == EncounterTriggers.NavigationSelect);
 

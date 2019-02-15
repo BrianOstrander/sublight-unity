@@ -88,6 +88,7 @@ namespace LunraGames.SubLight
 			{
 				public const string PopTransitComplete = "pop_transit_complete";
 				public const string PopResourceRequest = "pop_resource_request";
+				public const string PopResourceConsume = "pop_resource_consume";
 				public const string PopSystemIdle = "pop_system_idle";
 			}
 		}

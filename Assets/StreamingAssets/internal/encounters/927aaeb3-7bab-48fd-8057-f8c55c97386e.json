@@ -1,0 +1,72 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "bc9e8585-830b-4a99-a741-2e9c48fed331",
+  "name": "InitializeRules Default",
+  "trigger": "InitializeRules",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "5f45147d-f27a-4e93-8967-c8cf0c50b227",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Initializing Default Rules"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d5108347-70c2-4e91-9cbb-1734f661f577"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "965bd402-9f03-452d-b03d-ace12b45b564"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "InitializeRules Default",
+  "metaKeyValues": {
+    "EncounterId": "bc9e8585-830b-4a99-a741-2e9c48fed331"
+  },
+  "created": "2019-02-15T14:50:14.11832-08:00",
+  "modified": "2019-02-15T14:50:14.11832-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

@@ -1093,6 +1093,11 @@ namespace LunraGames.SubLight
 				);
 
 				entry.KeyValues.SetBoolean(
+					EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume,
+					EditorGUILayout.Toggle("Resource Consume", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume))
+				);
+
+				entry.KeyValues.SetBoolean(
 					EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle,
 					EditorGUILayout.Toggle("System Idle", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle))
 				);

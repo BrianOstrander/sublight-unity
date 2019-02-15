@@ -5,7 +5,15 @@
 		Unknown = 0,
 
 		// -- Default Triggers
+		/// <summary>
+		/// Called every time the game loads.
+		/// </summary>
 		Load = 10,
+		/// <summary>
+		/// Called every time the game loads to set basic rules and default
+		/// values.
+		/// </summary>
+		InitializeRules = 20,
 
 		// -- Navigation View Triggers
 		/// <summary>
@@ -25,10 +33,13 @@
 
 		// -- Resource Triggers
 		/// <summary>
-		/// When resources are gathered for the ark. Mostly for internal
-		/// gameplay logic.
+		/// When resources are gathered for the ark.
 		/// </summary>
 		ResourceRequest = 300,
+		/// <summary>
+		/// When resources are consumed by the ark.
+		/// </summary>
+		ResourceConsume = 310,
 
 		// -- System Triggers
 		/// <summary>

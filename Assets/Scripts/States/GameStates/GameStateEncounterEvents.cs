@@ -205,6 +205,7 @@ namespace LunraGames.SubLight
 
 				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete)) popped.Add(EncounterTriggers.TransitComplete);
 				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest)) popped.Add(EncounterTriggers.ResourceRequest);
+				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume)) popped.Add(EncounterTriggers.ResourceConsume);
 				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle)) popped.Add(EncounterTriggers.SystemIdle);
 
 				Debug.Log(popped.Count());
