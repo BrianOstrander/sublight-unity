@@ -19,7 +19,14 @@
     ]
   },
   "logs": {
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "c4b1785c-e7a8-4ee4-b47d-bdac67548901"
+      }
+    ],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
@@ -52,8 +59,8 @@
           }
         ],
         "beginning": true,
-        "ending": true,
-        "logId": "965bd402-9f03-452d-b03d-ace12b45b564"
+        "logId": "965bd402-9f03-452d-b03d-ace12b45b564",
+        "fallbackLogId": "c4b1785c-e7a8-4ee4-b47d-bdac67548901"
       }
     ],
     "dialogLogs": [],

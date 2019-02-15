@@ -14,7 +14,7 @@
         "operation": "GreaterThan",
         "target": "CelestialSystem",
         "key": "remaining_rations",
-        "source": "Value",
+        "source": "LocalValue",
         "filterId": "ecddb9fe-e903-4f2d-8772-9e3cbcd28f46",
         "group": "Any"
       }

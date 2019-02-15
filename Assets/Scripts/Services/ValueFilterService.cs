@@ -157,7 +157,7 @@ namespace LunraGames.SubLight
 		{
 			switch (filter.Source.Value)
 			{
-				case KeyValueSources.Value:
+				case KeyValueSources.LocalValue:
 					OnHandle(filter, filter.FilterValue.Value, done);
 					break;
 				case KeyValueSources.KeyValue:
@@ -191,7 +191,7 @@ namespace LunraGames.SubLight
 		{
 			switch (filter.Source.Value)
 			{
-				case KeyValueSources.Value:
+				case KeyValueSources.LocalValue:
 					OnHandle(filter, filter.FilterValue.Value, done);
 					break;
 				case KeyValueSources.KeyValue:
@@ -254,7 +254,7 @@ namespace LunraGames.SubLight
 		{
 			switch (filter.Source.Value)
 			{
-				case KeyValueSources.Value:
+				case KeyValueSources.LocalValue:
 					OnHandle(filter, filter.FilterValue.Value, done);
 					break;
 				case KeyValueSources.KeyValue:
@@ -307,7 +307,7 @@ namespace LunraGames.SubLight
 		{
 			switch (filter.Source.Value)
 			{
-				case KeyValueSources.Value:
+				case KeyValueSources.LocalValue:
 					OnHandle(filter, filter.FilterValue.Value, done);
 					break;
 				case KeyValueSources.KeyValue:

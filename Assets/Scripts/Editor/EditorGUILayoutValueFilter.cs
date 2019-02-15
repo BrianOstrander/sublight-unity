@@ -242,7 +242,7 @@ namespace LunraGames.SubLight
 		static IValueFilterEntryModel OnCreateKeyValue(IValueFilterEntryModel result)
 		{
 			var typedResult = result as IKeyValueFilterEntryModel;
-			typedResult.FilterSource = KeyValueSources.Value;
+			typedResult.FilterSource = KeyValueSources.LocalValue;
 
 			return typedResult;
 		}
@@ -488,7 +488,7 @@ namespace LunraGames.SubLight
 
 			switch (model.FilterSource)
 			{
-				case KeyValueSources.Value:
+				case KeyValueSources.LocalValue:
 					return false;
 				case KeyValueSources.KeyValue:
 					OnHandleKeyValueDefinition(

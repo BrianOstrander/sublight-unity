@@ -6,6 +6,62 @@ namespace LunraGames.SubLight.Models
 {
 	public class KeyValueEntryModel : EdgeEntryModel
 	{
+		[Serializable]
+		public struct BooleanBlock
+		{
+			public enum Operations
+			{
+				Unknown = 0,
+				Set = 10
+			}
+
+			public static BooleanBlock Default { get { return new BooleanBlock(); } }
+
+			public Operations Operation;
+		}
+
+		[Serializable]
+		public struct IntegerBlock
+		{
+			public enum Operations
+			{
+				Unknown = 0,
+				Set = 10
+			}
+
+			public static IntegerBlock Default { get { return new IntegerBlock(); } }
+
+			public Operations Operation;
+		}
+
+		[Serializable]
+		public struct StringBlock
+		{
+			public enum Operations
+			{
+				Unknown = 0,
+				Set = 10
+			}
+
+			public static StringBlock Default { get { return new StringBlock(); } }
+
+			public Operations Operation;
+		}
+
+		[Serializable]
+		public struct FloatBlock
+		{
+			public enum Operations
+			{
+				Unknown = 0,
+				Set = 10
+			}
+
+			public static FloatBlock Default { get { return new FloatBlock(); } }
+
+			public Operations Operation;
+		}
+
 		[JsonProperty] KeyValueOperations operation;
 		[JsonProperty] KeyValueTargets target;
 		[JsonProperty] string key;
