@@ -464,7 +464,14 @@ namespace LunraGames.SubLight
 			);
 
 			PushUpdateKeyValues();
-			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
+
+			Payload.Game.EncounterTriggers.Value = new EncounterTriggers[] {
+				EncounterTriggers.TransitComplete,
+				EncounterTriggers.ResourceRequest,
+				EncounterTriggers.SystemIdle
+			};
+
+			SM.Push(OnCheckForEncounters, "TransitCompleteCheckForEncounters");
 		}
 
 		void PushUpdateKeyValues()
@@ -602,15 +609,57 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		void OnTransitCompleteCheckForEncounters()
+		void OnCheckForEncounters()
 		{
-			var encounterId = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounterId.Value;
+			var target = EncounterTriggers.Unknown;
+			var remaining = new List<EncounterTriggers>();
 
-			if (!OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete))
+			foreach (var trigger in Payload.Game.EncounterTriggers.Value)
 			{
-				Debug.Log("Check for non-specified encounters here!");
-				return;
+				if (trigger == EncounterTriggers.Unknown)
+				{
+					Debug.LogError("Unknown trigger on stack, this should not happen, ignoring");
+					continue;
+				}
+
+				if (target == EncounterTriggers.Unknown)
+				{
+					target = trigger;
+					continue;
+				}
+				remaining.Add(trigger);
 			}
+
+			Payload.Game.EncounterTriggers.Value = remaining.ToArray();
+
+			var encounterId = string.Empty;
+
+			switch (target)
+			{
+				case EncounterTriggers.Unknown:
+					// No encounters were found on stack, just bail here.
+					return;
+				case EncounterTriggers.TransitComplete:
+					encounterId = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounterId.Value;
+					break;
+				case EncounterTriggers.ResourceRequest:
+				case EncounterTriggers.SystemIdle:
+					// No need to do anything, these shouldn't have any overrides defined.
+					break;
+				default:
+					Debug.LogError("Unrecognized EncounterTrigger: " + target);
+					return;
+			}
+
+			if (OnCheckSpecifiedEncounter(encounterId, target)) return; // Our override was accepted...
+
+			// Do assigning of a non-specified encounter id here...
+			Debug.Log("Check for non-specified encounters here! Trigger: "+target);
+
+			if (OnCheckSpecifiedEncounter(encounterId, target)) return; // Our random encounter was accepted...
+
+			// Check again for the next trigger...
+			SM.Push(OnCheckForEncounters, "NoEncounterTriggerCheckForNextTrigger");
 		}
 
 		/// <summary>
@@ -633,7 +682,7 @@ namespace LunraGames.SubLight
 						{
 							if (valid) Debug.Log("Override Encounter is valid, triggering");
 							else Debug.LogWarning("Override Encounter is not valid, triggering anyways");
-							OnTransitCompleteFiltered(true, encounterOverride, trigger);
+							OnEncounterFiltered(true, encounterOverride, trigger);
 						},
 						encounterOverride.Filtering,
 						Payload.Game,
@@ -665,7 +714,7 @@ namespace LunraGames.SubLight
 				case EncounterTriggers.NavigationSelect:
 				case EncounterTriggers.TransitComplete:
 					App.ValueFilter.Filter(
-						valid => OnTransitCompleteFiltered(valid, encounter, trigger),
+						valid => OnEncounterFiltered(valid, encounter, trigger),
 						encounter.Filtering,
 						Payload.Game,
 						encounter
@@ -677,7 +726,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter, EncounterTriggers trigger)
+		void OnEncounterFiltered(bool valid, EncounterInfoModel encounter, EncounterTriggers trigger)
 		{
 			if (!valid) return;
 
@@ -739,6 +788,8 @@ namespace LunraGames.SubLight
 					);
 					// Clear the EncounterResume so it doesn't play again when we open the game.
 					Payload.Game.EncounterResume.Value = EncounterResume.Default;
+					// Check the stack for any additional encounter triggers waiting to be called.
+					SM.Push(OnCheckForEncounters, "EncounterCompleteCheckForEncounters");
 					break;
 				default:
 					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);

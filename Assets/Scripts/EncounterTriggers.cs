@@ -3,8 +3,20 @@
 	public enum EncounterTriggers
 	{
 		Unknown = 0,
+
+		// -- Default Triggers
 		Load = 10,
-		TransitComplete = 20,
-		NavigationSelect = 30
+
+		// -- Navigation View Triggers
+		NavigationSelect = 100,
+
+		// -- Transit Triggers
+		TransitComplete = 200,
+
+		// -- Resource Triggers
+		ResourceRequest = 300,
+
+		// -- System Triggers
+		SystemIdle = 400
 	}
 }
