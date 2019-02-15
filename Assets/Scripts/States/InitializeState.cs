@@ -63,7 +63,7 @@ namespace LunraGames.SubLight
 					App.GameService.CreateGame(DevPrefs.DevCreateGame, OnAutoNewGame);
 					return;
 				case AutoGameOptions.ContinueGame:
-					App.M.List<GameModel>(OnAutoContinueGame);
+					App.GameService.ContinueGame(OnAutoContinueGame);
 					return;
 				default:
 					Debug.Log("Unrecognized AutoGameOption: " + DevPrefs.AutoGameOption.Value+ ", fallbing back to AutoGameOptions.None behaviour");
@@ -280,32 +280,18 @@ namespace LunraGames.SubLight
 			OnRequestGameState(model);
 		}
 
-		void OnAutoContinueGame(SaveLoadArrayRequest<SaveModel> result)
+		void OnAutoContinueGame(RequestResult result, GameModel model)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Unable to load a list of saved games, falling back to AutoGameOptions.None behaviour");
+				Debug.LogError("Unable to load a continuable game, falling back to AutoGameOptions.None behaviour");
 				OnRequestHomeState();
 				return;
 			}
 
-			var continueSave = result.Models.Where(s => s.SupportedVersion.Value).OrderBy(s => s.Modified.Value).LastOrDefault();
-
-			if (continueSave == null)
+			if (model == null)
 			{
 				Debug.LogWarning("No continue save to load, falling back to AutoGameOptions.None behaviour");
-				OnRequestHomeState();
-				return;
-			}
-
-			App.GameService.LoadGame(continueSave, OnAutoContinueGameLoaded);
-		}
-
-		void OnAutoContinueGameLoaded(RequestResult result, GameModel model)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Loading game returned status "+result.Status+", falling back to AutoGameOptions.None behaviour");
 				OnRequestHomeState();
 				return;
 			}

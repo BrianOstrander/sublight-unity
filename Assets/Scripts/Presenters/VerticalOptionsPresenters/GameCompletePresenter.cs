@@ -74,6 +74,7 @@ namespace LunraGames.SubLight.Presenters
 		*/
 
 		void Show(
+			EncounterEvents.GameComplete.Conditions condition,
 			KeyValueListModel keyValues
 		)
 		{
@@ -85,7 +86,6 @@ namespace LunraGames.SubLight.Presenters
 
 			var entries = new List<IVerticalOptionsEntry>();
 
-			var condition = keyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition);
 			Debug.Log("a game over event was recieved with condition: " + condition);
 
 			var title = keyValues.GetString(EncounterEvents.GameComplete.StringKeys.Title);
@@ -165,7 +165,16 @@ namespace LunraGames.SubLight.Presenters
 			var gameCompletion = handler.Events.Value.FirstOrDefault(e => e.EncounterEvent.Value == EncounterEvents.Types.GameComplete);
 			if (gameCompletion == null) return;
 
-			Show(gameCompletion.KeyValues);
+			var condition = gameCompletion.KeyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition);
+
+			var details = model.SaveDetails.Value;
+			details.IsCompleted = true;
+			details.CompleteCondition = condition;
+			details.CompleteKeyValues = gameCompletion.KeyValues;
+
+			model.SaveDetails.Value = details;
+
+			Show(condition, gameCompletion.KeyValues);
 		}
 		#endregion
 

@@ -751,11 +751,18 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case SaveRequest.States.Request:
-					Payload.Game.SaveDetails.Value = new GameSaveDetails(
-						Payload.Game.TransitHistory.Peek().Id,
-						DateTime.Now,
-						Payload.Game.ElapsedTime.Value
+
+					var details = Payload.Game.SaveDetails.Value;
+					details.TransitHistoryId = Payload.Game.TransitHistory.Peek().Id;
+					details.Time = DateTime.Now;
+					details.ElapsedTime = Payload.Game.ElapsedTime.Value;
+					Payload.Game.SaveDetails.Value = details;
+
+					Payload.Game.SetMetaKey(
+						MetaKeyConstants.Game.IsCompleted,
+						Payload.Game.SaveDetails.Value.IsCompleted ? MetaKeyConstants.Values.True : MetaKeyConstants.Values.False
 					);
+
 					App.M.Save(Payload.Game, result => OnSaveDone(result, request));
 					break;
 				case SaveRequest.States.Complete:

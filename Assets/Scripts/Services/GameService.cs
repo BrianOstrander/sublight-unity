@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -83,31 +85,6 @@ namespace LunraGames.SubLight
 		}
 
 		/// <summary>
-		/// Loads the specified save and populates the context with required
-		/// values.
-		/// </summary>
-		/// <param name="model">Model.</param>
-		/// <param name="done">Done.</param>
-		public void LoadGame(SaveModel model, Action<RequestResult, GameModel> done)
-		{
-			if (model == null) throw new ArgumentNullException("model");
-			if (done == null) throw new ArgumentNullException("done");
-
-			App.M.Load<GameModel>(
-				model,
-				result =>
-				{
-					if (result.Status != RequestStatus.Success)
-					{
-						done(RequestResult.Failure(result.Error).Log(), null);
-						return;
-					}
-					LoadGame(result.TypedModel, done);
-				}
-			);
-		}
-
-		/// <summary>
 		/// Loads the specified game and populates the context with required
 		/// values.
 		/// </summary>
@@ -126,6 +103,54 @@ namespace LunraGames.SubLight
 				model,
 				done
 			);
+		}
+
+		/// <summary>
+		/// Retrieves the most recent continuable game, if one exists, otherwise null.
+		/// </summary>
+		/// <remarks>
+		/// A sucessful result will still return null if no continuable games are available.
+		/// </remarks>
+		/// <param name="done">Done.</param>
+		public void ContinueGame(Action<RequestResult, GameModel> done)
+		{
+			if (done == null) throw new ArgumentNullException("done");
+
+			App.M.List<GameModel>(result => OnContinueGameList(result, done));
+		}
+		#endregion
+
+		#region Continue Game
+		void OnContinueGameList(SaveLoadArrayRequest<SaveModel> result, Action<RequestResult, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to load a list of saved games, error: "+result.Error);
+				done(RequestResult.Failure(result.Error), null);
+				return;
+			}
+
+			var continueGame = result.Models.Where(s => s.SupportedVersion.Value).OrderByDescending(s => s.Modified.Value).FirstOrDefault(m => m.GetMetaKey(MetaKeyConstants.Game.IsCompleted) != MetaKeyConstants.Values.True);
+
+			if (continueGame == null)
+			{
+				done(RequestResult.Success(), null);
+				return;
+			}
+
+			App.M.Load<GameModel>(continueGame, loadResult => OnContinueGameLoad(loadResult, done));
+		}
+
+		void OnContinueGameLoad(SaveLoadRequest<GameModel> result, Action<RequestResult, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Continue game load status " + result.Status + " error: " + result.Error);
+				done(RequestResult.Failure(result.Error), null);
+				return;
+			}
+
+			LoadGame(result.TypedModel, done);
 		}
 		#endregion
 

@@ -100,7 +100,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnContinueGameClick()
 		{
-			App.GameService.LoadGame(payload.ContinueSave, OnLoadGame);
+			OnLoadGame(RequestResult.Success(), payload.ContinueSave);
 		}
 
 		void OnSettingsClick()

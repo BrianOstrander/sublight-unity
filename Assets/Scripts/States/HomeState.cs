@@ -18,8 +18,7 @@ namespace LunraGames.SubLight
 		#endregion
 
 		public bool CanContinueSave { get { return ContinueSave != null; } }
-		public SaveModel[] Saves = new SaveModel[0];
-		public SaveModel ContinueSave;
+		public GameModel ContinueSave;
 		public CreateGameBlock NewGameBlock;
 
 		public float MenuAnimationMultiplier;
@@ -44,7 +43,7 @@ namespace LunraGames.SubLight
 			SM.PushBlocking(LoadScenes, "LoadScenes");
 			SM.PushBlocking(InitializeInput, "InitializeInput");
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
-			SM.PushBlocking(InitializeLoadSaves, "InitializeLoadSaves");
+			SM.PushBlocking(InitializeContinueGame, "InitializeContinueGame");
 			SM.PushBlocking(InitializeLoadGalaxy, "InitializeLoadGalaxy");
 			SM.PushBlocking(done => Focuses.InitializePresenters(Payload, done), "InitializePresenters");
 			SM.PushBlocking(InitializeFocus, "InitializeFocus");
@@ -78,21 +77,19 @@ namespace LunraGames.SubLight
 			App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetMainMenuFocus(), done));
 		}
 
-		void InitializeLoadSaves(Action done)
+		void InitializeContinueGame(Action done)
 		{
-			App.M.List<GameModel>(result => OnInitializeLoadSaves(result, done));
+			App.GameService.ContinueGame((result, model) => OnInitializeContinueGame(result, model, done));
 		}
 
-		void OnInitializeLoadSaves(SaveLoadArrayRequest<SaveModel> result, Action done)
+		void OnInitializeContinueGame(RequestResult result, GameModel model, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Unable to load a list of saved games");
+				Debug.LogError("Unable to load a continuable game");
 				// TODO: Error logic.
 			}
-			else Payload.Saves = result.Models;
-
-			Payload.ContinueSave = Payload.Saves.Where(s => s.SupportedVersion.Value).OrderBy(s => s.Modified.Value).LastOrDefault();
+			else  Payload.ContinueSave = model;
 
 			done();
 		}

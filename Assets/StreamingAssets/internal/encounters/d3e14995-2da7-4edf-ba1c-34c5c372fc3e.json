@@ -22,7 +22,6 @@
           {
             "entry": {
               "encounterEvent": "GameComplete",
-              "isHalting": true,
               "keyValues": {
                 "booleans": {},
                 "integers": {},
