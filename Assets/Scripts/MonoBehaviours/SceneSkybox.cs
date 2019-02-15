@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace LunraGames.SubLight
 {
@@ -37,13 +36,14 @@ namespace LunraGames.SubLight
 		{
 			skyboxInstance = new Material(skybox);
 
+			// Don't remember why I commented this out... shouldn't be a problem though...
 			//ApplyRenderSettings();
 		}
 
 		void Update()
 		{
 			skyboxRotation = (skyboxRotation + (skyboxRotationSpeed * Time.deltaTime)) % 360f;
-			//skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Rotation, skyboxRotation);
+			skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Rotation, skyboxRotation);
 		}
 
 		public void ApplyRenderSettings()
@@ -57,7 +57,7 @@ namespace LunraGames.SubLight
 		void ApplyTimeScalar()
 		{
 			skyboxRotationSpeed = skyboxRotationSpeedRange.Evaluate(TimeScalar);
-			//skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Exposure, skyboxExposureRange.Evaluate(skyboxExposureByTimeScalarCurve.Evaluate(TimeScalar)));
+			skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Exposure, skyboxExposureRange.Evaluate(skyboxExposureByTimeScalarCurve.Evaluate(TimeScalar)));
 		}
 	}
 }
