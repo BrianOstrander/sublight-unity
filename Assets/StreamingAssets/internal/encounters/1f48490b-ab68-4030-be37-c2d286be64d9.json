@@ -15,7 +15,6 @@
         "target": "CelestialSystem",
         "key": "remaining_rations",
         "source": "Value",
-        "ignore": true,
         "filterId": "ecddb9fe-e903-4f2d-8772-9e3cbcd28f46",
         "group": "Any"
       }
@@ -23,7 +22,23 @@
     "encounterInteractions": []
   },
   "logs": {
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "operation": "SetFloat",
+              "target": "CelestialSystem",
+              "key": "remaining_rations",
+              "entryId": "f8ade785-3241-4aa6-bdb5-247a1826fbb1"
+            }
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "f4915045-ef24-44f4-9a6a-481f7adf70b9"
+      }
+    ],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
@@ -79,8 +94,9 @@
           }
         ],
         "beginning": true,
-        "ending": true,
-        "logId": "7d6cd449-b38d-4a1d-b707-abcb4b1aa5df"
+        "logId": "7d6cd449-b38d-4a1d-b707-abcb4b1aa5df",
+        "fallbackLogId": "f4915045-ef24-44f4-9a6a-481f7adf70b9",
+        "name": "Begin"
       }
     ],
     "dialogLogs": [],
