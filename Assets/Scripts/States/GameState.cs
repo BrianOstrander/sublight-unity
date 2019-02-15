@@ -89,6 +89,8 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 			App.Callbacks.SaveRequest += OnSaveRequest;
 
+			App.Heartbeat.Update += OnUpdate;
+
 			Payload.Game.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
 			Payload.Game.Context.FocusTransform.Changed += OnFocusTransform;
 
@@ -179,6 +181,8 @@ namespace LunraGames.SubLight
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 			App.Callbacks.SaveRequest -= OnSaveRequest;
 
+			App.Heartbeat.Update -= OnUpdate;
+
 			Payload.Game.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 			Payload.Game.Context.FocusTransform.Changed -= OnFocusTransform;
 
@@ -221,6 +225,11 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Events
+		void OnUpdate(float delta)
+		{
+			if (Payload.Game.Context.ElapsedTimeBlockers.None) Payload.Game.ElapsedTime.Value += TimeSpan.FromSeconds(delta);
+		}
+
 		void OnDialogRequest(DialogRequest request)
 		{
 			if (request.OverrideFocusHandling) return;
@@ -446,6 +455,7 @@ namespace LunraGames.SubLight
 			Payload.Game.TransitHistory.Push(
 				TransitHistoryEntry.Create(
 					DateTime.Now,
+					Payload.Game.ElapsedTime.Value,
 					Payload.Game.RelativeDayTime.Value,
 					transitState.BeginSystem,
 					transitState.EndSystem,
@@ -741,6 +751,18 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case SaveRequest.States.Request:
+
+					var details = Payload.Game.SaveDetails.Value;
+					details.TransitHistoryId = Payload.Game.TransitHistory.Peek().Id;
+					details.Time = DateTime.Now;
+					details.ElapsedTime = Payload.Game.ElapsedTime.Value;
+					Payload.Game.SaveDetails.Value = details;
+
+					Payload.Game.SetMetaKey(
+						MetaKeyConstants.Game.IsCompleted,
+						Payload.Game.SaveDetails.Value.IsCompleted ? MetaKeyConstants.Values.True : MetaKeyConstants.Values.False
+					);
+
 					App.M.Save(Payload.Game, result => OnSaveDone(result, request));
 					break;
 				case SaveRequest.States.Complete:
@@ -757,6 +779,7 @@ namespace LunraGames.SubLight
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError("Save game returned " + result.Status + " with error: " + result.Error);
+				App.Callbacks.SaveRequest(SaveRequest.Failure(request, result.Error));
 				return;
 			}
 

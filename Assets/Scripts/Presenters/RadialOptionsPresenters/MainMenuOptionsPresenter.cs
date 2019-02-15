@@ -100,7 +100,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnContinueGameClick()
 		{
-			App.GameService.LoadGame(payload.ContinueSave, OnLoadGame);
+			OnLoadGame(RequestResult.Success(), payload.ContinueSave);
 		}
 
 		void OnSettingsClick()
@@ -158,7 +158,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			StartGame(model);
+			payload.StartGame(model);
 		}
 
 		void OnLoadGame(RequestResult result, GameModel model)
@@ -175,34 +175,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			StartGame(model);
-		}
-
-		void StartGame(GameModel model)
-		{
-			SM.PushBlocking(
-				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetNoFocus(), done)),
-				"StartGameSetNoFocus"
-			);
-
-			SM.PushBlocking(
-				done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultHideDuration, done)),
-				"StartGameHideCamera"
-			);
-
-			SM.Push(
-				() =>
-				{
-					Debug.Log("Starting game...");
-					var gamePayload = new GamePayload
-					{
-						MainCamera = payload.MainCamera,
-						Game = model
-					};
-				App.SM.RequestState(gamePayload);
-				},
-				"StartGameRequestState"
-			);
+			payload.StartGame(model);
 		}
 		#endregion
 	}

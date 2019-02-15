@@ -49,8 +49,13 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.DumpKeyValues:
 								OnHandleEventDumpKeyValues(payload, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.GameComplete:
+								// Some presenter takes care of this.
+								currOnEventDone();
+								break;
 							default:
-								Debug.LogError("Unrecognized Encounter EventType " + entry.EncounterEvent.Value + ". May cause halting issues.");
+								Debug.LogError("Unrecognized Encounter EventType " + entry.EncounterEvent.Value + ". May cause halting issues, will try to invoke callback.");
+								currOnEventDone();
 								break;
 						}
 					}

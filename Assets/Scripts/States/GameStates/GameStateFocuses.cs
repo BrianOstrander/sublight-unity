@@ -40,6 +40,14 @@ namespace LunraGames.SubLight
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
+				var mainMenuLanguage = LanguageStringModel.Override("Main Menu");
+				var returningToMainMenuLanguage = LanguageStringModel.Override("Returning to Main Menu...");
+				var saveErrorLanguage = new DialogLanguageBlock
+				{
+					Title = LanguageStringModel.Override("Error Saving"),
+					Message = LanguageStringModel.Override("An error was encountered while trying to save your game.")
+				};
+
 				new PauseMenuPresenter(
 					payload,
 					payload.Game,
@@ -54,7 +62,7 @@ namespace LunraGames.SubLight
 							Title = LanguageStringModel.Override("Already Saved"),
 							Message = LanguageStringModel.Override("Your latest progress is already saved.")
 						},
-						MainMenu = LanguageStringModel.Override("Main Menu"),
+						MainMenu = mainMenuLanguage,
 						MainMenuConfirm = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("Return to Main Menu"),
@@ -70,14 +78,34 @@ namespace LunraGames.SubLight
 
 						SavingTitle = LanguageStringModel.Override("Saving..."),
 						SavingComplete = LanguageStringModel.Override("Success!"),
-						SavingError = new DialogLanguageBlock
+						SavingError = saveErrorLanguage,
+						ReturningToMainMenu = returningToMainMenuLanguage,
+						Quiting = LanguageStringModel.Override("Quitting...")
+					}
+				);
+
+				new GameCompletePresenter(
+					payload,
+					payload.Game,
+					new GameCompleteLanguageBlock
+					{
+						FailureTitle = LanguageStringModel.Override("Failure!"),
+						FailureMessage = LanguageStringModel.Override("Your voyage has come to an end..."),
+
+						SuccessTitle = LanguageStringModel.Override("Success!"),
+						SuccessMessage = LanguageStringModel.Override("Finally, the long voyage is over..."),
+
+						Retry = LanguageStringModel.Override("Try Again"),
+						MainMenu = mainMenuLanguage,
+
+						RetryTitle = LanguageStringModel.Override("Starting New Game..."),
+						RetryError = new DialogLanguageBlock
 						{
-							Title = LanguageStringModel.Override("Error Saving"),
-							Message = LanguageStringModel.Override("An error was encountered while trying to save your game.")
+							Title = LanguageStringModel.Override("Error Starting Game"),
+							Message = LanguageStringModel.Override("An error was encountered while trying to start a new game.")
 						},
-						
-						ReturningToMainMenu = LanguageStringModel.Override("Returning to Main Menu..."),
-						Quiting = LanguageStringModel.Override("Quitting..")
+
+						ReturningToMainMenu = returningToMainMenuLanguage
 					}
 				);
 

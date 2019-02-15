@@ -12,7 +12,6 @@ namespace LunraGames.SubLight
 
 		public static readonly DevPrefsBool ApplyTimeScaling = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ApplyTimeScaling");
 		public static readonly DevPrefsFloat TimeScaling = new DevPrefsFloat(ProjectConstants.PrefsPrefix + "TimeScaling");
-		public static readonly DevPrefsEnum<AutoGameOptions> AutoGameOption = new DevPrefsEnum<AutoGameOptions>(ProjectConstants.PrefsPrefix + "AutoGameOption", AutoGameOptions.None);
 		public static readonly DevPrefsBool WipeGameSavesOnStart = new DevPrefsBool(ProjectConstants.PrefsPrefix + "WipeGameSavesOnStart");
 
 		public static readonly DevPrefsString EncounterIdOverride = new DevPrefsString(ProjectConstants.PrefsPrefix + "EncounterIdOverride");
@@ -26,27 +25,14 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		public static readonly DevPrefsInt GameSeed = new DevPrefsInt(ProjectConstants.PrefsPrefix + "GameSeed");
-		public static readonly DevPrefsInt GalaxySeed = new DevPrefsInt(ProjectConstants.PrefsPrefix + "GalaxySeed");
-		public static readonly DevPrefsString GalaxyId = new DevPrefsString(ProjectConstants.PrefsPrefix + "GalaxyId");
-		public static readonly DevPrefsEnum<ToolbarSelections> ToolbarSelection = new DevPrefsEnum<ToolbarSelections>(ProjectConstants.PrefsPrefix + "ToolbarSelection");
+		public static readonly DevPrefsEnum<AutoGameOptions> AutoGameOption = new DevPrefsEnum<AutoGameOptions>(ProjectConstants.PrefsPrefix + "AutoGameOption", AutoGameOptions.None);
+		public static readonly DevPrefsBool AutoGameOptionRepeats = new DevPrefsBool(ProjectConstants.PrefsPrefix + "AutoGameOptionRepeats");
 
-		/// <summary>
-		/// Gets a created game block using the dev preferences.
-		/// </summary>
-		/// <value>The dev create game.</value>
-		public static CreateGameBlock DevCreateGame
-		{
-			get
-			{
-				return new CreateGameBlock
-				{
-					GameSeed = GameSeed.Value,
-					GalaxySeed = GalaxySeed.Value,
-					GalaxyId = GalaxyId.Value,
-					ToolbarSelection = ToolbarSelection.Value
-				};
-			}
-		}
+		#region Create Game Overrides
+		public static readonly DevPrefsToggle<DevPrefsInt, int> GameSeed = new DevPrefsToggle<DevPrefsInt, int>(new DevPrefsInt(ProjectConstants.PrefsPrefix + "GameSeed"));
+		public static readonly DevPrefsToggle<DevPrefsInt, int> GalaxySeed = new DevPrefsToggle<DevPrefsInt, int>(new DevPrefsInt(ProjectConstants.PrefsPrefix + "GalaxySeed"));
+		public static readonly DevPrefsToggle<DevPrefsString, string> GalaxyId = new DevPrefsToggle<DevPrefsString, string>(new DevPrefsString(ProjectConstants.PrefsPrefix + "GalaxyId"));
+		public static readonly DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections> ToolbarSelection = new DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections>(new DevPrefsEnum<ToolbarSelections>(ProjectConstants.PrefsPrefix + "ToolbarSelection"));
+		#endregion
 	}
 }

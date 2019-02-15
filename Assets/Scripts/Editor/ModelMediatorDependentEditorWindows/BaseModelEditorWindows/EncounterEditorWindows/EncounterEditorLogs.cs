@@ -701,7 +701,7 @@ namespace LunraGames.SubLight
 		{
 			var wasStyle = model.Style.Value;
 			var newStyle = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				"Style",
+				new GUIContent("Style"),
 				"- Select Button Style -",
 				model.Style.Value
 			);
@@ -765,7 +765,7 @@ namespace LunraGames.SubLight
 			var style = model.ConversationStyle.Value;
 
 			style.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				"Theme",
+				new GUIContent("Theme"),
 				"- Select Button Theme -",
 				style.Theme
 			);
@@ -971,6 +971,12 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.DumpKeyValues:
 					OnEncounterEventLogEdgeDumpKeyValues(entry);
 					break;
+				case EncounterEvents.Types.GameComplete:
+					OnEncounterEventLogEdgeGameComplete(entry);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
+					break;
 			}
 
 			EditorGUILayoutValueFilter.Field(
@@ -1038,6 +1044,31 @@ namespace LunraGames.SubLight
 					"All",
 					entry.KeyValues.GetEnum<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
 				)
+			);
+		}
+
+		void OnEncounterEventLogEdgeGameComplete(
+			EncounterEventEntryModel entry
+		)
+		{
+			entry.KeyValues.SetEnum(
+				EncounterEvents.GameComplete.EnumKeys.Condition,
+				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					new GUIContent("Condition"),
+					"- Select a Condition -",
+					entry.KeyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
+					Color.red
+				)
+			);
+
+			entry.KeyValues.SetString(
+				EncounterEvents.GameComplete.StringKeys.Title,
+				EditorGUILayout.TextField("Title", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Title))
+			);
+
+			entry.KeyValues.SetString(
+				EncounterEvents.GameComplete.StringKeys.Message,
+				EditorGUILayout.TextField("Message", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Message))
 			);
 		}
 		#endregion
@@ -1447,7 +1478,7 @@ namespace LunraGames.SubLight
 			{
 				block.TransmitionType = EditorGUILayout.TextField("Type", block.TransmitionType);
 				block.TransmitionStrength = EditorGUILayout.TextField("Strength", block.TransmitionStrength);
-				block.TransmitionStrengthIcon = EditorGUILayoutExtensions.HelpfulEnumPopup("Strength Bar", "- Select Strength -", block.TransmitionStrengthIcon);
+				block.TransmitionStrengthIcon = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Strength Bar"), "- Select Strength -", block.TransmitionStrengthIcon);
 			}
 			EditorGUILayoutExtensions.PopIndent();
 
@@ -1462,7 +1493,7 @@ namespace LunraGames.SubLight
 			GUILayout.Label("Avatar", EditorStyles.boldLabel);
 			EditorGUILayoutExtensions.PushIndent();
 			{
-				block.AvatarType = EditorGUILayoutExtensions.HelpfulEnumPopup("Type", "- Select Avatar Type -", block.AvatarType);
+				block.AvatarType = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Type"), "- Select Avatar Type -", block.AvatarType);
 				switch (block.AvatarType)
 				{
 					case BustEntryModel.AvatarTypes.Unknown: EditorGUILayout.HelpBox("An Avatar Type must be specified.", MessageType.Error); break;
@@ -1587,7 +1618,7 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal();
 			{
-				block.Style = EditorGUILayoutExtensions.HelpfulEnumPopup("Button Configuration", "- Select Style -", block.Style);
+				block.Style = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Button Configuration"), "- Select Style -", block.Style);
 				block.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(GUIContent.none, "- Select Theme -", block.Theme);
 			}
 			GUILayout.EndHorizontal();

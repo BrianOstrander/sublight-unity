@@ -5,6 +5,7 @@
 		Unknown = 0,
 		None = 10,
 		NewGame = 20,
-		ContinueGame = 30
+		OverrideGame = 30,
+		ContinueGame = 40
 	}
 }

@@ -190,26 +190,28 @@ namespace LunraGames.SubLight
 				EnumExtensions.GetValues(AutoGameOptions.Unknown)
 			);
 
-			switch (DevPrefs.AutoGameOption.Value)
+			EditorGUILayoutExtensions.PushIndent();
 			{
-				case AutoGameOptions.None: break;
-				case AutoGameOptions.NewGame:
-					EditorGUILayoutExtensions.PushIndent();
-					{
-						DevPrefs.GameSeed.Value = EditorGUILayout.IntField("Game Seed", DevPrefs.GameSeed.Value);
-						DevPrefs.GalaxySeed.Value = EditorGUILayout.IntField("Galaxy Seed", DevPrefs.GalaxySeed.Value);
-						DevPrefs.GalaxyId.Value = EditorGUILayout.TextField("Galaxy Id", DevPrefs.GalaxyId.Value);
-						DevPrefs.ToolbarSelection.Value = EditorGUILayoutExtensions.HelpfulEnumPopup("Toolbar Selection", "- Select an Override -", DevPrefs.ToolbarSelection.Value);
-					}
-					EditorGUILayoutExtensions.PopIndent();
-					break;
-				case AutoGameOptions.ContinueGame:
-					GUILayout.Label("todo");
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized AutoGameOption: " + DevPrefs.AutoGameOption.Value, MessageType.Error);
-					break;
+				DevPrefs.AutoGameOptionRepeats.Value = EditorGUILayout.Toggle(new GUIContent("Repeat on Main Menu", "If enabled, everytime the game returns to the main menu this logic will run."), DevPrefs.AutoGameOptionRepeats);
+				switch (DevPrefs.AutoGameOption.Value)
+				{
+					case AutoGameOptions.None: break;
+					case AutoGameOptions.NewGame:
+					case AutoGameOptions.OverrideGame:
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GameSeed, p => p.Value = EditorGUILayout.IntField("Game Seed", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxySeed, p => p.Value = EditorGUILayout.IntField("Galaxy Seed", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxyId, p => p.Value = EditorGUILayout.TextField("Galaxy Id", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.ToolbarSelection, p => p.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Toolbar Selection"), "- Select an Override -", DevPrefs.ToolbarSelection.Value));
+						break;
+					case AutoGameOptions.ContinueGame:
+						GUILayout.Label("todo");
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized AutoGameOption: " + DevPrefs.AutoGameOption.Value, MessageType.Error);
+						break;
+				}
 			}
+			EditorGUILayoutExtensions.PopIndent();
 
 			var encounterNotOverriding = !DevPrefs.EncounterIdOverrideActive;
 			if (encounterNotOverriding) EditorGUILayoutExtensions.PushColor(Color.gray);

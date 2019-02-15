@@ -10,7 +10,8 @@ namespace LunraGames.SubLight
 			Custom = 10,
 			Debug = 20,
 			ToolbarSelection = 30,
-			DumpKeyValues = 40
+			DumpKeyValues = 40,
+			GameComplete = 50
 		}
 
 		public static class Debug
@@ -26,12 +27,12 @@ namespace LunraGames.SubLight
 
 			public static class EnumKeys
 			{
-				public const string Severity = "Severity";
+				public const string Severity = "severity";
 			}
 
 			public static class StringKeys
 			{
-				public const string Message = "Message";
+				public const string Message = "message";
 			}
 		}
 
@@ -46,8 +47,8 @@ namespace LunraGames.SubLight
 
 			public static class EnumKeys
 			{
-				public const string Selection = "Selection";
-				public const string LockState = "LockState";
+				public const string Selection = "selection";
+				public const string LockState = "lock_state";
 			}
 		}
 
@@ -55,7 +56,28 @@ namespace LunraGames.SubLight
 		{
 			public static class EnumKeys
 			{
-				public const string Target = "Target";
+				public const string Target = "target";
+			}
+		}
+
+		public static class GameComplete
+		{
+			public enum Conditions
+			{
+				Unknown = 0,
+				Success = 10,
+				Failure = 20
+			}
+
+			public static class EnumKeys
+			{
+				public const string Condition = "condition";
+			}
+
+			public static class StringKeys
+			{
+				public const string Title = "title";
+				public const string Message = "message";
 			}
 		}
 	}

@@ -232,7 +232,7 @@ namespace LunraGames.SubLight
 
 			if (hasPrefixContent) EditorGUILayout.PrefixLabel(prefixContent);
 
-			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PushColorCombined(dropdownColor.Value.NewS(0.25f), dropdownColor.Value.NewS(0.65f));
+			EditorGUILayoutExtensions.PushColorValidation(dropdownColor);
 			{
 				if (EditorGUILayout.DropdownButton(content, FocusType.Keyboard, GUILayout.MaxWidth(200f)))
 				{
@@ -255,7 +255,7 @@ namespace LunraGames.SubLight
 					};
 				}
 			}
-			if (dropdownColor.HasValue) EditorGUILayoutExtensions.PopColorCombined();
+			EditorGUILayoutExtensions.PopColorValidation(dropdownColor);
 
 			if (Event.current.type == EventType.Repaint && lastMouseOverCallback != null && lastCallbackSource == CallbackSources.AppendSelectOrBlank)
 			{

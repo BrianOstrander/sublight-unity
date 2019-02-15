@@ -62,6 +62,9 @@ namespace LunraGames.SubLight.Models
 		FocusTransform focusTransform;
 		public readonly ListenerProperty<FocusTransform> FocusTransform;
 
+		int pauseMenuBlockers;
+		public readonly ListenerProperty<int> PauseMenuBlockers;
+
 		UniverseScaleModel scaleSystem = UniverseScaleModel.Create(UniverseScales.System);
 		UniverseScaleModel scaleLocal = UniverseScaleModel.Create(UniverseScales.Local);
 		UniverseScaleModel scaleStellar = UniverseScaleModel.Create(UniverseScales.Stellar);
@@ -100,6 +103,9 @@ namespace LunraGames.SubLight.Models
 
 		SaveBlockerListModel saveBlockers = new SaveBlockerListModel();
 		public SaveBlockerListModel SaveBlockers { get { return saveBlockers; } }
+
+		StackListModel<string> elapsedTimeBlockers = new StackListModel<string>();
+		public StackListModel<string> ElapsedTimeBlockers { get { return elapsedTimeBlockers; } }
 		#endregion
 
 		#region Models
@@ -134,6 +140,8 @@ namespace LunraGames.SubLight.Models
 
 			ToolbarSelectionRequest = new ListenerProperty<ToolbarSelectionRequest>(value => toolbarSelectionRequest = value, () => toolbarSelectionRequest);
 			FocusTransform = new ListenerProperty<FocusTransform>(value => focusTransform = value, () => focusTransform);
+
+			PauseMenuBlockers = new ListenerProperty<int>(value => pauseMenuBlockers = value, () => pauseMenuBlockers);
 
 			ActiveScale = new ReadonlyProperty<UniverseScaleModel>(value => activeScale = value, () => activeScale, out activeScaleListener);
 			foreach (var currScale in EnumExtensions.GetValues(UniverseScales.Unknown).Select(GetScale))
