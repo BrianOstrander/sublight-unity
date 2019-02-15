@@ -49,6 +49,9 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.DumpKeyValues:
 								OnHandleEventDumpKeyValues(payload, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.PopTriggers:
+								OnHandleEventPopTriggers(payload, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
 								currOnEventDone();
@@ -179,6 +182,25 @@ namespace LunraGames.SubLight
 				}
 
 				Debug.Log("Dumping Key Values...\n" + result);
+
+				done();
+			}
+
+			static void OnHandleEventPopTriggers(
+				GamePayload payload,
+				EncounterEventEntryModel entry,
+				Action done
+			)
+			{
+				var popped = new List<EncounterTriggers>();
+
+				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete)) popped.Add(EncounterTriggers.TransitComplete);
+				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest)) popped.Add(EncounterTriggers.ResourceRequest);
+				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle)) popped.Add(EncounterTriggers.SystemIdle);
+
+				Debug.Log(popped.Count());
+
+				payload.Game.EncounterTriggers.Value = payload.Game.EncounterTriggers.Value.Where(t => !popped.Contains(t)).ToArray();
 
 				done();
 			}

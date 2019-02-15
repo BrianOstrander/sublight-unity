@@ -160,15 +160,33 @@ namespace LunraGames.SubLight
 			SM.Push(
 				() =>
 				{
-					if (OnCheckSpecifiedEncounter(null, EncounterTriggers.Load)) return; // We got interrupted by some test encounter.
-					if (!Payload.Game.EncounterResume.Value.CanResume) return; // No encounter to resume.
-					if (!OnCheckSpecifiedEncounter(Payload.Game.EncounterResume.Value.EncounterId, Payload.Game.EncounterResume.Value.Trigger))
-					{
-						Debug.LogError("Unable to resume encounter with id " + Payload.Game.EncounterResume.Value.EncounterId + " and trigger " + Payload.Game.EncounterResume.Value.Trigger);
-					}
+					OnCheckSpecifiedEncounter(
+						string.Empty,
+						EncounterTriggers.Load,
+						false,
+						OnLoadDevEncounter
+					);
 				},
 				"EncounterResumeCheck"
 			);
+		}
+
+		void OnLoadDevEncounter(bool run)
+		{
+			if (run) return; // We got interrupted by some test encounter.
+			if (!Payload.Game.EncounterResume.Value.CanResume) return; // No encounter to resume.
+
+			OnCheckSpecifiedEncounter(
+				Payload.Game.EncounterResume.Value.EncounterId,
+				Payload.Game.EncounterResume.Value.Trigger,
+				true,
+				OnResumeEncounter
+			);
+		}
+
+		void OnResumeEncounter(bool run)
+		{
+			if (!run) Debug.LogError("Unable to resume encounter with id " + Payload.Game.EncounterResume.Value.EncounterId + " and trigger " + Payload.Game.EncounterResume.Value.Trigger);
 		}
 		#endregion
 
@@ -297,7 +315,7 @@ namespace LunraGames.SubLight
 			if (focusTransform.ToScale == Payload.LastUniverseFocusToScale) return;
 			Payload.LastUniverseFocusToScale = focusTransform.ToScale;
 
- 			switch (focusTransform.ToScale)
+			switch (focusTransform.ToScale)
 			{
 				case UniverseScales.Local:
 					OnCalculateLocalSectors(Payload.Game.Context.GetScale(focusTransform.ToScale).TransformDefault.Value, true);
@@ -444,7 +462,7 @@ namespace LunraGames.SubLight
 
 		void OnTransitState(TransitState transitState)
 		{
-			switch(transitState.State)
+			switch (transitState.State)
 			{
 				case TransitState.States.Complete: OnTransitComplete(transitState); break;
 			}
@@ -464,7 +482,14 @@ namespace LunraGames.SubLight
 			);
 
 			PushUpdateKeyValues();
-			SM.Push(OnTransitCompleteCheckForEncounters, "TransitCompleteCheckForEncounters");
+
+			Payload.Game.EncounterTriggers.Value = new EncounterTriggers[] {
+				EncounterTriggers.TransitComplete,
+				EncounterTriggers.ResourceRequest,
+				EncounterTriggers.SystemIdle
+			};
+
+			SM.Push(OnCheckForEncounters, "TransitCompleteCheckForEncounters");
 		}
 
 		void PushUpdateKeyValues()
@@ -602,15 +627,79 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		void OnTransitCompleteCheckForEncounters()
+		void OnCheckForEncounters()
 		{
-			var encounterId = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounterId.Value;
+			var target = EncounterTriggers.Unknown;
+			var remaining = new List<EncounterTriggers>();
 
-			if (!OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.TransitComplete))
+			foreach (var trigger in Payload.Game.EncounterTriggers.Value)
 			{
-				Debug.Log("Check for non-specified encounters here!");
+				if (trigger == EncounterTriggers.Unknown)
+				{
+					Debug.LogError("Unknown trigger on stack, this should not happen, ignoring");
+					continue;
+				}
+
+				if (target == EncounterTriggers.Unknown)
+				{
+					target = trigger;
+					continue;
+				}
+				remaining.Add(trigger);
+			}
+
+			Payload.Game.EncounterTriggers.Value = remaining.ToArray();
+
+			if (target == EncounterTriggers.Unknown) return;
+
+			var encounterId = string.Empty;
+
+			var allSpecifiedEncounters = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == target);
+
+			if (1 < allSpecifiedEncounters.Count())
+			{
+				Debug.LogError("Multiple encounters are specified for system " + Payload.Game.Context.CurrentSystem.Name + " with trigger " + target + ", this behaviour is not supported yet, choosing the first one instead.");
+			}
+
+			encounterId = allSpecifiedEncounters.FirstOrDefault().EncounterId;
+
+			OnCheckSpecifiedEncounter(encounterId, target, true, run => OnCheckForEncountersSpecified(run, target));
+		}
+
+		void OnCheckForEncountersSpecified(bool run, EncounterTriggers trigger)
+		{
+			if (run) return; // Our override was accepted...
+
+			App.Encounters.GetNextEncounter(
+				OnCheckForEncountersNext,
+				trigger,
+				Payload.Game
+			);
+		}
+
+		void OnCheckForEncountersNext(RequestResult result, EncounterInfoModel model)
+		{
+			if (result.IsNotSuccess)
+			{
+				Debug.LogError("Filtering next encounter returning with status " + result.Status + ", error: " + result.Message);
+				SM.Push(OnCheckForEncounters, "FilterErrorCheckForNextTrigger");
 				return;
 			}
+			if (model == null)
+			{
+				SM.Push(OnCheckForEncounters, "NoEncounterForTriggerCheckForNextTrigger");
+				return;
+			}
+
+			OnCheckSpecifiedEncounter(
+				model,
+				model.Trigger.Value,
+				false,
+				run =>
+				{
+					if (!run) SM.Push(OnCheckForEncounters, "NoEncounterTriggerCheckForNextTrigger");
+				}
+			);
 		}
 
 		/// <summary>
@@ -620,8 +709,39 @@ namespace LunraGames.SubLight
 		/// <returns><c>true</c>, if an encounter was triggered, <c>false</c> otherwise.</returns>
 		/// <param name="encounterId">Encounter identifier.</param>
 		/// <param name="trigger">Trigger.</param>
-		bool OnCheckSpecifiedEncounter(string encounterId, EncounterTriggers trigger)
+		void OnCheckSpecifiedEncounter(
+			string encounterId,
+			EncounterTriggers trigger,
+			bool filter,
+			Action<bool> done = null
+		)
 		{
+			var encounter = App.Encounters.GetEncounter(encounterId);
+
+			if (!string.IsNullOrEmpty(encounterId) && encounter == null)
+			{
+				Debug.LogError("Unable to find specified encounter: " + encounterId+", checking for other encounters anyways");
+			}
+
+			OnCheckSpecifiedEncounter(encounter, trigger, filter, done);
+		}
+
+		/// <summary>
+		/// This should be called whenever a trigger happens, even if the
+		/// encounterId is null or empty.
+		/// </summary>
+		/// <returns><c>true</c>, if an encounter was triggered, <c>false</c> otherwise.</returns>
+		/// <param name="encounter">Encounter.</param>
+		/// <param name="trigger">Trigger.</param>
+		void OnCheckSpecifiedEncounter(
+			EncounterInfoModel encounter,
+			EncounterTriggers trigger,
+			bool filter,
+			Action<bool> done = null
+		)
+		{
+			done = done ?? ActionExtensions.GetEmpty<bool>();
+
 			if (DevPrefs.EncounterIdOverrideActive && trigger == DevPrefs.EncounterIdOverrideTrigger.Value)
 			{
 				var encounterOverride = App.Encounters.GetEncounter(DevPrefs.EncounterIdOverride.Value);
@@ -633,51 +753,56 @@ namespace LunraGames.SubLight
 						{
 							if (valid) Debug.Log("Override Encounter is valid, triggering");
 							else Debug.LogWarning("Override Encounter is not valid, triggering anyways");
-							OnTransitCompleteFiltered(true, encounterOverride, trigger);
+							OnEncounterFiltered(true, encounterOverride, trigger);
 						},
 						encounterOverride.Filtering,
 						Payload.Game,
 						encounterOverride
 					);
-					return true;
+					done(true);
+					return;
 				}
 			}
 
-			if (string.IsNullOrEmpty(encounterId)) return false;
 			if (trigger == EncounterTriggers.Unknown)
 			{
 				Debug.LogError("Specifying a trigger of type " + EncounterTriggers.Unknown + " is not supported");
-				return false;
+				done(false);
+				return;
 			}
-
-			var encounter = App.Encounters.GetEncounter(encounterId);
 
 			if (encounter == null)
 			{
-				Debug.LogError("Unable to find specified encounter: " + encounterId);
-				return false;
+				done(false);
+				return;
 			}
-
-			if (encounter.Trigger.Value != trigger) return false;
-
-			switch (encounter.Trigger.Value)
+			if (encounter.Trigger.Value != trigger)
 			{
-				case EncounterTriggers.NavigationSelect:
-				case EncounterTriggers.TransitComplete:
-					App.ValueFilter.Filter(
-						valid => OnTransitCompleteFiltered(valid, encounter, trigger),
-						encounter.Filtering,
-						Payload.Game,
-						encounter
-					);
-					return true;
-				default:
-					Debug.LogError("Unrecognized encounter trigger: " + encounter.Trigger.Value);
-					return false;
+				//Debug.LogError("Trigger was specified as " + trigger + " but the encounter's trigger was " + encounter.Trigger.Value + ", this probably should not ever happen. Ignoring Encounter.");
+				done(false);
+				return;
 			}
+
+			if (filter)
+			{
+				App.ValueFilter.Filter(
+					valid =>
+					{
+						OnEncounterFiltered(valid, encounter, trigger);
+						done(valid);
+					},
+					encounter.Filtering,
+					Payload.Game,
+					encounter
+				);
+				return;
+			}
+
+			OnEncounterFiltered(true, encounter, trigger);
+			done(true);
 		}
 
-		void OnTransitCompleteFiltered(bool valid, EncounterInfoModel encounter, EncounterTriggers trigger)
+		void OnEncounterFiltered(bool valid, EncounterInfoModel encounter, EncounterTriggers trigger)
 		{
 			if (!valid) return;
 
@@ -739,6 +864,8 @@ namespace LunraGames.SubLight
 					);
 					// Clear the EncounterResume so it doesn't play again when we open the game.
 					Payload.Game.EncounterResume.Value = EncounterResume.Default;
+					// Check the stack for any additional encounter triggers waiting to be called.
+					SM.Push(OnCheckForEncounters, "EncounterCompleteCheckForEncounters");
 					break;
 				default:
 					Debug.LogError("Unrecognized EncounterRequest State: " + request.State);
@@ -790,7 +917,16 @@ namespace LunraGames.SubLight
 		{
 			if (block.System == null || block.State != CelestialSystemStateBlock.States.Selected) return;
 
-			OnCheckSpecifiedEncounter(block.System.SpecifiedEncounterId.Value, EncounterTriggers.NavigationSelect);
+			var allSpecifiedEncounters = block.System.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == EncounterTriggers.NavigationSelect);
+
+			if (1 < allSpecifiedEncounters.Count())
+			{
+				Debug.LogError("Multiple encounters are specified for system " + block.System.Name + " with trigger " + EncounterTriggers.NavigationSelect + ", this behaviour is not supported yet, choosing the first one instead.");
+			}
+
+			var encounterId = allSpecifiedEncounters.FirstOrDefault().EncounterId;
+
+			OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.NavigationSelect, true);
 		}
 		#endregion
 	}

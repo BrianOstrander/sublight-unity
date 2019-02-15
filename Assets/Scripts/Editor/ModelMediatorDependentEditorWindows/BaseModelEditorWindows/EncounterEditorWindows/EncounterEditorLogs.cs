@@ -974,6 +974,9 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.GameComplete:
 					OnEncounterEventLogEdgeGameComplete(entry);
 					break;
+				case EncounterEvents.Types.PopTriggers:
+					OnEncounterEventLogEdgePopTriggers(entry);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
 					break;
@@ -1071,6 +1074,32 @@ namespace LunraGames.SubLight
 				EditorGUILayout.TextField("Message", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Message))
 			);
 		}
+
+		void OnEncounterEventLogEdgePopTriggers(
+			EncounterEventEntryModel entry
+		)
+		{
+			GUILayout.Label("Pop the following triggers if on the stack");
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				entry.KeyValues.SetBoolean(
+					EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete,
+					EditorGUILayout.Toggle("Transit Complete", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete))
+				);
+
+				entry.KeyValues.SetBoolean(
+					EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest,
+					EditorGUILayout.Toggle("Resource Request", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest))
+				);
+
+				entry.KeyValues.SetBoolean(
+					EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle,
+					EditorGUILayout.Toggle("System Idle", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle))
+				);
+			}
+			EditorGUILayoutExtensions.PopIndent();
+		}
+
 		#endregion
 
 		#region Dialog Logs

@@ -1,0 +1,65 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f",
+  "name": "ResourceRequest 0",
+  "trigger": "ResourceRequest",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Run ResourceRequest 0"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "2f679984-9747-46b7-828e-7fcc85842210"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "7d6cd449-b38d-4a1d-b707-abcb4b1aa5df"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "ResourceRequest 0",
+  "metaKeyValues": {
+    "EncounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f"
+  },
+  "created": "2019-02-14T23:25:05.935233-08:00",
+  "modified": "2019-02-14T23:25:05.935233-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

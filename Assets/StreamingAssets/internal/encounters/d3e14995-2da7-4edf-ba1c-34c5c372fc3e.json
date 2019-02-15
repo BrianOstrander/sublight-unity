@@ -1,7 +1,8 @@
 {
   "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
   "encounterId": "d0b380f6-dc63-406b-8f98-65e32fd9554d",
-  "name": "Overriding Start Encounter",
+  "name": "TransitComplete 0",
   "trigger": "TransitComplete",
   "filtering": {
     "showValues": true,
@@ -42,7 +43,59 @@
                 "encounterInteractions": []
               },
               "entryId": "a7c4612c-892d-4d85-a7e9-87154df12bbb"
-            }
+            },
+            "ignore": true
+          },
+          {
+            "entry": {
+              "encounterEvent": "PopTriggers",
+              "keyValues": {
+                "booleans": {
+                  "pop_transit_complete": true,
+                  "pop_resource_request": true,
+                  "pop_system_idle": true
+                },
+                "integers": {},
+                "strings": {},
+                "enums": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "2a666a47-09e0-4d0b-82b2-ea8f7d9949c6"
+            },
+            "index": 1,
+            "ignore": true
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Running TransitComplete 0"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d6e6674b-208d-480c-9c4b-13a89cee8b5f"
+            },
+            "index": 2
           }
         ],
         "beginning": true,
@@ -55,7 +108,7 @@
     "conversationLogs": []
   },
   "version": 7,
-  "meta": "Overriding Start Encounter",
+  "meta": "TransitComplete 0",
   "metaKeyValues": {
     "EncounterId": "d0b380f6-dc63-406b-8f98-65e32fd9554d"
   },

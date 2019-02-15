@@ -31,6 +31,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] EncounterResume encounterResume = SubLight.EncounterResume.Default;
 		[JsonIgnore] public readonly ListenerProperty<EncounterResume> EncounterResume;
 
+		[JsonProperty] EncounterTriggers[] encounterTriggers = new EncounterTriggers[0];
+		[JsonIgnore] public readonly ListenerProperty<EncounterTriggers[]> EncounterTriggers;
+
 		[JsonProperty] TimeSpan elapsedTime;
 		[JsonIgnore] public readonly ListenerProperty<TimeSpan> ElapsedTime;
 
@@ -97,6 +100,7 @@ namespace LunraGames.SubLight.Models
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
 			EncounterResume = new ListenerProperty<EncounterResume>(value => encounterResume = value, () => encounterResume);
+			EncounterTriggers = new ListenerProperty<EncounterTriggers[]>(value => encounterTriggers = value, () => encounterTriggers);
 			ElapsedTime = new ListenerProperty<TimeSpan>(value => elapsedTime = value, () => elapsedTime);
 			SaveDetails = new ListenerProperty<GameSaveDetails>(value => saveDetails = value, () => saveDetails);
 

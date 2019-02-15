@@ -157,8 +157,6 @@ namespace LunraGames.SubLight
 				// Any other values should only be set if specified by developer preferences...
 			};
 
-			var wasSeed = gameBlock.GameSeed;
-
 			if (Payload.FromInitialization || DevPrefs.AutoGameOptionRepeats)
 			{
 				switch (DevPrefs.AutoGameOption.Value)

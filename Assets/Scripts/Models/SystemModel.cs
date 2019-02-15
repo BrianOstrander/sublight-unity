@@ -29,7 +29,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] float iconScale;
 		[JsonProperty] BodyModel[] bodies = new BodyModel[0];
 
-		[JsonProperty] string specifiedEncounterId;
+		[JsonProperty] SpecifiedEncounterEntry[] specifiedEncounters = new SpecifiedEncounterEntry[0];
 
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Index;
@@ -59,7 +59,7 @@ namespace LunraGames.SubLight.Models
 		public readonly ListenerProperty<BodyModel[]> Bodies;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<string> SpecifiedEncounterId;
+		public readonly ListenerProperty<SpecifiedEncounterEntry[]> SpecifiedEncounters;
 
 		[JsonIgnore]
 		public bool IsGenerated { get; set; }
@@ -80,7 +80,7 @@ namespace LunraGames.SubLight.Models
 			IconScale = new ListenerProperty<float>(value => iconScale = value, () => iconScale);
 			Bodies = new ListenerProperty<BodyModel[]>(value => bodies = value, () => bodies);
 
-			SpecifiedEncounterId = new ListenerProperty<string>(value => specifiedEncounterId = value, () => specifiedEncounterId);
+			SpecifiedEncounters = new ListenerProperty<SpecifiedEncounterEntry[]>(value => specifiedEncounters = value, () => specifiedEncounters);
 		}
 
 		#region Utility

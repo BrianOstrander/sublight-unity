@@ -133,6 +133,10 @@ namespace LunraGames.NumberDemon
 		public static bool NextBool { get { return Generator.NextBool; } }
 		public static int NextInteger { get { return Generator.NextInteger; } }
 		public static long NextLong { get { return Generator.NextLong; } }
+		/// <summary>
+		/// Gets the next float value between 0.0f and 1.0f.
+		/// </summary>
+		/// <value>The next float.</value>
 		public static float NextFloat { get { return Generator.NextFloat; } }
 		public static Color NextColor { get { return new Color(NextFloat, NextFloat, NextFloat); } }
 
