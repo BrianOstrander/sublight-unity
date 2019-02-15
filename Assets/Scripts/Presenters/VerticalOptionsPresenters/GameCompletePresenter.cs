@@ -136,7 +136,7 @@ namespace LunraGames.SubLight.Presenters
 				{
 					var homePayload = new HomePayload();
 					homePayload.MainCamera = payload.MainCamera;
-					homePayload.AutoNewGame = autoNewgame;
+					homePayload.AutoRetryNewGame = autoNewgame;
 					App.SM.RequestState(homePayload);
 				},
 				description

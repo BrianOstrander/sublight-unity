@@ -112,4 +112,32 @@ namespace LunraGames
 			if (!typeof(T).IsEnum) Debug.LogError(typeof(T).FullName + " is not an enum.");
 		}
 	}
+
+	public class DevPrefsToggle<P, T>
+		where P : DevPrefsKv<T>
+	{
+		public readonly P Property;
+		public readonly DevPrefsBool Enabled;
+
+		public DevPrefsToggle(
+			P property,
+			bool enabled = false
+		)
+		{
+			Property = property;
+			Enabled = new DevPrefsBool("DPToggle_" + property.Key, enabled);
+		}
+
+		public T Value 
+		{
+			get { return Property.Value; }
+			set { Property.Value = value; }
+		}
+
+		public T Get(T fallback = default(T)) { return Enabled.Value ? Property.Value : fallback; }
+		public void Set(ref T value)
+		{
+			if (Enabled.Value) value = Property.Value;
+		}
+	}
 }
