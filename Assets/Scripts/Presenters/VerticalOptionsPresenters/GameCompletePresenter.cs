@@ -77,6 +77,8 @@ namespace LunraGames.SubLight.Presenters
 			KeyValueListModel keyValues
 		)
 		{
+			model.Context.PauseMenuBlockers.Value++;
+
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetPriorityFocus(model.ToolbarSelection.Value)));
 
 			View.Reset();

@@ -40,12 +40,16 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.Escape += OnEscape;
+
+			model.Context.PauseMenuBlockers.Changed += OnPauseMenuBlockers;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			App.Callbacks.Escape -= OnEscape;
+
+			model.Context.PauseMenuBlockers.Changed -= OnPauseMenuBlockers;
 		}
 
 		string SaveMessage
@@ -81,7 +85,9 @@ namespace LunraGames.SubLight.Presenters
 			{
 				return state == States.Default &&
 					                  lastDialogState == DialogRequest.States.Complete &&
-					                  model.Context.TransitState.Value.State == TransitState.States.Complete;
+					                  model.Context.PauseMenuBlockers.Value <= 0 &&
+					                  model.Context.TransitState.Value.State == TransitState.States.Complete &&
+					                  model.Context.ToolbarSelectionRequest.Value.Selection == model.ToolbarSelection.Value;
 			}
 		}
 
@@ -227,6 +233,11 @@ namespace LunraGames.SubLight.Presenters
 					Close();
 					break;
 			}
+		}
+
+		void OnPauseMenuBlockers(int count)
+		{
+			if (count < 0) Debug.LogError("Pause Menu Blockers is less than zero, this should never happen!");
 		}
 
 		void OnCheckSaveResult()
