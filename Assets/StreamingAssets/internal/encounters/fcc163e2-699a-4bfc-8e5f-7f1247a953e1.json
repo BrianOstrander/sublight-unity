@@ -1,0 +1,65 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "4f97b7d4-50d6-4ae6-9e08-c415200155bb",
+  "name": "SystemIdle 0",
+  "trigger": "SystemIdle",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Run SystemIdle 0"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "b13bf943-8be0-42a6-9a5f-59459bd82d7a"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "f639fbe1-ca2a-42ac-a868-94e79e898471"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "SystemIdle 0",
+  "metaKeyValues": {
+    "EncounterId": "4f97b7d4-50d6-4ae6-9e08-c415200155bb"
+  },
+  "created": "2019-02-14T23:25:54.580326-08:00",
+  "modified": "2019-02-14T23:25:54.580326-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

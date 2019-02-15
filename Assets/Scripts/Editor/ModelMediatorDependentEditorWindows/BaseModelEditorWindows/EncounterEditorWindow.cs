@@ -23,6 +23,7 @@ namespace LunraGames.SubLight
 			var model = base.CreateModel(name);
 
 			model.RandomWeightMultiplier.Value = 1f;
+			model.RandomAppearance.Value = 1f;
 			model.Trigger.Value = EncounterTriggers.TransitComplete;
 
 			return model;

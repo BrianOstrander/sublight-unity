@@ -25,12 +25,13 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginHorizontal();
 				{
-					model.OrderWeight.Value = EditorGUILayout.FloatField("Order Weight", model.OrderWeight.Value, GUILayout.ExpandWidth(true));
+					model.OrderWeight.Value = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Order Weight", "Specifies which grouping of encounters this is sorted and randomly chosen from."), model.OrderWeight.Value, GUILayout.ExpandWidth(true)));
 					GUILayout.Label("Ignore", GUILayout.ExpandWidth(false));
 					model.Ignore.Value = EditorGUILayout.Toggle(model.Ignore.Value, GUILayout.Width(14f));
 				}
 				GUILayout.EndHorizontal();
-				model.RandomWeightMultiplier.Value = EditorGUILayout.FloatField("Random Weight Multiplier", model.RandomWeightMultiplier.Value);
+				model.RandomWeightMultiplier.Value = Mathf.Max(0f, EditorGUILayout.FloatField(new GUIContent("Random Weight Multiplier", "The chance of it appearing relative to others among its Order Weight grouping."), model.RandomWeightMultiplier.Value));
+				model.RandomAppearance.Value = Mathf.Clamp01(EditorGUILayout.FloatField(new GUIContent("Random Appearance", "Chance it won't be shown at all each time encounters are chosen."), model.RandomAppearance.Value));
 				model.EncounterId.Value = model.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value));
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;

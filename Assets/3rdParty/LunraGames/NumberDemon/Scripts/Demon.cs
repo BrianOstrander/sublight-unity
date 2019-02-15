@@ -16,6 +16,10 @@ namespace LunraGames.NumberDemon
 		public bool NextBool { get { return Generator.Next(2) == 0; } }
 		public int NextInteger { get { return Generator.Next(); } }
 		public long NextLong { get { return BitConverter.ToInt64(GetNextBytes(8), 0); } }
+		/// <summary>
+		/// Gets the next float value between 0.0f and 1.0f.
+		/// </summary>
+		/// <value>The next float.</value>
 		public float NextFloat { get { return (float)Generator.NextDouble(); } }
 		public Color NextColor { get { return new Color(NextFloat, NextFloat, NextFloat); } }
 		#endregion

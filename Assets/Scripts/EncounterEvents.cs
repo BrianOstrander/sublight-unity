@@ -11,7 +11,8 @@ namespace LunraGames.SubLight
 			Debug = 20,
 			ToolbarSelection = 30,
 			DumpKeyValues = 40,
-			GameComplete = 50
+			GameComplete = 50,
+			PopTriggers = 60
 		}
 
 		public static class Debug
@@ -78,6 +79,16 @@ namespace LunraGames.SubLight
 			{
 				public const string Title = "title";
 				public const string Message = "message";
+			}
+		}
+
+		public static class PopTriggers
+		{
+			public static class BooleanKeys
+			{
+				public const string PopTransitComplete = "pop_transit_complete";
+				public const string PopResourceRequest = "pop_resource_request";
+				public const string PopSystemIdle = "pop_system_idle";
 			}
 		}
 	}

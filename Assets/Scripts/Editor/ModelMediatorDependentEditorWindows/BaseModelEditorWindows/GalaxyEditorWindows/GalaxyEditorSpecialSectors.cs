@@ -514,7 +514,18 @@ namespace LunraGames.SubLight
 			var localPos = new UniversePosition(EditorGUILayout.Vector3Field("Local Position", system.Position.Value.Local));
 			system.Position.Value = new UniversePosition(sector.Position.Value.SectorInteger, localPos.Local);
 
-			system.SpecifiedEncounterId.Value = EditorGUILayout.TextField("Specified Encounter Id", system.SpecifiedEncounterId.Value);
+			var navigationSelectEncounter = system.SpecifiedEncounters.Value.FirstOrDefault(s => s.Trigger == EncounterTriggers.NavigationSelect).EncounterId;
+			var transitCompleteEncounter = system.SpecifiedEncounters.Value.FirstOrDefault(s => s.Trigger == EncounterTriggers.TransitComplete).EncounterId;
+
+			GUILayout.Label("Encounters", EditorStyles.boldLabel);
+			navigationSelectEncounter = EditorGUILayout.TextField("Navigation Select", navigationSelectEncounter);
+			transitCompleteEncounter = EditorGUILayout.TextField("Transit Complete", transitCompleteEncounter);
+
+			system.SpecifiedEncounters.Value = new SpecifiedEncounterEntry[]
+			{
+				new SpecifiedEncounterEntry { EncounterId = navigationSelectEncounter, Trigger = EncounterTriggers.NavigationSelect },
+				new SpecifiedEncounterEntry { EncounterId = transitCompleteEncounter, Trigger = EncounterTriggers.TransitComplete },
+			};
 		}
 
 		void SpecifiedSectorsCreateSystem(GalaxyInfoModel model, SectorModel sector)

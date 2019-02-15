@@ -7,8 +7,9 @@ namespace LunraGames.SubLight.Models
 	public class EncounterInfoModel : SaveModel
 	{
 		[JsonProperty] bool ignore;
-		[JsonProperty] float orderWeight;
+		[JsonProperty] int orderWeight;
 		[JsonProperty] float randomWeightMultiplier;
+		[JsonProperty] float randomAppearance;
 		[JsonProperty] string encounterId;
 		[JsonProperty] string name;
 		[JsonProperty] string description;
@@ -27,13 +28,19 @@ namespace LunraGames.SubLight.Models
 		/// the more likely it is to appear first.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<float> OrderWeight;
+		public readonly ListenerProperty<int> OrderWeight;
 		/// <summary>
 		/// This value is multiplied by the random weight. Higher values means
 		/// this encounter will appear more often. The minimum is zero.
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<float> RandomWeightMultiplier;
+		/// <summary>
+		/// The random appearance of this encounter, if 1 then always, if less
+		/// than 1 there's a chance it will not be considered.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<float> RandomAppearance;
 		/// <summary>
 		/// The encounter identifier.
 		/// </summary>
@@ -78,8 +85,9 @@ namespace LunraGames.SubLight.Models
 		{
 			SaveType = SaveTypes.EncounterInfo;
 			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
-			OrderWeight = new ListenerProperty<float>(value => orderWeight = value, () => orderWeight);
+			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
 			RandomWeightMultiplier = new ListenerProperty<float>(value => randomWeightMultiplier = value, () => randomWeightMultiplier);
+			RandomAppearance = new ListenerProperty<float>(value => randomAppearance = value, () => randomAppearance);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
