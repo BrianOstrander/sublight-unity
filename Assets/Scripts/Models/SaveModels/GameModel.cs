@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -28,6 +30,12 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] EncounterResume encounterResume = SubLight.EncounterResume.Default;
 		[JsonIgnore] public readonly ListenerProperty<EncounterResume> EncounterResume;
+
+		[JsonProperty] TimeSpan elapsedTime;
+		[JsonIgnore] public readonly ListenerProperty<TimeSpan> ElapsedTime;
+
+		[JsonProperty] GameSaveDetails saveDetails;
+		[JsonIgnore] public readonly ListenerProperty<GameSaveDetails> SaveDetails;
 		#endregion
 
 		#region Serialized Models
@@ -89,6 +97,8 @@ namespace LunraGames.SubLight.Models
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
 			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
 			EncounterResume = new ListenerProperty<EncounterResume>(value => encounterResume = value, () => encounterResume);
+			ElapsedTime = new ListenerProperty<TimeSpan>(value => elapsedTime = value, () => elapsedTime);
+			SaveDetails = new ListenerProperty<GameSaveDetails>(value => saveDetails = value, () => saveDetails);
 
 			Context = new GameContextModel(this, Ship);
 		}

@@ -100,6 +100,9 @@ namespace LunraGames.SubLight.Models
 
 		SaveBlockerListModel saveBlockers = new SaveBlockerListModel();
 		public SaveBlockerListModel SaveBlockers { get { return saveBlockers; } }
+
+		StackListModel<string> elapsedTimeBlockers = new StackListModel<string>();
+		public StackListModel<string> ElapsedTimeBlockers { get { return elapsedTimeBlockers; } }
 		#endregion
 
 		#region Models

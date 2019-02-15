@@ -201,7 +201,14 @@ namespace LunraGames.SubLight
 			model.Ship.Position.Value = begin;
 			model.Ship.SystemIndex.Value = beginSystem.Index.Value;
 
-			model.TransitHistory.Push(TransitHistoryEntry.Begin(instructions.CurrentTime, beginSystem));
+			var transitHistoryBegin = TransitHistoryEntry.Begin(instructions.CurrentTime, beginSystem);
+
+			model.TransitHistory.Push(transitHistoryBegin);
+			model.SaveDetails.Value = new GameSaveDetails(
+				transitHistoryBegin.Id,
+				transitHistoryBegin.EnterTime,
+				transitHistoryBegin.ElapsedTime
+			);
 
 			var shipWaypoint = new WaypointModel();
 			shipWaypoint.SetLocation(begin);

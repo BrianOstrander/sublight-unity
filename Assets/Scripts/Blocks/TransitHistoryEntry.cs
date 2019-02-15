@@ -15,7 +15,9 @@ namespace LunraGames.SubLight
 		)
 		{
 			return new TransitHistoryEntry(
+				Guid.NewGuid().ToString(),
 				enterTime,
+				TimeSpan.Zero,
 				RelativeDayTime.Zero,
 				beginSystem.Name.Value,
 				beginSystem.Position.Value,
@@ -28,6 +30,7 @@ namespace LunraGames.SubLight
 
 		public static TransitHistoryEntry Create(
 			DateTime enterTime,
+			TimeSpan elapsedTime,
 			RelativeDayTime relativeEnterTime,
 			SystemModel previousSystem,
 			SystemModel nextSystem,
@@ -36,7 +39,9 @@ namespace LunraGames.SubLight
 		{
 			var transitDistance = UniversePosition.Distance(previousSystem.Position.Value, nextSystem.Position.Value);
 			return new TransitHistoryEntry(
+				Guid.NewGuid().ToString(),
 				enterTime,
+				elapsedTime,
 				relativeEnterTime,
 				nextSystem.Name.Value,
 				nextSystem.Position.Value,
@@ -47,7 +52,9 @@ namespace LunraGames.SubLight
 			);
 		}
 
+		[JsonProperty] public readonly string Id;
 		[JsonProperty] public readonly DateTime EnterTime;
+		[JsonProperty] public readonly TimeSpan ElapsedTime;
 		[JsonProperty] public readonly RelativeDayTime RelativeEnterTime;
 		[JsonProperty] public readonly string SystemName;
 		[JsonProperty] public readonly UniversePosition SystemPosition;
@@ -57,7 +64,9 @@ namespace LunraGames.SubLight
 		[JsonProperty] public readonly float TotalTransitDistance;
 
 		TransitHistoryEntry(
+			string id,
 			DateTime enterTime,
+			TimeSpan elapsedTime,
 			RelativeDayTime relativeEnterTime,
 			string systemName,
 			UniversePosition systemPosition,
@@ -67,7 +76,9 @@ namespace LunraGames.SubLight
 			float totalTransitDistance
 		)
 		{
+			Id = id;
 			EnterTime = enterTime;
+			ElapsedTime = elapsedTime;
 			RelativeEnterTime = relativeEnterTime;
 			SystemName = systemName;
 			SystemPosition = systemPosition;

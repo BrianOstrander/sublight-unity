@@ -32,7 +32,7 @@ namespace LunraGames.SubLight.Models
 		{
 			if (stack.Length == 0) Debug.LogError("Trying to peek at an empty stack");
 
-			return stackListener.Value.FirstOrDefault();
+			return Stack.Value.FirstOrDefault();
 		}
 
 		public TransitHistoryEntry Peek(int offset)
@@ -45,9 +45,15 @@ namespace LunraGames.SubLight.Models
 			if (offset < 0) Debug.LogError("Trying to peek with offset less than zero");
 			if (stack.Length <= offset) Debug.LogError("Trying to peek with an offset greater than or equal to the stack length");
 
-			return stackListener.Value[Mathf.Clamp(offset, 0, stack.Length - 1)];
+			return Stack.Value[Mathf.Clamp(offset, 0, stack.Length - 1)];
 		}
 
-		public int Count() { return stackListener.Value.Length; }
+		public TransitHistoryEntry Peek(string id)
+		{
+			if (string.IsNullOrEmpty(id)) Debug.LogError("Trying to peek with null or empty id");
+			return Stack.Value.FirstOrDefault(t => t.Id == id);
+		}
+
+		public int Count() { return Stack.Value.Length; }
 	}
 }

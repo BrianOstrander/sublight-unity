@@ -24,6 +24,7 @@ namespace LunraGames.SubLight.Presenters
 		DialogRequest.States lastDialogState = DialogRequest.States.Complete;
 
 		SaveRequest? saveResult;
+		Action popElapsedTimeBlock;
 		Action popHasSavedBlock;
 		bool HasSavedSinceOpening { get { return popHasSavedBlock != null; } }
 
@@ -51,7 +52,26 @@ namespace LunraGames.SubLight.Presenters
 		{
 			get
 			{
-				return "Last saved 5 minutes ago, in the current system";
+				var elapsedResult = string.Empty;
+				var elapsedSinceSave = model.ElapsedTime.Value - model.SaveDetails.Value.ElapsedTime;
+
+				if (elapsedSinceSave < TimeSpan.FromMinutes(1f)) elapsedResult = "less than a minute ago";
+				else if (elapsedSinceSave < TimeSpan.FromMinutes(3f)) elapsedResult = "a couple minutes ago";
+				else if (elapsedSinceSave < TimeSpan.FromMinutes(6f)) elapsedResult = "5 minutes ago";
+				else if (elapsedSinceSave < TimeSpan.FromHours(1f)) elapsedResult = elapsedSinceSave.TotalMinutes.ToString("N0") + " minutes ago";
+				else elapsedResult = elapsedSinceSave.TotalHours.ToString("N0") + " hours and " + elapsedSinceSave.Minutes.ToString("N0") + " minutes ago";
+
+				var currentTransit = model.TransitHistory.Peek();
+				var lastTransit = currentTransit.TransitCount == 0 ? currentTransit : model.TransitHistory.Peek(1);
+				var saveTransit = model.TransitHistory.Peek(model.SaveDetails.Value.TransitHistoryId);
+
+				var transitResult = string.Empty;
+
+				if (model.SaveDetails.Value.TransitHistoryId == currentTransit.Id) transitResult = "in the current system";
+				else if (model.SaveDetails.Value.TransitHistoryId == lastTransit.Id) transitResult = "in the previous system";
+				else transitResult = (currentTransit.TransitCount - saveTransit.TransitCount) + " transits previous in the " + saveTransit.SystemName + " system";
+
+				return "Last saved " + elapsedResult + ", " + transitResult + ".";
 			}
 		}
 
@@ -151,6 +171,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void Show(bool instant = false)
 		{
+			popElapsedTimeBlock = model.Context.ElapsedTimeBlockers.Push("Pause Menu Open");
 			saveResult = null;
 			state = States.Default;
 
@@ -161,7 +182,7 @@ namespace LunraGames.SubLight.Presenters
 
 			ButtonVerticalOptionsEntry saveEntry = null;
 
-			if (model.Context.SaveBlockers.CanSave) saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSave);
+			if (model.Context.SaveBlockers.None) saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSave);
 			else saveEntry = ButtonVerticalOptionsEntry.CreateButton(language.Save.Value, OnClickSaveDisabled, ButtonVerticalOptionsEntry.InteractionStates.LooksNotInteractable);
 
 			View.SetEntries(
@@ -179,6 +200,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void Close()
 		{
+			popElapsedTimeBlock();
 			if (popHasSavedBlock != null) popHasSavedBlock();
 
 			CloseView();
