@@ -438,7 +438,14 @@
             {
               "Trigger": "TransitComplete"
             }
-          ]
+          ],
+          "keyValues": {
+            "booleans": {},
+            "integers": {},
+            "strings": {},
+            "enums": {},
+            "floats": {}
+          }
         },
         {
           "index": 1,
@@ -461,7 +468,14 @@
             {
               "Trigger": "TransitComplete"
             }
-          ]
+          ],
+          "keyValues": {
+            "booleans": {},
+            "integers": {},
+            "strings": {},
+            "enums": {},
+            "floats": {}
+          }
         },
         {
           "index": 2,
@@ -486,7 +500,17 @@
             {
               "Trigger": "TransitComplete"
             }
-          ]
+          ],
+          "keyValues": {
+            "booleans": {},
+            "integers": {},
+            "strings": {},
+            "enums": {},
+            "floats": {
+              "generated_rations": 0.0,
+              "remaining_rations": 1.0
+            }
+          }
         },
         {
           "index": 3,
@@ -511,7 +535,17 @@
               "Trigger": "TransitComplete",
               "EncounterId": ""
             }
-          ]
+          ],
+          "keyValues": {
+            "booleans": {},
+            "integers": {},
+            "strings": {},
+            "enums": {},
+            "floats": {
+              "generated_rations": 5.0,
+              "remaining_rations": 5.0
+            }
+          }
         },
         {
           "index": 4,
@@ -534,7 +568,14 @@
             {
               "Trigger": "TransitComplete"
             }
-          ]
+          ],
+          "keyValues": {
+            "booleans": {},
+            "integers": {},
+            "strings": {},
+            "enums": {},
+            "floats": {}
+          }
         }
       ]
     },
@@ -561,7 +602,14 @@
           "iconColor": {"r":1.0,"g":1.0,"b":1.0,"a":1.0},
           "iconScale": 1.0,
           "bodies": [],
-          "specifiedEncounters": []
+          "specifiedEncounters": [],
+          "keyValues": {
+            "booleans": {},
+            "integers": {},
+            "strings": {},
+            "enums": {},
+            "floats": {}
+          }
         }
       ]
     }

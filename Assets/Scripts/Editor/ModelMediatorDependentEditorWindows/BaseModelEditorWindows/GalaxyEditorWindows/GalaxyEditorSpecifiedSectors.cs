@@ -22,30 +22,39 @@ namespace LunraGames.SubLight
 			UpdatingSector = 30
 		}
 
+		EditorPrefsFloat specifiedSectorsScroll;
 		EditorPrefsString specifiedSectorsSelectedSectorName;
 		EditorPrefsInt specifiedSectorsPreviewSize;
 		EditorPrefsBool specifiedSectorsPreviewMinimized;
 		EditorPrefsInt specifiedSectorsSelectedPreview;
-		EditorPrefsFloat specifiedSectorsDetailsScroll;
+		EditorPrefsFloat specifiedSectorsSystemsScroll;
 		EditorPrefsBool specifiedSectorsShowTargets;
 		EditorPrefsBool specifiedSectorsShowDerivedValues;
+
+		EditorPrefsInt specifiedSectorsSelectedSystemIndex;
+		EditorPrefsFloat specifiedSectorsSystemDetailsScroll;
 
 		SpecifiedSectorsStates specifiedSectorsState = SpecifiedSectorsStates.Idle;
 		SectorModel specifiedSectorsSelectedSectorLast;
 		SectorModel specifiedSectorsSelectedSector;
+		SystemModel specifiedSectorSelectedSystem;
 		bool specifiedSectorsIsOverAnAllSector;
 
 		void SpecifiedSectorsConstruct()
 		{
 			var currPrefix = KeyPrefix + "SpecifiedSectors";
 
+			specifiedSectorsScroll = new EditorPrefsFloat(currPrefix + "Scroll");
 			specifiedSectorsSelectedSectorName = new EditorPrefsString(currPrefix + "SelectedSectorName");
 			specifiedSectorsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
 			specifiedSectorsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
 			specifiedSectorsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
-			specifiedSectorsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
+			specifiedSectorsSystemsScroll = new EditorPrefsFloat(currPrefix + "SystemsScroll");
 			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
 			specifiedSectorsShowDerivedValues = new EditorPrefsBool(currPrefix + "ShowDerivedValues");
+
+			specifiedSectorsSelectedSystemIndex = new EditorPrefsInt(currPrefix + "SelectedSystemIndex");
+			specifiedSectorsSystemDetailsScroll = new EditorPrefsFloat(currPrefix + "SystemDetailsScroll");
 
 			RegisterToolbar("Specified Sectors", SpecifiedSectorsToolbar);
 
@@ -66,11 +75,13 @@ namespace LunraGames.SubLight
 				SpecifiedSectorsSelectSpecifiedSector(model.GetSpecifiedSector(specifiedSectorsSelectedSectorName.Value));
 			}
 
+			var isDeleting = !Event.current.shift && Event.current.alt;
+
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.BeginVertical(GUILayout.Width(350f));
 				{
-					labelsListScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, labelsListScroll.Value), false, true, GUILayout.ExpandHeight(true)).y;
+					specifiedSectorsScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, specifiedSectorsScroll.Value), false, true, GUILayout.ExpandHeight(true)).y;
 					{
 						var sectorIndex = -1;
 						foreach (var specifiedSector in model.GetSpecifiedSectors())
@@ -82,29 +93,30 @@ namespace LunraGames.SubLight
 							GUILayout.BeginHorizontal(EditorStyles.helpBox);
 							if (isSelectedSector) EditorGUILayoutExtensions.PopColor();
 							{
-								EditorGUILayoutExtensions.PushColor(EditorUtilityExtensions.ColorFromIndex(sectorIndex));
-								GUILayout.BeginHorizontal(EditorStyles.helpBox);
-								EditorGUILayoutExtensions.PopColor();
+								EditorGUILayoutExtensions.PushColor(EditorUtilityExtensions.ColorFromIndex(sectorIndex).NewS(0.65f));
 								{
-									GUILayout.Label(specifiedSector.Name.Value, EditorStyles.boldLabel);
+									GUILayout.Label(specifiedSector.Name.Value);
 								}
-								GUILayout.EndHorizontal();
+								EditorGUILayoutExtensions.PopColor();
 
 								EditorGUILayoutExtensions.PushEnabled(!isSelectedSector);
-								if (GUILayout.Button("Edit Sector", GUILayout.Width(100f)))
+								if (GUILayout.Button("Edit", EditorStyles.miniButton, GUILayout.Width(42f)))
 								{
 									SpecifiedSectorsSelectSpecifiedSector(specifiedSector);
 								}
 								EditorGUILayoutExtensions.PopEnabled();
 
-								if (EditorGUILayoutExtensions.XButton())
+								if (isDeleting)
 								{
-									if (specifiedSectorsSelectedSector == specifiedSector)
+									if (EditorGUILayoutExtensions.XButton(true))
 									{
-										SpecifiedSectorsSelectSpecifiedSector(null);
+										if (specifiedSectorsSelectedSector == specifiedSector)
+										{
+											SpecifiedSectorsSelectSpecifiedSector(null);
+										}
+										model.RemoveSpecifiedSector(specifiedSector);
+										ModelSelectionModified = true;
 									}
-									model.RemoveSpecifiedSector(specifiedSector);
-									ModelSelectionModified = true;
 								}
 							}
 							GUILayout.EndHorizontal();
@@ -112,6 +124,101 @@ namespace LunraGames.SubLight
 
 					}
 					GUILayout.EndScrollView();
+
+
+					var listingSystems = specifiedSectorsSelectedSector != null;
+					EditorGUILayoutExtensions.PushEnabled(listingSystems && specifiedSectorsState == SpecifiedSectorsStates.Idle);
+					{
+						GUILayout.BeginHorizontal();
+						{
+							GUILayout.Label("Systems", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+							GUILayout.FlexibleSpace();
+							EditorGUILayoutExtensions.PushColor(Color.gray);
+							{
+								GUILayout.Label("Hold 'alt' to delete", GUILayout.ExpandWidth(false));
+							}
+							EditorGUILayoutExtensions.PopColor();
+							if (GUILayout.Button("Add System", EditorStyles.miniButton, GUILayout.Width(64f))) SpecifiedSectorsCreateSystem(model, specifiedSectorsSelectedSector);
+						}
+						GUILayout.EndHorizontal();
+
+						if (listingSystems)
+						{
+							specifiedSectorsSystemsScroll.VerticalScroll = GUILayout.BeginScrollView(specifiedSectorsSystemsScroll.VerticalScroll, false, true, GUILayout.ExpandHeight(true));
+							{
+								int? deletedSystem = null;
+								foreach (var system in specifiedSectorsSelectedSector.Systems.Value.OrderBy(s => s.Name.Value))
+								{
+									var isSelectedSystem = system.Index.Value == specifiedSectorsSelectedSystemIndex.Value;
+									if (isSelectedSystem) EditorGUILayoutExtensions.PushColor(Color.blue.NewS(0.7f));
+									GUILayout.BeginHorizontal(EditorStyles.helpBox);
+									if (isSelectedSystem) EditorGUILayoutExtensions.PopColor();
+									{
+										GUILayout.Label(string.IsNullOrEmpty(system.Name) ? "< #" + system.Index.Value + " no name >" : system.Name.Value);
+										EditorGUILayoutExtensions.PushEnabled(system.Index.Value != specifiedSectorsSelectedSystemIndex.Value);
+										{
+											var systemTag = string.Empty;
+											if (system.PlayerBegin.Value) systemTag = "begin";
+											else if (system.PlayerEnd.Value) systemTag = "end";
+
+											if (!string.IsNullOrEmpty(systemTag))
+											{
+												EditorGUILayoutExtensions.PushColor(Color.gray);
+												{
+													GUILayout.Label(systemTag, GUILayout.ExpandWidth(false));
+												}
+												EditorGUILayoutExtensions.PopColor();
+											}
+
+											if (GUILayout.Button("Edit", EditorStyles.miniButton, GUILayout.Width(42f)))
+											{
+												specifiedSectorSelectedSystem = system;
+												specifiedSectorsSelectedSystemIndex.Value = system.Index.Value;
+												GUIUtility.keyboardControl = 0;
+											}
+										}
+										EditorGUILayoutExtensions.PopEnabled();
+
+										if (isDeleting)
+										{
+											if (EditorGUILayoutExtensions.XButton(true))
+											{
+												deletedSystem = system.Index.Value;
+												ModelSelectionModified = true;
+											}
+										}
+									}
+									GUILayout.EndHorizontal();
+								}
+
+								if (deletedSystem.HasValue)
+								{
+									if (specifiedSectorsSelectedSystemIndex.Value == deletedSystem.Value)
+									{
+										specifiedSectorSelectedSystem = null;
+										specifiedSectorsSelectedSystemIndex.Value = -1;
+
+										specifiedSectorsSelectedSector.Systems.Value = specifiedSectorsSelectedSector.Systems.Value.Where(s => s.Index.Value != deletedSystem.Value).ToArray();
+										specifiedSectorsSelectedSector.SystemCount.Value = specifiedSectorsSelectedSector.Systems.Value.Count();
+
+										var newIndex = 0;
+										foreach (var system in specifiedSectorsSelectedSector.Systems.Value.OrderBy(s => s.Index.Value))
+										{
+											system.Index.Value = newIndex;
+											newIndex++;
+										}
+									}
+
+								}
+							}
+							GUILayout.EndScrollView();
+						}
+						else
+						{
+							EditorGUILayout.HelpBox("Select a sector to see systems.", MessageType.Info);
+						}
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 
 					GUILayout.BeginHorizontal();
 					{
@@ -162,7 +269,7 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndVertical();
 
-				specifiedSectorsDetailsScroll.VerticalScroll = GUILayout.BeginScrollView(specifiedSectorsDetailsScroll.VerticalScroll, false, true, GUILayout.ExpandHeight(true));
+				GUILayout.BeginVertical();
 				{
 					if (specifiedSectorsSelectedSector == null)
 					{
@@ -173,12 +280,41 @@ namespace LunraGames.SubLight
 						EditorGUILayoutExtensions.PushEnabled(specifiedSectorsState == SpecifiedSectorsStates.Idle);
 						{
 							SpecifiedSectorsDetails(model, specifiedSectorsSelectedSector);
+
+							if (specifiedSectorSelectedSystem == null)
+							{
+								EditorGUILayout.HelpBox("Select a system to edit it.", MessageType.Info);
+							}
+							else
+							{
+								var setToPlayerBegin = false;
+								var setToPlayerEnd = false;
+
+								SpecifiedSectorsDrawSystem(
+									model,
+									specifiedSectorsSelectedSector,
+									specifiedSectorSelectedSystem,
+									out setToPlayerBegin,
+									out setToPlayerEnd
+								);
+
+								if (setToPlayerBegin || setToPlayerEnd)
+								{
+									foreach (var otherSector in model.GetSpecifiedSectors())
+									{
+										foreach (var otherSystem in otherSector.Systems.Value)
+										{
+											if (setToPlayerBegin && otherSystem != specifiedSectorSelectedSystem) otherSystem.PlayerBegin.Value = false;
+											if (setToPlayerEnd && otherSystem != specifiedSectorSelectedSystem) otherSystem.PlayerEnd.Value = false;
+										}
+									}
+								}
+							}
 						}
 						EditorGUILayoutExtensions.PopEnabled();
 					}
 				}
-				GUILayout.EndScrollView();
-
+				GUILayout.EndVertical();
 			}
 			GUILayout.EndHorizontal();
 
@@ -203,7 +339,7 @@ namespace LunraGames.SubLight
 
 		void SpecifiedSectorsDrawPreviewToolbarSuffix(GalaxyInfoModel model)
 		{
-
+			// Lol what is this?
 		}
 
 		void SpecifiedSectorsDrawOnPreview(GalaxyInfoModel model, Rect displayArea)
@@ -344,11 +480,25 @@ namespace LunraGames.SubLight
 			SpecifiedSectorsSelectSpecifiedSector(null);
 		}
 
-		void SpecifiedSectorsSelectSpecifiedSector(SectorModel sector, SpecifiedSectorsStates state = SpecifiedSectorsStates.Idle)
+		void SpecifiedSectorsSelectSpecifiedSector(SectorModel sector)
 		{
+			var selectedSectorChanged = sector == null || sector.Name.Value != specifiedSectorsSelectedSectorName.Value;
+
 			specifiedSectorsSelectedSector = sector;
 			specifiedSectorsSelectedSectorName.Value = sector == null ? null : sector.Name.Value;
-			if (state != SpecifiedSectorsStates.Unknown) specifiedSectorsState = state;
+			specifiedSectorsState = SpecifiedSectorsStates.Idle;
+
+			if (selectedSectorChanged)
+			{
+				specifiedSectorsSelectedSystemIndex.Value = -1;
+				specifiedSectorSelectedSystem = null;
+			}
+			else
+			{
+				specifiedSectorSelectedSystem = sector.Systems.Value.FirstOrDefault(s => s.Index.Value == specifiedSectorsSelectedSystemIndex.Value);
+				specifiedSectorsSelectedSystemIndex.Value = specifiedSectorSelectedSystem == null ? -1 : specifiedSectorSelectedSystem.Index.Value;
+			}
+
 			GUIUtility.keyboardControl = 0;
 		}
 
@@ -394,151 +544,199 @@ namespace LunraGames.SubLight
 					EditorGUILayoutExtensions.PopBackgroundColor();
 				}
 				GUILayout.EndHorizontal();
-
-				SpecifiedSectorsListSystems(model, sector);
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
-		}
-
-		void SpecifiedSectorsListSystems(GalaxyInfoModel model, SectorModel sector)
-		{
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("Systems");
-				GUILayout.FlexibleSpace();
-				if (GUILayout.Button("Add System", GUILayout.Width(100f))) SpecifiedSectorsCreateSystem(model, sector);
-			}
-			GUILayout.EndHorizontal();
-
-			SystemModel deletedSystem = null;
-			SystemModel beginSystem = null;
-			SystemModel endSystem = null;
-
-			foreach (var system in sector.Systems.Value.OrderBy(s => s.Index.Value))
-			{
-				var isDeleted = false;
-				var setToPlayerBegin = false;
-				var setToPlayerEnd = false;
-
-				GUILayout.BeginVertical(EditorStyles.helpBox);
-				{
-					SpecifiedSectorsDrawSystem(model, sector, system, out isDeleted, out setToPlayerBegin, out setToPlayerEnd);
-				}
-				GUILayout.EndHorizontal();
-
-				if (isDeleted) deletedSystem = system;
-				if (setToPlayerBegin) beginSystem = system;
-				if (setToPlayerEnd) endSystem = system;
-			}
-
-			if (deletedSystem != null)
-			{
-				sector.Systems.Value = sector.Systems.Value.ExceptOne(deletedSystem).ToArray();
-				sector.SystemCount.Value = sector.Systems.Value.Count();
-
-				var newIndex = 0;
-				foreach (var system in sector.Systems.Value.OrderBy(s => s.Index.Value))
-				{
-					system.Index.Value = newIndex;
-					newIndex++;
-				}
-			}
-
-			if (beginSystem != null || endSystem != null)
-			{
-				var changingBegin = beginSystem != null;
-				var changingEnd = endSystem != null;
-				foreach (var otherSector in model.GetSpecifiedSectors())
-				{
-					foreach (var otherSystem in otherSector.Systems.Value)
-					{
-						if (changingBegin && otherSystem != beginSystem) otherSystem.PlayerBegin.Value = false;
-						if (changingEnd && otherSystem != endSystem) otherSystem.PlayerEnd.Value = false;
-					}
-				}
-			}
 		}
 
 		void SpecifiedSectorsDrawSystem(
 			GalaxyInfoModel model,
 			SectorModel sector,
 			SystemModel system,
-			out bool deleted,
 			out bool setToPlayerBegin,
 			out bool setToPlayerEnd
 		)
 		{
-			GUILayout.BeginHorizontal();
+			EditorGUIExtensions.BeginChangeCheck();
 			{
-				GUILayout.Label("#" + system.Index.Value + " | " + (string.IsNullOrEmpty(system.Name.Value) ? "< Null or Empty Name >" : system.Name.Value), EditorStyles.boldLabel);
-				GUILayout.FlexibleSpace();
-				deleted = EditorGUILayoutExtensions.XButton();
-			}
-			GUILayout.EndHorizontal();
-
-			system.Name.Value = EditorGUILayout.TextField(new GUIContent("Name"), system.Name.Value);
-
-			system.Visited.Value = EditorGUILayout.Toggle("Visited", system.Visited.Value);
-
-			GUILayout.BeginHorizontal();
-			{
-				system.SecondaryClassification.Value = EditorGUILayout.TextField("Classification", system.SecondaryClassification.Value);
-				system.PrimaryClassification.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select a Primary Classification -", system.PrimaryClassification.Value, GUILayout.Width(150f));
-			}
-			GUILayout.EndHorizontal();
-
-			system.IconColor.Value = EditorGUILayout.ColorField("Icon Color", system.IconColor.Value);
-			system.IconScale.Value = EditorGUILayout.Slider("Icon Scale", system.IconScale.Value, 0f, 1f);
-
-			// --- Begin / End
-			var wasPlayerBegin = system.PlayerBegin.Value;
-			var wasPlayerEnd = system.PlayerEnd.Value;
-
-			system.PlayerBegin.Value = EditorGUILayout.Toggle("Player Begin", system.PlayerBegin.Value);
-			system.PlayerEnd.Value = EditorGUILayout.Toggle("Player End", system.PlayerEnd.Value);
-
-			setToPlayerBegin = !wasPlayerBegin && system.PlayerBegin.Value;
-			setToPlayerEnd = !wasPlayerEnd && system.PlayerEnd.Value;
-			// ---
-
-			if (specifiedSectorsShowDerivedValues.Value)
-			{
-				EditorGUILayoutExtensions.PushEnabled(false);
+				specifiedSectorsSystemDetailsScroll.VerticalScroll = GUILayout.BeginScrollView(specifiedSectorsSystemDetailsScroll.VerticalScroll, false, true, GUILayout.ExpandHeight(true));
 				{
-					EditorGUILayout.Toggle("Specified", system.Specified.Value);
-					EditorGUILayout.Vector3IntField("Sector", system.Position.Value.SectorInteger);
+					GUILayout.Label("#" + system.Index.Value + " | " + (string.IsNullOrEmpty(system.Name.Value) ? "< Null or Empty Name >" : system.Name.Value), EditorStyles.boldLabel);
+
+					system.Name.Value = EditorGUILayout.TextField(new GUIContent("Name"), system.Name.Value);
+
+					system.Visited.Value = EditorGUILayout.Toggle("Visited", system.Visited.Value);
+
+					GUILayout.BeginHorizontal();
+					{
+						system.SecondaryClassification.Value = EditorGUILayout.TextField("Classification", system.SecondaryClassification.Value);
+						system.PrimaryClassification.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValue("- Select a Primary Classification -", system.PrimaryClassification.Value, GUILayout.Width(150f));
+					}
+					GUILayout.EndHorizontal();
+
+					system.IconColor.Value = EditorGUILayout.ColorField("Icon Color", system.IconColor.Value);
+					system.IconScale.Value = EditorGUILayout.Slider("Icon Scale", system.IconScale.Value, 0f, 1f);
+
+					// --- Begin / End
+					var wasPlayerBegin = system.PlayerBegin.Value;
+					var wasPlayerEnd = system.PlayerEnd.Value;
+
+					system.PlayerBegin.Value = EditorGUILayout.Toggle("Player Begin", system.PlayerBegin.Value);
+					system.PlayerEnd.Value = EditorGUILayout.Toggle("Player End", system.PlayerEnd.Value);
+
+					setToPlayerBegin = !wasPlayerBegin && system.PlayerBegin.Value;
+					setToPlayerEnd = !wasPlayerEnd && system.PlayerEnd.Value;
+					// ---
+
+					if (specifiedSectorsShowDerivedValues.Value)
+					{
+						EditorGUILayoutExtensions.PushEnabled(false);
+						{
+							EditorGUILayout.Toggle("Specified", system.Specified.Value);
+							EditorGUILayout.Vector3IntField("Sector", system.Position.Value.SectorInteger);
+						}
+						EditorGUILayoutExtensions.PopEnabled();
+					}
+
+					var localPos = new UniversePosition(EditorGUILayout.Vector3Field("Local Position", system.Position.Value.Local));
+					system.Position.Value = new UniversePosition(sector.Position.Value.SectorInteger, localPos.Local);
+
+					var navigationSelectEncounter = system.SpecifiedEncounters.Value.FirstOrDefault(s => s.Trigger == EncounterTriggers.NavigationSelect).EncounterId;
+					var transitCompleteEncounter = system.SpecifiedEncounters.Value.FirstOrDefault(s => s.Trigger == EncounterTriggers.TransitComplete).EncounterId;
+
+					GUILayout.Label("Encounters", EditorStyles.boldLabel);
+					navigationSelectEncounter = EditorGUILayout.TextField("Navigation Select", navigationSelectEncounter);
+					transitCompleteEncounter = EditorGUILayout.TextField("Transit Complete", transitCompleteEncounter);
+
+					system.SpecifiedEncounters.Value = new SpecifiedEncounterEntry[]
+					{
+						new SpecifiedEncounterEntry { EncounterId = navigationSelectEncounter, Trigger = EncounterTriggers.NavigationSelect },
+						new SpecifiedEncounterEntry { EncounterId = transitCompleteEncounter, Trigger = EncounterTriggers.TransitComplete },
+					};
+
+					GUILayout.Label("Key Values", EditorStyles.boldLabel);
+
+					foreach (var definedKeyValue in DefinedKeyInstances.CelestialSystem.All)
+					{
+						SpecifiedSectorsDrawSystemKeyValue(
+							system.KeyValues,
+							definedKeyValue
+						);
+					}
 				}
-				EditorGUILayoutExtensions.PopEnabled();
+				GUILayout.EndScrollView();
 			}
+			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+		}
 
-			var localPos = new UniversePosition(EditorGUILayout.Vector3Field("Local Position", system.Position.Value.Local));
-			system.Position.Value = new UniversePosition(sector.Position.Value.SectorInteger, localPos.Local);
-
-			var navigationSelectEncounter = system.SpecifiedEncounters.Value.FirstOrDefault(s => s.Trigger == EncounterTriggers.NavigationSelect).EncounterId;
-			var transitCompleteEncounter = system.SpecifiedEncounters.Value.FirstOrDefault(s => s.Trigger == EncounterTriggers.TransitComplete).EncounterId;
-
-			GUILayout.Label("Encounters", EditorStyles.boldLabel);
-			navigationSelectEncounter = EditorGUILayout.TextField("Navigation Select", navigationSelectEncounter);
-			transitCompleteEncounter = EditorGUILayout.TextField("Transit Complete", transitCompleteEncounter);
-
-			system.SpecifiedEncounters.Value = new SpecifiedEncounterEntry[]
+		void SpecifiedSectorsDrawSystemKeyValue(
+			KeyValueListModel keyValues,
+			IDefinedKey definition
+		)
+		{
+			var content = new GUIContent(ObjectNames.NicifyVariableName(definition.Key.Replace('_', ' ')), definition.Notes);
+			switch (definition.ValueType)
 			{
-				new SpecifiedEncounterEntry { EncounterId = navigationSelectEncounter, Trigger = EncounterTriggers.NavigationSelect },
-				new SpecifiedEncounterEntry { EncounterId = transitCompleteEncounter, Trigger = EncounterTriggers.TransitComplete },
-			};
+				case KeyValueTypes.Boolean:
+					SpecifiedSectorsDrawSystemKeyValue(
+						content,
+						keyValues,
+						definition as DefinedKeys.Boolean
+					);
+					break;
+				case KeyValueTypes.Integer:
+					SpecifiedSectorsDrawSystemKeyValue(
+						content,
+						keyValues,
+						definition as DefinedKeys.Integer
+					);
+					break;
+				case KeyValueTypes.String:
+					SpecifiedSectorsDrawSystemKeyValue(
+						content,
+						keyValues,
+						definition as DefinedKeys.String
+					);
+					break;
+				case KeyValueTypes.Float:
+					SpecifiedSectorsDrawSystemKeyValue(
+						content,
+						keyValues,
+						definition as DefinedKeys.Float
+					);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized KeyValueType: " + definition.ValueType, MessageType.Error);
+					break;
+			}
+		}
+
+		void SpecifiedSectorsDrawSystemKeyValue(
+			GUIContent content,
+			KeyValueListModel keyValues,
+			DefinedKeys.Boolean definition
+		)
+		{
+			keyValues.SetBoolean(
+				definition.Key,
+				EditorGUILayout.Toggle(content, keyValues.GetBoolean(definition.Key))
+			);
+		}
+
+		void SpecifiedSectorsDrawSystemKeyValue(
+			GUIContent content,
+			KeyValueListModel keyValues,
+			DefinedKeys.Integer definition
+		)
+		{
+			keyValues.SetInteger(
+				definition.Key,
+				EditorGUILayout.IntField(content, keyValues.GetInteger(definition.Key))
+			);
+		}
+
+		void SpecifiedSectorsDrawSystemKeyValue(
+			GUIContent content,
+			KeyValueListModel keyValues,
+			DefinedKeys.String definition
+		)
+		{
+			keyValues.SetString(
+				definition.Key,
+				EditorGUILayoutExtensions.TextDynamic(content, keyValues.GetString(definition.Key))
+			);
+		}
+
+		void SpecifiedSectorsDrawSystemKeyValue(
+			GUIContent content,
+			KeyValueListModel keyValues,
+			DefinedKeys.Float definition
+		)
+		{
+			keyValues.SetFloat(
+				definition.Key,
+				EditorGUILayout.FloatField(content, keyValues.GetFloat(definition.Key))
+			);
 		}
 
 		void SpecifiedSectorsCreateSystem(GalaxyInfoModel model, SectorModel sector)
 		{
 			var currSystems = sector.Systems.Value.OrderBy(s => s.Index.Value);
 			var result = new SystemModel();
+
 			result.Index.Value = currSystems.None() ? 0 : currSystems.Last().Index.Value + 1;
 			result.Seed.Value = DemonUtility.NextInteger;
 			result.Specified.Value = true;
 			result.Position.Value = sector.Position.Value;
+			result.IconColor.Value = Color.white;
 
 			sector.Systems.Value = sector.Systems.Value.Append(result).ToArray();
 			sector.SystemCount.Value = sector.Systems.Value.Count();
+
+			specifiedSectorSelectedSystem = result;
+			specifiedSectorsSelectedSystemIndex.Value = result.Index.Value;
+			GUIUtility.keyboardControl = 0;
+
+			ModelSelectionModified = true;
 		}
 	}
 }

@@ -23,6 +23,10 @@
 		/// values.
 		/// related.
 		/// </remarks>
-		Preferences = 40
+		Preferences = 40,
+		/// <summary>
+		/// Values specific to the current celestial system.
+		/// </summary>
+		CelestialSystem = 50
 	}
 }

@@ -2,17 +2,43 @@
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f",
-  "name": "ResourceRequest 0",
+  "name": "ResourceRequest Default",
   "trigger": "ResourceRequest",
   "filtering": {
+    "showValues": true,
     "booleanKeyValues": [],
     "integerKeyValues": [],
     "stringKeyValues": [],
-    "floatKeyValues": [],
+    "floatKeyValues": [
+      {
+        "operation": "GreaterThan",
+        "target": "CelestialSystem",
+        "key": "remaining_rations",
+        "source": "Value",
+        "filterId": "ecddb9fe-e903-4f2d-8772-9e3cbcd28f46",
+        "group": "Any"
+      }
+    ],
     "encounterInteractions": []
   },
   "logs": {
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "operation": "SetFloat",
+              "target": "CelestialSystem",
+              "key": "remaining_rations",
+              "entryId": "f8ade785-3241-4aa6-bdb5-247a1826fbb1"
+            }
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "f4915045-ef24-44f4-9a6a-481f7adf70b9"
+      }
+    ],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
@@ -26,7 +52,7 @@
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "message": "Run ResourceRequest 0"
+                  "message": "Run ResourceRequest Default"
                 },
                 "enums": {
                   "severity": 0
@@ -42,11 +68,35 @@
               },
               "entryId": "2f679984-9747-46b7-828e-7fcc85842210"
             }
+          },
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 50
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "b80004f7-a665-4f7a-ab19-0b7c062d967f"
+            },
+            "index": 1
           }
         ],
         "beginning": true,
-        "ending": true,
-        "logId": "7d6cd449-b38d-4a1d-b707-abcb4b1aa5df"
+        "logId": "7d6cd449-b38d-4a1d-b707-abcb4b1aa5df",
+        "fallbackLogId": "f4915045-ef24-44f4-9a6a-481f7adf70b9",
+        "name": "Begin"
       }
     ],
     "dialogLogs": [],
@@ -54,7 +104,7 @@
     "conversationLogs": []
   },
   "version": 7,
-  "meta": "ResourceRequest 0",
+  "meta": "ResourceRequest Default",
   "metaKeyValues": {
     "EncounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f"
   },

@@ -111,6 +111,9 @@ namespace LunraGames.SubLight.Models
 		#region Models
 		public GalaxyInfoModel Galaxy { get; set; }
 		public GalaxyInfoModel GalaxyTarget { get; set; }
+
+		public KeyValueListener KeyValueListener { get; set; }
+		public KeyValueListener CelestialSystemKeyValueListener { get; private set; }
 		#endregion
 
 		public GameContextModel(
@@ -181,6 +184,21 @@ namespace LunraGames.SubLight.Models
 		{
 			currentSystemListener.Value = system;
 			ship.SystemIndex.Value = system == null ? -1 : system.Index.Value;
+
+			if (CelestialSystemKeyValueListener != null)
+			{
+				CelestialSystemKeyValueListener.UnRegister();
+				CelestialSystemKeyValueListener = null;
+			}
+
+			if (system != null)
+			{
+				CelestialSystemKeyValueListener = new KeyValueListener(
+					KeyValueTargets.CelestialSystem,
+					system.KeyValues,
+					App.KeyValues
+				).Register();
+			}
 		}
 		#endregion
 	}

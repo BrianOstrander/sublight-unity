@@ -15,6 +15,7 @@ namespace LunraGames.SubLight
 	public static class EditorGUILayoutValueFilter
 	{
 		const float OperatorWidth = 120f;
+		const float KeyValueTargetWidth = 90f;
 		const float KeyValueKeyWidth = 170f;
 
 		static string changedFilterId;
@@ -281,6 +282,7 @@ namespace LunraGames.SubLight
 				case KeyValueTargets.Game: definitions = DefinedKeyInstances.Game; break;
 				case KeyValueTargets.Global: definitions = DefinedKeyInstances.Global; break;
 				case KeyValueTargets.Preferences: definitions = DefinedKeyInstances.Preferences; break;
+				case KeyValueTargets.CelestialSystem: definitions = DefinedKeyInstances.CelestialSystem; break;
 				default:
 					Debug.LogError("Unrecognized KeyValueTarget: " + model.FilterTarget);
 					return;
@@ -380,6 +382,7 @@ namespace LunraGames.SubLight
 					case KeyValueTargets.Game: definitions = DefinedKeyInstances.Game; break;
 					case KeyValueTargets.Global: definitions = DefinedKeyInstances.Global; break;
 					case KeyValueTargets.Preferences: definitions = DefinedKeyInstances.Preferences; break;
+					case KeyValueTargets.CelestialSystem: definitions = DefinedKeyInstances.CelestialSystem; break;
 					default:
 						Debug.LogError("Unrecognized KeyValueTarget: " + target);
 						continueCheck = false;
@@ -452,7 +455,7 @@ namespace LunraGames.SubLight
 				"- Target -",
 				target,
 				Color.red,
-				GUILayout.Width(80f)
+				GUILayout.Width(KeyValueTargetWidth)
 			);
 
 			var keyIsInvalid = string.IsNullOrEmpty(key);

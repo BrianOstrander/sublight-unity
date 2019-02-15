@@ -64,6 +64,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public bool IsGenerated { get; set; }
 
+		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
+		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
+
 		public SystemModel()
 		{
 			Index = new ListenerProperty<int>(value => index = value, () => index);

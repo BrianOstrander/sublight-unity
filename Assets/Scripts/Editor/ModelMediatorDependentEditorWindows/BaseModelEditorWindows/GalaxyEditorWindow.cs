@@ -76,9 +76,11 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Utility
-		Vector3 ScreenToNormal(Vector2 screenPosition, Rect window, Rect preview)
+		Vector3 ScreenToNormal(Vector2 screenPosition, Rect preview)
 		{
-			var previewOffset = ((screenPosition - window.min) - preview.min);
+			preview = new Rect(GUIUtility.GUIToScreenPoint(lastPreviewRect.position), preview.size);
+
+			var previewOffset = screenPosition - preview.min;
 			return new Vector3(previewOffset.x / preview.width, 0f, 1f - (previewOffset.y / preview.height));
 		}
 
@@ -117,8 +119,7 @@ namespace LunraGames.SubLight
 					if (GUILayout.Button(GUIContent.none, previewStyle, GUILayout.Width(size), GUILayout.Height(size)))
 					{
 						var universePosition = ScreenToNormal(
-							GUIUtility.GUIToScreenPoint(Event.current.mousePosition),
-							position,
+							GUIUtility.GUIToScreenPoint(Event.current.mousePosition), // You may be tempted to fix this by offseting it, but don't...
 							lastPreviewRect
 						);
 
