@@ -38,8 +38,6 @@ namespace LunraGames.SubLight
 		public HoloRoomFocusCameraPresenter MainCamera;
 		public List<IPresenterCloseShowOptions> ShowOnIdle = new List<IPresenterCloseShowOptions>();
 
-		public KeyValueListener KeyValueListener;
-
 		public List<SectorInstanceModel> LocalSectorInstances = new List<SectorInstanceModel>();
 		public UniversePosition LastLocalFocus = new UniversePosition(new Vector3Int(int.MinValue, 0, int.MinValue));
 		public UniverseScales LastUniverseFocusToScale;
@@ -83,7 +81,7 @@ namespace LunraGames.SubLight
 
 		void InitializeCallbacks(Action done)
 		{
-			Payload.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues).Register();
+			Payload.Game.Context.KeyValueListener = new KeyValueListener(KeyValueTargets.Game, Payload.Game.KeyValues, App.KeyValues).Register();
 
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
@@ -193,7 +191,7 @@ namespace LunraGames.SubLight
 		#region End
 		protected override void End()
 		{
-			Payload.KeyValueListener.UnRegister();
+			Payload.Game.Context.KeyValueListener.UnRegister();
 
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
@@ -483,7 +481,8 @@ namespace LunraGames.SubLight
 
 			PushUpdateKeyValues();
 
-			Payload.Game.EncounterTriggers.Value = new EncounterTriggers[] {
+			Payload.Game.EncounterTriggers.Value = new EncounterTriggers[]
+			{
 				EncounterTriggers.TransitComplete,
 				EncounterTriggers.ResourceRequest,
 				EncounterTriggers.SystemIdle

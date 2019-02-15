@@ -5,8 +5,8 @@ namespace LunraGames.SubLight
 {
 	public static class DefinedKeyInstances
 	{
-//#pragma warning disable CS0414 // The private field is assigned but its value is never used.
-//#pragma warning restore CS0414 // The private field is assigned but its value is never used.
+		//#pragma warning disable CS0414 // The private field is assigned but its value is never used.
+		//#pragma warning restore CS0414 // The private field is assigned but its value is never used.
 
 		public static readonly ValueFilterTypes[] SupportedFilterTypes = {
 			ValueFilterTypes.KeyValueBoolean,
@@ -15,19 +15,23 @@ namespace LunraGames.SubLight
 			ValueFilterTypes.KeyValueFloat
 		};
 
+		#region Defined Keys
 		public static readonly EncounterKeys Encounter = new EncounterKeys();
 		public static readonly GameKeys Game = new GameKeys();
 		public static readonly GlobalKeys Global = new GlobalKeys();
 		public static readonly PreferencesKeys Preferences = new PreferencesKeys();
+		public static readonly CelestialSystemKeys CelestialSystem = new CelestialSystemKeys();
 
 		public static readonly DefinedKeys[] AllTargets = {
 			Encounter,
 			Game,
 			Global,
-			Preferences
+			Preferences,
+			CelestialSystem
 		};
 
 		public static IDefinedKey[] All { get { return AllTargets.SelectMany(t => t.All).ToArray(); } }
+		#endregion
 	}
 
 	public interface IDefinedKey

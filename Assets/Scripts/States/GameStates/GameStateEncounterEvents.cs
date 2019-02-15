@@ -163,16 +163,19 @@ namespace LunraGames.SubLight
 					switch (target)
 					{
 						case KeyValueTargets.Encounter:
-							result += payload.Game.Context.EncounterState.KeyValues.Dump("Encounter");
+							result += OnHandleEventDumpKeyValuesInstance("Encounter", payload.Game.Context.EncounterState.KeyValues);
 							break;
 						case KeyValueTargets.Game:
-							result += payload.Game.KeyValues.Dump("Game");
+							result += OnHandleEventDumpKeyValuesInstance("Game", payload.Game.KeyValues);
 							break;
 						case KeyValueTargets.Global:
-							result += App.MetaKeyValues.GlobalKeyValues.KeyValues.Dump("Global");
+							result += OnHandleEventDumpKeyValuesInstance("Global", App.MetaKeyValues.GlobalKeyValues.KeyValues);
 							break;
 						case KeyValueTargets.Preferences:
-							result += App.MetaKeyValues.PreferencesKeyValues.KeyValues.Dump("Preferences");
+							result += OnHandleEventDumpKeyValuesInstance("Preferences", App.MetaKeyValues.PreferencesKeyValues.KeyValues);
+							break;
+						case KeyValueTargets.CelestialSystem:
+							result += OnHandleEventDumpKeyValuesInstance("CelestialSystem", payload.Game.Context.CurrentSystem.Value == null ? null : payload.Game.Context.CurrentSystem.Value.KeyValues);
 							break;
 						default:
 							Debug.LogError("Unrecognized Target: " + target);
@@ -184,6 +187,12 @@ namespace LunraGames.SubLight
 				Debug.Log("Dumping Key Values...\n" + result);
 
 				done();
+			}
+
+			static string OnHandleEventDumpKeyValuesInstance(string name, KeyValueListModel keyValues)
+			{
+				if (keyValues == null) return name + " is null\n";
+				return keyValues.Dump(name);
 			}
 
 			static void OnHandleEventPopTriggers(
