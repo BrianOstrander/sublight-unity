@@ -11,11 +11,6 @@ namespace LunraGames.SubLight
 {
 	public partial class GalaxyEditorWindow : BaseModelEditorWindow<GalaxyEditorWindow, GalaxyInfoModel>
 	{
-		/// <summary>
-		/// Haaaaack... I dunno on OSX the mouse click seems off...
-		/// </summary>
-		static Vector2 MouseOffset = new Vector2(4f, -4f);
-
 		static class PreviewConstants
 		{
 			public static string[] Names =
@@ -124,7 +119,7 @@ namespace LunraGames.SubLight
 					if (GUILayout.Button(GUIContent.none, previewStyle, GUILayout.Width(size), GUILayout.Height(size)))
 					{
 						var universePosition = ScreenToNormal(
-							GUIUtility.GUIToScreenPoint(Event.current.mousePosition) + MouseOffset,
+							GUIUtility.GUIToScreenPoint(Event.current.mousePosition), // You may be tempted to fix this by offseting it, but don't...
 							lastPreviewRect
 						);
 
