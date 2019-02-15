@@ -18,14 +18,17 @@ namespace LunraGames.SubLight.Presenters
 			Animating = 20
 		}
 
+		GamePayload payload;
 		GameModel model;
 		GameCompleteLanguageBlock language;
 
 		public GameCompletePresenter(
+			GamePayload payload,
 			GameModel model,
 			GameCompleteLanguageBlock language
 		)
 		{
+			this.payload = payload;
 			this.model = model;
 			this.language = language;
 
@@ -36,42 +39,6 @@ namespace LunraGames.SubLight.Presenters
 		{
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
-
-		/*
-		void PushMainMenuRequest()
-		{
-			// Pause menu should be close should already be closed or on the state machine's stack.
-
-			SM.PushBlocking(
-				done =>
-				{
-					View.Reset();
-					View.Shown += done;
-					View.SetEntries(
-						VerticalOptionsThemes.Neutral,
-						LabelVerticalOptionsEntry.CreateTitle(language.ReturningToMainMenu.Value, VerticalOptionsIcons.Return)
-					);
-					ShowView();
-				},
-				"ShowingPauseMenuReturningToMainMenu"
-			);
-
-			SM.PushBlocking(
-				done => App.Heartbeat.Wait(done, 0.5f),
-				"WaitingPauseMenuForMinimumReturningToMainMenuTime"
-			);
-
-			SM.Push(
-				() =>
-				{
-					var homePayload = new HomePayload();
-					homePayload.MainCamera = payload.MainCamera;
-					App.SM.RequestState(homePayload);
-				},
-				"RequestingMainMenuFromPauseMenu"
-			);
-		}
-		*/
 
 		void Show(
 			EncounterEvents.GameComplete.Conditions condition,
@@ -148,6 +115,34 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetToolbarSelectionFocus(model.ToolbarSelection.Value)));
 		}
 
+		bool NotInteractable { get { return View.TransitionState != TransitionStates.Shown; } }
+
+		void PushCloseRequest(string description)
+		{
+			SM.PushBlocking(
+				done =>
+				{
+					View.Closed += done;
+					CloseView();
+				},
+				description
+			);
+		}
+
+		void PushMainMenuRequest(string description, bool autoNewgame = false)
+		{
+			SM.Push(
+				() =>
+				{
+					var homePayload = new HomePayload();
+					homePayload.MainCamera = payload.MainCamera;
+					homePayload.AutoNewGame = autoNewgame;
+					App.SM.RequestState(homePayload);
+				},
+				description
+			);
+		}
+
 		#region Events
 		void OnEncounterRequest(EncounterRequest request)
 		{
@@ -181,12 +176,53 @@ namespace LunraGames.SubLight.Presenters
 		#region Click Events
 		void OnClickRetry()
 		{
-			Debug.Log("click retry");
+			if (NotInteractable) return;
+
+			PushCloseRequest("ClosingCompletionForRetry");
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Reset();
+					View.Shown += done;
+					View.SetEntries(
+						VerticalOptionsThemes.Neutral,
+						LabelVerticalOptionsEntry.CreateTitle(language.RetryTitle.Value, VerticalOptionsIcons.Return)
+					);
+					ShowView();
+				},
+				"ShowingCompletionRetry"
+			);
+
+			SM.PushBlocking(
+				done => App.Heartbeat.Wait(done, 0.5f),
+				"WaitingCompletionForMinimumRetry"
+			);
+
+			PushMainMenuRequest("RequestingMainMenuFromCompletionForRetry", true);
 		}
 
 		void OnClickMainMenu()
 		{
-			Debug.Log("click main menu");
+			if (NotInteractable) return;
+
+			PushCloseRequest("ClosingCompletionForMainMenu");
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Reset();
+					View.Shown += done;
+					View.SetEntries(
+						VerticalOptionsThemes.Neutral,
+						LabelVerticalOptionsEntry.CreateTitle(language.ReturningToMainMenu.Value, VerticalOptionsIcons.Return)
+					);
+					ShowView();
+				},
+				"ShowingCompletionMainMenu"
+			);
+
+			PushMainMenuRequest("RequestingMainMenuFromCompletion");
 		}
 		#endregion
 

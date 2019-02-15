@@ -17,6 +17,7 @@ namespace LunraGames.SubLight
 		public HoloRoomFocusCameraPresenter MainCamera;
 		#endregion
 
+		public bool AutoNewGame;
 		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public GameModel ContinueSave;
 		public CreateGameBlock NewGameBlock;

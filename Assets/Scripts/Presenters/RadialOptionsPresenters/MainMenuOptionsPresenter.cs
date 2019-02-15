@@ -199,7 +199,7 @@ namespace LunraGames.SubLight.Presenters
 						MainCamera = payload.MainCamera,
 						Game = model
 					};
-				App.SM.RequestState(gamePayload);
+					App.SM.RequestState(gamePayload);
 				},
 				"StartGameRequestState"
 			);

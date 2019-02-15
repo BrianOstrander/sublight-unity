@@ -85,6 +85,7 @@ namespace LunraGames.SubLight
 				);
 
 				new GameCompletePresenter(
+					payload,
 					payload.Game,
 					new GameCompleteLanguageBlock
 					{
