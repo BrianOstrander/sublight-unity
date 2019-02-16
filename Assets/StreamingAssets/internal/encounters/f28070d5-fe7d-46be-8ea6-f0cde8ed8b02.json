@@ -1,0 +1,66 @@
+{
+  "orderWeight": 9,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "8d979319-4535-43f6-ae96-3c628f5cf9f7",
+  "name": "ShowOffMessage",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "2c519927-ce3a-45e7-ad10-306fb9120121",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Propellant Low",
+              "message": "Your propellant reserves are approaching critical levels.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Warning",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "393ca736-108d-4ff7-bd18-5dea242323fd"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "e0091958-a1bb-4128-be88-bab829cd889c"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "ShowOffMessage",
+  "metaKeyValues": {
+    "EncounterId": "8d979319-4535-43f6-ae96-3c628f5cf9f7"
+  },
+  "created": "2019-02-15T17:24:42.366355-08:00",
+  "modified": "2019-02-15T17:24:42.366355-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

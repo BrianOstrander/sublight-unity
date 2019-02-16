@@ -1,0 +1,66 @@
+{
+  "orderWeight": 8,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "e7210244-67f0-4c4d-9910-f41b1c249c64",
+  "name": "ShowOffMessage2",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "3f89eb62-d592-44bf-b951-e86a44abfc1f",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Rations Critical",
+              "message": "Your Ark's supply of rations is critically low! Target systems with harvestable resources to resupply.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "439443f8-66c2-4768-8e63-12f37ce09ddf"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "2153b459-0e4f-4bd1-95ac-d88c2ee4b44f"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "ShowOffMessage2",
+  "metaKeyValues": {
+    "EncounterId": "e7210244-67f0-4c4d-9910-f41b1c249c64"
+  },
+  "created": "2019-02-15T17:26:28.75835-08:00",
+  "modified": "2019-02-15T17:26:28.75835-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}
