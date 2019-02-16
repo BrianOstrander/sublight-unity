@@ -2,16 +2,26 @@
 
 namespace LunraGames.SubLight
 {
-	[Serializable]
-	public struct KeyValueAddress<T>
+	public interface IKeyValueAddress
 	{
+		KeyValueSources Source { get; }
+		KeyValueTargets ForeignTarget { get; }
+		string ForeignKey { get; }
+	}
+
+	[Serializable]
+	public struct KeyValueAddress<T> : IKeyValueAddress
+	{
+		public static KeyValueAddress<T> Default { get { return Local(); } }
+
 		public static KeyValueAddress<T> Local(T value = default(T))
 		{
 			return new KeyValueAddress<T>(
 				KeyValueSources.LocalValue,
-				value,
 				KeyValueTargets.Unknown,
-				null
+				null,
+
+				value
 			);
 		}
 
@@ -19,28 +29,32 @@ namespace LunraGames.SubLight
 		{
 			return new KeyValueAddress<T>(
 				KeyValueSources.KeyValue,
-				default(T),
 				target,
-				key
+				key,
+
+				default(T)
 			);
 		}
 
-		public KeyValueSources Source;
-		public T LocalValue;
-		public KeyValueTargets ForeignTarget;
-		public string ForeignKey;
+		public KeyValueSources Source { get; set; }
+		public KeyValueTargets ForeignTarget { get; set; }
+		public string ForeignKey { get; set; }
+
+		public T LocalValue { get; set; }
 
 		KeyValueAddress(
 			KeyValueSources source,
-			T localValue,
 			KeyValueTargets foreignTarget,
-			string foreignKey
+			string foreignKey,
+
+			T localValue
 		)
 		{
 			Source = source;
-			LocalValue = localValue;
 			ForeignTarget = foreignTarget;
 			ForeignKey = foreignKey;
+
+			LocalValue = localValue;
 		}
 	}
 }

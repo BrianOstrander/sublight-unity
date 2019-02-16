@@ -12,11 +12,16 @@
     "floatKeyValues": [
       {
         "operation": "GreaterThan",
-        "target": "CelestialSystem",
-        "key": "remaining_rations",
-        "source": "LocalValue",
-        "filterId": "ecddb9fe-e903-4f2d-8772-9e3cbcd28f46",
-        "group": "Any"
+        "operand": {
+          "Source": "KeyValue",
+          "ForeignTarget": "CelestialSystem",
+          "ForeignKey": "remaining_rations"
+        },
+        "input": {
+          "Source": "LocalValue"
+        },
+        "filterId": "03e4077f-2187-4e12-95bb-49906f735f77",
+        "group": "All"
       }
     ],
     "encounterInteractions": []

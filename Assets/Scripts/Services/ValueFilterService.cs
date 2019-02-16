@@ -155,61 +155,72 @@ namespace LunraGames.SubLight
 		#region Handling
 		void OnHandle(BooleanKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
-			switch (filter.Source.Value)
+			// The input may or may not be local, so we check.
+			switch (filter.Input.Value.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.FilterValue.Value, done);
+					OnHandle(filter, filter.Input.Value.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.SourceTarget.Value,
-							filter.SourceKey.Value,
+							filter.Input.Value.ForeignTarget,
+							filter.Input.Value.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input.Value.Source);
 					break;
 			}
 		}
 
-		void OnHandle(BooleanKeyValueFilterEntryModel filter, bool value, Action<ValueFilterGroups, bool> done)
+		void OnHandle(BooleanKeyValueFilterEntryModel filter, bool inputValue, Action<ValueFilterGroups, bool> done)
 		{
-			callbacks.KeyValueRequest(
-				KeyValueRequest.Get(
-					filter.Target.Value,
-					filter.Key.Value,
-					// If the boolean KV is equal to the result on the filter, the result is true.
-					result => done(filter.Group.Value, result.Value == value)
-				)
-			);
+			// The operand should always be foreign.
+			switch (filter.Operand.Value.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Operand.Value.ForeignTarget,
+							filter.Operand.Value.ForeignKey,
+							// If the boolean KV is equal to the result on the filter, the result is true.
+							result => done(filter.Group.Value, result.Value == inputValue)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands not supported");
+					break;
+			}
 		}
 
 		void OnHandle(IntegerKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
-			switch (filter.Source.Value)
+			// The input may or may not be local, so we check.
+			switch (filter.Input.Value.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.FilterValue.Value, done);
+					OnHandle(filter, filter.Input.Value.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.GetInteger(
-							filter.SourceTarget.Value,
-							filter.SourceKey.Value,
+							filter.Input.Value.ForeignTarget,
+							filter.Input.Value.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input.Value.Source);
 					break;
 			}
 		}
 
-		void OnHandle(IntegerKeyValueFilterEntryModel filter, int value, Action<ValueFilterGroups, bool> done)
+		void OnHandle(IntegerKeyValueFilterEntryModel filter, int inputValue, Action<ValueFilterGroups, bool> done)
 		{
 			Action<KeyValueResult<int>> onGet = result =>
 			{
@@ -217,22 +228,22 @@ namespace LunraGames.SubLight
 				switch (filter.Operation.Value)
 				{
 					case IntegerFilterOperations.Equals:
-						passed = result.Value == value;
+						passed = result.Value == inputValue;
 						break;
 					case IntegerFilterOperations.NotEquals:
-						passed = result.Value != value;
+						passed = result.Value != inputValue;
 						break;
 					case IntegerFilterOperations.LessThanOrEquals:
-						passed = result.Value <= value;
+						passed = result.Value <= inputValue;
 						break;
 					case IntegerFilterOperations.GreaterThanOrEquals:
-						passed = result.Value >= value;
+						passed = result.Value >= inputValue;
 						break;
 					case IntegerFilterOperations.LessThan:
-						passed = result.Value < value;
+						passed = result.Value < inputValue;
 						break;
 					case IntegerFilterOperations.GreaterThan:
-						passed = result.Value > value;
+						passed = result.Value > inputValue;
 						break;
 					default:
 						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
@@ -241,91 +252,111 @@ namespace LunraGames.SubLight
 				done(filter.Group.Value, passed);
 			};
 
-			callbacks.KeyValueRequest(
-				KeyValueRequest.Get(
-					filter.Target.Value,
-					filter.Key.Value,
-					onGet
-				)
-			);
+			// The operand should always be foreign
+			switch (filter.Operand.Value.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Operand.Value.ForeignTarget,
+							filter.Operand.Value.ForeignKey,
+							onGet
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands not supported");
+					break;
+			}
 		}
 
 		void OnHandle(StringKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
-			switch (filter.Source.Value)
+			// The input may or may not be local, so we check.
+			switch (filter.Input.Value.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.FilterValue.Value, done);
+					OnHandle(filter, filter.Input.Value.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.SourceTarget.Value,
-							filter.SourceKey.Value,
+							filter.Input.Value.ForeignTarget,
+							filter.Input.Value.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input.Value.Source);
 					break;
 			}
 		}
 
-		void OnHandle(StringKeyValueFilterEntryModel filter, string value, Action<ValueFilterGroups, bool> done)
+		void OnHandle(StringKeyValueFilterEntryModel filter, string inputValue, Action<ValueFilterGroups, bool> done)
 		{
-			callbacks.KeyValueRequest(
-				KeyValueRequest.Get(
-					filter.Target.Value,
-					filter.Key.Value,
-					// If the string KV is equal to the result on the filter, the result is true.
-					result =>
-					{
-						var passed = false;
-						switch (filter.Operation.Value)
-						{
-							case StringFilterOperations.Equals:
-								passed = result.Value == value;
-								break;
-							case StringFilterOperations.IsNullOrEmpty:
-								passed = string.IsNullOrEmpty(result.Value);
-								break;
-							case StringFilterOperations.IsNull:
-								passed = result.Value == null;
-								break;
-							default:
-								Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
-								break;
-						}
-						done(filter.Group.Value, passed);
-					}
-				)
-			);
+			// The operand should always be foreign.
+			switch (filter.Operand.Value.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Operand.Value.ForeignTarget,
+							filter.Operand.Value.ForeignKey,
+							// If the string KV is equal to the result on the filter, the result is true.
+							result =>
+							{
+								var passed = false;
+								switch (filter.Operation.Value)
+								{
+									case StringFilterOperations.Equals:
+										passed = result.Value == inputValue;
+										break;
+									case StringFilterOperations.IsNullOrEmpty:
+										passed = string.IsNullOrEmpty(result.Value);
+										break;
+									case StringFilterOperations.IsNull:
+										passed = result.Value == null;
+										break;
+									default:
+										Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+										break;
+								}
+								done(filter.Group.Value, passed);
+							}
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands are not supported");
+					break;
+			}
 		}
 
 		void OnHandle(FloatKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
-			switch (filter.Source.Value)
+			// The input may or may not be local, so we check.
+			switch (filter.Input.Value.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.FilterValue.Value, done);
+					OnHandle(filter, filter.Input.Value.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.GetFloat(
-							filter.SourceTarget.Value,
-							filter.SourceKey.Value,
+							filter.Input.Value.ForeignTarget,
+							filter.Input.Value.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Source: " + filter.Source.Value);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input.Value.Source);
 					break;
 			}
 		}
 
-		void OnHandle(FloatKeyValueFilterEntryModel filter, float value, Action<ValueFilterGroups, bool> done)
+		void OnHandle(FloatKeyValueFilterEntryModel filter, float floatValue, Action<ValueFilterGroups, bool> done)
 		{
 			Action<KeyValueResult<float>> onGet = result =>
 			{
@@ -333,22 +364,22 @@ namespace LunraGames.SubLight
 				switch (filter.Operation.Value)
 				{
 					case FloatFilterOperations.Equals:
-						passed = Mathf.Approximately(result.Value, value);
+						passed = Mathf.Approximately(result.Value, floatValue);
 						break;
 					case FloatFilterOperations.NotEquals:
-						passed = !Mathf.Approximately(result.Value, value);
+						passed = !Mathf.Approximately(result.Value, floatValue);
 						break;
 					case FloatFilterOperations.LessThanOrEquals:
-						passed = result.Value < value || Mathf.Approximately(result.Value, value);
+						passed = result.Value < floatValue || Mathf.Approximately(result.Value, floatValue);
 						break;
 					case FloatFilterOperations.GreaterThanOrEquals:
-						passed = result.Value > value || Mathf.Approximately(result.Value, value);
+						passed = result.Value > floatValue || Mathf.Approximately(result.Value, floatValue);
 						break;
 					case FloatFilterOperations.LessThan:
-						passed = result.Value < value;
+						passed = result.Value < floatValue;
 						break;
 					case FloatFilterOperations.GreaterThan:
-						passed = result.Value > value;
+						passed = result.Value > floatValue;
 						break;
 					default:
 						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
@@ -357,13 +388,22 @@ namespace LunraGames.SubLight
 				done(filter.Group.Value, passed);
 			};
 
-			callbacks.KeyValueRequest(
-				KeyValueRequest.Get(
-					filter.Target.Value,
-					filter.Key.Value,
-					onGet
-				)
-			);
+			// Operand must be foreign.
+			switch (filter.Operand.Value.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Operand.Value.ForeignTarget,
+							filter.Operand.Value.ForeignKey,
+							onGet
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands are not supported");
+					break;
+			}
 		}
 
 		void OnHandle(

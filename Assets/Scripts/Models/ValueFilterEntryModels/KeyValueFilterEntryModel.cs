@@ -2,80 +2,56 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public abstract class KeyValueFilterEntryModel<T> : ValueFilterEntryModel<T>, IKeyValueFilterEntryModel
+	public abstract class KeyValueFilterEntryModel<T> : ValueFilterEntryModel, IKeyValueFilterEntryModel
 	{
-		[JsonProperty] KeyValueTargets target;
-		[JsonIgnore] public ListenerProperty<KeyValueTargets> Target;
+		[JsonProperty] KeyValueAddress<T> operand = KeyValueAddress<T>.Foreign(KeyValueTargets.Unknown, null);
+		[JsonIgnore] public ListenerProperty<KeyValueAddress<T>> Operand;
 
-		[JsonProperty] string key;
-		[JsonIgnore] public ListenerProperty<string> Key;
-
-		[JsonProperty] KeyValueSources source;
-		[JsonIgnore] public ListenerProperty<KeyValueSources> Source;
-
-		[JsonProperty] KeyValueTargets sourceTarget;
-		[JsonIgnore] public ListenerProperty<KeyValueTargets> SourceTarget;
-
-		[JsonProperty] string sourceKey;
-		[JsonIgnore] public ListenerProperty<string> SourceKey;
+		[JsonProperty] KeyValueAddress<T> input = KeyValueAddress<T>.Default;
+		[JsonIgnore] public ListenerProperty<KeyValueAddress<T>> Input;
 
 		[JsonIgnore]
-		public KeyValueTargets FilterTarget
-		{
-			get { return Target.Value; }
-			set { Target.Value = value; }
-		}
+		public IKeyValueAddress OperandAddress { get { return Operand.Value; } }
 		[JsonIgnore]
-		public string FilterKey
+		public IKeyValueAddress InputAddress { get { return Input.Value; } }
+
+		public void SetOperand(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null)
 		{
-			get { return Key.Value; }
-			set { Key.Value = value; }
-		}
-		[JsonIgnore]
-		public KeyValueSources FilterSource
-		{
-			get { return Source.Value; }
-			set { Source.Value = value; }
-		}
-		[JsonIgnore]
-		public KeyValueTargets FilterSourceTarget
-		{
-			get { return SourceTarget.Value; }
-			set { SourceTarget.Value = value; }
-		}
-		[JsonIgnore]
-		public string FilterSourceKey
-		{
-			get { return SourceKey.Value; }
-			set { SourceKey.Value = value; }
+			SetAddress(ref Operand, source, foreignTarget, foreignKey);
 		}
 
-		[JsonIgnore]
-		public abstract KeyValueTypes FilterKeyValueType { get; }
+		public void SetInput(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null)
+		{
+			SetAddress(ref Input, source, foreignTarget, foreignKey);
+		}
+
+		void SetAddress(
+			ref ListenerProperty<KeyValueAddress<T>> property,
+			KeyValueSources source,
+			KeyValueTargets foreignTarget,
+			string foreignKey
+		)
+		{
+			var curr = property.Value;
+			curr.Source = source;
+			curr.ForeignTarget = foreignTarget;
+			curr.ForeignKey = foreignKey;
+			property.Value = curr;
+		}
 
 		public KeyValueFilterEntryModel()
 		{
-			Target = new ListenerProperty<KeyValueTargets>(value => target = value, () => target);
-			Key = new ListenerProperty<string>(value => key = value, () => key);
-
-			Source = new ListenerProperty<KeyValueSources>(value => source = value, () => source);
-
-			SourceTarget = new ListenerProperty<KeyValueTargets>(value => sourceTarget = value, () => sourceTarget);
-			SourceKey = new ListenerProperty<string>(value => sourceKey = value, () => sourceKey);
+			Operand = new ListenerProperty<KeyValueAddress<T>>(value => operand = value, () => operand);
+			Input = new ListenerProperty<KeyValueAddress<T>>(value => input = value, () => input);
 		}
 	}
 
 	public interface IKeyValueFilterEntryModel : IValueFilterEntryModel
 	{
-		KeyValueTargets FilterTarget { get; set; }
-		string FilterKey { get; set; }
+		IKeyValueAddress OperandAddress { get; }
+		IKeyValueAddress InputAddress { get; }
 
-		KeyValueSources FilterSource { get; set; }
-
-		KeyValueTargets FilterSourceTarget { get; set; }
-		string FilterSourceKey { get; set; }
-
-		KeyValueTypes FilterKeyValueType { get; }
-
+		void SetOperand(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null);
+		void SetInput(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null);
 	}
 }

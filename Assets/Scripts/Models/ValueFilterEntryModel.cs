@@ -2,30 +2,27 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public abstract class ValueFilterEntryModel<T> : Model, IValueFilterEntryModel
+	public abstract class ValueFilterEntryModel : Model, IValueFilterEntryModel
 	{
 		[JsonProperty] int index;
-		[JsonProperty] bool ignore;
-		[JsonProperty] string filterId;
-		[JsonProperty] ValueFilterGroups group;
-		[JsonProperty] T filterValue;
-		[JsonProperty] bool negate;
-
 		/// <summary>
 		/// Used internally to determine how these are displayed.
 		/// </summary>
 		[JsonIgnore]
 		public ListenerProperty<int> Index;
-		[JsonIgnore]
-		public ListenerProperty<bool> Ignore;
-		[JsonIgnore]
-		public ListenerProperty<string> FilterId;
-		[JsonIgnore]
-		public ListenerProperty<ValueFilterGroups> Group;
-		[JsonIgnore]
-		public ListenerProperty<T> FilterValue;
-		[JsonIgnore]
-		public ListenerProperty<bool> Negate;
+
+		[JsonProperty] bool ignore;
+		[JsonIgnore] public ListenerProperty<bool> Ignore;
+
+		[JsonProperty] string filterId;
+		[JsonIgnore] public ListenerProperty<string> FilterId;
+
+		[JsonProperty] ValueFilterGroups group;
+		[JsonIgnore] public ListenerProperty<ValueFilterGroups> Group;
+
+		[JsonProperty] bool negate;
+		[JsonIgnore] public ListenerProperty<bool> Negate;
+
 		[JsonIgnore]
 		public int FilterIndex
 		{
@@ -56,8 +53,11 @@ namespace LunraGames.SubLight.Models
 			get { return Negate.Value; }
 			set { Negate.Value = value; }
 		}
+
 		[JsonIgnore]
 		public abstract ValueFilterTypes FilterType { get; }
+		[JsonIgnore]
+		public abstract KeyValueTypes FilterValueType { get; }
 
 		public ValueFilterEntryModel()
 		{
@@ -65,8 +65,18 @@ namespace LunraGames.SubLight.Models
 			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			FilterId = new ListenerProperty<string>(value => filterId = value, () => filterId);
 			Group = new ListenerProperty<ValueFilterGroups>(value => group = value, () => group);
-			FilterValue = new ListenerProperty<T>(value => filterValue = value, () => filterValue);
 			Negate = new ListenerProperty<bool>(value => negate = value, () => negate);
+		}
+	}
+
+	public abstract class ValueFilterEntryModel<T> : ValueFilterEntryModel
+	{
+		[JsonProperty] T filterValue;
+		[JsonIgnore] public ListenerProperty<T> FilterValue;
+
+		public ValueFilterEntryModel()
+		{
+			FilterValue = new ListenerProperty<T>(value => filterValue = value, () => filterValue);
 		}
 	}
 
@@ -78,5 +88,6 @@ namespace LunraGames.SubLight.Models
 		ValueFilterGroups FilterGroup { get; set; }
 		bool FilterNegate { get; set; }
 		ValueFilterTypes FilterType { get; }
+		KeyValueTypes FilterValueType { get; }
 	}
 }

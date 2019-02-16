@@ -189,8 +189,7 @@ namespace LunraGames.SubLight
 				model.Filters.Value.Length
 			) as IKeyValueFilterEntryModel;
 
-			result.FilterTarget = replacement.Target;
-			result.FilterKey = replacement.Key;
+			result.SetOperand(KeyValueSources.KeyValue, replacement.Target, replacement.Key);
 
 			changedFilterId = result.FilterIdValue;
 		}
@@ -242,7 +241,8 @@ namespace LunraGames.SubLight
 		static IValueFilterEntryModel OnCreateKeyValue(IValueFilterEntryModel result)
 		{
 			var typedResult = result as IKeyValueFilterEntryModel;
-			typedResult.FilterSource = KeyValueSources.LocalValue;
+
+			typedResult.SetInput(KeyValueSources.LocalValue, KeyValueTargets.Unknown, null);
 
 			return typedResult;
 		}
@@ -271,12 +271,12 @@ namespace LunraGames.SubLight
 			style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconNotLinked;
 			help = string.Empty;
 
-			if (model.FilterTarget == KeyValueTargets.Unknown) return;
-			if (string.IsNullOrEmpty(model.FilterKey)) return;
+			if (model.OperandAddress.ForeignTarget == KeyValueTargets.Unknown) return;
+			if (string.IsNullOrEmpty(model.OperandAddress.ForeignKey)) return;
 
 			DefinedKeys definitions = null;
 
-			switch (model.FilterTarget)
+			switch (model.OperandAddress.ForeignTarget)
 			{
 				case KeyValueTargets.Encounter: definitions = DefinedKeyInstances.Encounter; break;
 				case KeyValueTargets.Game: definitions = DefinedKeyInstances.Game; break;
@@ -284,7 +284,7 @@ namespace LunraGames.SubLight
 				case KeyValueTargets.Preferences: definitions = DefinedKeyInstances.Preferences; break;
 				case KeyValueTargets.CelestialSystem: definitions = DefinedKeyInstances.CelestialSystem; break;
 				default:
-					Debug.LogError("Unrecognized KeyValueTarget: " + model.FilterTarget);
+					Debug.LogError("Unrecognized KeyValueTarget: " + model.OperandAddress.ForeignTarget);
 					return;
 			}
 
@@ -307,7 +307,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var linkedKey = keys.FirstOrDefault(k => k.Key == model.FilterKey);
+			var linkedKey = keys.FirstOrDefault(k => k.Key == model.OperandAddress.ForeignKey);
 
 			if (linkedKey == null) return;
 
@@ -337,12 +337,12 @@ namespace LunraGames.SubLight
 
 			OnHandleKeyValueDefinition(
 				model.FilterIdValue,
-				model.FilterKeyValueType,
+				model.FilterValueType,
 				model.FilterType,
-				model.FilterTarget,
-				model.FilterKey,
-				target => model.FilterTarget = target,
-				key => model.FilterKey = key
+				model.OperandAddress.ForeignTarget,
+				model.OperandAddress.ForeignKey,
+				target => model.SetOperand(KeyValueSources.KeyValue, target, model.OperandAddress.ForeignKey),
+				key => model.SetOperand(KeyValueSources.KeyValue, model.OperandAddress.ForeignTarget, key)
 			);
 		}
 
@@ -478,34 +478,36 @@ namespace LunraGames.SubLight
 		/// <param name="model">Model.</param>
 		static bool OnHandleKeyValueSource(IKeyValueFilterEntryModel model)
 		{
-			model.FilterSource = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+			var inputSource = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 				GUIContent.none,
 				"- Source -",
-				model.FilterSource,
+				model.InputAddress.Source,
 				Color.red,
 				guiOptions: GUILayout.Width(70f)
 			);
 
-			switch (model.FilterSource)
+			model.SetInput(inputSource, model.InputAddress.ForeignTarget, model.InputAddress.ForeignKey);
+
+			switch (model.InputAddress.Source)
 			{
 				case KeyValueSources.LocalValue:
 					return false;
 				case KeyValueSources.KeyValue:
 					OnHandleKeyValueDefinition(
 						model.FilterIdValue,
-						model.FilterKeyValueType,
+						model.FilterValueType,
 						model.FilterType,
-						model.FilterSourceTarget,
-						model.FilterSourceKey,
-						target => model.FilterSourceTarget = target,
-						key => model.FilterSourceKey = key,
+						model.InputAddress.ForeignTarget,
+						model.InputAddress.ForeignKey,
+						target => model.SetInput(KeyValueSources.KeyValue, target, model.InputAddress.ForeignKey),
+						key => model.SetInput(KeyValueSources.KeyValue, model.InputAddress.ForeignTarget, key),
 						false
 					);
 					break;
 				default:
 					EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
 					{
-						GUILayout.Label("Unrecognized Source: " + model.FilterSource, GUILayout.ExpandWidth(false));
+						GUILayout.Label("Unrecognized Source: " + model.InputAddress.Source, GUILayout.ExpandWidth(false));
 					}
 					EditorGUILayoutExtensions.PopColor();
 					break;
@@ -525,7 +527,9 @@ namespace LunraGames.SubLight
 
 				if(!OnHandleKeyValueSource(model))
 				{
-					model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButtonValue(model.FilterValue.Value, style: EditorStyles.miniButton);
+					var result = model.Input.Value;
+					result.LocalValue = EditorGUILayoutExtensions.ToggleButtonValue(result.LocalValue, style: EditorStyles.miniButton);
+					model.Input.Value = result;
 				}
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
@@ -547,7 +551,9 @@ namespace LunraGames.SubLight
 
 				if (!OnHandleKeyValueSource(model))
 				{
-					model.FilterValue.Value = EditorGUILayout.IntField(model.FilterValue.Value);
+					var result = model.Input.Value;
+					result.LocalValue = EditorGUILayout.IntField(result.LocalValue);
+					model.Input.Value = result;
 				}
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
@@ -571,7 +577,9 @@ namespace LunraGames.SubLight
 				{
 					if (!OnHandleKeyValueSource(model))
 					{
-						model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
+						var result = model.Input.Value;
+						result.LocalValue = EditorGUILayout.TextField(result.LocalValue);
+						model.Input.Value = result;
 					}
 				}
 			}
@@ -594,7 +602,9 @@ namespace LunraGames.SubLight
 
 				if (!OnHandleKeyValueSource(model))
 				{
-					model.FilterValue.Value = EditorGUILayout.FloatField(model.FilterValue.Value);
+					var result = model.Input.Value;
+					result.LocalValue = EditorGUILayout.FloatField(result.LocalValue);
+					model.Input.Value = result;
 				}
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
