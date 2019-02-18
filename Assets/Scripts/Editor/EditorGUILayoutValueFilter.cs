@@ -294,9 +294,8 @@ namespace LunraGames.SubLight
 		{
 			OnOneLineHandleBegin(model);
 
-			EditorGUILayoutDefinedKeyValue.OnHandleKeyValueDefinition(
+			EditorGUILayoutDefinedKeyValue.ValueForeign(
 				ObjectNames.NicifyVariableName(model.FilterType.ToString()),
-				model.FilterIdValue,
 				model.FilterValueType,
 				model.OperandAddress.ForeignTarget,
 				model.OperandAddress.ForeignKey,
@@ -334,9 +333,8 @@ namespace LunraGames.SubLight
 				case KeyValueSources.LocalValue:
 					return false;
 				case KeyValueSources.KeyValue:
-					EditorGUILayoutDefinedKeyValue.OnHandleKeyValueDefinition(
+					EditorGUILayoutDefinedKeyValue.ValueForeign(
 						ObjectNames.NicifyVariableName(model.FilterType.ToString()),
-						model.FilterIdValue,
 						model.FilterValueType,
 						model.InputAddress.ForeignTarget,
 						model.InputAddress.ForeignKey,

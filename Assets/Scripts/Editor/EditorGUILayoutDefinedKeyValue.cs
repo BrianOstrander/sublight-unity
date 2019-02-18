@@ -15,9 +15,148 @@ namespace LunraGames.SubLight
 	{
 		const float KeyValueTargetWidth = 90f;
 
-		public static void OnHandleKeyValueDefinition(
+		/// <summary>
+		/// When this is not null or empty, it means an address has been
+		/// modified and the next time we see it the context should be marked
+		/// changed. This stops changes being lost when exiting the defines
+		/// window.
+		/// </summary>
+		static string changedAddressId;
+
+		public static void Value<T>(
+			Func<KeyValueAddress<T>> get,
+			Action<KeyValueAddress<T>> set,
+			KeyValueSources force = KeyValueSources.Unknown,
+			Action define = null
+		)
+			where T : IConvertible
+		{
+			GUILayout.BeginHorizontal();
+			{
+				var inputSource = get().Source;
+
+				switch (force)
+				{
+					case KeyValueSources.Unknown:
+						inputSource = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+							GUIContent.none,
+							"- Source -",
+							get().Source,
+							Color.red,
+							guiOptions: GUILayout.Width(70f)
+						);
+						break;
+					default:
+						inputSource = force;
+						break;
+				}
+
+				if (inputSource != get().Source)
+				{
+					var value = get();
+					value.Source = inputSource;
+					value.ForeignTarget = KeyValueTargets.Unknown;
+					value.ForeignKey = null;
+					value.LocalValue = default(T);
+					set(value);
+					GUI.changed = true;
+				}
+
+				switch (get().Source)
+				{
+					case KeyValueSources.LocalValue:
+						OnValueLocal(get, set);
+						break;
+					case KeyValueSources.KeyValue:
+						OnValueForeign(get, set, define);
+						break;
+					default:
+						EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
+						{
+							GUILayout.Label("Unrecognized Source: " + get().Source, GUILayout.ExpandWidth(false));
+						}
+						EditorGUILayoutExtensions.PopColor();
+						break;
+				}
+
+				// It's possible we've changed a filter from the DefinedKeyValueEditorWindow, so we check for that here.
+				if (!string.IsNullOrEmpty(changedAddressId) && get().AddressId == changedAddressId)
+				{
+					changedAddressId = null;
+					GUI.changed = true;
+				}
+			}
+			GUILayout.EndHorizontal();
+		}
+
+		static void OnValueLocal<T>(
+			Func<KeyValueAddress<T>> get,
+			Action<KeyValueAddress<T>> set
+		)
+			where T : IConvertible
+		{
+			var value = get();
+			switch (value.KeyValueType)
+			{
+				case KeyValueTypes.Boolean:
+					value.LocalValueRaw = EditorGUILayoutExtensions.ToggleButtonValue((bool)value.LocalValueRaw, style: EditorStyles.miniButton);
+					break;
+				case KeyValueTypes.Integer:
+					value.LocalValueRaw = EditorGUILayout.IntField((int)value.LocalValueRaw);
+					break;
+				case KeyValueTypes.String:
+					value.LocalValueRaw = EditorGUILayout.TextField((string)value.LocalValueRaw);
+					break;
+				case KeyValueTypes.Float:
+					value.LocalValueRaw = EditorGUILayout.FloatField((float)value.LocalValueRaw);
+					break;
+				default:
+					EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
+					{
+						GUILayout.Label("Unrecognized Source: " + value.Source, GUILayout.ExpandWidth(false));
+					}
+					EditorGUILayoutExtensions.PopColor();
+					break;
+			}
+			set(value);
+		}
+
+		static void OnValueForeign<T>(
+			Func<KeyValueAddress<T>> get,
+			Action<KeyValueAddress<T>> set,
+			Action define = null
+		)
+			where T : IConvertible
+		{
+			var value = get();
+			ValueForeign(
+				ObjectNames.NicifyVariableName(value.KeyValueType.ToString()),
+				value.KeyValueType,
+				value.ForeignTarget,
+				value.ForeignKey,
+				target =>
+				{
+					var foreignValueTargetChanged = get();
+					foreignValueTargetChanged.ForeignTarget = target;
+					set(foreignValueTargetChanged);
+				},
+				key =>
+				{
+					var foreignValueKeyChanged = get();
+					foreignValueKeyChanged.ForeignKey = key;
+					set(foreignValueKeyChanged);
+				},
+				() => 
+				{
+					if (string.IsNullOrEmpty(value.AddressId)) Debug.LogError("AddressId is null or empty, field will not be notified of changes.");
+					else changedAddressId = value.AddressId;
+					if (define != null) define();
+				}
+			);
+		}
+
+		public static void ValueForeign(
 			string tooltipPrefix,
-			string filterId,
 			KeyValueTypes valueType,
 			KeyValueTargets target,
 			string key,

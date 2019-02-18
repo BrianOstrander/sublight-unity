@@ -21,7 +21,92 @@
   "logs": {
     "keyValueLogs": [
       {
-        "entries": [],
+        "entries": [
+          {
+            "entry": {
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "Source": "LocalValue"
+                }
+              },
+              "entryId": "bc29d719-5a18-4dee-b60b-ba74ee9e5295"
+            }
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "Source": "LocalValue"
+                }
+              },
+              "entryId": "553a4008-41d9-4b30-9e7b-c694b66b6f16"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "keyValueType": "String",
+              "stringValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "Source": "LocalValue"
+                }
+              },
+              "entryId": "21f891b4-d474-4e7b-a4ec-2a3d912b27ac"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "Source": "LocalValue"
+                }
+              },
+              "entryId": "b9af9742-3ae7-494d-b7e1-e77ce2144b00"
+            },
+            "index": 3
+          }
+        ],
         "index": 1,
         "ending": true,
         "logId": "c4b1785c-e7a8-4ee4-b47d-bdac67548901"

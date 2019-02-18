@@ -603,7 +603,24 @@ namespace LunraGames.SubLight
 		{
 			var entry = edge.Entry;
 
-			GUILayout.Label("todo tood lol");
+			switch (entry.KeyValueType.Value)
+			{
+				case KeyValueTypes.Boolean:
+					OnKeyValueLogEdgeEntry(entry, entry.BooleanValue.Value);
+					break;
+				case KeyValueTypes.Integer:
+					OnKeyValueLogEdgeEntry(entry, entry.IntegerValue.Value);
+					break;
+				case KeyValueTypes.String:
+					OnKeyValueLogEdgeEntry(entry, entry.StringValue.Value);
+					break;
+				case KeyValueTypes.Float:
+					OnKeyValueLogEdgeEntry(entry, entry.FloatValue.Value);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized KeyValueType: " + entry.KeyValueType.Value, MessageType.Error);
+					break;
+			}
 
 			//entry.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
 			//	new GUIContent("Target", "Determines the target value store to modify."),
@@ -621,6 +638,48 @@ namespace LunraGames.SubLight
 			//	case KeyValueOperations.SetFloat: entry.FloatValue.Value = EditorGUILayout.FloatField("Value", entry.FloatValue.Value); break;
 			//	default: EditorGUILayout.HelpBox("Unrecognized Operation: " + entry.Operation.Value, MessageType.Error); break;
 			//}
+		}
+
+		void OnKeyValueLogEdgeEntry(
+			KeyValueEntryModel entry,
+			KeyValueEntryModel.BooleanBlock block
+		)
+		{
+
+
+			entry.BooleanValue.Value = block;
+		}
+
+		void OnKeyValueLogEdgeEntry(
+			KeyValueEntryModel entry,
+			KeyValueEntryModel.IntegerBlock block
+		)
+		{
+			// todo: logic here
+
+			entry.IntegerValue.Value = block;
+		}
+
+
+		void OnKeyValueLogEdgeEntry(
+			KeyValueEntryModel entry,
+			KeyValueEntryModel.StringBlock block
+		)
+		{
+			// todo: logic here
+
+			entry.StringValue.Value = block;
+		}
+
+
+		void OnKeyValueLogEdgeEntry(
+			KeyValueEntryModel entry,
+			KeyValueEntryModel.FloatBlock block
+		)
+		{
+			// todo: logic here
+
+			entry.FloatValue.Value = block;
 		}
 		#endregion
 

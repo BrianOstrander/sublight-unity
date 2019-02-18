@@ -8,9 +8,11 @@ namespace LunraGames.SubLight
 {
 	public interface IKeyValueAddress
 	{
-		KeyValueSources Source { get; }
-		KeyValueTargets ForeignTarget { get; }
-		string ForeignKey { get; }
+		string AddressId { get; set; }
+		KeyValueSources Source { get; set; }
+		KeyValueTargets ForeignTarget { get; set; }
+		string ForeignKey { get; set; }
+		object LocalValueRaw { get; set; }
 	}
 
 	[Serializable]
@@ -41,11 +43,19 @@ namespace LunraGames.SubLight
 			);
 		}
 
+		public string AddressId { get; set; }
 		public KeyValueSources Source { get; set; }
 		public KeyValueTargets ForeignTarget { get; set; }
 		public string ForeignKey { get; set; }
 
 		public T LocalValue { get; set; }
+
+		[JsonIgnore]
+		public object LocalValueRaw
+		{
+			get { return LocalValue; }
+			set { LocalValue = value == null ? default(T) : (T)value; }
+		}
 
 		[JsonIgnore]
 		public KeyValueTypes KeyValueType
@@ -71,6 +81,7 @@ namespace LunraGames.SubLight
 			T localValue
 		)
 		{
+			AddressId = Guid.NewGuid().ToString();
 			Source = source;
 			ForeignTarget = foreignTarget;
 			ForeignKey = foreignKey;

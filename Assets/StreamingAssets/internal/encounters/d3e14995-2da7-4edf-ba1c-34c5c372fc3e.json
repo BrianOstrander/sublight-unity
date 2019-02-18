@@ -1,5 +1,4 @@
 {
-  "ignore": true,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "d0b380f6-dc63-406b-8f98-65e32fd9554d",
@@ -54,7 +53,8 @@
                 "booleans": {
                   "pop_transit_complete": true,
                   "pop_resource_request": true,
-                  "pop_system_idle": true
+                  "pop_system_idle": true,
+                  "pop_resource_consume": false
                 },
                 "integers": {},
                 "strings": {},
@@ -108,6 +108,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
+  "ignore": true,
   "version": 7,
   "meta": "TransitComplete 0",
   "metaKeyValues": {

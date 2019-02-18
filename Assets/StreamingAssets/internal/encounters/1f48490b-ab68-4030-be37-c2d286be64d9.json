@@ -9,36 +9,13 @@
     "booleanKeyValues": [],
     "integerKeyValues": [],
     "stringKeyValues": [],
-    "floatKeyValues": [
-      {
-        "operation": "GreaterThan",
-        "operand": {
-          "Source": "KeyValue",
-          "ForeignTarget": "CelestialSystem",
-          "ForeignKey": "remaining_rations"
-        },
-        "input": {
-          "Source": "LocalValue"
-        },
-        "filterId": "03e4077f-2187-4e12-95bb-49906f735f77",
-        "group": "All"
-      }
-    ],
+    "floatKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
     "keyValueLogs": [
       {
-        "entries": [
-          {
-            "entry": {
-              "operation": "SetFloat",
-              "target": "CelestialSystem",
-              "key": "remaining_rations",
-              "entryId": "f8ade785-3241-4aa6-bdb5-247a1826fbb1"
-            }
-          }
-        ],
+        "entries": [],
         "index": 1,
         "ending": true,
         "logId": "f4915045-ef24-44f4-9a6a-481f7adf70b9"
