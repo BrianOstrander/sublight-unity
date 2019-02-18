@@ -6,7 +6,6 @@ namespace LunraGames.SubLight.Models
 {
 	public class EncounterInfoModel : SaveModel
 	{
-		[JsonProperty] bool ignore;
 		[JsonProperty] int orderWeight;
 		[JsonProperty] float randomWeightMultiplier;
 		[JsonProperty] float randomAppearance;
@@ -18,11 +17,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
-		/// <summary>
-		/// If true, this encounter info will never show up in game.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> Ignore;
 		/// <summary>
 		/// Used to bias the selection of this encounter. The higher the weight
 		/// the more likely it is to appear first.
@@ -84,7 +78,6 @@ namespace LunraGames.SubLight.Models
 		public EncounterInfoModel()
 		{
 			SaveType = SaveTypes.EncounterInfo;
-			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
 			RandomWeightMultiplier = new ListenerProperty<float>(value => randomWeightMultiplier = value, () => randomWeightMultiplier);
 			RandomAppearance = new ListenerProperty<float>(value => randomAppearance = value, () => randomAppearance);

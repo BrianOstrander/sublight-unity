@@ -44,6 +44,7 @@ namespace LunraGames.SubLight
 		EditorPrefsFloat modelSelectorScroll;
 		EditorPrefsString modelSelectedPath;
 		EditorPrefsInt modelSelectedToolbar;
+		EditorPrefsBool modelShowIgnored;
 
 		bool lastIsPlayingOrWillChangePlaymode;
 		int frameDelayRemaining;
@@ -80,6 +81,7 @@ namespace LunraGames.SubLight
 			modelSelectorScroll = new EditorPrefsFloat(KeyPrefix + "ModelSelectorScroll");
 			modelSelectedPath = new EditorPrefsString(KeyPrefix + "ModelSelectedPath");
 			modelSelectedToolbar = new EditorPrefsInt(KeyPrefix + "ModelSelectedToolbar");
+			modelShowIgnored = new EditorPrefsBool(KeyPrefix + "ModelShowIgnored", true);
 
 			Enable += OnModelEnable;
 			Disable += OnModelDisable;
@@ -285,12 +287,34 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndHorizontal();
 
-				modelSelectorScroll.VerticalScroll = GUILayout.BeginScrollView(modelSelectorScroll.VerticalScroll, false, true);
+				var ignoredCount = 0;
+				modelSelectorScroll.VerticalScroll = GUILayout.BeginScrollView(modelSelectorScroll.VerticalScroll);
 				{
 					var isAlternate = false;
-					foreach (var model in modelList) OnDrawModel(model, ref isAlternate);
+					foreach (var model in modelList)
+					{
+						if (!modelShowIgnored.Value && model.Ignore.Value) ignoredCount++;
+						else OnDrawModel(model, ref isAlternate);
+					}
 				}
 				GUILayout.EndScrollView();
+
+				GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandWidth(true));
+				{
+					modelShowIgnored.Value = EditorGUILayout.ToggleLeft(new GUIContent("Show Ignored"), modelShowIgnored.Value, GUILayout.Width(100f));
+
+					GUILayout.FlexibleSpace();
+
+					if (0 < ignoredCount)
+					{
+						EditorGUILayoutExtensions.PushColor(Color.gray);
+						{
+							GUILayout.Label(ignoredCount + " entries hidden", GUILayout.ExpandWidth(false));
+						}
+						EditorGUILayoutExtensions.PopColor();
+					}
+				}
+				GUILayout.EndHorizontal();
 			}
 			EditorGUILayoutExtensions.EndVertical();
 		}
@@ -311,9 +335,14 @@ namespace LunraGames.SubLight
 
 					GUILayout.BeginHorizontal();
 					{
-						GUILayout.Label(new GUIContent(string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
-						GUILayout.FlexibleSpace();
-						GUILayout.Label(modelName, EditorStyles.boldLabel);
+						var isIgnored = model.Ignore.Value;
+						if (isIgnored) EditorGUILayoutExtensions.PushColor(new Color(0.65f, 0.65f, 0.65f));
+						{
+							GUILayout.Label(new GUIContent(string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
+							GUILayout.FlexibleSpace();
+							GUILayout.Label(modelName, EditorStyles.boldLabel);
+						}
+						if (isIgnored) EditorGUILayoutExtensions.PopColor();
 					}
 					GUILayout.EndHorizontal();
 

@@ -1,4 +1,5 @@
 {
+  "ignore": true,
   "orderWeight": 10,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
