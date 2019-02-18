@@ -182,8 +182,21 @@ namespace LunraGames.SubLight
 			DefinedState replacement
 		)
 		{
+			var valueFilterType = ValueFilterTypes.Unknown;
+
+			switch (replacement.ValueType)
+			{
+				case KeyValueTypes.Boolean: valueFilterType = ValueFilterTypes.KeyValueBoolean; break;
+				case KeyValueTypes.Integer: valueFilterType = ValueFilterTypes.KeyValueInteger; break;
+				case KeyValueTypes.String: valueFilterType = ValueFilterTypes.KeyValueString; break;
+				case KeyValueTypes.Float: valueFilterType = ValueFilterTypes.KeyValueFloat; break;
+				default:
+					Debug.LogError("Unrecognized KeyValueType: " + replacement.ValueType);
+					break;
+			}
+
 			var result = Create(
-				replacement.FilterType,
+				valueFilterType,
 				model,
 				group,
 				model.Filters.Value.Length
@@ -437,7 +450,6 @@ namespace LunraGames.SubLight
 						new DefinedState
 						{
 							ValueType = valueType,
-							FilterType = filterType,
 							Target = target,
 							Key = key
 						},

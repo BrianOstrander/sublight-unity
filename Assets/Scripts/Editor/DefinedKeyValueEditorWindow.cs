@@ -15,7 +15,6 @@ namespace LunraGames.SubLight
 		public class DefinedState
 		{
 			public KeyValueTypes ValueType;
-			public ValueFilterTypes FilterType;
 			public KeyValueTargets Target;
 			public string Key;
 		}
@@ -24,7 +23,6 @@ namespace LunraGames.SubLight
 		{
 			public bool IsCurrent;
 			public KeyValueTypes ValueType;
-			public ValueFilterTypes FilterType;
 			public KeyValueTargets Target;
 			public string Key;
 			public string Notes;
@@ -64,11 +62,11 @@ namespace LunraGames.SubLight
 
 			window.position = EditorGUIExtensions.GetPositionOnScreen(Size);
 
-			var valueTypeOrder = DefinedKeyInstances.SupportedFilterTypes;
+			var valueTypeOrder = EnumExtensions.GetValues(KeyValueTypes.Unknown);
 
-			if (current != null && current.FilterType != ValueFilterTypes.Unknown)
+			if (current != null && current.ValueType != KeyValueTypes.Unknown)
 			{
-				valueTypeOrder = valueTypeOrder.ExceptOne(current.FilterType).Prepend(current.FilterType).ToArray();
+				valueTypeOrder = valueTypeOrder.ExceptOne(current.ValueType).Prepend(current.ValueType).ToArray();
 				window.hiddenValueTypes = EnumExtensions.GetValues(current.ValueType).ToList();
 			}
 
@@ -76,14 +74,13 @@ namespace LunraGames.SubLight
 			var allDefinedKeys = DefinedKeyInstances.All;
 			var entryList = new List<DefinedKeyEntry>();
 
-			foreach (var definedKey in valueTypeOrder.SelectMany(v => allDefinedKeys.Where(k => k.FilterType == v).OrderBy(k => k.Key).OrderBy(k => k.Target)))
+			foreach (var definedKey in valueTypeOrder.SelectMany(v => allDefinedKeys.Where(k => k.ValueType == v).OrderBy(k => k.Key).OrderBy(k => k.Target)))
 			{
 				entryList.Add(
 					new DefinedKeyEntry
 					{
 						IsCurrent = definedKey.Key == currentKey,
 						ValueType = definedKey.ValueType,
-						FilterType = definedKey.FilterType,
 						Target = definedKey.Target,
 						Key = definedKey.Key,
 						Notes = definedKey.Notes
@@ -204,7 +201,6 @@ namespace LunraGames.SubLight
 				new DefinedState
 				{
 					ValueType = entry.ValueType,
-					FilterType = entry.FilterType,
 					Target = entry.Target,
 					Key = entry.Key
 				}
