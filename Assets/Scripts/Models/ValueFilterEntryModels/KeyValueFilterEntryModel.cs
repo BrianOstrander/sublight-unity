@@ -7,25 +7,25 @@ namespace LunraGames.SubLight.Models
 	public abstract class KeyValueFilterEntryModel<T> : ValueFilterEntryModel, IKeyValueFilterEntryModel
 		where T : IConvertible
 	{
-		[JsonProperty] KeyValueAddress<T> operand = KeyValueAddress<T>.Foreign(KeyValueTargets.Unknown, null);
-		[JsonIgnore] public ListenerProperty<KeyValueAddress<T>> Operand;
+		[JsonProperty] KeyValueAddress<T> input0 = KeyValueAddress<T>.Foreign(KeyValueTargets.Unknown, null);
+		[JsonIgnore] public ListenerProperty<KeyValueAddress<T>> Input0;
 
-		[JsonProperty] KeyValueAddress<T> input = KeyValueAddress<T>.Default;
-		[JsonIgnore] public ListenerProperty<KeyValueAddress<T>> Input;
+		[JsonProperty] KeyValueAddress<T> input1 = KeyValueAddress<T>.Default;
+		[JsonIgnore] public ListenerProperty<KeyValueAddress<T>> Input1;
 
 		[JsonIgnore]
-		public IKeyValueAddress OperandAddress { get { return Operand.Value; } }
+		public IKeyValueAddress Input0Address { get { return Input0.Value; } }
 		[JsonIgnore]
-		public IKeyValueAddress InputAddress { get { return Input.Value; } }
+		public IKeyValueAddress Input1Address { get { return Input1.Value; } }
 
-		public void SetOperand(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null)
+		public void SetInput0(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null)
 		{
-			SetAddress(ref Operand, source, foreignTarget, foreignKey);
+			SetAddress(ref Input0, source, foreignTarget, foreignKey);
 		}
 
-		public void SetInput(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null)
+		public void SetInput1(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null)
 		{
-			SetAddress(ref Input, source, foreignTarget, foreignKey);
+			SetAddress(ref Input1, source, foreignTarget, foreignKey);
 		}
 
 		void SetAddress(
@@ -44,17 +44,17 @@ namespace LunraGames.SubLight.Models
 
 		public KeyValueFilterEntryModel()
 		{
-			Operand = new ListenerProperty<KeyValueAddress<T>>(value => operand = value, () => operand);
-			Input = new ListenerProperty<KeyValueAddress<T>>(value => input = value, () => input);
+			Input0 = new ListenerProperty<KeyValueAddress<T>>(value => input0 = value, () => input0);
+			Input1 = new ListenerProperty<KeyValueAddress<T>>(value => input1 = value, () => input1);
 		}
 	}
 
 	public interface IKeyValueFilterEntryModel : IValueFilterEntryModel
 	{
-		IKeyValueAddress OperandAddress { get; }
-		IKeyValueAddress InputAddress { get; }
+		IKeyValueAddress Input0Address { get; }
+		IKeyValueAddress Input1Address { get; }
 
-		void SetOperand(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null);
-		void SetInput(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null);
+		void SetInput0(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null);
+		void SetInput1(KeyValueSources source, KeyValueTargets foreignTarget = KeyValueTargets.Unknown, string foreignKey = null);
 	}
 }
