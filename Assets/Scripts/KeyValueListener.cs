@@ -49,7 +49,7 @@ namespace LunraGames.SubLight
 
 		KeyValueResult<T> Result<T>(string key, T value) where T : IConvertible
 		{
-			return new KeyValueResult<T>(target, key, value);
+			return new KeyValueResult<T>(KeyValueSources.KeyValue, target, key, value);
 		}
 
 		void OnGetBoolean(KeyValueRequest request, Action<KeyValueResult<bool>> done)

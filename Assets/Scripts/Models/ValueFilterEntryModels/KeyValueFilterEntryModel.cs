@@ -1,8 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+
+using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
 	public abstract class KeyValueFilterEntryModel<T> : ValueFilterEntryModel, IKeyValueFilterEntryModel
+		where T : IConvertible
 	{
 		[JsonProperty] KeyValueAddress<T> operand = KeyValueAddress<T>.Foreign(KeyValueTargets.Unknown, null);
 		[JsonIgnore] public ListenerProperty<KeyValueAddress<T>> Operand;

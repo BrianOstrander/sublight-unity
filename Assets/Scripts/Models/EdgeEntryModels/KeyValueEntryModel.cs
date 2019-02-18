@@ -1,5 +1,7 @@
 ﻿using System;
 
+using UnityEngine;
+
 using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
@@ -12,12 +14,32 @@ namespace LunraGames.SubLight.Models
 			public enum Operations
 			{
 				Unknown = 0,
-				Set = 10
+				Set = 10,
+				And = 20,
+				Or = 30,
+				Xor = 40
 			}
 
-			public static BooleanBlock Default { get { return new BooleanBlock(); } }
+			public static BooleanBlock Default
+			{
+				get
+				{
+					return new BooleanBlock
+					{
+						Operation = Operations.Set,
+						Input0 = KeyValueAddress<bool>.Default,
+						Input1 = KeyValueAddress<bool>.Default,
+						Output = KeyValueAddress<bool>.Default
+					};
+				}
+			}
 
 			public Operations Operation;
+
+			public KeyValueAddress<bool> Input0;
+			public KeyValueAddress<bool> Input1;
+
+			public KeyValueAddress<bool> Output;
 		}
 
 		[Serializable]
@@ -26,12 +48,46 @@ namespace LunraGames.SubLight.Models
 			public enum Operations
 			{
 				Unknown = 0,
-				Set = 10
+				Set = 10,
+				Add = 20,
+				Subtract = 30,
+				Multiply = 40,
+				Divide = 50,
+				Modulo = 60,
+
+				Clamp = 100
 			}
 
-			public static IntegerBlock Default { get { return new IntegerBlock(); } }
+			public static IntegerBlock Default
+			{
+				get
+				{
+					return new IntegerBlock
+					{
+						Operation = Operations.Set,
+						Input0 = KeyValueAddress<int>.Default,
+						Input1 = KeyValueAddress<int>.Default,
+						MinimumClampingEnabled = false,
+						MaximumClampingEnabled = false,
+						MinimumClamping = KeyValueAddress<int>.Default,
+						MaximumClamping = KeyValueAddress<int>.Default,
+						Output = KeyValueAddress<int>.Default
+					};
+				}
+			}
 
 			public Operations Operation;
+
+			public KeyValueAddress<int> Input0;
+			public KeyValueAddress<int> Input1;
+
+			public bool MinimumClampingEnabled;
+			public bool MaximumClampingEnabled;
+
+			public KeyValueAddress<int> MinimumClamping;
+			public KeyValueAddress<int> MaximumClamping;
+
+			public KeyValueAddress<int> Output;
 		}
 
 		[Serializable]
@@ -43,9 +99,24 @@ namespace LunraGames.SubLight.Models
 				Set = 10
 			}
 
-			public static StringBlock Default { get { return new StringBlock(); } }
+			public static StringBlock Default
+			{
+				get
+				{
+					return new StringBlock
+					{
+						Operation = Operations.Set,
+						Input0 = KeyValueAddress<string>.Default,
+						Output = KeyValueAddress<string>.Default
+					};
+				}
+			}
 
 			public Operations Operation;
+
+			public KeyValueAddress<string> Input0;
+
+			public KeyValueAddress<string> Output;
 		}
 
 		[Serializable]
@@ -54,49 +125,91 @@ namespace LunraGames.SubLight.Models
 			public enum Operations
 			{
 				Unknown = 0,
-				Set = 10
+				Set = 10,
+				Add = 20,
+				Subtract = 30,
+				Multiply = 40,
+				Divide = 50,
+				Modulo = 60,
+
+				Clamp = 100,
+				Round = 110,
+				Floor = 120,
+				Ceiling = 130
 			}
 
-			public static FloatBlock Default { get { return new FloatBlock(); } }
+			public static FloatBlock Default
+			{
+				get
+				{
+					return new FloatBlock
+					{
+						Operation = Operations.Set,
+						Input0 = KeyValueAddress<float>.Default,
+						Input1 = KeyValueAddress<float>.Default,
+						MinimumClampingEnabled = false,
+						MaximumClampingEnabled = false,
+						MinimumClamping = KeyValueAddress<float>.Default,
+						MaximumClamping = KeyValueAddress<float>.Default,
+						Output = KeyValueAddress<float>.Default
+					};
+				}
+			}
 
 			public Operations Operation;
+
+			public KeyValueAddress<float> Input0;
+			public KeyValueAddress<float> Input1;
+
+			public bool MinimumClampingEnabled;
+			public bool MaximumClampingEnabled;
+
+			public KeyValueAddress<float> MinimumClamping;
+			public KeyValueAddress<float> MaximumClamping;
+
+			public KeyValueAddress<float> Output;
 		}
 
-		[JsonProperty] KeyValueOperations operation;
-		[JsonProperty] KeyValueTargets target;
-		[JsonProperty] string key;
+		[JsonProperty] KeyValueTypes keyValueType;
+		[JsonIgnore] public readonly ListenerProperty<KeyValueTypes> KeyValueType;
 
-		[JsonProperty] bool booleanValue;
-		[JsonProperty] int integerValue;
-		[JsonProperty] string stringValue;
-		[JsonProperty] float floatValue;
+		[JsonProperty] BooleanBlock booleanValue;
+		[JsonIgnore] public readonly ListenerProperty<BooleanBlock> BooleanValue;
+
+		[JsonProperty] IntegerBlock integerValue;
+		[JsonIgnore] public readonly ListenerProperty<IntegerBlock> IntegerValue;
+		
+		[JsonProperty] StringBlock stringValue;
+		[JsonIgnore] public readonly ListenerProperty<StringBlock> StringValue;
+
+		[JsonProperty] FloatBlock floatValue;
+		[JsonIgnore] public readonly ListenerProperty<FloatBlock> FloatValue;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<KeyValueOperations> Operation;
-		[JsonIgnore]
-		public readonly ListenerProperty<KeyValueTargets> Target;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> Key;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> BooleanValue;
-		[JsonIgnore]
-		public readonly ListenerProperty<int> IntegerValue;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> StringValue;
-		[JsonIgnore]
-		public readonly ListenerProperty<float> FloatValue;
+		public string Name
+		{
+			get
+			{
+				switch (KeyValueType.Value)
+				{
+					case KeyValueTypes.Boolean: return KeyValueType.Value + "." + BooleanValue.Value.Operation;
+					case KeyValueTypes.Integer: return KeyValueType.Value + "." + IntegerValue.Value.Operation;
+					case KeyValueTypes.String: return KeyValueType.Value + "." + StringValue.Value.Operation;
+					case KeyValueTypes.Float: return KeyValueType.Value + "." + FloatValue.Value.Operation;
+					default:
+						Debug.LogError("Unrecognized KeyValueType: " + KeyValueType.Value);
+						return KeyValueType.Value.ToString();
+				}
+			}
+		}
 
 		public KeyValueEntryModel()
 		{
-			Operation = new ListenerProperty<KeyValueOperations>(value => operation = value, () => operation);
-			Target = new ListenerProperty<KeyValueTargets>(value => target = value, () => target);
-			Key = new ListenerProperty<string>(value => key = value, () => key);
-
-			BooleanValue = new ListenerProperty<bool>(value => booleanValue = value, () => booleanValue);
-			IntegerValue = new ListenerProperty<int>(value => integerValue = value, () => integerValue);
-			StringValue = new ListenerProperty<string>(value => stringValue = value, () => stringValue);
-			FloatValue = new ListenerProperty<float>(value => floatValue = value, () => floatValue);
+			KeyValueType = new ListenerProperty<KeyValueTypes>(value => keyValueType = value, () => keyValueType);
+			BooleanValue = new ListenerProperty<BooleanBlock>(value => booleanValue = value, () => booleanValue);
+			IntegerValue = new ListenerProperty<IntegerBlock>(value => integerValue = value, () => integerValue);
+			StringValue = new ListenerProperty<StringBlock>(value => stringValue = value, () => stringValue);
+			FloatValue = new ListenerProperty<FloatBlock>(value => floatValue = value, () => floatValue);
 		}
 	}
 }

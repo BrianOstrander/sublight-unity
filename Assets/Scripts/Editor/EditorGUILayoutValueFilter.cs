@@ -262,6 +262,7 @@ namespace LunraGames.SubLight
 			);
 		}
 
+		/*
 		static void OnOneLineHandleBeginLinked(
 			IKeyValueFilterEntryModel model,
 			out GUIStyle style,
@@ -314,6 +315,7 @@ namespace LunraGames.SubLight
 			style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconLinked;
 			help = linkedKey.Notes ?? string.Empty;
 		}
+		*/
 
 		static void OnOneLineHandleEnd(IValueFilterEntryModel model, ref string deleted)
 		{

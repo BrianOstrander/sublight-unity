@@ -552,52 +552,47 @@ namespace LunraGames.SubLight
 		#region KeyValue Logs
 		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)
 		{
-			var targets = Enum.GetValues(typeof(KeyValueTargets)).Cast<KeyValueTargets>().ToList();
-			var kvTypes = Enum.GetValues(typeof(KeyValueOperations)).Cast<KeyValueOperations>().ToList();
+			var selection = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				GUIContent.none,
+				"- Append New Key Value Operation -",
+				KeyValueTypes.Unknown
+			);
 
-			var labels = new List<string>(new string[] { "- Select Operation -" });
-			var onSelections = new Dictionary<int, Action>();
-			var index = 1;
-
-			foreach (var target in targets)
+			switch (selection)
 			{
-				if (target == KeyValueTargets.Unknown) continue;
-				labels.Add("--- " + target + " ---");
-				index++;
-
-				foreach (var kvType in kvTypes)
-				{
-					if (kvType == KeyValueOperations.Unknown) continue;
-					labels.Add(target + "." + kvType);
-					onSelections.Add(
-						index,
-						() => OnEdgedLogSpawn(model, result => OnKeyValueLogSpawn(result, kvType, target))
-					);
-					index++;
-				}
+				case KeyValueTypes.Unknown: break;
+				default:
+					OnEdgedLogSpawn(model, result => OnKeyValueLogSpawn(result, selection));
+					break;
 			}
-
-			var selection = 0;
-			GUILayout.BeginHorizontal();
-			{
-				GUILayout.Label("Append New Key Value Operation: ", GUILayout.ExpandWidth(false));
-				selection = EditorGUILayout.Popup(selection, labels.ToArray());
-			}
-			GUILayout.EndHorizontal();
-			Action onSelection;
-			if (onSelections.TryGetValue(selection, out onSelection)) onSelection();
 
 			OnEdgedLog<KeyValueEncounterLogModel, KeyValueEdgeModel>(infoModel, model, OnKeyValueLogEdge);
 		}
 
 		void OnKeyValueLogSpawn(
 			KeyValueEdgeModel edge,
-			KeyValueOperations operation,
-			KeyValueTargets target
+			KeyValueTypes keyValueType
 		)
 		{
-			edge.Entry.Operation.Value = operation;
-			edge.Entry.Target.Value = target;
+			edge.Entry.KeyValueType.Value = keyValueType;
+			switch (keyValueType)
+			{
+				case KeyValueTypes.Boolean:
+					edge.Entry.BooleanValue.Value = KeyValueEntryModel.BooleanBlock.Default;
+					break;
+				case KeyValueTypes.Integer:
+					edge.Entry.IntegerValue.Value = KeyValueEntryModel.IntegerBlock.Default;
+					break;
+				case KeyValueTypes.String:
+					edge.Entry.StringValue.Value = KeyValueEntryModel.StringBlock.Default;
+					break;
+				case KeyValueTypes.Float:
+					edge.Entry.FloatValue.Value = KeyValueEntryModel.FloatBlock.Default;
+					break;
+				default:
+					Debug.LogError("Unrecognized KeyValueType: " + keyValueType);
+					break;
+			}
 		}
 
 		void OnKeyValueLogEdge(
@@ -608,22 +603,24 @@ namespace LunraGames.SubLight
 		{
 			var entry = edge.Entry;
 
-			entry.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				new GUIContent("Target", "Determines the target value store to modify."),
-				"- Selecte a Target -",
-				entry.Target.Value
-			);
+			GUILayout.Label("todo tood lol");
 
-			entry.Key.Value = EditorGUILayout.TextField(new GUIContent("Key", "The key to change the value of."), entry.Key.Value);
+			//entry.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+			//	new GUIContent("Target", "Determines the target value store to modify."),
+			//	"- Selecte a Target -",
+			//	entry.Target.Value
+			//);
 
-			switch (entry.Operation.Value)
-			{
-				case KeyValueOperations.SetBoolean: entry.BooleanValue.Value = EditorGUILayout.Toggle("Value", entry.BooleanValue.Value); break;
-				case KeyValueOperations.SetInteger: entry.IntegerValue.Value = EditorGUILayout.IntField("Value", entry.IntegerValue.Value); break;
-				case KeyValueOperations.SetString: entry.StringValue.Value = EditorGUILayout.TextField("Value", entry.StringValue.Value); break;
-				case KeyValueOperations.SetFloat: entry.FloatValue.Value = EditorGUILayout.FloatField("Value", entry.FloatValue.Value); break;
-				default: EditorGUILayout.HelpBox("Unrecognized Operation: " + entry.Operation.Value, MessageType.Error); break;
-			}
+			//entry.Key.Value = EditorGUILayout.TextField(new GUIContent("Key", "The key to change the value of."), entry.Key.Value);
+
+			//switch (entry.Operation.Value)
+			//{
+			//	case KeyValueOperations.SetBoolean: entry.BooleanValue.Value = EditorGUILayout.Toggle("Value", entry.BooleanValue.Value); break;
+			//	case KeyValueOperations.SetInteger: entry.IntegerValue.Value = EditorGUILayout.IntField("Value", entry.IntegerValue.Value); break;
+			//	case KeyValueOperations.SetString: entry.StringValue.Value = EditorGUILayout.TextField("Value", entry.StringValue.Value); break;
+			//	case KeyValueOperations.SetFloat: entry.FloatValue.Value = EditorGUILayout.FloatField("Value", entry.FloatValue.Value); break;
+			//	default: EditorGUILayout.HelpBox("Unrecognized Operation: " + entry.Operation.Value, MessageType.Error); break;
+			//}
 		}
 		#endregion
 
