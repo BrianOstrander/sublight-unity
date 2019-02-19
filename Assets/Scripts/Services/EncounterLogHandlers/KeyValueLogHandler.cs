@@ -44,7 +44,28 @@ namespace LunraGames.SubLight
 			var next = remaining.First();
 			remaining.RemoveAt(0);
 
+			Configuration.ValueFilter.Filter(
+				result => OnHandleNextOperationFiltered(result, next, remaining, done),
+				next.Filtering,
+				Configuration.Model,
+				Configuration.Encounter
+			);
+		}
+
+		void OnHandleNextOperationFiltered(
+			bool result,
+			KeyValueEntryModel next,
+			List<KeyValueEntryModel> remaining,
+			Action done
+		)
+		{
 			Action onNext = () => OnHandleNextOperation(remaining, done);
+
+			if (!result)
+			{
+				onNext();
+				return;
+			}
 
 			switch (next.KeyValueType.Value)
 			{

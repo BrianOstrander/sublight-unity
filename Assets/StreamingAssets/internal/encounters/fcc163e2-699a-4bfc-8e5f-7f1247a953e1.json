@@ -1,12 +1,31 @@
 {
+  "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "4f97b7d4-50d6-4ae6-9e08-c415200155bb",
-  "name": "SystemIdle 0",
+  "name": "Failure: Population Starved",
   "trigger": "SystemIdle",
   "filtering": {
+    "showValues": true,
+    "falseByDefault": true,
     "booleanKeyValues": [],
-    "integerKeyValues": [],
+    "integerKeyValues": [
+      {
+        "operation": "LessThanOrEquals",
+        "filterId": "45114d5d-ef89-4ec6-8916-8a7da690add5",
+        "group": "All",
+        "Input0": {
+          "AddressId": "4101a333-51b3-4b66-a5e1-5ab7b327ac44",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transits_without_rations_until_failure"
+        },
+        "Input1": {
+          "AddressId": "5d790653-d33a-4fec-99e4-6419839c412c",
+          "Source": "LocalValue"
+        }
+      }
+    ],
     "stringKeyValues": [],
     "floatKeyValues": [],
     "encounterInteractions": []
@@ -21,15 +40,16 @@
         "entries": [
           {
             "entry": {
-              "encounterEvent": "Debug",
+              "encounterEvent": "GameComplete",
               "keyValues": {
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "message": "Run SystemIdle 0"
+                  "title": "Population Starved",
+                  "message": "There simply wasn't enough rations to go around..."
                 },
                 "enums": {
-                  "severity": 0
+                  "condition": 20
                 },
                 "floats": {}
               },
@@ -40,13 +60,14 @@
                 "floatKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "b13bf943-8be0-42a6-9a5f-59459bd82d7a"
+              "entryId": "567c343a-2fe5-43a1-a2bb-ad8e516e6296"
             }
           }
         ],
+        "index": 1,
         "beginning": true,
         "ending": true,
-        "logId": "f639fbe1-ca2a-42ac-a868-94e79e898471"
+        "logId": "5156c86d-608c-4e0b-873f-23cc1d30b097"
       }
     ],
     "dialogLogs": [],
@@ -54,7 +75,7 @@
     "conversationLogs": []
   },
   "version": 7,
-  "meta": "SystemIdle 0",
+  "meta": "Failure: Population Starved",
   "metaKeyValues": {
     "EncounterId": "4f97b7d4-50d6-4ae6-9e08-c415200155bb"
   },

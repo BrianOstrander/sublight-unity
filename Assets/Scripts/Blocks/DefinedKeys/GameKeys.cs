@@ -8,8 +8,14 @@
 		#region Integers - Read & Write
 		public readonly Integer Rationing;
 		public readonly Integer TransitsWithoutRations;
+		public readonly Integer TransitsWithoutRationsMaximum;
+		public readonly Integer TransitsWithoutRationsUntilFailure;
 		public readonly Integer TransitsWithOverPopulation;
+		public readonly Integer TransitsWithOverPopulationMaximum;
+		public readonly Integer TransitsWithOverPopulationUntilFailure;
 		public readonly Integer TransitsWithUnderPopulation;
+		public readonly Integer TransitsWithUnderPopulationMaximum;
+		public readonly Integer TransitsWithUnderPopulationUntilFailure;
 		#endregion
 
 		#region Strings
@@ -24,6 +30,8 @@
 		public readonly Float YearsElapsedGalactic;
 		public readonly Float YearsElapsedShip;
 		public readonly Float YearsElapsedDelta;
+
+		public readonly Float PreviousTransitYearsElapsedShip;
 
 		public readonly Float PopulationMinimum;
 		public readonly Float PopulationMaximum;
@@ -60,9 +68,33 @@
 					true
 				),
 				Create(
+					ref TransitsWithoutRationsMaximum,
+					"transits_without_rations_maximum",
+					"The maximum number of transits without rations before failure.",
+					true
+				),
+				Create(
+					ref TransitsWithoutRationsUntilFailure,
+					"transits_without_rations_until_failure",
+					"How many more transits without rations can the ark survive.",
+					true
+				),
+				Create(
 					ref TransitsWithOverPopulation,
 					"transits_with_over_population",
 					"How many transits with too many people onboard. Resets to zero once there is enough space for everyone.",
+					true
+				),
+				Create(
+					ref TransitsWithOverPopulationMaximum,
+					"transits_with_over_population_maximum",
+					"The maximum number of transits with overpopulation before failure.",
+					true
+				),
+				Create(
+					ref TransitsWithOverPopulationUntilFailure,
+					"transits_with_over_population_until_failure",
+					"How many more transits with overpopulation can the ark survive.",
 					true
 				),
 				Create(
@@ -70,7 +102,19 @@
 					"transits_with_under_population",
 					"How many transits with less population than the minimum. Rests to zero once there the minimum number of people is reached.",
 					true
-				)
+				),
+				Create(
+					ref TransitsWithUnderPopulationMaximum,
+					"transits_with_under_population_maximum",
+					"The maximum number of transits with underpopulation before failure.",
+					true
+				),
+				Create(
+					ref TransitsWithUnderPopulationUntilFailure,
+					"transits_with_under_population_until_failure",
+					"How many more transits with underpopulation can the ark survive.",
+					true
+				),
 			};
 
 			Strings = new String[]
@@ -116,6 +160,11 @@
 					ref YearsElapsedDelta,
 					"years_elapsed_delta",
 					"The ship time subtracted from the galactic time. This value will always be greater than or equal to zero."
+				),
+				Create(
+					ref PreviousTransitYearsElapsedShip,
+					"previous_transit_years_elapsed_ship",
+					"The number of years elapsed during the last transit, from the ship reference point."
 				),
 				Create(
 					ref PopulationMinimum,

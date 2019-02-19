@@ -617,6 +617,21 @@ namespace LunraGames.SubLight
 				"UpdateYearsElapsedDelta",
 				synchronizedId
 			);
+
+			SM.PushBlocking(
+				doneBlocking =>
+				{
+					App.Callbacks.KeyValueRequest(
+						KeyValueRequest.SetDefined(
+							DefinedKeyInstances.Game.PreviousTransitYearsElapsedShip,
+							Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears,
+							setDone => doneBlocking()
+						)
+					);
+				},
+				"UpdatePreviousTransitYearsElapsedShip",
+				synchronizedId
+			);
 		}
 
 		void OnCheckForEncounters()

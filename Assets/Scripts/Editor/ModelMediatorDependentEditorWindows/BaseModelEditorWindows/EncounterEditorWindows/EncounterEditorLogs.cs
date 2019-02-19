@@ -670,6 +670,11 @@ namespace LunraGames.SubLight
 					EditorGUILayout.HelpBox("Unrecognized KeyValueType: " + entry.KeyValueType.Value, MessageType.Error);
 					break;
 			}
+
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "Passing this filter is required to continue to run this key value logic."),
+				entry.Filtering
+			);
 		}
 
 		void OnKeyValueLogEdgeEntryBeginFirstLine<T>(

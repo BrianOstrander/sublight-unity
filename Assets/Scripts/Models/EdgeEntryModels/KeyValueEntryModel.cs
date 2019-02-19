@@ -218,6 +218,9 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
+		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
+		[JsonIgnore] public ValueFilterModel Filtering { get { return filtering; } }
+
 		[JsonProperty] KeyValueTypes keyValueType;
 		[JsonIgnore] public readonly ListenerProperty<KeyValueTypes> KeyValueType;
 

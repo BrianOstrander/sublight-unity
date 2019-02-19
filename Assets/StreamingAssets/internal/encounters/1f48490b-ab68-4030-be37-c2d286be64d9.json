@@ -13,72 +13,16 @@
     "encounterInteractions": []
   },
   "logs": {
-    "keyValueLogs": [
-      {
-        "entries": [],
-        "index": 1,
-        "ending": true,
-        "logId": "f4915045-ef24-44f4-9a6a-481f7adf70b9"
-      }
-    ],
+    "keyValueLogs": [],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
     "eventLogs": [
       {
-        "entries": [
-          {
-            "entry": {
-              "encounterEvent": "Debug",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {
-                  "message": "Run ResourceRequest Default"
-                },
-                "enums": {
-                  "severity": 0
-                },
-                "floats": {}
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "2f679984-9747-46b7-828e-7fcc85842210"
-            }
-          },
-          {
-            "entry": {
-              "encounterEvent": "DumpKeyValues",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
-                  "target": 50
-                },
-                "floats": {}
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "b80004f7-a665-4f7a-ab19-0b7c062d967f"
-            },
-            "index": 1
-          }
-        ],
+        "entries": [],
         "beginning": true,
-        "logId": "7d6cd449-b38d-4a1d-b707-abcb4b1aa5df",
-        "fallbackLogId": "f4915045-ef24-44f4-9a6a-481f7adf70b9",
-        "name": "Begin"
+        "ending": true,
+        "logId": "3a7bcb90-a21f-4b30-ba88-e95c8fb97163"
       }
     ],
     "dialogLogs": [],
