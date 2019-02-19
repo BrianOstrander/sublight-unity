@@ -2,7 +2,7 @@
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "bc9e8585-830b-4a99-a741-2e9c48fed331",
-  "name": "InitializeRules Default",
+  "name": "Test KVs",
   "trigger": "InitializeRules",
   "filtering": {
     "showValues": true,
@@ -28,17 +28,132 @@
               "booleanValue": {
                 "Operation": "Set",
                 "Input0": {
-                  "Source": "LocalValue"
+                  "AddressId": "655d1bb0-424c-4507-8acb-62ebdf7e32a2",
+                  "Source": "LocalValue",
+                  "LocalValue": true
                 },
                 "Input1": {
+                  "AddressId": "cb2fe2fb-90e2-4d6c-ab24-c3238bc90c02",
                   "Source": "LocalValue"
                 },
                 "Output": {
-                  "Source": "LocalValue"
+                  "AddressId": "d3c9d6dc-4a7b-4c03-812d-95bafdf0d48a",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_bool"
                 }
               },
-              "entryId": "bc29d719-5a18-4dee-b60b-ba74ee9e5295"
+              "entryId": "0afdf8f1-eeb3-40e2-a436-a3e3ad88f3d1"
             }
+          },
+          {
+            "entry": {
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "a5edf6ee-04a7-4a07-8fea-4c906cd08d45",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "db6e2fde-df06-4c86-bc27-6512c017eab5",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "1aa1b42a-6cb2-4800-b377-216ec660a210",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_bool"
+                }
+              },
+              "entryId": "2daa06fe-be1b-40c1-89aa-b68f69ccd3d2"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "And",
+                "Input0": {
+                  "AddressId": "6d662702-5af0-4748-85fc-0728cd49eb7f",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_bool"
+                },
+                "Input1": {
+                  "AddressId": "8737a6a0-b44d-4688-9295-2c536a9fbbee",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_bool"
+                },
+                "Output": {
+                  "AddressId": "b0655478-68f5-41ab-8785-d561a7588e64",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "and_bool"
+                }
+              },
+              "entryId": "bffac977-20a1-4631-ac13-a3ee33d0283c"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Or",
+                "Input0": {
+                  "AddressId": "8c60cf84-4dad-4fea-94e5-3921e45c21c0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_bool"
+                },
+                "Input1": {
+                  "AddressId": "6019aed3-2edc-420e-9a56-688217418109",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_bool"
+                },
+                "Output": {
+                  "AddressId": "197ad6db-f5fe-41b3-b21c-d86cec60b0f4",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "or_bool"
+                }
+              },
+              "entryId": "ec04b767-75b9-4e75-88ac-6e576ed4b479"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Xor",
+                "Input0": {
+                  "AddressId": "ddcda457-55ef-436c-a535-63dad53a8949",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_bool"
+                },
+                "Input1": {
+                  "AddressId": "d3d562e8-bd08-4d7e-a5c5-40e78cc94100",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_bool"
+                },
+                "Output": {
+                  "AddressId": "635f1cbb-8faf-40ac-8d22-85d1b7d4dd30",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "xor_bool"
+                }
+              },
+              "entryId": "26681f4e-6bdc-4003-ba21-3df0e41a2f15"
+            },
+            "index": 4
           },
           {
             "entry": {
@@ -46,24 +161,310 @@
               "integerValue": {
                 "Operation": "Set",
                 "Input0": {
-                  "Source": "LocalValue"
+                  "AddressId": "a3746920-8f20-4531-ad35-e648b72a1c5b",
+                  "Source": "LocalValue",
+                  "LocalValue": 2
                 },
                 "Input1": {
+                  "AddressId": "7667eec8-eba8-4ad1-a774-236d5d46843b",
                   "Source": "LocalValue"
                 },
                 "MinimumClamping": {
+                  "AddressId": "14d27e0f-3da7-4dbb-819b-2af365f5f024",
                   "Source": "LocalValue"
                 },
                 "MaximumClamping": {
+                  "AddressId": "7b74b967-0f47-4f58-90f3-11563a27219b",
                   "Source": "LocalValue"
                 },
                 "Output": {
-                  "Source": "LocalValue"
+                  "AddressId": "519c1d16-64ec-4dab-806f-94f1b0f50609",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_int"
                 }
               },
-              "entryId": "553a4008-41d9-4b30-9e7b-c694b66b6f16"
+              "entryId": "36c51375-4de6-4dcd-862a-87cfad08b240"
             },
-            "index": 1
+            "index": 5
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "315e2671-72fc-4dba-83ef-dfccd59bb62b",
+                  "Source": "LocalValue",
+                  "LocalValue": 6
+                },
+                "Input1": {
+                  "AddressId": "fe431b40-dddb-461c-b376-350e3eafa646",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "78cb8a62-c724-41d2-b614-9898ec828a65",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "eb5ceea1-d2ad-47b3-81ba-81e00b36efeb",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "9b78dd4c-bd6a-458f-b666-35013e7df61e",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_int"
+                }
+              },
+              "entryId": "485b9824-545c-4bd0-94de-47b1fde68fa9"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "12355b82-724c-450e-9270-27f25eff4ec9",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_int"
+                },
+                "Input1": {
+                  "AddressId": "8f6e2bba-9621-4623-9539-21d6141bec55",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_int"
+                },
+                "MinimumClamping": {
+                  "AddressId": "64dcc345-0f48-4bc6-af54-0759b7680db1",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "6da54d0d-d7bb-49ec-b680-cb3c5e8d87d4",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "0db10936-4db5-4b4e-889b-07c7c22c7496",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "add_int"
+                }
+              },
+              "entryId": "9e6ae888-0e99-4d7d-a3cf-77195557fa57"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Subtract",
+                "Input0": {
+                  "AddressId": "7d53e98b-2fc3-4744-9660-66f844528550",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_int"
+                },
+                "Input1": {
+                  "AddressId": "42fc32c3-2504-4211-8b2f-8beb3ecf724c",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_int"
+                },
+                "MinimumClamping": {
+                  "AddressId": "831d600c-0655-4449-b8cd-871f70603618",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "bc95c02d-e200-4479-9ce1-ad7644b554f0",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "525051e1-7968-45fa-956a-8eeac389fbc9",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "sub_int"
+                }
+              },
+              "entryId": "c95d97a6-7262-4c49-982d-7ea3ef60fb1c"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "b5aa3580-5cc9-4991-8564-70fa470dea20",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_int"
+                },
+                "Input1": {
+                  "AddressId": "e4c6aa37-af0f-4d06-8284-4321c0452459",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_int"
+                },
+                "MinimumClamping": {
+                  "AddressId": "7047116e-e0ea-462e-92e5-07dbabbc9a33",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "c63bcdaa-e267-468e-9665-87ada066c624",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "1bb7c695-f13e-4973-95c2-8b445dfb2755",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "mult_int"
+                }
+              },
+              "entryId": "4f00b8ad-0ae8-41d3-8bc8-d4a06ef4d148"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Divide",
+                "Input0": {
+                  "AddressId": "886b8d82-92aa-42f6-826f-2c9da5069f4a",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_int"
+                },
+                "Input1": {
+                  "AddressId": "7c52db66-3ed7-4b96-bd11-42bf09265011",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_int"
+                },
+                "MinimumClamping": {
+                  "AddressId": "a98de8c0-5ac2-493f-9864-1857fae8a111",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "19a29fbb-1c71-411f-9b3e-d0b714606a85",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "b80db6e0-f9bc-4c42-912e-bba3f7b71d51",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "div_int"
+                }
+              },
+              "entryId": "266529bf-9c3b-459a-b7dc-44870735844c"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Modulo",
+                "Input0": {
+                  "AddressId": "50de1b3f-907c-4b0f-8f66-3d5fff6b4787",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_int"
+                },
+                "Input1": {
+                  "AddressId": "721c474f-d90c-4af7-8519-45e61ce89830",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_int"
+                },
+                "MinimumClamping": {
+                  "AddressId": "a362a718-a721-4029-98eb-700a66c53b2e",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "b64b10c9-39ca-4592-964c-812239b0854a",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "856aa9ad-8691-4d7d-9241-f19fefb83cbf",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "mod_int"
+                }
+              },
+              "entryId": "c8100bf8-96e0-438d-900a-68569ae6bc4d"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Clamp",
+                "Input0": {
+                  "AddressId": "2fc3f489-c234-404a-83f1-3160763a8047",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_int"
+                },
+                "Input1": {
+                  "AddressId": "58cdaff3-831c-4429-a77a-4e4ab935be3b",
+                  "Source": "LocalValue"
+                },
+                "MinimumClampingEnabled": true,
+                "MaximumClampingEnabled": true,
+                "MinimumClamping": {
+                  "AddressId": "8b7b867e-efaa-4ba2-a060-1e6ed3ecd48d",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "f0004187-518b-440d-bf6d-1fc92d07fa24",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_int"
+                },
+                "Output": {
+                  "AddressId": "72a84d28-d2f7-4704-8323-a2b2f6c8ab54",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "clamp_int"
+                }
+              },
+              "entryId": "dd22e40a-59e5-4515-ad06-5b5dd836247d"
+            },
+            "index": 12
+          }
+        ],
+        "index": 1,
+        "logId": "c4b1785c-e7a8-4ee4-b47d-bdac67548901",
+        "fallbackLogId": "80dcb8b8-6d3e-4d49-819d-fd83371ee49f"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "keyValueType": "String",
+              "stringValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "97d24bf7-710f-4d2a-86a1-7a93b6c1f1df",
+                  "Source": "LocalValue",
+                  "LocalValue": "ha"
+                },
+                "Output": {
+                  "AddressId": "1f99499f-651f-435d-b87e-a9b715f7dbe0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_string"
+                }
+              },
+              "entryId": "958049f9-e909-4b36-b703-39858a052163"
+            }
           },
           {
             "entry": {
@@ -71,13 +472,270 @@
               "stringValue": {
                 "Operation": "Set",
                 "Input0": {
+                  "AddressId": "2d88b094-71db-48b0-8549-7856676bd311",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_string"
+                },
+                "Output": {
+                  "AddressId": "22a7cce5-5d4e-4923-be7e-1eb660c1073d",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "othe_string"
+                }
+              },
+              "entryId": "f73854b0-b482-4e12-83c9-2928ff160df3"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "01aa1984-bc16-4b41-a638-a1e942460219",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_float"
+                },
+                "Input1": {
+                  "AddressId": "c82efef2-a825-4131-8989-511951387f48",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_float"
+                },
+                "MinimumClamping": {
+                  "AddressId": "38d26801-ae1a-4ea1-942d-fef3e007da8c",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "2ebd13d0-17f2-484b-a3a4-dcff50c5efe4",
                   "Source": "LocalValue"
                 },
                 "Output": {
-                  "Source": "LocalValue"
+                  "AddressId": "a14815bb-730a-40d8-ae55-d80d91c5deae",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "add_float"
                 }
               },
-              "entryId": "21f891b4-d474-4e7b-a4ec-2a3d912b27ac"
+              "entryId": "42d32975-3bcf-4333-a095-d3226c79a7cf"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Subtract",
+                "Input0": {
+                  "AddressId": "3a7d3383-698c-47c8-852b-b04a1726f50e",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_float"
+                },
+                "Input1": {
+                  "AddressId": "2f3a4b8a-71c7-4473-8c3b-6e10f7ac70d4",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_float"
+                },
+                "MinimumClamping": {
+                  "AddressId": "b11a23a9-4c47-4dbd-bf80-6c84bc174669",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "8da1a73e-3533-4b3e-82c1-43c14900855e",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "bc229a72-c063-46fd-a64b-4010e6e0520b",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "sub_float"
+                }
+              },
+              "entryId": "edd2231e-9a41-46b0-a12f-f464b7312411"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "f0a0310c-da2b-448b-845c-0092365153b3",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_float"
+                },
+                "Input1": {
+                  "AddressId": "50e16254-5512-48c8-900d-35c4e1a4e89b",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_float"
+                },
+                "MinimumClamping": {
+                  "AddressId": "1d261405-897b-40df-960c-16d9477db125",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "715a6164-60a5-4587-85f7-1d372da45fac",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "0df9fc2b-bdf4-4b60-a4e8-7b1d859e1fb2",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "mult_float"
+                }
+              },
+              "entryId": "e235ccb7-acb9-45bf-aa87-2d0d736feb1b"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Divide",
+                "Input0": {
+                  "AddressId": "16af73f7-5ad0-41d7-b0bc-028d8d621cdf",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_float"
+                },
+                "Input1": {
+                  "AddressId": "e7393d35-4e9e-41b3-a2c9-c8045c75aad7",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_float"
+                },
+                "MinimumClamping": {
+                  "AddressId": "77b14021-3af8-451a-a861-44a59082fd5b",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "d2d87454-6ad9-4cb5-ae62-aca522b46bd3",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "523ed2e9-2aa8-439e-9595-458ce4c12aba",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "div_float"
+                }
+              },
+              "entryId": "0bb2e6be-cd8b-419c-a1b5-9b9a53b68a2c"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Modulo",
+                "Input0": {
+                  "AddressId": "978505ab-5831-43aa-a9a2-661de6d1de3c",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_float"
+                },
+                "Input1": {
+                  "AddressId": "1feb0ec7-0201-40a0-acbd-9b3ed14c56bd",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_float"
+                },
+                "MinimumClamping": {
+                  "AddressId": "97b4c682-337a-4c41-8763-29ca8bffe97b",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "dc95b991-9128-49f9-aee9-2dd090fb8fef",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "470bf316-afd5-43c5-a1de-811c8237a1a8",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "mod_float"
+                }
+              },
+              "entryId": "bac564ef-23f0-4477-9a2b-4e89531535c2"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Clamp",
+                "Input0": {
+                  "AddressId": "7714b0ea-bb91-4bce-a353-94207b4025b0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_float"
+                },
+                "Input1": {
+                  "AddressId": "8660a99c-d050-422c-bd4f-315638cade87",
+                  "Source": "LocalValue"
+                },
+                "MinimumClampingEnabled": true,
+                "MaximumClampingEnabled": true,
+                "MinimumClamping": {
+                  "AddressId": "c9d89fdd-3765-4b4d-aed8-70988d38b4f8",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "b36fa5d5-55ad-497d-b65e-606fd51a01df",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_float"
+                },
+                "Output": {
+                  "AddressId": "ed20d94b-e575-42e5-80b1-41d4e043b06b",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "clamp_float"
+                }
+              },
+              "entryId": "43c03934-9716-43d4-80bb-5396db75892f"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "ac3cf152-2b94-4cc7-b030-108495279041",
+                  "Source": "LocalValue",
+                  "LocalValue": 2.0
+                },
+                "Input1": {
+                  "AddressId": "be3b2d8c-1858-4f76-84a5-2b465492494a",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "aa10a546-ad3f-45ab-be9d-b633c812b035",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "21ef4950-4649-4c97-8501-5541f4d51199",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "b342411f-50a1-4900-abc0-c29019f2711f",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "some_float"
+                }
+              },
+              "entryId": "34f6954a-f564-4340-8b87-7c4be188c7e8"
             },
             "index": 2
           },
@@ -87,29 +745,139 @@
               "floatValue": {
                 "Operation": "Set",
                 "Input0": {
-                  "Source": "LocalValue"
+                  "AddressId": "6ecddde0-83c0-48bf-bd0f-ef70afddd8e6",
+                  "Source": "LocalValue",
+                  "LocalValue": 6.0
                 },
                 "Input1": {
+                  "AddressId": "95d1f216-1db7-4900-ba1a-b80e85608d2d",
                   "Source": "LocalValue"
                 },
                 "MinimumClamping": {
+                  "AddressId": "b6957f28-ffc8-4175-9d50-ba5a082e882f",
                   "Source": "LocalValue"
                 },
                 "MaximumClamping": {
+                  "AddressId": "8b79ab0f-f4f6-4913-81f6-90faf0b3d36e",
                   "Source": "LocalValue"
                 },
                 "Output": {
-                  "Source": "LocalValue"
+                  "AddressId": "06f97631-915c-42e8-996f-4061818a285e",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "other_float"
                 }
               },
-              "entryId": "b9af9742-3ae7-494d-b7e1-e77ce2144b00"
+              "entryId": "953e1ff6-b866-4457-8dbf-653a1dcdae2b"
             },
             "index": 3
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Round",
+                "Input0": {
+                  "AddressId": "2f51ca0e-0a30-45c0-985b-8a196e6da97d",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "div_float"
+                },
+                "Input1": {
+                  "AddressId": "8d9ce4e2-4c28-4892-97fe-b01e0c4f500c",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "2a12e455-d3f4-4078-af20-3faec5beab6a",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "dfcb9fb9-5847-4025-a7de-ec34775c2f3c",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "f936884c-5f25-4bc4-8d54-86ff72b3dd0c",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "round_float"
+                }
+              },
+              "entryId": "f2c4b03f-f38e-4849-ac85-828e08533d87"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Floor",
+                "Input0": {
+                  "AddressId": "99e35d97-766d-4d83-8787-19418070824b",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "div_float"
+                },
+                "Input1": {
+                  "AddressId": "5ec91531-96b2-44bf-9464-9868b5b3b039",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "1711c7de-e731-4175-9e27-1bb8a3c50ad0",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "373545ee-35c3-478d-b6a7-90d45d6b55f4",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "4104f229-8b8d-4d46-9711-20b284a41423",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "floor_float"
+                }
+              },
+              "entryId": "95f5ee7f-529b-4c93-a823-0f23681b675b"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Ceiling",
+                "Input0": {
+                  "AddressId": "3a0652fc-3c5b-4691-a012-7c87669c3c3f",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "div_float"
+                },
+                "Input1": {
+                  "AddressId": "dac303a3-0faa-4ebc-857c-879a0cff6d5e",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "c3e3263e-a197-4233-8dcd-8e8779ec1644",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "4725e74b-b441-4c2e-aee4-f83efa5c4429",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "8636de38-2409-47d2-baa4-fb224b17ab16",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "ceil_float"
+                }
+              },
+              "entryId": "d196c286-ada8-44ac-a348-b8ef357fe24a"
+            },
+            "index": 12
           }
         ],
-        "index": 1,
-        "ending": true,
-        "logId": "c4b1785c-e7a8-4ee4-b47d-bdac67548901"
+        "index": 3,
+        "logId": "80dcb8b8-6d3e-4d49-819d-fd83371ee49f",
+        "fallbackLogId": "1778b514-00ee-4f7f-92c0-6798075ee058"
       }
     ],
     "switchLogs": [],
@@ -146,14 +914,45 @@
         "beginning": true,
         "logId": "965bd402-9f03-452d-b03d-ace12b45b564",
         "fallbackLogId": "c4b1785c-e7a8-4ee4-b47d-bdac67548901"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 10
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "74df70a7-aa07-4ec9-9cb7-130b7ae95ab6"
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "1778b514-00ee-4f7f-92c0-6798075ee058",
+        "name": "dump kv"
       }
     ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": []
   },
+  "ignore": true,
   "version": 7,
-  "meta": "InitializeRules Default",
+  "meta": "Test KVs",
   "metaKeyValues": {
     "EncounterId": "bc9e8585-830b-4a99-a741-2e9c48fed331"
   },

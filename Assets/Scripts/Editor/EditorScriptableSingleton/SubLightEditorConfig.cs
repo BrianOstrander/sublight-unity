@@ -90,6 +90,20 @@ namespace LunraGames.SubLight
 		Texture encounterEditorLogToolbarNextImage;
 		public Texture EncounterEditorLogToolbarNextImage { get { return encounterEditorLogToolbarNextImage; } }
 
+		[SerializeField]
+		SkinColor encounterEditorLogKeyValueOperationLabelsTextColor = SkinColor.Default;
+		[SerializeField]
+		GUIStyle encounterEditorLogKeyValueOperationLabels;
+		public GUIStyle EncounterEditorLogKeyValueOperationLabels
+		{
+			get
+			{
+				var result = new GUIStyle(encounterEditorLogKeyValueOperationLabels);
+				result.normal.textColor = encounterEditorLogKeyValueOperationLabelsTextColor;
+				return result;
+			}
+		}
+
 		[Header("Galaxy Editor Styles")]
 		[SerializeField]
 		GUIStyle galaxyEditorGalaxyTargetStyle;

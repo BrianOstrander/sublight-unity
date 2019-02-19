@@ -18,6 +18,11 @@ namespace LunraGames.SubLight
 			public const string SelectOrCreateLog = "- Select Or Create Log -";
 		}
 
+		static class LogFloats
+		{
+			public const float KeyValueOperationWidth = 80f;
+		}
+
 		class EncounterEditorLogCache
 		{
 			public string[] BustIdsInitialized;
@@ -606,80 +611,349 @@ namespace LunraGames.SubLight
 			switch (entry.KeyValueType.Value)
 			{
 				case KeyValueTypes.Boolean:
-					OnKeyValueLogEdgeEntry(entry, entry.BooleanValue.Value);
+					OnKeyValueLogEdgeEntry(entry.BooleanValue);
 					break;
 				case KeyValueTypes.Integer:
-					OnKeyValueLogEdgeEntry(entry, entry.IntegerValue.Value);
+					OnKeyValueLogEdgeEntry(entry.IntegerValue);
 					break;
 				case KeyValueTypes.String:
-					OnKeyValueLogEdgeEntry(entry, entry.StringValue.Value);
+					OnKeyValueLogEdgeEntry(entry.StringValue);
 					break;
 				case KeyValueTypes.Float:
-					OnKeyValueLogEdgeEntry(entry, entry.FloatValue.Value);
+					OnKeyValueLogEdgeEntry(entry.FloatValue);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized KeyValueType: " + entry.KeyValueType.Value, MessageType.Error);
 					break;
 			}
+		}
 
-			//entry.Target.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
-			//	new GUIContent("Target", "Determines the target value store to modify."),
-			//	"- Selecte a Target -",
-			//	entry.Target.Value
-			//);
+		void OnKeyValueLogEdgeEntryBeginFirstLine<T>(
+			KeyValueEntryModel.BaseBlock<T> block
+		)
+			where T : IConvertible
+		{
+			GUILayout.BeginHorizontal();
 
-			//entry.Key.Value = EditorGUILayout.TextField(new GUIContent("Key", "The key to change the value of."), entry.Key.Value);
+			EditorGUILayoutDefinedKeyValue.Value(
+				() => block.Output,
+				result => block.Output = result,
+				KeyValueSources.KeyValue
+			);
+		}
 
-			//switch (entry.Operation.Value)
-			//{
-			//	case KeyValueOperations.SetBoolean: entry.BooleanValue.Value = EditorGUILayout.Toggle("Value", entry.BooleanValue.Value); break;
-			//	case KeyValueOperations.SetInteger: entry.IntegerValue.Value = EditorGUILayout.IntField("Value", entry.IntegerValue.Value); break;
-			//	case KeyValueOperations.SetString: entry.StringValue.Value = EditorGUILayout.TextField("Value", entry.StringValue.Value); break;
-			//	case KeyValueOperations.SetFloat: entry.FloatValue.Value = EditorGUILayout.FloatField("Value", entry.FloatValue.Value); break;
-			//	default: EditorGUILayout.HelpBox("Unrecognized Operation: " + entry.Operation.Value, MessageType.Error); break;
-			//}
+		void OnKeyValueLogEdgeEntryEndFirstLine()
+		{
+			GUILayout.EndHorizontal();
 		}
 
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel entry,
 			KeyValueEntryModel.BooleanBlock block
 		)
 		{
+			OnKeyValueLogEdgeEntryBeginFirstLine(block);
 
+			var previousOperation = block.Operation;
+			block.Operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				GUIContent.none,
+				"- Operation -",
+				block.Operation,
+				Color.red,
+				guiOptions: GUILayout.Width(LogFloats.KeyValueOperationWidth)
+			);
 
-			entry.BooleanValue.Value = block;
+			if (previousOperation != block.Operation)
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.BooleanBlock.Operations.Set:
+						block.Input1 = KeyValueAddress<bool>.Default;
+						break;
+				}
+			}
+
+			OnKeyValueLogEdgeEntryEndFirstLine();
+
+			GUILayout.BeginHorizontal();
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.BooleanBlock.Operations.Set:
+						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input0,
+							result => block.Input0 = result
+						);
+
+						GUILayout.FlexibleSpace();
+						break;
+					case KeyValueEntryModel.BooleanBlock.Operations.And:
+					case KeyValueEntryModel.BooleanBlock.Operations.Or:
+					case KeyValueEntryModel.BooleanBlock.Operations.Xor:
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input0,
+							result => block.Input0 = result
+						);
+						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input1,
+							result => block.Input1 = result
+						);
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
+						break;
+				}
+			}
+			GUILayout.EndHorizontal();
 		}
 
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel entry,
 			KeyValueEntryModel.IntegerBlock block
 		)
 		{
-			// todo: logic here
+			OnKeyValueLogEdgeEntryBeginFirstLine(block);
 
-			entry.IntegerValue.Value = block;
+			var previousOperation = block.Operation;
+			block.Operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				GUIContent.none,
+				"- Operation -",
+				block.Operation,
+				Color.red,
+				guiOptions: GUILayout.Width(LogFloats.KeyValueOperationWidth)
+			);
+
+			if (previousOperation != block.Operation)
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.IntegerBlock.Operations.Set:
+					case KeyValueEntryModel.IntegerBlock.Operations.Clamp:
+						block.Input1 = KeyValueAddress<int>.Default;
+						break;
+				}
+			}
+
+			OnKeyValueLogEdgeEntryEndFirstLine();
+
+			GUILayout.BeginHorizontal();
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.IntegerBlock.Operations.Set:
+					case KeyValueEntryModel.IntegerBlock.Operations.Clamp:
+						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input0,
+							result => block.Input0 = result
+						);
+						GUILayout.FlexibleSpace();
+						break;
+					case KeyValueEntryModel.IntegerBlock.Operations.Add:
+					case KeyValueEntryModel.IntegerBlock.Operations.Subtract:
+					case KeyValueEntryModel.IntegerBlock.Operations.Multiply:
+					case KeyValueEntryModel.IntegerBlock.Operations.Divide:
+					case KeyValueEntryModel.IntegerBlock.Operations.Modulo:
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input0,
+							result => block.Input0 = result
+						);
+						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input1,
+							result => block.Input1 = result
+						);
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
+						break;
+				}
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushEnabled(block.MinimumClampingEnabled);
+				{
+					GUILayout.Label("MINIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
+					EditorGUILayoutDefinedKeyValue.Value(
+						() => block.MinimumClamping,
+						result => block.MinimumClamping = result
+					);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+				if (block.MinimumClampingEnabled != EditorGUILayout.Toggle(block.MinimumClampingEnabled, GUILayout.Width(14f)))
+				{
+					block.MinimumClampingEnabled = !block.MinimumClampingEnabled;
+					if (!block.MinimumClampingEnabled) block.MinimumClamping = KeyValueAddress<int>.Default;
+				}
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushEnabled(block.MaximumClampingEnabled);
+				{
+					GUILayout.Label("MAXIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
+					EditorGUILayoutDefinedKeyValue.Value(
+						() => block.MaximumClamping,
+						result => block.MaximumClamping = result
+					);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+				if (block.MaximumClampingEnabled != EditorGUILayout.Toggle(block.MaximumClampingEnabled, GUILayout.Width(14f)))
+				{
+					block.MaximumClampingEnabled = !block.MaximumClampingEnabled;
+					if (!block.MinimumClampingEnabled) block.MaximumClamping = KeyValueAddress<int>.Default;
+				}
+			}
+			GUILayout.EndHorizontal();
 		}
 
-
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel entry,
 			KeyValueEntryModel.StringBlock block
 		)
 		{
-			// todo: logic here
+			OnKeyValueLogEdgeEntryBeginFirstLine(block);
 
-			entry.StringValue.Value = block;
+			var previousOperation = block.Operation;
+			block.Operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				GUIContent.none,
+				"- Operation -",
+				block.Operation,
+				Color.red,
+				guiOptions: GUILayout.Width(LogFloats.KeyValueOperationWidth)
+			);
+
+			OnKeyValueLogEdgeEntryEndFirstLine();
+
+			GUILayout.BeginHorizontal();
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.StringBlock.Operations.Set:
+						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input0,
+							result => block.Input0 = result
+						);
+
+						GUILayout.FlexibleSpace();
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
+						break;
+				}
+			}
+			GUILayout.EndHorizontal();
 		}
 
-
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel entry,
 			KeyValueEntryModel.FloatBlock block
 		)
 		{
-			// todo: logic here
+			OnKeyValueLogEdgeEntryBeginFirstLine(block);
 
-			entry.FloatValue.Value = block;
+			var previousOperation = block.Operation;
+			block.Operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				GUIContent.none,
+				"- Operation -",
+				block.Operation,
+				Color.red,
+				guiOptions: GUILayout.Width(LogFloats.KeyValueOperationWidth)
+			);
+
+			if (previousOperation != block.Operation)
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.FloatBlock.Operations.Set:
+					case KeyValueEntryModel.FloatBlock.Operations.Clamp:
+					case KeyValueEntryModel.FloatBlock.Operations.Round:
+					case KeyValueEntryModel.FloatBlock.Operations.Floor:
+					case KeyValueEntryModel.FloatBlock.Operations.Ceiling:
+						block.Input1 = KeyValueAddress<float>.Default;
+						break;
+				}
+			}
+
+			OnKeyValueLogEdgeEntryEndFirstLine();
+
+			GUILayout.BeginHorizontal();
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.FloatBlock.Operations.Set:
+					case KeyValueEntryModel.FloatBlock.Operations.Clamp:
+					case KeyValueEntryModel.FloatBlock.Operations.Round:
+					case KeyValueEntryModel.FloatBlock.Operations.Floor:
+					case KeyValueEntryModel.FloatBlock.Operations.Ceiling:
+						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input0,
+							result => block.Input0 = result
+						);
+						GUILayout.FlexibleSpace();
+						break;
+					case KeyValueEntryModel.FloatBlock.Operations.Add:
+					case KeyValueEntryModel.FloatBlock.Operations.Subtract:
+					case KeyValueEntryModel.FloatBlock.Operations.Multiply:
+					case KeyValueEntryModel.FloatBlock.Operations.Divide:
+					case KeyValueEntryModel.FloatBlock.Operations.Modulo:
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input0,
+							result => block.Input0 = result
+						);
+						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
+						EditorGUILayoutDefinedKeyValue.Value(
+							() => block.Input1,
+							result => block.Input1 = result
+						);
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
+						break;
+				}
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushEnabled(block.MinimumClampingEnabled);
+				{
+					GUILayout.Label("MINIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
+					EditorGUILayoutDefinedKeyValue.Value(
+						() => block.MinimumClamping,
+						result => block.MinimumClamping = result
+					);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+				if (block.MinimumClampingEnabled != EditorGUILayout.Toggle(block.MinimumClampingEnabled, GUILayout.Width(14f)))
+				{
+					block.MinimumClampingEnabled = !block.MinimumClampingEnabled;
+					if (!block.MinimumClampingEnabled) block.MinimumClamping = KeyValueAddress<float>.Default;
+				}
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushEnabled(block.MaximumClampingEnabled);
+				{
+					GUILayout.Label("MAXIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
+					EditorGUILayoutDefinedKeyValue.Value(
+						() => block.MaximumClamping,
+						result => block.MaximumClamping = result
+					);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+				if (block.MaximumClampingEnabled != EditorGUILayout.Toggle(block.MaximumClampingEnabled, GUILayout.Width(14f)))
+				{
+					block.MaximumClampingEnabled = !block.MaximumClampingEnabled;
+					if (!block.MinimumClampingEnabled) block.MaximumClamping = KeyValueAddress<float>.Default;
+				}
+			}
+			GUILayout.EndHorizontal();
 		}
 		#endregion
 

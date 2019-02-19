@@ -8,8 +8,16 @@ namespace LunraGames.SubLight.Models
 {
 	public class KeyValueEntryModel : EdgeEntryModel
 	{
+		public interface BaseBlock<T>
+			where T : IConvertible
+		{
+			KeyValueAddress<T> Input0 { get; set; }
+
+			KeyValueAddress<T> Output { get; set; }
+		}
+
 		[Serializable]
-		public struct BooleanBlock
+		public class BooleanBlock : BaseBlock<bool>
 		{
 			public enum Operations
 			{
@@ -34,16 +42,19 @@ namespace LunraGames.SubLight.Models
 				}
 			}
 
-			public Operations Operation;
+			public Operations Operation { get; set; }
 
-			public KeyValueAddress<bool> Input0;
-			public KeyValueAddress<bool> Input1;
+			public KeyValueAddress<bool> Input0 { get; set; }
+			public KeyValueAddress<bool> Input1 { get; set; }
 
-			public KeyValueAddress<bool> Output;
+			public KeyValueAddress<bool> Output { get; set; }
+
+			[JsonIgnore]
+			public string OperationReadable { get { return Operation.ToString().ToUpper(); } }
 		}
 
 		[Serializable]
-		public struct IntegerBlock
+		public class IntegerBlock : BaseBlock<int>
 		{
 			public enum Operations
 			{
@@ -76,22 +87,39 @@ namespace LunraGames.SubLight.Models
 				}
 			}
 
-			public Operations Operation;
+			public Operations Operation { get; set; }
 
-			public KeyValueAddress<int> Input0;
-			public KeyValueAddress<int> Input1;
+			public KeyValueAddress<int> Input0 { get; set; }
+			public KeyValueAddress<int> Input1 { get; set; }
 
-			public bool MinimumClampingEnabled;
-			public bool MaximumClampingEnabled;
+			public bool MinimumClampingEnabled { get; set; }
+			public bool MaximumClampingEnabled { get; set; }
 
-			public KeyValueAddress<int> MinimumClamping;
-			public KeyValueAddress<int> MaximumClamping;
+			public KeyValueAddress<int> MinimumClamping { get; set; }
+			public KeyValueAddress<int> MaximumClamping { get; set; }
 
-			public KeyValueAddress<int> Output;
+			public KeyValueAddress<int> Output { get; set; }
+
+			[JsonIgnore]
+			public string OperationReadable
+			{
+				get
+				{
+					switch (Operation)
+					{
+						case Operations.Add: return "+";
+						case Operations.Subtract: return "-";
+						case Operations.Multiply: return "*";
+						case Operations.Divide: return "/";
+						case Operations.Modulo: return "%";
+					}
+					return Operation.ToString().ToUpper();
+				}
+			}
 		}
 
 		[Serializable]
-		public struct StringBlock
+		public class StringBlock : BaseBlock<string>
 		{
 			public enum Operations
 			{
@@ -112,15 +140,18 @@ namespace LunraGames.SubLight.Models
 				}
 			}
 
-			public Operations Operation;
+			public Operations Operation { get; set; }
 
-			public KeyValueAddress<string> Input0;
+			public KeyValueAddress<string> Input0 { get; set; }
 
-			public KeyValueAddress<string> Output;
+			public KeyValueAddress<string> Output { get; set; }
+
+			[JsonIgnore]
+			public string OperationReadable { get { return Operation.ToString().ToUpper(); } }
 		}
 
 		[Serializable]
-		public struct FloatBlock
+		public class FloatBlock : BaseBlock<float>
 		{
 			public enum Operations
 			{
@@ -156,18 +187,35 @@ namespace LunraGames.SubLight.Models
 				}
 			}
 
-			public Operations Operation;
+			public Operations Operation { get; set; }
 
-			public KeyValueAddress<float> Input0;
-			public KeyValueAddress<float> Input1;
+			public KeyValueAddress<float> Input0 { get; set; }
+			public KeyValueAddress<float> Input1 { get; set; }
 
-			public bool MinimumClampingEnabled;
-			public bool MaximumClampingEnabled;
+			public bool MinimumClampingEnabled { get; set; }
+			public bool MaximumClampingEnabled { get; set; }
 
-			public KeyValueAddress<float> MinimumClamping;
-			public KeyValueAddress<float> MaximumClamping;
+			public KeyValueAddress<float> MinimumClamping { get; set; }
+			public KeyValueAddress<float> MaximumClamping { get; set; }
 
-			public KeyValueAddress<float> Output;
+			public KeyValueAddress<float> Output { get; set; }
+
+			[JsonIgnore]
+			public string OperationReadable
+			{
+				get
+				{
+					switch (Operation)
+					{
+						case Operations.Add: return "+";
+						case Operations.Subtract: return "-";
+						case Operations.Multiply: return "*";
+						case Operations.Divide: return "/";
+						case Operations.Modulo: return "%";
+					}
+					return Operation.ToString().ToUpper();
+				}
+			}
 		}
 
 		[JsonProperty] KeyValueTypes keyValueType;

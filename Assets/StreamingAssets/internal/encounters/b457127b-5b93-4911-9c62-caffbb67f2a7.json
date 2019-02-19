@@ -1,0 +1,79 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330",
+  "name": "InitializeRules Default",
+  "trigger": "InitializeRules",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "a31fe23d-84b8-4982-b6f2-7baac76a5b59",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "7e1a57e0-ed7e-4c42-a659-c0480de34631"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Initializing Game Rules"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "67b3d3f9-3c15-4271-a34c-d5b92c04e07d"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "de52157e-a3b7-4bec-b2d0-e3765bd6d35d",
+        "fallbackLogId": "7e1a57e0-ed7e-4c42-a659-c0480de34631"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "InitializeRules Default",
+  "metaKeyValues": {
+    "EncounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330"
+  },
+  "created": "2019-02-18T19:16:17.499742-08:00",
+  "modified": "2019-02-18T19:16:17.499742-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}
