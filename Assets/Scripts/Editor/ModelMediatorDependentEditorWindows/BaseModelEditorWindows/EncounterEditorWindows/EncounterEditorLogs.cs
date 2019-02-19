@@ -557,46 +557,90 @@ namespace LunraGames.SubLight
 		#region KeyValue Logs
 		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)
 		{
-			var selection = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				GUIContent.none,
-				"- Append New Key Value Operation -",
-				KeyValueTypes.Unknown
-			);
-
-			switch (selection)
+			GUILayout.BeginHorizontal();
 			{
-				case KeyValueTypes.Unknown: break;
-				default:
-					OnEdgedLogSpawn(model, result => OnKeyValueLogSpawn(result, selection));
-					break;
+				var selection = EditorGUILayoutExtensions.HelpfulEnumPopup(
+					GUIContent.none,
+					"- Append New Key Value Operation -",
+					KeyValueTypes.Unknown
+				);
+
+				switch (selection)
+				{
+					case KeyValueTypes.Unknown: break;
+					default:
+						OnEdgedLogSpawn(model, result => OnKeyValueLogSpawn(result, selection));
+						break;
+				}
+
+				EditorGUIExtensions.PauseChangeCheck();
+				{
+					if (
+						GUILayout.Button(
+							new GUIContent("Defines", "Select a predefined key that is updated are listened to by the event system."),
+							EditorStyles.miniButton,
+							GUILayout.ExpandWidth(false)
+						)
+					)
+					{
+						DefinedKeyValueEditorWindow.Show(
+							null,
+							result => OnEdgedLogSpawn(
+								model,
+								spawnResult => OnKeyValueLogSpawn(spawnResult, result.ValueType, result.Target, result.Key)
+							)
+						);
+					}
+				}
+				EditorGUIExtensions.UnPauseChangeCheck();
 			}
+			GUILayout.EndHorizontal();
+
 
 			OnEdgedLog<KeyValueEncounterLogModel, KeyValueEdgeModel>(infoModel, model, OnKeyValueLogEdge);
 		}
 
 		void OnKeyValueLogSpawn(
 			KeyValueEdgeModel edge,
-			KeyValueTypes keyValueType
+			KeyValueTypes keyValueType,
+			KeyValueTargets target = KeyValueTargets.Unknown,
+			string key = null
 		)
 		{
+			ModelSelectionModified = true;
 			edge.Entry.KeyValueType.Value = keyValueType;
+			IKeyValueAddress output = null;
+			Action<IKeyValueAddress> setOutput;
+
 			switch (keyValueType)
 			{
 				case KeyValueTypes.Boolean:
-					edge.Entry.BooleanValue.Value = KeyValueEntryModel.BooleanBlock.Default;
+					output = (edge.Entry.BooleanValue.Value = KeyValueEntryModel.BooleanBlock.Default).Output;
+					setOutput = result => edge.Entry.BooleanValue.Value.Output = (KeyValueAddress<bool>)result;
 					break;
 				case KeyValueTypes.Integer:
-					edge.Entry.IntegerValue.Value = KeyValueEntryModel.IntegerBlock.Default;
+					output = (edge.Entry.IntegerValue.Value = KeyValueEntryModel.IntegerBlock.Default).Output;
+					setOutput = result => edge.Entry.IntegerValue.Value.Output = (KeyValueAddress<int>)result;
 					break;
 				case KeyValueTypes.String:
-					edge.Entry.StringValue.Value = KeyValueEntryModel.StringBlock.Default;
+					output = (edge.Entry.StringValue.Value = KeyValueEntryModel.StringBlock.Default).Output;
+					setOutput = result => edge.Entry.StringValue.Value.Output = (KeyValueAddress<string>)result;
 					break;
 				case KeyValueTypes.Float:
-					edge.Entry.FloatValue.Value = KeyValueEntryModel.FloatBlock.Default;
+					output = (edge.Entry.FloatValue.Value = KeyValueEntryModel.FloatBlock.Default).Output;
+					setOutput = result => edge.Entry.FloatValue.Value.Output = (KeyValueAddress<float>)result;
 					break;
 				default:
 					Debug.LogError("Unrecognized KeyValueType: " + keyValueType);
-					break;
+					return;
+			}
+
+			if (target != KeyValueTargets.Unknown && !string.IsNullOrEmpty(key))
+			{
+				output.Source = KeyValueSources.KeyValue;
+				output.ForeignTarget = target;
+				output.ForeignKey = key;
+				setOutput(output);
 			}
 		}
 
