@@ -12,6 +12,8 @@ namespace LunraGames.SubLight.Presenters
 			get { return focusLayer == SetFocusLayers.Unknown ? (focusLayer = SetFocusDetailsBase.GetLayer<D>()) : focusLayer; }
 		}
 
+		protected bool FocusLayerEnabled { get; private set; }
+
 		protected Transform ViewParent;
 
 		public FocusPresenter() : this(null) {}
@@ -36,6 +38,8 @@ namespace LunraGames.SubLight.Presenters
 			{
 				if (request.FirstActive)
 				{
+					FocusLayerEnabled = true;
+
 					// We check if they're the same, because if we're showing the priority layer we don't want to run logic for already visible stuff...
 					if (transition.Start.Enabled != transition.End.Enabled)
 					{
@@ -46,6 +50,8 @@ namespace LunraGames.SubLight.Presenters
 			}
 			else if (request.LastActive)
 			{
+				FocusLayerEnabled = false;
+
 				if (View.TransitionState == TransitionStates.Shown) CloseInstant();
 				else OnUpdateDisabled();
 			}
@@ -62,6 +68,18 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			OnTransitionActive(request, transition, transition.Start.Details as D, transition.End.Details as D);
+		}
+
+		/// <summary>
+		/// If a view should be shown or closed outside the normal focus logic,
+		/// call this. It will only force run the typical show and close logic
+		/// again, not actually override CanShow, CanClose, or CanReset logic.
+		/// </summary>
+		/// <param name="showing">If set to <c>true</c> showing.</param>
+		protected void ForceShowClose(bool showing)
+		{
+			if (showing) ShowInstant();
+			else CloseInstant();
 		}
 
 		void ShowInstant()

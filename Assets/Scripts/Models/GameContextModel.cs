@@ -87,6 +87,7 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
+
 		#region Read Only Listeners
 		UniverseScaleModel activeScale;
 		ListenerProperty<UniverseScaleModel> activeScaleListener;
@@ -106,6 +107,9 @@ namespace LunraGames.SubLight.Models
 
 		StackListModel<string> elapsedTimeBlockers = new StackListModel<string>();
 		public StackListModel<string> ElapsedTimeBlockers { get { return elapsedTimeBlockers; } }
+
+		StackListModel<DeveloperViews> developerViewsEnabled = new StackListModel<DeveloperViews>();
+		public StackListModel<DeveloperViews> DeveloperViewsEnabled { get { return developerViewsEnabled; } }
 		#endregion
 
 		#region Models
