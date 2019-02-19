@@ -12,6 +12,9 @@ namespace LunraGames.SubLight.Presenters
 		public GridDeveloperPresenter(GameModel model) : base(model)
 		{
 			App.Callbacks.KeyValueRequest += OnKeyValueRequest;
+
+			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
+			Model.Ship.Velocity.Changed += OnVelocity;
 		}
 
 		protected override void OnUnBind()
@@ -19,6 +22,9 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			App.Callbacks.KeyValueRequest -= OnKeyValueRequest;
+
+			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Model.Ship.Velocity.Changed -= OnVelocity;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -61,17 +67,38 @@ namespace LunraGames.SubLight.Presenters
 					new DeveloperStrings.RatioColor(Color.red, Color.green)
 				);
 
-				result += "\n";
-				return result;
+				if (Model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected)
+				{
+					result += "\n";
+
+					//var yearsTransit = RelativityUtility.TransitTime()
+
+					result += "Transit Consumption ---";
+				}
+
+				return result + "\n";
 			}
 		}
 
 		#region Events
 		void OnKeyValueRequest(KeyValueRequest request)
 		{
-			if (!View.Visible) return;
+			OnRefreshMessage();
+		}
 
-			View.Message = CurrentMessage;
+		void OnCelestialSystemState(CelestialSystemStateBlock celestialSystemState)
+		{
+			OnRefreshMessage();
+		}
+
+		void OnVelocity(TransitVelocity velocity)
+		{
+			OnRefreshMessage();
+		}
+
+		void OnRefreshMessage()
+		{
+			if (View.Visible) View.Message = CurrentMessage;
 		}
 		#endregion
 	}

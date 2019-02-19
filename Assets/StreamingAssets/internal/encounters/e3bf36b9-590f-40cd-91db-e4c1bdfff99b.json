@@ -100,73 +100,11 @@
               "entryId": "abe3af85-4eb5-4a12-9fab-276d715c7314"
             },
             "index": 1
-          },
-          {
-            "entry": {
-              "filtering": {
-                "falseByDefault": true,
-                "booleanKeyValues": [],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [
-                  {
-                    "operation": "LessThanOrEquals",
-                    "filterId": "366582c3-4bd5-47e4-a320-b463b86737e4",
-                    "group": "All",
-                    "Input0": {
-                      "AddressId": "d558f9e8-4762-4245-8040-426272842dd5",
-                      "Source": "KeyValue",
-                      "ForeignTarget": "Game",
-                      "ForeignKey": "rations"
-                    },
-                    "Input1": {
-                      "AddressId": "686670a6-ad17-4d59-a60a-bf3b42086c6d",
-                      "Source": "LocalValue"
-                    }
-                  }
-                ],
-                "encounterInteractions": []
-              },
-              "keyValueType": "Integer",
-              "integerValue": {
-                "Operation": "Add",
-                "Input0": {
-                  "AddressId": "a4c56d98-72bd-423a-9bf5-5d9f0b23e163",
-                  "Source": "KeyValue",
-                  "ForeignTarget": "Game",
-                  "ForeignKey": "transits_without_rations"
-                },
-                "Input1": {
-                  "AddressId": "b84a494e-4384-4781-a150-e58a70431b7b",
-                  "Source": "LocalValue",
-                  "LocalValue": 1
-                },
-                "MaximumClampingEnabled": true,
-                "MinimumClamping": {
-                  "AddressId": "2f085b03-3302-4335-b0fc-09cbe1d989ec",
-                  "Source": "LocalValue"
-                },
-                "MaximumClamping": {
-                  "AddressId": "839472ed-76b5-41a4-b008-78b7eeef1250",
-                  "Source": "KeyValue",
-                  "ForeignTarget": "Game",
-                  "ForeignKey": "transits_without_rations_maximum"
-                },
-                "Output": {
-                  "AddressId": "ed7430ef-030c-457b-b45e-67c8dcf08ba9",
-                  "Source": "KeyValue",
-                  "ForeignTarget": "Game",
-                  "ForeignKey": "transits_without_rations"
-                }
-              },
-              "entryId": "916263ce-1fc7-41e7-b351-43e09f886289"
-            },
-            "index": 2
           }
         ],
         "beginning": true,
         "logId": "1fe0b10b-9b33-4194-a1e1-0153726262d7",
-        "fallbackLogId": "c9f814dc-5660-4653-9151-7876d456956c"
+        "fallbackLogId": "81c95ed1-7748-48c4-bc79-5c35cc366cd7"
       },
       {
         "entries": [
@@ -302,13 +240,105 @@
             "index": 2
           }
         ],
-        "index": 1,
+        "index": 3,
         "logId": "c9f814dc-5660-4653-9151-7876d456956c",
         "fallbackLogId": "36a10195-6191-4497-ada4-bdfebd1dc314",
         "name": "Until Failure Calculations"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "21594711-3935-442d-b52f-74a25f0741b2",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transits_without_rations"
+                },
+                "Input1": {
+                  "AddressId": "22727333-5929-400d-b6b2-4244d1baaaf6",
+                  "Source": "LocalValue",
+                  "LocalValue": 1
+                },
+                "MaximumClampingEnabled": true,
+                "MinimumClamping": {
+                  "AddressId": "f691ba2b-4c88-4274-b202-b951b96b4dd5",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "8b6e2660-f482-44cd-99d8-fbe7dc8b997d",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transits_without_rations_maximum"
+                },
+                "Output": {
+                  "AddressId": "f58b16c5-e0ed-4e27-a713-d49197ede89d",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transits_without_rations"
+                }
+              },
+              "entryId": "deb16892-cbf2-49d4-8410-569f5faeee79"
+            }
+          }
+        ],
+        "index": 2,
+        "logId": "6ad563c5-b08a-416c-b69c-3df3a84070d7",
+        "fallbackLogId": "c9f814dc-5660-4653-9151-7876d456956c",
+        "name": "Out Of Rations",
+        "notes": "This runs if the current amount of rations is zero."
       }
     ],
-    "switchLogs": [],
+    "switchLogs": [
+      {
+        "switches": [
+          {
+            "entry": {
+              "nextLogId": "6ad563c5-b08a-416c-b69c-3df3a84070d7",
+              "filtering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThanOrEquals",
+                    "filterId": "cb75dbc7-e6b5-4beb-b75a-6bfb837a9271",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "d8490a4b-5f7d-42f1-a1f1-dc1187428f89",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "rations"
+                    },
+                    "Input1": {
+                      "AddressId": "38d05667-f44a-417a-96a9-e68c4a9feb64",
+                      "Source": "LocalValue"
+                    }
+                  }
+                ],
+                "encounterInteractions": []
+              },
+              "entryId": "0ecf9ba6-dfb3-4d38-a54d-a98d0638849a"
+            }
+          }
+        ],
+        "index": 1,
+        "logId": "81c95ed1-7748-48c4-bc79-5c35cc366cd7",
+        "fallbackLogId": "c9f814dc-5660-4653-9151-7876d456956c",
+        "name": "Check For Out Of Rations"
+      }
+    ],
     "buttonLogs": [],
     "encyclopediaLogs": [],
     "eventLogs": [
@@ -337,7 +367,7 @@
             }
           }
         ],
-        "index": 2,
+        "index": 4,
         "ending": true,
         "logId": "36a10195-6191-4497-ada4-bdfebd1dc314",
         "name": "Dictionary Dump"

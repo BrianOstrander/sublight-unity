@@ -90,10 +90,6 @@ namespace LunraGames.SubLight
 					return colorTagBegin + value.ToString(format) + " / " + maximum.ToString(format) + colorTagEnd;
 				case RatioThemes.ProgressBar:
 					var progressBarResult = colorTagBegin+"|";
-
-					progressBarResult += "==";
-					progressBarLimit -= 2;
-
 					var progressBarHasReachedLimit = false;
 					for (var i = 0; i < progressBarLimit; i++)
 					{
