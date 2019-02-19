@@ -32,7 +32,10 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		public static KeyValueAddress<T> Foreign(KeyValueTargets target, string key)
+		public static KeyValueAddress<T> Foreign(
+			KeyValueTargets target = KeyValueTargets.Unknown,
+			string key = null
+		)
 		{
 			return new KeyValueAddress<T>(
 				KeyValueSources.KeyValue,

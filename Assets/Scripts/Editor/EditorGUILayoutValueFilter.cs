@@ -14,6 +14,12 @@ namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutValueFilter
 	{
+		struct KeyValueCreateInfo
+		{
+			public KeyValueTargets ForeignTarget;
+			public string ForeignKey;
+		}
+
 		const float OperatorWidth = 120f;
 		const float KeyValueKeyWidth = 170f;
 
@@ -194,16 +200,17 @@ namespace LunraGames.SubLight
 					break;
 			}
 
-			var result = Create(
+			changedFilterId = Create(
 				valueFilterType,
 				model,
 				group,
-				model.Filters.Value.Length
-			) as IKeyValueFilterEntryModel;
-
-			result.SetInput0(KeyValueSources.KeyValue, replacement.Target, replacement.Key);
-
-			changedFilterId = result.FilterIdValue;
+				model.Filters.Value.Length,
+				keyValueCreateInfo: new KeyValueCreateInfo
+				{
+					ForeignTarget = replacement.Target,
+					ForeignKey = replacement.Key
+				}
+			).FilterIdValue;
 		}
 
 		static IValueFilterEntryModel Create(
@@ -211,20 +218,21 @@ namespace LunraGames.SubLight
 			ValueFilterModel model,
 			ValueFilterGroups group,
 			int index,
-			string filterId = null
+			string filterId = null,
+			KeyValueCreateInfo keyValueCreateInfo = default(KeyValueCreateInfo)
 		)
 		{
 			switch (type)
 			{
 				case ValueFilterTypes.Unknown: break;
 				case ValueFilterTypes.KeyValueBoolean:
-					return Create<BooleanKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<BooleanKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.KeyValueInteger:
-					return Create<IntegerKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<IntegerKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.KeyValueString:
-					return Create<StringKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<StringKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.KeyValueFloat:
-					return Create<FloatKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<FloatKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.EncounterInteraction:
 					return Create<EncounterInteractionFilterEntryModel>(model, index, group, filterId);
 				default: Debug.LogError("Unrecognized FilterType: " + type); break;
@@ -232,12 +240,11 @@ namespace LunraGames.SubLight
 			return null;
 		}
 
-		static IValueFilterEntryModel Create<T>(
+		static T Create<T>(
 			ValueFilterModel model,
 			int index,
 			ValueFilterGroups group,
-			string filterId = null,
-			Func<IValueFilterEntryModel, IValueFilterEntryModel> initialize = null
+			string filterId = null
 		) where T : IValueFilterEntryModel, new()
 		{
 			var result = new T();
@@ -246,17 +253,19 @@ namespace LunraGames.SubLight
 			result.FilterGroup = group;
 			model.Filters.Value = model.Filters.Value.Append(result).ToArray();
 
-			if (initialize == null) return result;
-			return initialize(result);
+			return result;
 		}
 
-		static IValueFilterEntryModel OnCreateKeyValue(IValueFilterEntryModel result)
+		static KeyValueFilterEntryModel<T> OnCreateKeyValue<T>(
+			KeyValueFilterEntryModel<T> entry,
+			KeyValueCreateInfo keyValueCreateInfo
+		)
+			where T: IConvertible
 		{
-			var typedResult = result as IKeyValueFilterEntryModel;
+			entry.Input0 = KeyValueAddress<T>.Foreign(keyValueCreateInfo.ForeignTarget, keyValueCreateInfo.ForeignKey);
+			entry.Input1 = KeyValueAddress<T>.Local();
 
-			typedResult.SetInput1(KeyValueSources.LocalValue, KeyValueTargets.Unknown, null);
-
-			return typedResult;
+			return entry;
 		}
 
 		#region Handling
@@ -288,71 +297,23 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 		}
 
-		static void OnHandleKeyValueBegin(
-			IKeyValueFilterEntryModel model
+		static void OnHandleKeyValueBegin<T>(
+			KeyValueFilterEntryModel<T> model
 		)
+			where T : IConvertible
 		{
 			OnOneLineHandleBegin(model);
 
-			EditorGUILayoutDefinedKeyValue.ValueForeign(
-				ObjectNames.NicifyVariableName(model.FilterType.ToString()),
-				model.FilterValueType,
-				model.Input0Address.ForeignTarget,
-				model.Input0Address.ForeignKey,
-				target => model.SetInput0(KeyValueSources.KeyValue, target, model.Input0Address.ForeignKey),
-				key => model.SetInput0(KeyValueSources.KeyValue, model.Input0Address.ForeignTarget, key),
-				() => changedFilterId = model.FilterIdValue,
-				KeyValueKeyWidth
+			EditorGUILayoutDefinedKeyValue.Value(
+				() => model.Input0,
+				result => model.Input0 = result,
+				KeyValueSources.KeyValue
 			);
 		}
 
 		static void OnHandleKeyValueEnd(IKeyValueFilterEntryModel model, ref string deleted)
 		{
 			OnOneLineHandleEnd(model, ref deleted);
-		}
-
-		/// <summary>
-		/// Handles the selection and validation of defined key value sources.
-		/// </summary>
-		/// <returns><c>true</c>, if this method handled the value, <c>false</c> otherwise.</returns>
-		/// <param name="model">Model.</param>
-		static bool OnHandleKeyValueSource(IKeyValueFilterEntryModel model)
-		{
-			var inputSource = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-				GUIContent.none,
-				"- Source -",
-				model.Input1Address.Source,
-				Color.red,
-				guiOptions: GUILayout.Width(70f)
-			);
-
-			model.SetInput1(inputSource, model.Input1Address.ForeignTarget, model.Input1Address.ForeignKey);
-
-			switch (model.Input1Address.Source)
-			{
-				case KeyValueSources.LocalValue:
-					return false;
-				case KeyValueSources.KeyValue:
-					EditorGUILayoutDefinedKeyValue.ValueForeign(
-						ObjectNames.NicifyVariableName(model.FilterType.ToString()),
-						model.FilterValueType,
-						model.Input1Address.ForeignTarget,
-						model.Input1Address.ForeignKey,
-						target => model.SetInput1(KeyValueSources.KeyValue, target, model.Input1Address.ForeignKey),
-						key => model.SetInput1(KeyValueSources.KeyValue, model.Input1Address.ForeignTarget, key),
-						() => changedFilterId = model.FilterIdValue
-					);
-					break;
-				default:
-					EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
-					{
-						GUILayout.Label("Unrecognized Source: " + model.Input1Address.Source, GUILayout.ExpandWidth(false));
-					}
-					EditorGUILayoutExtensions.PopColor();
-					break;
-			}
-
-			return true;
 		}
 
 		static void OnHandle(
@@ -364,12 +325,10 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.Label("Equals", GUILayout.Width(OperatorWidth));
 
-				if(!OnHandleKeyValueSource(model))
-				{
-					var result = model.Input1.Value;
-					result.LocalValue = EditorGUILayoutExtensions.ToggleButtonValue(result.LocalValue, style: EditorStyles.miniButton);
-					model.Input1.Value = result;
-				}
+				EditorGUILayoutDefinedKeyValue.Value(
+					() => model.Input1,
+					result => model.Input1 = result
+				);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
@@ -388,12 +347,10 @@ namespace LunraGames.SubLight
 					GUILayout.Width(OperatorWidth)
 				);
 
-				if (!OnHandleKeyValueSource(model))
-				{
-					var result = model.Input1.Value;
-					result.LocalValue = EditorGUILayout.IntField(result.LocalValue);
-					model.Input1.Value = result;
-				}
+				EditorGUILayoutDefinedKeyValue.Value(
+					() => model.Input1,
+					result => model.Input1 = result
+				);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
@@ -414,12 +371,10 @@ namespace LunraGames.SubLight
 
 				if (model.Operation.Value == StringFilterOperations.Equals)
 				{
-					if (!OnHandleKeyValueSource(model))
-					{
-						var result = model.Input1.Value;
-						result.LocalValue = EditorGUILayout.TextField(result.LocalValue);
-						model.Input1.Value = result;
-					}
+					EditorGUILayoutDefinedKeyValue.Value(
+						() => model.Input1,
+						result => model.Input1 = result
+					);
 				}
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
@@ -439,12 +394,10 @@ namespace LunraGames.SubLight
 					GUILayout.Width(OperatorWidth)
 				);
 
-				if (!OnHandleKeyValueSource(model))
-				{
-					var result = model.Input1.Value;
-					result.LocalValue = EditorGUILayout.FloatField(result.LocalValue);
-					model.Input1.Value = result;
-				}
+				EditorGUILayoutDefinedKeyValue.Value(
+					() => model.Input1,
+					result => model.Input1 = result
+				);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}

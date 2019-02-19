@@ -156,22 +156,22 @@ namespace LunraGames.SubLight
 		void OnHandle(BooleanKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
 			// The input may or may not be local, so we check.
-			switch (filter.Input1.Value.Source)
+			switch (filter.Input1.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.Input1.Value.LocalValue, done);
+					OnHandle(filter, filter.Input1.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.Input1.Value.ForeignTarget,
-							filter.Input1.Value.ForeignKey,
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Value.Source);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
 					break;
 			}
 		}
@@ -179,13 +179,13 @@ namespace LunraGames.SubLight
 		void OnHandle(BooleanKeyValueFilterEntryModel filter, bool inputValue, Action<ValueFilterGroups, bool> done)
 		{
 			// The operand should always be foreign.
-			switch (filter.Input0.Value.Source)
+			switch (filter.Input0.Source)
 			{
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.Input0.Value.ForeignTarget,
-							filter.Input0.Value.ForeignKey,
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
 							// If the boolean KV is equal to the result on the filter, the result is true.
 							result => done(filter.Group.Value, result.Value == inputValue)
 						)
@@ -200,22 +200,22 @@ namespace LunraGames.SubLight
 		void OnHandle(IntegerKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
 			// The input may or may not be local, so we check.
-			switch (filter.Input1.Value.Source)
+			switch (filter.Input1.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.Input1.Value.LocalValue, done);
+					OnHandle(filter, filter.Input1.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.GetInteger(
-							filter.Input1.Value.ForeignTarget,
-							filter.Input1.Value.ForeignKey,
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Value.Source);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
 					break;
 			}
 		}
@@ -253,13 +253,13 @@ namespace LunraGames.SubLight
 			};
 
 			// The operand should always be foreign
-			switch (filter.Input0.Value.Source)
+			switch (filter.Input0.Source)
 			{
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.Input0.Value.ForeignTarget,
-							filter.Input0.Value.ForeignKey,
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
 							onGet
 						)
 					);
@@ -273,22 +273,22 @@ namespace LunraGames.SubLight
 		void OnHandle(StringKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
 			// The input may or may not be local, so we check.
-			switch (filter.Input1.Value.Source)
+			switch (filter.Input1.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.Input1.Value.LocalValue, done);
+					OnHandle(filter, filter.Input1.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.Input1.Value.ForeignTarget,
-							filter.Input1.Value.ForeignKey,
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Value.Source);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
 					break;
 			}
 		}
@@ -296,13 +296,13 @@ namespace LunraGames.SubLight
 		void OnHandle(StringKeyValueFilterEntryModel filter, string inputValue, Action<ValueFilterGroups, bool> done)
 		{
 			// The operand should always be foreign.
-			switch (filter.Input0.Value.Source)
+			switch (filter.Input0.Source)
 			{
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.Input0.Value.ForeignTarget,
-							filter.Input0.Value.ForeignKey,
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
 							// If the string KV is equal to the result on the filter, the result is true.
 							result =>
 							{
@@ -336,22 +336,22 @@ namespace LunraGames.SubLight
 		void OnHandle(FloatKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
 			// The input may or may not be local, so we check.
-			switch (filter.Input1.Value.Source)
+			switch (filter.Input1.Source)
 			{
 				case KeyValueSources.LocalValue:
-					OnHandle(filter, filter.Input1.Value.LocalValue, done);
+					OnHandle(filter, filter.Input1.LocalValue, done);
 					break;
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.GetFloat(
-							filter.Input1.Value.ForeignTarget,
-							filter.Input1.Value.ForeignKey,
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
 							result => OnHandle(filter, result.Value, done)
 						)
 					);
 					break;
 				default:
-					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Value.Source);
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
 					break;
 			}
 		}
@@ -389,13 +389,13 @@ namespace LunraGames.SubLight
 			};
 
 			// Operand must be foreign.
-			switch (filter.Input0.Value.Source)
+			switch (filter.Input0.Source)
 			{
 				case KeyValueSources.KeyValue:
 					callbacks.KeyValueRequest(
 						KeyValueRequest.Get(
-							filter.Input0.Value.ForeignTarget,
-							filter.Input0.Value.ForeignKey,
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
 							onGet
 						)
 					);
