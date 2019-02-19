@@ -1,0 +1,463 @@
+{
+  "ignore": true,
+  "orderWeight": 10,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "233e1089-a323-4543-83d9-70e46152b747",
+  "name": "ShowOffDialog",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "c9b6e75a-749f-4073-a4d8-91043981606b",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Asteroid belt",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "236d2e3f-0ac8-46cb-920f-b85133f3ed6f"
+            }
+          },
+          {
+            "entry": {
+              "message": "Comet field",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "30d76727-f79f-4e88-823f-cdb0ced52000"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "We can't spare the fuel for this",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "f8ea5dde-5e9d-47ac-9009-05b823fc3597"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 3,
+        "logId": "b4335c4c-a6e9-4727-b465-3a4afa2fe912",
+        "fallbackLogId": "6f54582f-ccfd-4c1a-89ae-20648801f432"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "alwaysHalting": true,
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 30,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9782def0-09b2-4440-88c4-10d993bf58ef"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "4fc414ef-4098-4c60-b40d-0e08b7903249",
+        "fallbackLogId": "d6ffd1c1-17c8-4605-96ba-2fbe2047a9aa"
+      },
+      {
+        "alwaysHalting": true,
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9a50b344-7f6e-44e7-8071-0f57f020fe3d"
+            }
+          }
+        ],
+        "index": 10,
+        "ending": true,
+        "logId": "1c5f6c4a-2e69-4d9e-a342-08b584285606"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Propellant Breach!",
+              "message": "Fuel has escaped out of your secondary tank, fuel supplies are running low...",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "fa8b65cc-4f7b-430b-aafb-292726ff7ffd"
+            }
+          }
+        ],
+        "index": 7,
+        "logId": "8bdc8d8e-ea10-4739-90fe-17b04b8bf057",
+        "fallbackLogId": "2f946737-960a-434a-8e61-8f0a7aad1d99"
+      }
+    ],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Test",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "TitleSource": "Nebula XC",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "Vanessa Yu",
+                "PlacardDescription": "Astrogation",
+                "AvatarType": "Static"
+              },
+              "entryId": "d7b389eb-9a0a-4c51-b496-9869e657e08b"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Test",
+              "bustEvent": "Focus",
+              "entryId": "ceecbc72-fac9-47e5-bfc7-c9214f44babc"
+            },
+            "index": 1
+          }
+        ],
+        "index": 1,
+        "logId": "d6ffd1c1-17c8-4605-96ba-2fbe2047a9aa",
+        "fallbackLogId": "3941dc50-a3c3-46f5-9ba2-236876a3a268"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Navigation",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "TitleSource": "Nebula XC",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "Charles Hunt",
+                "PlacardDescription": "Navigation",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 1
+              },
+              "entryId": "b0a96e31-8eae-4857-9467-5b17952d82cf"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Navigation",
+              "bustEvent": "Focus",
+              "entryId": "84db9ed1-4993-4af6-a823-7f4b78724c32"
+            },
+            "index": 1
+          }
+        ],
+        "index": 5,
+        "logId": "b1abf029-06af-4f99-9b0b-0462f378bcd9",
+        "fallbackLogId": "7cdf1886-8c4c-4f86-bb57-3b5bdc7ddb2c"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Test",
+              "bustEvent": "Focus",
+              "entryId": "6c188a2c-1381-4b2a-8c2d-9cb320a4c8b5"
+            }
+          }
+        ],
+        "index": 8,
+        "logId": "2f946737-960a-434a-8e61-8f0a7aad1d99",
+        "fallbackLogId": "1b9b382f-bd66-4db3-9d2e-19b8790a09f2"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We've entered the star system in a highly elliptical orbit, it'll be tough to get any resources without expending fuel adjusting our orbit",
+              "entryId": "54d55641-fdf6-4b06-a11f-782ac7798c2f"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm willing to make the burn if it's worth it...",
+              "entryId": "144eef8b-a0fc-4ff4-a9a8-4ff2922b3999"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Options?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "cfadf1e5-fc10-4f6d-82f4-0738debf07cf"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "There's a rich astreroid belt hugging the orbit of the inner planet, and a more tenuous field of comets further out",
+              "entryId": "7012be20-e09e-4a67-86dd-be5a70de1062"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'd advise against the astroid belt, it'll bring our ark real close to the parent star",
+              "entryId": "4858cf60-b900-4331-a48d-e8ab33f2b15c"
+            },
+            "index": 4
+          }
+        ],
+        "index": 2,
+        "logId": "3941dc50-a3c3-46f5-9ba2-236876a3a268",
+        "fallbackLogId": "b4335c4c-a6e9-4727-b465-3a4afa2fe912"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "We need the resources in that asteroid belt, make arrangements for the burn",
+              "entryId": "2b52b577-6884-40f8-8fc8-33ea8ba072cd"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood",
+              "entryId": "25807823-8329-4d28-bff4-c9e5968c1509"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Proceed",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "cfbc4060-eb63-420d-8168-32e99f84ea83"
+            },
+            "index": 2
+          }
+        ],
+        "index": 4,
+        "logId": "6f54582f-ccfd-4c1a-89ae-20648801f432",
+        "fallbackLogId": "b1abf029-06af-4f99-9b0b-0462f378bcd9"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Burn almost complete...",
+              "entryId": "86c3efae-a2a2-4573-90d3-32e4acd77a79"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Scratch that we're losing pressure on propellant tank 2, closing bulkheads",
+              "entryId": "0388a7a9-8477-46f1-920c-b5d52332f840"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm not going to be able to shut the burn off in time, hold on!",
+              "entryId": "ff35d66f-e232-4999-8757-81eeba2b6ce2"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Brace for impact!",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "bf84b5c2-f03c-484e-8ea8-0b4a71d53d96"
+            },
+            "index": 3
+          }
+        ],
+        "index": 6,
+        "logId": "7cdf1886-8c4c-4f86-bb57-3b5bdc7ddb2c",
+        "fallbackLogId": "8bdc8d8e-ea10-4739-90fe-17b04b8bf057"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We've spent too much delta-v in this system already, I suggest we move on...",
+              "entryId": "36364fe3-242b-41b5-ac4c-16c75f883829"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Understood",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "2365ac01-79af-461a-89b5-2a7956a59b3c"
+            },
+            "index": 1
+          }
+        ],
+        "index": 9,
+        "logId": "1b9b382f-bd66-4db3-9d2e-19b8790a09f2",
+        "fallbackLogId": "1c5f6c4a-2e69-4d9e-a342-08b584285606"
+      }
+    ]
+  },
+  "version": 7,
+  "meta": "ShowOffDialog",
+  "metaKeyValues": {
+    "EncounterId": "233e1089-a323-4543-83d9-70e46152b747"
+  },
+  "created": "2019-02-15T17:01:28.642141-08:00",
+  "modified": "2019-02-15T17:01:28.642141-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

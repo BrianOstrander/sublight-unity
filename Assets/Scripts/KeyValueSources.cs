@@ -6,7 +6,7 @@
 		/// <summary>
 		/// The value is specified already.
 		/// </summary>
-		Value = 10,
+		LocalValue = 10,
 		/// <summary>
 		/// Another keyvalue needs to be queried to do the comparison.
 		/// </summary>

@@ -5,16 +5,6 @@ namespace LunraGames.SubLight
 {
 	public static class DefinedKeyInstances
 	{
-		//#pragma warning disable CS0414 // The private field is assigned but its value is never used.
-		//#pragma warning restore CS0414 // The private field is assigned but its value is never used.
-
-		public static readonly ValueFilterTypes[] SupportedFilterTypes = {
-			ValueFilterTypes.KeyValueBoolean,
-			ValueFilterTypes.KeyValueInteger,
-			ValueFilterTypes.KeyValueString,
-			ValueFilterTypes.KeyValueFloat
-		};
-
 		#region Defined Keys
 		public static readonly EncounterKeys Encounter = new EncounterKeys();
 		public static readonly GameKeys Game = new GameKeys();
@@ -39,7 +29,6 @@ namespace LunraGames.SubLight
 		string Key { get; }
 		KeyValueTargets Target { get; }
 		KeyValueTypes ValueType { get; }
-		ValueFilterTypes FilterType { get; }
 		string Notes { get; }
 		bool CanWrite { get; }
 		bool CanRead { get; }
@@ -55,7 +44,6 @@ namespace LunraGames.SubLight
 		public string Key { get; private set; }
 		public KeyValueTargets Target { get; private set; }
 		public KeyValueTypes ValueType { get; private set; }
-		public ValueFilterTypes FilterType { get; private set; }
 		public string Notes { get; private set; }
 		/// <summary>
 		/// If <see langword="true"/>, encounters can write to this key value.
@@ -72,7 +60,6 @@ namespace LunraGames.SubLight
 			string key,
 			KeyValueTargets target,
 			KeyValueTypes valueType,
-			ValueFilterTypes filterType,
 			string notes,
 			bool canWrite,
 			bool canRead
@@ -87,7 +74,6 @@ namespace LunraGames.SubLight
 			Key = key;
 			Target = target;
 			ValueType = valueType;
-			FilterType = filterType;
 			Notes = notes;
 			CanWrite = canWrite;
 			CanRead = canRead;
@@ -108,7 +94,6 @@ namespace LunraGames.SubLight
 				key,
 				target,
 				KeyValueTypes.Boolean,
-				ValueFilterTypes.KeyValueBoolean,
 				notes,
 				canWrite,
 				canRead
@@ -128,7 +113,6 @@ namespace LunraGames.SubLight
 				key,
 				target,
 				KeyValueTypes.Integer,
-				ValueFilterTypes.KeyValueInteger,
 				notes,
 				canWrite,
 				canRead
@@ -148,7 +132,6 @@ namespace LunraGames.SubLight
 				key,
 				target,
 				KeyValueTypes.String,
-				ValueFilterTypes.KeyValueString,
 				notes,
 				canWrite,
 				canRead
@@ -168,7 +151,6 @@ namespace LunraGames.SubLight
 				key,
 				target,
 				KeyValueTypes.Float,
-				ValueFilterTypes.KeyValueFloat,
 				notes,
 				canWrite,
 				canRead

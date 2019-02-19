@@ -25,6 +25,7 @@ namespace LunraGames.SubLight.Models
 		List<string> specifiedSiblings = new List<string>();
 		Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
+		[JsonProperty] bool ignore;
 		[JsonProperty] int version;
 		[JsonProperty] string meta;
 		[JsonProperty] Dictionary<string, string> metaKeyValues = new Dictionary<string, string>();
@@ -56,6 +57,11 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Path;
 
+		/// <summary>
+		/// If true, this should be ignored.
+		/// </summary>
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> Ignore;
 		/// <summary>
 		/// The version of the app this was saved under.
 		/// </summary>
@@ -161,6 +167,7 @@ namespace LunraGames.SubLight.Models
 			SiblingBehaviour = SiblingBehaviours.None;
 			SupportedVersion = new ListenerProperty<bool>(value => supportedVersion = value, () => supportedVersion);
 			Path = new ListenerProperty<string>(value => path = value, () => path);
+			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			Version = new ListenerProperty<int>(value => version = value, () => version);
 			Meta = new ListenerProperty<string>(value => meta = value, () => meta);
 			MetaKeyValues = new ListenerProperty<Dictionary<string, string>>(OnSetKeyValues, OnGetMetaKeyValues);

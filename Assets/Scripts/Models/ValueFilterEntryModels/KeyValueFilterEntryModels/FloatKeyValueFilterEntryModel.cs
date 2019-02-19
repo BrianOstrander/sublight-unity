@@ -10,7 +10,7 @@ namespace LunraGames.SubLight.Models
 		public ListenerProperty<FloatFilterOperations> Operation;
 
 		public override ValueFilterTypes FilterType { get { return ValueFilterTypes.KeyValueFloat; } }
-		public override KeyValueTypes FilterKeyValueType { get { return KeyValueTypes.Float; } }
+		public override KeyValueTypes FilterValueType { get { return KeyValueTypes.Float; } }
 
 		public FloatKeyValueFilterEntryModel()
 		{

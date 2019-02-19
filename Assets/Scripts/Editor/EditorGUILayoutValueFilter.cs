@@ -14,8 +14,13 @@ namespace LunraGames.SubLight
 {
 	public static class EditorGUILayoutValueFilter
 	{
+		struct KeyValueCreateInfo
+		{
+			public KeyValueTargets ForeignTarget;
+			public string ForeignKey;
+		}
+
 		const float OperatorWidth = 120f;
-		const float KeyValueTargetWidth = 90f;
 		const float KeyValueKeyWidth = 170f;
 
 		static string changedFilterId;
@@ -182,17 +187,30 @@ namespace LunraGames.SubLight
 			DefinedState replacement
 		)
 		{
-			var result = Create(
-				replacement.FilterType,
+			var valueFilterType = ValueFilterTypes.Unknown;
+
+			switch (replacement.ValueType)
+			{
+				case KeyValueTypes.Boolean: valueFilterType = ValueFilterTypes.KeyValueBoolean; break;
+				case KeyValueTypes.Integer: valueFilterType = ValueFilterTypes.KeyValueInteger; break;
+				case KeyValueTypes.String: valueFilterType = ValueFilterTypes.KeyValueString; break;
+				case KeyValueTypes.Float: valueFilterType = ValueFilterTypes.KeyValueFloat; break;
+				default:
+					Debug.LogError("Unrecognized KeyValueType: " + replacement.ValueType);
+					break;
+			}
+
+			changedFilterId = Create(
+				valueFilterType,
 				model,
 				group,
-				model.Filters.Value.Length
-			) as IKeyValueFilterEntryModel;
-
-			result.FilterTarget = replacement.Target;
-			result.FilterKey = replacement.Key;
-
-			changedFilterId = result.FilterIdValue;
+				model.Filters.Value.Length,
+				keyValueCreateInfo: new KeyValueCreateInfo
+				{
+					ForeignTarget = replacement.Target,
+					ForeignKey = replacement.Key
+				}
+			).FilterIdValue;
 		}
 
 		static IValueFilterEntryModel Create(
@@ -200,20 +218,21 @@ namespace LunraGames.SubLight
 			ValueFilterModel model,
 			ValueFilterGroups group,
 			int index,
-			string filterId = null
+			string filterId = null,
+			KeyValueCreateInfo keyValueCreateInfo = default(KeyValueCreateInfo)
 		)
 		{
 			switch (type)
 			{
 				case ValueFilterTypes.Unknown: break;
 				case ValueFilterTypes.KeyValueBoolean:
-					return Create<BooleanKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<BooleanKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.KeyValueInteger:
-					return Create<IntegerKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<IntegerKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.KeyValueString:
-					return Create<StringKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<StringKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.KeyValueFloat:
-					return Create<FloatKeyValueFilterEntryModel>(model, index, group, filterId, OnCreateKeyValue);
+					return OnCreateKeyValue(Create<FloatKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.EncounterInteraction:
 					return Create<EncounterInteractionFilterEntryModel>(model, index, group, filterId);
 				default: Debug.LogError("Unrecognized FilterType: " + type); break;
@@ -221,12 +240,11 @@ namespace LunraGames.SubLight
 			return null;
 		}
 
-		static IValueFilterEntryModel Create<T>(
+		static T Create<T>(
 			ValueFilterModel model,
 			int index,
 			ValueFilterGroups group,
-			string filterId = null,
-			Func<IValueFilterEntryModel, IValueFilterEntryModel> initialize = null
+			string filterId = null
 		) where T : IValueFilterEntryModel, new()
 		{
 			var result = new T();
@@ -235,16 +253,19 @@ namespace LunraGames.SubLight
 			result.FilterGroup = group;
 			model.Filters.Value = model.Filters.Value.Append(result).ToArray();
 
-			if (initialize == null) return result;
-			return initialize(result);
+			return result;
 		}
 
-		static IValueFilterEntryModel OnCreateKeyValue(IValueFilterEntryModel result)
+		static KeyValueFilterEntryModel<T> OnCreateKeyValue<T>(
+			KeyValueFilterEntryModel<T> entry,
+			KeyValueCreateInfo keyValueCreateInfo
+		)
+			where T: IConvertible
 		{
-			var typedResult = result as IKeyValueFilterEntryModel;
-			typedResult.FilterSource = KeyValueSources.Value;
+			entry.Input0 = KeyValueAddress<T>.Foreign(keyValueCreateInfo.ForeignTarget, keyValueCreateInfo.ForeignKey);
+			entry.Input1 = KeyValueAddress<T>.Local();
 
-			return typedResult;
+			return entry;
 		}
 
 		#region Handling
@@ -262,59 +283,6 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		static void OnOneLineHandleBeginLinked(
-			IKeyValueFilterEntryModel model,
-			out GUIStyle style,
-			out string help
-		)
-		{
-			style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconNotLinked;
-			help = string.Empty;
-
-			if (model.FilterTarget == KeyValueTargets.Unknown) return;
-			if (string.IsNullOrEmpty(model.FilterKey)) return;
-
-			DefinedKeys definitions = null;
-
-			switch (model.FilterTarget)
-			{
-				case KeyValueTargets.Encounter: definitions = DefinedKeyInstances.Encounter; break;
-				case KeyValueTargets.Game: definitions = DefinedKeyInstances.Game; break;
-				case KeyValueTargets.Global: definitions = DefinedKeyInstances.Global; break;
-				case KeyValueTargets.Preferences: definitions = DefinedKeyInstances.Preferences; break;
-				case KeyValueTargets.CelestialSystem: definitions = DefinedKeyInstances.CelestialSystem; break;
-				default:
-					Debug.LogError("Unrecognized KeyValueTarget: " + model.FilterTarget);
-					return;
-			}
-
-			IDefinedKey[] keys = null;
-
-			switch (model.FilterType)
-			{
-				case ValueFilterTypes.KeyValueBoolean: keys = definitions.Booleans; break;
-				case ValueFilterTypes.KeyValueInteger: keys = definitions.Integers; break;
-				case ValueFilterTypes.KeyValueString: keys = definitions.Strings; break;
-				case ValueFilterTypes.KeyValueFloat: keys = definitions.Floats; break;
-				default:
-					Debug.LogError("Unrecognized ValueFilterType: " + model.FilterType);
-					return;
-			}
-
-			if (keys == null)
-			{
-				Debug.LogError("Keys should not be null");
-				return;
-			}
-
-			var linkedKey = keys.FirstOrDefault(k => k.Key == model.FilterKey);
-
-			if (linkedKey == null) return;
-
-			style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconLinked;
-			help = linkedKey.Notes ?? string.Empty;
-		}
-
 		static void OnOneLineHandleEnd(IValueFilterEntryModel model, ref string deleted)
 		{
 			if (model.FilterIgnore) EditorGUILayoutExtensions.PopColor();
@@ -329,189 +297,23 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 		}
 
-		static void OnHandleKeyValueBegin(
-			IKeyValueFilterEntryModel model
+		static void OnHandleKeyValueBegin<T>(
+			KeyValueFilterEntryModel<T> model
 		)
+			where T : IConvertible
 		{
 			OnOneLineHandleBegin(model);
 
-			OnHandleKeyValueDefinition(
-				model.FilterIdValue,
-				model.FilterKeyValueType,
-				model.FilterType,
-				model.FilterTarget,
-				model.FilterKey,
-				target => model.FilterTarget = target,
-				key => model.FilterKey = key
+			EditorGUILayoutDefinedKeyValue.Value(
+				() => model.Input0,
+				result => model.Input0 = result,
+				KeyValueSources.KeyValue
 			);
 		}
 
 		static void OnHandleKeyValueEnd(IKeyValueFilterEntryModel model, ref string deleted)
 		{
 			OnOneLineHandleEnd(model, ref deleted);
-		}
-
-		static void OnHandleKeyValueDefinition(
-			string filterId,
-			KeyValueTypes valueType,
-			ValueFilterTypes filterType,
-			KeyValueTargets target,
-			string key,
-			Action<KeyValueTargets> setTarget,
-			Action<string> setKey,
-			bool primary = true
-		)
-		{
-			if (setTarget == null) throw new ArgumentNullException("setTarget");
-			if (setKey == null) throw new ArgumentNullException("setKey");
-
-			// ----
-			var tooltip = ObjectNames.NicifyVariableName(filterType.ToString());
-			var style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconNotLinked;
-			var notes = string.Empty;
-
-			// -- begin link area?
-			if (target != KeyValueTargets.Unknown && !string.IsNullOrEmpty(key))
-			{
-				DefinedKeys definitions = null;
-				var continueCheck = true;
-
-				switch (target)
-				{
-					case KeyValueTargets.Encounter: definitions = DefinedKeyInstances.Encounter; break;
-					case KeyValueTargets.Game: definitions = DefinedKeyInstances.Game; break;
-					case KeyValueTargets.Global: definitions = DefinedKeyInstances.Global; break;
-					case KeyValueTargets.Preferences: definitions = DefinedKeyInstances.Preferences; break;
-					case KeyValueTargets.CelestialSystem: definitions = DefinedKeyInstances.CelestialSystem; break;
-					default:
-						Debug.LogError("Unrecognized KeyValueTarget: " + target);
-						continueCheck = false;
-						break;
-				}
-
-				if (continueCheck)
-				{
-					IDefinedKey[] keys = null;
-
-					switch (filterType)
-					{
-						case ValueFilterTypes.KeyValueBoolean: keys = definitions.Booleans; break;
-						case ValueFilterTypes.KeyValueInteger: keys = definitions.Integers; break;
-						case ValueFilterTypes.KeyValueString: keys = definitions.Strings; break;
-						case ValueFilterTypes.KeyValueFloat: keys = definitions.Floats; break;
-						default:
-							Debug.LogError("Unrecognized ValueFilterType: " + filterType);
-							continueCheck = false;
-							break;
-					}
-
-					if (keys == null)
-					{
-						Debug.LogError("Keys should not be null");
-						continueCheck = false;
-					}
-
-					if (continueCheck)
-					{
-						var linkedKey = keys.FirstOrDefault(k => k.Key == key);
-						
-						if (linkedKey != null)
-						{
-							style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconLinked;
-							notes = linkedKey.Notes ?? string.Empty;
-						}
-					}
-				}
-			}
-			// -- end link area?
-
-			tooltip = tooltip + " - Click to link to a defined key value." + (string.IsNullOrEmpty(notes) ? string.Empty : "\n" + notes);
-
-			EditorGUIExtensions.PauseChangeCheck();
-			{
-				if (GUILayout.Button(new GUIContent(string.Empty, tooltip), style, GUILayout.ExpandWidth(false)))
-				{
-					DefinedKeyValueEditorWindow.Show(
-						new DefinedState
-						{
-							ValueType = valueType,
-							FilterType = filterType,
-							Target = target,
-							Key = key
-						},
-						result =>
-						{
-							setTarget(result.Target);
-							setKey(result.Key);
-							changedFilterId = filterId;
-						}
-					);
-				}
-			}
-			EditorGUIExtensions.UnPauseChangeCheck();
-			// ----
-
-			target = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
-				"- Target -",
-				target,
-				Color.red,
-				GUILayout.Width(KeyValueTargetWidth)
-			);
-
-			var keyIsInvalid = string.IsNullOrEmpty(key);
-			EditorGUILayoutExtensions.PushColorValidation(Color.red, keyIsInvalid);
-			{
-				if (primary) key = EditorGUILayout.TextField(key, GUILayout.Width(KeyValueKeyWidth));
-				else key = EditorGUILayout.TextField(key);
-
-			}
-			EditorGUILayoutExtensions.PopColorValidation(keyIsInvalid);
-
-			setTarget(target);
-			setKey(key);
-		}
-
-		/// <summary>
-		/// Handles the selection and validation of defined key value sources.
-		/// </summary>
-		/// <returns><c>true</c>, if this method handled the value, <c>false</c> otherwise.</returns>
-		/// <param name="model">Model.</param>
-		static bool OnHandleKeyValueSource(IKeyValueFilterEntryModel model)
-		{
-			model.FilterSource = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-				GUIContent.none,
-				"- Source -",
-				model.FilterSource,
-				Color.red,
-				guiOptions: GUILayout.Width(70f)
-			);
-
-			switch (model.FilterSource)
-			{
-				case KeyValueSources.Value:
-					return false;
-				case KeyValueSources.KeyValue:
-					OnHandleKeyValueDefinition(
-						model.FilterIdValue,
-						model.FilterKeyValueType,
-						model.FilterType,
-						model.FilterSourceTarget,
-						model.FilterSourceKey,
-						target => model.FilterSourceTarget = target,
-						key => model.FilterSourceKey = key,
-						false
-					);
-					break;
-				default:
-					EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
-					{
-						GUILayout.Label("Unrecognized Source: " + model.FilterSource, GUILayout.ExpandWidth(false));
-					}
-					EditorGUILayoutExtensions.PopColor();
-					break;
-			}
-
-			return true;
 		}
 
 		static void OnHandle(
@@ -523,10 +325,10 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.Label("Equals", GUILayout.Width(OperatorWidth));
 
-				if(!OnHandleKeyValueSource(model))
-				{
-					model.FilterValue.Value = EditorGUILayoutExtensions.ToggleButtonValue(model.FilterValue.Value, style: EditorStyles.miniButton);
-				}
+				EditorGUILayoutDefinedKeyValue.Value(
+					() => model.Input1,
+					result => model.Input1 = result
+				);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
@@ -545,10 +347,10 @@ namespace LunraGames.SubLight
 					GUILayout.Width(OperatorWidth)
 				);
 
-				if (!OnHandleKeyValueSource(model))
-				{
-					model.FilterValue.Value = EditorGUILayout.IntField(model.FilterValue.Value);
-				}
+				EditorGUILayoutDefinedKeyValue.Value(
+					() => model.Input1,
+					result => model.Input1 = result
+				);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
@@ -569,10 +371,10 @@ namespace LunraGames.SubLight
 
 				if (model.Operation.Value == StringFilterOperations.Equals)
 				{
-					if (!OnHandleKeyValueSource(model))
-					{
-						model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
-					}
+					EditorGUILayoutDefinedKeyValue.Value(
+						() => model.Input1,
+						result => model.Input1 = result
+					);
 				}
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
@@ -592,10 +394,10 @@ namespace LunraGames.SubLight
 					GUILayout.Width(OperatorWidth)
 				);
 
-				if (!OnHandleKeyValueSource(model))
-				{
-					model.FilterValue.Value = EditorGUILayout.FloatField(model.FilterValue.Value);
-				}
+				EditorGUILayoutDefinedKeyValue.Value(
+					() => model.Input1,
+					result => model.Input1 = result
+				);
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}

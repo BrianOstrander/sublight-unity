@@ -3,8 +3,15 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public struct KeyValueResult<T> where T : IConvertible
+	public interface IKeyValueResult
 	{
+		RequestResult GenericResult { get; }
+	}
+
+	public struct KeyValueResult<T> : IKeyValueResult
+		where T : IConvertible
+	{
+		public readonly KeyValueSources Source;
 		public readonly KeyValueTargets Target;
 		public readonly string Key;
 		public readonly T Value;
@@ -12,7 +19,10 @@ namespace LunraGames.SubLight
 		public readonly string Error;
 		public readonly string TargetKey;
 
+		public RequestResult GenericResult { get { return new RequestResult(Status, Error); } }
+
 		public KeyValueResult(
+			KeyValueSources source,
 			KeyValueTargets target,
 			string key,
 			T value,
@@ -20,6 +30,7 @@ namespace LunraGames.SubLight
 			string error = null
 		)
 		{
+			Source = source;
 			Target = target;
 			Key = key;
 			Value = value;
@@ -33,6 +44,7 @@ namespace LunraGames.SubLight
 			string error
 		)
 		{
+			Source = KeyValueSources.KeyValue;
 			Target = request.Target;
 			Key = request.Key;
 			Status = RequestStatus.Failure;

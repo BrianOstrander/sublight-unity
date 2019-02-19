@@ -13,6 +13,7 @@ namespace LunraGames.SubLight.Models
 		public ListenerProperty<EncounterInteractionFilterOperations> Operation;
 
 		public override ValueFilterTypes FilterType { get { return ValueFilterTypes.EncounterInteraction; } }
+		public override KeyValueTypes FilterValueType { get { return KeyValueTypes.String; } }
 
 		public EncounterInteractionFilterEntryModel()
 		{
