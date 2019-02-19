@@ -23,8 +23,8 @@
       {
         "entries": [],
         "index": 1,
-        "ending": true,
-        "logId": "7e1a57e0-ed7e-4c42-a659-c0480de34631"
+        "logId": "7e1a57e0-ed7e-4c42-a659-c0480de34631",
+        "fallbackLogId": "dfc53016-7b51-4254-9400-52b1ad7244e0"
       }
     ],
     "switchLogs": [],
@@ -61,6 +61,35 @@
         "beginning": true,
         "logId": "de52157e-a3b7-4bec-b2d0-e3765bd6d35d",
         "fallbackLogId": "7e1a57e0-ed7e-4c42-a659-c0480de34631"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 20
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "845d192c-4c5c-44fa-ac33-182fe5adc37b"
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "dfc53016-7b51-4254-9400-52b1ad7244e0"
       }
     ],
     "dialogLogs": [],
