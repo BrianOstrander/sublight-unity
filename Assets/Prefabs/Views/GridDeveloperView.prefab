@@ -213,7 +213,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 257
+  m_textAlignment: 1025
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -326,7 +326,6 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
-  - {fileID: 11400000, guid: a1f9ee32bcd744ad28bce162aaef6a18, type: 2}
   group: {fileID: 98119840023509474}
   canvas: {fileID: 6602426941887271244}
   canvasAnchor: {fileID: 3448568208444233400}
