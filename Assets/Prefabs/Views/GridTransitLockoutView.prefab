@@ -4851,7 +4851,7 @@ MonoBehaviour:
   prepareDuration: 0.5
   transitWarmupDuration: 0.5
   transitCooldownDuration: 0.5
-  transitDuration: {x: 0.75, y: 0.75}
+  transitDuration: {x: 1, y: 1}
   finalizeDuration: 0.5
   transitTitleLabel: {fileID: 114191684770132858}
   transitDescriptionLabel: {fileID: 114386747980236126}
