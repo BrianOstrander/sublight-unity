@@ -1,0 +1,33 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "7608d6ec-6695-4c37-b470-b388ae4848f3",
+  "name": "Failure: Over Population",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "Failure: Over Population",
+  "metaKeyValues": {
+    "EncounterId": "7608d6ec-6695-4c37-b470-b388ae4848f3"
+  },
+  "created": "2019-02-20T08:24:16.376915-08:00",
+  "modified": "2019-02-20T08:24:16.376915-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

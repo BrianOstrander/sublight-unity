@@ -291,7 +291,7 @@ namespace LunraGames.SubLight
 				modelSelectorScroll.VerticalScroll = GUILayout.BeginScrollView(modelSelectorScroll.VerticalScroll);
 				{
 					var isAlternate = false;
-					foreach (var model in modelList)
+					foreach (var model in modelList.OrderBy(m => m.Meta.Value))
 					{
 						if (!modelShowIgnored.Value && model.Ignore.Value) ignoredCount++;
 						else OnDrawModel(model, ref isAlternate);
