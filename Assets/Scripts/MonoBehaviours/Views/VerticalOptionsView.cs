@@ -268,7 +268,8 @@ namespace LunraGames.SubLight.Views
 		Title = 10,
 		Header = 20,
 		Divider = 30,
-		Button = 40
+		Button = 40,
+		Body = 50
 	}
 
 	public enum VerticalOptionsIcons
@@ -359,6 +360,7 @@ namespace LunraGames.SubLight.Views
 	{
 		public static LabelVerticalOptionsEntry CreateTitle(string message, VerticalOptionsIcons icon = VerticalOptionsIcons.None) { return new LabelVerticalOptionsEntry(VerticalOptionsStyles.Title, message, icon); }
 		public static LabelVerticalOptionsEntry CreateHeader(string message) { return new LabelVerticalOptionsEntry(VerticalOptionsStyles.Header, message); }
+		public static LabelVerticalOptionsEntry CreateBody(string message) { return new LabelVerticalOptionsEntry(VerticalOptionsStyles.Body, message); }
 
 		VerticalOptionsStyles style;
 		public override VerticalOptionsStyles Style { get { return style; } }

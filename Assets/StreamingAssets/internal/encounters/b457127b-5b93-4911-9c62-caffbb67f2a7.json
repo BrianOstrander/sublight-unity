@@ -60,7 +60,7 @@
               },
               "entryId": "d23159ff-b942-4e99-8508-aab73261d609"
             },
-            "index": 7
+            "index": 6
           },
           {
             "entry": {
@@ -100,7 +100,7 @@
               },
               "entryId": "958a23e9-057d-4ec3-802d-030106189a63"
             },
-            "index": 10
+            "index": 9
           },
           {
             "entry": {
@@ -116,7 +116,8 @@
                 "Operation": "Set",
                 "Input0": {
                   "AddressId": "2ffe9ec1-a550-4f60-be87-8df6ed66b13b",
-                  "Source": "LocalValue"
+                  "Source": "LocalValue",
+                  "LocalValue": 2
                 },
                 "Input1": {
                   "AddressId": "7671ca65-4fea-4663-8ad1-bb37d0ad4180",
@@ -138,7 +139,8 @@
                 }
               },
               "entryId": "cf354630-d3ab-48e7-bffb-c9dd4c9a405c"
-            }
+            },
+            "index": 13
           },
           {
             "entry": {
@@ -177,8 +179,7 @@
                 }
               },
               "entryId": "2cbe63e6-62aa-4203-ae1c-9c09680df922"
-            },
-            "index": 1
+            }
           },
           {
             "entry": {
@@ -218,7 +219,7 @@
               },
               "entryId": "f622ba43-a6c3-4129-8104-4950efef0e5f"
             },
-            "index": 5
+            "index": 1
           },
           {
             "entry": {
@@ -258,7 +259,7 @@
               },
               "entryId": "4b34fdfb-808a-4004-954e-11c14c310a9a"
             },
-            "index": 6
+            "index": 5
           },
           {
             "entry": {
@@ -460,7 +461,7 @@
               },
               "entryId": "4ab65a75-9267-4620-be06-1b9a20a848c4"
             },
-            "index": 8
+            "index": 7
           },
           {
             "entry": {
@@ -502,7 +503,7 @@
               },
               "entryId": "127ac76f-3a7c-42ca-bcc5-68a5407ed926"
             },
-            "index": 9
+            "index": 8
           },
           {
             "entry": {
@@ -545,7 +546,7 @@
               },
               "entryId": "928ff752-d073-48e4-bed5-944865fa045e"
             },
-            "index": 11
+            "index": 10
           },
           {
             "entry": {
@@ -587,7 +588,7 @@
               },
               "entryId": "0f6ff457-ef76-45cb-b17b-c932f178234c"
             },
-            "index": 12
+            "index": 11
           },
           {
             "entry": {
@@ -630,7 +631,7 @@
               },
               "entryId": "b628cde3-e323-4203-aa52-c646e0f8aa96"
             },
-            "index": 13
+            "index": 12
           },
           {
             "entry": {
@@ -653,7 +654,7 @@
                 "Input1": {
                   "AddressId": "dd9fcd00-69d7-42bc-847d-6e7d27403cb1",
                   "Source": "LocalValue",
-                  "LocalValue": 2000.0
+                  "LocalValue": 200000.0
                 },
                 "MinimumClamping": {
                   "AddressId": "fbc10359-8f40-4bf8-a5d2-6bf70eb2f57d",
