@@ -2,8 +2,8 @@
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f",
-  "name": "ResourceRequest Default",
-  "trigger": "ResourceRequest",
+  "name": "SystemIdle Default",
+  "trigger": "SystemIdle",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -19,7 +19,30 @@
     "encyclopediaLogs": [],
     "eventLogs": [
       {
-        "entries": [],
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 20
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "5113f38f-1b0f-44c8-818f-828ccb56d133"
+            }
+          }
+        ],
         "beginning": true,
         "ending": true,
         "logId": "3a7bcb90-a21f-4b30-ba88-e95c8fb97163"
@@ -30,7 +53,7 @@
     "conversationLogs": []
   },
   "version": 7,
-  "meta": "ResourceRequest Default",
+  "meta": "SystemIdle Default",
   "metaKeyValues": {
     "EncounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f"
   },

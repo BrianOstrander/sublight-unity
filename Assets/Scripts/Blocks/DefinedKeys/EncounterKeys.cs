@@ -1,6 +1,6 @@
 ﻿namespace LunraGames.SubLight
 {
-	public class EncounterKeys : DefinedKeys
+	public class EncounterKeys : KeyDefinitions
 	{
 		#region Booleans
 		#endregion

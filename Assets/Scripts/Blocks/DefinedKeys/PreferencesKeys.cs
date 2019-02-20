@@ -1,6 +1,6 @@
 ﻿namespace LunraGames.SubLight
 {
-	public class PreferencesKeys : DefinedKeys
+	public class PreferencesKeys : KeyDefinitions
 	{
 		#region Booleans
 		#endregion

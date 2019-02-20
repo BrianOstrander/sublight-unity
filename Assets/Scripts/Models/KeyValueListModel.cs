@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
+using UnityEngine;
+
 namespace LunraGames.SubLight.Models
 {
 	public class KeyValueListModel : Model
@@ -22,7 +24,7 @@ namespace LunraGames.SubLight.Models
 		/// <param name="key">Key.</param>
 		string NormalizeKey(string key) { return string.IsNullOrEmpty(key) ? key : key.ToLower(); }
 
-		#region Utility
+		#region Base Get
 		public bool GetBoolean(string key, bool fallback = false)
 		{
 			booleans.TryGetValue(NormalizeKey(key), out fallback);
@@ -55,7 +57,9 @@ namespace LunraGames.SubLight.Models
 			floats.TryGetValue(NormalizeKey(key), out fallback);
 			return fallback;
 		}
+		#endregion
 
+		#region Base Set
 		public bool SetBoolean(string key, bool value)
 		{
 			booleans[NormalizeKey(key)] = value;
@@ -87,7 +91,21 @@ namespace LunraGames.SubLight.Models
 			floats[NormalizeKey(key)] = value;
 			return value;
 		}
+		#endregion
 
+		#region Defined Get & Set
+		public bool Get(KeyDefinitions.Boolean key, bool fallback = false) { return GetBoolean(key.Key, fallback); }
+		public int Get(KeyDefinitions.Integer key, int fallback = 0) { return GetInteger(key.Key, fallback); }
+		public string Get(KeyDefinitions.String key, string fallback = null) { return GetString(key.Key, fallback); }
+		public float Get(KeyDefinitions.Float key, float fallback = 0f) { return GetFloat(key.Key, fallback); }
+
+		public bool Set(KeyDefinitions.Boolean key, bool value) { return SetBoolean(key.Key, value); }
+		public int Set(KeyDefinitions.Integer key, int value) { return SetInteger(key.Key, value); }
+		public string Set(KeyDefinitions.String key, string value) { return SetString(key.Key, value); }
+		public float Set(KeyDefinitions.Float key, float value) { return SetFloat(key.Key, value); }
+		#endregion
+
+		#region Utility
 		public void Clear()
 		{
 			booleans.Clear();

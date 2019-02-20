@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace LunraGames.SubLight
 {
-	public static class DefinedKeyInstances
+	public static class KeyDefines
 	{
 		#region Defined Keys
 		public static readonly EncounterKeys Encounter = new EncounterKeys();
@@ -12,7 +12,7 @@ namespace LunraGames.SubLight
 		public static readonly PreferencesKeys Preferences = new PreferencesKeys();
 		public static readonly CelestialSystemKeys CelestialSystem = new CelestialSystemKeys();
 
-		public static readonly DefinedKeys[] AllTargets = {
+		public static readonly KeyDefinitions[] AllTargets = {
 			Encounter,
 			Game,
 			Global,
@@ -20,11 +20,11 @@ namespace LunraGames.SubLight
 			CelestialSystem
 		};
 
-		public static IDefinedKey[] All { get { return AllTargets.SelectMany(t => t.All).ToArray(); } }
+		public static IKeyDefinition[] All { get { return AllTargets.SelectMany(t => t.All).ToArray(); } }
 		#endregion
 	}
 
-	public interface IDefinedKey
+	public interface IKeyDefinition
 	{
 		string Key { get; }
 		KeyValueTargets Target { get; }
@@ -34,7 +34,7 @@ namespace LunraGames.SubLight
 		bool CanRead { get; }
 	}
 
-	public abstract class DefinedKeyTyped<T> : IDefinedKey
+	public abstract class KeyDefinitionsTyped<T> : IKeyDefinition
 	{
 		static ArgumentException GetValueTypeExecption(Type type, KeyValueTypes valueType)
 		{
@@ -56,7 +56,7 @@ namespace LunraGames.SubLight
 		/// <value><c>true</c> if can read; otherwise, <c>false</c>.</value>
 		public bool CanRead { get; private set; }
 
-		protected DefinedKeyTyped(
+		protected KeyDefinitionsTyped(
 			string key,
 			KeyValueTargets target,
 			KeyValueTypes valueType,
@@ -80,9 +80,9 @@ namespace LunraGames.SubLight
 		}
 	}
 
-	public abstract class DefinedKeys
+	public abstract class KeyDefinitions
 	{
-		public class Boolean : DefinedKeyTyped<bool>
+		public class Boolean : KeyDefinitionsTyped<bool>
 		{
 			public Boolean(
 				string key,
@@ -101,7 +101,7 @@ namespace LunraGames.SubLight
 			{ }
 		}
 
-		public class Integer : DefinedKeyTyped<int>
+		public class Integer : KeyDefinitionsTyped<int>
 		{
 			public Integer(
 				string key,
@@ -120,7 +120,7 @@ namespace LunraGames.SubLight
 			{ }
 		}
 
-		public class String : DefinedKeyTyped<string>
+		public class String : KeyDefinitionsTyped<string>
 		{
 			public String(
 				string key,
@@ -139,7 +139,7 @@ namespace LunraGames.SubLight
 			{ }
 		}
 
-		public class Float : DefinedKeyTyped<float>
+		public class Float : KeyDefinitionsTyped<float>
 		{
 			public Float(
 				string key,
@@ -165,18 +165,18 @@ namespace LunraGames.SubLight
 		public String[] Strings { get; protected set; }
 		public Float[] Floats { get; protected set; }
 
-		public IDefinedKey[] All
+		public IKeyDefinition[] All
 		{
 			get
 			{
-				return Booleans.Cast<IDefinedKey>().Concat(Integers)
+				return Booleans.Cast<IKeyDefinition>().Concat(Integers)
 												   .Concat(Strings)
 												   .Concat(Floats)
 												   .ToArray();
 			}
 		}
 
-		protected DefinedKeys(KeyValueTargets target)
+		protected KeyDefinitions(KeyValueTargets target)
 		{
 			Target = target;
 		}

@@ -583,12 +583,13 @@ namespace LunraGames.SubLight
 						)
 					)
 					{
-						DefinedKeyValueEditorWindow.Show(
+						KeyDefinitionEditorWindow.Show(
 							null,
 							result => OnEdgedLogSpawn(
 								model,
 								spawnResult => OnKeyValueLogSpawn(spawnResult, result.ValueType, result.Target, result.Key)
-							)
+							),
+							requiresWrite: true
 						);
 					}
 				}
@@ -684,10 +685,11 @@ namespace LunraGames.SubLight
 		{
 			GUILayout.BeginHorizontal();
 
-			EditorGUILayoutDefinedKeyValue.Value(
+			EditorGUILayoutKeyDefinition.Value(
 				() => block.Output,
 				result => block.Output = result,
-				KeyValueSources.KeyValue
+				KeyValueSources.KeyValue,
+				requiresWrite: true
 			);
 		}
 
@@ -729,7 +731,7 @@ namespace LunraGames.SubLight
 				{
 					case KeyValueEntryModel.BooleanBlock.Operations.Set:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
 						);
@@ -739,12 +741,12 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.BooleanBlock.Operations.And:
 					case KeyValueEntryModel.BooleanBlock.Operations.Or:
 					case KeyValueEntryModel.BooleanBlock.Operations.Xor:
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
 						);
 						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input1,
 							result => block.Input1 = result
 						);
@@ -792,7 +794,7 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.IntegerBlock.Operations.Set:
 					case KeyValueEntryModel.IntegerBlock.Operations.Clamp:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
 						);
@@ -803,12 +805,12 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.IntegerBlock.Operations.Multiply:
 					case KeyValueEntryModel.IntegerBlock.Operations.Divide:
 					case KeyValueEntryModel.IntegerBlock.Operations.Modulo:
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
 						);
 						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input1,
 							result => block.Input1 = result
 						);
@@ -825,7 +827,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushEnabled(block.MinimumClampingEnabled);
 				{
 					GUILayout.Label("MINIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
-					EditorGUILayoutDefinedKeyValue.Value(
+					EditorGUILayoutKeyDefinition.Value(
 						() => block.MinimumClamping,
 						result => block.MinimumClamping = result
 					);
@@ -844,7 +846,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushEnabled(block.MaximumClampingEnabled);
 				{
 					GUILayout.Label("MAXIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
-					EditorGUILayoutDefinedKeyValue.Value(
+					EditorGUILayoutKeyDefinition.Value(
 						() => block.MaximumClamping,
 						result => block.MaximumClamping = result
 					);
@@ -882,7 +884,7 @@ namespace LunraGames.SubLight
 				{
 					case KeyValueEntryModel.StringBlock.Operations.Set:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
 						);
@@ -938,7 +940,7 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.FloatBlock.Operations.Floor:
 					case KeyValueEntryModel.FloatBlock.Operations.Ceiling:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
 						);
@@ -949,12 +951,12 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.FloatBlock.Operations.Multiply:
 					case KeyValueEntryModel.FloatBlock.Operations.Divide:
 					case KeyValueEntryModel.FloatBlock.Operations.Modulo:
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
 						);
 						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
-						EditorGUILayoutDefinedKeyValue.Value(
+						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input1,
 							result => block.Input1 = result
 						);
@@ -971,7 +973,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushEnabled(block.MinimumClampingEnabled);
 				{
 					GUILayout.Label("MINIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
-					EditorGUILayoutDefinedKeyValue.Value(
+					EditorGUILayoutKeyDefinition.Value(
 						() => block.MinimumClamping,
 						result => block.MinimumClamping = result
 					);
@@ -990,7 +992,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PushEnabled(block.MaximumClampingEnabled);
 				{
 					GUILayout.Label("MAXIMUM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(72f));
-					EditorGUILayoutDefinedKeyValue.Value(
+					EditorGUILayoutKeyDefinition.Value(
 						() => block.MaximumClamping,
 						result => block.MaximumClamping = result
 					);

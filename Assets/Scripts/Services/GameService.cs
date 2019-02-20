@@ -28,6 +28,15 @@ namespace LunraGames.SubLight
 		{
 			public bool IsFirstLoad;
 			public DateTime CurrentTime;
+			public DeveloperViews[] DeveloperViewsEnabled;
+
+			public LoadInstructions ApplyDefaults()
+			{
+				CurrentTime = DateTime.Now;
+				DeveloperViewsEnabled = EnumExtensions.GetValues(DeveloperViews.Unknown);
+
+				return this;
+			}
 		}
 
 		IModelMediator modelMediator;
@@ -66,6 +75,7 @@ namespace LunraGames.SubLight
 			);
 
 			// Ship ---
+			// TODO: Some of these values should be based on... like... the ship's inventory.
 			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
 			model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
 			model.Ship.SetVelocityMultiplierMaximum(7);
@@ -75,10 +85,10 @@ namespace LunraGames.SubLight
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
 
 			OnInitializeGame(
-				new LoadInstructions {
-					IsFirstLoad = true,
-					CurrentTime = DateTime.Now
-				},
+				new LoadInstructions
+				{
+					IsFirstLoad = true
+				}.ApplyDefaults(),
 				model,
 				done
 			);
@@ -98,8 +108,8 @@ namespace LunraGames.SubLight
 			OnInitializeGame(
 				new LoadInstructions
 				{
-					CurrentTime = DateTime.Now
-				},
+					// Nothing to do here...
+				}.ApplyDefaults(),
 				model,
 				done
 			);
@@ -275,15 +285,9 @@ namespace LunraGames.SubLight
 			// By this point the galaxy and target galaxy should already be set.
 			// Additionally, begin, end, specified sectors, and waypoints should be defined.
 
-			// Ship ---
-			// TODO: Some of these values should be based on... like... the ship's inventory. Also why do I need to set them here? Why aren't they serialized properly?
-			//model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
-			//model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
-			//model.Ship.SetVelocityMultiplierMaximum(7);
-			//model.Ship.SetVelocityMultiplierEnabledMaximum(5);
-			// --------
-
 			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
+
+			foreach (var developerView in instructions.DeveloperViewsEnabled) model.Context.DeveloperViewsEnabled.Push(developerView);
 
 			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
 

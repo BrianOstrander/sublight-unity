@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -22,6 +23,8 @@ namespace LunraGames.SubLight.Models
 		Entry[] entries = new Entry[0];
 		readonly ListenerProperty<Entry[]> entriesListener;
 		public readonly ReadonlyProperty<Entry[]> Entries;
+
+		public T[] Values { get { return Entries.Value.Select(e => e.Value).ToArray(); } }
 
 		public StackListModel()
 		{
@@ -52,12 +55,25 @@ namespace LunraGames.SubLight.Models
 			return () => Pop(id);
 		}
 
+		public bool Pop(T value, Func<T, T, bool> predicate = null)
+		{
+			if (predicate == null) predicate = (value0, value1) => EqualityComparer<T>.Default.Equals(value0, value1);
+			return Pop(Entries.Value.FirstOrDefault(e => predicate(e.Value, value)).Id);
+		}
+
 		public bool Pop(string id)
 		{
 			var newEntries = Entries.Value.Where(b => b.Id != id).ToArray();
 			var result = newEntries.Length != Entries.Value.Length;
 			entriesListener.Value = newEntries;
 			return result;
+		}
+
+		public bool PopAll()
+		{
+			var hadEntries = Any;
+			if (hadEntries) entriesListener.Value = new Entry[0];
+			return hadEntries;
 		}
 	}
 }

@@ -47,6 +47,10 @@ namespace LunraGames.SubLight
 		public GUIStyle SharedModelEditorModelsFilterEntryIconNotLinked { get { return sharedModelEditorModelsFilterEntryIconNotLinked; } }
 
 		[SerializeField]
+		GUIStyle sharedModelEditorModelsFilterEntryIconInvalidLink;
+		public GUIStyle SharedModelEditorModelsFilterEntryIconInvalidLink { get { return sharedModelEditorModelsFilterEntryIconInvalidLink; } }
+
+		[SerializeField]
 		GUIStyle sharedModelEditorModelsFilterEntryDescription;
 		public GUIStyle SharedModelEditorModelsFilterEntryDescription { get { return sharedModelEditorModelsFilterEntryDescription; } }
 

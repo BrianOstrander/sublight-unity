@@ -154,7 +154,7 @@ namespace LunraGames.SubLight
 
 		void OnPresentersShown()
 		{
-			PushUpdateKeyValues();
+			SM.Push(OnUpdateKeyValues, "InitialUpdateKeyValues");
 
 			var triggers = new List<EncounterTriggers>(Payload.Game.EncounterTriggers.Value);
 
@@ -466,7 +466,8 @@ namespace LunraGames.SubLight
 				)
 			);
 
-			PushUpdateKeyValues();
+			SM.Push(OnUpdateGameplay, "UpdateGameplay");
+			SM.Push(OnUpdateKeyValues, "UpdateKeyValues");
 
 			PushEncounterTriggers(
 				"TransitCompleteCheckForEncounters",
@@ -484,38 +485,78 @@ namespace LunraGames.SubLight
 			SM.Push(OnCheckForEncounters, description);
 		}
 
-		void PushUpdateKeyValues()
+		void OnUpdateGameplay()
 		{
-			var synchronizedId = SM.UniqueSynchronizedId;
+			// This should probably be run after every transit...
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.SetDefined(
-							DefinedKeyInstances.Game.DistanceFromBegin,
-							Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value,
-							setDone => doneBlocking()
-						)
-					);
-				},
-				"UpdateDistanceFromBegin",
-				synchronizedId
+			var rations = Payload.Game.KeyValues.Get(KeyDefines.Game.Rations);
+			var rationsConsumptionMultiplier = Payload.Game.KeyValues.Get(KeyDefines.Game.RationsConsumptionMultiplier);
+			var rationing = Payload.Game.KeyValues.Get(KeyDefines.Game.Rationing);
+
+			var transitsWithoutRations = Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRations);
+			var transitsWithOverPopulation = Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulation);
+			var transitsWithUnderPopulation = Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulation);
+
+			var population = Payload.Game.KeyValues.Get(KeyDefines.Game.Population);
+			var shipPopulationMaximum = Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMaximum);
+			var shipPopulationMinimum = Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMinimum);
+
+			var populationMinimum = Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMinimum);
+			var populationMaximum = Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMaximumMultiplier) * shipPopulationMaximum;
+
+			var rationsConsumed = population * rationsConsumptionMultiplier * Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears;
+
+			if (rationing < 0) rationsConsumed = rationsConsumed / (Mathf.Abs(rationing) + 1);
+			else if (0 < rationing) rationsConsumed *= rationing + 1;
+
+			var isStarving = rations < rationsConsumed;
+			rations = Mathf.Max(0f, rations - rationsConsumed);
+
+			var populationDelta = Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationRationingMultiplier);
+			populationDelta *= isStarving ? Payload.Game.KeyValues.Get(KeyDefines.Game.RationingMinimum) : rationing;
+
+			population = Mathf.Clamp(population + populationDelta, populationMinimum, populationMaximum);
+
+			if (isStarving) transitsWithoutRations = Mathf.Min(transitsWithoutRations + 1, Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRationsMaximum));
+			if (shipPopulationMaximum < population) transitsWithOverPopulation = Mathf.Min(transitsWithOverPopulation + 1, Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum));
+			if (population < shipPopulationMinimum) transitsWithUnderPopulation = Mathf.Min(transitsWithUnderPopulation + 1, Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum));
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.Rations,
+				rations
 			);
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.SetDefined(
-							DefinedKeyInstances.Game.DistanceToEnd,
-							Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value,
-							setDone => doneBlocking()
-						)
-					);
-				},
-				"UpdateDistanceFromEnd",
-				synchronizedId
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitsWithoutRations,
+				transitsWithoutRations
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitsWithOverPopulation,
+				transitsWithOverPopulation
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitsWithUnderPopulation,
+				transitsWithUnderPopulation
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.Population,
+				population
+			);
+		}
+
+		void OnUpdateKeyValues()
+		{
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.DistanceFromBegin,
+				Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.BeginSystem).Distance.Value
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.DistanceToEnd,
+				Payload.Game.Waypoints.Waypoints.Value.First(w => w.WaypointId == WaypointIds.EndSystem).Distance.Value
 			);
 
 			var transitDistance = UniversePosition.Distance(
@@ -523,114 +564,54 @@ namespace LunraGames.SubLight
 				Payload.Game.Context.TransitState.Value.EndSystem.Position.Value
 			);
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.GetDefined(
-							DefinedKeyInstances.Game.DistanceTraveled,
-							distanceTraveled =>
-							{
-								App.Callbacks.KeyValueRequest(
-									KeyValueRequest.SetDefined(
-										DefinedKeyInstances.Game.DistanceTraveled,
-										distanceTraveled.Value + transitDistance,
-										setDone => doneBlocking()
-									)
-								);
-							}
-						)
-					);
-				},
-				"UpdateDistanceTraveled",
-				synchronizedId
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.DistanceTraveled,
+				Payload.Game.KeyValues.Get(KeyDefines.Game.DistanceTraveled) + transitDistance
 			);
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.GetDefined(
-							DefinedKeyInstances.Game.FurthestTransit,
-							furthestTransit =>
-							{
-								if (furthestTransit.Value < transitDistance)
-								{
-									App.Callbacks.KeyValueRequest(
-										KeyValueRequest.SetDefined(
-											DefinedKeyInstances.Game.FurthestTransit,
-											transitDistance,
-											setDone => doneBlocking()
-										)
-									);
-								}
-								else doneBlocking();
-							}
-						)
-					);
-				},
-				"UpdateFurthestTransit",
-				synchronizedId
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.FurthestTransit,
+				Mathf.Max(Payload.Game.KeyValues.Get(KeyDefines.Game.FurthestTransit), transitDistance)
 			);
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.SetDefined(
-							DefinedKeyInstances.Game.YearsElapsedGalactic,
-							Payload.Game.RelativeDayTime.Value.GalacticTime.TotalYears,
-							setDone => doneBlocking()
-						)
-					);
-				},
-				"UpdateYearsElapsedGalactic",
-				synchronizedId
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.YearsElapsedGalactic,
+				Payload.Game.RelativeDayTime.Value.GalacticTime.TotalYears
 			);
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.SetDefined(
-							DefinedKeyInstances.Game.YearsElapsedShip,
-							Payload.Game.RelativeDayTime.Value.ShipTime.TotalYears,
-							setDone => doneBlocking()
-						)
-					);
-				},
-				"UpdateYearsElapsedShip",
-				synchronizedId
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.YearsElapsedShip,
+				Payload.Game.RelativeDayTime.Value.ShipTime.TotalYears
 			);
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.SetDefined(
-							DefinedKeyInstances.Game.YearsElapsedDelta,
-							(Payload.Game.RelativeDayTime.Value.GalacticTime - Payload.Game.RelativeDayTime.Value.ShipTime).TotalYears,
-							setDone => doneBlocking()
-						)
-					);
-				},
-				"UpdateYearsElapsedDelta",
-				synchronizedId
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.YearsElapsedDelta,
+				(Payload.Game.RelativeDayTime.Value.GalacticTime - Payload.Game.RelativeDayTime.Value.ShipTime).TotalYears
 			);
 
-			SM.PushBlocking(
-				doneBlocking =>
-				{
-					App.Callbacks.KeyValueRequest(
-						KeyValueRequest.SetDefined(
-							DefinedKeyInstances.Game.PreviousTransitYearsElapsedShip,
-							Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears,
-							setDone => doneBlocking()
-						)
-					);
-				},
-				"UpdatePreviousTransitYearsElapsedShip",
-				synchronizedId
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.PreviousTransitYearsElapsedShip,
+				Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitsWithoutRationsUntilFailure,
+				Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRationsMaximum) - Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRations)
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitsWithOverPopulationUntilFailure,
+				Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum) - Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulation)
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitsWithUnderPopulationUntilFailure,
+				Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum) - Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulation)
+			);
+
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.PopulationMaximum,
+				Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMaximum) * Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMaximumMultiplier)
 			);
 		}
 

@@ -80,47 +80,48 @@ namespace LunraGames.SubLight
 			Unknown = 0,
 			GetRequest = 10,
 			SetRequest = 20,
-			GetComplete = 30,
-			SetComplete = 40
+			// TODO: Add these callbacks when requests are done?
+			//GetComplete = 30,
+			//SetComplete = 40
 		}
 
 		#region Defined Key Get & Set
-		public static KeyValueRequest SetDefined(DefinedKeys.Boolean definedKey, bool value, Action<KeyValueResult<bool>> done = null)
+		public static KeyValueRequest SetDefined(KeyDefinitions.Boolean definedKey, bool value, Action<KeyValueResult<bool>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Boolean, booleanValue: value, booleanDone: done);
 		}
 
-		public static KeyValueRequest SetDefined(DefinedKeys.Integer definedKey, int value, Action<KeyValueResult<int>> done = null)
+		public static KeyValueRequest SetDefined(KeyDefinitions.Integer definedKey, int value, Action<KeyValueResult<int>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Integer, integerValue: value, integerDone: done);
 		}
 
-		public static KeyValueRequest SetDefined(DefinedKeys.String definedKey, string value, Action<KeyValueResult<string>> done = null)
+		public static KeyValueRequest SetDefined(KeyDefinitions.String definedKey, string value, Action<KeyValueResult<string>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.String, stringValue: value, stringDone: done);
 		}
 
-		public static KeyValueRequest SetDefined(DefinedKeys.Float definedKey, float value, Action<KeyValueResult<float>> done = null)
+		public static KeyValueRequest SetDefined(KeyDefinitions.Float definedKey, float value, Action<KeyValueResult<float>> done = null)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.SetRequest, KeyValueTypes.Float, floatValue: value, floatDone: done);
 		}
 
-		public static KeyValueRequest GetDefined(DefinedKeys.Boolean definedKey, Action<KeyValueResult<bool>> done)
+		public static KeyValueRequest GetDefined(KeyDefinitions.Boolean definedKey, Action<KeyValueResult<bool>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Boolean, booleanDone: done);
 		}
 
-		public static KeyValueRequest GetDefined(DefinedKeys.Integer definedKey, Action<KeyValueResult<int>> done)
+		public static KeyValueRequest GetDefined(KeyDefinitions.Integer definedKey, Action<KeyValueResult<int>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Integer, integerDone: done);
 		}
 
-		public static KeyValueRequest GetDefined(DefinedKeys.String definedKey, Action<KeyValueResult<string>> done)
+		public static KeyValueRequest GetDefined(KeyDefinitions.String definedKey, Action<KeyValueResult<string>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.String, stringDone: done);
 		}
 
-		public static KeyValueRequest GetDefined(DefinedKeys.Float definedKey, Action<KeyValueResult<float>> done)
+		public static KeyValueRequest GetDefined(KeyDefinitions.Float definedKey, Action<KeyValueResult<float>> done)
 		{
 			return new KeyValueRequest(definedKey.Target, definedKey.Key, States.GetRequest, KeyValueTypes.Float, floatDone: done);
 		}
