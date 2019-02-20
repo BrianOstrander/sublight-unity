@@ -5,10 +5,12 @@ namespace LunraGames.SubLight
 	public struct GameCompleteLanguageBlock
 	{
 		public LanguageStringModel FailureTitle;
-		public LanguageStringModel FailureMessage;
+		public LanguageStringModel FailureHeader;
+		public LanguageStringModel FailureBody;
 
 		public LanguageStringModel SuccessTitle;
-		public LanguageStringModel SuccessMessage;
+		public LanguageStringModel SuccessHeader;
+		public LanguageStringModel SuccessBody;
 
 		public LanguageStringModel Retry;
 		public LanguageStringModel MainMenu;

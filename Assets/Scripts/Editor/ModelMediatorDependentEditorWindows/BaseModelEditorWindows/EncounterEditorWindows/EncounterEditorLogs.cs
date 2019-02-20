@@ -1451,8 +1451,13 @@ namespace LunraGames.SubLight
 			);
 
 			entry.KeyValues.SetString(
-				EncounterEvents.GameComplete.StringKeys.Message,
-				EditorGUILayout.TextField("Message", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Message))
+				EncounterEvents.GameComplete.StringKeys.Header,
+				EditorGUILayout.TextField("Header", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Header))
+			);
+
+			entry.KeyValues.SetString(
+				EncounterEvents.GameComplete.StringKeys.Body,
+				EditorGUILayout.TextField("Body", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Body))
 			);
 		}
 

@@ -45,7 +45,9 @@
                 "integers": {},
                 "strings": {
                   "title": "Population Starved",
-                  "message": "There simply wasn't enough rations to go around..."
+                  "message": "There simply wasn't enough rations to go around...",
+                  "header": "There simply wasn't enough rations to go around...",
+                  "body": ""
                 },
                 "enums": {
                   "condition": 20

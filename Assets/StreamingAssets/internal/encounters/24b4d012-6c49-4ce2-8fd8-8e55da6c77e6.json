@@ -45,7 +45,9 @@
                 "integers": {},
                 "strings": {
                   "title": "Operations Ceased",
-                  "message": "Insufficient crew to maintain the ark's life support and propulsion systems..."
+                  "message": "Insufficient crew to maintain the ark's life support and propulsion systems...",
+                  "header": "Insufficient crew to maintain the ark's life support and propulsion systems...",
+                  "body": ""
                 },
                 "enums": {
                   "condition": 20

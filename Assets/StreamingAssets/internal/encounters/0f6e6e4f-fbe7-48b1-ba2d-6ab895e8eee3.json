@@ -45,7 +45,9 @@
                 "integers": {},
                 "strings": {
                   "title": "Life Support Failure",
-                  "message": "The ark's systems couldn't handle the strain of such a large population..."
+                  "message": "The ark's systems couldn't handle the strain of such a large population...",
+                  "header": "The ark's systems couldn't handle the strain of such a large population...",
+                  "body": ""
                 },
                 "enums": {
                   "condition": 20
