@@ -116,8 +116,7 @@
                 "Operation": "Set",
                 "Input0": {
                   "AddressId": "2ffe9ec1-a550-4f60-be87-8df6ed66b13b",
-                  "Source": "LocalValue",
-                  "LocalValue": 2
+                  "Source": "LocalValue"
                 },
                 "Input1": {
                   "AddressId": "7671ca65-4fea-4663-8ad1-bb37d0ad4180",
@@ -299,7 +298,7 @@
               },
               "entryId": "a7e96168-6b59-4b2d-959b-a4b69cc6b79b"
             },
-            "index": 17
+            "index": 16
           },
           {
             "entry": {
@@ -312,15 +311,17 @@
               },
               "keyValueType": "Integer",
               "integerValue": {
-                "Operation": "Set",
+                "Operation": "Multiply",
                 "Input0": {
                   "AddressId": "040eb179-d24b-407b-8caa-bc5f68ab2cd2",
-                  "Source": "LocalValue",
-                  "LocalValue": -3
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rationing_maximum"
                 },
                 "Input1": {
                   "AddressId": "9cd7a81b-0239-4778-994a-fca5f853c953",
-                  "Source": "LocalValue"
+                  "Source": "LocalValue",
+                  "LocalValue": -1
                 },
                 "MinimumClamping": {
                   "AddressId": "1f0a357c-8c44-42ce-8311-b39c5fa6f0fc",
@@ -339,7 +340,7 @@
               },
               "entryId": "33a3d3d8-2eca-4b62-8163-b07ae15c4664"
             },
-            "index": 16
+            "index": 17
           },
           {
             "entry": {
@@ -654,7 +655,7 @@
                 "Input1": {
                   "AddressId": "dd9fcd00-69d7-42bc-847d-6e7d27403cb1",
                   "Source": "LocalValue",
-                  "LocalValue": 200000.0
+                  "LocalValue": 20000.0
                 },
                 "MinimumClamping": {
                   "AddressId": "fbc10359-8f40-4bf8-a5d2-6bf70eb2f57d",
