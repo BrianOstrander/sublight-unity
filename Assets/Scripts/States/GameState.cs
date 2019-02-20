@@ -488,62 +488,9 @@ namespace LunraGames.SubLight
 		void OnUpdateGameplay()
 		{
 			// This should probably be run after every transit...
-
-			var rations = Payload.Game.KeyValues.Get(KeyDefines.Game.Rations);
-			var rationsConsumptionMultiplier = Payload.Game.KeyValues.Get(KeyDefines.Game.RationsConsumptionMultiplier);
-			var rationing = Payload.Game.KeyValues.Get(KeyDefines.Game.Rationing);
-
-			var transitsWithoutRations = Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRations);
-			var transitsWithOverPopulation = Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulation);
-			var transitsWithUnderPopulation = Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulation);
-
-			var population = Payload.Game.KeyValues.Get(KeyDefines.Game.Population);
-			var shipPopulationMaximum = Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMaximum);
-			var shipPopulationMinimum = Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMinimum);
-
-			var populationMinimum = Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMinimum);
-			var populationMaximum = Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMaximumMultiplier) * shipPopulationMaximum;
-
-			var rationsConsumed = population * rationsConsumptionMultiplier * Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears;
-
-			if (rationing < 0) rationsConsumed = rationsConsumed / (Mathf.Abs(rationing) + 1);
-			else if (0 < rationing) rationsConsumed *= rationing + 1;
-
-			var isStarving = rations < rationsConsumed;
-			rations = Mathf.Max(0f, rations - rationsConsumed);
-
-			var populationDelta = Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationRationingMultiplier);
-			populationDelta *= isStarving ? Payload.Game.KeyValues.Get(KeyDefines.Game.RationingMinimum) : rationing;
-
-			population = Mathf.Clamp(population + populationDelta, populationMinimum, populationMaximum);
-
-			if (isStarving) transitsWithoutRations = Mathf.Min(transitsWithoutRations + 1, Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRationsMaximum));
-			if (shipPopulationMaximum < population) transitsWithOverPopulation = Mathf.Min(transitsWithOverPopulation + 1, Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum));
-			if (population < shipPopulationMinimum) transitsWithUnderPopulation = Mathf.Min(transitsWithUnderPopulation + 1, Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum));
-
-			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.Rations,
-				rations
-			);
-
-			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.TransitsWithoutRations,
-				transitsWithoutRations
-			);
-
-			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.TransitsWithOverPopulation,
-				transitsWithOverPopulation
-			);
-
-			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.TransitsWithUnderPopulation,
-				transitsWithUnderPopulation
-			);
-
-			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.Population,
-				population
+			GameplayUtility.ApplyTransit(
+				Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears,
+				Payload.Game.KeyValues
 			);
 		}
 

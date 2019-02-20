@@ -26,6 +26,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.KeyValueRequest += OnKeyValueRequest;
 
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
+			Model.Context.TransitState.Changed += OnTransitState;
 			Model.Ship.Velocity.Changed += OnVelocity;
 		}
 
@@ -36,6 +37,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.KeyValueRequest -= OnKeyValueRequest;
 
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Model.Context.TransitState.Changed -= OnTransitState;
 			Model.Ship.Velocity.Changed -= OnVelocity;
 		}
 
@@ -68,12 +70,30 @@ namespace LunraGames.SubLight.Presenters
 		string CreateMessage(out Dictionary<string, Action> target)
 		{
 			target = new Dictionary<string, Action>();
+			var result = string.Empty;
 
-			var result = GetLink(LinkIds.LearnMore, DeveloperStrings.GetSize("Temporary Interface [ Learn More ]", 0.4f), target, OnLearnMore);
+			if (Model.Context.TransitState.Value.State != TransitState.States.Complete) return result;
+
+			result = GetLink(LinkIds.LearnMore, DeveloperStrings.GetSize("Temporary Interface [ Learn More ]", 0.4f), target, OnLearnMore);
 
 			switch (Model.Context.CelestialSystemStateLastSelected.Value.State)
 			{
-				case CelestialSystemStateBlock.States.Selected: return CreateMessageSystemSelected(result, target);
+				case CelestialSystemStateBlock.States.Selected:
+					return CreateMessageTransitPreview(
+						result,
+						target,
+						Model.Context.CelestialSystemStateLastSelected.Value.System
+					);
+			}
+
+			switch (Model.Context.CelestialSystemState.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Highlighted:
+					return CreateMessageTransitPreview(
+						result,
+						target,
+						Model.Context.CelestialSystemState.Value.System
+					);
 			}
 
 			return CreateMessageIdle(result, target);
@@ -81,33 +101,84 @@ namespace LunraGames.SubLight.Presenters
 
 		string CreateMessageIdle(string result, Dictionary<string, Action> target)
 		{
-			result = AppendPopulationMessage(result, target);
-			result = AppendRationing(result, target);
-			result = AppendRations(result, target);
+			var gameSource = Model.KeyValues;
+
+			result = AppendSystemName(result, target, "Current System", Model.Context.CurrentSystem.Value);
+			result = AppendPopulationMessage(result, target, gameSource);
+			result = AppendRationing(result, target, gameSource);
+			result = AppendRations(result, target, gameSource);
 
 			return result;
 		}
 
-		string CreateMessageSystemSelected(string result, Dictionary<string, Action> target)
+		string CreateMessageTransitPreview(string result, Dictionary<string, Action> target, SystemModel system)
 		{
-			result += "\nTodo";
+			var gameSource = Model.KeyValues;
 
-			//result = AppendPopulationMessage(result, target);
-			//result = AppendRationing(result, target);
-			//result = AppendRations(result, target);
+			if (system != null)
+			{
+				var currVelocity = Model.Ship.Velocity.Value.VelocityLightYearsCurrent;
+				var currDistance = UniversePosition.ToLightYearDistance(
+					UniversePosition.Distance(
+						Model.Context.CurrentSystem.Value.Position.Value,
+						system.Position.Value
+					)
+				);
+
+				gameSource = gameSource.Duplicate;
+				GameplayUtility.ApplyTransit(
+					RelativityUtility.TransitTime(
+						currVelocity,
+						currDistance
+					).ShipTime.TotalYears,
+					gameSource
+				);
+			}
+
+			result = AppendSystemName(result, target, "Target System", system);
+			result = AppendPopulationMessage(result, target, gameSource);
+			result = AppendRationing(result, target, gameSource);
+			result = AppendRations(result, target, gameSource);
 
 			return result;
 		}
 
-		string AppendPopulationMessage(string result, Dictionary<string, Action> target)
+		string AppendSystemName(string result, Dictionary<string, Action> target, string prefix, SystemModel system)
 		{
 			result += "\n";
 
-			var population = Model.KeyValues.Get(KeyDefines.Game.Population);
-			var shipPopulationMinimum = Model.KeyValues.Get(KeyDefines.Game.ShipPopulationMinimum);
-			var shipPopulationMaximum = Model.KeyValues.Get(KeyDefines.Game.ShipPopulationMaximum);
+			result += DeveloperStrings.GetBold(prefix+": ");
+			if (system == null) result += "< null system >";
+			else if (system.Name.Value == null) result += "< null name >";
+			else if (string.IsNullOrEmpty(system.Name.Value)) result += "< empty name >";
+			else result += system.Name.Value;
+
+			return result;
+		}
+
+		string AppendPopulationMessage(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
+		{
+			result += "\n";
+
+			var population = gameSource.Get(KeyDefines.Game.Population);
+			var shipPopulationMinimum = gameSource.Get(KeyDefines.Game.ShipPopulationMinimum);
+			var shipPopulationMaximum = gameSource.Get(KeyDefines.Game.ShipPopulationMaximum);
 
 			result += DeveloperStrings.GetBold("Population: ") + population.ToString("N0");
+
+			var currentPopulation = Model.KeyValues.Get(KeyDefines.Game.Population);
+			if (1f < Mathf.Abs(population - currentPopulation))
+			{
+				var populationDelta = population - currentPopulation;
+				result += DeveloperStrings.GetColor(
+					DeveloperStrings.GetSize(
+						(populationDelta < 0f ? " " : " +") + populationDelta.ToString("N0"),
+						0.4f
+					),
+					(populationDelta < 0f ? Color.red : Color.green).NewS(0.65f)
+				);
+			}
+
 			result += "\n\t" + DeveloperStrings.GetRatio(
 				population,
 				shipPopulationMinimum,
@@ -119,11 +190,11 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		string AppendRationing(string result, Dictionary<string, Action> target)
+		string AppendRationing(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
 		{
-			var rationing = Model.KeyValues.Get(KeyDefines.Game.Rationing);
-			var rationingMinimum = Model.KeyValues.Get(KeyDefines.Game.RationingMinimum);
-			var rationingMaximum = Model.KeyValues.Get(KeyDefines.Game.RationingMaximum);
+			var rationing = gameSource.Get(KeyDefines.Game.Rationing);
+			var rationingMinimum = gameSource.Get(KeyDefines.Game.RationingMinimum);
+			var rationingMaximum = gameSource.Get(KeyDefines.Game.RationingMaximum);
 			var rationingDelta = (rationingMaximum - rationingMinimum) + 1;
 			if (3 <= rationingDelta && rationingDelta <= 17)
 			{
@@ -180,14 +251,28 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		string AppendRations(string result, Dictionary<string, Action> target)
+		string AppendRations(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
 		{
 			result += "\n";
 
-			var rations = Model.KeyValues.Get(KeyDefines.Game.Rations);
-			var rationsMaximum = Model.KeyValues.Get(KeyDefines.Game.RationsMaximum);
+			var rations = gameSource.Get(KeyDefines.Game.Rations);
+			var rationsMaximum = gameSource.Get(KeyDefines.Game.RationsMaximum);
 
 			result += DeveloperStrings.GetBold("Rations: ") + rations.ToString("N0");
+
+			var currentRations = Model.KeyValues.Get(KeyDefines.Game.Rations);
+			if (1f < Mathf.Abs(rations - currentRations))
+			{
+				var rationsDelta = rations - currentRations;
+				result += DeveloperStrings.GetColor(
+					DeveloperStrings.GetSize(
+						(rationsDelta < 0f ? " " : " +") + rationsDelta.ToString("N0"),
+						0.4f
+					),
+					(rationsDelta < 0f ? Color.red : Color.green).NewS(0.65f)
+				);
+			}
+
 			result += "\n\t" + DeveloperStrings.GetRatio(
 				rations,
 				0f,
@@ -211,6 +296,11 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		void OnVelocity(TransitVelocity velocity)
+		{
+			OnRefreshMessage();
+		}
+
+		void OnTransitState(TransitState transitState)
 		{
 			OnRefreshMessage();
 		}
@@ -246,7 +336,10 @@ namespace LunraGames.SubLight.Presenters
 		{
 			App.Callbacks.DialogRequest(
 				DialogRequest.Confirm(
-					LanguageStringModel.Override("SubLight is a work in progress, and the current interfaces do not always represent the final product."),
+					LanguageStringModel.Override(
+						"SubLight is a work in progress, and the current interfaces do not always represent the final product." +
+						"\n - Use the <b>Rationing</b> slider to select how strict your ark's rationing is."
+					),
 					title: LanguageStringModel.Override("Work In Progress")
 				)
 			);
