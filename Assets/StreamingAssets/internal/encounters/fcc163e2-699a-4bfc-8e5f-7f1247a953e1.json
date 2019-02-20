@@ -7,7 +7,6 @@
   "trigger": "SystemIdle",
   "filtering": {
     "showValues": true,
-    "falseByDefault": true,
     "booleanKeyValues": [],
     "integerKeyValues": [
       {
