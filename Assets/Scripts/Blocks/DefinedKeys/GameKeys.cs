@@ -1,18 +1,23 @@
 ﻿namespace LunraGames.SubLight
 {
-	public class GameKeys : DefinedKeys
+	public class GameKeys : KeyDefinitions
 	{
 		#region Booleans
 		#endregion
 
 		#region Integers - Read & Write
 		public readonly Integer Rationing;
+		public readonly Integer RationingMinimum;
+		public readonly Integer RationingMaximum;
+
 		public readonly Integer TransitsWithoutRations;
 		public readonly Integer TransitsWithoutRationsMaximum;
 		public readonly Integer TransitsWithoutRationsUntilFailure;
+
 		public readonly Integer TransitsWithOverPopulation;
 		public readonly Integer TransitsWithOverPopulationMaximum;
 		public readonly Integer TransitsWithOverPopulationUntilFailure;
+
 		public readonly Integer TransitsWithUnderPopulation;
 		public readonly Integer TransitsWithUnderPopulationMaximum;
 		public readonly Integer TransitsWithUnderPopulationUntilFailure;
@@ -21,7 +26,7 @@
 		#region Strings
 		#endregion
 
-		#region Floats - Write Only
+		#region Floats
 		public readonly Float DistanceFromBegin;
 		public readonly Float DistanceToEnd;
 		public readonly Float DistanceTraveled;
@@ -33,16 +38,18 @@
 
 		public readonly Float PreviousTransitYearsElapsedShip;
 
-		public readonly Float PopulationMinimum;
-		public readonly Float PopulationMaximum;
-
-		public readonly Float RationsMaximum;
-		#endregion
-
-		#region Floats - Read & Write
 		public readonly Float Population;
+		public readonly Float PopulationMinimum;
+		public readonly Float PopulationMaximumMultiplier;
+		public readonly Float PopulationMaximum;
+		public readonly Float PopulationRationingMultiplier;
+
+		public readonly Float ShipPopulationMinimum;
+		public readonly Float ShipPopulationMaximum;
 
 		public readonly Float Rations;
+		public readonly Float RationsMaximum;
+		public readonly Float RationsConsumptionMultiplier;
 		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
@@ -54,11 +61,22 @@
 
 			Integers = new Integer[]
 			{
-				// -- Read & Write
 				Create(
 					ref Rationing,
 					"rationing",
 					"How severe the rationing is, zero is sufficient, less than zero is insufficient, and more than zero is plentiful.",
+					true
+				),
+				Create(
+					ref RationingMinimum,
+					"rationing_minimum",
+					"The minimum possible amount rationing can be set to, should be less than zero.",
+					true
+				),
+				Create(
+					ref RationingMaximum,
+					"rationing_maximum",
+					"The maximum possible amount rationing can be set to, should be greater than zero.",
 					true
 				),
 				Create(
@@ -76,8 +94,7 @@
 				Create(
 					ref TransitsWithoutRationsUntilFailure,
 					"transits_without_rations_until_failure",
-					"How many more transits without rations can the ark survive.",
-					true
+					"How many more transits without rations can the ark survive."
 				),
 				Create(
 					ref TransitsWithOverPopulation,
@@ -94,8 +111,7 @@
 				Create(
 					ref TransitsWithOverPopulationUntilFailure,
 					"transits_with_over_population_until_failure",
-					"How many more transits with overpopulation can the ark survive.",
-					true
+					"How many more transits with overpopulation can the ark survive."
 				),
 				Create(
 					ref TransitsWithUnderPopulation,
@@ -112,8 +128,7 @@
 				Create(
 					ref TransitsWithUnderPopulationUntilFailure,
 					"transits_with_under_population_until_failure",
-					"How many more transits with underpopulation can the ark survive.",
-					true
+					"How many more transits with underpopulation can the ark survive."
 				),
 			};
 
@@ -124,7 +139,6 @@
 
 			Floats = new Float[]
 			{
-				// -- Write Only
 				Create(
 					ref DistanceFromBegin,
 					"distance_from_begin",
@@ -169,19 +183,44 @@
 				Create(
 					ref PopulationMinimum,
 					"population_minimum",
-					"The minimum population required to run the ship."
+					"The minimum population allowed in the game.",
+					true
+				),
+				Create(
+					ref PopulationMaximumMultiplier,
+					"population_maximum_multiplier",
+					"The multiplier used to find the maximum population allowed in the game, multiplied with the ship's maximum population.",
+					true
 				),
 				Create(
 					ref PopulationMaximum,
 					"population_maximum",
-					"The maximum population the ship can support."
+					"The current population maximum allowed in game, using the ship's maximum and the population maximum multiplier."
+				),
+				Create(
+					ref PopulationRationingMultiplier,
+					"population_rationing_multiplier",
+					"The change in population by rationing level, when rations are insufficient or plentiful.",
+					true
+				),
+				Create(
+					ref ShipPopulationMinimum,
+					"ship_population_minimum",
+					"The minimum population required to operate the ship, below this and underpopulation will be a problem.",
+					true
+				),
+				Create(
+					ref ShipPopulationMaximum,
+					"ship_population_maximum",
+					"The maximum population allowed aboard the ship before overpopulation becomes a problem.",
+					true
 				),
 				Create(
 					ref RationsMaximum,
 					"rations_maximum",
-					"The maximum rations the ship can store."
+					"The maximum rations the ship can store.",
+					true
 				),
-				// -- Read & Write
 				Create(
 					ref Population,
 					"population",
@@ -192,6 +231,12 @@
 					ref Rations,
 					"rations",
 					"The ship's current store of rations.",
+					true
+				),
+				Create(
+					ref RationsConsumptionMultiplier,
+					"rations_consumption_multiplier",
+					"The amount of rations 1 population consumes per year when rationing is zero.",
 					true
 				)
 			};

@@ -8,7 +8,7 @@ using UnityEngine;
 using LunraGames.SubLight.Models;
 using LunraGamesEditor;
 
-using DefinedState = LunraGames.SubLight.DefinedKeyValueEditorWindow.DefinedState;
+using DefinedState = LunraGames.SubLight.KeyDefinitionEditorWindow.DefinedState;
 
 namespace LunraGames.SubLight
 {
@@ -124,7 +124,7 @@ namespace LunraGames.SubLight
 						)
 					)
 					{
-						DefinedKeyValueEditorWindow.Show(
+						KeyDefinitionEditorWindow.Show(
 							null,
 							result => CreateDefined(
 								model,
@@ -304,7 +304,7 @@ namespace LunraGames.SubLight
 		{
 			OnOneLineHandleBegin(model);
 
-			EditorGUILayoutDefinedKeyValue.Value(
+			EditorGUILayoutKeyDefinition.Value(
 				() => model.Input0,
 				result => model.Input0 = result,
 				KeyValueSources.KeyValue
@@ -325,7 +325,7 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.Label("Equals", GUILayout.Width(OperatorWidth));
 
-				EditorGUILayoutDefinedKeyValue.Value(
+				EditorGUILayoutKeyDefinition.Value(
 					() => model.Input1,
 					result => model.Input1 = result
 				);
@@ -347,7 +347,7 @@ namespace LunraGames.SubLight
 					GUILayout.Width(OperatorWidth)
 				);
 
-				EditorGUILayoutDefinedKeyValue.Value(
+				EditorGUILayoutKeyDefinition.Value(
 					() => model.Input1,
 					result => model.Input1 = result
 				);
@@ -371,7 +371,7 @@ namespace LunraGames.SubLight
 
 				if (model.Operation.Value == StringFilterOperations.Equals)
 				{
-					EditorGUILayoutDefinedKeyValue.Value(
+					EditorGUILayoutKeyDefinition.Value(
 						() => model.Input1,
 						result => model.Input1 = result
 					);
@@ -394,7 +394,7 @@ namespace LunraGames.SubLight
 					GUILayout.Width(OperatorWidth)
 				);
 
-				EditorGUILayoutDefinedKeyValue.Value(
+				EditorGUILayoutKeyDefinition.Value(
 					() => model.Input1,
 					result => model.Input1 = result
 				);

@@ -1,6 +1,6 @@
 ﻿namespace LunraGames.SubLight
 {
-	public class GlobalKeys : DefinedKeys
+	public class GlobalKeys : KeyDefinitions
 	{
 		#region Booleans
 		#endregion

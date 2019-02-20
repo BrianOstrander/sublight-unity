@@ -615,7 +615,7 @@ namespace LunraGames.SubLight
 
 					GUILayout.Label("Key Values", EditorStyles.boldLabel);
 
-					foreach (var definedKeyValue in DefinedKeyInstances.CelestialSystem.All)
+					foreach (var definedKeyValue in KeyDefines.CelestialSystem.All)
 					{
 						SpecifiedSectorsDrawSystemKeyValue(
 							system.KeyValues,
@@ -630,7 +630,7 @@ namespace LunraGames.SubLight
 
 		void SpecifiedSectorsDrawSystemKeyValue(
 			KeyValueListModel keyValues,
-			IDefinedKey definition
+			IKeyDefinition definition
 		)
 		{
 			var content = new GUIContent(ObjectNames.NicifyVariableName(definition.Key.Replace('_', ' ')), definition.Notes);
@@ -640,28 +640,28 @@ namespace LunraGames.SubLight
 					SpecifiedSectorsDrawSystemKeyValue(
 						content,
 						keyValues,
-						definition as DefinedKeys.Boolean
+						definition as KeyDefinitions.Boolean
 					);
 					break;
 				case KeyValueTypes.Integer:
 					SpecifiedSectorsDrawSystemKeyValue(
 						content,
 						keyValues,
-						definition as DefinedKeys.Integer
+						definition as KeyDefinitions.Integer
 					);
 					break;
 				case KeyValueTypes.String:
 					SpecifiedSectorsDrawSystemKeyValue(
 						content,
 						keyValues,
-						definition as DefinedKeys.String
+						definition as KeyDefinitions.String
 					);
 					break;
 				case KeyValueTypes.Float:
 					SpecifiedSectorsDrawSystemKeyValue(
 						content,
 						keyValues,
-						definition as DefinedKeys.Float
+						definition as KeyDefinitions.Float
 					);
 					break;
 				default:
@@ -673,7 +673,7 @@ namespace LunraGames.SubLight
 		void SpecifiedSectorsDrawSystemKeyValue(
 			GUIContent content,
 			KeyValueListModel keyValues,
-			DefinedKeys.Boolean definition
+			KeyDefinitions.Boolean definition
 		)
 		{
 			keyValues.SetBoolean(
@@ -685,7 +685,7 @@ namespace LunraGames.SubLight
 		void SpecifiedSectorsDrawSystemKeyValue(
 			GUIContent content,
 			KeyValueListModel keyValues,
-			DefinedKeys.Integer definition
+			KeyDefinitions.Integer definition
 		)
 		{
 			keyValues.SetInteger(
@@ -697,7 +697,7 @@ namespace LunraGames.SubLight
 		void SpecifiedSectorsDrawSystemKeyValue(
 			GUIContent content,
 			KeyValueListModel keyValues,
-			DefinedKeys.String definition
+			KeyDefinitions.String definition
 		)
 		{
 			keyValues.SetString(
@@ -709,7 +709,7 @@ namespace LunraGames.SubLight
 		void SpecifiedSectorsDrawSystemKeyValue(
 			GUIContent content,
 			KeyValueListModel keyValues,
-			DefinedKeys.Float definition
+			KeyDefinitions.Float definition
 		)
 		{
 			keyValues.SetFloat(

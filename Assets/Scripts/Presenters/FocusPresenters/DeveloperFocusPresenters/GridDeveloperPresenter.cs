@@ -40,23 +40,23 @@ namespace LunraGames.SubLight.Presenters
 
 				result += "\n";
 
-				var population = Model.KeyValues.GetFloat(DefinedKeyInstances.Game.Population.Key);
-				var populationMinimum = Model.KeyValues.GetFloat(DefinedKeyInstances.Game.PopulationMinimum.Key);
-				var populationMaximum = Model.KeyValues.GetFloat(DefinedKeyInstances.Game.PopulationMaximum.Key);
+				var population = Model.KeyValues.GetFloat(KeyDefines.Game.Population.Key);
+				var shipPopulationMinimum = Model.KeyValues.GetFloat(KeyDefines.Game.ShipPopulationMinimum.Key);
+				var shipPopulationMaximum = Model.KeyValues.GetFloat(KeyDefines.Game.ShipPopulationMaximum.Key);
 
 				result += "Population: " + population.ToString("N0");
 				result += "\n\t" + DeveloperStrings.GetRatio(
 					population,
-					populationMinimum,
-					populationMaximum,
+					shipPopulationMinimum,
+					shipPopulationMaximum,
 					DeveloperStrings.RatioThemes.ProgressBar,
 					new DeveloperStrings.RatioColor(Color.green, Color.red, true)
 				);
 
 				result += "\n";
 
-				var rations = Model.KeyValues.GetFloat(DefinedKeyInstances.Game.Rations.Key);
-				var rationsMaximum = Model.KeyValues.GetFloat(DefinedKeyInstances.Game.RationsMaximum.Key);
+				var rations = Model.KeyValues.GetFloat(KeyDefines.Game.Rations.Key);
+				var rationsMaximum = Model.KeyValues.GetFloat(KeyDefines.Game.RationsMaximum.Key);
 
 				result += "Rations: " + rations.ToString("N0");
 				result += "\n\t" + DeveloperStrings.GetRatio(

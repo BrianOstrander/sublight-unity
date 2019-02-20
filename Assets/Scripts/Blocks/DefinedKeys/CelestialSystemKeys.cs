@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight
 {
-	public class CelestialSystemKeys : DefinedKeys
+	public class CelestialSystemKeys : KeyDefinitions
 	{
 		static class Suffixes
 		{

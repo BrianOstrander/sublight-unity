@@ -7,11 +7,11 @@ using UnityEngine;
 
 using LunraGamesEditor;
 
-using DefinedState = LunraGames.SubLight.DefinedKeyValueEditorWindow.DefinedState;
+using DefinedState = LunraGames.SubLight.KeyDefinitionEditorWindow.DefinedState;
 
 namespace LunraGames.SubLight
 {
-	public static class EditorGUILayoutDefinedKeyValue
+	public static class EditorGUILayoutKeyDefinition
 	{
 		const float KeyValueTargetWidth = 90f;
 
@@ -27,7 +27,9 @@ namespace LunraGames.SubLight
 			Func<KeyValueAddress<T>> get,
 			Action<KeyValueAddress<T>> set,
 			KeyValueSources force = KeyValueSources.Unknown,
-			Action define = null
+			Action define = null,
+			bool requiresWrite = false,
+			bool requiresRead = true
 		)
 			where T : IConvertible
 		{
@@ -68,7 +70,7 @@ namespace LunraGames.SubLight
 						OnValueLocal(get, set);
 						break;
 					case KeyValueSources.KeyValue:
-						OnValueForeign(get, set, define);
+						OnValueForeign(get, set, define, requiresWrite, requiresRead);
 						break;
 					default:
 						EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
@@ -124,7 +126,9 @@ namespace LunraGames.SubLight
 		static void OnValueForeign<T>(
 			Func<KeyValueAddress<T>> get,
 			Action<KeyValueAddress<T>> set,
-			Action define = null
+			Action define,
+			bool requiresWrite,
+			bool requiresRead
 		)
 			where T : IConvertible
 		{
@@ -151,7 +155,9 @@ namespace LunraGames.SubLight
 					if (string.IsNullOrEmpty(value.AddressId)) Debug.LogError("AddressId is null or empty, field will not be notified of changes.");
 					else changedAddressId = value.AddressId;
 					if (define != null) define();
-				}
+				},
+				requiresWrite: requiresWrite,
+				requiresRead: requiresRead
 			);
 		}
 
@@ -163,7 +169,9 @@ namespace LunraGames.SubLight
 			Action<KeyValueTargets> setTarget,
 			Action<string> setKey,
 			Action define = null,
-			float? keyValueKeyWidth = null
+			float? keyValueKeyWidth = null,
+			bool requiresWrite = false,
+			bool requiresRead = true
 		)
 		{
 			if (setTarget == null) throw new ArgumentNullException("setTarget");
@@ -171,22 +179,24 @@ namespace LunraGames.SubLight
 
 			// ----
 			var tooltip = tooltipPrefix;
-			var style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconNotLinked;
+			var style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconInvalidLink;
+			if (target != KeyValueTargets.Unknown && !string.IsNullOrEmpty(key)) style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconNotLinked;
+
 			var notes = string.Empty;
 
 			// -- begin link area?
 			if (target != KeyValueTargets.Unknown && !string.IsNullOrEmpty(key))
 			{
-				DefinedKeys definitions = null;
+				KeyDefinitions definitions = null;
 				var continueCheck = true;
 
 				switch (target)
 				{
-					case KeyValueTargets.Encounter: definitions = DefinedKeyInstances.Encounter; break;
-					case KeyValueTargets.Game: definitions = DefinedKeyInstances.Game; break;
-					case KeyValueTargets.Global: definitions = DefinedKeyInstances.Global; break;
-					case KeyValueTargets.Preferences: definitions = DefinedKeyInstances.Preferences; break;
-					case KeyValueTargets.CelestialSystem: definitions = DefinedKeyInstances.CelestialSystem; break;
+					case KeyValueTargets.Encounter: definitions = KeyDefines.Encounter; break;
+					case KeyValueTargets.Game: definitions = KeyDefines.Game; break;
+					case KeyValueTargets.Global: definitions = KeyDefines.Global; break;
+					case KeyValueTargets.Preferences: definitions = KeyDefines.Preferences; break;
+					case KeyValueTargets.CelestialSystem: definitions = KeyDefines.CelestialSystem; break;
 					default:
 						Debug.LogError("Unrecognized KeyValueTarget: " + target);
 						continueCheck = false;
@@ -195,7 +205,7 @@ namespace LunraGames.SubLight
 
 				if (continueCheck)
 				{
-					IDefinedKey[] keys = null;
+					IKeyDefinition[] keys = null;
 
 					switch (valueType)
 					{
@@ -223,6 +233,18 @@ namespace LunraGames.SubLight
 						{
 							style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconLinked;
 							notes = linkedKey.Notes ?? string.Empty;
+
+							if (requiresWrite && !linkedKey.CanWrite)
+							{
+								style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconInvalidLink;
+								notes = "* Not Writable! *\n" + notes;
+							}
+
+							if (requiresRead && !linkedKey.CanRead)
+							{
+								style = SubLightEditorConfig.Instance.SharedModelEditorModelsFilterEntryIconInvalidLink;
+								notes = "\n* Not Readable! *\n" + notes;
+							}
 						}
 					}
 				}
@@ -235,7 +257,7 @@ namespace LunraGames.SubLight
 			{
 				if (GUILayout.Button(new GUIContent(string.Empty, tooltip), style, GUILayout.ExpandWidth(false)))
 				{
-					DefinedKeyValueEditorWindow.Show(
+					KeyDefinitionEditorWindow.Show(
 						new DefinedState
 						{
 							ValueType = valueType,
@@ -247,7 +269,9 @@ namespace LunraGames.SubLight
 							setTarget(result.Target);
 							setKey(result.Key);
 							if (define != null) define();
-						}
+						},
+						requiresWrite: requiresWrite,
+						requiresRead: requiresRead
 					);
 				}
 			}

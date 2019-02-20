@@ -10,7 +10,7 @@ using LunraGamesEditor;
 
 namespace LunraGames.SubLight
 {
-	public class DefinedKeyValueEditorWindow : EditorWindow
+	public class KeyDefinitionEditorWindow : EditorWindow
 	{
 		public class DefinedState
 		{
@@ -27,6 +27,8 @@ namespace LunraGames.SubLight
 			public string Key;
 			public string Notes;
 			public bool Expanded;
+			public bool IsReadable;
+			public bool IsWritable;
 		}
 
 		static Vector2 Size = new Vector2(430f, 400f);
@@ -38,6 +40,9 @@ namespace LunraGames.SubLight
 		Action cancel;
 		string description;
 		DefinedKeyEntry[] entries;
+		bool requiresWrite;
+		bool requiresRead;
+		EditorPrefsBool ignoreInvalidDefines;
 
 		Vector2 verticalScroll;
 		List<KeyValueTypes> hiddenValueTypes = new List<KeyValueTypes>();
@@ -47,18 +52,23 @@ namespace LunraGames.SubLight
 			DefinedState current,
 			Action<DefinedState> selection,
 			string title = null,
-			Action cancel = null
+			Action cancel = null,
+			bool requiresWrite = false,
+			bool requiresRead = true
 		)
 		{
 			if (selection == null) throw new ArgumentNullException("replaced");
 
-			title = string.IsNullOrEmpty(title) ? "Select a Defined Key Value" : title;
+			title = string.IsNullOrEmpty(title) ? "Select a Key Definition" : title;
 
-			var window = GetWindow(typeof(DefinedKeyValueEditorWindow), true, title, true) as DefinedKeyValueEditorWindow;
+			var window = GetWindow(typeof(KeyDefinitionEditorWindow), true, title, true) as KeyDefinitionEditorWindow;
 			window.current = current;
 			window.selection = selection;
 			window.cancel = cancel;
-			window.description = "Defined key values are updated or listened to by the event system.";
+			window.description = "Key definitions are updated or listened to by the event system.";
+			window.requiresWrite = requiresWrite;
+			window.requiresRead = requiresRead;
+			window.ignoreInvalidDefines = new EditorPrefsBool("KeyDefinitionEditorWindow_IgnoreInvalidDefines");
 
 			window.position = EditorGUIExtensions.GetPositionOnScreen(Size);
 
@@ -71,7 +81,7 @@ namespace LunraGames.SubLight
 			}
 
 			var currentKey = current == null ? null : current.Key;
-			var allDefinedKeys = DefinedKeyInstances.All;
+			var allDefinedKeys = KeyDefines.All;
 			var entryList = new List<DefinedKeyEntry>();
 
 			foreach (var definedKey in valueTypeOrder.SelectMany(v => allDefinedKeys.Where(k => k.ValueType == v).OrderBy(k => k.Key).OrderBy(k => k.Target)))
@@ -83,7 +93,9 @@ namespace LunraGames.SubLight
 						ValueType = definedKey.ValueType,
 						Target = definedKey.Target,
 						Key = definedKey.Key,
-						Notes = definedKey.Notes
+						Notes = definedKey.Notes,
+						IsReadable = definedKey.CanRead,
+						IsWritable = definedKey.CanWrite
 					}
 				);
 			}
@@ -99,15 +111,24 @@ namespace LunraGames.SubLight
 
 			var normalColor = GUI.color;
 
+			var ignoredDefines = 0;
+
 			verticalScroll = new Vector2(0f, GUILayout.BeginScrollView(verticalScroll, false, true).y);
 			{
 				var lastValueType = KeyValueTypes.Unknown;
+
 				foreach (var entry in entries)
 				{
+					GUI.color = normalColor;
+
 					var isEnabled = true;
+
+					if (requiresRead && !entry.IsReadable) isEnabled = false;
+					else if (requiresWrite && !entry.IsWritable) isEnabled = false;
+
 					if (current != null)
 					{
-						isEnabled = current.ValueType == entry.ValueType;
+						isEnabled = isEnabled && (current.ValueType == entry.ValueType);
 						GUI.color = isEnabled ? normalColor : Color.gray;
 					}
 
@@ -130,6 +151,14 @@ namespace LunraGames.SubLight
 						GUILayout.Space(2f);
 					}
 
+					GUI.color = isEnabled ? normalColor : Color.gray;
+
+
+					if (ignoreInvalidDefines.Value && !isEnabled)
+					{
+						ignoredDefines++;
+						continue;
+					}
 					if (!entryVisible) continue;
 
 					EditorGUILayoutExtensions.PushIndent();
@@ -139,6 +168,27 @@ namespace LunraGames.SubLight
 							if (entry.IsCurrent) EditorGUILayoutExtensions.PushContentColor(CurrentContentColor);
 							{
 								entry.Expanded = EditorGUILayout.Foldout(entry.Expanded, new GUIContent(ObjectNames.NicifyVariableName(entry.Key.Replace('_', ' ')), entry.Key), true);
+
+								var accessText = string.Empty;
+								var accessTooltip = string.Empty;
+								var accessError = false;
+
+								if (entry.IsReadable && entry.IsWritable) accessText = "Read & Write";
+								else if (entry.IsReadable) accessText = "Read";
+								else if (entry.IsWritable) accessText = "Write";
+								else 
+								{
+									accessText = "Invalid Access";
+									accessTooltip = "This entry is key definition is neither readable nor writable.";
+									accessError = true;
+								}
+
+								EditorGUILayoutExtensions.PushContentColor(accessError ? Color.red.NewS(0.65f) : Color.gray);
+								{
+									GUILayout.Label(new GUIContent(accessText, accessTooltip), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false));
+								}
+								EditorGUILayoutExtensions.PopContentColor();
+
 								GUILayout.Label(entry.Target.ToString(), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false));
 							}
 							if (entry.IsCurrent) EditorGUILayoutExtensions.PopContentColor();
@@ -184,6 +234,20 @@ namespace LunraGames.SubLight
 					hiddenValueTypes = EnumExtensions.GetValues(KeyValueTypes.Unknown).ToList();
 					foreach (var entry in entries) entry.Expanded = false;
 				}
+				if (GUILayout.Button(ignoreInvalidDefines.Value ? "Show Invalid Keys" : "Hide Invalid Keys", EditorStyles.toolbarButton, GUILayout.Width(100f)))
+				{
+					ignoreInvalidDefines.Value = !ignoreInvalidDefines.Value;
+				}
+
+				if (0 < ignoredDefines)
+				{
+					EditorGUILayoutExtensions.PushColor(Color.gray);
+					{
+						GUILayout.Label(ignoredDefines + " Hidden", EditorStyles.miniLabel, GUILayout.ExpandWidth(false));
+					}
+					EditorGUILayoutExtensions.PopColor();
+				}
+
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button("Cancel", EditorStyles.toolbarButton))
 				{
