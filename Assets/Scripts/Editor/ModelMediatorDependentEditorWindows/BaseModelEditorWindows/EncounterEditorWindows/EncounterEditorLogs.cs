@@ -219,7 +219,7 @@ namespace LunraGames.SubLight
 
 						var focusedLogId = string.Empty;
 
-						if (-1 < logsFocusedLogIdsIndex.Value) focusedLogId = LogsFocusedLogIdsStack.ElementAt(logsFocusedLogIdsIndex.Value);
+						if (-1 < logsFocusedLogIdsIndex.Value) focusedLogId = LogsFocusedLogIdsStack.ElementAtOrDefault(logsFocusedLogIdsIndex.Value);
 
 						var checkForFocus = !string.IsNullOrEmpty(focusedLogId);
 
