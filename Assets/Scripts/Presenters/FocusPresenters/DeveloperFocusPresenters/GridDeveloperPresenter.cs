@@ -19,6 +19,9 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override DeveloperViews DeveloperView { get { return DeveloperViews.Grid; } }
 
+		DeveloperMessageEntry primaryMessage;
+		DeveloperMessageEntry secondaryMessage;
+
 		Dictionary<string, Action> links;
 
 		public GridDeveloperPresenter(GameModel model) : base(model)
@@ -43,8 +46,17 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			View.Message = CreateMessage(out links);
-			View.ClickLink = OnClickLink;
+			primaryMessage = View.CreateEntry(
+				OnClickLink,
+				30f
+			);
+
+			secondaryMessage = View.CreateEntry(
+				OnClickLink,
+				60f
+			);
+
+			OnRefreshMessage(true);
 		}
 
 		/* Better to hide this until I actually need it.
@@ -67,9 +79,10 @@ namespace LunraGames.SubLight.Presenters
 			return "<link=\"" + linkId + "\">" + message + "</link>";
 		}
 
-		string CreateMessage(out Dictionary<string, Action> target)
+		string CreatePrimaryMessage(Dictionary<string, Action> target)
 		{
-			target = new Dictionary<string, Action>();
+			if (target == null) throw new ArgumentNullException("target");
+
 			var result = string.Empty;
 
 			if (Model.Context.TransitState.Value.State != TransitState.States.Complete) return result;
@@ -320,6 +333,13 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
+		string CreateSecondaryMessage(Dictionary<string, Action> target)
+		{
+			if (target == null) throw new ArgumentNullException("target");
+
+			return "lol todo";
+		}
+
 		#region Events
 		void OnKeyValueRequest(KeyValueRequest request)
 		{
@@ -341,11 +361,14 @@ namespace LunraGames.SubLight.Presenters
 			OnRefreshMessage();
 		}
 
-		void OnRefreshMessage()
+		void OnRefreshMessage(bool force = false)
 		{
-			if (!View.Visible) return;
+			if (!force && !View.Visible) return;
 
-			View.Message = CreateMessage(out links);
+			links = new Dictionary<string, Action>();
+
+			primaryMessage.Message(CreatePrimaryMessage(links));
+			secondaryMessage.Message(CreateSecondaryMessage(links));
 		}
 
 		void OnClickLink(string linkId)
