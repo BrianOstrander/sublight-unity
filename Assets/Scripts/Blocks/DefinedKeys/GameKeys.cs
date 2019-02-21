@@ -21,6 +21,9 @@
 		public readonly Integer TransitsWithUnderPopulation;
 		public readonly Integer TransitsWithUnderPopulationMaximum;
 		public readonly Integer TransitsWithUnderPopulationUntilFailure;
+
+		public readonly Integer Propellant;
+		public readonly Integer PropellantMaximum;
 		#endregion
 
 		#region Strings
@@ -50,6 +53,9 @@
 		public readonly Float Rations;
 		public readonly Float RationsMaximum;
 		public readonly Float RationsConsumptionMultiplier;
+
+		public readonly Float TransitRangeMinimum;
+		public readonly Float TransitVelocityMinimum;
 		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
@@ -129,6 +135,18 @@
 					ref TransitsWithUnderPopulationUntilFailure,
 					"transits_with_under_population_until_failure",
 					"How many more transits with underpopulation can the ark survive."
+				),
+				Create(
+					ref Propellant,
+					"propellant",
+					"Current amount of propellant on board.",
+					true
+				),
+				Create(
+					ref PropellantMaximum,
+					"propellant_maximum",
+					"The maximum propellant the ark can store.",
+					true
 				),
 			};
 
@@ -237,6 +255,18 @@
 					ref RationsConsumptionMultiplier,
 					"rations_consumption_multiplier",
 					"The amount of rations 1 population consumes per year when rationing is zero.",
+					true
+				),
+				Create(
+					ref TransitRangeMinimum,
+					"transit_range_minimum",
+					"The minimum range of this ark in universe units.",
+					true
+				),
+				Create(
+					ref TransitVelocityMinimum,
+					"transit_velocity_minimum",
+					"The minimum velocity, as a fraction of light speed, that the ark can travel. Only values between zero and one are valid.",
 					true
 				)
 			};

@@ -338,7 +338,7 @@ namespace LunraGames.SubLight.Presenters
 				DialogRequest.Confirm(
 					LanguageStringModel.Override(
 						"SubLight is a work in progress, and the current interfaces do not always represent the final product." +
-						"\n - Use the <b>Rationing</b> slider to select how strict your ark's rationing is."
+						"\n - Use the <b>Rationing</b> slider to select how strict your ark's rationing is"
 					),
 					title: LanguageStringModel.Override("Work In Progress")
 				)

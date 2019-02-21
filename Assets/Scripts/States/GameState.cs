@@ -86,6 +86,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 			App.Callbacks.SaveRequest += OnSaveRequest;
+			App.Callbacks.KeyValueRequest += OnKeyValueRequest;
 
 			App.Heartbeat.Update += OnUpdate;
 
@@ -132,24 +133,40 @@ namespace LunraGames.SubLight
 		protected override void Idle()
 		{
 			App.Callbacks.HoloColorRequest(new HoloColorRequest(Color.white));
-			App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus));
 
 			// HACK BEGIN - Probably bad to do and I should feel bad... but oh well...
 			var activeScale = Payload.Game.Context.ActiveScale.Value;
 			activeScale.Opacity.Changed(1f);
 			activeScale.Transform.Changed(activeScale.Transform.Value);
 			// HACK END
+
+			PushEncounterTriggers("IdleEncounterRules", EncounterTriggers.InitializeRules);
+			App.Heartbeat.Wait(
+				() => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(0.75f, OnIdleShowFocus)),
+				0.1f
+			);
 		}
 
 		void OnIdleShowFocus()
 		{
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(Payload.Game.ToolbarSelection), OnIdleShowFocusDone, 0.5f));
+			App.Callbacks.SetFocusRequest(
+				SetFocusRequest.Request(
+					Focuses.GetToolbarSelectionFocus(
+						Payload.Game.ToolbarSelection
+					),
+					OnIdleShowFocusDone,
+					0.5f
+				)
+			);
 		}
 
 		void OnIdleShowFocusDone()
 		{
 			foreach (var presenter in Payload.ShowOnIdle) presenter.Show();
-			App.Heartbeat.Wait(OnPresentersShown, 0.21f);
+			App.Heartbeat.Wait(
+				OnPresentersShown,
+				0.21f
+			);
 		}
 
 		void OnPresentersShown()
@@ -158,8 +175,10 @@ namespace LunraGames.SubLight
 
 			var triggers = new List<EncounterTriggers>(Payload.Game.EncounterTriggers.Value);
 
-			if (Payload.Game.EncounterResume.Value.CanResume) triggers.Insert(0, Payload.Game.EncounterResume.Value.Trigger);
-			if (!triggers.Contains(EncounterTriggers.InitializeRules)) triggers.Insert(0, EncounterTriggers.InitializeRules);
+			if (Payload.Game.EncounterResume.Value.CanResume && Payload.Game.EncounterResume.Value.Trigger != EncounterTriggers.InitializeRules)
+			{
+				triggers.Insert(0, Payload.Game.EncounterResume.Value.Trigger);
+			}
 			if (!triggers.Contains(EncounterTriggers.Load)) triggers.Insert(0, EncounterTriggers.Load);
 
 			SM.Push(
@@ -183,6 +202,7 @@ namespace LunraGames.SubLight
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 			App.Callbacks.SaveRequest -= OnSaveRequest;
+			App.Callbacks.KeyValueRequest -= OnKeyValueRequest;
 
 			App.Heartbeat.Update -= OnUpdate;
 
@@ -876,6 +896,62 @@ namespace LunraGames.SubLight
 			var encounterId = allSpecifiedEncounters.FirstOrDefault().EncounterId;
 
 			OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.NavigationSelect, true);
+		}
+
+		void OnKeyValueRequest(KeyValueRequest request)
+		{
+			if (request.State != KeyValueRequest.States.SetRequest) return;
+
+			switch (request.ValueType)
+			{
+				case KeyValueTypes.Boolean: OnKeyValueRequestBoolean(request.Target, request.Key, request.BooleanValue); break;
+				case KeyValueTypes.Integer: OnKeyValueRequestInteger(request.Target, request.Key, request.IntegerValue); break;
+				case KeyValueTypes.String: OnKeyValueRequestString(request.Target, request.Key, request.StringValue); break;
+				case KeyValueTypes.Float: OnKeyValueRequestFloat(request.Target, request.Key, request.FloatValue); break;
+				default:
+					Debug.LogError("Unrecognized ValueType: " + request.ValueType);
+					break;
+			}
+		}
+
+		void OnKeyValueRequestBoolean(KeyValueTargets target, string key, bool value)
+		{
+			switch (target)
+			{
+				case KeyValueTargets.Game:
+					break;
+			}
+		}
+
+		void OnKeyValueRequestInteger(KeyValueTargets target, string key, int value)
+		{
+			switch (target)
+			{
+				case KeyValueTargets.Game:
+					if (key == KeyDefines.Game.Propellant.Key) Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(value);
+					else if (key == KeyDefines.Game.PropellantMaximum.Key) Payload.Game.Ship.SetVelocityMultiplierMaximum(value - 1);
+					break;
+			}
+		}
+
+		void OnKeyValueRequestString(KeyValueTargets target, string key, string value)
+		{
+			switch (target)
+			{
+				case KeyValueTargets.Game:
+					break;
+			}
+		}
+
+		void OnKeyValueRequestFloat(KeyValueTargets target, string key, float value)
+		{
+			switch (target)
+			{
+				case KeyValueTargets.Game:
+					if (key == KeyDefines.Game.TransitRangeMinimum.Key) Payload.Game.Ship.SetRangeMinimum(value);
+					else if (key == KeyDefines.Game.TransitVelocityMinimum.Key) Payload.Game.Ship.SetVelocityMinimum(value * UniversePosition.LightYearToUniverseScalar);
+					break;
+			}
 		}
 		#endregion
 	}
