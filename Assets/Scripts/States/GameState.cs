@@ -510,7 +510,8 @@ namespace LunraGames.SubLight
 			// This should probably be run after every transit...
 			GameplayUtility.ApplyTransit(
 				Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears,
-				Payload.Game.KeyValues
+				Payload.Game.KeyValues,
+				Payload.Game.Context.TransitState.Value.BeginSystem.KeyValues
 			);
 		}
 

@@ -132,7 +132,8 @@ namespace LunraGames.SubLight.Presenters
 						currVelocity,
 						currDistance
 					).ShipTime.TotalYears,
-					gameSource
+					gameSource,
+					system.KeyValues.Duplicate
 				);
 			}
 
