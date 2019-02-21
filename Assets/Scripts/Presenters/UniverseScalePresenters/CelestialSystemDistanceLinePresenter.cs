@@ -20,6 +20,7 @@ namespace LunraGames.SubLight.Presenters
 			positionInUniverse = Model.Ship.Position;
 
 			Model.Ship.Position.Changed += OnShipPosition;
+			model.Context.TransitState.Changed += OnTransitState;
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			ScaleModel.Transform.Changed += OnScaleTransform;
@@ -30,12 +31,13 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			Model.Ship.Position.Changed -= OnShipPosition;
+			Model.Context.TransitState.Changed -= OnTransitState;
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			ScaleModel.Transform.Changed -= OnScaleTransform;
 		}
 
-		void SetPoints(UniversePosition? end)
+		void SetPoints(UniversePosition begin, UniversePosition? end)
 		{
 			var noShow = !end.HasValue;
 
@@ -48,15 +50,15 @@ namespace LunraGames.SubLight.Presenters
 			end = end ?? Model.Ship.Position;
 
 			var minOffset = new Vector3(0f, View.YMinimumOffset, 0f);
-			var begin = transform.GetUnityPosition(Model.Ship.Position) + minOffset;
+			var beginResult = transform.GetUnityPosition(begin) + minOffset;
 			var endResult = transform.GetUnityPosition(end.Value) + minOffset;
 
 			Vector3? clampedBegin = null;
 			Vector3? clampedEnd = null;
-			var clamping = ClampPoints(begin, endResult, out clampedBegin, out clampedEnd);
+			var clamping = ClampPoints(beginResult, endResult, out clampedBegin, out clampedEnd);
 
 			View.SetPoints(
-				begin,
+				beginResult,
 				endResult,
 				clamping,
 				clampedBegin,
@@ -185,7 +187,23 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnShipPosition(UniversePosition position)
 		{
+			if (Model.Context.TransitState.Value.State == TransitState.States.Active) return;
 			positionInUniverse = position;
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			switch (transitState.State)
+			{
+				case TransitState.States.Active:
+					positionInUniverse = transitState.BeginSystem.Position.Value;
+					break;
+				case TransitState.States.Complete:
+					positionInUniverse = Model.Ship.Position.Value;
+					SetPoints(Model.Ship.Position.Value, Model.Ship.Position.Value);
+					ForceApplyScaleTransform();
+					break;
+			}
 		}
 
 		protected override void OnShowView()
@@ -204,30 +222,40 @@ namespace LunraGames.SubLight.Presenters
 		{
 			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
+			UniversePosition begin = Model.Ship.Position;
 			UniversePosition? end = null;
-			if (Model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected)
+
+			if (Model.Context.TransitState.Value.State == TransitState.States.Active)
 			{
-				switch (Model.Context.CelestialSystemState.Value.State)
-				{
-					case CelestialSystemStateBlock.States.Highlighted:
-						end = Model.Context.CelestialSystemState.Value.Position;
-						break;
-					default:
-						end = Model.Context.CelestialSystemStateLastSelected.Value.Position;
-						break;
-				}
+				begin = Model.Context.TransitState.Value.BeginSystem.Position.Value;
+				end = Model.Context.TransitState.Value.EndSystem.Position.Value;
 			}
 			else
 			{
-				switch (Model.Context.CelestialSystemState.Value.State)
+				if (Model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected)
 				{
-					case CelestialSystemStateBlock.States.Highlighted:
-						end = Model.Context.CelestialSystemState.Value.Position;
-						break;
+					switch (Model.Context.CelestialSystemState.Value.State)
+					{
+						case CelestialSystemStateBlock.States.Highlighted:
+							end = Model.Context.CelestialSystemState.Value.Position;
+							break;
+						default:
+							end = Model.Context.CelestialSystemStateLastSelected.Value.Position;
+							break;
+					}
+				}
+				else
+				{
+					switch (Model.Context.CelestialSystemState.Value.State)
+					{
+						case CelestialSystemStateBlock.States.Highlighted:
+							end = Model.Context.CelestialSystemState.Value.Position;
+							break;
+					}
 				}
 			}
 
-			SetPoints(end);
+			SetPoints(begin, end);
 		}
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
@@ -261,7 +289,7 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 
-			SetPoints(end);
+			SetPoints(Model.Ship.Position.Value, end);
 		}
 		#endregion
 	}
