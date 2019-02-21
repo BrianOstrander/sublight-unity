@@ -1,0 +1,85 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867",
+  "name": "Failure: No Propellent",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [
+      {
+        "operation": "LessThanOrEquals",
+        "filterId": "520e1b88-9d37-4195-a260-861838479b6d",
+        "group": "All",
+        "Input0": {
+          "AddressId": "c8bbc9c2-f257-43aa-b6c8-c6987957ceda",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "propellant"
+        },
+        "Input1": {
+          "AddressId": "85a2ade3-0da7-4469-9579-9da79dace2be",
+          "Source": "LocalValue"
+        }
+      }
+    ],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "GameComplete",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "title": "Out of Propellant",
+                  "header": "Without propellant for our ark, we're done for...",
+                  "body": null
+                },
+                "enums": {
+                  "condition": 20
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a737ee6b-672b-40b5-a7ca-47980c77ac5c"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "b8ffcbff-ed26-473e-8009-ae933b20c6a5"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "Failure: No Propellent",
+  "metaKeyValues": {
+    "EncounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867"
+  },
+  "created": "2019-02-20T18:27:36.566984-08:00",
+  "modified": "2019-02-20T18:27:36.566984-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

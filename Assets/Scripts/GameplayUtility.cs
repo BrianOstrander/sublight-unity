@@ -49,7 +49,7 @@ namespace LunraGames.SubLight
 			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage) + 1;
 
 			propellant = propellant - propellantUsage;
-			propellantUsage = Mathf.Min(propellant, propellantUsage - 1);
+			propellantUsage = Mathf.Max(0, Mathf.Min(propellant, propellantUsage - 1));
 
 			gameSource.Set(
 				KeyDefines.Game.Rations,
