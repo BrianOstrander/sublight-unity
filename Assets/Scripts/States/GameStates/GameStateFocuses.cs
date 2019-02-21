@@ -90,10 +90,12 @@ namespace LunraGames.SubLight
 					new GameCompleteLanguageBlock
 					{
 						FailureTitle = LanguageStringModel.Override("Failure!"),
-						FailureMessage = LanguageStringModel.Override("Your voyage has come to an end..."),
+						FailureHeader = LanguageStringModel.Override("Your voyage has come to an end..."),
+						FailureBody = LanguageStringModel.Override(string.Empty),
 
 						SuccessTitle = LanguageStringModel.Override("Success!"),
-						SuccessMessage = LanguageStringModel.Override("Finally, the long voyage is over..."),
+						SuccessHeader = LanguageStringModel.Override("Finally, the long voyage is over..."),
+						SuccessBody = LanguageStringModel.Override(string.Empty),
 
 						Retry = LanguageStringModel.Override("Try Again"),
 						MainMenu = mainMenuLanguage,

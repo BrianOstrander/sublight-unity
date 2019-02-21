@@ -4,6 +4,9 @@ namespace LunraGames.SubLight
 {
 	public struct PointerOrientation
 	{
+		/// <summary>
+		/// The camera's position in space.
+		/// </summary>
 		public readonly Vector3 Position;
 		public readonly Quaternion Rotation;
 		public readonly Vector3 Forward;

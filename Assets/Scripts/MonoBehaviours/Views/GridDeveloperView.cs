@@ -25,11 +25,12 @@ namespace LunraGames.SubLight.Views
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string Message { set { messageLabel.text = value ?? string.Empty; } }
+		public Action<string> ClickLink { set; private get; }
 
 		protected override void OnOpacityStack(float opacity)
 		{
 			group.alpha = opacity;
-			group.blocksRaycasts = Mathf.Approximately(0f, opacity);
+			group.blocksRaycasts = !Mathf.Approximately(0f, opacity);
 		}
 
 		public override void Reset()
@@ -39,9 +40,32 @@ namespace LunraGames.SubLight.Views
 			canvas.SetParent(canvasAnchor, false);
 
 			Message = string.Empty;
+			ClickLink = ActionExtensions.GetEmpty<string>();
+		}
+
+		void GetSelectedLink(Action<string> selection)
+		{
+			if (selection == null) throw new ArgumentNullException("selection");
+			if (App.V.Camera == null)
+			{
+				Debug.LogError("Unable to process click while camera is null");
+				return;
+			}
+
+			var linkIndex = TMP_TextUtilities.FindIntersectingLink(
+				messageLabel,
+				Input.mousePosition, // TODO: Should this be here???
+				App.V.Camera
+			);
+
+			if (-1 < linkIndex) selection(messageLabel.textInfo.linkInfo[linkIndex].GetLinkID());
 		}
 
 		#region Events
+		public void OnClickMessage()
+		{
+			if (ClickLink != null) GetSelectedLink(ClickLink);
+		}
 		#endregion
 
 		void OnDrawGizmos()
@@ -56,5 +80,6 @@ namespace LunraGames.SubLight.Views
 	public interface ISystemScratchView : IView
 	{
 		string Message { set; }
+		Action<string> ClickLink { set; }
 	}
 }

@@ -2,25 +2,25 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "4f97b7d4-50d6-4ae6-9e08-c415200155bb",
-  "name": "Failure: Population Starved",
-  "trigger": "SystemIdle",
+  "encounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867",
+  "name": "Failure: No Propellent",
+  "trigger": "TransitComplete",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
     "integerKeyValues": [
       {
         "operation": "LessThanOrEquals",
-        "filterId": "45114d5d-ef89-4ec6-8916-8a7da690add5",
+        "filterId": "520e1b88-9d37-4195-a260-861838479b6d",
         "group": "All",
         "Input0": {
-          "AddressId": "4101a333-51b3-4b66-a5e1-5ab7b327ac44",
+          "AddressId": "c8bbc9c2-f257-43aa-b6c8-c6987957ceda",
           "Source": "KeyValue",
           "ForeignTarget": "Game",
-          "ForeignKey": "transits_without_rations_until_failure"
+          "ForeignKey": "propellant"
         },
         "Input1": {
-          "AddressId": "5d790653-d33a-4fec-99e4-6419839c412c",
+          "AddressId": "85a2ade3-0da7-4469-9579-9da79dace2be",
           "Source": "LocalValue"
         }
       }
@@ -44,10 +44,9 @@
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "title": "Population Starved",
-                  "message": "There simply wasn't enough rations to go around...",
-                  "header": "There simply wasn't enough rations to go around...",
-                  "body": ""
+                  "title": "Out of Propellant",
+                  "header": "Without propellant for our ark, we're done for...",
+                  "body": null
                 },
                 "enums": {
                   "condition": 20
@@ -61,14 +60,13 @@
                 "floatKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "567c343a-2fe5-43a1-a2bb-ad8e516e6296"
+              "entryId": "a737ee6b-672b-40b5-a7ca-47980c77ac5c"
             }
           }
         ],
-        "index": 1,
         "beginning": true,
         "ending": true,
-        "logId": "5156c86d-608c-4e0b-873f-23cc1d30b097"
+        "logId": "b8ffcbff-ed26-473e-8009-ae933b20c6a5"
       }
     ],
     "dialogLogs": [],
@@ -76,12 +74,12 @@
     "conversationLogs": []
   },
   "version": 7,
-  "meta": "Failure: Population Starved",
+  "meta": "Failure: No Propellent",
   "metaKeyValues": {
-    "EncounterId": "4f97b7d4-50d6-4ae6-9e08-c415200155bb"
+    "EncounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867"
   },
-  "created": "2019-02-14T23:25:54.580326-08:00",
-  "modified": "2019-02-14T23:25:54.580326-08:00",
+  "created": "2019-02-20T18:27:36.566984-08:00",
+  "modified": "2019-02-20T18:27:36.566984-08:00",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

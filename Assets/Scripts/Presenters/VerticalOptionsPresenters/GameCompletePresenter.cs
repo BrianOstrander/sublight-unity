@@ -56,20 +56,24 @@ namespace LunraGames.SubLight.Presenters
 			Debug.Log("a game over event was recieved with condition: " + condition);
 
 			var title = keyValues.GetString(EncounterEvents.GameComplete.StringKeys.Title);
-			var message = keyValues.GetString(EncounterEvents.GameComplete.StringKeys.Message);
+			var header = keyValues.GetString(EncounterEvents.GameComplete.StringKeys.Header);
+			var body = keyValues.GetString(EncounterEvents.GameComplete.StringKeys.Body);
 
 			var defaultTitle = "< undefined title >";
-			var defaultMessage = "< undefined message >";
+			var defaultHeader = "< undefined header >";
+			var defaultBody = "< undefined body >";
 
 			switch (condition)
 			{
 				case EncounterEvents.GameComplete.Conditions.Success:
 					defaultTitle = language.SuccessTitle.Value;
-					defaultMessage = language.SuccessMessage.Value;
+					defaultHeader = language.SuccessHeader.Value;
+					defaultBody = language.SuccessBody.Value;
 					break;
 				case EncounterEvents.GameComplete.Conditions.Failure:
 					defaultTitle = language.FailureTitle.Value;
-					defaultMessage = language.FailureMessage.Value;
+					defaultHeader = language.FailureHeader.Value;
+					defaultBody = language.FailureBody.Value;
 					break;
 				default:
 					Debug.LogError("Unrecognized Condition: " + condition);
@@ -79,13 +83,13 @@ namespace LunraGames.SubLight.Presenters
 			var theme = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsThemes.Success : VerticalOptionsThemes.Error;
 			var icon = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsIcons.GameSuccess : VerticalOptionsIcons.GameFailure;
 
-			entries.AddRange(
-				new IVerticalOptionsEntry[]
-				{
-					LabelVerticalOptionsEntry.CreateTitle(string.IsNullOrEmpty(title) ? defaultTitle : title, icon),
-					LabelVerticalOptionsEntry.CreateHeader(string.IsNullOrEmpty(message) ? defaultMessage : message)
-				}
-			);
+			title = string.IsNullOrEmpty(title) ? defaultTitle : title;
+			header = string.IsNullOrEmpty(header) ? defaultHeader : header;
+			body = string.IsNullOrEmpty(body) ? defaultBody : body;
+
+			if (!string.IsNullOrEmpty(title)) entries.Add(LabelVerticalOptionsEntry.CreateTitle(title, icon));
+			if (!string.IsNullOrEmpty(header)) entries.Add(LabelVerticalOptionsEntry.CreateHeader(header));
+			if (!string.IsNullOrEmpty(body)) entries.Add(LabelVerticalOptionsEntry.CreateBody(body));
 
 			switch (condition)
 			{

@@ -108,5 +108,30 @@ namespace LunraGames.SubLight
 					return string.Empty;
 			}
 		}
+
+		public static string GetColorTagBegin(Color color)
+		{
+			return "<color=#" + ColorUtility.ToHtmlStringRGB(color) + ">";
+		}
+
+		public static string GetColorTagEnd() { return "</color>"; }
+
+		public static string GetColor(
+			string text,
+			Color color
+		)
+		{
+			return GetColorTagBegin(color) + text + GetColorTagEnd();
+		}
+
+		public static string GetSize(string text, float normal)
+		{
+			return "<size=%" + Mathf.RoundToInt(normal * 100f) + ">" + text + "</size>";
+		}
+
+		public static string GetBold(string text)
+		{
+			return "<b>" + text + "</b>";
+		}
 	}
 }

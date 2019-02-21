@@ -78,7 +78,8 @@ namespace LunraGames.SubLight
 			public static class StringKeys
 			{
 				public const string Title = "title";
-				public const string Message = "message";
+				public const string Header = "header";
+				public const string Body = "body";
 			}
 		}
 

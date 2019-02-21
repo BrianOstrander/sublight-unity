@@ -163,6 +163,23 @@ namespace LunraGames.SubLight.Models
 
 			return result;
 		}
+
+		[JsonIgnore]
+		public KeyValueListModel Duplicate
+		{
+			get
+			{
+				var result = new KeyValueListModel
+				{
+					booleans = new Dictionary<string, bool>(booleans),
+					integers = new Dictionary<string, int>(integers),
+					strings = new Dictionary<string, string>(strings),
+					enums = new Dictionary<string, int>(enums),
+					floats = new Dictionary<string, float>(floats)
+				};
+				return result;
+			}
+		}
 		#endregion
 	}
 }

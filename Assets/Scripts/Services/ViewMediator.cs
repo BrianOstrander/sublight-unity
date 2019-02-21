@@ -353,6 +353,7 @@ namespace LunraGames.SubLight
 		public Ray CameraViewportPointToRay(Vector3 pos) { return IsCameraMainNull ? new Ray(Vector3.zero, Vector3.forward) : Camera.main.ViewportPointToRay(pos); }
 
 		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.Context.CameraTransform.Value; } }
+		public Camera Camera { get { return IsCameraMainNull ? null : Camera.main; } }
 		#endregion
 	}
 }
