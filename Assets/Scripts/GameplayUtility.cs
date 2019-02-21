@@ -45,6 +45,12 @@ namespace LunraGames.SubLight
 			if (shipPopulationMaximum < population) transitsWithOverPopulation = Mathf.Min(transitsWithOverPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum));
 			if (population < shipPopulationMinimum) transitsWithUnderPopulation = Mathf.Min(transitsWithUnderPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum));
 
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
+			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage) + 1;
+
+			propellant = propellant - propellantUsage;
+			propellantUsage = Mathf.Min(propellant, propellantUsage - 1);
+
 			gameSource.Set(
 				KeyDefines.Game.Rations,
 				rations
@@ -68,6 +74,16 @@ namespace LunraGames.SubLight
 			gameSource.Set(
 				KeyDefines.Game.Population,
 				population
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.Propellant,
+				propellant
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.PropellantUsage,
+				propellantUsage
 			);
 		}
 

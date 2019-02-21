@@ -107,6 +107,7 @@ namespace LunraGames.SubLight.Presenters
 			result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRationing(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
+			result = AppendPropellant(result, target, gameSource);
 
 			return result;
 		}
@@ -139,6 +140,7 @@ namespace LunraGames.SubLight.Presenters
 			result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRationing(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
+			result = AppendPropellant(result, target, gameSource);
 
 			return result;
 		}
@@ -277,6 +279,39 @@ namespace LunraGames.SubLight.Presenters
 				rations,
 				0f,
 				rationsMaximum,
+				DeveloperStrings.RatioThemes.ProgressBar,
+				new DeveloperStrings.RatioColor(Color.red, Color.green)
+			);
+
+			return result;
+		}
+
+		string AppendPropellant(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
+		{
+			result += "\n";
+
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.PropellantMaximum);
+
+			result += DeveloperStrings.GetBold("Propellant: ") + (propellant + 1);
+
+			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant);
+			if (0 < Mathf.Abs(propellant - currentPropellant))
+			{
+				var propellantDelta = propellant - currentPropellant;
+				result += DeveloperStrings.GetColor(
+					DeveloperStrings.GetSize(
+						(propellantDelta < 0f ? " " : " +") + propellantDelta,
+						0.4f
+					),
+					(propellantDelta < 0f ? Color.red : Color.green).NewS(0.65f)
+				);
+			}
+
+			result += "\n\t" + DeveloperStrings.GetRatio(
+				propellant,
+				0f,
+				propellantMaximum,
 				DeveloperStrings.RatioThemes.ProgressBar,
 				new DeveloperStrings.RatioColor(Color.red, Color.green)
 			);
