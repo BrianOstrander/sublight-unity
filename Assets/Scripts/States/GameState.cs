@@ -929,6 +929,7 @@ namespace LunraGames.SubLight
 			{
 				case KeyValueTargets.Game:
 					if (key == KeyDefines.Game.Propellant.Key) Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(value);
+					else if (key == KeyDefines.Game.PropellantUsage.Key) Payload.Game.Ship.SetVelocityMultiplierCurrent(value);
 					else if (key == KeyDefines.Game.PropellantMaximum.Key) Payload.Game.Ship.SetVelocityMultiplierMaximum(value - 1);
 					break;
 			}

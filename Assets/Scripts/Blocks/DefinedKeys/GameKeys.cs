@@ -23,6 +23,7 @@
 		public readonly Integer TransitsWithUnderPopulationUntilFailure;
 
 		public readonly Integer Propellant;
+		public readonly Integer PropellantUsage;
 		public readonly Integer PropellantMaximum;
 		#endregion
 
@@ -140,6 +141,12 @@
 					ref Propellant,
 					"propellant",
 					"Current amount of propellant on board.",
+					true
+				),
+				Create(
+					ref PropellantUsage,
+					"propellant_usage",
+					"Current amount of propellant being used for transit.",
 					true
 				),
 				Create(
