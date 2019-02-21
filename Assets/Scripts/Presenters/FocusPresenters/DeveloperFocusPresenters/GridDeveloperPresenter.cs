@@ -17,6 +17,8 @@ namespace LunraGames.SubLight.Presenters
 			public const string LearnMore = "learn_more";
 		}
 
+		static float GetMessageAngle(int index = 0) { return (25f + ((Mathf.Abs(index) - 1) * 30f)) * (index < 0 ? -1f : 1); }
+
 		protected override DeveloperViews DeveloperView { get { return DeveloperViews.Grid; } }
 
 		DeveloperMessageEntry primaryMessage;
@@ -48,12 +50,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			primaryMessage = View.CreateEntry(
 				OnClickLink,
-				30f
+				GetMessageAngle(1)
 			);
 
 			secondaryMessage = View.CreateEntry(
 				OnClickLink,
-				60f
+				GetMessageAngle(2)
 			);
 
 			OnRefreshMessage(true);
@@ -116,7 +118,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			var gameSource = Model.KeyValues;
 
-			result = AppendSystemName(result, target, "Current System", Model.Context.CurrentSystem.Value);
+			//result = AppendSystemName(result, target, "Current System", Model.Context.CurrentSystem.Value);
 			result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRationing(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
@@ -150,7 +152,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 			}
 
-			result = AppendSystemName(result, target, "Target System", system);
+			//result = AppendSystemName(result, target, "Target System", system);
 			result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRationing(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
@@ -337,7 +339,56 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (target == null) throw new ArgumentNullException("target");
 
-			return "lol todo";
+			var result = string.Empty;
+
+			switch (Model.Context.CelestialSystemStateLastSelected.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Selected:
+					return CreateMessageSystem(
+						result,
+						target,
+						Model.Context.CelestialSystemStateLastSelected.Value.System
+					);
+			}
+
+			switch (Model.Context.CelestialSystemState.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Highlighted:
+					return CreateMessageSystem(
+						result,
+						target,
+						Model.Context.CelestialSystemState.Value.System
+					);
+			}
+
+			return result;
+		}
+
+		string CreateMessageSystem(
+			string result,
+			Dictionary<string, Action> target,
+			SystemModel system
+		)
+		{
+			result = AppendSystemName(result, target, "Target System", system);
+
+			result += "\n";
+
+			result += DeveloperStrings.GetBold("Rations: ");
+			var remainingRations = system.KeyValues.Get(KeyDefines.CelestialSystem.RemainingRations);
+			if (Mathf.Approximately(0f, remainingRations)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0f < remainingRations) result += DeveloperStrings.GetColor("+" + remainingRations.ToString("N0"), Color.green);
+			else result += "Invalid Amount " + remainingRations;
+
+			result += "\n";
+
+			result += DeveloperStrings.GetBold("Propellant: ");
+			var remainingPropellant = system.KeyValues.Get(KeyDefines.CelestialSystem.RemainingPropellant);
+			if (Mathf.Approximately(0, remainingPropellant)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0 < remainingPropellant) result += DeveloperStrings.GetColor("+" + remainingPropellant.ToString("N0"), Color.green);
+			else result += "Invalid Amount " + remainingPropellant;
+
+			return result;
 		}
 
 		#region Events
