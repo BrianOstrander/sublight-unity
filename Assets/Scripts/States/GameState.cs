@@ -584,7 +584,7 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
 				propellantUsage: Payload.Game.KeyValues.Get(KeyDefines.Game.PropellantUsage),
-				propellantUsageLimit: Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant)
+				propellantUsageLimit: Mathf.FloorToInt(Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant.Amount))
 			);
 		}
 
@@ -940,28 +940,6 @@ namespace LunraGames.SubLight
 							propellantUsage: Mathf.Min(value, Payload.Game.Ship.Velocity.Value.PropellantUsageLimit)
 						);
 					}
-					else if (key == KeyDefines.Game.PropellantUsageMinimum.Key)
-					{
-						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
-							propellantUsage: Mathf.Max(Payload.Game.Ship.Velocity.Value.PropellantUsage, value)
-						);
-					}
-					else if (key == KeyDefines.Game.PropellantUsageMaximum.Key)
-					{
-						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
-							profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
-								count: value
-							),
-							propellantUsage: Mathf.Min(Payload.Game.Ship.Velocity.Value.PropellantUsage, value)
-						);
-					}
-					else if (key == KeyDefines.Game.Propellant.Key)
-					{
-						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
-							propellantUsage: Mathf.Min(Payload.Game.Ship.Velocity.Value.PropellantUsage, value),
-							propellantUsageLimit: value
-						);
-					}
 					break;
 			}
 		}
@@ -987,6 +965,22 @@ namespace LunraGames.SubLight
 							profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
 								velocityMinimumLightYears: value
 							)
+						);
+					}
+					else if (key == KeyDefines.Game.Propellant.Amount.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+							propellantUsage: Mathf.Min(Payload.Game.Ship.Velocity.Value.PropellantUsage, Mathf.FloorToInt(value)),
+							propellantUsageLimit: Mathf.FloorToInt(value)
+						);
+					}
+					else if (key == KeyDefines.Game.Propellant.Maximum.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+							profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
+								count: Mathf.FloorToInt(value)
+							),
+							propellantUsage: Mathf.Min(Payload.Game.Ship.Velocity.Value.PropellantUsage, Mathf.FloorToInt(value))
 						);
 					}
 					break;

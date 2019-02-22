@@ -63,10 +63,6 @@ namespace LunraGames.SubLight
 		public readonly Integer RationingMaximum;
 
 		public readonly Integer PropellantUsage;
-		public readonly Integer PropellantUsageMinimum;
-		public readonly Integer PropellantUsageMaximum;
-
-		public readonly Integer Propellant;
 
 		public readonly Integer TransitsWithoutRations;
 		public readonly Integer TransitsWithoutRationsMaximum;
@@ -113,6 +109,7 @@ namespace LunraGames.SubLight
 
 		#region Resources
 		public readonly Resource Rations;
+		public readonly Resource Propellant;
   		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
@@ -146,24 +143,6 @@ namespace LunraGames.SubLight
 					ref PropellantUsage,
 					"propellant_usage",
 					"The current propellant multiplier used for transits.",
-					true
-				),
-				Create(
-					ref PropellantUsageMinimum,
-					"propellant_usage_minimum",
-					"The minimum propellant multiplier used for transits, should be greater than zero.",
-					true
-				),
-				Create(
-					ref PropellantUsageMaximum,
-					"propellant_usage_maximum",
-					"The maximum propellant multiplier allowed.",
-					true
-				),
-				Create(
-					ref Propellant,
-					"propellant",
-					"The current propellant available.",
 					true
 				),
 				Create(
@@ -329,6 +308,7 @@ namespace LunraGames.SubLight
 			};
 
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
+			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
 		}
 	}
 }

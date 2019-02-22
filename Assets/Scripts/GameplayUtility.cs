@@ -177,9 +177,6 @@ namespace LunraGames.SubLight
 					out rationsFromSystem
 				);
 
-
-				var wasRationsTotal = rationsTotal;
-
 				rationsTotal = Mathf.Max(0f, rationsTotal - rationsConsumed);
 				var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
 				var rations = Mathf.Min(rationsMaximum, rationsTotal);
@@ -248,16 +245,16 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
 			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage);
-			var propellantUsageMinimum = gameSource.Get(KeyDefines.Game.PropellantUsageMinimum);
+			var propellantUsageMinimum = 1;
 
 			propellant = propellant - propellantUsage;
-			propellantUsage = Mathf.Max(propellantUsageMinimum, Mathf.Min(propellant, propellantUsage));
+			propellantUsage = Mathf.Max(propellantUsageMinimum, Mathf.Min(Mathf.FloorToInt(propellant), propellantUsage));
 			Debug.Log("todo: get proplellnt from systems");
 
 			gameSource.Set(
-				KeyDefines.Game.Propellant,
+				KeyDefines.Game.Propellant.Amount,
 				propellant
 			);
 
