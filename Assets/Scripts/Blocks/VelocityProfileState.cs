@@ -27,24 +27,6 @@ namespace LunraGames.SubLight
 			PropellantUsageLimit = propellantUsageLimit;
 		}
 
-		public VelocityProfileState(
-			VelocityProfileState state,
-			float propellant
-		)
-		{
-			Profile = state.Profile.Duplicate();
-			PropellantUsage = 0;
-			PropellantUsageLimit = 0;
-
-			for (var i = 0; i < Profile.Count; i++)
-			{
-				if (propellant < Profile.Velocities[i].PropellantRequired) break;
-				PropellantUsageLimit = i + 1;
-			}
-
-			PropellantUsage = Mathf.Min(PropellantUsageLimit, state.PropellantUsage);
-		}
-
 		[JsonIgnore]
 		public VelocityProfile.Velocity Current
 		{

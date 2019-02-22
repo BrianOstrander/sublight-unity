@@ -306,12 +306,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			result += "\n";
 
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
-			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.PropellantUsageMaximum);
 
 			result += DeveloperStrings.GetBold("Propellant: ") + (propellant + 1);
 
-			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount);
+			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant);
 			if (0 < Mathf.Abs(propellant - currentPropellant))
 			{
 				var propellantDelta = propellant - currentPropellant;

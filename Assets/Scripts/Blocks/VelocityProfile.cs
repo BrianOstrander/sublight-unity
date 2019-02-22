@@ -10,7 +10,7 @@ namespace LunraGames.SubLight
 	[Serializable]
 	public struct VelocityProfile
 	{
-		public static VelocityProfile Default { get { return new VelocityProfile(0f, 0f, 0); } }
+		public static VelocityProfile Default { get { return new VelocityProfile(0f, 0); } }
 
 		[Serializable]
 		public struct Velocity
@@ -31,20 +31,16 @@ namespace LunraGames.SubLight
 			/// </summary>
 			public float Normal;
 
-			public float PropellantRequired;
-
 			public bool Approximately(Velocity other)
 			{
 				if (Multiplier != other.Multiplier) return false;
 				if (!Mathf.Approximately(Normal, other.Normal)) return false;
-				if (!Mathf.Approximately(PropellantRequired, other.PropellantRequired)) return false;
 				return Mathf.Approximately(Relativistic, other.Relativistic) && Mathf.Approximately(Newtonian, other.Newtonian);
 			}
 		}
 
 		#region Provided
 		[JsonProperty] readonly float velocityMinimumLightYears;
-		[JsonProperty] public readonly float PropellantConsumptionMultiplier;
 		#endregion
 
 		#region Calculated
@@ -53,13 +49,11 @@ namespace LunraGames.SubLight
 
 		public VelocityProfile(
 			float velocityMinimumLightYears,
-			float propellantConsumptionMultiplier,
 			int count
 		)
 		{
 			this.velocityMinimumLightYears = velocityMinimumLightYears;
 			var velocityMinimum = UniversePosition.ToUniverseDistance(velocityMinimumLightYears);
-			PropellantConsumptionMultiplier = propellantConsumptionMultiplier;
 
 			Velocities = new Velocity[count];
 
@@ -85,7 +79,6 @@ namespace LunraGames.SubLight
 				velocity.RelativisticLightYears = relativeLightYears;
 				velocity.NewtonianLightYears = newtonianLightYears;
 				velocity.RelativityRatio = relativeLightYears / newtonianLightYears;
-				velocity.PropellantRequired = propellantConsumptionMultiplier * (i + 1);
 
 				maximumVelocity = velocity.Relativistic;
 
@@ -119,13 +112,11 @@ namespace LunraGames.SubLight
 
 		public VelocityProfile Duplicate(
 			float? velocityMinimumLightYears = null,
-			float? propellantConsumptionMultiplier = null,
 			int? count = null
 		)
 		{
 			return new VelocityProfile(
 				velocityMinimumLightYears ?? this.velocityMinimumLightYears,
-				propellantConsumptionMultiplier ?? PropellantConsumptionMultiplier,
 				count ?? Count
 			);
 		}

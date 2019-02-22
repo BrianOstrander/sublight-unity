@@ -66,6 +66,8 @@ namespace LunraGames.SubLight
 		public readonly Integer PropellantUsageMinimum;
 		public readonly Integer PropellantUsageMaximum;
 
+		public readonly Integer Propellant;
+
 		public readonly Integer TransitsWithoutRations;
 		public readonly Integer TransitsWithoutRationsMaximum;
 		public readonly Integer TransitsWithoutRationsUntilFailure;
@@ -104,7 +106,6 @@ namespace LunraGames.SubLight
 		public readonly Float ShipPopulationMaximum;
 
 		public readonly Float RationsConsumptionMultiplier;
-		public readonly Float PropellantConsumptionMultiplier;
 
 		public readonly Float TransitRangeMinimum;
 		public readonly Float TransitVelocityMinimum;
@@ -112,7 +113,6 @@ namespace LunraGames.SubLight
 
 		#region Resources
 		public readonly Resource Rations;
-		public readonly Resource Propellant;
   		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
@@ -158,6 +158,12 @@ namespace LunraGames.SubLight
 					ref PropellantUsageMaximum,
 					"propellant_usage_maximum",
 					"The maximum propellant multiplier allowed.",
+					true
+				),
+				Create(
+					ref Propellant,
+					"propellant",
+					"The current propellant available.",
 					true
 				),
 				Create(
@@ -309,12 +315,6 @@ namespace LunraGames.SubLight
 					true
 				),
 				Create(
-					ref PropellantConsumptionMultiplier,
-					KeyDefines.Resources.Propellant+"_consumption_multiplier",
-					"The amount of " + KeyDefines.Resources.Propellant + " consumed per propellant multiplier.",
-					true
-				),
-				Create(
 					ref TransitRangeMinimum,
 					"transit_range_minimum",
 					"The minimum range of this ship in universe units.",
@@ -329,7 +329,6 @@ namespace LunraGames.SubLight
 			};
 
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
-			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
 		}
 	}
 }
