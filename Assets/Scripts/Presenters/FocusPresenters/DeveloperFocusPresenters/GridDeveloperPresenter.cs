@@ -391,18 +391,35 @@ namespace LunraGames.SubLight.Presenters
 				out rationsFromSystem
 			);
 
+			var rationsNormal = rationsFromSystem / Model.KeyValues.Get(KeyDefines.Game.Rations.Maximum);
+			var rationsPercent = Mathf.FloorToInt(rationsNormal * 100f);
+			var rationsColor = rationsPercent < 10 ? Color.red : Color.green;
+
 			result += DeveloperStrings.GetBold("Rations: ");
-			if (Mathf.Approximately(0f, rationsFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsFromSystem.ToString("N0"), Color.green);
-			else result += "Invalid Amount " + rationsFromSystem;
+			if (rationsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0 < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), rationsColor);
+			else result += "Invalid Amount " + rationsPercent+"%";
 
-			//result += "\n";
+			result += "\n";
 
-			//result += DeveloperStrings.GetBold("Propellant: ");
-			//var remainingPropellant = system.KeyValues.Get(KeyDefines.CelestialSystem.GatheredPropellant);
-			//if (Mathf.Approximately(0, remainingPropellant)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			//else if (0 < remainingPropellant) result += DeveloperStrings.GetColor("+" + remainingPropellant.ToString("N0"), Color.green);
-			//else result += "Invalid Amount " + remainingPropellant;
+			float propellantTotal;
+			float propellantFromSystem;
+			GameplayUtility.ResourcesAvailable(
+				Model.KeyValues,
+				system.KeyValues,
+				KeyDefines.Game.Propellant,
+				KeyDefines.CelestialSystem.Propellant,
+				out propellantTotal,
+				out propellantFromSystem
+			);
+
+			propellantFromSystem = Mathf.Floor(propellantFromSystem);
+			var propellantAbsolute = Mathf.FloorToInt(propellantFromSystem);
+
+			result += DeveloperStrings.GetBold("Propellant: ");
+			if (Mathf.Approximately(0f, propellantFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantAbsolute,  propellantAbsolute < 2 ? Color.red : Color.green);
+			else result += "Invalid Amount " + propellantFromSystem;
 
 			return result;
 		}
