@@ -933,10 +933,27 @@ namespace LunraGames.SubLight
 			switch (target)
 			{
 				case KeyValueTargets.Game:
-					Debug.Log("todo this speed velocity stuff");
-					//if (key == KeyDefines.Game.Propellant.Key) Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(value);
-					//else if (key == KeyDefines.Game.PropellantUsage.Key) Payload.Game.Ship.SetVelocityMultiplierCurrent(value);
-					//else if (key == KeyDefines.Game.PropellantMaximum.Key) Payload.Game.Ship.SetVelocityMultiplierMaximum(value);
+					if (key == KeyDefines.Game.PropellantUsage.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+							propellantUsage: value
+						);
+					}
+					else if (key == KeyDefines.Game.PropellantUsageMinimum.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+							propellantUsage: Mathf.Max(Payload.Game.Ship.Velocity.Value.PropellantUsage, value)
+						);
+					}
+					else if (key == KeyDefines.Game.PropellantUsageMaximum.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+							profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
+								count: value
+							),
+							propellantUsage: Mathf.Min(Payload.Game.Ship.Velocity.Value.PropellantUsage, value)
+						);
+					}
 					break;
 			}
 		}
@@ -956,9 +973,28 @@ namespace LunraGames.SubLight
 			{
 				case KeyValueTargets.Game:
 					if (key == KeyDefines.Game.TransitRangeMinimum.Key) Payload.Game.Ship.SetRangeMinimum(value);
+					else if (key == KeyDefines.Game.PropellantConsumptionMultiplier.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+							profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
+								propellantConsumptionMultiplier: value
+							)
+						);
+					}
 					else if (key == KeyDefines.Game.TransitVelocityMinimum.Key)
 					{
-						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(Payload.Game.Ship.Velocity.Value.Profile.Duplicate(value));
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+							profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
+								velocityMinimumLightYears: value
+							)
+						);
+					}
+					else if (key == KeyDefines.Game.Propellant.Amount.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = new VelocityProfileState(
+							Payload.Game.Ship.Velocity.Value,
+							value
+						);
 					}
 					break;
 			}

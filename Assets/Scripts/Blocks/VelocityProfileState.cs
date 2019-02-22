@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -26,14 +27,34 @@ namespace LunraGames.SubLight
 			PropellantUsageLimit = propellantUsageLimit;
 		}
 
+		public VelocityProfileState(
+			VelocityProfileState state,
+			float propellant
+		)
+		{
+			Profile = state.Profile.Duplicate();
+			PropellantUsage = 0;
+			PropellantUsageLimit = 0;
+
+			for (var i = 0; i < Profile.Count; i++)
+			{
+				if (propellant < Profile.Velocities[i].PropellantRequired) break;
+				PropellantUsageLimit = i + 1;
+			}
+
+			PropellantUsage = Mathf.Min(PropellantUsageLimit, state.PropellantUsage);
+		}
+
 		[JsonIgnore]
 		public VelocityProfile.Velocity Current
 		{
-			get
-			{
-				if (Profile.Count == 0) return default(VelocityProfile.Velocity);
-				return Profile.Velocities[PropellantUsage];
-			}
+			get { return GetVelocityByUsage(PropellantUsage); }
+		}
+
+		public VelocityProfile.Velocity GetVelocityByUsage(int propellantUsage)
+		{
+			if (Profile.Count == 0) return default(VelocityProfile.Velocity);
+			return Profile.Velocities.FirstOrDefault(v => v.Multiplier == propellantUsage);
 		}
 
 		public VelocityProfileState Duplicate(

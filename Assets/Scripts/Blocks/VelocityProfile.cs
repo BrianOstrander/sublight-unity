@@ -71,39 +71,28 @@ namespace LunraGames.SubLight
 
 				velocity.Multiplier = i + 1;
 
-				if (i == 0)
-				{
-					velocity.Relativistic = velocityMinimum;
-					velocity.Newtonian = velocityMinimum;
-					velocity.RelativisticLightYears = velocityMinimumLightYears;
-					velocity.NewtonianLightYears = velocityMinimumLightYears;
-					velocity.RelativityRatio = 1f;
-					velocity.Normal = 0f;
-					velocity.PropellantRequired = propellantConsumptionMultiplier;
-				}
-				else
-				{
-					var relativeLightYears = 0f;
-					var newtonianLightYears = 0f;
-					RelativityUtility.VelocityByEnergyMultiplier(
-						velocityMinimumLightYears,
-						i,
-						out relativeLightYears,
-						out newtonianLightYears
-					);
+				var relativeLightYears = 0f;
+				var newtonianLightYears = 0f;
+				RelativityUtility.VelocityByEnergyMultiplier(
+					velocityMinimumLightYears,
+					velocity.Multiplier,
+					out relativeLightYears,
+					out newtonianLightYears
+				);
 
-					velocity.Relativistic = UniversePosition.ToUniverseDistance(relativeLightYears);
-					velocity.Newtonian = UniversePosition.ToUniverseDistance(newtonianLightYears);
-					velocity.RelativisticLightYears = relativeLightYears;
-					velocity.NewtonianLightYears = newtonianLightYears;
-					velocity.RelativityRatio = relativeLightYears / newtonianLightYears;
-					velocity.PropellantRequired = propellantConsumptionMultiplier * (i + 1);
-				}
+				velocity.Relativistic = UniversePosition.ToUniverseDistance(relativeLightYears);
+				velocity.Newtonian = UniversePosition.ToUniverseDistance(newtonianLightYears);
+				velocity.RelativisticLightYears = relativeLightYears;
+				velocity.NewtonianLightYears = newtonianLightYears;
+				velocity.RelativityRatio = relativeLightYears / newtonianLightYears;
+				velocity.PropellantRequired = propellantConsumptionMultiplier * (i + 1);
 
 				maximumVelocity = velocity.Relativistic;
 
 				Velocities[i] = velocity;
 			}
+
+			if (Velocities.Any()) velocityMinimum = Velocities.FirstOrDefault().Relativistic;
 
 			if (!Mathf.Approximately(0f, maximumVelocity))
 			{
@@ -112,7 +101,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		[JsonIgnore] public int Count { get { return Velocities.Length; } }
+		[JsonIgnore] public int Count { get { return Velocities == null ? 0 : Velocities.Length; } }
 		[JsonIgnore] public Velocity Minimum { get { return Velocities.FirstOrDefault(); } }
 		[JsonIgnore] public Velocity Maximum { get { return Velocities.LastOrDefault(); } }
 
