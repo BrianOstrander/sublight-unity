@@ -97,6 +97,7 @@ namespace LunraGames.SubLight
 		public UniverseModel CreateUniverse(CreateGameBlock info)
 		{
 			var universeModel = new UniverseModel();
+
 			universeModel.Seed.Value = info.GalaxySeed;
 
 			return universeModel;

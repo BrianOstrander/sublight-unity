@@ -8,112 +8,292 @@ namespace LunraGames.SubLight
 {
 	public static class GameplayUtility
 	{
-		public static void ApplyTransit(
+		static float RationsConsumed(
 			float duration,
-			KeyValueListModel gameSource
+			float population,
+			float rationsConsumptionMultiplier,
+			int rationing
 		)
 		{
-			var rations = gameSource.Get(KeyDefines.Game.Rations);
-			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
-			var rationing = gameSource.Get(KeyDefines.Game.Rationing);
-
-			var transitsWithoutRations = gameSource.Get(KeyDefines.Game.TransitsWithoutRations);
-			var transitsWithOverPopulation = gameSource.Get(KeyDefines.Game.TransitsWithOverPopulation);
-			var transitsWithUnderPopulation = gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulation);
-
-			var population = gameSource.Get(KeyDefines.Game.Population);
-			var shipPopulationMaximum = gameSource.Get(KeyDefines.Game.ShipPopulationMaximum);
-			var shipPopulationMinimum = gameSource.Get(KeyDefines.Game.ShipPopulationMinimum);
-
-			var populationMinimum = gameSource.Get(KeyDefines.Game.PopulationMinimum);
-			var populationMaximum = gameSource.Get(KeyDefines.Game.PopulationMaximumMultiplier) * shipPopulationMaximum;
-
 			var rationsConsumed = population * rationsConsumptionMultiplier * duration;
 
 			if (rationing < 0) rationsConsumed = rationsConsumed / (Mathf.Abs(rationing) + 1);
 			else if (0 < rationing) rationsConsumed *= rationing + 1;
 
-			var isStarving = rations < rationsConsumed;
-			rations = Mathf.Max(0f, rations - rationsConsumed);
+			return rationsConsumed;
+		}
 
-			var populationDelta = gameSource.Get(KeyDefines.Game.PopulationRationingMultiplier);
-			populationDelta *= isStarving ? gameSource.Get(KeyDefines.Game.RationingMinimum) : rationing;
+		public static void ResourcesAvailable(
+			KeyValueListModel gameSource,
+			KeyValueListModel systemSource,
+			GameKeys.Resource shipResource,
+			CelestialSystemKeys.Resource systemResource,
+			out float resourcesTotal
+		)
+		{
+			float resourcesFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				shipResource,
+				systemResource,
+				out resourcesTotal,
+				out resourcesFromSystem
+			);
+		}
 
-			population = Mathf.Clamp(population + populationDelta, populationMinimum, populationMaximum);
+		public static void ResourcesAvailable(
+			KeyValueListModel gameSource,
+			KeyValueListModel systemSource,
+			GameKeys.Resource shipResource,
+			CelestialSystemKeys.Resource systemResource,
+			out float resourcesTotal,
+			out float resourcesFromSystem
+		)
+		{
+			if (gameSource == null) throw new ArgumentNullException("gameSource");
+			if (systemSource == null) throw new ArgumentNullException("systemSource");
+			if (shipResource == null) throw new ArgumentNullException("shipResource");
+			if (systemResource == null) throw new ArgumentNullException("systemResource");
 
-			if (isStarving) transitsWithoutRations = Mathf.Min(transitsWithoutRations + 1, gameSource.Get(KeyDefines.Game.TransitsWithoutRationsMaximum));
-			if (shipPopulationMaximum < population) transitsWithOverPopulation = Mathf.Min(transitsWithOverPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum));
-			if (population < shipPopulationMinimum) transitsWithUnderPopulation = Mathf.Min(transitsWithUnderPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum));
+			resourcesFromSystem = 0f;
 
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
-			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage) + 1;
+			if (!systemSource.Get(systemResource.Discovered))
+			{
+				resourcesFromSystem = systemSource.Get(systemResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMaximum);
+			}
 
-			propellant = propellant - propellantUsage;
-			propellantUsage = Mathf.Max(0, Mathf.Min(propellant, propellantUsage - 1));
+			resourcesTotal = resourcesFromSystem + gameSource.Get(shipResource.Amount);
+		}
 
-			gameSource.Set(
+		public static bool RationsValidation(
+			float duration,
+			KeyValueListModel gameSource,
+			KeyValueListModel systemSource,
+			out int rationingMinimum,
+			out int rationingMaximum,
+			out int rationingLimit,
+			out bool rationsInsufficientForLimit
+		)
+		{
+			if (gameSource == null) throw new ArgumentNullException("gameSource");
+			if (systemSource == null) throw new ArgumentNullException("systemSource");
+
+			rationingMinimum = gameSource.Get(KeyDefines.Game.RationingMinimum);
+			rationingMaximum = gameSource.Get(KeyDefines.Game.RationingMaximum);
+			rationingLimit = rationingMinimum;
+			rationsInsufficientForLimit = true;
+
+			var rationingDelta = (rationingMaximum - rationingMinimum) + 1;
+
+			// TODO: Maybe put these somewhere... in like a constant or something?
+			if (rationingDelta < 3 || 17 < rationingDelta) return false;
+
+			float rationsTotal;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
 				KeyDefines.Game.Rations,
-				rations
+				KeyDefines.CelestialSystem.Rations,
+				out rationsTotal
 			);
 
-			gameSource.Set(
-				KeyDefines.Game.TransitsWithoutRations,
-				transitsWithoutRations
-			);
+			var population = gameSource.Get(KeyDefines.Game.Population);
+			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
 
-			gameSource.Set(
-				KeyDefines.Game.TransitsWithOverPopulation,
-				transitsWithOverPopulation
-			);
+			for (var i = rationingMinimum; i <= rationingMaximum; i++)
+			{
+				if (rationsTotal < RationsConsumed(duration, population, rationsConsumptionMultiplier, i)) break;
+				rationingLimit = i;
+				rationsInsufficientForLimit = false;
+			}
 
-			gameSource.Set(
-				KeyDefines.Game.TransitsWithUnderPopulation,
-				transitsWithUnderPopulation
-			);
+			return true;
+		}
 
-			gameSource.Set(
-				KeyDefines.Game.Population,
-				population
-			);
+		public static void ApplyTransit(
+			float duration,
+			KeyValueListModel gameSource,
+			KeyValueListModel systemSource
+		)
+		{
+			if (gameSource == null) throw new ArgumentNullException("gameSource");
+			if (systemSource == null) throw new ArgumentNullException("systemSource");
 
-			gameSource.Set(
+			// -- To Update
+
+			//float? rations = null;
+			//float? rationsRemainingInSystem = null;
+
+			//var propellant = gameSource.Get(KeyDefines.Game.Propellant);
+			//var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage) + 1; // Indexing of velocities starts at zero, but we always want to consume full.
+			// --
+
+			int rationingMinimum;
+			int rationingMaximum;
+			int rationingLimit;
+			bool rationsInsufficientForLimit;
+
+			if (RationsValidation(
+				duration,
+				gameSource,
+				systemSource,
+				out rationingMinimum,
+				out rationingMaximum,
+				out rationingLimit,
+				out rationsInsufficientForLimit
+			))
+			{
+				// Rationing is valid and we can make calculations based on it.
+
+				var rationing = gameSource.Get(KeyDefines.Game.Rationing);
+				var population = gameSource.Get(KeyDefines.Game.Population);
+				var shipPopulationMaximum = gameSource.Get(KeyDefines.Game.ShipPopulationMaximum);
+				var shipPopulationMinimum = gameSource.Get(KeyDefines.Game.ShipPopulationMinimum);
+				var populationMinimum = gameSource.Get(KeyDefines.Game.PopulationMinimum);
+				var populationMaximum = gameSource.Get(KeyDefines.Game.PopulationMaximumMultiplier) * shipPopulationMaximum;
+				var populationRationingMultiplier = gameSource.Get(KeyDefines.Game.PopulationRationingMultiplier);
+				var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
+				var transitsWithoutRations = gameSource.Get(KeyDefines.Game.TransitsWithoutRations);
+				var transitsWithOverPopulation = gameSource.Get(KeyDefines.Game.TransitsWithOverPopulation);
+				var transitsWithUnderPopulation = gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulation);
+
+				rationing = Mathf.Min(rationing, rationingLimit);
+				var rationsConsumed = RationsConsumed(
+					duration,
+					population,
+					rationsConsumptionMultiplier,
+					rationing
+				);
+
+				float rationsTotal;
+				float rationsFromSystem;
+				ResourcesAvailable(
+					gameSource,
+					systemSource,
+					KeyDefines.Game.Rations,
+					KeyDefines.CelestialSystem.Rations,
+					out rationsTotal,
+					out rationsFromSystem
+				);
+
+				rationsTotal = Mathf.Max(0f, rationsTotal - rationsConsumed);
+				var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
+				var rations = Mathf.Min(rationsMaximum, rationsTotal);
+				var rationsRemainingInSystem = Mathf.Min(Mathf.Max(0f, rationsTotal - rations), rationsFromSystem);
+
+				population = Mathf.Clamp(
+					population + ((rationsInsufficientForLimit ? rationingMinimum : rationing) * populationRationingMultiplier),
+					populationMinimum,
+					populationMaximum
+				);
+
+				if (rationsInsufficientForLimit) transitsWithoutRations = Mathf.Min(transitsWithoutRations + 1, gameSource.Get(KeyDefines.Game.TransitsWithoutRationsMaximum));
+				if (shipPopulationMaximum < population) transitsWithOverPopulation = Mathf.Min(transitsWithOverPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum));
+				if (population < shipPopulationMinimum) transitsWithUnderPopulation = Mathf.Min(transitsWithUnderPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum));
+
+				// -- Updating
+				gameSource.Set(
+					KeyDefines.Game.TransitsWithoutRations,
+					transitsWithoutRations
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.TransitsWithOverPopulation,
+					transitsWithOverPopulation
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.TransitsWithUnderPopulation,
+					transitsWithUnderPopulation
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.Population,
+					population
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.Rationing,
+					rationing
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.Rations.Amount,
+					rations
+				);
+
+				if (!systemSource.Get(KeyDefines.CelestialSystem.Rations.Discovered))
+				{
+					systemSource.Set(
+						KeyDefines.CelestialSystem.Rations.Discovered,
+						true
+					);
+
+					systemSource.Set(
+						KeyDefines.CelestialSystem.Rations.GatheredAmount,
+						rationsFromSystem - rationsRemainingInSystem
+					);
+				}
+				// --
+			}
+			else
+			{
+				Debug.LogError(
+					"Invalid rationing range [ " + rationingMinimum + " , " + rationingMaximum + " ]" +
+	               	"\nThis really shouldn't happen, make sure you initialized the rules properly"
+				);
+			}
+
+			float propellantTotal;
+			float propellantFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
 				KeyDefines.Game.Propellant,
-				propellant
+				KeyDefines.CelestialSystem.Propellant,
+				out propellantTotal,
+				out propellantFromSystem
+			);
+
+			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage);
+
+			propellantTotal = Mathf.Max(0f, propellantTotal - propellantUsage);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
+			var propellant = Mathf.Min(propellantMaximum, propellantTotal);
+			var propellantRemainingInSystem = Mathf.Min(Mathf.Max(0f, propellantTotal - propellant), propellantFromSystem);
+
+			propellantUsage = Mathf.Max(1, Mathf.Min(Mathf.FloorToInt(propellant), propellantUsage));
+
+			gameSource.Set(
+				KeyDefines.Game.Propellant.Amount,
+				Mathf.Floor(propellant)
 			);
 
 			gameSource.Set(
 				KeyDefines.Game.PropellantUsage,
 				propellantUsage
 			);
+
+			//var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+
+			//var propellantUsageMinimum = 1;
+
+
+
+			//propellant = propellant - propellantUsage;
+			//propellantUsage = Mathf.Max(propellantUsageMinimum, Mathf.Min(Mathf.FloorToInt(propellant), propellantUsage));
+			//Debug.Log("todo: get proplellnt from systems");
+
+			//gameSource.Set(
+			//	KeyDefines.Game.Propellant.Amount,
+			//	propellant
+			//);
+
+			//gameSource.Set(
+			//	KeyDefines.Game.PropellantUsage,
+			//	propellantUsage
+			//);
 		}
-
-		//public static void VelocityByEnergyMultiplier(
-		//	float velocityBaseLightYear,
-		//	int count,
-		//	out float relativeVelocity,
-		//	out float newtonianVelocity
-		//)
-		//{
-		//	if (count < 1) throw new ArgumentOutOfRangeException("count", "Needs to be at least 1");
-
-		//	var baseEnergy = (1f / Mathf.Sqrt(1f - Mathf.Pow(velocityBaseLightYear, 2f))) - 1f;
-		//	var finalEnergy = baseEnergy * count;
-		//	relativeVelocity = Mathf.Sqrt(1f - Mathf.Pow((1f / (finalEnergy + 1f)), 2f));
-		//	newtonianVelocity = velocityBaseLightYear * Mathf.Sqrt(count);
-		//}
-
-		//public static RelativeDayTime TransitTime(
-		//	float velocityLightYear,
-		//	float distanceLightYear
-		//)
-		//{
-		//	var galacticTime = distanceLightYear / velocityLightYear;
-		//	var shipTime = galacticTime * (1f / (1f / Mathf.Sqrt(1f - (Mathf.Pow(velocityLightYear, 2f) / 1f))));
-
-		//	return new RelativeDayTime(
-		//		DayTime.FromYear(shipTime),
-		//		DayTime.FromYear(galacticTime)
-		//	);
-		//}
 	}
 }

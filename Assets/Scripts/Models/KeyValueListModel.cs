@@ -157,7 +157,7 @@ namespace LunraGames.SubLight.Models
 
 			if (floats.Any())
 			{
-				foreach (var kv in floats) result += "\t" + kv.Key + " , " + kv.Value + "\n";
+				foreach (var kv in floats) result += "\t" + kv.Key + " , " + kv.Value.ToString("N4") + "\n";
 			}
 			else result += "\tNone\n";
 

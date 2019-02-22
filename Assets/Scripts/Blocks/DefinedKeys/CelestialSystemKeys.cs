@@ -1,19 +1,45 @@
 ﻿using System;
+using System.Linq;
 
 namespace LunraGames.SubLight
 {
 	public class CelestialSystemKeys : KeyDefinitions
 	{
-		static class Suffixes
+		public class Resource
 		{
-			public const string Rations = "rations";
-		}
+			public readonly Float GatherMultiplier;
+			public readonly Float GatheredAmount;
+			public readonly Boolean Discovered;
 
-		enum ResourceProperties
-		{
-			Unknown = 0,
-			Generated = 10,
-			Remaining = 20
+			public Resource(
+				string resource,
+				CelestialSystemKeys instance
+			)
+			{
+				instance.Floats = instance.Floats.Append(
+					instance.Create(
+						ref GatherMultiplier,
+						"gather_multiplier_" + resource,
+						"The multiplier applied to the ark's gather rate when gathering " + resource + "."
+					)
+				).ToArray();
+
+				instance.Floats = instance.Floats.Append(
+					instance.Create(
+						ref GatheredAmount,
+						"gather_amount_" + resource,
+						"The of " + resource + " gathered in this system already, or zero if there was never any to begin with."
+					)
+				).ToArray();
+
+				instance.Booleans = instance.Booleans.Append(
+					instance.Create(
+						ref Discovered,
+						"discovered_" + resource,
+						"True if the ark passed through this system after discovering " + resource + ". Allows newly discovered resources to be gathered upon returning to previously visited systems."
+					)
+				).ToArray();
+			}
 		}
 
 		#region Booleans
@@ -25,9 +51,12 @@ namespace LunraGames.SubLight
 		#region Strings
 		#endregion
 
-		#region Floats - Read & Write
-		public readonly Float GeneratedRations;
-		public readonly Float RemainingRations;
+		#region Floats
+		#endregion
+
+		#region Resources
+		public readonly Resource Rations;
+		public readonly Resource Propellant;
 		#endregion
 
 		public CelestialSystemKeys() : base(KeyValueTargets.CelestialSystem)
@@ -49,35 +78,11 @@ namespace LunraGames.SubLight
 
 			Floats = new Float[]
 			{
-				// -- Read & Write
-				CreateResource(ref GeneratedRations, Suffixes.Rations, ResourceProperties.Generated),
-				CreateResource(ref GeneratedRations, Suffixes.Rations, ResourceProperties.Remaining),
-			};
-		}
 
-		Float CreateResource(
-			ref Float definition,
-			string resourceSuffix,
-			ResourceProperties property
-		)
-		{
-			switch (property)
-			{
-				case ResourceProperties.Generated:
-					return Create(
-						ref definition,
-						"generated_" + resourceSuffix,
-						"The amount of " + resourceSuffix + " assigned to a system when it was generated."
-					);
-				case ResourceProperties.Remaining:
-					return Create(
-						ref definition,
-						"remaining_" + resourceSuffix,
-						"The amount of " + resourceSuffix + " remaining in a system."
-					);
-				default:
-					throw new ArgumentOutOfRangeException("property", "Unrecognized ResourceProperty: " + property);
-			}
+			};
+
+			Rations = new Resource(KeyDefines.Resources.Rations, this);
+			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
 		}
 	}
 }

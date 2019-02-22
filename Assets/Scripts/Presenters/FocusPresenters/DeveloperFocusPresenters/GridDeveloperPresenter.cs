@@ -17,7 +17,12 @@ namespace LunraGames.SubLight.Presenters
 			public const string LearnMore = "learn_more";
 		}
 
+		static float GetMessageAngle(int index = 0) { return (25f + ((Mathf.Abs(index) - 1) * 30f)) * (index < 0 ? -1f : 1); }
+
 		protected override DeveloperViews DeveloperView { get { return DeveloperViews.Grid; } }
+
+		DeveloperMessageEntry primaryMessage;
+		DeveloperMessageEntry secondaryMessage;
 
 		Dictionary<string, Action> links;
 
@@ -43,8 +48,17 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnUpdateEnabled()
 		{
-			View.Message = CreateMessage(out links);
-			View.ClickLink = OnClickLink;
+			primaryMessage = View.CreateEntry(
+				OnClickLink,
+				GetMessageAngle(1)
+			);
+
+			secondaryMessage = View.CreateEntry(
+				OnClickLink,
+				GetMessageAngle(2)
+			);
+
+			OnRefreshMessage(true);
 		}
 
 		/* Better to hide this until I actually need it.
@@ -67,9 +81,10 @@ namespace LunraGames.SubLight.Presenters
 			return "<link=\"" + linkId + "\">" + message + "</link>";
 		}
 
-		string CreateMessage(out Dictionary<string, Action> target)
+		string CreatePrimaryMessage(Dictionary<string, Action> target)
 		{
-			target = new Dictionary<string, Action>();
+			if (target == null) throw new ArgumentNullException("target");
+
 			var result = string.Empty;
 
 			if (Model.Context.TransitState.Value.State != TransitState.States.Complete) return result;
@@ -103,7 +118,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			var gameSource = Model.KeyValues;
 
-			result = AppendSystemName(result, target, "Current System", Model.Context.CurrentSystem.Value);
+			//result = AppendSystemName(result, target, "Current System", Model.Context.CurrentSystem.Value);
 			result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRationing(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
@@ -118,7 +133,7 @@ namespace LunraGames.SubLight.Presenters
 
 			if (system != null)
 			{
-				var currVelocity = Model.Ship.Velocity.Value.VelocityLightYearsCurrent;
+				var currVelocity = Model.Ship.Velocity.Value.Current.RelativisticLightYears;
 				var currDistance = UniversePosition.ToLightYearDistance(
 					UniversePosition.Distance(
 						Model.Context.CurrentSystem.Value.Position.Value,
@@ -132,11 +147,12 @@ namespace LunraGames.SubLight.Presenters
 						currVelocity,
 						currDistance
 					).ShipTime.TotalYears,
-					gameSource
+					gameSource,
+					system.KeyValues.Duplicate
 				);
 			}
 
-			result = AppendSystemName(result, target, "Target System", system);
+			//result = AppendSystemName(result, target, "Target System", system);
 			result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRationing(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
@@ -253,19 +269,25 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		string AppendRations(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
+		string AppendRations(
+			string result,
+			Dictionary<string, Action> target,
+			KeyValueListModel gameSource
+		)
 		{
 			result += "\n";
 
-			var rations = gameSource.Get(KeyDefines.Game.Rations);
-			var rationsMaximum = gameSource.Get(KeyDefines.Game.RationsMaximum);
+			var rationsTotal = gameSource.Get(KeyDefines.Game.Rations.Amount);
+			var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
 
-			result += DeveloperStrings.GetBold("Rations: ") + rations.ToString("N0");
+			result += DeveloperStrings.GetBold("Rations: ") + rationsTotal.ToString("N0");
 
-			var currentRations = Model.KeyValues.Get(KeyDefines.Game.Rations);
-			if (1f < Mathf.Abs(rations - currentRations))
+			var currentRations = Model.KeyValues.Get(KeyDefines.Game.Rations.Amount);
+			if (1f < Mathf.Abs(rationsTotal - currentRations))
 			{
-				var rationsDelta = rations - currentRations;
+				var rationsDelta = rationsTotal - currentRations;
+				if (rationsMaximum < rationsTotal) rationsDelta = (rationsDelta + currentRations) - rationsMaximum;
+
 				result += DeveloperStrings.GetColor(
 					DeveloperStrings.GetSize(
 						(rationsDelta < 0f ? " " : " +") + rationsDelta.ToString("N0"),
@@ -276,7 +298,7 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			result += "\n\t" + DeveloperStrings.GetRatio(
-				rations,
+				rationsTotal,
 				0f,
 				rationsMaximum,
 				DeveloperStrings.RatioThemes.ProgressBar,
@@ -290,12 +312,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			result += "\n";
 
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
-			var propellantMaximum = gameSource.Get(KeyDefines.Game.PropellantMaximum);
+			var propellant = Mathf.FloorToInt(gameSource.Get(KeyDefines.Game.Propellant.Amount));
+			var propellantMaximum = Mathf.FloorToInt(gameSource.Get(KeyDefines.Game.Propellant.Maximum));
 
-			result += DeveloperStrings.GetBold("Propellant: ") + (propellant + 1);
+			result += DeveloperStrings.GetBold("Propellant: ") + propellant;
 
-			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant);
+			var currentPropellant = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount));
 			if (0 < Mathf.Abs(propellant - currentPropellant))
 			{
 				var propellantDelta = propellant - currentPropellant;
@@ -319,6 +341,89 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
+		string CreateSecondaryMessage(Dictionary<string, Action> target)
+		{
+			if (target == null) throw new ArgumentNullException("target");
+
+			var result = string.Empty;
+
+			switch (Model.Context.CelestialSystemStateLastSelected.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Selected:
+					return CreateMessageSystem(
+						result,
+						target,
+						Model.Context.CelestialSystemStateLastSelected.Value.System
+					);
+			}
+
+			switch (Model.Context.CelestialSystemState.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Highlighted:
+					return CreateMessageSystem(
+						result,
+						target,
+						Model.Context.CelestialSystemState.Value.System
+					);
+			}
+
+			return result;
+		}
+
+		string CreateMessageSystem(
+			string result,
+			Dictionary<string, Action> target,
+			SystemModel system
+		)
+		{
+			result = AppendSystemName(result, target, "Target System", system);
+
+			result += "\n";
+
+			float rationsTotal;
+			float rationsFromSystem;
+			GameplayUtility.ResourcesAvailable(
+				Model.KeyValues,
+				system.KeyValues,
+				KeyDefines.Game.Rations,
+				KeyDefines.CelestialSystem.Rations,
+				out rationsTotal,
+				out rationsFromSystem
+			);
+
+			var rationsNormal = rationsFromSystem / Model.KeyValues.Get(KeyDefines.Game.Rations.Maximum);
+			var rationsPercent = Mathf.FloorToInt(rationsNormal * 100f);
+			var rationsColor = rationsPercent < 10 ? Color.red : Color.green;
+
+			result += DeveloperStrings.GetBold("Rations: ");
+			if (rationsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0 < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), rationsColor);
+			else result += "Invalid Amount " + rationsPercent+"%";
+
+			result += "\n";
+
+			float propellantTotal;
+			float propellantFromSystem;
+			GameplayUtility.ResourcesAvailable(
+				Model.KeyValues,
+				system.KeyValues,
+				KeyDefines.Game.Propellant,
+				KeyDefines.CelestialSystem.Propellant,
+				out propellantTotal,
+				out propellantFromSystem
+			);
+
+			propellantFromSystem = Mathf.Floor(propellantFromSystem);
+			var propellantAbsolute = Mathf.FloorToInt(propellantFromSystem);
+
+			result += DeveloperStrings.GetBold("Propellant: ");
+			if (Mathf.Approximately(0f, propellantFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantAbsolute,  propellantAbsolute < 2 ? Color.red : Color.green);
+			else result += "Invalid Amount " + propellantFromSystem;
+
+			return result;
+		}
+
 		#region Events
 		void OnKeyValueRequest(KeyValueRequest request)
 		{
@@ -330,7 +435,7 @@ namespace LunraGames.SubLight.Presenters
 			OnRefreshMessage();
 		}
 
-		void OnVelocity(TransitVelocity velocity)
+		void OnVelocity(VelocityProfileState velocity)
 		{
 			OnRefreshMessage();
 		}
@@ -340,11 +445,14 @@ namespace LunraGames.SubLight.Presenters
 			OnRefreshMessage();
 		}
 
-		void OnRefreshMessage()
+		void OnRefreshMessage(bool force = false)
 		{
-			if (!View.Visible) return;
+			if (!force && !View.Visible) return;
 
-			View.Message = CreateMessage(out links);
+			links = new Dictionary<string, Action>();
+
+			primaryMessage.Message(CreatePrimaryMessage(links));
+			secondaryMessage.Message(CreateSecondaryMessage(links));
 		}
 
 		void OnClickLink(string linkId)

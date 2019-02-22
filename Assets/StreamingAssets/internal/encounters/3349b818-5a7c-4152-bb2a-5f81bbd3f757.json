@@ -8,25 +8,26 @@
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
-    "integerKeyValues": [
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [
       {
         "operation": "LessThanOrEquals",
-        "filterId": "520e1b88-9d37-4195-a260-861838479b6d",
+        "index": 1,
+        "filterId": "417ecbe6-217c-47e0-92ca-5b73dcfe27e0",
         "group": "All",
         "Input0": {
-          "AddressId": "c8bbc9c2-f257-43aa-b6c8-c6987957ceda",
+          "AddressId": "47efb53c-ad02-4cd7-8124-5b1c91eb83b0",
           "Source": "KeyValue",
           "ForeignTarget": "Game",
           "ForeignKey": "propellant"
         },
         "Input1": {
-          "AddressId": "85a2ade3-0da7-4469-9579-9da79dace2be",
+          "AddressId": "39222412-826f-4b25-84ca-572f62d98f45",
           "Source": "LocalValue"
         }
       }
     ],
-    "stringKeyValues": [],
-    "floatKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {

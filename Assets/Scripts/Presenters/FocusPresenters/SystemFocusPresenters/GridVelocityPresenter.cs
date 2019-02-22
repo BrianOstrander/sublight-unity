@@ -40,14 +40,14 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
-		void OnVelocity(TransitVelocity velocity)
+		void OnVelocity(VelocityProfileState velocity)
 		{
 			if (!View.Visible) return;
 
 			OnVelocityForced(velocity);
 		}
 
-		void OnVelocityForced(TransitVelocity velocity)
+		void OnVelocityForced(VelocityProfileState velocity)
 		{
 			View.SetVelocities(velocity);
 		}
@@ -55,7 +55,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnMultiplierSelection(int index)
 		{
 			model.KeyValues.Set(KeyDefines.Game.PropellantUsage, index);
-			model.Ship.SetVelocityMultiplierCurrent(index);
+			model.Ship.Velocity.Value = model.Ship.Velocity.Value.Duplicate(propellantUsage: index);
 		}
 
 		void OnTransitState(TransitState transitState)

@@ -77,9 +77,9 @@ namespace LunraGames.SubLight
 			// Ship ---
 			// TODO: Some of these values should be based on... like... the ship's inventory.
 			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
-			model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
-			model.Ship.SetVelocityMultiplierMaximum(7);
-			model.Ship.SetVelocityMultiplierEnabledMaximum(5);
+			//model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			//model.Ship.SetVelocityMultiplierMaximum(7);
+			//model.Ship.SetVelocityMultiplierEnabledMaximum(5);
 			// --------
 
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
