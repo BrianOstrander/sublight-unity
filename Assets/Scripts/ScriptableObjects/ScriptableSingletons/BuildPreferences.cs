@@ -1,6 +1,7 @@
 ﻿using System;
 
 using UnityEngine;
+using UnityEngine.Analytics;
 
 using LunraGames.Singletonnes;
 
@@ -70,15 +71,20 @@ namespace LunraGames.SubLight
 				ref result,
 				SystemInfo.operatingSystem
 			);
-			//AppendFeedbackFormEntry(
-			//	ref index,
-			//	ref result,
-			//	persistentId
-			//);
 			AppendFeedbackFormEntry(
 				ref index,
 				ref result,
 				persistentId
+			);
+			AppendFeedbackFormEntry(
+				ref index,
+				ref result,
+				AnalyticsSessionInfo.userId
+			);
+			AppendFeedbackFormEntry(
+				ref index,
+				ref result,
+				AnalyticsSessionInfo.sessionId.ToString()
 			);
 			AppendFeedbackFormEntry(
 				ref index,
