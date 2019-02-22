@@ -80,7 +80,7 @@ namespace LunraGames.SubLight.Presenters
 			if (block.State == CelestialSystemStateBlock.States.Selected)
 			{
 				var distance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(block.Position, model.Ship.Position.Value));
-				var transitDelta = RelativityUtility.TransitTime(model.Ship.Velocity.Value.Velocity.RelativisticLightYears, distance);
+				var transitDelta = RelativityUtility.TransitTime(model.Ship.Velocity.Value.Current.RelativisticLightYears, distance);
 
 				result.DeltaTimes[ReferenceFrames.Ship] = transitDelta.ShipTime;
 				result.DeltaTimes[ReferenceFrames.Galactic] = transitDelta.GalacticTime;

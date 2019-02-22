@@ -15,14 +15,38 @@ namespace LunraGames.SubLight
 		[JsonProperty] public readonly int PropellantUsage;
 		[JsonProperty] public readonly int PropellantUsageLimit;
 
+		public VelocityProfileState(
+			VelocityProfile profile,
+			int propellantUsage,
+			int propellantUsageLimit
+		)
+		{
+			Profile = profile;
+			PropellantUsage = propellantUsage;
+			PropellantUsageLimit = propellantUsageLimit;
+		}
+
 		[JsonIgnore]
-		public VelocityProfile.Velocity Velocity
+		public VelocityProfile.Velocity Current
 		{
 			get
 			{
 				if (Profile.Count == 0) return default(VelocityProfile.Velocity);
 				return Profile.Velocities[PropellantUsage];
 			}
+		}
+
+		public VelocityProfileState Duplicate(
+			VelocityProfile? profile = null,
+			int? propellantUsage = null,
+			int? propellantUsageLimit = null
+		)
+		{
+			return new VelocityProfileState(
+				profile ?? Profile,
+				propellantUsage ?? PropellantUsage,
+				propellantUsageLimit ?? PropellantUsageLimit
+			);
 		}
 	}
 }

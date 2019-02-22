@@ -40,13 +40,6 @@ namespace LunraGames.SubLight.Models
 
 		#region Utility
 		public void SetRangeMinimum(float minimum) { rangeListener.Value = rangeListener.Value.NewMinimum(minimum); }
-
-		// TODO: Somehow initialize these values in the rules initializition and listen for changes...
-
-		public void SetVelocityMinimum(float minimum) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } // { velocityListenerold.Value = velocityListenerold.Value.NewVelocityMinimum(minimum); }
-		public void SetVelocityMultiplierCurrent(int multiplier) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierCurrent(multiplier); }
-		public void SetVelocityMultiplierMaximum(int maximum) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierMaximum(maximum); }
-		public void SetVelocityMultiplierEnabledMaximum(int enabledMaximum) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierEnabledMaximum(enabledMaximum); }
 		#endregion
 	}
 }

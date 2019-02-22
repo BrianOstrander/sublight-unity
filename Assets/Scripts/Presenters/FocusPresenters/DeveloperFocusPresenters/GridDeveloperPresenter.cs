@@ -133,7 +133,7 @@ namespace LunraGames.SubLight.Presenters
 
 			if (system != null)
 			{
-				var currVelocity = Model.Ship.Velocity.Value.Velocity.RelativisticLightYears;
+				var currVelocity = Model.Ship.Velocity.Value.Current.RelativisticLightYears;
 				var currDistance = UniversePosition.ToLightYearDistance(
 					UniversePosition.Distance(
 						Model.Context.CurrentSystem.Value.Position.Value,

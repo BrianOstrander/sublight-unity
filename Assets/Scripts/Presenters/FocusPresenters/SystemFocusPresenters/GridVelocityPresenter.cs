@@ -55,7 +55,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnMultiplierSelection(int index)
 		{
 			model.KeyValues.Set(KeyDefines.Game.PropellantUsage, index);
-			model.Ship.SetVelocityMultiplierCurrent(index);
+			model.Ship.Velocity.Value = model.Ship.Velocity.Value.Duplicate(propellantUsage: index);
 		}
 
 		void OnTransitState(TransitState transitState)

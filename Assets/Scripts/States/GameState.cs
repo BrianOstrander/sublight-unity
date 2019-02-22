@@ -956,7 +956,10 @@ namespace LunraGames.SubLight
 			{
 				case KeyValueTargets.Game:
 					if (key == KeyDefines.Game.TransitRangeMinimum.Key) Payload.Game.Ship.SetRangeMinimum(value);
-					else if (key == KeyDefines.Game.TransitVelocityMinimum.Key) Payload.Game.Ship.SetVelocityMinimum(value * UniversePosition.LightYearToUniverseScalar);
+					else if (key == KeyDefines.Game.TransitVelocityMinimum.Key)
+					{
+						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(Payload.Game.Ship.Velocity.Value.Profile.Duplicate(value));
+					}
 					break;
 			}
 		}

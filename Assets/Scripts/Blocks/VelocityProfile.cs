@@ -43,6 +43,7 @@ namespace LunraGames.SubLight
 		}
 
 		#region Provided
+		[JsonProperty] readonly float velocityMinimumLightYears;
 		[JsonProperty] public readonly float PropellantConsumptionMultiplier;
 		#endregion
 
@@ -53,17 +54,18 @@ namespace LunraGames.SubLight
 		public VelocityProfile(
 			float velocityMinimumLightYears,
 			float propellantConsumptionMultiplier,
-			int multiplierLimit
+			int count
 		)
 		{
+			this.velocityMinimumLightYears = velocityMinimumLightYears;
 			var velocityMinimum = UniversePosition.ToUniverseDistance(velocityMinimumLightYears);
 			PropellantConsumptionMultiplier = propellantConsumptionMultiplier;
 
-			Velocities = new Velocity[multiplierLimit];
+			Velocities = new Velocity[count];
 
 			var maximumVelocity = 0f;
 
-			for (var i = 0; i < multiplierLimit; i++)
+			for (var i = 0; i < count; i++)
 			{
 				var velocity = new Velocity();
 
@@ -124,6 +126,19 @@ namespace LunraGames.SubLight
 			}
 
 			return true;
+		}
+
+		public VelocityProfile Duplicate(
+			float? velocityMinimumLightYears = null,
+			float? propellantConsumptionMultiplier = null,
+			int? count = null
+		)
+		{
+			return new VelocityProfile(
+				velocityMinimumLightYears ?? this.velocityMinimumLightYears,
+				propellantConsumptionMultiplier ?? PropellantConsumptionMultiplier,
+				count ?? Count
+			);
 		}
 	}
 }
