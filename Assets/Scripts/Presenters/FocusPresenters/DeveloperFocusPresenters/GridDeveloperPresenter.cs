@@ -269,19 +269,25 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		string AppendRations(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
+		string AppendRations(
+			string result,
+			Dictionary<string, Action> target,
+			KeyValueListModel gameSource
+		)
 		{
 			result += "\n";
 
-			var rations = gameSource.Get(KeyDefines.Game.Rations.Amount);
+			var rationsTotal = gameSource.Get(KeyDefines.Game.Rations.Amount);
 			var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
 
-			result += DeveloperStrings.GetBold("Rations: ") + rations.ToString("N0");
+			result += DeveloperStrings.GetBold("Rations: ") + rationsTotal.ToString("N0");
 
 			var currentRations = Model.KeyValues.Get(KeyDefines.Game.Rations.Amount);
-			if (1f < Mathf.Abs(rations - currentRations))
+			if (1f < Mathf.Abs(rationsTotal - currentRations))
 			{
-				var rationsDelta = rations - currentRations;
+				var rationsDelta = rationsTotal - currentRations;
+				if (rationsMaximum < rationsTotal) rationsDelta = (rationsDelta + currentRations) - rationsMaximum;
+
 				result += DeveloperStrings.GetColor(
 					DeveloperStrings.GetSize(
 						(rationsDelta < 0f ? " " : " +") + rationsDelta.ToString("N0"),
@@ -292,7 +298,7 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			result += "\n\t" + DeveloperStrings.GetRatio(
-				rations,
+				rationsTotal,
 				0f,
 				rationsMaximum,
 				DeveloperStrings.RatioThemes.ProgressBar,
@@ -374,12 +380,21 @@ namespace LunraGames.SubLight.Presenters
 
 			result += "\n";
 
-			Debug.Log("todo: calculate this message");
-			//result += DeveloperStrings.GetBold("Rations: ");
-			//var remainingRations = system.KeyValues.Get(KeyDefines.CelestialSystem.GatheredRations);
-			//if (Mathf.Approximately(0f, remainingRations)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			//else if (0f < remainingRations) result += DeveloperStrings.GetColor("+" + remainingRations.ToString("N0"), Color.green);
-			//else result += "Invalid Amount " + remainingRations;
+			float rationsTotal;
+			float rationsFromSystem;
+			GameplayUtility.ResourcesAvailable(
+				Model.KeyValues,
+				system.KeyValues,
+				KeyDefines.Game.Rations,
+				KeyDefines.CelestialSystem.Rations,
+				out rationsTotal,
+				out rationsFromSystem
+			);
+
+			result += DeveloperStrings.GetBold("Rations: ");
+			if (Mathf.Approximately(0f, rationsFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0f < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsFromSystem.ToString("N0"), Color.green);
+			else result += "Invalid Amount " + rationsFromSystem;
 
 			//result += "\n";
 

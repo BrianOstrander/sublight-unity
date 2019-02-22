@@ -511,7 +511,7 @@ namespace LunraGames.SubLight
 			GameplayUtility.ApplyTransit(
 				Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears,
 				Payload.Game.KeyValues,
-				Payload.Game.Context.TransitState.Value.BeginSystem.KeyValues
+				Payload.Game.Context.TransitState.Value.EndSystem.KeyValues
 			);
 		}
 
@@ -582,9 +582,10 @@ namespace LunraGames.SubLight
 				Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMaximum) * Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMaximumMultiplier)
 			);
 
-			Debug.Log("calculate propellant usage");
-			//Payload.Game.Ship.SetVelocityMultiplierCurrent(Payload.Game.KeyValues.Get(KeyDefines.Game.PropellantUsage));
-			//Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant));
+			Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+				propellantUsage: Payload.Game.KeyValues.Get(KeyDefines.Game.PropellantUsage),
+				propellantUsageLimit: Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant)
+			);
 		}
 
 		void OnCheckForEncounters()

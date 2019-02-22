@@ -552,7 +552,10 @@
             }
           ],
           "keyValues": {
-            "booleans": {},
+            "booleans": {
+              "discovered_rations": false,
+              "discovered_propellant": false
+            },
             "integers": {
               "generated_propellant": 0,
               "remaining_propellant": 0
@@ -561,7 +564,11 @@
             "enums": {},
             "floats": {
               "generated_rations": 5.0,
-              "remaining_rations": 5.0
+              "remaining_rations": 5.0,
+              "gather_multiplier_rations": 0.5,
+              "gather_amount_rations": 0.0,
+              "gather_multiplier_propellant": 0.0,
+              "gather_amount_propellant": 0.0
             }
           }
         },
@@ -588,7 +595,10 @@
             }
           ],
           "keyValues": {
-            "booleans": {},
+            "booleans": {
+              "discovered_rations": false,
+              "discovered_propellant": false
+            },
             "integers": {
               "generated_propellant": 0,
               "remaining_propellant": 0
@@ -597,7 +607,11 @@
             "enums": {},
             "floats": {
               "generated_rations": 0.0,
-              "remaining_rations": 0.0
+              "remaining_rations": 0.0,
+              "gather_multiplier_rations": 0.0,
+              "gather_amount_rations": 0.0,
+              "gather_multiplier_propellant": 0.0,
+              "gather_amount_propellant": 0.0
             }
           }
         }

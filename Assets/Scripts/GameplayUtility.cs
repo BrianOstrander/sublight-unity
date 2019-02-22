@@ -62,6 +62,7 @@ namespace LunraGames.SubLight
 			{
 				resourcesFromSystem = systemSource.Get(systemResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMaximum);
 			}
+
 			resourcesTotal = resourcesFromSystem + gameSource.Get(shipResource.Amount);
 		}
 
@@ -176,9 +177,11 @@ namespace LunraGames.SubLight
 					out rationsFromSystem
 				);
 
+
+				var wasRationsTotal = rationsTotal;
+
 				rationsTotal = Mathf.Max(0f, rationsTotal - rationsConsumed);
 				var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
-
 				var rations = Mathf.Min(rationsMaximum, rationsTotal);
 				var rationsRemainingInSystem = Mathf.Min(Mathf.Max(0f, rationsTotal - rations), rationsFromSystem);
 
@@ -245,13 +248,14 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			//propellant = propellant - propellantUsage;
-			//propellantUsage = Mathf.Max(0, Mathf.Min(propellant, propellantUsage - 1));
-			Debug.Log("todo: propellant usage and stuff");
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
+			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage);
+			var propellantUsageMinimum = gameSource.Get(KeyDefines.Game.PropellantUsageMinimum);
 
-			// --
+			propellant = propellant - propellantUsage;
+			propellantUsage = Mathf.Max(propellantUsageMinimum, Mathf.Min(propellant, propellantUsage));
+			Debug.Log("todo: get proplellnt from systems");
 
-			/*
 			gameSource.Set(
 				KeyDefines.Game.Propellant,
 				propellant
@@ -261,36 +265,6 @@ namespace LunraGames.SubLight
 				KeyDefines.Game.PropellantUsage,
 				propellantUsage
 			);
-			*/
 		}
-
-		//public static void VelocityByEnergyMultiplier(
-		//	float velocityBaseLightYear,
-		//	int count,
-		//	out float relativeVelocity,
-		//	out float newtonianVelocity
-		//)
-		//{
-		//	if (count < 1) throw new ArgumentOutOfRangeException("count", "Needs to be at least 1");
-
-		//	var baseEnergy = (1f / Mathf.Sqrt(1f - Mathf.Pow(velocityBaseLightYear, 2f))) - 1f;
-		//	var finalEnergy = baseEnergy * count;
-		//	relativeVelocity = Mathf.Sqrt(1f - Mathf.Pow((1f / (finalEnergy + 1f)), 2f));
-		//	newtonianVelocity = velocityBaseLightYear * Mathf.Sqrt(count);
-		//}
-
-		//public static RelativeDayTime TransitTime(
-		//	float velocityLightYear,
-		//	float distanceLightYear
-		//)
-		//{
-		//	var galacticTime = distanceLightYear / velocityLightYear;
-		//	var shipTime = galacticTime * (1f / (1f / Mathf.Sqrt(1f - (Mathf.Pow(velocityLightYear, 2f) / 1f))));
-
-		//	return new RelativeDayTime(
-		//		DayTime.FromYear(shipTime),
-		//		DayTime.FromYear(galacticTime)
-		//	);
-		//}
 	}
 }
