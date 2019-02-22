@@ -32,7 +32,7 @@ namespace LunraGames.SubLight.Presenters
 
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 			Model.Context.TransitState.Changed += OnTransitState;
-			Model.Ship.Velocity.Changed += OnVelocity;
+			Model.Ship.Velocityold.Changed += OnVelocity;
 		}
 
 		protected override void OnUnBind()
@@ -43,7 +43,7 @@ namespace LunraGames.SubLight.Presenters
 
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Model.Context.TransitState.Changed -= OnTransitState;
-			Model.Ship.Velocity.Changed -= OnVelocity;
+			Model.Ship.Velocityold.Changed -= OnVelocity;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -133,7 +133,7 @@ namespace LunraGames.SubLight.Presenters
 
 			if (system != null)
 			{
-				var currVelocity = Model.Ship.Velocity.Value.VelocityLightYearsCurrent;
+				var currVelocity = Model.Ship.Velocityold.Value.VelocityLightYearsCurrent;
 				var currDistance = UniversePosition.ToLightYearDistance(
 					UniversePosition.Distance(
 						Model.Context.CurrentSystem.Value.Position.Value,

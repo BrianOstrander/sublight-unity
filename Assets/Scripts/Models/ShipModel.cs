@@ -12,9 +12,12 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore] ListenerProperty<TransitRange> rangeListener;
 		[JsonIgnore] public readonly ReadonlyProperty<TransitRange> Range;
 
-		[JsonProperty] TransitVelocity velocity = TransitVelocity.Default;
-		[JsonIgnore] ListenerProperty<TransitVelocity> velocityListener;
-		[JsonIgnore] public readonly ReadonlyProperty<TransitVelocity> Velocity;
+		[JsonProperty] TransitVelocity velocityold = TransitVelocity.Default;
+		[JsonIgnore] ListenerProperty<TransitVelocity> velocityListenerold;
+		[JsonIgnore] public readonly ReadonlyProperty<TransitVelocity> Velocityold;
+
+		[JsonProperty] VelocityProfile velocity = VelocityProfile.Default;
+		[JsonIgnore] public readonly ListenerProperty<VelocityProfile> Velocity;
 
 		[JsonProperty] int systemIndex;
 		/// <summary>
@@ -35,7 +38,10 @@ namespace LunraGames.SubLight.Models
 		{
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			Range = new ReadonlyProperty<TransitRange>(value => range = value, () => range, out rangeListener);
-			Velocity = new ReadonlyProperty<TransitVelocity>(value => velocity = value, () => velocity, out velocityListener);
+
+			Velocityold = new ReadonlyProperty<TransitVelocity>(value => velocityold = value, () => velocityold, out velocityListenerold);
+			Velocity = new ListenerProperty<VelocityProfile>(value => velocity = value, () => velocity);
+
 			SystemIndex = new ListenerProperty<int>(value => systemIndex = value, () => systemIndex);
 		}
 
@@ -44,10 +50,10 @@ namespace LunraGames.SubLight.Models
 
 		// TODO: Somehow initialize these values in the rules initializition and listen for changes...
 
-		public void SetVelocityMinimum(float minimum) { velocityListener.Value = velocityListener.Value.NewVelocityMinimum(minimum); }
-		public void SetVelocityMultiplierCurrent(int multiplier) { velocityListener.Value = velocityListener.Value.NewMultiplierCurrent(multiplier); }
-		public void SetVelocityMultiplierMaximum(int maximum) { velocityListener.Value = velocityListener.Value.NewMultiplierMaximum(maximum); }
-		public void SetVelocityMultiplierEnabledMaximum(int enabledMaximum) { velocityListener.Value = velocityListener.Value.NewMultiplierEnabledMaximum(enabledMaximum); }
+		public void SetVelocityMinimum(float minimum) { velocityListenerold.Value = velocityListenerold.Value.NewVelocityMinimum(minimum); }
+		public void SetVelocityMultiplierCurrent(int multiplier) { velocityListenerold.Value = velocityListenerold.Value.NewMultiplierCurrent(multiplier); }
+		public void SetVelocityMultiplierMaximum(int maximum) { velocityListenerold.Value = velocityListenerold.Value.NewMultiplierMaximum(maximum); }
+		public void SetVelocityMultiplierEnabledMaximum(int enabledMaximum) { velocityListenerold.Value = velocityListenerold.Value.NewMultiplierEnabledMaximum(enabledMaximum); }
 		#endregion
 	}
 }
