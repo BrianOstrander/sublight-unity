@@ -23,36 +23,49 @@ namespace LunraGames.SubLight
 			return rationsConsumed;
 		}
 
-		public static void RationsAvailable(
+		public static void ResourcesAvailable(
 			KeyValueListModel gameSource,
 			KeyValueListModel systemSource,
-			out float rationsTotal
+			GameKeys.Resource shipResource,
+			CelestialSystemKeys.Resource systemResource,
+			out float resourcesTotal
 		)
 		{
-			float rationsFromSystem;
-			RationsAvailable(
+			float resourcesFromSystem;
+			ResourcesAvailable(
 				gameSource,
 				systemSource,
-				out rationsTotal,
-				out rationsFromSystem
+				shipResource,
+				systemResource,
+				out resourcesTotal,
+				out resourcesFromSystem
 			);
 		}
 
-		public static void RationsAvailable(
+		public static void ResourcesAvailable(
 			KeyValueListModel gameSource,
 			KeyValueListModel systemSource,
-			out float rationsTotal,
-			out float rationsFromSystem
+			GameKeys.Resource shipResource,
+			CelestialSystemKeys.Resource systemResource,
+			out float resourcesTotal,
+			out float resourcesFromSystem
 		)
 		{
 			if (gameSource == null) throw new ArgumentNullException("gameSource");
 			if (systemSource == null) throw new ArgumentNullException("systemSource");
+			if (shipResource == null) throw new ArgumentNullException("shipResource");
+			if (systemResource == null) throw new ArgumentNullException("systemResource");
 
-			rationsFromSystem = systemSource.Get(KeyDefines.CelestialSystem.RemainingRations);
-			rationsTotal = gameSource.Get(KeyDefines.Game.Rations) + rationsFromSystem;
+			resourcesFromSystem = 0f;
+
+			if (!systemSource.Get(systemResource.Discovered))
+			{
+				resourcesFromSystem = systemSource.Get(systemResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMaximum);
+			}
+			resourcesTotal = resourcesFromSystem + gameSource.Get(shipResource.Amount);
 		}
 
-		public static bool RationingValidation(
+		public static bool RationsValidation(
 			float duration,
 			KeyValueListModel gameSource,
 			KeyValueListModel systemSource,
@@ -76,7 +89,13 @@ namespace LunraGames.SubLight
 			if (rationingDelta < 3 || 17 < rationingDelta) return false;
 
 			float rationsTotal;
-			RationsAvailable(gameSource, systemSource, out rationsTotal);
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				KeyDefines.Game.Rations,
+				KeyDefines.CelestialSystem.Rations,
+				out rationsTotal
+			);
 
 			var population = gameSource.Get(KeyDefines.Game.Population);
 			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
@@ -101,17 +120,12 @@ namespace LunraGames.SubLight
 			if (systemSource == null) throw new ArgumentNullException("systemSource");
 
 			// -- To Update
-			var transitsWithoutRations = gameSource.Get(KeyDefines.Game.TransitsWithoutRations);
-			var transitsWithOverPopulation = gameSource.Get(KeyDefines.Game.TransitsWithOverPopulation);
-			var transitsWithUnderPopulation = gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulation);
 
-			var population = gameSource.Get(KeyDefines.Game.Population);
-			var rationing = gameSource.Get(KeyDefines.Game.Rationing);
-			float? rations = null;
-			float? rationsRemainingInSystem = null;
+			//float? rations = null;
+			//float? rationsRemainingInSystem = null;
 
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
-			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage) + 1; // Indexing of velocities starts at zero, but we always want to consume full.
+			//var propellant = gameSource.Get(KeyDefines.Game.Propellant);
+			//var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage) + 1; // Indexing of velocities starts at zero, but we always want to consume full.
 			// --
 
 			int rationingMinimum;
@@ -119,7 +133,7 @@ namespace LunraGames.SubLight
 			int rationingLimit;
 			bool rationsInsufficientForLimit;
 
-			if (RationingValidation(
+			if (RationsValidation(
 				duration,
 				gameSource,
 				systemSource,
@@ -129,14 +143,20 @@ namespace LunraGames.SubLight
 				out rationsInsufficientForLimit
 			))
 			{
+				// Rationing is valid and we can make calculations based on it.
+
+				var rationing = gameSource.Get(KeyDefines.Game.Rationing);
+				var population = gameSource.Get(KeyDefines.Game.Population);
 				var shipPopulationMaximum = gameSource.Get(KeyDefines.Game.ShipPopulationMaximum);
 				var shipPopulationMinimum = gameSource.Get(KeyDefines.Game.ShipPopulationMinimum);
 				var populationMinimum = gameSource.Get(KeyDefines.Game.PopulationMinimum);
 				var populationMaximum = gameSource.Get(KeyDefines.Game.PopulationMaximumMultiplier) * shipPopulationMaximum;
 				var populationRationingMultiplier = gameSource.Get(KeyDefines.Game.PopulationRationingMultiplier);
 				var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
+				var transitsWithoutRations = gameSource.Get(KeyDefines.Game.TransitsWithoutRations);
+				var transitsWithOverPopulation = gameSource.Get(KeyDefines.Game.TransitsWithOverPopulation);
+				var transitsWithUnderPopulation = gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulation);
 
-				// Rationing is valid and we can make calculations based on it.
 				rationing = Mathf.Min(rationing, rationingLimit);
 				var rationsConsumed = RationsConsumed(
 					duration,
@@ -145,21 +165,22 @@ namespace LunraGames.SubLight
 					rationing
 				);
 
-
 				float rationsTotal;
 				float rationsFromSystem;
-				RationsAvailable(
+				ResourcesAvailable(
 					gameSource,
 					systemSource,
+					KeyDefines.Game.Rations,
+					KeyDefines.CelestialSystem.Rations,
 					out rationsTotal,
 					out rationsFromSystem
 				);
 
 				rationsTotal = Mathf.Max(0f, rationsTotal - rationsConsumed);
-				var rationsMaximum = gameSource.Get(KeyDefines.Game.RationsMaximum);
+				var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
 
-				rations = Mathf.Min(rationsMaximum, rationsTotal);
-				rationsRemainingInSystem = Mathf.Min(Mathf.Max(0f, rationsTotal - rations.Value), rationsFromSystem);
+				var rations = Mathf.Min(rationsMaximum, rationsTotal);
+				var rationsRemainingInSystem = Mathf.Min(Mathf.Max(0f, rationsTotal - rations), rationsFromSystem);
 
 				population = Mathf.Clamp(
 					population + ((rationsInsufficientForLimit ? rationingMinimum : rationing) * populationRationingMultiplier),
@@ -170,6 +191,51 @@ namespace LunraGames.SubLight
 				if (rationsInsufficientForLimit) transitsWithoutRations = Mathf.Min(transitsWithoutRations + 1, gameSource.Get(KeyDefines.Game.TransitsWithoutRationsMaximum));
 				if (shipPopulationMaximum < population) transitsWithOverPopulation = Mathf.Min(transitsWithOverPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum));
 				if (population < shipPopulationMinimum) transitsWithUnderPopulation = Mathf.Min(transitsWithUnderPopulation + 1, gameSource.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum));
+
+				// -- Updating
+				gameSource.Set(
+					KeyDefines.Game.TransitsWithoutRations,
+					transitsWithoutRations
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.TransitsWithOverPopulation,
+					transitsWithOverPopulation
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.TransitsWithUnderPopulation,
+					transitsWithUnderPopulation
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.Population,
+					population
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.Rationing,
+					rationing
+				);
+
+				gameSource.Set(
+					KeyDefines.Game.Rations.Amount,
+					rations
+				);
+
+				if (!systemSource.Get(KeyDefines.CelestialSystem.Rations.Discovered))
+				{
+					systemSource.Set(
+						KeyDefines.CelestialSystem.Rations.Discovered,
+						true
+					);
+
+					systemSource.Set(
+						KeyDefines.CelestialSystem.Rations.GatheredAmount,
+						rationsFromSystem - rationsRemainingInSystem
+					);
+				}
+				// --
 			}
 			else
 			{
@@ -179,53 +245,13 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			propellant = propellant - propellantUsage;
-			propellantUsage = Mathf.Max(0, Mathf.Min(propellant, propellantUsage - 1));
-
-			// -- Updating
-			gameSource.Set(
-				KeyDefines.Game.TransitsWithoutRations,
-				transitsWithoutRations
-			);
-
-			gameSource.Set(
-				KeyDefines.Game.TransitsWithOverPopulation,
-				transitsWithOverPopulation
-			);
-
-			gameSource.Set(
-				KeyDefines.Game.TransitsWithUnderPopulation,
-				transitsWithUnderPopulation
-			);
-
-			gameSource.Set(
-				KeyDefines.Game.Population,
-				population
-			);
-
-			gameSource.Set(
-				KeyDefines.Game.Rationing,
-				rationing
-			);
-
-			if (rations.HasValue)
-			{
-				gameSource.Set(
-					KeyDefines.Game.Rations,
-					rations.Value
-				);
-			}
-
-			if (rationsRemainingInSystem.HasValue)
-			{
-				systemSource.Set(
-					KeyDefines.CelestialSystem.RemainingRations,
-					rationsRemainingInSystem.Value
-				);
-			}
+			//propellant = propellant - propellantUsage;
+			//propellantUsage = Mathf.Max(0, Mathf.Min(propellant, propellantUsage - 1));
+			Debug.Log("todo: propellant usage and stuff");
 
 			// --
 
+			/*
 			gameSource.Set(
 				KeyDefines.Game.Propellant,
 				propellant
@@ -235,6 +261,7 @@ namespace LunraGames.SubLight
 				KeyDefines.Game.PropellantUsage,
 				propellantUsage
 			);
+			*/
 		}
 
 		//public static void VelocityByEnergyMultiplier(

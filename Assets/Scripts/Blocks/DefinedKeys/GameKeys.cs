@@ -1,7 +1,59 @@
-﻿namespace LunraGames.SubLight
+﻿using System.Linq;
+
+namespace LunraGames.SubLight
 {
 	public class GameKeys : KeyDefinitions
 	{
+		public class Resource
+		{
+			public readonly Float Amount;
+			public readonly Float Maximum;
+			public readonly Float GatherMultiplier;
+			public readonly Float GatherMaximum;
+
+			public Resource(
+				string resource,
+				GameKeys instance
+			)
+			{
+				instance.Floats = instance.Floats.Append(
+					instance.Create(
+						ref Amount,
+						resource,
+						"The ship's current store of " + resource + ".",
+						true
+					)
+				).ToArray();
+
+				instance.Floats = instance.Floats.Append(
+					instance.Create(
+						ref Maximum,
+						resource + "_maximum",
+						"The maximum " + resource + " the ship can store.",
+						true
+					)
+				).ToArray();
+
+				instance.Floats = instance.Floats.Append(
+					instance.Create(
+						ref GatherMultiplier,
+						resource + "_gather_multiplier",
+						"The multiplier for the amount of " + resource + " gathered when arriving in a system, should be between zero and one.",
+						true
+					)
+				).ToArray();
+
+				instance.Floats = instance.Floats.Append(
+					instance.Create(
+						ref GatherMaximum,
+						resource + "_gather_maximum",
+						"The maximum for the amount of " + resource + " that can be gathered upon arriving in a system, as an absolute value.",
+						true
+					)
+				).ToArray();
+			}
+		}
+
 		#region Booleans
 		#endregion
 
@@ -9,6 +61,10 @@
 		public readonly Integer Rationing;
 		public readonly Integer RationingMinimum;
 		public readonly Integer RationingMaximum;
+
+		public readonly Integer PropellantUsage;
+		public readonly Integer PropellantUsageMinimum;
+		public readonly Integer PropellantUsageMaximum;
 
 		public readonly Integer TransitsWithoutRations;
 		public readonly Integer TransitsWithoutRationsMaximum;
@@ -21,10 +77,6 @@
 		public readonly Integer TransitsWithUnderPopulation;
 		public readonly Integer TransitsWithUnderPopulationMaximum;
 		public readonly Integer TransitsWithUnderPopulationUntilFailure;
-
-		public readonly Integer Propellant;
-		public readonly Integer PropellantUsage;
-		public readonly Integer PropellantMaximum;
 		#endregion
 
 		#region Strings
@@ -51,13 +103,17 @@
 		public readonly Float ShipPopulationMinimum;
 		public readonly Float ShipPopulationMaximum;
 
-		public readonly Float Rations;
-		public readonly Float RationsMaximum;
 		public readonly Float RationsConsumptionMultiplier;
+		public readonly Float PropellantConsumptionMultiplier;
 
 		public readonly Float TransitRangeMinimum;
 		public readonly Float TransitVelocityMinimum;
 		#endregion
+
+		#region Resources
+		public readonly Resource Rations;
+		public readonly Resource Propellant;
+  		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
 		{
@@ -87,6 +143,24 @@
 					true
 				),
 				Create(
+					ref PropellantUsage,
+					"propellant_usage",
+					"The current propellant multiplier used for transits.",
+					true
+				),
+				Create(
+					ref PropellantUsageMinimum,
+					"propellant_usage_minimum",
+					"The minimum propellant multiplier used for transits, should be greater than zero.",
+					true
+				),
+				Create(
+					ref PropellantUsageMaximum,
+					"propellant_usage_maximum",
+					"The maximum propellant multiplier allowed.",
+					true
+				),
+				Create(
 					ref TransitsWithoutRations,
 					"transits_without_rations",
 					"How many transits without even the meagerest of rations. Resets upon a transit with at least meager rations.",
@@ -101,7 +175,7 @@
 				Create(
 					ref TransitsWithoutRationsUntilFailure,
 					"transits_without_rations_until_failure",
-					"How many more transits without rations can the ark survive."
+					"How many more transits without rations can the ship survive."
 				),
 				Create(
 					ref TransitsWithOverPopulation,
@@ -118,7 +192,7 @@
 				Create(
 					ref TransitsWithOverPopulationUntilFailure,
 					"transits_with_over_population_until_failure",
-					"How many more transits with overpopulation can the ark survive."
+					"How many more transits with overpopulation can the ship survive."
 				),
 				Create(
 					ref TransitsWithUnderPopulation,
@@ -135,26 +209,8 @@
 				Create(
 					ref TransitsWithUnderPopulationUntilFailure,
 					"transits_with_under_population_until_failure",
-					"How many more transits with underpopulation can the ark survive."
-				),
-				Create(
-					ref Propellant,
-					"propellant",
-					"Current amount of propellant on board.",
-					true
-				),
-				Create(
-					ref PropellantUsage,
-					"propellant_usage",
-					"Current amount of propellant being used for transit.",
-					true
-				),
-				Create(
-					ref PropellantMaximum,
-					"propellant_maximum",
-					"The maximum propellant the ark can store.",
-					true
-				),
+					"How many more transits with underpopulation can the ship survive."
+				)
 			};
 
 			Strings = new String[]
@@ -241,42 +297,39 @@
 					true
 				),
 				Create(
-					ref RationsMaximum,
-					"rations_maximum",
-					"The maximum rations the ship can store.",
-					true
-				),
-				Create(
 					ref Population,
 					"population",
 					"The ship's current population.",
 					true
 				),
 				Create(
-					ref Rations,
-					"rations",
-					"The ship's current store of rations.",
+					ref RationsConsumptionMultiplier,
+					KeyDefines.Resources.Rations + "_consumption_multiplier",
+					"The amount of " + KeyDefines.Resources.Rations + " 1 population consumes per year when rationing is zero.",
 					true
 				),
 				Create(
-					ref RationsConsumptionMultiplier,
-					"rations_consumption_multiplier",
-					"The amount of rations 1 population consumes per year when rationing is zero.",
+					ref PropellantConsumptionMultiplier,
+					KeyDefines.Resources.Propellant+"_consumption_multiplier",
+					"The amount of " + KeyDefines.Resources.Propellant + " consumed per propellant multiplier.",
 					true
 				),
 				Create(
 					ref TransitRangeMinimum,
 					"transit_range_minimum",
-					"The minimum range of this ark in universe units.",
+					"The minimum range of this ship in universe units.",
 					true
 				),
 				Create(
 					ref TransitVelocityMinimum,
 					"transit_velocity_minimum",
-					"The minimum velocity, as a fraction of light speed, that the ark can travel. Only values between zero and one are valid.",
+					"The minimum velocity, as a fraction of light speed, that the ship can travel. Only values between zero and one are valid.",
 					true
 				)
 			};
+
+			Rations = new Resource(KeyDefines.Resources.Rations, this);
+			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
 		}
 	}
 }

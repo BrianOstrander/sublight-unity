@@ -582,8 +582,9 @@ namespace LunraGames.SubLight
 				Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMaximum) * Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMaximumMultiplier)
 			);
 
-			Payload.Game.Ship.SetVelocityMultiplierCurrent(Payload.Game.KeyValues.Get(KeyDefines.Game.PropellantUsage));
-			Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant));
+			Debug.Log("calculate propellant usage");
+			//Payload.Game.Ship.SetVelocityMultiplierCurrent(Payload.Game.KeyValues.Get(KeyDefines.Game.PropellantUsage));
+			//Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant));
 		}
 
 		void OnCheckForEncounters()
@@ -932,9 +933,10 @@ namespace LunraGames.SubLight
 			switch (target)
 			{
 				case KeyValueTargets.Game:
-					if (key == KeyDefines.Game.Propellant.Key) Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(value);
-					else if (key == KeyDefines.Game.PropellantUsage.Key) Payload.Game.Ship.SetVelocityMultiplierCurrent(value);
-					else if (key == KeyDefines.Game.PropellantMaximum.Key) Payload.Game.Ship.SetVelocityMultiplierMaximum(value);
+					Debug.Log("todo this speed velocity stuff");
+					//if (key == KeyDefines.Game.Propellant.Key) Payload.Game.Ship.SetVelocityMultiplierEnabledMaximum(value);
+					//else if (key == KeyDefines.Game.PropellantUsage.Key) Payload.Game.Ship.SetVelocityMultiplierCurrent(value);
+					//else if (key == KeyDefines.Game.PropellantMaximum.Key) Payload.Game.Ship.SetVelocityMultiplierMaximum(value);
 					break;
 			}
 		}

@@ -273,12 +273,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			result += "\n";
 
-			var rations = gameSource.Get(KeyDefines.Game.Rations);
-			var rationsMaximum = gameSource.Get(KeyDefines.Game.RationsMaximum);
+			var rations = gameSource.Get(KeyDefines.Game.Rations.Amount);
+			var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
 
 			result += DeveloperStrings.GetBold("Rations: ") + rations.ToString("N0");
 
-			var currentRations = Model.KeyValues.Get(KeyDefines.Game.Rations);
+			var currentRations = Model.KeyValues.Get(KeyDefines.Game.Rations.Amount);
 			if (1f < Mathf.Abs(rations - currentRations))
 			{
 				var rationsDelta = rations - currentRations;
@@ -306,12 +306,12 @@ namespace LunraGames.SubLight.Presenters
 		{
 			result += "\n";
 
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant);
-			var propellantMaximum = gameSource.Get(KeyDefines.Game.PropellantMaximum);
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
 
 			result += DeveloperStrings.GetBold("Propellant: ") + (propellant + 1);
 
-			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant);
+			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount);
 			if (0 < Mathf.Abs(propellant - currentPropellant))
 			{
 				var propellantDelta = propellant - currentPropellant;
@@ -374,19 +374,20 @@ namespace LunraGames.SubLight.Presenters
 
 			result += "\n";
 
-			result += DeveloperStrings.GetBold("Rations: ");
-			var remainingRations = system.KeyValues.Get(KeyDefines.CelestialSystem.RemainingRations);
-			if (Mathf.Approximately(0f, remainingRations)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < remainingRations) result += DeveloperStrings.GetColor("+" + remainingRations.ToString("N0"), Color.green);
-			else result += "Invalid Amount " + remainingRations;
+			Debug.Log("todo: calculate this message");
+			//result += DeveloperStrings.GetBold("Rations: ");
+			//var remainingRations = system.KeyValues.Get(KeyDefines.CelestialSystem.GatheredRations);
+			//if (Mathf.Approximately(0f, remainingRations)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			//else if (0f < remainingRations) result += DeveloperStrings.GetColor("+" + remainingRations.ToString("N0"), Color.green);
+			//else result += "Invalid Amount " + remainingRations;
 
-			result += "\n";
+			//result += "\n";
 
-			result += DeveloperStrings.GetBold("Propellant: ");
-			var remainingPropellant = system.KeyValues.Get(KeyDefines.CelestialSystem.RemainingPropellant);
-			if (Mathf.Approximately(0, remainingPropellant)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0 < remainingPropellant) result += DeveloperStrings.GetColor("+" + remainingPropellant.ToString("N0"), Color.green);
-			else result += "Invalid Amount " + remainingPropellant;
+			//result += DeveloperStrings.GetBold("Propellant: ");
+			//var remainingPropellant = system.KeyValues.Get(KeyDefines.CelestialSystem.GatheredPropellant);
+			//if (Mathf.Approximately(0, remainingPropellant)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			//else if (0 < remainingPropellant) result += DeveloperStrings.GetColor("+" + remainingPropellant.ToString("N0"), Color.green);
+			//else result += "Invalid Amount " + remainingPropellant;
 
 			return result;
 		}
