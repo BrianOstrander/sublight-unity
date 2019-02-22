@@ -13,6 +13,7 @@ namespace LunraGames.SubLight.Models
 		public static class Seeds
 		{
 			public static int Position(int seed) { return DemonUtility.CantorPairs(seed, 1); }
+			public static int Resources(int seed) { return DemonUtility.CantorPairs(seed, 2); }
 		}
 
 		[JsonProperty] int index;

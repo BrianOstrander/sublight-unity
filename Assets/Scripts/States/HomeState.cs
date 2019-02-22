@@ -165,7 +165,7 @@ namespace LunraGames.SubLight
 					case AutoGameOptions.OverrideGame:
 						Debug.LogWarning("Developer Auto Game or Override Specified");
 						DevPrefs.GameSeed.Set(ref gameBlock.GameSeed);
-						DevPrefs.GalaxySeed.Set(ref gameBlock.GameSeed);
+						DevPrefs.GalaxySeed.Set(ref gameBlock.GalaxySeed);
 						DevPrefs.GalaxyId.Set(ref gameBlock.GalaxyId);
 						DevPrefs.ToolbarSelection.Set(ref gameBlock.ToolbarSelection);
 						break;
