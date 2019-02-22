@@ -60,6 +60,7 @@ namespace LunraGames.SubLight
 							},
 
 							Settings = LanguageStringModel.Override("Settings"),
+							Feedback = LanguageStringModel.Override("Feedback"),
 							Credits = LanguageStringModel.Override("Credits"),
 
 							Quit = LanguageStringModel.Override("Quit"),

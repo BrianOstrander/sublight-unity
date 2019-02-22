@@ -50,7 +50,8 @@ namespace LunraGames.SubLight.Presenters
 			View.ButtonsRight = new LabelButtonBlock[]
 			{
 				new LabelButtonBlock(language.Settings, CloseThenClick(OnSettingsClick)),
-				new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
+				new LabelButtonBlock(language.Feedback, CloseThenClick(OnFeedbackClick)),
+				//new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
 				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
 			};
 
@@ -106,6 +107,38 @@ namespace LunraGames.SubLight.Presenters
 		void OnSettingsClick()
 		{
 			OnNotImplimentedClick();
+		}
+
+		void OnFeedbackClick()
+		{
+			KeyValueListModel globalSource = null;
+
+			if (App.MetaKeyValues != null && App.MetaKeyValues.GlobalKeyValues != null)
+			{
+				globalSource = App.MetaKeyValues.GlobalKeyValues.KeyValues;
+			}
+
+			App.Heartbeat.Wait(
+				() => 
+				{
+					Application.OpenURL(
+						App.BuildPreferences.FeedbackForm(
+							FeedbackFormTriggers.MainMenu,
+							globalSource
+						)
+					);
+				},
+				0.75f
+			);
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.Confirm(
+					LanguageStringModel.Override("Your browser should open to a feedback form, if not visit <b>strangestar.games/contact</b> to send us a message!"),
+					DialogStyles.Neutral,
+					LanguageStringModel.Override("Feedback"),
+					confirmClick: () => OnShow(false)
+				)
+			);
 		}
 
 		void OnCreditsClick()

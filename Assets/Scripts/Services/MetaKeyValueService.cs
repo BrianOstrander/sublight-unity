@@ -65,7 +65,7 @@ namespace LunraGames.SubLight
 			modelMediator.List<PreferencesKeyValuesModel>(
 				listResult => OnInitializeList<PreferencesKeyValuesModel>(
 					listResult,
-					preferencesResult => OnInitializeDone(preferencesResult, done)
+					preferencesResult => OnInitializeKeyValues(preferencesResult, done)
 				)
 			);
 		}
@@ -152,11 +152,49 @@ namespace LunraGames.SubLight
 			done(RequestStatus.Success);
 		}
 
-		void OnInitializeDone(RequestStatus result, Action<RequestStatus> done)
+		void OnInitializeKeyValues(RequestStatus result, Action<RequestStatus> done)
 		{
 			if (result != RequestStatus.Success)
 			{
 				Debug.LogError("Initializing preferences key values failed with status " + result);
+				done(result);
+				return;
+			}
+
+			if (GlobalKeyValues == null) Debug.LogError("GlobalKeyValues null, skipping...");
+			else
+			{
+				if (string.IsNullOrEmpty(GlobalKeyValues.KeyValues.Get(KeyDefines.Global.PersistentId)))
+				{
+					Debug.Log("Generating Persistent Id");
+					GlobalKeyValues.KeyValues.Set(KeyDefines.Global.PersistentId, Guid.NewGuid().ToString());
+				}
+			}
+
+			if (PreferencesKeyValues == null) Debug.LogError("PreferencesKeyValues null, skipping...");
+			else
+			{
+
+			}
+
+			modelMediator.Save(
+				GlobalKeyValues,
+				globalSaveResult => 
+				{
+					if (globalSaveResult.Status != RequestStatus.Success) Debug.LogError("Saving GlobalKeyValues failed with status " + globalSaveResult.Status + " and error: " + globalSaveResult.Error + "\nTrying to continue...");
+					modelMediator.Save(
+						PreferencesKeyValues,
+						preferencesSaveResult => OnInitializeDone(preferencesSaveResult.Status, done)
+					);
+				}
+			);
+		}
+
+		void OnInitializeDone(RequestStatus result, Action<RequestStatus> done)
+		{
+			if (result != RequestStatus.Success)
+			{
+				Debug.LogError("Initializing key values failed with status " + result);
 				done(result);
 				return;
 			}
@@ -172,6 +210,7 @@ namespace LunraGames.SubLight
 
 			done(result);
 		}
+
 		#endregion
 
 		#region Events

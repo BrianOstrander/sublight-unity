@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 		public DialogLanguageBlock ContinueGameError;
 
 		public LanguageStringModel Settings;
+		public LanguageStringModel Feedback;
 		public LanguageStringModel Credits;
 
 		public LanguageStringModel Quit;

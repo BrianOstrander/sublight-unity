@@ -9,6 +9,7 @@
 		#endregion
 
 		#region Strings
+		public readonly String PersistentId;
 		#endregion
 
 		#region Floats
@@ -28,7 +29,11 @@
 
 			Strings = new String[]
 			{
-
+				Create(
+					ref PersistentId,
+					"persistent_id",
+					"The persistent id assigned upon initial installation."
+				)
 			};
 
 			Floats = new Float[]
