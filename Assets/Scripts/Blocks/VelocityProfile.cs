@@ -110,13 +110,13 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		[JsonIgnore] public int Limit { get { return Velocities.Length; } }
+		[JsonIgnore] public int Count { get { return Velocities.Length; } }
 		[JsonIgnore] public Velocity Minimum { get { return Velocities.FirstOrDefault(); } }
 		[JsonIgnore] public Velocity Maximum { get { return Velocities.LastOrDefault(); } }
 
 		public bool Approximately(VelocityProfile other)
 		{
-			if (Limit != other.Limit) return false;
+			if (Count != other.Count) return false;
 
 			for (var i = 0; i < Velocities.Length; i++)
 			{
