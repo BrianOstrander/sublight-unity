@@ -91,18 +91,18 @@ namespace LunraGames.SubLight.Views
 		float previewRadius;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		TransitVelocity? lastVelocity;
+		VelocityProfileState? lastVelocity;
 		GridVelocityOptionLeaf[] options;
 		long frameOptionEntered;
 		long frameOptionExited;
 
 		bool showingResourceWarning;
 
-		public void SetVelocities(TransitVelocity velocity)
+		public void SetVelocities(VelocityProfileState velocity)
 		{
-			if (lastVelocity.HasValue && lastVelocity.Value.Approximately(velocity) && lastVelocity.Value.MultiplierEnabledMaximum == velocity.MultiplierEnabledMaximum)
+			if (lastVelocity.HasValue && lastVelocity.Value.Profile.Approximately(velocity.Profile) && lastVelocity.Value.PropellantUsageLimit == velocity.PropellantUsageLimit)
 			{
-				if (lastVelocity.Value.MultiplierCurrent != velocity.MultiplierCurrent) SetOptionIndices(velocity.MultiplierCurrent);
+				if (lastVelocity.Value.PropellantUsage != velocity.PropellantUsage) SetOptionIndices(velocity.PropellantUsage);
 				
 				lastVelocity = velocity;
 				return;
@@ -111,13 +111,13 @@ namespace LunraGames.SubLight.Views
 			lastVelocity = velocity;
 
 			ClearVelocities();
-			var velocityCount = velocity.MultiplierVelocities.Length;
+			var velocityCount = velocity.Profile.Count;
 			options = new GridVelocityOptionLeaf[velocityCount];
 
 			for (var i = 0; i < velocityCount; i++)
 			{
 				var currentIndex = i;
-				var isEnabled = i <= velocity.MultiplierEnabledMaximum;
+				var isEnabled = i <= velocity.PropellantUsageLimit;
 				var orientationIndex = (velocityCount - 1) - currentIndex;
 				var position = Vector3.zero;
 				var normal = Vector3.zero;
@@ -140,10 +140,10 @@ namespace LunraGames.SubLight.Views
 				options[currentIndex] = instance;
 			}
 
-			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMinimum, velocity.VelocityBaseLightSpeed);
-			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMaximum, velocity.MultiplierVelocitiesLightYears.LastOrDefault());
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMinimum, velocity.Profile.Minimum.RelativisticLightYears);
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorMaximum, velocity.Profile.Maximum.RelativisticLightYears);
 
-			SetOptionIndices(velocity.MultiplierCurrent);
+			SetOptionIndices(velocity.PropellantUsage);
 		}
 
 		public Action<int> MultiplierSelection { set; private get; }
@@ -232,9 +232,9 @@ namespace LunraGames.SubLight.Views
 		void SetOptionIndices(int index)
 		{
 			multiplierLabel.text = (index + 1).ToString("N0");
-			velocityLabel.text = lastVelocity.Value.MultiplierVelocitiesLightYears[index].ToString("0.00");
+			velocityLabel.text = lastVelocity.Value.Profile.Velocities[index].RelativisticLightYears.ToString("0.00");
 
-			var isEnabled = index <= lastVelocity.Value.MultiplierEnabledMaximum;
+			var isEnabled = index <= lastVelocity.Value.PropellantUsageLimit;
 			showingResourceWarning = !isEnabled;
 			labelGroup.alpha = isEnabled ? 1f : velocityDisabledLabelOpacity;
 
@@ -247,7 +247,7 @@ namespace LunraGames.SubLight.Views
 				SetOptionIndex(options[i], i, index);
 			}
 
-			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorCurrent, lastVelocity.Value.VelocityNormals[index]);
+			velocityMesh.material.SetFloat(ShaderConstants.HoloWidgetGridVelocitySelection.AnchorCurrent, lastVelocity.Value.Profile.Velocities[index].Normal);
 		}
 
 		void SetOptionIndex(GridVelocityOptionLeaf leaf, int currentIndex, int targetIndex)
@@ -330,7 +330,7 @@ namespace LunraGames.SubLight.Views
 
 		void OnEnterOption(GridVelocityOptionLeaf leaf, int index)
 		{
-			if (!multiplierBeforePreview.HasValue) multiplierBeforePreview = lastVelocity.Value.MultiplierCurrent;
+			if (!multiplierBeforePreview.HasValue) multiplierBeforePreview = lastVelocity.Value.PropellantUsage;
 
 			frameOptionEntered = App.V.FrameCount;
 
@@ -347,7 +347,7 @@ namespace LunraGames.SubLight.Views
 
 			if (frameOptionExited == frameOptionEntered) return;
 
-			var result = multiplierBeforePreview ?? lastVelocity.Value.MultiplierCurrent;
+			var result = multiplierBeforePreview ?? lastVelocity.Value.PropellantUsage;
 
 			multiplierBeforePreview = null;
 
@@ -364,7 +364,7 @@ namespace LunraGames.SubLight.Views
 
 		void OnClickDisabledOption(GridVelocityOptionLeaf leaf, int index)
 		{
-			multiplierBeforePreview = lastVelocity.Value.MultiplierEnabledMaximum;
+			multiplierBeforePreview = lastVelocity.Value.PropellantUsageLimit;
 			//options[lastVelocity.Value.MultiplierEnabledMaximum].EnterParticles.Emit(1);
 
 			leaf.DisabledParticles.Emit(1);
@@ -397,6 +397,6 @@ namespace LunraGames.SubLight.Views
 		string VelocityUnit { set; }
 		string ResourceUnit { set; }
 		string ResourceWarning { set; }
-		void SetVelocities(TransitVelocity velocities);
+		void SetVelocities(VelocityProfileState velocities);
 	}
 }

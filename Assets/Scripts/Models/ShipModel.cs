@@ -12,10 +12,6 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore] ListenerProperty<TransitRange> rangeListener;
 		[JsonIgnore] public readonly ReadonlyProperty<TransitRange> Range;
 
-		[JsonProperty] TransitVelocity velocityold = TransitVelocity.Default;
-		[JsonIgnore] ListenerProperty<TransitVelocity> velocityListenerold;
-		[JsonIgnore] public readonly ReadonlyProperty<TransitVelocity> Velocityold;
-
 		[JsonProperty] VelocityProfileState velocity = VelocityProfileState.Default;
 		[JsonIgnore] public readonly ListenerProperty<VelocityProfileState> Velocity;
 
@@ -38,10 +34,7 @@ namespace LunraGames.SubLight.Models
 		{
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			Range = new ReadonlyProperty<TransitRange>(value => range = value, () => range, out rangeListener);
-
-			Velocityold = new ReadonlyProperty<TransitVelocity>(value => velocityold = value, () => velocityold, out velocityListenerold);
 			Velocity = new ListenerProperty<VelocityProfileState>(value => velocity = value, () => velocity);
-
 			SystemIndex = new ListenerProperty<int>(value => systemIndex = value, () => systemIndex);
 		}
 
@@ -50,10 +43,10 @@ namespace LunraGames.SubLight.Models
 
 		// TODO: Somehow initialize these values in the rules initializition and listen for changes...
 
-		public void SetVelocityMinimum(float minimum) {} // { velocityListenerold.Value = velocityListenerold.Value.NewVelocityMinimum(minimum); }
-		public void SetVelocityMultiplierCurrent(int multiplier) { } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierCurrent(multiplier); }
-		public void SetVelocityMultiplierMaximum(int maximum) { } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierMaximum(maximum); }
-		public void SetVelocityMultiplierEnabledMaximum(int enabledMaximum) { } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierEnabledMaximum(enabledMaximum); }
+		public void SetVelocityMinimum(float minimum) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } // { velocityListenerold.Value = velocityListenerold.Value.NewVelocityMinimum(minimum); }
+		public void SetVelocityMultiplierCurrent(int multiplier) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierCurrent(multiplier); }
+		public void SetVelocityMultiplierMaximum(int maximum) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierMaximum(maximum); }
+		public void SetVelocityMultiplierEnabledMaximum(int enabledMaximum) { UnityEngine.Debug.LogError("asnoetuhanseohtu"); } //{ velocityListenerold.Value = velocityListenerold.Value.NewMultiplierEnabledMaximum(enabledMaximum); }
 		#endregion
 	}
 }
