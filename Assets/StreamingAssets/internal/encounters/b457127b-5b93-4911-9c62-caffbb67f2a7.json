@@ -1058,7 +1058,7 @@
                 "Input0": {
                   "AddressId": "0cd6b05f-0110-409e-85bb-edcbe85466f3",
                   "Source": "LocalValue",
-                  "LocalValue": 0.1
+                  "LocalValue": 0.25
                 },
                 "Input1": {
                   "AddressId": "19c06f91-9fe2-4d7b-96bd-cefe90f9099d",

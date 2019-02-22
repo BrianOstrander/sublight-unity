@@ -245,23 +245,55 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
-			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage);
-			var propellantUsageMinimum = 1;
+			float propellantTotal;
+			float propellantFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				KeyDefines.Game.Propellant,
+				KeyDefines.CelestialSystem.Propellant,
+				out propellantTotal,
+				out propellantFromSystem
+			);
 
-			propellant = propellant - propellantUsage;
-			propellantUsage = Mathf.Max(propellantUsageMinimum, Mathf.Min(Mathf.FloorToInt(propellant), propellantUsage));
-			Debug.Log("todo: get proplellnt from systems");
+			var propellantUsage = gameSource.Get(KeyDefines.Game.PropellantUsage);
+
+			propellantTotal = Mathf.Max(0f, propellantTotal - propellantUsage);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
+			var propellant = Mathf.Min(propellantMaximum, propellantTotal);
+			var propellantRemainingInSystem = Mathf.Min(Mathf.Max(0f, propellantTotal - propellant), propellantFromSystem);
+
+			propellantUsage = Mathf.Max(1, Mathf.Min(Mathf.FloorToInt(propellant), propellantUsage));
 
 			gameSource.Set(
 				KeyDefines.Game.Propellant.Amount,
-				propellant
+				Mathf.Floor(propellant)
 			);
 
 			gameSource.Set(
 				KeyDefines.Game.PropellantUsage,
 				propellantUsage
 			);
+
+			//var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+
+			//var propellantUsageMinimum = 1;
+
+
+
+			//propellant = propellant - propellantUsage;
+			//propellantUsage = Mathf.Max(propellantUsageMinimum, Mathf.Min(Mathf.FloorToInt(propellant), propellantUsage));
+			//Debug.Log("todo: get proplellnt from systems");
+
+			//gameSource.Set(
+			//	KeyDefines.Game.Propellant.Amount,
+			//	propellant
+			//);
+
+			//gameSource.Set(
+			//	KeyDefines.Game.PropellantUsage,
+			//	propellantUsage
+			//);
 		}
 	}
 }
