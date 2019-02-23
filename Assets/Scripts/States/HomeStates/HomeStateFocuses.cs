@@ -59,7 +59,8 @@ namespace LunraGames.SubLight
 								Message = LanguageStringModel.Override("An error was encountered while trying to load your game.")
 							},
 
-							Settings = LanguageStringModel.Override("Settings"),
+							Preferences = LanguageStringModel.Override("Preferences"),
+							Feedback = LanguageStringModel.Override("Feedback"),
 							Credits = LanguageStringModel.Override("Credits"),
 
 							Quit = LanguageStringModel.Override("Quit"),
@@ -67,8 +68,9 @@ namespace LunraGames.SubLight
 							{
 								Title = LanguageStringModel.Override("Quit to Desktop"),
 								Message = LanguageStringModel.Override("Are you sure you want to quit?")
-							},
-						}
+							}
+						},
+						PreferencesPresenter.CreateDefault()
 					)
 				};
 

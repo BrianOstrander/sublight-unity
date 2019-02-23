@@ -11,14 +11,17 @@ namespace LunraGames.SubLight.Presenters
 	{
 		HomePayload payload;
 		MainMenuLanguageBlock language;
+		PreferencesPresenter preferences;
 
 		public MainMenuOptionsPresenter(
 			HomePayload payload,
-			MainMenuLanguageBlock language
+			MainMenuLanguageBlock language,
+			PreferencesPresenter preferences
 		)
 		{
 			this.payload = payload;
 			this.language = language;
+			this.preferences = preferences;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -49,8 +52,9 @@ namespace LunraGames.SubLight.Presenters
 
 			View.ButtonsRight = new LabelButtonBlock[]
 			{
-				new LabelButtonBlock(language.Settings, CloseThenClick(OnSettingsClick)),
-				new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
+				new LabelButtonBlock(language.Preferences, CloseThenClick(OnPreferencesClick)),
+				new LabelButtonBlock(language.Feedback, CloseThenClick(OnFeedbackClick)),
+				//new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
 				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
 			};
 
@@ -103,9 +107,52 @@ namespace LunraGames.SubLight.Presenters
 			OnLoadGame(RequestResult.Success(), payload.ContinueSave);
 		}
 
-		void OnSettingsClick()
+		void OnPreferencesClick()
 		{
-			OnNotImplimentedClick();
+			preferences.Show(
+				setFocusInstant =>
+				{
+					if (setFocusInstant) App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(HomeState.Focuses.GetPriorityFocus()));
+					else App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetPriorityFocus()));
+				},
+				() =>
+				{
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetMainMenuFocus()));
+					OnShow(false);
+				}
+			);
+		}
+
+		void OnFeedbackClick()
+		{
+			KeyValueListModel globalSource = null;
+
+			if (App.MetaKeyValues != null && App.MetaKeyValues.GlobalKeyValues != null)
+			{
+				globalSource = App.MetaKeyValues.GlobalKeyValues.KeyValues;
+			}
+
+			App.Heartbeat.Wait(
+				() => 
+				{
+					Application.OpenURL(
+						App.BuildPreferences.FeedbackForm(
+							FeedbackFormTriggers.MainMenu,
+							globalSource
+						)
+					);
+				},
+				0.75f
+			);
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.Confirm(
+					LanguageStringModel.Override("Your browser should open to a feedback form, if not visit <b>strangestar.games/contact</b> to send us a message!"),
+					DialogStyles.Neutral,
+					LanguageStringModel.Override("Feedback"),
+					confirmClick: () => OnShow(false)
+				)
+			);
 		}
 
 		void OnCreditsClick()

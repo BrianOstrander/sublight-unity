@@ -280,6 +280,7 @@ namespace LunraGames.SubLight.Views
 		Save = 30,
 		Return = 40,
 		Quit = 50,
+		Preferences = 60,
 		// -- Game Icons
 		GameFailure = 1000,
 		GameSuccess = 1010,
