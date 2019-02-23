@@ -32,6 +32,10 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		string feedbackFormPrefix;
 
+		public string BlogUrl;
+		public string DiscordUrl;
+		public string TwitterUrl;
+
 		public IBuildInfo Info
 		{
 			get

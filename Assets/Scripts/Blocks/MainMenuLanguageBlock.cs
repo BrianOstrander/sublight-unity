@@ -13,6 +13,7 @@ namespace LunraGames.SubLight
 
 		public LanguageStringModel Preferences;
 		public LanguageStringModel Feedback;
+		public LanguageStringModel LearnMore;
 		public LanguageStringModel Credits;
 
 		public LanguageStringModel Quit;

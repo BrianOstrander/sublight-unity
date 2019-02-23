@@ -1,13 +1,11 @@
-﻿using System;
-
-using UnityEngine.Analytics;
+﻿using UnityEngine.Analytics;
 
 using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class PreferencesPresenter : VerticalOptionsPresenter
+	public class PreferencesPresenter : ContextualOptionsPresenter
 	{
 		public static PreferencesPresenter CreateDefault()
 		{
@@ -27,9 +25,6 @@ namespace LunraGames.SubLight.Presenters
 
 		PreferencesLanguageBlock language;
 
-		Action<bool> setFocus;
-		Action back;
-
 		public PreferencesPresenter(
 			PreferencesLanguageBlock language
 		)
@@ -42,31 +37,8 @@ namespace LunraGames.SubLight.Presenters
 
 		}
 
-		bool NotInteractable
+		protected override void OnShow()
 		{
-			get
-			{
-				return View.TransitionState != TransitionStates.Shown;
-			}
-		}
-
-		public void Show(
-			Action<bool> setFocus,
-			Action back,
-			bool instant = false,
-			bool reFocus = true
-		)
-		{
-			if (setFocus == null) throw new ArgumentNullException("setFocus");
-			if (back == null) throw new ArgumentNullException("back");
-
-			this.setFocus = setFocus;
-			this.back = back;
-
-			if (reFocus) setFocus(instant);
-
-			View.Reset();
-
 			ButtonVerticalOptionsEntry analyticsEntry = null;
 
 			if (Analytics.enabled)
@@ -91,8 +63,6 @@ namespace LunraGames.SubLight.Presenters
 				analyticsEntry,
 				ButtonVerticalOptionsEntry.CreateButton(language.Back.Value, OnClickBack)
 			);
-
-			ShowView(instant: instant);
 		}
 
 		#region Events
@@ -102,23 +72,7 @@ namespace LunraGames.SubLight.Presenters
 
 			Analytics.enabled = enable;
 
-			CloseView(true);
-
-			Show(
-				setFocus,
-				back,
-				true,
-				false
-			);
-		}
-
-		void OnClickBack()
-		{
-			if (NotInteractable) return;
-
-			View.Closed += back;
-
-			CloseView();
+			ReShowInstant();
 		}
 		#endregion
 

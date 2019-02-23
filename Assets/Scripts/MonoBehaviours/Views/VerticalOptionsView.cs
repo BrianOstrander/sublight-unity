@@ -89,6 +89,8 @@ namespace LunraGames.SubLight.Views
 					Debug.LogError("Unrecognized entry type: " + entryType.FullName);
 				}
 			}
+
+			//LayoutRebuilder.ForceRebuildLayoutImmediate(entryArea.GetComponent<RectTransform>());
 		}
 
 		void InstantiateEntry<E, L>(IVerticalOptionsEntry entry, ThemeEntry theme, Action<E, L, ThemeEntry> done)
@@ -281,6 +283,8 @@ namespace LunraGames.SubLight.Views
 		Return = 40,
 		Quit = 50,
 		Preferences = 60,
+		OpeningUrl = 70,
+		LearnMore = 80,
 		// -- Game Icons
 		GameFailure = 1000,
 		GameSuccess = 1010,

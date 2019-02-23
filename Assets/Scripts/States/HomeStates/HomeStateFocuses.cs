@@ -61,6 +61,7 @@ namespace LunraGames.SubLight
 
 							Preferences = LanguageStringModel.Override("Preferences"),
 							Feedback = LanguageStringModel.Override("Feedback"),
+							LearnMore = LanguageStringModel.Override("Learn More"),
 							Credits = LanguageStringModel.Override("Credits"),
 
 							Quit = LanguageStringModel.Override("Quit"),
@@ -70,7 +71,8 @@ namespace LunraGames.SubLight
 								Message = LanguageStringModel.Override("Are you sure you want to quit?")
 							}
 						},
-						PreferencesPresenter.CreateDefault()
+						PreferencesPresenter.CreateDefault(),
+						LearnMorePresenter.CreateDefault()
 					)
 				};
 

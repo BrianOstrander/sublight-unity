@@ -12,16 +12,19 @@ namespace LunraGames.SubLight.Presenters
 		HomePayload payload;
 		MainMenuLanguageBlock language;
 		PreferencesPresenter preferences;
+		LearnMorePresenter learnMore;
 
 		public MainMenuOptionsPresenter(
 			HomePayload payload,
 			MainMenuLanguageBlock language,
-			PreferencesPresenter preferences
+			PreferencesPresenter preferences,
+			LearnMorePresenter learnMore
 		)
 		{
 			this.payload = payload;
 			this.language = language;
 			this.preferences = preferences;
+			this.learnMore = learnMore;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -54,6 +57,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				new LabelButtonBlock(language.Preferences, CloseThenClick(OnPreferencesClick)),
 				new LabelButtonBlock(language.Feedback, CloseThenClick(OnFeedbackClick)),
+				new LabelButtonBlock(language.LearnMore, CloseThenClick(OnLearnMoreClick)),
 				//new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
 				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
 			};
@@ -109,18 +113,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnPreferencesClick()
 		{
-			preferences.Show(
-				setFocusInstant =>
-				{
-					if (setFocusInstant) App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(HomeState.Focuses.GetPriorityFocus()));
-					else App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetPriorityFocus()));
-				},
-				() =>
-				{
-					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetMainMenuFocus()));
-					OnShow(false);
-				}
-			);
+			OnShowContextualOptions(preferences);
 		}
 
 		void OnFeedbackClick()
@@ -155,6 +148,11 @@ namespace LunraGames.SubLight.Presenters
 			);
 		}
 
+		void OnLearnMoreClick()
+		{
+			OnShowContextualOptions(learnMore);
+		}
+
 		void OnCreditsClick()
 		{
 			OnNotImplimentedClick();
@@ -181,6 +179,22 @@ namespace LunraGames.SubLight.Presenters
 					DialogStyles.Warning,
 					confirmClick: () => OnShow(false)
 				)
+			);
+		}
+
+		void OnShowContextualOptions(ContextualOptionsPresenter presenter)
+		{
+			presenter.Show(
+				setFocusInstant =>
+				{
+					if (setFocusInstant) App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(HomeState.Focuses.GetPriorityFocus()));
+					else App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetPriorityFocus()));
+				},
+				() =>
+				{
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetMainMenuFocus()));
+					OnShow(false);
+				}
 			);
 		}
 		#endregion

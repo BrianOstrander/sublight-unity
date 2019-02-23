@@ -3189,12 +3189,16 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: 46c7f8d0728d04117ac9fb941bd37294, type: 3}
   - Icon: 50
     Sprite: {fileID: 21300000, guid: 53592bee4dcc44232aaf90d9bf20929d, type: 3}
+  - Icon: 60
+    Sprite: {fileID: 21300000, guid: f9d26d0a9fc3d48b5b94e7f721cb6916, type: 3}
+  - Icon: 70
+    Sprite: {fileID: 21300000, guid: a1084dc8940f04ec8ad118f21bda9af9, type: 3}
+  - Icon: 80
+    Sprite: {fileID: 21300000, guid: 8c428aa3a0c684dc794f6d2c341576dc, type: 3}
   - Icon: 1000
     Sprite: {fileID: 21300000, guid: 96fd7ec2179404f7b8dca2de4e3e08b3, type: 3}
   - Icon: 1010
     Sprite: {fileID: 21300000, guid: 6d6fbce7d3fe4484aba7293ff1df4b4f, type: 3}
-  - Icon: 60
-    Sprite: {fileID: 21300000, guid: f9d26d0a9fc3d48b5b94e7f721cb6916, type: 3}
   primaryColorGraphics:
   - {fileID: 7414643357384007153}
   - {fileID: 9673063455839720}
