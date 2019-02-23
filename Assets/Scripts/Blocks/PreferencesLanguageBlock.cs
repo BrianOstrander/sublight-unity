@@ -9,5 +9,7 @@ namespace LunraGames.SubLight
 
 		public LanguageStringModel AnalyticsEnabled;
 		public LanguageStringModel AnalyticsDisabled;
+
+		public LanguageStringModel VersionPrefix;
 	}
 }

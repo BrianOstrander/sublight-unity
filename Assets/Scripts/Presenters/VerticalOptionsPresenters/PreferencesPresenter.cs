@@ -18,7 +18,9 @@ namespace LunraGames.SubLight.Presenters
 					Back = LanguageStringModel.Override("Back"),
 
 					AnalyticsEnabled = LanguageStringModel.Override("Disable Analytics"),
-					AnalyticsDisabled = LanguageStringModel.Override("Enable Analytics")
+					AnalyticsDisabled = LanguageStringModel.Override("Enable Analytics"),
+
+					VersionPrefix = LanguageStringModel.Override("SubLight Version ")
 				}
 			);
 		}
@@ -85,6 +87,7 @@ namespace LunraGames.SubLight.Presenters
 			View.SetEntries(
 				VerticalOptionsThemes.Neutral,
 				LabelVerticalOptionsEntry.CreateTitle(language.Title.Value, VerticalOptionsIcons.Preferences),
+				LabelVerticalOptionsEntry.CreateBody(language.VersionPrefix.Value + BuildPreferences.Instance.Info.Version),
 				analyticsEntry,
 				ButtonVerticalOptionsEntry.CreateButton(language.Back.Value, OnClickBack)
 			);
