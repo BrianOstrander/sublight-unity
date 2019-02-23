@@ -11,14 +11,17 @@ namespace LunraGames.SubLight.Presenters
 	{
 		HomePayload payload;
 		MainMenuLanguageBlock language;
+		PreferencesPresenter preferences;
 
 		public MainMenuOptionsPresenter(
 			HomePayload payload,
-			MainMenuLanguageBlock language
+			MainMenuLanguageBlock language,
+			PreferencesPresenter preferences
 		)
 		{
 			this.payload = payload;
 			this.language = language;
+			this.preferences = preferences;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -49,7 +52,7 @@ namespace LunraGames.SubLight.Presenters
 
 			View.ButtonsRight = new LabelButtonBlock[]
 			{
-				new LabelButtonBlock(language.Settings, CloseThenClick(OnSettingsClick)),
+				new LabelButtonBlock(language.Preferences, CloseThenClick(OnPreferencesClick)),
 				new LabelButtonBlock(language.Feedback, CloseThenClick(OnFeedbackClick)),
 				//new LabelButtonBlock(language.Credits, CloseThenClick(OnCreditsClick)),
 				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
@@ -104,9 +107,20 @@ namespace LunraGames.SubLight.Presenters
 			OnLoadGame(RequestResult.Success(), payload.ContinueSave);
 		}
 
-		void OnSettingsClick()
+		void OnPreferencesClick()
 		{
-			OnNotImplimentedClick();
+			preferences.Show(
+				setFocusInstant =>
+				{
+					if (setFocusInstant) App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(HomeState.Focuses.GetPriorityFocus()));
+					else App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetPriorityFocus()));
+				},
+				() =>
+				{
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetMainMenuFocus()));
+					OnShow(false);
+				}
+			);
 		}
 
 		void OnFeedbackClick()

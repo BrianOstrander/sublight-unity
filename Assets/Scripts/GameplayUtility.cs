@@ -275,25 +275,18 @@ namespace LunraGames.SubLight
 				propellantUsage
 			);
 
-			//var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+			if (!systemSource.Get(KeyDefines.CelestialSystem.Propellant.Discovered))
+			{
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Propellant.Discovered,
+					true
+				);
 
-			//var propellantUsageMinimum = 1;
-
-
-
-			//propellant = propellant - propellantUsage;
-			//propellantUsage = Mathf.Max(propellantUsageMinimum, Mathf.Min(Mathf.FloorToInt(propellant), propellantUsage));
-			//Debug.Log("todo: get proplellnt from systems");
-
-			//gameSource.Set(
-			//	KeyDefines.Game.Propellant.Amount,
-			//	propellant
-			//);
-
-			//gameSource.Set(
-			//	KeyDefines.Game.PropellantUsage,
-			//	propellantUsage
-			//);
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Propellant.GatheredAmount,
+					propellantRemainingInSystem
+				);
+			}
 		}
 	}
 }
