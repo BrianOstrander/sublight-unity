@@ -234,6 +234,7 @@ namespace LunraGames.SubLight
 
 				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
 
+				/* Disabling this for the moment...
 				new SystemAlertPresenter(
 					payload.Game,
 					playerEnd,
@@ -242,6 +243,7 @@ namespace LunraGames.SubLight
 					() => Debug.LogWarning("Todo: open the encyclopedia entry for Sagittarius A*"),
 					UniverseScales.Galactic
 				);
+				*/
 
 				new GalaxyPresenter(payload.Game);
 				new GalaxyDetailPresenter(payload.Game, UniverseScales.Quadrant);

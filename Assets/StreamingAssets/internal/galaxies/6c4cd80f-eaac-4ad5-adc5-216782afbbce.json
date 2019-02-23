@@ -643,7 +643,7 @@
       "seed": 528735376,
       "specified": true,
       "position": {
-        "Sector": {"x":100.0,"z":100.0}
+        "Sector": {"x":89.0,"z":28.0}
       },
       "systemCount": 1,
       "systems": [
@@ -652,22 +652,38 @@
           "specified": true,
           "playerEnd": true,
           "position": {
-            "Sector": {"x":100.0,"z":100.0},
+            "Sector": {"x":89.0,"z":28.0},
             "Local": {"x":0.5,"z":0.5}
           },
-          "name": "Sagittarius A*",
+          "name": "Cygnus X-1",
           "primaryClassification": "Degenerate",
           "secondaryClassification": "Super Massive Black Hole",
           "iconColor": {"r":1.0,"g":1.0,"b":1.0,"a":1.0},
           "iconScale": 1.0,
           "bodies": [],
-          "specifiedEncounters": [],
+          "specifiedEncounters": [
+            {
+              "Trigger": "NavigationSelect"
+            },
+            {
+              "Trigger": "TransitComplete",
+              "EncounterId": "f4fc7b5c-a661-4089-abb4-0f46efafdf02"
+            }
+          ],
           "keyValues": {
-            "booleans": {},
+            "booleans": {
+              "discovered_rations": false,
+              "discovered_propellant": false
+            },
             "integers": {},
             "strings": {},
             "enums": {},
-            "floats": {}
+            "floats": {
+              "gather_multiplier_rations": 0.0,
+              "gather_amount_rations": 0.0,
+              "gather_multiplier_propellant": 0.0,
+              "gather_amount_propellant": 0.0
+            }
           }
         }
       ]
