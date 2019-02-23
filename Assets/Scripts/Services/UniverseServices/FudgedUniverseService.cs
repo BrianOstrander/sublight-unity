@@ -33,6 +33,15 @@ namespace LunraGames.SubLight
 			systemModel.SecondaryClassification.Value = "Red Dwarf";
 			systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.53f, 1f);
 
+			systemModel.SpecifiedEncounters.Value = new SpecifiedEncounterEntry[]
+			{
+				new SpecifiedEncounterEntry
+				{
+					Trigger = EncounterTriggers.NavigationSelect,
+					EncounterId = "2ecf3799-264f-43b7-adec-383b09571ef5"
+				}
+			};
+
 			var resourceGenerator = new Demon(SystemModel.Seeds.Resources(systemModel.Seed));
 
 			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Rations.GatherMultiplier, resourceGenerator.NextFloat);

@@ -281,16 +281,58 @@ namespace LunraGames.SubLight
 
 		void OnIdleShow()
 		{
+			var totalWait = 0f;
 			foreach (var kv in Payload.DelayedPresenterShows)
 			{
+				var currWait = kv.Key * Payload.MenuAnimationMultiplier;
+				totalWait += currWait;
 				App.Heartbeat.Wait(
 					() =>
-				{
-					foreach (var presenter in kv.Value) presenter.Show(instant: Mathf.Approximately(0f, Payload.MenuAnimationMultiplier));
-				},
-					kv.Key * Payload.MenuAnimationMultiplier
+					{
+						foreach (var presenter in kv.Value) presenter.Show(instant: Mathf.Approximately(0f, Payload.MenuAnimationMultiplier));
+					},
+					currWait
 				);
 			}
+
+			if (!Payload.FromInitialization && !App.MetaKeyValues.GlobalKeyValues.KeyValues.Get(KeyDefines.Global.HasAskedForFeedback))
+			{
+				App.MetaKeyValues.GlobalKeyValues.KeyValues.Set(KeyDefines.Global.HasAskedForFeedback, true);
+				App.Heartbeat.Wait(
+					() => App.Callbacks.DialogRequest(
+						DialogRequest.ConfirmDeny(
+							LanguageStringModel.Override("If you're interested in providing feedback, it would help us out a lot!"),
+							title: LanguageStringModel.Override("Submit Feedback?"),
+							confirmClick: OnSubmitFeedbackClick
+						)
+					),
+					totalWait + 0.05f
+				);
+			}
+		}
+
+		void OnSubmitFeedbackClick()
+		{
+			App.Heartbeat.Wait(
+				() =>
+				{
+					Application.OpenURL(
+						App.BuildPreferences.FeedbackForm(
+							FeedbackFormTriggers.MainMenu,
+							App.MetaKeyValues.GlobalKeyValues.KeyValues
+						)
+					);
+				},
+				0.75f
+			);
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.Confirm(
+					LanguageStringModel.Override("Your browser should open to a feedback form, if not visit <b>strangestar.games/contact</b> to send us a message!"),
+					DialogStyles.Neutral,
+					LanguageStringModel.Override("Feedback")
+				)
+			);
 		}
 		#endregion
 

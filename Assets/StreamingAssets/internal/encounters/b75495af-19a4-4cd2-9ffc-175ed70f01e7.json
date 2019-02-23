@@ -1,0 +1,262 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "bf8956db-4fb2-4688-a806-068321c9de3c",
+  "name": "Intro",
+  "trigger": "Load",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "741c8f5d-f8a5-4fd1-b465-475e315d1142",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "52bcbeb3-38ca-47bd-8ff3-703e8e0c70ad"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "761e3ce4-3a83-4bc5-bcb3-5d2e29a4f0f4",
+        "fallbackLogId": "bc415fb7-bb76-4c35-bd3c-c0da6beba2f5"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "16a4b59d-a837-403f-8c97-41959e834c58"
+            }
+          }
+        ],
+        "index": 3,
+        "logId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2",
+        "fallbackLogId": "2522a033-554d-4496-96d9-3ca50f0bde81"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Navigation",
+              "message": "You can <b>zoom</b> in and out on the navigation area with your <b>scroll wheel</b>. You can <b>pan</b> around by <b>clicking and dragging</b> the grid. Goodluck!",
+              "dialogType": "Confirm",
+              "dialogStyle": "Neutral",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e8de6ddd-de03-48c0-a0dc-ef55398e0521"
+            }
+          }
+        ],
+        "index": 4,
+        "ending": true,
+        "logId": "2522a033-554d-4496-96d9-3ca50f0bde81"
+      }
+    ],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "IntroBust",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "TitleSource": "Earth",
+                "TitleClassification": "Terrestrial",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "Brian O.",
+                "PlacardDescription": "Game Developer",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 1
+              },
+              "entryId": "68a55388-a3b3-4b00-bffe-ac66f9bd975f"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "IntroBust",
+              "bustEvent": "Focus",
+              "entryId": "529b81da-10c6-4d8d-b705-1e50c01fc892"
+            },
+            "index": 1
+          }
+        ],
+        "index": 1,
+        "logId": "bc415fb7-bb76-4c35-bd3c-c0da6beba2f5",
+        "fallbackLogId": "72419e71-44f7-4c83-a7ef-3612b76cc58d"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Welcome to the first public SubLight Demo! The game is still very much a <b>work in progress</b>, and this represents only a working prototype of the game's systems. If you'd like to provide feedback, or learn more, you can do so from the <b>Main Menu</b>, cool?",
+              "entryId": "1d43fed5-20c3-4f38-ad7c-e08d2bee9484"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Cool!",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "89667644-247a-4b8f-a223-c5f4585b4aad"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Okay, your goal is to head towards <b>Cygnus X-1</b>, there will be a waypoint for it on the perimeter of your navigation view. Try not to starve your crew or run out of propellant along the way, okay?",
+              "entryId": "34a9a46d-511b-4709-8961-e0f8ddc93727"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Some interface elements are <b>not complete</b>, but nothing should crash the game or put you in a state you can't get out of. If anything like that occurs, please report those issues in your feedback!",
+              "entryId": "c706b336-0f0c-44a8-8ae7-d74dc4354917"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Understood",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "19401f2b-ef8a-47be-9300-01d74eea84f8"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Cool!",
+              "entryId": "92674feb-9654-4c56-afae-31405d52ea32"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Understood",
+              "entryId": "55e89881-ced1-457f-8837-02c79abf1247"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "No promises!",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "7e5c1afc-adf8-41bd-bffd-247b5c0c6e97"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "No promises!",
+              "entryId": "ebd87b01-76fa-4535-971f-b0059cc50284"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "...",
+              "entryId": "2d400d6d-493d-4069-a2f7-a728c2c4fcd9"
+            },
+            "index": 9
+          }
+        ],
+        "index": 2,
+        "logId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
+        "fallbackLogId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2"
+      }
+    ]
+  },
+  "version": 7,
+  "meta": "Intro",
+  "metaKeyValues": {
+    "EncounterId": "bf8956db-4fb2-4688-a806-068321c9de3c"
+  },
+  "created": "2019-02-22T17:56:13.94163-08:00",
+  "modified": "2019-02-22T17:56:13.94163-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

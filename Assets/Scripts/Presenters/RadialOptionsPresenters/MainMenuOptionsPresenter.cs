@@ -118,20 +118,13 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnFeedbackClick()
 		{
-			KeyValueListModel globalSource = null;
-
-			if (App.MetaKeyValues != null && App.MetaKeyValues.GlobalKeyValues != null)
-			{
-				globalSource = App.MetaKeyValues.GlobalKeyValues.KeyValues;
-			}
-
 			App.Heartbeat.Wait(
 				() => 
 				{
 					Application.OpenURL(
 						App.BuildPreferences.FeedbackForm(
 							FeedbackFormTriggers.MainMenu,
-							globalSource
+							App.MetaKeyValues.GlobalKeyValues.KeyValues
 						)
 					);
 				},
