@@ -62,6 +62,9 @@ namespace LunraGames.SubLight
 							Title = LanguageStringModel.Override("Already Saved"),
 							Message = LanguageStringModel.Override("Your latest progress is already saved.")
 						},
+
+						Preferences = LanguageStringModel.Override("Preferences"),
+
 						MainMenu = mainMenuLanguage,
 						MainMenuConfirm = new DialogLanguageBlock
 						{
@@ -81,7 +84,8 @@ namespace LunraGames.SubLight
 						SavingError = saveErrorLanguage,
 						ReturningToMainMenu = returningToMainMenuLanguage,
 						Quiting = LanguageStringModel.Override("Quitting...")
-					}
+					},
+					PreferencesPresenter.CreateDefault()
 				);
 
 				new GameCompletePresenter(

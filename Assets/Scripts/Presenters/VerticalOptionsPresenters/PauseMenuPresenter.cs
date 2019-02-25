@@ -19,6 +19,7 @@ namespace LunraGames.SubLight.Presenters
 		GamePayload payload;
 		GameModel model;
 		PauseMenuLanguageBlock language;
+		PreferencesPresenter preferences;
 
 		States state = States.Default;
 		DialogRequest.States lastDialogState = DialogRequest.States.Complete;
@@ -31,12 +32,14 @@ namespace LunraGames.SubLight.Presenters
 		public PauseMenuPresenter(
 			GamePayload payload,
 			GameModel model,
-			PauseMenuLanguageBlock language
+			PauseMenuLanguageBlock language,
+			PreferencesPresenter preferences
 		)
 		{
 			this.payload = payload;
 			this.model = model;
 			this.language = language;
+			this.preferences = preferences;
 
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.Escape += OnEscape;
@@ -197,6 +200,7 @@ namespace LunraGames.SubLight.Presenters
 				LabelVerticalOptionsEntry.CreateHeader(SaveMessage),
 				ButtonVerticalOptionsEntry.CreateButton(language.Resume.Value, OnClickResume),
 				saveEntry,
+				ButtonVerticalOptionsEntry.CreateButton(language.Preferences.Value, OnClickPreferences),
 				ButtonVerticalOptionsEntry.CreateButton(language.MainMenu.Value, OnClickMainMenu),
 				ButtonVerticalOptionsEntry.CreateButton(language.Quit.Value, OnClickQuit)
 			);
@@ -412,6 +416,35 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(
 				() => Show(),
 				"ShowingPauseMenuFromSaveDisabled"
+			);
+		}
+
+		void OnClickPreferences()
+		{
+			if (NotInteractable) return;
+
+			model.Context.PauseMenuBlockers.Value++;
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Closed += done;
+					CloseView();
+				},
+				"ClosingPauseMenuForPreferences"
+			);
+
+			SM.Push(
+				() => preferences.Show(
+					ActionExtensions.GetEmpty<bool>(),
+					() =>
+					{
+						Show();
+						model.Context.PauseMenuBlockers.Value--;
+					},
+					reFocus: false
+				),
+				"ShowingPreferencesFromPauseMenu"
 			);
 		}
 

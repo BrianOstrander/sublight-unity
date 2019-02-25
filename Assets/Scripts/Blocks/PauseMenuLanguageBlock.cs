@@ -10,6 +10,8 @@ namespace LunraGames.SubLight
 		public LanguageStringModel Save;
 		public DialogLanguageBlock SaveDisabledAlreadySaved;
 
+		public LanguageStringModel Preferences;
+
 		public LanguageStringModel MainMenu;
 		public DialogLanguageBlock MainMenuConfirm;
 
