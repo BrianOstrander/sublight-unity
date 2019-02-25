@@ -3,11 +3,27 @@
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "bf8956db-4fb2-4688-a806-068321c9de3c",
-  "name": "Intro",
+  "name": "Tutorial: Intro",
   "trigger": "Load",
   "filtering": {
     "showValues": true,
-    "booleanKeyValues": [],
+    "booleanKeyValues": [
+      {
+        "index": 1,
+        "filterId": "5adff222-1a9a-4797-a5c4-1081ffd186e3",
+        "group": "All",
+        "Input0": {
+          "AddressId": "9c8a8c50-e226-48e4-86d9-8318cca01884",
+          "Source": "KeyValue",
+          "ForeignTarget": "Preferences",
+          "ForeignKey": "ignore_tutorial"
+        },
+        "Input1": {
+          "AddressId": "597c28cb-d332-4862-90b4-1bfcada33bc6",
+          "Source": "LocalValue"
+        }
+      }
+    ],
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
@@ -20,9 +36,120 @@
     ]
   },
   "logs": {
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "d782b63d-1405-4536-9cb7-9c14b996a678",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "b31e2979-8d94-4cea-b366-719d5d0e846d",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "c71cf310-2f4b-42a7-b4fd-daf68ebbd834",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Preferences",
+                  "ForeignKey": "ignore_tutorial"
+                }
+              },
+              "entryId": "337905d6-3b2b-44c8-b62d-f6bcbacddeca"
+            }
+          }
+        ],
+        "index": 7,
+        "logId": "35b44710-45c9-4a1a-86e4-ad943de63b43",
+        "fallbackLogId": "622daf89-c44d-4700-a8c1-19611625116f",
+        "name": "IgnoreTutorialKV"
+      }
+    ],
     "switchLogs": [],
-    "buttonLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Cool",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "ff595f91-7f51-4e9d-b143-c22f7c903294"
+            }
+          },
+          {
+            "entry": {
+              "message": "I don't need a tutorial",
+              "nextLogId": "35b44710-45c9-4a1a-86e4-ad943de63b43",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "872cd24d-ab8e-4ad4-9a72-b6df3d708d0e"
+            },
+            "index": 1
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 6,
+        "logId": "0f71953e-f647-4d43-83ae-3e0a1cdfe422",
+        "fallbackLogId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
+        "name": "IgnoreTutorialButtons"
+      }
+    ],
     "encyclopediaLogs": [],
     "eventLogs": [
       {
@@ -86,6 +213,38 @@
         "index": 3,
         "logId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2",
         "fallbackLogId": "2522a033-554d-4496-96d9-3ca50f0bde81"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "622a7d6d-6d35-4b31-a757-61da17140afe"
+            }
+          }
+        ],
+        "index": 9,
+        "ending": true,
+        "logId": "0d98de0d-76ae-47b2-9e11-0df7f5334166",
+        "name": "IgnoreTutorialEnd"
       }
     ],
     "dialogLogs": [
@@ -146,31 +305,12 @@
         ],
         "index": 1,
         "logId": "bc415fb7-bb76-4c35-bd3c-c0da6beba2f5",
-        "fallbackLogId": "72419e71-44f7-4c83-a7ef-3612b76cc58d"
+        "fallbackLogId": "063461fd-a46c-4302-bd67-d04b0f9959d4"
       }
     ],
     "conversationLogs": [
       {
         "entries": [
-          {
-            "entry": {
-              "conversationType": "MessageIncoming",
-              "message": "Welcome to the first public SubLight Demo! The game is still very much a <b>work in progress</b>, and this represents only a working prototype of the game's systems. If you'd like to provide feedback, or learn more, you can do so from the <b>Main Menu</b>, cool?",
-              "entryId": "1d43fed5-20c3-4f38-ad7c-e08d2bee9484"
-            }
-          },
-          {
-            "entry": {
-              "conversationType": "Prompt",
-              "message": "Cool!",
-              "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
-              },
-              "entryId": "89667644-247a-4b8f-a223-c5f4585b4aad"
-            },
-            "index": 1
-          },
           {
             "entry": {
               "conversationType": "MessageIncoming",
@@ -246,12 +386,44 @@
         ],
         "index": 2,
         "logId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
-        "fallbackLogId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2"
+        "fallbackLogId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2",
+        "name": "WelcomeConversation",
+        "notes": "ContinueConversatio"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Welcome to the first public SubLight Demo! The game is still very much a <b>work in progress</b>, and this represents only a working prototype of the game's systems. If you'd like to provide feedback, or learn more, you can do so from the <b>Main Menu</b>, cool?",
+              "entryId": "3d6dd4f5-7e3c-4b1a-a785-166e5380d265"
+            }
+          }
+        ],
+        "index": 5,
+        "logId": "063461fd-a46c-4302-bd67-d04b0f9959d4",
+        "fallbackLogId": "0f71953e-f647-4d43-83ae-3e0a1cdfe422",
+        "name": "IntroConversation"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "No problem!",
+              "entryId": "6aaaf2b8-ada9-4ac0-9c99-65caf5456883"
+            }
+          }
+        ],
+        "index": 8,
+        "logId": "622daf89-c44d-4700-a8c1-19611625116f",
+        "fallbackLogId": "0d98de0d-76ae-47b2-9e11-0df7f5334166",
+        "name": "IgnoreConversationEnd"
       }
     ]
   },
-  "version": 7,
-  "meta": "Intro",
+  "version": 8,
+  "meta": "Tutorial: Intro",
   "metaKeyValues": {
     "EncounterId": "bf8956db-4fb2-4688-a806-068321c9de3c"
   },

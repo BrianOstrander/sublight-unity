@@ -3,6 +3,7 @@
 	public class PreferencesKeys : KeyDefinitions
 	{
 		#region Booleans
+		public readonly Boolean IgnoreTutorial;
 		#endregion
 
 		#region Integers
@@ -18,7 +19,12 @@
 		{
 			Booleans = new Boolean[]
 			{
-
+				Create(
+					ref IgnoreTutorial,
+					"ignore_tutorial",
+					"True if the initial tutorial should be skipped.",
+					true
+				)
 			};
 
 			Integers = new Integer[]
