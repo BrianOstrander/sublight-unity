@@ -330,7 +330,7 @@ namespace LunraGames.SubLight
 						waypoint.Name.Value = "Origin";
 						break;
 					case WaypointIds.EndSystem:
-						waypoint.Name.Value = "Sagittarius A*";
+						waypoint.Name.Value = "Cygnus X-1";
 						break;
 				}
 
