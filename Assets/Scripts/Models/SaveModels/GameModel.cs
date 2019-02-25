@@ -1,237 +1,110 @@
-﻿using System.Linq;
+﻿using System;
 
 using Newtonsoft.Json;
 
-using UnityEngine;
-
-using Focuses = LunraGames.SubLight.FocusRequest.Focuses;
-
 namespace LunraGames.SubLight.Models
 {
+	/// <summary>
+	/// All data that is serialized about the game.
+	/// </summary>
 	public class GameModel : SaveModel
 	{
-		#region Serialized
+		#region Serialized Values
 		[JsonProperty] int seed;
-		[JsonProperty] DayTime dayTime;
-		[JsonProperty] float speed;
-		[JsonProperty] UniverseModel universe;
-		[JsonProperty] UniversePosition endSystem;
-		[JsonProperty] UniversePosition focusedSector;
-		[JsonProperty] ShipModel ship;
-		[JsonProperty] float destructionSpeedIncrement;
-		[JsonProperty] float destructionSpeed;
-		[JsonProperty] float destructionRadius;
-		[JsonProperty] TravelRequest travelRequest;
-		[JsonProperty] DestructionSpeedDelta[] destructionSpeedDeltas = new DestructionSpeedDelta[0];
-
-		[JsonProperty] EncounterStatus[] encounterStatuses = new EncounterStatus[0];
-
-		[JsonProperty] GalaxyFocusRequest galaxyFocus;
-		[JsonProperty] SystemBodiesFocusRequest systemBodiesFocus;
-		[JsonProperty] SystemsFocusRequest systemsFocus;
-		[JsonProperty] BodyFocusRequest bodyFocus;
-		[JsonProperty] EncounterFocusRequest encounterFocus;
-		[JsonProperty] ShipFocusRequest shipFocus;
-		[JsonProperty] EncyclopediaFocusRequest encyclopediaFocus;
-
-		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
-
-		[JsonProperty] FinalReportModel[] finalReports = new FinalReportModel[0];
-
-		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
-
 		/// <summary>
 		/// The game seed.
 		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<int> Seed;
+		[JsonIgnore] public readonly ListenerProperty<int> Seed;
+
+		[JsonProperty] RelativeDayTime relativeDayTime;
 		/// <summary>
 		/// The day time.
 		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<DayTime> DayTime;
-		/// <summary>
-		/// The speed of the ship, in universe units per day, whether or not
-		/// it's curently in motion.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> Speed;
-		/// <summary>
-		/// The game universe.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniverseModel> Universe;
-		/// <summary>
-		/// The target system the player is traveling to.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> EndSystem;
-		/// <summary>
-		/// The sector the camera is looking at.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> FocusedSector;
-		/// <summary>
-		/// The game ship.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<ShipModel> Ship;
-		/// <summary>
-		/// The destruction speed increments.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> DestructionSpeedIncrement;
-		/// <summary>
-		/// The speed at which the destruction expands, in universe units per
-		/// day.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> DestructionSpeed;
-		/// <summary>
-		/// The total destruction radius, in universe units.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<float> DestructionRadius;
-		[JsonIgnore]
-		public readonly ListenerProperty<TravelRequest> TravelRequest;
-		[JsonIgnore]
-		public readonly ListenerProperty<DestructionSpeedDelta[]> DestructionSpeedDeltas;
+		[JsonIgnore] public readonly ListenerProperty<RelativeDayTime> RelativeDayTime;
 
-		[JsonIgnore]
-		public readonly ListenerProperty<FocusRequest> FocusRequest;
+		[JsonProperty] ToolbarSelections toolbarSelection;
+		[JsonIgnore] public readonly ListenerProperty<ToolbarSelections> ToolbarSelection;
 
-		/// <summary>
-		/// The encounters seen, completed or otherwise.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<EncounterStatus[]> EncounterStatuses;
+		[JsonProperty] bool toolbarLocking;
+		[JsonIgnore] public readonly ListenerProperty<bool> ToolbarLocking;
+
+		[JsonProperty] EncounterResume encounterResume = SubLight.EncounterResume.Default;
+		[JsonIgnore] public readonly ListenerProperty<EncounterResume> EncounterResume;
+
+		[JsonProperty] EncounterTriggers[] encounterTriggers = new EncounterTriggers[0];
+		[JsonIgnore] public readonly ListenerProperty<EncounterTriggers[]> EncounterTriggers;
+
+		[JsonProperty] TimeSpan elapsedTime;
+		[JsonIgnore] public readonly ListenerProperty<TimeSpan> ElapsedTime;
+
+		[JsonProperty] GameSaveDetails saveDetails;
+		[JsonIgnore] public readonly ListenerProperty<GameSaveDetails> SaveDetails;
 		#endregion
 
-		#region NonSerialized
-		SaveStateBlock saveState = SaveStateBlock.Savable();
-		UniversePosition[] focusedSectors = new UniversePosition[0];
+		#region Serialized Models
+		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
+		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
 
+		[JsonProperty] ShipModel ship = new ShipModel();
+		[JsonIgnore] public ShipModel Ship { get { return ship; } }
+
+		[JsonProperty] WaypointListModel waypoints = new WaypointListModel();
+		[JsonIgnore] public WaypointListModel Waypoints { get { return waypoints; } }
+
+		[JsonProperty] EncyclopediaListModel encyclopedia = new EncyclopediaListModel();
+		[JsonIgnore] public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
+
+		[JsonProperty] TransitHistoryModel transitHistory = new TransitHistoryModel();
+		[JsonIgnore] public TransitHistoryModel TransitHistory { get { return transitHistory; } }
+
+		[JsonProperty] EncounterStatusListModel encounterStatuses = new EncounterStatusListModel();
+		[JsonIgnore] public EncounterStatusListModel EncounterStatuses { get { return encounterStatuses; } }
+
+		[JsonProperty] string galaxyId;
+		[JsonIgnore] public string GalaxyId { get { return galaxyId; } set { galaxyId = value; } }
+
+		[JsonProperty] string galaxyTargetId;
+		[JsonIgnore] public string GalaxyTargetId { get { return galaxyTargetId; } set { galaxyTargetId = value; } }
+
+		[JsonProperty] UniverseModel universe;
 		/// <summary>
-		/// Positions of all loaded sectors.
+		/// Gets or sets the universe.
 		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition[]> FocusedSectors;
-		[JsonIgnore]
-		public readonly ListenerProperty<SaveStateBlock> SaveState;
+		/// <remarks>
+		/// This should only be set upon creation of a new game by the
+		/// UniverseService.
+		/// </remarks>
+		/// <value>The universe.</value>
+		[JsonIgnore] public UniverseModel Universe { get { return universe; } set { universe = value; } }
+		#endregion
+
+		#region Non Serialized Models
+		/// <summary>
+		/// Gets the context data, non-serialized information relating to game
+		/// data.
+		/// </summary>
+		/// <remarks>
+		/// This should be the only non-serialized data in this model, anything
+		/// else should be inside the context.
+		/// </remarks>
+		/// <value>The context.</value>
+		[JsonIgnore] public readonly GameContextModel Context;
 		#endregion
 
 		public GameModel()
 		{
 			SaveType = SaveTypes.Game;
+
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
-			DayTime = new ListenerProperty<DayTime>(value => dayTime = value, () => dayTime);
-			Speed = new ListenerProperty<float>(value => speed = value, () => speed);
-			Universe = new ListenerProperty<UniverseModel>(value => universe = value, () => universe);
-			EndSystem = new ListenerProperty<UniversePosition>(value => endSystem = value, () => endSystem);
-			FocusedSector = new ListenerProperty<UniversePosition>(value => focusedSector = value, () => focusedSector);
-			FocusedSectors = new ListenerProperty<UniversePosition[]>(value => focusedSectors = value, () => focusedSectors);
-			SaveState = new ListenerProperty<SaveStateBlock>(value => saveState = value, () => saveState);
-			Ship = new ListenerProperty<ShipModel>(value => ship = value, () => ship);
-			DestructionSpeedIncrement = new ListenerProperty<float>(value => destructionSpeedIncrement = value, () => destructionSpeedIncrement);
-			DestructionSpeed = new ListenerProperty<float>(value => destructionSpeed = value, () => destructionSpeed);
-			DestructionRadius = new ListenerProperty<float>(value => destructionRadius = value, () => destructionRadius);
-			TravelRequest = new ListenerProperty<TravelRequest>(value => travelRequest = value, () => travelRequest);
-			DestructionSpeedDeltas = new ListenerProperty<DestructionSpeedDelta[]>(value => destructionSpeedDeltas = value, () => destructionSpeedDeltas);
+			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
+			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
+			ToolbarLocking = new ListenerProperty<bool>(value => toolbarLocking = value, () => toolbarLocking);
+			EncounterResume = new ListenerProperty<EncounterResume>(value => encounterResume = value, () => encounterResume);
+			EncounterTriggers = new ListenerProperty<EncounterTriggers[]>(value => encounterTriggers = value, () => encounterTriggers);
+			ElapsedTime = new ListenerProperty<TimeSpan>(value => elapsedTime = value, () => elapsedTime);
+			SaveDetails = new ListenerProperty<GameSaveDetails>(value => saveDetails = value, () => saveDetails);
 
-			EncounterStatuses = new ListenerProperty<EncounterStatus[]>(value => encounterStatuses = value, () => encounterStatuses);
-
-			FocusRequest = new ListenerProperty<FocusRequest>(OnSetFocus, OnGetFocus);
+			Context = new GameContextModel(this, Ship);
 		}
-
-		#region Events
-		void OnSetFocus(FocusRequest focus)
-		{
-			galaxyFocus = null;
-			systemBodiesFocus = null;
-			systemsFocus = null;
-			bodyFocus = null;
-			encounterFocus = null;
-			shipFocus = null;
-			encyclopediaFocus = null;
-
-			switch (focus.Focus)
-			{
-				case Focuses.Galaxy:
-					galaxyFocus = focus as GalaxyFocusRequest;
-					break;
-				case Focuses.SystemBodies:
-					systemBodiesFocus = focus as SystemBodiesFocusRequest;
-					break;
-				case Focuses.Systems:
-					systemsFocus = focus as SystemsFocusRequest;
-					break;
-				case Focuses.Body:
-					bodyFocus = focus as BodyFocusRequest;
-					break;
-				case Focuses.Encounter:
-					encounterFocus = focus as EncounterFocusRequest;
-					break;
-				case Focuses.Ship:
-					shipFocus = focus as ShipFocusRequest;
-					break;
-				case Focuses.Encyclopedia:
-					encyclopediaFocus = focus as EncyclopediaFocusRequest;
-					break;
-				default:
-					Debug.LogError("Unrecognized Focus: " + focus.Focus);
-					break;
-			}
-		}
-
-		FocusRequest OnGetFocus()
-		{
-			if (galaxyFocus != null) return galaxyFocus;
-			if (systemBodiesFocus != null) return systemBodiesFocus;
-			if (systemsFocus != null) return systemsFocus;
-			if (bodyFocus != null) return bodyFocus;
-			if (encounterFocus != null) return encounterFocus;
-			if (shipFocus != null) return shipFocus;
-
-			return null;
-		}
-		#endregion
-
-		#region Utility
-		public void SetEncounterStatus(EncounterStatus status)
-		{
-			if (status.Encounter == null)
-			{
-				Debug.LogError("Cannot update the status of an encounter with a null id, update ignored.");
-				return;
-			}
-			EncounterStatuses.Value = EncounterStatuses.Value.Where(e => e.Encounter != status.Encounter).Append(status).ToArray();
-		}
-
-		public EncounterStatus GetEncounterStatus(string encounterId)
-		{
-			return EncounterStatuses.Value.FirstOrDefault(e => e.Encounter == encounterId);
-		}
-
-		[JsonIgnore]
-		public KeyValueListModel KeyValues { get { return keyValues; } }
-
-		public void AddFinalReport(FinalReportModel finalReport)
-		{
-			if (finalReports.FirstOrDefault(r => r.Encounter.Value == finalReport.Encounter.Value) != null)
-			{
-				Debug.LogError("A final report with EncounterId " + finalReport.Encounter.Value + " already exists.");
-				return;
-			}
-			finalReports = finalReports.Append(finalReport).ToArray();
-		}
-
-		public FinalReportModel GetFinalReport(string encounter)
-		{
-			return finalReports.FirstOrDefault(r => r.Encounter.Value == encounter);
-		}
-
-		[JsonIgnore]
-		public EncyclopediaListModel Encyclopedia { get { return encyclopedia; } }
-		#endregion
 	}
 }

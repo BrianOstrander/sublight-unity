@@ -10,6 +10,7 @@ namespace LunraGames.SubLight.Models
 		public ListenerProperty<StringFilterOperations> Operation;
 
 		public override ValueFilterTypes FilterType { get { return ValueFilterTypes.KeyValueString; } }
+		public override KeyValueTypes FilterValueType { get { return KeyValueTypes.String; } }
 
 		public StringKeyValueFilterEntryModel()
 		{

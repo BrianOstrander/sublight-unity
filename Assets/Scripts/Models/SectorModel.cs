@@ -1,78 +1,59 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-using UnityEngine;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
 	public class SectorModel : Model
 	{
+		[JsonProperty] string name;
 		[JsonProperty] int seed;
 		[JsonProperty] bool visited;
+		[JsonProperty] bool specified;
 		[JsonProperty] UniversePosition position;
+		[JsonProperty] int systemCount;
+		[JsonProperty] SystemModel[] systems = new SystemModel[0];
 
-		[JsonProperty] CelestialSystemModel[] celestials = new CelestialSystemModel[0];
-
+		[JsonIgnore]
+		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Seed;
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> Visited;
 		[JsonIgnore]
+		public readonly ListenerProperty<bool> Specified;
+		[JsonIgnore]
 		public readonly ListenerProperty<UniversePosition> Position;
-
-		#region Derived
+		[JsonIgnore]
+		public readonly ListenerProperty<int> SystemCount;
 		[JsonIgnore]
 		public readonly ListenerProperty<SystemModel[]> Systems;
-		#endregion
+
+		bool isGenerated;
+		[JsonIgnore]
+		public bool IsGenerated
+		{
+			get { return isGenerated || Visited.Value || Specified.Value; }
+			set { isGenerated = value; }
+		}
 
 		public SectorModel()
 		{
+			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			Visited = new ListenerProperty<bool>(value => visited = value, () => visited);
-			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
-
-			Systems = new ListenerProperty<SystemModel[]>(OnSetSystems, OnGetSystems);
+			Specified = new ListenerProperty<bool>(value => specified = value, () => specified);
+			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position, OnPosition);
+			SystemCount = new ListenerProperty<int>(value => systemCount = value, () => systemCount);
+			Systems = new ListenerProperty<SystemModel[]>(value => systems = value, () => systems);
 		}
-
-		#region Utility
-		public SystemModel GetSystem(UniversePosition position)
-		{
-			return Systems.Value.FirstOrDefault(s => s.Position.Value == position);
-		}
-
-		public BodyModel GetBody(UniversePosition position, int id)
-		{
-			return GetSystem(position).GetBody(id);
-		}
-		#endregion
 
 		#region Events
-		void OnSetSystems(SystemModel[] newSystems)
+		void OnPosition(UniversePosition position)
 		{
-			var celestialList = new List<CelestialSystemModel>();
-
-			foreach (var system in newSystems)
+			foreach (var system in Systems.Value)
 			{
-				switch(system.SystemType)
-				{
-					case SystemTypes.Celestial:
-						celestialList.Add(system as CelestialSystemModel);
-						break;
-					default:
-						Debug.LogError("Unrecognized SystemType: " + system.SystemType);
-						break;
-				}
+				system.Position.Value = new UniversePosition(position.SectorInteger, system.Position.Value.Local);
 			}
-
-			celestials = celestialList.ToArray();
 		}
-
-		SystemModel[] OnGetSystems()
-		{
-			return celestials.ToArray();
-		}
-		#endregion
+ 		#endregion 
 	}
 }

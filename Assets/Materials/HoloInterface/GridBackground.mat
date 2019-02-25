@@ -1,0 +1,169 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GridBackground
+  m_Shader: {fileID: 4800000, guid: 649b95f32b1394b7c8426ae51d91b38f, type: 3}
+  m_ShaderKeywords: _GRIDINVERT_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_5DE4870D:
+        m_Texture: {fileID: 2800000, guid: fe4bd57908bd74ad8883c0f0823cf58d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_B577BEA9:
+        m_Texture: {fileID: 2800000, guid: ff6e9e1eaab1b4b3e80957642c0b0d7b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_E75D15B9:
+        m_Texture: {fileID: 2800000, guid: 98192518b0652405f8efe797b8ed02e1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveRamp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GridRamp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: dffef66376be4fa480fb02b19edbe903, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RadiusMask:
+        m_Texture: {fileID: 2800000, guid: 3e11c0dc399b043c28e32270e03e3685, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RadiusRamp:
+        m_Texture: {fileID: 2800000, guid: 51e8211488317482080cd9cbec70c9b5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RangeFalloffGradient:
+        m_Texture: {fileID: 2800000, guid: cd87126bdac3d4d498cbaee6f42e0549, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_2E2A859B: 0.332
+    - Vector1_9EC3C678: -0.5
+    - Vector1_A87B78D3: 1
+    - Vector1_C384AA28: 0.7
+    - Vector1_C9F244F9: 4
+    - Vector1_E9271C64: 0.465
+    - _Alpha: 1
+    - _AlphaClip: 0
+    - _Blend: 0
+    - _BumpScale: 1
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossinessSource: 0
+    - _GlossyReflections: 1
+    - _GridInvert: 1
+    - _LipMax: 0
+    - _LipMin: 0
+    - _Metallic: 0
+    - _MinimumThinness: 0.7
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _RadiusChockWidth: 0.005
+    - _RadiusChoke: 0.97
+    - _RadiusChokeFresnelPower: 27
+    - _RadiusChokeWidth: 0.005
+    - _RadiusMax: 0.1
+    - _RadiusMin: 0
+    - _RadiusProgress: 1
+    - _RadiusWidth: 0
+    - _RangeFalloff: 0.5
+    - _RangeRadius: 2
+    - _RangeRadiusPrimary: 0.5
+    - _RangeRadiusSecondary: 1.59
+    - _RangeRadiusTertiary: 1.36
+    - _RangeShifted: 1
+    - _RangeThreshold: 0.01
+    - _RangeThresholds: 0.05
+    - _Shininess: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecSource: 1
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Surface: 0
+    - _Tiling: 8
+    - _TilingPrimary: 4
+    - _TilingScalar: 10
+    - _TilingSecondary: 8
+    - _UVSec: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    - _Zoom: 0
+    m_Colors:
+    - Color_1CADFCF0: {r: 0.18431373, g: 0.18431373, b: 0.18431373, a: 1}
+    - Vector2_353EB7A2: {r: 0, g: 0, b: 0, a: 0}
+    - Vector2_85E35356: {r: 0, g: 0, b: 0, a: 0}
+    - Vector2_B99190B2: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GridColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GridTint: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 1}
+    - _MainColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _RangeColorPrimary: {r: 0.21, g: 0.21, b: 0.21, a: 1}
+    - _RangeColorPrimaryShifted: {r: 0.22, g: 0.22, b: 0.22, a: 1}
+    - _RangeColorSecondary: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+    - _RangeColorSecondaryShifted: {r: 0, g: 0, b: 0, a: 1}
+    - _RangeColorShiftedTertiary: {r: 0.06, g: 0.06, b: 0.06, a: 1}
+    - _RangeColorTertiary: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+    - _RangeOrigin: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}

@@ -11,12 +11,14 @@ namespace LunraGames.SubLight.Models
 	public class EncounterLogListModel : Model
 	{
 		#region Assigned Values
-		[JsonProperty] TextEncounterLogModel[] textLogs = new TextEncounterLogModel[0];
 		[JsonProperty] KeyValueEncounterLogModel[] keyValueLogs = new KeyValueEncounterLogModel[0];
-		[JsonProperty] InventoryEncounterLogModel[] inventoryLogs = new InventoryEncounterLogModel[0];
 		[JsonProperty] SwitchEncounterLogModel[] switchLogs = new SwitchEncounterLogModel[0];
 		[JsonProperty] ButtonEncounterLogModel[] buttonLogs = new ButtonEncounterLogModel[0];
 		[JsonProperty] EncyclopediaEncounterLogModel[] encyclopediaLogs = new EncyclopediaEncounterLogModel[0];
+		[JsonProperty] EncounterEventEncounterLogModel[] eventLogs = new EncounterEventEncounterLogModel[0];
+		[JsonProperty] DialogEncounterLogModel[] dialogLogs = new DialogEncounterLogModel[0];
+		[JsonProperty] BustEncounterLogModel[] bustLogs = new BustEncounterLogModel[0];
+		[JsonProperty] ConversationEncounterLogModel[] conversationLogs = new ConversationEncounterLogModel[0];
 		#endregion
 
 		#region Derived Values
@@ -91,25 +93,21 @@ namespace LunraGames.SubLight.Models
 		#region Events
 		void OnSetLogs(EncounterLogModel[] newLogs)
 		{
-			var textList = new List<TextEncounterLogModel>();
 			var keyValueList = new List<KeyValueEncounterLogModel>();
-			var inventoryList = new List<InventoryEncounterLogModel>();
 			var switchList = new List<SwitchEncounterLogModel>();
 			var buttonList = new List<ButtonEncounterLogModel>();
 			var encyclopediaList = new List<EncyclopediaEncounterLogModel>();
+			var eventList = new List<EncounterEventEncounterLogModel>();
+			var dialogList = new List<DialogEncounterLogModel>();
+			var bustList = new List<BustEncounterLogModel>();
+			var conversationList = new List<ConversationEncounterLogModel>();
 
 			foreach (var log in newLogs)
 			{
 				switch (log.LogType)
 				{
-					case EncounterLogTypes.Text:
-						textList.Add(log as TextEncounterLogModel);
-						break;
 					case EncounterLogTypes.KeyValue:
 						keyValueList.Add(log as KeyValueEncounterLogModel);
-						break;
-					case EncounterLogTypes.Inventory:
-						inventoryList.Add(log as InventoryEncounterLogModel);
 						break;
 					case EncounterLogTypes.Switch:
 						switchList.Add(log as SwitchEncounterLogModel);
@@ -120,28 +118,44 @@ namespace LunraGames.SubLight.Models
 					case EncounterLogTypes.Encyclopedia:
 						encyclopediaList.Add(log as EncyclopediaEncounterLogModel);
 						break;
+					case EncounterLogTypes.Event:
+						eventList.Add(log as EncounterEventEncounterLogModel);
+						break;
+					case EncounterLogTypes.Dialog:
+						dialogList.Add(log as DialogEncounterLogModel);
+						break;
+					case EncounterLogTypes.Bust:
+						bustList.Add(log as BustEncounterLogModel);
+						break;
+					case EncounterLogTypes.Conversation:
+						conversationList.Add(log as ConversationEncounterLogModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized EncounterLogType: " + log.LogType);
 						break;
 				}
 			}
 
-			textLogs = textList.ToArray();
 			keyValueLogs = keyValueList.ToArray();
-			inventoryLogs = inventoryList.ToArray();
 			switchLogs = switchList.ToArray();
 			buttonLogs = buttonList.ToArray();
 			encyclopediaLogs = encyclopediaList.ToArray();
+			eventLogs = eventList.ToArray();
+			dialogLogs = dialogList.ToArray();
+			bustLogs = bustList.ToArray();
+			conversationLogs = conversationList.ToArray();
 		}
 
 		EncounterLogModel[] OnGetLogs()
 		{
-			return textLogs.Cast<EncounterLogModel>().Concat(keyValueLogs)
-													 .Concat(inventoryLogs)
-													 .Concat(switchLogs)
-													 .Concat(buttonLogs)
-													 .Concat(encyclopediaLogs)
-													 .ToArray();
+			return keyValueLogs.Cast<EncounterLogModel>().Concat(switchLogs)
+														 .Concat(buttonLogs)
+														 .Concat(encyclopediaLogs)
+					           							 .Concat(eventLogs)
+					           							 .Concat(dialogLogs)
+					           							 .Concat(bustLogs)
+					           							 .Concat(conversationLogs)
+														 .ToArray();
 		}
 		#endregion
 	}

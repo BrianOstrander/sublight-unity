@@ -1,66 +1,97 @@
 ﻿using UnityEngine;
 
+using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
 	public class DialogPresenter : Presenter<IDialogView>
 	{
-		DialogRequest lastRequest;
-		SpeedRequest lastSpeedChange;
-		bool wasShaded;
-		bool wasObscured;
-		bool hasPoppedEscape;
+		LanguageStringModel alertTitle;
+		LanguageStringModel confirmTitle;
 
-		public DialogPresenter()
+		LanguageStringModel okayDefault;
+		LanguageStringModel yesDefault;
+		LanguageStringModel noDefault;
+		LanguageStringModel cancelDefault;
+
+		DialogRequest lastRequest;
+
+		public DialogPresenter(
+			LanguageStringModel alertTitle,
+			LanguageStringModel confirmTitle,
+
+			LanguageStringModel okayDefault,
+			LanguageStringModel yesDefault,
+			LanguageStringModel noDefault,
+			LanguageStringModel cancelDefault
+		)
 		{
+			this.alertTitle = alertTitle;
+			this.confirmTitle = confirmTitle;
+
+			this.okayDefault = okayDefault;
+			this.yesDefault = yesDefault;
+			this.noDefault = noDefault;
+			this.cancelDefault = cancelDefault;
+
 			App.Callbacks.DialogRequest += OnDialogRequest;
+			App.Callbacks.EncounterRequest += OnEncounterRequest;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.DialogRequest -= OnDialogRequest;
+			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 		}
 
-		public void Show()
+		void Show()
 		{
 			if (View.Visible) return;
-			if (App.Callbacks.LastPlayState.State != PlayState.States.Paused) App.Callbacks.PlayState(PlayState.Paused);
-
-			wasShaded = App.Callbacks.LastShadeRequest.IsShaded;
-			wasObscured = App.Callbacks.LastObscureCameraRequest.IsObscured;
-			hasPoppedEscape = false;
-
-			lastSpeedChange = App.Callbacks.LastSpeedRequest;
-			App.Callbacks.SpeedRequest(SpeedRequest.PauseRequest);
 
 			View.Reset();
 
-			EscapeEntry escape;
-			if (wasShaded != wasObscured) Debug.LogWarning("Values wasShaded and wasObscured not equal, may cause unexpected behaviour.");
+			View.DialogType = lastRequest.DialogType;
+			View.Style = lastRequest.Style;
 
-			if (wasShaded && wasObscured) escape = new EscapeEntry(OnEscape);
-			else
+			LanguageStringModel defaultTitle = alertTitle;
+			LanguageStringModel defaultSuccess = yesDefault;
+			LanguageStringModel defaultFailure = noDefault;
+			LanguageStringModel defaultCancel = cancelDefault;
+
+			switch (lastRequest.DialogType)
 			{
-				App.Callbacks.ShadeRequest(ShadeRequest.Shade);
-				App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.Obscure);
-				escape = new EscapeEntry(OnEscape, false, false);
+				case DialogTypes.Confirm:
+					defaultTitle = alertTitle;
+					defaultSuccess = okayDefault;
+					break;
+				case DialogTypes.ConfirmDeny:
+					defaultTitle = confirmTitle;
+					defaultSuccess = yesDefault;
+					defaultFailure = noDefault;
+					break;
+				case DialogTypes.ConfirmDenyCancel:
+					defaultTitle = confirmTitle;
+					defaultSuccess = yesDefault;
+					defaultFailure = noDefault;
+					defaultCancel = cancelDefault;
+					break;
+				default:
+					Debug.LogError("Unrecognized style: " + lastRequest.Style);
+					break;
 			}
 
-			View.Shown += () => App.Callbacks.PushEscape(escape);
-
-			View.DialogType = lastRequest.DialogType;
-			View.Title = lastRequest.Title;
-			View.Message = lastRequest.Message;
-			View.CancelText = lastRequest.CancelText;
-			View.FailureText = lastRequest.FailureText;
-			View.SuccessText = lastRequest.SuccessText;
+			View.Title = lastRequest.Title ?? defaultTitle;
+			View.Message = lastRequest.Message ?? string.Empty;
+			View.SuccessText = lastRequest.SuccessText ?? defaultSuccess;
+			View.FailureText = lastRequest.FailureText ?? defaultFailure;
+			View.CancelText = lastRequest.CancelText ?? defaultCancel;
 
 			View.CancelClick = OnCancelClick;
 			View.FailureClick = OnFailureClick;
 			View.SuccessClick = OnSuccessClick;
 
-			ShowView(App.OverlayCanvasRoot);
+			ShowView();
 		}
 
 		#region Events
@@ -77,16 +108,34 @@ namespace LunraGames.SubLight.Presenters
 					App.Callbacks.DialogRequest(lastRequest = request.Duplicate(DialogRequest.States.Active));
 					break;
 				case DialogRequest.States.Active:
-					
 					Show();
 					break;
 			}
 		}
 
-		void OnEscape()
+		void OnEncounterRequest(EncounterRequest request)
 		{
-			hasPoppedEscape = true;
-			OnClose(RequestStatus.Cancel);
+			if (request.State != EncounterRequest.States.Handle || request.LogType != EncounterLogTypes.Dialog) return;
+			if (!request.TryHandle<DialogHandlerModel>(OnEncounterDialogHandle)) Debug.LogError("Unable to handle specified model");
+		}
+
+		void OnEncounterDialogHandle(DialogHandlerModel handler)
+		{
+			var dialog = handler.Dialog.Value;
+
+			App.Callbacks.DialogRequest(new DialogRequest(
+				DialogRequest.States.Request,
+				dialog.DialogType,
+				dialog.DialogStyle,
+				string.IsNullOrEmpty(dialog.Title) ? null : LanguageStringModel.Override(dialog.Title),
+				string.IsNullOrEmpty(dialog.Message) ? null : LanguageStringModel.Override(dialog.Message),
+				string.IsNullOrEmpty(dialog.CancelText) ? null : LanguageStringModel.Override(dialog.CancelText),
+				string.IsNullOrEmpty(dialog.FailureText) ? null : LanguageStringModel.Override(dialog.FailureText),
+				string.IsNullOrEmpty(dialog.SuccessText) ? null : LanguageStringModel.Override(dialog.SuccessText),
+				dialog.CancelClick,
+				dialog.FailureClick,
+				dialog.SuccessClick
+			));
 		}
 
 		void OnCancelClick()
@@ -109,34 +158,31 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClose(RequestStatus status)
 		{
-			if (!hasPoppedEscape) App.Callbacks.PopEscape();
-			if (!(wasShaded && wasObscured))
-			{
-				if (App.Callbacks.LastPlayState.State != PlayState.States.Playing) App.Callbacks.PlayState(PlayState.Playing);
-				App.Callbacks.ShadeRequest(ShadeRequest.UnShade);
-				App.Callbacks.ObscureCameraRequest(ObscureCameraRequest.UnObscure);
-			}
+			App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Completing));
+
 			View.Closed += () => OnClosed(status);
 			CloseView();
 		}
 
 		void OnClosed(RequestStatus status)
 		{
-			App.Callbacks.SpeedRequest(lastSpeedChange.Duplicate(SpeedRequest.States.Request));
-			App.Callbacks.DialogRequest(lastRequest = lastRequest.Duplicate(DialogRequest.States.Complete));
+			var finalRequest = lastRequest.Duplicate(DialogRequest.States.Complete);
+			lastRequest = default(DialogRequest);
+			App.Callbacks.DialogRequest(finalRequest);
+
 			switch(status)
 			{
 				case RequestStatus.Cancel: 
-					lastRequest.Cancel(); 
+					finalRequest.Cancel(); 
 					break;
 				case RequestStatus.Failure:
-					lastRequest.Failure();
+					finalRequest.Failure();
 					break;
 				case RequestStatus.Success:
-					lastRequest.Success();
+					finalRequest.Success();
 					break;
 			}
-			lastRequest.Done(status);
+			finalRequest.Done(status);
 		}
 		#endregion
 

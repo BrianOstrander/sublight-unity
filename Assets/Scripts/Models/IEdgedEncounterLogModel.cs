@@ -4,6 +4,5 @@
 		where E : IEdgeModel
 	{
 		E[] Edges { get; set; }
-		bool IsLinear { get; }
 	}
 }

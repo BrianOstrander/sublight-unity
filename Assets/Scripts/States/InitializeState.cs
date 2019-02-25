@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		public List<GameObject> DefaultViews = new List<GameObject>();
 		public DefaultShaderGlobals ShaderGlobals;
 
-		public HomePayload homePayload = new HomePayload();
+		public HomePayload HomeStatePayload = new HomePayload();
 	}
 
 	public class InitializeState : State<InitializePayload>
@@ -26,27 +26,38 @@ namespace LunraGames.SubLight
 		protected override void Begin()
 		{
 			Payload.ShaderGlobals.Apply();
-			App.SM.PushBlocking(InitializeModels);
-			App.SM.PushBlocking(InitializeViews);
-			App.SM.PushBlocking(InitializePresenters);
-			App.SM.PushBlocking(InitializePreferences);
-			App.SM.PushBlocking(InitializeEncounters);
-			App.SM.PushBlocking(InitializeInventoryReferences);
-			App.SM.PushBlocking(InitializeListeners);
-			App.SM.PushBlocking(InitializeGlobalKeyValues);
+			SM.PushBlocking(InitializeModels, "InitializeModels");
+			SM.PushBlocking(InitializeViews, "InitializeViews");
+			SM.PushBlocking(InitializePresenters, "InitializePresenters");
+			SM.PushBlocking(InitializePreferences, "InitializePreferences");
+			SM.PushBlocking(InitializeEncounters, "InitializeEncounters");
+			SM.PushBlocking(InitializeListeners, "InitializeListeners");
+			SM.PushBlocking(InitializeMetaKeyValues, "InitializeMetakeyValues");
 
-			if (DevPrefs.WipeGameSavesOnStart) App.SM.PushBlocking(WipeGameSaves);
+			if (DevPrefs.WipeGameSavesOnStart) SM.PushBlocking(WipeGameSaves, "WipeGameSaves");
 		}
 
 		protected override void Idle()
 		{
-			App.Callbacks.PlayState(PlayState.Playing);
+			var mainCamera = (Payload.HomeStatePayload.MainCamera = new HoloRoomFocusCameraPresenter());
 
-			App.P.AddGlobals(new DialogPresenter());
-			App.P.AddGlobals(new ShadePresenter());
+			App.P.AddGlobals(
+				new DialogPresenter(
+					LanguageStringModel.Override("Alert"),
+					LanguageStringModel.Override("Confirm"),
 
-			if (DevPrefs.AutoNewGame) App.GameService.CreateGame(OnAutoNewGame);
-			else App.SM.RequestState(Payload.homePayload);
+					LanguageStringModel.Override("Okay"),
+					LanguageStringModel.Override("Yes"),
+					LanguageStringModel.Override("No"),
+					LanguageStringModel.Override("Cancel")
+				),
+				mainCamera,
+				new GenericFocusCameraPresenter<PriorityFocusDetails>(mainCamera.GantryAnchor, mainCamera.FieldOfView)
+			);
+
+			Payload.HomeStatePayload.FromInitialization = true;
+
+			App.SM.RequestState(Payload.HomeStatePayload);
 		}
 
 		#region Mediators
@@ -187,44 +198,36 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		void InitializeInventoryReferences(Action done)
-		{
-			App.InventoryReferences.Initialize(
-				status =>
-				{
-					if (status == RequestStatus.Success)
-					{
-						App.Log("Inventory References Initialized", LogTypes.Initialization);
-						done();
-					}
-					else App.Restart("Initializing Inventory References failed with status " + status);
-				}
-			);
-		}
-
 		void InitializeListeners(Action done)
 		{
-			App.Callbacks.UniversePositionRequest += UniversePosition.OnUniversePositionRequest;
 			done();
 		}
 
-		void InitializeGlobalKeyValues(Action done)
+		void InitializeMetaKeyValues(Action done)
 		{
-			App.GlobalKeyValues.Initialize(
+			App.MetaKeyValues.Initialize(
 				status =>
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("Global KVs Initialized", LogTypes.Initialization);
+						App.Log("Meta KVs Initialized", LogTypes.Initialization);
 						done();
 					}
-					else App.Restart("Initializing Global KVs failed with status " + status);
+					else App.Restart("Initializing Meta KVs failed with status " + status);
 				}
 			);
 		}
 
 		void WipeGameSaves(Action done)
 		{
+			switch (DevPrefs.AutoGameOption.Value)
+			{
+				case AutoGameOptions.ContinueGame:
+					Debug.LogWarning("Auto Continue Game behaviour is selected, canceling wipe save action");
+					done();
+					return;
+			}
+
 			App.M.List<GameModel>(result => OnWipeGameSavesLoad(result, done));
 		}
 
@@ -244,13 +247,6 @@ namespace LunraGames.SubLight
 			var current = remaining[0];
 			remaining.RemoveAt(0);
 			App.M.Delete(current, deleteResult => OnWipeGameSavesDelete(deleteResult.Status, deleteResult, remaining, done));
-		}
-
-		void OnAutoNewGame(RequestStatus result, GameModel model)
-		{
-			var payload = new GamePayload();
-			payload.Game = model;
-			App.SM.RequestState(payload);
 		}
 	}
 }

@@ -1,7 +1,5 @@
 using UnityEngine;
 
-using LunraGames;
-
 namespace LunraGames.SubLight
 {
 	public class OpacityAnimation : ViewAnimation
@@ -11,14 +9,22 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		AnimationCurve closingOpacity = AnimationCurveExtensions.Constant(1f);
 
-		public override void OnShowing(IView view, float scalar)
+		public override void OnPrepare(IView view)
 		{
-			view.Opacity = showingOpacity.Evaluate(scalar);
+			view.PushOpacity(OnQueryOpacity);
 		}
 
-		public override void OnClosing(IView view, float scalar)
+		float OnQueryOpacity(IView view)
 		{
-			view.Opacity = closingOpacity.Evaluate(scalar);
+			view.SetOpacityStale();
+			switch (view.TransitionState)
+			{
+				case TransitionStates.Showing: return showingOpacity.Evaluate(view.ProgressScalar);
+				case TransitionStates.Closing: return closingOpacity.Evaluate(view.ProgressScalar);
+				case TransitionStates.Shown: return showingOpacity.Evaluate(1f);
+				case TransitionStates.Closed: return closingOpacity.Evaluate(1f);
+			}
+			return 0f;
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace LunraGames.SubLight
 		Type PayloadType { get; }
 		bool AcceptsPayload(object payload, bool throws = false);
 		void Initialize(object payload);
-		void UpdateState(StateMachine.States state, StateMachine.Events stateEvent);
+		void UpdateState(StateMachine.States state, StateMachine.Events stateEvent, object payload);
 	}
 
 	public interface IStateTyped<P> : IState
@@ -26,11 +26,13 @@ namespace LunraGames.SubLight
 
 		public object PayloadObject { get; set; }
 
+		protected StateMachineWrapper SM;
+
 		public virtual bool AcceptsPayload(object payload, bool throws = false)
 		{
 			Exception exception = null;
 			if (payload == null) exception = new ArgumentNullException("payload");
-			else if (payload.GetType() != PayloadType) exception = new ArgumentException("payload of type "+payload.GetType()+" is not supported by this state");
+			else if (payload.GetType() != PayloadType) exception = new ArgumentException("payload of type " + payload.GetType() + " is not supported by this state");
 
 			var accepts = exception == null;
 			if (throws && !accepts) throw exception;
@@ -41,9 +43,10 @@ namespace LunraGames.SubLight
 		{
 			AcceptsPayload(payload, true);
 			PayloadObject = payload;
+			SM = SM ?? new StateMachineWrapper(App.SM, GetType());
 		}
 
-		public virtual void UpdateState(StateMachine.States state, StateMachine.Events stateEvent)
+		public virtual void UpdateState(StateMachine.States state, StateMachine.Events stateEvent, object payload)
 		{
 			if (state != HandledState) return;
 			switch (stateEvent)
@@ -58,13 +61,13 @@ namespace LunraGames.SubLight
 					End();
 					break;
 			}
-			App.Log("State is now " + state + "." + stateEvent, LogTypes.StateMachine);
-			App.Callbacks.StateChange(new StateChange(state, stateEvent));
+			App.Log("State is now " + state + "." + stateEvent + " - Payload " + payload.GetType(), LogTypes.StateMachine);
+			App.Callbacks.StateChange(new StateChange(state, stateEvent, payload));
 		}
 
-		protected virtual void Begin() {}
-		protected virtual void End() {}
-		protected virtual void Idle() {}
+		protected virtual void Begin() { }
+		protected virtual void End() { }
+		protected virtual void Idle() { }
 	}
 
 	public abstract class State<P> : BaseState, IStateTyped<P>

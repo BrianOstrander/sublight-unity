@@ -15,7 +15,7 @@ namespace LunraGamesEditor
 			Paused
 		}
 
-		static int CurrentLevel = 0; // For some reason this has to be zero otherwise bugs may occur on recompile...
+		static int CurrentLevel;
 		static Stack<ChangeCheckStates> ChangeCheckStateStack = new Stack<ChangeCheckStates>();
 		static Stack<bool> ChangeValueStack = new Stack<bool>();
 
@@ -30,7 +30,12 @@ namespace LunraGamesEditor
 					Debug.LogError("Cannot begin a change check in the middle of a pause.");
 					return;
 				}
-				var previous = ChangeValueStack.Pop() || EditorGUI.EndChangeCheck();
+
+				// If anything messes up, it's probably because of the next two lines...
+				var previous = false;
+				try { previous = EditorGUI.EndChangeCheck(); } catch {}
+
+				previous = ChangeValueStack.Pop() || previous;
 				ChangeValueStack.Push(previous);
 			}
 
@@ -44,7 +49,8 @@ namespace LunraGamesEditor
 
 		public static bool EndChangeCheck(ref bool changed)
 		{
-			return changed |= EndChangeCheck();
+			changed = EndChangeCheck() || changed;
+			return changed;
 		}
 
 		public static bool EndChangeCheck()
@@ -62,7 +68,9 @@ namespace LunraGamesEditor
 
 			ChangeCheckStateStack.Pop();
 			CurrentLevel--;
-			return ChangeValueStack.Pop() || EditorGUI.EndChangeCheck();
+			var result = ChangeValueStack.Pop();
+			result = EditorGUI.EndChangeCheck() || result;
+			return result;
 		}
 
 		public static void PauseChangeCheck()
@@ -72,7 +80,8 @@ namespace LunraGamesEditor
 
 			ChangeCheckStateStack.Push(ChangeCheckStates.Paused);
 
-			var current = ChangeValueStack.Pop() || EditorGUI.EndChangeCheck();
+			var current = EditorGUI.EndChangeCheck();
+			current = ChangeValueStack.Pop() || current;
 			ChangeValueStack.Push(current);
 		}
 
@@ -88,6 +97,28 @@ namespace LunraGamesEditor
 			ChangeCheckStateStack.Pop();
 
 			EditorGUI.BeginChangeCheck();
+		}
+
+		/* Not possible it seems...
+		public static bool IsOnScreen(Rect position)
+		{
+			var screenRect = new Rect(0f, 0f, Screen.currentResolution.width, Screen.currentResolution.height);
+			return screenRect.Contains(position.min) && screenRect.Contains(position.max);
+		}
+		*/
+
+		/// <summary>
+		/// Gets the position on screen either around the cursor, or centered, depending on the size of the window.
+		/// </summary>
+		/// <returns>The position on screen.</returns>
+		/// <param name="size">Size.</param>
+		public static Rect GetPositionOnScreen(Vector2 size)
+		{
+			var result = new Rect(GUIUtility.GUIToScreenPoint(Event.current.mousePosition) - (size * 0.5f), size);
+
+			return result;
+			//if (IsOnScreen(result)) return result;
+			//return new Rect((new Vector2(Screen.width * 0.5f, Screen.height * 0.5f)) - (size * 0.5f), size);
 		}
 	}
 }

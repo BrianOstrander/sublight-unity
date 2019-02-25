@@ -14,6 +14,14 @@ namespace LunraGames.SubLight
 
 		public static bool HasInstance { get { return instance != null; } }
 
+		/// <summary>
+		/// Called when the App instance is done being constructed.
+		/// </summary>
+		/// <remarks>
+		/// Idealy nothing should use this except editor time scripts.
+		/// </remarks>
+		public static Action<App> Instantiated = ActionExtensions.GetEmpty<App>();
+
 		Main main;
 		public static Main Main { get { return instance.main; } }
 
@@ -59,17 +67,17 @@ namespace LunraGames.SubLight
 		EncounterHandlerService encounterHandler;
 		public static EncounterHandlerService EncounterHandler { get { return instance.encounterHandler; } }
 
-		InventoryReferenceService inventoryReferences;
-		public static InventoryReferenceService InventoryReferences { get { return instance.inventoryReferences; } }
-
 		KeyValueService keyValues;
 		public static KeyValueService KeyValues { get { return instance.keyValues; } }
 
-		GlobalKeyValueService globalKeyValues;
-		public static GlobalKeyValueService GlobalKeyValues { get { return instance.globalKeyValues; } }
+		MetaKeyValueService metaKeyValues;
+		public static MetaKeyValueService MetaKeyValues { get { return instance.metaKeyValues; } }
 
 		ValueFilterService valueFilter;
 		public static ValueFilterService ValueFilter { get { return instance.valueFilter; } }
+
+		FocusService focus;
+		public static FocusService Focus { get { return instance.focus; } }
 
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
@@ -107,9 +115,14 @@ namespace LunraGames.SubLight
 			GameObject audioRoot, 
 			Transform canvasRoot,
 			Transform gameCanvasRoot,
-			Transform overlayCanvasRoot
+			Transform overlayCanvasRoot,
+			SceneSkybox sceneSkybox
 		)
 		{
+			Time.timeScale = DevPrefs.ApplyTimeScaling.Value ? DevPrefs.TimeScaling.Value : 1f;
+
+			if (DevPrefs.ApplyTimeScaling.Value) Debug.LogWarning("DevPref: Time Scaling to " + DevPrefs.TimeScaling.Value.ToString("N2"));
+
 			instance = this;
 			this.main = main;
 			this.defaultViews = defaultViews;
@@ -121,11 +134,12 @@ namespace LunraGames.SubLight
 			callbackService = new CallbackService();
 			heartbeat = new Heartbeat();
 			presenterMediator = new PresenterMediator(Heartbeat);
-			viewMediator = new ViewMediator(Heartbeat);
+			viewMediator = new ViewMediator(Heartbeat, Callbacks);
 			audioService = new AudioService(audioRoot);
 			stateMachine = new StateMachine(
 				Heartbeat,
 				new InitializeState(),
+				new QuitState(),
 				new HomeState(),
 				new GameState()
 			);
@@ -150,11 +164,10 @@ namespace LunraGames.SubLight
 				throw new Exception("Unknown platform");
 			}
 
-			inventoryReferences = new InventoryReferenceService(M, Logging, Callbacks);
-			scenes = new SceneService(Logging, Callbacks);
+			scenes = new SceneService(Logging, Callbacks, sceneSkybox);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
-			globalKeyValues = new GlobalKeyValueService(Callbacks, M, KeyValues, Logging);
+			metaKeyValues = new MetaKeyValueService(Callbacks, M, KeyValues, Logging);
 			valueFilter = new ValueFilterService(Callbacks);
 			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
 
@@ -163,10 +176,22 @@ namespace LunraGames.SubLight
 				Callbacks,
 				Encounters,
 				KeyValues,
-				InventoryReferences,
 				ValueFilter,
-				CurrentPreferences
+				CurrentPreferences,
+				SM,
+				new DialogLanguageBlock
+				{
+					Title = LanguageStringModel.Override("Active Encounter"),
+					Message = LanguageStringModel.Override("Saving is disabled during encounters.")
+				}
 			);
+
+			focus = new FocusService(Heartbeat, Callbacks);
+
+			Application.targetFrameRate = BuildPreferences.TargetFrameRate;
+			QualitySettings.vSyncCount = BuildPreferences.VSyncCount;
+
+			Instantiated(this);
 		}
 
 		public static void Restart(string message)

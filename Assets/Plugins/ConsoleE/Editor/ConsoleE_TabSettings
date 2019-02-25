@@ -10,24 +10,24 @@
 <IconMain>
 <Layers>
 <e Size = "24" OutlineThickness = "0.428571403026581" OutlineShape = "Round" IconText = "" IconShape = "OctagonSmall" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "FF5959FF" FreeSkin = "FF6363EC" />
-<ColorIconOutline ProSkin = "922B2BB9" FreeSkin = "853E3EC4" />
+<ColorIconCore ProSkin = "7B4242AF" FreeSkin = "BF7474E8" />
+<ColorIconOutline ProSkin = "232121CF" FreeSkin = "565656D9" />
 </e>
 <e Size = "14" OutlineThickness = "0.428571403026581" OutlineShape = "Block" IconText = "!" IconShape = "None" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "FBEAEA91" FreeSkin = "F0BCB0FF" />
-<ColorIconOutline ProSkin = "774444FF" FreeSkin = "7B26269E" />
+<ColorIconCore ProSkin = "7671719C" FreeSkin = "5F2D2DA2" />
+<ColorIconOutline ProSkin = "18050586" FreeSkin = "BF8686F9" />
 </e>
 </Layers>
 </IconMain>
 <IconToolbar>
 <Layers>
 <e Size = "25" OutlineThickness = "0.428571403026581" OutlineShape = "Round" IconText = "" IconShape = "OctagonSmall" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "FF5959FF" FreeSkin = "FF6363EC" />
-<ColorIconOutline ProSkin = "922B2BB9" FreeSkin = "853E3EC4" />
+<ColorIconCore ProSkin = "7B4242AF" FreeSkin = "BF7474E8" />
+<ColorIconOutline ProSkin = "232121CF" FreeSkin = "565656D9" />
 </e>
 <e Size = "14" OutlineThickness = "0.428571403026581" OutlineShape = "Block" IconText = "!" IconShape = "None" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "FBEAEA91" FreeSkin = "F0BCB0FF" />
-<ColorIconOutline ProSkin = "774444DC" FreeSkin = "7B26269E" />
+<ColorIconCore ProSkin = "7671719C" FreeSkin = "5F2D2DA2" />
+<ColorIconOutline ProSkin = "18050586" FreeSkin = "BF8686F9" />
 </e>
 </Layers>
 </IconToolbar>
@@ -100,24 +100,24 @@
 <IconMain>
 <Layers>
 <e Size = "24" OutlineThickness = "0.428571403026581" OutlineShape = "Round" IconText = "" IconShape = "TriangleSmall" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "C6B83DFF" FreeSkin = "FFDD00B7" />
-<ColorIconOutline ProSkin = "B28906C8" FreeSkin = "A87700B5" />
+<ColorIconCore ProSkin = "5F653C9C" FreeSkin = "A6A68BE8" />
+<ColorIconOutline ProSkin = "1D1D1DC8" FreeSkin = "181817AB" />
 </e>
 <e Size = "14" OutlineThickness = "0.428571403026581" OutlineShape = "Block" IconText = "!" IconShape = "None" OffsetX = "0" OffsetY = "2.75" IsItalic = "false">
-<ColorIconCore ProSkin = "B9B9B9E3" FreeSkin = "D9D7BFFF" />
-<ColorIconOutline ProSkin = "6E5E1AFF" FreeSkin = "A58300C8" />
+<ColorIconCore ProSkin = "6C6C63C6" FreeSkin = "4C4F4FBC" />
+<ColorIconOutline ProSkin = "1D1D1BCF" FreeSkin = "ACACA1F9" />
 </e>
 </Layers>
 </IconMain>
 <IconToolbar>
 <Layers>
 <e Size = "24" OutlineThickness = "0.428571403026581" OutlineShape = "Round" IconText = "" IconShape = "TriangleSmall" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "C6B83DFF" FreeSkin = "FFDD00B7" />
-<ColorIconOutline ProSkin = "B28906C8" FreeSkin = "A87700B5" />
+<ColorIconCore ProSkin = "5F653C9C" FreeSkin = "A6A68BE8" />
+<ColorIconOutline ProSkin = "1D1D1DC8" FreeSkin = "181817AB" />
 </e>
 <e Size = "14" OutlineThickness = "0.428571403026581" OutlineShape = "Block" IconText = "!" IconShape = "None" OffsetX = "0" OffsetY = "1" IsItalic = "false">
-<ColorIconCore ProSkin = "B9B9B9E3" FreeSkin = "D9D7BFFF" />
-<ColorIconOutline ProSkin = "6E5E1AFF" FreeSkin = "A58300A0" />
+<ColorIconCore ProSkin = "6C6C63C6" FreeSkin = "4C4F4FBC" />
+<ColorIconOutline ProSkin = "1D1D1BCF" FreeSkin = "ACACA1F9" />
 </e>
 </Layers>
 </IconToolbar>
@@ -189,24 +189,24 @@
 <IconMain>
 <Layers>
 <e Size = "24" OutlineThickness = "0.428571403026581" OutlineShape = "Round" IconText = "" IconShape = "BubbleSmall" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "C8C8C8FF" FreeSkin = "FFFFFFE8" />
-<ColorIconOutline ProSkin = "282828C8" FreeSkin = "00000086" />
+<ColorIconCore ProSkin = "565656B5" FreeSkin = "C5CAD2E8" />
+<ColorIconOutline ProSkin = "1D1E1EAC" FreeSkin = "121212AB" />
 </e>
 <e Size = "14" OutlineThickness = "0.428571403026581" OutlineShape = "Block" IconText = "!" IconShape = "None" OffsetX = "0" OffsetY = "-1.5" IsItalic = "false">
-<ColorIconCore ProSkin = "C8C8C8FF" FreeSkin = "EFEFEFEA" />
-<ColorIconOutline ProSkin = "323232C8" FreeSkin = "00000088" />
+<ColorIconCore ProSkin = "94979773" FreeSkin = "606363C2" />
+<ColorIconOutline ProSkin = "252525C8" FreeSkin = "BFC4CAF9" />
 </e>
 </Layers>
 </IconMain>
 <IconToolbar>
 <Layers>
 <e Size = "24" OutlineThickness = "0.428571403026581" OutlineShape = "Round" IconText = "" IconShape = "BubbleSmall" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "C8C8C8FF" FreeSkin = "FFFFFFE8" />
-<ColorIconOutline ProSkin = "282828C8" FreeSkin = "00000086" />
+<ColorIconCore ProSkin = "565656B5" FreeSkin = "C5CAD2E8" />
+<ColorIconOutline ProSkin = "1D1E1EAC" FreeSkin = "121212AB" />
 </e>
 <e Size = "14" OutlineThickness = "0.428571403026581" OutlineShape = "Block" IconText = "!" IconShape = "None" OffsetX = "0" OffsetY = "0" IsItalic = "false">
-<ColorIconCore ProSkin = "C8C8C8FF" FreeSkin = "EFEFEFEA" />
-<ColorIconOutline ProSkin = "323232C8" FreeSkin = "00000070" />
+<ColorIconCore ProSkin = "94979773" FreeSkin = "606363C2" />
+<ColorIconOutline ProSkin = "252525C8" FreeSkin = "BFC4CAF9" />
 </e>
 </Layers>
 </IconToolbar>

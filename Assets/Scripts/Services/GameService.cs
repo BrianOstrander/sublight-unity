@@ -1,25 +1,42 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
-using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
 	public class GameService
 	{
-		static class DefaultShip
+		static class Defaults
 		{
-			public const string StockRoot = "eccdddb4-553f-4f7a-be7e-b68799839bc8";
-			public const string StockOrbiterBay = "23c48a72-e35a-44d6-bd7e-29e600a76046";
-			public const string StockStorage = "ba230c9e-33a9-4a26-ba2c-de25cc3a0b27";
-			public const string StockLogistics = "90a2c3b4-7b41-449f-b23f-86bc201a1729";
-			public const string StockEngine = "88d5280d-7802-401a-bb25-24b1e4ee46ca";
-			public const string StockTerrestrialOrbiter = "84af3d23-d1c6-4bfd-bec1-c17b11c15269";
-			public const string StockStellarOrbiter = "290702f5-d9a7-43e4-907f-23dfdb579eb9";
-			public const string StockMultiOrbiter = "3442e5dd-00ae-4a1a-bd1c-234e652901d7";
+			public static class CreateGameBlock
+			{
+				public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089"; // Milkyway
+				public const string GalaxyTargetId = "a6603c5e-f151-45aa-96bb-30905e781573"; // Andromeda
+
+				public const ToolbarSelections ToolbarSelection = ToolbarSelections.System;
+			}
+
+			public const float TransitRangeMinimum = 1f; // In universe units.
+			public const float TransitVelocityMinimum = 0.3f * UniversePosition.LightYearToUniverseScalar; // In universe units. Shouldn't be greater than 1 lightyear...
+		}
+
+		struct LoadInstructions
+		{
+			public bool IsFirstLoad;
+			public DateTime CurrentTime;
+			public DeveloperViews[] DeveloperViewsEnabled;
+
+			public LoadInstructions ApplyDefaults()
+			{
+				CurrentTime = DateTime.Now;
+				DeveloperViewsEnabled = EnumExtensions.GetValues(DeveloperViews.Unknown);
+
+				return this;
+			}
 		}
 
 		IModelMediator modelMediator;
@@ -34,269 +51,332 @@ namespace LunraGames.SubLight
 			this.universeService = universeService;
 		}
 
-		public void CreateGame(Action<RequestStatus, GameModel> done)
+		#region Exposed Utilities
+		/// <summary>
+		/// Creates a new game using the specified info.
+		/// </summary>
+		/// <param name="info">Info.</param>
+		/// <param name="done">Done.</param>
+		public void CreateGame(CreateGameBlock info, Action<RequestResult, GameModel> done)
 		{
 			if (done == null) throw new ArgumentNullException("done");
 
-			var game = modelMediator.Create<GameModel>();
-			game.Seed.Value = DemonUtility.NextInteger;
-			game.Universe.Value = universeService.CreateUniverse(1);
-			game.FocusedSector.Value = UniversePosition.Zero;
-			game.DestructionSpeed.Value = 0.004f;
-			game.DestructionSpeedIncrement.Value = 0.0025f;
+			var model = modelMediator.Create<GameModel>();
 
-			var startSystem = game.Universe.Value.Sectors.Value.First().Systems.Value.First();
-			var lastDistance = UniversePosition.Distance(UniversePosition.Zero, startSystem.Position);
-			foreach (var system in game.Universe.Value.Sectors.Value.First().Systems.Value)
-			{
-				var distance = UniversePosition.Distance(UniversePosition.Zero, system.Position);
-				if (lastDistance < distance) continue;
-				lastDistance = distance;
-				startSystem = system;
-			}
+			model.Seed.Value = info.GameSeed;
+			model.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, Defaults.CreateGameBlock.GalaxyId);
+			model.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, Defaults.CreateGameBlock.GalaxyTargetId);
+			model.Universe = universeService.CreateUniverse(info);
 
-			var startPosition = startSystem.Position;
-			var rations = 0.3f;
-			var fuel = 1f;
-			var fuelConsumption = 1f;
-			var resourceDetection = 0.5f;
-			var maximumNavigationTime = 10f;
-
-			var ship = new ShipModel();
-			ship.CurrentSystem.Value = startSystem.Position;
-			ship.Position.Value = startPosition;
-			ship.Inventory.AllResources.Rations.Value = rations;
-			ship.Inventory.AllResources.Fuel.Value = fuel;
-			ship.FuelConsumption.Value = fuelConsumption;
-			ship.ResourceDetection.Value = resourceDetection;
-			ship.MaximumNavigationTime.Value = new DayTime(maximumNavigationTime);
-
-			game.Ship.Value = ship;
-
-			game.TravelRequest.Value = new TravelRequest(
-				TravelRequest.States.Complete,
-				startSystem.Position,
-				startSystem.Position,
-				startSystem.Position,
-				DayTime.Zero,
-				DayTime.Zero,
-				0f,
-				1f
+			var initialTime = DayTime.Zero;
+			model.RelativeDayTime.Value = new RelativeDayTime(
+				initialTime,
+				initialTime
 			);
 
-			// Setting the request to Complete for consistency, since that's how
-			// the game will normally be opened from a save.
-			game.FocusRequest.Value = new SystemsFocusRequest(
-				startSystem.Position.Value.SystemZero,
-				startSystem.Position,
-				FocusRequest.States.Complete
-			);
+			// Ship ---
+			// TODO: Some of these values should be based on... like... the ship's inventory.
+			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			//model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
+			//model.Ship.SetVelocityMultiplierMaximum(7);
+			//model.Ship.SetVelocityMultiplierEnabledMaximum(5);
+			// --------
 
-			var endSector = game.Universe.Value.GetSector(startSystem.Position + new UniversePosition(new Vector3(0f, 0f, 1f), Vector3.zero));
-			game.EndSystem.Value = endSector.Systems.Value.First().Position;
+			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
-				DefaultShip.StockRoot,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockRootLoaded(instanceResult, game, done)
+			OnInitializeGame(
+				new LoadInstructions
+				{
+					IsFirstLoad = true
+				}.ApplyDefaults(),
+				model,
+				done
 			);
 		}
 
-		void OnStockRootLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		/// <summary>
+		/// Loads the specified game and populates the context with required
+		/// values.
+		/// </summary>
+		/// <param name="model">Model.</param>
+		/// <param name="done">Done.</param>
+		public void LoadGame(GameModel model, Action<RequestResult, GameModel> done)
+		{
+			if (model == null) throw new ArgumentNullException("model");
+			if (done == null) throw new ArgumentNullException("done");
+
+			OnInitializeGame(
+				new LoadInstructions
+				{
+					// Nothing to do here...
+				}.ApplyDefaults(),
+				model,
+				done
+			);
+		}
+
+		/// <summary>
+		/// Retrieves the most recent continuable game, if one exists, otherwise null.
+		/// </summary>
+		/// <remarks>
+		/// A sucessful result will still return null if no continuable games are available.
+		/// </remarks>
+		/// <param name="done">Done.</param>
+		public void ContinueGame(Action<RequestResult, GameModel> done)
+		{
+			if (done == null) throw new ArgumentNullException("done");
+
+			App.M.List<GameModel>(result => OnContinueGameList(result, done));
+		}
+		#endregion
+
+		#region Continue Game
+		void OnContinueGameList(SaveLoadArrayRequest<SaveModel> result, Action<RequestResult, GameModel> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
+				Debug.LogError("Unable to load a list of saved games, error: "+result.Error);
+				done(RequestResult.Failure(result.Error), null);
 				return;
 			}
 
-			game.Ship.Value.Inventory.Add(result.Instance);
+			var continueGame = result.Models.Where(s => s.SupportedVersion.Value).OrderByDescending(s => s.Modified.Value).FirstOrDefault(m => m.GetMetaKey(MetaKeyConstants.Game.IsCompleted) != MetaKeyConstants.Values.True);
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
-				DefaultShip.StockOrbiterBay,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockOrbiterBayLoaded(instanceResult, game, done)
+			if (continueGame == null)
+			{
+				done(RequestResult.Success(), null);
+				return;
+			}
+
+			App.M.Load<GameModel>(continueGame, loadResult => OnContinueGameLoad(loadResult, done));
+		}
+
+		void OnContinueGameLoad(SaveLoadRequest<GameModel> result, Action<RequestResult, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Continue game load status " + result.Status + " error: " + result.Error);
+				done(RequestResult.Failure(result.Error), null);
+				return;
+			}
+
+			LoadGame(result.TypedModel, done);
+		}
+		#endregion
+
+		#region Initialization
+		void OnInitializeGame(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		{
+			model.Context.FocusTransform.Value = FocusTransform.Default;
+
+			if (string.IsNullOrEmpty(model.GalaxyId))
+			{
+				done(RequestResult.Failure("No GalaxyId to load").Log(), null);
+				return;
+			}
+			App.M.Load<GalaxyInfoModel>(model.GalaxyId, result => OnLoadGalaxy(result, instructions, model, done));
+
+		}
+
+		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure("Unable to load galaxy, resulted in " + result.Status + " and error: " + result.Error).Log(), null);
+				return;
+			}
+			model.Context.Galaxy = result.TypedModel;
+
+			if (string.IsNullOrEmpty(model.GalaxyTargetId))
+			{
+				done(RequestResult.Failure("No GalaxyTargetId to load").Log(), null);
+				return;
+			}
+
+			App.M.Load<GalaxyInfoModel>(model.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, instructions, model, done));
+		}
+
+		void OnLoadGalaxyTarget(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure("Unable to load galaxy target, resulted in " + result.Status + " and error: " + result.Error).Log(), null);
+				return;
+			}
+			model.Context.GalaxyTarget = result.TypedModel;
+
+			if (instructions.IsFirstLoad) OnInitializeFirstLoad(instructions, model, done);
+			else SetContext(instructions, model, done);
+		}
+
+		void OnInitializeFirstLoad(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		{
+			// By this point the galaxy and target galaxy should already be set.
+
+			var beginFound = false;
+			SectorModel beginSector;
+			SystemModel beginSystem;
+			var begin = model.Context.Galaxy.GetPlayerBegin(out beginFound, out beginSector, out beginSystem);
+			if (!beginFound)
+			{
+				done(RequestResult.Failure("Provided galaxy has no player begin defined").Log(), null);
+				return;
+			}
+
+			var endFound = false;
+			SectorModel endSector;
+			SystemModel endSystem;
+			var end = model.Context.Galaxy.GetPlayerEnd(out endFound, out endSector, out endSystem);
+			if (!endFound)
+			{
+				done(RequestResult.Failure("Provided galaxy has no player end defined").Log(), null);
+				return;
+			}
+
+			model.Ship.Position.Value = begin;
+			model.Ship.SystemIndex.Value = beginSystem.Index.Value;
+
+			var transitHistoryBegin = TransitHistoryEntry.Begin(instructions.CurrentTime, beginSystem);
+
+			model.TransitHistory.Push(transitHistoryBegin);
+			model.SaveDetails.Value = new GameSaveDetails(
+				transitHistoryBegin.Id,
+				transitHistoryBegin.EnterTime,
+				transitHistoryBegin.ElapsedTime
 			);
+
+			var shipWaypoint = new WaypointModel();
+			shipWaypoint.SetLocation(begin);
+			shipWaypoint.WaypointId.Value = WaypointIds.Ship;
+			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			shipWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
+			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
+			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
+
+			model.Waypoints.AddWaypoint(shipWaypoint);
+
+			var beginWaypoint = new WaypointModel();
+			beginWaypoint.SetLocation(beginSystem);
+			beginWaypoint.WaypointId.Value = WaypointIds.BeginSystem;
+			beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
+			beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Visited;
+			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
+			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
+
+			model.Waypoints.AddWaypoint(beginWaypoint);
+
+			var endWaypoint = new WaypointModel();
+			endWaypoint.SetLocation(endSystem);
+			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
+			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
+			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
+			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, end);
+
+			model.Waypoints.AddWaypoint(endWaypoint);
+
+			model.Universe.Sectors.Value = model.Context.Galaxy.GetSpecifiedSectors();
+
+			SetContext(instructions, model, done);
 		}
 
-		void OnStockOrbiterBayLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		void SetContext(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
 		{
-			if (result.Status != RequestStatus.Success)
+			// By this point the galaxy and target galaxy should already be set.
+			// Additionally, begin, end, specified sectors, and waypoints should be defined.
+
+			model.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(model.ToolbarSelection.Value, false, ToolbarSelectionRequest.Sources.Player);
+
+			foreach (var developerView in instructions.DeveloperViewsEnabled) model.Context.DeveloperViewsEnabled.Push(developerView);
+
+			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
+
+			if (instructions.IsFirstLoad || model.TransitHistory.Count() == 1)
 			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
-				return;
+				model.Context.TransitState.Value = TransitState.Default(model.Context.CurrentSystem, model.Context.CurrentSystem);
+			}
+			else
+			{
+				var previousSystem = model.TransitHistory.Peek(1);
+				model.Context.TransitState.Value = TransitState.Default(
+					universeService.GetSystem(model.Context.Galaxy, model.Universe, previousSystem.SystemPosition, previousSystem.SystemIndex),
+					model.Context.CurrentSystem
+				);
 			}
 
-			game.Ship.Value.Inventory.Add(result.Instance);
-
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
-				DefaultShip.StockStorage,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockStorageLoaded(instanceResult, game, done)
+			model.Context.SetCurrentSystem(
+				App.Universe.GetSystem(
+					model.Context.Galaxy,
+					model.Universe,
+					model.Ship.Position,
+					model.Ship.SystemIndex
+				)
 			);
-		}
 
-		void OnStockStorageLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
-		{
-			if (result.Status != RequestStatus.Success)
+			if (model.Context.CurrentSystem.Value == null)
 			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
+				done(RequestResult.Failure("Unable to load current system at " + model.Ship.Position.Value + " and index " + model.Ship.SystemIndex.Value).Log(), null);
 				return;
 			}
 
-			game.Ship.Value.Inventory.Add(result.Instance);
+			foreach (var waypoint in model.Waypoints.Waypoints.Value)
+			{
+				switch (waypoint.WaypointId.Value)
+				{
+					case WaypointIds.Ship:
+						waypoint.Name.Value = "Ark";
+						break;
+					case WaypointIds.BeginSystem:
+						waypoint.Name.Value = "Origin";
+						break;
+					case WaypointIds.EndSystem:
+						waypoint.Name.Value = "Cygnus X-1";
+						break;
+				}
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
-				DefaultShip.StockLogistics,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockLogisticsLoaded(instanceResult, game, done)
-			);
+				if (!waypoint.Location.Value.IsSystem) continue;
+
+				var currWaypointSystem = App.Universe.GetSystem(
+					model.Context.Galaxy,
+					model.Universe,
+					waypoint.Location.Value.Position,
+					waypoint.Location.Value.SystemIndex
+				);
+
+				if (currWaypointSystem == null)
+				{
+					done(
+						RequestResult.Failure(
+							"Unable to load waypoint system ( WaypointId: " + waypoint.WaypointId.Value + " , Name: " + waypoint.Name.Value + " ) at\n" + waypoint.Location.Value.Position + " and index " + waypoint.Location.Value.SystemIndex
+						).Log(),
+						null
+					);
+					return;
+				}
+				waypoint.SetLocation(currWaypointSystem);
+			}
+
+			modelMediator.Save(model, result => OnSaveGame(result, instructions, model, done));
 		}
 
-		void OnStockLogisticsLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
+		void OnSaveGame(
+			SaveLoadRequest<GameModel> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
+				done(RequestResult.Failure(result.Error).Log(), null);
 				return;
 			}
 
-			game.Ship.Value.Inventory.Add(result.Instance);
+			// Return the passed model rather than the save result, since we're keeping the Context data.
+			done(RequestResult.Success(), model);
 
-			App.InventoryReferences.CreateInstance<ModuleInventoryModel>(
-				DefaultShip.StockEngine,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockEngineLoaded(instanceResult, game, done)
-			);
+			//done(RequestResult.Failure("Some fake error"), null);
 		}
-
-		void OnStockEngineLoaded(InventoryReferenceRequest<ModuleInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
-				return;
-			}
-
-			game.Ship.Value.Inventory.Add(result.Instance);
-
-			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(
-				DefaultShip.StockTerrestrialOrbiter,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockTerrestrialOrbiterLoaded(instanceResult, game, done)
-			);
-		}
-
-		void OnStockTerrestrialOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
-				return;
-			}
-
-			game.Ship.Value.Inventory.Add(result.Instance);
-
-			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(
-				DefaultShip.StockStellarOrbiter,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockStellarOrbiterLoaded(instanceResult, game, done)
-			);
-		}
-
-		void OnStockStellarOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
-				return;
-			}
-
-			game.Ship.Value.Inventory.Add(result.Instance);
-
-			App.InventoryReferences.CreateInstance<OrbitalCrewInventoryModel>(
-				DefaultShip.StockMultiOrbiter,
-				InventoryReferenceContext.Default,
-				instanceResult => OnStockMultiOrbiterLoaded(instanceResult, game, done)
-			);
-		}
-
-		void OnStockMultiOrbiterLoaded(InventoryReferenceRequest<OrbitalCrewInventoryModel> result, GameModel game, Action<RequestStatus, GameModel> done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
-				return;
-			}
-
-			//game.Ship.Value.Inventory.Add(result.Instance);
-
-			OnConnectShip(game, done);
-		}
-
-		void OnConnectShip(GameModel game, Action<RequestStatus, GameModel> done)
-		{
-			var inventory = game.Ship.Value.Inventory;
-
-			var stockRoot = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockRoot);
-			var stockOrbiterBay = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockOrbiterBay);
-			var stockStorage = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockStorage);
-			var stockLogistics = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockLogistics);
-			var stockEngine = inventory.GetInventoryFirstOrDefault<ModuleInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockEngine);
-
-			var stockTerrestrialOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockTerrestrialOrbiter);
-			var stockStellarOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockStellarOrbiter);
-			//var stockMultiOrbiter = inventory.GetInventoryFirstOrDefault<OrbitalCrewInventoryModel>(i => i.InventoryId.Value == DefaultShip.StockMultiOrbiter);
-
-			var rootModule0 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_0");
-			var rootModule1 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_1");
-			var rootModule2 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_2");
-			var rootModule3 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_3");
-			//var rootModule4 = stockRoot.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("module_4");
-
-			var orbitalBayOrbital0 = stockOrbiterBay.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("orbital_0");
-			var orbitalBayOrbital1 = stockOrbiterBay.Slots.GetSlotFirstOrDefault<ModuleSlotModel>("orbital_1");
-
-			inventory.Connect(rootModule0, stockOrbiterBay);
-			inventory.Connect(rootModule1, stockStorage);
-			inventory.Connect(rootModule2, stockLogistics);
-			inventory.Connect(rootModule3, stockEngine);
-
-			inventory.Connect(orbitalBayOrbital0, stockTerrestrialOrbiter);
-			inventory.Connect(orbitalBayOrbital1, stockStellarOrbiter);
-
-			OnShipReady(game, done);
-		}
-
-		void OnShipReady(GameModel game, Action<RequestStatus, GameModel> done)
-		{
-			// Uncomment this to make the goal closer.
-			//game.EndSystem.Value = game.Universe.Value.GetSector(startSystem.Position).Systems.Value.OrderBy(s => UniversePosition.Distance(startSystem.Position, s.Position)).ElementAt(1).Position;
-
-			// Uncomment this to make the void never expand
-			//game.DestructionSpeed.Value = 0f;
-			//game.DestructionSpeedIncrement.Value = 0f;
-
-			modelMediator.Save(game, result => OnSaveGame(result, done));
-		}
-
-		void OnSaveGame(SaveLoadRequest<GameModel> result, Action<RequestStatus, GameModel> done)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError(result.Error);
-				done(result.Status, null);
-				return;
-			}
-			done(result.Status, result.TypedModel);
-		}
+		#endregion
 	}
 }

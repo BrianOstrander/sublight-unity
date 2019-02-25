@@ -12,11 +12,81 @@ namespace LunraGamesEditor
 {
 	public static class EditorGUILayoutExtensions
 	{
+		struct ColorCombined
+		{
+			public Color ContentColor;
+			public Color BackgroundColor;
+			public Color Color;
+		}
+
 		static Stack<Color> ColorStack = new Stack<Color>();
+		static Stack<ColorCombined> ColorCombinedStack = new Stack<ColorCombined>();
 		static Stack<Color> BackgroundColorStack = new Stack<Color>();
+		static Stack<Color> ContentColorStack = new Stack<Color>();
 		static Stack<bool> EnabledStack = new Stack<bool>();
 		static Stack<bool> TextAreaWordWrapStack = new Stack<bool>();
 		static Stack<TextAnchor> ButtonTextAnchorStack = new Stack<TextAnchor>();
+
+		public static T HelpfulEnumPopupValidation<T>(
+			GUIContent content,
+			string primaryReplacement,
+			T value,
+			Color? defaultValueColor,
+			T[] options = null,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopup(
+				content,
+				primaryReplacement,
+				value,
+				options,
+				guiOptions
+			);
+			PopColorValidation(defaultValueColor);
+			return result;
+		}
+
+		public static T HelpfulEnumPopupValueValidation<T>(
+			string primaryReplacement,
+			T value,
+			Color? defaultValueColor,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopupValue(
+				primaryReplacement,
+				value,
+				guiOptions
+			);
+			PopColorValidation(defaultValueColor);
+			return result;
+		}
+
+		public static T HelpfulEnumPopupValueValidation<T>(
+			string primaryReplacement,
+			T value,
+			Color? defaultValueColor,
+			T[] options,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopupValue(
+				primaryReplacement,
+				value,
+				options,
+				null,
+				guiOptions
+			);
+			PopColorValidation(defaultValueColor);
+			return result;
+		}
 
 		public static T HelpfulEnumPopup<T>(
 			GUIContent content,
@@ -30,14 +100,53 @@ namespace LunraGamesEditor
 			GUILayout.BeginHorizontal();
 			{
 				EditorGUILayout.PrefixLabel(content);
-				result = HelpfulEnumPopupValue(primaryReplacement, value, options, guiOptions);
+				var wasIndent = EditorGUI.indentLevel;
+				EditorGUI.indentLevel = 0;
+				result = HelpfulEnumPopupValue(
+					primaryReplacement,
+					value,
+					options,
+					null,
+					guiOptions
+				);
+				EditorGUI.indentLevel = wasIndent;
 			}
 			GUILayout.EndHorizontal();
 			return result;
 		}
 
+		public static T HelpfulEnumPopupValue<T>(
+			string primaryReplacement,
+			T value,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			return HelpfulEnumPopupValue<T>(
+				primaryReplacement,
+				value,
+				null,
+				guiOptions
+			);
+		}
+
+		public static T HelpfulEnumPopupValue<T>(
+			string primaryReplacement,
+			T value,
+			T[] options,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			return HelpfulEnumPopupValue(
+				primaryReplacement,
+				value,
+				options,
+				null,
+				guiOptions
+			);
+		}
+
 		/// <summary>
-		/// Renames the first enum entry, useful for adding a "Select X" option.
+		/// Renames the first enum entry, useful for adding a "- Select X -" option.
 		/// </summary>
 		/// <returns>The enum popup.</returns>
 		/// <param name="primaryReplacement">Primary replacement.</param>
@@ -45,7 +154,8 @@ namespace LunraGamesEditor
 		public static T HelpfulEnumPopupValue<T>(
 			string primaryReplacement, 
 			T value,
-			T[] options = null,
+			T[] options,
+			GUIStyle style,
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
@@ -60,7 +170,8 @@ namespace LunraGamesEditor
 				selection++;
 			}
 			selection = selection == names.Length ? 0 : selection;
-			selection = EditorGUILayout.Popup(selection, names, guiOptions);
+			if (style == null) selection = EditorGUILayout.Popup(selection, names, guiOptions);
+			else selection = EditorGUILayout.Popup(selection, names, style, guiOptions);
 
 			return (T)Enum.Parse(value.GetType(), originalNames[selection]);
 		}
@@ -77,6 +188,63 @@ namespace LunraGamesEditor
 			GUI.color = ColorStack.Pop();
 		}
 
+		/// <summary>
+		/// Works like PushColorCombined, but handles the tinting automatically.
+		/// </summary>
+		/// <param name="color">Color.</param>
+		public static void PushColorValidation(Color? color)
+		{
+			if (color.HasValue) PushColorValidation(color.Value);
+		}
+
+		public static void PopColorValidation(Color? color)
+		{
+			if (color.HasValue) PopColorValidation();
+		}
+
+		/// <summary>
+		/// Works like PushColorCombined, but handles the tinting automatically.
+		/// </summary>
+		/// <param name="color">Color.</param>
+		public static void PushColorValidation(Color color, bool useColor = true)
+		{
+			if (useColor) PushColorCombined(color.NewS(0.25f), color.NewS(0.65f));
+		}
+
+		public static void PopColorValidation(bool useColor = true)
+		{	
+			if (useColor) PopColorCombined();
+		}
+
+		public static void PushColorCombined(
+			Color? contentColor = null,
+			Color? backgroundColor = null,
+			Color? color = null
+		)
+		{
+			var current = new ColorCombined
+			{
+				ContentColor = GUI.contentColor,
+				BackgroundColor = GUI.backgroundColor,
+            	Color = GUI.color,
+			};
+
+			ColorCombinedStack.Push(current);
+
+			if (contentColor.HasValue) GUI.contentColor = contentColor.Value;
+			if (backgroundColor.HasValue) GUI.backgroundColor = backgroundColor.Value;
+			if (color.HasValue) GUI.color = color.Value;
+		}
+
+		public static void PopColorCombined()
+		{
+			if (ColorCombinedStack.Count == 0) return;
+			var target = ColorCombinedStack.Pop();
+			GUI.contentColor = target.ContentColor;
+			GUI.backgroundColor = target.BackgroundColor;
+			GUI.color = target.Color;
+		}
+
 		public static void PushBackgroundColor(Color backgroundColor)
 		{
 			BackgroundColorStack.Push(GUI.backgroundColor);
@@ -87,6 +255,18 @@ namespace LunraGamesEditor
 		{
 			if (BackgroundColorStack.Count == 0) return;
 			GUI.backgroundColor = BackgroundColorStack.Pop();
+		}
+
+		public static void PushContentColor(Color color)
+		{
+			ContentColorStack.Push(GUI.contentColor);
+			GUI.contentColor = color;
+		}
+
+		public static void PopContentColor()
+		{
+			if (ContentColorStack.Count == 0) return;
+			GUI.contentColor = ContentColorStack.Pop();
 		}
 
 		public static void PushEnabled(bool enabled)
@@ -139,15 +319,31 @@ namespace LunraGamesEditor
 			EditorGUI.indentLevel--;
 		}
 
-		public static bool XButton()
+		public static bool XButton(bool small = false)
 		{
-			PushColor(Color.red);
-			var clicked = GUILayout.Button("x", GUILayout.Width(20f));
-			PopColor();
+			PushColorValidation(Color.red);
+			var clicked = false;
+			if (small) clicked = GUILayout.Button("x", EditorStyles.miniButton, GUILayout.Width(20f));
+			else clicked = GUILayout.Button("x", GUILayout.Width(20f));
+			PopColorValidation();
 			return clicked;
 		}
 
-		public static string[] StringArray(string name, string[] values, string defaultValue = null)
+		public static string[] StringArray(string name, string[] values, string defaultValue = null, Color? color = null)
+		{
+			BeginVertical(EditorStyles.helpBox, color, color.HasValue);
+			{
+				values = StringArrayValue(
+					name,
+					values,
+					defaultValue
+				);
+			}
+			EndVertical();
+			return values;
+		}
+
+		public static string[] StringArrayValue(string name, string[] values, string defaultValue = null)
 		{
 			if (values == null) throw new ArgumentNullException("values");
 
@@ -192,10 +388,52 @@ namespace LunraGamesEditor
 			T[] values,
 			string primaryReplacemnt = null,
 			T defaultValue = default(T),
-			T[] options = null
+			T[] options = null,
+			Color? color = null
 		) where T : struct, IConvertible
 		{
 			return EnumArray(
+				new GUIContent(name),
+				values,
+				primaryReplacemnt,
+				defaultValue,
+				options,
+				color
+			);
+		}
+
+		public static T[] EnumArray<T>(
+			GUIContent content,
+			T[] values,
+			string primaryReplacemnt = null,
+			T defaultValue = default(T),
+			T[] options = null,
+			Color? color = null
+		) where T : struct, IConvertible
+		{
+			BeginVertical(EditorStyles.helpBox, color, color.HasValue);
+			{
+				values = EnumArrayValue(
+					content,
+					values,
+					primaryReplacemnt,
+					defaultValue,
+					options
+				);
+			}
+			EndVertical();
+			return values;
+		}
+
+		public static T[] EnumArrayValue<T>(
+			string name,
+			T[] values,
+			string primaryReplacemnt = null,
+			T defaultValue = default(T),
+			T[] options = null
+		) where T : struct, IConvertible
+		{
+			return EnumArrayValue(
 				new GUIContent(name),
 				values,
 				primaryReplacemnt,
@@ -204,7 +442,7 @@ namespace LunraGamesEditor
 			);
 		}
 
-		public static T[] EnumArray<T>(
+		public static T[] EnumArrayValue<T>(
 			GUIContent content, 
 			T[] values, 
 			string primaryReplacemnt = null, 
@@ -236,7 +474,11 @@ namespace LunraGamesEditor
 					{
 						GUILayout.Space(16f);
 						GUILayout.Label("[ " + i + " ]", GUILayout.Width(32f));
-						values[i] = HelpfulEnumPopupValue(primaryReplacemnt, values[i], options);
+						values[i] = HelpfulEnumPopupValue(
+							primaryReplacemnt,
+							values[i],
+							options
+						);
 						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();
@@ -277,10 +519,11 @@ namespace LunraGamesEditor
 					if (nullContent) value = EditorGUILayout.TextField(value);
 					else value = EditorGUILayout.TextField(content, value);
 					PushEnabled(value != null);
-					if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+					if (GUILayout.Button("Set Null", GUILayout.Width(54f), GUILayout.Height(14f))) value = null;
 					PopEnabled();
 				}
 				GUILayout.EndHorizontal();
+				GUILayout.Space(3f);
 			}
 			else
 			{
@@ -291,7 +534,7 @@ namespace LunraGamesEditor
 					{
 						if (!nullContent) GUILayout.Label(content);
 						PushEnabled(value != null);
-						if (GUILayout.Button("Set Null", GUILayout.Width(54f))) value = null;
+						if (GUILayout.Button("Set Null", GUILayout.Width(54f), GUILayout.Height(14f))) value = null;
 						PopEnabled();
 					}
 					GUILayout.EndHorizontal();
@@ -302,11 +545,32 @@ namespace LunraGamesEditor
 			return value;
 		}
 
-		public static bool ToggleButtonValue(bool value, string trueText = "True", string falseText = "False", params GUILayoutOption[] options)
+		public static bool ToggleButtonValue(bool value, string trueText = "True", string falseText = "False", GUIStyle style = null, params GUILayoutOption[] options)
 		{
 			options = options.Prepend(GUILayout.Width(48f)).ToArray();
-			if (GUILayout.Button(value ? trueText : falseText, options)) value = !value;
+			var wasValue = value;
+
+			PushColorValidation(Color.red, !wasValue);
+			{
+				var text = value ? trueText : falseText;
+
+				if (style == null || style == GUIStyle.none)
+				{
+					if (GUILayout.Button(text, options)) value = !value;
+				}
+				else
+				{
+					if (GUILayout.Button(text, style, options)) value = !value;
+				}
+			}
+			PopColorValidation(!wasValue);
+
 			return value;
+		}
+
+		public static bool ToggleButton(string label, bool value, string trueText = "True", string falseText = "False")
+		{
+			return ToggleButton(new GUIContent(label), value, trueText, falseText);
 		}
 
 		public static bool ToggleButton(GUIContent content, bool value, string trueText = "True", string falseText = "False")
@@ -324,38 +588,55 @@ namespace LunraGamesEditor
 			return value;
 		}
 
-		public static bool ToggleButtonArray(bool value, string trueText = "True", string falseText = "False", float width = 48f)
+		public static bool ToggleButtonArray(bool value, string trueText = "True", string falseText = "False")
 		{
+			return ToggleButtonArray(GUIContent.none, value, trueText, falseText);
+		}
+
+		public static bool ToggleButtonArray(string label, bool value, string trueText = "True", string falseText = "False")
+		{
+			return ToggleButtonArray(new GUIContent(label), value, trueText, falseText);
+		}
+
+		public static bool ToggleButtonArray(GUIContent label, bool value, string trueText = "True", string falseText = "False")
+		{
+			var wasValue = value;
+
 			GUILayout.BeginHorizontal();
 			{
-				PushEnabled(!value);
-				if (GUILayout.Button(trueText, GUILayout.Width(width))) value = true;
-				PopEnabled();
+				if (label != null && label != GUIContent.none) GUILayout.Label(label, GUILayout.Width(145f));
 
-				PushEnabled(value);
-				if (GUILayout.Button(falseText, GUILayout.Width(width))) value = false;
-				PopEnabled();
+				var notSelectedContentColor = Color.gray.NewV(0.75f);
+				var notSelectedBackgroundColor = Color.gray.NewV(0.65f);
+
+				if (!wasValue) PushColorCombined(notSelectedContentColor, notSelectedBackgroundColor);
+				if (GUILayout.Button(trueText, EditorStyles.miniButtonLeft, GUILayout.ExpandWidth(false))) value = true;
+				if (!wasValue) PopColorCombined();
+
+				if (wasValue) PushColorCombined(notSelectedContentColor, notSelectedBackgroundColor);
+				if (GUILayout.Button(falseText, EditorStyles.miniButtonRight, GUILayout.ExpandWidth(false))) value = false;
+				if (wasValue) PopColorCombined();
 			}
 			GUILayout.EndHorizontal();
 			return value;
 		}
 
-		public static void BeginVertical(GUIStyle style, Color? color, bool useColor = true)
+		public static void BeginVertical(GUIStyle style, Color? color, bool useColor = true, params GUILayoutOption[] options)
 		{
-			BeginVertical(style, color.HasValue ? color.Value : GUI.color, useColor);
+			BeginVertical(style, color.HasValue ? color.Value : GUI.color, useColor, options);
 		}
 
-		public static void BeginVertical(GUIStyle style, Color color, bool useColor = true)
+		public static void BeginVertical(GUIStyle style, Color color, bool useColor = true, params GUILayoutOption[] options)
 		{
 			if (useColor) PushColor(color);
-			GUILayout.BeginVertical(style);
+			GUILayout.BeginVertical(style, options);
 			if (useColor) PopColor();
 		}
 
-		public static void BeginVertical(GUIStyle style, Color primaryColor, Color secondaryColor, bool isPrimary)
+		public static void BeginVertical(GUIStyle style, Color primaryColor, Color secondaryColor, bool isPrimary, params GUILayoutOption[] options)
 		{
 			PushColor(isPrimary ? primaryColor : secondaryColor);
-			GUILayout.BeginVertical(style);
+			GUILayout.BeginVertical(style, options);
 			PopColor();
 		}
 
@@ -364,10 +645,10 @@ namespace LunraGamesEditor
 			GUILayout.EndVertical();
 		}
 
-		public static void BeginHorizontal(GUIStyle style, Color color, bool useColor = true)
+		public static void BeginHorizontal(GUIStyle style, Color color, bool useColor = true, params GUILayoutOption[] options)
 		{
 			if (useColor) PushColor(color);
-			GUILayout.BeginHorizontal(style);
+			GUILayout.BeginHorizontal(style, options);
 			if (useColor) PopColor();
 		}
 

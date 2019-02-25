@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,7 +34,13 @@ namespace LunraGames.SubLight
 
 		Vector2 lastGesture;
 
+		Vector2 beginScrollGestureNormal;
+
+		Vector2 lastScrollGesture;
+
 		bool startedDragging;
+
+		bool[] layerStates = new bool[32];
 
 		public InputService(Heartbeat heartbeat, CallbackService callbacks)
 		{
@@ -55,11 +62,13 @@ namespace LunraGames.SubLight
 		protected virtual void OnEnabled()
 		{
 			heartbeat.Update += OnUpdate;
+			callbacks.InputLayerRequest += OnInputLayerRequest;
 		}
 
 		protected virtual void OnDisabled()
 		{
 			heartbeat.Update -= OnUpdate;
+			callbacks.InputLayerRequest -= OnInputLayerRequest;
 		}
 
 		#region Events
@@ -75,31 +84,95 @@ namespace LunraGames.SubLight
 			if (clickDown) clickDownTime = DateTime.Now;
 			var clickDownDuration = DateTime.Now - clickDownTime;
 			var clickClick = clickUp && clickDownDuration.TotalSeconds < GetClickDuration() && ((beginGesture - lastGesture).sqrMagnitude < MaximumClickDistance);
+
+			// BEGIN GESTURE
 			var gesturingBegan = GetGestureBegan();
 			var gesturingEnded = GetGestureEnded();
 
 			var currentGestureNormal = GetGesture();
 			var currentGesture = currentGestureNormal * GetGestureSensitivity();
 
-			// TODO: Delete this?
-			//var gestureDelta = GetGestureDelta(gesturingBegan, gesturingEnded, currentGesture, lastGesture);
+			var gestureState = Gesture.States.Active;
 
 			if (gesturingBegan)
 			{
+				gestureState = Gesture.States.Begin;
+
 				beginGesture = currentGesture;
 				beginGestureNormal = currentGestureNormal;
-				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction()));
+				callbacks.BeginGesture(new Gesture(currentGestureNormal, IsSecondaryClickInteraction(), delta));
 			}
 
-			// TODO: Delete this?
-			//var gestureNormalDelta = currentGestureNormal - beginGestureNormal;
+			var gestureDeltaSinceLast = gestureState == Gesture.States.Begin ? Vector2.zero : (currentGesture - lastGesture);
 
-			if (gesturingEnded) callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, false, IsSecondaryClickInteraction()));
-			callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, IsGesturing(), IsSecondaryClickInteraction()));
+			if (gesturingEnded)
+			{
+				gestureState = Gesture.States.End;
+
+				callbacks.EndGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureDeltaSinceLast, gestureState, IsSecondaryClickInteraction(), delta));
+			}
+
+			if (IsGesturing() || gesturingEnded)
+			{
+				callbacks.CurrentGesture(new Gesture(beginGestureNormal, currentGestureNormal, gestureDeltaSinceLast, gestureState, IsSecondaryClickInteraction(), delta));
+			}
 
 			var gestureDeltaFromBegin = GetGestureDelta(gesturingBegan, gesturingEnded, beginGesture, lastGesture);
 
 			lastGesture = currentGesture;
+			// END GESTURE
+
+			// BEGIN SCROLL GESTURE
+			var scrollGesturingBegan = GetScrollGestureBegan();
+			var scrollGesturingEnded = GetScrollGestureEnded();
+
+			var currentScrollGestureNormal = GetScrollGesture();
+			var currentScrollGesture = currentScrollGestureNormal * GetScrollGestureSensitivity();
+
+			var scrollGestureState = ScrollGesture.States.Unknown;
+
+			if (scrollGesturingBegan)
+			{
+				scrollGestureState = ScrollGesture.States.Begin;
+
+				beginScrollGestureNormal = Vector2.zero;
+				callbacks.BeginScrollGesture(new ScrollGesture(currentScrollGestureNormal, IsSecondaryClickInteraction(), delta));
+			}
+
+			var scrollGestureDeltaSinceLast = scrollGestureState == ScrollGesture.States.Begin ? currentScrollGesture : (currentScrollGesture - lastScrollGesture);
+
+			if (scrollGesturingEnded)
+			{
+				scrollGestureState = ScrollGesture.States.End;
+				callbacks.EndScrollGesture(
+					new ScrollGesture(
+						beginScrollGestureNormal,
+						currentScrollGestureNormal,
+						scrollGestureDeltaSinceLast,
+						scrollGestureState,
+						IsSecondaryClickInteraction(),
+						delta
+					)
+				);
+			}
+
+			if (IsScrollGesturing() || scrollGesturingEnded)
+			{
+				if (scrollGestureState == ScrollGesture.States.Unknown) scrollGestureState = ScrollGesture.States.Active;
+				callbacks.CurrentScrollGesture(
+					new ScrollGesture(
+						beginScrollGestureNormal,
+						currentScrollGestureNormal,
+						scrollGestureDeltaSinceLast,
+						scrollGestureState,
+						IsSecondaryClickInteraction(),
+						delta
+					)
+				);
+			}
+
+			lastScrollGesture = currentScrollGesture;
+			// END SCROLL GESTURE
 
 			var screenPos = GetScreenPosition();
 
@@ -116,34 +189,32 @@ namespace LunraGames.SubLight
 			// TODO: This probably doesn't need to be a foreach loop.
 			foreach (var raycast in raycasts)
 			{
-				if (stillHighlighted.Count == 0)
-				{
-					stillHighlighted.Add(raycast.gameObject);
+				// Ignore non active layers.
+				if (!layerStates[raycast.gameObject.layer]) continue;
 
-					if (!highlighted.Contains(raycast.gameObject)) ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler);
-				}
+				stillHighlighted.AddRange(OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerEnterHandler, r => !highlighted.Contains(r) && !stillHighlighted.Contains(r), r => !stillHighlighted.Contains(r)));
 
 				if (!anyInteraction) break;
 				if (clickDown)
 				{
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler) != null;
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.beginDragHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerDownHandler).Any();
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.beginDragHandler).Any();
 					dragging.Add(raycast.gameObject);
 				}
 				if (clickUp)
 				{
 					if (clickClick)
 					{
-						wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler) != null;
+						wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerClickHandler).Any();
 					}
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.pointerUpHandler).Any();
 
 					expiredDrags.Add(raycast.gameObject);
 				}
 				if (clickHeldDown && (startedDragging || IsDragging(gestureDeltaFromBegin)))
 				{
 					startedDragging = true;
-					wasTriggered |= ExecuteEvents.ExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler) != null;
+					wasTriggered |= OnExecuteHierarchy(raycast.gameObject, pointerData, ExecuteEvents.dragHandler).Any();
 				}
 				break;
 			}
@@ -159,11 +230,13 @@ namespace LunraGames.SubLight
 
 			foreach (var drag in expiredDrags) dragging.Remove(drag);
 
+			var highlightsExited = new List<GameObject>();
+			Func<GameObject, bool> checkExecuteOrReturnHighlightExit = r => { return !stillHighlighted.Contains(r) && !highlightsExited.Contains(r); };
 			foreach (var highlight in highlighted)
 			{
-				if (highlight != null && !stillHighlighted.Contains(highlight))
+				if (highlight != null && checkExecuteOrReturnHighlightExit(highlight))
 				{
-					ExecuteEvents.ExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler);
+					highlightsExited.AddRange(OnExecuteHierarchy(highlight, pointerData, ExecuteEvents.pointerExitHandler, checkExecuteOrReturnHighlightExit, checkExecuteOrReturnHighlightExit));
 				}
 			}
 
@@ -182,11 +255,56 @@ namespace LunraGames.SubLight
 
 			// Camera
 			var cameraPosition = GetCameraPosition();
-			var cameraRotation = GetCameraRotation();
-			callbacks.CameraOrientation(new CameraOrientation(cameraPosition, cameraRotation));
 
 			var pointerRotation = GetPointerRotation();
 			callbacks.PointerOrientation(new PointerOrientation(cameraPosition, pointerRotation, screenPos));
+		}
+
+		void OnInputLayerRequest(InputLayerRequest request)
+		{
+			if (request.SetAllLayers.HasValue)
+			{
+				for (var i = 0; i < layerStates.Length; i++) layerStates[i] = request.SetAllLayers.Value;
+				return;
+			}
+
+			foreach (var kv in request.LayerDeltas)
+			{
+				layerStates[LayerMask.NameToLayer(kv.Key)] = kv.Value;
+			}
+		}
+
+		GameObject[] OnExecuteHierarchy<T>(
+			GameObject root,
+			BaseEventData eventData,
+			ExecuteEvents.EventFunction<T> callbackFunction,
+			Func<GameObject, bool> executeCondition = null,
+			Func<GameObject, bool> returnCondition = null
+		)
+			where T : IEventSystemHandler
+		{
+			var results = new List<GameObject>();
+
+			while (root != null)
+			{
+				root = ExecuteEvents.GetEventHandler<T>(root);
+
+				if (root == null) break;
+
+				if (executeCondition == null || executeCondition(root))
+				{
+					ExecuteEvents.Execute(root, eventData, callbackFunction);
+				}
+
+				if (returnCondition == null || returnCondition(root))
+				{
+					results.Add(root);
+				}
+
+				root = root.transform.parent.gameObject;
+			}
+
+			return results.ToArray();
 		}
 		#endregion
 		protected virtual bool IsEscapeUp() { return false; }
@@ -210,5 +328,11 @@ namespace LunraGames.SubLight
 		protected virtual Vector3 GetCameraPosition() { return new Vector3(0f, 0f, 0f); }
 		protected virtual Quaternion GetCameraRotation() { return Quaternion.identity; }
 		protected virtual bool IsDragging(Vector2 gesture) { return 0.0001f < gesture.sqrMagnitude; }
+
+		protected virtual float GetScrollGestureSensitivity() { return 1f; }
+		protected virtual bool GetScrollGestureBegan() { return false; }
+		protected virtual bool IsScrollGesturing() { return false; }
+		protected virtual bool GetScrollGestureEnded() { return false; }
+		protected virtual Vector2 GetScrollGesture() { return Vector2.zero; }
 	}
 }

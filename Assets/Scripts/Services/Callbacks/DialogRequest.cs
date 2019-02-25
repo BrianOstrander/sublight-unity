@@ -1,26 +1,18 @@
 ﻿using System;
 
+using LunraGames.SubLight.Models;
+
 namespace LunraGames.SubLight
 {
 	public struct DialogRequest
 	{
-		static class Defaults
-		{
-			public const string AlertTitle = "Alert";
-			public const string CancelConfirmTitle = "Confirm";
-			public const string CancelDenyConfirmTitle = "Confirm";
-
-			public const string Cancel = "Cancel";
-			public const string Failure = "Deny";
-			public const string Success = "Okay";
-		}
-
 		public enum States
 		{
 			Unknown = 0,
 			Request = 10,
 			Active = 20,
-			Complete = 30
+			Completing = 30, // Called when the dialog is closing.
+			Complete = 40 // Called when the dialog is finally closed.
 		}
 
 		/// <summary>
@@ -29,20 +21,23 @@ namespace LunraGames.SubLight
 		/// <returns>The alert.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="title">Title.</param>
-		/// <param name="done">Done.</param>
-		public static DialogRequest Alert(
-			string message, 
-			string title = null,
-			Action done = null
+		/// <param name="confirmClick">Done.</param>
+		public static DialogRequest Confirm(
+			LanguageStringModel message,
+			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
+			Action confirmClick = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			return new DialogRequest(
 				States.Request,
-				DialogTypes.Alert,
-				title ?? Defaults.AlertTitle,
+				DialogTypes.Confirm,
+				style,
+				title,
 				message,
-				successText: Defaults.Success,
-				success: done
+				success: confirmClick,
+				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
 
@@ -52,27 +47,29 @@ namespace LunraGames.SubLight
 		/// <returns>The confirm.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="title">Title.</param>
-		/// <param name="cancel">Cancel.</param>
-		/// <param name="confirm">Confirm.</param>
+		/// <param name="denyClick">Cancel.</param>
+		/// <param name="confirmClick">Confirm.</param>
 		/// <param name="done">Done.</param>
-		public static DialogRequest CancelConfirm(
-			string message,
-			string title = null,
-			Action cancel = null,
-			Action confirm = null,
-			Action<RequestStatus> done = null
+		public static DialogRequest ConfirmDeny(
+			LanguageStringModel message,
+			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
+			Action confirmClick = null,
+			Action denyClick = null,
+			Action<RequestStatus> done = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			return new DialogRequest(
 				States.Request,
-				DialogTypes.CancelConfirm,
-				title ?? Defaults.AlertTitle,
+				DialogTypes.ConfirmDeny,
+				style,
+				title,
 				message,
-				cancelText: Defaults.Cancel,
-				successText: Defaults.Success,
-				cancel: cancel,
-				success: confirm,
-				done: done
+				success: confirmClick,
+				failure: denyClick,
+				done: done,
+				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
 
@@ -82,74 +79,84 @@ namespace LunraGames.SubLight
 		/// <returns>The deny confirm.</returns>
 		/// <param name="message">Message.</param>
 		/// <param name="title">Title.</param>
-		/// <param name="cancel">Cancel.</param>
-		/// <param name="deny">Deny.</param>
-		/// <param name="confirm">Confirm.</param>
+		/// <param name="cancelClick">Cancel.</param>
+		/// <param name="denyClick">Deny.</param>
+		/// <param name="confirmClick">Confirm.</param>
 		/// <param name="done">Done.</param>
-		public static DialogRequest CancelDenyConfirm(
-			string message,
-			string title = null,
-			Action cancel = null,
-			Action deny = null,
-			Action confirm = null,
-			string cancelText = null,
-			string denyText = null,
-			string confirmText = null,
-			Action<RequestStatus> done = null
+		public static DialogRequest ConfirmDenyCancel(
+			LanguageStringModel message,
+			DialogStyles style = DialogStyles.Neutral,
+			LanguageStringModel title = null,
+			Action confirmClick = null,
+			Action denyClick = null,
+			Action cancelClick = null,
+			LanguageStringModel cancelText = null,
+			LanguageStringModel denyText = null,
+			LanguageStringModel confirmText = null,
+			Action<RequestStatus> done = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			return new DialogRequest(
 				States.Request,
-				DialogTypes.CancelDenyConfirm,
-				title ?? Defaults.AlertTitle,
+				DialogTypes.ConfirmDenyCancel,
+				style,
+				title,
 				message,
-				cancelText: cancelText ?? Defaults.Cancel,
-				failureText: denyText ?? Defaults.Failure,
-				successText: confirmText ?? Defaults.Success,
-				cancel: cancel,
-				failure: deny,
-				success: confirm,
-				done: done
+				cancelText: cancelText,
+				failureText: denyText,
+				successText: confirmText,
+				cancel: cancelClick,
+				failure: denyClick,
+				success: confirmClick,
+				done: done,
+				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
 
 		public readonly States State;
 		public readonly DialogTypes DialogType;
-		public readonly string Title;
-		public readonly string Message;
-		public readonly string CancelText;
-		public readonly string FailureText;
-		public readonly string SuccessText;
+		public readonly DialogStyles Style;
+		public readonly LanguageStringModel Title;
+		public readonly LanguageStringModel Message;
+		public readonly LanguageStringModel CancelText;
+		public readonly LanguageStringModel FailureText;
+		public readonly LanguageStringModel SuccessText;
 		public readonly Action Cancel;
 		public readonly Action Failure;
 		public readonly Action Success;
 		public readonly Action<RequestStatus> Done;
+		public readonly bool OverrideFocusHandling;
 
-		DialogRequest(
+		public DialogRequest(
 			States state,
 			DialogTypes dialogType,
-			string title,
-			string message,
-			string cancelText = null,
-			string failureText = null,
-			string successText = null,
+			DialogStyles style,
+			LanguageStringModel title,
+			LanguageStringModel message,
+			LanguageStringModel cancelText = null,
+			LanguageStringModel failureText = null,
+			LanguageStringModel successText = null,
 			Action cancel = null,
 			Action failure = null,
 			Action success = null,
-			Action<RequestStatus> done = null
+			Action<RequestStatus> done = null,
+			bool overrideFocuseHandling = false
 		)
 		{
 			State = state;
 			DialogType = dialogType;
-			Title = title ?? string.Empty;
-			Message = message ?? string.Empty;
-			CancelText = cancelText ?? string.Empty;
-			FailureText = failureText ?? string.Empty;
-			SuccessText = successText ?? string.Empty;
+			Style = style == DialogStyles.Unknown ? DialogStyles.Neutral : style;
+			Title = title;
+			Message = message;
+			CancelText = cancelText;
+			FailureText = failureText;
+			SuccessText = successText;
 			Done = done ?? ActionExtensions.GetEmpty<RequestStatus>();
 			Cancel = cancel ?? ActionExtensions.Empty;
 			Failure = failure ?? ActionExtensions.Empty;
 			Success = success ?? ActionExtensions.Empty;
+			OverrideFocusHandling = overrideFocuseHandling;
 		}
 
 		public DialogRequest Duplicate(States state = States.Unknown)
@@ -157,6 +164,7 @@ namespace LunraGames.SubLight
 			return new DialogRequest(
 				state == States.Unknown ? State : state,
 				DialogType,
+				Style,
 				Title,
 				Message,
 				CancelText,
@@ -165,7 +173,8 @@ namespace LunraGames.SubLight
 				Cancel,
 				Failure,
 				Success,
-				Done
+				Done,
+				OverrideFocusHandling
 			);
 		}
 	}

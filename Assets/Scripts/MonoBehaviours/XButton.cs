@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		IBeginDragHandler,
 		IEndDragHandler
 	{
-		const float FadeDuration = 0.2f;
+		const float FadeDurationDefault = 0.1f;
 
 		new public enum SelectionState
 		{
@@ -24,6 +24,9 @@ namespace LunraGames.SubLight
 		}
 
 		#region Inspector
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+		[SerializeField]
+		FloatOverrideBlock fadeDuration;
 		[SerializeField]
 		XButtonLeaf[] leafs = new XButtonLeaf[0];
 		[SerializeField]
@@ -53,7 +56,10 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		UnityEvent onDragEnd;
 		public UnityEvent OnDragEnd { get { return onDragEnd; } }
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		#endregion
+
+		float FadeDuration { get { return fadeDuration.Override ? fadeDuration.Value : FadeDurationDefault; } }
 
 		SelectionState state;
 		SelectionState State 
@@ -83,6 +89,7 @@ namespace LunraGames.SubLight
 			base.OnEnable();
 			if (!Application.isPlaying) return;
 
+			highlighted = false;
 			State = SelectionState.Normal;
 			ApplyState(State);
 
@@ -124,6 +131,11 @@ namespace LunraGames.SubLight
 					fadeTimeRemaining = Mathf.Max(fadeTimeRemaining.Value - Time.deltaTime, 0f);
 				}
 			}
+		}
+
+		public void ForceApplyState()
+		{
+			ApplyState(state);
 		}
 
 		void ApplyState(SelectionState appliedState, float scalar = 1f)

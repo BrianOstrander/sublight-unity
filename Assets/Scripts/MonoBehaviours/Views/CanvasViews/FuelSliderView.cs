@@ -9,6 +9,7 @@ namespace LunraGames.SubLight.Views
 {
 	public class FuelSliderView : CanvasView, IFuelSliderView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI rationsLabel;
 		[SerializeField]
@@ -17,6 +18,7 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI fuelConsumptionLabel;
 		[SerializeField]
 		Slider fuelConsumptionSlider;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float fuel;
 

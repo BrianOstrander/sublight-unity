@@ -19,7 +19,12 @@ namespace LunraGames.SubLight
 			this.callbacks = callbacks;
 		}
 
-		public void Filter(Action<bool> done, ValueFilterModel filter, GameModel model)
+		public void Filter(
+			Action<bool> done,
+			ValueFilterModel filter,
+			GameModel model,
+			EncounterInfoModel encounterModel
+		)
 		{
 			var remaining = filter.Filters.Value.Where(f => !f.FilterIgnore).ToList();
 
@@ -33,7 +38,15 @@ namespace LunraGames.SubLight
 			bool? allResult = null;
 			bool? noneResult = null;
 
-			OnFilter(done, anyResult, allResult, noneResult, remaining, model);
+			OnFilter(
+				done,
+				anyResult,
+				allResult,
+				noneResult,
+				remaining,
+				model,
+				encounterModel
+			);
 		}
 
 		void OnFilter(
@@ -42,7 +55,8 @@ namespace LunraGames.SubLight
 			bool? allResult,
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
-			GameModel model
+			GameModel model,
+			EncounterInfoModel encounterModel
 		)
 		{
 			if (remaining.Count == 0)
@@ -59,7 +73,18 @@ namespace LunraGames.SubLight
 
 			Action<ValueFilterGroups, bool> filterDone = (group, result) =>
 			{
-				OnFilterResult(group, result, current.FilterNegate, done, anyResult, allResult, noneResult, remaining, model);
+				OnFilterResult(
+					group,
+					result,
+					current.FilterNegate,
+					done,
+					anyResult,
+					allResult,
+					noneResult,
+					remaining,
+					model,
+					encounterModel
+				);
 			};
 
 			switch (current.FilterType)
@@ -67,15 +92,21 @@ namespace LunraGames.SubLight
 				case ValueFilterTypes.KeyValueBoolean:
 					OnHandle(current as BooleanKeyValueFilterEntryModel, filterDone);
 					break;
+				case ValueFilterTypes.KeyValueInteger:
+					OnHandle(current as IntegerKeyValueFilterEntryModel, filterDone);
+					break;
 				case ValueFilterTypes.KeyValueString:
 					OnHandle(current as StringKeyValueFilterEntryModel, filterDone);
 					break;
+				case ValueFilterTypes.KeyValueFloat:
+					OnHandle(current as FloatKeyValueFilterEntryModel, filterDone);
+					break;
 				case ValueFilterTypes.EncounterInteraction:
-					OnHandle(current as EncounterInteractionFilterEntryModel, model, filterDone);
+					OnHandle(current as EncounterInteractionFilterEntryModel, model, encounterModel, filterDone);
 					break;
 				default:
 					Debug.LogError("Unrecognized FilterType: " + current.FilterType + ", skipping...");
-					OnFilter(done, anyResult, allResult, noneResult, remaining, model);
+					OnFilter(done, anyResult, allResult, noneResult, remaining, model, encounterModel);
 					break;
 			}
 		}
@@ -89,7 +120,8 @@ namespace LunraGames.SubLight
 			bool? allResult,
 			bool? noneResult,
 			List<IValueFilterEntryModel> remaining,
-			GameModel model
+			GameModel model,
+			EncounterInfoModel encounterModel
 		)
 		{
 			result = negated ? !result : result;
@@ -109,57 +141,281 @@ namespace LunraGames.SubLight
 					Debug.LogError("Unrecognized group: " + group + ", skipping...");
 					break;
 			}
-			OnFilter(done, anyResult, allResult, noneResult, remaining, model);
+			OnFilter(
+				done,
+				anyResult,
+				allResult,
+				noneResult,
+				remaining,
+				model,
+				encounterModel
+			);
 		}
 
 		#region Handling
 		void OnHandle(BooleanKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
-			callbacks.KeyValueRequest(
-				KeyValueRequest.Get(
-					filter.Target.Value,
-					filter.Key.Value,
-					// If the boolean KV is equal to the result on the filter, the result is true.
-					result => done(filter.Group.Value, result.Value == filter.FilterValue.Value)
-				)
-			);
+			// The input may or may not be local, so we check.
+			switch (filter.Input1.Source)
+			{
+				case KeyValueSources.LocalValue:
+					OnHandle(filter, filter.Input1.LocalValue, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
+					break;
+			}
+		}
+
+		void OnHandle(BooleanKeyValueFilterEntryModel filter, bool inputValue, Action<ValueFilterGroups, bool> done)
+		{
+			// The operand should always be foreign.
+			switch (filter.Input0.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
+							// If the boolean KV is equal to the result on the filter, the result is true.
+							result => done(filter.Group.Value, result.Value == inputValue)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands not supported");
+					break;
+			}
+		}
+
+		void OnHandle(IntegerKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
+		{
+			// The input may or may not be local, so we check.
+			switch (filter.Input1.Source)
+			{
+				case KeyValueSources.LocalValue:
+					OnHandle(filter, filter.Input1.LocalValue, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.GetInteger(
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
+					break;
+			}
+		}
+
+		void OnHandle(IntegerKeyValueFilterEntryModel filter, int inputValue, Action<ValueFilterGroups, bool> done)
+		{
+			Action<KeyValueResult<int>> onGet = result =>
+			{
+				var passed = false;
+				switch (filter.Operation.Value)
+				{
+					case IntegerFilterOperations.Equals:
+						passed = result.Value == inputValue;
+						break;
+					case IntegerFilterOperations.NotEquals:
+						passed = result.Value != inputValue;
+						break;
+					case IntegerFilterOperations.LessThanOrEquals:
+						passed = result.Value <= inputValue;
+						break;
+					case IntegerFilterOperations.GreaterThanOrEquals:
+						passed = result.Value >= inputValue;
+						break;
+					case IntegerFilterOperations.LessThan:
+						passed = result.Value < inputValue;
+						break;
+					case IntegerFilterOperations.GreaterThan:
+						passed = result.Value > inputValue;
+						break;
+					default:
+						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+						break;
+				}
+				done(filter.Group.Value, passed);
+			};
+
+			// The operand should always be foreign
+			switch (filter.Input0.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
+							onGet
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands not supported");
+					break;
+			}
 		}
 
 		void OnHandle(StringKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
 		{
-			callbacks.KeyValueRequest(
-				KeyValueRequest.Get(
-					filter.Target.Value,
-					filter.Key.Value,
-					// If the string KV is equal to the result on the filter, the result is true.
-					result =>
-					{
-						var passed = false;
-						switch (filter.Operation.Value)
-						{
-							case StringFilterOperations.Equals:
-								passed = result.Value == filter.FilterValue.Value;
-								break;
-							case StringFilterOperations.IsNullOrEmpty:
-								passed = string.IsNullOrEmpty(result.Value);
-								break;
-							case StringFilterOperations.IsNull:
-								passed = result.Value == null;
-								break;
-							default:
-								Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
-								break;
-						}
-						done(filter.Group.Value, passed);
-					}
-				)
-			);
+			// The input may or may not be local, so we check.
+			switch (filter.Input1.Source)
+			{
+				case KeyValueSources.LocalValue:
+					OnHandle(filter, filter.Input1.LocalValue, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
+					break;
+			}
 		}
 
-		void OnHandle(EncounterInteractionFilterEntryModel filter, GameModel model, Action<ValueFilterGroups, bool> done)
+		void OnHandle(StringKeyValueFilterEntryModel filter, string inputValue, Action<ValueFilterGroups, bool> done)
 		{
+			// The operand should always be foreign.
+			switch (filter.Input0.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
+							// If the string KV is equal to the result on the filter, the result is true.
+							result =>
+							{
+								var passed = false;
+								switch (filter.Operation.Value)
+								{
+									case StringFilterOperations.Equals:
+										passed = result.Value == inputValue;
+										break;
+									case StringFilterOperations.IsNullOrEmpty:
+										passed = string.IsNullOrEmpty(result.Value);
+										break;
+									case StringFilterOperations.IsNull:
+										passed = result.Value == null;
+										break;
+									default:
+										Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+										break;
+								}
+								done(filter.Group.Value, passed);
+							}
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands are not supported");
+					break;
+			}
+		}
+
+		void OnHandle(FloatKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
+		{
+			// The input may or may not be local, so we check.
+			switch (filter.Input1.Source)
+			{
+				case KeyValueSources.LocalValue:
+					OnHandle(filter, filter.Input1.LocalValue, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.GetFloat(
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
+					break;
+			}
+		}
+
+		void OnHandle(FloatKeyValueFilterEntryModel filter, float floatValue, Action<ValueFilterGroups, bool> done)
+		{
+			Action<KeyValueResult<float>> onGet = result =>
+			{
+				var passed = false;
+				switch (filter.Operation.Value)
+				{
+					case FloatFilterOperations.Equals:
+						passed = Mathf.Approximately(result.Value, floatValue);
+						break;
+					case FloatFilterOperations.NotEquals:
+						passed = !Mathf.Approximately(result.Value, floatValue);
+						break;
+					case FloatFilterOperations.LessThanOrEquals:
+						passed = result.Value < floatValue || Mathf.Approximately(result.Value, floatValue);
+						break;
+					case FloatFilterOperations.GreaterThanOrEquals:
+						passed = result.Value > floatValue || Mathf.Approximately(result.Value, floatValue);
+						break;
+					case FloatFilterOperations.LessThan:
+						passed = result.Value < floatValue;
+						break;
+					case FloatFilterOperations.GreaterThan:
+						passed = result.Value > floatValue;
+						break;
+					default:
+						Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+						break;
+				}
+				done(filter.Group.Value, passed);
+			};
+
+			// Operand must be foreign.
+			switch (filter.Input0.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
+							onGet
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands are not supported");
+					break;
+			}
+		}
+
+		void OnHandle(
+			EncounterInteractionFilterEntryModel filter,
+			GameModel model,
+			EncounterInfoModel encounterModel,
+			Action<ValueFilterGroups, bool> done
+		)
+		{
+			var encounterId = string.IsNullOrEmpty(filter.FilterValue.Value) ? (encounterModel == null ? null : encounterModel.EncounterId.Value) : filter.FilterValue.Value;
 			var operation = filter.Operation.Value;
-			var encounterInteraction = model.GetEncounterStatus(filter.FilterValue.Value);
+			var encounterInteraction = model.EncounterStatuses.GetEncounterStatus(encounterId);
 			var result = false;
 
 			if (operation == EncounterInteractionFilterOperations.NotCompleted)

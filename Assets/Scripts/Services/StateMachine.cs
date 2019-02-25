@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -10,34 +10,64 @@ namespace LunraGames.SubLight
 	{
 		public enum States
 		{
-			Unknown,
-			Initialize,
-			Home,
-			Game
+			Unknown = 0,
+			Initialize = 10,
+			Quit = 20,
+			Home = 30,
+			Game = 40,
 		}
 
 		public enum Events
 		{
-			Unknown,
-			Begin,
-			Idle,
-			End
+			Unknown = 0,
+			Begin = 10,
+			Idle = 20,
+			End = 30
 		}
 
-		interface IEntry
+		public enum EntryStates
+		{
+			Unknown = 0,
+			Queued = 10,
+			Waiting = 20,
+			Calling = 30,
+			Blocking = 40,
+			Blocked = 50
+		}
+
+		/// <summary>
+		/// Used for external examination and debugging of the StateMachine.
+		/// </summary>
+		public interface IEntryImmutable
 		{
 			States State { get; }
 			Events Event { get; }
+			string Description { get; }
 			bool IsRepeating { get; }
+			string SynchronizedId { get; }
+			EntryStates EntryState { get; }
+		}
+
+		interface IEntry : IEntryImmutable
+		{
 			bool Trigger();
+
+			new EntryStates EntryState { get; set; }
 		}
 
 		abstract class Entry : IEntry
 		{
 			public States State { get; protected set; }
 			public Events Event { get; protected set; }
+			public string Description { get; protected set; }
 			public bool IsRepeating { get; protected set; }
+			public string SynchronizedId { get; protected set; }
 			public abstract bool Trigger();
+
+			#region Debug Values
+			// These are only assigned by the StateMachine, not read for any logical purposes.
+			public EntryStates EntryState { get; set; }
+   			#endregion
 		}
 
 		class BlockingEntry : Entry
@@ -45,12 +75,20 @@ namespace LunraGames.SubLight
 			Action<Action> action;
 			bool? isDone;
 
-			public BlockingEntry(Action<Action> action, States state, Events stateEvent)
+			public BlockingEntry(
+				Action<Action> action,
+				States state,
+				Events stateEvent,
+				string description,
+				string synchronizedId
+			)
 			{
 				this.action = action;
 				State = state;
 				Event = stateEvent;
+				Description = description;
 				IsRepeating = false;
+				SynchronizedId = string.IsNullOrEmpty(synchronizedId) ? null : synchronizedId;
 			}
 
 			public override bool Trigger()
@@ -73,12 +111,21 @@ namespace LunraGames.SubLight
 		{
 			Action action;
 
-			public NonBlockingEntry(Action action, States state, Events stateEvent, bool repeating)
+			public NonBlockingEntry(
+				Action action,
+				States state,
+				Events stateEvent,
+				string description,
+				bool repeating,
+				string synchronizedId
+			)
 			{
 				this.action = action;
 				State = state;
 				Event = stateEvent;
+				Description = description;
 				IsRepeating = repeating;
+				SynchronizedId = string.IsNullOrEmpty(synchronizedId) ? null : synchronizedId;
 			}
 
 			public override bool Trigger()
@@ -88,10 +135,14 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		Heartbeat heartbeat;
+
 		IState[] stateEntries;
 
 		IState currentState;
+		object currentPayload;
 		IState nextState;
+		object nextPayload;
 		Events currentEvent;
 		List<IEntry> queued = new List<IEntry>();
 		List<IEntry> entries = new List<IEntry>();
@@ -122,7 +173,9 @@ namespace LunraGames.SubLight
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
 
+			this.heartbeat = heartbeat;
 			stateEntries = states;
+
 			heartbeat.Update += Update;
 		}
 
@@ -132,29 +185,46 @@ namespace LunraGames.SubLight
 			queued.Clear();
 			var persisted = new List<IEntry>();
 			var isBlocked = false;
+			string blockingSynchronizedId = null;
+
 			foreach (var entry in entries)
 			{
-				if (isBlocked)
+				if (isBlocked && (string.IsNullOrEmpty(blockingSynchronizedId) || entry.SynchronizedId != blockingSynchronizedId))
 				{
+					blockingSynchronizedId = null;
+					entry.EntryState = EntryStates.Blocked;
 					persisted.Add(entry);
 					continue;
 				}
 
 				if (entry.State != currentState.HandledState)
 				{
-					if (entry.State == nextState.HandledState) persisted.Add(entry);
+					if (entry.State == nextState.HandledState)
+					{
+						entry.EntryState = EntryStates.Waiting;
+						persisted.Add(entry);
+					}
 					continue;
 				}
 
+				var currentIsBlocking = false;
+
+				entry.EntryState = EntryStates.Calling;
 				if (entry.IsRepeating) persisted.Add(entry);
 				try 
 				{
-					isBlocked = !entry.Trigger();
+					currentIsBlocking = !entry.Trigger();
 				}
 				catch (Exception exception) { Debug.LogException(exception); }
 				finally
 				{
-					if (!entry.IsRepeating && isBlocked) persisted.Add(entry);
+					if (!entry.IsRepeating && currentIsBlocking)
+					{
+						blockingSynchronizedId = entry.SynchronizedId;
+						entry.EntryState = EntryStates.Blocking;
+						persisted.Add(entry);
+					}
+					isBlocked |= currentIsBlocking;
 				}
 			}
 			entries = persisted;
@@ -167,12 +237,12 @@ namespace LunraGames.SubLight
 				if (currentEvent == Events.Idle)
 				{
 					// We transitioning states, but we haven't completed yet.
-					SetState(currentState, Events.End);
+					SetState(currentState, Events.End, currentPayload);
 				}
 				else if (currentEvent == Events.End)
 				{
 					// We already completed last frame, so now we'll be starting.
-					SetState(nextState, Events.Begin);
+					SetState(nextState, Events.Begin, nextPayload);
 				}
 			}
 			else
@@ -180,17 +250,18 @@ namespace LunraGames.SubLight
 				if (currentEvent == Events.Begin)
 				{
 					// We already started last frame, so now we go to idle
-					SetState(currentState, Events.Idle);
+					SetState(currentState, Events.Idle, currentPayload);
 				}
 			}
 		}
 
-		void SetState(IState state, Events stateEvent)
+		void SetState(IState state, Events stateEvent, object payload)
 		{
 			currentState = state;
+			currentPayload = payload;
 			currentEvent = stateEvent;
 
-			currentState.UpdateState(currentState.HandledState, currentEvent);
+			currentState.UpdateState(currentState.HandledState, currentEvent, payload);
 		}
 
 		IState GetState<P>(P payload)
@@ -203,33 +274,159 @@ namespace LunraGames.SubLight
 			return null;
 		}
 
-		public void Push(Action action, bool repeating)
+		#region Pushing
+		public void Push<T>(
+			Action action,
+			string description,
+			bool repeating = false
+		)
 		{
-			Push(action, currentState.HandledState, currentEvent, repeating);
+			Push(
+				action,
+				typeof(T),
+				description,
+				repeating
+			);
 		}
 
-		public void PushBlocking(Action<Action> action)
+		public void PushBlocking<T>(Action<Action> action, string description)
 		{
-			PushBlocking(action, currentState.HandledState, currentEvent);
+			PushBlocking(
+				action,
+				typeof(T),
+				description
+			);
 		}
 
-		public void Push(Action action, States state, Events stateEvent, bool repeating)
+		public void PushBlocking<T>(Action action, Func<bool> condition, string description)
+		{
+			PushBlocking(
+				action,
+				condition,
+				typeof(T),
+				description
+			);
+		}
+
+		public void Push(
+			Action action,
+			Type type,
+			string description,
+			bool repeating = false,
+			string synchronizedId = null
+		)
+		{
+			OnPush(
+				action,
+				currentState.HandledState,
+				currentEvent,
+				type,
+				description,
+				repeating,
+				synchronizedId
+			);
+		}
+
+		public void PushBlocking(
+			Action<Action> action,
+			Type type,
+			string description,
+			string synchronizedId = null
+		)
+		{
+			OnPushBlocking(
+				action,
+				currentState.HandledState,
+				currentEvent,
+				type,
+				description,
+				synchronizedId
+			);
+		}
+
+		public void PushBlocking(
+			Action action,
+			Func<bool> condition,
+			Type type,
+			string description,
+			string synchronizedId = null
+		)
+		{
+			Action<Action> waiter = done =>
+			{
+				action();
+				heartbeat.Wait(done, condition);
+			};
+
+			OnPushBlocking(
+				waiter,
+				currentState.HandledState,
+				currentEvent,
+				type,
+				description,
+				synchronizedId
+			);
+		}
+		#endregion
+
+		#region Push Handlers
+		void OnPush(
+			Action action,
+			States state,
+			Events stateEvent,
+			Type type,
+			string description,
+			bool repeating,
+			string synchronizedId
+		)
 		{
 			if (action == null) throw new ArgumentNullException("action");
 			if (state == States.Unknown) throw new ArgumentException("Cannot bind to States.Unknown");
 			if (stateEvent == Events.Unknown) throw new ArgumentException("Cannot bind to Events.Unknown");
+			if (string.IsNullOrEmpty(description)) throw new ArgumentException("Cannot have empty or null description");
 
-			queued.Add(new NonBlockingEntry(action, state, stateEvent, repeating));
+			queued.Add(
+				new NonBlockingEntry(
+					action,
+					state,
+					stateEvent,
+					type == null ? "< Unspecified >." + description : type.Name + "." + description,
+					repeating,
+					synchronizedId
+				)
+				{
+					EntryState = EntryStates.Queued
+				}
+			);
 		}
 
-		public void PushBlocking(Action<Action> action, States state, Events stateEvent)
+		void OnPushBlocking(
+			Action<Action> action,
+			States state,
+			Events stateEvent,
+			Type type,
+			string description,
+			string synchronizedId
+		)
 		{
 			if (action == null) throw new ArgumentNullException("action");
 			if (state == States.Unknown) throw new ArgumentException("Cannot bind to States.Unknown");
 			if (stateEvent == Events.Unknown) throw new ArgumentException("Cannot bind to Events.Unknown");
+			if (string.IsNullOrEmpty(description)) throw new ArgumentException("Cannot have empty or null description");
 
-			queued.Add(new BlockingEntry(action, state, stateEvent));
+			queued.Add(
+				new BlockingEntry(
+					action, state,
+					stateEvent,
+					type == null ? "< Unspecified >." + description : type.Name + "." + description,
+					synchronizedId
+				)
+				{
+					EntryState = EntryStates.Queued
+				}
+			);
 		}
+		#endregion
 
 		/// <summary>
 		/// Requests to transition to the first state that accepts the specified payload.
@@ -252,9 +449,25 @@ namespace LunraGames.SubLight
 			}
 
 			nextState = handlingState;
+			nextPayload = payload;
 			nextState.Initialize(payload);
-			if (currentState == null) SetState(nextState, Events.Begin);
-
+			if (currentState == null) SetState(nextState, Events.Begin, payload);
 		}
+
+
+		#region Utility
+		public void PushBreak()
+		{
+			Push<StateMachine>(OnBreak, "PushBreak");
+		}
+
+		void OnBreak()
+		{
+			Debug.LogWarning("Break Pushed");
+			Debug.Break();
+		}
+
+		public IEntryImmutable[] GetEntries() { return entries.Cast<IEntryImmutable>().ToArray(); }
+		#endregion
 	}
 }

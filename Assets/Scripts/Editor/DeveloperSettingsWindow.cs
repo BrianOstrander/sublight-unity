@@ -20,17 +20,44 @@ namespace LunraGames.SubLight
 	{
 		const string KeyPrefix = "LG_SF_DeveloperSettings_";
 
+		static string[] TabNames = {
+			"General",
+			"Game",
+			"Local"
+		};
+
+		DevPrefsInt currentTab;
+
+		public DeveloperSettingsWindow()
+		{
+			currentTab = new DevPrefsInt(KeyPrefix + "CurrentTab");
+		}
+
 		[MenuItem("Window/Lunra Games/Development Settings")]
 		static void Initialize()
 		{
 			GetWindow(typeof(DeveloperSettingsWindow), false, "Developer Settings").Show();
 		}
 
-
 		void OnGUI()
 		{
 			GUILayout.Label("Note: These values are local to your machine only.");
+			currentTab.Value = GUILayout.Toolbar(currentTab.Value, TabNames);
 
+			switch (currentTab.Value)
+			{
+				case 0: OnGeneralTab(); break;
+				case 1: OnGameTab(); break;
+				case 2: OnLocalTab(); break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized tab value: " + currentTab.Value, MessageType.Error);
+					if (GUILayout.Button("Reset")) currentTab.Value = 0;
+					break;
+			}
+		}
+
+		void OnGeneralTab()
+		{
 			#region Editor Globals
 			GUILayout.Label("Globals", EditorStyles.boldLabel);
 
@@ -51,7 +78,6 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			DevPrefs.WindInEditMode.Value = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
-			DevPrefs.AutoApplySkybox.Value = GUILayout.Toggle(DevPrefs.AutoApplySkybox, "Auto Apply Skybox");
 			DevPrefs.ApplyXButtonStyleInEditMode.Value = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
 			#endregion
 
@@ -61,14 +87,22 @@ namespace LunraGames.SubLight
 			{
 				GUILayout.BeginVertical();
 				{
-					DevPrefs.SkipExplanation.Value = GUILayout.Toggle(DevPrefs.SkipExplanation, "Skip Explanation");
-					var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
-					if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
-					DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");
-					if (isWiping) EditorGUILayoutExtensions.PopColor();
+					DevPrefs.ShowHoloHelper.Value = GUILayout.Toggle(DevPrefs.ShowHoloHelper, "Show Holo Helper");
+					using (var check = new EditorGUI.ChangeCheckScope())
+					{
+						DevPrefs.ShowUxHelper.Value = GUILayout.Toggle(DevPrefs.ShowUxHelper, "Show UX Helper");
+						if (check.changed) UxHelper.RunUpdate();
+					}
 				}
 				GUILayout.EndVertical();
-				DevPrefs.AutoNewGame.Value = GUILayout.Toggle(DevPrefs.AutoNewGame, "Auto New Game");
+
+				GUILayout.BeginVertical();
+				{
+					// second column of controlls here
+					DevPrefs.IgnoreGuiExitExceptions.Value = GUILayout.Toggle(DevPrefs.IgnoreGuiExitExceptions, "Ignore GuiExit Exceptions");
+				}
+				GUILayout.EndVertical();
+
 				GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();
@@ -101,16 +135,113 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 			#endregion
+		}
 
-			Space();
+		void OnGameTab()
+		{
+			GUILayout.BeginHorizontal();
+			{
+				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PushColor(Color.white.NewV(0.7f));
+				{
+					DevPrefs.TimeScaling.Value = EditorGUILayout.Slider("Time Scale", DevPrefs.TimeScaling.Value, 0f, 1f);
+				}
+				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PopColor();
 
+				DevPrefs.ApplyTimeScaling.Value = EditorGUILayout.Toggle(DevPrefs.ApplyTimeScaling.Value, GUILayout.Width(12f));
+				if (DevPrefs.ApplyTimeScaling.Value && Application.isPlaying) Time.timeScale = DevPrefs.TimeScaling.Value;
+
+				EditorGUILayoutExtensions.PushEnabled(Application.isPlaying && !Mathf.Approximately(DevPrefs.TimeScaling.Value, Time.timeScale));
+				{
+					if (GUILayout.Button("Apply Once", EditorStyles.miniButtonLeft)) Time.timeScale = DevPrefs.TimeScaling;
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+
+				if (GUILayout.Button("Reset", EditorStyles.miniButtonRight))
+				{
+					DevPrefs.TimeScaling.Value = 1f;
+					Time.timeScale = 1f;
+				}
+			}
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.BeginVertical();
+				{
+					DevPrefs.SkipMainMenuAnimations.Value = GUILayout.Toggle(DevPrefs.SkipMainMenuAnimations, "Skip Main Menu Animations");
+				}
+				GUILayout.EndVertical();
+				GUILayout.BeginVertical();
+				{
+					var isWiping = DevPrefs.WipeGameSavesOnStart.Value;
+					if (isWiping) EditorGUILayoutExtensions.PushColor(Color.red);
+					DevPrefs.WipeGameSavesOnStart.Value = GUILayout.Toggle(DevPrefs.WipeGameSavesOnStart, "Wipe Game Saves on Start");
+					if (isWiping) EditorGUILayoutExtensions.PopColor();
+				}
+				GUILayout.EndVertical();
+				GUILayout.FlexibleSpace();
+			}
+			GUILayout.EndHorizontal();
+
+			DevPrefs.AutoGameOption.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				new GUIContent("Auto Game Behaviour"),
+				"- Select Auto Game Behaviour -",
+				DevPrefs.AutoGameOption.Value,
+				EnumExtensions.GetValues(AutoGameOptions.Unknown)
+			);
+
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				DevPrefs.AutoGameOptionRepeats.Value = EditorGUILayout.Toggle(new GUIContent("Repeat on Main Menu", "If enabled, everytime the game returns to the main menu this logic will run."), DevPrefs.AutoGameOptionRepeats);
+				switch (DevPrefs.AutoGameOption.Value)
+				{
+					case AutoGameOptions.None: break;
+					case AutoGameOptions.NewGame:
+					case AutoGameOptions.OverrideGame:
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GameSeed, p => p.Value = EditorGUILayout.IntField("Game Seed", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxySeed, p => p.Value = EditorGUILayout.IntField("Galaxy Seed", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxyId, p => p.Value = EditorGUILayout.TextField("Galaxy Id", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.ToolbarSelection, p => p.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Toolbar Selection"), "- Select an Override -", DevPrefs.ToolbarSelection.Value));
+						break;
+					case AutoGameOptions.ContinueGame:
+						GUILayout.Label("todo");
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized AutoGameOption: " + DevPrefs.AutoGameOption.Value, MessageType.Error);
+						break;
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
+
+			var encounterNotOverriding = !DevPrefs.EncounterIdOverrideActive;
+			if (encounterNotOverriding) EditorGUILayoutExtensions.PushColor(Color.gray);
+			{
+				GUILayout.BeginHorizontal();
+				{
+					EditorGUILayout.PrefixLabel(new GUIContent("Encounter Overriding", "If a valid trigger and Encounter Id are selected, the specified Encounter will run when the appropriate trigger occurs."));
+					DevPrefs.EncounterIdOverrideTrigger.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
+						GUIContent.none,
+						"- Select a Trigger -",
+						DevPrefs.EncounterIdOverrideTrigger.Value,
+						guiOptions: GUILayout.Width(120f)
+					);
+					DevPrefs.EncounterIdOverride.Value = EditorGUILayout.TextField(DevPrefs.EncounterIdOverride.Value);
+					DevPrefs.EncounterIdOverrideIgnore.Value = !EditorGUILayout.Toggle(!DevPrefs.EncounterIdOverrideIgnore.Value, GUILayout.Width(18f));
+				}
+				GUILayout.EndHorizontal();
+			}
+			if (encounterNotOverriding) EditorGUILayoutExtensions.PopColor();
+		}
+
+		void OnLocalTab()
+		{
 			if (this is ILocalDeveloperSettingsWindow)
 			{
 				GUILayout.Label("Local developer settings", EditorStyles.boldLabel);
-				try 
+				try
 				{
 					var localWindow = (this as ILocalDeveloperSettingsWindow);
-					localWindow.OnLocalGUI(); 
+					localWindow.OnLocalGUI();
 				}
 				catch (Exception e)
 				{

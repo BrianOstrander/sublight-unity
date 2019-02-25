@@ -168,50 +168,9 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Utility
-		public void AssignBestEncounter(Action<AssignBestEncounter> done, GameModel model, SystemModel system)
+		public InteractedEncounterInfoModel GetEncounterInteraction(string encounter)
 		{
-			// TODO: Check if old encounters are still valid here?
-			if (system.HasEncounter)
-			{
-				OnAssignBestEncounterResult(done, GetEncounter(system.EncounterId), system);
-				return;
-			}
-			// Required checks
-			var remaining = encounters.Where(
-				e =>
-				{
-					if (e.Ignore.Value) return false;
-					switch (model.GetEncounterStatus(e.EncounterId).State)
-					{
-						case EncounterStatus.States.Completed:
-						case EncounterStatus.States.Seen:
-							return false;
-					}
-					if (!e.ValidSystems.Value.ContainsOrIsEmpty(system.SystemType)) return false;
-					if (e.ValidBodies.Value.None()) return true;
-					foreach (var bodyType in system.Bodies.Value.Select(b => b.BodyType).Distinct())
-					{
-						if (e.ValidBodies.Value.Contains(bodyType)) return true;
-					}
-					return false;
-				}
-			);
-
-			if (remaining.None())
-			{
-				OnAssignBestEncounterResult(done, null, system);
-				return;
-			}
-
-			OnFilterEncounters(
-				done,
-				null,
-				null,
-				remaining.ToList(),
-				new List<EncounterInfoModel>(),
-				model,
-				system
-			);
+			return interactedEncounters.GetEncounter(encounter);
 		}
 
 		/// <summary>
@@ -222,95 +181,127 @@ namespace LunraGames.SubLight
 			return encounters.FirstOrDefault(e => e.EncounterId.Value == encounter);
 		}
 
-		public InteractedEncounterInfoModel GetEncounterInteraction(string encounter)
+		/// <summary>
+		/// Gets the next best encounter.
+		/// </summary>
+		/// <remarks>
+		/// Will return a "success" result even if none are found.
+		/// </remarks>
+		public void GetNextEncounter(
+			Action<RequestResult, EncounterInfoModel> done,
+			EncounterTriggers trigger,
+			GameModel model
+		)
 		{
-			return interactedEncounters.GetEncounter(encounter);
+			if (done == null) throw new ArgumentNullException("done");
+			if (trigger == EncounterTriggers.Unknown) throw new ArgumentOutOfRangeException("trigger", "Trigger \"" + trigger + "\" not supported");
+			if (model == null) throw new ArgumentNullException("model");
+
+			var remaining = encounters.Where(e => !e.Ignore.Value && e.Trigger.Value == trigger).OrderByDescending(e => e.OrderWeight.Value);
+
+			if (remaining.None())
+			{
+				done(RequestResult.Success(), null);
+				return;
+			}
+
+			OnGetNextEncounterFilter(
+				done,
+				model,
+				remaining.First().OrderWeight.Value,
+				remaining.ToList(),
+				new List<EncounterInfoModel>()
+			);
 		}
 		#endregion
 
-		#region Events
-		void OnFilterEncounters(
-			Action<AssignBestEncounter> done,
-			bool? lastFilteredPassed,
-			EncounterInfoModel lastFiltered,
-			List<EncounterInfoModel> toFilter,
-			List<EncounterInfoModel> filtered,
+		#region Assign Best Encounter Events
+		void OnGetNextEncounterFilter(
+			Action<RequestResult, EncounterInfoModel> done,
 			GameModel model,
-			SystemModel system
+			int orderWeight,
+			List<EncounterInfoModel> remaining,
+			List<EncounterInfoModel> filtered,
+			EncounterInfoModel lastFiltered = null
 		)
 		{
-			if (lastFilteredPassed.HasValue)
-			{
-				if (lastFilteredPassed.Value) filtered.Add(lastFiltered);
-			}
+			if (lastFiltered != null) filtered.Add(lastFiltered);
 
-			if (toFilter.Any())
+			if (remaining.None())
 			{
-				var nextToFilter = toFilter.First();
-				toFilter.RemoveAt(0);
-				valueFilter.Filter(result =>
-				{
-					OnFilterEncounters(done, result, nextToFilter, toFilter, filtered, model, system);
-				}, nextToFilter.Filtering, model);
+				done(RequestResult.Success(), OnGetNextEncounterSelect(filtered));
 				return;
 			}
 
-			if (filtered.None())
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+
+			if (orderWeight != next.OrderWeight && filtered.Any())
 			{
-				OnAssignBestEncounterResult(done, null, system);
+				done(RequestResult.Success(), OnGetNextEncounterSelect(filtered));
 				return;
 			}
 
-			var ordered = filtered.OrderByDescending(r => r.OrderWeight.Value);
-			var topWeight = ordered.First().OrderWeight.Value;
-
-			var maxRandomWeight = 0f;
-			EncounterInfoModel chosen = null;
-
-			foreach (var current in ordered.Where(r => Mathf.Approximately(r.OrderWeight.Value, topWeight)))
+			if (!Mathf.Approximately(next.RandomAppearance.Value, 1f) && next.RandomAppearance.Value < DemonUtility.NextFloat)
 			{
-				var currentWeight = current.RandomWeightMultiplier.Value * DemonUtility.NextFloat;
-				if (chosen == null || maxRandomWeight < currentWeight)
+				// Skip this, it didn't randomly appear.
+				OnGetNextEncounterFilter(
+					done,
+					model,
+					next.OrderWeight,
+					remaining,
+					filtered
+				);
+				return;
+			}
+
+			valueFilter.Filter(
+				filterResult =>
 				{
-					maxRandomWeight = currentWeight;
-					chosen = current;
+					OnGetNextEncounterFilter(
+						done,
+						model,
+						next.OrderWeight,
+						remaining,
+						filtered,
+						filterResult ? next : null
+					);
+				},
+				next.Filtering,
+				model,
+				next
+			);
+		}
+
+		EncounterInfoModel OnGetNextEncounterSelect(
+			List<EncounterInfoModel> filtered
+		)
+		{
+			if (filtered.None()) return null;
+
+			var ordered = filtered.OrderBy(f => f.RandomWeightMultiplier.Value);
+			var keyed = new List<KeyValuePair<float, EncounterInfoModel>>();
+			var offset = 0f;
+			foreach (var encounter in ordered)
+			{
+				offset += encounter.RandomWeightMultiplier.Value;
+				keyed.Add(new KeyValuePair<float, EncounterInfoModel>(offset, encounter));
+			}
+			var selectedOffset = DemonUtility.GetNextFloat(max: offset);
+
+			var lastOffset = 0f;
+			foreach (var entry in keyed)
+			{
+				if ((Mathf.Approximately(entry.Key, lastOffset) || lastOffset < selectedOffset) && selectedOffset < entry.Key)
+				{
+					return entry.Value;
 				}
 			}
-
-			model.SetEncounterStatus(EncounterStatus.Seen(chosen.EncounterId));
-			system.EncounterId.Value = chosen.EncounterId;
-
-			var interaction = GetEncounterInteraction(chosen.EncounterId);
-			interaction.TimesSeen.Value++;
-			interaction.LastSeen.Value = DateTime.Now;
-
-			OnFilterEncountersDone(done, chosen, system);
+			return keyed.Last().Value;
 		}
+		#endregion
 
-		void OnFilterEncountersDone(Action<AssignBestEncounter> done, EncounterInfoModel encounter, SystemModel system)
-		{
-			system.EncounterId.Value = encounter.EncounterId.Value;
-
-			if (encounter.AssignedToBody.Value)
-			{
-				var bodies = encounter.HasBodyRequirements ? system.Bodies.Value.Where(b => encounter.ValidBodies.Value.Contains(b.BodyType)) : system.Bodies.Value;
-				var assignedBody = bodies.OrderBy(b => b.EncounterWeight.Value).First();
-				system.EncounterBodyId.Value = assignedBody.BodyId.Value;
-			}
-
-			OnAssignBestEncounterResult(done, encounter, system);
-		}
-
-		void OnAssignBestEncounterResult(Action<AssignBestEncounter> done, EncounterInfoModel encounter, SystemModel system)
-		{
-			if (encounter == null)
-			{
-				done(SubLight.AssignBestEncounter.NoEncounterResult(system));
-				return;
-			}
-			done(SubLight.AssignBestEncounter.EncounterResult(system, encounter, system.BodyWithEncounter));
-		}
-
+		#region Save Events
 		void OnSaveRequest(SaveRequest request)
 		{
 			if (request.State == SaveRequest.States.Complete) OnTrySave();

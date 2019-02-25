@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using LunraGames.SubLight.Models;
+
 namespace LunraGames.SubLight
 {
 	public struct SceneRequest
@@ -62,29 +64,41 @@ namespace LunraGames.SubLight
 	{
 		ILogService logging;
 		CallbackService callbacks;
+		SceneSkybox sceneSkybox;
 
 		SceneRequest current;
 
-		public SceneService(ILogService logging, CallbackService callbacks)
+		GameModel model;
+
+		public SceneService(
+			ILogService logging,
+			CallbackService callbacks,
+			SceneSkybox sceneSkybox
+		)
 		{
 			if (logging == null) throw new ArgumentNullException("logging");
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
+			if (sceneSkybox == null) throw new ArgumentNullException("sceneSkybox");
 
 			this.logging = logging;
 			this.callbacks = callbacks;
+			this.sceneSkybox = sceneSkybox;
+
+			callbacks.StateChange += OnStateChange;
 		}
 
+		#region Exposed Functionality
 		public void Request(SceneRequest request)
 		{
 			if (request.State != SceneRequest.States.Request) throw new ArgumentOutOfRangeException("request.State", "Must be a States.Request");
-			switch(current.State)
+			switch (current.State)
 			{
 				case SceneRequest.States.Request:
 				case SceneRequest.States.Active:
 					throw new Exception("Cannot start a request before the last one is complete");
 			}
 			current = request;
-			switch(current.Type)
+			switch (current.Type)
 			{
 				case SceneRequest.Types.Load:
 					LoadScenes();
@@ -94,7 +108,8 @@ namespace LunraGames.SubLight
 					break;
 			}
 		}
-		
+		#endregion
+
 		#region Load Scenes
 		void LoadScenes()
 		{
@@ -110,7 +125,6 @@ namespace LunraGames.SubLight
 			logging.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
 
 			current.ProcessedScenes.Add(scene.name);
-			SceneManager.SetActiveScene(scene);
 
 			if (current.Scenes.Length != current.ProcessedScenes.Count) return;
 
@@ -119,7 +133,7 @@ namespace LunraGames.SubLight
 			foreach (var tag in current.Tags)
 			{
 				if (current.FoundTags.ContainsKey(tag) || current.MissingTags.Contains(tag)) continue;
-				var tagObject = GameObject.FindWithTag(tag);
+				var tagObject = GameObjectExtensions.FindWithTagOrHandleMissingTag(tag);
 				if (tagObject == null)
 				{
 					current.MissingTags.Add(tag);
@@ -136,6 +150,15 @@ namespace LunraGames.SubLight
 			}
 
 			callbacks.SceneLoad -= OnSceneLoaded;
+			callbacks.SceneSetActive += OnAllScenesLoaded;
+
+			SceneManager.SetActiveScene(scene);
+		}
+
+		void OnAllScenesLoaded(Scene currentScene, Scene nextScene)
+		{
+			callbacks.SceneSetActive -= OnAllScenesLoaded;
+			sceneSkybox.ApplyRenderSettings();
 			OnAllScenesProcessed();
 		}
 		#endregion
@@ -162,12 +185,51 @@ namespace LunraGames.SubLight
 			callbacks.SceneUnload -= OnSceneUnloaded;
 			OnAllScenesProcessed();
 		}
-  		#endregion
-
+		#endregion
 		void OnAllScenesProcessed()
 		{
+			//sceneSkybox.ApplyRenderSettings();
 			current.State = SceneRequest.States.Complete;
 			if (current.Done != null) current.Done(current);
 		}
+
+		#region Events
+		void OnStateChange(StateChange change)
+		{
+			switch (change.State)
+			{
+				case StateMachine.States.Game:
+					switch (change.Event)
+					{
+						case StateMachine.Events.Begin:
+							OnGameBegin(change);
+							break;
+						case StateMachine.Events.End:
+							OnGameEnd(change);
+							break;
+					}
+					break;
+			}
+		}
+
+		void OnGameBegin(StateChange change)
+		{
+			model = (change.Payload as GamePayload).Game;
+			model.Context.TransitState.Changed += OnTransitState;
+			OnTransitState(model.Context.TransitState);
+		}
+
+		void OnGameEnd(StateChange change)
+		{
+			model.Context.TransitState.Changed -= OnTransitState;
+			OnTransitState(TransitState.Default());
+			model = null;
+		}
+
+		void OnTransitState(TransitState transitState)
+		{
+			sceneSkybox.TimeScalar = transitState.RelativeTimeScalar;
+		}
+		#endregion
 	}
 }

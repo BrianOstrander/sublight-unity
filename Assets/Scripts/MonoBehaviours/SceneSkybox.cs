@@ -1,33 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	[ExecuteInEditMode]
 	public class SceneSkybox : MonoBehaviour
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		Material skybox;
 		[SerializeField]
 		Color ambientLight = Color.white;
+		[SerializeField]
+		FloatRange skyboxRotationSpeedRange;
+		[SerializeField]
+		FloatRange skyboxExposureRange;
+		[SerializeField]
+		AnimationCurve skyboxExposureByTimeScalarCurve;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-		void Start()
+		Material skyboxInstance;
+		float skyboxRotationSpeed;
+		float skyboxRotation;
+
+		float timeScalar;
+		public float TimeScalar
 		{
-			Apply();
+			set
+			{
+				timeScalar = value;
+				ApplyTimeScalar();
+			}
+			private get { return timeScalar; }
 		}
 
-#if UNITY_EDITOR
+		void Awake()
+		{
+			skyboxInstance = new Material(skybox);
+
+			// Don't remember why I commented this out... shouldn't be a problem though...
+			//ApplyRenderSettings();
+		}
+
 		void Update()
 		{
-			if (DevPrefs.AutoApplySkybox) Apply();	
+			skyboxRotation = (skyboxRotation + (skyboxRotationSpeed * Time.deltaTime)) % 360f;
+			skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Rotation, skyboxRotation);
 		}
-#endif
 
-		void Apply()
+		public void ApplyRenderSettings()
 		{
-			RenderSettings.skybox = new Material(skybox);
+			RenderSettings.skybox = skyboxInstance;
 			RenderSettings.ambientLight = ambientLight;
+
+			ApplyTimeScalar();
+		}
+
+		void ApplyTimeScalar()
+		{
+			skyboxRotationSpeed = skyboxRotationSpeedRange.Evaluate(TimeScalar);
+			skyboxInstance.SetFloat(ShaderConstants.SkyboxPanoramic.Exposure, skyboxExposureRange.Evaluate(skyboxExposureByTimeScalarCurve.Evaluate(TimeScalar)));
 		}
 	}
 }

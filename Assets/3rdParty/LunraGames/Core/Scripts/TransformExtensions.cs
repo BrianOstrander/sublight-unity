@@ -7,17 +7,15 @@ namespace LunraGames
 {
 	public static class TransformExtensions
 	{
-		public static void ClearChildren(this Transform transform, Func<Transform, bool> condition = null)
+		public static void ClearChildren(this Transform transform, Func<Transform, bool> condition = null, bool destroyImmediate = false)
 		{
-			transform.ClearChildren<Transform>(condition);
+			transform.ClearChildren<Transform>(condition, destroyImmediate);
 		}
 
-		public static void ClearChildren<T>(this Transform transform, Func<T, bool> condition = null) where T : Component
+		public static void ClearChildren<T>(this Transform transform, Func<T, bool> condition = null, bool destroyImmediate = false) where T : Component
 		{
-			foreach (var child in transform.GetChildren(condition))
-			{
-				Object.Destroy(child.gameObject);
-			}
+			if (destroyImmediate) foreach (var child in transform.GetChildren(condition)) Object.DestroyImmediate(child.gameObject);
+			else foreach (var child in transform.GetChildren(condition)) Object.Destroy(child.gameObject);
 		}
 
 		public static void SetChildrenActive(this Transform transform, bool active) {
@@ -78,6 +76,20 @@ namespace LunraGames
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// I haven't tested this...
+		/// </summary>
+		public static T GetAncestor<T>(this Transform transform, Func<T, bool> condition = null) where T : Component
+		{
+			if (transform.parent == null) return null;
+			var parentComponent = transform.parent.GetComponent<T>();
+			if (parentComponent == null) return transform.parent.GetAncestor(condition);
+			if (condition == null) return parentComponent;
+
+			if (condition(parentComponent)) return parentComponent;
+			return transform.parent.GetAncestor(condition);
 		}
 
 		/// <summary>

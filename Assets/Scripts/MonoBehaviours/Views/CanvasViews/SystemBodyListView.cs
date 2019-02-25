@@ -9,12 +9,14 @@ namespace LunraGames.SubLight.Views
 {
 	public class SystemBodyListView : CanvasView, ISystemBodyListView
 	{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI titleLabel;
 		[SerializeField]
 		LabelButtonLeaf bodyEntryPrefab;
 		[SerializeField]
 		GameObject bodyEntryArea;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string Title { set { titleLabel.text = value ?? string.Empty; } }
 		public LabelButtonBlock[] BodyEntries { set { SetEntries(bodyEntryArea, bodyEntryPrefab, value); } }

@@ -11,14 +11,20 @@ namespace LunraGames.SubLight
 		SerializedProperty targetTogglesProperty;
 		SerializedProperty targetTransfomsProperty;
 		SerializedProperty targetGraphicsProperty;
+		SerializedProperty targetMeshRenderersProperty;
+		SerializedProperty targetGroupsProperty;
+		SerializedProperty particleSystemsProperty;
 
 		void OnEnable() 
 		{
-			globalStyleProperty = serializedObject.FindProperty("GlobalStyle");
-			localStyleProperty = serializedObject.FindProperty("LocalStyle");
+			globalStyleProperty = serializedObject.FindProperty("globalStyle");
+			localStyleProperty = serializedObject.FindProperty("localStyle");
 			targetTogglesProperty = serializedObject.FindProperty("targetToggles");
 			targetTransfomsProperty = serializedObject.FindProperty("targetTransforms");
 			targetGraphicsProperty = serializedObject.FindProperty("targetGraphics");
+			targetMeshRenderersProperty = serializedObject.FindProperty("targetMeshRenderers");
+			targetGroupsProperty = serializedObject.FindProperty("targetGroups");
+			particleSystemsProperty = serializedObject.FindProperty("particleSystems");
 		}
 
 		public override void OnInspectorGUI()
@@ -36,6 +42,9 @@ namespace LunraGames.SubLight
 			EditorGUILayout.PropertyField(targetTogglesProperty, true);
 			EditorGUILayout.PropertyField(targetTransfomsProperty, true);
 			EditorGUILayout.PropertyField(targetGraphicsProperty, true);
+			EditorGUILayout.PropertyField(targetMeshRenderersProperty, true);
+			EditorGUILayout.PropertyField(targetGroupsProperty, true);
+			EditorGUILayout.PropertyField(particleSystemsProperty, true);
 
 			serializedObject.ApplyModifiedProperties();
 			EditorUtility.SetDirty(target);

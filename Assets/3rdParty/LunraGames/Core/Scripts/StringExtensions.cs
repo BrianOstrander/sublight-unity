@@ -12,5 +12,7 @@
 			if (value.Length <= length) return value;
 			return truncation + value.Substring(value.Length - length);
 		}
+
+		public static string GetNonNullOrEmpty(string value, string defaultValue) { return string.IsNullOrEmpty(value) ? defaultValue : value; }
 	}
 }

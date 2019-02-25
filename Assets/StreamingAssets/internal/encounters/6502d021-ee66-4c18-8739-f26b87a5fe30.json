@@ -1,0 +1,66 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "2ecf3799-264f-43b7-adec-383b09571ef5",
+  "name": "Click Again",
+  "trigger": "NavigationSelect",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "ab97aa8c-e483-487e-9713-8c750733105e",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Navigation",
+              "message": "You've <b>selected</b> a system, click it again to <b>confirm</b> your transit. This will consume rations and propellant, but you can gain those back by traveling to systems with resources!<br><br>If you're low on <b>rations</b> you can change your <b>rationing</b> level, but be careful not to starve your whole population! When rationing is <b>insufficient</b> your population will <b>decrease</b>. If you increase your rationing, your population will <b>increase</b>, but make sure not to let your population get too high either, your life support will fail!",
+              "dialogType": "Confirm",
+              "dialogStyle": "Neutral",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "f10825a3-c2ff-4b5b-b017-a4b993879efc"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "94665ada-2eb2-47d4-bf5f-920ca8b2c981"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "Click Again",
+  "metaKeyValues": {
+    "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
+  },
+  "created": "2019-02-22T18:12:03.02069-08:00",
+  "modified": "2019-02-22T18:12:03.02069-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

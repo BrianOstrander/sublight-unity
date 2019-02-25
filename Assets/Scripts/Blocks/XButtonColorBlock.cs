@@ -24,5 +24,19 @@ namespace LunraGames.SubLight
 		public Color NormalColor;
 		public Color HighlightedColor;
 		public Color PressedColor;
+
+		public XButtonColorBlock Duplicate
+		{
+			get
+			{
+				return new XButtonColorBlock
+				{
+					DisabledColor = DisabledColor,
+					NormalColor = NormalColor,
+					HighlightedColor = HighlightedColor,
+					PressedColor = PressedColor
+				};
+			}
+		}
 	}
 }

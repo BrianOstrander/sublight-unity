@@ -17,8 +17,6 @@ namespace LunraGames.SubLight
 		static string ParentPath { get { return Path.Combine(Application.persistentDataPath, "saves"); } }
 		static string InternalPath { get { return Path.Combine(Application.streamingAssetsPath, "internal"); } }
 
-		static string InventoryReferencePath(string suffix) { return Path.Combine(Path.Combine(InternalPath, "inventory-references"), suffix); }
-
 		bool readableSaves;
 
 		protected override Dictionary<SaveTypes, int> MinimumSupportedSaves
@@ -32,11 +30,13 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, -1 },
 					{ SaveTypes.EncounterInfo, 0 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
-					{ SaveTypes.InteractedInventoryReferenceList, -1 },
+					// -- Meta Key Values
 					{ SaveTypes.GlobalKeyValues, -1 },
-					// -- Inventory References
-					{ SaveTypes.ModuleReference, 4 },
-					{ SaveTypes.OrbitalCrewReference, 4 }
+					{ SaveTypes.PreferencesKeyValues, -1 },
+					// -- Galaxies
+					{ SaveTypes.GalaxyPreview, 7 },
+					{ SaveTypes.GalaxyDistant, 7 },
+					{ SaveTypes.GalaxyInfo, 7 }
 					// --
 				};
 			}
@@ -52,11 +52,13 @@ namespace LunraGames.SubLight
 					{ SaveTypes.Preferences, true },
 					{ SaveTypes.EncounterInfo, false },
 					{ SaveTypes.InteractedEncounterInfoList, true },
-					{ SaveTypes.InteractedInventoryReferenceList, true },
+					// -- Meta Key Values
 					{ SaveTypes.GlobalKeyValues, true },
-					// -- Inventory References
-					{ SaveTypes.ModuleReference, false },
-					{ SaveTypes.OrbitalCrewReference, false }
+					{ SaveTypes.PreferencesKeyValues, true },
+					// -- Galaxies
+					{ SaveTypes.GalaxyPreview, false },
+					{ SaveTypes.GalaxyDistant, false },
+					{ SaveTypes.GalaxyInfo, false }
 					// --
 				};
 			}
@@ -97,13 +99,16 @@ namespace LunraGames.SubLight
 				case SaveTypes.Game: return Path.Combine(ParentPath, "games");
 				case SaveTypes.Preferences: return Path.Combine(ParentPath, "preferences");
 				case SaveTypes.EncounterInfo: return Path.Combine(InternalPath, "encounters");
+				// -- Meta Key Values
 				case SaveTypes.GlobalKeyValues: return Path.Combine(ParentPath, "global-kv");
+				case SaveTypes.PreferencesKeyValues: return Path.Combine(ParentPath, "preferences-kv");
+				// -- Galaxies
+				case SaveTypes.GalaxyPreview:
+				case SaveTypes.GalaxyDistant:
+				case SaveTypes.GalaxyInfo:
+					return Path.Combine(InternalPath, "galaxies");
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
-				case SaveTypes.InteractedInventoryReferenceList: return Path.Combine(ParentPath, "interacted-references");
-				// -- Inventory References
-				case SaveTypes.ModuleReference: return InventoryReferencePath("modules");
-				case SaveTypes.OrbitalCrewReference: return InventoryReferencePath("orbital-crew");
 				// --
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
@@ -129,18 +134,21 @@ namespace LunraGames.SubLight
 
 			result.SupportedVersion.Value = model.SupportedVersion;
 			result.Path.Value = model.Path;
-			done(SaveLoadRequest<M>.Success(model, result));
+
+			if (result.HasSiblingDirectory) LoadSiblingFiles(model, result, done);
+			else done(SaveLoadRequest<M>.Success(model, result));
 		}
 
 		protected override void OnSave<M>(M model, Action<SaveLoadRequest<M>> done = null)
 		{
 			File.WriteAllText(model.Path, Serialization.Serialize(model, formatting: readableSaves ? Formatting.Indented : Formatting.None));
+			if (model.HasSiblingDirectory) Directory.CreateDirectory(model.SiblingDirectory);
 			done(SaveLoadRequest<M>.Success(model, model));
 		}
 
 		protected override void OnList<M>(Action<SaveLoadArrayRequest<SaveModel>> done)
 		{
-			var path = GetPath(ToEnum(typeof(M)));
+			var path = GetPath(ToEnum(typeof(M)).FirstOrDefault());
 			var results = new List<SaveModel>();
 			foreach (var file in Directory.GetFiles(path))
 			{
@@ -168,5 +176,83 @@ namespace LunraGames.SubLight
 			File.Delete(model.Path);
 			done(SaveLoadRequest<M>.Success(model, model));
 		}
+
+		protected override void OnRead(string path, Action<ReadWriteRequest> done)
+		{
+			var data = File.ReadAllBytes(path);
+
+			if (data == null)
+			{
+				done(ReadWriteRequest.Failure(path, "Null result"));
+				return;
+			}
+
+			done(ReadWriteRequest.Success(path, data));
+		}
+
+		#region Sibling Loading
+		void LoadSiblingFiles<M>(SaveModel model, M result, Action<SaveLoadRequest<M>> done)
+			where M : SaveModel
+		{
+			OnLoadSiblingFiles(Directory.GetFiles(result.SiblingDirectory).ToList(), model, result, done);
+		}
+
+		void OnLoadSiblingFiles<M>(List<string> remainingFiles, SaveModel model, M result, Action<SaveLoadRequest<M>> done)
+			where M : SaveModel
+		{
+			if (remainingFiles.None())
+			{
+				done(SaveLoadRequest<M>.Success(model, result));
+				return;
+			}
+
+			var nextFile = remainingFiles.First();
+			remainingFiles.RemoveAt(0);
+
+			Action onDone = () => OnLoadSiblingFiles(remainingFiles, model, result, done);
+
+			switch (Path.GetExtension(nextFile))
+			{
+				case ".png":
+					Read(nextFile, textureResult => OnReadSiblingTexture(textureResult, result, onDone));
+					break;
+				default:
+					onDone();
+					break;
+			}
+		}
+
+		void OnReadSiblingTexture<M>(ReadWriteRequest textureResult, M result, Action done)
+			where M : SaveModel
+		{
+			var textureName = Path.GetFileNameWithoutExtension(textureResult.Path);
+
+			Action<string> onError = error =>
+			{
+				Debug.LogError(error);
+				result.Textures.Add(textureName, null);
+				done();
+			};
+
+			if (textureResult.Status != RequestStatus.Success)
+			{
+				onError("Unable to read bytes at \"" + textureResult.Path + "\", returning null.");
+				return;
+			}
+
+			try
+			{
+				var target = new Texture2D(1, 1);
+				result.PrepareTexture(textureName, target);
+				target.LoadImage(textureResult.Bytes);
+				result.Textures.Add(textureName, target);
+				done();
+			}
+			catch (Exception e)
+			{
+				onError("Encountered the following exception while loading bytes into texture:\n" + e.Message);
+			}
+		}
+		#endregion
 	}
 }

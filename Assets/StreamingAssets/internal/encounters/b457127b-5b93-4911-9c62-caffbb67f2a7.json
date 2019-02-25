@@ -1,0 +1,1210 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330",
+  "name": "InitializeRules Default",
+  "trigger": "InitializeRules",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "a31fe23d-84b8-4982-b6f2-7baac76a5b59",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "ee6749d7-a4fb-4e60-8e36-97077e93278a",
+                  "Source": "LocalValue",
+                  "LocalValue": 50.0
+                },
+                "Input1": {
+                  "AddressId": "9001cae8-ceaa-41ec-a5bb-196054765cb8",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "ca98690c-6f44-49b9-801a-aeb2ec7b71b0",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "fe90eab1-7e3a-4d28-a1c6-f9c5b08dd21d",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "20eb8a4d-7b5f-4651-bee3-0e53b391975e",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "population_minimum"
+                }
+              },
+              "entryId": "d23159ff-b942-4e99-8508-aab73261d609"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "2eb91f46-b2da-4312-92ee-b2e359a06147",
+                  "Source": "LocalValue",
+                  "LocalValue": 2.0
+                },
+                "Input1": {
+                  "AddressId": "3cb37a7d-c74f-426e-abd1-291bd2e7ad36",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "b09a9ee4-3efa-4472-9e8e-53e9edb33dd8",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "8bd80ccf-89c1-4dab-835a-15419198a71e",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "a6d6d3ee-51ef-4909-a8f4-4e12304d8d78",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "population_maximum_multiplier"
+                }
+              },
+              "entryId": "958a23e9-057d-4ec3-802d-030106189a63"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "2ffe9ec1-a550-4f60-be87-8df6ed66b13b",
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "AddressId": "7671ca65-4fea-4663-8ad1-bb37d0ad4180",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "f823d979-de06-4d0c-a16a-f9a7556eca65",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "4288f241-ccfe-4fca-ac72-013c066d605d",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "6c3d09ba-1bde-4032-8f20-cc612b83d5fe",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rationing"
+                }
+              },
+              "entryId": "cf354630-d3ab-48e7-bffb-c9dd4c9a405c"
+            },
+            "index": 13
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "149d291f-6c26-4e06-a2e3-a2600f7642e1",
+                  "Source": "LocalValue",
+                  "LocalValue": 3
+                },
+                "Input1": {
+                  "AddressId": "8abcf1b9-2513-405e-9d6d-c1ff0ccc6423",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "8ca2db85-3641-4219-b77f-291dcdbffcea",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "5b6caca8-6d4f-4dad-9467-545de810a02b",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "89f9ed56-6f94-4765-98f0-cac3cf30f6e6",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transits_with_over_population_maximum"
+                }
+              },
+              "entryId": "2cbe63e6-62aa-4203-ae1c-9c09680df922"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "829aeaf7-34bf-42e6-b8d5-4ecdd2da8e27",
+                  "Source": "LocalValue",
+                  "LocalValue": 3
+                },
+                "Input1": {
+                  "AddressId": "34e8e1c7-9127-4bc5-8666-05ef30bcd353",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "ac41cd15-be7e-4e66-8061-d090dca69fce",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "f4a27a3d-9c3b-442a-8a44-f4d95cc6b715",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "1662b259-3816-403b-ba50-2a84bcee774a",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transits_with_under_population_maximum"
+                }
+              },
+              "entryId": "f622ba43-a6c3-4129-8104-4950efef0e5f"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "a441f7fb-ae47-489c-b6e8-71de358cc504",
+                  "Source": "LocalValue",
+                  "LocalValue": 3
+                },
+                "Input1": {
+                  "AddressId": "a35bc02f-837b-4370-8535-00436032911a",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "7e25f39c-161e-44dc-aedb-6e89bec876c4",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "ddec0c61-464b-40b8-9557-c54b4cff28bf",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "92674c50-2c24-4bfd-b479-5f7034632b7e",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transits_without_rations_maximum"
+                }
+              },
+              "entryId": "4b34fdfb-808a-4004-954e-11c14c310a9a"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "49cde61e-979a-42be-a963-f420bbc2ee8b",
+                  "Source": "LocalValue",
+                  "LocalValue": 3
+                },
+                "Input1": {
+                  "AddressId": "3e549f4f-362c-4a88-a585-e71b402c447b",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "88ae4e20-393a-4726-b939-05a969ab17b3",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "10a3113b-26ca-47cd-a19c-07d5ca997418",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "7e255eae-75ea-414a-bf96-245720c828f3",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rationing_maximum"
+                }
+              },
+              "entryId": "a7e96168-6b59-4b2d-959b-a4b69cc6b79b"
+            },
+            "index": 20
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "040eb179-d24b-407b-8caa-bc5f68ab2cd2",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rationing_maximum"
+                },
+                "Input1": {
+                  "AddressId": "9cd7a81b-0239-4778-994a-fca5f853c953",
+                  "Source": "LocalValue",
+                  "LocalValue": -1
+                },
+                "MinimumClamping": {
+                  "AddressId": "1f0a357c-8c44-42ce-8311-b39c5fa6f0fc",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "cc2ea59c-292a-4a96-b7cd-b7b5394a3cde",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "e73df9ef-5554-42ea-a742-3dab409f291c",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rationing_minimum"
+                }
+              },
+              "entryId": "33a3d3d8-2eca-4b62-8163-b07ae15c4664"
+            },
+            "index": 21
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "6322186d-f238-4e44-959f-c781cec64bd8",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.1
+                },
+                "Input1": {
+                  "AddressId": "23e017d7-0c48-45d1-b1af-07316b8f8f89",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "445b253d-0e55-45f8-b144-cdd7c8482ddd",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "661c000d-3280-4b76-bd36-4b4e65d6fb48",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "6dc21a63-2745-47e6-a65b-36eccc6fbb70",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_consumption_multiplier"
+                }
+              },
+              "entryId": "850a5c9e-46cc-4036-95f3-de86e3da256b"
+            },
+            "index": 14
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "c3cc8404-b7a9-4c66-9c86-2ea3eaf83210",
+                  "Source": "LocalValue",
+                  "LocalValue": 10.0
+                },
+                "Input1": {
+                  "AddressId": "430f358c-0b53-48f8-a792-08797d29ca3e",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "d6c2b958-afc3-457e-8c75-1a585b7e9644",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "801295f9-d22a-45c2-a957-1856e1e4c4f7",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "eebb7f57-370a-4f79-a3d0-1e741adf6b1d",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "population_rationing_multiplier"
+                }
+              },
+              "entryId": "e2783d41-faa5-46ac-9280-29e7c4195a02"
+            },
+            "index": 23
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "d39e41dc-b862-4ba1-b24b-3560917507e8",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "population_minimum"
+                },
+                "Input1": {
+                  "AddressId": "97010e0e-26c7-4290-8283-c04b9176cecb",
+                  "Source": "LocalValue",
+                  "LocalValue": 10.0
+                },
+                "MinimumClamping": {
+                  "AddressId": "6f9072d2-e308-4e9b-9935-51710113b755",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "9ae4daa6-ab48-4f39-8846-9ff2cf64cfc2",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "750e9799-e3aa-4a61-8558-aa51dd5b0f43",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "ship_population_minimum"
+                }
+              },
+              "entryId": "4ab65a75-9267-4620-be06-1b9a20a848c4"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "5ed210bb-4b31-4c96-beba-a3d5ac265c99",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "ship_population_minimum"
+                },
+                "Input1": {
+                  "AddressId": "16a48044-a142-4735-b896-9459959977d5",
+                  "Source": "LocalValue",
+                  "LocalValue": 100.0
+                },
+                "MinimumClamping": {
+                  "AddressId": "89a47169-dcb5-4ba6-8036-89b528e6a7ce",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "af3c24aa-d49a-449d-924c-ea300a28eae4",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "9ea8267b-a779-4201-8c45-2485d68b88f2",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "ship_population_maximum"
+                }
+              },
+              "entryId": "127ac76f-3a7c-42ca-bcc5-68a5407ed926"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Subtract",
+                "Input0": {
+                  "AddressId": "a6cd3aa9-0093-466c-850c-3f2597673eb0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "ship_population_maximum"
+                },
+                "Input1": {
+                  "AddressId": "5be2de70-096b-44e7-92d9-dcce031f6937",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "ship_population_minimum"
+                },
+                "MinimumClamping": {
+                  "AddressId": "c98271a7-2495-48a3-bae3-d38e5626562b",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "f52ef8de-9e61-489f-af81-966aaf5d1c38",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "f1a59cda-9521-4fa6-a591-da63c294b817",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "population_delta"
+                }
+              },
+              "entryId": "928ff752-d073-48e4-bed5-944865fa045e"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "20f36f88-b31a-432e-b412-7c41b4efcd1e",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "population_delta"
+                },
+                "Input1": {
+                  "AddressId": "cec93acb-879e-4b53-b6f0-92bb251455e0",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.5
+                },
+                "MinimumClamping": {
+                  "AddressId": "ad710679-1e8d-4b38-b99f-8c4529fdbd0b",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "50b6aaf8-4fed-4dde-94f4-8e1b70090522",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "c195b43e-0496-4758-90c6-039a4306c175",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "population_delta"
+                }
+              },
+              "entryId": "0f6ff457-ef76-45cb-b17b-c932f178234c"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "a3119b89-46da-46f7-b9ed-83d633257020",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "ship_population_minimum"
+                },
+                "Input1": {
+                  "AddressId": "aa38f05b-11f0-40cd-936a-0b096a075796",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "population_delta"
+                },
+                "MinimumClamping": {
+                  "AddressId": "1d3846b4-4448-449a-9d16-cf8c88172297",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "a50b3f68-5e85-4293-9f34-f73d7e4db35b",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "e826965e-9b0f-477d-ad6a-1d6753bc6658",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "population"
+                }
+              },
+              "entryId": "b628cde3-e323-4203-aa52-c646e0f8aa96"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "b601e81d-1a02-4bac-a56e-e3f3adfa65cf",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "rations_per_year_by_population"
+                },
+                "Input1": {
+                  "AddressId": "dd9fcd00-69d7-42bc-847d-6e7d27403cb1",
+                  "Source": "LocalValue",
+                  "LocalValue": 5000.0
+                },
+                "MinimumClamping": {
+                  "AddressId": "fbc10359-8f40-4bf8-a5d2-6bf70eb2f57d",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "65c9516e-e470-49ba-8178-85945c8a6244",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "3a4ac19e-24d5-4171-8409-3f35b6d2c91a",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations"
+                }
+              },
+              "entryId": "723cb715-1e9c-49dc-b404-5bdc23a02d7d"
+            },
+            "index": 16
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "c7cd3c69-6858-422b-ba5e-58ca73796d3f",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations"
+                },
+                "Input1": {
+                  "AddressId": "41851553-6121-4996-a3f9-5adddd61bc74",
+                  "Source": "LocalValue",
+                  "LocalValue": 2.0
+                },
+                "MinimumClamping": {
+                  "AddressId": "e9f72284-e9d6-4e8d-8b90-eac2d7fa6c33",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "c8001f6d-75cb-42f3-acde-91405ac69c42",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "d46c0a31-7c82-41e8-b43e-1e2f9238f77b",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_maximum"
+                }
+              },
+              "entryId": "d52be297-719c-4665-8960-2614dcf999fd"
+            },
+            "index": 17
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "eb7ba9a4-27ad-4985-b6ff-bf74512f22b6",
+                  "Source": "LocalValue",
+                  "LocalValue": 1.0
+                },
+                "Input1": {
+                  "AddressId": "5e98e22f-3dd1-4625-a11b-d02f8dbaa2d2",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "55be9eb5-92ee-419f-8210-8f929ece9f5f",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "6eee7e64-ae2a-4d04-afea-10c8caa958fd",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "0512f635-7d76-4d31-98ec-c21aa2b92326",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transit_range_minimum"
+                }
+              },
+              "entryId": "5de99f78-4deb-4c37-8320-104e1eb45ed7"
+            },
+            "index": 24
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "2dd0c2d7-271f-4c97-be67-ceba198cb282",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.3
+                },
+                "Input1": {
+                  "AddressId": "88c9a3aa-2e0c-4e19-8eaf-e881ab55c15f",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "fc1dbb47-5ff5-4eca-80ed-a6df7cc83f74",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "4f39b083-0014-48e3-b206-e03f078949b0",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "fa042c8d-2aa6-4fd9-8c33-9544fac187a4",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transit_velocity_minimum"
+                }
+              },
+              "entryId": "feb4b3c2-b31a-48cb-966f-4eee102b0d75"
+            },
+            "index": 25
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "c8778b0d-f9e5-4149-ad58-9586e5f827c6",
+                  "Source": "LocalValue",
+                  "LocalValue": 1
+                },
+                "Input1": {
+                  "AddressId": "d4d3ed5f-0a44-4959-97f6-b44e64844e2f",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "7c36df9e-27fd-4f71-a7ad-66cc0a1446ad",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "bb0b8123-232c-41d9-9c5e-445078da831f",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "6b56b0bd-0024-4229-856d-570a1fd19858",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_usage"
+                }
+              },
+              "entryId": "1c4b18e5-0f37-402a-8a16-4a0995b46953"
+            },
+            "index": 34
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "a06c9619-51ab-4403-b455-654d1a55d126",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.025
+                },
+                "Input1": {
+                  "AddressId": "a5048fb3-45c2-4f58-8657-7775ad1038f7",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "6b5b19fb-f746-47a7-8484-ece55f8d4dc2",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "5bfe9adf-9a0d-47f2-9d95-4a96eccbcf75",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "49851155-61f0-4b02-93fa-163b13b90f6a",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_gather_multiplier"
+                }
+              },
+              "entryId": "38686840-70c4-4b29-b266-66bd677dcd72"
+            },
+            "index": 18
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "00c8b910-0a99-4f36-a57c-77863cefc661",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_maximum"
+                },
+                "Input1": {
+                  "AddressId": "73c0fe8f-f666-4da7-9cbc-24a87fb90f5c",
+                  "Source": "LocalValue",
+                  "LocalValue": 10.0
+                },
+                "MinimumClamping": {
+                  "AddressId": "887f0790-d0a6-46be-a748-00e6faa3a954",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "cf7002a9-e71f-46bd-b318-ea69e790506b",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "2b8a4fe1-a950-4793-8793-3c6653f20cb8",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_gather_maximum"
+                }
+              },
+              "entryId": "dcc4851f-74bc-45e2-966c-63a7dc7f19ef"
+            },
+            "index": 19
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "0a861f46-f408-4ed4-805f-f2a1876063db",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_consumption_multiplier"
+                },
+                "Input1": {
+                  "AddressId": "4f83eea1-4799-418f-a86e-f7ba28e78790",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "population"
+                },
+                "MinimumClamping": {
+                  "AddressId": "974d4105-01a6-489f-96fb-0fa5823713c6",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "c7d3209c-7e63-4fae-a833-5c2ec2b5c5a7",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "ee78d4c5-4b0c-4ffb-9cc8-bae78fc0a417",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "rations_per_year_by_population"
+                }
+              },
+              "entryId": "176399de-585f-401a-b921-04c5e52ae47e"
+            },
+            "index": 15
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "3345ef27-76cc-49c7-8ec7-d570e824a8e4",
+                  "Source": "LocalValue",
+                  "LocalValue": 5.0
+                },
+                "Input1": {
+                  "AddressId": "5abc4912-a024-4d25-a90a-5e50e461806d",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "e26334dc-583f-4757-af94-809d4d4e572d",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "c3582307-0d28-44fc-963e-744f57dda2a1",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "64d4a049-9693-4203-a616-ac580ed9e6fa",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant"
+                }
+              },
+              "entryId": "5f42f47f-c3fd-4513-ad83-110f90446a21"
+            },
+            "index": 35
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "23e2fbc8-69f4-41a8-b840-1ef3389c4416",
+                  "Source": "LocalValue",
+                  "LocalValue": 16.0
+                },
+                "Input1": {
+                  "AddressId": "4089b4df-6e01-4328-8373-025018450da1",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "58be0f39-a961-4179-a04e-a44256acc4e6",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "ea7ba40d-b836-49a0-9e5c-11245d232f45",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "f4b80465-e40b-4505-b44f-a2e0389406ad",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_gather_maximum"
+                }
+              },
+              "entryId": "1fc5aa4e-146e-4cd1-9fa8-12432a8fb985"
+            },
+            "index": 36
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "0cd6b05f-0110-409e-85bb-edcbe85466f3",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.25
+                },
+                "Input1": {
+                  "AddressId": "19c06f91-9fe2-4d7b-96bd-cefe90f9099d",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "d918383a-066b-4637-85c3-c9d44bcd7666",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "807d61ae-db8e-4b05-a17a-f3d1a5d4bb3c",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "f1f233c6-d07f-45e6-a6e9-b74e53519889",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_gather_multiplier"
+                }
+              },
+              "entryId": "643cdfcd-7c3b-4568-b3d1-8d690fb01f6d"
+            },
+            "index": 37
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "a02151c5-b0eb-4af6-a6be-2f50b0ec51c5",
+                  "Source": "LocalValue",
+                  "LocalValue": 5.0
+                },
+                "Input1": {
+                  "AddressId": "dc6d5e80-b926-443d-96df-67f3fc88e6c4",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "54733c8d-fa38-41f1-88d2-abb09c5a03b8",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "bd0e484a-4f2e-40a5-83bd-c2b6e9f1a128",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "fd2f8c07-961d-4da6-a0b6-dcba1d107788",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_maximum"
+                }
+              },
+              "entryId": "4d8635a1-1d5a-4943-8385-aefc7fb7861d"
+            },
+            "index": 38
+          }
+        ],
+        "index": 1,
+        "logId": "7e1a57e0-ed7e-4c42-a659-c0480de34631",
+        "fallbackLogId": "dfc53016-7b51-4254-9400-52b1ad7244e0"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "Initializing Game Rules"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "67b3d3f9-3c15-4271-a34c-d5b92c04e07d"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "de52157e-a3b7-4bec-b2d0-e3765bd6d35d",
+        "fallbackLogId": "7e1a57e0-ed7e-4c42-a659-c0480de34631"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 20
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "845d192c-4c5c-44fa-ac33-182fe5adc37b"
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "dfc53016-7b51-4254-9400-52b1ad7244e0"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 7,
+  "meta": "InitializeRules Default",
+  "metaKeyValues": {
+    "EncounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330"
+  },
+  "created": "2019-02-18T19:16:17.499742-08:00",
+  "modified": "2019-02-18T19:16:17.499742-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

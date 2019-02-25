@@ -5,11 +5,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+using LunraGames.SubLight.Models;
+
 namespace LunraGames.SubLight
 {
 	public class ViewMediator
 	{
+		GameModel gameModel;
+
 		Heartbeat heartbeat;
+		CallbackService callbacks;
 
 		int interactionCount;
 		public int InteractionCount
@@ -37,11 +42,13 @@ namespace LunraGames.SubLight
 		List<IView> views = new List<IView>();
 		Transform storage;
 
-		public ViewMediator(Heartbeat heartbeat)
+		public ViewMediator(Heartbeat heartbeat, CallbackService callbacks)
 		{
 			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
+			if (callbacks == null) throw new ArgumentNullException("callbacks");
 
 			this.heartbeat = heartbeat;
+			this.callbacks = callbacks;
 		}
 
 		public void Initialize(List<GameObject> defaultViews, Transform viewStorage, Action<RequestStatus> done)
@@ -64,6 +71,8 @@ namespace LunraGames.SubLight
 			}
 			heartbeat.Update += Update;
 			heartbeat.LateUpdate += LateUpdate;
+
+			callbacks.StateChange += OnStateChange;
 
 			done(RequestStatus.Success);
 		}
@@ -132,7 +141,7 @@ namespace LunraGames.SubLight
 				if (component == null) continue;
 				if (predicate != null)
 				{
-					try 
+					try
 					{
 						if (!predicate(component as IView)) continue;
 					}
@@ -153,7 +162,7 @@ namespace LunraGames.SubLight
 			return Create(prefab);
 		}
 
-		private IView Create(GameObject prefab)
+		IView Create(GameObject prefab)
 		{
 			var spawned = Object.Instantiate(prefab).GetComponent<IView>();
 			spawned.gameObject.SetActive(false);
@@ -188,8 +197,10 @@ namespace LunraGames.SubLight
 		void Closing(IView view)
 		{
 			// TODO: make this take into account multiple calls per frame, because Time.deltaTime is going to ruin it.
-			view.Progress = Mathf.Min(view.CloseDuration, view.Progress + Time.deltaTime);
-			var scalar = view.Progress / view.CloseDuration;
+			var progress = Mathf.Min(view.CloseDuration, view.Progress + Time.deltaTime);
+			var scalar = progress / view.CloseDuration;
+
+			view.SetProgress(progress, scalar);
 
 			view.Closing(scalar);
 			if (Mathf.Approximately(1f, scalar))
@@ -205,8 +216,10 @@ namespace LunraGames.SubLight
 		void Showing(IView view)
 		{
 			// TODO: make this take into account multiple calls per frame, because Time.deltaTime is going to ruin it.
-			view.Progress = Mathf.Min(view.ShowDuration, view.Progress + Time.deltaTime);
-			var scalar = view.Progress / view.ShowDuration;
+			var progress = Mathf.Min(view.ShowDuration, view.Progress + Time.deltaTime);
+			var scalar = progress / view.ShowDuration;
+
+			view.SetProgress(progress, scalar);
 
 			view.Showing(scalar);
 			if (Mathf.Approximately(1f, scalar))
@@ -217,11 +230,18 @@ namespace LunraGames.SubLight
 
 		void Update(float delta)
 		{
+			FrameCount++;
+			CameraHasMoved = !lastCameraForward.Approximately(CameraForward) || !lastCameraPosition.Approximately(CameraPosition);
+			lastCameraForward = CameraForward;
+			lastCameraPosition = CameraPosition;
+
 			foreach (var view in views.ToList())
 			{
-				if (view.TransitionState == TransitionStates.Shown) 
+				if (view.TransitionState != TransitionStates.Closed) view.Constant(delta);
+
+				if (view.TransitionState == TransitionStates.Shown)
 				{
-					view.Idle (delta);
+					view.Idle(delta);
 					continue;
 				}
 
@@ -241,7 +261,23 @@ namespace LunraGames.SubLight
 		{
 			foreach (var view in views.ToList())
 			{
+				if (view.TransitionState != TransitionStates.Closed) view.LateConstant(delta);
 				if (view.TransitionState == TransitionStates.Shown) view.LateIdle(delta);
+			}
+		}
+
+		void OnStateChange(StateChange stateChange)
+		{
+			switch (stateChange.State)
+			{
+				case StateMachine.States.Game: break;
+				default: return;
+			}
+
+			switch (stateChange.Event)
+			{
+				case StateMachine.Events.Idle: gameModel = stateChange.GetPayload<GamePayload>().Game; break;
+				case StateMachine.Events.End: gameModel = null; break;
 			}
 		}
 
@@ -265,7 +301,9 @@ namespace LunraGames.SubLight
 			}
 
 			view.Parent = parent;
-			view.Progress = instant ? view.ShowDuration : 0f;
+
+			if (instant) view.SetProgress(view.ShowDuration, 1f);
+			else view.SetProgress(0f, 0f);
 
 			views.Add(view);
 			view.Prepare();
@@ -281,15 +319,41 @@ namespace LunraGames.SubLight
 			{
 				case TransitionStates.Closed:
 					return;
-
-				case TransitionStates.Unknown:
+				case TransitionStates.Unknown: // This may no longer ever get called.
 					Debug.LogWarning("Can't close a view with an unknown state", view.gameObject);
 					return;
 			}
 
-			view.Progress = instant ? view.CloseDuration : 0f;
+			if (instant) view.SetProgress(view.CloseDuration, 1f);
+			else view.SetProgress(0f, 0f);
+
 			view.PrepareClose();
 			Closing(view);
 		}
+
+		#region Animation Data
+		// Instead of animations getting their data from weird places, they should get everything through here.
+
+		Vector3 lastCameraPosition;
+		Vector3 lastCameraForward;
+
+		bool IsCameraMainNull { get { return Camera.main == null; } }
+		bool IsGameModelNull { get { return gameModel == null; } }
+
+		public long FrameCount { get; private set; } // Should be good for 4.8 billion years at 60 FPS!
+		/// <summary>
+		/// Has the camera moved since the last frame?
+		/// </summary>
+		/// <value><c>true</c> if camera has moved; otherwise, <c>false</c>.</value>
+		public bool CameraHasMoved { get; private set; }
+		public Vector3 CameraPosition { get { return IsCameraMainNull ? Vector3.zero : Camera.main.transform.position; } }
+		public Vector3 CameraForward { get { return IsCameraMainNull ? Vector3.forward : Camera.main.transform.forward; } }
+		public Vector3 CameraUp { get { return IsCameraMainNull ? Vector3.up : Camera.main.transform.up; } }
+		public Quaternion CameraRotation { get { return IsCameraMainNull ? Quaternion.identity : Camera.main.transform.rotation; } }
+		public Ray CameraViewportPointToRay(Vector3 pos) { return IsCameraMainNull ? new Ray(Vector3.zero, Vector3.forward) : Camera.main.ViewportPointToRay(pos); }
+
+		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.Context.CameraTransform.Value; } }
+		public Camera Camera { get { return IsCameraMainNull ? null : Camera.main; } }
+		#endregion
 	}
 }

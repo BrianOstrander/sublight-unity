@@ -6,18 +6,15 @@ namespace LunraGames.SubLight.Models
 {
 	public class EncounterInfoModel : SaveModel
 	{
-		[JsonProperty] float orderWeight;
+		[JsonProperty] int orderWeight;
 		[JsonProperty] float randomWeightMultiplier;
-		[JsonProperty] bool ignore;
+		[JsonProperty] float randomAppearance;
 		[JsonProperty] string encounterId;
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 		[JsonProperty] string hook;
 		[JsonProperty] EncounterTriggers trigger;
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
-		[JsonProperty] SystemTypes[] validSystems = new SystemTypes[0];
-		[JsonProperty] bool assignedToBody;
-		[JsonProperty] BodyTypes[] validBodies = new BodyTypes[0];
 		[JsonProperty] EncounterLogListModel logs = new EncounterLogListModel();
 
 		/// <summary>
@@ -25,7 +22,7 @@ namespace LunraGames.SubLight.Models
 		/// the more likely it is to appear first.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<float> OrderWeight;
+		public readonly ListenerProperty<int> OrderWeight;
 		/// <summary>
 		/// This value is multiplied by the random weight. Higher values means
 		/// this encounter will appear more often. The minimum is zero.
@@ -33,10 +30,11 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<float> RandomWeightMultiplier;
 		/// <summary>
-		/// If true, this encounter info will never show up in game.
+		/// The random appearance of this encounter, if 1 then always, if less
+		/// than 1 there's a chance it will not be considered.
 		/// </summary>
 		[JsonIgnore]
-		public readonly ListenerProperty<bool> Ignore;
+		public readonly ListenerProperty<float> RandomAppearance;
 		/// <summary>
 		/// The encounter identifier.
 		/// </summary>
@@ -64,21 +62,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<EncounterTriggers> Trigger;
-		[JsonIgnore]
-		public readonly ListenerProperty<SystemTypes[]> ValidSystems;
-		/// <summary>
-		/// If true, this encounter gets associated with a specific body in a
-		/// system.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> AssignedToBody;
-		/// <summary>
-		/// A system requires at least one of these bodies in order for the
-		/// encounter to be assigned to it. If empty, there are no body
-		/// requirements.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<BodyTypes[]> ValidBodies;
 
 		#region Shortcuts
 		[JsonIgnore]
@@ -88,13 +71,6 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region Utility
-		/// <summary>
-		/// If true, this encounter has to be in a system with certain types of
-		/// bodies. Basically true if there are any entries in ValidBodies.
-		/// </summary>
-		/// <value><c>true</c> if has body requirements; otherwise, <c>false</c>.</value>
-		[JsonIgnore]
-		public bool HasBodyRequirements { get { return ValidBodies.Value.Any(); } }
 		[JsonIgnore]
 		public bool IsIntroduction { get { return 100f <= OrderWeight.Value; } }
 		#endregion
@@ -102,17 +78,14 @@ namespace LunraGames.SubLight.Models
 		public EncounterInfoModel()
 		{
 			SaveType = SaveTypes.EncounterInfo;
-			OrderWeight = new ListenerProperty<float>(value => orderWeight = value, () => orderWeight);
+			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
 			RandomWeightMultiplier = new ListenerProperty<float>(value => randomWeightMultiplier = value, () => randomWeightMultiplier);
-			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
+			RandomAppearance = new ListenerProperty<float>(value => randomAppearance = value, () => randomAppearance);
 			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Hook = new ListenerProperty<string>(value => hook = value, () => hook);
 			Trigger = new ListenerProperty<EncounterTriggers>(value => trigger = value, () => trigger);
-			ValidSystems = new ListenerProperty<SystemTypes[]>(value => validSystems = value, () => validSystems);
-			AssignedToBody = new ListenerProperty<bool>(value => assignedToBody = value, () => assignedToBody);
-			ValidBodies = new ListenerProperty<BodyTypes[]>(value => validBodies = value, () => validBodies);
 		}
 	}
 }
