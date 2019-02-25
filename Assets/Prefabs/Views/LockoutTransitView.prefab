@@ -3770,10 +3770,10 @@ RectTransform:
   m_Father: {fileID: 224007015176429796}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 435.40997, y: -54.850006}
-  m_SizeDelta: {x: 0, y: 109.70001}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 435.40997, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222004967096066122
 CanvasRenderer:
@@ -4654,7 +4654,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 306.77997, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222474609174008418
@@ -4806,7 +4806,7 @@ GameObject:
   - component: {fileID: 4327329817141164}
   - component: {fileID: 114831163076427200}
   m_Layer: 15
-  m_Name: GridTransitLockoutView
+  m_Name: LockoutTransitView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4848,11 +4848,6 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
-  prepareDuration: 1
-  transitWarmupDuration: 1
-  transitCooldownDuration: 1
-  transitDuration: {x: 1, y: 1}
-  finalizeDuration: 3.5
   transitTitleLabel: {fileID: 114191684770132858}
   transitDescriptionLabel: {fileID: 114386747980236126}
   transitTimeStamp: {fileID: 114202644810188310}
@@ -4931,8 +4926,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  transitTimeWarmupDays: 3650
-  transitTimeCooldownDays: 3650
   completedEmission: 2.85
   transitDistanceCurve:
     serializedVersion: 2
@@ -7689,10 +7682,10 @@ RectTransform:
   m_Father: {fileID: 224007015176429796}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 171.81998, y: -54.850006}
-  m_SizeDelta: {x: 0, y: 109.70001}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 171.81998, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222327040276791662
 CanvasRenderer:

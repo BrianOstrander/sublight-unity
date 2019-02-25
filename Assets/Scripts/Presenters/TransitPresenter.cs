@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using UnityEngine;
 
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
 
-using LunraGames.NumberDemon;
-
 namespace LunraGames.SubLight.Presenters
 {
-	public class GridTransitLockoutPresenter : Presenter<IGridTransitLockoutView>
+	public class TransitPresenter : Presenter<ITransitView>
 	{
 		GameModel model;
-		GridTransitLockoutLanguageBlock language;
+		TransitLanguageBlock language;
 
 		TransitState lastState;
 		bool isCompleting;
 		Action popSaveBlocker;
 
-		public GridTransitLockoutPresenter(
+		public TransitPresenter(
 			GameModel model,
-			GridTransitLockoutLanguageBlock language
+			TransitLanguageBlock language
 		)
 		{
 			this.model = model;
@@ -287,7 +284,6 @@ namespace LunraGames.SubLight.Presenters
 							OnProcessVisualsFinalize(transitState, details);
 							break;
 					}
-					View.AnimationProgress = transitState.AnimationProgress;
 					break;
 				default:
 					isCompleting = true;
@@ -299,33 +295,6 @@ namespace LunraGames.SubLight.Presenters
 		void OnProcessVisualsPrepareInitialize(TransitState transitState, TransitState.StepDetails details)
 		{
 			View.Reset();
-
-			View.TransitTitle = language.TransitTitle.Value.Value;
-			View.TransitDescription = language.TransitDescription.Value.Value;
-
-			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
-
-			View.SystemName = transitState.EndSystem.Name.Value;
-			View.SetSystemDescription(language.DescriptionPrefix.Value.Value, transitState.BeginSystem.Name.Value);
-
-			View.UnlockLeftTitle = language.UnlockLeftTitle.Value.Value;
-			View.UnlockRightTitle = language.UnlockRightTitle.Value.Value;
-
-			var leftStatuses = new List<string>();
-			var rightStatuses = new List<string>();
-
-			foreach (var status in language.UnlockLeftStatuses)
-			{
-				leftStatuses.Insert(DemonUtility.GetNextInteger(0, leftStatuses.Count), status.Value.Value);
-			}
-
-			foreach (var status in language.UnlockRightStatuses)
-			{
-				rightStatuses.Insert(DemonUtility.GetNextInteger(0, rightStatuses.Count), status.Value.Value);
-			}
-
-			View.UnlockLeftStatuses = leftStatuses.ToArray();
-			View.UnlockRightStatuses = rightStatuses.ToArray();
 
 			ShowView();
 
@@ -344,12 +313,12 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnProcessVisualsTransit(TransitState transitState, TransitState.StepDetails details)
 		{
-			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
+
 		}
 
 		void OnProcessVisualsFinalizeInitialize(TransitState transitState, TransitState.StepDetails details)
 		{
-			View.SetTimeStamp(transitState.RelativeTimeRemaining.ShipTime, transitState.RelativeTimeTotal.ShipTime);
+
 		}
 
 		void OnProcessVisualsFinalize(TransitState transitState, TransitState.StepDetails details)
