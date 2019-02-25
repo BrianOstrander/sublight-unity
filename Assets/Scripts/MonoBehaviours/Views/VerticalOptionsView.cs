@@ -145,6 +145,12 @@ namespace LunraGames.SubLight.Views
 		{
 			instance.Label.text = entry.Message;
 
+			entry.OnSetMessage = message =>
+			{
+				if (instance == null) Debug.LogError("Trying to call SetMessage on null label entry");
+				else instance.Label.text = message ?? string.Empty;
+			};
+
 			if (entry.Icon == VerticalOptionsIcons.None)
 			{
 				if (instance.Icon != null) instance.Icon.gameObject.SetActive(false);
@@ -172,7 +178,9 @@ namespace LunraGames.SubLight.Views
 			ThemeEntry theme
 		)
 		{
-			instance.Label.text = entry.Message;
+			instance.PrimaryLabel.text = entry.PrimaryMessage;
+			instance.SecondaryLabel.text = entry.SecondaryMessage;
+
 			instance.Button.OnClick.AddListener(new UnityEngine.Events.UnityAction(() => OnClick(entry)));
 
 			foreach (var target in instance.DisabledAreas) target.gameObject.SetActive(entry.InteractionState != ButtonVerticalOptionsEntry.InteractionStates.Interactable);
@@ -212,9 +220,19 @@ namespace LunraGames.SubLight.Views
 					break;
 			}
 
-			backgroundTarget.LocalStyle.Colors = backgroundColors;
-			highlightTarget.LocalStyle.Colors = highlightColors;
-			labelTarget.LocalStyle.Colors = labelColors;
+			foreach (var leaf in instance.BackgroundAreas) leaf.LocalStyle.Colors = backgroundColors;
+			foreach (var leaf in instance.HighlightAreas) leaf.LocalStyle.Colors = highlightColors;
+			foreach (var leaf in instance.LabelAreas) leaf.LocalStyle.Colors = labelColors;
+
+			entry.OnSetMessages = (primaryMessage, secondaryMessage) =>
+			{
+				if (instance == null) Debug.LogError("Trying to call SetMessages on null button entry");
+				else
+				{
+					instance.PrimaryLabel.text = primaryMessage ?? string.Empty;
+					instance.SecondaryLabel.text = secondaryMessage ?? string.Empty;
+				}
+			};
 		}
 
 		protected override void OnOpacityStack(float opacity)
@@ -373,6 +391,8 @@ namespace LunraGames.SubLight.Views
 		public string Message;
 		public VerticalOptionsIcons Icon;
 
+		public Action<string> OnSetMessage;
+
 		LabelVerticalOptionsEntry(
 			VerticalOptionsStyles style,
 			string message,
@@ -382,6 +402,12 @@ namespace LunraGames.SubLight.Views
 			this.style = style;
 			Message = message;
 			Icon = icon;
+		}
+
+		public void SetMessage(string message)
+		{
+			if (OnSetMessage == null) Debug.LogError("SetMessage is null");
+			else OnSetMessage(message);
 		}
 	}
 
@@ -410,6 +436,23 @@ namespace LunraGames.SubLight.Views
 			return new ButtonVerticalOptionsEntry(
 				VerticalOptionsStyles.Button,
 				message,
+				string.Empty,
+				click,
+				interactionState
+			);
+		}
+
+		public static ButtonVerticalOptionsEntry CreateToggle(
+			string primaryMessage,
+			string secondaryMessage,
+			Action click,
+			InteractionStates interactionState = InteractionStates.Interactable
+		)
+		{
+			return new ButtonVerticalOptionsEntry(
+				VerticalOptionsStyles.Button,
+				primaryMessage,
+				secondaryMessage,
 				click,
 				interactionState
 			);
@@ -418,21 +461,32 @@ namespace LunraGames.SubLight.Views
 		VerticalOptionsStyles style;
 		public override VerticalOptionsStyles Style { get { return style; } }
 
-		public string Message;
+		public string PrimaryMessage;
+		public string SecondaryMessage;
 		public Action Click;
 		public InteractionStates InteractionState;
 
+		public Action<string, string> OnSetMessages;
+
 		ButtonVerticalOptionsEntry(
 			VerticalOptionsStyles style,
-			string message,
+			string primaryMessage,
+			string secondaryMessage,
 			Action click,
 			InteractionStates interactionState
 		)
 		{
 			this.style = style;
-			Message = message;
+			PrimaryMessage = primaryMessage;
+			SecondaryMessage = secondaryMessage;
 			Click = click;
 			InteractionState = interactionState;
+		}
+
+		public void SetMessages(string primaryMessage, string secondaryMessage = null)
+		{
+			if (OnSetMessages == null) Debug.LogError("OnSetMessages is null");
+			else OnSetMessages(primaryMessage, secondaryMessage);
 		}
 	}
 }

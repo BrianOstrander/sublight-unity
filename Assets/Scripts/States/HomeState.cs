@@ -295,9 +295,9 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			if (!Payload.FromInitialization && !App.MetaKeyValues.GlobalKeyValues.KeyValues.Get(KeyDefines.Global.HasAskedForFeedback))
+			if (!Payload.FromInitialization && !App.MetaKeyValues.Get(KeyDefines.Global.HasAskedForFeedback))
 			{
-				App.MetaKeyValues.GlobalKeyValues.KeyValues.Set(KeyDefines.Global.HasAskedForFeedback, true);
+				App.MetaKeyValues.Set(KeyDefines.Global.HasAskedForFeedback, true);
 				App.Heartbeat.Wait(
 					() => App.Callbacks.DialogRequest(
 						DialogRequest.ConfirmDeny(
@@ -319,7 +319,7 @@ namespace LunraGames.SubLight
 					Application.OpenURL(
 						App.BuildPreferences.FeedbackForm(
 							FeedbackFormTriggers.MainMenu,
-							App.MetaKeyValues.GlobalKeyValues.KeyValues
+							App.MetaKeyValues.GlobalKeyValues
 						)
 					);
 				},

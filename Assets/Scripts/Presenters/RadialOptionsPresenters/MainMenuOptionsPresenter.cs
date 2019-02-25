@@ -124,7 +124,7 @@ namespace LunraGames.SubLight.Presenters
 					Application.OpenURL(
 						App.BuildPreferences.FeedbackForm(
 							FeedbackFormTriggers.MainMenu,
-							App.MetaKeyValues.GlobalKeyValues.KeyValues
+							App.MetaKeyValues.GlobalKeyValues
 						)
 					);
 				},

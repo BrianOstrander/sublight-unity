@@ -6,7 +6,8 @@ namespace LunraGames.SubLight.Views
 {
 	public class ButtonVerticalOptionsEntryLeaf : VerticalOptionsEntryLeaf
 	{
-		public TextMeshProUGUI Label;
+		public TextMeshProUGUI PrimaryLabel;
+		public TextMeshProUGUI SecondaryLabel;
 		public XButton Button;
 
 		public GameObject[] DisabledAreas;

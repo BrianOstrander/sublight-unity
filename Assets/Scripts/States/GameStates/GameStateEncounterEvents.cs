@@ -169,10 +169,10 @@ namespace LunraGames.SubLight
 							result += OnHandleEventDumpKeyValuesInstance("Game", payload.Game.KeyValues);
 							break;
 						case KeyValueTargets.Global:
-							result += OnHandleEventDumpKeyValuesInstance("Global", App.MetaKeyValues.GlobalKeyValues.KeyValues);
+							result += OnHandleEventDumpKeyValuesInstance("Global", App.MetaKeyValues.GlobalKeyValues);
 							break;
 						case KeyValueTargets.Preferences:
-							result += OnHandleEventDumpKeyValuesInstance("Preferences", App.MetaKeyValues.PreferencesKeyValues.KeyValues);
+							result += OnHandleEventDumpKeyValuesInstance("Preferences", App.MetaKeyValues.PreferencesKeyValues);
 							break;
 						case KeyValueTargets.CelestialSystem:
 							result += OnHandleEventDumpKeyValuesInstance("CelestialSystem", payload.Game.Context.CurrentSystem.Value == null ? null : payload.Game.Context.CurrentSystem.Value.KeyValues);

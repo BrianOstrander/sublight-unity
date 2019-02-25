@@ -1,4 +1,7 @@
-﻿using UnityEngine.Analytics;
+﻿using System;
+
+using UnityEngine;
+using UnityEngine.Analytics;
 
 using LunraGames.SubLight.Views;
 using LunraGames.SubLight.Models;
@@ -9,16 +12,23 @@ namespace LunraGames.SubLight.Presenters
 	{
 		public static PreferencesPresenter CreateDefault()
 		{
+			var defaultToggle = new ToggleOptionLanguageBlock
+			{
+				MessageEnabled = LanguageStringModel.Override("ENABLED"),
+				MessageDisabled = LanguageStringModel.Override("DISABLED")
+			};
+
 			return new PreferencesPresenter(
 				new PreferencesLanguageBlock
 				{
 					Title = LanguageStringModel.Override("Preferences"),
 					Back = LanguageStringModel.Override("Back"),
 
-					AnalyticsEnabled = LanguageStringModel.Override("Disable Analytics"),
-					AnalyticsDisabled = LanguageStringModel.Override("Enable Analytics"),
+					Analytics = defaultToggle.Duplicate(LanguageStringModel.Override("Analytics")),
+					Tutorial = defaultToggle.Duplicate(LanguageStringModel.Override("Tutorial")),
 
-					VersionPrefix = LanguageStringModel.Override("SubLight Version ")
+					VersionPrefix = LanguageStringModel.Override("SubLight Version "),
+					Gameplay = LanguageStringModel.Override("Gameplay")
 				}
 			);
 		}
@@ -39,40 +49,56 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShow()
 		{
-			ButtonVerticalOptionsEntry analyticsEntry = null;
-
-			if (Analytics.enabled)
-			{
-				analyticsEntry = ButtonVerticalOptionsEntry.CreateButton(
-					language.AnalyticsEnabled.Value,
-					() => OnClickToggleAnalytics(false)
-				);
-			}
-			else
-			{
-				analyticsEntry = ButtonVerticalOptionsEntry.CreateButton(
-					language.AnalyticsDisabled.Value,
-					() => OnClickToggleAnalytics(true)
-				);
-			}
-
 			View.SetEntries(
 				VerticalOptionsThemes.Neutral,
 				LabelVerticalOptionsEntry.CreateTitle(language.Title.Value, VerticalOptionsIcons.Preferences),
 				LabelVerticalOptionsEntry.CreateBody(language.VersionPrefix.Value + BuildPreferences.Instance.Info.Version),
-				analyticsEntry,
+				GetToggle(
+					language.Analytics,
+					() => Analytics.enabled,
+					value => Analytics.enabled = value
+				),
+				LabelVerticalOptionsEntry.CreateHeader(language.Gameplay),
+				GetToggle(
+					language.Tutorial,
+					() => !App.MetaKeyValues.Get(KeyDefines.Preferences.IgnoreTutorial),
+					value => App.MetaKeyValues.Set(KeyDefines.Preferences.IgnoreTutorial, !value)
+				),
 				ButtonVerticalOptionsEntry.CreateButton(language.Back.Value, OnClickBack)
 			);
 		}
 
-		#region Events
-		void OnClickToggleAnalytics(bool enable)
+		ButtonVerticalOptionsEntry GetToggle(
+			ToggleOptionLanguageBlock toggleLanguage,
+			Func<bool> getValue,
+			Action<bool> setValue
+		)
 		{
-			if (NotInteractable) return;
+			if (getValue == null) throw new ArgumentNullException("getValue");
+			if (setValue == null) throw new ArgumentNullException("setValue");
 
-			Analytics.enabled = enable;
+			var result = ButtonVerticalOptionsEntry.CreateToggle(
+				toggleLanguage.Message,
+				toggleLanguage.GetValue(getValue()),
+				OnClickToggleNotSet
+			);
 
-			ReShowInstant();
+			result.Click = () =>
+			{
+				if (NotInteractable) return;
+				var newValue = !getValue();
+				result.SetMessages(toggleLanguage.Message, toggleLanguage.GetValue(newValue));
+				setValue(newValue);
+			};
+
+			return result;
+		}
+
+
+		#region Events
+		void OnClickToggleNotSet()
+		{
+			Debug.LogError("Toggle click was not set");
 		}
 		#endregion
 
