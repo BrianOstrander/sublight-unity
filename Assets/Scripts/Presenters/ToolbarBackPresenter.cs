@@ -7,19 +7,12 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class ToolbarBackPresenter : Presenter<IToolbarBackView>, IPresenterCloseShowOptions
 	{
-		GameModel model;
 		LanguageStringModel back;
 		bool waitingForAnimation;
 
-		public ToolbarBackPresenter(GameModel model, LanguageStringModel back)
+		public ToolbarBackPresenter(LanguageStringModel back)
 		{
-			this.model = model;
 			this.back = back;
-		}
-
-		protected override void OnUnBind()
-		{
-
 		}
 
 		public void Show(Transform parent = null, bool instant = false)

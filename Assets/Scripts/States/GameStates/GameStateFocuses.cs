@@ -36,7 +36,7 @@ namespace LunraGames.SubLight
 				// All other presenters for this state...
 
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
-				payload.ShowOnIdle.Add(new ToolbarBackPresenter(payload.Game, LanguageStringModel.Override("Back")));
+				payload.ShowOnIdle.Add(new ToolbarBackPresenter(LanguageStringModel.Override("Back")));
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
@@ -162,6 +162,8 @@ namespace LunraGames.SubLight
 				new GridPresenter(payload.Game, gridInfo);
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
+				new RingTransitPresenter(payload.Game, UniverseScales.Local);
+
 				var gridTimeChronometerLanguage = GridTimeLanguageBlock.Default;
 				gridTimeChronometerLanguage.Title = LanguageStringModel.Override("Chronometer");
 				gridTimeChronometerLanguage.SubTitle = LanguageStringModel.Override("Reference Frame");
@@ -205,7 +207,8 @@ namespace LunraGames.SubLight
 				new ClusterPresenter(payload.Game, payload.Game.Context.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
 				var foundEnd = false;
-				var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
+				payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
+				//var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
 
 				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
 
