@@ -7,6 +7,16 @@ namespace LunraGames.SubLight.Presenters
 		Action<bool> setFocus;
 		Action back;
 
+		public ContextualOptionsPresenter()
+		{
+			App.Callbacks.Escape += OnEscape;
+		}
+
+		protected override void OnUnBind()
+		{
+			App.Callbacks.Escape -= OnEscape;
+		}
+
 		protected bool NotInteractable
 		{
 			get
@@ -51,8 +61,6 @@ namespace LunraGames.SubLight.Presenters
 
 		protected void ReShowInstant()
 		{
-			//CloseView(true);
-
 			Show(
 				setFocus,
 				back,
@@ -62,6 +70,16 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnEscape()
+		{
+			switch (View.TransitionState)
+			{
+				case TransitionStates.Shown:
+					OnClickBack();
+					break;
+			}
+		}
+
 		protected void OnClickBack()
 		{
 			if (NotInteractable) return;

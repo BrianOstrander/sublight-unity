@@ -38,8 +38,26 @@ namespace LunraGames.SubLight
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
 				model.Hook.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Hook", "The description given to the player before entering this encounter."), model.Hook.Value, leftOffset: false);
 
-				model.Trigger.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Trigger", "What triggers this encounter to appear upon entering a system with it."), "- Select a Trigger -", model.Trigger.Value);
-				if (model.Trigger.Value == EncounterTriggers.Unknown) EditorGUILayout.HelpBox("A trigger for this encounter must be selected.", MessageType.Error);
+				Color? triggerColor = null;
+				var triggerContent = new GUIContent("Trigger", "What triggers this encounter to appear upon entering a system with it.");
+				switch (model.Trigger.Value)
+				{
+					case EncounterTriggers.Unknown:
+						triggerColor = Color.red;
+						triggerContent.tooltip = "A trigger for this encounter must be selected.";
+						break;
+					case EncounterTriggers.None:
+						triggerColor = Color.yellow;
+						triggerContent.tooltip = "This encounter will never be shown unless specified by a system.";
+						break;
+				}
+
+				model.Trigger.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					triggerContent,
+					"- Select a Trigger -",
+					model.Trigger.Value,
+					result => triggerColor
+				);
 
 				var alternateColor = Color.grey;
 

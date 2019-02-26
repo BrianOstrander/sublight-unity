@@ -31,6 +31,46 @@ namespace LunraGamesEditor
 			GUIContent content,
 			string primaryReplacement,
 			T value,
+			Func<T, Color?> getDefaultValueColor,
+			T[] options = null,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			var defaultValueColor = getDefaultValueColor(value);
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopup(
+				content,
+				primaryReplacement,
+				value,
+				options,
+				guiOptions
+			);
+			PopColorValidation(defaultValueColor);
+			return result;
+		}
+
+		public static T HelpfulEnumPopupValueValidation<T>(
+			string primaryReplacement,
+			T value,
+			Func<T, Color?> getDefaultValueColor,
+			params GUILayoutOption[] guiOptions
+		) where T : struct, IConvertible
+		{
+			var defaultValueColor = getDefaultValueColor(value);
+			PushColorValidation(defaultValueColor);
+			var result = HelpfulEnumPopupValue(
+				primaryReplacement,
+				value,
+				guiOptions
+			);
+			PopColorValidation(defaultValueColor);
+			return result;
+		}
+
+		public static T HelpfulEnumPopupValidation<T>(
+			GUIContent content,
+			string primaryReplacement,
+			T value,
 			Color? defaultValueColor,
 			T[] options = null,
 			params GUILayoutOption[] guiOptions

@@ -36,11 +36,6 @@ namespace LunraGames.SubLight.Presenters
 			this.language = language;
 		}
 
-		protected override void OnUnBind()
-		{
-
-		}
-
 		protected override void OnShow()
 		{
 			View.SetEntries(

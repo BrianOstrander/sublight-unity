@@ -434,7 +434,7 @@
           "specifiedEncounters": [
             {
               "Trigger": "NavigationSelect",
-              "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
+              "EncounterId": ""
             },
             {
               "Trigger": "TransitComplete"
@@ -478,7 +478,7 @@
           "specifiedEncounters": [
             {
               "Trigger": "NavigationSelect",
-              "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
+              "EncounterId": ""
             },
             {
               "Trigger": "TransitComplete"
@@ -524,7 +524,7 @@
           "specifiedEncounters": [
             {
               "Trigger": "NavigationSelect",
-              "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
+              "EncounterId": ""
             },
             {
               "Trigger": "TransitComplete"
@@ -568,7 +568,7 @@
           "specifiedEncounters": [
             {
               "Trigger": "NavigationSelect",
-              "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
+              "EncounterId": ""
             },
             {
               "Trigger": "TransitComplete",
@@ -613,7 +613,7 @@
           "specifiedEncounters": [
             {
               "Trigger": "NavigationSelect",
-              "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
+              "EncounterId": ""
             },
             {
               "Trigger": "TransitComplete"
@@ -697,7 +697,7 @@
   "galaxySize": {
     "Sector": {"x":200.0,"y":200.0,"z":200.0}
   },
-  "version": 7,
+  "version": 8,
   "meta": "Milky Way",
   "metaKeyValues": {
     "GalaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089"

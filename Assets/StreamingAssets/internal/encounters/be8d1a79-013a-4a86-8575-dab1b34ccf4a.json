@@ -1,0 +1,65 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "b764f4ba-be4b-48f1-8770-ff998c00ae82",
+  "name": "Select Sol",
+  "trigger": "NavigationSelect",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "you clicked sol"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9d6930e4-1fd1-40ac-b097-cc3c1e1c705d"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "a5be22f4-8fec-472f-afc6-478b18a031c2"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 8,
+  "meta": "Select Sol",
+  "metaKeyValues": {
+    "EncounterId": "b764f4ba-be4b-48f1-8770-ff998c00ae82"
+  },
+  "created": "2019-02-26T13:14:25.874144-08:00",
+  "modified": "2019-02-26T13:14:25.874144-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

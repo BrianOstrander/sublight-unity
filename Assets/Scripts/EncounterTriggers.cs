@@ -6,6 +6,13 @@
 
 		// -- Default Triggers
 		/// <summary>
+		/// Should only be used for encounters that are triggered in some other way.
+		/// </summary>
+		/// <remarks>
+		/// These will never trigger on their own.
+		/// </remarks>
+		None = 5,
+		/// <summary>
 		/// Called every time the game loads.
 		/// </summary>
 		Load = 10,

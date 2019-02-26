@@ -59,6 +59,8 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
+			Payload.Game.Context.PauseMenuBlockers.Value++;
+
 			SM.PushBlocking(LoadScenes, "LoadScenes");
 			SM.PushBlocking(InitializeInput, "InitializeInput");
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
@@ -190,6 +192,10 @@ namespace LunraGames.SubLight
 					);
 				},
 				"IdleEncounterResumeCheck"
+			);
+			SM.Push(
+				() => Payload.Game.Context.PauseMenuBlockers.Value--,
+				"IdleUnBlockPauseMenu"
 			);
 		}
 		#endregion
@@ -622,8 +628,18 @@ namespace LunraGames.SubLight
 			}
 			else
 			{
+				var systemEncounters = Payload.Game.Context.CurrentSystem.Value;
+
+				switch (target)
+				{
+					case EncounterTriggers.NavigationSelect:
+						if (Payload.Game.Context.CelestialSystemStateLastSelected.Value.System == null) Debug.LogError("NavigationSelect was triggered, but no system is currently selected, checking current system instead");
+						else systemEncounters = Payload.Game.Context.CelestialSystemStateLastSelected.Value.System;
+						break;
+				}
+
 				// Checking if the system has any matching encounter triggers...
-				var allSpecifiedEncounters = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == target);
+				var allSpecifiedEncounters = systemEncounters.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == target);
 
 				if (1 < allSpecifiedEncounters.Count())
 				{
@@ -746,9 +762,9 @@ namespace LunraGames.SubLight
 				done(false);
 				return;
 			}
-			if (encounter.Trigger.Value != trigger)
+			if (encounter.Trigger.Value != trigger && encounter.Trigger.Value != EncounterTriggers.None)
 			{
-				//Debug.LogError("Trigger was specified as " + trigger + " but the encounter's trigger was " + encounter.Trigger.Value + ", this probably should not ever happen. Ignoring Encounter.");
+				Debug.LogError("Trigger was specified as " + trigger + " but the encounter's trigger was " + encounter.Trigger.Value + ", this probably should not ever happen. Ignoring Encounter.");
 				done(false);
 				return;
 			}
@@ -892,16 +908,10 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var allSpecifiedEncounters = block.System.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == EncounterTriggers.NavigationSelect);
-
-			if (1 < allSpecifiedEncounters.Count())
-			{
-				Debug.LogError("Multiple encounters are specified for system " + block.System.Name + " with trigger " + EncounterTriggers.NavigationSelect + ", this behaviour is not supported yet, choosing the first one instead.");
-			}
-
-			var encounterId = allSpecifiedEncounters.FirstOrDefault().EncounterId;
-
-			OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.NavigationSelect, true);
+			PushEncounterTriggers(
+				"NavigationSelectCheckForEncounters",
+				EncounterTriggers.NavigationSelect
+			);
 		}
 
 		void OnKeyValueRequest(KeyValueRequest request)

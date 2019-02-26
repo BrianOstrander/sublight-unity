@@ -3,8 +3,8 @@
 	public class GlobalKeys : KeyDefinitions
 	{
 		#region Booleans
-		public readonly Boolean HasShownUserAnalyticsWarning;
-		public readonly Boolean HasAskedForFeedback;
+		public readonly Boolean IgnoreUserAnalyticsWarning;
+		public readonly Boolean IgnoreFeedbackRequest;
 		#endregion
 
 		#region Integers
@@ -22,13 +22,13 @@
 			Booleans = new Boolean[]
 			{
 				Create(
-					ref HasShownUserAnalyticsWarning,
-					"has_shown_user_analytics_warning",
-					"True if the user been shown an analytics warning in compliance with GDPR."
+					ref IgnoreUserAnalyticsWarning,
+					"ignore_user_analytics_warning",
+					"True if the player been shown an analytics warning in compliance with GDPR."
 				),
 				Create(
-					ref HasAskedForFeedback,
-					"has_asked_for_feedback",
+					ref IgnoreFeedbackRequest,
+					"ignore_feedback_request",
 					"True if the player has been asked for feedback already."
 				)
 			};

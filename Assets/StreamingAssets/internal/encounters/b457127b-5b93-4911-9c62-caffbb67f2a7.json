@@ -1,4 +1,5 @@
 {
+  "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330",
@@ -1198,7 +1199,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "version": 8,
   "meta": "InitializeRules Default",
   "metaKeyValues": {
     "EncounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330"

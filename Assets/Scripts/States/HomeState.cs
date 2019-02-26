@@ -295,9 +295,9 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			if (!Payload.FromInitialization && !App.MetaKeyValues.Get(KeyDefines.Global.HasAskedForFeedback))
+			if (!Payload.FromInitialization && !App.MetaKeyValues.Get(KeyDefines.Global.IgnoreFeedbackRequest))
 			{
-				App.MetaKeyValues.Set(KeyDefines.Global.HasAskedForFeedback, true);
+				App.MetaKeyValues.Set(KeyDefines.Global.IgnoreFeedbackRequest, true);
 				App.Heartbeat.Wait(
 					() => App.Callbacks.DialogRequest(
 						DialogRequest.ConfirmDeny(

@@ -55,9 +55,10 @@ namespace LunraGames.SubLight
 		}
 
 		#region Booleans
+		public readonly Boolean IgnoreSystemOutOfRangeWarning;
 		#endregion
 
-		#region Integers - Read & Write
+		#region Integers
 		public readonly Integer Rationing;
 		public readonly Integer RationingMinimum;
 		public readonly Integer RationingMaximum;
@@ -116,7 +117,11 @@ namespace LunraGames.SubLight
 		{
 			Booleans = new Boolean[]
 			{
-
+				Create(
+					ref IgnoreSystemOutOfRangeWarning,
+					"ignore_system_out_of_range_warning",
+					"True if the player has been warned about clicking on out of range systems already."
+				)
 			};
 
 			Integers = new Integer[]
