@@ -36,7 +36,7 @@ namespace LunraGames.SubLight
 				// All other presenters for this state...
 
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
-				payload.ShowOnIdle.Add(new ToolbarBackPresenter(payload.Game, LanguageStringModel.Override("Back")));
+				payload.ShowOnIdle.Add(new ToolbarBackPresenter(LanguageStringModel.Override("Back")));
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
@@ -162,6 +162,8 @@ namespace LunraGames.SubLight
 				new GridPresenter(payload.Game, gridInfo);
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
+				new RingTransitPresenter(payload.Game, UniverseScales.Local);
+
 				var gridTimeChronometerLanguage = GridTimeLanguageBlock.Default;
 				gridTimeChronometerLanguage.Title = LanguageStringModel.Override("Chronometer");
 				gridTimeChronometerLanguage.SubTitle = LanguageStringModel.Override("Reference Frame");
@@ -189,44 +191,15 @@ namespace LunraGames.SubLight
 					}
 				);
 
-				new GridTransitLockoutPresenter(
+				new TransitPresenter(
 					payload.Game,
-					new GridTransitLockoutLanguageBlock
+					new TransitLanguageBlock
 					{
-						TransitTitle = LanguageStringModel.Override("Crew Lockout"),
-						TransitDescription = LanguageStringModel.Override("Interstellar ark is under automated\ncontrol until reaching destination"),
-						DescriptionPrefix = LanguageStringModel.Override("In transit from"),
-						UnlockLeftTitle = LanguageStringModel.Override("Unlocking"),
-						UnlockRightTitle = LanguageStringModel.Override("System Survey"),
-						UnlockLeftStatuses = LanguageStringModel.Overrides(
-							"Restarting Crew Control System <b>Success</b>",
-							"Confirming Subsystem Integrity <b>Success</b>",
-							"Generating Administrator Privileges <b>Passed</b>",
-							"Confirming Admin Identities <b>Validated</b>",
-							"Unlocking Engine Control Systems <b>Success</b>",
-							"Flushing Life Support Mechanisms <b>Vented</b>",
-							"Updating Hull Damage Manifest <b>Recorded</b>",
-							"Aligning Astrogation Sensors <b>Calibrated</b>",
-							"Locating Tracer From Terra <b>Failed</b>",
-							"Downloading Database Deltas <b>Disconnected</b>"
-						),
-						UnlockRightStatuses = LanguageStringModel.Overrides(
-							"<b>Waking</b> Probe Bay",
-							"<b>Scanning</b> Surface Of Primary Bodies",
-							"<b>Running</b> Chemical Analysis",
-							"<b>Collating</b> Results Of Scans",
-							"<b>Processing</b> Atmospheric Data",
-							"<b>Rendering</b> Orbital Anomalies",
-							"<b>Sweeping</b> Debris Fields For Impacts",
-							"<b>Integrating</b> Collected Data From Databases",
-							"<b>Rewriting</b> Known System Entries",
-							"<b>Assigning</b> Targets For Further Study"
-						),
 						SaveDisabledDuringTransit = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("In Transit"),
 							Message = LanguageStringModel.Override("Saving is disabled during transit.")
-						},
+						}
 					}
 				);
 
@@ -234,7 +207,8 @@ namespace LunraGames.SubLight
 				new ClusterPresenter(payload.Game, payload.Game.Context.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
 				var foundEnd = false;
-				var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
+				payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
+				//var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
 
 				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
 

@@ -110,6 +110,9 @@ namespace LunraGames.SubLight.Models
 
 		StackListModel<DeveloperViews> developerViewsEnabled = new StackListModel<DeveloperViews>();
 		public StackListModel<DeveloperViews> DeveloperViewsEnabled { get { return developerViewsEnabled; } }
+
+		GridModel grid = new GridModel();
+		public GridModel Grid { get { return grid; } }
 		#endregion
 
 		#region Models

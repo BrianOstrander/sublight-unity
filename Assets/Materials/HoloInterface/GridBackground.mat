@@ -160,7 +160,7 @@ Material:
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _RangeColorPrimary: {r: 0.21, g: 0.21, b: 0.21, a: 1}
     - _RangeColorPrimaryShifted: {r: 0.22, g: 0.22, b: 0.22, a: 1}
-    - _RangeColorSecondary: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+    - _RangeColorSecondary: {r: 0, g: 0, b: 0, a: 1}
     - _RangeColorSecondaryShifted: {r: 0, g: 0, b: 0, a: 1}
     - _RangeColorShiftedTertiary: {r: 0.06, g: 0.06, b: 0.06, a: 1}
     - _RangeColorTertiary: {r: 0.1, g: 0.1, b: 0.1, a: 1}

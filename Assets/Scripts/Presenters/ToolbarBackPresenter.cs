@@ -7,21 +7,12 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class ToolbarBackPresenter : Presenter<IToolbarBackView>, IPresenterCloseShowOptions
 	{
-		GameModel model;
 		LanguageStringModel back;
 		bool waitingForAnimation;
 
-		public ToolbarBackPresenter(GameModel model, LanguageStringModel back)
+		public ToolbarBackPresenter(LanguageStringModel back)
 		{
-			this.model = model;
 			this.back = back;
-
-			model.Context.TransitState.Changed += OnTransitState;
-		}
-
-		protected override void OnUnBind()
-		{
-			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -54,15 +45,6 @@ namespace LunraGames.SubLight.Presenters
 		void OnAnimationDone()
 		{
 			waitingForAnimation = false;
-		}
-
-		void OnTransitState(TransitState transitState)
-		{
-			if (!View.Visible) return;
-			if (waitingForAnimation) return;
-			if (Mathf.Approximately(0f, model.Context.CameraTransform.Value.PitchValue())) return;
-
-			OnClick();
 		}
 		#endregion
 	}

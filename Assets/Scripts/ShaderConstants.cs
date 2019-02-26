@@ -327,10 +327,6 @@ namespace LunraGames.SubLight
 			public const string RangeColorTertiary = "_RangeColorTertiary";
 			public const string RangeThreshold = "_RangeThreshold";
 			public const string RangeFalloffGradient = "_RangeFalloffGradient";
-			public const string RangeShifted = "_RangeShifted";
-			public const string RangeColorPrimaryShifted = "_RangeColorPrimaryShifted";
-			public const string RangeColorSecondaryShifted = "_RangeColorSecondaryShifted";
-			public const string RangeColorTertiaryShifted = "_RangeColorTertiaryShifted";
 		}
 
 		public static class HoloGridRange
@@ -350,14 +346,11 @@ namespace LunraGames.SubLight
 			public const string RangeColorSecondary = "_RangeColorSecondary";
 			public const string RangeThreshold = "_RangeThreshold";
 			public const string RangeFalloffGradient = "_RangeFalloffGradient";
-			public const string RangeShifted = "_RangeShifted";
-			public const string RangeColorPrimaryShifted = "_RangeColorPrimaryShifted";
-			public const string RangeColorSecondaryShifted = "_RangeColorSecondaryShifted";
 			public const string RadiusV = "_RadiusV";
 			public const string RadiusVFalloff = "_RadiusVFalloff";
 			public const string RadiusUTiling = "_RadiusUTiling";
 			public const string GridRangeMap = "_GridRangeMap";
-			public const string RadiusUSpeed = "_RadiusUSpeed";
+			public const string RadiusUOffset = "_RadiusUOffset";
 		}
 
 		public static class HoloGrid
@@ -581,6 +574,17 @@ namespace LunraGames.SubLight
 		{
 			public const string Name = "SubLight/Holo/Bust/AvatarStatic";
 			public const string ColorMap = "_ColorMap";
+		}
+
+		public static class HoloWidgetGridRing
+		{
+			public const string Name = "SubLight/Holo/Widget/GridRing";
+			public const string Alpha = "_Alpha";
+			public const string VMaximum = "_VMaximum";
+			public const string UOffset = "_UOffset";
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
 		}
 
 		#region NonSubLight Shaders
