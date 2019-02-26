@@ -15,6 +15,7 @@ namespace LunraGames.SubLight
 		public class Focuses : StateFocuses
 		{
 			const float PriorityDimming = 0.25f;
+			const float TransitDimming = 0.75f;
 
 			public static void InitializePresenters(GameState state, Action done)
 			{
@@ -455,6 +456,17 @@ namespace LunraGames.SubLight
 						Debug.LogError("Unrecognized selection: " + selection);
 						break;
 				}
+
+				return results.ToArray();
+			}
+
+			public static SetFocusBlock[] GetTransitFocus()
+			{
+				var results = GetBaseEnabledFocuses();
+
+				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f, true));
+				results.Add(GetFocus<ToolbarFocusDetails>(1, true, TransitDimming, false));
+				results.Add(GetFocus<SystemFocusDetails>(1, true, TransitDimming, false));
 
 				return results.ToArray();
 			}

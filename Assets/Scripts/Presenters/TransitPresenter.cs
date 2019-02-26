@@ -298,7 +298,7 @@ namespace LunraGames.SubLight.Presenters
 
 			ShowView();
 
-			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetPriorityFocus(ToolbarSelections.System)));
+			App.Callbacks.SetFocusRequest(SetFocusRequest.Request(GameState.Focuses.GetTransitFocus()));
 		}
 
 		void OnProcessVisualsPrepare(TransitState transitState, TransitState.StepDetails details)

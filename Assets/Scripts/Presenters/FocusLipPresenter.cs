@@ -75,7 +75,11 @@ namespace LunraGames.SubLight.Presenters
 							if (transition.End.Enabled && transition.End.Order < order) closestLayer = transition.Layer;
 						}
 					}
-					if (currentLayer == closestLayer) break;
+					if (currentLayer == closestLayer)
+					{
+						revealing = RevealStates.Unknown;
+						return;
+					}
 
 					var wasCurrent = currentLayer;
 					currentLayer = closestLayer;
