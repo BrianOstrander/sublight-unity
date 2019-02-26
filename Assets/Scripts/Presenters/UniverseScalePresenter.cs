@@ -24,6 +24,7 @@ namespace LunraGames.SubLight.Presenters
 		protected float GridRadius { private set; get; }
 
 		TweenStates lastZoomState;
+		UniverseTransform? updatedTransform;
 
 		public UniverseScalePresenter(GameModel model, UniverseScales scale)
 		{
@@ -36,6 +37,7 @@ namespace LunraGames.SubLight.Presenters
 			ScaleModel.Opacity.Changed += OnOpacity;
 
 			App.Callbacks.TransitionFocusRequest += OnTransitionFocusRequest;
+			App.Heartbeat.LateUpdate += OnLateUpdate;
 		}
 
 		protected override void OnUnBind()
@@ -45,10 +47,12 @@ namespace LunraGames.SubLight.Presenters
 			ScaleModel.Opacity.Changed -= OnOpacity;
 
 			App.Callbacks.TransitionFocusRequest -= OnTransitionFocusRequest;
+			App.Heartbeat.LateUpdate -= OnLateUpdate;
 		}
 
 		void ApplyScaleTransform(UniverseTransform transform)
 		{
+			updatedTransform = null;
 			var scale = transform.GetUnityScale(ScaleInUniverse);
 			scale = new Vector3(
 				Mathf.Max(MinimumScale, scale.x),
@@ -149,31 +153,6 @@ namespace LunraGames.SubLight.Presenters
 				lastZoomState = TweenStates.Unknown;
 				if (View.TransitionState == TransitionStates.Shown) CloseViewInstant();
 			}
-			/*
-			if (transition.End.Enabled)
-			{
-				if (View.TransitionState == TransitionStates.Closed) ShowInstant();
-				else OnUpdateEnabled();
-			}
-			else if (request.LastActive)
-			{
-				if (View.TransitionState == TransitionStates.Shown) CloseInstant();
-				else OnUpdateDisabled();
-			}
-
-			if (transition.Start.Layer != transition.End.Layer)
-			{
-				Debug.LogError("Mismatch between details, cannot begin with " + transition.Start.Layer + " and end with " + transition.End.Layer, View.gameObject);
-				return;
-			}
-			if (transition.Start.Layer != FocusLayer)
-			{
-				Debug.LogError("Mismatch between start and end details of layer " + transition.Start.Layer + ", and this presenter's layer, " + FocusLayer, View.gameObject);
-				return;
-			}
-
-			OnTransitionActive(request, transition, transition.Start.Details as D, transition.End.Details as D);
-			*/
 		}
 
 		#region Events
@@ -193,7 +172,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnScaleTransform(UniverseTransform transform)
 		{
 			if (!View.Visible) return;
-			ApplyScaleTransform(transform);
+			updatedTransform = transform;
 		}
 
 		void OnFocusTransform(FocusTransform focusTransform)
@@ -226,6 +205,11 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (focusTransform.Zoom.State == TweenStates.Active) return;
 			CloseViewInstant();
+		}
+
+		void OnLateUpdate(float delta)
+		{
+			if (View.Visible && updatedTransform.HasValue) ApplyScaleTransform(updatedTransform.Value);
 		}
 
 		protected virtual void OnShowView() {}
