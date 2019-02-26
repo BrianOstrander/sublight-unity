@@ -13,6 +13,7 @@ namespace LunraGames.SubLight.Presenters
 		static class LinkIds
 		{
 			public const string RationingPrefix = "rationing_";
+			public const string PropellantUsagePrefix = "propellant_usage_";
 
 			public const string LearnMore = "learn_more";
 		}
@@ -100,6 +101,7 @@ namespace LunraGames.SubLight.Presenters
 
 			result = GetLink(LinkIds.LearnMore, DeveloperStrings.GetSize("Temporary Interface [ Learn More ]", 0.4f), target, OnLearnMore);
 			result = AppendRationing(result, target, gameSource);
+			result = AppendPropellantUsage(result, target, gameSource);
 
 			return result;
 		}
@@ -335,6 +337,46 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
+		string AppendPropellantUsage(
+			string result,
+			Dictionary<string, Action> target,
+			KeyValueListModel gameSource
+		)
+		{
+			result += "\nPropellant Usage\n\t";
+
+			var boundrySaturation = 0.45f;
+			var normalSaturation = 0.65f;
+			var unusedSaturation = 0.45f;
+
+			result += DeveloperStrings.GetColor("|", Color.blue.NewS(boundrySaturation)) + DeveloperStrings.GetColorTagBegin(Color.blue.NewS(normalSaturation));
+
+			var currentPropellant = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount));
+			var currentPropellantUsage = Model.KeyValues.Get(KeyDefines.Game.PropellantUsage);
+			var currentPropellantMaximum = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Maximum));
+
+			for (var i = 1; i <= currentPropellantMaximum; i++)
+			{
+				if (i - 1 == currentPropellantUsage)
+				{
+					result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColorTagBegin(Color.blue.NewS(unusedSaturation));
+				}
+
+				if (i - 1 == currentPropellant) result += DeveloperStrings.GetColorTagBegin(Color.white);
+
+				var currPropellantUsage = string.Empty;
+				currPropellantUsage = i == currentPropellantUsage ? " + " : " — "; // Special hyphen, copy paste!
+
+				var currIndex = i;
+				result += GetLink(LinkIds.PropellantUsagePrefix + i, currPropellantUsage, target, () => OnSetPropellantUsage(currIndex));
+			}
+
+			result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColor("|", Color.blue.NewS(boundrySaturation));
+
+			return result;
+		}
+
+
 		string AppendRations(
 			string result,
 			Dictionary<string, Action> target,
@@ -437,11 +479,27 @@ namespace LunraGames.SubLight.Presenters
 				shipMessage.Message(string.Empty);
 				resourceMessage.Message(string.Empty);
 				systemMessage.Message(string.Empty);
+				return;
 			}
 
 			links = new Dictionary<string, Action>();
 
-			var system = Model.Context.CelestialSystemStateLastSelected.Value.System ?? Model.Context.CurrentSystem.Value;
+			var system = Model.Context.CurrentSystem.Value;
+
+			switch (Model.Context.CelestialSystemState.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Highlighted:
+					system = Model.Context.CelestialSystemState.Value.System;
+					break;
+				default:
+					switch (Model.Context.CelestialSystemStateLastSelected.Value.State)
+					{
+						case CelestialSystemStateBlock.States.Selected:
+							system = Model.Context.CelestialSystemStateLastSelected.Value.System;
+							break;
+					}
+					break;
+			}
 
 			var gameSource = Model.KeyValues;
 
@@ -488,7 +546,12 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnSetRationing(int rationing)
 		{
-			Model.KeyValues.Set(KeyDefines.Game.Rationing, rationing);
+			App.Callbacks.KeyValueRequest(KeyValueRequest.SetDefined(KeyDefines.Game.Rationing, rationing));
+		}
+
+		void OnSetPropellantUsage(int propellantUsage)
+		{
+			App.Callbacks.KeyValueRequest(KeyValueRequest.SetDefined(KeyDefines.Game.PropellantUsage, propellantUsage));
 		}
 
 		void OnLearnMore()
