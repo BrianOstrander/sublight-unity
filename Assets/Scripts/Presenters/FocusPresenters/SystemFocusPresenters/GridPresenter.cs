@@ -174,6 +174,8 @@ namespace LunraGames.SubLight.Presenters
 
 			}
 
+			model.Context.Grid.HazardOffset.Changed += OnGridHazardOffset;
+
 			model.Ship.Position.Changed += OnShipPosition;
 			OnShipPosition(model.Ship.Position.Value);
 
@@ -191,6 +193,8 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CurrentScrollGesture -= OnCurrentScrollGesture;
 			App.Callbacks.CurrentGesture -= OnCurrentGesture;
 
+			model.Context.Grid.HazardOffset.Changed -= OnGridHazardOffset;
+
 			model.Ship.Position.Changed -= OnShipPosition;
 			model.Ship.Range.Changed -= OnTravelRange;
 			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
@@ -201,7 +205,12 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
-			View.SetGridSelected(model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected, true);
+			View.SetGridSelected(
+				model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected ? GridStates.Selected : GridStates.Idle,
+				true
+			);
+
+			View.GridHazardOffset = model.Context.Grid.HazardOffset.Value;
 		}
 
 		void SetGrid()
@@ -362,10 +371,18 @@ namespace LunraGames.SubLight.Presenters
 		void OnUpdate(float delta)
 		{
 			if (!View.Visible) return;
+			model.Context.Grid.HazardOffset.Value = (model.Context.Grid.HazardOffset.Value + (delta * View.GridHazardOffsetMultiplierCurve.Evaluate(model.Context.TransitState.Value.RelativeTimeScalar))) % 1f;
 
 			OnCheckTween(model.Context.FocusTransform.Value, delta);
 
 			OnCheckDragging(delta);
+		}
+
+		void OnGridHazardOffset(float offset)
+		{
+			if (!View.Visible) return;
+
+			View.GridHazardOffset = offset;
 		}
 
 		void OnCheckTween(FocusTransform transform, float delta)
@@ -614,10 +631,10 @@ namespace LunraGames.SubLight.Presenters
 			switch (block.State)
 			{
 				case CelestialSystemStateBlock.States.UnSelected:
-					View.SetGridSelected(false);
+					View.SetGridSelected(GridStates.Idle);
 					break;
 				case CelestialSystemStateBlock.States.Selected:
-					View.SetGridSelected(true);
+					View.SetGridSelected(GridStates.Selected);
 					break;
 			}
 		}

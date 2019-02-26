@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6250301216978811887}
   m_Layer: 12
-  m_Name: PositionArea
+  m_Name: PositionScaleArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1461002426041104962}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 5508156974307211682}
   m_Father: {fileID: 3093213782490623700}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 2308983548687530006}
   - component: {fileID: 3511046569502351622}
   m_Layer: 12
-  m_Name: RingMeshInverse
+  m_Name: InnerRingMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 44617837964266529}
   - component: {fileID: 7768593168851518766}
   m_Layer: 12
-  m_Name: RingMesh
+  m_Name: OuterRingMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -239,8 +239,101 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   scaleIgnores: 30
   positionIgnores: 30
-  scaleArea: {fileID: 0}
+  scaleArea: {fileID: 6250301216978811887}
   positionArea: {fileID: 6250301216978811887}
+  ringMaterial: {fileID: 2100000, guid: f43fc3adf0ad74e458632bc824783f45, type: 2}
+  outerRingRenderQueue: 3002
+  innerRingRenderQueue: 3001
+  outerRingMesh: {fileID: 7768593168851518766}
+  innerRingMesh: {fileID: 3511046569502351622}
+  ringMeshes:
+  - {fileID: 7768593168851518766}
+  - {fileID: 3511046569502351622}
+  heightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.5
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  heightMaximum: 0.2
+  opacityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.25
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.75
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6476732194309155750
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,7 +359,7 @@ Transform:
   m_GameObject: {fileID: 6476732194309155750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7254240092741707852}
   - {fileID: 1026164695646672886}

@@ -48,6 +48,8 @@ namespace LunraGames.SubLight.Views
 		{
 			GridOrigin = gridOrigin;
 			GridRadius = gridRadius;
+
+			OnSetGrid(gridOrigin, gridRadius);
 		}
 
 		public void SetScale(Vector3 scale, Vector3 rawScale)
@@ -86,6 +88,7 @@ namespace LunraGames.SubLight.Views
 		protected virtual void OnPosition(Vector3 position, Vector3 rawPosition) {}
 		protected virtual void OnInBoundsChanged(bool isInBounds) {}
 		protected virtual void OnInBoundsUnscaledChanged(bool isInBoundsUnscaled) {}
+		protected virtual void OnSetGrid(Vector3 gridOrigin, float gridRadius) {}
 
 		protected float GetRadiusNormal(Vector3 worldPosition, float margin = 0f)
 		{

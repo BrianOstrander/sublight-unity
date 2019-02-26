@@ -25,6 +25,28 @@ namespace LunraGames.SubLight.Views
 			public float RangeRadius;
 		}
 
+		[Serializable]
+		public struct GridColors
+		{
+			public GridStates State;
+			public GridStates Fallback;
+			public Color Primary;
+			public Color Secondary;
+			public Color Tertiary;
+
+			public GridColors Lerp(GridColors other, float normal)
+			{
+				return new GridColors
+				{
+					State = State,
+					Fallback = Fallback,
+					Primary = Color.Lerp(Primary, other.Primary, normal),
+					Secondary = Color.Lerp(Secondary, other.Secondary, normal),
+					Tertiary = Color.Lerp(Tertiary, other.Tertiary, normal),
+				};
+			}
+		}
+
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		float zoomAnimationDuration;
@@ -78,16 +100,30 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField]
 		float gridSelectDuration;
+
+		[SerializeField]
+		GridColors[] backgroundStates;
+		[SerializeField]
+		GridColors[] hazardStates;
+
+		[SerializeField]
+		CurveRange gridHazardOffsetMultiplierCurve = CurveRange.Normal;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		Material[] gridBackgrounds;
 		Material[] gridsHazards;
 		Material[] grids;
 
-		float fromShiftValue;
-		float toShiftValue;
-		float lastShiftValue;
 		float? gridSelectRemaining;
+
+		GridColors gridBackgroundColorsFrom;
+		GridColors gridHazardColorsFrom;
+
+		GridColors gridBackgroundColorsTo;
+		GridColors gridHazardColorsTo;
+
+		GridColors gridBackgroundColorsLast;
+		GridColors gridHazardColorsLast;
 
 		public float ZoomAnimationDuration { get { return zoomAnimationDuration; } }
 		public float NudgeAnimationDuration { get { return nudgeAnimationDuration; } }
@@ -106,6 +142,17 @@ namespace LunraGames.SubLight.Views
 		public AnimationCurve GetPositionCurve(bool zoomingUp) { return zoomingUp ? positionZoomUpCurve : positionZoomDownCurve; }
 		public AnimationCurve ZoomCurve { get { return zoomCurve; } }
 		public AnimationCurve PositionCenterCurve { get { return positionCenterCurve; } }
+
+		public float GridHazardOffset
+		{
+			set
+			{
+				if (gridsHazards == null) return;
+				foreach (var hazard in gridsHazards) hazard.SetFloat(ShaderConstants.HoloGridRange.RadiusUOffset, value);
+			}
+		}
+
+		public CurveRange GridHazardOffsetMultiplierCurve { get { return gridHazardOffsetMultiplierCurve; } }
 
 		public Action DrawGizmos { set; private get; }
 
@@ -150,13 +197,13 @@ namespace LunraGames.SubLight.Views
 					background.renderQueue = renderQueue;
 					background.SetVector(ShaderConstants.HoloGridBackgroundRange.RangeOrigin, block.RangeOrigin);
 					background.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeRadius, block.RangeRadius);
-					OnSetGridSelection(background, lastShiftValue);
+					OnSetGridSelection(background, gridBackgroundColorsLast);
 
 					hazard.renderQueue = renderQueue + 1;
 					hazard.SetVector(ShaderConstants.HoloGridRange.RangeOrigin, block.RangeOrigin);
 					hazard.SetFloat(ShaderConstants.HoloGridRange.RangeRadius, block.RangeRadius);
 					hazard.SetFloat(ShaderConstants.HoloGridRange.RadiusV, block.RangeRadius);
-					OnSetGridSelection(hazard, lastShiftValue);
+					OnSetGridSelection(hazard, gridHazardColorsLast);
 
 					grid.renderQueue = renderQueue + 2;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
@@ -172,25 +219,49 @@ namespace LunraGames.SubLight.Views
 			}
 		}
 
-		public void SetGridSelected(bool value, bool instant = false)
+		public void SetGridSelected(GridStates state, bool instant = false)
 		{
-			var shiftValue = value ? 1f : 0f;
+			if (state == GridStates.Unknown)
+			{
+				Debug.LogError("Cannot set GridState to " + state);
+				return;
+			}
+
+			var backgroundTarget = GetGridState(state, backgroundStates);
+			var hazardTarget = GetGridState(state, hazardStates);
 
 			if (gridBackgrounds == null)
 			{
-				fromShiftValue = shiftValue;
-				toShiftValue = shiftValue;
-				lastShiftValue = shiftValue;
+				gridBackgroundColorsFrom = backgroundTarget;
+				gridHazardColorsFrom = hazardTarget;
+
+				gridBackgroundColorsTo = backgroundTarget;
+				gridHazardColorsTo = hazardTarget;
+
+				gridBackgroundColorsLast = backgroundTarget;
+				gridHazardColorsLast = hazardTarget;
+
 				gridSelectRemaining = null;
 				return;
 			}
 
-			fromShiftValue = toShiftValue;
-			toShiftValue = shiftValue;
-			lastShiftValue = fromShiftValue;
+			gridBackgroundColorsFrom = gridBackgroundColorsLast;
+			gridHazardColorsFrom = gridHazardColorsLast;
+
+			gridBackgroundColorsTo = backgroundTarget;
+			gridHazardColorsTo = hazardTarget;
+
 			gridSelectRemaining = gridSelectDuration;
 
 			if (instant) OnUpdateGridSelection(gridSelectDuration);
+		}
+
+		GridColors GetGridState(GridStates state, GridColors[] entries)
+		{
+			var result = entries.FirstOrDefault(s => s.State == state);
+			if (result.Fallback != GridStates.Unknown) result = entries.FirstOrDefault(s => s.State == result.Fallback);
+			if (result.State == GridStates.Unknown) result = entries.FirstOrDefault(s => s.State == GridStates.Idle);
+			return result;
 		}
 
 		void OnUpdateGridSelection(float delta)
@@ -201,22 +272,33 @@ namespace LunraGames.SubLight.Views
 
 			if (Mathf.Approximately(0f, gridSelectRemaining.Value))
 			{
-				lastShiftValue = toShiftValue;
-				foreach (var background in gridBackgrounds) OnSetGridSelection(background, toShiftValue);
-				foreach (var hazard in gridsHazards) OnSetGridSelection(hazard, lastShiftValue);
+				gridBackgroundColorsLast = gridBackgroundColorsTo;
+				gridHazardColorsLast = gridHazardColorsTo;
+				foreach (var background in gridBackgrounds) OnSetGridSelection(background, gridBackgroundColorsTo);
+				foreach (var hazard in gridsHazards) OnSetGridSelection(hazard, gridHazardColorsTo);
 				gridSelectRemaining = null;
 				return;
 			}
 
-			var scalar = 1f - (gridSelectRemaining.Value / gridSelectDuration);
-			lastShiftValue = fromShiftValue + ((toShiftValue - fromShiftValue) * scalar);
-			foreach (var background in gridBackgrounds) OnSetGridSelection(background, lastShiftValue);
-			foreach (var hazard in gridsHazards) OnSetGridSelection(hazard, lastShiftValue);
+			var normal = 1f - (gridSelectRemaining.Value / gridSelectDuration);
+
+			gridBackgroundColorsLast = gridBackgroundColorsFrom.Lerp(gridBackgroundColorsTo, normal);
+			gridHazardColorsLast = gridHazardColorsFrom.Lerp(gridHazardColorsTo, normal);
+
+			//lastShiftValue = fromShiftValue + ((toShiftValue - fromShiftValue) * scalar);
+
+			foreach (var background in gridBackgrounds) OnSetGridSelection(background, gridBackgroundColorsLast);
+			foreach (var hazard in gridsHazards) OnSetGridSelection(hazard, gridHazardColorsLast);
 		}
 
-		void OnSetGridSelection(Material material, float value)
+		void OnSetGridSelection(
+			Material material,
+			GridColors colors
+		)
 		{
-			material.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeShifted, value);
+			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorPrimary, colors.Primary);
+			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorSecondary, colors.Secondary);
+			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorTertiary, colors.Tertiary);
 		}
 
 		public override void Reset()
@@ -228,9 +310,8 @@ namespace LunraGames.SubLight.Views
 			Highlighted = false;
 			SetRadius(0f, true);
 
-			fromShiftValue = 0f;
-			toShiftValue = 0f;
-			lastShiftValue = 0f;
+			SetGridSelected(GridStates.Idle, true);
+
 			gridSelectRemaining = null;
 
 			DrawGizmos = ActionExtensions.Empty;
@@ -327,6 +408,15 @@ namespace LunraGames.SubLight.Views
 		}
 	}
 
+	public enum GridStates
+	{
+		Unknown = 0,
+		Idle = 10,
+		Selected = 20,
+		Transit = 30,
+		OutOfRange = 40
+	}
+
 	public interface IGridView : IView
 	{
 		float ZoomAnimationDuration { get; }
@@ -351,8 +441,12 @@ namespace LunraGames.SubLight.Views
 		bool ProcessDrag(Vector2 viewport, out Vector3 unityPosition, out bool inRadius);
 		void SetRadius(float scalar, bool showing);
 
-		void SetGridSelected(bool value, bool instant = false);
+		void SetGridSelected(GridStates state, bool instant = false);
 
+		CurveRange GridHazardOffsetMultiplierCurve { get; }
+
+		float GridHazardOffset { set; }
+		
 		Action DrawGizmos { set; }
 	}
 }
