@@ -4,12 +4,21 @@ ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
+    100002: TransitRing
+    100004: TransitRingInverse
     400000: //RootNode
+    400002: TransitRing
+    400004: TransitRingInverse
     2100000: None__Untitled_002
     2300000: //RootNode
+    2300002: TransitRing
+    2300004: TransitRingInverse
     3300000: //RootNode
+    3300002: TransitRing
+    3300004: TransitRingInverse
     4300000: Cylinder
     4300002: TransitRing
+    4300004: TransitRingInverse
     7400000: Default Take
     9500000: //RootNode
     2186277476908879412: ImportLogs

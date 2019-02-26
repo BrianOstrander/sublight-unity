@@ -357,7 +357,7 @@ namespace LunraGames.SubLight
 			public const string RadiusVFalloff = "_RadiusVFalloff";
 			public const string RadiusUTiling = "_RadiusUTiling";
 			public const string GridRangeMap = "_GridRangeMap";
-			public const string RadiusUSpeed = "_RadiusUSpeed";
+			public const string RadiusUOffset = "_RadiusUOffset";
 		}
 
 		public static class HoloGrid

@@ -130,10 +130,11 @@ Material:
     - _RadiusProgress: 1
     - _RadiusU: 2
     - _RadiusUFalloff: 0.5
+    - _RadiusUOffset: 0
     - _RadiusUSpeed: 0.02
     - _RadiusV: 2
     - _RadiusVFalloff: 0.2
-    - _RadiusVTiling: 5
+    - _RadiusVTiling: 2
     - _RadiusWidth: 0
     - _RangeFalloff: 0.25
     - _RangeRadius: 2
