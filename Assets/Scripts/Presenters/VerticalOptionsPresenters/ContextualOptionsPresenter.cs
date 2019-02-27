@@ -17,7 +17,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Escape -= OnEscape;
 		}
 
-		protected bool NotInteractable
+		protected virtual bool NotInteractable
 		{
 			get
 			{
@@ -72,21 +72,23 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnEscape()
 		{
-			switch (View.TransitionState)
-			{
-				case TransitionStates.Shown:
-					OnClickBack();
-					break;
-			}
+			if (NotInteractable) return;
+
+			OnClickBack();
 		}
 
-		protected void OnClickBack()
+		protected virtual void OnClickBack()
 		{
 			if (NotInteractable) return;
 
-			View.Closed += back;
+			View.Closed += OnBack;
 
 			CloseView();
+		}
+
+		protected void OnBack()
+		{
+			back();
 		}
 		#endregion
 

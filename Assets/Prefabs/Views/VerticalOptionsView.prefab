@@ -682,7 +682,6 @@ GameObject:
   - component: {fileID: 6667382161977670671}
   - component: {fileID: 89611785140526461}
   - component: {fileID: 8861645281000651834}
-  - component: {fileID: 7505653328933146914}
   m_Layer: 15
   m_Name: SecondaryLabel
   m_TagString: Untagged
@@ -834,109 +833,6 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &7505653328933146914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3066142725547615973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  globalStyle: {fileID: 0}
-  localStyle:
-    DistanceScaleIntensity:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    ClickScaleDelta:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    Colors:
-      DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
-      NormalColor: {r: 0, g: 0, b: 0, a: 1}
-      HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-      PressedColor: {r: 1, g: 1, b: 1, a: 1}
-    Toggles:
-      ActiveOnDisabled: 1
-      ActiveOnNormal: 1
-      ActiveOnHighlighted: 1
-      ActiveOnPressed: 1
-    ClickDistanceDelta:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  targetToggles: []
-  targetTransforms: []
-  targetGraphics:
-  - {fileID: 8861645281000651834}
-  targetMeshRenderers: []
-  targetGroups: []
-  particleSystems: []
 --- !u!1 &3120785676073239242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,13 +897,14 @@ MonoBehaviour:
   - {fileID: 1160586713750782328}
   LabelAreas:
   - {fileID: 4314106324338967234}
-  - {fileID: 7505653328933146914}
   BackgroundAreas:
   - {fileID: 6338452800374558369}
   - {fileID: 4637143295655890884}
   HighlightAreas:
   - {fileID: 984536641800662105}
   - {fileID: 8618910586657670372}
+  LabelNormalAreas:
+  - {fileID: 8861645281000651834}
 --- !u!1 &3271163753226650140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,7 +1813,6 @@ MonoBehaviour:
   - {fileID: 4314106324338967234}
   - {fileID: 4637143295655890884}
   - {fileID: 8618910586657670372}
-  - {fileID: 7505653328933146914}
   globalSounds: {fileID: 0}
   localSounds:
     DisabledSound: {fileID: 0}

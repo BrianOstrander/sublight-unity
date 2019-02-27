@@ -6,10 +6,10 @@ namespace LunraGames.SubLight
 	{
 		#region Booleans
 		public readonly Boolean IgnoreTutorial;
+		public readonly Boolean InterfaceLarge;
 		#endregion
 
 		#region Integers
-		public readonly Integer InterfaceScale;
 		#endregion
 
 		#region Strings
@@ -35,17 +35,18 @@ namespace LunraGames.SubLight
 					"ignore_tutorial",
 					"True if the initial tutorial should be skipped.",
 					true
+				),
+				Create(
+					ref InterfaceLarge,
+					"interface_large",
+					"True if the interface should be large. This is temporary until proper integer based scaling is added.",
+					created: AppendReloadHomeRequired
 				)
 			};
 
 			Integers = new Integer[]
 			{
-				Create(
-					ref InterfaceScale,
-					"interface_scale",
-					"Scale of the current interface.",
-					created: AppendReloadHomeRequired
-				)
+
 			};
 
 			Strings = new String[]
@@ -70,6 +71,7 @@ namespace LunraGames.SubLight
 			where T : IKeyDefinition
 		{
 			ReloadHomeRequired = ReloadHomeRequired.Append(instance).ToArray();
+			ReloadGameRequired = ReloadGameRequired.Append(instance).ToArray();
 			return instance;
 		}
 

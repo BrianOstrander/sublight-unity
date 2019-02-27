@@ -253,6 +253,7 @@ namespace LunraGames.SubLight.Models
 
 			var allKeys = values.Keys.ToList();
 			allKeys.AddRange(valuesOther.Keys.ToList());
+			allKeys = allKeys.Select(NormalizeKey).Distinct().ToList();
 
 			foreach (var key in allKeys)
 			{
