@@ -15,7 +15,9 @@ namespace LunraGames.SubLight.Presenters
 		{
 			get
 			{
-				return lastTransition.State == TransitionFocusRequest.States.Complete && !model.ToolbarLocking.Value;
+				return lastTransition.State == TransitionFocusRequest.States.Complete
+									 && !model.ToolbarLocking.Value
+					                 && model.Context.GridInput.Value.State == GridInputRequest.States.Complete;
 			}
 		}
 

@@ -11,6 +11,15 @@ namespace LunraGames.SubLight.Presenters
 		LanguageStringModel back;
 		bool waitingForAnimation;
 
+		bool CanClick
+		{
+			get
+			{
+				return !waitingForAnimation
+					&& model.Context.GridInput.Value.State == GridInputRequest.States.Complete;
+			}
+		}
+
 		public ToolbarBackPresenter(
 			GameModel model,
 			LanguageStringModel back
@@ -62,7 +71,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClick()
 		{
-			if (waitingForAnimation) return;
+			if (!CanClick) return;
 			waitingForAnimation = true;
 			App.Callbacks.CameraTransformRequest(
 				CameraTransformRequest.Animation(
