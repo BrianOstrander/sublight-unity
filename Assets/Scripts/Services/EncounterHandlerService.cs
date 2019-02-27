@@ -134,8 +134,6 @@ namespace LunraGames.SubLight
 		{
 			if (!nextLogDelay.HasValue) return;
 
-			if (currentPreferences().EncounterLogsAutoNext.Value) nextLogDelay = Mathf.Max(0f, nextLogDelay.Value - delta);
-
 			if (!Mathf.Approximately(0f, nextLogDelay.Value)) return;
 
 			OnNextLog(nextLog);
