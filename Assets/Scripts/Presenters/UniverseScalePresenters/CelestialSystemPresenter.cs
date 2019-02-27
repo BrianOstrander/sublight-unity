@@ -188,7 +188,7 @@ namespace LunraGames.SubLight.Presenters
 			switch(selectedState)
 			{
 				case Celestial.SelectedStates.Selected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(positionInUniverse, instanceModel.ActiveSystem.Value);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.UnSelect(positionInUniverse, instanceModel.ActiveSystem.Value));
 					break;
 			}
 		}
@@ -226,7 +226,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnEnter()
 		{
-			Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse, instanceModel.ActiveSystem.Value);
+			Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Highlight(positionInUniverse, instanceModel.ActiveSystem.Value));
 		}
 
 		void OnExit()
@@ -234,13 +234,13 @@ namespace LunraGames.SubLight.Presenters
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.NotSelected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Ship.Position, null);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Idle(Model.Ship.Position, null));
 					break;
 				case Celestial.SelectedStates.Selected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(positionInUniverse, instanceModel.ActiveSystem.Value);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Idle(positionInUniverse, instanceModel.ActiveSystem.Value));
 					break;
 				case Celestial.SelectedStates.OtherSelected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Context.CelestialSystemStateLastSelected.Value.Position, Model.Context.CelestialSystemStateLastSelected.Value.System);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Idle(Model.Context.CelestialSystemStateLastSelected.Value.Position, Model.Context.CelestialSystemStateLastSelected.Value.System));
 					break;
 			}
 
@@ -255,7 +255,7 @@ namespace LunraGames.SubLight.Presenters
 					{
 						case Celestial.SelectedStates.OtherSelected:
 						case Celestial.SelectedStates.NotSelected:
-							Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
+							Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value));
 							break;
 						case Celestial.SelectedStates.Selected:
 							switch (visitState)

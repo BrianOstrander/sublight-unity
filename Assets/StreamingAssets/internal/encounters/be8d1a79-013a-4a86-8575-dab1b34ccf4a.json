@@ -42,6 +42,29 @@
               },
               "entryId": "9d6930e4-1fd1-40ac-b097-cc3c1e1c705d"
             }
+          },
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "target": 20
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "c37b667a-1f0a-4259-bd26-67f5837b653f"
+            },
+            "index": 1
           }
         ],
         "beginning": true,

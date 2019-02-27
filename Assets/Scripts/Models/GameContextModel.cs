@@ -23,9 +23,6 @@ namespace LunraGames.SubLight.Models
 		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 		public readonly ListenerProperty<GridInputRequest> GridInput;
 
-		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
-		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
-
 		UniverseScaleLabelBlock scaleLabelSystem = UniverseScaleLabelBlock.Default;
 		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelSystem;
 
@@ -49,6 +46,10 @@ namespace LunraGames.SubLight.Models
 
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
+
+		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
+		ListenerProperty<CelestialSystemStateBlock> celestialSystemStateListener;
+		public readonly ReadonlyProperty<CelestialSystemStateBlock> CelestialSystemState;
 
 		TransitStateRequest transitStateRequest;
 		public ListenerProperty<TransitStateRequest> TransitStateRequest;
@@ -133,7 +134,6 @@ namespace LunraGames.SubLight.Models
 
 			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
 			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);
-			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
 
 			ScaleLabelSystem = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelSystem = value, () => scaleLabelSystem);
 			ScaleLabelLocal = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelLocal = value, () => scaleLabelLocal);
@@ -144,6 +144,11 @@ namespace LunraGames.SubLight.Models
 			GridScaleOpacity = new ListenerProperty<float>(value => gridScaleOpacity = value, () => gridScaleOpacity);
 
 			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
+			CelestialSystemState = new ReadonlyProperty<CelestialSystemStateBlock>(
+				value => celestialSystemState = value,
+				() => celestialSystemState,
+				out celestialSystemStateListener
+			);
 
 			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
 			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
@@ -173,20 +178,30 @@ namespace LunraGames.SubLight.Models
 			}
 			activeScaleListener.Value = newHighestOpacityScale;
 		}
+		#endregion
 
-		void OnCelestialSystemState(CelestialSystemStateBlock block)
+		#region Utility
+		public void SetCelestialSystemState(CelestialSystemStateBlock block)
 		{
+			celestialSystemStateListener.Value = block;
+
 			switch (block.State)
 			{
 				case CelestialSystemStateBlock.States.UnSelected:
 				case CelestialSystemStateBlock.States.Selected:
 					CelestialSystemStateLastSelected.Value = block;
+					model.KeyValues.Set(
+						KeyDefines.Game.NavigationSelectionName,
+						block.State == CelestialSystemStateBlock.States.Selected ? block.System.Name.Value : null
+					);
+					model.KeyValues.Set(
+						KeyDefines.Game.NavigationSelection,
+						block.State == CelestialSystemStateBlock.States.Selected ? block.System.ShrunkPosition : null
+					);
 					break;
 			}
 		}
-		#endregion
 
-		#region Utility
 		public void SetCurrentSystem(SystemModel system)
 		{
 			currentSystemListener.Value = system;

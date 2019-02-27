@@ -674,7 +674,7 @@ namespace LunraGames.SubLight.Presenters
 								model.Ship.Position.Value = transitState.EndSystem.Position;
 
 								model.Context.SetCurrentSystem(transitState.EndSystem);
-								model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemState.Value.System.Position.Value, model.Context.CelestialSystemState.Value.System);
+								model.Context.SetCelestialSystemState(CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemState.Value.System.Position.Value, model.Context.CelestialSystemState.Value.System));
 
 								SetGrid();
 							}

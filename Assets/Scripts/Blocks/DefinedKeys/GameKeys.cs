@@ -79,6 +79,8 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Strings
+		public readonly String NavigationSelection;
+		public readonly String NavigationSelectionName;
 		#endregion
 
 		#region Floats
@@ -205,7 +207,19 @@ namespace LunraGames.SubLight
 
 			Strings = new String[]
 			{
-
+				Create(
+					ref NavigationSelection,
+					"navigation_selection",
+					"The sector and index of the currently selected celestial system, or null if none is selected. " +
+					"This information is serialized as:\n\t\"Format_SectorX_SectoryY_SectorZ_Index\"\n" +
+					"The only format currently supported is \"coordinate\", though others may be added in the future.",
+					true
+				),
+				Create(
+					ref NavigationSelectionName,
+					"navigation_selection_name",
+					"The name of the current navigation selection."
+				)
 			};
 
 			Floats = new Float[]

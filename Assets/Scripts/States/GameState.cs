@@ -959,6 +959,41 @@ namespace LunraGames.SubLight
 			switch (target)
 			{
 				case KeyValueTargets.Game:
+					if (key == KeyDefines.Game.NavigationSelection.Key)
+					{
+						Action navigationSelectionNone = () =>
+						{
+							Payload.Game.Context.SetCelestialSystemState(
+								Payload.Game.Context.CelestialSystemState.Value.Duplicate(CelestialSystemStateBlock.States.UnSelected)
+							);
+						};
+
+						UniversePosition.Expand(
+							value,
+							navigationSelectionNone,
+							(position, index) =>
+							{
+								var navigationSelectionSystem = App.Universe.GetSystem(
+									Payload.Game.Context.Galaxy,
+									Payload.Game.Universe,
+									position,
+									index
+								);
+
+								if (navigationSelectionSystem == null)
+								{
+									Debug.LogError("Tried to set navigation selection to \"" + value + "\" but no system could be found");
+									navigationSelectionNone();
+								}
+								else
+								{
+									Payload.Game.Context.SetCelestialSystemState(
+										CelestialSystemStateBlock.Select(position, navigationSelectionSystem)
+									);
+								}
+							}
+						);
+					}
 					break;
 			}
 		}
