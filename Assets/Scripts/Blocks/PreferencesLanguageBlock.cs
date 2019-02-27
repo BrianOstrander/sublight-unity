@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		public LanguageStringModel VersionPrefix;
 		public LanguageStringModel Gameplay;
 
-		public DialogLanguageBlock CannotEditDuringGame;
+		public DialogLanguageBlock BlockedDuringGame;
 		public DialogLanguageBlock ReloadHomeRequired;
 		public DialogLanguageBlock RestartRequired;
 

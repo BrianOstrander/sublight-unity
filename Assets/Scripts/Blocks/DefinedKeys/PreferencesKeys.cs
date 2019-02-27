@@ -18,13 +18,13 @@ namespace LunraGames.SubLight
 		#region Floats
 		#endregion
 
-		public IKeyDefinition[] ReloadGameRequired { get; private set; }
+		public IKeyDefinition[] BlockedDuringGame { get; private set; }
 		public IKeyDefinition[] ReloadHomeRequired { get; private set; }
 		public IKeyDefinition[] RestartRequired { get; private set; }
 
 		public PreferencesKeys() : base(KeyValueTargets.Preferences)
 		{
-			ReloadGameRequired = new IKeyDefinition[0];
+			BlockedDuringGame = new IKeyDefinition[0];
 			ReloadHomeRequired = new IKeyDefinition[0];
 			RestartRequired = new IKeyDefinition[0];
 
@@ -60,10 +60,10 @@ namespace LunraGames.SubLight
 			};
 		}
 
-		T AppendReloadGameRequired<T>(T instance)
+		T AppendBlockedDuringGame<T>(T instance)
 			where T : IKeyDefinition
 		{
-			ReloadGameRequired = ReloadGameRequired.Append(instance).ToArray();
+			BlockedDuringGame = BlockedDuringGame.Append(instance).ToArray();
 			return instance;
 		}
 
@@ -71,7 +71,7 @@ namespace LunraGames.SubLight
 			where T : IKeyDefinition
 		{
 			ReloadHomeRequired = ReloadHomeRequired.Append(instance).ToArray();
-			ReloadGameRequired = ReloadGameRequired.Append(instance).ToArray();
+			BlockedDuringGame = BlockedDuringGame.Append(instance).ToArray();
 			return instance;
 		}
 
@@ -79,6 +79,7 @@ namespace LunraGames.SubLight
 			where T : IKeyDefinition
 		{
 			RestartRequired = RestartRequired.Append(instance).ToArray();
+			BlockedDuringGame = BlockedDuringGame.Append(instance).ToArray();
 			return instance;
 		}
 	}

@@ -38,7 +38,7 @@ namespace LunraGames.SubLight.Presenters
 					VersionPrefix = LanguageStringModel.Override("SubLight Version "),
 					Gameplay = LanguageStringModel.Override("Gameplay"),
 
-					CannotEditDuringGame = new DialogLanguageBlock
+					BlockedDuringGame = new DialogLanguageBlock
 					{
 						Title = LanguageStringModel.Override("Restricted"),
 						Message = LanguageStringModel.Override("This preference can only be edited from the main menu.")
@@ -146,16 +146,16 @@ namespace LunraGames.SubLight.Presenters
 
 			Action click = OnClickToggleNotSet;
 
-			if (App.SM.CurrentState == StateMachine.States.Game && KeyDefines.Preferences.ReloadGameRequired.Any(k => k.Key == keyDefine.Key && k.ValueType == keyDefine.ValueType))
+			if (App.SM.CurrentState == StateMachine.States.Game && KeyDefines.Preferences.BlockedDuringGame.Any(k => k.Key == keyDefine.Key && k.ValueType == keyDefine.ValueType))
 			{
 				interactable = ButtonVerticalOptionsEntry.InteractionStates.LooksNotInteractable;
 				click = () =>
 				{
 					View.Closed += () => App.Callbacks.DialogRequest(
 						DialogRequest.Confirm(
-							language.CannotEditDuringGame.Message,
+							language.BlockedDuringGame.Message,
 							DialogStyles.Error,
-							language.CannotEditDuringGame.Title,
+							language.BlockedDuringGame.Title,
 							ReShow,
 							true
 						)
@@ -210,13 +210,99 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			Debug.Log("lol something changed");
+			var reloadHomeRequired = false;
+			var blockedDuringGame = false;
+			var restartRequired = false;
 
-			foreach (var delta in deltas) Debug.Log(delta.Key + " changed");
+			foreach (var delta in deltas)
+			{
+				reloadHomeRequired |= KeyDefines.Preferences.ReloadHomeRequired.Any(k => k.Key == delta.Key && k.ValueType == delta.Type);
+				blockedDuringGame |= KeyDefines.Preferences.BlockedDuringGame.Any(k => k.Key == delta.Key && k.ValueType == delta.Type);
+				restartRequired |= KeyDefines.Preferences.RestartRequired.Any(k => k.Key == delta.Key && k.ValueType == delta.Type);
+			}
 
-			// Should be set null when closed...
-			//editedPreferences = null;
+			if (App.SM.CurrentState == StateMachine.States.Game && (reloadHomeRequired || blockedDuringGame || restartRequired))
+			{
+				Debug.LogError(
+					"Invalid state for edited preferences, ignoring..." +
+					"\n\tReloadHomeRequired: " + reloadHomeRequired +
+					"\n\tBlockedDuringGame: " + blockedDuringGame +
+					"\n\tRestartRequired: " + restartRequired
+				);
+				editedPreferences = null;
+				base.OnClickBack();
+				return;
+			}
+
+			if (reloadHomeRequired)
+			{
+				View.Closed += () => App.Callbacks.DialogRequest(
+					DialogRequest.ConfirmDenyCancel(
+						language.ReloadHomeRequired.Message,
+						DialogStyles.Warning,
+						language.ReloadHomeRequired.Title,
+						() => OnSave(OnReloadHome),
+						() => OnDiscard(OnBack),
+						ReShow,
+						confirmText: language.ReloadRestartConfirm,
+						denyText: language.ReloadRestartDiscard,
+						cancelText: language.ReloadRestartCancel,
+						overrideFocuseHandling: true
+					)
+				);
+
+				CloseView();
+				return;
+			}
+
+			if (restartRequired)
+			{
+				View.Closed += () => App.Callbacks.DialogRequest(
+					DialogRequest.ConfirmDenyCancel(
+						language.RestartRequired.Message,
+						DialogStyles.Warning,
+						language.RestartRequired.Title,
+						() => OnSave(OnRestartGame),
+						() => OnDiscard(OnBack),
+						ReShow,
+						confirmText: language.ReloadRestartConfirm,
+						denyText: language.ReloadRestartDiscard,
+						cancelText: language.ReloadRestartCancel,
+						overrideFocuseHandling: true
+					)
+				);
+
+				CloseView();
+				return;
+			}
+
+			View.Closed += () => OnSave(OnBack);
+			CloseView();
 		}
+
+		void OnSave(Action done)
+		{
+			App.MetaKeyValues.PreferencesKeyValues.Apply(editedPreferences);
+			editedPreferences = null;
+			App.MetaKeyValues.Save(result => done());
+		}
+
+		void OnDiscard(Action done)
+		{
+			editedPreferences = null;
+			done();
+		}
+
+		void OnReloadHome()
+		{
+			Debug.Log("reload home here!");
+		}
+
+		void OnRestartGame()
+		{
+			Debug.Log("restart game here!");
+		}
+
 		#endregion
 
 	}
