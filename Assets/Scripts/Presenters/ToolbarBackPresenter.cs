@@ -51,7 +51,9 @@ namespace LunraGames.SubLight.Presenters
 		{
 			switch (model.ToolbarSelection.Value)
 			{
-				case ToolbarSelections.Ship: break;
+				case ToolbarSelections.Unknown:
+				case ToolbarSelections.Ship:
+					break;
 				default:
 					OnClick();
 					break;

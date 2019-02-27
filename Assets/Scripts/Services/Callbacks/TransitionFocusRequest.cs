@@ -18,19 +18,20 @@ namespace LunraGames.SubLight
 		public static TransitionFocusRequest Request(
 			GatherFocusResult gatherResult,
 			SetFocusTransition[] transitions,
-			DateTime startTime,
-			DateTime endTime
+			float duration
 		)
 		{
+			var instant = Mathf.Approximately(0f, duration);
+			if (instant) Debug.LogWarning("Requesting a focus with a duration of zero, running instantly");
+
 			return new TransitionFocusRequest(
 				States.Request,
 				gatherResult,
 				transitions,
-				startTime,
-				endTime,
-				endTime - startTime,
 				0f,
-				false,
+				duration,
+				0f,
+				instant,
 				false
 			);
 		}
@@ -44,9 +45,8 @@ namespace LunraGames.SubLight
 				States.Request,
 				gatherResult,
 				transitions,
-				DateTime.MinValue,
-				DateTime.MinValue,
-				TimeSpan.MinValue,
+				0f,
+				0f,
 				0f,
 				true,
 				false
@@ -56,9 +56,8 @@ namespace LunraGames.SubLight
 		public readonly States State;
 		public readonly GatherFocusResult GatherResult;
 		public readonly SetFocusTransition[] Transitions;
-		public readonly DateTime StartTime;
-		public readonly DateTime EndTime;
-		public readonly TimeSpan Duration;
+		public readonly float Elapsed;
+		public readonly float Duration;
 		public readonly float Progress;
 		public readonly bool Instant;
 		/// <summary>
@@ -76,9 +75,8 @@ namespace LunraGames.SubLight
 			States state,
 			GatherFocusResult gatherResult,
 			SetFocusTransition[] transitions,
-			DateTime startTime,
-			DateTime endTime,
-			TimeSpan duration,
+			float elapsed,
+			float duration,
 			float progress,
 			bool instant,
 			bool firstActive
@@ -87,8 +85,7 @@ namespace LunraGames.SubLight
 			State = state;
 			GatherResult = gatherResult;
 			Transitions = transitions;
-			StartTime = startTime;
-			EndTime = endTime;
+			Elapsed = elapsed;
 			Duration = duration;
 			Progress = progress;
 			Instant = instant;
@@ -100,6 +97,7 @@ namespace LunraGames.SubLight
 		public TransitionFocusRequest Duplicate(
 			bool firstActive,
 			States state = States.Unknown,
+			float? elapsed = null,
 			float? progress = null
 		)
 		{
@@ -107,8 +105,7 @@ namespace LunraGames.SubLight
 				state == States.Unknown ? State : state,
 				GatherResult,
 				Transitions,
-				StartTime,
-				EndTime,
+				elapsed.HasValue ? elapsed.Value : Elapsed,
 				Duration,
 				progress.HasValue ? progress.Value : Progress,
 				Instant,
@@ -126,11 +123,6 @@ namespace LunraGames.SubLight
 			}
 			result = Transitions.FirstOrDefault(t => t.Layer == layer);
 			return !result.NoTransition;
-		}
-
-		internal TransitionFocusRequest Duplicate(States complete)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }
