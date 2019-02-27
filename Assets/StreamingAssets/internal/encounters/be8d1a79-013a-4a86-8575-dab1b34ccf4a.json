@@ -1,4 +1,5 @@
 {
+  "orderWeight": 510,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "b764f4ba-be4b-48f1-8770-ff998c00ae82",
@@ -30,18 +31,45 @@
     "encounterInteractions": []
   },
   "logs": {
-    "keyValueLogs": [],
-    "switchLogs": [],
-    "buttonLogs": [],
-    "encyclopediaLogs": [],
-    "eventLogs": [
+    "keyValueLogs": [
       {
-        "entries": [],
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "String",
+              "stringValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "05a63f0b-bfc9-4fca-a311-40f517eaa72b",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "7b336790-b270-4306-bd11-06758aede066",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "navigation_selection"
+                }
+              },
+              "entryId": "708d5f45-d0d5-432d-aa4c-d31ac8e41097"
+            }
+          }
+        ],
         "beginning": true,
-        "logId": "c5d50937-31c7-44f6-a9b3-c8d8d66e8ebb",
+        "logId": "21724a92-5002-4f20-ba56-8f48d88d71d9",
         "fallbackLogId": "0c06e302-818b-4b4c-8c5e-05d028fc240e"
       }
     ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
     "dialogLogs": [
       {
         "dialogs": [
