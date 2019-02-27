@@ -312,6 +312,13 @@ namespace LunraGames.SubLight
 									case StringFilterOperations.Equals:
 										passed = result.Value == inputValue;
 										break;
+									case StringFilterOperations.NormalizedEquals:
+										if (string.IsNullOrEmpty(result.Value) == string.IsNullOrEmpty(inputValue))
+										{
+											if (string.IsNullOrEmpty(inputValue)) passed = true;
+											else passed = result.Value.ToLower() == inputValue.ToLower();
+										}
+										break;
 									case StringFilterOperations.IsNullOrEmpty:
 										passed = string.IsNullOrEmpty(result.Value);
 										break;

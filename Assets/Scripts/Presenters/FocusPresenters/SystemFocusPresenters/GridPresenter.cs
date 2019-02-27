@@ -363,6 +363,7 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnTransitionActive(TransitionFocusRequest request, SetFocusTransition transition, SystemFocusDetails startDetails, SystemFocusDetails endDetails)
 		{
+			if (transition.Start.Enabled == transition.End.Enabled) return; // I added this without testing it, no idea if it will break things.
 			// TODO: This needs to be called multiple times while focusing and I don't know why.
 			if (transition.End.Enabled && (request.FirstActive || request.LastActive)) BeginZoom(model.Context.FocusTransform.Value.Zoom, true);
 		}
@@ -674,7 +675,7 @@ namespace LunraGames.SubLight.Presenters
 								model.Ship.Position.Value = transitState.EndSystem.Position;
 
 								model.Context.SetCurrentSystem(transitState.EndSystem);
-								model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemState.Value.System.Position.Value, model.Context.CelestialSystemState.Value.System);
+								model.Context.SetCelestialSystemState(CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemState.Value.System.Position.Value, model.Context.CelestialSystemState.Value.System));
 
 								SetGrid();
 							}

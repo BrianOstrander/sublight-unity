@@ -68,6 +68,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
 
+		[JsonIgnore]
+		public string ShrunkPosition { get { return UniversePosition.Shrink(Position.Value, Index.Value); } }
+
 		public SystemModel()
 		{
 			Index = new ListenerProperty<int>(value => index = value, () => index);

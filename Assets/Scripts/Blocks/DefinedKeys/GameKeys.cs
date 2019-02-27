@@ -79,6 +79,10 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Strings
+		public readonly String NavigationSelection;
+		public readonly String NavigationSelectionName;
+		public readonly String NavigationHighlight;
+		public readonly String NavigationHighlightName;
 		#endregion
 
 		#region Floats
@@ -205,7 +209,27 @@ namespace LunraGames.SubLight
 
 			Strings = new String[]
 			{
-
+				Create(
+					ref NavigationSelection,
+					"navigation_selection",
+					GetNavigationSystemNotes("selection"),
+					true
+				),
+				Create(
+					ref NavigationSelectionName,
+					"navigation_selection_name",
+					"The name of the current navigation selection."
+				),
+				Create(
+					ref NavigationHighlight,
+					"navigation_highlight",
+					GetNavigationSystemNotes("highlight")
+				),
+				Create(
+					ref NavigationHighlightName,
+					"navigation_highlight_name",
+					"The name of the current navigation highlight."
+				)
 			};
 
 			Floats = new Float[]
@@ -314,6 +338,13 @@ namespace LunraGames.SubLight
 
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
 			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
+		}
+
+		static string GetNavigationSystemNotes(string interaction)
+		{
+			return "The condensed id of the current celestial system " + interaction + ", null or empty if none. " +
+				"This information is serialized as:\n\t\"Format_SectorX_SectoryY_SectorZ_Index\"\n" +
+				"The only format currently supported is \"coordinate\", though others may be added in the future.";
 		}
 	}
 }

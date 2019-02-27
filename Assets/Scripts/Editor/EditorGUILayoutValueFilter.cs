@@ -369,12 +369,15 @@ namespace LunraGames.SubLight
 					GUILayout.Width(OperatorWidth)
 				);
 
-				if (model.Operation.Value == StringFilterOperations.Equals)
+				switch (model.Operation.Value)
 				{
-					EditorGUILayoutKeyDefinition.Value(
-						() => model.Input1,
-						result => model.Input1 = result
-					);
+					case StringFilterOperations.Equals:
+					case StringFilterOperations.NormalizedEquals:
+						EditorGUILayoutKeyDefinition.Value(
+							() => model.Input1,
+							result => model.Input1 = result
+						);
+						break;
 				}
 			}
 			OnHandleKeyValueEnd(model, ref deleted);

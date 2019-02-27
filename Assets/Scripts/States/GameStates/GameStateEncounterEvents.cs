@@ -49,7 +49,7 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.DumpKeyValues:
 								OnHandleEventDumpKeyValues(payload, entry, currOnEventDone);
 								break;
-							case EncounterEvents.Types.PopTriggers:
+							case EncounterEvents.Types.TriggerQueue:
 								OnHandleEventPopTriggers(payload, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.GameComplete:
@@ -202,15 +202,24 @@ namespace LunraGames.SubLight
 			)
 			{
 				var popped = new List<EncounterTriggers>();
+				var pushed = new Dictionary<EncounterTriggers, int>();
 
-				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete)) popped.Add(EncounterTriggers.TransitComplete);
-				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest)) popped.Add(EncounterTriggers.ResourceRequest);
-				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume)) popped.Add(EncounterTriggers.ResourceConsume);
-				if (entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle)) popped.Add(EncounterTriggers.SystemIdle);
+				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
+				{
+					if (entry.KeyValues.GetBoolean(EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger))) popped.Add(trigger);
 
-				Debug.Log(popped.Count());
+					var pushIndex = entry.KeyValues.GetInteger(
+						EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger),
+						EncounterEvents.TriggerQueue.PushDisabled
+					);
+					if (pushIndex != EncounterEvents.TriggerQueue.PushDisabled) pushed.Add(trigger, pushIndex);
+				}
 
-				payload.Game.EncounterTriggers.Value = payload.Game.EncounterTriggers.Value.Where(t => !popped.Contains(t)).ToArray();
+				var result = payload.Game.EncounterTriggers.Value.Where(t => !popped.Contains(t)).ToList();
+
+				foreach (var push in pushed.OrderByDescending(p => p.Value).Select(p => p.Key)) result.Add(push);
+
+				payload.Game.EncounterTriggers.Value = result.ToArray();
 
 				done();
 			}

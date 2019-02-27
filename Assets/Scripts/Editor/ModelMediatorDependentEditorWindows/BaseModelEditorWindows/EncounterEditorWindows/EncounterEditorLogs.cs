@@ -1355,7 +1355,7 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.GameComplete:
 					OnEncounterEventLogEdgeGameComplete(entry);
 					break;
-				case EncounterEvents.Types.PopTriggers:
+				case EncounterEvents.Types.TriggerQueue:
 					OnEncounterEventLogEdgePopTriggers(entry);
 					break;
 				default:
@@ -1468,25 +1468,40 @@ namespace LunraGames.SubLight
 			GUILayout.Label("Pop the following triggers if on the stack");
 			EditorGUILayoutExtensions.PushIndent();
 			{
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete,
-					EditorGUILayout.Toggle("Transit Complete", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete))
-				);
+				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
+				{
+					entry.KeyValues.SetBoolean(
+						EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger),
+						EditorGUILayout.Toggle(
+							ObjectNames.NicifyVariableName(trigger.ToString()),
+							entry.KeyValues.GetBoolean(EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger))
+						)
+					);
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
+			GUILayout.Label("Push the following triggers onto the stack in descending order");
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
+				{
+					var pushValue = entry.KeyValues.GetInteger(EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger));
 
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest,
-					EditorGUILayout.Toggle("Resource Request", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest))
-				);
-
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume,
-					EditorGUILayout.Toggle("Resource Consume", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume))
-				);
-
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle,
-					EditorGUILayout.Toggle("System Idle", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle))
-				);
+					if (pushValue == EncounterEvents.TriggerQueue.PushDisabled) EditorGUILayoutExtensions.PushColor(Color.gray);
+					{
+						entry.KeyValues.SetInteger(
+							EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger),
+							Mathf.Max(
+								EncounterEvents.TriggerQueue.PushDisabled,
+								EditorGUILayout.IntField(
+									ObjectNames.NicifyVariableName(trigger.ToString()),
+									pushValue
+								)
+							)
+						);
+					}
+					if (pushValue == EncounterEvents.TriggerQueue.PushDisabled) EditorGUILayoutExtensions.PopColor();
+				}
 			}
 			EditorGUILayoutExtensions.PopIndent();
 		}
