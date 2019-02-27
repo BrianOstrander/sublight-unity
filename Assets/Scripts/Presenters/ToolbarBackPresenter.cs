@@ -7,12 +7,24 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class ToolbarBackPresenter : Presenter<IToolbarBackView>, IPresenterCloseShowOptions
 	{
+		GameModel model;
 		LanguageStringModel back;
 		bool waitingForAnimation;
 
-		public ToolbarBackPresenter(LanguageStringModel back)
+		public ToolbarBackPresenter(
+			GameModel model,
+			LanguageStringModel back
+		)
 		{
+			this.model = model;
 			this.back = back;
+
+			model.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
+		}
+
+		protected override void OnUnBind()
+		{
+			model.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -35,11 +47,27 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnToolbarSelectionRequest(ToolbarSelectionRequest request)
+		{
+			switch (model.ToolbarSelection.Value)
+			{
+				case ToolbarSelections.Ship: break;
+				default:
+					OnClick();
+					break;
+			}
+		}
+
 		void OnClick()
 		{
 			if (waitingForAnimation) return;
 			waitingForAnimation = true;
-			App.Callbacks.CameraTransformRequest(CameraTransformRequest.Animation(pitch: 0f, duration: View.AnimationTime, done: OnAnimationDone));
+			App.Callbacks.CameraTransformRequest(
+				CameraTransformRequest.Animation(
+					pitch: 0f,
+					duration: View.AnimationTime,
+					done: OnAnimationDone)
+			);
 		}
 
 		void OnAnimationDone()

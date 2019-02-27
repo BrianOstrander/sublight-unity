@@ -14,6 +14,7 @@ namespace LunraGames.SubLight.Presenters
 
 		CameraMaskRequest lastMask;
 
+		bool gameBinded;
 		GameModel gameModel;
 
 		bool lastTransformedByInput;
@@ -40,8 +41,29 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.CameraTransformRequest -= OnCameraTransformRequest;
 			App.Callbacks.StateChange -= OnStateChange;
 			App.Heartbeat.Update -= OnUpdate;
+
+			UnBindGame();
 		}
 
+		void BindGame(GameModel model)
+		{
+			if (gameBinded) Debug.LogError("Calling BindGame when already binded, unpredictable behaviour may occur");
+
+			gameModel = model;
+
+			// Any binding logic here...
+
+			gameBinded = true;
+		}
+
+		void UnBindGame()
+		{
+			if (!gameBinded) return;
+
+			// Any unbinding logic here...
+
+			gameModel = null;
+		}
 
 		#region Events
 		void OnStateChange(StateChange stateChange)
@@ -54,8 +76,8 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (stateChange.Event)
 			{
-				case StateMachine.Events.Idle: gameModel = stateChange.GetPayload<GamePayload>().Game; break;
-				case StateMachine.Events.End: gameModel = null; break;
+				case StateMachine.Events.Idle: BindGame(stateChange.GetPayload<GamePayload>().Game); break;
+				case StateMachine.Events.End: UnBindGame(); break;
 			}
 		}
 

@@ -37,7 +37,12 @@ namespace LunraGames.SubLight
 				// All other presenters for this state...
 
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
-				payload.ShowOnIdle.Add(new ToolbarBackPresenter(LanguageStringModel.Override("Back")));
+				payload.ShowOnIdle.Add(
+					new ToolbarBackPresenter(
+						payload.Game,
+						LanguageStringModel.Override("Back")
+					)
+				);
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
