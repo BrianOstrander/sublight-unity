@@ -140,6 +140,8 @@ namespace LunraGames.SubLight
 		// TODO: Think about moving these to state or GameModel...
 
 		#region Genaral Caching
+		public TransitionFocusRequest LastTransitionFocusRequest;
+
 		public PointerOrientation LastPointerOrientation;
 		public Highlight LastHighlight;
 		public Gesture LastGesture;
@@ -148,7 +150,7 @@ namespace LunraGames.SubLight
 
 		#region Game Caching
 		public DayTimeDelta LastDayTimeDelta;
-		public SpeedRequest LastSpeedRequest;
+		public SpeedRequest LastSpeedRequest; //  Todo: I don't think this is used
 		#endregion
 
 		public CallbackService()
@@ -156,6 +158,7 @@ namespace LunraGames.SubLight
 			SceneManager.sceneLoaded += (scene, loadMode) => SceneLoad(scene, loadMode);
 			SceneManager.sceneUnloaded += scene => SceneUnload(scene);
 			SceneManager.activeSceneChanged += (currentScene, nextScene) => SceneSetActive(currentScene, nextScene);
+			TransitionFocusRequest += transitionFocus => LastTransitionFocusRequest = transitionFocus;
 			PointerOrientation += orientation => LastPointerOrientation = orientation;
 			Highlight += highlight => LastHighlight = highlight;
 			CurrentGesture += gesture => LastGesture = gesture;

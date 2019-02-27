@@ -811,7 +811,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Request:
 					break;
 				case EncounterRequest.States.Handle:
-					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(Payload, handler))) break;
+					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(this, handler))) break;
 					// The list below is used mainly for when you're making a new log type and need to catch unhandled ones.
 					// Any in the switch below should be handled by an existing presenter, or something...
 					switch (request.LogType)

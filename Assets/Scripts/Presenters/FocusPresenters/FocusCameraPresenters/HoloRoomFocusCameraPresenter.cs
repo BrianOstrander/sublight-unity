@@ -63,6 +63,7 @@ namespace LunraGames.SubLight.Presenters
 			// Any unbinding logic here...
 
 			gameModel = null;
+			gameBinded = false;
 		}
 
 		#region Events

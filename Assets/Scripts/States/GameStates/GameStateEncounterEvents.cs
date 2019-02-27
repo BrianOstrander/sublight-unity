@@ -14,7 +14,7 @@ namespace LunraGames.SubLight
 		public class Encounter
 		{
 			public static void OnHandleEvent(
-				GamePayload payload,
+				GameState state,
 				EncounterEventHandlerModel handler
 			)
 			{
@@ -41,16 +41,16 @@ namespace LunraGames.SubLight
 						switch (entry.EncounterEvent.Value)
 						{
 							case EncounterEvents.Types.Debug:
-								OnHandleEventDebugLog(payload, entry, currOnEventDone);
+								OnHandleEventDebugLog(state, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.ToolbarSelection:
-								OnHandleEventToolbarSelection(payload, entry, currOnEventDone);
+								OnHandleEventToolbarSelection(state, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.DumpKeyValues:
-								OnHandleEventDumpKeyValues(payload, entry, currOnEventDone);
+								OnHandleEventDumpKeyValues(state, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.TriggerQueue:
-								OnHandleEventPopTriggers(payload, entry, currOnEventDone);
+								OnHandleEventPopTriggers(state, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
@@ -70,7 +70,7 @@ namespace LunraGames.SubLight
 			}
 
 			static void OnHandleEventDebugLog(
-				GamePayload payload,
+				GameState state,
 				EncounterEventEntryModel entry,
 				Action done
 			)
@@ -111,17 +111,17 @@ namespace LunraGames.SubLight
 			}
 
 			static void OnHandleEventToolbarSelection(
-				GamePayload payload,
+				GameState state,
 				EncounterEventEntryModel entry,
 				Action done
 			)
 			{
-				var currentSelection = payload.Game.ToolbarSelection.Value;
+				var currentSelection = state.Payload.Game.ToolbarSelection.Value;
 				var targetSelection = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
 
 				if (targetSelection == ToolbarSelections.Unknown) targetSelection = currentSelection;
 
-				var currentLocking = payload.Game.ToolbarLocking.Value ? EncounterEvents.ToolbarSelection.LockStates.Lock : EncounterEvents.ToolbarSelection.LockStates.UnLock;
+				var currentLocking = state.Payload.Game.ToolbarLocking.Value ? EncounterEvents.ToolbarSelection.LockStates.Lock : EncounterEvents.ToolbarSelection.LockStates.UnLock;
 				var targetLocking = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
 
 				if (targetLocking == EncounterEvents.ToolbarSelection.LockStates.Unknown) targetLocking = currentLocking;
@@ -132,16 +132,24 @@ namespace LunraGames.SubLight
 					return;
 				}
 
-				payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
-					targetSelection,
-					targetLocking == EncounterEvents.ToolbarSelection.LockStates.Lock,
-					ToolbarSelectionRequest.Sources.Encounter,
-					done
+				// We're already waiting for this event to be done... so we can't push anything to the state machine.
+				// This could be fixed by not wrapping all events in one big block up above.
+				App.Heartbeat.Wait(
+					() => 
+					{
+						state.Payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
+							targetSelection,
+							targetLocking == EncounterEvents.ToolbarSelection.LockStates.Lock,
+							ToolbarSelectionRequest.Sources.Encounter,
+							done
+						);
+					},
+					() => App.Callbacks.LastTransitionFocusRequest.State == TransitionFocusRequest.States.Complete
 				);
 			}
 
 			static void OnHandleEventDumpKeyValues(
-				GamePayload payload,
+				GameState state,
 				EncounterEventEntryModel entry,
 				Action done
 			)
@@ -163,10 +171,10 @@ namespace LunraGames.SubLight
 					switch (target)
 					{
 						case KeyValueTargets.Encounter:
-							result += OnHandleEventDumpKeyValuesInstance("Encounter", payload.Game.Context.EncounterState.KeyValues);
+							result += OnHandleEventDumpKeyValuesInstance("Encounter", state.Payload.Game.Context.EncounterState.KeyValues);
 							break;
 						case KeyValueTargets.Game:
-							result += OnHandleEventDumpKeyValuesInstance("Game", payload.Game.KeyValues);
+							result += OnHandleEventDumpKeyValuesInstance("Game", state.Payload.Game.KeyValues);
 							break;
 						case KeyValueTargets.Global:
 							result += OnHandleEventDumpKeyValuesInstance("Global", App.MetaKeyValues.GlobalKeyValues);
@@ -175,7 +183,7 @@ namespace LunraGames.SubLight
 							result += OnHandleEventDumpKeyValuesInstance("Preferences", App.MetaKeyValues.PreferencesKeyValues);
 							break;
 						case KeyValueTargets.CelestialSystem:
-							result += OnHandleEventDumpKeyValuesInstance("CelestialSystem", payload.Game.Context.CurrentSystem.Value == null ? null : payload.Game.Context.CurrentSystem.Value.KeyValues);
+							result += OnHandleEventDumpKeyValuesInstance("CelestialSystem", state.Payload.Game.Context.CurrentSystem.Value == null ? null : state.Payload.Game.Context.CurrentSystem.Value.KeyValues);
 							break;
 						default:
 							Debug.LogError("Unrecognized Target: " + target);
@@ -196,7 +204,7 @@ namespace LunraGames.SubLight
 			}
 
 			static void OnHandleEventPopTriggers(
-				GamePayload payload,
+				GameState state,
 				EncounterEventEntryModel entry,
 				Action done
 			)
@@ -215,11 +223,11 @@ namespace LunraGames.SubLight
 					if (pushIndex != EncounterEvents.TriggerQueue.PushDisabled) pushed.Add(trigger, pushIndex);
 				}
 
-				var result = payload.Game.EncounterTriggers.Value.Where(t => !popped.Contains(t)).ToList();
+				var result = state.Payload.Game.EncounterTriggers.Value.Where(t => !popped.Contains(t)).ToList();
 
 				foreach (var push in pushed.OrderByDescending(p => p.Value).Select(p => p.Key)) result.Add(push);
 
-				payload.Game.EncounterTriggers.Value = result.ToArray();
+				state.Payload.Game.EncounterTriggers.Value = result.ToArray();
 
 				done();
 			}
