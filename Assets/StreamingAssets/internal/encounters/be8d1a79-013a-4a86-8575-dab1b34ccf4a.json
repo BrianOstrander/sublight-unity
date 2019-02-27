@@ -5,9 +5,27 @@
   "name": "Select Sol",
   "trigger": "NavigationSelect",
   "filtering": {
+    "showValues": true,
     "booleanKeyValues": [],
     "integerKeyValues": [],
-    "stringKeyValues": [],
+    "stringKeyValues": [
+      {
+        "operation": "NormalizedEquals",
+        "filterId": "f78fa018-cfce-4cee-9d3f-146a72b73957",
+        "group": "All",
+        "Input0": {
+          "AddressId": "3403b135-09b3-4ee1-a55f-b9407de546b6",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "navigation_selection_name"
+        },
+        "Input1": {
+          "AddressId": "b180884b-4b21-42a1-8b6c-6c255178e496",
+          "Source": "LocalValue",
+          "LocalValue": "sol"
+        }
+      }
+    ],
     "floatKeyValues": [],
     "encounterInteractions": []
   },
@@ -18,61 +36,38 @@
     "encyclopediaLogs": [],
     "eventLogs": [
       {
-        "entries": [
-          {
-            "entry": {
-              "encounterEvent": "Debug",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {
-                  "message": "you clicked sol"
-                },
-                "enums": {
-                  "severity": 0
-                },
-                "floats": {}
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "9d6930e4-1fd1-40ac-b097-cc3c1e1c705d"
-            }
-          },
-          {
-            "entry": {
-              "encounterEvent": "DumpKeyValues",
-              "keyValues": {
-                "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
-                  "target": 20
-                },
-                "floats": {}
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "c37b667a-1f0a-4259-bd26-67f5837b653f"
-            },
-            "index": 1
-          }
-        ],
+        "entries": [],
         "beginning": true,
-        "ending": true,
-        "logId": "a5be22f4-8fec-472f-afc6-478b18a031c2"
+        "logId": "c5d50937-31c7-44f6-a9b3-c8d8d66e8ebb",
+        "fallbackLogId": "0c06e302-818b-4b4c-8c5e-05d028fc240e"
       }
     ],
-    "dialogLogs": [],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "No Response",
+              "message": "Nobody in the <b>Sol</b> system is transmitting on any frequency, and telescopic resolution is pitiful at this distance.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "39d27b80-c5ea-4959-a7eb-8ec8ab7c73e3"
+            }
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "0c06e302-818b-4b4c-8c5e-05d028fc240e"
+      }
+    ],
     "bustLogs": [],
     "conversationLogs": []
   },

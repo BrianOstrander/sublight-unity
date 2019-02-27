@@ -24,6 +24,7 @@
 	{
 		Unknown = 0,
 		Equals = 10,
+		NormalizedEquals = 15,
 		IsNullOrEmpty = 20,
 		IsNull = 30
 	}
