@@ -52,6 +52,12 @@ namespace LunraGames.SubLight.Models
 			return Enum.GetValues(typeof(T)).Cast<T>().FirstOrDefault(e => Convert.ToInt32(e) == intValue);
 		}
 
+		public int GetEnumInteger(string key, int fallback = 0)
+		{
+			enums.TryGetValue(NormalizeKey(key), out fallback);
+			return fallback;
+		}
+
 		public float GetFloat(string key, float fallback = 0f)
 		{
 			floats.TryGetValue(NormalizeKey(key), out fallback);
@@ -83,6 +89,12 @@ namespace LunraGames.SubLight.Models
 			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
 
 			enums[NormalizeKey(key)] = Convert.ToInt32(value);
+			return value;
+		}
+
+		public int SetEnumInteger(string key, int value)
+		{
+			enums[NormalizeKey(key)] = value;
 			return value;
 		}
 
@@ -179,6 +191,100 @@ namespace LunraGames.SubLight.Models
 				};
 				return result;
 			}
+		}
+
+		public IKeyValueDelta[] GetDeltas(KeyValueListModel other)
+		{
+			var result = new List<IKeyValueDelta>();
+
+			result.AddRange(
+				GetDeltasTyped(
+					KeyValueExtendedTypes.Boolean,
+					booleans,
+					other.booleans,
+					(value, valueOther) => value == valueOther
+				)
+			);
+			result.AddRange(
+				GetDeltasTyped(
+					KeyValueExtendedTypes.Integer,
+					integers,
+					other.integers,
+					(value, valueOther) => value == valueOther
+				)
+			);
+			result.AddRange(
+				GetDeltasTyped(
+					KeyValueExtendedTypes.String,
+					strings,
+					other.strings,
+					(value, valueOther) => value == valueOther
+				)
+			);
+			result.AddRange(
+				GetDeltasTyped(
+					KeyValueExtendedTypes.Enum,
+					enums,
+					other.enums,
+					(value, valueOther) => value == valueOther
+				)
+			);
+			result.AddRange(
+				GetDeltasTyped(
+					KeyValueExtendedTypes.Float,
+					floats,
+					other.floats,
+					Mathf.Approximately
+				)
+			);
+
+			return result.ToArray();
+		}
+
+		List<IKeyValueDelta> GetDeltasTyped<T>(
+			KeyValueExtendedTypes type,
+			Dictionary<string, T> values,
+			Dictionary<string, T> valuesOther,
+			Func<T, T, bool> comparison
+		)
+			where T : IConvertible
+		{
+			var result = new List<IKeyValueDelta>();
+
+			var allKeys = values.Keys.ToList();
+			allKeys.AddRange(valuesOther.Keys.ToList());
+
+			foreach (var key in allKeys)
+			{
+				T value = default(T);
+				T valueOther = default(T);
+
+				values.TryGetValue(key, out value);
+				valuesOther.TryGetValue(key, out valueOther);
+
+				if (!comparison(value, valueOther))
+				{
+					result.Add(
+						new KeyValueDelta<T>(
+							key,
+							type,
+							value,
+							valueOther
+						)
+					);
+				}
+			}
+
+			return result;
+		}
+
+		public void Apply(KeyValueListModel other)
+		{
+			foreach (var kv in other.booleans) SetBoolean(kv.Key, kv.Value);
+			foreach (var kv in other.integers) SetInteger(kv.Key, kv.Value);
+			foreach (var kv in other.strings) SetString(kv.Key, kv.Value);
+			foreach (var kv in other.enums) SetEnumInteger(kv.Key, kv.Value);
+			foreach (var kv in other.floats) SetFloat(kv.Key, kv.Value);
 		}
 		#endregion
 	}
