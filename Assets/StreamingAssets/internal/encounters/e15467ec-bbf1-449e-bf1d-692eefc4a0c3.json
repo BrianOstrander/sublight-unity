@@ -50,7 +50,7 @@
               "title": "Out of Range",
               "message": "The <b>Cygnus X-1</b> system is still out of range! Navigate through other systems to reach it.",
               "dialogType": "Confirm",
-              "dialogStyle": "Warning",
+              "dialogStyle": "Error",
               "successText": "Understood",
               "filtering": {
                 "booleanKeyValues": [],
