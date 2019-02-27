@@ -99,6 +99,7 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Position.Changed += OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
+			Payload.Game.Context.NavigationSelectionOutOfRange += OnNavigationSelectionOutOfRange;
 
 			Payload.Game.Context.TransitState.Changed += OnTransitState;
 
@@ -219,6 +220,7 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Position.Changed -= OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Payload.Game.Context.NavigationSelectionOutOfRange -= OnNavigationSelectionOutOfRange;
 
 			Payload.Game.Context.TransitState.Changed -= OnTransitState;
 
@@ -901,6 +903,25 @@ namespace LunraGames.SubLight
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
 		{
+			if (block.System == null) return;
+
+			switch (block.State)
+			{
+				case CelestialSystemStateBlock.States.Selected: break;
+				case CelestialSystemStateBlock.States.Highlighted:
+				case CelestialSystemStateBlock.States.Idle:
+					Payload.Game.KeyValues.Set(
+						KeyDefines.Game.NavigationHighlight,
+						block.State == CelestialSystemStateBlock.States.Highlighted ? block.System.ShrunkPosition : null
+					);
+					Payload.Game.KeyValues.Set(
+						KeyDefines.Game.NavigationHighlightName,
+						block.State == CelestialSystemStateBlock.States.Highlighted ? block.System.Name.Value : null
+					);
+					return;
+				default: return;
+			}
+
 			if (block.System == null || block.State != CelestialSystemStateBlock.States.Selected) return;
 			if (Payload.Game.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
 			{
@@ -911,6 +932,21 @@ namespace LunraGames.SubLight
 			PushEncounterTriggers(
 				"NavigationSelectCheckForEncounters",
 				EncounterTriggers.NavigationSelect
+			);
+		}
+
+		void OnNavigationSelectionOutOfRange(SystemModel system)
+		{
+			if (system == null) return;
+			if (Payload.Game.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
+			{
+				Debug.LogWarning("Checking for Navigation Selection Out Of Range events during encounter is not supported, ignoring");
+				return;
+			}
+
+			PushEncounterTriggers(
+				"NavigationSelectOutOfRangeCheckForEncounters",
+				EncounterTriggers.NavigationSelectOutOfRange
 			);
 		}
 

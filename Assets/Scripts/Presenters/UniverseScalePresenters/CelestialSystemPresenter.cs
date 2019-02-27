@@ -268,6 +268,9 @@ namespace LunraGames.SubLight.Presenters
 							break;
 					}
 					break;
+				case Celestial.RangeStates.OutOfRange:
+					Model.Context.NavigationSelectionOutOfRange(instanceModel.ActiveSystem.Value);
+					break;
 			}
 		}
 

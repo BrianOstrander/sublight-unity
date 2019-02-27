@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
@@ -123,6 +124,10 @@ namespace LunraGames.SubLight.Models
 		public KeyValueListener KeyValueListener { get; set; }
 		public KeyValueListener CelestialSystemKeyValueListener { get; private set; }
 		#endregion
+
+		#region Events
+		public Action<SystemModel> NavigationSelectionOutOfRange = ActionExtensions.GetEmpty<SystemModel>();
+  		#endregion
 
 		public GameContextModel(
 			GameModel model,
