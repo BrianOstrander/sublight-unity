@@ -28,13 +28,13 @@ namespace LunraGames.SubLight
 				// TODO: Main menu presenter stuff...
 				new HoloPresenter();
 
-				payload.DelayedPresenterShows[1f] = new IPresenterCloseShowOptions[]
+				payload.DelayedPresenterShows[0f] = new IPresenterCloseShowOptions[]
 				{
 					new FocusLipPresenter(SetFocusLayers.Home),
 					new GenericPresenter<IMainMenuLogoView>()
 				};
 
-				payload.DelayedPresenterShows[2f] = new IPresenterCloseShowOptions[]
+				payload.DelayedPresenterShows[1f] = new IPresenterCloseShowOptions[]
 				{
 					new MainMenuOptionsPresenter(
 						payload,
@@ -83,7 +83,7 @@ namespace LunraGames.SubLight
 					)
 				};
 
-				payload.DelayedPresenterShows[2.5f] = new IPresenterCloseShowOptions[]
+				payload.DelayedPresenterShows[1.5f] = new IPresenterCloseShowOptions[]
 				{
 					new MainMenuGalaxyPresenter(payload.PreviewGalaxy)
 				};
