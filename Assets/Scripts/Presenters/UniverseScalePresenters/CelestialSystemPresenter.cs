@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click += OnGlobalClick;
 
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
-			Model.Context.CameraTransform.Changed += OnCameraTransform;
+			Model.Context.CameraTransformAbsolute.Changed += OnCameraTransform;
 			Model.Context.GridInput.Changed += OnGridInput;
 			Model.Context.FocusTransform.Changed += OnFocusTransform;
 			Model.Ship.Position.Changed += OnShipPosition;
@@ -56,7 +56,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click -= OnGlobalClick;
 
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
-			Model.Context.CameraTransform.Changed -= OnCameraTransform;
+			Model.Context.CameraTransformAbsolute.Changed -= OnCameraTransform;
 			Model.Context.GridInput.Changed -= OnGridInput;
 			Model.Context.FocusTransform.Changed -= OnFocusTransform;
 			Model.Ship.Position.Changed -= OnShipPosition;
@@ -323,7 +323,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnGridInput(GridInputRequest gridInput)
 		{
 			if (!View.Visible) return;
-			ProcessInterectable(Model.Context.CameraTransform.Value, gridInput);
+			ProcessInterectable(Model.Context.CameraTransformAbsolute.Value, gridInput);
 		}
 
 		void ProcessInterectable(CameraTransformRequest transform, GridInputRequest gridInput)

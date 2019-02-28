@@ -22,7 +22,19 @@ namespace LunraGames.SubLight
 			Settle = 30
 		}
 
-		public static CameraTransformRequest Default { get { return new CameraTransformRequest(States.Complete, Transforms.Animation, 0f, 0f, 0f); } }
+		public static CameraTransformRequest Default
+		{
+			get
+			{
+				return new CameraTransformRequest(
+					States.Complete,
+					Transforms.Animation,
+					null,
+					null,
+					null
+				);
+			}
+		}
 
 		public static CameraTransformRequest Input(
 			float? yaw = null,

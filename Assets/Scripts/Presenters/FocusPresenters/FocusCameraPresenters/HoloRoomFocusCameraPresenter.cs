@@ -109,7 +109,7 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			var cameraTransform = gameModel.Context.CameraTransform.Value;
+			var cameraTransform = gameModel.Context.CameraTransformAbsolute.Value;
 
 			if (lastTransformedByInput)
 			{
@@ -182,7 +182,7 @@ namespace LunraGames.SubLight.Presenters
 						return;
 					}
 					lastTransformedByInput = false;
-					transformOnAnimationBegin = gameModel.Context.CameraTransform.Value;
+					transformOnAnimationBegin = gameModel.Context.CameraTransformAbsolute.Value;
 					transformAnimation = transform;
 					animationRemaining = transform.Duration;
 					OnAnimation(0f);

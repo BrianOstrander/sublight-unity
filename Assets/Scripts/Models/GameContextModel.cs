@@ -17,6 +17,10 @@ namespace LunraGames.SubLight.Models
 		GameModel model;
 #pragma warning restore CS0414 // The private field is assigned but its value is never used.
 		ShipModel ship;
+		
+		CameraTransformRequest cameraTransformAbsolute = CameraTransformRequest.Default;
+		readonly ListenerProperty<CameraTransformRequest> cameraTransformAbsoluteListener;
+		public readonly ReadonlyProperty<CameraTransformRequest> CameraTransformAbsolute;
 
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
 		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
@@ -137,7 +141,17 @@ namespace LunraGames.SubLight.Models
 			this.model = model;
 			this.ship = ship;
 
-			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
+			CameraTransformAbsolute = new ReadonlyProperty<CameraTransformRequest>(
+				value => cameraTransformAbsolute = value,
+				() => cameraTransformAbsolute,
+				out cameraTransformAbsoluteListener
+			);
+			CameraTransform = new ListenerProperty<CameraTransformRequest>(
+				value => cameraTransform = value,
+				() => cameraTransform,
+				OnCameraTransform
+			);
+
 			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);
 
 			ScaleLabelSystem = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelSystem = value, () => scaleLabelSystem);
@@ -174,6 +188,19 @@ namespace LunraGames.SubLight.Models
 		}
 
 		#region Events
+		void OnCameraTransform(CameraTransformRequest request)
+		{
+			cameraTransformAbsoluteListener.Value = new CameraTransformRequest(
+				request.State,
+				request.Transform,
+				request.Yaw ?? cameraTransformAbsoluteListener.Value.Yaw,
+				request.Pitch ?? cameraTransformAbsoluteListener.Value.Pitch,
+				request.Radius ?? cameraTransformAbsoluteListener.Value.Radius,
+				request.Duration,
+				request.Done
+			);
+		}
+
 		void OnScaleOpacity(float opacity)
 		{
 			var newHighestOpacityScale = activeScale;

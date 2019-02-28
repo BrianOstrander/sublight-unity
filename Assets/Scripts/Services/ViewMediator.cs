@@ -270,21 +270,18 @@ namespace LunraGames.SubLight
 		{
 			switch (stateChange.State)
 			{
-				case StateMachine.States.Game: break;
+				case StateMachine.States.Game:
+					if (stateChange.Event == StateMachine.Events.Idle) gameModel = stateChange.GetPayload<GamePayload>().Game;
+					return;
 				case StateMachine.States.Home:
 					if (stateChange.Event == StateMachine.Events.Begin)
 					{
 						InterfaceScale = App.MetaKeyValues.PreferencesKeyValues.Get(KeyDefines.Preferences.InterfaceLarge) ? 1 : 0;
 					}
-					return;
-				default: return;
+					break;
 			}
 
-			switch (stateChange.Event)
-			{
-				case StateMachine.Events.Idle: gameModel = stateChange.GetPayload<GamePayload>().Game; break;
-				case StateMachine.Events.End: gameModel = null; break;
-			}
+			gameModel = null;
 		}
 
 		void DisableAndCacheView(IView view)
@@ -358,7 +355,7 @@ namespace LunraGames.SubLight
 		public Quaternion CameraRotation { get { return IsCameraMainNull ? Quaternion.identity : Camera.main.transform.rotation; } }
 		public Ray CameraViewportPointToRay(Vector3 pos) { return IsCameraMainNull ? new Ray(Vector3.zero, Vector3.forward) : Camera.main.ViewportPointToRay(pos); }
 
-		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.Context.CameraTransform.Value; } }
+		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.Context.CameraTransformAbsolute.Value; } }
 		public Camera Camera { get { return IsCameraMainNull ? null : Camera.main; } }
 
 		public int InterfaceScale { get; private set; }
