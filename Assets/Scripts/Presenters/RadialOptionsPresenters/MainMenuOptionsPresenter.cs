@@ -70,9 +70,9 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(
 				() =>
 				{
-					var quitPayload = new QuitPayload();
-					quitPayload.Requester = "HomeMainMenu";
-					App.SM.RequestState(quitPayload);
+					App.SM.RequestState(
+						TransitionPayload.Quit("HomeMainMenu")
+					);
 				},
 				"QuittingFromMainMenu"
 			);
@@ -212,7 +212,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			payload.StartGame(model);
+			payload.StartGame(model, false);
 		}
 
 		void OnLoadGame(RequestResult result, GameModel model)
@@ -229,7 +229,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			payload.StartGame(model);
+			payload.StartGame(model, false);
 		}
 		#endregion
 	}

@@ -91,7 +91,14 @@ namespace LunraGames.SubLight
 						ReturningToMainMenu = returningToMainMenuLanguage,
 						Quiting = LanguageStringModel.Override("Quitting...")
 					},
-					PreferencesPresenter.CreateDefault()
+					PreferencesPresenter.CreateDefault(
+						() =>
+						{
+							var homePayload = new HomePayload();
+							homePayload.MainCamera = payload.MainCamera;
+							return homePayload;
+						}
+					)
 				);
 
 				new GameCompletePresenter(

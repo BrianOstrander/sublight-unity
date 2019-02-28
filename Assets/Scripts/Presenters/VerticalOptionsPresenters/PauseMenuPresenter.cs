@@ -170,9 +170,9 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(
 				() =>
 				{
-					var quitPayload = new QuitPayload();
-					quitPayload.Requester = "GamePauseMenu";
-					App.SM.RequestState(quitPayload);
+					App.SM.RequestState(
+						TransitionPayload.Quit("GamePauseMenu")
+					);
 				},
 				"QuittingFromPauseMenu"
 			);

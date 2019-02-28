@@ -35,7 +35,9 @@ namespace LunraGames.SubLight
 
 		public GalaxyPreviewModel PreviewGalaxy;
 
-		public Action<GameModel> StartGame;
+		public Action<GameModel, bool> StartGame;
+
+		public bool IgnoreMaskOnEnd;
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -243,7 +245,7 @@ namespace LunraGames.SubLight
 				PushIdleDefaults();
 				return;
 			}
-			Payload.StartGame(model);
+			Payload.StartGame(model, true);
 		}
 
 		void OnContinueGame(RequestResult result, GameModel model)
@@ -262,7 +264,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			Payload.StartGame(model);
+			Payload.StartGame(model, true);
 		}
 		#endregion
 
@@ -343,6 +345,19 @@ namespace LunraGames.SubLight
 
 			App.Input.SetEnabled(false);
 
+			if (!Payload.IgnoreMaskOnEnd)
+			{
+				SM.PushBlocking(
+					done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
+					"HomeSettingNoFocus"
+				);
+
+				SM.PushBlocking(
+					done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(CameraMaskRequest.DefaultHideDuration, done)),
+					"HomeHideMask"
+				);
+			}
+
 			SM.PushBlocking(
 				done => App.P.UnRegisterAll(done),
 				"HomeUnBind"
@@ -370,18 +385,9 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnStartGame(GameModel model)
+		void OnStartGame(GameModel model, bool instant)
 		{
-			// We only run this logic if we're not skipping through the main menu to a new or continued game.
-			SM.PushBlocking(
-				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
-				"StartGameSetNoFocus"
-			);
-
-			SM.PushBlocking(
-				done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultHideDuration, done)),
-				"StartGameHideCamera"
-			);
+			Payload.IgnoreMaskOnEnd = instant;
 
 			SM.Push(
 				() =>

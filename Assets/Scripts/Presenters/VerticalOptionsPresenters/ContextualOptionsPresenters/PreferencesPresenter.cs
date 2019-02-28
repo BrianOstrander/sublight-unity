@@ -12,7 +12,9 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class PreferencesPresenter : ContextualOptionsPresenter
 	{
-		public static PreferencesPresenter CreateDefault()
+		public static PreferencesPresenter CreateDefault(
+			Func<HomePayload> getHomePayload
+		)
 		{
 			var defaultToggle = new ToggleOptionLanguageBlock
 			{
@@ -57,11 +59,13 @@ namespace LunraGames.SubLight.Presenters
 					ReloadRestartConfirm = LanguageStringModel.Override("Confirm"),
 					ReloadRestartDiscard = LanguageStringModel.Override("Discard"),
 					ReloadRestartCancel = LanguageStringModel.Override("Cancel")
-				}
+				},
+				getHomePayload
 			);
 		}
 
 		PreferencesLanguageBlock language;
+		Func<HomePayload> getHomePayload;
 
 		KeyValueListModel editedPreferences;
 		bool saving;
@@ -75,10 +79,12 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		public PreferencesPresenter(
-			PreferencesLanguageBlock language
+			PreferencesLanguageBlock language,
+			Func<HomePayload> getHomePayload
 		)
 		{
 			this.language = language;
+			this.getHomePayload = getHomePayload;
 		}
 
 		protected override void OnShow()
@@ -295,12 +301,16 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnReloadHome()
 		{
-			Debug.Log("reload home here!");
+			App.SM.RequestState(
+				TransitionPayload.Fallthrough("Preferences", getHomePayload())
+			);
 		}
 
 		void OnRestartGame()
 		{
-			Debug.Log("restart game here!");
+			App.SM.RequestState(
+				TransitionPayload.Quit("Preferences")
+			);
 		}
 
 		#endregion
