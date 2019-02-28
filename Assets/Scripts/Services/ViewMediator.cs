@@ -270,21 +270,18 @@ namespace LunraGames.SubLight
 		{
 			switch (stateChange.State)
 			{
-				case StateMachine.States.Game: break;
+				case StateMachine.States.Game:
+					if (stateChange.Event == StateMachine.Events.Idle) gameModel = stateChange.GetPayload<GamePayload>().Game;
+					return;
 				case StateMachine.States.Home:
 					if (stateChange.Event == StateMachine.Events.Begin)
 					{
 						InterfaceScale = App.MetaKeyValues.PreferencesKeyValues.Get(KeyDefines.Preferences.InterfaceLarge) ? 1 : 0;
 					}
-					return;
-				default: return;
+					break;
 			}
 
-			switch (stateChange.Event)
-			{
-				case StateMachine.Events.Idle: gameModel = stateChange.GetPayload<GamePayload>().Game; break;
-				case StateMachine.Events.End: gameModel = null; break;
-			}
+			gameModel = null;
 		}
 
 		void DisableAndCacheView(IView view)
