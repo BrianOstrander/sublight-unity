@@ -71,7 +71,14 @@ namespace LunraGames.SubLight
 								Message = LanguageStringModel.Override("Are you sure you want to quit?")
 							}
 						},
-						PreferencesPresenter.CreateDefault(),
+						PreferencesPresenter.CreateDefault(
+							() =>
+							{
+								var homePayload = new HomePayload();
+								homePayload.MainCamera = payload.MainCamera;
+								return homePayload;
+							}
+						),
 						LearnMorePresenter.CreateDefault()
 					)
 				};

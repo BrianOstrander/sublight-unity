@@ -271,6 +271,12 @@ namespace LunraGames.SubLight
 			switch (stateChange.State)
 			{
 				case StateMachine.States.Game: break;
+				case StateMachine.States.Home:
+					if (stateChange.Event == StateMachine.Events.Begin)
+					{
+						InterfaceScale = App.MetaKeyValues.PreferencesKeyValues.Get(KeyDefines.Preferences.InterfaceLarge) ? 1 : 0;
+					}
+					return;
 				default: return;
 			}
 
@@ -354,6 +360,8 @@ namespace LunraGames.SubLight
 
 		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.Context.CameraTransform.Value; } }
 		public Camera Camera { get { return IsCameraMainNull ? null : Camera.main; } }
+
+		public int InterfaceScale { get; private set; }
 		#endregion
 	}
 }

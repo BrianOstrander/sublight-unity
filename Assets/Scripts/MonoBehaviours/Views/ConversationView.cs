@@ -70,6 +70,8 @@ namespace LunraGames.SubLight.Views
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
+		InterfaceScaleBlock fontScales = InterfaceScaleBlock.Default;
+		[SerializeField]
 		GameObject conversationArea;
 		[SerializeField]
 		GameObject conversationAnchor;
@@ -221,7 +223,7 @@ namespace LunraGames.SubLight.Views
 
 		ConversationLeaf OnInstantiatePrefab(
 			MessageConversationLeaf prefab,
-			MessageConversationBlock block, // This may be needed for ather instantiators, leave it...
+			MessageConversationBlock block, // This may be needed for other instantiators, leave it...
 			out Action<Entry> initializeLayout
 		)
 		{
@@ -277,6 +279,7 @@ namespace LunraGames.SubLight.Views
 					break;
 			}
 
+			instance.MessageLabel.fontSize = fontScales.GetScale(App.V.InterfaceScale);
 			instance.MessageLabel.text = entry.Block.Message;
 
 			LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootCanvas);

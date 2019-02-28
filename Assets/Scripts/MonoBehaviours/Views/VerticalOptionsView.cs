@@ -223,6 +223,7 @@ namespace LunraGames.SubLight.Views
 			foreach (var leaf in instance.BackgroundAreas) leaf.LocalStyle.Colors = backgroundColors;
 			foreach (var leaf in instance.HighlightAreas) leaf.LocalStyle.Colors = highlightColors;
 			foreach (var leaf in instance.LabelAreas) leaf.LocalStyle.Colors = labelColors;
+			foreach (var graphic in instance.LabelNormalAreas) graphic.color = labelColors.NormalColor;
 
 			entry.OnSetMessages = (primaryMessage, secondaryMessage) =>
 			{

@@ -139,7 +139,7 @@ namespace LunraGames.SubLight
 			stateMachine = new StateMachine(
 				Heartbeat,
 				new InitializeState(),
-				new QuitState(),
+				new TransitionState(),
 				new HomeState(),
 				new GameState()
 			);

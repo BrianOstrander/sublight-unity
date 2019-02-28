@@ -228,41 +228,69 @@ namespace LunraGames.SubLight
 			if (request.State == SaveRequest.States.Complete) OnTrySave();
 		}
 
-		void OnTrySave()
+		void OnTrySave(Action<RequestResult> done = null)
 		{
 			if (currentlySaving)
 			{
-				Debug.LogWarning("Currently trying to save meta key values.");
+				var error = "Currently trying to save meta key values.";
+				Debug.LogError(error);
+				if (done != null) done(RequestResult.Failure(error));
 				return;
 			}
 			currentlySaving = true;
 
-			modelMediator.Save(globals, OnTrySaveGlobals);
+			modelMediator.Save(globals, globalsResult => OnTrySaveGlobals(globalsResult, done));
 		}
 
-		void OnTrySaveGlobals(SaveLoadRequest<GlobalKeyValuesModel> result)
+		void OnTrySaveGlobals(SaveLoadRequest<GlobalKeyValuesModel> result, Action<RequestResult> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Trying to save global key values failed with status " + result.Status + "\nError: " + result.Error);
+				OnTrySaveDone(
+					result.Status,
+					"Trying to save global key values failed with status " + result.Status + "\nError: " + result.Error,
+					done
+				);
+				return;
 			}
 
-			modelMediator.Save(preferences, OnTrySavePreferences);
+			modelMediator.Save(preferences, preferencesResult => OnTrySavePreferences(preferencesResult, done));
 		}
 
-		void OnTrySavePreferences(SaveLoadRequest<PreferencesKeyValuesModel> result)
+		void OnTrySavePreferences(SaveLoadRequest<PreferencesKeyValuesModel> result, Action<RequestResult> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Trying to save preferences key values failed with status " + result.Status + "\nError: " + result.Error);
+				OnTrySaveDone(
+					result.Status,
+					"Trying to save preferences key values failed with status " + result.Status + "\nError: " + result.Error,
+					done
+				);
+				return;
 			}
 
-			OnTrySaveDone();
+			OnTrySaveDone(
+				result.Status,
+				null,
+				done
+			);
 		}
 
-		void OnTrySaveDone()
+		void OnTrySaveDone(
+			RequestStatus result,
+			string error,
+			Action<RequestResult> done
+		)
 		{
 			currentlySaving = false;
+
+			if (result != RequestStatus.Success)
+			{
+				if (string.IsNullOrEmpty(error)) Debug.Log("Trying to save failed with status: " + result + " and no error specified.");
+				else Debug.LogError(error);
+			}
+
+			if (done != null) done(new RequestResult(result, error));
 		}
 		#endregion
 
@@ -287,6 +315,12 @@ namespace LunraGames.SubLight
 					throw new ArgumentOutOfRangeException("key.Target", "Only Global and Preferences kv stores can be accessed, " + key.Target + " not recognized");
 			}
 		}
+
+		public void Save(Action<RequestResult> done = null)
+		{
+			OnTrySave(done);
+		}
+
 		#endregion
 	}
 }

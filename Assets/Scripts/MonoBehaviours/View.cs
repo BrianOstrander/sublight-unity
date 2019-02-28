@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace LunraGames.SubLight 
+// TODO: Why is this not in the views namespace?
+namespace LunraGames.SubLight
 {
 	
 	public enum TransitionStates
@@ -160,6 +161,8 @@ namespace LunraGames.SubLight
 			opacityStackStale = (force || opacityStackStale == StackOpacityStates.Forced) ? StackOpacityStates.Forced : StackOpacityStates.Stale;
 		}
 
+		protected virtual void OnSetInterfaceScale(int index) { }
+
 		public float OpacityStack { get { return lastCalculatedOpacityStack; } }
 
 		void CheckOpacityStack()
@@ -228,6 +231,9 @@ namespace LunraGames.SubLight
 			Root.localPosition = Vector3.zero;
 			Root.localScale = Vector3.one;
 			Root.localRotation = Quaternion.identity;
+
+			OnSetInterfaceScale(App.V.InterfaceScale);
+
 			Root.gameObject.SetActive(true);
 
 			foreach (var anim in ViewAnimations) anim.OnPrepare(this);

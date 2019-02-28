@@ -1321,6 +1321,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
   - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
+  buttonScales:
+    Entries:
+    - Index: 0
+      Scale: 1
+    - Index: 1
+      Scale: 1.25
+  buttonsScaleArea: {fileID: 7607892853870621929}
   lookAtArea: {fileID: 7607892853870621929}
   buttonArea: {fileID: 7607892855131830054}
   buttonPrefab: {fileID: 7607892853934669203}

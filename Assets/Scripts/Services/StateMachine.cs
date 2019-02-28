@@ -12,7 +12,7 @@ namespace LunraGames.SubLight
 		{
 			Unknown = 0,
 			Initialize = 10,
-			Quit = 20,
+			Transition = 20,
 			Home = 30,
 			Game = 40,
 		}
