@@ -173,9 +173,11 @@ namespace LunraGames.SubLight.Presenters
 				};
 			}
 
+			var currentValue = editedPreferences.Get(keyDefine);
+
 			var result = ButtonVerticalOptionsEntry.CreateToggle(
 				toggleLanguage.Message,
-				toggleLanguage.GetValue(editedPreferences.Get(keyDefine)),
+				toggleLanguage.GetValue(invertSecondaryMessages ? !currentValue : currentValue),
 				OnClickToggleNotSet,
 				interactable
 			);
@@ -185,7 +187,7 @@ namespace LunraGames.SubLight.Presenters
 				click = () =>
 				{
 					var newValue = !editedPreferences.Get(keyDefine);
-					result.SetMessages(toggleLanguage.Message, toggleLanguage.GetValue(invertSecondaryMessages? !newValue : newValue));
+					result.SetMessages(toggleLanguage.Message, toggleLanguage.GetValue(invertSecondaryMessages ? !newValue : newValue));
 					editedPreferences.Set(keyDefine, newValue);
 				};
 			}

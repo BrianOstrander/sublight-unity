@@ -93,6 +93,10 @@ namespace LunraGames.SubLight.Views
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
+		InterfaceScaleBlock buttonScales = InterfaceScaleBlock.Default;
+		[SerializeField]
+		Transform buttonsScaleArea;
+		[SerializeField]
 		Transform lookAtArea;
 		[SerializeField]
 		GameObject buttonArea;
@@ -275,6 +279,11 @@ namespace LunraGames.SubLight.Views
 			base.OnLateIdle(delta);
 
 			lookAtArea.LookAt(lookAtArea.position + (lookAtArea.position - App.V.CameraPosition).FlattenY());
+		}
+
+		protected override void OnSetInterfaceScale(int index)
+		{
+			buttonsScaleArea.localScale = buttonScales.GetVectorScale(index);
 		}
 
 		#region Events
