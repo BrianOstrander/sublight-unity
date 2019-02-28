@@ -28,6 +28,8 @@ namespace LunraGames.SubLight
 				// TODO: Main menu presenter stuff...
 				new HoloPresenter();
 
+				payload.Changelog = ChangelogPresenter.CreateDefault();
+
 				payload.DelayedPresenterShows[0f] = new IPresenterCloseShowOptions[]
 				{
 					new FocusLipPresenter(SetFocusLayers.Home),

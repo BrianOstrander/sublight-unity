@@ -38,6 +38,8 @@ namespace LunraGames.SubLight
 		public Action<GameModel, bool> StartGame;
 
 		public bool IgnoreMaskOnEnd;
+
+		public ChangelogPresenter Changelog;
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -297,20 +299,66 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			if (!Payload.FromInitialization && !App.MetaKeyValues.Get(KeyDefines.Global.IgnoreFeedbackRequest))
+			App.Heartbeat.Wait(
+				OnIdleShowComplete,
+				totalWait + 0.001f
+			);
+		}
+
+		void OnIdleShowComplete()
+		{
+			if (Payload.FromInitialization)
 			{
-				App.MetaKeyValues.Set(KeyDefines.Global.IgnoreFeedbackRequest, true);
-				App.Heartbeat.Wait(
-					() => App.Callbacks.DialogRequest(
-						DialogRequest.ConfirmDeny(
-							LanguageStringModel.Override("If you're interested in providing feedback, it would help us out a lot!"),
-							title: LanguageStringModel.Override("Submit Feedback?"),
-							confirmClick: OnSubmitFeedbackClick
-						)
-					),
-					totalWait + 0.05f
+				var previousVersion = App.MetaKeyValues.Get(KeyDefines.Global.PreviousChangelogVersion);
+				var currentVersion = App.BuildPreferences.Current.Version;
+				App.MetaKeyValues.Set(KeyDefines.Global.PreviousChangelogVersion, currentVersion);
+
+				App.MetaKeyValues.Save(
+					result =>
+					{
+						if (result.Status == RequestStatus.Success && previousVersion != 0 && previousVersion < currentVersion)
+						{
+							ShowChangelog();
+						}
+					}
 				);
+
+
 			}
+			else
+			{
+				if (!App.MetaKeyValues.Get(KeyDefines.Global.IgnoreFeedbackRequest)) AskForFeedback();
+			}
+		}
+
+		void ShowChangelog()
+		{
+			var changeLog = App.BuildPreferences.Current;
+			App.MetaKeyValues.Set(KeyDefines.Global.PreviousChangelogVersion, changeLog.Version);
+
+			Payload.Changelog.Show(
+				setFocusInstant =>
+				{
+					if (setFocusInstant) App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetPriorityFocus()));
+					else App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus()));
+				},
+				() =>
+				{
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
+				}
+			);
+		}
+
+		void AskForFeedback()
+		{
+			App.MetaKeyValues.Set(KeyDefines.Global.IgnoreFeedbackRequest, true);
+			App.Callbacks.DialogRequest(
+				DialogRequest.ConfirmDeny(
+					LanguageStringModel.Override("If you're interested in providing feedback, it would help us out a lot!"),
+					title: LanguageStringModel.Override("Submit Feedback?"),
+					confirmClick: OnSubmitFeedbackClick
+				)
+			);
 		}
 
 		void OnSubmitFeedbackClick()

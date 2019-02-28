@@ -304,6 +304,7 @@ namespace LunraGames.SubLight.Views
 		Preferences = 60,
 		OpeningUrl = 70,
 		LearnMore = 80,
+		Changelog = 90,
 		// -- Game Icons
 		GameFailure = 1000,
 		GameSuccess = 1010,

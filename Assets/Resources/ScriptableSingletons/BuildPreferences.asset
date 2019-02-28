@@ -18,3 +18,29 @@ MonoBehaviour:
   BlogUrl: https://strangestar.games/blog/
   DiscordUrl: https://discord.gg/6FaGvnS
   TwitterUrl: https://twitter.com/spacew00t
+  ChangeLogs:
+  - Title: Sol
+    Description: Welcome to the first public Alpha of <b>SubLight</b>!
+    ReleaseType: Feature
+    Cyle: Alpha
+    Version: 7
+    Year: 2019
+    Month: 2
+    Day: 22
+    Entries:
+    - Index: 0
+      Change: 10
+      Description: Playable build for Windows and macOS
+  - Title: Proxima Centauri
+    Description: Incorporating feedback from the first alpha of <b>SubLight</b>, this
+      one includes plenty of bugfixes, improvements, and a few new features.
+    ReleaseType: Feature
+    Cyle: Alpha
+    Version: 8
+    Year: 2019
+    Month: 3
+    Day: 1
+    Entries:
+    - Index: 0
+      Change: 10
+      Description: Interface scaling option available in <b>Preferences</b>

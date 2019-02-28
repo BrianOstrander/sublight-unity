@@ -8,6 +8,7 @@
 		#endregion
 
 		#region Integers
+		public readonly Integer PreviousChangelogVersion;
 		#endregion
 
 		#region Strings
@@ -35,7 +36,11 @@
 
 			Integers = new Integer[]
 			{
-
+				Create(
+					ref PreviousChangelogVersion,
+					"previous_changelog_version",
+					"The version of the game when a changelog was last shown to the player."
+				)
 			};
 
 			Strings = new String[]
