@@ -104,7 +104,8 @@ namespace LunraGames.SubLight.Presenters
 				LabelVerticalOptionsEntry.CreateHeader(language.Gameplay),
 				GetToggle(
 					language.Tutorial,
-					KeyDefines.Preferences.IgnoreTutorial
+					KeyDefines.Preferences.IgnoreTutorial,
+					true
 				),
 				GetToggle(
 					language.InterfaceLarge,
@@ -142,7 +143,8 @@ namespace LunraGames.SubLight.Presenters
 
 		ButtonVerticalOptionsEntry GetToggle(
 			ToggleOptionLanguageBlock toggleLanguage,
-			KeyDefinitions.Boolean keyDefine
+			KeyDefinitions.Boolean keyDefine,
+			bool invertSecondaryMessages = false
 		)
 		{
 			if (keyDefine == null) throw new ArgumentNullException("keyDefine");
@@ -183,7 +185,7 @@ namespace LunraGames.SubLight.Presenters
 				click = () =>
 				{
 					var newValue = !editedPreferences.Get(keyDefine);
-					result.SetMessages(toggleLanguage.Message, toggleLanguage.GetValue(newValue));
+					result.SetMessages(toggleLanguage.Message, toggleLanguage.GetValue(invertSecondaryMessages? !newValue : newValue));
 					editedPreferences.Set(keyDefine, newValue);
 				};
 			}

@@ -21,6 +21,10 @@ namespace LunraGames.SubLight.Views
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
+		InterfaceScaleBlock dialogScales = InterfaceScaleBlock.Default;
+		[SerializeField]
+		Transform dialogScaleArea;
+		[SerializeField]
 		CanvasGroup rootGroup;
 
 		[SerializeField]
@@ -185,6 +189,11 @@ namespace LunraGames.SubLight.Views
 			base.OnPrepare();
 
 			if (layoutIsStale) ForceRebuildLayout();
+		}
+
+		protected override void OnSetInterfaceScale(int index)
+		{
+			dialogScaleArea.localScale = dialogScales.GetVectorScale(index);
 		}
 
 		protected override void OnIdle(float delta)

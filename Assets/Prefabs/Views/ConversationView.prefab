@@ -1709,6 +1709,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3f3e0852638b24ea5a92ebeb3a6661e8, type: 2}
   - {fileID: 11400000, guid: ec8594ecb5a844a5b8208cb02bbc43bb, type: 2}
   - {fileID: 11400000, guid: aa2bbcc956419434e8e780a4cd68d34f, type: 2}
+  fontScales:
+    Entries:
+    - Index: 0
+      Scale: 48
+    - Index: 1
+      Scale: 60
   conversationArea: {fileID: 5620756991963589188}
   conversationAnchor: {fileID: 1523010748602606712}
   incomingAnchor: {fileID: 1847949350994127619}
