@@ -358,7 +358,7 @@ namespace LunraGames.SubLight
 		public Quaternion CameraRotation { get { return IsCameraMainNull ? Quaternion.identity : Camera.main.transform.rotation; } }
 		public Ray CameraViewportPointToRay(Vector3 pos) { return IsCameraMainNull ? new Ray(Vector3.zero, Vector3.forward) : Camera.main.ViewportPointToRay(pos); }
 
-		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.Context.CameraTransform.Value; } }
+		public CameraTransformRequest CameraTransform { get { return IsGameModelNull ? CameraTransformRequest.Default : gameModel.Context.CameraTransformAbsolute.Value; } }
 		public Camera Camera { get { return IsCameraMainNull ? null : Camera.main; } }
 
 		public int InterfaceScale { get; private set; }

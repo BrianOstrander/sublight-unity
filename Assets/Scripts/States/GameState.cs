@@ -233,6 +233,7 @@ namespace LunraGames.SubLight
 
 			App.Input.SetEnabled(false);
 
+			// No focus is important because it clears the buffered render target images.
 			SM.PushBlocking(
 				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
 				"GameSettingNoFocus"
