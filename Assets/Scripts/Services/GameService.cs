@@ -21,6 +21,9 @@ namespace LunraGames.SubLight
 			}
 
 			public const float TransitRangeMinimum = 1f; // In universe units.
+
+			public const float TransitHistoryLineDistance = 3f; // In universe units.
+			public const int TransitHistoryLineCount = 16;
 		}
 
 		struct LoadInstructions
@@ -287,7 +290,7 @@ namespace LunraGames.SubLight
 
 			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
 
-			if (instructions.IsFirstLoad || model.TransitHistory.Count() == 1)
+			if (instructions.IsFirstLoad || model.TransitHistory.Count == 1)
 			{
 				model.Context.TransitState.Value = TransitState.Default(model.Context.CurrentSystem, model.Context.CurrentSystem);
 			}
@@ -352,6 +355,9 @@ namespace LunraGames.SubLight
 				}
 				waypoint.SetLocation(currWaypointSystem);
 			}
+
+			model.Context.TransitHistoryLineDistance.Value = Defaults.TransitHistoryLineDistance;
+			model.Context.TransitHistoryLineCount.Value = Defaults.TransitHistoryLineCount;
 
 			modelMediator.Save(model, result => OnSaveGame(result, instructions, model, done));
 		}

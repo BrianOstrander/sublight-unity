@@ -88,5 +88,6 @@ namespace LunraGames.SubLight
 			TotalTransitDistance = totalTransitDistance;
 		}
 
+		[JsonIgnore] public bool IsValid { get { return !string.IsNullOrEmpty(Id); } }
 	}
 }
