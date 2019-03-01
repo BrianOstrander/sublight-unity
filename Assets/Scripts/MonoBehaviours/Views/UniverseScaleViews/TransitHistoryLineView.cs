@@ -20,7 +20,10 @@ namespace LunraGames.SubLight.Views
 			previous = previous.NewY(0f);
 			next = next.NewY(0f);
 
-			line.SetPositions(new Vector3[] { next - previous, next });
+			var begin = Vector3.zero;
+			var delta = next - previous;
+
+			line.SetPositions(new Vector3[] { begin, begin + delta });
 		}
 
 		protected override void OnOpacityStack(float opacity)

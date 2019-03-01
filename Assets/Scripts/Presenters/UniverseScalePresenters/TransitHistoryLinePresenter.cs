@@ -70,6 +70,8 @@ namespace LunraGames.SubLight.Presenters
 
 			Model.Context.TransitState.Changed += OnTransitState;
 			Model.TransitHistory.Stack.Changed += OnTransitHistory;
+
+			ScaleModel.Transform.Changed += OnScaleTransform;
 		}
 
 		protected override void OnUnBind()
@@ -78,17 +80,16 @@ namespace LunraGames.SubLight.Presenters
 
 			Model.Context.TransitState.Changed -= OnTransitState;
 			Model.TransitHistory.Stack.Changed -= OnTransitHistory;
+
+			ScaleModel.Transform.Changed -= OnScaleTransform;
 		}
 
 		protected override void OnShowView()
 		{
-			View.SetPoints(
-				ScaleModel.Transform.Value.GetUnityPosition(previousPosition),
-				ScaleModel.Transform.Value.GetUnityPosition(nextPosition)
-			);
+			OnScaleTransformForced(ScaleModel.Transform.Value);
 		}
 
-		protected void LeapAhead()
+		void LeapAhead()
 		{
 			if (Next == null)
 			{
@@ -152,8 +153,23 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitHistory(TransitHistoryEntry[] entries)
 		{
-			if (!willLeap) return;
 			// TODO: I think I can remove this...
+		}
+
+		void OnScaleTransform(UniverseTransform transform)
+		{
+			if (!View.Visible) return;
+			OnScaleTransformForced(transform);
+		}
+
+		void OnScaleTransformForced(UniverseTransform transform)
+		{
+			SetGrid(transform.UnityOrigin, transform.UnityRadius);
+
+			View.SetPoints(
+				transform.GetUnityPosition(previousPosition),
+				transform.GetUnityPosition(nextPosition)
+			);
 		}
 		#endregion
 	}
