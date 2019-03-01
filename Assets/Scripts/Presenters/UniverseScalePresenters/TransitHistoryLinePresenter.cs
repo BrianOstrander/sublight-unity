@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
@@ -17,18 +18,13 @@ namespace LunraGames.SubLight.Presenters
 			/// </summary>
 			Pooled = 10,
 			/// <summary>
-			/// The line has a valid begin, and an end equal to the ship's
-			/// position, but no transit history corresponds with this line yet.
-			/// </summary>
-			Transit = 20,
-			/// <summary>
 			/// The line is assigned to a valid transit history entry, though it
 			/// may not be visible depending on the maximum distance defined.
 			/// </summary>
-			Assigned = 30
+			Assigned = 20
 		}
 
-		protected override UniversePosition PositionInUniverse { get { return positionInUniverseBegin; } }
+		protected override UniversePosition PositionInUniverse { get { return previousPosition; } }
 
 		protected override bool CanShow
 		{
@@ -37,7 +33,6 @@ namespace LunraGames.SubLight.Presenters
 				switch (State)
 				{
 					case States.Assigned:
-					case States.Transit:
 						return true;
 				}
 				return false;
@@ -52,8 +47,17 @@ namespace LunraGames.SubLight.Presenters
 		public bool IsFirst { get { return Next == null; } }
 		public bool IsLast { get { return Previous == null; } }
 
-		UniversePosition positionInUniverseBegin;
-		UniversePosition positionInUniverseEnd;
+		public TransitHistoryLinePresenter GetFirst()
+		{
+			var result = this;
+			while (result.Next != null) result = result.Next;
+
+			return result;
+		}
+
+		UniversePosition previousPosition;
+		UniversePosition currentPosition;
+		bool willLeap;
 
 		public TransitHistoryLinePresenter(
 			GameModel model,
@@ -78,7 +82,10 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override void OnShowView()
 		{
-
+			View.SetPoints(
+				ScaleModel.Transform.Value.GetUnityPosition(previousPosition),
+				ScaleModel.Transform.Value.GetUnityPosition(currentPosition)
+			);
 		}
 
 		protected void LeapAhead()
@@ -94,30 +101,27 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			var firstLine = Next;
-			while (firstLine.Next != null) firstLine = firstLine.Next;
+			var newLast = Next;
 
-			Next.Previous = null;
-			firstLine.Next = this;
-			Previous = firstLine;
+			newLast.Previous = null;
 
-			SetTransit(
-				Previous.positionInUniverseEnd,
-				Previous.positionInUniverseEnd,
-				Previous.TransitCount + 1,
-				States.Transit
-			);
+			var oldFirst = newLast;
+			while (oldFirst.Next != null) oldFirst = oldFirst.Next;
+
+			oldFirst.Next = this;
+			Previous = oldFirst;
+			Next = null;
 		}
 
 		public void SetTransit(
-			UniversePosition begin,
-			UniversePosition end,
+			UniversePosition previous,
+			UniversePosition current,
 			int transitCount,
 			States state
 		)
 		{
-			positionInUniverseBegin = begin;
-			positionInUniverseEnd = end;
+			previousPosition = previous;
+			currentPosition = current;
 			TransitCount = transitCount;
 			State = state;
 		}
@@ -125,23 +129,31 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnTransitState(TransitState transitState)
 		{
-			if (!IsLast || transitState.State != TransitState.States.Request) return;
+			if (IsLast && transitState.State == TransitState.States.Request)
+			{
+				willLeap = true;
+			}
+			else if (willLeap && transitState.State == TransitState.States.Complete)
+			{
+				willLeap = false;
 
-			LeapAhead();
+				LeapAhead();
 
-			Debug.Log("do whatever now");
-			//switch (View.TransitionState)
-			//{
-			//	case TransitionStates.Closed:
-			//		ShowViewInstant()
-			//}
+				SetTransit(
+					transitState.BeginSystem.Position.Value,
+					transitState.EndSystem.Position.Value,
+					Previous.TransitCount + 1,
+					States.Assigned
+				);
+
+				ShowViewInstant();
+			}
 		}
 
 		void OnTransitHistory(TransitHistoryEntry[] entries)
 		{
-			if (!IsFirst) return;
-
-			Debug.Log("todo set to assigned");
+			if (!willLeap) return;
+			// TODO: I think I can remove this...
 		}
 		#endregion
 	}

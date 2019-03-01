@@ -23,7 +23,7 @@ namespace LunraGames.SubLight
 			public const float TransitRangeMinimum = 1f; // In universe units.
 
 			public const float TransitHistoryLineDistance = 3f; // In universe units.
-			public const int TransitHistoryLineCount = 16;
+			public const int TransitHistoryLineCount = 4;
 		}
 
 		struct LoadInstructions

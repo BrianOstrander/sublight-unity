@@ -8,8 +8,20 @@ namespace LunraGames.SubLight.Views
 	{
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
-
+		[SerializeField]
+		LineRenderer line;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		public void SetPoints(
+			Vector3 previous,
+			Vector3 next
+		)
+		{
+			previous = previous.NewY(0f);
+			next = next.NewY(0f);
+
+			line.SetPositions(new Vector3[] { next - previous, next });
+		}
 
 		protected override void OnOpacityStack(float opacity)
 		{
@@ -24,12 +36,16 @@ namespace LunraGames.SubLight.Views
 
 		void OnDrawGizmos()
 		{
-			Gizmos.color = Color.yellow;
-			Gizmos.DrawWireSphere(transform.position, 0.1f);
+			Gizmos.color = Color.cyan;
+			Gizmos.DrawWireSphere(PositionArea.position, 0.1f);
 		}
 	}
 
 	public interface ITransitHistoryLineView : IUniverseScaleView
 	{
+		void SetPoints(
+			Vector3 previous,
+			Vector3 next
+		);
 	}
 }

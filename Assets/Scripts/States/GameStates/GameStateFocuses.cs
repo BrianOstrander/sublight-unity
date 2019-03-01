@@ -365,7 +365,7 @@ namespace LunraGames.SubLight
 							UniverseScales.Local,
 							previousTransitLine
 						);
-						previousTransitLine.Next = currentTransitLine;
+						if (previousTransitLine != null) previousTransitLine.Next = currentTransitLine;
 						previousTransitLine = currentTransitLine;
 						transitLines.Insert(0, currentTransitLine);
 					}
