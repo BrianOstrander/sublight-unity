@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TransitHistoryLine
-  m_Shader: {fileID: 4800000, guid: 00b672b67134742cf92f9a43786019df, type: 3}
+  m_Shader: {fileID: 4800000, guid: 51498ffeedfef4522886f2b86d92e6e4, type: 3}
   m_ShaderKeywords: BOOLEAN_D7E37715_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -60,7 +60,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PrimaryTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: afb61b1d22fb649b4a1d712b763d49a3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -82,7 +82,7 @@ Material:
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RadiusChoke: 0.975
+    - _RadiusChoke: 0.97
     - _RadiusChokeFresnelPower: 27
     - _RadiusChokeWidth: 0.005
     - _RadiusProgress: 1
@@ -101,9 +101,9 @@ Material:
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _DistanceFieldRange: {r: 0.3, g: 0.7, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _NearFarPlanes: {r: 0, g: 10, b: 0, a: 0}
-    - _PrimaryColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _NearFarPlanes: {r: 0.3, g: 3000, b: 0, a: 0}
+    - _PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
     - _RangeBegin: {r: 0, g: 0, b: 0, a: 0}
-    - _SecondaryColor: {r: 0.21, g: 0.21, b: 0.21, a: 1}
+    - _SecondaryColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _WorldOrigin: {r: 0, g: 2.99, b: 0, a: 0}
