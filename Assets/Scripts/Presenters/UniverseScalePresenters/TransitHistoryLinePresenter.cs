@@ -56,7 +56,7 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		UniversePosition previousPosition;
-		UniversePosition currentPosition;
+		UniversePosition nextPosition;
 		bool willLeap;
 
 		public TransitHistoryLinePresenter(
@@ -84,7 +84,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			View.SetPoints(
 				ScaleModel.Transform.Value.GetUnityPosition(previousPosition),
-				ScaleModel.Transform.Value.GetUnityPosition(currentPosition)
+				ScaleModel.Transform.Value.GetUnityPosition(nextPosition)
 			);
 		}
 
@@ -115,13 +115,13 @@ namespace LunraGames.SubLight.Presenters
 
 		public void SetTransit(
 			UniversePosition previous,
-			UniversePosition current,
+			UniversePosition next,
 			int transitCount,
 			States state
 		)
 		{
 			previousPosition = previous;
-			currentPosition = current;
+			nextPosition = next;
 			TransitCount = transitCount;
 			State = state;
 		}
