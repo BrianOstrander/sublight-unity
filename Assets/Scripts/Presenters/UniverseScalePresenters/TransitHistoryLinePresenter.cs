@@ -24,7 +24,7 @@ namespace LunraGames.SubLight.Presenters
 			Assigned = 20
 		}
 
-		protected override UniversePosition PositionInUniverse { get { return previousPosition; } }
+		protected override UniversePosition PositionInUniverse { get { return beginPosition; } }
 
 		protected override bool CanShow
 		{
@@ -55,9 +55,14 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		UniversePosition previousPosition;
-		UniversePosition nextPosition;
-		bool willLeap;
+		UniversePosition beginPosition;
+		UniversePosition endPosition;
+		int? willLeapToTransitCount;
+
+		TransitHistoryEntry GetHistory()
+		{
+			return Model.TransitHistory.Peek(e => e.TransitCount == TransitCount);
+		}
 
 		public TransitHistoryLinePresenter(
 			GameModel model,
@@ -72,6 +77,8 @@ namespace LunraGames.SubLight.Presenters
 			Model.TransitHistory.Stack.Changed += OnTransitHistory;
 
 			ScaleModel.Transform.Changed += OnScaleTransform;
+
+			TransitCount = -1;
 		}
 
 		protected override void OnUnBind()
@@ -87,6 +94,55 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnShowView()
 		{
 			OnScaleTransformForced(ScaleModel.Transform.Value);
+			CalculateDistances();
+		}
+
+		void CalculateDistances()
+		{
+			var historyEntry = GetHistory();
+
+			if (!historyEntry.IsValid)
+			{
+				View.SetDistance(1f, 1f);
+				return;
+			}
+
+			var beginNormal = 1f;
+			var endNormal = 1f;
+
+			var latestEntry = Model.TransitHistory.Peek();
+
+			var maximumDistance = Model.Context.TransitHistoryLineDistance.Value;
+
+			if (Mathf.Approximately(maximumDistance, 0f))
+			{
+				View.SetDistance(beginNormal, endNormal);
+				return;
+			}
+
+			var totalDistance = latestEntry.TotalTransitDistance;
+
+			switch (Model.Context.TransitState.Value.State)
+			{
+				case TransitState.States.Active:
+					totalDistance += Model.Context.TransitState.Value.DistanceElapsed;
+					break;
+			}
+
+			var endDistance = totalDistance - historyEntry.TotalTransitDistance;
+			var beginDistance = endDistance + historyEntry.TransitDistance;
+
+			if (endDistance < maximumDistance)
+			{
+				endNormal = endDistance / maximumDistance;
+
+				if (beginDistance < maximumDistance)
+				{
+					beginNormal = beginDistance / maximumDistance;
+				}
+			}
+
+			View.SetDistance(beginNormal, endNormal);
 		}
 
 		void LeapAhead()
@@ -115,16 +171,18 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		public void SetTransit(
-			UniversePosition previous,
-			UniversePosition next,
+			UniversePosition begin,
+			UniversePosition end,
 			int transitCount,
 			States state
 		)
 		{
-			previousPosition = previous;
-			nextPosition = next;
+			beginPosition = begin;
+			endPosition = end;
 			TransitCount = transitCount;
 			State = state;
+
+			Debug.Log("uhh: " + TransitCount, View.Root);
 		}
 
 		#region Events
@@ -132,28 +190,40 @@ namespace LunraGames.SubLight.Presenters
 		{
 			if (IsLast && transitState.State == TransitState.States.Request)
 			{
-				willLeap = true;
+				var first = this;
+				while (first.Next != null) first = first.Next;
+				willLeapToTransitCount = Mathf.Max(1, first.TransitCount + 1);
+				TransitCount = -1;
 			}
-			else if (willLeap && transitState.State == TransitState.States.Complete)
+			else if (willLeapToTransitCount.HasValue && transitState.State == TransitState.States.Complete)
 			{
-				willLeap = false;
+				var targetCount = willLeapToTransitCount.Value;
+				willLeapToTransitCount = null;
 
 				LeapAhead();
 
 				SetTransit(
 					transitState.BeginSystem.Position.Value,
 					transitState.EndSystem.Position.Value,
-					Previous.TransitCount + 1,
+					targetCount,
 					States.Assigned
 				);
 
 				ShowViewInstant();
 			}
+
+			if (View.Visible && transitState.State == TransitState.States.Active && 0 < TransitCount)
+			{
+				CalculateDistances();
+			}
 		}
 
 		void OnTransitHistory(TransitHistoryEntry[] entries)
 		{
-			// TODO: I think I can remove this...
+			//Debug.Log("homm called here");
+			//if (historyEntry.IsValid || TransitCount == 0) return;
+
+			//SetTransitHistory(entries.FirstOrDefault(e => e.TransitCount == TransitCount));
 		}
 
 		void OnScaleTransform(UniverseTransform transform)
@@ -167,8 +237,8 @@ namespace LunraGames.SubLight.Presenters
 			SetGrid(transform.UnityOrigin, transform.UnityRadius);
 
 			View.SetPoints(
-				transform.GetUnityPosition(previousPosition),
-				transform.GetUnityPosition(nextPosition)
+				transform.GetUnityPosition(beginPosition),
+				transform.GetUnityPosition(endPosition)
 			);
 		}
 		#endregion

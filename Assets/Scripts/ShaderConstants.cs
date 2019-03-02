@@ -159,6 +159,21 @@ namespace LunraGames.SubLight
 			public const string WorldRadius = "_WorldRadius";
 		}
 
+		public static class HoloTextureColorAlphaMaskedLine
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/TextureColorAlphaMaskedLine";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string PrimaryColor = "_PrimaryColor";
+			public const string SecondaryColor = "_SecondaryColor";
+			public const string Alpha = "_Alpha";
+
+			public const string WorldOrigin = "_WorldOrigin";
+			public const string WorldRadius = "_WorldRadius";
+		}
+
 		public static class HoloTextureColorAlpha
 		{
 			/// <summary>
