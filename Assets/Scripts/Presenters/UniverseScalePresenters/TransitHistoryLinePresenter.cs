@@ -181,8 +181,6 @@ namespace LunraGames.SubLight.Presenters
 			endPosition = end;
 			TransitCount = transitCount;
 			State = state;
-
-			Debug.Log("uhh: " + TransitCount, View.Root);
 		}
 
 		#region Events

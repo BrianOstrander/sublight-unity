@@ -58,7 +58,7 @@ namespace LunraGames.SubLight.Presenters
 		#region Events
 		void OnToolbarSelectionRequest(ToolbarSelectionRequest request)
 		{
-			switch (model.ToolbarSelection.Value)
+			switch (request.Selection)
 			{
 				case ToolbarSelections.Unknown:
 				case ToolbarSelections.Ship:

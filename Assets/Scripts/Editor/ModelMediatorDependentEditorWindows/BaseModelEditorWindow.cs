@@ -262,8 +262,6 @@ namespace LunraGames.SubLight
 			switch (modelSelectionState.Value)
 			{
 				case ModelSelectionStates.Browsing:
-					DrawBrowsingEditor();
-					break;
 				case ModelSelectionStates.Selected:
 					DrawSelectedEditor(ModelSelection);
 					break;
@@ -338,7 +336,9 @@ namespace LunraGames.SubLight
 						var isIgnored = model.Ignore.Value;
 						if (isIgnored) EditorGUILayoutExtensions.PushColor(new Color(0.65f, 0.65f, 0.65f));
 						{
-							GUILayout.Label(new GUIContent(string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
+							var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta;
+							if (32 < metaName.Length) metaName = metaName.Substring(0, 29) + "...";
+							GUILayout.Label(new GUIContent(metaName, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
 							GUILayout.FlexibleSpace();
 							GUILayout.Label(modelName, EditorStyles.boldLabel);
 						}
@@ -556,11 +556,6 @@ namespace LunraGames.SubLight
 			return model;
 		}
 
-		protected virtual void DrawBrowsingEditor()
-		{
-			EditorGUILayout.HelpBox("Select a model to begin.", MessageType.Info);
-		}
-
 		protected virtual void DrawSelectedEditor(M model)
 		{
 			Action<M> onDraw = DrawSelectedEditorNotImplemented;
@@ -569,30 +564,39 @@ namespace LunraGames.SubLight
 			{
 				if (modelTabState.Value == ModelTabStates.Minimized && GUILayout.Button(GetTabStateLabel(), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) ToggleTabState();
 
-				var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
-				GUILayout.Label(metaName, GUILayout.ExpandWidth(false));
-
-				switch (toolbars.Count)
+				if (model == null)
 				{
-					case 0: break;
-					case 1: onDraw = toolbars.First().Callback; break;
-					default: onDraw = OnDrawToolbar(); break;
+					EditorGUILayout.HelpBox("Select a model to begin editing.", MessageType.Info);
+					onDraw = null;
 				}
-
-				GUILayout.FlexibleSpace();
-
-				if (GUILayout.Button("Settings", EditorStyles.toolbarButton, GUILayout.Width(64f))) ShowSettingsDialog();
-
-				EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || (!Event.current.shift && Event.current.control));
+				else
 				{
-					var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
-					if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save(null);
+					var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
+
+					GUILayout.Label(metaName, GUILayout.ExpandWidth(false));
+
+					switch (toolbars.Count)
+					{
+						case 0: break;
+						case 1: onDraw = toolbars.First().Callback; break;
+						default: onDraw = OnDrawToolbar(); break;
+					}
+
+					GUILayout.FlexibleSpace();
+
+					if (GUILayout.Button("Settings", EditorStyles.toolbarButton, GUILayout.Width(64f))) ShowSettingsDialog();
+
+					EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || (!Event.current.shift && Event.current.control));
+					{
+						var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
+						if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save(null);
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 				}
-				EditorGUILayoutExtensions.PopEnabled();
 			}
 			GUILayout.EndHorizontal();
 
-			onDraw(model);
+			if (onDraw != null) onDraw(model);
 		}
 		#endregion
 

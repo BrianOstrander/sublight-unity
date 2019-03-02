@@ -847,7 +847,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Complete:
 					// Unlocking the toolbar incase it was locked during the encounter.
 					Payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
-						Payload.Game.ToolbarSelection.Value,
+						ToolbarSelections.Unknown,
 						false,
 						ToolbarSelectionRequest.Sources.Encounter
 					);
