@@ -93,6 +93,23 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
+		//float transitHistoryDistance;
+		///// <summary>
+		///// The transit history distance in universe units.
+		///// </summary>
+		//public readonly ListenerProperty<float> TransitHistoryDistance;
+		float transitHistoryLineDistance;
+		/// <summary>
+		/// The transit history distance in universe units.
+		/// </summary>
+		public readonly ListenerProperty<float> TransitHistoryLineDistance;
+		//float transitHistoryDistance;
+		///// <summary>
+		///// The transit history distance in universe units.
+		///// </summary>
+		//public readonly ListenerProperty<float> TransitHistoryDistance;
+		int transitHistoryLineCount;
+		public readonly ListenerProperty<int> TransitHistoryLineCount;
 
 		#region Read Only Listeners
 		UniverseScaleModel activeScale;
@@ -185,6 +202,9 @@ namespace LunraGames.SubLight.Models
 			}
 
 			CurrentSystem = new ReadonlyProperty<SystemModel>(value => currentSystem = value, () => currentSystem, out currentSystemListener);
+
+			TransitHistoryLineDistance = new ListenerProperty<float>(value => transitHistoryLineDistance = value, () => transitHistoryLineDistance);
+			TransitHistoryLineCount = new ListenerProperty<int>(value => transitHistoryLineCount = value, () => transitHistoryLineCount);
 		}
 
 		#region Events

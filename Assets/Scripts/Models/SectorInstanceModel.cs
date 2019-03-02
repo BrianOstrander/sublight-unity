@@ -5,11 +5,9 @@ namespace LunraGames.SubLight.Models
 	public class SectorInstanceModel : Model
 	{
 		SectorModel sector;
-		SystemInstanceModel[] systemModels;
-
-		[JsonIgnore]
 		public readonly ListenerProperty<SectorModel> Sector;
-		[JsonIgnore]
+
+		SystemInstanceModel[] systemModels;
 		public readonly ListenerProperty<SystemInstanceModel[]> SystemModels;
 
 		public SectorInstanceModel()

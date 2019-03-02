@@ -21,7 +21,9 @@ namespace LunraGames.SubLight
 			}
 
 			public const float TransitRangeMinimum = 1f; // In universe units.
-			public const float TransitVelocityMinimum = 0.3f * UniversePosition.LightYearToUniverseScalar; // In universe units. Shouldn't be greater than 1 lightyear...
+
+			public const float TransitHistoryLineDistance = 8f; // In universe units.
+			public const int TransitHistoryLineCount = 32;
 		}
 
 		struct LoadInstructions
@@ -75,11 +77,8 @@ namespace LunraGames.SubLight
 			);
 
 			// Ship ---
-			// TODO: Some of these values should be based on... like... the ship's inventory.
+			// TODO: Should this set minimum range be removed? It should just be set by the rules encounter, no?
 			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
-			//model.Ship.SetVelocityMinimum(Defaults.TransitVelocityMinimum);
-			//model.Ship.SetVelocityMultiplierMaximum(7);
-			//model.Ship.SetVelocityMultiplierEnabledMaximum(5);
 			// --------
 
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
@@ -291,7 +290,7 @@ namespace LunraGames.SubLight
 
 			model.Context.SetCurrentSystem(universeService.GetSystem(model.Context.Galaxy, model.Universe, model.Ship.Position.Value, model.Ship.SystemIndex.Value));
 
-			if (instructions.IsFirstLoad || model.TransitHistory.Count() == 1)
+			if (instructions.IsFirstLoad || model.TransitHistory.Count == 1)
 			{
 				model.Context.TransitState.Value = TransitState.Default(model.Context.CurrentSystem, model.Context.CurrentSystem);
 			}
@@ -330,6 +329,7 @@ namespace LunraGames.SubLight
 						waypoint.Name.Value = "Origin";
 						break;
 					case WaypointIds.EndSystem:
+						// TODO: This shouldn't be stored here... Maybe it should be done by the rules encounter? Or from the galaxy data?
 						waypoint.Name.Value = "Cygnus X-1";
 						break;
 				}
@@ -356,6 +356,9 @@ namespace LunraGames.SubLight
 				waypoint.SetLocation(currWaypointSystem);
 			}
 
+			model.Context.TransitHistoryLineDistance.Value = Defaults.TransitHistoryLineDistance;
+			model.Context.TransitHistoryLineCount.Value = Defaults.TransitHistoryLineCount;
+
 			modelMediator.Save(model, result => OnSaveGame(result, instructions, model, done));
 		}
 
@@ -374,8 +377,6 @@ namespace LunraGames.SubLight
 
 			// Return the passed model rather than the save result, since we're keeping the Context data.
 			done(RequestResult.Success(), model);
-
-			//done(RequestResult.Failure("Some fake error"), null);
 		}
 		#endregion
 	}

@@ -349,6 +349,43 @@ namespace LunraGames.SubLight
 				}
 				payload.Waypoints = waypointEntries;
 
+				if (payload.Game.Context.TransitHistoryLineCount.Value < 2)
+				{
+					Debug.LogError("Cannot initialize transit lines with a count of " + payload.Game.Context.TransitHistoryLineCount.Value+", skipping...");
+				}
+				else
+				{
+					var transitLines = new List<TransitHistoryLinePresenter>();
+					TransitHistoryLinePresenter previousTransitLine = null;
+
+					for (var i = 0; i < payload.Game.Context.TransitHistoryLineCount.Value; i++)
+					{
+						var currentTransitLine = new TransitHistoryLinePresenter(
+							payload.Game,
+							UniverseScales.Local,
+							previousTransitLine
+						);
+						if (previousTransitLine != null) previousTransitLine.Next = currentTransitLine;
+						previousTransitLine = currentTransitLine;
+						transitLines.Insert(0, currentTransitLine);
+					}
+
+					for (var i = 0; i < Mathf.Min(transitLines.Count, payload.Game.TransitHistory.Count); i++)
+					{
+						var currentHistory = payload.Game.TransitHistory.Peek(i);
+						if (currentHistory.TransitCount == 0) break;
+						var previousHistory = payload.Game.TransitHistory.Peek(i + 1);
+
+						var currentTransitLine = transitLines[i];
+						currentTransitLine.SetTransit(
+							previousHistory.SystemPosition,
+							currentHistory.SystemPosition,
+							currentHistory.TransitCount,
+							TransitHistoryLinePresenter.States.Assigned
+						);
+					}
+				}
+
 				InitializeShipPresenters(state, done);
 			}
 

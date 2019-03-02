@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		public int LocalSectorOffset = 1; // Not set anywhere else at the moment...
+		public int LocalSectorOffset = 2; // Not set anywhere else at the moment...
 		public int LocalSectorOffsetTotal { get { return (LocalSectorOffset * 2) + 1; } }
 		public int LocalSectorCount { get { return LocalSectorOffsetTotal * LocalSectorOffsetTotal; } }
 
@@ -847,7 +847,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Complete:
 					// Unlocking the toolbar incase it was locked during the encounter.
 					Payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
-						Payload.Game.ToolbarSelection.Value,
+						ToolbarSelections.Unknown,
 						false,
 						ToolbarSelectionRequest.Sources.Encounter
 					);
