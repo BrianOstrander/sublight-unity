@@ -683,6 +683,7 @@ namespace LunraGames.SubLight.Views
 					switch (HighlightState)
 					{
 						case Celestial.HighlightStates.OtherHighlighted:
+							/*
 							switch (SelectedState)
 							{
 								case Celestial.SelectedStates.Selected:
@@ -697,6 +698,7 @@ namespace LunraGames.SubLight.Views
 									}
 									break;
 							}
+							*/
 							break;
 						case Celestial.HighlightStates.Highlighted:
 						case Celestial.HighlightStates.HighlightedAnalysis:
@@ -1077,20 +1079,5 @@ namespace LunraGames.SubLight.Views
 			Celestial.TravelStates travelState = Celestial.TravelStates.Unknown,
 			bool instant = false
 		);
-
-		//string ClassificationText { set; }
-		//string DistanceText { set; }
-		//string DistanceUnitText { set; }
-		//string AnalysisText { set; }
-		//string AnalysisDetailsText { set; }
-		//string ConfirmText { set; }
-		//string ConfirmDetailsText { set; }
-		//Texture2D ClassificationIcon { set; }
-		//Texture2D SystemIcon { set; }
-		//float ClassificationHue { set; }
-		//float SystemHue { set; }
-		//Action ClassificationClick { set; }
-		//Action SystemClick { set; }
-		//float Height { set; }
 	}
 }

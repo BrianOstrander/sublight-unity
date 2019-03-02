@@ -25,7 +25,6 @@ namespace LunraGames.SubLight.Views
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		float beginNormal;
-		float endNormal;
 
 		public void SetPoints(
 			Vector3 begin,
@@ -44,7 +43,6 @@ namespace LunraGames.SubLight.Views
 
 			lineTransform.localScale = lineTransform.localScale.NewY(distance);
 			linePivot.LookAt(linePivot.position + delta, Vector3.up);
-			//line.SetPositions(new Vector3[] { begin, begin + delta });
 		}
 
 		public void SetDistance(
@@ -53,7 +51,6 @@ namespace LunraGames.SubLight.Views
 		)
 		{
 			beginNormal = begin;
-			endNormal = end;
 
 			var beginColor = distanceColor.Evaluate(begin);
 			var endColor = distanceColor.Evaluate(end);
