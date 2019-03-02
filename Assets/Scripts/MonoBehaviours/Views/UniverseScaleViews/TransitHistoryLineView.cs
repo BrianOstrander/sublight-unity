@@ -63,7 +63,8 @@ namespace LunraGames.SubLight.Views
 
 		protected override void OnOpacityStack(float opacity)
 		{
-
+			baseRenderer.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMasked.Alpha, opacity);
+			lineRenderer.material.SetFloat(ShaderConstants.HoloTextureColorAlphaMaskedLine.Alpha, opacity);
 		}
 
 		public override void Reset()
