@@ -99,18 +99,25 @@ namespace LunraGames.SubLight.Presenters
 
 		void CalculateDistances()
 		{
-			var historyEntry = GetHistory();
+			var currentHistoryEntry = GetHistory();
+			var latestHistoryEntry = Model.TransitHistory.Peek();
 
-			if (!historyEntry.IsValid)
+			var transitDistance = 0f;
+			var transitDistanceTotal = 0f;
+
+			if (currentHistoryEntry.IsValid)
 			{
-				View.SetDistance(1f, 1f);
-				return;
+				transitDistance = currentHistoryEntry.TransitDistance;
+				transitDistanceTotal = currentHistoryEntry.TotalTransitDistance;
+			}
+			else
+			{
+				transitDistance = Model.Context.TransitState.Value.DistanceElapsed;
+				transitDistanceTotal = transitDistance + latestHistoryEntry.TotalTransitDistance;
 			}
 
 			var beginNormal = 1f;
 			var endNormal = 1f;
-
-			var latestEntry = Model.TransitHistory.Peek();
 
 			var maximumDistance = Model.Context.TransitHistoryLineDistance.Value;
 
@@ -120,7 +127,7 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			var totalDistance = latestEntry.TotalTransitDistance;
+			var totalDistance = latestHistoryEntry.TotalTransitDistance;
 
 			switch (Model.Context.TransitState.Value.State)
 			{
@@ -129,8 +136,8 @@ namespace LunraGames.SubLight.Presenters
 					break;
 			}
 
-			var endDistance = totalDistance - historyEntry.TotalTransitDistance;
-			var beginDistance = endDistance + historyEntry.TransitDistance;
+			var endDistance = totalDistance - transitDistanceTotal;
+			var beginDistance = endDistance + transitDistance;
 
 			if (endDistance < maximumDistance)
 			{
@@ -193,7 +200,7 @@ namespace LunraGames.SubLight.Presenters
 				willLeapToTransitCount = Mathf.Max(1, first.TransitCount + 1);
 				TransitCount = -1;
 			}
-			else if (willLeapToTransitCount.HasValue && transitState.State == TransitState.States.Complete)
+			else if (willLeapToTransitCount.HasValue && transitState.FinalizeStep.Initializing)
 			{
 				var targetCount = willLeapToTransitCount.Value;
 				willLeapToTransitCount = null;
