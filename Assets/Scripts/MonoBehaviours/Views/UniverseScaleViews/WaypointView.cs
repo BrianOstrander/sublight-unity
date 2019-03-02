@@ -83,6 +83,7 @@ namespace LunraGames.SubLight.Views
 		protected override void OnInBoundsChanged(bool isInBounds)
 		{
 			inRangeParticleSystemsRoot.gameObject.SetActive(isInBounds);
+			group.interactable = !isInBounds;
 		}
 
 		void UpdateInRangeParticleSystems()
