@@ -90,7 +90,7 @@ namespace LunraGames.SubLight.Presenters
 					                  lastDialogState == DialogRequest.States.Complete &&
 					                  model.Context.PauseMenuBlockers.Value <= 0 &&
 					                  model.Context.TransitState.Value.State == TransitState.States.Complete &&
-					                  model.Context.ToolbarSelectionRequest.Value.Selection == model.ToolbarSelection.Value;
+					                  (model.Context.ToolbarSelectionRequest.Value.Selection == model.ToolbarSelection.Value || model.Context.ToolbarSelectionRequest.Value.Selection == ToolbarSelections.Unknown);
 			}
 		}
 
