@@ -159,11 +159,10 @@ namespace LunraGames.SubLight.Presenters
 
 			var rationsNormal = rationsFromSystem / Model.KeyValues.Get(KeyDefines.Game.Rations.Maximum);
 			var rationsPercent = Mathf.FloorToInt(rationsNormal * 100f);
-			var rationsColor = rationsPercent < 10 ? Color.red : Color.green;
 
 			result += DeveloperStrings.GetBold("Rations: ");
 			if (rationsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0 < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), rationsColor);
+			else if (0 < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
 			else result += "Invalid Amount " + rationsPercent + "%";
 
 			result += "\n";
@@ -184,7 +183,7 @@ namespace LunraGames.SubLight.Presenters
 
 			result += DeveloperStrings.GetBold("Propellant: ");
 			if (Mathf.Approximately(0f, propellantFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantAbsolute, propellantAbsolute < 2 ? Color.red : Color.green);
+			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantAbsolute, Color.green);
 			else result += "Invalid Amount " + propellantFromSystem;
 
 			result += "\n";
@@ -200,10 +199,13 @@ namespace LunraGames.SubLight.Presenters
 				out metallicsFromSystem
 			);
 
+			var metallicsNormal = metallicsFromSystem / Model.KeyValues.Get(KeyDefines.Game.Metallics.Maximum);
+			var metallicsPercent = Mathf.FloorToInt(metallicsNormal * 100f);
+
 			result += DeveloperStrings.GetBold("Metallics: ");
-			if (Mathf.Approximately(0f, metallicsFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < metallicsFromSystem) result += DeveloperStrings.GetColor("+" + metallicsFromSystem, Color.green);
-			else result += "Invalid Amount " + metallicsFromSystem;
+			if (metallicsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0 < metallicsFromSystem) result += DeveloperStrings.GetColor("+" + metallicsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
+			else result += "Invalid Amount " + metallicsPercent + "%";
 
 			return result;
 		}
