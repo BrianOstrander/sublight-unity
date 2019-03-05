@@ -190,7 +190,10 @@ namespace LunraGames.SubLight
 			);
 
 			focus = new FocusService(Heartbeat, Callbacks);
-			analytics = new AnalyticsService(Callbacks);
+			analytics = new AnalyticsService(
+				Callbacks,
+				BuildPreferences
+			);
 
 			Application.targetFrameRate = BuildPreferences.TargetFrameRate;
 			QualitySettings.vSyncCount = BuildPreferences.VSyncCount;

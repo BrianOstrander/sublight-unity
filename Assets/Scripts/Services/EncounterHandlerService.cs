@@ -156,7 +156,7 @@ namespace LunraGames.SubLight
 				Debug.LogError("Beginning an encounter while one is not complete, may cause unpredictable behaviour.");
 			}
 
-			App.Analytics.EncounterBegin(encounter);
+			App.Analytics.EncounterBegin(model, encounter);
 
 			model.Context.EncounterState.Current.Value = new EncounterStateModel.Details(EncounterStateModel.States.Processing, encounter.EncounterId.Value);
 

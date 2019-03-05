@@ -70,16 +70,20 @@ namespace LunraGames.SubLight
 		}
 
 		CallbackService callbacks;
+		BuildPreferences buildPreferences;
 
 		StateMachine.States lastState;
 
 		public AnalyticsService(
-			CallbackService callbacks
+			CallbackService callbacks,
+			BuildPreferences buildPreferences
 		)
 		{
 			if (callbacks == null) throw new NullReferenceException("callbacks");
+			if (buildPreferences == null) throw new NullReferenceException("buildPreferences");
 
 			this.callbacks = callbacks;
+			this.buildPreferences = buildPreferences;
 		}
 
 		public void Initialize(
@@ -109,6 +113,8 @@ namespace LunraGames.SubLight
 		#region Private Events
 		void StateChange(StateMachine.States state)
 		{
+			if (buildPreferences.Analytics.IgnoreStateChange) return;
+
 			AnalyticsEvent.Custom(
 				"state_change",
 				new Dictionary<string, object>
@@ -127,6 +133,8 @@ namespace LunraGames.SubLight
 			GameModel gameModel
 		)
 		{
+			if (buildPreferences.Analytics.IgnoreGameStart) return;
+
 			var eventData = new Dictionary<string, object>
 			{
 				{ GameFields.Id, gameModel.GameId.Value},
@@ -147,6 +155,8 @@ namespace LunraGames.SubLight
 			string title
 		)
 		{
+			if (buildPreferences.Analytics.IgnoreGameOver) return;
+
 			var eventData = new Dictionary<string, object>
 			{
 				{ GameFields.Id, gameModel.GameId.Value},
@@ -166,6 +176,8 @@ namespace LunraGames.SubLight
 			GameModel gameModel
 		)
 		{
+			if (buildPreferences.Analytics.IgnoreGameContinue) return;
+
 			var eventData = new Dictionary<string, object>
 			{
 				{ GameFields.Id, gameModel.GameId.Value},
@@ -182,16 +194,23 @@ namespace LunraGames.SubLight
 		}
 
 		public void EncounterBegin(
+			GameModel gameModel,
 			EncounterInfoModel encounter
 		)
 		{
+			if (buildPreferences.Analytics.IgnoreEncounterBegin) return;
+
+			var eventData = new Dictionary<string, object>
+			{
+				{ GameFields.TotalTransits, gameModel.TransitHistory.Count },
+
+				{ EncounterFields.Id, encounter.EncounterId.Value },
+				{ EncounterFields.Name, encounter.Name.Value }
+			};
+
 			AnalyticsEvent.Custom(
 				"encounter_begin",
-				new Dictionary<string, object>
-				{
-					{ EncounterFields.Id, encounter.EncounterId.Value },
-					{ EncounterFields.Name, encounter.Name.Value }
-				}
+				ApplyWaypoints(gameModel, eventData)
 			);
 		}
 
@@ -199,6 +218,8 @@ namespace LunraGames.SubLight
 			EncounterInfoModel encounter
 		)
 		{
+			if (buildPreferences.Analytics.IgnoreEncounterEnd) return;
+
 			AnalyticsEvent.Custom(
 				"encounter_end",
 				new Dictionary<string, object>
@@ -214,6 +235,8 @@ namespace LunraGames.SubLight
 			Dictionary<string, object> properties = null
 		)
 		{
+			if (buildPreferences.Analytics.IgnoreScreenVisit) return;
+
 			if (properties == null)
 			{
 				properties = new Dictionary<string, object>
@@ -241,6 +264,8 @@ namespace LunraGames.SubLight
 			TransitState transit
 		)
 		{
+			if (buildPreferences.Analytics.IgnoreTransit) return;
+
 			AnalyticsEvent.Custom(
 				"transit",
 				new Dictionary<string, object>

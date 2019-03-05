@@ -18,6 +18,15 @@ MonoBehaviour:
   BlogUrl: https://strangestar.games/blog/
   DiscordUrl: https://discord.gg/6FaGvnS
   TwitterUrl: https://twitter.com/spacew00t
+  Analytics:
+    IgnoreStateChange: 0
+    IgnoreGameStart: 0
+    IgnoreGameOver: 0
+    IgnoreGameContinue: 0
+    IgnoreEncounterBegin: 0
+    IgnoreEncounterEnd: 1
+    IgnoreScreenVisit: 0
+    IgnoreTransit: 1
   ChangeLogs:
   - Title: Sol
     Description: Welcome to the first public Alpha of <b>SubLight</b>!

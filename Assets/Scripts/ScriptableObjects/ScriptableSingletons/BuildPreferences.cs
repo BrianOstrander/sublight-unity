@@ -27,6 +27,19 @@ namespace LunraGames.SubLight
 
 	public class BuildPreferences : ScriptableSingleton<BuildPreferences>
 	{
+		[Serializable]
+		public struct AnalyticsPreferences
+		{
+			public bool IgnoreStateChange;
+			public bool IgnoreGameStart;
+			public bool IgnoreGameOver;
+			public bool IgnoreGameContinue;
+			public bool IgnoreEncounterBegin;
+			public bool IgnoreEncounterEnd;
+			public bool IgnoreScreenVisit;
+			public bool IgnoreTransit;
+		}
+
 		public int TargetFrameRate;
 		public int VSyncCount;
 
@@ -38,6 +51,8 @@ namespace LunraGames.SubLight
 		public string BlogUrl;
 		public string DiscordUrl;
 		public string TwitterUrl;
+
+		public AnalyticsPreferences Analytics;
 
 		public Changelog[] ChangeLogs;
 

@@ -52,7 +52,8 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "ignore": true,
+  "version": 8,
   "meta": "SystemIdle Default",
   "metaKeyValues": {
     "EncounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f"
