@@ -39,12 +39,14 @@ namespace LunraGames.SubLight
 			public const string GalaxyId = "galaxy_id";
 			public const string GalaxyTargetId = "galaxy_target_id";
 			public const string UniverseSeed = "universe_seed";
-			public const string Condition = "complete_condition";
-			public const string ConditionTitle = "complete_condition_title";
 
 			public const string BeginPosition = "begin_position";
 			public const string EndPosition = "end_position";
 			public const string CurrentPosition = "current_position";
+
+			public const string Condition = "complete_condition";
+			public const string ConditionTitle = "complete_condition_title";
+			public const string TotalTransits = "total_transits";
 		}
 
 		static class EncounterFields
@@ -150,7 +152,8 @@ namespace LunraGames.SubLight
 				{ GameFields.Id, gameModel.GameId.Value},
 
 				{ GameFields.Condition, condition },
-				{ GameFields.ConditionTitle, title }
+				{ GameFields.ConditionTitle, title },
+				{ GameFields.TotalTransits, gameModel.TransitHistory.Count }
 			};
 
 			AnalyticsEvent.GameOver(
@@ -242,6 +245,8 @@ namespace LunraGames.SubLight
 				"transit",
 				new Dictionary<string, object>
 				{
+					{ GameFields.TotalTransits, gameModel.TransitHistory.Count },
+
 					{ TransitFields.GalaxySize, gameModel.Context.Galaxy.GalaxySize.SectorInteger },
 					{ TransitFields.Position, transit.EndSystem.Position.Value.Lossy },
 					{ TransitFields.Velocity, transit.VelocityLightYearsMaximum },
