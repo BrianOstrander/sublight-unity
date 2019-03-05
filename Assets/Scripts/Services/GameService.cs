@@ -65,6 +65,9 @@ namespace LunraGames.SubLight
 
 			var model = modelMediator.Create<GameModel>();
 
+			model.Name.Value = Guid.NewGuid().ToString();
+			model.GameId.Value = model.Name.Value;
+
 			model.Seed.Value = info.GameSeed;
 			model.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, Defaults.CreateGameBlock.GalaxyId);
 			model.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, Defaults.CreateGameBlock.GalaxyTargetId);

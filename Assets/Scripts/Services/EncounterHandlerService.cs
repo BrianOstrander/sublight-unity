@@ -144,6 +144,9 @@ namespace LunraGames.SubLight
 			EncounterInfoModel encounter
 		)
 		{
+			if (model == null) throw new ArgumentNullException("model");
+			if (encounter == null) throw new ArgumentNullException("encounter");
+
 			if (model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Unknown)
 			{
 				Debug.LogError("Encounter state is currently Unknown, may cause unpredictable behaviour.");
@@ -152,6 +155,8 @@ namespace LunraGames.SubLight
 			{
 				Debug.LogError("Beginning an encounter while one is not complete, may cause unpredictable behaviour.");
 			}
+
+			App.Analytics.EncounterBegin(encounter);
 
 			model.Context.EncounterState.Current.Value = new EncounterStateModel.Details(EncounterStateModel.States.Processing, encounter.EncounterId.Value);
 
@@ -195,6 +200,8 @@ namespace LunraGames.SubLight
 
 		void OnEnd()
 		{
+			App.Analytics.EncounterEnd(configuration.Encounter);
+
 			popSaveBlocker();
 
 			var oldModel = configuration.Model;

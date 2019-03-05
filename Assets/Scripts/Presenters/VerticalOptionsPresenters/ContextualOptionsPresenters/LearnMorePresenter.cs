@@ -47,6 +47,8 @@ namespace LunraGames.SubLight.Presenters
 				ButtonVerticalOptionsEntry.CreateButton(language.Twitter.Value, CloseThenClick(() => OnClickLink(BuildPreferences.Instance.TwitterUrl))),
 				ButtonVerticalOptionsEntry.CreateButton(language.Back.Value, OnClickBack)
 			);
+
+			App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.LearnMore);
 		}
 
 		Action CloseThenClick(Action done)

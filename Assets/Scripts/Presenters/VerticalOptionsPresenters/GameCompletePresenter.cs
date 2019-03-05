@@ -109,6 +109,12 @@ namespace LunraGames.SubLight.Presenters
 				entries.ToArray()
 			);
 
+			App.Analytics.GameOver(
+				model,
+				condition,
+				title
+			);
+
 			ShowView();
 		}
 

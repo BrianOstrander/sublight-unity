@@ -59,6 +59,8 @@ namespace LunraGames.SubLight.Presenters
 				LabelVerticalOptionsEntry.CreateBody(changes),
 				ButtonVerticalOptionsEntry.CreateButton(language.Back.Value, OnClickBack)
 			);
+
+			App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Changelog);
 		}
 
 		string GetDescription(

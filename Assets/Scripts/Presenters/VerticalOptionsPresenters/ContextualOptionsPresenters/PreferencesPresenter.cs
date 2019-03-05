@@ -113,6 +113,8 @@ namespace LunraGames.SubLight.Presenters
 				),
 				ButtonVerticalOptionsEntry.CreateButton(language.Back.Value, OnClickBack)
 			);
+
+			App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Preferences);
 		}
 
 		ButtonVerticalOptionsEntry GetToggle(

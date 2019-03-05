@@ -35,7 +35,7 @@ namespace LunraGames.SubLight
 
 		public GalaxyPreviewModel PreviewGalaxy;
 
-		public Action<GameModel, bool> StartGame;
+		public Action<GameModel, bool, bool> StartGame;
 
 		public bool IgnoreMaskOnEnd;
 
@@ -247,7 +247,7 @@ namespace LunraGames.SubLight
 				PushIdleDefaults();
 				return;
 			}
-			Payload.StartGame(model, true);
+			Payload.StartGame(model, true, false);
 		}
 
 		void OnContinueGame(RequestResult result, GameModel model)
@@ -266,7 +266,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			Payload.StartGame(model, true);
+			Payload.StartGame(model, true, true);
 		}
 		#endregion
 
@@ -433,9 +433,16 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnStartGame(GameModel model, bool instant)
+		void OnStartGame(
+			GameModel model,
+			bool instant,
+			bool isContinue
+		)
 		{
 			Payload.IgnoreMaskOnEnd = instant;
+
+			if (isContinue) App.Analytics.GameContinue(model);
+			else App.Analytics.GameStart(model);
 
 			SM.Push(
 				() =>

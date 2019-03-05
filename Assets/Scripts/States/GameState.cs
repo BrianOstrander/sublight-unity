@@ -310,6 +310,27 @@ namespace LunraGames.SubLight
 		{
 			Payload.Game.ToolbarSelection.Value = request.Selection;
 			if (request.Done != null) request.Done();
+
+			switch (request.Selection)
+			{
+				case ToolbarSelections.Unknown: break;
+				case ToolbarSelections.System:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Navigation);
+					break;
+				case ToolbarSelections.Ship:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Logistics);
+					break;
+				case ToolbarSelections.Communication:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Communication);
+					break;
+				case ToolbarSelections.Encyclopedia:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Encyclopedia);
+					break;
+				default:
+					Debug.LogError("Unrecognized Selection: " + request.Selection);
+					break;
+
+			}
 		}
 
 		void OnCelestialSystemsTransform(UniverseTransform transform)
@@ -504,6 +525,11 @@ namespace LunraGames.SubLight
 				EncounterTriggers.ResourceRequest,
 				EncounterTriggers.ResourceConsume,
 				EncounterTriggers.SystemIdle
+			);
+
+			App.Analytics.Transit(
+				Payload.Game,
+				transitState
 			);
 		}
 

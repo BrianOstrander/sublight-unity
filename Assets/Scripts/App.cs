@@ -79,6 +79,9 @@ namespace LunraGames.SubLight
 		FocusService focus;
 		public static FocusService Focus { get { return instance.focus; } }
 
+		AnalyticsService analytics;
+		public static AnalyticsService Analytics { get { return instance.analytics; } }
+
 		List<GameObject> defaultViews;
 		DefaultShaderGlobals shaderGlobals;
 
@@ -187,6 +190,7 @@ namespace LunraGames.SubLight
 			);
 
 			focus = new FocusService(Heartbeat, Callbacks);
+			analytics = new AnalyticsService(Callbacks);
 
 			Application.targetFrameRate = BuildPreferences.TargetFrameRate;
 			QualitySettings.vSyncCount = BuildPreferences.VSyncCount;

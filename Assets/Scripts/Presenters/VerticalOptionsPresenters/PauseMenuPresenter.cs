@@ -205,6 +205,8 @@ namespace LunraGames.SubLight.Presenters
 				ButtonVerticalOptionsEntry.CreateButton(language.Quit.Value, OnClickQuit)
 			);
 
+			App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.PauseMenu);
+
 			ShowView(instant: instant);
 		}
 

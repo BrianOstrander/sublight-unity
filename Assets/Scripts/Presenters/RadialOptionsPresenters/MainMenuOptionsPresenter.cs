@@ -62,6 +62,8 @@ namespace LunraGames.SubLight.Presenters
 				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
 			};
 
+			App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.MainMenu);
+
 			ShowView(parent, instant);
 		}
 
@@ -212,7 +214,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			payload.StartGame(model, false);
+			payload.StartGame(model, false, false);
 		}
 
 		void OnLoadGame(RequestResult result, GameModel model)
@@ -229,7 +231,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			payload.StartGame(model, false);
+			payload.StartGame(model, false, true);
 		}
 		#endregion
 	}

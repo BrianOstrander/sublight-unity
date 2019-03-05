@@ -181,7 +181,6 @@ namespace LunraGames.SubLight.Presenters
 						Debug.LogError("Cannot request an animation while another is active");
 						return;
 					}
-					Debug.Log("requested an anim transform");
 					lastTransformedByInput = false;
 					transformOnAnimationBegin = gameModel.Context.CameraTransformAbsolute.Value;
 					transformAnimation = transform;
