@@ -317,7 +317,7 @@ namespace LunraGames.SubLight.Presenters
 							DialogStyles.Error,
 							language.SavingError.Title,
 							done,
-							true
+							overrideFocuseHandling: true
 						)
 					);
 				},
@@ -408,7 +408,7 @@ namespace LunraGames.SubLight.Presenters
 							DialogStyles.Error,
 							currentBlocker.Title,
 							done,
-							true
+							overrideFocuseHandling: true
 						)
 					);
 				},
@@ -481,8 +481,8 @@ namespace LunraGames.SubLight.Presenters
 							language.MainMenuConfirm.Title,
 							PushMainMenuRequest,
 							() => Show(),
-							result => done(),
-							true
+							done: result => done(),
+							overrideFocuseHandling: true
 						)
 					);
 				},
@@ -521,8 +521,8 @@ namespace LunraGames.SubLight.Presenters
 							language.QuitConfirm.Title,
 							PushQuitRequest,
 							() => Show(),
-							result => done(),
-							true
+							done: result => done(),
+							overrideFocuseHandling: true
 						)
 					);
 				},

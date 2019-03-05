@@ -8,6 +8,7 @@ using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Presenters;
 
 using UnityEngine;
+using UnityEngine.Analytics;
 
 namespace LunraGames.SubLight
 {
@@ -300,8 +301,45 @@ namespace LunraGames.SubLight
 			}
 
 			App.Heartbeat.Wait(
-				OnIdleShowComplete,
+				OnCheckForAnalyticsWarning,
 				totalWait + 0.001f
+			);
+		}
+
+		void OnCheckForAnalyticsWarning()
+		{
+			if (App.MetaKeyValues.Get(KeyDefines.Global.IgnoreUserAnalyticsWarning))
+			{
+				OnIdleShowComplete();
+				return;
+			}
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.ConfirmDeny(
+					LanguageStringModel.Override("<b>SubLight</b> uses analytics to fix bugs and improve your experience playing our game! " +
+					                             "We do not share or sell personal data about you to anyone, but we understand if you would " +
+					                             "still like to opt out of analytics."),
+					DialogStyles.Neutral,
+					LanguageStringModel.Override("Analytics"),
+					() => OnSetAnalytics(true),
+					() => OnSetAnalytics(false),
+					LanguageStringModel.Override("Keep Enabled"),
+					LanguageStringModel.Override("Disable")
+				)
+			);
+		}
+
+		void OnSetAnalytics(bool analyticsEnabled)
+		{
+			Analytics.enabled = analyticsEnabled;
+			App.MetaKeyValues.Set(KeyDefines.Global.IgnoreUserAnalyticsWarning, true);
+
+			App.MetaKeyValues.Save(
+				result =>
+				{
+					if (result.IsNotSuccess) Debug.LogError("Unable to save meta keyvalues, status " + result.Status + " with error: " + result.Message);
+					OnIdleShowComplete();
+				}
 			);
 		}
 

@@ -167,7 +167,7 @@ namespace LunraGames.SubLight.Presenters
 							DialogStyles.Error,
 							language.BlockedDuringGame.Title,
 							ReShow,
-							true
+							overrideFocuseHandling: true
 						)
 					);
 
