@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 		{
 			public const string Rations = "rations";
 			public const string Propellant = "propellant";
+			public const string Metallics = "metallics";
 		}
 
 		#region Defined Keys

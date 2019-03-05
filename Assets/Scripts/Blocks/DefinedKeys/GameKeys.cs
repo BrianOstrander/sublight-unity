@@ -115,6 +115,7 @@ namespace LunraGames.SubLight
 		#region Resources
 		public readonly Resource Rations;
 		public readonly Resource Propellant;
+		public readonly Resource Metallics;
   		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
@@ -338,6 +339,7 @@ namespace LunraGames.SubLight
 
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
 			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
+			Metallics = new Resource(KeyDefines.Resources.Metallics, this);
 		}
 
 		static string GetNavigationSystemNotes(string interaction)

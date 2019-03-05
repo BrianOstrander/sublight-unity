@@ -120,6 +120,7 @@ namespace LunraGames.SubLight.Presenters
 			result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
 			result = AppendPropellant(result, target, gameSource);
+			result = AppendMetallics(result, target, gameSource);
 
 			return result;
 		}
@@ -186,44 +187,26 @@ namespace LunraGames.SubLight.Presenters
 			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantAbsolute, propellantAbsolute < 2 ? Color.red : Color.green);
 			else result += "Invalid Amount " + propellantFromSystem;
 
-			return result;
-		}
+			result += "\n";
 
-		/*
-		string CreateMessageTransitPreview(string result, Dictionary<string, Action> target, SystemModel system)
-		{
-			var gameSource = Model.KeyValues;
+			float metallicsTotal;
+			float metallicsFromSystem;
+			GameplayUtility.ResourcesAvailable(
+				Model.KeyValues,
+				system.KeyValues,
+				KeyDefines.Game.Metallics,
+				KeyDefines.CelestialSystem.Metallics,
+				out metallicsTotal,
+				out metallicsFromSystem
+			);
 
-			if (system != null)
-			{
-				var currVelocity = Model.Ship.Velocity.Value.Current.RelativisticLightYears;
-				var currDistance = UniversePosition.ToLightYearDistance(
-					UniversePosition.Distance(
-						Model.Context.CurrentSystem.Value.Position.Value,
-						system.Position.Value
-					)
-				);
-
-				gameSource = gameSource.Duplicate;
-				GameplayUtility.ApplyTransit(
-					RelativityUtility.TransitTime(
-						currVelocity,
-						currDistance
-					).ShipTime.TotalYears,
-					gameSource,
-					system.KeyValues.Duplicate
-				);
-			}
-
-			//result = AppendSystemName(result, target, "Target System", system);
-			result = AppendPopulationMessage(result, target, gameSource);
-			result = AppendRationing(result, target, gameSource);
-			result = AppendRations(result, target, gameSource);
-			result = AppendPropellant(result, target, gameSource);
+			result += DeveloperStrings.GetBold("Metallics: ");
+			if (Mathf.Approximately(0f, metallicsFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0f < metallicsFromSystem) result += DeveloperStrings.GetColor("+" + metallicsFromSystem, Color.green);
+			else result += "Invalid Amount " + metallicsFromSystem;
 
 			return result;
 		}
-		*/
 
 		string AppendSystemName(string result, Dictionary<string, Action> target, string prefix, SystemModel system)
 		{
@@ -442,6 +425,45 @@ namespace LunraGames.SubLight.Presenters
 				propellant,
 				0f,
 				propellantMaximum,
+				DeveloperStrings.RatioThemes.ProgressBar,
+				new DeveloperStrings.RatioColor(Color.red, Color.green)
+			);
+
+			return result;
+		}
+
+		string AppendMetallics(
+			string result,
+			Dictionary<string, Action> target,
+			KeyValueListModel gameSource
+		)
+		{
+			result += "\n";
+
+			var metallicsTotal = gameSource.Get(KeyDefines.Game.Metallics.Amount);
+			var metallicsMaximum = gameSource.Get(KeyDefines.Game.Metallics.Maximum);
+
+			result += DeveloperStrings.GetBold("Metallics: ") + metallicsTotal.ToString("N0");
+
+			var currentMetallics = Model.KeyValues.Get(KeyDefines.Game.Metallics.Amount);
+			if (1f < Mathf.Abs(metallicsTotal - currentMetallics))
+			{
+				var metallicsDelta = metallicsTotal - currentMetallics;
+				if (metallicsMaximum < metallicsTotal) metallicsDelta = (metallicsDelta + currentMetallics) - metallicsMaximum;
+
+				result += DeveloperStrings.GetColor(
+					DeveloperStrings.GetSize(
+						(metallicsDelta < 0f ? " " : " +") + metallicsDelta.ToString("N0"),
+						0.4f
+					),
+					(metallicsDelta < 0f ? Color.red : Color.green).NewS(0.65f)
+				);
+			}
+
+			result += "\n\t" + DeveloperStrings.GetRatio(
+				metallicsTotal,
+				0f,
+				metallicsMaximum,
 				DeveloperStrings.RatioThemes.ProgressBar,
 				new DeveloperStrings.RatioColor(Color.red, Color.green)
 			);

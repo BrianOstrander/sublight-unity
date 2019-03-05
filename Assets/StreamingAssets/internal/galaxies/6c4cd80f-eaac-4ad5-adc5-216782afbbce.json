@@ -443,7 +443,8 @@
           "keyValues": {
             "booleans": {
               "discovered_rations": true,
-              "discovered_propellant": true
+              "discovered_propellant": true,
+              "discovered_metallics": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -457,7 +458,9 @@
               "gather_multiplier_rations": 0.0,
               "gather_amount_rations": 0.0,
               "gather_multiplier_propellant": 0.0,
-              "gather_amount_propellant": 0.0
+              "gather_amount_propellant": 0.0,
+              "gather_multiplier_metallics": 0.0,
+              "gather_amount_metallics": 0.0
             }
           }
         },
@@ -487,7 +490,8 @@
           "keyValues": {
             "booleans": {
               "discovered_rations": false,
-              "discovered_propellant": false
+              "discovered_propellant": false,
+              "discovered_metallics": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -501,7 +505,9 @@
               "gather_multiplier_rations": 0.25,
               "gather_amount_rations": 0.0,
               "gather_multiplier_propellant": 0.1,
-              "gather_amount_propellant": 0.0
+              "gather_amount_propellant": 0.0,
+              "gather_multiplier_metallics": 0.1,
+              "gather_amount_metallics": 0.0
             }
           }
         },
@@ -533,7 +539,8 @@
           "keyValues": {
             "booleans": {
               "discovered_rations": true,
-              "discovered_propellant": true
+              "discovered_propellant": true,
+              "discovered_metallics": true
             },
             "integers": {
               "generated_propellant": 0,
@@ -547,7 +554,9 @@
               "gather_multiplier_rations": 0.0,
               "gather_amount_rations": 0.0,
               "gather_multiplier_propellant": 0.0,
-              "gather_amount_propellant": 0.0
+              "gather_amount_propellant": 0.0,
+              "gather_multiplier_metallics": 0.0,
+              "gather_amount_metallics": 0.0
             }
           }
         },
@@ -578,7 +587,8 @@
           "keyValues": {
             "booleans": {
               "discovered_rations": false,
-              "discovered_propellant": false
+              "discovered_propellant": false,
+              "discovered_metallics": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -592,7 +602,9 @@
               "gather_multiplier_rations": 0.5,
               "gather_amount_rations": 0.0,
               "gather_multiplier_propellant": 0.5,
-              "gather_amount_propellant": 0.0
+              "gather_amount_propellant": 0.0,
+              "gather_multiplier_metallics": 0.5,
+              "gather_amount_metallics": 0.0
             }
           }
         },
@@ -622,7 +634,8 @@
           "keyValues": {
             "booleans": {
               "discovered_rations": false,
-              "discovered_propellant": false
+              "discovered_propellant": false,
+              "discovered_metallics": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -636,7 +649,9 @@
               "gather_multiplier_rations": 0.3,
               "gather_amount_rations": 0.0,
               "gather_multiplier_propellant": 0.75,
-              "gather_amount_propellant": 0.0
+              "gather_amount_propellant": 0.0,
+              "gather_multiplier_metallics": 0.5,
+              "gather_amount_metallics": 0.0
             }
           }
         }
@@ -677,7 +692,8 @@
           "keyValues": {
             "booleans": {
               "discovered_rations": false,
-              "discovered_propellant": false
+              "discovered_propellant": false,
+              "discovered_metallics": false
             },
             "integers": {},
             "strings": {},
@@ -686,7 +702,9 @@
               "gather_multiplier_rations": 0.0,
               "gather_amount_rations": 0.0,
               "gather_multiplier_propellant": 0.0,
-              "gather_amount_propellant": 0.0
+              "gather_amount_propellant": 0.0,
+              "gather_multiplier_metallics": 0.0,
+              "gather_amount_metallics": 0.0
             }
           }
         }
