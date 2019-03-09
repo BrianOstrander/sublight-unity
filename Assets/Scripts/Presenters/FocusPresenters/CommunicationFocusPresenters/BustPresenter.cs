@@ -220,6 +220,7 @@ namespace LunraGames.SubLight.Presenters
 		BustBlock OnInitializeInfoToBlockStaticAvatar(BustBlock block, BustEntryModel.InitializeBlock info)
 		{
 			block.AvatarStaticIndex = info.AvatarStaticIndex;
+			block.AvatarStaticTerminalTextVisible = info.AvatarStaticTerminalTextVisible;
 			return block;
 		}
  

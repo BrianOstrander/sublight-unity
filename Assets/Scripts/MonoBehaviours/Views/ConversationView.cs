@@ -72,6 +72,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		InterfaceScaleBlock fontScales = InterfaceScaleBlock.Default;
 		[SerializeField]
+		InterfaceScaleBlock sizeCuttoffScales = InterfaceScaleBlock.Default;
+		[SerializeField]
 		GameObject conversationArea;
 		[SerializeField]
 		GameObject conversationAnchor;
@@ -233,7 +235,7 @@ namespace LunraGames.SubLight.Views
 			{
 				OnInitializeEntry(entry, instance);
 
-				var isSmall = instance.MessageLabel.textInfo.lineCount < 4;
+				var isSmall = instance.MessageLabel.textInfo.lineCount < sizeCuttoffScales.GetScale(App.V.InterfaceScale);
 
 				instance.BackgroundSmall.SetActive(isSmall);
 				instance.BackgroundLarge.SetActive(!isSmall);

@@ -1715,6 +1715,12 @@ MonoBehaviour:
       Scale: 48
     - Index: 1
       Scale: 60
+  sizeCuttoffScales:
+    Entries:
+    - Index: 0
+      Scale: 4
+    - Index: 1
+      Scale: 3
   conversationArea: {fileID: 5620756991963589188}
   conversationAnchor: {fileID: 1523010748602606712}
   incomingAnchor: {fileID: 1847949350994127619}

@@ -23,5 +23,7 @@ namespace LunraGames.SubLight.Views
 
 		public Transform AvatarAnchor;
 		public Transform AvatarDepthAnchor;
+
+		public ParticleSystem TerminalTextParticles;
 	}
 }
