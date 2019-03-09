@@ -263,7 +263,6 @@ namespace LunraGames.SubLight.Views
 
 			instance.TerminalTextParticles.gameObject.SetActive(block.AvatarStaticTerminalTextVisible);
 
-			Debug.Log(block.TransmitionStrengthIndex);
 			for (var i = 0; i < instance.TransmissionStrengths.Length; i++) instance.TransmissionStrengths[i].SetActive(i == block.TransmitionStrengthIndex);
 		}
 

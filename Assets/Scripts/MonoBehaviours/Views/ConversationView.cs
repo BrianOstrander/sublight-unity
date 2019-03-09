@@ -87,6 +87,8 @@ namespace LunraGames.SubLight.Views
 		float verticalSpacing;
 		[SerializeField]
 		float verticalScrollDuration;
+		[SerializeField]
+		float delayAfterAddition;
 
 		[SerializeField]
 		MessageConversationLeaf messageIncomingPrefab;
@@ -158,6 +160,8 @@ namespace LunraGames.SubLight.Views
 		float? verticalScrollTarget;
 		bool waitingForInstantScroll;
 		float verticalScrollRemaining;
+
+		float? delayAfterAdditionRemaining;
 
 		Action addDone;
 
@@ -312,6 +316,8 @@ namespace LunraGames.SubLight.Views
 			waitingForInstantScroll = false;
 			verticalScrollRemaining = 0f;
 
+			delayAfterAdditionRemaining = null;
+
 			addDone = null;
 
 			conversationArea.transform.ClearChildren();
@@ -360,6 +366,20 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnIdle(delta);
 
+			if (delayAfterAdditionRemaining.HasValue)
+			{
+				delayAfterAdditionRemaining = Mathf.Max(0f, delayAfterAdditionRemaining.Value - delta);
+
+				if (Mathf.Approximately(0f, delayAfterAdditionRemaining.Value))
+				{
+					delayAfterAdditionRemaining = null;
+					var oldAddDone = addDone;
+					addDone = null;
+					oldAddDone();
+				}
+				return;
+			}
+
 			if (!verticalScrollTarget.HasValue) return;
 
 			if (waitingForInstantScroll)
@@ -384,9 +404,7 @@ namespace LunraGames.SubLight.Views
 
 			if (!verticalScrollTarget.HasValue && addDone != null)
 			{
-				var oldAddDone = addDone;
-				addDone = null;
-				oldAddDone();
+				delayAfterAdditionRemaining = delayAfterAddition;
 			}
 		}
 

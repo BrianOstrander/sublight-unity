@@ -1727,7 +1727,8 @@ MonoBehaviour:
   outgoingAnchor: {fileID: 1152226604047862770}
   lookOffset: {x: -0.124, y: 0, z: -0.992}
   verticalSpacing: 0.12
-  verticalScrollDuration: 1
+  verticalScrollDuration: 0.8
+  delayAfterAddition: 0.2
   messageIncomingPrefab: {fileID: 7626323115396521109}
   messageOutgoingPrefab: {fileID: 5868936660454624424}
   attachmentIncomingPrefab: {fileID: 0}
@@ -1744,8 +1745,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.69785357
-      value: 1.0613393
+      time: 0.69869393
+      value: 1.0347553
       inSlope: 0.08673529
       outSlope: 0.08673529
       tangentMode: 0
