@@ -223,7 +223,14 @@ namespace LunraGames.SubLight.Views
 
 			instance.TitleGroup.alpha = currLabelsOpacity;
 			instance.PlacardGroup.alpha = currLabelsOpacity;
-			instance.AvatarGroup.alpha = avatarOpacity.Evaluate(scalar);
+
+			var currentAvatarOpacity = avatarOpacity.Evaluate(scalar);
+			instance.AvatarGroup.alpha = currentAvatarOpacity;
+
+			if (bust.Instance.TerminalTextParticles.gameObject.activeSelf)
+			{
+				instance.TerminalTextParticlesRenderer.material.SetFloat(ShaderConstants.HoloVerticalMaskAdditive.Alpha, currentAvatarOpacity);
+			}
 
 			instance.AvatarAnchor.localPosition = instance.AvatarDepthAnchor.localPosition * avatarDepth.Evaluate(scalar);
 
@@ -261,7 +268,14 @@ namespace LunraGames.SubLight.Views
 				);
 			}
 
+			if (block.AvatarStaticTerminalTextVisible)
+			{
+				instance.TerminalTextParticlesRenderer.material = new Material(instance.TerminalTextParticlesRenderer.material);
+				instance.TerminalTextParticlesRenderer.material.SetFloat(ShaderConstants.HoloVerticalMaskAdditive.Alpha, 0f);
+			}
+
 			instance.TerminalTextParticles.gameObject.SetActive(block.AvatarStaticTerminalTextVisible);
+
 
 			for (var i = 0; i < instance.TransmissionStrengths.Length; i++) instance.TransmissionStrengths[i].SetActive(i == block.TransmitionStrengthIndex);
 		}

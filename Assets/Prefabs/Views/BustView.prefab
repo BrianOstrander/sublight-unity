@@ -99,8 +99,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 936006103303903734}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 20}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 20.000011}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4065047088244136186}
@@ -119,7 +119,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 936006103303903734}
   serializedVersion: 6
-  lengthInSec: 10
+  lengthInSec: 15
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -11538,3 +11538,4 @@ MonoBehaviour:
   AvatarAnchor: {fileID: 7312078035036008391}
   AvatarDepthAnchor: {fileID: 7302195163226128940}
   TerminalTextParticles: {fileID: 8803593253596961457}
+  TerminalTextParticlesRenderer: {fileID: 435676803139506486}

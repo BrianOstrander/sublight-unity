@@ -612,6 +612,7 @@ namespace LunraGames.SubLight
 			/// The opacity
 			/// </summary>
 			public const string WorldOriginHeight = "_WorldOriginHeight";
+			public const string Alpha = "_Alpha";
 		}
 
 		#region NonSubLight Shaders
