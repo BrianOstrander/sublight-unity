@@ -1310,7 +1310,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Good to see your ego and self-awareness routines are operational. However, this is arithmetic diagnostic, and refusing to answer is a failure.",
+              "message": "Good to see your ego and self-awareness routines are operational. However, this is an arithmetic diagnostic, and refusing to answer is a failure.",
               "entryId": "03efe4c4-ca93-4203-a253-2dba3c880e38"
             },
             "index": 1
