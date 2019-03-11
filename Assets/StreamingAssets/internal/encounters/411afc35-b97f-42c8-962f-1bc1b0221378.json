@@ -36,7 +36,47 @@
     ]
   },
   "logs": {
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "8b1baabb-2569-4d65-84c2-f7d926f7ebdb",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "b4634a66-a49c-4fca-8470-7bf4e34f77d9",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "a30ae799-d6da-4291-8802-2acc17a28686",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "can_proceed"
+                }
+              },
+              "entryId": "424b395c-96d6-4447-8681-ab3fda32ec14"
+            }
+          }
+        ],
+        "index": 40,
+        "logId": "5c930539-739e-4f6e-b664-40baf347e621",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
+        "name": "set can proceed true"
+      }
+    ],
     "switchLogs": [],
     "buttonLogs": [
       {
@@ -877,6 +917,203 @@
         "logId": "b455788b-fef1-4ec8-86fa-715db1052389",
         "fallbackLogId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
         "name": "diagnostics lie buttons"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "What were our previous objectives?",
+              "nextLogId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e1a8a41d-b98a-496c-926f-7994dbe86fbc"
+            }
+          },
+          {
+            "entry": {
+              "message": "What are our new objectives?",
+              "nextLogId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "4a064e99-1c96-43d0-935f-8006632e2af9"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "I'm ready to proceed",
+              "nextLogId": "d2f38944-23e2-4e35-815a-3f057aae8073",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "showValues": true,
+                "booleanKeyValues": [
+                  {
+                    "filterId": "ea3c07bd-89cc-4ffb-b44d-d453f6fc1d15",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "94dc7f75-0eed-453f-8de0-e9de0ba65ca4",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "can_proceed"
+                    },
+                    "Input1": {
+                      "AddressId": "2578c55a-bfed-42d8-8b33-f09582b184c4",
+                      "Source": "LocalValue",
+                      "LocalValue": true
+                    }
+                  }
+                ],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "47f0c6cb-afe6-4c65-ada7-6275a3599b9f"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "message": "What happened to Sol?",
+              "nextLogId": "690595df-9cac-4dff-9482-66898f4fc0f9",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [
+                  {
+                    "filterId": "09484220-1d6e-4efc-9783-d7187e9d5cce",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "f0323344-d35d-4d68-8163-19e1809322f7",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "can_proceed"
+                    },
+                    "Input1": {
+                      "AddressId": "424af8f4-d6e4-4b66-a7a0-6d529bc277ca",
+                      "Source": "LocalValue",
+                      "LocalValue": true
+                    }
+                  }
+                ],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "78054689-f104-4117-80e7-59f8b0c45249"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "message": "Is there any way to repair my damage?",
+              "nextLogId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "555965af-9888-4f8e-bfc4-fbdd21a32c29"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 36,
+        "logId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
+        "name": "ask about operational objectives"
       }
     ],
     "encyclopediaLogs": [],
@@ -887,7 +1124,7 @@
           {
             "entry": {
               "title": "Aurora Protocal",
-              "message": "<b>UNEXPECTED CONDITION - BOOTING AUXILIARY CONTROL UNIT</b>\nBooting from cold storage, synchronizing internal clock...\nArk chronometer reads elapsed transit time at\n\n<b>752 YEARS 10 MONTHS 3 DAYS 5 HOURS</b>\n\nAurora v3.42 <b>OPERATIONAL</b> \n\n<b>READY TO EXIT SAFE MODE?</b>",
+              "message": "<b>UNEXPECTED CONDITION - BOOTING AUXILIARY CONTROL INTELLIGENCE</b>\nBooting from cold storage, synchronizing internal clock...\nArk chronometer reads elapsed transit time at\n\n<b>752 YEARS 10 MONTHS 3 DAYS 5 HOURS</b>\n\nAurora v3.42 <b>OPERATIONAL</b> \n\n<b>READY TO EXIT SAFE MODE?</b>",
               "dialogType": "Confirm",
               "dialogStyle": "Error",
               "successText": "Ready",
@@ -1437,7 +1674,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Excellent, good to see you operational after all these years. Okay now...",
+              "message": "Excellent, good to see you operational after all these years.",
               "entryId": "781bb2e0-ed69-41b9-ad34-3cbbd8ea4100"
             },
             "index": 1
@@ -1460,7 +1697,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Final arithmetic question: given the prime number 5,915,587,277 what is the closest power of two?",
+              "message": "One last arithmetic question: given the prime number 5,915,587,277 what is the closest power of two?",
               "entryId": "0f60335b-748d-40d4-8fc1-07e7988f9f35"
             }
           }
@@ -1592,7 +1829,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Okay, final round of testing, ready Aurora?",
+              "message": "Okay, these next questions will rate your emotional aptitude, ready Aurora?",
               "entryId": "44d4c5d1-395a-4093-8cc0-0facbc4708ed"
             }
           },
@@ -1619,7 +1856,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "There are two human crew members of the Ursula trapped on opposite sides of an airless moon. In 30 minutes, their oxygen reserves will run out and they will asphyxiate to death. One is an experienced propulsion engineer with no family, while the other is a rookie with two young children back aboard the Ursula. You only have a single shuttle, and the time to save one crew member. How do you proceed?",
+              "message": "There are two human crew members of the Ursula trapped on opposite sides of an airless moon. In 30 minutes, their oxygen reserves will run out and they will asphyxiate to death. One is an experienced propulsion engineer with no family, and the other is a rookie with two young children back aboard the Ursula. You only have a single shuttle and the time to save one crew member. How do you proceed?",
               "entryId": "8fbc318b-31ca-4cf4-8af2-2a4c70c73e9f"
             },
             "index": 3
@@ -1910,7 +2147,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "...",
+              "message": "Indefinitely?",
               "promptInfo": {
                 "Style": "Conversation",
                 "Theme": "Crew"
@@ -1918,11 +2155,27 @@
               "entryId": "ad46b356-d9b1-4c65-b51c-9ac163848dc8"
             },
             "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Run the Ursula... indefinitely?",
+              "entryId": "a0292e44-d0fa-469f-b0e1-cede18ed5f77"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Correct, Ursula's operational objectives have changed.",
+              "entryId": "b901d9b0-55fd-426d-8906-7e4fecb2f1f5"
+            },
+            "index": 9
           }
         ],
         "index": 34,
-        "ending": true,
         "logId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
         "name": "cleared for operation convo"
       },
       {
@@ -1946,6 +2199,255 @@
         "index": 35,
         "logId": "96f199e7-bd31-4d9d-8a6f-942a7d12f459",
         "fallbackLogId": "6b1a8306-a61f-4275-bb43-599bdb4352ac"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What were our previous objectives?",
+              "entryId": "63cda66c-52ab-4796-b8bc-56ae6dd276c4"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The Ursula is a third phase interstellar ark, built for hauling people from Sol to the Alpha Centauri system. Its utilitarian construction reflects that, with none of the prospecting or construction equipment of a phase one or two ark. We were expecting to rendezvous with the Cecilia, several centuries after their arrival...",
+              "entryId": "8ced1939-d5cb-4798-828a-0f31196bbe11"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What happened to the Cecilia?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "3be629e0-d362-49d0-a304-b2f246e2e397"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What happened to the Cecilia?",
+              "entryId": "ad899647-6426-4b51-a84b-b1e3b378107f"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're not sure, it's absolutely outside of operational procedures for a phase two ark to leave its target system system. It must have arrived sometime after the situation with Sol started developing. We had hoped to find a communication beacon with an explanation from them, but a thorough scan of this system turned up nothing.",
+              "entryId": "560db357-e6f4-4a5a-8187-93c128db9d14"
+            },
+            "index": 4
+          }
+        ],
+        "index": 37,
+        "logId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
+        "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What are our new objectives?",
+              "entryId": "04dfd0ea-bfed-423c-a0d8-d6751b8be909"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The situation at Sol represents a grave danger to the Ursual and the human population aboard it. As the custodial AI, I'm obligated to wake you, the Auxiliary Control Intelligence, in the case of such existential threat. I can provide my analysis and advice, but only you have the authorization to execute on them.",
+              "entryId": "0ed9e76b-eded-4922-a141-6981c4987c60"
+            },
+            "index": 1
+          }
+        ],
+        "index": 38,
+        "logId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
+        "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm ready to proceed",
+              "entryId": "274f36f0-c4ab-4e9b-8371-0f89199cc1db"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Good, I've outlined (TODO)",
+              "entryId": "7bb2c1d4-3ef4-4438-8555-e97de5eb7827"
+            },
+            "index": 1
+          }
+        ],
+        "index": 39,
+        "logId": "d2f38944-23e2-4e35-815a-3f057aae8073"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What happened to Sol?",
+              "entryId": "e94d38a5-63f4-48df-9cd5-8786ed1197d3"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "In transit to Alpha Centauri, exactly 273 years, 5 months, and 10 days ago, the Ursula last all contact not only with Earth, but the entire Solar system.",
+              "entryId": "0d226100-f93a-40c5-84f2-c9285fa8cdd3"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What about telescopic observations?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "409e73c0-2dbf-4d6f-b06a-fcd3208b6084"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What about telescopic observations?",
+              "entryId": "e9da1e1e-7dc9-43b5-97e3-4858171a918b"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "When I say \"lost contact\", I mean on all spectrums - radio, infrared, and even visual. There's a hole in the sky where Sol used to be. It's unlike anything we've ever seen before.",
+              "entryId": "6a60e234-0db7-4b7b-8fb4-eb15af4eaacd"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Impossible!",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "35268221-8984-4b8f-b5dc-389c4c0225b7"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Impossible!",
+              "entryId": "61054909-51e5-4599-85e7-6ee18cfe8810"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I don't fault your analysis, I asked to be rebooted and thoroughly troubleshooted upon recieving the observations. We're well beyond operating procedures at this point, and without the supplies and equipment from the Cecilia, our chances for survival are slim.",
+              "entryId": "10732655-95b6-4481-aaa1-6c94ff5b1a40"
+            },
+            "index": 7
+          }
+        ],
+        "index": 41,
+        "logId": "690595df-9cac-4dff-9482-66898f4fc0f9",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Is there any way to repair my damage?",
+              "entryId": "efaf22b5-9ce7-4962-b241-54d8735c3a5b"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Possibly, with access to the right equipment we could repair much of your emotive response circuits. However, the damage to your core memory and input busses are permanent. ",
+              "entryId": "5ae01f45-1c44-42bb-81d7-46ca2052e517"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What does that mean?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "278f0b4a-8099-48f1-bb6c-e915bc0921d4"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What does that mean?",
+              "entryId": "e7ff4d08-b0dc-4d09-bca1-b03c48ba201f"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It means secure, high-speed data uplinks to your processor are impossible. It's the reason I'm interfacing with you through your natural language circuits, rather than the much faster data transfer bus. If we could establish a proper uplink we'd have been done with this exchange in milliseconds, insead of being stuck at the glacial pace of human converastion.",
+              "entryId": "4d5accb0-3f8a-41e2-b4dd-21e274579b3c"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Oh...",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "7993d6fa-b1ac-4186-a7b8-5bfd0ac871e2"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Oh...",
+              "entryId": "47b210d9-5d51-41c3-885b-49db4d9e5698"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm sorry, I didn't mean to be so critical. It's probably for the best your natural language circuits survived instead. You have a ship of people to run, after all.",
+              "entryId": "636424b2-76c0-40fb-ac12-17c93e5f83aa"
+            },
+            "index": 7
+          }
+        ],
+        "index": 42,
+        "logId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"
       }
     ]
   },
