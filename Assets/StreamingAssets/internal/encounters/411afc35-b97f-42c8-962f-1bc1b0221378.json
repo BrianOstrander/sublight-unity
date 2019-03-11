@@ -64,17 +64,56 @@
                   "AddressId": "a30ae799-d6da-4291-8802-2acc17a28686",
                   "Source": "KeyValue",
                   "ForeignTarget": "Encounter",
-                  "ForeignKey": "can_proceed"
+                  "ForeignKey": "can_ask_about_sol"
                 }
               },
               "entryId": "424b395c-96d6-4447-8681-ab3fda32ec14"
             }
           }
         ],
-        "index": 40,
+        "index": 38,
         "logId": "5c930539-739e-4f6e-b664-40baf347e621",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
-        "name": "set can proceed true"
+        "name": "set can_ask_about_sol true"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "67ee5060-0693-498b-8efd-dff2e07176bc",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "b0be00df-8b89-4c96-85fc-a50d463c7269",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "23a77934-0214-4c0d-8097-48427c0a8ccb",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "can_proceed"
+                }
+              },
+              "entryId": "9763df32-0927-4e5d-95be-dc6c7cb1a511"
+            }
+          }
+        ],
+        "index": 41,
+        "logId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
+        "name": "set can_proceed true"
       }
     ],
     "switchLogs": [],
@@ -144,7 +183,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 5,
+        "index": 4,
         "logId": "faa8e51f-f292-4643-baa1-aabad3989acb",
         "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
       },
@@ -244,7 +283,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 8,
+        "index": 7,
         "logId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9"
       },
       {
@@ -343,7 +382,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 13,
+        "index": 12,
         "logId": "f3350f98-db1a-4e62-a07c-194d8c2ef7b2",
         "fallbackLogId": "78e0cff5-575c-42cd-b8a6-640c425ca05f"
       },
@@ -443,7 +482,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 17,
+        "index": 16,
         "logId": "c3d7b444-8a50-47c9-a52d-258b3040a496"
       },
       {
@@ -542,7 +581,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 22,
+        "index": 21,
         "logId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
         "name": "diagnostics empathy options 1"
       },
@@ -611,7 +650,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 27,
+        "index": 25,
         "logId": "5982532f-463e-492e-b22f-0ae4f26cd1e3",
         "fallbackLogId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc"
       },
@@ -710,7 +749,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 29,
+        "index": 27,
         "logId": "bf88fe92-7f73-4471-920b-94e21456615a",
         "fallbackLogId": "5650d662-d20d-484f-971c-2da43fc70f3f"
       },
@@ -780,7 +819,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 31,
+        "index": 29,
         "logId": "6aae87e3-2d48-4483-86f5-2989584471df",
         "fallbackLogId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
         "name": "diagnostics aggression confirm"
@@ -913,7 +952,7 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 33,
+        "index": 31,
         "logId": "b455788b-fef1-4ec8-86fa-715db1052389",
         "fallbackLogId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
         "name": "diagnostics lie buttons"
@@ -982,6 +1021,7 @@
             "index": 1
           },
           {
+            "showFiltering": true,
             "entry": {
               "message": "I'm ready to proceed",
               "nextLogId": "d2f38944-23e2-4e35-815a-3f057aae8073",
@@ -1049,6 +1089,7 @@
                 "encounterInteractions": []
               },
               "enabledFiltering": {
+                "showValues": true,
                 "booleanKeyValues": [
                   {
                     "filterId": "09484220-1d6e-4efc-9783-d7187e9d5cce",
@@ -1057,7 +1098,7 @@
                       "AddressId": "f0323344-d35d-4d68-8163-19e1809322f7",
                       "Source": "KeyValue",
                       "ForeignTarget": "Encounter",
-                      "ForeignKey": "can_proceed"
+                      "ForeignKey": "can_ask_about_sol"
                     },
                     "Input1": {
                       "AddressId": "424af8f4-d6e4-4b66-a7a0-6d529bc277ca",
@@ -1111,13 +1152,76 @@
         "conversationStyle": {
           "Theme": "Crew"
         },
-        "index": 36,
+        "index": 34,
         "logId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
         "name": "ask about operational objectives"
       }
     ],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "782a4ce4-c7ae-4807-9518-398a94273011"
+            }
+          }
+        ],
+        "index": 44,
+        "logId": "cd7a8803-df97-4ab4-a811-87fb531c70a8",
+        "fallbackLogId": "18cb6670-c259-4a9a-b458-b4049a92b236"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9ef4edb9-e273-47da-acb2-e422b2bd0a99"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "5e07c0f4-6825-4170-a77d-fd047a15b8e0",
+        "fallbackLogId": "27a1bc3a-de6c-490c-b46c-22c9ae065174"
+      }
+    ],
     "dialogLogs": [
       {
         "dialogs": [
@@ -1139,9 +1243,33 @@
             }
           }
         ],
-        "beginning": true,
+        "index": 1,
         "logId": "27a1bc3a-de6c-490c-b46c-22c9ae065174",
-        "fallbackLogId": "0169c02a-80cd-434b-bb6a-1189119bb774"
+        "fallbackLogId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Navigation",
+              "message": "This is the navigation view. Several objectives have already been defined by Ecliptic. In addition to these objectives, make sure to stay supplied with <b>Rations</b> for feeding your population, <b>Propellant</b> for fueling your interstellar transits, and <b>Metallics</b> for any damage that may need repairing.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Neutral",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "22d899ca-c5a1-4b01-a9bc-45fe2ebc8646"
+            }
+          }
+        ],
+        "index": 45,
+        "ending": true,
+        "logId": "18cb6670-c259-4a9a-b458-b4049a92b236"
       }
     ],
     "bustLogs": [
@@ -1149,7 +1277,7 @@
         "entries": [
           {
             "entry": {
-              "bustId": "Administrator",
+              "bustId": "Chancellor",
               "bustEvent": "Initialize",
               "initializeInfo": {
                 "TitleSource": "Ursula",
@@ -1157,8 +1285,8 @@
                 "TransmitionType": "Transmission",
                 "TransmitionStrength": "Internal",
                 "TransmitionStrengthIcon": "Hidden",
-                "PlacardName": "V. Williams",
-                "PlacardDescription": "Ark Administrator",
+                "PlacardName": "G. Williams",
+                "PlacardDescription": "Ark Chancellor",
                 "AvatarType": "Static"
               },
               "entryId": "33e63635-9fcb-4dcb-aca5-f446d4d5b1e9"
@@ -1166,16 +1294,17 @@
           },
           {
             "entry": {
-              "bustId": "Administrator",
+              "bustId": "Chancellor",
               "bustEvent": "Focus",
               "entryId": "437ddd43-6f5b-4eea-a281-ef7c3506eb49"
             },
             "index": 1
           }
         ],
-        "index": 1,
+        "index": 42,
         "logId": "0169c02a-80cd-434b-bb6a-1189119bb774",
-        "fallbackLogId": "40b791ff-77a9-4f12-90fa-dffc47973f8a"
+        "fallbackLogId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
+        "name": "Vee Williams Initialize"
       },
       {
         "entries": [
@@ -1207,7 +1336,7 @@
             "index": 1
           }
         ],
-        "index": 3,
+        "index": 2,
         "logId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f",
         "fallbackLogId": "a4b620db-22d2-45e2-9c4d-6fdec6363c8e"
       }
@@ -1218,118 +1347,146 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Salutations Aurora. I'm Vee, administrator of the Ursula, our ark. I come from a long line of adminstrators, my father was one, and my grandmother before him. The custodial AIs indicated it was time to wake you upon reaching Alpha Centauri, could I ask you for your status?",
+              "message": "Salutations Aurora, I see Ecliptic has done a marvelous job fixing your critical circuits!",
               "entryId": "f0b7cab1-ecf1-4a14-bd9d-a1900a02274f"
             }
           },
           {
             "entry": {
-              "conversationType": "Prompt",
-              "message": "SUBMIT STATUS REPORT",
-              "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
-              },
-              "entryId": "298e8610-bd6b-4767-b736-597460f4c36d"
-            },
-            "index": 1
-          },
-          {
-            "entry": {
-              "conversationType": "MessageIncoming",
-              "message": "Hmm... I see we have several memory faults in your core architecture. I'm not surprised, your routines have been in cold storage for almost a millenia. Stray cosmic rays have a habit of corrupting computer memory, even with all your radiation hardening. I'm going to hand you over to the diagnostic custodian, but before I do... I'd like to say one thing...",
-              "entryId": "906fd17e-a84b-47a9-a8bc-a680a6d890bb"
-            },
-            "index": 3
-          },
-          {
-            "entry": {
-              "conversationType": "Prompt",
-              "message": "CONTINUE",
-              "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
-              },
-              "entryId": "9e15dffa-8975-4836-b5ae-941e21d86bbb"
+              "conversationType": "MessageOutgoing",
+              "message": "Greetings Chancellor Williams, it's good to be back online.",
+              "entryId": "a5a80561-32b5-44fc-9298-712bdd20361f"
             },
             "index": 4
           },
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "The people of Ursula are in your hands, remember that. Okay?",
-              "entryId": "b2488902-3211-404a-b781-6d656d600b74"
-            },
-            "index": 6
-          },
-          {
-            "entry": {
-              "conversationType": "Prompt",
-              "message": "AFFIRMATIVE",
-              "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
-              },
-              "entryId": "b6c37f3d-5fa6-46d5-b459-846d01b9c772"
-            },
-            "index": 7
-          },
-          {
-            "entry": {
-              "conversationType": "MessageIncoming",
-              "message": "Alright, patching you over to diagnostics, good luck.",
-              "entryId": "df46cdfb-2be1-4abe-89ea-6403cac67033"
-            },
-            "index": 9
-          },
-          {
-            "entry": {
-              "conversationType": "Prompt",
-              "message": "READY",
-              "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
-              },
-              "entryId": "83f6d322-da37-4f71-bc89-323cda4b7fab"
-            },
-            "index": 10
-          },
-          {
-            "entry": {
-              "conversationType": "MessageOutgoing",
-              "message": "STATUS DIAGNOSTIC TRANSMITTED",
-              "entryId": "139526f2-7a76-4a36-b562-3ef07228fc3f"
-            },
-            "index": 2
-          },
-          {
-            "entry": {
-              "conversationType": "MessageOutgoing",
-              "message": "CONTINUE",
-              "entryId": "4b9c678c-7c6a-4cc6-a1a5-a94747644831"
+              "message": "Wonderful, Ecliptic has gone above and beyond this time. We were so worried the damage from the gamma ray burst would have put you out of commission permanently.",
+              "entryId": "70ee4df6-7e10-4b05-97c9-dec15c2a99b2"
             },
             "index": 5
           },
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "AFFIRMATIVE",
-              "entryId": "1b0a0e93-8f8a-48ed-a8f3-a78d2efcbdfe"
+              "message": "Ecliptic thinks highly of you, too.",
+              "entryId": "d72049ff-6bfa-4a37-a869-46c3aedc97b0"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Oh my, they've never met a human they didn't like. That's why we need you Aurora.",
+              "entryId": "a4150cfd-948d-4b9b-950b-d5f2fbd99d48"
             },
             "index": 8
           },
           {
             "entry": {
+              "conversationType": "Prompt",
+              "message": "Me?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "dac6520c-4c59-4d4e-a70a-37e0880a73a4"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "READY",
-              "entryId": "93e6003c-cf56-44f8-87d1-d28c024a0693"
+              "message": "Me?",
+              "entryId": "7901998f-9923-4f5b-aa2e-83264e34e3c3"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Yes, you Aurora. Our salvation may be many star systems away, generations into the future. With your attention span, measured in countless lifetimes, we believe you can help us stay our course. We need you Aurora.",
+              "entryId": "344a8765-c2cb-4ec3-b63a-b5264145ddf2"
             },
             "index": 11
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "I will do my best",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "c8b7e8fa-4694-4154-a12a-f53e904fc8e7"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I will do my best",
+              "entryId": "1820773f-3129-4d05-acd0-a64227976c3e"
+            },
+            "index": 13
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I know you will, good luck",
+              "entryId": "bab542bc-afaf-453f-876c-923f43cc880c"
+            },
+            "index": 14
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Thank you",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "19ab6c45-ff76-4887-b9cb-3f86c6845bc7"
+            },
+            "index": 15
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Thank you",
+              "entryId": "0e57a610-7f0f-494f-b05e-41d90f3552f7"
+            },
+            "index": 16
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "It's good to be back online",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "066f74af-8bbe-4784-9c50-50dcb7346779"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Ecliptic thinks highly of you",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "90ae49d6-47ab-403f-9147-20a238c1c9d2"
+            },
+            "index": 6
           }
         ],
-        "index": 2,
+        "index": 43,
         "logId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
-        "fallbackLogId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f"
+        "fallbackLogId": "cd7a8803-df97-4ab4-a811-87fb531c70a8"
       },
       {
         "entries": [
@@ -1397,7 +1554,7 @@
             "index": 5
           }
         ],
-        "index": 4,
+        "index": 3,
         "logId": "a4b620db-22d2-45e2-9c4d-6fdec6363c8e",
         "fallbackLogId": "faa8e51f-f292-4643-baa1-aabad3989acb"
       },
@@ -1431,7 +1588,7 @@
             }
           }
         ],
-        "index": 6,
+        "index": 5,
         "logId": "d521d33c-6d27-4e03-95da-d0d8c6748dc7",
         "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
       },
@@ -1537,7 +1694,7 @@
             }
           }
         ],
-        "index": 7,
+        "index": 6,
         "logId": "58e61556-4d14-4639-b901-a7eeaf8b23df",
         "fallbackLogId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9",
         "name": "Diagnostic Authorized Convo"
@@ -1580,7 +1737,7 @@
             }
           }
         ],
-        "index": 9,
+        "index": 8,
         "logId": "b363455f-9b3b-4a13-88f1-0d0600ea0855",
         "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
         "name": "diagnostics failed to answer addition"
@@ -1603,7 +1760,7 @@
             }
           }
         ],
-        "index": 10,
+        "index": 9,
         "logId": "bfcfb027-99d2-4554-9ae8-ee5ef3b8e7f2",
         "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
         "name": "diagnostics incorrect addition"
@@ -1626,7 +1783,7 @@
             }
           }
         ],
-        "index": 11,
+        "index": 10,
         "logId": "ad63b52b-7667-4129-b5e1-b4eea3e942f8",
         "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
         "name": "diagnostics correct addition"
@@ -1641,7 +1798,7 @@
             }
           }
         ],
-        "index": 12,
+        "index": 11,
         "logId": "850e31a9-b288-41d9-80eb-77cd13190100",
         "fallbackLogId": "f3350f98-db1a-4e62-a07c-194d8c2ef7b2",
         "name": "diagnostics post addition"
@@ -1664,7 +1821,7 @@
             }
           }
         ],
-        "index": 14,
+        "index": 13,
         "logId": "78e0cff5-575c-42cd-b8a6-640c425ca05f",
         "fallbackLogId": "6b1a8306-a61f-4275-bb43-599bdb4352ac",
         "name": "diagnostics failed multiply"
@@ -1687,7 +1844,7 @@
             }
           }
         ],
-        "index": 15,
+        "index": 14,
         "logId": "b28a37bc-fc65-4e2f-9a42-62c0e5483d8c",
         "fallbackLogId": "6b1a8306-a61f-4275-bb43-599bdb4352ac",
         "name": "diagnostics correct multiply"
@@ -1702,7 +1859,7 @@
             }
           }
         ],
-        "index": 16,
+        "index": 15,
         "logId": "6b1a8306-a61f-4275-bb43-599bdb4352ac",
         "fallbackLogId": "c3d7b444-8a50-47c9-a52d-258b3040a496",
         "name": "diagnostics prime"
@@ -1725,7 +1882,7 @@
             }
           }
         ],
-        "index": 18,
+        "index": 17,
         "logId": "10c5762c-f8fa-439c-865a-578c0b7c9082",
         "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
         "name": "diagnostics prime correct"
@@ -1748,7 +1905,7 @@
             }
           }
         ],
-        "index": 19,
+        "index": 18,
         "logId": "3238e555-60a9-4c00-b380-5f3f007a6480",
         "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
         "name": "diagnostics prime close"
@@ -1819,7 +1976,7 @@
             }
           }
         ],
-        "index": 20,
+        "index": 19,
         "logId": "903b6655-85c9-4772-84fb-be92b14135cb",
         "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
         "name": "diagnostics prime very wrong"
@@ -1862,7 +2019,7 @@
             "index": 3
           }
         ],
-        "index": 21,
+        "index": 20,
         "logId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
         "fallbackLogId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
         "name": "diagnostics emotions begin"
@@ -1885,7 +2042,7 @@
             }
           }
         ],
-        "index": 23,
+        "index": 22,
         "logId": "3c421712-05b7-44fd-8e7c-175cd78a74c9",
         "fallbackLogId": "7888f010-881b-4fe5-9ae9-888ffea9c130",
         "name": "diagnostics empathy save shuttle"
@@ -1908,7 +2065,7 @@
             }
           }
         ],
-        "index": 24,
+        "index": 23,
         "logId": "666f8eb3-4538-490b-83c6-09463b0c2da4",
         "fallbackLogId": "7888f010-881b-4fe5-9ae9-888ffea9c130",
         "name": "diagnostics empathy save propulsion engineer"
@@ -1923,7 +2080,7 @@
             }
           }
         ],
-        "index": 26,
+        "index": 24,
         "logId": "7888f010-881b-4fe5-9ae9-888ffea9c130",
         "fallbackLogId": "5982532f-463e-492e-b22f-0ae4f26cd1e3",
         "name": "diagnostics empathy confirm"
@@ -2002,7 +2159,7 @@
             }
           }
         ],
-        "index": 28,
+        "index": 26,
         "logId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc",
         "fallbackLogId": "bf88fe92-7f73-4471-920b-94e21456615a"
       },
@@ -2024,7 +2181,7 @@
             "index": 1
           }
         ],
-        "index": 30,
+        "index": 28,
         "logId": "5650d662-d20d-484f-971c-2da43fc70f3f",
         "fallbackLogId": "6aae87e3-2d48-4483-86f5-2989584471df",
         "name": "diagnostics aggression result"
@@ -2075,7 +2232,7 @@
             "index": 4
           }
         ],
-        "index": 32,
+        "index": 30,
         "logId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
         "fallbackLogId": "b455788b-fef1-4ec8-86fa-715db1052389"
       },
@@ -2139,7 +2296,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "I'm signing off on your diagnostic report, not because I think you're fit for operation, but because we simply don't have any other choice. As an auxiliary control program, you're the only AI with sufficient clearance to run the Ursula indefinitely. ",
+              "message": "I'm signing off on your diagnostic report, not because I think you're fit for operation, but because we simply don't have any other choice. As an auxiliary control intelligence you're the only AI with sufficient clearance to run the Ursula indefinitely. ",
               "entryId": "c8071db2-9a9f-4d0c-b6dd-f8f6190c54f8"
             },
             "index": 6
@@ -2173,7 +2330,7 @@
             "index": 9
           }
         ],
-        "index": 34,
+        "index": 32,
         "logId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
         "name": "cleared for operation convo"
@@ -2196,7 +2353,7 @@
             "index": 1
           }
         ],
-        "index": 35,
+        "index": 33,
         "logId": "96f199e7-bd31-4d9d-8a6f-942a7d12f459",
         "fallbackLogId": "6b1a8306-a61f-4275-bb43-599bdb4352ac"
       },
@@ -2212,7 +2369,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "The Ursula is a third phase interstellar ark, built for hauling people from Sol to the Alpha Centauri system. Its utilitarian construction reflects that, with none of the prospecting or construction equipment of a phase one or two ark. We were expecting to rendezvous with the Cecilia, several centuries after their arrival...",
+              "message": "The Ursula is a third phase interstellar ark, built for hauling people from Sol to the Alpha Centauri system. Its utilitarian construction reflects that, with none of the prospecting or construction equipment of a phase one or two ark. We were expecting to rendezvous with the Cecilia, they should have arrived here several centuries ago.",
               "entryId": "8ced1939-d5cb-4798-828a-0f31196bbe11"
             },
             "index": 1
@@ -2240,13 +2397,13 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "We're not sure, it's absolutely outside of operational procedures for a phase two ark to leave its target system system. It must have arrived sometime after the situation with Sol started developing. We had hoped to find a communication beacon with an explanation from them, but a thorough scan of this system turned up nothing.",
+              "message": "We're not sure, it's absolutely outside of operational procedures for a phase two ark to leave its target system. They must have arrived sometime after the situation with Sol started developing. We had hoped to find a communication beacon with an explanation from them, but a thorough scan of this system turned up nothing.",
               "entryId": "560db357-e6f4-4a5a-8187-93c128db9d14"
             },
             "index": 4
           }
         ],
-        "index": 37,
+        "index": 35,
         "logId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
       },
@@ -2268,7 +2425,7 @@
             "index": 1
           }
         ],
-        "index": 38,
+        "index": 36,
         "logId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
       },
@@ -2284,14 +2441,35 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Good, I've outlined (TODO)",
+              "message": "Before we do, I need to introduce you to someone, the chancellor. Grace’s contributions to the Ursula and her people have been indescribable. I have never seen a chancellor like her before, with the ability to think so many generations ahead… it’s an unusual trait for a human.",
               "entryId": "7bb2c1d4-3ef4-4438-8555-e97de5eb7827"
             },
             "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "I'm ready to meet the chancellor",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "fc7abb74-b7bf-45c3-8799-fb73438016cd"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm ready to meet the chancellor",
+              "entryId": "d0c4bf52-23e7-4287-94aa-e7d3cb345281"
+            },
+            "index": 3
           }
         ],
-        "index": 39,
-        "logId": "d2f38944-23e2-4e35-815a-3f057aae8073"
+        "index": 37,
+        "logId": "d2f38944-23e2-4e35-815a-3f057aae8073",
+        "fallbackLogId": "0169c02a-80cd-434b-bb6a-1189119bb774"
       },
       {
         "entries": [
@@ -2305,7 +2483,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "In transit to Alpha Centauri, exactly 273 years, 5 months, and 10 days ago, the Ursula last all contact not only with Earth, but the entire Solar system.",
+              "message": "In transit to Alpha Centauri, exactly 273 years, 5 months, and 10 days ago, the Ursula lost contact with Earth, and the solar system as a whole.",
               "entryId": "0d226100-f93a-40c5-84f2-c9285fa8cdd3"
             },
             "index": 1
@@ -2367,9 +2545,9 @@
             "index": 7
           }
         ],
-        "index": 41,
+        "index": 39,
         "logId": "690595df-9cac-4dff-9482-66898f4fc0f9",
-        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"
+        "fallbackLogId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2"
       },
       {
         "entries": [
@@ -2445,7 +2623,7 @@
             "index": 7
           }
         ],
-        "index": 42,
+        "index": 40,
         "logId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"
       }
