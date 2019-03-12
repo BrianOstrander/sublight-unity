@@ -20,52 +20,38 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonProperty] bool isPlayable;
+		[JsonIgnore] public readonly ListenerProperty<bool> IsPlayable;
+
 		[JsonProperty] string galaxyId;
+		[JsonIgnore] public readonly ListenerProperty<string> GalaxyId;
+
 		[JsonProperty] string name;
+		[JsonIgnore] public readonly ListenerProperty<string> Name;
+
 		[JsonProperty] string description;
+		[JsonIgnore] public readonly ListenerProperty<string> Description;
 
 		[JsonProperty] Vector3 universeNormal;
-		[JsonProperty] float alertHeightMultiplier;
+		[JsonIgnore] public readonly ListenerProperty<Vector3> UniverseNormal;
 
-		[JsonProperty] UniversePosition clusterOrigin;
-		[JsonProperty] UniversePosition galaxyOrigin;
+		[JsonProperty] float alertHeightMultiplier;
+		[JsonIgnore] public readonly ListenerProperty<float> AlertHeightMultiplier;
 
 		[JsonProperty] int minimumSectorSystemCount;
+		[JsonIgnore] public readonly ListenerProperty<int> MinimumSectorSystemCount;
 		[JsonProperty] int maximumSectorSystemCount;
+		[JsonIgnore] public readonly ListenerProperty<int> MaximumSectorSystemCount;
+
 		[JsonProperty] AnimationCurve sectorSystemChance = AnimationCurveExtensions.Constant(1f);
+		[JsonIgnore] public readonly ListenerProperty<AnimationCurve> SectorSystemChance;
 
 		[JsonProperty] string encyclopediaEntryId;
+		[JsonIgnore] public readonly ListenerProperty<string> EncyclopediaEntryId;
 
 		[JsonProperty] GalaxyLabelModel[] labels = new GalaxyLabelModel[0];
 		[JsonProperty] SectorModel[] specifiedSectors = new SectorModel[0];
 
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> IsPlayable;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> GalaxyId;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> Name;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> Description;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<Vector3> UniverseNormal;
-		[JsonIgnore]
-		public readonly ListenerProperty<float> AlertHeightMultiplier;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<int> MinimumSectorSystemCount;
-		[JsonIgnore]
-		public readonly ListenerProperty<int> MaximumSectorSystemCount;
-		[JsonIgnore]
-		public readonly ListenerProperty<AnimationCurve> SectorSystemChance;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<string> EncyclopediaEntryId;
-
 		[JsonProperty] int galaxyRadius;
-		[JsonProperty] UniversePosition galaxySize;
-
 		/// <summary>
 		/// Gets or sets the galaxy radius in sectors.
 		/// </summary>
@@ -82,6 +68,7 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
+		[JsonProperty] UniversePosition galaxySize;
 		/// <summary>
 		/// Gets the size of the galaxy in sectors.
 		/// </summary>
@@ -90,45 +77,45 @@ namespace LunraGames.SubLight.Models
 		public UniversePosition GalaxySize { get { return galaxySize; } }
 
 		[JsonIgnore]
-		public Vector3 ClusterOriginNormal
-		{
-			get { return UniversePosition.NormalizedSector(clusterOrigin, galaxySize); }
-			set { clusterOrigin = UniversePositionFromNormal(value); }
-		}
-
-		[JsonIgnore]
-		public Vector3 GalaxyOriginNormal
-		{
-			get { return UniversePosition.NormalizedSector(galaxyOrigin, galaxySize); }
-			set { galaxyOrigin = UniversePositionFromNormal(value); }
-		}
-
-		[JsonIgnore]
 		public Vector3 PlayerBeginNormal
 		{
-			get { return UniversePosition.NormalizedSector(GetPlayerBegin(), galaxySize); }
+			get { return UniversePosition.NormalizedSector(GetPlayerBegin(), GalaxySize); }
 			set { SetPlayerBegin(UniversePositionFromNormal(value)); }
 		}
 
 		[JsonIgnore]
 		public Vector3 PlayerEndNormal
 		{
-			get { return UniversePosition.NormalizedSector(GetPlayerEnd(), galaxySize); }
+			get { return UniversePosition.NormalizedSector(GetPlayerEnd(), GalaxySize); }
 			set { SetPlayerEnd(UniversePositionFromNormal(value)); }
 		}
 
+		[JsonProperty] UniversePosition clusterOrigin;
 		[JsonIgnore]
 		public UniversePosition ClusterOrigin
 		{
 			get { return clusterOrigin; }
 			set { clusterOrigin = value; }
 		}
+		[JsonIgnore]
+		public Vector3 ClusterOriginNormal
+		{
+			get { return UniversePosition.NormalizedSector(ClusterOrigin, GalaxySize); }
+			set { clusterOrigin = UniversePositionFromNormal(value); }
+		}
 
+		[JsonProperty] UniversePosition galaxyOrigin;
 		[JsonIgnore]
 		public UniversePosition GalaxyOrigin
 		{
 			get { return galaxyOrigin; }
 			set { galaxyOrigin = value; }
+		}
+		[JsonIgnore]
+		public Vector3 GalaxyOriginNormal
+		{
+			get { return UniversePosition.NormalizedSector(GalaxyOrigin, GalaxySize); }
+			set { GalaxyOrigin = UniversePositionFromNormal(value); }
 		}
 
 		public GalaxyBaseModel()
