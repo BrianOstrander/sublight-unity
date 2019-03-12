@@ -1,8 +1,5 @@
-﻿using System.IO;
-
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 using LunraGamesEditor;
 
@@ -14,8 +11,6 @@ namespace LunraGames.SubLight
 	{
 		void GeneralConstruct()
 		{
-			//var currPrefix = KeyPrefix + "General";
-
 			RegisterToolbar("General", GeneralToolbar);
 		}
 

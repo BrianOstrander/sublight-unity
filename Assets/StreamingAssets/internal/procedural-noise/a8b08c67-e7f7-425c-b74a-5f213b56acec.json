@@ -1,0 +1,13 @@
+{
+  "proceduralNoiseId": "6701d03a-94a6-46fd-a460-f73e7144e476",
+  "name": "Basic Galaxy",
+  "version": 8,
+  "meta": "Basic Galaxy",
+  "metaKeyValues": {
+    "ProceduralNoiseId": "6701d03a-94a6-46fd-a460-f73e7144e476"
+  },
+  "created": "2019-03-12T12:46:15.973086-07:00",
+  "modified": "2019-03-12T12:46:15.973086-07:00",
+  "SaveType": "ProceduralNoise",
+  "SiblingBehaviour": "None"
+}
