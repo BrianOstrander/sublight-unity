@@ -7,6 +7,7 @@ namespace LunraGames.SubLight
 		#region Booleans
 		public readonly Boolean IgnoreTutorial;
 		public readonly Boolean InterfaceLarge;
+		public readonly Boolean IsDemoMode;
 		#endregion
 
 		#region Integers
@@ -41,6 +42,11 @@ namespace LunraGames.SubLight
 					"interface_large",
 					"True if the interface should be large. This is temporary until proper integer based scaling is added.",
 					created: AppendReloadHomeRequired
+				),
+				Create(
+					ref IsDemoMode,
+					"is_demo_mode",
+					"True if the game is in demo mode. This causes certain values to be changed upon entering a game, while other functions are ignored."
 				)
 			};
 

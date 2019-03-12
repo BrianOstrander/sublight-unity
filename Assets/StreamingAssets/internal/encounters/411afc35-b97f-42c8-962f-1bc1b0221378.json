@@ -114,6 +114,44 @@
         "logId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
         "name": "set can_proceed true"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "9ccb431c-af37-4d04-b541-b7ca9ca42718",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "2303897a-a88f-43f1-b429-528235e4fb46",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "b5faa652-0d45-4772-8d72-4bd94d5c1026",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Preferences",
+                  "ForeignKey": "ignore_tutorial"
+                }
+              },
+              "entryId": "c68154bf-62c6-410c-8b37-caaebdb703dd"
+            }
+          }
+        ],
+        "index": 46,
+        "logId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef",
+        "fallbackLogId": "4f3d2d30-ab88-4617-a16c-399e1e41b31b"
       }
     ],
     "switchLogs": [],
@@ -1220,6 +1258,37 @@
         "beginning": true,
         "logId": "5e07c0f4-6825-4170-a77d-fd047a15b8e0",
         "fallbackLogId": "27a1bc3a-de6c-490c-b46c-22c9ae065174"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0c4f0012-a697-4305-96cd-fdf4535ed424"
+            }
+          }
+        ],
+        "index": 47,
+        "ending": true,
+        "logId": "4f3d2d30-ab88-4617-a16c-399e1e41b31b"
       }
     ],
     "dialogLogs": [
@@ -1229,9 +1298,11 @@
             "entry": {
               "title": "Aurora Protocal",
               "message": "<b>UNEXPECTED CONDITION - BOOTING AUXILIARY CONTROL INTELLIGENCE</b>\nBooting from cold storage, synchronizing internal clock...\nArk chronometer reads elapsed transit time at\n\n<b>752 YEARS 10 MONTHS 3 DAYS 5 HOURS</b>\n\nAurora v3.42 <b>OPERATIONAL</b> \n\n<b>READY TO EXIT SAFE MODE?</b>",
-              "dialogType": "Confirm",
+              "dialogType": "ConfirmDeny",
               "dialogStyle": "Error",
+              "failureLogId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef",
               "successText": "Ready",
+              "failureText": "Skip",
               "filtering": {
                 "booleanKeyValues": [],
                 "integerKeyValues": [],

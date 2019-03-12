@@ -10,6 +10,7 @@ namespace LunraGames.SubLight
 		public ToggleOptionLanguageBlock Analytics;
 		public ToggleOptionLanguageBlock Tutorial;
 		public ToggleOptionLanguageBlock InterfaceLarge;
+		public ToggleOptionLanguageBlock DemoMode;
 
 		public LanguageStringModel VersionPrefix;
 		public LanguageStringModel Gameplay;

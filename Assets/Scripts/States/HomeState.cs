@@ -477,6 +477,12 @@ namespace LunraGames.SubLight
 			bool isContinue
 		)
 		{
+			if (App.MetaKeyValues.Get(KeyDefines.Preferences.IsDemoMode))
+			{
+				Debug.LogWarning("Starting or continuing game in Demo Mode.");
+				App.MetaKeyValues.Set(KeyDefines.Preferences.IgnoreTutorial, false);
+			}
+
 			Payload.IgnoreMaskOnEnd = instant;
 
 			if (isContinue) App.Analytics.GameContinue(model);

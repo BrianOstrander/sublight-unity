@@ -93,7 +93,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnNewGameClick()
 		{
-			if (payload.CanContinueSave)
+			if (!App.MetaKeyValues.Get(KeyDefines.Preferences.IsDemoMode) && payload.CanContinueSave)
 			{
 				App.Callbacks.DialogRequest(
 					DialogRequest.ConfirmDeny(
