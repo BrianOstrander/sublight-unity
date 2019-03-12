@@ -602,6 +602,19 @@ namespace LunraGames.SubLight
 			public const string WorldRadius = "_WorldRadius";
 		}
 
+		public static class HoloVerticalMaskAdditive
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/VerticalMaskAdditive";
+			/// <summary>
+			/// The opacity
+			/// </summary>
+			public const string WorldOriginHeight = "_WorldOriginHeight";
+			public const string Alpha = "_Alpha";
+		}
+
 		#region NonSubLight Shaders
 		public static class SkyboxPanoramic
 		{

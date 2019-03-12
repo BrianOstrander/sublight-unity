@@ -36,6 +36,7 @@ namespace LunraGames.SubLight.Presenters
 						MessageEnabled = LanguageStringModel.Override("LARGE"),
 						MessageDisabled = LanguageStringModel.Override("NORMAL")
 					},
+					DemoMode = defaultToggle.Duplicate(LanguageStringModel.Override("Demo Mode")),
 
 					VersionPrefix = LanguageStringModel.Override("SubLight Version "),
 					Gameplay = LanguageStringModel.Override("Gameplay"),
@@ -110,6 +111,10 @@ namespace LunraGames.SubLight.Presenters
 				GetToggle(
 					language.InterfaceLarge,
 					KeyDefines.Preferences.InterfaceLarge
+				),
+				GetToggle(
+					language.DemoMode,
+					KeyDefines.Preferences.IsDemoMode
 				),
 				ButtonVerticalOptionsEntry.CreateButton(language.Back.Value, OnClickBack)
 			);

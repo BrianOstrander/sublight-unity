@@ -162,7 +162,7 @@ namespace LunraGames.SubLight
 
 							if (logIsFocused != GUILayout.Toggle(logIsFocused, new GUIContent(logName, logIsFocused ? "Log is currently focused." : "Jump to this log."), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)) && !logIsFocused)
 							{
-								logsFocusedLogIdsIndex.Value = currLogIdIndex;
+								LogsSetFocusedLogIdsIndex(currLogIdIndex);
 							}
 
 							currLogIdIndex++;
@@ -1944,6 +1944,7 @@ namespace LunraGames.SubLight
 		BustEntryModel.InitializeBlock OnBustLogEdgeInitializeAvatarStatic(BustEntryModel.InitializeBlock block)
 		{
 			block.AvatarStaticIndex = Mathf.Max(0, EditorGUILayout.IntField("Index", block.AvatarStaticIndex));
+			block.AvatarStaticTerminalTextVisible = EditorGUILayout.Toggle("Terminal Text Visible", block.AvatarStaticTerminalTextVisible);
 			return block;
 		}
 
@@ -2304,6 +2305,13 @@ namespace LunraGames.SubLight
 		/// <param name="indexOffset">Index offset.</param>
 		string LogsFocusedLogIdsPeekRelative(int indexOffset) { return LogsFocusedLogIdsStack.ElementAtOrDefault(logsFocusedLogIdsIndex.Value + indexOffset); }
 
+		int LogsSetFocusedLogIdsIndex(int index)
+		{
+			logsFocusedLogIdsIndex.Value = index;
+			GUIUtility.keyboardControl = 0;
+			return index;
+		}
+
 		void LogsFocusedLogIdsPush(string logId)
 		{
 			logsStackScroll.Value = float.MaxValue;
@@ -2315,7 +2323,7 @@ namespace LunraGames.SubLight
 			if (string.IsNullOrEmpty(logId)) throw new ArgumentException("logId cannot be null or empty");
 			LogsFocusedLogIdsPop(Mathf.Clamp(index, -1, LogsFocusedLogIdsStack.Count() - 1));
 			LogsFocusedLogIdsStack = LogsFocusedLogIdsStack.Append(logId);
-			logsFocusedLogIdsIndex.Value = LogsFocusedLogIdsStack.Count() - 1;
+			LogsSetFocusedLogIdsIndex(LogsFocusedLogIdsStack.Count() - 1);
 		}
 
 		void LogsFocusedLogIdsPop(int index = -1)
@@ -2323,12 +2331,12 @@ namespace LunraGames.SubLight
 			var newStack = new List<string>();
 			for (var i = 0; i <= index; i++) newStack.Add(LogsFocusedLogIdsStack.ElementAt(i));
 			LogsFocusedLogIdsStack = newStack;
-			logsFocusedLogIdsIndex.Value = index;
+			LogsSetFocusedLogIdsIndex(index);
 		}
 
 		void LogsFocusedLogIdsOffsetIndex(int delta)
 		{
-			logsFocusedLogIdsIndex.Value = Mathf.Clamp(logsFocusedLogIdsIndex.Value + delta, 0, LogsFocusedLogIdsStack.Count() - 1);
+			LogsSetFocusedLogIdsIndex(Mathf.Clamp(logsFocusedLogIdsIndex.Value + delta, 0, LogsFocusedLogIdsStack.Count() - 1));
 		}
 		#endregion
 
