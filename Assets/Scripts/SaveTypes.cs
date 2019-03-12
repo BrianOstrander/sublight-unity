@@ -19,5 +19,7 @@
 		GalaxyPreview = 60,
 		GalaxyDistant = 62,
 		GalaxyInfo = 64,
+
+		ProceduralNoise = 70
 	}
 }

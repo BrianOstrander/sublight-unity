@@ -22,5 +22,10 @@
 		{
 			public const string IsCompleted = "IsCompleted";
 		}
+
+		public static class ProceduralNoise
+		{
+			public const string ProceduralNoiseId = "ProceduralNoiseId";
+		}
 	}
 }
