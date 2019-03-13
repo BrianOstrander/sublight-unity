@@ -8,11 +8,11 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class FudgedUniverseService : UniverseService
+	public class DefaultUniverseService : UniverseService
 	{
 		protected override UniversePosition GetPositionInSector(UniversePosition sectorPosition, int seed, int index, int systemCount)
 		{
-			switch(index)
+			switch (index)
 			{
 				case 0: return sectorPosition.NewLocal(new Vector3(0.1f, 0.05f, 0.0f));
 				case 1: return sectorPosition.NewLocal(new Vector3(0.1f, 0.1f, 0.9f));
@@ -28,7 +28,7 @@ namespace LunraGames.SubLight
 		protected override SystemModel OnCreateSystem(SystemModel systemModel)
 		{
 			//systemModel.Name.Value = "Sys " + systemModel.Index.Value + " - [ " + systemModel.Position.Value.SectorInteger.x + " , " + systemModel.Position.Value.SectorInteger.z + " ]";
-			systemModel.Name.Value = "Unnamed - fudge";
+			systemModel.Name.Value = "Unnamed";
 			systemModel.PrimaryClassification.Value = SystemClassifications.Stellar;
 			systemModel.SecondaryClassification.Value = "Red Dwarf";
 			systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.53f, 1f);

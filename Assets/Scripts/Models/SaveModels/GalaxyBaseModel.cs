@@ -129,6 +129,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] TextureDataModel[] textureData = new TextureDataModel[0];
 		[JsonIgnore] public readonly ListenerProperty<TextureDataModel[]> TextureData;
 
+		[JsonProperty] ProceduralNoiseDataModel[] noiseData = new ProceduralNoiseDataModel[0];
+		[JsonIgnore] public readonly ListenerProperty<ProceduralNoiseDataModel[]> NoiseData;
+
 		public GalaxyBaseModel()
 		{
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
@@ -146,6 +149,7 @@ namespace LunraGames.SubLight.Models
 			EncyclopediaEntryId = new ListenerProperty<string>(value => encyclopediaEntryId = value, () => encyclopediaEntryId);
 
 			TextureData = new ListenerProperty<TextureDataModel[]>(value => textureData = value, () => textureData);
+			NoiseData = new ListenerProperty<ProceduralNoiseDataModel[]>(value => noiseData = value, () => noiseData);
 		}
 
 		protected override void OnPrepareTexture(string name, Texture2D texture)

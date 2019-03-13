@@ -74,14 +74,6 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
-		/// <summary>
-		/// Keys are not case sensitive, so we normalize them here, along with
-		/// any other operations.
-		/// </summary>
-		/// <returns>The key.</returns>
-		/// <param name="key">Key.</param>
-		public static string NormalizeKey(string key) { return string.IsNullOrEmpty(key) ? key : key.ToLower(); }
-
 		[JsonProperty] string textureDataId;
 		[JsonIgnore] public readonly ListenerProperty<string> TextureDataId;
 

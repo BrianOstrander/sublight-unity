@@ -1,0 +1,13 @@
+{
+  "proceduralNoiseId": "3fe52be0-ee5a-4f2a-a552-06cd4e7e48db",
+  "name": "Basic Galaxy Age Addition",
+  "version": 8,
+  "meta": "Basic Galaxy Age Addition",
+  "metaKeyValues": {
+    "ProceduralNoiseId": "3fe52be0-ee5a-4f2a-a552-06cd4e7e48db"
+  },
+  "created": "2019-03-12T18:44:17.424327-07:00",
+  "modified": "2019-03-12T18:44:17.424327-07:00",
+  "SaveType": "ProceduralNoise",
+  "SiblingBehaviour": "None"
+}

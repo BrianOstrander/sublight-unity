@@ -724,6 +724,13 @@
       "wrapping": "Clamped"
     }
   ],
+  "noiseData": [
+    {
+      "noiseDataId": "874dcb94-e432-4dae-b8bf-0b73e14e153e",
+      "noiseAssetId": "3fe52be0-ee5a-4f2a-a552-06cd4e7e48db",
+      "key": "celestial_system_age_addition"
+    }
+  ],
   "version": 8,
   "meta": "Milky Way",
   "metaKeyValues": {
