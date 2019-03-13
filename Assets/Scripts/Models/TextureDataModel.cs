@@ -21,26 +21,17 @@ namespace LunraGames.SubLight.Models
 			Value = 70
 		}
 
-		public enum Wrapping
+		public enum WrappingTypes
 		{
 			Unknown = 0,
 			Clamped = 10,
 			Repeat = 20
 		}
 
-		[Serializable]
-		public class Definition
-		{
-			public string DefinitionId;
-			public string Key;
-			public Channels Channel;
-			public Wrapping Wrapping;
-		}
-
 		public class DefinitionInstance
 		{
 			public Texture2D Texture;
-			public Definition DefinitionEntry;
+			public TextureDataModel Model;
 
 			public float GetValue(
 				Vector2 normalPosition,
@@ -50,24 +41,24 @@ namespace LunraGames.SubLight.Models
 				var x = Mathf.FloorToInt(Texture.width * normalPosition.x);
 				var y = Mathf.FloorToInt(Texture.height * normalPosition.y);
 
-				switch (DefinitionEntry.Wrapping)
+				switch (Model.Wrapping.Value)
 				{
-					case Wrapping.Clamped:
+					case WrappingTypes.Clamped:
 						x = Mathf.Clamp(x, 0, Texture.width);
 						y = Mathf.Clamp(y, 0, Texture.height);
 						break;
-					case Wrapping.Repeat:
+					case WrappingTypes.Repeat:
 						x = x % Texture.width;
 						y = y % Texture.height;
 						break;
 					default:
-						Debug.LogError("Unrecognized wrapping mode");
+						Debug.LogError("Unrecognized Wrapping Type: "+Model.Wrapping.Value);
 						break;
 				}
 
 				var color = Texture.GetPixel(x, y);
 
-				switch (DefinitionEntry.Channel)
+				switch (Model.Channel.Value)
 				{
 					case Channels.Red: return color.r;
 					case Channels.Green: return color.g;
@@ -77,7 +68,7 @@ namespace LunraGames.SubLight.Models
 					case Channels.Saturation: return color.GetS();
 					case Channels.Value: return color.GetV();
 					default:
-						Debug.LogError("Unrecognized channel: " + DefinitionEntry.Channel);
+						Debug.LogError("Unrecognized Channel: " + Model.Channel.Value);
 						return fallback;
 				}
 			}
@@ -89,37 +80,42 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		/// <returns>The key.</returns>
 		/// <param name="key">Key.</param>
-		string NormalizeKey(string key) { return string.IsNullOrEmpty(key) ? key : key.ToLower(); }
+		public static string NormalizeKey(string key) { return string.IsNullOrEmpty(key) ? key : key.ToLower(); }
+
+		[JsonProperty] string textureDataId;
+		[JsonIgnore] public readonly ListenerProperty<string> TextureDataId;
 
 		[JsonProperty] string texturePath;
 		[JsonIgnore] public readonly ListenerProperty<string> TexturePath;
 
-		[JsonProperty] Definition[] definitions = new Definition[0];
-		[JsonIgnore] public readonly ListenerProperty<Definition[]> Definitions;
+		[JsonProperty] string key;
+		[JsonIgnore] public readonly ListenerProperty<string> Key;
+
+		[JsonProperty] Channels channel;
+		[JsonIgnore] public readonly ListenerProperty<Channels> Channel;
+
+		[JsonProperty] WrappingTypes wrapping;
+		[JsonIgnore] public readonly ListenerProperty<WrappingTypes> Wrapping;
 
 		public TextureDataModel()
 		{
+			TextureDataId = new ListenerProperty<string>(value => textureDataId = value, () => textureDataId);
 			TexturePath = new ListenerProperty<string>(value => texturePath = value, () => texturePath);
-			Definitions = new ListenerProperty<Definition[]>(value => definitions = value, () => definitions);
+			Key = new ListenerProperty<string>(value => key = value, () => key);
+			Channel = new ListenerProperty<Channels>(value => channel = value, () => channel);
+			Wrapping = new ListenerProperty<WrappingTypes>(value => wrapping = value, () => wrapping);
 		}
 
 		public DefinitionInstance CreateInstance(
-			string key,
 			Texture2D texture
 		)
 		{
-			if (string.IsNullOrEmpty(key) || texture == null) return null;
-
-			key = NormalizeKey(key);
-
-			var definition = definitions.FirstOrDefault(d => d.Key == key);
-
-			if (definition == null) return null;
+			if (texture == null) throw new ArgumentNullException("texture");
 
 			return new DefinitionInstance
 			{
 				Texture = texture,
-				DefinitionEntry = definition
+				Model = this
 			};
 		}
 	}

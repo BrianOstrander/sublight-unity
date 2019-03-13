@@ -2,12 +2,6 @@
   "isPlayable": true,
   "galaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089",
   "name": "Milky Way",
-  "clusterOrigin": {
-    "Sector": {"z":170.0}
-  },
-  "galaxyOrigin": {
-    "Sector": {"x":100.0,"z":100.0}
-  },
   "maximumSectorSystemCount": 5,
   "sectorSystemChance": {
     "keys": [
@@ -715,6 +709,21 @@
   "galaxySize": {
     "Sector": {"x":200.0,"y":200.0,"z":200.0}
   },
+  "clusterOrigin": {
+    "Sector": {"z":170.0}
+  },
+  "galaxyOrigin": {
+    "Sector": {"x":100.0,"z":100.0}
+  },
+  "textureData": [
+    {
+      "textureDataId": "9f7daf24-667d-47d4-9871-f9ebb1906975",
+      "texturePath": "biases0",
+      "key": "celestial_system_age",
+      "channel": "Red",
+      "wrapping": "Clamped"
+    }
+  ],
   "version": 8,
   "meta": "Milky Way",
   "metaKeyValues": {

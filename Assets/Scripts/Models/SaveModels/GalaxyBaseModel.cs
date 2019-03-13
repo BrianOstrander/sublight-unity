@@ -19,6 +19,14 @@ namespace LunraGames.SubLight.Models
 			public const string Details = "details";
 		}
 
+		public static readonly string[] TextureNamesAll = 
+		{
+			TextureNames.BodyMap,
+			TextureNames.Preview,
+			TextureNames.FullPreview,
+			TextureNames.Details
+		};
+
 		[JsonProperty] bool isPlayable;
 		[JsonIgnore] public readonly ListenerProperty<bool> IsPlayable;
 
@@ -118,6 +126,9 @@ namespace LunraGames.SubLight.Models
 			set { GalaxyOrigin = UniversePositionFromNormal(value); }
 		}
 
+		[JsonProperty] TextureDataModel[] textureData = new TextureDataModel[0];
+		[JsonIgnore] public readonly ListenerProperty<TextureDataModel[]> TextureData;
+
 		public GalaxyBaseModel()
 		{
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
@@ -133,6 +144,8 @@ namespace LunraGames.SubLight.Models
 			SectorSystemChance = new ListenerProperty<AnimationCurve>(value => sectorSystemChance = value, () => sectorSystemChance);
 
 			EncyclopediaEntryId = new ListenerProperty<string>(value => encyclopediaEntryId = value, () => encyclopediaEntryId);
+
+			TextureData = new ListenerProperty<TextureDataModel[]>(value => textureData = value, () => textureData);
 		}
 
 		protected override void OnPrepareTexture(string name, Texture2D texture)
