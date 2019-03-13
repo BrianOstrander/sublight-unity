@@ -728,7 +728,14 @@
     {
       "noiseDataId": "874dcb94-e432-4dae-b8bf-0b73e14e153e",
       "noiseAssetId": "3fe52be0-ee5a-4f2a-a552-06cd4e7e48db",
-      "key": "celestial_system_age_addition"
+      "key": "celestial_system_age_addition",
+      "seedOffset": 1337
+    },
+    {
+      "noiseDataId": "e8844bf4-8c76-441e-a883-d62591693956",
+      "noiseAssetId": "6701d03a-94a6-46fd-a460-f73e7144e476",
+      "key": "celestial_system_sector_distribution",
+      "seedOffset": 7331
     }
   ],
   "version": 8,

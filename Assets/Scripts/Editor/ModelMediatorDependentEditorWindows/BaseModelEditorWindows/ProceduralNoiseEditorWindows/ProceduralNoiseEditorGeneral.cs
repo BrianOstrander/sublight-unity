@@ -155,7 +155,7 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 
 				GUILayout.Label("Range: " + generalPreview.MinimumValue.ToString("N2")+" , "+generalPreview.MaximumValue.ToString("N2"));
-
+				GUILayout.Label("Value at 0, 0, 0: " + generalPreview.Root.GetValue(0.1f, 0.1f, 0f).ToString("N6"));
 			}
 			EditorGUIExtensions.EndChangeCheck(ref previewModified);
 
@@ -251,7 +251,6 @@ namespace LunraGames.SubLight
 							else color = new Color(value, value, value);
 							break;
 					}
-
 					generalPreview.PreviewTexture.SetPixel(x, y, color);
 				}
 			}

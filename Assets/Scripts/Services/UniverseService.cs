@@ -230,7 +230,12 @@ namespace LunraGames.SubLight
 			system.Index.Value = index;
 			system.Seed.Value = DemonUtility.CantorPairs(index, sector.Seed);
 			system.Visited.Value = false;
-			system.Position.Value = GetPositionInSector(sector.Position.Value, SystemModel.Seeds.Position(system.Seed.Value), index, sector.SystemCount.Value);
+			system.Position.Value = GetPositionInSector(
+				sector.Position.Value,
+				SystemModel.Seeds.Position(system.Seed.Value),
+				index,
+				sector.SystemCount.Value
+			);
 
 			var seedString = system.Seed.Value.ToString();
 			if (4 < seedString.Length) seedString = seedString.Substring(0, 4);
@@ -239,7 +244,12 @@ namespace LunraGames.SubLight
 			return system;
 		}
 
-		protected abstract UniversePosition GetPositionInSector(UniversePosition sectorPosition, int seed, int index, int systemCount);
+		protected abstract UniversePosition GetPositionInSector(
+			UniversePosition sectorPosition,
+			int seed,
+			int index,
+			int systemCount
+		);
 
 		protected virtual SectorModel OnCreateSector(SectorModel sector) { return sector; }
 		protected virtual SystemModel OnCreateSystem(SystemModel systemModel) { return systemModel; }

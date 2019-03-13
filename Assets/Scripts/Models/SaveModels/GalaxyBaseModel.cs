@@ -132,6 +132,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ProceduralNoiseDataModel[] noiseData = new ProceduralNoiseDataModel[0];
 		[JsonIgnore] public readonly ListenerProperty<ProceduralNoiseDataModel[]> NoiseData;
 
+		// TODO: This feels really weird here...
+		[JsonIgnore] public ProceduralNoiseDataModel.DefinitionInstance[] NoiseDataInstances = new ProceduralNoiseDataModel.DefinitionInstance[0];
+
 		public GalaxyBaseModel()
 		{
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);

@@ -33,11 +33,15 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string key;
 		[JsonIgnore] public readonly ListenerProperty<string> Key;
 
+		[JsonProperty] int seedOffset;
+		[JsonIgnore] public readonly ListenerProperty<int> SeedOffset;
+
 		public ProceduralNoiseDataModel()
 		{
 			NoiseDataId = new ListenerProperty<string>(value => noiseDataId = value, () => noiseDataId);
 			NoiseAssetId = new ListenerProperty<string>(value => noiseAssetId = value, () => noiseAssetId);
 			Key = new ListenerProperty<string>(value => key = value, () => key);
+			SeedOffset = new ListenerProperty<int>(value => seedOffset = value, () => seedOffset);
 		}
 
 		public DefinitionInstance CreateInstance(

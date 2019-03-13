@@ -195,8 +195,111 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			App.M.Load<GalaxyInfoModel>(model.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, instructions, model, done));
+			App.M.List<ProceduralNoiseModel>(
+				noiseDataResults => OnListNoiseData(
+					noiseDataResults,
+					instructions,
+					model,
+					done
+				)
+			);
+			//App.M.Load<GalaxyInfoModel>(model.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, instructions, model, done));
 		}
+
+		void OnListNoiseData(
+			SaveLoadArrayRequest<SaveModel> results,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
+		{
+			if (results.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure("Unable to list galaxy noise data, resulted in " + results.Status + " and error: " + results.Error).Log(), null);
+				return;
+			}
+
+			OnLoadNoiseData(
+				null,
+				results.Models.Where(s => model.Context.Galaxy.NoiseData.Value.Select(g => g.NoiseAssetId.Value).Contains(s.GetMetaKey(MetaKeyConstants.ProceduralNoise.ProceduralNoiseId))).ToList(),
+				instructions,
+				model,
+				done
+			);
+		}
+
+		void OnLoadNoiseData(
+			SaveLoadRequest<ProceduralNoiseModel>? result,
+			List<SaveModel> remaining,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
+		{
+			if (result.HasValue)
+			{
+				if (result.Value.Status != RequestStatus.Success)
+				{
+					done(RequestResult.Failure("Unable to load galaxy noise data, resulted in " + result.Value.Status + " and error: " + result.Value.Error).Log(), null);
+					return;
+				}
+				var matchingEntry = model.Context.Galaxy.NoiseData.Value.FirstOrDefault(d => d.NoiseAssetId.Value == result.Value.TypedModel.ProceduralNoiseId.Value);
+
+				if (matchingEntry == null)
+				{
+					done(RequestResult.Failure("Unable to find matching noise asset for id " + result.Value.TypedModel.ProceduralNoiseId.Value).Log(), null);
+					return;
+				}
+
+				var seed = model.Seed.Value + matchingEntry.SeedOffset.Value;
+
+				model.Context.Galaxy.NoiseDataInstances = model.Context.Galaxy.NoiseDataInstances.Append(
+					matchingEntry.CreateInstance(
+						result.Value.TypedModel.CreateInstance(
+							seed
+						)
+					)
+				).ToArray();
+			}
+
+			if (remaining.None())
+			{
+				if (model.Context.Galaxy.NoiseData.Value.Length != model.Context.Galaxy.NoiseDataInstances.Length)
+				{
+					done(RequestResult.Failure("Unable to load some galaxy noise data").Log(), null);
+					return;
+				}
+
+				App.M.Load<GalaxyInfoModel>(
+					model.GalaxyTargetId,
+					targetResult => OnLoadGalaxyTarget(
+						targetResult,
+						instructions,
+						model,
+						done
+					)
+				);
+				return;
+			}
+
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+
+			App.M.Load<ProceduralNoiseModel>(
+				next,
+				nextResult => OnLoadNoiseData(
+					nextResult,
+					remaining,
+					instructions,
+					model,
+					done
+				)
+			);
+		}
+
+		//void OnLoadGalaxyNoiseData(
+		//	SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done
+		//)
 
 		void OnLoadGalaxyTarget(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
 		{

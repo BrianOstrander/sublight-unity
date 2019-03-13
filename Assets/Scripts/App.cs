@@ -146,7 +146,7 @@ namespace LunraGames.SubLight
 				new HomeState(),
 				new GameState()
 			);
-			universe = new FudgedUniverseService();
+			universe = new DefaultUniverseService();
 
 			if (Application.isEditor)
 			{

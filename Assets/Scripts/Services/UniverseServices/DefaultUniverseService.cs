@@ -10,7 +10,12 @@ namespace LunraGames.SubLight
 {
 	public class DefaultUniverseService : UniverseService
 	{
-		protected override UniversePosition GetPositionInSector(UniversePosition sectorPosition, int seed, int index, int systemCount)
+		protected override UniversePosition GetPositionInSector(
+			UniversePosition sectorPosition,
+			int seed,
+			int index,
+			int systemCount
+		)
 		{
 			switch (index)
 			{

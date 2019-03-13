@@ -183,6 +183,11 @@ namespace LunraGames.SubLight
 				);
 			}
 			if (wasAssetError) EditorGUILayoutExtensions.PopBackgroundColor();
+
+			entry.SeedOffset.Value = EditorGUILayout.IntField(
+				new GUIContent("Seed Offset", "The value added to the game's seed to get this noise's seed"),
+				entry.SeedOffset.Value
+			);
 		}
 
 		void GenerationTextureData(GalaxyInfoModel model)
