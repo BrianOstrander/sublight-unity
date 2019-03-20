@@ -53,6 +53,57 @@ namespace LunraGames.SubLight
 			*/
 		};
 
+		static string[] SystemNames =
+		{
+			"Aker",
+			"Amun",
+			"Anhur",
+			"Aten",
+			"Bennu",
+			"Geb",
+			"Hapi",
+			"Horus",
+			"Khepri",
+			"Khnum",
+			"Khonsu",
+			"Maahes",
+			"Amunet",
+			"Anuket",
+			"Bastet",
+			"Bat",
+			"Hathor",
+			"Heqet",
+			"Hesat",
+			"Imentet",
+			"Maat",
+			"Menhit",
+			"Mut",
+			"Nu",
+			"Ra",
+			"Tatenen",
+			"Anubis",
+			"Anput",
+			"Montu",
+			"Nefertum",
+			"Nemty",
+			"Neper",
+			"Osiris",
+			"Ptah",
+			"Set",
+			"Shu",
+			"Sobek",
+			"Sopdu",
+			"Thoth",
+			"Neith",
+			"Nekhbet",
+			"Nepit",
+			"Pakhet",
+			"Satet",
+			"Sekhmet",
+			"Tefnut",
+			"Wosret"
+		};
+
 		protected override UniversePosition GetPositionInSector(
 			UniversePosition sectorPosition,
 			int sectorOffset,
@@ -69,9 +120,13 @@ namespace LunraGames.SubLight
 		protected override SystemModel OnCreateSystem(SystemModel systemModel)
 		{
 			//systemModel.Name.Value = "Sys " + systemModel.Index.Value + " - [ " + systemModel.Position.Value.SectorInteger.x + " , " + systemModel.Position.Value.SectorInteger.z + " ]";
-			systemModel.Name.Value = "Unnamed";
-
 			var hackGenerator = new Demon(DemonUtility.CantorPairs(systemModel.Seed.Value, 42));
+
+			//systemModel.Name.Value = "Unnamed";
+
+			systemModel.Name.Value = SystemNames[hackGenerator.GetNextInteger(0, SystemNames.Length)];
+
+			systemModel.Name.Value += " "+hackGenerator.GetNextInteger(1, 100);
 
 			var classification = hackGenerator.NextFloat;
 
