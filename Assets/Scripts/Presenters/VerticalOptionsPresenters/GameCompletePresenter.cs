@@ -87,6 +87,11 @@ namespace LunraGames.SubLight.Presenters
 			header = string.IsNullOrEmpty(header) ? defaultHeader : header;
 			body = string.IsNullOrEmpty(body) ? defaultBody : body;
 
+			if (title == GDCHackGlobals.SettlementChosenTrigger)
+			{
+				title = "replacement here";
+			}
+
 			if (!string.IsNullOrEmpty(title)) entries.Add(LabelVerticalOptionsEntry.CreateTitle(title, icon));
 			if (!string.IsNullOrEmpty(header)) entries.Add(LabelVerticalOptionsEntry.CreateHeader(header));
 			if (!string.IsNullOrEmpty(body)) entries.Add(LabelVerticalOptionsEntry.CreateBody(body));

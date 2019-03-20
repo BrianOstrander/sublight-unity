@@ -134,7 +134,7 @@ namespace LunraGames.SubLight.Presenters
 				var newMessage = string.Empty;
 
 				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.PlanetCount));
-				newMessage += "Of all the planets around this system's "+systemModel.SecondaryClassification.Value.ToLower()+", the "+planetReadable+" looks the most promising.\n";
+				newMessage += "Of all the planets around this system's " + systemModel.SecondaryClassification.Value.ToLower() + ", the " + planetReadable + " looks the most promising. ";
 
 				var scanLevel = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeScanLevel);
 
@@ -176,9 +176,11 @@ namespace LunraGames.SubLight.Presenters
 								break;
 							case 1:
 								newMessage += "but we only have a single surface probe left. I suggest you choose wisely before deciding to use it.";
+								systemModel.KeyValues.SetBoolean("can_send_probe", true);
 								break;
 							default:
 								newMessage += "but we have (" + probesLeft + ") surface probes left, if you choose to send one down to complete our scans.";
+								systemModel.KeyValues.SetBoolean("can_send_probe", true);
 								break;
 						}
 					}
@@ -193,9 +195,11 @@ namespace LunraGames.SubLight.Presenters
 								break;
 							case 1:
 								newMessage += "If you choose to send down a surface probe it will give us a clearer, albeit incomplete, picture. However, we only have a single probe left. I suggest you use it wisely.";
+								systemModel.KeyValues.SetBoolean("can_send_probe", true);
 								break;
 							default:
-								newMessage += "If you choose to send down a surface probe it will give us a clearer, albeit incomplete, picture. We have ("+probesLeft+") surface probes left.";
+								newMessage += "If you choose to send down a surface probe it will give us a clearer, albeit incomplete, picture. We have (" + probesLeft + ") surface probes left.";
+								systemModel.KeyValues.SetBoolean("can_send_probe", true);
 								break;
 						}
 					}
@@ -204,11 +208,11 @@ namespace LunraGames.SubLight.Presenters
 						newMessage += "The unusual terrain makes resolving the remaining details of this planet impossible, even with the help of a surface probe.";
 					}
 
-					newMessage += "\n";
+					newMessage += "\n\n";
 				}
 				else
 				{
-					newMessage += "Our orbital scanners were sufficient to resolve all the properties of this planet.\n";
+					newMessage += "Our orbital scanners were sufficient to resolve all the properties of this planet.\n\n";
 				}
 
 				newMessage += GDCHackGlobals.GetReading(
@@ -249,6 +253,86 @@ namespace LunraGames.SubLight.Presenters
 					systemScanLevelResources,
 					GDCHackGlobals.HabitableResourcesDescriptions,
 					false,
+					DeveloperStrings.GetBold("Resources:")
+				) + "\n";
+
+				dialog.Message = newMessage;
+			}
+			else if (dialog.Message == GDCHackGlobals.SurfaceResultsTrigger)
+			{
+				var game = (App.SM.CurrentHandler as GameState).Payload.Game;
+				var systemModel = game.Context.CurrentSystem.Value;
+
+				var newMessage = string.Empty;
+
+				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.PlanetCount));
+				newMessage += "We've sent a probe to the surface, here are the results.\n\n";
+
+				var scanLevel = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeScanLevel);
+
+				var systemScanLevelAtmosphere = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelAtmosphere);
+				var systemScanLevelGravity = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelGravity);
+				var systemScanLevelTemperature = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelTemperature);
+				var systemScanLevelWater = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelWater);
+				var systemScanLevelResources = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelResources);
+
+				var allScanLevels = new int[]
+				{
+					systemScanLevelAtmosphere,
+					systemScanLevelGravity,
+					systemScanLevelTemperature,
+					systemScanLevelWater,
+					systemScanLevelResources
+				};
+
+				var maxScanLevel = Mathf.Max(allScanLevels);
+
+				var anyScansObscured = 0 < maxScanLevel;
+				var anyScanOutOfRange = scanLevel < maxScanLevel;
+				var anyScansObscuredButScannable = allScanLevels.Any(s => 0 < s && s <= scanLevel);
+				var allScansAreInRange = allScanLevels.None(s => scanLevel < s);
+
+				var probesLeft = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeCount);
+				//var anyProbesLeft = 0 < probesLeft;
+
+				newMessage += GDCHackGlobals.GetReading(
+					systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableAtmosphere),
+					scanLevel,
+					systemScanLevelAtmosphere,
+					GDCHackGlobals.HabitableAtmosphereDescriptions,
+					true,
+					DeveloperStrings.GetBold("Atmosphere:")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableGravity),
+					scanLevel,
+					systemScanLevelGravity,
+					GDCHackGlobals.HabitableGravityDescriptions,
+					true,
+					DeveloperStrings.GetBold("Gravity:\t")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableTemperature),
+					scanLevel,
+					systemScanLevelTemperature,
+					GDCHackGlobals.HabitableTemperatureDescriptions,
+					true,
+					DeveloperStrings.GetBold("Temperature:")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableWater),
+					scanLevel,
+					systemScanLevelWater,
+					GDCHackGlobals.HabitableWaterDescriptions,
+					true,
+					DeveloperStrings.GetBold("Water:\t")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableResources),
+					scanLevel,
+					systemScanLevelResources,
+					GDCHackGlobals.HabitableResourcesDescriptions,
+					true,
 					DeveloperStrings.GetBold("Resources:")
 				) + "\n";
 

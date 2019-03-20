@@ -145,7 +145,7 @@ namespace LunraGames.SubLight
 				}
 			}
 
-			if (hackGenerator.NextFloat < 0f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.PlanetCount, 0);
+			if (hackGenerator.NextFloat < 0.15f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.PlanetCount, 0);
 			else systemModel.KeyValues.Set(KeyDefines.CelestialSystem.PlanetCount, hackGenerator.GetNextInteger(1, GDCHackGlobals.PlanetCountMaximum + 1));
 
 			SetHabitable(hackGenerator, systemModel, KeyDefines.CelestialSystem.HabitableAtmosphere);
@@ -187,7 +187,7 @@ namespace LunraGames.SubLight
 			KeyDefinitions.Integer key
 		)
 		{
-			if (demon.NextFloat < 0.9f) systemModel.KeyValues.Set(key, 0);
+			if (demon.NextFloat < 0.5f) systemModel.KeyValues.Set(key, 0);
 			else systemModel.KeyValues.Set(key, demon.GetNextInteger(1, GDCHackGlobals.ScanLevelMaximum + 1));
 		}
 
