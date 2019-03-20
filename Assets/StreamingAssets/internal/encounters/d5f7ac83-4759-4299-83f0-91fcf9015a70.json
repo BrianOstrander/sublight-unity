@@ -1,0 +1,115 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf",
+  "name": "Planets Detected",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [
+      {
+        "operation": "GreaterThan",
+        "filterId": "1ec15bf6-76af-44b0-91ca-0e4b2d48a45e",
+        "group": "All",
+        "Input0": {
+          "AddressId": "1a497dd2-0f62-46c9-987a-63f019c2af0d",
+          "Source": "KeyValue",
+          "ForeignTarget": "CelestialSystem",
+          "ForeignKey": "planet_count"
+        },
+        "Input1": {
+          "AddressId": "32fab2d9-1e41-457a-acc8-7f301b2c9e59",
+          "Source": "LocalValue"
+        }
+      }
+    ],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "38589f73-463e-4ba7-a4a0-a36cf3cb1d8c"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {
+                  "message": "todo: investigate"
+                },
+                "enums": {
+                  "severity": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "28fccfde-c4f5-4fa8-b3d1-3de1d52a04f2"
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "fa20a6f3-097a-46a9-a5ac-b7875bc43a75"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Planet Detected",
+              "message": "planet*detected",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Warning",
+              "successLogId": "fa20a6f3-097a-46a9-a5ac-b7875bc43a75",
+              "failureLogId": "38589f73-463e-4ba7-a4a0-a36cf3cb1d8c",
+              "successText": "Investigate",
+              "failureText": "Move On",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "7af2d808-ba36-4497-826a-409116eb7b6b"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "a5aacfa2-a67a-4b3d-a011-e792902ca8d6"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 8,
+  "meta": "Planets Detected",
+  "metaKeyValues": {
+    "EncounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf"
+  },
+  "created": "2019-03-20T11:59:11.309393-07:00",
+  "modified": "2019-03-20T11:59:11.309393-07:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

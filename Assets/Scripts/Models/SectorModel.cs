@@ -1,9 +1,16 @@
 ﻿using Newtonsoft.Json;
 
+using LunraGames.NumberDemon;
+
 namespace LunraGames.SubLight.Models
 {
 	public class SectorModel : Model
 	{
+		public static class Seeds
+		{
+			public static int Position(int seed) { return DemonUtility.CantorPairs(seed, 1); }
+		}
+
 		[JsonProperty] string name;
 		[JsonProperty] int seed;
 		[JsonProperty] bool visited;
@@ -11,6 +18,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] UniversePosition position;
 		[JsonProperty] int systemCount;
 		[JsonProperty] SystemModel[] systems = new SystemModel[0];
+
+		public int sectorOffset;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;

@@ -1,0 +1,68 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "b88c6f13-6794-4198-8613-eda1e54a4a09",
+  "name": "No Planets In System",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "49f85ce5-9806-4426-a167-c40a7f6eead1",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "No Planets Detected",
+              "message": "This system lacks any terrestrial bodies suitable for settlement. If any are detected in future systems, you will be alerted.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "failureLogId": "0874751f-5363-4dd1-8968-3a4a7026017a",
+              "successText": "Understood",
+              "failureText": "Ignore",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "ec9db2b6-f394-4369-914b-7a5d8d1a6a55"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "c70519e1-1a1e-4c31-b961-7697cc609a69"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 8,
+  "meta": "No Planets In System",
+  "metaKeyValues": {
+    "EncounterId": "b88c6f13-6794-4198-8613-eda1e54a4a09"
+  },
+  "created": "2019-03-20T11:52:04.907557-07:00",
+  "modified": "2019-03-20T11:52:04.907557-07:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

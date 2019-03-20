@@ -76,6 +76,9 @@ namespace LunraGames.SubLight
 		public readonly Integer TransitsWithUnderPopulation;
 		public readonly Integer TransitsWithUnderPopulationMaximum;
 		public readonly Integer TransitsWithUnderPopulationUntilFailure;
+
+		public readonly Integer SurfaceProbeCount;
+		public readonly Integer SurfaceProbeScanLevel;
 		#endregion
 
 		#region Strings
@@ -205,6 +208,18 @@ namespace LunraGames.SubLight
 					ref TransitsWithUnderPopulationUntilFailure,
 					"transits_with_under_population_until_failure",
 					"How many more transits with underpopulation can the ship survive."
+				),
+				Create(
+					ref SurfaceProbeCount,
+					"surface_probe_count",
+					"The number of surface probes remaining.",
+					true
+				),
+				Create(
+					ref SurfaceProbeScanLevel,
+					"surface_probe_scan_level",
+					"todo desc",
+					true // TODO: should be readable???
 				)
 			};
 
