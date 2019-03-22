@@ -48,8 +48,33 @@ MonoBehaviour:
     Version: 8
     Year: 2019
     Month: 3
-    Day: 1
+    Day: 22
     Entries:
     - Index: 0
       Change: 10
-      Description: Interface scaling option available in <b>Preferences</b>
+      Description: Scanning for habitable planets added, this is the start of a sandbox
+        mode
+    - Index: 1
+      Change: 10
+      Description: "A trail now shows where you\u2019ve been"
+    - Index: 2
+      Change: 10
+      Description: Support for showing changelogs when opening a new version
+    - Index: 3
+      Change: 10
+      Description: Added in a new resource, <b>Metallics</b>, for future updates
+    - Index: 4
+      Change: 20
+      Description: New introduction to the game
+    - Index: 5
+      Change: 20
+      Description: Time delay between the appearance of conversation entries
+    - Index: 6
+      Change: 20
+      Description: Velocity can now be set in a temporary menu
+    - Index: 7
+      Change: 20
+      Description: Options for increasing the scale of interfaces added to <b>Preferences</b>
+    - Index: 8
+      Change: 30
+      Description: Minor bug-fixes
