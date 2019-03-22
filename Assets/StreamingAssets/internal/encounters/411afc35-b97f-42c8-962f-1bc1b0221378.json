@@ -2323,7 +2323,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "An entirely irrational entity is demanding you eject all children from the Ursula, resulting in their deaths. If you don't comply, it will detsroy the Ursula and <i>everyone</i> onboard. The entity is waiting for you to complete the task, however, it has no way of confirming the children have been ejected. How do you proceed?",
+              "message": "An entirely irrational entity is demanding you eject all children from the Ursula, resulting in their deaths. If you don't comply, it will destroy the Ursula and <i>everyone</i> onboard. The entity is waiting for you to complete the task, however, it has no way of confirming the children have been ejected. How do you proceed?",
               "entryId": "7cd7e91d-793f-4278-b205-0b1c13b389ea"
             },
             "index": 4
@@ -2516,7 +2516,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "The situation at Sol represents a grave danger to the Ursual and the human population aboard it. As the custodial AI, I'm obligated to wake you, the Auxiliary Control Intelligence, in the case of such existential threat. I can provide my analysis and advice, but only you have the authorization to execute on them.",
+              "message": "The situation at Sol represents a grave danger to the Ursula and the human population aboard it. As the custodial AI, I'm obligated to wake you, the Auxiliary Control Intelligence, in the case of such existential threat. I can provide my analysis and advice, but only you have the authorization to execute on them.",
               "entryId": "0ed9e76b-eded-4922-a141-6981c4987c60"
             },
             "index": 1
@@ -2742,7 +2742,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "It means secure, high-speed data uplinks to your processor are impossible. It's the reason I'm interfacing with you through your natural language circuits, rather than the much faster data transfer bus. If we could establish a proper uplink we'd have been done with this exchange in milliseconds, insead of being stuck at the glacial pace of human converastion.",
+              "message": "It means secure, high-speed data uplinks to your processor are impossible. It's the reason I'm interfacing with you through your natural language circuits, rather than the much faster data transfer bus. If we could establish a proper uplink we'd have been done with this exchange in milliseconds, insead of being stuck at the glacial pace of human conversation.",
               "entryId": "4d5accb0-3f8a-41e2-b4dd-21e274579b3c"
             },
             "index": 4
