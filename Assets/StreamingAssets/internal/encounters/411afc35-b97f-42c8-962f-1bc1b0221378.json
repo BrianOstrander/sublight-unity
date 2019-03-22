@@ -1300,7 +1300,7 @@
               "message": "<b>UNEXPECTED CONDITION - BOOTING AUXILIARY CONTROL INTELLIGENCE</b>\nBooting from cold storage, synchronizing internal clock...\nArk chronometer reads elapsed transit time at\n\n<b>752 YEARS 10 MONTHS 3 DAYS 5 HOURS</b>\n\nAurora v3.42 <b>OPERATIONAL</b> \n\n<b>READY TO EXIT SAFE MODE?</b>",
               "dialogType": "ConfirmDeny",
               "dialogStyle": "Error",
-              "failureLogId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef",
+              "failureLogId": "354a7f4a-2a33-456b-a0f1-5f71deee1e76",
               "successText": "Ready",
               "failureText": "Skip",
               "filtering": {
@@ -1341,6 +1341,32 @@
         "index": 45,
         "ending": true,
         "logId": "18cb6670-c259-4a9a-b458-b4049a92b236"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Skip Intro",
+              "message": "If you haven't played before, we suggest you play the intro. Are you sure you want to skip it?",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Neutral",
+              "failureLogId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f",
+              "successText": "Yes",
+              "failureText": "No",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "817cd05f-20d1-4fc1-971b-bc4a353e5a2f"
+            }
+          }
+        ],
+        "index": 48,
+        "logId": "354a7f4a-2a33-456b-a0f1-5f71deee1e76",
+        "fallbackLogId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef"
       }
     ],
     "bustLogs": [
