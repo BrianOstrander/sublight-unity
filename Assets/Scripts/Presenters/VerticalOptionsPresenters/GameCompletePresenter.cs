@@ -87,6 +87,134 @@ namespace LunraGames.SubLight.Presenters
 			header = string.IsNullOrEmpty(header) ? defaultHeader : header;
 			body = string.IsNullOrEmpty(body) ? defaultBody : body;
 
+			if (title == GDCHackGlobals.SettlementChosenTrigger)
+			{
+				var game = (App.SM.CurrentHandler as GameState).Payload.Game;
+				var systemModel = game.Context.CurrentSystem.Value;
+
+				var newMessage = string.Empty;
+
+				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.PlanetCount));
+				newMessage += "We've sent a probe to the surface, here are the results.\n\n";
+
+				var scanLevel = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeScanLevel);
+
+				var systemScanLevelAtmosphere = 0;
+				var systemScanLevelGravity = 0;
+				var systemScanLevelTemperature = 0;
+				var systemScanLevelWater = 0;
+				var systemScanLevelResources = 0;
+
+				var systemAtmosphere = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableAtmosphere);
+				var systemGravity = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableGravity);
+				var systemTemperature = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableTemperature);
+				var systemWater = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableWater);
+				var systemResources = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableResources);
+
+				var finalScore = systemAtmosphere + systemGravity + systemTemperature + systemWater + systemResources;
+
+
+
+				var allScanLevels = new int[]
+				{
+					systemScanLevelAtmosphere,
+					systemScanLevelGravity,
+					systemScanLevelTemperature,
+					systemScanLevelWater,
+					systemScanLevelResources
+				};
+
+				var maxScanLevel = Mathf.Max(allScanLevels);
+
+				var anyScansObscured = 0 < maxScanLevel;
+				var anyScanOutOfRange = scanLevel < maxScanLevel;
+				var anyScansObscuredButScannable = allScanLevels.Any(s => 0 < s && s <= scanLevel);
+				var allScansAreInRange = allScanLevels.None(s => scanLevel < s);
+
+				var probesLeft = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeCount);
+				//var anyProbesLeft = 0 < probesLeft;
+
+				newMessage += GDCHackGlobals.GetReading(
+					systemAtmosphere,
+					scanLevel,
+					systemScanLevelAtmosphere,
+					GDCHackGlobals.HabitableAtmosphereDescriptions,
+					true,
+					DeveloperStrings.GetBold("Atmosphere:")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemGravity,
+					scanLevel,
+					systemScanLevelGravity,
+					GDCHackGlobals.HabitableGravityDescriptions,
+					true,
+					DeveloperStrings.GetBold("Gravity:\t")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemTemperature,
+					scanLevel,
+					systemScanLevelTemperature,
+					GDCHackGlobals.HabitableTemperatureDescriptions,
+					true,
+					DeveloperStrings.GetBold("Temperature:")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemWater,
+					scanLevel,
+					systemScanLevelWater,
+					GDCHackGlobals.HabitableWaterDescriptions,
+					true,
+					DeveloperStrings.GetBold("Water:\t")
+				) + "\n";
+				newMessage += GDCHackGlobals.GetReading(
+					systemResources,
+					scanLevel,
+					systemScanLevelResources,
+					GDCHackGlobals.HabitableResourcesDescriptions,
+					true,
+					DeveloperStrings.GetBold("Resources:\t")
+				) + "\n";
+
+				// var min = 0, max = 20
+
+				newMessage += "\n";
+
+				if (finalScore == 0)
+				{
+					title = "A Hellish World";
+					newMessage += "You've chosen a hellish world, your people are doomed.";
+				}
+				else if (finalScore < 5)
+				{
+					title = "A Tough World";
+					newMessage += "You've chosen a nearly impossible to settle world, life will be tough for the few who survive.";
+				}
+				else if (finalScore < 10)
+				{
+					title = "Better Than Nothing";
+					newMessage += "The world you've chosen is no paradise, but it's better than the cold vacuum of space...";
+				}
+				else if (finalScore < 15)
+				{
+					title = "It Will Do";
+					newMessage += "You've chosen a world with a hospitable environment. With enough work, it's something we could call home.";
+				}
+				else if (finalScore == 20)
+				{
+					title += "A Perfect World";
+					newMessage += "This planet is such a jewel, how could we have been so lucky to find it?!";
+				}
+				else
+				{
+					title = "This Planet is a Treasure";
+					newMessage += "Your people step off their landers to find a lush world, ripe for settlement. We will live long and happy lives here...";
+				}
+
+				newMessage += "\n\nFinal Score: " + DeveloperStrings.GetBold((finalScore * 10) + " / 200");
+
+				body = newMessage;
+			}
+
 			if (!string.IsNullOrEmpty(title)) entries.Add(LabelVerticalOptionsEntry.CreateTitle(title, icon));
 			if (!string.IsNullOrEmpty(header)) entries.Add(LabelVerticalOptionsEntry.CreateHeader(header));
 			if (!string.IsNullOrEmpty(body)) entries.Add(LabelVerticalOptionsEntry.CreateBody(body));

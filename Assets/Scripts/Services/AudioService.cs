@@ -20,10 +20,11 @@ namespace LunraGames.SubLight
 		{
 			// TODO: Non leaky audio.
 			Debug.LogWarning("Proper audio system not created yet!");
-			var source = audioRoot.AddComponent<AudioSource>();
-			source.clip = clip;
-			source.Play();
-			return source;
+			//var source = audioRoot.AddComponent<AudioSource>();
+			//source.clip = clip;
+			//source.Play();
+			//return source;
+			return null;
 		}
 	}
 }

@@ -1300,7 +1300,7 @@
               "message": "<b>UNEXPECTED CONDITION - BOOTING AUXILIARY CONTROL INTELLIGENCE</b>\nBooting from cold storage, synchronizing internal clock...\nArk chronometer reads elapsed transit time at\n\n<b>752 YEARS 10 MONTHS 3 DAYS 5 HOURS</b>\n\nAurora v3.42 <b>OPERATIONAL</b> \n\n<b>READY TO EXIT SAFE MODE?</b>",
               "dialogType": "ConfirmDeny",
               "dialogStyle": "Error",
-              "failureLogId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef",
+              "failureLogId": "354a7f4a-2a33-456b-a0f1-5f71deee1e76",
               "successText": "Ready",
               "failureText": "Skip",
               "filtering": {
@@ -1323,7 +1323,7 @@
           {
             "entry": {
               "title": "Navigation",
-              "message": "This is the navigation view. Several objectives have already been defined by Ecliptic. In addition to these objectives, make sure to stay supplied with <b>Rations</b> for feeding your population, <b>Propellant</b> for fueling your interstellar transits, and <b>Metallics</b> for any damage that may need repairing.",
+              "message": "This is the navigation view. As you travel, make sure to stay supplied with <b>Rations</b> for feeding your population, <b>Propellant</b> for fueling your interstellar transits, and <b>Metallics</b> for any damage that may need repairing.",
               "dialogType": "Confirm",
               "dialogStyle": "Neutral",
               "successText": "Understood",
@@ -1341,6 +1341,32 @@
         "index": 45,
         "ending": true,
         "logId": "18cb6670-c259-4a9a-b458-b4049a92b236"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Skip Intro",
+              "message": "If you haven't played before, we suggest you play the intro. Are you sure you want to skip it?",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Neutral",
+              "failureLogId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f",
+              "successText": "Yes",
+              "failureText": "No",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "817cd05f-20d1-4fc1-971b-bc4a353e5a2f"
+            }
+          }
+        ],
+        "index": 48,
+        "logId": "354a7f4a-2a33-456b-a0f1-5f71deee1e76",
+        "fallbackLogId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef"
       }
     ],
     "bustLogs": [
@@ -2494,6 +2520,62 @@
               "entryId": "0ed9e76b-eded-4922-a141-6981c4987c60"
             },
             "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "I'm open to suggestions",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "d3e74aec-e06f-4e6d-85d5-10318ae16427"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm open to suggestions",
+              "entryId": "f88a80f0-af92-4f46-8555-9eaa71557233"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Our resources are limited, and Ursula was not meant for multiple transits... We'll need to find a habitable system before our ark falls to pieces.",
+              "entryId": "2a87fe66-d0fb-4ffe-95f3-e9db1fc0a508"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Habitable?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "b46b5be3-346b-4c1b-b39e-ce851135f7b5"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What constitutes a habitable system?",
+              "entryId": "77f6cf9f-db38-4493-aa03-a5c8bc336cc6"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Without a thorough survey of the system, it's hard to say. We'll be able to make basic assessments from orbit, but a more detailed analysis will require sending a probe down. However... we only have a limited number of probes, so use them wisely.",
+              "entryId": "9ef08d31-3062-41bd-a206-3df70f23f59c"
+            },
+            "index": 7
           }
         ],
         "index": 36,
