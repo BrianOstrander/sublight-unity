@@ -11,7 +11,6 @@ namespace LunraGames.SubLight.Presenters
 	public class HoloPresenter : Presenter<IHoloView>
 	{
 		GameModel model;
-		TransitionFocusRequest.States lastTransition;
 		Dictionary<SetFocusLayers, int> layerToOrder = new Dictionary<SetFocusLayers, int>();
 
 		UniverseScaleModel lastActiveScale;
@@ -76,11 +75,10 @@ namespace LunraGames.SubLight.Presenters
 			switch (request.State)
 			{
 				case TransitionFocusRequest.States.Active:
-					if (lastTransition != request.State) OnTransitionFocusActiveInitialize(request);
+					if (request.FirstActive) OnTransitionFocusActiveInitialize(request);
 					else OnTransitionFocusActiveUpdate(request);
 					break;
 			}
-			lastTransition = request.State;
 		}
 
 		void OnTransitionFocusActiveInitialize(TransitionFocusRequest request)

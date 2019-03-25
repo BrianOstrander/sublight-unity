@@ -12,6 +12,18 @@ namespace LunraGames.SubLight
 #pragma warning restore CS0659 // Overrides Object.Equals(object) but does not override Object.GetHashCode()
 #pragma warning restore CS0661 // Defines == or != operator but does not override Ojbect.GetHashCode()
 	{
+		public enum Formats
+		{
+			Unknown = 0,
+			None = 10,
+			Coordinate = 20
+		}
+
+		static string FormatPrefix(Formats format)
+		{
+			return Enum.GetName(typeof(Formats), format).ToLower() + "_";
+		}
+
 		public const float UniverseToLightYearScalar = 500f;
 		public const float LightYearToUniverseScalar = 0.002f;
 
@@ -87,6 +99,62 @@ namespace LunraGames.SubLight
 		public static DayTime TravelTime(UniversePosition universePosition0, UniversePosition universePosition1, float speed)
 		{
 			return new DayTime(Distance(universePosition0, universePosition1) / speed);
+		}
+
+		public static void Expand(
+			string value,
+			Action none = null,
+			Action<UniversePosition, int> coordinate = null
+		)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				if (none != null) none();
+			}
+			else if (value.StartsWith(FormatPrefix(Formats.Coordinate))) ExpandCoordinate(value, none, coordinate);
+			else
+			{
+				Debug.LogError("Unrecognized format for value: " + value);
+				if (none != null) none();
+			}
+		}
+
+		static void ExpandCoordinate(
+			string value,
+			Action none,
+			Action<UniversePosition, int> coordinate
+		)
+		{
+			try
+			{
+				value = value.Remove(0, FormatPrefix(Formats.Coordinate).Length);
+
+				var elements = value.Split('_');
+				if (elements.Length != 4) throw new Exception("Unable to expand \"" + value + "\", 4 elements required");
+
+				var position = new UniversePosition(
+					new Vector3Int(
+						int.Parse(elements[0]),
+						int.Parse(elements[1]),
+						int.Parse(elements[2])
+					)
+				);
+				var index = int.Parse(elements[3]);
+
+				if (coordinate != null) coordinate(position, index);
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e);
+				Debug.LogError("Unable to expand and parse \"" + value + "\", returning false");
+				if (none != null) none();
+			}
+		}
+
+		public static string Shrink(UniversePosition position, int index = -1)
+		{
+			var sector = position.SectorInteger;
+			return FormatPrefix(Formats.Coordinate) + sector.x + "_" + sector.y + "_" + sector.z + "_" + index;
 		}
 
 		public static UniversePosition Zero { get { return new UniversePosition(Vector3.zero, Vector3.zero); } }

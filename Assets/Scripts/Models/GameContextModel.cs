@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
@@ -16,15 +17,16 @@ namespace LunraGames.SubLight.Models
 		GameModel model;
 #pragma warning restore CS0414 // The private field is assigned but its value is never used.
 		ShipModel ship;
+		
+		CameraTransformRequest cameraTransformAbsolute = CameraTransformRequest.Default;
+		readonly ListenerProperty<CameraTransformRequest> cameraTransformAbsoluteListener;
+		public readonly ReadonlyProperty<CameraTransformRequest> CameraTransformAbsolute;
 
 		CameraTransformRequest cameraTransform = CameraTransformRequest.Default;
 		public readonly ListenerProperty<CameraTransformRequest> CameraTransform;
 
 		GridInputRequest gridInput = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Input);
 		public readonly ListenerProperty<GridInputRequest> GridInput;
-
-		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
-		public readonly ListenerProperty<CelestialSystemStateBlock> CelestialSystemState;
 
 		UniverseScaleLabelBlock scaleLabelSystem = UniverseScaleLabelBlock.Default;
 		public readonly ListenerProperty<UniverseScaleLabelBlock> ScaleLabelSystem;
@@ -49,6 +51,10 @@ namespace LunraGames.SubLight.Models
 
 		CelestialSystemStateBlock celestialSystemStateLastSelected = CelestialSystemStateBlock.Default;
 		public ListenerProperty<CelestialSystemStateBlock> CelestialSystemStateLastSelected;
+
+		CelestialSystemStateBlock celestialSystemState = CelestialSystemStateBlock.Default;
+		ListenerProperty<CelestialSystemStateBlock> celestialSystemStateListener;
+		public readonly ReadonlyProperty<CelestialSystemStateBlock> CelestialSystemState;
 
 		TransitStateRequest transitStateRequest;
 		public ListenerProperty<TransitStateRequest> TransitStateRequest;
@@ -87,6 +93,23 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
+		//float transitHistoryDistance;
+		///// <summary>
+		///// The transit history distance in universe units.
+		///// </summary>
+		//public readonly ListenerProperty<float> TransitHistoryDistance;
+		float transitHistoryLineDistance;
+		/// <summary>
+		/// The transit history distance in universe units.
+		/// </summary>
+		public readonly ListenerProperty<float> TransitHistoryLineDistance;
+		//float transitHistoryDistance;
+		///// <summary>
+		///// The transit history distance in universe units.
+		///// </summary>
+		//public readonly ListenerProperty<float> TransitHistoryDistance;
+		int transitHistoryLineCount;
+		public readonly ListenerProperty<int> TransitHistoryLineCount;
 
 		#region Read Only Listeners
 		UniverseScaleModel activeScale;
@@ -110,6 +133,9 @@ namespace LunraGames.SubLight.Models
 
 		StackListModel<DeveloperViews> developerViewsEnabled = new StackListModel<DeveloperViews>();
 		public StackListModel<DeveloperViews> DeveloperViewsEnabled { get { return developerViewsEnabled; } }
+
+		GridModel grid = new GridModel();
+		public GridModel Grid { get { return grid; } }
 		#endregion
 
 		#region Models
@@ -120,6 +146,10 @@ namespace LunraGames.SubLight.Models
 		public KeyValueListener CelestialSystemKeyValueListener { get; private set; }
 		#endregion
 
+		#region Events
+		public Action<SystemModel> NavigationSelectionOutOfRange = ActionExtensions.GetEmpty<SystemModel>();
+  		#endregion
+
 		public GameContextModel(
 			GameModel model,
 			ShipModel ship
@@ -128,9 +158,18 @@ namespace LunraGames.SubLight.Models
 			this.model = model;
 			this.ship = ship;
 
-			CameraTransform = new ListenerProperty<CameraTransformRequest>(value => cameraTransform = value, () => cameraTransform);
+			CameraTransformAbsolute = new ReadonlyProperty<CameraTransformRequest>(
+				value => cameraTransformAbsolute = value,
+				() => cameraTransformAbsolute,
+				out cameraTransformAbsoluteListener
+			);
+			CameraTransform = new ListenerProperty<CameraTransformRequest>(
+				value => cameraTransform = value,
+				() => cameraTransform,
+				OnCameraTransform
+			);
+
 			GridInput = new ListenerProperty<GridInputRequest>(value => gridInput = value, () => gridInput);
-			CelestialSystemState = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemState = value, () => celestialSystemState, OnCelestialSystemState);
 
 			ScaleLabelSystem = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelSystem = value, () => scaleLabelSystem);
 			ScaleLabelLocal = new ListenerProperty<UniverseScaleLabelBlock>(value => scaleLabelLocal = value, () => scaleLabelLocal);
@@ -141,6 +180,11 @@ namespace LunraGames.SubLight.Models
 			GridScaleOpacity = new ListenerProperty<float>(value => gridScaleOpacity = value, () => gridScaleOpacity);
 
 			CelestialSystemStateLastSelected = new ListenerProperty<CelestialSystemStateBlock>(value => celestialSystemStateLastSelected = value, () => celestialSystemStateLastSelected);
+			CelestialSystemState = new ReadonlyProperty<CelestialSystemStateBlock>(
+				value => celestialSystemState = value,
+				() => celestialSystemState,
+				out celestialSystemStateListener
+			);
 
 			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
 			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
@@ -158,9 +202,25 @@ namespace LunraGames.SubLight.Models
 			}
 
 			CurrentSystem = new ReadonlyProperty<SystemModel>(value => currentSystem = value, () => currentSystem, out currentSystemListener);
+
+			TransitHistoryLineDistance = new ListenerProperty<float>(value => transitHistoryLineDistance = value, () => transitHistoryLineDistance);
+			TransitHistoryLineCount = new ListenerProperty<int>(value => transitHistoryLineCount = value, () => transitHistoryLineCount);
 		}
 
 		#region Events
+		void OnCameraTransform(CameraTransformRequest request)
+		{
+			cameraTransformAbsoluteListener.Value = new CameraTransformRequest(
+				request.State,
+				request.Transform,
+				request.Yaw ?? cameraTransformAbsoluteListener.Value.Yaw,
+				request.Pitch ?? cameraTransformAbsoluteListener.Value.Pitch,
+				request.Radius ?? cameraTransformAbsoluteListener.Value.Radius,
+				request.Duration,
+				request.Done
+			);
+		}
+
 		void OnScaleOpacity(float opacity)
 		{
 			var newHighestOpacityScale = activeScale;
@@ -170,20 +230,30 @@ namespace LunraGames.SubLight.Models
 			}
 			activeScaleListener.Value = newHighestOpacityScale;
 		}
+		#endregion
 
-		void OnCelestialSystemState(CelestialSystemStateBlock block)
+		#region Utility
+		public void SetCelestialSystemState(CelestialSystemStateBlock block)
 		{
+			celestialSystemStateListener.Value = block;
+
 			switch (block.State)
 			{
 				case CelestialSystemStateBlock.States.UnSelected:
 				case CelestialSystemStateBlock.States.Selected:
 					CelestialSystemStateLastSelected.Value = block;
+					model.KeyValues.Set(
+						KeyDefines.Game.NavigationSelectionName,
+						block.State == CelestialSystemStateBlock.States.Selected ? block.System.Name.Value : null
+					);
+					model.KeyValues.Set(
+						KeyDefines.Game.NavigationSelection,
+						block.State == CelestialSystemStateBlock.States.Selected ? block.System.ShrunkPosition : null
+					);
 					break;
 			}
 		}
-		#endregion
 
-		#region Utility
 		public void SetCurrentSystem(SystemModel system)
 		{
 			currentSystemListener.Value = system;

@@ -19,6 +19,7 @@ namespace LunraGames.SubLight.Presenters
 		GamePayload payload;
 		GameModel model;
 		PauseMenuLanguageBlock language;
+		PreferencesPresenter preferences;
 
 		States state = States.Default;
 		DialogRequest.States lastDialogState = DialogRequest.States.Complete;
@@ -31,12 +32,14 @@ namespace LunraGames.SubLight.Presenters
 		public PauseMenuPresenter(
 			GamePayload payload,
 			GameModel model,
-			PauseMenuLanguageBlock language
+			PauseMenuLanguageBlock language,
+			PreferencesPresenter preferences
 		)
 		{
 			this.payload = payload;
 			this.model = model;
 			this.language = language;
+			this.preferences = preferences;
 
 			App.Callbacks.DialogRequest += OnDialogRequest;
 			App.Callbacks.Escape += OnEscape;
@@ -87,7 +90,7 @@ namespace LunraGames.SubLight.Presenters
 					                  lastDialogState == DialogRequest.States.Complete &&
 					                  model.Context.PauseMenuBlockers.Value <= 0 &&
 					                  model.Context.TransitState.Value.State == TransitState.States.Complete &&
-					                  model.Context.ToolbarSelectionRequest.Value.Selection == model.ToolbarSelection.Value;
+					                  (model.Context.ToolbarSelectionRequest.Value.Selection == model.ToolbarSelection.Value || model.Context.ToolbarSelectionRequest.Value.Selection == ToolbarSelections.Unknown);
 			}
 		}
 
@@ -167,9 +170,9 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(
 				() =>
 				{
-					var quitPayload = new QuitPayload();
-					quitPayload.Requester = "GamePauseMenu";
-					App.SM.RequestState(quitPayload);
+					App.SM.RequestState(
+						TransitionPayload.Quit("GamePauseMenu")
+					);
 				},
 				"QuittingFromPauseMenu"
 			);
@@ -197,9 +200,12 @@ namespace LunraGames.SubLight.Presenters
 				LabelVerticalOptionsEntry.CreateHeader(SaveMessage),
 				ButtonVerticalOptionsEntry.CreateButton(language.Resume.Value, OnClickResume),
 				saveEntry,
+				ButtonVerticalOptionsEntry.CreateButton(language.Preferences.Value, OnClickPreferences),
 				ButtonVerticalOptionsEntry.CreateButton(language.MainMenu.Value, OnClickMainMenu),
 				ButtonVerticalOptionsEntry.CreateButton(language.Quit.Value, OnClickQuit)
 			);
+
+			App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.PauseMenu);
 
 			ShowView(instant: instant);
 		}
@@ -311,7 +317,7 @@ namespace LunraGames.SubLight.Presenters
 							DialogStyles.Error,
 							language.SavingError.Title,
 							done,
-							true
+							overrideFocuseHandling: true
 						)
 					);
 				},
@@ -402,7 +408,7 @@ namespace LunraGames.SubLight.Presenters
 							DialogStyles.Error,
 							currentBlocker.Title,
 							done,
-							true
+							overrideFocuseHandling: true
 						)
 					);
 				},
@@ -412,6 +418,35 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(
 				() => Show(),
 				"ShowingPauseMenuFromSaveDisabled"
+			);
+		}
+
+		void OnClickPreferences()
+		{
+			if (NotInteractable) return;
+
+			model.Context.PauseMenuBlockers.Value++;
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Closed += done;
+					CloseView();
+				},
+				"ClosingPauseMenuForPreferences"
+			);
+
+			SM.Push(
+				() => preferences.Show(
+					ActionExtensions.GetEmpty<bool>(),
+					() =>
+					{
+						Show();
+						model.Context.PauseMenuBlockers.Value--;
+					},
+					reFocus: false
+				),
+				"ShowingPreferencesFromPauseMenu"
 			);
 		}
 
@@ -446,8 +481,8 @@ namespace LunraGames.SubLight.Presenters
 							language.MainMenuConfirm.Title,
 							PushMainMenuRequest,
 							() => Show(),
-							result => done(),
-							true
+							done: result => done(),
+							overrideFocuseHandling: true
 						)
 					);
 				},
@@ -486,8 +521,8 @@ namespace LunraGames.SubLight.Presenters
 							language.QuitConfirm.Title,
 							PushQuitRequest,
 							() => Show(),
-							result => done(),
-							true
+							done: result => done(),
+							overrideFocuseHandling: true
 						)
 					);
 				},

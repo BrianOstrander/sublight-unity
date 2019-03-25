@@ -7,7 +7,17 @@ namespace LunraGames.SubLight.Presenters
 		Action<bool> setFocus;
 		Action back;
 
-		protected bool NotInteractable
+		public ContextualOptionsPresenter()
+		{
+			App.Callbacks.Escape += OnEscape;
+		}
+
+		protected override void OnUnBind()
+		{
+			App.Callbacks.Escape -= OnEscape;
+		}
+
+		protected virtual bool NotInteractable
 		{
 			get
 			{
@@ -51,8 +61,6 @@ namespace LunraGames.SubLight.Presenters
 
 		protected void ReShowInstant()
 		{
-			//CloseView(true);
-
 			Show(
 				setFocus,
 				back,
@@ -62,13 +70,25 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
-		protected void OnClickBack()
+		void OnEscape()
 		{
 			if (NotInteractable) return;
 
-			View.Closed += back;
+			OnClickBack();
+		}
+
+		protected virtual void OnClickBack()
+		{
+			if (NotInteractable) return;
+
+			View.Closed += OnBack;
 
 			CloseView();
+		}
+
+		protected void OnBack()
+		{
+			back();
 		}
 		#endregion
 

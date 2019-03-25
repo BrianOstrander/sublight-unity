@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -26,15 +27,36 @@ namespace LunraGames.SubLight
 
 	public class BuildPreferences : ScriptableSingleton<BuildPreferences>
 	{
+		[Serializable]
+		public struct AnalyticsPreferences
+		{
+			public bool IgnoreStateChange;
+			public bool IgnoreGameStart;
+			public bool IgnoreGameOver;
+			public bool IgnoreGameContinue;
+			public bool IgnoreEncounterBegin;
+			public bool IgnoreEncounterEnd;
+			public bool IgnoreScreenVisit;
+			public bool IgnoreTransit;
+		}
+
 		public int TargetFrameRate;
 		public int VSyncCount;
 
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		string feedbackFormPrefix;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		public string BlogUrl;
 		public string DiscordUrl;
 		public string TwitterUrl;
+
+		public AnalyticsPreferences Analytics;
+
+		public Changelog[] ChangeLogs;
+
+		public Changelog Current { get { return ChangeLogs.FirstOrDefault(c => c.Version == Info.Version); } }
 
 		public IBuildInfo Info
 		{

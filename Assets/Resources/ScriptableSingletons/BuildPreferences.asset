@@ -18,3 +18,63 @@ MonoBehaviour:
   BlogUrl: https://strangestar.games/blog/
   DiscordUrl: https://discord.gg/6FaGvnS
   TwitterUrl: https://twitter.com/spacew00t
+  Analytics:
+    IgnoreStateChange: 0
+    IgnoreGameStart: 0
+    IgnoreGameOver: 0
+    IgnoreGameContinue: 0
+    IgnoreEncounterBegin: 0
+    IgnoreEncounterEnd: 1
+    IgnoreScreenVisit: 0
+    IgnoreTransit: 1
+  ChangeLogs:
+  - Title: Sol
+    Description: Welcome to the first public Alpha of <b>SubLight</b>!
+    ReleaseType: Feature
+    Cyle: Alpha
+    Version: 7
+    Year: 2019
+    Month: 2
+    Day: 22
+    Entries:
+    - Index: 0
+      Change: 10
+      Description: Playable build for Windows and macOS
+  - Title: Proxima Centauri
+    Description: Incorporating feedback from the first alpha of <b>SubLight</b>, this
+      one includes plenty of bugfixes, improvements, and a few new features.
+    ReleaseType: Feature
+    Cyle: Alpha
+    Version: 8
+    Year: 2019
+    Month: 3
+    Day: 22
+    Entries:
+    - Index: 0
+      Change: 10
+      Description: Scanning for habitable planets added, this is the start of a sandbox
+        mode
+    - Index: 1
+      Change: 10
+      Description: "A trail now shows where you\u2019ve been"
+    - Index: 2
+      Change: 10
+      Description: Support for showing changelogs when opening a new version
+    - Index: 3
+      Change: 10
+      Description: Added in a new resource, <b>Metallics</b>, for future updates
+    - Index: 4
+      Change: 20
+      Description: New introduction to the game
+    - Index: 5
+      Change: 20
+      Description: Time delay between the appearance of conversation entries
+    - Index: 6
+      Change: 20
+      Description: Velocity can now be set in a temporary menu
+    - Index: 7
+      Change: 20
+      Description: Options for increasing the scale of interfaces added to <b>Preferences</b>
+    - Index: 8
+      Change: 30
+      Description: Minor bug-fixes

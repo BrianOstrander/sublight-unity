@@ -62,6 +62,8 @@ namespace LunraGames.SubLight.Presenters
 				new LabelButtonBlock(language.Quit, CloseThenClick(OnQuitClick))
 			};
 
+			App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.MainMenu);
+
 			ShowView(parent, instant);
 		}
 
@@ -70,9 +72,9 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(
 				() =>
 				{
-					var quitPayload = new QuitPayload();
-					quitPayload.Requester = "HomeMainMenu";
-					App.SM.RequestState(quitPayload);
+					App.SM.RequestState(
+						TransitionPayload.Quit("HomeMainMenu")
+					);
 				},
 				"QuittingFromMainMenu"
 			);
@@ -91,7 +93,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnNewGameClick()
 		{
-			if (payload.CanContinueSave)
+			if (!App.MetaKeyValues.Get(KeyDefines.Preferences.IsDemoMode) && payload.CanContinueSave)
 			{
 				App.Callbacks.DialogRequest(
 					DialogRequest.ConfirmDeny(
@@ -124,7 +126,7 @@ namespace LunraGames.SubLight.Presenters
 					Application.OpenURL(
 						App.BuildPreferences.FeedbackForm(
 							FeedbackFormTriggers.MainMenu,
-							App.MetaKeyValues.GlobalKeyValues.KeyValues
+							App.MetaKeyValues.GlobalKeyValues
 						)
 					);
 				},
@@ -212,7 +214,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			payload.StartGame(model);
+			payload.StartGame(model, false, false);
 		}
 
 		void OnLoadGame(RequestResult result, GameModel model)
@@ -229,7 +231,7 @@ namespace LunraGames.SubLight.Presenters
 				);
 				return;
 			}
-			payload.StartGame(model);
+			payload.StartGame(model, false, true);
 		}
 		#endregion
 	}

@@ -264,6 +264,13 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: 92e9f1ad75afb4a42b2c9a6117e78c0a, type: 2}
   - {fileID: 11400000, guid: 8cac59c785f42436c91e690c040b41f4, type: 2}
+  dialogScales:
+    Entries:
+    - Index: 0
+      Scale: 1
+    - Index: 1
+      Scale: 1.25
+  dialogScaleArea: {fileID: 1944}
   rootGroup: {fileID: 2511}
   neutralPrimaryColor:
     globalStyle: {fileID: 11400000, guid: ceb9b9ccb3be84c5aacf6e28777196b1, type: 2}
@@ -1985,8 +1992,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 430, y: 0}
+  m_SizeDelta: {x: 860, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1632
 CanvasRenderer:
@@ -2083,7 +2090,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 18, y: 10, z: 18, w: 18}
+  m_margin: {x: 24, y: 20, z: 24, w: 36}
   m_textInfo:
     textComponent: {fileID: 3223}
     characterCount: 12
@@ -5430,8 +5437,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 430, y: 0}
+  m_SizeDelta: {x: 860, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1590
 CanvasRenderer:
@@ -5528,7 +5535,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 18, y: 10, z: 18, w: 18}
+  m_margin: {x: 24, y: 20, z: 24, w: 36}
   m_textInfo:
     textComponent: {fileID: 2859}
     characterCount: 12
@@ -6315,8 +6322,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 430, y: 0}
+  m_SizeDelta: {x: 860, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1744
 CanvasRenderer:
@@ -6413,7 +6420,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 18, y: 10, z: 18, w: 18}
+  m_margin: {x: 24, y: 20, z: 24, w: 36}
   m_textInfo:
     textComponent: {fileID: 2847}
     characterCount: 12

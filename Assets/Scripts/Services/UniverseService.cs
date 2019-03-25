@@ -218,6 +218,10 @@ namespace LunraGames.SubLight
 			sector.Visited.Value = false;
 			sector.Systems.Value = new SystemModel[0];
 			sector.Seed.Value = DemonUtility.CantorPairs(Mathf.FloorToInt(sector.Position.Value.Sector.x), Mathf.FloorToInt(sector.Position.Value.Sector.z), universe.Seed);
+
+			var demon = new Demon(SectorModel.Seeds.Position(sector.Seed.Value));
+			sector.sectorOffset = demon.GetNextInteger(0, 17); // TODO: Don't hardcode this lol (the max should be the same as fudged universe's position array length, not max in sector)
+
 			return sector;
 		}
 
@@ -230,7 +234,12 @@ namespace LunraGames.SubLight
 			system.Index.Value = index;
 			system.Seed.Value = DemonUtility.CantorPairs(index, sector.Seed);
 			system.Visited.Value = false;
-			system.Position.Value = GetPositionInSector(sector.Position.Value, SystemModel.Seeds.Position(system.Seed.Value), index, sector.SystemCount.Value);
+			system.Position.Value = GetPositionInSector(
+				sector.Position.Value,
+				sector.sectorOffset, // TODO: HACK LOL
+				index,
+				sector.SystemCount.Value
+			);
 
 			var seedString = system.Seed.Value.ToString();
 			if (4 < seedString.Length) seedString = seedString.Substring(0, 4);

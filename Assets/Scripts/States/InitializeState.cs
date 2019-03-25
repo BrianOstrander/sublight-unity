@@ -33,6 +33,7 @@ namespace LunraGames.SubLight
 			SM.PushBlocking(InitializeEncounters, "InitializeEncounters");
 			SM.PushBlocking(InitializeListeners, "InitializeListeners");
 			SM.PushBlocking(InitializeMetaKeyValues, "InitializeMetakeyValues");
+			SM.PushBlocking(InitializeAnalytics, "InitializeAnalytics");
 
 			if (DevPrefs.WipeGameSavesOnStart) SM.PushBlocking(WipeGameSaves, "WipeGameSaves");
 		}
@@ -215,6 +216,22 @@ namespace LunraGames.SubLight
 					}
 					else App.Restart("Initializing Meta KVs failed with status " + status);
 				}
+			);
+		}
+
+		void InitializeAnalytics(Action done)
+		{
+			App.Analytics.Initialize(
+				status => 
+				{
+					if (status == RequestStatus.Success)
+					{
+						App.Log("Analytics Initialized", LogTypes.Initialization);
+						done();
+					}
+					else App.Restart("Initializing Analytics failed with status " + status);
+				},
+				StateMachine.States.Initialize
 			);
 		}
 

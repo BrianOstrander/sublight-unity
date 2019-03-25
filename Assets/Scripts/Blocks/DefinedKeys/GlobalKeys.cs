@@ -3,11 +3,12 @@
 	public class GlobalKeys : KeyDefinitions
 	{
 		#region Booleans
-		public readonly Boolean HasShownUserAnalyticsWarning;
-		public readonly Boolean HasAskedForFeedback;
+		public readonly Boolean IgnoreUserAnalyticsWarning;
+		public readonly Boolean IgnoreFeedbackRequest;
 		#endregion
 
 		#region Integers
+		public readonly Integer PreviousChangelogVersion;
 		#endregion
 
 		#region Strings
@@ -22,20 +23,24 @@
 			Booleans = new Boolean[]
 			{
 				Create(
-					ref HasShownUserAnalyticsWarning,
-					"has_shown_user_analytics_warning",
-					"True if the user been shown an analytics warning in compliance with GDPR."
+					ref IgnoreUserAnalyticsWarning,
+					"ignore_user_analytics_warning",
+					"True if the player been shown an analytics warning in compliance with GDPR."
 				),
 				Create(
-					ref HasAskedForFeedback,
-					"has_asked_for_feedback",
+					ref IgnoreFeedbackRequest,
+					"ignore_feedback_request",
 					"True if the player has been asked for feedback already."
 				)
 			};
 
 			Integers = new Integer[]
 			{
-
+				Create(
+					ref PreviousChangelogVersion,
+					"previous_changelog_version",
+					"The version of the game when a changelog was last shown to the player."
+				)
 			};
 
 			Strings = new String[]

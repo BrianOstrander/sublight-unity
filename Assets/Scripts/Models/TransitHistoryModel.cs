@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
@@ -10,10 +11,8 @@ namespace LunraGames.SubLight.Models
 	{
 		#region Serialized
 		[JsonProperty] TransitHistoryEntry[] stack = new TransitHistoryEntry[0];
-
 		readonly ListenerProperty<TransitHistoryEntry[]> stackListener;
-		[JsonIgnore]
-		public readonly ReadonlyProperty<TransitHistoryEntry[]> Stack;
+		[JsonIgnore] public readonly ReadonlyProperty<TransitHistoryEntry[]> Stack;
 		#endregion
 
 		public TransitHistoryModel()
@@ -23,7 +22,7 @@ namespace LunraGames.SubLight.Models
 
 		public void Push(TransitHistoryEntry entry)
 		{
-			if (0 < stack.Length && stack.First().TransitCount != (entry.TransitCount - 1)) Debug.LogError("Pushing a non-sequencial TransitHistoryEntry to the stack");
+			if (0 < stack.Length && stack.First().TransitCount != (entry.TransitCount - 1)) Debug.LogError("Pushing a non-sequencial TransitHistoryEntry to the stack, unperdictable behaviour may occur");
 
 			stackListener.Value = stack.Prepend(entry).ToArray();
 		}
@@ -54,6 +53,11 @@ namespace LunraGames.SubLight.Models
 			return Stack.Value.FirstOrDefault(t => t.Id == id);
 		}
 
-		public int Count() { return Stack.Value.Length; }
+		public TransitHistoryEntry Peek(Func<TransitHistoryEntry, bool> predicate)
+		{
+			return Stack.Value.FirstOrDefault(predicate);
+		}
+
+		[JsonIgnore] public int Count { get { return Stack.Value.Length; } }
 	}
 }

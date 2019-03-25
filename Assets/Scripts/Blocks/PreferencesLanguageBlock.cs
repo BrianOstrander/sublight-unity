@@ -7,9 +7,20 @@ namespace LunraGames.SubLight
 		public LanguageStringModel Title;
 		public LanguageStringModel Back;
 
-		public LanguageStringModel AnalyticsEnabled;
-		public LanguageStringModel AnalyticsDisabled;
+		public ToggleOptionLanguageBlock Analytics;
+		public ToggleOptionLanguageBlock Tutorial;
+		public ToggleOptionLanguageBlock InterfaceLarge;
+		public ToggleOptionLanguageBlock DemoMode;
 
 		public LanguageStringModel VersionPrefix;
+		public LanguageStringModel Gameplay;
+
+		public DialogLanguageBlock BlockedDuringGame;
+		public DialogLanguageBlock ReloadHomeRequired;
+		public DialogLanguageBlock RestartRequired;
+
+		public LanguageStringModel ReloadRestartConfirm;
+		public LanguageStringModel ReloadRestartDiscard;
+		public LanguageStringModel ReloadRestartCancel;
 	}
 }

@@ -61,6 +61,7 @@ namespace LunraGames.SubLight.Models
 			public AvatarTypes AvatarType;
 
 			public int AvatarStaticIndex;
+			public bool AvatarStaticTerminalTextVisible;
 		}
 
 		[Serializable]

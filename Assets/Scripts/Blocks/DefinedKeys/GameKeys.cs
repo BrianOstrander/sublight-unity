@@ -55,9 +55,10 @@ namespace LunraGames.SubLight
 		}
 
 		#region Booleans
+		public readonly Boolean IgnoreSystemOutOfRangeWarning;
 		#endregion
 
-		#region Integers - Read & Write
+		#region Integers
 		public readonly Integer Rationing;
 		public readonly Integer RationingMinimum;
 		public readonly Integer RationingMaximum;
@@ -75,9 +76,16 @@ namespace LunraGames.SubLight
 		public readonly Integer TransitsWithUnderPopulation;
 		public readonly Integer TransitsWithUnderPopulationMaximum;
 		public readonly Integer TransitsWithUnderPopulationUntilFailure;
+
+		public readonly Integer SurfaceProbeCount;
+		public readonly Integer SurfaceProbeScanLevel;
 		#endregion
 
 		#region Strings
+		public readonly String NavigationSelection;
+		public readonly String NavigationSelectionName;
+		public readonly String NavigationHighlight;
+		public readonly String NavigationHighlightName;
 		#endregion
 
 		#region Floats
@@ -110,13 +118,18 @@ namespace LunraGames.SubLight
 		#region Resources
 		public readonly Resource Rations;
 		public readonly Resource Propellant;
+		public readonly Resource Metallics;
   		#endregion
 
 		public GameKeys() : base(KeyValueTargets.Game)
 		{
 			Booleans = new Boolean[]
 			{
-
+				Create(
+					ref IgnoreSystemOutOfRangeWarning,
+					"ignore_system_out_of_range_warning",
+					"True if the player has been warned about clicking on out of range systems already."
+				)
 			};
 
 			Integers = new Integer[]
@@ -195,12 +208,44 @@ namespace LunraGames.SubLight
 					ref TransitsWithUnderPopulationUntilFailure,
 					"transits_with_under_population_until_failure",
 					"How many more transits with underpopulation can the ship survive."
+				),
+				Create(
+					ref SurfaceProbeCount,
+					"surface_probe_count",
+					"The number of surface probes remaining.",
+					true
+				),
+				Create(
+					ref SurfaceProbeScanLevel,
+					"surface_probe_scan_level",
+					"todo desc",
+					true // TODO: should be readable???
 				)
 			};
 
 			Strings = new String[]
 			{
-
+				Create(
+					ref NavigationSelection,
+					"navigation_selection",
+					GetNavigationSystemNotes("selection"),
+					true
+				),
+				Create(
+					ref NavigationSelectionName,
+					"navigation_selection_name",
+					"The name of the current navigation selection."
+				),
+				Create(
+					ref NavigationHighlight,
+					"navigation_highlight",
+					GetNavigationSystemNotes("highlight")
+				),
+				Create(
+					ref NavigationHighlightName,
+					"navigation_highlight_name",
+					"The name of the current navigation highlight."
+				)
 			};
 
 			Floats = new Float[]
@@ -309,6 +354,14 @@ namespace LunraGames.SubLight
 
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
 			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
+			Metallics = new Resource(KeyDefines.Resources.Metallics, this);
+		}
+
+		static string GetNavigationSystemNotes(string interaction)
+		{
+			return "The condensed id of the current celestial system " + interaction + ", null or empty if none. " +
+				"This information is serialized as:\n\t\"Format_SectorX_SectoryY_SectorZ_Index\"\n" +
+				"The only format currently supported is \"coordinate\", though others may be added in the future.";
 		}
 	}
 }

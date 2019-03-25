@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 		{
 			public const string Rations = "rations";
 			public const string Propellant = "propellant";
+			public const string Metallics = "metallics";
 		}
 
 		#region Defined Keys
@@ -195,10 +196,12 @@ namespace LunraGames.SubLight
 			string key,
 			string notes = null,
 			bool canWrite = false,
-			bool canRead = true
+			bool canRead = true,
+			Func<Boolean, Boolean> created = null
 		)
 		{
-			return instance = new Boolean(key, Target, notes, canWrite, canRead);
+			created = created ?? (result => result);
+			return instance = created(new Boolean(key, Target, notes, canWrite, canRead));
 		}
 
 		protected Integer Create(
@@ -206,10 +209,12 @@ namespace LunraGames.SubLight
 			string key,
 			string notes = null,
 			bool canWrite = false,
-			bool canRead = true
+			bool canRead = true,
+			Func<Integer, Integer> created = null
 		)
 		{
-			return instance = new Integer(key, Target, notes, canWrite, canRead);
+			created = created ?? (result => result);
+			return instance = created(new Integer(key, Target, notes, canWrite, canRead));
 		}
 
 		protected String Create(
@@ -217,10 +222,12 @@ namespace LunraGames.SubLight
 			string key,
 			string notes = null,
 			bool canWrite = false,
-			bool canRead = true
+			bool canRead = true,
+			Func<String, String> created = null
 		)
 		{
-			return instance = new String(key, Target, notes, canWrite, canRead);
+			created = created ?? (result => result);
+			return instance = created(new String(key, Target, notes, canWrite, canRead));
 		}
 
 		protected Float Create(
@@ -228,10 +235,12 @@ namespace LunraGames.SubLight
 			string key,
 			string notes = null,
 			bool canWrite = false,
-			bool canRead = true
+			bool canRead = true,
+			Func<Float, Float> created = null
 		)
 		{
-			return instance = new Float(key, Target, notes, canWrite, canRead);
+			created = created ?? (result => result);
+			return instance = created(new Float(key, Target, notes, canWrite, canRead));
 		}
 	}
 }

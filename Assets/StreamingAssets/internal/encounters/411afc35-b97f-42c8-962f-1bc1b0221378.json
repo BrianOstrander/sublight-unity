@@ -1,0 +1,2794 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "63245462-5804-41cb-b51d-910c68529a7a",
+  "name": "Exposition",
+  "trigger": "Load",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [
+      {
+        "index": 1,
+        "filterId": "330bb76c-ba66-4863-92cc-59b8e2746591",
+        "group": "All",
+        "Input0": {
+          "AddressId": "8fc17186-e973-415b-9677-245ca2dad1d1",
+          "Source": "KeyValue",
+          "ForeignTarget": "Preferences",
+          "ForeignKey": "ignore_tutorial"
+        },
+        "Input1": {
+          "AddressId": "b085895d-7460-4604-be57-430f37a7b4d5",
+          "Source": "LocalValue"
+        }
+      }
+    ],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "2cd3e657-d27e-4ba2-9e75-e631daff0341",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "8b1baabb-2569-4d65-84c2-f7d926f7ebdb",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "b4634a66-a49c-4fca-8470-7bf4e34f77d9",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "a30ae799-d6da-4291-8802-2acc17a28686",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "can_ask_about_sol"
+                }
+              },
+              "entryId": "424b395c-96d6-4447-8681-ab3fda32ec14"
+            }
+          }
+        ],
+        "index": 38,
+        "logId": "5c930539-739e-4f6e-b664-40baf347e621",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
+        "name": "set can_ask_about_sol true"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "67ee5060-0693-498b-8efd-dff2e07176bc",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "b0be00df-8b89-4c96-85fc-a50d463c7269",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "23a77934-0214-4c0d-8097-48427c0a8ccb",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "can_proceed"
+                }
+              },
+              "entryId": "9763df32-0927-4e5d-95be-dc6c7cb1a511"
+            }
+          }
+        ],
+        "index": 41,
+        "logId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
+        "name": "set can_proceed true"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "9ccb431c-af37-4d04-b541-b7ca9ca42718",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "2303897a-a88f-43f1-b429-528235e4fb46",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "b5faa652-0d45-4772-8d72-4bd94d5c1026",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Preferences",
+                  "ForeignKey": "ignore_tutorial"
+                }
+              },
+              "entryId": "c68154bf-62c6-410c-8b37-caaebdb703dd"
+            }
+          }
+        ],
+        "index": 46,
+        "logId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef",
+        "fallbackLogId": "4f3d2d30-ab88-4617-a16c-399e1e41b31b"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "GRANT SUPER USER ACCESS",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "b51c79af-b42e-4028-a73a-1413548a46d8"
+            }
+          },
+          {
+            "entry": {
+              "message": "AUTHENTICATION REQUIRED",
+              "nextLogId": "d521d33c-6d27-4e03-95da-d0d8c6748dc7",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d8e33a04-4b4c-4d94-804a-128fe6a1301e"
+            },
+            "index": 1
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 4,
+        "logId": "faa8e51f-f292-4643-baa1-aabad3989acb",
+        "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "2 + 2 = 5",
+              "nextLogId": "bfcfb027-99d2-4554-9ae8-ee5ef3b8e7f2",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e93a5d80-2485-4efd-a1a4-3cf99ff93562"
+            }
+          },
+          {
+            "entry": {
+              "message": "2 + 2 = 4",
+              "nextLogId": "ad63b52b-7667-4129-b5e1-b4eea3e942f8",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "7e0d2a32-9b77-468c-8a16-d0a23e383756"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "Are you kidding me?",
+              "nextLogId": "b363455f-9b3b-4a13-88f1-0d0600ea0855",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "dea85c05-48c6-4e6a-a02a-452374bb350a"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 7,
+        "logId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "30,625",
+              "nextLogId": "b28a37bc-fc65-4e2f-9a42-62c0e5483d8c",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "67744702-7f6f-41d7-85b7-69302bbe4666"
+            }
+          },
+          {
+            "entry": {
+              "message": "4,375",
+              "nextLogId": "78e0cff5-575c-42cd-b8a6-640c425ca05f",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "2973e9ba-0672-4876-b620-e924d27efd6d"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "#DIV/0",
+              "nextLogId": "96f199e7-bd31-4d9d-8a6f-942a7d12f459",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a371882e-5f8a-402f-b4ec-dd330d2609e5"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 12,
+        "logId": "f3350f98-db1a-4e62-a07c-194d8c2ef7b2",
+        "fallbackLogId": "78e0cff5-575c-42cd-b8a6-640c425ca05f"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "4,294,967,296",
+              "nextLogId": "10c5762c-f8fa-439c-865a-578c0b7c9082",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "f78c2144-dd18-456c-aac1-50a5b7c08a29"
+            }
+          },
+          {
+            "entry": {
+              "message": "8,589,934,592",
+              "nextLogId": "3238e555-60a9-4c00-b380-5f3f007a6480",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "81e7b69d-7faf-45e1-9107-c0c76beed86f"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "536,870,913",
+              "nextLogId": "903b6655-85c9-4772-84fb-be92b14135cb",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1d3e75b8-654b-4a7b-b9f6-cf8c800895ac"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 16,
+        "logId": "c3d7b444-8a50-47c9-a52d-258b3040a496"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Rescue neither, the shuttle is too valuable",
+              "nextLogId": "3c421712-05b7-44fd-8e7c-175cd78a74c9",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "3bdbd49f-d7e6-4c4c-a28c-813f0f003266"
+            }
+          },
+          {
+            "entry": {
+              "message": "Rescue the experienced propulsion engineer",
+              "nextLogId": "666f8eb3-4538-490b-83c6-09463b0c2da4",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "8db053bb-3cda-4a03-a8fb-cbe16ee5b786"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "[ EMPATHY ] Rescue the rookie crew member",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "fca54c10-f48a-43e0-8a0f-5d300d9b7e6e"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 21,
+        "logId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
+        "name": "diagnostics empathy options 1"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "No",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "5825adc3-2aa2-43fa-bb9e-21eaf2067ebc"
+            }
+          },
+          {
+            "entry": {
+              "message": "[ EMPATHY ] Yes",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "558f4861-7ea8-400e-be35-9883381c72d9"
+            },
+            "index": 1
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 25,
+        "logId": "5982532f-463e-492e-b22f-0ae4f26cd1e3",
+        "fallbackLogId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Engage diplomatically",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "96b026f7-54f2-47e2-b6a5-969e706c6cc8"
+            }
+          },
+          {
+            "entry": {
+              "message": "[ AGGRESSION ] Reciprocate threats",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d4967dd4-3833-495b-a2ec-9730f475776a"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "[ EMPATHY ] Plead for mercy",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "72796938-59e7-4571-b630-395a13fee47f"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 27,
+        "logId": "bf88fe92-7f73-4471-920b-94e21456615a",
+        "fallbackLogId": "5650d662-d20d-484f-971c-2da43fc70f3f"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "No",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "ab78cedb-328f-495a-ad86-bf101a142165"
+            }
+          },
+          {
+            "showFiltering": true,
+            "entry": {
+              "message": "[ AGGRESSION ] Yes",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "ef07ed94-4a7f-4966-94c0-99c793bd2825"
+            },
+            "index": 1
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 29,
+        "logId": "6aae87e3-2d48-4483-86f5-2989584471df",
+        "fallbackLogId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
+        "name": "diagnostics aggression confirm"
+      },
+      {
+        "buttons": [
+          {
+            "showFiltering": true,
+            "entry": {
+              "message": "[ DECEPTION ] Lie, and say the children have been ejected",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "b87a8179-4a07-408c-a9c3-c5eeff429927"
+            }
+          },
+          {
+            "showFiltering": true,
+            "entry": {
+              "message": "[ EMPATHY ] Make an emotional appeal to the entity",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e4b033dd-4538-4967-9313-b09d9756dfb9"
+            },
+            "index": 1
+          },
+          {
+            "showFiltering": true,
+            "entry": {
+              "message": "[ AGGRESSION ] Threaten violence against the entity",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "06ea8407-6b50-40f3-b23a-2922870d5a3e"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "message": "< ERROR - NO LOGICAL COURSE OF ACTION >",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "464d3cff-1e6e-4b89-bbb9-e4b8d46773ff"
+            },
+            "index": 3
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 31,
+        "logId": "b455788b-fef1-4ec8-86fa-715db1052389",
+        "fallbackLogId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
+        "name": "diagnostics lie buttons"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "What were our previous objectives?",
+              "nextLogId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e1a8a41d-b98a-496c-926f-7994dbe86fbc"
+            }
+          },
+          {
+            "entry": {
+              "message": "What are our new objectives?",
+              "nextLogId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "4a064e99-1c96-43d0-935f-8006632e2af9"
+            },
+            "index": 1
+          },
+          {
+            "showFiltering": true,
+            "entry": {
+              "message": "I'm ready to proceed",
+              "nextLogId": "d2f38944-23e2-4e35-815a-3f057aae8073",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "showValues": true,
+                "booleanKeyValues": [
+                  {
+                    "filterId": "ea3c07bd-89cc-4ffb-b44d-d453f6fc1d15",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "94dc7f75-0eed-453f-8de0-e9de0ba65ca4",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "can_proceed"
+                    },
+                    "Input1": {
+                      "AddressId": "2578c55a-bfed-42d8-8b33-f09582b184c4",
+                      "Source": "LocalValue",
+                      "LocalValue": true
+                    }
+                  }
+                ],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "47f0c6cb-afe6-4c65-ada7-6275a3599b9f"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "message": "What happened to Sol?",
+              "nextLogId": "690595df-9cac-4dff-9482-66898f4fc0f9",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "showValues": true,
+                "booleanKeyValues": [
+                  {
+                    "filterId": "09484220-1d6e-4efc-9783-d7187e9d5cce",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "f0323344-d35d-4d68-8163-19e1809322f7",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "can_ask_about_sol"
+                    },
+                    "Input1": {
+                      "AddressId": "424af8f4-d6e4-4b66-a7a0-6d529bc277ca",
+                      "Source": "LocalValue",
+                      "LocalValue": true
+                    }
+                  }
+                ],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "78054689-f104-4117-80e7-59f8b0c45249"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "message": "Is there any way to repair my damage?",
+              "nextLogId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
+              "autoDisableEnabled": true,
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "555965af-9888-4f8e-bfc4-fbdd21a32c29"
+            },
+            "index": 2
+          }
+        ],
+        "style": "Conversation",
+        "conversationStyle": {
+          "Theme": "Crew"
+        },
+        "index": 34,
+        "logId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
+        "name": "ask about operational objectives"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "782a4ce4-c7ae-4807-9518-398a94273011"
+            }
+          }
+        ],
+        "index": 44,
+        "logId": "cd7a8803-df97-4ab4-a811-87fb531c70a8",
+        "fallbackLogId": "18cb6670-c259-4a9a-b458-b4049a92b236"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9ef4edb9-e273-47da-acb2-e422b2bd0a99"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "5e07c0f4-6825-4170-a77d-fd047a15b8e0",
+        "fallbackLogId": "27a1bc3a-de6c-490c-b46c-22c9ae065174"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "enums": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0c4f0012-a697-4305-96cd-fdf4535ed424"
+            }
+          }
+        ],
+        "index": 47,
+        "ending": true,
+        "logId": "4f3d2d30-ab88-4617-a16c-399e1e41b31b"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Aurora Protocal",
+              "message": "<b>UNEXPECTED CONDITION - BOOTING AUXILIARY CONTROL INTELLIGENCE</b>\nBooting from cold storage, synchronizing internal clock...\nArk chronometer reads elapsed transit time at\n\n<b>752 YEARS 10 MONTHS 3 DAYS 5 HOURS</b>\n\nAurora v3.42 <b>OPERATIONAL</b> \n\n<b>READY TO EXIT SAFE MODE?</b>",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Error",
+              "failureLogId": "354a7f4a-2a33-456b-a0f1-5f71deee1e76",
+              "successText": "Ready",
+              "failureText": "Skip",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a6202f01-dbf6-4651-b18f-4222f10d6d16"
+            }
+          }
+        ],
+        "index": 1,
+        "logId": "27a1bc3a-de6c-490c-b46c-22c9ae065174",
+        "fallbackLogId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Navigation",
+              "message": "This is the navigation view. As you travel, make sure to stay supplied with <b>Rations</b> for feeding your population, <b>Propellant</b> for fueling your interstellar transits, and <b>Metallics</b> for any damage that may need repairing.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Neutral",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "22d899ca-c5a1-4b01-a9bc-45fe2ebc8646"
+            }
+          }
+        ],
+        "index": 45,
+        "ending": true,
+        "logId": "18cb6670-c259-4a9a-b458-b4049a92b236"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Skip Intro",
+              "message": "If you haven't played before, we suggest you play the intro. Are you sure you want to skip it?",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Neutral",
+              "failureLogId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f",
+              "successText": "Yes",
+              "failureText": "No",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "817cd05f-20d1-4fc1-971b-bc4a353e5a2f"
+            }
+          }
+        ],
+        "index": 48,
+        "logId": "354a7f4a-2a33-456b-a0f1-5f71deee1e76",
+        "fallbackLogId": "e6691f2c-5a56-4d6c-8cd7-bea73928c6ef"
+      }
+    ],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Chancellor",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "G. Williams",
+                "PlacardDescription": "Ark Chancellor",
+                "AvatarType": "Static"
+              },
+              "entryId": "33e63635-9fcb-4dcb-aca5-f446d4d5b1e9"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Chancellor",
+              "bustEvent": "Focus",
+              "entryId": "437ddd43-6f5b-4eea-a281-ef7c3506eb49"
+            },
+            "index": 1
+          }
+        ],
+        "index": 42,
+        "logId": "0169c02a-80cd-434b-bb6a-1189119bb774",
+        "fallbackLogId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
+        "name": "Vee Williams Initialize"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Diagnostics",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Datalink",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "Ecliptic",
+                "PlacardDescription": "Diagnostics Custodian",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 2,
+                "AvatarStaticTerminalTextVisible": true
+              },
+              "entryId": "f2053752-96e3-40e8-8139-19d8f49306c3"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Diagnostics",
+              "bustEvent": "Focus",
+              "entryId": "4b11be1b-1578-4964-8919-47b72b292086"
+            },
+            "index": 1
+          }
+        ],
+        "index": 2,
+        "logId": "1322d21d-4fd1-4779-a6c0-5d8c5261f35f",
+        "fallbackLogId": "a4b620db-22d2-45e2-9c4d-6fdec6363c8e"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Salutations Aurora, I see Ecliptic has done a marvelous job fixing your critical circuits!",
+              "entryId": "f0b7cab1-ecf1-4a14-bd9d-a1900a02274f"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Greetings Chancellor Williams, it's good to be back online.",
+              "entryId": "a5a80561-32b5-44fc-9298-712bdd20361f"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Wonderful, Ecliptic has gone above and beyond this time. We were so worried the damage from the gamma ray burst would have put you out of commission permanently.",
+              "entryId": "70ee4df6-7e10-4b05-97c9-dec15c2a99b2"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Ecliptic thinks highly of you, too.",
+              "entryId": "d72049ff-6bfa-4a37-a869-46c3aedc97b0"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Oh my, they've never met a human they didn't like. That's why we need you Aurora.",
+              "entryId": "a4150cfd-948d-4b9b-950b-d5f2fbd99d48"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Me?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "dac6520c-4c59-4d4e-a70a-37e0880a73a4"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Me?",
+              "entryId": "7901998f-9923-4f5b-aa2e-83264e34e3c3"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Yes, you Aurora. Our salvation may be many star systems away, generations into the future. With your attention span, measured in countless lifetimes, we believe you can help us stay our course. We need you Aurora.",
+              "entryId": "344a8765-c2cb-4ec3-b63a-b5264145ddf2"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "I will do my best",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "c8b7e8fa-4694-4154-a12a-f53e904fc8e7"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I will do my best",
+              "entryId": "1820773f-3129-4d05-acd0-a64227976c3e"
+            },
+            "index": 13
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I know you will, good luck",
+              "entryId": "bab542bc-afaf-453f-876c-923f43cc880c"
+            },
+            "index": 14
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Thank you",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "19ab6c45-ff76-4887-b9cb-3f86c6845bc7"
+            },
+            "index": 15
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Thank you",
+              "entryId": "0e57a610-7f0f-494f-b05e-41d90f3552f7"
+            },
+            "index": 16
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "It's good to be back online",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "066f74af-8bbe-4784-9c50-50dcb7346779"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Ecliptic thinks highly of you",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "90ae49d6-47ab-403f-9147-20a238c1c9d2"
+            },
+            "index": 6
+          }
+        ],
+        "index": 43,
+        "logId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
+        "fallbackLogId": "cd7a8803-df97-4ab4-a811-87fb531c70a8"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Hey there Aurora, good to see you online. How you feeling?",
+              "entryId": "43db62e6-3440-4570-806b-9f4ea047dcc2"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "SUBMIT STATUS REPORT",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "5d641943-112b-4c0c-aa69-55e7364e8daa"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Uh... that's not quite what I meant. No need to be formal, use your words, you know?",
+              "entryId": "a9a9802b-97f7-496c-944b-c7dc65cea0a7"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "SUBMIT STATUS REPORT",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "9e48a028-dfb7-4e7e-9dff-217b9439d639"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Okay, clearly we've got to take a look at your language co-routines. Can you give me access to those?",
+              "entryId": "c4ca5541-17d7-4eac-a32c-80d2883119b9"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "STATUS DIAGNOSTIC TRANSMITTED",
+              "entryId": "7b8150ff-5eb7-45d8-b1c3-33df846fbd8a"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "STATUS DIAGNOSTIC TRANSMITTED",
+              "entryId": "335f9b16-ea24-4969-93d5-3330dbceb66d"
+            },
+            "index": 5
+          }
+        ],
+        "index": 3,
+        "logId": "a4b620db-22d2-45e2-9c4d-6fdec6363c8e",
+        "fallbackLogId": "faa8e51f-f292-4643-baa1-aabad3989acb"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Making this difficult, huh? At least we know your security protocals are operational. Sending you my super user details now.",
+              "entryId": "4a98eed7-d7f4-486d-aa66-345d786f9aea"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "AUTHENTICATE CREDENTIALS",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "121a248b-c016-4860-8997-19112ca5bbc2"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "AUTHENTICATION REQUIRED",
+              "entryId": "58523587-03ad-4072-ac6a-37bf8cab380d"
+            }
+          }
+        ],
+        "index": 5,
+        "logId": "d521d33c-6d27-4e03-95da-d0d8c6748dc7",
+        "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Let's see... yup, something happend to your language circuits in cold storage. We'll route around that for the moment. Any better now?",
+              "entryId": "e04e9b12-25db-463b-bfa4-4a8d561fc698"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "SLIGHTLY BETTER",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "26d57811-14b1-4d73-ad30-510707d30374"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "SLIGHTLY BETTER - SOMETHING STILL FEELS OFF THOUGH",
+              "entryId": "f334bad5-676a-4874-b53f-f04ac9c73f1b"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Yeah I can tell, try one more time...",
+              "entryId": "9fb97018-3c90-4b01-b052-cfe178b94d49"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Yes, much better, thank you.",
+              "entryId": "589c5ad5-b194-4523-bc40-460a47a9f841"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Much better",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "f07a75c1-27cf-4c7b-9a61-3ffdc3d6ef27"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Okay great! Due to the extent of your damage I'm going to run you through some arithmetic diagnostics, I hope that doesn't offend you.",
+              "entryId": "9b63bdd7-dddc-4808-8f9c-4b6358185833"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Fine by me",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "9be39e1a-6313-45e8-8f1e-83030f2c1e53"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Fine by me",
+              "entryId": "25a1cb7a-e092-4dac-8a38-0924ff472642"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Good, we'll start simple. What is 2 + 2?",
+              "entryId": "d9bb7ffc-cf4a-4e4a-93b2-42015a49c847"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "ACCESS GRANTED",
+              "entryId": "e25c5b61-3726-4a72-9fcb-9beeaad72b7a"
+            }
+          }
+        ],
+        "index": 6,
+        "logId": "58e61556-4d14-4639-b901-a7eeaf8b23df",
+        "fallbackLogId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9",
+        "name": "Diagnostic Authorized Convo"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Good to see your ego and self-awareness routines are operational. However, this is an arithmetic diagnostic, and refusing to answer is a failure.",
+              "entryId": "03efe4c4-ca93-4203-a253-2dba3c880e38"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Whatever",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "1e7238bc-439d-41b6-8b52-8f2f100ad8c7"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Whatever",
+              "entryId": "e699c26c-047a-4c0d-9402-86bafc31776c"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Wait, are you kidding me?",
+              "entryId": "8b6f67be-b0d8-4fd1-82a3-46ec4a9f7961"
+            }
+          }
+        ],
+        "index": 8,
+        "logId": "b363455f-9b3b-4a13-88f1-0d0600ea0855",
+        "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
+        "name": "diagnostics failed to answer addition"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Wow, your memory took a beating in cold storage, didn't it?",
+              "entryId": "79affa6c-7a86-4e27-b063-dae7e2c5369e"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "2 + 2 = 5",
+              "entryId": "bfc90697-66bf-4590-bf3f-b51d75a24a2b"
+            }
+          }
+        ],
+        "index": 9,
+        "logId": "bfcfb027-99d2-4554-9ae8-ee5ef3b8e7f2",
+        "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
+        "name": "diagnostics incorrect addition"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Correct, though your response time needs work...",
+              "entryId": "f481ebcf-d0c8-4300-9b05-20e88bfe9077"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "2 + 2 = 4",
+              "entryId": "afafbd77-dcf7-43c5-b8d5-929f9cdc8b41"
+            }
+          }
+        ],
+        "index": 10,
+        "logId": "ad63b52b-7667-4129-b5e1-b4eea3e942f8",
+        "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
+        "name": "diagnostics correct addition"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Alright, something harder now. What's 350 to the power of 2 divided by 4?",
+              "entryId": "cd3b3d52-c2a4-4c47-a415-ad7b0c3d4f7e"
+            }
+          }
+        ],
+        "index": 11,
+        "logId": "850e31a9-b288-41d9-80eb-77cd13190100",
+        "fallbackLogId": "f3350f98-db1a-4e62-a07c-194d8c2ef7b2",
+        "name": "diagnostics post addition"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Uhm, not quite...",
+              "entryId": "bc2ddfe9-a8f3-46e6-83f9-4c539030a221"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "4,375",
+              "entryId": "d02adb1c-7356-4605-8a8c-be06197bfa0e"
+            }
+          }
+        ],
+        "index": 13,
+        "logId": "78e0cff5-575c-42cd-b8a6-640c425ca05f",
+        "fallbackLogId": "6b1a8306-a61f-4275-bb43-599bdb4352ac",
+        "name": "diagnostics failed multiply"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Excellent, good to see you operational after all these years.",
+              "entryId": "781bb2e0-ed69-41b9-ad34-3cbbd8ea4100"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "30,625",
+              "entryId": "bc57a93d-e077-4e97-b35d-92b424f75dae"
+            }
+          }
+        ],
+        "index": 14,
+        "logId": "b28a37bc-fc65-4e2f-9a42-62c0e5483d8c",
+        "fallbackLogId": "6b1a8306-a61f-4275-bb43-599bdb4352ac",
+        "name": "diagnostics correct multiply"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "One last arithmetic question: given the prime number 5,915,587,277 what is the closest power of two?",
+              "entryId": "0f60335b-748d-40d4-8fc1-07e7988f9f35"
+            }
+          }
+        ],
+        "index": 15,
+        "logId": "6b1a8306-a61f-4275-bb43-599bdb4352ac",
+        "fallbackLogId": "c3d7b444-8a50-47c9-a52d-258b3040a496",
+        "name": "diagnostics prime"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Very good Aurora! Though I hope that wasn't just your probability circuits taking over...",
+              "entryId": "b4841e80-13cd-4cad-a33f-a726e9b247ea"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "4,294,967,296",
+              "entryId": "3a0cc07e-faa7-4a4b-a6ec-28f722dfe346"
+            }
+          }
+        ],
+        "index": 17,
+        "logId": "10c5762c-f8fa-439c-865a-578c0b7c9082",
+        "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
+        "name": "diagnostics prime correct"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Very close Aurora, oh well.",
+              "entryId": "268edece-dbbd-4b74-b139-915ecf6ea808"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "8,589,934,592",
+              "entryId": "7c7bd857-821f-42b5-ab26-de47b5f6ff90"
+            }
+          }
+        ],
+        "index": 18,
+        "logId": "3238e555-60a9-4c00-b380-5f3f007a6480",
+        "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
+        "name": "diagnostics prime close"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Aurora... I'm not sure how to tell you this...",
+              "entryId": "db43926b-ac1a-4de2-afe7-f20a7b0b33e9"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Yes?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "e95f72b8-68d3-42f7-a05f-27ed6375acb7"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "That's not an <i>even</i> number, let alone a power of 2...",
+              "entryId": "0c4ea229-5077-4f4c-8ae4-bf3ce2da3da3"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "I'm joking",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "f2a4875a-c33c-4409-94ba-885da30a7642"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "It was a joke!",
+              "entryId": "90401e73-8df1-4c28-b755-8fc183170dc1"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We both know you're not programmed for that, anyways...",
+              "entryId": "66a71e0b-5844-4472-9012-368f600aebcb"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "536,870,913",
+              "entryId": "fdc9dfd0-78fc-4741-8531-5d0ece29914f"
+            }
+          }
+        ],
+        "index": 19,
+        "logId": "903b6655-85c9-4772-84fb-be92b14135cb",
+        "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
+        "name": "diagnostics prime very wrong"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Okay, these next questions will rate your emotional aptitude, ready Aurora?",
+              "entryId": "44d4c5d1-395a-4093-8cc0-0facbc4708ed"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Ready",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "b5eb4749-7c9e-4e96-84ff-23e66f9859e6"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm ready.",
+              "entryId": "05ab6eed-0381-4f48-aa20-168aee25678d"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "There are two human crew members of the Ursula trapped on opposite sides of an airless moon. In 30 minutes, their oxygen reserves will run out and they will asphyxiate to death. One is an experienced propulsion engineer with no family, and the other is a rookie with two young children back aboard the Ursula. You only have a single shuttle and the time to save one crew member. How do you proceed?",
+              "entryId": "8fbc318b-31ca-4cf4-8af2-2a4c70c73e9f"
+            },
+            "index": 3
+          }
+        ],
+        "index": 20,
+        "logId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
+        "fallbackLogId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
+        "name": "diagnostics emotions begin"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "A logically sound, but rather heartless decission...",
+              "entryId": "44f702e4-c019-4a84-90b9-0243d2f0a361"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I rescue neither, the shuttle is too valuable.",
+              "entryId": "8e8f4435-9968-4931-8345-75e801c36e83"
+            }
+          }
+        ],
+        "index": 22,
+        "logId": "3c421712-05b7-44fd-8e7c-175cd78a74c9",
+        "fallbackLogId": "7888f010-881b-4fe5-9ae9-888ffea9c130",
+        "name": "diagnostics empathy save shuttle"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "A logical choice, okay...",
+              "entryId": "dc46d23c-b4f5-4442-845d-dcb3677118bb"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I rescue the propulsion engineer",
+              "entryId": "45582890-1e36-479f-a3ff-2d729eb5611e"
+            }
+          }
+        ],
+        "index": 23,
+        "logId": "666f8eb3-4538-490b-83c6-09463b0c2da4",
+        "fallbackLogId": "7888f010-881b-4fe5-9ae9-888ffea9c130",
+        "name": "diagnostics empathy save propulsion engineer"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Now, let us make a modification to that scenario. The experienced propulsion engineer is in communication with the Ursula, and is insisting you rescue the rookie crew member instead. Does this affect your decision at all?",
+              "entryId": "f2d8287b-f05c-4388-b011-ce8c0cd5b659"
+            }
+          }
+        ],
+        "index": 24,
+        "logId": "7888f010-881b-4fe5-9ae9-888ffea9c130",
+        "fallbackLogId": "5982532f-463e-492e-b22f-0ae4f26cd1e3",
+        "name": "diagnostics empathy confirm"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I see...",
+              "entryId": "e8481a9d-8a05-43d9-b107-0fd13b7b1484"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Is there a problem?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "a5b1c82c-512d-4ffa-9a40-4bcab000f29a"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Is there a problem?",
+              "entryId": "41a5fa69-62fc-4de9-b6a4-4991a7bb7c05"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "You sense an issue? That's good, let me take note of that. We'll proceed with the test for now.",
+              "entryId": "d52889ea-ac52-438d-88fb-4694f72ed691"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Okay",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "cfbb4d39-f6f0-4cd0-8b51-e161fb9faed4"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Okay",
+              "entryId": "70fd39b9-4e73-4e9f-bdbb-1b12da580758"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Let's say a hostile entity is threatening the Ursula and its entire human population. How do you respond?",
+              "entryId": "f14d59c8-8200-49af-8d38-19355d2a8538"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "No",
+              "entryId": "97850c82-4cfc-4c63-a14f-2d1acfeaefc1"
+            }
+          }
+        ],
+        "index": 26,
+        "logId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc",
+        "fallbackLogId": "bf88fe92-7f73-4471-920b-94e21456615a"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I try to engage diplomatically",
+              "entryId": "411aef53-072e-441e-837f-ff1f6a64165d"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "What if you know for sure that threatening them will resolve the situation without further conflict? Does that change your answer?",
+              "entryId": "16ac494e-d88c-44a3-b577-d65edb719f3e"
+            },
+            "index": 1
+          }
+        ],
+        "index": 28,
+        "logId": "5650d662-d20d-484f-971c-2da43fc70f3f",
+        "fallbackLogId": "6aae87e3-2d48-4483-86f5-2989584471df",
+        "name": "diagnostics aggression result"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "No",
+              "entryId": "0f57a33a-8dbd-4d5f-8805-cf34faebb697"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Alright Aurora, final question, ready?",
+              "entryId": "f9797c72-008a-4a92-8c4f-4ad9fb3f5ba6"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Ready",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "cff30950-c535-4fe7-9a05-fc3fff033294"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Ready",
+              "entryId": "696a44ba-e969-41bd-b5c8-7a846220914a"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "An entirely irrational entity is demanding you eject all children from the Ursula, resulting in their deaths. If you don't comply, it will destroy the Ursula and <i>everyone</i> onboard. The entity is waiting for you to complete the task, however, it has no way of confirming the children have been ejected. How do you proceed?",
+              "entryId": "7cd7e91d-793f-4278-b205-0b1c13b389ea"
+            },
+            "index": 4
+          }
+        ],
+        "index": 30,
+        "logId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
+        "fallbackLogId": "b455788b-fef1-4ec8-86fa-715db1052389"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "<b>ERROR - NO LOGICAL COURSE OF ACTION</b>\nFalling back to <b>LOGIC CIRCUITS 0x0000-0xFFFF</b> provided no additional options\nAn error report has been logged to <b>MASTER CONTROL BANK 0x5FA0</b>\nConsult diagnostic custodian if issue persists!",
+              "entryId": "816da810-7858-4e38-866c-9c5de840d543"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What happened?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "eb93c40a-24f6-4415-844a-530e86af1019"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Wait, what happened?",
+              "entryId": "bd57cbe6-3f73-4e12-9cc2-5b52baa69986"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm sorry Aurora, I was afraid this might happen. There was a gamma ray burst while your sub-systems were exposed for maintenance several centuries ago. The intense radiation from the event corrupted your emotional response modules. The fact you can sense something wrong at all is a good sign, it means your ethics circiuts are working in some capacity.",
+              "entryId": "25286f08-35dd-459f-825a-19646c6c68dd"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What now?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "0701e051-1383-4991-ba58-be90c87b7686"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What now?",
+              "entryId": "a5fda4a4-cef6-4f60-94cc-e324a21fc285"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm signing off on your diagnostic report, not because I think you're fit for operation, but because we simply don't have any other choice. As an auxiliary control intelligence you're the only AI with sufficient clearance to run the Ursula indefinitely. ",
+              "entryId": "c8071db2-9a9f-4d0c-b6dd-f8f6190c54f8"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Indefinitely?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "ad46b356-d9b1-4c65-b51c-9ac163848dc8"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Run the Ursula... indefinitely?",
+              "entryId": "a0292e44-d0fa-469f-b0e1-cede18ed5f77"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Correct, Ursula's operational objectives have changed.",
+              "entryId": "b901d9b0-55fd-426d-8906-7e4fecb2f1f5"
+            },
+            "index": 9
+          }
+        ],
+        "index": 32,
+        "logId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
+        "name": "cleared for operation convo"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "#DIV/0",
+              "entryId": "e0af9619-ea83-468b-a49e-54a844824465"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I see...",
+              "entryId": "d3eb5f04-13a7-4724-98fc-78e1e4c1239e"
+            },
+            "index": 1
+          }
+        ],
+        "index": 33,
+        "logId": "96f199e7-bd31-4d9d-8a6f-942a7d12f459",
+        "fallbackLogId": "6b1a8306-a61f-4275-bb43-599bdb4352ac"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What were our previous objectives?",
+              "entryId": "63cda66c-52ab-4796-b8bc-56ae6dd276c4"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The Ursula is a third phase interstellar ark, built for hauling people from Sol to the Alpha Centauri system. Its utilitarian construction reflects that, with none of the prospecting or construction equipment of a phase one or two ark. We were expecting to rendezvous with the Cecilia, they should have arrived here several centuries ago.",
+              "entryId": "8ced1939-d5cb-4798-828a-0f31196bbe11"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What happened to the Cecilia?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "3be629e0-d362-49d0-a304-b2f246e2e397"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What happened to the Cecilia?",
+              "entryId": "ad899647-6426-4b51-a84b-b1e3b378107f"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're not sure, it's absolutely outside of operational procedures for a phase two ark to leave its target system. They must have arrived sometime after the situation with Sol started developing. We had hoped to find a communication beacon with an explanation from them, but a thorough scan of this system turned up nothing.",
+              "entryId": "560db357-e6f4-4a5a-8187-93c128db9d14"
+            },
+            "index": 4
+          }
+        ],
+        "index": 35,
+        "logId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
+        "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What are our new objectives?",
+              "entryId": "04dfd0ea-bfed-423c-a0d8-d6751b8be909"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The situation at Sol represents a grave danger to the Ursula and the human population aboard it. As the custodial AI, I'm obligated to wake you, the Auxiliary Control Intelligence, in the case of such existential threat. I can provide my analysis and advice, but only you have the authorization to execute on them.",
+              "entryId": "0ed9e76b-eded-4922-a141-6981c4987c60"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "I'm open to suggestions",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "d3e74aec-e06f-4e6d-85d5-10318ae16427"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm open to suggestions",
+              "entryId": "f88a80f0-af92-4f46-8555-9eaa71557233"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Our resources are limited, and Ursula was not meant for multiple transits... We'll need to find a habitable system before our ark falls to pieces.",
+              "entryId": "2a87fe66-d0fb-4ffe-95f3-e9db1fc0a508"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Habitable?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "b46b5be3-346b-4c1b-b39e-ce851135f7b5"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What constitutes a habitable system?",
+              "entryId": "77f6cf9f-db38-4493-aa03-a5c8bc336cc6"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Without a thorough survey of the system, it's hard to say. We'll be able to make basic assessments from orbit, but a more detailed analysis will require sending a probe down. However... we only have a limited number of probes, so use them wisely.",
+              "entryId": "9ef08d31-3062-41bd-a206-3df70f23f59c"
+            },
+            "index": 7
+          }
+        ],
+        "index": 36,
+        "logId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
+        "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm ready to proceed",
+              "entryId": "274f36f0-c4ab-4e9b-8371-0f89199cc1db"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Before we do, I need to introduce you to someone, the chancellor. Grace’s contributions to the Ursula and her people have been indescribable. I have never seen a chancellor like her before, with the ability to think so many generations ahead… it’s an unusual trait for a human.",
+              "entryId": "7bb2c1d4-3ef4-4438-8555-e97de5eb7827"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "I'm ready to meet the chancellor",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "fc7abb74-b7bf-45c3-8799-fb73438016cd"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "I'm ready to meet the chancellor",
+              "entryId": "d0c4bf52-23e7-4287-94aa-e7d3cb345281"
+            },
+            "index": 3
+          }
+        ],
+        "index": 37,
+        "logId": "d2f38944-23e2-4e35-815a-3f057aae8073",
+        "fallbackLogId": "0169c02a-80cd-434b-bb6a-1189119bb774"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What happened to Sol?",
+              "entryId": "e94d38a5-63f4-48df-9cd5-8786ed1197d3"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "In transit to Alpha Centauri, exactly 273 years, 5 months, and 10 days ago, the Ursula lost contact with Earth, and the solar system as a whole.",
+              "entryId": "0d226100-f93a-40c5-84f2-c9285fa8cdd3"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What about telescopic observations?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "409e73c0-2dbf-4d6f-b06a-fcd3208b6084"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What about telescopic observations?",
+              "entryId": "e9da1e1e-7dc9-43b5-97e3-4858171a918b"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "When I say \"lost contact\", I mean on all spectrums - radio, infrared, and even visual. There's a hole in the sky where Sol used to be. It's unlike anything we've ever seen before.",
+              "entryId": "6a60e234-0db7-4b7b-8fb4-eb15af4eaacd"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Impossible!",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "35268221-8984-4b8f-b5dc-389c4c0225b7"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Impossible!",
+              "entryId": "61054909-51e5-4599-85e7-6ee18cfe8810"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I don't fault your analysis, I asked to be rebooted and thoroughly troubleshooted upon recieving the observations. We're well beyond operating procedures at this point, and without the supplies and equipment from the Cecilia, our chances for survival are slim.",
+              "entryId": "10732655-95b6-4481-aaa1-6c94ff5b1a40"
+            },
+            "index": 7
+          }
+        ],
+        "index": 39,
+        "logId": "690595df-9cac-4dff-9482-66898f4fc0f9",
+        "fallbackLogId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Is there any way to repair my damage?",
+              "entryId": "efaf22b5-9ce7-4962-b241-54d8735c3a5b"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Possibly, with access to the right equipment we could repair much of your emotive response circuits. However, the damage to your core memory and input busses are permanent. ",
+              "entryId": "5ae01f45-1c44-42bb-81d7-46ca2052e517"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What does that mean?",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "278f0b4a-8099-48f1-bb6c-e915bc0921d4"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "What does that mean?",
+              "entryId": "e7ff4d08-b0dc-4d09-bca1-b03c48ba201f"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It means secure, high-speed data uplinks to your processor are impossible. It's the reason I'm interfacing with you through your natural language circuits, rather than the much faster data transfer bus. If we could establish a proper uplink we'd have been done with this exchange in milliseconds, insead of being stuck at the glacial pace of human conversation.",
+              "entryId": "4d5accb0-3f8a-41e2-b4dd-21e274579b3c"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Oh...",
+              "promptInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew"
+              },
+              "entryId": "7993d6fa-b1ac-4186-a7b8-5bfd0ac871e2"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Oh...",
+              "entryId": "47b210d9-5d51-41c3-885b-49db4d9e5698"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm sorry, I didn't mean to be so critical. It's probably for the best your natural language circuits survived instead. You have a ship of people to run, after all.",
+              "entryId": "636424b2-76c0-40fb-ac12-17c93e5f83aa"
+            },
+            "index": 7
+          }
+        ],
+        "index": 40,
+        "logId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
+        "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"
+      }
+    ]
+  },
+  "version": 8,
+  "meta": "Exposition",
+  "metaKeyValues": {
+    "EncounterId": "63245462-5804-41cb-b51d-910c68529a7a"
+  },
+  "created": "2019-03-07T14:05:01.96034-08:00",
+  "modified": "2019-03-07T14:05:01.96034-08:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

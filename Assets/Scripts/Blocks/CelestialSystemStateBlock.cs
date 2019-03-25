@@ -59,5 +59,16 @@ namespace LunraGames.SubLight
 			Position = position;
 			System = system;
 		}
+
+		public CelestialSystemStateBlock Duplicate(
+			States state = States.Unknown
+		)
+		{
+			return new CelestialSystemStateBlock(
+				state == States.Unknown ? State : state,
+				Position,
+				System
+			);
+		}
 	}
 }

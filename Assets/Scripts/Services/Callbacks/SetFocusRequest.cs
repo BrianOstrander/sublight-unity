@@ -1,5 +1,7 @@
 ﻿using System;
 
+using UnityEngine;
+
 namespace LunraGames.SubLight
 {
 	public struct SetFocusRequest
@@ -8,7 +10,10 @@ namespace LunraGames.SubLight
 
 		public static SetFocusRequest Request(SetFocusBlock[] targets, Action done = null, float duration = DefaultDuration)
 		{
-			return new SetFocusRequest(false, false, duration, targets, done);
+			var instant = Mathf.Approximately(0f, duration);
+			if (instant) Debug.LogWarning("Requesting a set focus with a duration of zero, running instantly");
+
+			return new SetFocusRequest(false, instant, duration, targets, done);
 		}
 
 		public static SetFocusRequest RequestInstant(SetFocusBlock[] targets, Action done = null)

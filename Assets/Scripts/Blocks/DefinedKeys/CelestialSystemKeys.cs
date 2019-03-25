@@ -46,6 +46,21 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Integers
+		public readonly Integer PlanetCount;
+
+		public readonly Integer HabitableAtmosphere;
+		public readonly Integer HabitableGravity;
+		public readonly Integer HabitableTemperature;
+		public readonly Integer HabitableWater;
+		public readonly Integer HabitableResources;
+
+		public readonly Integer ScanLevelAtmosphere;
+		public readonly Integer ScanLevelGravity;
+		public readonly Integer ScanLevelTemperature;
+		public readonly Integer ScanLevelWater;
+		public readonly Integer ScanLevelResources;
+
+		public readonly Integer AnomalyIndex;
 		#endregion
 
 		#region Strings
@@ -57,6 +72,7 @@ namespace LunraGames.SubLight
 		#region Resources
 		public readonly Resource Rations;
 		public readonly Resource Propellant;
+		public readonly Resource Metallics;
 		#endregion
 
 		public CelestialSystemKeys() : base(KeyValueTargets.CelestialSystem)
@@ -68,7 +84,81 @@ namespace LunraGames.SubLight
 
 			Integers = new Integer[]
 			{
+				Create(
+					ref PlanetCount,
+					"planet_count",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
 
+				Create(
+					ref HabitableAtmosphere,
+					"habitable_atmosphere",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref HabitableGravity,
+					"habitable_gravity",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref HabitableTemperature,
+					"habitable_temperature",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref HabitableWater,
+					"habitable_water",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref HabitableResources,
+					"habitable_resources",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+
+				Create(
+					ref ScanLevelAtmosphere,
+					"scan_level_atmosphere",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref ScanLevelGravity,
+					"scan_level_gravity",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref ScanLevelTemperature,
+					"scan_level_temperature",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref ScanLevelWater,
+					"scan_level_water",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+				Create(
+					ref ScanLevelResources,
+					"scan_level_resources",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				),
+
+				Create(
+					ref AnomalyIndex,
+					"anomaly_index",
+					"desc todo",
+					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+				)
 			};
 
 			Strings = new String[]
@@ -83,6 +173,7 @@ namespace LunraGames.SubLight
 
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
 			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
+			Metallics = new Resource(KeyDefines.Resources.Metallics, this);
 		}
 	}
 }

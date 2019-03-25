@@ -11,17 +11,29 @@ namespace LunraGames.SubLight.Presenters
 		LanguageStringModel back;
 		bool waitingForAnimation;
 
-		public ToolbarBackPresenter(GameModel model, LanguageStringModel back)
+		bool CanClick
+		{
+			get
+			{
+				return !waitingForAnimation
+					&& model.Context.GridInput.Value.State == GridInputRequest.States.Complete;
+			}
+		}
+
+		public ToolbarBackPresenter(
+			GameModel model,
+			LanguageStringModel back
+		)
 		{
 			this.model = model;
 			this.back = back;
 
-			model.Context.TransitState.Changed += OnTransitState;
+			model.Context.ToolbarSelectionRequest.Changed += OnToolbarSelectionRequest;
 		}
 
 		protected override void OnUnBind()
 		{
-			model.Context.TransitState.Changed -= OnTransitState;
+			model.Context.ToolbarSelectionRequest.Changed -= OnToolbarSelectionRequest;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -44,25 +56,34 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnToolbarSelectionRequest(ToolbarSelectionRequest request)
+		{
+			switch (request.Selection)
+			{
+				case ToolbarSelections.Unknown:
+				case ToolbarSelections.Ship:
+					break;
+				default:
+					OnClick();
+					break;
+			}
+		}
+
 		void OnClick()
 		{
-			if (waitingForAnimation) return;
+			if (!CanClick) return;
 			waitingForAnimation = true;
-			App.Callbacks.CameraTransformRequest(CameraTransformRequest.Animation(pitch: 0f, duration: View.AnimationTime, done: OnAnimationDone));
+			App.Callbacks.CameraTransformRequest(
+				CameraTransformRequest.Animation(
+					pitch: 0f,
+					duration: View.AnimationTime,
+					done: OnAnimationDone)
+			);
 		}
 
 		void OnAnimationDone()
 		{
 			waitingForAnimation = false;
-		}
-
-		void OnTransitState(TransitState transitState)
-		{
-			if (!View.Visible) return;
-			if (waitingForAnimation) return;
-			if (Mathf.Approximately(0f, model.Context.CameraTransform.Value.PitchValue())) return;
-
-			OnClick();
 		}
 		#endregion
 	}

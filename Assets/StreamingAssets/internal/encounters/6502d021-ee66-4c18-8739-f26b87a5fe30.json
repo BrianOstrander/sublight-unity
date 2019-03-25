@@ -3,11 +3,27 @@
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "2ecf3799-264f-43b7-adec-383b09571ef5",
-  "name": "Click Again",
+  "name": "Tutorial: Navigation Confirm",
   "trigger": "NavigationSelect",
   "filtering": {
     "showValues": true,
-    "booleanKeyValues": [],
+    "booleanKeyValues": [
+      {
+        "index": 1,
+        "filterId": "7def4d1e-0838-439f-8450-69053f218d89",
+        "group": "All",
+        "Input0": {
+          "AddressId": "6b52561a-619a-4b18-9249-5d5bd05df345",
+          "Source": "KeyValue",
+          "ForeignTarget": "Preferences",
+          "ForeignKey": "ignore_tutorial"
+        },
+        "Input1": {
+          "AddressId": "9556bdbe-db8c-4d8b-ba08-b3d34ded8c2d",
+          "Source": "LocalValue"
+        }
+      }
+    ],
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
@@ -54,8 +70,8 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
-  "meta": "Click Again",
+  "version": 8,
+  "meta": "Tutorial: Navigation Confirm",
   "metaKeyValues": {
     "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
   },

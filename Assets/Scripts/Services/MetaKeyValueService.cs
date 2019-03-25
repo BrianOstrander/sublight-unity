@@ -14,8 +14,12 @@ namespace LunraGames.SubLight
 		KeyValueService keyValues;
 		ILogService logger;
 
-		public GlobalKeyValuesModel GlobalKeyValues { get; private set; }
-		public PreferencesKeyValuesModel PreferencesKeyValues { get; private set; }
+
+		GlobalKeyValuesModel globals;
+		PreferencesKeyValuesModel preferences;
+
+		public KeyValueListModel GlobalKeyValues { get { return globals.KeyValues; } }
+		public KeyValueListModel PreferencesKeyValues { get { return preferences.KeyValues; } }
 		bool currentlySaving;
 
 		public MetaKeyValueService(
@@ -75,7 +79,7 @@ namespace LunraGames.SubLight
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Listing " + typeof(T).Name + " failed with status " + result.Status+"\nError: "+result.Error);
+				Debug.LogError("Listing " + typeof(T).Name + " failed with status " + result.Status + "\nError: " + result.Error);
 				done(result.Status);
 				return;
 			}
@@ -115,7 +119,7 @@ namespace LunraGames.SubLight
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Loading " + typeof(T).Name + " failed with status " + result.Status+ "\nError: " + result.Error);
+				Debug.LogError("Loading " + typeof(T).Name + " failed with status " + result.Status + "\nError: " + result.Error);
 				done(result.Status);
 				return;
 			}
@@ -132,7 +136,7 @@ namespace LunraGames.SubLight
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Saving " + typeof(T).Name + " failed with status " + result.Status+ "\nError: " + result.Error);
+				Debug.LogError("Saving " + typeof(T).Name + " failed with status " + result.Status + "\nError: " + result.Error);
 				done(result.Status);
 				return;
 			}
@@ -142,10 +146,10 @@ namespace LunraGames.SubLight
 			switch (result.Model.SaveType)
 			{
 				case SaveTypes.GlobalKeyValues:
-					GlobalKeyValues = result.TypedModel as GlobalKeyValuesModel;
+					globals = result.TypedModel as GlobalKeyValuesModel;
 					break;
 				case SaveTypes.PreferencesKeyValues:
-					PreferencesKeyValues = result.TypedModel as PreferencesKeyValuesModel;
+					preferences = result.TypedModel as PreferencesKeyValuesModel;
 					break;
 			}
 
@@ -164,10 +168,10 @@ namespace LunraGames.SubLight
 			if (GlobalKeyValues == null) Debug.LogError("GlobalKeyValues null, skipping...");
 			else
 			{
-				if (string.IsNullOrEmpty(GlobalKeyValues.KeyValues.Get(KeyDefines.Global.PersistentId)))
+				if (string.IsNullOrEmpty(GlobalKeyValues.Get(KeyDefines.Global.PersistentId)))
 				{
 					Debug.Log("Generating Persistent Id");
-					GlobalKeyValues.KeyValues.Set(KeyDefines.Global.PersistentId, Guid.NewGuid().ToString());
+					GlobalKeyValues.Set(KeyDefines.Global.PersistentId, Guid.NewGuid().ToString());
 				}
 			}
 
@@ -178,12 +182,12 @@ namespace LunraGames.SubLight
 			}
 
 			modelMediator.Save(
-				GlobalKeyValues,
-				globalSaveResult => 
+				globals,
+				globalSaveResult =>
 				{
 					if (globalSaveResult.Status != RequestStatus.Success) Debug.LogError("Saving GlobalKeyValues failed with status " + globalSaveResult.Status + " and error: " + globalSaveResult.Error + "\nTrying to continue...");
 					modelMediator.Save(
-						PreferencesKeyValues,
+						preferences,
 						preferencesSaveResult => OnInitializeDone(preferencesSaveResult.Status, done)
 					);
 				}
@@ -205,8 +209,8 @@ namespace LunraGames.SubLight
 			callbacks.SaveRequest += OnSaveRequest;
 
 			// Keyvalue listeners are created here and just float about... never being unregistered... so keep that in mind I guess...
-			new KeyValueListener(KeyValueTargets.Global, GlobalKeyValues.KeyValues, keyValues).Register();
-			new KeyValueListener(KeyValueTargets.Preferences, PreferencesKeyValues.KeyValues, keyValues).Register();
+			new KeyValueListener(KeyValueTargets.Global, GlobalKeyValues, keyValues).Register();
+			new KeyValueListener(KeyValueTargets.Preferences, PreferencesKeyValues, keyValues).Register();
 
 			done(result);
 		}
@@ -224,42 +228,99 @@ namespace LunraGames.SubLight
 			if (request.State == SaveRequest.States.Complete) OnTrySave();
 		}
 
-		void OnTrySave()
+		void OnTrySave(Action<RequestResult> done = null)
 		{
 			if (currentlySaving)
 			{
-				Debug.LogWarning("Currently trying to save meta key values.");
+				var error = "Currently trying to save meta key values.";
+				Debug.LogError(error);
+				if (done != null) done(RequestResult.Failure(error));
 				return;
 			}
 			currentlySaving = true;
 
-			modelMediator.Save(GlobalKeyValues, OnTrySaveGlobals);
+			modelMediator.Save(globals, globalsResult => OnTrySaveGlobals(globalsResult, done));
 		}
 
-		void OnTrySaveGlobals(SaveLoadRequest<GlobalKeyValuesModel> result)
+		void OnTrySaveGlobals(SaveLoadRequest<GlobalKeyValuesModel> result, Action<RequestResult> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Trying to save global key values failed with status " + result.Status + "\nError: " + result.Error);
+				OnTrySaveDone(
+					result.Status,
+					"Trying to save global key values failed with status " + result.Status + "\nError: " + result.Error,
+					done
+				);
+				return;
 			}
 
-			modelMediator.Save(PreferencesKeyValues, OnTrySavePreferences);
+			modelMediator.Save(preferences, preferencesResult => OnTrySavePreferences(preferencesResult, done));
 		}
 
-		void OnTrySavePreferences(SaveLoadRequest<PreferencesKeyValuesModel> result)
+		void OnTrySavePreferences(SaveLoadRequest<PreferencesKeyValuesModel> result, Action<RequestResult> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Trying to save preferences key values failed with status " + result.Status+ "\nError: " + result.Error);
+				OnTrySaveDone(
+					result.Status,
+					"Trying to save preferences key values failed with status " + result.Status + "\nError: " + result.Error,
+					done
+				);
+				return;
 			}
 
-			OnTrySaveDone();
+			OnTrySaveDone(
+				result.Status,
+				null,
+				done
+			);
 		}
 
-		void OnTrySaveDone()
+		void OnTrySaveDone(
+			RequestStatus result,
+			string error,
+			Action<RequestResult> done
+		)
 		{
 			currentlySaving = false;
+
+			if (result != RequestStatus.Success)
+			{
+				if (string.IsNullOrEmpty(error)) Debug.Log("Trying to save failed with status: " + result + " and no error specified.");
+				else Debug.LogError(error);
+			}
+
+			if (done != null) done(new RequestResult(result, error));
 		}
+		#endregion
+
+		#region Utility
+		public bool Get(KeyDefinitions.Boolean key, bool fallback = false) { return GetKeyValueList(key).GetBoolean(key.Key, fallback); }
+		public int Get(KeyDefinitions.Integer key, int fallback = 0) { return GetKeyValueList(key).GetInteger(key.Key, fallback); }
+		public string Get(KeyDefinitions.String key, string fallback = null) { return GetKeyValueList(key).GetString(key.Key, fallback); }
+		public float Get(KeyDefinitions.Float key, float fallback = 0f) { return GetKeyValueList(key).GetFloat(key.Key, fallback); }
+
+		public bool Set(KeyDefinitions.Boolean key, bool value) { return GetKeyValueList(key).SetBoolean(key.Key, value); }
+		public int Set(KeyDefinitions.Integer key, int value) { return GetKeyValueList(key).SetInteger(key.Key, value); }
+		public string Set(KeyDefinitions.String key, string value) { return GetKeyValueList(key).SetString(key.Key, value); }
+		public float Set(KeyDefinitions.Float key, float value) { return GetKeyValueList(key).SetFloat(key.Key, value); }
+
+		KeyValueListModel GetKeyValueList(IKeyDefinition key)
+		{
+			switch (key.Target)
+			{
+				case KeyValueTargets.Global: return GlobalKeyValues;
+				case KeyValueTargets.Preferences: return PreferencesKeyValues;
+				default:
+					throw new ArgumentOutOfRangeException("key.Target", "Only Global and Preferences kv stores can be accessed, " + key.Target + " not recognized");
+			}
+		}
+
+		public void Save(Action<RequestResult> done = null)
+		{
+			OnTrySave(done);
+		}
+
 		#endregion
 	}
 }

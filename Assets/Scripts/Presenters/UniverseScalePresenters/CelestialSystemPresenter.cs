@@ -40,7 +40,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click += OnGlobalClick;
 
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
-			Model.Context.CameraTransform.Changed += OnCameraTransform;
+			Model.Context.CameraTransformAbsolute.Changed += OnCameraTransform;
 			Model.Context.GridInput.Changed += OnGridInput;
 			Model.Context.FocusTransform.Changed += OnFocusTransform;
 			Model.Ship.Position.Changed += OnShipPosition;
@@ -56,7 +56,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.Click -= OnGlobalClick;
 
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
-			Model.Context.CameraTransform.Changed -= OnCameraTransform;
+			Model.Context.CameraTransformAbsolute.Changed -= OnCameraTransform;
 			Model.Context.GridInput.Changed -= OnGridInput;
 			Model.Context.FocusTransform.Changed -= OnFocusTransform;
 			Model.Ship.Position.Changed -= OnShipPosition;
@@ -188,7 +188,7 @@ namespace LunraGames.SubLight.Presenters
 			switch(selectedState)
 			{
 				case Celestial.SelectedStates.Selected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.UnSelect(positionInUniverse, instanceModel.ActiveSystem.Value);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.UnSelect(positionInUniverse, instanceModel.ActiveSystem.Value));
 					break;
 			}
 		}
@@ -226,7 +226,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnEnter()
 		{
-			Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Highlight(positionInUniverse, instanceModel.ActiveSystem.Value);
+			Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Highlight(positionInUniverse, instanceModel.ActiveSystem.Value));
 		}
 
 		void OnExit()
@@ -234,13 +234,13 @@ namespace LunraGames.SubLight.Presenters
 			switch (selectedState)
 			{
 				case Celestial.SelectedStates.NotSelected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Ship.Position, null);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Idle(Model.Ship.Position, null));
 					break;
 				case Celestial.SelectedStates.Selected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(positionInUniverse, instanceModel.ActiveSystem.Value);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Idle(positionInUniverse, instanceModel.ActiveSystem.Value));
 					break;
 				case Celestial.SelectedStates.OtherSelected:
-					Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Idle(Model.Context.CelestialSystemStateLastSelected.Value.Position, Model.Context.CelestialSystemStateLastSelected.Value.System);
+					Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Idle(Model.Context.CelestialSystemStateLastSelected.Value.Position, Model.Context.CelestialSystemStateLastSelected.Value.System));
 					break;
 			}
 
@@ -255,7 +255,7 @@ namespace LunraGames.SubLight.Presenters
 					{
 						case Celestial.SelectedStates.OtherSelected:
 						case Celestial.SelectedStates.NotSelected:
-							Model.Context.CelestialSystemState.Value = CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value);
+							Model.Context.SetCelestialSystemState(CelestialSystemStateBlock.Select(positionInUniverse, instanceModel.ActiveSystem.Value));
 							break;
 						case Celestial.SelectedStates.Selected:
 							switch (visitState)
@@ -267,6 +267,9 @@ namespace LunraGames.SubLight.Presenters
 							}
 							break;
 					}
+					break;
+				case Celestial.RangeStates.OutOfRange:
+					Model.Context.NavigationSelectionOutOfRange(instanceModel.ActiveSystem.Value);
 					break;
 			}
 		}
@@ -320,7 +323,7 @@ namespace LunraGames.SubLight.Presenters
 		void OnGridInput(GridInputRequest gridInput)
 		{
 			if (!View.Visible) return;
-			ProcessInterectable(Model.Context.CameraTransform.Value, gridInput);
+			ProcessInterectable(Model.Context.CameraTransformAbsolute.Value, gridInput);
 		}
 
 		void ProcessInterectable(CameraTransformRequest transform, GridInputRequest gridInput)

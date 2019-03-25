@@ -15,6 +15,7 @@ namespace LunraGames.SubLight
 		public class Focuses : StateFocuses
 		{
 			const float PriorityDimming = 0.25f;
+			const float TransitDimming = 0.75f;
 
 			public static void InitializePresenters(GameState state, Action done)
 			{
@@ -36,7 +37,12 @@ namespace LunraGames.SubLight
 				// All other presenters for this state...
 
 				payload.ShowOnIdle.Add(new ToolbarPresenter(payload.Game));
-				payload.ShowOnIdle.Add(new ToolbarBackPresenter(payload.Game, LanguageStringModel.Override("Back")));
+				payload.ShowOnIdle.Add(
+					new ToolbarBackPresenter(
+						payload.Game,
+						LanguageStringModel.Override("Back")
+					)
+				);
 
 				new FocusLipPresenter(SetFocusLayers.System, SetFocusLayers.Ship, SetFocusLayers.Communication, SetFocusLayers.Encyclopedia);
 
@@ -62,6 +68,9 @@ namespace LunraGames.SubLight
 							Title = LanguageStringModel.Override("Already Saved"),
 							Message = LanguageStringModel.Override("Your latest progress is already saved.")
 						},
+
+						Preferences = LanguageStringModel.Override("Preferences"),
+
 						MainMenu = mainMenuLanguage,
 						MainMenuConfirm = new DialogLanguageBlock
 						{
@@ -81,7 +90,15 @@ namespace LunraGames.SubLight
 						SavingError = saveErrorLanguage,
 						ReturningToMainMenu = returningToMainMenuLanguage,
 						Quiting = LanguageStringModel.Override("Quitting...")
-					}
+					},
+					PreferencesPresenter.CreateDefault(
+						() =>
+						{
+							var homePayload = new HomePayload();
+							homePayload.MainCamera = payload.MainCamera;
+							return homePayload;
+						}
+					)
 				);
 
 				new GameCompletePresenter(
@@ -158,6 +175,8 @@ namespace LunraGames.SubLight
 				new GridPresenter(payload.Game, gridInfo);
 				new GridScalePresenter(payload.Game, gridInfo.Scale);
 
+				new RingTransitPresenter(payload.Game, UniverseScales.Local);
+
 				var gridTimeChronometerLanguage = GridTimeLanguageBlock.Default;
 				gridTimeChronometerLanguage.Title = LanguageStringModel.Override("Chronometer");
 				gridTimeChronometerLanguage.SubTitle = LanguageStringModel.Override("Reference Frame");
@@ -185,44 +204,15 @@ namespace LunraGames.SubLight
 					}
 				);
 
-				new GridTransitLockoutPresenter(
+				new TransitPresenter(
 					payload.Game,
-					new GridTransitLockoutLanguageBlock
+					new TransitLanguageBlock
 					{
-						TransitTitle = LanguageStringModel.Override("Crew Lockout"),
-						TransitDescription = LanguageStringModel.Override("Interstellar ark is under automated\ncontrol until reaching destination"),
-						DescriptionPrefix = LanguageStringModel.Override("In transit from"),
-						UnlockLeftTitle = LanguageStringModel.Override("Unlocking"),
-						UnlockRightTitle = LanguageStringModel.Override("System Survey"),
-						UnlockLeftStatuses = LanguageStringModel.Overrides(
-							"Restarting Crew Control System <b>Success</b>",
-							"Confirming Subsystem Integrity <b>Success</b>",
-							"Generating Administrator Privileges <b>Passed</b>",
-							"Confirming Admin Identities <b>Validated</b>",
-							"Unlocking Engine Control Systems <b>Success</b>",
-							"Flushing Life Support Mechanisms <b>Vented</b>",
-							"Updating Hull Damage Manifest <b>Recorded</b>",
-							"Aligning Astrogation Sensors <b>Calibrated</b>",
-							"Locating Tracer From Terra <b>Failed</b>",
-							"Downloading Database Deltas <b>Disconnected</b>"
-						),
-						UnlockRightStatuses = LanguageStringModel.Overrides(
-							"<b>Waking</b> Probe Bay",
-							"<b>Scanning</b> Surface Of Primary Bodies",
-							"<b>Running</b> Chemical Analysis",
-							"<b>Collating</b> Results Of Scans",
-							"<b>Processing</b> Atmospheric Data",
-							"<b>Rendering</b> Orbital Anomalies",
-							"<b>Sweeping</b> Debris Fields For Impacts",
-							"<b>Integrating</b> Collected Data From Databases",
-							"<b>Rewriting</b> Known System Entries",
-							"<b>Assigning</b> Targets For Further Study"
-						),
 						SaveDisabledDuringTransit = new DialogLanguageBlock
 						{
 							Title = LanguageStringModel.Override("In Transit"),
 							Message = LanguageStringModel.Override("Saving is disabled during transit.")
-						},
+						}
 					}
 				);
 
@@ -230,7 +220,8 @@ namespace LunraGames.SubLight
 				new ClusterPresenter(payload.Game, payload.Game.Context.GalaxyTarget, LanguageStringModel.Override("Click for information"));
 
 				var foundEnd = false;
-				var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
+				payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
+				//var playerEnd = payload.Game.Context.Galaxy.GetPlayerEnd(out foundEnd);
 
 				if (!foundEnd) Debug.LogError("Provided galaxy has no defined player end");
 
@@ -358,6 +349,43 @@ namespace LunraGames.SubLight
 				}
 				payload.Waypoints = waypointEntries;
 
+				if (payload.Game.Context.TransitHistoryLineCount.Value < 2)
+				{
+					Debug.LogError("Cannot initialize transit lines with a count of " + payload.Game.Context.TransitHistoryLineCount.Value+", skipping...");
+				}
+				else
+				{
+					var transitLines = new List<TransitHistoryLinePresenter>();
+					TransitHistoryLinePresenter previousTransitLine = null;
+
+					for (var i = 0; i < payload.Game.Context.TransitHistoryLineCount.Value; i++)
+					{
+						var currentTransitLine = new TransitHistoryLinePresenter(
+							payload.Game,
+							UniverseScales.Local,
+							previousTransitLine
+						);
+						if (previousTransitLine != null) previousTransitLine.Next = currentTransitLine;
+						previousTransitLine = currentTransitLine;
+						transitLines.Insert(0, currentTransitLine);
+					}
+
+					for (var i = 0; i < Mathf.Min(transitLines.Count, payload.Game.TransitHistory.Count); i++)
+					{
+						var currentHistory = payload.Game.TransitHistory.Peek(i);
+						if (currentHistory.TransitCount == 0) break;
+						var previousHistory = payload.Game.TransitHistory.Peek(i + 1);
+
+						var currentTransitLine = transitLines[i];
+						currentTransitLine.SetTransit(
+							previousHistory.SystemPosition,
+							currentHistory.SystemPosition,
+							currentHistory.TransitCount,
+							TransitHistoryLinePresenter.States.Assigned
+						);
+					}
+				}
+
 				InitializeShipPresenters(state, done);
 			}
 
@@ -477,6 +505,17 @@ namespace LunraGames.SubLight
 						Debug.LogError("Unrecognized selection: " + selection);
 						break;
 				}
+
+				return results.ToArray();
+			}
+
+			public static SetFocusBlock[] GetTransitFocus()
+			{
+				var results = GetBaseEnabledFocuses();
+
+				results.Add(GetFocus<PriorityFocusDetails>(0, true, 1f, true));
+				results.Add(GetFocus<ToolbarFocusDetails>(1, true, TransitDimming, false));
+				results.Add(GetFocus<SystemFocusDetails>(1, true, TransitDimming, false));
 
 				return results.ToArray();
 			}

@@ -6,6 +6,13 @@
 
 		// -- Default Triggers
 		/// <summary>
+		/// Should only be used for encounters that are triggered in some other way.
+		/// </summary>
+		/// <remarks>
+		/// These will never trigger on their own.
+		/// </remarks>
+		None = 5,
+		/// <summary>
 		/// Called every time the game loads.
 		/// </summary>
 		Load = 10,
@@ -17,9 +24,14 @@
 
 		// -- Navigation View Triggers
 		/// <summary>
-		/// When the player selects a star system in the navigation view.
+		/// When the player selects a celestial system in the navigation view.
 		/// </summary>
 		NavigationSelect = 100,
+		/// <summary>
+		/// When the player selects a celestial system in the navigation view,
+		/// but it's out of range.
+		/// </summary>
+		NavigationSelectOutOfRange = 110,
 
 		// -- Transit Triggers
 		/// <summary>

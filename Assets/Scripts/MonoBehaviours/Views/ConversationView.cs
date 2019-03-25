@@ -70,6 +70,10 @@ namespace LunraGames.SubLight.Views
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
+		InterfaceScaleBlock fontScales = InterfaceScaleBlock.Default;
+		[SerializeField]
+		InterfaceScaleBlock sizeCuttoffScales = InterfaceScaleBlock.Default;
+		[SerializeField]
 		GameObject conversationArea;
 		[SerializeField]
 		GameObject conversationAnchor;
@@ -83,6 +87,8 @@ namespace LunraGames.SubLight.Views
 		float verticalSpacing;
 		[SerializeField]
 		float verticalScrollDuration;
+		[SerializeField]
+		float delayAfterAddition;
 
 		[SerializeField]
 		MessageConversationLeaf messageIncomingPrefab;
@@ -155,6 +161,8 @@ namespace LunraGames.SubLight.Views
 		bool waitingForInstantScroll;
 		float verticalScrollRemaining;
 
+		float? delayAfterAdditionRemaining;
+
 		Action addDone;
 
 		public void AddToConversation(
@@ -221,7 +229,7 @@ namespace LunraGames.SubLight.Views
 
 		ConversationLeaf OnInstantiatePrefab(
 			MessageConversationLeaf prefab,
-			MessageConversationBlock block, // This may be needed for ather instantiators, leave it...
+			MessageConversationBlock block, // This may be needed for other instantiators, leave it...
 			out Action<Entry> initializeLayout
 		)
 		{
@@ -231,7 +239,7 @@ namespace LunraGames.SubLight.Views
 			{
 				OnInitializeEntry(entry, instance);
 
-				var isSmall = instance.MessageLabel.textInfo.lineCount < 4;
+				var isSmall = instance.MessageLabel.textInfo.lineCount < sizeCuttoffScales.GetScale(App.V.InterfaceScale);
 
 				instance.BackgroundSmall.SetActive(isSmall);
 				instance.BackgroundLarge.SetActive(!isSmall);
@@ -277,6 +285,7 @@ namespace LunraGames.SubLight.Views
 					break;
 			}
 
+			instance.MessageLabel.fontSize = fontScales.GetScale(App.V.InterfaceScale);
 			instance.MessageLabel.text = entry.Block.Message;
 
 			LayoutRebuilder.ForceRebuildLayoutImmediate(instance.RootCanvas);
@@ -306,6 +315,8 @@ namespace LunraGames.SubLight.Views
 			verticalScrollTarget = null;
 			waitingForInstantScroll = false;
 			verticalScrollRemaining = 0f;
+
+			delayAfterAdditionRemaining = null;
 
 			addDone = null;
 
@@ -355,6 +366,20 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnIdle(delta);
 
+			if (delayAfterAdditionRemaining.HasValue)
+			{
+				delayAfterAdditionRemaining = Mathf.Max(0f, delayAfterAdditionRemaining.Value - delta);
+
+				if (Mathf.Approximately(0f, delayAfterAdditionRemaining.Value))
+				{
+					delayAfterAdditionRemaining = null;
+					var oldAddDone = addDone;
+					addDone = null;
+					oldAddDone();
+				}
+				return;
+			}
+
 			if (!verticalScrollTarget.HasValue) return;
 
 			if (waitingForInstantScroll)
@@ -379,9 +404,7 @@ namespace LunraGames.SubLight.Views
 
 			if (!verticalScrollTarget.HasValue && addDone != null)
 			{
-				var oldAddDone = addDone;
-				addDone = null;
-				oldAddDone();
+				delayAfterAdditionRemaining = delayAfterAddition;
 			}
 		}
 

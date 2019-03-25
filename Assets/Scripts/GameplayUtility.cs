@@ -287,6 +287,39 @@ namespace LunraGames.SubLight
 					propellantRemainingInSystem
 				);
 			}
+
+			float metallicsTotal;
+			float metallicsFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				KeyDefines.Game.Metallics,
+				KeyDefines.CelestialSystem.Metallics,
+				out metallicsTotal,
+				out metallicsFromSystem
+			);
+
+			var metallicsMaximum = gameSource.Get(KeyDefines.Game.Metallics.Maximum);
+			var metallics = Mathf.Min(metallicsMaximum, metallicsTotal);
+			var metallicsRemainingInSystem = Mathf.Min(Mathf.Max(0f, metallicsTotal - metallics), metallicsFromSystem);
+
+			gameSource.Set(
+				KeyDefines.Game.Metallics.Amount,
+				metallics
+			);
+
+			if (!systemSource.Get(KeyDefines.CelestialSystem.Metallics.Discovered))
+			{
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Metallics.Discovered,
+					true
+				);
+
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Metallics.GatheredAmount,
+					metallicsRemainingInSystem
+				);
+			}
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		public int LocalSectorOffset = 1; // Not set anywhere else at the moment...
+		public int LocalSectorOffset = 2; // Not set anywhere else at the moment...
 		public int LocalSectorOffsetTotal { get { return (LocalSectorOffset * 2) + 1; } }
 		public int LocalSectorCount { get { return LocalSectorOffsetTotal * LocalSectorOffsetTotal; } }
 
@@ -59,6 +59,8 @@ namespace LunraGames.SubLight
 		#region Begin
 		protected override void Begin()
 		{
+			Payload.Game.Context.PauseMenuBlockers.Value++;
+
 			SM.PushBlocking(LoadScenes, "LoadScenes");
 			SM.PushBlocking(InitializeInput, "InitializeInput");
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
@@ -97,6 +99,7 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Position.Changed += OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
+			Payload.Game.Context.NavigationSelectionOutOfRange += OnNavigationSelectionOutOfRange;
 
 			Payload.Game.Context.TransitState.Changed += OnTransitState;
 
@@ -191,6 +194,10 @@ namespace LunraGames.SubLight
 				},
 				"IdleEncounterResumeCheck"
 			);
+			SM.Push(
+				() => Payload.Game.Context.PauseMenuBlockers.Value--,
+				"IdleUnBlockPauseMenu"
+			);
 		}
 		#endregion
 
@@ -213,6 +220,7 @@ namespace LunraGames.SubLight
 			Payload.Game.Ship.Position.Changed -= OnShipPosition;
 
 			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
+			Payload.Game.Context.NavigationSelectionOutOfRange -= OnNavigationSelectionOutOfRange;
 
 			Payload.Game.Context.TransitState.Changed -= OnTransitState;
 
@@ -225,6 +233,7 @@ namespace LunraGames.SubLight
 
 			App.Input.SetEnabled(false);
 
+			// No focus is important because it clears the buffered render target images.
 			SM.PushBlocking(
 				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
 				"GameSettingNoFocus"
@@ -301,6 +310,27 @@ namespace LunraGames.SubLight
 		{
 			Payload.Game.ToolbarSelection.Value = request.Selection;
 			if (request.Done != null) request.Done();
+
+			switch (request.Selection)
+			{
+				case ToolbarSelections.Unknown: break;
+				case ToolbarSelections.System:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Navigation);
+					break;
+				case ToolbarSelections.Ship:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Logistics);
+					break;
+				case ToolbarSelections.Communication:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Communication);
+					break;
+				case ToolbarSelections.Encyclopedia:
+					App.Analytics.ScreenVisit(AnalyticsService.ScreenNames.Encyclopedia);
+					break;
+				default:
+					Debug.LogError("Unrecognized Selection: " + request.Selection);
+					break;
+
+			}
 		}
 
 		void OnCelestialSystemsTransform(UniverseTransform transform)
@@ -496,6 +526,11 @@ namespace LunraGames.SubLight
 				EncounterTriggers.ResourceConsume,
 				EncounterTriggers.SystemIdle
 			);
+
+			App.Analytics.Transit(
+				Payload.Game,
+				transitState
+			);
 		}
 
 		void PushEncounterTriggers(string description, params EncounterTriggers[] triggers)
@@ -622,8 +657,18 @@ namespace LunraGames.SubLight
 			}
 			else
 			{
+				var systemEncounters = Payload.Game.Context.CurrentSystem.Value;
+
+				switch (target)
+				{
+					case EncounterTriggers.NavigationSelect:
+						if (Payload.Game.Context.CelestialSystemStateLastSelected.Value.System == null) Debug.LogError("NavigationSelect was triggered, but no system is currently selected, checking current system instead");
+						else systemEncounters = Payload.Game.Context.CelestialSystemStateLastSelected.Value.System;
+						break;
+				}
+
 				// Checking if the system has any matching encounter triggers...
-				var allSpecifiedEncounters = Payload.Game.Context.CurrentSystem.Value.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == target);
+				var allSpecifiedEncounters = systemEncounters.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == target);
 
 				if (1 < allSpecifiedEncounters.Count())
 				{
@@ -746,9 +791,9 @@ namespace LunraGames.SubLight
 				done(false);
 				return;
 			}
-			if (encounter.Trigger.Value != trigger)
+			if (encounter.Trigger.Value != trigger && encounter.Trigger.Value != EncounterTriggers.None)
 			{
-				//Debug.LogError("Trigger was specified as " + trigger + " but the encounter's trigger was " + encounter.Trigger.Value + ", this probably should not ever happen. Ignoring Encounter.");
+				Debug.LogError("Trigger was specified as " + trigger + " but the encounter's trigger was " + encounter.Trigger.Value + ", this probably should not ever happen. Ignoring Encounter.");
 				done(false);
 				return;
 			}
@@ -793,7 +838,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Request:
 					break;
 				case EncounterRequest.States.Handle:
-					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(Payload, handler))) break;
+					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(this, handler))) break;
 					// The list below is used mainly for when you're making a new log type and need to catch unhandled ones.
 					// Any in the switch below should be handled by an existing presenter, or something...
 					switch (request.LogType)
@@ -828,7 +873,7 @@ namespace LunraGames.SubLight
 				case EncounterRequest.States.Complete:
 					// Unlocking the toolbar incase it was locked during the encounter.
 					Payload.Game.Context.ToolbarSelectionRequest.Value = ToolbarSelectionRequest.Create(
-						Payload.Game.ToolbarSelection.Value,
+						ToolbarSelections.Unknown,
 						false,
 						ToolbarSelectionRequest.Sources.Encounter
 					);
@@ -885,6 +930,25 @@ namespace LunraGames.SubLight
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
 		{
+			if (block.System == null) return;
+
+			switch (block.State)
+			{
+				case CelestialSystemStateBlock.States.Selected: break;
+				case CelestialSystemStateBlock.States.Highlighted:
+				case CelestialSystemStateBlock.States.Idle:
+					Payload.Game.KeyValues.Set(
+						KeyDefines.Game.NavigationHighlight,
+						block.State == CelestialSystemStateBlock.States.Highlighted ? block.System.ShrunkPosition : null
+					);
+					Payload.Game.KeyValues.Set(
+						KeyDefines.Game.NavigationHighlightName,
+						block.State == CelestialSystemStateBlock.States.Highlighted ? block.System.Name.Value : null
+					);
+					return;
+				default: return;
+			}
+
 			if (block.System == null || block.State != CelestialSystemStateBlock.States.Selected) return;
 			if (Payload.Game.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
 			{
@@ -892,16 +956,25 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var allSpecifiedEncounters = block.System.SpecifiedEncounters.Value.Where(s => !string.IsNullOrEmpty(s.EncounterId) && s.Trigger == EncounterTriggers.NavigationSelect);
+			PushEncounterTriggers(
+				"NavigationSelectCheckForEncounters",
+				EncounterTriggers.NavigationSelect
+			);
+		}
 
-			if (1 < allSpecifiedEncounters.Count())
+		void OnNavigationSelectionOutOfRange(SystemModel system)
+		{
+			if (system == null) return;
+			if (Payload.Game.Context.EncounterState.Current.Value.State != EncounterStateModel.States.Complete)
 			{
-				Debug.LogError("Multiple encounters are specified for system " + block.System.Name + " with trigger " + EncounterTriggers.NavigationSelect + ", this behaviour is not supported yet, choosing the first one instead.");
+				Debug.LogWarning("Checking for Navigation Selection Out Of Range events during encounter is not supported, ignoring");
+				return;
 			}
 
-			var encounterId = allSpecifiedEncounters.FirstOrDefault().EncounterId;
-
-			OnCheckSpecifiedEncounter(encounterId, EncounterTriggers.NavigationSelect, true);
+			PushEncounterTriggers(
+				"NavigationSelectOutOfRangeCheckForEncounters",
+				EncounterTriggers.NavigationSelectOutOfRange
+			);
 		}
 
 		void OnKeyValueRequest(KeyValueRequest request)
@@ -949,6 +1022,41 @@ namespace LunraGames.SubLight
 			switch (target)
 			{
 				case KeyValueTargets.Game:
+					if (key == KeyDefines.Game.NavigationSelection.Key)
+					{
+						Action navigationSelectionNone = () =>
+						{
+							Payload.Game.Context.SetCelestialSystemState(
+								Payload.Game.Context.CelestialSystemState.Value.Duplicate(CelestialSystemStateBlock.States.UnSelected)
+							);
+						};
+
+						UniversePosition.Expand(
+							value,
+							navigationSelectionNone,
+							(position, index) =>
+							{
+								var navigationSelectionSystem = App.Universe.GetSystem(
+									Payload.Game.Context.Galaxy,
+									Payload.Game.Universe,
+									position,
+									index
+								);
+
+								if (navigationSelectionSystem == null)
+								{
+									Debug.LogError("Tried to set navigation selection to \"" + value + "\" but no system could be found");
+									navigationSelectionNone();
+								}
+								else
+								{
+									Payload.Game.Context.SetCelestialSystemState(
+										CelestialSystemStateBlock.Select(position, navigationSelectionSystem)
+									);
+								}
+							}
+						);
+					}
 					break;
 			}
 		}

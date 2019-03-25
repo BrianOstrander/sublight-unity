@@ -162,7 +162,7 @@ namespace LunraGames.SubLight
 
 							if (logIsFocused != GUILayout.Toggle(logIsFocused, new GUIContent(logName, logIsFocused ? "Log is currently focused." : "Jump to this log."), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)) && !logIsFocused)
 							{
-								logsFocusedLogIdsIndex.Value = currLogIdIndex;
+								LogsSetFocusedLogIdsIndex(currLogIdIndex);
 							}
 
 							currLogIdIndex++;
@@ -1355,7 +1355,7 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.GameComplete:
 					OnEncounterEventLogEdgeGameComplete(entry);
 					break;
-				case EncounterEvents.Types.PopTriggers:
+				case EncounterEvents.Types.TriggerQueue:
 					OnEncounterEventLogEdgePopTriggers(entry);
 					break;
 				default:
@@ -1468,25 +1468,40 @@ namespace LunraGames.SubLight
 			GUILayout.Label("Pop the following triggers if on the stack");
 			EditorGUILayoutExtensions.PushIndent();
 			{
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete,
-					EditorGUILayout.Toggle("Transit Complete", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopTransitComplete))
-				);
+				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
+				{
+					entry.KeyValues.SetBoolean(
+						EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger),
+						EditorGUILayout.Toggle(
+							ObjectNames.NicifyVariableName(trigger.ToString()),
+							entry.KeyValues.GetBoolean(EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger))
+						)
+					);
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
+			GUILayout.Label("Push the following triggers onto the stack in descending order");
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
+				{
+					var pushValue = entry.KeyValues.GetInteger(EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger));
 
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest,
-					EditorGUILayout.Toggle("Resource Request", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceRequest))
-				);
-
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume,
-					EditorGUILayout.Toggle("Resource Consume", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopResourceConsume))
-				);
-
-				entry.KeyValues.SetBoolean(
-					EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle,
-					EditorGUILayout.Toggle("System Idle", entry.KeyValues.GetBoolean(EncounterEvents.PopTriggers.BooleanKeys.PopSystemIdle))
-				);
+					if (pushValue == EncounterEvents.TriggerQueue.PushDisabled) EditorGUILayoutExtensions.PushColor(Color.gray);
+					{
+						entry.KeyValues.SetInteger(
+							EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger),
+							Mathf.Max(
+								EncounterEvents.TriggerQueue.PushDisabled,
+								EditorGUILayout.IntField(
+									ObjectNames.NicifyVariableName(trigger.ToString()),
+									pushValue
+								)
+							)
+						);
+					}
+					if (pushValue == EncounterEvents.TriggerQueue.PushDisabled) EditorGUILayoutExtensions.PopColor();
+				}
 			}
 			EditorGUILayoutExtensions.PopIndent();
 		}
@@ -1929,6 +1944,7 @@ namespace LunraGames.SubLight
 		BustEntryModel.InitializeBlock OnBustLogEdgeInitializeAvatarStatic(BustEntryModel.InitializeBlock block)
 		{
 			block.AvatarStaticIndex = Mathf.Max(0, EditorGUILayout.IntField("Index", block.AvatarStaticIndex));
+			block.AvatarStaticTerminalTextVisible = EditorGUILayout.Toggle("Terminal Text Visible", block.AvatarStaticTerminalTextVisible);
 			return block;
 		}
 
@@ -2289,6 +2305,13 @@ namespace LunraGames.SubLight
 		/// <param name="indexOffset">Index offset.</param>
 		string LogsFocusedLogIdsPeekRelative(int indexOffset) { return LogsFocusedLogIdsStack.ElementAtOrDefault(logsFocusedLogIdsIndex.Value + indexOffset); }
 
+		int LogsSetFocusedLogIdsIndex(int index)
+		{
+			logsFocusedLogIdsIndex.Value = index;
+			GUIUtility.keyboardControl = 0;
+			return index;
+		}
+
 		void LogsFocusedLogIdsPush(string logId)
 		{
 			logsStackScroll.Value = float.MaxValue;
@@ -2300,7 +2323,7 @@ namespace LunraGames.SubLight
 			if (string.IsNullOrEmpty(logId)) throw new ArgumentException("logId cannot be null or empty");
 			LogsFocusedLogIdsPop(Mathf.Clamp(index, -1, LogsFocusedLogIdsStack.Count() - 1));
 			LogsFocusedLogIdsStack = LogsFocusedLogIdsStack.Append(logId);
-			logsFocusedLogIdsIndex.Value = LogsFocusedLogIdsStack.Count() - 1;
+			LogsSetFocusedLogIdsIndex(LogsFocusedLogIdsStack.Count() - 1);
 		}
 
 		void LogsFocusedLogIdsPop(int index = -1)
@@ -2308,12 +2331,12 @@ namespace LunraGames.SubLight
 			var newStack = new List<string>();
 			for (var i = 0; i <= index; i++) newStack.Add(LogsFocusedLogIdsStack.ElementAt(i));
 			LogsFocusedLogIdsStack = newStack;
-			logsFocusedLogIdsIndex.Value = index;
+			LogsSetFocusedLogIdsIndex(index);
 		}
 
 		void LogsFocusedLogIdsOffsetIndex(int delta)
 		{
-			logsFocusedLogIdsIndex.Value = Mathf.Clamp(logsFocusedLogIdsIndex.Value + delta, 0, LogsFocusedLogIdsStack.Count() - 1);
+			LogsSetFocusedLogIdsIndex(Mathf.Clamp(logsFocusedLogIdsIndex.Value + delta, 0, LogsFocusedLogIdsStack.Count() - 1));
 		}
 		#endregion
 

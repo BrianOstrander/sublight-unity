@@ -27,6 +27,7 @@ namespace LunraGames.SubLight
 			DialogStyles style = DialogStyles.Neutral,
 			LanguageStringModel title = null,
 			Action confirmClick = null,
+			LanguageStringModel confirmText = null,
 			bool overrideFocuseHandling = false
 		)
 		{
@@ -37,6 +38,7 @@ namespace LunraGames.SubLight
 				title,
 				message,
 				success: confirmClick,
+				successText: confirmText,
 				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
@@ -56,6 +58,8 @@ namespace LunraGames.SubLight
 			LanguageStringModel title = null,
 			Action confirmClick = null,
 			Action denyClick = null,
+			LanguageStringModel confirmText = null,
+			LanguageStringModel denyText = null,
 			Action<RequestStatus> done = null,
 			bool overrideFocuseHandling = false
 		)
@@ -69,6 +73,8 @@ namespace LunraGames.SubLight
 				success: confirmClick,
 				failure: denyClick,
 				done: done,
+				successText: confirmText,
+				failureText: denyText,
 				overrideFocuseHandling: overrideFocuseHandling
 			);
 		}
@@ -90,9 +96,9 @@ namespace LunraGames.SubLight
 			Action confirmClick = null,
 			Action denyClick = null,
 			Action cancelClick = null,
-			LanguageStringModel cancelText = null,
-			LanguageStringModel denyText = null,
 			LanguageStringModel confirmText = null,
+			LanguageStringModel denyText = null,
+			LanguageStringModel cancelText = null,
 			Action<RequestStatus> done = null,
 			bool overrideFocuseHandling = false
 		)

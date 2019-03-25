@@ -12,7 +12,7 @@ namespace LunraGames.SubLight
 			ToolbarSelection = 30,
 			DumpKeyValues = 40,
 			GameComplete = 50,
-			PopTriggers = 60
+			TriggerQueue = 60
 		}
 
 		public static class Debug
@@ -83,14 +83,26 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		public static class PopTriggers
+		public static class TriggerQueue
 		{
+			public const int PushDisabled = 0;
+
+			static string TriggerNormalized(EncounterTriggers trigger) { return Enum.GetName(typeof(EncounterTriggers), trigger).ToLower(); }
+
 			public static class BooleanKeys
 			{
-				public const string PopTransitComplete = "pop_transit_complete";
-				public const string PopResourceRequest = "pop_resource_request";
-				public const string PopResourceConsume = "pop_resource_consume";
-				public const string PopSystemIdle = "pop_system_idle";
+				public static string PopTrigger(EncounterTriggers trigger)
+				{
+					return "pop_" + TriggerNormalized(trigger);
+				}
+			}
+
+			public static class IntegerKeys
+			{
+				public static string PushTrigger(EncounterTriggers trigger)
+				{
+					return "push_" + TriggerNormalized(trigger);
+				}
 			}
 		}
 	}

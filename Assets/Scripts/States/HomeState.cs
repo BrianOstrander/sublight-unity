@@ -8,6 +8,7 @@ using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Presenters;
 
 using UnityEngine;
+using UnityEngine.Analytics;
 
 namespace LunraGames.SubLight
 {
@@ -35,7 +36,11 @@ namespace LunraGames.SubLight
 
 		public GalaxyPreviewModel PreviewGalaxy;
 
-		public Action<GameModel> StartGame;
+		public Action<GameModel, bool, bool> StartGame;
+
+		public bool IgnoreMaskOnEnd;
+
+		public ChangelogPresenter Changelog;
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -243,7 +248,7 @@ namespace LunraGames.SubLight
 				PushIdleDefaults();
 				return;
 			}
-			Payload.StartGame(model);
+			Payload.StartGame(model, true, false);
 		}
 
 		void OnContinueGame(RequestResult result, GameModel model)
@@ -262,7 +267,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			Payload.StartGame(model);
+			Payload.StartGame(model, true, true);
 		}
 		#endregion
 
@@ -295,20 +300,103 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			if (!Payload.FromInitialization && !App.MetaKeyValues.GlobalKeyValues.KeyValues.Get(KeyDefines.Global.HasAskedForFeedback))
+			App.Heartbeat.Wait(
+				OnCheckForAnalyticsWarning,
+				totalWait + 0.001f
+			);
+		}
+
+		void OnCheckForAnalyticsWarning()
+		{
+			if (App.MetaKeyValues.Get(KeyDefines.Global.IgnoreUserAnalyticsWarning))
 			{
-				App.MetaKeyValues.GlobalKeyValues.KeyValues.Set(KeyDefines.Global.HasAskedForFeedback, true);
-				App.Heartbeat.Wait(
-					() => App.Callbacks.DialogRequest(
-						DialogRequest.ConfirmDeny(
-							LanguageStringModel.Override("If you're interested in providing feedback, it would help us out a lot!"),
-							title: LanguageStringModel.Override("Submit Feedback?"),
-							confirmClick: OnSubmitFeedbackClick
-						)
-					),
-					totalWait + 0.05f
-				);
+				OnIdleShowComplete();
+				return;
 			}
+
+			App.Callbacks.DialogRequest(
+				DialogRequest.ConfirmDeny(
+					LanguageStringModel.Override("<b>SubLight</b> uses analytics to fix bugs and improve your experience playing our game! " +
+					                             "We do not share or sell personal data about you to anyone, but we understand if you would " +
+					                             "still like to opt out of analytics."),
+					DialogStyles.Neutral,
+					LanguageStringModel.Override("Analytics"),
+					() => OnSetAnalytics(true),
+					() => OnSetAnalytics(false),
+					LanguageStringModel.Override("Keep Enabled"),
+					LanguageStringModel.Override("Disable")
+				)
+			);
+		}
+
+		void OnSetAnalytics(bool analyticsEnabled)
+		{
+			Analytics.enabled = analyticsEnabled;
+			App.MetaKeyValues.Set(KeyDefines.Global.IgnoreUserAnalyticsWarning, true);
+
+			App.MetaKeyValues.Save(
+				result =>
+				{
+					if (result.IsNotSuccess) Debug.LogError("Unable to save meta keyvalues, status " + result.Status + " with error: " + result.Message);
+					OnIdleShowComplete();
+				}
+			);
+		}
+
+		void OnIdleShowComplete()
+		{
+			if (Payload.FromInitialization)
+			{
+				var previousVersion = App.MetaKeyValues.Get(KeyDefines.Global.PreviousChangelogVersion);
+				var currentVersion = App.BuildPreferences.Current.Version;
+				App.MetaKeyValues.Set(KeyDefines.Global.PreviousChangelogVersion, currentVersion);
+
+				App.MetaKeyValues.Save(
+					result =>
+					{
+						if (result.Status == RequestStatus.Success && previousVersion != 0 && previousVersion < currentVersion)
+						{
+							ShowChangelog();
+						}
+					}
+				);
+
+
+			}
+			else
+			{
+				if (!App.MetaKeyValues.Get(KeyDefines.Global.IgnoreFeedbackRequest)) AskForFeedback();
+			}
+		}
+
+		void ShowChangelog()
+		{
+			var changeLog = App.BuildPreferences.Current;
+			App.MetaKeyValues.Set(KeyDefines.Global.PreviousChangelogVersion, changeLog.Version);
+
+			Payload.Changelog.Show(
+				setFocusInstant =>
+				{
+					if (setFocusInstant) App.Callbacks.SetFocusRequest(SetFocusRequest.RequestInstant(Focuses.GetPriorityFocus()));
+					else App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus()));
+				},
+				() =>
+				{
+					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
+				}
+			);
+		}
+
+		void AskForFeedback()
+		{
+			App.MetaKeyValues.Set(KeyDefines.Global.IgnoreFeedbackRequest, true);
+			App.Callbacks.DialogRequest(
+				DialogRequest.ConfirmDeny(
+					LanguageStringModel.Override("If you're interested in providing feedback, it would help us out a lot!"),
+					title: LanguageStringModel.Override("Submit Feedback?"),
+					confirmClick: OnSubmitFeedbackClick
+				)
+			);
 		}
 
 		void OnSubmitFeedbackClick()
@@ -319,7 +407,7 @@ namespace LunraGames.SubLight
 					Application.OpenURL(
 						App.BuildPreferences.FeedbackForm(
 							FeedbackFormTriggers.MainMenu,
-							App.MetaKeyValues.GlobalKeyValues.KeyValues
+							App.MetaKeyValues.GlobalKeyValues
 						)
 					);
 				},
@@ -342,6 +430,19 @@ namespace LunraGames.SubLight
 			App.Callbacks.DialogRequest -= OnDialogRequest;
 
 			App.Input.SetEnabled(false);
+
+			if (!Payload.IgnoreMaskOnEnd)
+			{
+				SM.PushBlocking(
+					done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
+					"HomeSettingNoFocus"
+				);
+
+				SM.PushBlocking(
+					done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(CameraMaskRequest.DefaultHideDuration, done)),
+					"HomeHideMask"
+				);
+			}
 
 			SM.PushBlocking(
 				done => App.P.UnRegisterAll(done),
@@ -370,18 +471,22 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnStartGame(GameModel model)
+		void OnStartGame(
+			GameModel model,
+			bool instant,
+			bool isContinue
+		)
 		{
-			// We only run this logic if we're not skipping through the main menu to a new or continued game.
-			SM.PushBlocking(
-				done => App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetNoFocus(), done)),
-				"StartGameSetNoFocus"
-			);
+			if (App.MetaKeyValues.Get(KeyDefines.Preferences.IsDemoMode))
+			{
+				Debug.LogWarning("Starting or continuing game in Demo Mode.");
+				App.MetaKeyValues.Set(KeyDefines.Preferences.IgnoreTutorial, false);
+			}
 
-			SM.PushBlocking(
-				done => App.Callbacks.CameraMaskRequest(CameraMaskRequest.Hide(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultHideDuration, done)),
-				"StartGameHideCamera"
-			);
+			Payload.IgnoreMaskOnEnd = instant;
+
+			if (isContinue) App.Analytics.GameContinue(model);
+			else App.Analytics.GameStart(model);
 
 			SM.Push(
 				() =>

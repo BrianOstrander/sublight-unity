@@ -12,7 +12,6 @@ namespace LunraGames.SubLight.Models
 	{
 		public static class Seeds
 		{
-			public static int Position(int seed) { return DemonUtility.CantorPairs(seed, 1); }
 			public static int Resources(int seed) { return DemonUtility.CantorPairs(seed, 2); }
 		}
 
@@ -67,6 +66,9 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonIgnore] public KeyValueListModel KeyValues { get { return keyValues; } }
+
+		[JsonIgnore]
+		public string ShrunkPosition { get { return UniversePosition.Shrink(Position.Value, Index.Value); } }
 
 		public SystemModel()
 		{

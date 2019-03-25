@@ -45,18 +45,9 @@ namespace LunraGames.SubLight
 			var pitchForward = App.V.CameraRotation * new Vector3(0f, Mathf.Sin(pitch), Mathf.Cos(pitch));
 
 			view.Root.position = position;
-			view.Root.LookAt(position + pitchForward);
-			////var dir = (view.transform.position + App.V.CameraForward).normalized;
-			//var dir = App.V.CameraForward;
 
-			//if (!horizontalOnly)
-			//{
-			//	Debug.DrawLine(view.transform.position, view.transform.position + Vector3.up, Color.red);
-			//	Debug.DrawLine(view.transform.position, view.transform.position + dir.NewY(0).normalized, Color.red.NewS(0.5f));
-			//	Debug.DrawLine(view.transform.position, view.transform.position + dir, Color.yellow);
-			//}
-
-			//return view.transform.position + (horizontalOnly ? dir.NewY(0).normalized : dir);
+			// Didn't used to specify the camera up, if issues occur it could be related to that.
+			view.Root.LookAt(position + pitchForward, App.V.CameraUp);
 		}
 
 		public override void OnShowing(IView view, float scalar)
