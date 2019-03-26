@@ -270,7 +270,7 @@ namespace LunraGames.SubLight
 			var endWaypoint = new WaypointModel();
 			endWaypoint.SetLocation(endSystem);
 			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
-			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
 			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
 			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
 			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, end);
