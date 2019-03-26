@@ -418,13 +418,6 @@
       "systemCount": 5,
       "systems": [
         {
-          "seed": 1063743355,
-          "visited": true,
-          "specified": true,
-          "name": "Sol",
-          "secondaryClassification": "Yellow Dwarf",
-          "iconColor": {"r":1.0,"g":0.85,"b":0.4705882,"a":1.0},
-          "iconScale": 0.475,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.5,"y":0.2,"z":0.5}
@@ -465,7 +458,8 @@
               "scan_level_gravity": 0,
               "scan_level_temperature": 0,
               "scan_level_water": 0,
-              "scan_level_resources": 0
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
             "strings": {
               "name": "Sol",
@@ -490,15 +484,6 @@
           }
         },
         {
-          "index": 1,
-          "seed": 1218121807,
-          "visited": true,
-          "specified": true,
-          "playerBegin": true,
-          "name": "Alpha Centauri",
-          "secondaryClassification": "Yellow Dwarf",
-          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
-          "iconScale": 0.236,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.5,"y":0.1,"z":0.75}
@@ -541,7 +526,8 @@
               "anomaly_index": 0,
               "index": 1,
               "seed": 1218121807,
-              "scannable_body_index": 0
+              "scannable_body_index": 0,
+              "classification_primary": 10
             },
             "strings": {
               "name": "Alpha Centauri",
@@ -566,13 +552,6 @@
           }
         },
         {
-          "index": 2,
-          "seed": 123782430,
-          "specified": true,
-          "name": "Barnard's Star",
-          "secondaryClassification": "Red Dwarf",
-          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
-          "iconScale": 0.238,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.25,"y":0.15,"z":0.5}
@@ -615,7 +594,8 @@
               "anomaly_index": 0,
               "index": 2,
               "seed": 123782430,
-              "scannable_body_index": 0
+              "scannable_body_index": 0,
+              "classification_primary": 10
             },
             "strings": {
               "name": "Barnard's Star",
@@ -640,13 +620,6 @@
           }
         },
         {
-          "index": 3,
-          "seed": 579281218,
-          "specified": true,
-          "name": "Sirius",
-          "secondaryClassification": "Dwarf",
-          "iconColor": {"r":0.470000029,"g":0.743833363,"b":1.0,"a":1.0},
-          "iconScale": 0.797,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.1,"y":0.3,"z":0.1}
@@ -688,7 +661,8 @@
               "scan_level_gravity": 0,
               "scan_level_temperature": 0,
               "scan_level_water": 0,
-              "scan_level_resources": 0
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
             "strings": {
               "name": "Sirius",
@@ -713,13 +687,6 @@
           }
         },
         {
-          "index": 4,
-          "seed": 1072218910,
-          "specified": true,
-          "name": "Wolf",
-          "secondaryClassification": "Red Dwarf",
-          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
-          "iconScale": 0.079,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.8,"z":0.9}
@@ -760,7 +727,8 @@
               "scan_level_gravity": 0,
               "scan_level_temperature": 0,
               "scan_level_water": 0,
-              "scan_level_resources": 0
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
             "strings": {
               "name": "Wolf",
@@ -796,13 +764,6 @@
       "systemCount": 1,
       "systems": [
         {
-          "seed": 85921647,
-          "specified": true,
-          "playerEnd": true,
-          "name": "Cygnus X-1",
-          "secondaryClassification": "Super Massive Black Hole",
-          "iconColor": {"r":1.0,"g":1.0,"b":1.0,"a":1.0},
-          "iconScale": 1.0,
           "position": {
             "Sector": {"x":89.0,"z":28.0},
             "Local": {"x":0.5,"z":0.5}
@@ -841,7 +802,8 @@
               "scan_level_gravity": 0,
               "scan_level_temperature": 0,
               "scan_level_water": 0,
-              "scan_level_resources": 0
+              "scan_level_resources": 0,
+              "classification_primary": 20
             },
             "strings": {
               "name": "Cygnus X-1",

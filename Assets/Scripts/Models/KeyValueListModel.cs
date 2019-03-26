@@ -16,6 +16,11 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] Dictionary<string, int> enums = new Dictionary<string, int>();
 		[JsonProperty] Dictionary<string, float> floats = new Dictionary<string, float>();
 
+		public KeyValueListModel()
+		{
+
+		}
+
 		/// <summary>
 		/// Keys are not case sensitive, so we normalize them here, along with
 		/// any other operations.
@@ -43,7 +48,7 @@ namespace LunraGames.SubLight.Models
 			return fallback;
 		}
 
-		public T GetEnum<T>(string key, T fallback = default(T)) where T : struct, IConvertible
+		private T GetEnum<T>(string key, T fallback = default(T)) where T : struct, IConvertible
 		{
 			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
 
@@ -52,10 +57,19 @@ namespace LunraGames.SubLight.Models
 			return Enum.GetValues(typeof(T)).Cast<T>().FirstOrDefault(e => Convert.ToInt32(e) == intValue);
 		}
 
-		public int GetEnumInteger(string key, int fallback = 0)
+		private int GetEnumInteger(string key, int fallback = 0)
 		{
 			enums.TryGetValue(NormalizeKey(key), out fallback);
 			return fallback;
+		}
+
+		public T GetEnumeration<T>(string key, T fallback = default(T)) where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
+
+			var intValue = Convert.ToInt32(fallback);
+			integers.TryGetValue(NormalizeKey(key), out intValue);
+			return Enum.GetValues(typeof(T)).Cast<T>().FirstOrDefault(e => Convert.ToInt32(e) == intValue);
 		}
 
 		public float GetFloat(string key, float fallback = 0f)
@@ -93,7 +107,7 @@ namespace LunraGames.SubLight.Models
 			return value;
 		}
 
-		public T SetEnum<T>(string key, T value) where T : struct, IConvertible
+		private T SetEnum<T>(string key, T value) where T : struct, IConvertible
 		{
 			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
 
@@ -101,7 +115,7 @@ namespace LunraGames.SubLight.Models
 			return value;
 		}
 
-		public int SetEnumInteger(string key, int value)
+		private int SetEnumInteger(string key, int value)
 		{
 			enums[NormalizeKey(key)] = value;
 			return value;
@@ -110,6 +124,14 @@ namespace LunraGames.SubLight.Models
 		public float SetFloat(string key, float value)
 		{
 			floats[NormalizeKey(key)] = value;
+			return value;
+		}
+
+		public T SetEnumeration<T>(string key, T value) where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
+
+			integers[NormalizeKey(key)] = Convert.ToInt32(value);
 			return value;
 		}
 
@@ -128,12 +150,20 @@ namespace LunraGames.SubLight.Models
 		public int Get(KeyDefinitions.Integer key, int fallback = 0) { return GetInteger(key.Key, fallback); }
 		public string Get(KeyDefinitions.String key, string fallback = null) { return GetString(key.Key, fallback); }
 		public float Get(KeyDefinitions.Float key, float fallback = 0f) { return GetFloat(key.Key, fallback); }
+		public T Get<T>(KeyDefinitions.Enumeration<T> key, T fallback = default(T)) where T : struct, IConvertible
+		{
+			return GetEnumeration(key.Key, fallback);
+		}
 		public Color Get(KeyDefinitions.HsvaColor key, Color fallback = default(Color)) { return GetColor(key, fallback); }
 
 		public bool Set(KeyDefinitions.Boolean key, bool value) { return SetBoolean(key.Key, value); }
 		public int Set(KeyDefinitions.Integer key, int value) { return SetInteger(key.Key, value); }
 		public string Set(KeyDefinitions.String key, string value) { return SetString(key.Key, value); }
 		public float Set(KeyDefinitions.Float key, float value) { return SetFloat(key.Key, value); }
+		public T Set<T>(KeyDefinitions.Enumeration<T> key, T value) where T : struct, IConvertible
+		{
+			return SetEnumeration(key.Key, value);
+		}
 		public Color Set(KeyDefinitions.HsvaColor key, Color value) { return SetColor(key, value); }
 		#endregion
 

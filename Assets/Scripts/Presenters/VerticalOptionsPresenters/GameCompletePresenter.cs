@@ -81,7 +81,7 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			var theme = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsThemes.Success : VerticalOptionsThemes.Error;
-			var icon = keyValues.GetEnum<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride);
+			var icon = keyValues.GetEnumeration<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride);
 
 			switch (icon)
 			{
@@ -305,7 +305,7 @@ namespace LunraGames.SubLight.Presenters
 			var gameCompletion = handler.Events.Value.FirstOrDefault(e => e.EncounterEvent.Value == EncounterEvents.Types.GameComplete);
 			if (gameCompletion == null) return;
 
-			var condition = gameCompletion.KeyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition);
+			var condition = gameCompletion.KeyValues.GetEnumeration<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition);
 
 			var details = model.SaveDetails.Value;
 			details.IsCompleted = true;

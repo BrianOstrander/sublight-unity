@@ -75,7 +75,7 @@ namespace LunraGames.SubLight
 				Action done
 			)
 			{
-				var severity = entry.KeyValues.GetEnum(EncounterEvents.Debug.EnumKeys.Severity, EncounterEvents.Debug.Severities.Error);
+				var severity = entry.KeyValues.GetEnumeration(EncounterEvents.Debug.EnumKeys.Severity, EncounterEvents.Debug.Severities.Error);
 				var message = entry.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message);
 				if (string.IsNullOrEmpty(message)) message = "< no message was provided >";
 
@@ -117,12 +117,12 @@ namespace LunraGames.SubLight
 			)
 			{
 				var currentSelection = state.Payload.Game.ToolbarSelection.Value;
-				var targetSelection = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
+				var targetSelection = entry.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
 
 				if (targetSelection == ToolbarSelections.Unknown) targetSelection = currentSelection;
 
 				var currentLocking = state.Payload.Game.ToolbarLocking.Value ? EncounterEvents.ToolbarSelection.LockStates.Lock : EncounterEvents.ToolbarSelection.LockStates.UnLock;
-				var targetLocking = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
+				var targetLocking = entry.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
 
 				if (targetLocking == EncounterEvents.ToolbarSelection.LockStates.Unknown) targetLocking = currentLocking;
 
@@ -154,7 +154,7 @@ namespace LunraGames.SubLight
 				Action done
 			)
 			{
-				var dumpTarget = entry.KeyValues.GetEnum(EncounterEvents.DumpKeyValues.EnumKeys.Target, KeyValueTargets.Unknown);
+				var dumpTarget = entry.KeyValues.GetEnumeration(EncounterEvents.DumpKeyValues.EnumKeys.Target, KeyValueTargets.Unknown);
 
 				var values = EnumExtensions.GetValues(KeyValueTargets.Unknown);
 

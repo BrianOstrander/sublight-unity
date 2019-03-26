@@ -1381,12 +1381,12 @@ namespace LunraGames.SubLight
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.Debug.EnumKeys.Severity,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Severity"),
 					"- Select A Severity -",
-					entry.KeyValues.GetEnum<EncounterEvents.Debug.Severities>(EncounterEvents.Debug.EnumKeys.Severity)
+					entry.KeyValues.GetEnumeration<EncounterEvents.Debug.Severities>(EncounterEvents.Debug.EnumKeys.Severity)
 				)
 			);
 			entry.KeyValues.SetString(
@@ -1399,21 +1399,21 @@ namespace LunraGames.SubLight
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.ToolbarSelection.EnumKeys.Selection,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Selection"),
 					"- No Change -",
-					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
+					entry.KeyValues.GetEnumeration<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
 				)
 			);
 
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.ToolbarSelection.EnumKeys.LockState,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Locking"),
 					"- No Change -",
-					entry.KeyValues.GetEnum<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
+					entry.KeyValues.GetEnumeration<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
 				)
 			);
 		}
@@ -1422,12 +1422,12 @@ namespace LunraGames.SubLight
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.DumpKeyValues.EnumKeys.Target,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Target"),
 					"All",
-					entry.KeyValues.GetEnum<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
+					entry.KeyValues.GetEnumeration<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
 				)
 			);
 		}
@@ -1436,22 +1436,22 @@ namespace LunraGames.SubLight
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.GameComplete.EnumKeys.Condition,
 				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 					new GUIContent("Condition"),
 					"- Select a Condition -",
-					entry.KeyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
+					entry.KeyValues.GetEnumeration<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
 					Color.red
 				)
 			);
 
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.GameComplete.EnumKeys.IconOverride,
 				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 					new GUIContent("Icon Override"),
 					"- Select an Icon -",
-					entry.KeyValues.GetEnum<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride),
+					entry.KeyValues.GetEnumeration<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride),
 					Color.yellow
 				)
 			);

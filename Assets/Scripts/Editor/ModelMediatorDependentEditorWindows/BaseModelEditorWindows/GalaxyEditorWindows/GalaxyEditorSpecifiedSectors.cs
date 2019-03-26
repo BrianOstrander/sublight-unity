@@ -621,6 +621,7 @@ namespace LunraGames.SubLight
 						KeyDefines.CelestialSystem.Seed,
 						KeyDefines.CelestialSystem.Name,
 						KeyDefines.CelestialSystem.Visited,
+						KeyDefines.CelestialSystem.ClassificationPrimary,
 						KeyDefines.CelestialSystem.ClassificationSecondary,
 						KeyDefines.CelestialSystem.IconColor.Hue,
 						KeyDefines.CelestialSystem.IconColor.Saturation,

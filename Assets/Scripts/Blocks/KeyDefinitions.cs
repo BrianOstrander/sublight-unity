@@ -79,7 +79,7 @@ namespace LunraGames.SubLight
 		{
 			var genericType = typeof(T);
 			if (genericType == typeof(bool) && valueType != KeyValueTypes.Boolean) throw GetValueTypeExecption(genericType, valueType);
-			if (genericType == typeof(int) && valueType != KeyValueTypes.Integer) throw GetValueTypeExecption(genericType, valueType);
+			if (genericType == typeof(int) && valueType != KeyValueTypes.Integer && valueType != KeyValueTypes.Enumeration) throw GetValueTypeExecption(genericType, valueType);
 			if (genericType == typeof(string) && valueType != KeyValueTypes.String) throw GetValueTypeExecption(genericType, valueType);
 			if (genericType == typeof(float) && valueType != KeyValueTypes.Float) throw GetValueTypeExecption(genericType, valueType);
 
@@ -170,6 +170,35 @@ namespace LunraGames.SubLight
 			{ }
 		}
 
+		public interface IEnumeration : IKeyDefinition
+		{
+			Type EnumerationType { get; }
+		}
+
+		public class Enumeration<T> : KeyDefinitionsTyped<int>, IEnumeration
+			where T : struct, IConvertible
+		{
+			public Type EnumerationType { get { return typeof(T); } }
+
+			public Enumeration(
+				string key,
+				KeyValueTargets target,
+				string notes,
+				bool canWrite,
+				bool canRead
+			) : base(
+				key,
+				target,
+				KeyValueTypes.Enumeration,
+				notes,
+				canWrite,
+				canRead
+			)
+			{
+				if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
+			}
+		}
+
 		public class HsvaColor
 		{
 			public readonly Float Hue;
@@ -186,7 +215,7 @@ namespace LunraGames.SubLight
 			)
 			{
 				Hue = new Float(
-					key+"_hue",
+					key + "_hue",
 					target,
 					notes,
 					canWrite,
@@ -222,6 +251,7 @@ namespace LunraGames.SubLight
 		public Integer[] Integers { get; protected set; }
 		public String[] Strings { get; protected set; }
 		public Float[] Floats { get; protected set; }
+		public IEnumeration[] Enumerations { get; protected set; }
 
 		public IKeyDefinition[] All
 		{
@@ -230,6 +260,7 @@ namespace LunraGames.SubLight
 				return Booleans.Cast<IKeyDefinition>().Concat(Integers)
 												   .Concat(Strings)
 												   .Concat(Floats)
+					           					   .Concat(Enumerations)
 												   .ToArray();
 			}
 		}
@@ -289,6 +320,20 @@ namespace LunraGames.SubLight
 		{
 			created = created ?? (result => result);
 			return instance = created(new Float(key, Target, notes, canWrite, canRead));
+		}
+
+		protected Enumeration<T> Create<T>(
+			ref Enumeration<T> instance,
+			string key,
+			string notes = null,
+			bool canWrite = false,
+			bool canRead = true,
+			Func<Enumeration<T>, Enumeration<T>> created = null
+		)
+			where T : struct, IConvertible
+		{
+			created = created ?? (result => result);
+			return instance = created(new Enumeration<T>(key, Target, notes, canWrite, canRead));
 		}
 
 		protected HsvaColor Create(

@@ -352,6 +352,11 @@ namespace LunraGames.SubLight
 				)
 			};
 
+			Enumerations = new IEnumeration[]
+			{
+
+			};
+
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
 			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
 			Metallics = new Resource(KeyDefines.Resources.Metallics, this);

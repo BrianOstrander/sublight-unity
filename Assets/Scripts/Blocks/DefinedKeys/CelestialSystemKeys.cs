@@ -88,7 +88,7 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Enumerations
-		//[JsonProperty] SystemClassifications primaryClassification; // TODO
+		public readonly Enumeration<SystemClassifications> ClassificationPrimary;
 		#endregion
 
 		public CelestialSystemKeys() : base(KeyValueTargets.CelestialSystem)
@@ -208,6 +208,15 @@ namespace LunraGames.SubLight
 					ref IconScale,
 					"icon_scale",
 					"Scale of the system's icon from 0.0 to 1.0."
+				)
+			};
+
+			Enumerations = new IEnumeration[]
+			{
+				Create<SystemClassifications>(
+					ref ClassificationPrimary,
+					"classification_primary",
+					"Primary classification for this system."
 				)
 			};
 
