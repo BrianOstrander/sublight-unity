@@ -63,6 +63,15 @@ namespace LunraGames.SubLight.Models
 			floats.TryGetValue(NormalizeKey(key), out fallback);
 			return fallback;
 		}
+
+		public Color GetColor(KeyDefinitions.HsvaColor key, Color fallback = default(Color))
+		{
+			return Color.HSVToRGB(
+				GetFloat(key.Hue.Key, fallback.GetH()),
+				GetFloat(key.Saturation.Key, fallback.GetS()),
+				GetFloat(key.Value.Key, fallback.GetV())
+			).NewA(GetFloat(key.Alpha.Key, fallback.a));
+		}
 		#endregion
 
 		#region Base Set
@@ -103,6 +112,15 @@ namespace LunraGames.SubLight.Models
 			floats[NormalizeKey(key)] = value;
 			return value;
 		}
+
+		public Color SetColor(KeyDefinitions.HsvaColor key, Color value)
+		{
+			SetFloat(key.Hue.Key, value.GetH());
+			SetFloat(key.Saturation.Key, value.GetS());
+			SetFloat(key.Value.Key, value.GetV());
+			SetFloat(key.Alpha.Key, value.a);
+			return value;
+		}
 		#endregion
 
 		#region Defined Get & Set
@@ -110,11 +128,13 @@ namespace LunraGames.SubLight.Models
 		public int Get(KeyDefinitions.Integer key, int fallback = 0) { return GetInteger(key.Key, fallback); }
 		public string Get(KeyDefinitions.String key, string fallback = null) { return GetString(key.Key, fallback); }
 		public float Get(KeyDefinitions.Float key, float fallback = 0f) { return GetFloat(key.Key, fallback); }
+		public Color Get(KeyDefinitions.HsvaColor key, Color fallback = default(Color)) { return GetColor(key, fallback); }
 
 		public bool Set(KeyDefinitions.Boolean key, bool value) { return SetBoolean(key.Key, value); }
 		public int Set(KeyDefinitions.Integer key, int value) { return SetInteger(key.Key, value); }
 		public string Set(KeyDefinitions.String key, string value) { return SetString(key.Key, value); }
 		public float Set(KeyDefinitions.Float key, float value) { return SetFloat(key.Key, value); }
+		public Color Set(KeyDefinitions.HsvaColor key, Color value) { return SetColor(key, value); }
 		#endregion
 
 		#region Utility

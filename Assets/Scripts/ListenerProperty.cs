@@ -16,7 +16,7 @@ namespace LunraGames.SubLight
 			get { return get(); }
 			set
 			{
-				if (EqualityComparer<T>.Default.Equals(get(), value)) return;
+				//if (EqualityComparer<T>.Default.Equals(get(), value)) return;
 				set(value);
 				Changed(value);
 			}

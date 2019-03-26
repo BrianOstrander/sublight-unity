@@ -43,9 +43,16 @@ namespace LunraGames.SubLight
 		}
 
 		#region Booleans
+		public readonly Boolean Visited;
+		public readonly Boolean Specified;
+		public readonly Boolean PlayerBegin;
+		public readonly Boolean PlayerEnd;
 		#endregion
 
 		#region Integers
+		public readonly Integer Index;
+		public readonly Integer Seed;
+
 		public readonly Integer ScannableBodyIndex;
 
 		public readonly Integer HabitableAtmosphere;
@@ -62,9 +69,12 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Strings
+		public readonly String Name;
+		public readonly String ClassificationSecondary;
 		#endregion
 
 		#region Floats
+		public readonly Float IconScale;
 		#endregion
 
 		#region Resources
@@ -73,15 +83,52 @@ namespace LunraGames.SubLight
 		public readonly Resource Metallics;
 		#endregion
 
+		#region HsvColors
+		public readonly HsvaColor IconColor;
+		#endregion
+
+		#region Enumerations
+		//[JsonProperty] SystemClassifications primaryClassification; // TODO
+		#endregion
+
 		public CelestialSystemKeys() : base(KeyValueTargets.CelestialSystem)
 		{
 			Booleans = new Boolean[]
 			{
-
+				Create(
+					ref Visited,
+					"visited",
+					"True if the system has been visited at least once."
+				),
+				Create(
+					ref Specified,
+					"specified",
+					"True if this system was specified in the galaxy model."
+				),
+				Create(
+					ref PlayerBegin,
+					"player_begin",
+					"True if this system is where the player starts."
+				),
+				Create(
+					ref PlayerEnd,
+					"player_end",
+					"True if this system is where the game ends."
+				)
 			};
 
 			Integers = new Integer[]
 			{
+				Create(
+					ref Index,
+					"index",
+					"Index of the system within the sector."
+				),
+				Create(
+					ref Seed,
+					"seed",
+					"Procedurally assigned seed used to generate this system."
+				),
 				Create(
 					ref ScannableBodyIndex,
 					"scannable_body_index",
@@ -143,17 +190,36 @@ namespace LunraGames.SubLight
 
 			Strings = new String[]
 			{
-
+				Create(
+					ref Name,
+					"name",
+					"Name of the system"
+				),
+				Create(
+					ref ClassificationSecondary,
+					"classification_secondary",
+					"A description of the system based on the primary classification."
+				)
 			};
 
 			Floats = new Float[]
 			{
-
+				Create(
+					ref IconScale,
+					"icon_scale",
+					"Scale of the system's icon from 0.0 to 1.0."
+				)
 			};
 
 			Rations = new Resource(KeyDefines.Resources.Rations, this);
 			Propellant = new Resource(KeyDefines.Resources.Propellant, this);
 			Metallics = new Resource(KeyDefines.Resources.Metallics, this);
+
+			Create(
+				ref IconColor,
+				"icon_color",
+				"Color of the system's icon."
+			);
 		}
 	}
 }
