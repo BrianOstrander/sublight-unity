@@ -308,6 +308,9 @@ namespace LunraGames.SubLight.Views
 		// -- Game Icons
 		GameFailure = 1000,
 		GameSuccess = 1010,
+		GameOverPopulated = 1020,
+		GameOutOfPropellant = 1030,
+		GameOutOfRations = 1040
 	}
 
 	public enum VerticalOptionsDividerFades

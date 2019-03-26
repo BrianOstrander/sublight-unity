@@ -50,7 +50,8 @@
                   "body": null
                 },
                 "enums": {
-                  "condition": 20
+                  "condition": 20,
+                  "icon_override": 1030
                 },
                 "floats": {}
               },
@@ -74,7 +75,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "version": 8,
   "meta": "Failure: No Propellent",
   "metaKeyValues": {
     "EncounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867"

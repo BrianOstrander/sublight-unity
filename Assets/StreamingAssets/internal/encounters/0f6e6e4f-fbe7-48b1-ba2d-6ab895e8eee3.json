@@ -50,7 +50,8 @@
                   "body": ""
                 },
                 "enums": {
-                  "condition": 20
+                  "condition": 20,
+                  "icon_override": 1020
                 },
                 "floats": {}
               },
@@ -74,7 +75,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "version": 8,
   "meta": "Failure: Over Population",
   "metaKeyValues": {
     "EncounterId": "7608d6ec-6695-4c37-b470-b388ae4848f3"

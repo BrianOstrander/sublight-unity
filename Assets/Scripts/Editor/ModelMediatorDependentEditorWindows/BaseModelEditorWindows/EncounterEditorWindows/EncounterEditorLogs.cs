@@ -8,6 +8,7 @@ using UnityEngine;
 using LunraGamesEditor;
 
 using LunraGames.SubLight.Models;
+using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight
 {
@@ -1442,6 +1443,16 @@ namespace LunraGames.SubLight
 					"- Select a Condition -",
 					entry.KeyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
 					Color.red
+				)
+			);
+
+			entry.KeyValues.SetEnum(
+				EncounterEvents.GameComplete.EnumKeys.IconOverride,
+				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					new GUIContent("Icon Override"),
+					"- Select an Icon -",
+					entry.KeyValues.GetEnum<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride),
+					Color.yellow
 				)
 			);
 

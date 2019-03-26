@@ -73,6 +73,7 @@ namespace LunraGames.SubLight
 			public static class EnumKeys
 			{
 				public const string Condition = "condition";
+				public const string IconOverride = "icon_override";
 			}
 
 			public static class StringKeys

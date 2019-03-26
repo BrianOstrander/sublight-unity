@@ -81,7 +81,14 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			var theme = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsThemes.Success : VerticalOptionsThemes.Error;
-			var icon = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsIcons.GameSuccess : VerticalOptionsIcons.GameFailure;
+			var icon = keyValues.GetEnum<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride);
+
+			switch (icon)
+			{
+				case VerticalOptionsIcons.Unknown:
+					icon = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsIcons.GameSuccess : VerticalOptionsIcons.GameFailure;
+					break;
+			}
 
 			title = string.IsNullOrEmpty(title) ? defaultTitle : title;
 			header = string.IsNullOrEmpty(header) ? defaultHeader : header;
