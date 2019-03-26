@@ -27,12 +27,12 @@ namespace LunraGames.SubLight
 				return new Dictionary<SaveTypes, int>
 				{
 					{ SaveTypes.Game, -1 },
-					{ SaveTypes.Preferences, -1 },
+					{ SaveTypes.Preferences, 8 },
 					{ SaveTypes.EncounterInfo, 0 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
 					// -- Meta Key Values
-					{ SaveTypes.GlobalKeyValues, -1 },
-					{ SaveTypes.PreferencesKeyValues, -1 },
+					{ SaveTypes.GlobalKeyValues, 8 },
+					{ SaveTypes.PreferencesKeyValues, 8 },
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, 7 },
 					{ SaveTypes.GalaxyDistant, 7 },
