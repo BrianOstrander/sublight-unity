@@ -192,8 +192,8 @@ namespace LunraGames.SubLight
 				}
 			}
 
-			if (hackGenerator.NextFloat < 0.15f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.PlanetCount, 0);
-			else systemModel.KeyValues.Set(KeyDefines.CelestialSystem.PlanetCount, hackGenerator.GetNextInteger(1, GDCHackGlobals.PlanetCountMaximum + 1));
+			if (hackGenerator.NextFloat < 0.15f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.ScannableBodyIndex, 0);
+			else systemModel.KeyValues.Set(KeyDefines.CelestialSystem.ScannableBodyIndex, hackGenerator.GetNextInteger(1, GDCHackGlobals.PlanetCountMaximum + 1));
 
 			SetHabitable(hackGenerator, systemModel, KeyDefines.CelestialSystem.HabitableAtmosphere);
 			SetHabitable(hackGenerator, systemModel, KeyDefines.CelestialSystem.HabitableGravity);
@@ -206,9 +206,6 @@ namespace LunraGames.SubLight
 			SetScan(hackGenerator, systemModel, KeyDefines.CelestialSystem.ScanLevelTemperature);
 			SetScan(hackGenerator, systemModel, KeyDefines.CelestialSystem.ScanLevelWater);
 			SetScan(hackGenerator, systemModel, KeyDefines.CelestialSystem.ScanLevelResources);
-
-			if (hackGenerator.NextFloat < 0.25f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.AnomalyIndex, hackGenerator.GetNextInteger(1, GDCHackGlobals.AnomalyMaximum + 1));
-			else systemModel.KeyValues.Set(KeyDefines.CelestialSystem.AnomalyIndex, 0);
 
 			systemModel.SpecifiedEncounters.Value = new SpecifiedEncounterEntry[]
 			{

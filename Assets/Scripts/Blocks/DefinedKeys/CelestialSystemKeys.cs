@@ -46,7 +46,7 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Integers
-		public readonly Integer PlanetCount;
+		public readonly Integer ScannableBodyIndex;
 
 		public readonly Integer HabitableAtmosphere;
 		public readonly Integer HabitableGravity;
@@ -59,8 +59,6 @@ namespace LunraGames.SubLight
 		public readonly Integer ScanLevelTemperature;
 		public readonly Integer ScanLevelWater;
 		public readonly Integer ScanLevelResources;
-
-		public readonly Integer AnomalyIndex;
 		#endregion
 
 		#region Strings
@@ -85,79 +83,61 @@ namespace LunraGames.SubLight
 			Integers = new Integer[]
 			{
 				Create(
-					ref PlanetCount,
-					"planet_count",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					ref ScannableBodyIndex,
+					"scannable_body_index",
+					"The orbit of the scannable body for this system."
 				),
 
 				Create(
 					ref HabitableAtmosphere,
 					"habitable_atmosphere",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The habitability of scannable body's atmosphere."
 				),
 				Create(
 					ref HabitableGravity,
 					"habitable_gravity",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The habitability of scannable body's gravity."
 				),
 				Create(
 					ref HabitableTemperature,
 					"habitable_temperature",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The habitability of scannable body's temperature."
 				),
 				Create(
 					ref HabitableWater,
 					"habitable_water",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The habitability of scannable body's water."
 				),
 				Create(
 					ref HabitableResources,
 					"habitable_resources",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The habitability of scannable body's resources."
 				),
 
 				Create(
 					ref ScanLevelAtmosphere,
 					"scan_level_atmosphere",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The minimum upgrade level of the player's scanner to reveal this value."
 				),
 				Create(
 					ref ScanLevelGravity,
 					"scan_level_gravity",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The minimum upgrade level of the player's scanner to reveal this value."
 				),
 				Create(
 					ref ScanLevelTemperature,
 					"scan_level_temperature",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The minimum upgrade level of the player's scanner to reveal this value."
 				),
 				Create(
 					ref ScanLevelWater,
 					"scan_level_water",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The minimum upgrade level of the player's scanner to reveal this value."
 				),
 				Create(
 					ref ScanLevelResources,
 					"scan_level_resources",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
-				),
-
-				Create(
-					ref AnomalyIndex,
-					"anomaly_index",
-					"desc todo",
-					true // TODO: SHOULD THIS ACTUALLY BE WRITABLE?
+					"The minimum upgrade level of the player's scanner to reveal this value."
 				)
 			};
 

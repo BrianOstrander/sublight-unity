@@ -101,7 +101,7 @@ namespace LunraGames.SubLight.Presenters
 
 				var newMessage = string.Empty;
 
-				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.PlanetCount));
+				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScannableBodyIndex));
 				newMessage += "We've sent a probe to the surface, here are the results.\n\n";
 
 				var scanLevel = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeScanLevel);
