@@ -467,7 +467,9 @@
         {
           "index": 1,
           "seed": 1218121807,
+          "visited": true,
           "specified": true,
+          "playerBegin": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.5,"y":0.1,"z":0.75}
@@ -489,24 +491,36 @@
           ],
           "keyValues": {
             "booleans": {
-              "discovered_rations": false,
-              "discovered_propellant": false,
-              "discovered_metallics": false
+              "discovered_rations": true,
+              "discovered_propellant": true,
+              "discovered_metallics": true
             },
             "integers": {
               "generated_propellant": 0,
-              "remaining_propellant": 0
+              "remaining_propellant": 0,
+              "planet_count": 0,
+              "habitable_atmosphere": 0,
+              "habitable_gravity": 0,
+              "habitable_temperature": 0,
+              "habitable_water": 0,
+              "habitable_resources": 0,
+              "scan_level_atmosphere": 0,
+              "scan_level_gravity": 0,
+              "scan_level_temperature": 0,
+              "scan_level_water": 0,
+              "scan_level_resources": 0,
+              "anomaly_index": 0
             },
             "strings": {},
             "enums": {},
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
-              "gather_multiplier_rations": 0.25,
+              "gather_multiplier_rations": 0.0,
               "gather_amount_rations": 0.0,
-              "gather_multiplier_propellant": 0.1,
+              "gather_multiplier_propellant": 0.0,
               "gather_amount_propellant": 0.0,
-              "gather_multiplier_metallics": 0.1,
+              "gather_multiplier_metallics": 0.0,
               "gather_amount_metallics": 0.0
             }
           }
@@ -514,9 +528,7 @@
         {
           "index": 2,
           "seed": 123782430,
-          "visited": true,
           "specified": true,
-          "playerBegin": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.25,"y":0.15,"z":0.5}
@@ -538,24 +550,36 @@
           ],
           "keyValues": {
             "booleans": {
-              "discovered_rations": true,
-              "discovered_propellant": true,
-              "discovered_metallics": true
+              "discovered_rations": false,
+              "discovered_propellant": false,
+              "discovered_metallics": false
             },
             "integers": {
               "generated_propellant": 0,
-              "remaining_propellant": 0
+              "remaining_propellant": 0,
+              "planet_count": 0,
+              "habitable_atmosphere": 0,
+              "habitable_gravity": 0,
+              "habitable_temperature": 0,
+              "habitable_water": 0,
+              "habitable_resources": 0,
+              "scan_level_atmosphere": 0,
+              "scan_level_gravity": 0,
+              "scan_level_temperature": 0,
+              "scan_level_water": 0,
+              "scan_level_resources": 0,
+              "anomaly_index": 0
             },
             "strings": {},
             "enums": {},
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
-              "gather_multiplier_rations": 0.0,
+              "gather_multiplier_rations": 0.25,
               "gather_amount_rations": 0.0,
-              "gather_multiplier_propellant": 0.0,
+              "gather_multiplier_propellant": 0.1,
               "gather_amount_propellant": 0.0,
-              "gather_multiplier_metallics": 0.0,
+              "gather_multiplier_metallics": 0.1,
               "gather_amount_metallics": 0.0
             }
           }
