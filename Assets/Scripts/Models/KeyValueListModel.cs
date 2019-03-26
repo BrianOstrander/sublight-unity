@@ -13,13 +13,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] Dictionary<string, bool> booleans = new Dictionary<string, bool>();
 		[JsonProperty] Dictionary<string, int> integers = new Dictionary<string, int>();
 		[JsonProperty] Dictionary<string, string> strings = new Dictionary<string, string>();
-		[JsonProperty] Dictionary<string, int> enums = new Dictionary<string, int>();
 		[JsonProperty] Dictionary<string, float> floats = new Dictionary<string, float>();
-
-		public KeyValueListModel()
-		{
-
-		}
 
 		/// <summary>
 		/// Keys are not case sensitive, so we normalize them here, along with
@@ -45,21 +39,6 @@ namespace LunraGames.SubLight.Models
 		public string GetString(string key, string fallback = null)
 		{
 			strings.TryGetValue(NormalizeKey(key), out fallback);
-			return fallback;
-		}
-
-		private T GetEnum<T>(string key, T fallback = default(T)) where T : struct, IConvertible
-		{
-			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
-
-			var intValue = Convert.ToInt32(fallback);
-			enums.TryGetValue(NormalizeKey(key), out intValue);
-			return Enum.GetValues(typeof(T)).Cast<T>().FirstOrDefault(e => Convert.ToInt32(e) == intValue);
-		}
-
-		private int GetEnumInteger(string key, int fallback = 0)
-		{
-			enums.TryGetValue(NormalizeKey(key), out fallback);
 			return fallback;
 		}
 
@@ -104,20 +83,6 @@ namespace LunraGames.SubLight.Models
 		public string SetString(string key, string value)
 		{
 			strings[NormalizeKey(key)] = value;
-			return value;
-		}
-
-		private T SetEnum<T>(string key, T value) where T : struct, IConvertible
-		{
-			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
-
-			enums[NormalizeKey(key)] = Convert.ToInt32(value);
-			return value;
-		}
-
-		private int SetEnumInteger(string key, int value)
-		{
-			enums[NormalizeKey(key)] = value;
 			return value;
 		}
 
@@ -173,7 +138,6 @@ namespace LunraGames.SubLight.Models
 			booleans.Clear();
 			integers.Clear();
 			strings.Clear();
-			enums.Clear();
 			floats.Clear();
 		}
 
@@ -207,14 +171,6 @@ namespace LunraGames.SubLight.Models
 			}
 			else result += "\tNone\n";
 
-			result += prefix + "Enums:\n";
-
-			if (enums.Any())
-			{
-				foreach (var kv in enums) result += "\t" + kv.Key + " , " + kv.Value + "\n";
-			}
-			else result += "\tNone\n";
-
 			result += prefix + "Floats:\n";
 
 			if (floats.Any())
@@ -236,7 +192,6 @@ namespace LunraGames.SubLight.Models
 					booleans = new Dictionary<string, bool>(booleans),
 					integers = new Dictionary<string, int>(integers),
 					strings = new Dictionary<string, string>(strings),
-					enums = new Dictionary<string, int>(enums),
 					floats = new Dictionary<string, float>(floats)
 				};
 				return result;
@@ -268,14 +223,6 @@ namespace LunraGames.SubLight.Models
 					KeyValueExtendedTypes.String,
 					strings,
 					other.strings,
-					(value, valueOther) => value == valueOther
-				)
-			);
-			result.AddRange(
-				GetDeltasTyped(
-					KeyValueExtendedTypes.Enum,
-					enums,
-					other.enums,
 					(value, valueOther) => value == valueOther
 				)
 			);
@@ -334,7 +281,6 @@ namespace LunraGames.SubLight.Models
 			foreach (var kv in other.booleans) SetBoolean(kv.Key, kv.Value);
 			foreach (var kv in other.integers) SetInteger(kv.Key, kv.Value);
 			foreach (var kv in other.strings) SetString(kv.Key, kv.Value);
-			foreach (var kv in other.enums) SetEnumInteger(kv.Key, kv.Value);
 			foreach (var kv in other.floats) SetFloat(kv.Key, kv.Value);
 		}
 		#endregion

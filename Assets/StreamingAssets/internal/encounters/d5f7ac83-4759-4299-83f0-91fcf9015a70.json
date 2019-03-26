@@ -434,12 +434,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 10,
                   "lock_state": 20
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -465,12 +464,11 @@
               "encounterEvent": "Debug",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "severity": 0
+                },
                 "strings": {
                   "message": "todo: investigate"
-                },
-                "enums": {
-                  "severity": 0
                 },
                 "floats": {}
               },
@@ -491,12 +489,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 30,
                   "lock_state": 10
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -522,14 +519,14 @@
               "encounterEvent": "GameComplete",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "condition": 10,
+                  "icon_override": 0
+                },
                 "strings": {
                   "title": "settlement*chosen",
                   "header": null,
                   "body": null
-                },
-                "enums": {
-                  "condition": 10
                 },
                 "floats": {}
               },
@@ -840,7 +837,7 @@
       }
     ]
   },
-  "version": 8,
+  "version": 9,
   "meta": "Planets Detected",
   "metaKeyValues": {
     "EncounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf"

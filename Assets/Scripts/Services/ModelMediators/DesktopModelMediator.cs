@@ -28,15 +28,15 @@ namespace LunraGames.SubLight
 				{
 					{ SaveTypes.Game, -1 },
 					{ SaveTypes.Preferences, 8 },
-					{ SaveTypes.EncounterInfo, 0 },
+					{ SaveTypes.EncounterInfo, 9 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
 					// -- Meta Key Values
 					{ SaveTypes.GlobalKeyValues, 8 },
 					{ SaveTypes.PreferencesKeyValues, 8 },
 					// -- Galaxies
-					{ SaveTypes.GalaxyPreview, 7 },
-					{ SaveTypes.GalaxyDistant, 7 },
-					{ SaveTypes.GalaxyInfo, 7 }
+					{ SaveTypes.GalaxyPreview, 9 },
+					{ SaveTypes.GalaxyDistant, 9 },
+					{ SaveTypes.GalaxyInfo, 9 }
 					// --
 				};
 			}

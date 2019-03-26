@@ -26,7 +26,7 @@
   "galaxySize": {
     "Sector": {"x":200.0,"y":200.0,"z":200.0}
   },
-  "version": 7,
+  "version": 9,
   "meta": "Andromeda",
   "metaKeyValues": {
     "GalaxyId": "a6603c5e-f151-45aa-96bb-30905e781573"

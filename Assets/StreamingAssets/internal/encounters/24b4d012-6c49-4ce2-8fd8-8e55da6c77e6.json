@@ -42,15 +42,15 @@
               "encounterEvent": "GameComplete",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "condition": 20,
+                  "icon_override": 0
+                },
                 "strings": {
                   "title": "Operations Ceased",
                   "message": "Insufficient crew to maintain the ark's life support and propulsion systems...",
                   "header": "Insufficient crew to maintain the ark's life support and propulsion systems...",
                   "body": ""
-                },
-                "enums": {
-                  "condition": 20
                 },
                 "floats": {}
               },
@@ -74,7 +74,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "version": 9,
   "meta": "Failure: Under Population",
   "metaKeyValues": {
     "EncounterId": "96169d75-e290-4dd2-be4c-6309cf35b5ad"

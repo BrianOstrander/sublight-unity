@@ -44,14 +44,14 @@
               "encounterEvent": "GameComplete",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "condition": 10,
+                  "icon_override": 0
+                },
                 "strings": {
                   "title": "Gravity Assist",
                   "header": "Your ark has succesfully reached its destination!",
                   "body": null
-                },
-                "enums": {
-                  "condition": 10
                 },
                 "floats": {}
               },
@@ -75,7 +75,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "version": 9,
   "meta": "Success: Reached Sag",
   "metaKeyValues": {
     "EncounterId": "f4fc7b5c-a661-4089-abb4-0f46efafdf02"

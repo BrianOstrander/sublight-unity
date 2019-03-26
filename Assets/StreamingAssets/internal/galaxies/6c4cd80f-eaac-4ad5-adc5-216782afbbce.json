@@ -422,7 +422,6 @@
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.5,"y":0.2,"z":0.5}
           },
-          "primaryClassification": "Stellar",
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -465,7 +464,6 @@
               "name": "Sol",
               "classification_secondary": "Yellow Dwarf"
             },
-            "enums": {},
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -488,7 +486,6 @@
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.5,"y":0.1,"z":0.75}
           },
-          "primaryClassification": "Stellar",
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -533,7 +530,6 @@
               "name": "Alpha Centauri",
               "classification_secondary": "Yellow Dwarf"
             },
-            "enums": {},
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -556,7 +552,6 @@
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.25,"y":0.15,"z":0.5}
           },
-          "primaryClassification": "Stellar",
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -601,7 +596,6 @@
               "name": "Barnard's Star",
               "classification_secondary": "Red Dwarf"
             },
-            "enums": {},
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -624,7 +618,6 @@
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.1,"y":0.3,"z":0.1}
           },
-          "primaryClassification": "Stellar",
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -668,7 +661,6 @@
               "name": "Sirius",
               "classification_secondary": "Dwarf"
             },
-            "enums": {},
             "floats": {
               "generated_rations": 5.0,
               "remaining_rations": 5.0,
@@ -691,7 +683,6 @@
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.8,"z":0.9}
           },
-          "primaryClassification": "Stellar",
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -734,7 +725,6 @@
               "name": "Wolf",
               "classification_secondary": "Red Dwarf"
             },
-            "enums": {},
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -768,7 +758,6 @@
             "Sector": {"x":89.0,"z":28.0},
             "Local": {"x":0.5,"z":0.5}
           },
-          "primaryClassification": "Degenerate",
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -809,7 +798,6 @@
               "name": "Cygnus X-1",
               "classification_secondary": "Super Massive Black Hole"
             },
-            "enums": {},
             "floats": {
               "gather_multiplier_rations": 0.0,
               "gather_amount_rations": 0.0,

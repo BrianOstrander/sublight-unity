@@ -25,11 +25,10 @@
               "encounterEvent": "DumpKeyValues",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "target": 20
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -53,7 +52,7 @@
     "conversationLogs": []
   },
   "ignore": true,
-  "version": 8,
+  "version": 9,
   "meta": "SystemIdle Default",
   "metaKeyValues": {
     "EncounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f"

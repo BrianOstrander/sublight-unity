@@ -1205,12 +1205,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 10,
                   "lock_state": 0
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -1236,12 +1235,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 30,
                   "lock_state": 10
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -1267,12 +1265,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 10,
                   "lock_state": 0
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -2782,7 +2779,7 @@
       }
     ]
   },
-  "version": 8,
+  "version": 9,
   "meta": "Exposition",
   "metaKeyValues": {
     "EncounterId": "63245462-5804-41cb-b51d-910c68529a7a"
