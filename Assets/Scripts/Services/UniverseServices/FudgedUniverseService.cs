@@ -137,43 +137,35 @@ namespace LunraGames.SubLight
 				var classificationSecondary = hackGenerator.NextFloat;
 				systemModel.IconScale.Value = classificationSecondary;
 
-				if (classificationSecondary < 0.5f)
+				if (classificationSecondary < 0.54f)
 				{
 					systemModel.SecondaryClassification.Value = "Red Dwarf";
 					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.53f, 1f);
 				}
-				else if (classificationSecondary < 0.65f)
+				else if (classificationSecondary < 0.69f)
 				{
 					systemModel.SecondaryClassification.Value = "Yellow Dwarf";
 					systemModel.IconColor.Value = Color.HSVToRGB(0.161f, 0.53f, 1f);
 				}
-				else if (classificationSecondary < 0.75f)
+				else if (classificationSecondary < 0.79f)
 				{
 					systemModel.SecondaryClassification.Value = "Red Giant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.59f, 1f);
 				}
-				else if (classificationSecondary < 0.83f)
+				else if (classificationSecondary < 0.87f)
 				{
 					systemModel.SecondaryClassification.Value = "Blue Giant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0.586f, 0.61f, 1f);
 				}
-				else if (classificationSecondary < 0.9f)
+				else if (classificationSecondary < 0.94f)
 				{
 					systemModel.SecondaryClassification.Value = "Red Hypergiant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.63f, 1f);
 				}
-				else if (classificationSecondary < 0.96f)
+				else
 				{
 					systemModel.SecondaryClassification.Value = "Blue Hypergiant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0.555f, 0.61f, 1f);
-				}
-				else
-				{
-					// TODO: LOL DUPE
-					systemModel.SecondaryClassification.Value = "Red Dwarf";
-					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.53f, 1f);
-					//systemModel.SecondaryClassification.Value = "White Dwarf";
-					//systemModel.IconColor.Value = Color.HSVToRGB(0f, 0f, 1f);
 				}
 			}
 			else
