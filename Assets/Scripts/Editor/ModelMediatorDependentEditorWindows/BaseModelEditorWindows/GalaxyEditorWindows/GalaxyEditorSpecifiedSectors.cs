@@ -615,7 +615,24 @@ namespace LunraGames.SubLight
 
 					GUILayout.Label("Key Values", EditorStyles.boldLabel);
 
-					foreach (var definedKeyValue in KeyDefines.CelestialSystem.All)
+					var keyValuesExceptions = new IKeyDefinition[]
+					{
+						KeyDefines.CelestialSystem.Index,
+						KeyDefines.CelestialSystem.Seed,
+						KeyDefines.CelestialSystem.Name,
+						KeyDefines.CelestialSystem.Visited,
+						KeyDefines.CelestialSystem.ClassificationSecondary,
+						KeyDefines.CelestialSystem.IconColor.Hue,
+						KeyDefines.CelestialSystem.IconColor.Saturation,
+						KeyDefines.CelestialSystem.IconColor.Value,
+						KeyDefines.CelestialSystem.IconColor.Alpha,
+						KeyDefines.CelestialSystem.IconScale,
+						KeyDefines.CelestialSystem.PlayerBegin,
+						KeyDefines.CelestialSystem.PlayerEnd,
+						KeyDefines.CelestialSystem.Specified
+					}.Select(k => k.Key);
+
+					foreach (var definedKeyValue in KeyDefines.CelestialSystem.All.Where(k => !keyValuesExceptions.Contains(k.Key)))
 					{
 						SpecifiedSectorsDrawSystemKeyValue(
 							system.KeyValues,
