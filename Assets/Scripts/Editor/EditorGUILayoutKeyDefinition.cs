@@ -29,7 +29,9 @@ namespace LunraGames.SubLight
 			KeyValueSources force = KeyValueSources.Unknown,
 			Action define = null,
 			bool requiresWrite = false,
-			bool requiresRead = true
+			bool requiresRead = true,
+			KeyValueTypes keyValueOverride = KeyValueTypes.Unknown,
+			KeyValueAddress<T> keyValueOverrideRelated = default(KeyValueAddress<T>)
 		)
 			where T : IConvertible
 		{
@@ -67,7 +69,7 @@ namespace LunraGames.SubLight
 				switch (get().Source)
 				{
 					case KeyValueSources.LocalValue:
-						OnValueLocal(get, set);
+						OnValueLocal(get, set, keyValueOverride, keyValueOverrideRelated);
 						break;
 					case KeyValueSources.KeyValue:
 						OnValueForeign(get, set, define, requiresWrite, requiresRead);
@@ -93,12 +95,15 @@ namespace LunraGames.SubLight
 
 		static void OnValueLocal<T>(
 			Func<KeyValueAddress<T>> get,
-			Action<KeyValueAddress<T>> set
+			Action<KeyValueAddress<T>> set,
+			KeyValueTypes keyValueOverride = KeyValueTypes.Unknown,
+			KeyValueAddress<T> keyValueOverrideRelated = default(KeyValueAddress<T>)
 		)
 			where T : IConvertible
 		{
 			var value = get();
-			switch (value.KeyValueType)
+			var valueType = keyValueOverride == KeyValueTypes.Unknown ? value.KeyValueType : keyValueOverride;
+			switch (valueType)
 			{
 				case KeyValueTypes.Boolean:
 					value.LocalValueRaw = EditorGUILayoutExtensions.ToggleButtonValue((bool)value.LocalValueRaw, style: EditorStyles.miniButton);
@@ -112,10 +117,30 @@ namespace LunraGames.SubLight
 				case KeyValueTypes.Float:
 					value.LocalValueRaw = EditorGUILayout.FloatField((float)value.LocalValueRaw);
 					break;
+				case KeyValueTypes.Enumeration:
+					var enumerationType = KeyDefines.GetEnumerationType(keyValueOverrideRelated.ForeignKey);
+					var enumerationError = string.Empty;
+
+					if (string.IsNullOrEmpty(keyValueOverrideRelated.ForeignKey)) enumerationError = "Foreign Key cannot be null or empty";
+					else if (enumerationType == null) enumerationError = "Unrecognized enumeration from Foreign Key";
+
+					//enumerationError = keyValueOverrideRelated.ForeignKey;
+
+					if (!string.IsNullOrEmpty(enumerationError))
+					{
+						EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
+						{
+							value.LocalValueRaw = EditorGUILayout.IntField((int)value.LocalValueRaw);
+							GUILayout.Label(enumerationError, GUILayout.ExpandWidth(false));
+						}
+						EditorGUILayoutExtensions.PopColor();
+					}
+					else value.LocalValueRaw = EditorGUILayoutExtensions.IntegerEnumPopupValue((int)value.LocalValueRaw, enumerationType);
+					break;
 				default:
 					EditorGUILayoutExtensions.PushColor(Color.red.NewS(0.65f));
 					{
-						GUILayout.Label("Unrecognized Source: " + value.Source, GUILayout.ExpandWidth(false));
+						GUILayout.Label("Unrecognized KeyValueType: " + valueType, GUILayout.ExpandWidth(false));
 					}
 					EditorGUILayoutExtensions.PopColor();
 					break;
@@ -210,7 +235,7 @@ namespace LunraGames.SubLight
 					switch (valueType)
 					{
 						case KeyValueTypes.Boolean: keys = definitions.Booleans; break;
-						case KeyValueTypes.Integer: keys = definitions.Integers; break;
+						case KeyValueTypes.Integer: keys = definitions.Integers.Cast<IKeyDefinition>().Concat(definitions.Enumerations).ToArray(); break;
 						case KeyValueTypes.String: keys = definitions.Strings; break;
 						case KeyValueTypes.Float: keys = definitions.Floats; break;
 						default:

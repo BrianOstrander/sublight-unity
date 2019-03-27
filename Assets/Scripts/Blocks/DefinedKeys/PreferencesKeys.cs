@@ -64,6 +64,11 @@ namespace LunraGames.SubLight
 			{
 
 			};
+
+			Enumerations = new IEnumeration[]
+			{
+
+			};
 		}
 
 		T AppendBlockedDuringGame<T>(T instance)

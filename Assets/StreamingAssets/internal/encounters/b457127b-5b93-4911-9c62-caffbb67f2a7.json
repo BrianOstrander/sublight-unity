@@ -1385,12 +1385,11 @@
               "encounterEvent": "Debug",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "severity": 0
+                },
                 "strings": {
                   "message": "Initializing Game Rules"
-                },
-                "enums": {
-                  "severity": 0
                 },
                 "floats": {}
               },
@@ -1416,11 +1415,10 @@
               "encounterEvent": "DumpKeyValues",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "target": 20
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -1443,7 +1441,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 8,
+  "version": 9,
   "meta": "InitializeRules Default",
   "metaKeyValues": {
     "EncounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330"

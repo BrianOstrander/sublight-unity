@@ -56,6 +56,11 @@
 			{
 
 			};
+
+			Enumerations = new IEnumeration[]
+			{
+
+			};
 		}
 	}
 }

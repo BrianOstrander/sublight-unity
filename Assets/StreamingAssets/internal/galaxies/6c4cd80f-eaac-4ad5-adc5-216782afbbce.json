@@ -418,18 +418,10 @@
       "systemCount": 5,
       "systems": [
         {
-          "seed": 1063743355,
-          "visited": true,
-          "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.5,"y":0.2,"z":0.5}
           },
-          "name": "Sol",
-          "primaryClassification": "Stellar",
-          "secondaryClassification": "Yellow Dwarf",
-          "iconColor": {"r":1.0,"g":0.85,"b":0.4705882,"a":1.0},
-          "iconScale": 0.475,
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -444,14 +436,34 @@
             "booleans": {
               "discovered_rations": true,
               "discovered_propellant": true,
-              "discovered_metallics": false
+              "discovered_metallics": false,
+              "visited": true,
+              "specified": true,
+              "player_begin": false,
+              "player_end": false
             },
             "integers": {
               "generated_propellant": 0,
-              "remaining_propellant": 0
+              "remaining_propellant": 0,
+              "index": 0,
+              "seed": 1063743355,
+              "scannable_body_index": 0,
+              "habitable_atmosphere": 0,
+              "habitable_gravity": 0,
+              "habitable_temperature": 0,
+              "habitable_water": 0,
+              "habitable_resources": 0,
+              "scan_level_atmosphere": 0,
+              "scan_level_gravity": 0,
+              "scan_level_temperature": 0,
+              "scan_level_water": 0,
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
-            "strings": {},
-            "enums": {},
+            "strings": {
+              "name": "Sol",
+              "classification_secondary": "Yellow Dwarf"
+            },
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -460,25 +472,20 @@
               "gather_multiplier_propellant": 0.0,
               "gather_amount_propellant": 0.0,
               "gather_multiplier_metallics": 0.0,
-              "gather_amount_metallics": 0.0
+              "gather_amount_metallics": 0.0,
+              "icon_color_hue": 0.119444452,
+              "icon_color_saturation": 0.5294118,
+              "icon_color_value": 1.0,
+              "icon_color_alpha": 1.0,
+              "icon_scale": 0.475
             }
           }
         },
         {
-          "index": 1,
-          "seed": 1218121807,
-          "visited": true,
-          "specified": true,
-          "playerBegin": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.5,"y":0.1,"z":0.75}
           },
-          "name": "Alpha Centauri",
-          "primaryClassification": "Stellar",
-          "secondaryClassification": "Yellow Dwarf",
-          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
-          "iconScale": 0.236,
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -493,7 +500,11 @@
             "booleans": {
               "discovered_rations": true,
               "discovered_propellant": true,
-              "discovered_metallics": true
+              "discovered_metallics": true,
+              "visited": true,
+              "specified": true,
+              "player_begin": true,
+              "player_end": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -509,10 +520,16 @@
               "scan_level_temperature": 0,
               "scan_level_water": 0,
               "scan_level_resources": 0,
-              "anomaly_index": 0
+              "anomaly_index": 0,
+              "index": 1,
+              "seed": 1218121807,
+              "scannable_body_index": 0,
+              "classification_primary": 10
             },
-            "strings": {},
-            "enums": {},
+            "strings": {
+              "name": "Alpha Centauri",
+              "classification_secondary": "Yellow Dwarf"
+            },
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -521,23 +538,20 @@
               "gather_multiplier_propellant": 0.0,
               "gather_amount_propellant": 0.0,
               "gather_multiplier_metallics": 0.0,
-              "gather_amount_metallics": 0.0
+              "gather_amount_metallics": 0.0,
+              "icon_color_hue": 0.0,
+              "icon_color_saturation": 0.53,
+              "icon_color_value": 1.0,
+              "icon_color_alpha": 1.0,
+              "icon_scale": 0.236
             }
           }
         },
         {
-          "index": 2,
-          "seed": 123782430,
-          "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.25,"y":0.15,"z":0.5}
           },
-          "name": "Barnard's Star",
-          "primaryClassification": "Stellar",
-          "secondaryClassification": "Red Dwarf",
-          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
-          "iconScale": 0.238,
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -552,7 +566,11 @@
             "booleans": {
               "discovered_rations": false,
               "discovered_propellant": false,
-              "discovered_metallics": false
+              "discovered_metallics": false,
+              "visited": false,
+              "specified": true,
+              "player_begin": false,
+              "player_end": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -568,10 +586,16 @@
               "scan_level_temperature": 0,
               "scan_level_water": 0,
               "scan_level_resources": 0,
-              "anomaly_index": 0
+              "anomaly_index": 0,
+              "index": 2,
+              "seed": 123782430,
+              "scannable_body_index": 0,
+              "classification_primary": 10
             },
-            "strings": {},
-            "enums": {},
+            "strings": {
+              "name": "Barnard's Star",
+              "classification_secondary": "Red Dwarf"
+            },
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -580,23 +604,20 @@
               "gather_multiplier_propellant": 0.1,
               "gather_amount_propellant": 0.0,
               "gather_multiplier_metallics": 0.1,
-              "gather_amount_metallics": 0.0
+              "gather_amount_metallics": 0.0,
+              "icon_color_hue": 0.0,
+              "icon_color_saturation": 0.53,
+              "icon_color_value": 1.0,
+              "icon_color_alpha": 1.0,
+              "icon_scale": 0.238
             }
           }
         },
         {
-          "index": 3,
-          "seed": 579281218,
-          "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.1,"y":0.3,"z":0.1}
           },
-          "name": "Sirius",
-          "primaryClassification": "Stellar",
-          "secondaryClassification": "Dwarf",
-          "iconColor": {"r":0.470000029,"g":0.743833363,"b":1.0,"a":1.0},
-          "iconScale": 0.797,
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -612,14 +633,34 @@
             "booleans": {
               "discovered_rations": false,
               "discovered_propellant": false,
-              "discovered_metallics": false
+              "discovered_metallics": false,
+              "visited": false,
+              "specified": true,
+              "player_begin": false,
+              "player_end": false
             },
             "integers": {
               "generated_propellant": 0,
-              "remaining_propellant": 0
+              "remaining_propellant": 0,
+              "index": 3,
+              "seed": 579281218,
+              "scannable_body_index": 0,
+              "habitable_atmosphere": 0,
+              "habitable_gravity": 0,
+              "habitable_temperature": 0,
+              "habitable_water": 0,
+              "habitable_resources": 0,
+              "scan_level_atmosphere": 0,
+              "scan_level_gravity": 0,
+              "scan_level_temperature": 0,
+              "scan_level_water": 0,
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
-            "strings": {},
-            "enums": {},
+            "strings": {
+              "name": "Sirius",
+              "classification_secondary": "Dwarf"
+            },
             "floats": {
               "generated_rations": 5.0,
               "remaining_rations": 5.0,
@@ -628,23 +669,20 @@
               "gather_multiplier_propellant": 0.5,
               "gather_amount_propellant": 0.0,
               "gather_multiplier_metallics": 0.5,
-              "gather_amount_metallics": 0.0
+              "gather_amount_metallics": 0.0,
+              "icon_color_hue": 0.580555558,
+              "icon_color_saturation": 0.53,
+              "icon_color_value": 1.0,
+              "icon_color_alpha": 1.0,
+              "icon_scale": 0.797
             }
           }
         },
         {
-          "index": 4,
-          "seed": 1072218910,
-          "specified": true,
           "position": {
             "Sector": {"x":79.0,"z":25.0},
             "Local": {"x":0.8,"z":0.9}
           },
-          "name": "Wolf",
-          "primaryClassification": "Stellar",
-          "secondaryClassification": "Red Dwarf",
-          "iconColor": {"r":1.0,"g":0.470000029,"b":0.470000029,"a":1.0},
-          "iconScale": 0.079,
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -659,14 +697,34 @@
             "booleans": {
               "discovered_rations": false,
               "discovered_propellant": false,
-              "discovered_metallics": false
+              "discovered_metallics": false,
+              "visited": false,
+              "specified": true,
+              "player_begin": false,
+              "player_end": false
             },
             "integers": {
               "generated_propellant": 0,
-              "remaining_propellant": 0
+              "remaining_propellant": 0,
+              "index": 4,
+              "seed": 1072218910,
+              "scannable_body_index": 0,
+              "habitable_atmosphere": 0,
+              "habitable_gravity": 0,
+              "habitable_temperature": 0,
+              "habitable_water": 0,
+              "habitable_resources": 0,
+              "scan_level_atmosphere": 0,
+              "scan_level_gravity": 0,
+              "scan_level_temperature": 0,
+              "scan_level_water": 0,
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
-            "strings": {},
-            "enums": {},
+            "strings": {
+              "name": "Wolf",
+              "classification_secondary": "Red Dwarf"
+            },
             "floats": {
               "generated_rations": 0.0,
               "remaining_rations": 0.0,
@@ -675,7 +733,12 @@
               "gather_multiplier_propellant": 0.75,
               "gather_amount_propellant": 0.0,
               "gather_multiplier_metallics": 0.5,
-              "gather_amount_metallics": 0.0
+              "gather_amount_metallics": 0.0,
+              "icon_color_hue": 0.0,
+              "icon_color_saturation": 0.53,
+              "icon_color_value": 1.0,
+              "icon_color_alpha": 1.0,
+              "icon_scale": 0.079
             }
           }
         }
@@ -691,18 +754,10 @@
       "systemCount": 1,
       "systems": [
         {
-          "seed": 85921647,
-          "specified": true,
-          "playerEnd": true,
           "position": {
             "Sector": {"x":89.0,"z":28.0},
             "Local": {"x":0.5,"z":0.5}
           },
-          "name": "Cygnus X-1",
-          "primaryClassification": "Degenerate",
-          "secondaryClassification": "Super Massive Black Hole",
-          "iconColor": {"r":1.0,"g":1.0,"b":1.0,"a":1.0},
-          "iconScale": 1.0,
           "bodies": [],
           "specifiedEncounters": [
             {
@@ -717,18 +772,44 @@
             "booleans": {
               "discovered_rations": false,
               "discovered_propellant": false,
-              "discovered_metallics": false
+              "discovered_metallics": false,
+              "visited": false,
+              "specified": true,
+              "player_begin": false,
+              "player_end": true
             },
-            "integers": {},
-            "strings": {},
-            "enums": {},
+            "integers": {
+              "index": 0,
+              "seed": 85921647,
+              "scannable_body_index": 0,
+              "habitable_atmosphere": 0,
+              "habitable_gravity": 0,
+              "habitable_temperature": 0,
+              "habitable_water": 0,
+              "habitable_resources": 0,
+              "scan_level_atmosphere": 0,
+              "scan_level_gravity": 0,
+              "scan_level_temperature": 0,
+              "scan_level_water": 0,
+              "scan_level_resources": 0,
+              "classification_primary": 20
+            },
+            "strings": {
+              "name": "Cygnus X-1",
+              "classification_secondary": "Super Massive Black Hole"
+            },
             "floats": {
               "gather_multiplier_rations": 0.0,
               "gather_amount_rations": 0.0,
               "gather_multiplier_propellant": 0.0,
               "gather_amount_propellant": 0.0,
               "gather_multiplier_metallics": 0.0,
-              "gather_amount_metallics": 0.0
+              "gather_amount_metallics": 0.0,
+              "icon_color_hue": 0.0,
+              "icon_color_saturation": 0.0,
+              "icon_color_value": 1.0,
+              "icon_color_alpha": 1.0,
+              "icon_scale": 1.0
             }
           }
         }
@@ -739,7 +820,7 @@
   "galaxySize": {
     "Sector": {"x":200.0,"y":200.0,"z":200.0}
   },
-  "version": 8,
+  "version": 9,
   "meta": "Milky Way",
   "metaKeyValues": {
     "GalaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089"

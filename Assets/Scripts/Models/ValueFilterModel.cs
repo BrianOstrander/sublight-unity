@@ -23,6 +23,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] IntegerKeyValueFilterEntryModel[] integerKeyValues = new IntegerKeyValueFilterEntryModel[0];
 		[JsonProperty] StringKeyValueFilterEntryModel[] stringKeyValues = new StringKeyValueFilterEntryModel[0];
 		[JsonProperty] FloatKeyValueFilterEntryModel[] floatKeyValues = new FloatKeyValueFilterEntryModel[0];
+		[JsonProperty] EnumerationKeyValueFilterEntryModel[] enumerationKeyValues = new EnumerationKeyValueFilterEntryModel[0];
 		[JsonProperty] EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
 
 		#endregion
@@ -55,6 +56,7 @@ namespace LunraGames.SubLight.Models
 			var newIntegerKeyValues = new List<IntegerKeyValueFilterEntryModel>();
 			var newStringKeyValues = new List<StringKeyValueFilterEntryModel>();
 			var newFloatKeyValues = new List<FloatKeyValueFilterEntryModel>();
+			var newEnumerationKeyValues = new List<EnumerationKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
 
 			foreach (var filter in newFilters)
@@ -73,6 +75,9 @@ namespace LunraGames.SubLight.Models
 					case ValueFilterTypes.KeyValueFloat:
 						newFloatKeyValues.Add(filter as FloatKeyValueFilterEntryModel);
 						break;
+					case ValueFilterTypes.KeyValueEnumeration:
+						newEnumerationKeyValues.Add(filter as EnumerationKeyValueFilterEntryModel);
+						break;
 					case ValueFilterTypes.EncounterInteraction:
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
 						break;
@@ -86,6 +91,7 @@ namespace LunraGames.SubLight.Models
 			integerKeyValues = newIntegerKeyValues.ToArray();
 			stringKeyValues = newStringKeyValues.ToArray();
 			floatKeyValues = newFloatKeyValues.ToArray();
+			enumerationKeyValues = newEnumerationKeyValues.ToArray();
 			encounterInteractions = newEncounterInteractions.ToArray();
 		}
 
@@ -94,6 +100,7 @@ namespace LunraGames.SubLight.Models
 			return booleanKeyValues.Cast<IValueFilterEntryModel>().Concat(integerKeyValues)
 															   	  .Concat(stringKeyValues)
 				                   								  .Concat(floatKeyValues)
+				                   								  .Concat(enumerationKeyValues)
 																  .Concat(encounterInteractions)
 																  .ToArray();
 		}

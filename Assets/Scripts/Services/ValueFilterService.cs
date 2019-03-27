@@ -101,6 +101,9 @@ namespace LunraGames.SubLight
 				case ValueFilterTypes.KeyValueFloat:
 					OnHandle(current as FloatKeyValueFilterEntryModel, filterDone);
 					break;
+				case ValueFilterTypes.KeyValueEnumeration:
+					OnHandle(current as EnumerationKeyValueFilterEntryModel, filterDone);
+					break;
 				case ValueFilterTypes.EncounterInteraction:
 					OnHandle(current as EncounterInteractionFilterEntryModel, model, encounterModel, filterDone);
 					break;
@@ -404,6 +407,66 @@ namespace LunraGames.SubLight
 							filter.Input0.ForeignTarget,
 							filter.Input0.ForeignKey,
 							onGet
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Local operands are not supported");
+					break;
+			}
+		}
+
+		void OnHandle(EnumerationKeyValueFilterEntryModel filter, Action<ValueFilterGroups, bool> done)
+		{
+			// The input may or may not be local, so we check.
+			switch (filter.Input1.Source)
+			{
+				case KeyValueSources.LocalValue:
+					OnHandle(filter, filter.Input1.LocalValue, done);
+					break;
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.Get(
+							filter.Input1.ForeignTarget,
+							filter.Input1.ForeignKey,
+							result => OnHandle(filter, result.Value, done)
+						)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Input.Source: " + filter.Input1.Source);
+					break;
+			}
+		}
+
+		void OnHandle(EnumerationKeyValueFilterEntryModel filter, int inputValue, Action<ValueFilterGroups, bool> done)
+		{
+			// The operand should always be foreign.
+			switch (filter.Input0.Source)
+			{
+				case KeyValueSources.KeyValue:
+					callbacks.KeyValueRequest(
+						KeyValueRequest.GetInteger(
+							filter.Input0.ForeignTarget,
+							filter.Input0.ForeignKey,
+							// If the string KV is equal to the result on the filter, the result is true.
+							result =>
+							{
+								var passed = false;
+								switch (filter.Operation.Value)
+								{
+									case EnumerationFilterOperations.Equals:
+										passed = result.Value == inputValue;
+										break;
+									case EnumerationFilterOperations.NotEquals:
+										passed = result.Value != inputValue;
+										break;
+									default:
+										Debug.LogError("Unrecognized Operation: " + filter.Operation.Value);
+										break;
+								}
+								done(filter.Group.Value, passed);
+							}
 						)
 					);
 					break;

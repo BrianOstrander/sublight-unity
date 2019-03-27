@@ -8,6 +8,7 @@
 		KeyValueInteger = 20,
 		KeyValueString = 30,
 		KeyValueFloat = 40,
+		KeyValueEnumeration = 50,
 
 		// -- EncounterInteractions
 		EncounterInteraction = 100,

@@ -42,16 +42,15 @@
               "encounterEvent": "GameComplete",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "condition": 20,
+                  "icon_override": 1040
+                },
                 "strings": {
                   "title": "Population Starved",
                   "message": "There simply wasn't enough rations to go around...",
                   "header": "There simply wasn't enough rations to go around...",
                   "body": ""
-                },
-                "enums": {
-                  "condition": 20,
-                  "icon_override": 1040
                 },
                 "floats": {}
               },
@@ -76,7 +75,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 8,
+  "version": 9,
   "meta": "Failure: Population Starved",
   "metaKeyValues": {
     "EncounterId": "4f97b7d4-50d6-4ae6-9e08-c415200155bb"

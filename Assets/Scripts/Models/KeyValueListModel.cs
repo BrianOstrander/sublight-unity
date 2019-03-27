@@ -13,7 +13,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] Dictionary<string, bool> booleans = new Dictionary<string, bool>();
 		[JsonProperty] Dictionary<string, int> integers = new Dictionary<string, int>();
 		[JsonProperty] Dictionary<string, string> strings = new Dictionary<string, string>();
-		[JsonProperty] Dictionary<string, int> enums = new Dictionary<string, int>();
 		[JsonProperty] Dictionary<string, float> floats = new Dictionary<string, float>();
 
 		/// <summary>
@@ -43,25 +42,28 @@ namespace LunraGames.SubLight.Models
 			return fallback;
 		}
 
-		public T GetEnum<T>(string key, T fallback = default(T)) where T : struct, IConvertible
+		public T GetEnumeration<T>(string key, T fallback = default(T)) where T : struct, IConvertible
 		{
 			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
 
 			var intValue = Convert.ToInt32(fallback);
-			enums.TryGetValue(NormalizeKey(key), out intValue);
+			integers.TryGetValue(NormalizeKey(key), out intValue);
 			return Enum.GetValues(typeof(T)).Cast<T>().FirstOrDefault(e => Convert.ToInt32(e) == intValue);
-		}
-
-		public int GetEnumInteger(string key, int fallback = 0)
-		{
-			enums.TryGetValue(NormalizeKey(key), out fallback);
-			return fallback;
 		}
 
 		public float GetFloat(string key, float fallback = 0f)
 		{
 			floats.TryGetValue(NormalizeKey(key), out fallback);
 			return fallback;
+		}
+
+		public Color GetColor(KeyDefinitions.HsvaColor key, Color fallback = default(Color))
+		{
+			return Color.HSVToRGB(
+				GetFloat(key.Hue.Key, fallback.GetH()),
+				GetFloat(key.Saturation.Key, fallback.GetS()),
+				GetFloat(key.Value.Key, fallback.GetV())
+			).NewA(GetFloat(key.Alpha.Key, fallback.a));
 		}
 		#endregion
 
@@ -84,23 +86,26 @@ namespace LunraGames.SubLight.Models
 			return value;
 		}
 
-		public T SetEnum<T>(string key, T value) where T : struct, IConvertible
-		{
-			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
-
-			enums[NormalizeKey(key)] = Convert.ToInt32(value);
-			return value;
-		}
-
-		public int SetEnumInteger(string key, int value)
-		{
-			enums[NormalizeKey(key)] = value;
-			return value;
-		}
-
 		public float SetFloat(string key, float value)
 		{
 			floats[NormalizeKey(key)] = value;
+			return value;
+		}
+
+		public T SetEnumeration<T>(string key, T value) where T : struct, IConvertible
+		{
+			if (!typeof(T).IsEnum) throw new Exception(typeof(T).FullName + " is not an enum.");
+
+			integers[NormalizeKey(key)] = Convert.ToInt32(value);
+			return value;
+		}
+
+		public Color SetColor(KeyDefinitions.HsvaColor key, Color value)
+		{
+			SetFloat(key.Hue.Key, value.GetH());
+			SetFloat(key.Saturation.Key, value.GetS());
+			SetFloat(key.Value.Key, value.GetV());
+			SetFloat(key.Alpha.Key, value.a);
 			return value;
 		}
 		#endregion
@@ -110,11 +115,21 @@ namespace LunraGames.SubLight.Models
 		public int Get(KeyDefinitions.Integer key, int fallback = 0) { return GetInteger(key.Key, fallback); }
 		public string Get(KeyDefinitions.String key, string fallback = null) { return GetString(key.Key, fallback); }
 		public float Get(KeyDefinitions.Float key, float fallback = 0f) { return GetFloat(key.Key, fallback); }
+		public T Get<T>(KeyDefinitions.Enumeration<T> key, T fallback = default(T)) where T : struct, IConvertible
+		{
+			return GetEnumeration(key.Key, fallback);
+		}
+		public Color Get(KeyDefinitions.HsvaColor key, Color fallback = default(Color)) { return GetColor(key, fallback); }
 
 		public bool Set(KeyDefinitions.Boolean key, bool value) { return SetBoolean(key.Key, value); }
 		public int Set(KeyDefinitions.Integer key, int value) { return SetInteger(key.Key, value); }
 		public string Set(KeyDefinitions.String key, string value) { return SetString(key.Key, value); }
 		public float Set(KeyDefinitions.Float key, float value) { return SetFloat(key.Key, value); }
+		public T Set<T>(KeyDefinitions.Enumeration<T> key, T value) where T : struct, IConvertible
+		{
+			return SetEnumeration(key.Key, value);
+		}
+		public Color Set(KeyDefinitions.HsvaColor key, Color value) { return SetColor(key, value); }
 		#endregion
 
 		#region Utility
@@ -123,7 +138,6 @@ namespace LunraGames.SubLight.Models
 			booleans.Clear();
 			integers.Clear();
 			strings.Clear();
-			enums.Clear();
 			floats.Clear();
 		}
 
@@ -157,14 +171,6 @@ namespace LunraGames.SubLight.Models
 			}
 			else result += "\tNone\n";
 
-			result += prefix + "Enums:\n";
-
-			if (enums.Any())
-			{
-				foreach (var kv in enums) result += "\t" + kv.Key + " , " + kv.Value + "\n";
-			}
-			else result += "\tNone\n";
-
 			result += prefix + "Floats:\n";
 
 			if (floats.Any())
@@ -186,7 +192,6 @@ namespace LunraGames.SubLight.Models
 					booleans = new Dictionary<string, bool>(booleans),
 					integers = new Dictionary<string, int>(integers),
 					strings = new Dictionary<string, string>(strings),
-					enums = new Dictionary<string, int>(enums),
 					floats = new Dictionary<string, float>(floats)
 				};
 				return result;
@@ -199,7 +204,7 @@ namespace LunraGames.SubLight.Models
 
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.Boolean,
+					KeyValueTypes.Boolean,
 					booleans,
 					other.booleans,
 					(value, valueOther) => value == valueOther
@@ -207,7 +212,7 @@ namespace LunraGames.SubLight.Models
 			);
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.Integer,
+					KeyValueTypes.Integer,
 					integers,
 					other.integers,
 					(value, valueOther) => value == valueOther
@@ -215,7 +220,7 @@ namespace LunraGames.SubLight.Models
 			);
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.String,
+					KeyValueTypes.String,
 					strings,
 					other.strings,
 					(value, valueOther) => value == valueOther
@@ -223,15 +228,7 @@ namespace LunraGames.SubLight.Models
 			);
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.Enum,
-					enums,
-					other.enums,
-					(value, valueOther) => value == valueOther
-				)
-			);
-			result.AddRange(
-				GetDeltasTyped(
-					KeyValueExtendedTypes.Float,
+					KeyValueTypes.Float,
 					floats,
 					other.floats,
 					Mathf.Approximately
@@ -242,7 +239,7 @@ namespace LunraGames.SubLight.Models
 		}
 
 		List<IKeyValueDelta> GetDeltasTyped<T>(
-			KeyValueExtendedTypes type,
+			KeyValueTypes type,
 			Dictionary<string, T> values,
 			Dictionary<string, T> valuesOther,
 			Func<T, T, bool> comparison
@@ -284,7 +281,6 @@ namespace LunraGames.SubLight.Models
 			foreach (var kv in other.booleans) SetBoolean(kv.Key, kv.Value);
 			foreach (var kv in other.integers) SetInteger(kv.Key, kv.Value);
 			foreach (var kv in other.strings) SetString(kv.Key, kv.Value);
-			foreach (var kv in other.enums) SetEnumInteger(kv.Key, kv.Value);
 			foreach (var kv in other.floats) SetFloat(kv.Key, kv.Value);
 		}
 		#endregion
