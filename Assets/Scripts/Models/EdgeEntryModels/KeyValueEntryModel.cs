@@ -244,7 +244,9 @@ namespace LunraGames.SubLight.Models
 				switch (KeyValueType.Value)
 				{
 					case KeyValueTypes.Boolean: return KeyValueType.Value + "." + BooleanValue.Value.Operation;
-					case KeyValueTypes.Integer: return KeyValueType.Value + "." + IntegerValue.Value.Operation;
+					case KeyValueTypes.Integer:
+					case KeyValueTypes.Enumeration:
+						return KeyValueType.Value + "." + IntegerValue.Value.Operation;
 					case KeyValueTypes.String: return KeyValueType.Value + "." + StringValue.Value.Operation;
 					case KeyValueTypes.Float: return KeyValueType.Value + "." + FloatValue.Value.Operation;
 					default:

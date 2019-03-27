@@ -33,6 +33,27 @@ namespace LunraGames.SubLight
 		};
 
 		public static IKeyDefinition[] All { get { return AllTargets.SelectMany(t => t.All).ToArray(); } }
+
+		public static Type GetEnumerationType(string key)
+		{
+			var definition = All.FirstOrDefault(d => d.ValueType == KeyValueTypes.Enumeration && d.Key == key);
+
+			if (definition == null)
+			{
+				//Debug.LogError("Unable to find a defined enumeration key \"" + key + "\"");
+				return null;
+			}
+
+			try
+			{
+				return (definition as KeyDefinitions.IEnumeration).EnumerationType;
+			}
+			catch
+			{
+				Debug.LogError("Unable to convert definition to enumeration type from " + definition.GetType());
+				return null;
+			}
+		}
 		#endregion
 	}
 

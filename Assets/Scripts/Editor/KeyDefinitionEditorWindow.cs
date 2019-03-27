@@ -128,7 +128,16 @@ namespace LunraGames.SubLight
 
 					if (current != null)
 					{
-						isEnabled = isEnabled && (current.ValueType == entry.ValueType);
+						switch (current.ValueType)
+						{
+							case KeyValueTypes.Integer:
+							case KeyValueTypes.Enumeration:
+								isEnabled &= entry.ValueType == KeyValueTypes.Integer || entry.ValueType == KeyValueTypes.Enumeration;
+								break;
+							default:
+								isEnabled &= current.ValueType == entry.ValueType;
+								break;
+						}
 						GUI.color = isEnabled ? normalColor : Color.gray;
 					}
 

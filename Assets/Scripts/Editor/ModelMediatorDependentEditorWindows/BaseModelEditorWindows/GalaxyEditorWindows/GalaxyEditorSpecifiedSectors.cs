@@ -682,6 +682,13 @@ namespace LunraGames.SubLight
 						definition as KeyDefinitions.Float
 					);
 					break;
+				case KeyValueTypes.Enumeration:
+					SpecifiedSectorsDrawSystemKeyValue(
+						content,
+						keyValues,
+						definition as KeyDefinitions.IEnumeration
+					);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized KeyValueType: " + definition.ValueType, MessageType.Error);
 					break;
@@ -733,6 +740,18 @@ namespace LunraGames.SubLight
 			keyValues.SetFloat(
 				definition.Key,
 				EditorGUILayout.FloatField(content, keyValues.GetFloat(definition.Key))
+			);
+		}
+
+		void SpecifiedSectorsDrawSystemKeyValue(
+			GUIContent content,
+			KeyValueListModel keyValues,
+			KeyDefinitions.IEnumeration definition
+		)
+		{
+			keyValues.SetInteger(
+				definition.Key,
+				EditorGUILayoutExtensions.IntegerEnumPopup(content, keyValues.GetInteger(definition.Key), definition.EnumerationType)
 			);
 		}
 

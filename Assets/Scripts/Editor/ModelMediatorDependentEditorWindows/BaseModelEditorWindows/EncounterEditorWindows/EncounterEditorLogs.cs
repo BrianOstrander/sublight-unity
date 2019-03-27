@@ -621,6 +621,7 @@ namespace LunraGames.SubLight
 					setOutput = result => edge.Entry.BooleanValue.Value.Output = (KeyValueAddress<bool>)result;
 					break;
 				case KeyValueTypes.Integer:
+				case KeyValueTypes.Enumeration:
 					output = (edge.Entry.IntegerValue.Value = KeyValueEntryModel.IntegerBlock.Default).Output;
 					setOutput = result => edge.Entry.IntegerValue.Value.Output = (KeyValueAddress<int>)result;
 					break;
@@ -660,13 +661,15 @@ namespace LunraGames.SubLight
 					OnKeyValueLogEdgeEntry(entry.BooleanValue);
 					break;
 				case KeyValueTypes.Integer:
-					OnKeyValueLogEdgeEntry(entry.IntegerValue);
 					break;
 				case KeyValueTypes.String:
 					OnKeyValueLogEdgeEntry(entry.StringValue);
 					break;
 				case KeyValueTypes.Float:
 					OnKeyValueLogEdgeEntry(entry.FloatValue);
+					break;
+				case KeyValueTypes.Enumeration:
+					OnKeyValueLogEdgeEntryEnumeration(entry.IntegerValue);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized KeyValueType: " + entry.KeyValueType.Value, MessageType.Error);
@@ -1003,6 +1006,47 @@ namespace LunraGames.SubLight
 				{
 					block.MaximumClampingEnabled = !block.MaximumClampingEnabled;
 					if (!block.MinimumClampingEnabled) block.MaximumClamping = KeyValueAddress<float>.Default;
+				}
+			}
+			GUILayout.EndHorizontal();
+		}
+
+		void OnKeyValueLogEdgeEntryEnumeration(
+			KeyValueEntryModel.IntegerBlock block
+		)
+		{
+			OnKeyValueLogEdgeEntryBeginFirstLine(block);
+
+			var previousOperation = block.Operation;
+			block.Operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				GUIContent.none,
+				"- Operation -",
+				block.Operation,
+				Color.red,
+				new KeyValueEntryModel.IntegerBlock.Operations[] { KeyValueEntryModel.IntegerBlock.Operations.Unknown, KeyValueEntryModel.IntegerBlock.Operations.Set },
+				GUILayout.Width(LogFloats.KeyValueOperationWidth)
+			);
+
+			OnKeyValueLogEdgeEntryEndFirstLine();
+
+			GUILayout.BeginHorizontal();
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.IntegerBlock.Operations.Set:
+						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
+						EditorGUILayoutKeyDefinition.Value(
+							() => block.Input0,
+							result => block.Input0 = result,
+							keyValueOverride: KeyValueTypes.Enumeration,
+							keyValueOverrideRelated: block.Output
+						);
+
+						GUILayout.FlexibleSpace();
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
+						break;
 				}
 			}
 			GUILayout.EndHorizontal();

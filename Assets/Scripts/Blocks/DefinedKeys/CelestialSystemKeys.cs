@@ -213,7 +213,7 @@ namespace LunraGames.SubLight
 
 			Enumerations = new IEnumeration[]
 			{
-				Create<SystemClassifications>(
+				Create(
 					ref ClassificationPrimary,
 					"classification_primary",
 					"Primary classification for this system."
