@@ -204,7 +204,7 @@ namespace LunraGames.SubLight.Models
 
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.Boolean,
+					KeyValueTypes.Boolean,
 					booleans,
 					other.booleans,
 					(value, valueOther) => value == valueOther
@@ -212,7 +212,7 @@ namespace LunraGames.SubLight.Models
 			);
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.Integer,
+					KeyValueTypes.Integer,
 					integers,
 					other.integers,
 					(value, valueOther) => value == valueOther
@@ -220,7 +220,7 @@ namespace LunraGames.SubLight.Models
 			);
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.String,
+					KeyValueTypes.String,
 					strings,
 					other.strings,
 					(value, valueOther) => value == valueOther
@@ -228,7 +228,7 @@ namespace LunraGames.SubLight.Models
 			);
 			result.AddRange(
 				GetDeltasTyped(
-					KeyValueExtendedTypes.Float,
+					KeyValueTypes.Float,
 					floats,
 					other.floats,
 					Mathf.Approximately
@@ -239,7 +239,7 @@ namespace LunraGames.SubLight.Models
 		}
 
 		List<IKeyValueDelta> GetDeltasTyped<T>(
-			KeyValueExtendedTypes type,
+			KeyValueTypes type,
 			Dictionary<string, T> values,
 			Dictionary<string, T> valuesOther,
 			Func<T, T, bool> comparison
