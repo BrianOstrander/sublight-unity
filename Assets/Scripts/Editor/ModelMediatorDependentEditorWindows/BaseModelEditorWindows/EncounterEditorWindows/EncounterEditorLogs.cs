@@ -661,6 +661,7 @@ namespace LunraGames.SubLight
 					OnKeyValueLogEdgeEntry(entry.BooleanValue);
 					break;
 				case KeyValueTypes.Integer:
+					OnKeyValueLogEdgeEntry(entry.IntegerValue);
 					break;
 				case KeyValueTypes.String:
 					OnKeyValueLogEdgeEntry(entry.StringValue);
@@ -755,6 +756,8 @@ namespace LunraGames.SubLight
 							result => block.Input1 = result
 						);
 						break;
+					case KeyValueEntryModel.BooleanBlock.Operations.Random:
+						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
 						break;
@@ -784,6 +787,7 @@ namespace LunraGames.SubLight
 				{
 					case KeyValueEntryModel.IntegerBlock.Operations.Set:
 					case KeyValueEntryModel.IntegerBlock.Operations.Clamp:
+					case KeyValueEntryModel.IntegerBlock.Operations.Random:
 						block.Input1 = KeyValueAddress<int>.Default;
 						break;
 				}
@@ -809,6 +813,7 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.IntegerBlock.Operations.Multiply:
 					case KeyValueEntryModel.IntegerBlock.Operations.Divide:
 					case KeyValueEntryModel.IntegerBlock.Operations.Modulo:
+					case KeyValueEntryModel.IntegerBlock.Operations.Random:
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
@@ -927,7 +932,12 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.FloatBlock.Operations.Round:
 					case KeyValueEntryModel.FloatBlock.Operations.Floor:
 					case KeyValueEntryModel.FloatBlock.Operations.Ceiling:
+					case KeyValueEntryModel.FloatBlock.Operations.Random:
 						block.Input1 = KeyValueAddress<float>.Default;
+						break;
+					case KeyValueEntryModel.FloatBlock.Operations.RandomNormal:
+						block.Input1 = KeyValueAddress<float>.Default;
+						block.Input0 = KeyValueAddress<float>.Default;
 						break;
 				}
 			}
@@ -955,6 +965,7 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.FloatBlock.Operations.Multiply:
 					case KeyValueEntryModel.FloatBlock.Operations.Divide:
 					case KeyValueEntryModel.FloatBlock.Operations.Modulo:
+					case KeyValueEntryModel.FloatBlock.Operations.Random:
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
@@ -964,6 +975,8 @@ namespace LunraGames.SubLight
 							() => block.Input1,
 							result => block.Input1 = result
 						);
+						break;
+					case KeyValueEntryModel.FloatBlock.Operations.RandomNormal:
 						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);

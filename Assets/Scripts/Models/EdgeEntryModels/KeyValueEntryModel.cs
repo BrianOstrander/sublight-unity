@@ -25,7 +25,9 @@ namespace LunraGames.SubLight.Models
 				Set = 10,
 				And = 20,
 				Or = 30,
-				Xor = 40
+				Xor = 40,
+
+				Random = 100
 			}
 
 			public static BooleanBlock Default
@@ -66,7 +68,9 @@ namespace LunraGames.SubLight.Models
 				Divide = 50,
 				Modulo = 60,
 
-				Clamp = 100
+				Clamp = 100,
+
+				Random = 200
 			}
 
 			public static IntegerBlock Default
@@ -112,6 +116,7 @@ namespace LunraGames.SubLight.Models
 						case Operations.Multiply: return "*";
 						case Operations.Divide: return "/";
 						case Operations.Modulo: return "%";
+						case Operations.Random: return "TO";
 					}
 					return Operation.ToString().ToUpper();
 				}
@@ -166,7 +171,10 @@ namespace LunraGames.SubLight.Models
 				Clamp = 100,
 				Round = 110,
 				Floor = 120,
-				Ceiling = 130
+				Ceiling = 130,
+
+				Random = 200,
+				RandomNormal = 210
 			}
 
 			public static FloatBlock Default
@@ -212,6 +220,7 @@ namespace LunraGames.SubLight.Models
 						case Operations.Multiply: return "*";
 						case Operations.Divide: return "/";
 						case Operations.Modulo: return "%";
+						case Operations.Random: return "TO";
 					}
 					return Operation.ToString().ToUpper();
 				}

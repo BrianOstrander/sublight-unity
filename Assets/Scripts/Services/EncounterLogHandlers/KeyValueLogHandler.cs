@@ -6,6 +6,8 @@ using UnityEngine;
 
 using LunraGames.SubLight.Models;
 
+using LunraGames.NumberDemon;
+
 using BooleanBlock = LunraGames.SubLight.Models.KeyValueEntryModel.BooleanBlock;
 using IntegerBlock = LunraGames.SubLight.Models.KeyValueEntryModel.IntegerBlock;
 using StringBlock = LunraGames.SubLight.Models.KeyValueEntryModel.StringBlock;
@@ -244,6 +246,9 @@ namespace LunraGames.SubLight
 				case BooleanBlock.Operations.Xor:
 					outputValue = input0.Value ^ input1.Value;
 					break;
+				case BooleanBlock.Operations.Random:
+					outputValue = DemonUtility.NextBool;
+					break;
 				default:
 					Debug.LogError("Unrecognized Operation: " + block.Operation.GetType().FullName + "." + block.Operation + ", skipping...");
 					next();
@@ -289,6 +294,9 @@ namespace LunraGames.SubLight
 					break;
 				case IntegerBlock.Operations.Clamp:
 					outputValue = input0.Value;
+					break;
+				case IntegerBlock.Operations.Random:
+					outputValue = DemonUtility.GetNextInteger(Mathf.Min(input0.Value, input1.Value), Mathf.Max(input0.Value, input1.Value));
 					break;
 				default:
 					Debug.LogError("Unrecognized Operation: " + block.Operation.GetType().FullName + "." + block.Operation + ", skipping...");
@@ -376,6 +384,12 @@ namespace LunraGames.SubLight
 					break;
 				case FloatBlock.Operations.Ceiling:
 					outputValue = Mathf.Ceil(input0.Value);
+					break;
+				case FloatBlock.Operations.Random:
+					outputValue = DemonUtility.GetNextFloat(Mathf.Min(input0.Value, input1.Value), Mathf.Max(input0.Value, input1.Value));
+					break;
+				case FloatBlock.Operations.RandomNormal:
+					outputValue = DemonUtility.NextFloat;
 					break;
 				default:
 					Debug.LogError("Unrecognized Operation: " + block.Operation.GetType().FullName + "." + block.Operation + ", skipping...");
