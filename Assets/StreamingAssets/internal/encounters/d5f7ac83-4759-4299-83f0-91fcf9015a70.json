@@ -16,7 +16,7 @@
           "AddressId": "1a497dd2-0f62-46c9-987a-63f019c2af0d",
           "Source": "KeyValue",
           "ForeignTarget": "CelestialSystem",
-          "ForeignKey": "planet_count"
+          "ForeignKey": "scannable_body_index"
         },
         "Input1": {
           "AddressId": "32fab2d9-1e41-457a-acc8-7f301b2c9e59",
@@ -26,6 +26,7 @@
     ],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -39,6 +40,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "keyValueType": "Integer",
@@ -94,6 +96,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -135,6 +138,7 @@
                 ],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -142,6 +146,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "ef7cff6f-e09e-4dd9-854c-d000f0ac831d"
@@ -157,6 +162,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -164,6 +170,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -171,6 +178,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "c5c79902-5b80-4e88-bec7-0ef6c5217825"
@@ -187,6 +195,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -194,6 +203,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -201,6 +211,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "95e85071-4e0c-47f7-bcf6-8b648846c50e"
@@ -228,6 +239,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -235,6 +247,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -242,6 +255,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "5571b905-3434-45e6-a442-e63694af949f"
@@ -257,6 +271,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -264,6 +279,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -271,6 +287,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "09b05032-dff6-4f41-b0b3-e724a1b92f4c"
@@ -297,6 +314,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -304,6 +322,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -311,6 +330,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "b8f355de-8ee5-4b03-89eb-e4f88e175e06"
@@ -326,6 +346,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -333,6 +354,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -340,6 +362,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "bb76ed1b-2af8-4dc1-b041-a39c1d25e45b"
@@ -366,6 +389,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -373,6 +397,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -380,6 +405,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "b780658d-2a73-4daa-8f71-ef11ccba567b"
@@ -395,6 +421,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -402,6 +429,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -409,6 +437,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "6c12250b-4da7-422b-8b93-f03923eb5793"
@@ -446,6 +475,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "63b7bbc3-f2ec-46a2-8d5b-33931c74f3ac"
@@ -477,6 +507,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "28fccfde-c4f5-4fa8-b3d1-3de1d52a04f2"
@@ -501,6 +532,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "04417895-2f21-419d-8253-8de772e2cc3a"
@@ -535,6 +567,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "c0afa488-e7cb-4dff-9496-69a2fd820b9b"
@@ -565,6 +598,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "7af2d808-ba36-4497-826a-409116eb7b6b"
@@ -591,6 +625,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "b33f1bb3-7514-43cd-a675-90f7f1faf901"

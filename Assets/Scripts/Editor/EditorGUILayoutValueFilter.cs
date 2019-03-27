@@ -165,6 +165,9 @@ namespace LunraGames.SubLight
 								case ValueFilterTypes.KeyValueFloat:
 									OnHandle(filter as FloatKeyValueFilterEntryModel, ref deleted);
 									break;
+								case ValueFilterTypes.KeyValueEnumeration:
+									OnHandle(filter as EnumerationKeyValueFilterEntryModel, ref deleted);
+									break;
 								case ValueFilterTypes.EncounterInteraction:
 									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
 									break;
@@ -195,6 +198,7 @@ namespace LunraGames.SubLight
 				case KeyValueTypes.Integer: valueFilterType = ValueFilterTypes.KeyValueInteger; break;
 				case KeyValueTypes.String: valueFilterType = ValueFilterTypes.KeyValueString; break;
 				case KeyValueTypes.Float: valueFilterType = ValueFilterTypes.KeyValueFloat; break;
+				case KeyValueTypes.Enumeration: valueFilterType = ValueFilterTypes.KeyValueEnumeration; break;
 				default:
 					Debug.LogError("Unrecognized KeyValueType: " + replacement.ValueType);
 					break;
@@ -233,6 +237,8 @@ namespace LunraGames.SubLight
 					return OnCreateKeyValue(Create<StringKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.KeyValueFloat:
 					return OnCreateKeyValue(Create<FloatKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
+				case ValueFilterTypes.KeyValueEnumeration:
+					return OnCreateKeyValue(Create<EnumerationKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.EncounterInteraction:
 					return Create<EncounterInteractionFilterEntryModel>(model, index, group, filterId);
 				default: Debug.LogError("Unrecognized FilterType: " + type); break;
@@ -401,6 +407,36 @@ namespace LunraGames.SubLight
 					() => model.Input1,
 					result => model.Input1 = result
 				);
+			}
+			OnHandleKeyValueEnd(model, ref deleted);
+		}
+
+		static void OnHandle(
+			EnumerationKeyValueFilterEntryModel model,
+			ref string deleted
+		)
+		{
+			OnHandleKeyValueBegin(model);
+			{
+				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+					"- Select Operation -",
+					model.Operation.Value,
+					Color.red,
+					GUILayout.Width(OperatorWidth)
+				);
+
+				switch (model.Operation.Value)
+				{
+					case EnumerationFilterOperations.Equals:
+					case EnumerationFilterOperations.NotEquals:
+						EditorGUILayoutKeyDefinition.Value(
+							() => model.Input1,
+							result => model.Input1 = result,
+							keyValueOverride: KeyValueTypes.Enumeration,
+							keyValueOverrideRelated: model.Input0
+						);
+						break;
+				}
 			}
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
