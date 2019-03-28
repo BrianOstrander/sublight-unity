@@ -1053,7 +1053,6 @@ GameObject:
   - component: {fileID: 5769839144333236409}
   - component: {fileID: 325811601686058412}
   - component: {fileID: 592886421684587133}
-  - component: {fileID: 2717927446266131563}
   m_Layer: 14
   m_Name: StartButton
   m_TagString: Untagged
@@ -1156,10 +1155,11 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 325811601686058412}
   fadeDuration:
-    Override: 0
-    Value: 0
+    Override: 1
+    Value: 0.3
   leafs:
   - {fileID: 2782529010162955670}
+  - {fileID: 2138381994139087466}
   globalSounds: {fileID: 0}
   localSounds:
     DisabledSound: {fileID: 0}
@@ -1197,18 +1197,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!225 &2717927446266131563
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3799130220662129553}
-  m_Enabled: 1
-  m_Alpha: 0.7
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &3850181337991436249
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,6 +1431,7 @@ GameObject:
   - component: {fileID: 6698055912103204717}
   - component: {fileID: 8498978491909155724}
   - component: {fileID: 2067335174836850010}
+  - component: {fileID: 2138381994139087466}
   m_Layer: 14
   m_Name: DropShadow
   m_TagString: Untagged
@@ -1527,6 +1516,109 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &2138381994139087466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993634146246093119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f38d85c0058d4aa8bf01ee89d58e4f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalStyle: {fileID: 0}
+  localStyle:
+    DistanceScaleIntensity:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ClickScaleDelta:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Colors:
+      DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
+      NormalColor: {r: 0, g: 0, b: 0, a: 0}
+      HighlightedColor: {r: 0, g: 0, b: 0, a: 1}
+      PressedColor: {r: 0, g: 0, b: 0, a: 1}
+    Toggles:
+      ActiveOnDisabled: 1
+      ActiveOnNormal: 1
+      ActiveOnHighlighted: 1
+      ActiveOnPressed: 1
+    ClickDistanceDelta:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  targetToggles: []
+  targetTransforms: []
+  targetGraphics:
+  - {fileID: 8498978491909155724}
+  targetMeshRenderers: []
+  targetGroups: []
+  particleSystems: []
 --- !u!1 &5272369834064798898
 GameObject:
   m_ObjectHideFlags: 0
@@ -1539,7 +1631,6 @@ GameObject:
   - component: {fileID: 1860720410216182694}
   - component: {fileID: 8853883341066160797}
   - component: {fileID: 2583532265565467071}
-  - component: {fileID: 1091927241050091448}
   - component: {fileID: 2782529010162955670}
   m_Layer: 14
   m_Name: StartLabel
@@ -1605,8 +1696,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 3211427069
-  m_fontColor: {r: 0.9921569, g: 0.48627454, b: 0.4156863, a: 0.7490196}
+    rgba: 4285168893
+  m_fontColor: {r: 0.9921569, g: 0.48627454, b: 0.4156863, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1705,18 +1796,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!225 &1091927241050091448
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5272369834064798898}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &2782529010162955670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1782,8 +1861,8 @@ MonoBehaviour:
     Colors:
       DisabledColor: {r: 0.78, g: 0.78, b: 0.78, a: 0.5}
       NormalColor: {r: 0.9921569, g: 0.48627454, b: 0.4156863, a: 0}
-      HighlightedColor: {r: 0.874, g: 0.31464, b: 0.255208, a: 1}
-      PressedColor: {r: 1, g: 0.26449665, b: 0.20099998, a: 1}
+      HighlightedColor: {r: 0.874, g: 0.31464, b: 0.255208, a: 0.7490196}
+      PressedColor: {r: 1, g: 0.26449665, b: 0.20099998, a: 0.7490196}
     Toggles:
       ActiveOnDisabled: 1
       ActiveOnNormal: 1
@@ -1823,8 +1902,7 @@ MonoBehaviour:
     meshRenderers: []
     renderers:
     - {fileID: 1074476576497249318}
-  targetGroups:
-  - {fileID: 1091927241050091448}
+  targetGroups: []
   particleSystems: []
 --- !u!1 &5913499323051746842
 GameObject:
