@@ -286,6 +286,8 @@ namespace LunraGames.SubLight
 
 		void OnIdleShow()
 		{
+			if (DevPrefs.HideMainMenu.Value) return;
+
 			var totalWait = 0f;
 			foreach (var kv in Payload.DelayedPresenterShows)
 			{

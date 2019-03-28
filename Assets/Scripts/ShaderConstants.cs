@@ -615,6 +615,18 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
+		public static class HoloGamemodePortalParallax
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GamemodePortalParallax";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string ParallaxCoordinates = "_ParallaxCoordinates";
+			public const string ChromaticOffsetScale = "_ChromaticOffsetScale";
+			public const string Alpha = "_Alpha";
+		}
+
 		#region NonSubLight Shaders
 		public static class SkyboxPanoramic
 		{

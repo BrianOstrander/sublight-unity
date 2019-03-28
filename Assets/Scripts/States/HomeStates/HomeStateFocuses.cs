@@ -90,6 +90,10 @@ namespace LunraGames.SubLight
 					new MainMenuGalaxyPresenter(payload.PreviewGalaxy)
 				};
 
+				// Additional presenters
+
+				new GamemodePortalPresenter().Show();
+
 				done();
 			}
 

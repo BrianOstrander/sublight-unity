@@ -9,11 +9,13 @@ namespace LunraGames.SubLight.Presenters
 		public GamemodePortalPresenter()
 		{
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
+			App.Heartbeat.Update += OnUpdate;
 		}
 
 		protected override void OnUnBind()
 		{
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
+			App.Heartbeat.Update -= OnUpdate;
 		}
 
 		public void Show(Transform parent = null, bool instant = false)
@@ -38,6 +40,13 @@ namespace LunraGames.SubLight.Presenters
 		void OnHoloColorRequest(HoloColorRequest request)
 		{
 			View.HoloColor = request.Color;
+		}
+
+		void OnUpdate(float delta)
+		{
+			if (!View.Visible) return;
+
+			View.PointerViewport = App.V.Camera.ScreenToViewportPoint(Input.mousePosition);
 		}
 		#endregion
 	}
