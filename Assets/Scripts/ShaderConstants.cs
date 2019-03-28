@@ -615,7 +615,16 @@ namespace LunraGames.SubLight
 			public const string Alpha = "_Alpha";
 		}
 
-		public static class HoloGamemodePortalParallax
+        public static class HoloGamemodePortalRim
+        {
+            /// <summary>
+            /// The name of the shader.
+            /// </summary>
+            public const string Name = "SubLight/Holo/GamemodePortalRim";
+            public const string PrimaryColor = "_PrimaryColor";
+        }
+
+        public static class HoloGamemodePortalParallax
 		{
 			/// <summary>
 			/// The name of the shader.

@@ -9,15 +9,23 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct ParallaxEntry
 		{
-			public Material OverrideMaterial;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+            public Material OverrideMaterial;
 			public Texture2D OverrideTexture;
 			public float Alpha;
 			public MeshRenderer Renderer;
-		}
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+        }
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
-		[SerializeField] MeshRenderer rimRenderer;
-		[SerializeField] Transform parallaxAnchor;
+        [SerializeField] CanvasGroup rootGroup;
+        [SerializeField] MeshRenderer rimRenderer;
+        [SerializeField] Color rimColor;
+        [SerializeField] MeshRenderer chromaticRenderer;
+        [SerializeField] Color chromaticColor;
+        [SerializeField] ParticleSystem scanningParticles;
+        [SerializeField] Color scanningParticlesStartColor;
+        [SerializeField] Transform parallaxAnchor;
 		[SerializeField] ParallaxEntry[] parallaxEntries;
 		[SerializeField] float parallaxScalar;
 		[SerializeField] AnimationCurve parallaxOffsetCurve;
@@ -52,12 +60,34 @@ namespace LunraGames.SubLight.Views
 					entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.ChromaticOffsetScale, chromaticAberration);
 					entry.Renderer.material.SetVector(ShaderConstants.HoloGamemodePortalParallax.ParallaxCoordinates, (delta * currMultiplier).NewZ(currZoom));
 					currMultiplier *= 0.6f;
+
+                    entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, OpacityStack * entry.Alpha);
 					//currZoom *= currZoomScalar;
 				}
 			}
 		}
 
-		public override void Reset()
+        public Action StartClick { set; private get; }
+        public Action NextClick { set; private get; }
+        public Action PreviousClick { set; private get; }
+
+        protected override void OnOpacityStack(float opacity)
+        {
+            rootGroup.alpha = opacity;
+
+            var particleSystemMain = scanningParticles.main;
+            particleSystemMain.startColor = scanningParticlesStartColor.NewA(scanningParticlesStartColor.a * opacity);
+
+            foreach (var entry in parallaxEntries)
+            {
+                entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, opacity * entry.Alpha);
+            }
+
+            rimRenderer.material.SetColor(ShaderConstants.HoloGamemodePortalRim.PrimaryColor, rimColor.NewA(rimColor.a * opacity));
+            chromaticRenderer.material.color = chromaticColor.NewV(chromaticColor.GetV() * opacity);
+        }
+
+        public override void Reset()
 		{
 			base.Reset();
 
@@ -75,11 +105,36 @@ namespace LunraGames.SubLight.Views
 			startButtonRoot.localPosition = Vector3.zero;
 
 			rimRenderer.material = new Material(rimRenderer.material);
-		}
-	}
+            chromaticRenderer.material = new Material(chromaticRenderer.material);
 
-	public interface IGamemodePortalView : IView, IHoloColorView
+            StartClick = ActionExtensions.Empty;
+            NextClick = ActionExtensions.Empty;
+            PreviousClick = ActionExtensions.Empty;
+		}
+
+        #region Events
+        public void OnStartClick()
+        {
+            StartClick();
+        }
+
+        public void OnNextClick()
+        {
+            NextClick();
+        }
+
+        public void OnPreviousClick()
+        {
+            PreviousClick();
+        }
+        #endregion
+    }
+
+    public interface IGamemodePortalView : IView, IHoloColorView
 	{
 		Vector3 PointerViewport { set; }
-	}
+        Action StartClick { set; }
+        Action NextClick { set; }
+        Action PreviousClick { set; }
+    }
 }

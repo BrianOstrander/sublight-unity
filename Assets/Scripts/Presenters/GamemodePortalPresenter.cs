@@ -25,6 +25,9 @@ namespace LunraGames.SubLight.Presenters
 			View.Reset();
 
 			View.HoloColor = App.Callbacks.LastHoloColorRequest.Color;
+            View.StartClick = OnStartClick;
+            View.NextClick = OnNextClick;
+            View.PreviousClick = OnPreviousClick;
 
 			ShowView(parent, instant);
 		}
@@ -48,6 +51,24 @@ namespace LunraGames.SubLight.Presenters
 
 			View.PointerViewport = App.V.Camera.ScreenToViewportPoint(Input.mousePosition);
 		}
-		#endregion
-	}
+        #endregion
+
+        #region View Events
+        void OnStartClick()
+        {
+            View.Closed += () => Show();
+            Close();
+        }
+
+        void OnNextClick()
+        {
+            Debug.Log("Next Clicked");
+        }
+
+        void OnPreviousClick()
+        {
+            Debug.Log("Previous Clicked");
+        }
+        #endregion
+    }
 }
