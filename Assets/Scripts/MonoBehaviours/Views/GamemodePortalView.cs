@@ -1,15 +1,28 @@
 ﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
+using TMPro;
+
 namespace LunraGames.SubLight.Views
 {
-    public enum GamemodePortalTransitions
+    public struct GamemodeBlock
     {
-        Unknown = 0,
-        None = 10,
-        Previous = 20,
-        Next = 30
+        public enum LockStates
+        {
+            Unknown = 0,
+            Unlocked = 10,
+            Locked = 20,
+            InDevelopment = 30
+        }
+
+        public string Title;
+        public string SubTitle;
+        public string Description;
+        public string StartText;
+        public Texture2D Icon;
+        public LockStates LockState;
     }
 
     public class GamemodePortalView : View, IGamemodePortalView
@@ -49,7 +62,27 @@ namespace LunraGames.SubLight.Views
 
 		[SerializeField] Transform startButtonRoot;
 		[SerializeField] Transform startButtonAnchor;
+
+        [SerializeField] TextMeshProUGUI titleLabel;
+        [SerializeField] TextMeshProUGUI subTitleLabel;
+        [SerializeField] TextMeshProUGUI descriptionLabel;
+        [SerializeField] TextMeshProUGUI startLabel;
+
+        [SerializeField] float transitionDuration;
+        [SerializeField] AnimationCurve transitionGroupsOpacityCurve;
+        [SerializeField] CanvasGroup[] transitionGroups;
+        [SerializeField] AnimationCurve transitionIconOpacityCurve;
+        [SerializeField] AnimationCurve transitionIconOffsetCurve;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+        GamemodeBlock currentGamemode;
+        GamemodeBlock targetGamemode;
+        bool transitionToRight;
+        float? transitionRemaining;
+        bool transitionHasSetData;
+
+        float lastTransitionIconOpacity;
+		float lastTransitionIconOffset;
 
 		public Color HoloColor { set { } } // lipMesh.material.SetColor(ShaderConstants.HoloLipAdditive.LipColor, value); } }
 
@@ -74,18 +107,50 @@ namespace LunraGames.SubLight.Views
 				foreach (var entry in parallaxEntries)
 				{
 					entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.ChromaticOffsetScale, chromaticAberration);
-					entry.Renderer.material.SetVector(ShaderConstants.HoloGamemodePortalParallax.ParallaxCoordinates, (delta * currMultiplier).NewZ(currZoom));
+					var currCoordinates = (delta * currMultiplier).NewZ(currZoom);
+					
 					currMultiplier *= 0.6f;
 
-                    entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, OpacityStack * entry.Alpha);
-					//currZoom *= currZoomScalar;
+					switch (entry.Layer)
+					{
+						case ParallaxEntry.Layers.Default:
+							entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, OpacityStack * entry.Alpha);
+							break;
+						case ParallaxEntry.Layers.Icon:
+							entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, OpacityStack * entry.Alpha * lastTransitionIconOpacity);
+							currCoordinates = currCoordinates.NewX(currCoordinates.x + lastTransitionIconOffset);
+							break;
+					}
+
+					entry.Renderer.material.SetVector(ShaderConstants.HoloGamemodePortalParallax.ParallaxCoordinates, currCoordinates);
 				}
 			}
 		}
 
-        public Action StartClick { set; private get; }
-        public Action NextClick { set; private get; }
-        public Action PreviousClick { set; private get; }
+		public Action StartClick { set; private get; }
+		public Action NextClick { set; private get; }
+		public Action PreviousClick { set; private get; }
+
+        public void SetGamemode(GamemodeBlock gamemode, bool instant = false, bool toRight = false)
+        {
+            transitionHasSetData = false;
+
+			if (instant)
+			{
+				currentGamemode = gamemode;
+				targetGamemode = gamemode;
+				transitionToRight = false;
+				transitionRemaining = null;
+				OnSetGamemodeData(gamemode);
+				OnSetGamemodeAnimation(1f);
+				return;
+			}
+
+            currentGamemode = targetGamemode;
+            targetGamemode = gamemode;
+            transitionToRight = toRight;
+            transitionRemaining = transitionDuration;
+        }
 
         protected override void OnOpacityStack(float opacity)
         {
@@ -96,7 +161,15 @@ namespace LunraGames.SubLight.Views
 
             foreach (var entry in parallaxEntries)
             {
-                entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, opacity * entry.Alpha);
+                switch (entry.Layer)
+                {
+                    case ParallaxEntry.Layers.Default:
+                        entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, opacity * entry.Alpha);
+                        break;
+                    case ParallaxEntry.Layers.Icon:
+                        entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, opacity * entry.Alpha * lastTransitionIconOpacity);
+                        break;
+                }
             }
 
             rimRenderer.material.SetColor(ShaderConstants.HoloGamemodePortalRim.PrimaryColor, rimColor.NewA(rimColor.a * opacity));
@@ -131,36 +204,106 @@ namespace LunraGames.SubLight.Views
 			startButtonRoot.localPosition = Vector3.zero;
 
 			rimRenderer.material = new Material(rimRenderer.material);
-            chromaticRenderer.material = new Material(chromaticRenderer.material);
+			chromaticRenderer.material = new Material(chromaticRenderer.material);
 
-            StartClick = ActionExtensions.Empty;
-            NextClick = ActionExtensions.Empty;
-            PreviousClick = ActionExtensions.Empty;
+			StartClick = ActionExtensions.Empty;
+			NextClick = ActionExtensions.Empty;
+			PreviousClick = ActionExtensions.Empty;
+
+			currentGamemode = new GamemodeBlock();
+			targetGamemode = new GamemodeBlock();
+			transitionToRight = false;
+			transitionRemaining = null;
+
+			titleLabel.text = string.Empty;
+			subTitleLabel.text = string.Empty;
+			descriptionLabel.text = string.Empty;
+			startLabel.text = string.Empty;
+
+			lastTransitionIconOpacity = 0f;
+			lastTransitionIconOffset = 0f;
+        }
+
+        protected override void OnIdle(float delta)
+        {
+            base.OnIdle(delta);
+
+            if (!transitionRemaining.HasValue) return;
+
+            transitionRemaining = Mathf.Max(0f, transitionRemaining.Value - delta);
+            var transitionScalar = 1f - (transitionRemaining.Value / transitionDuration);
+
+            if (!transitionHasSetData && 0.5f < transitionScalar)
+            {
+                OnSetGamemodeData(targetGamemode);
+            }
+
+			OnSetGamemodeAnimation(transitionScalar);
+
+			if (Mathf.Approximately(0f, transitionRemaining.Value))
+			{
+				transitionRemaining = null;
+			}
 		}
 
         #region Events
-        public void OnStartClick()
+        void OnSetGamemodeData(GamemodeBlock gamemode)
         {
+            titleLabel.text = gamemode.Title + " /";
+            subTitleLabel.text = gamemode.SubTitle;
+            descriptionLabel.text = gamemode.Description;
+            startLabel.text = gamemode.StartText;
+
+            transitionHasSetData = true;
+        }
+
+		void OnSetGamemodeAnimation(float scalar)
+		{
+			var transitionGroupOpacity = transitionGroupsOpacityCurve.Evaluate(scalar);
+			lastTransitionIconOpacity = transitionIconOpacityCurve.Evaluate(scalar);
+			lastTransitionIconOffset = transitionIconOffsetCurve.Evaluate(scalar);
+			if (!transitionToRight) lastTransitionIconOffset *= -1f;
+
+			foreach (var entry in parallaxEntries.Where(e => e.Layer == ParallaxEntry.Layers.Icon))
+			{
+				entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, OpacityStack * entry.Alpha * lastTransitionIconOpacity);
+			}
+
+			foreach (var group in transitionGroups) group.alpha = transitionGroupOpacity;
+		}
+		#endregion
+
+		#region Button Events
+		public void OnStartClick()
+        {
+            if (transitionRemaining.HasValue) return;
+
             StartClick();
         }
 
         public void OnNextClick()
         {
+            if (transitionRemaining.HasValue) return;
+
             NextClick();
         }
 
         public void OnPreviousClick()
         {
+            if (transitionRemaining.HasValue) return;
+
             PreviousClick();
         }
         #endregion
     }
 
     public interface IGamemodePortalView : IView, IHoloColorView
-	{
-		Vector3 PointerViewport { set; }
+    {
+        Vector3 PointerViewport { set; }
         Action StartClick { set; }
         Action NextClick { set; }
         Action PreviousClick { set; }
+
+        void SetGamemode(GamemodeBlock gamemode, bool instant = false, bool toRight = false);
     }
 }
