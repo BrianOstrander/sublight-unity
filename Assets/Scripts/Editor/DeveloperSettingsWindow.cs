@@ -5,7 +5,9 @@ using System.Linq;
 using LunraGamesEditor;
 
 using UnityEditor;
+
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LunraGames.SubLight
 {
@@ -28,9 +30,16 @@ namespace LunraGames.SubLight
 
 		DevPrefsInt currentTab;
 
+        [SerializeField]
+        GameObject stagedPrefab;
+        [SerializeField]
+        bool stagedPrefabEnabled;
+
 		public DeveloperSettingsWindow()
 		{
 			currentTab = new DevPrefsInt(KeyPrefix + "CurrentTab");
+
+            EditorApplication.playModeStateChanged += OnPlaymodeStateChanged;
 		}
 
 		[MenuItem("Window/Lunra Games/Development Settings")]
@@ -83,7 +92,25 @@ namespace LunraGames.SubLight
 
 			#region Utility
 			GUILayout.Label("Utility", EditorStyles.boldLabel);
-			GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal();
+            {
+                var wasStagedPrefabEnabled = !stagedPrefabEnabled;
+                if (wasStagedPrefabEnabled) EditorGUILayoutExtensions.PushColor(Color.grey);
+                {
+                    GUILayout.Label("Staged", GUILayout.ExpandWidth(false));
+                    stagedPrefab = (GameObject)EditorGUILayout.ObjectField(stagedPrefab, typeof(GameObject), false);
+                    stagedPrefabEnabled = EditorGUILayout.Toggle(stagedPrefabEnabled, GUILayout.Width(14f));
+                    EditorGUILayoutExtensions.PushEnabled(stagedPrefab != null);
+                    {
+                        if (GUILayout.Button("Load", GUILayout.ExpandWidth(false))) OnLoadStagedPrefab();
+                    }
+                    EditorGUILayoutExtensions.PopEnabled();
+                }
+                if (wasStagedPrefabEnabled) EditorGUILayoutExtensions.PopColor();
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
 			{
 				GUILayout.BeginVertical();
 				{
@@ -287,5 +314,22 @@ namespace LunraGames.SubLight
 					App.SM.Is(StateMachine.States.Game, StateMachine.Events.Idle);
 			}
 		}
-	}
+
+        #region Events
+        void OnPlaymodeStateChanged(PlayModeStateChange playmode)
+        {
+            switch (playmode)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    if (stagedPrefabEnabled && stagedPrefab != null) OnLoadStagedPrefab();
+                    break;
+            }
+        }
+
+        void OnLoadStagedPrefab()
+        {
+            AssetDatabase.OpenAsset(stagedPrefab);
+        }
+        #endregion
+    }
 }

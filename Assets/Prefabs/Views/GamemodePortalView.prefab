@@ -865,19 +865,23 @@ MonoBehaviour:
   scanningParticlesStartColor: {r: 1, g: 1, b: 1, a: 0.30980393}
   parallaxAnchor: {fileID: 3670784071567956531}
   parallaxEntries:
-  - OverrideMaterial: {fileID: 0}
+  - Layer: 10
+    OverrideMaterial: {fileID: 0}
     OverrideTexture: {fileID: 2800000, guid: dd4da8accf2fd4b52b468539f4591e14, type: 3}
     Alpha: 0.6
     Renderer: {fileID: 7373670926179877362}
-  - OverrideMaterial: {fileID: 0}
+  - Layer: 10
+    OverrideMaterial: {fileID: 0}
     OverrideTexture: {fileID: 2800000, guid: df6bf788fc39f41ddbea3fdd6b8e066e, type: 3}
     Alpha: 0.3
     Renderer: {fileID: 9153877538507611798}
-  - OverrideMaterial: {fileID: 0}
+  - Layer: 10
+    OverrideMaterial: {fileID: 0}
     OverrideTexture: {fileID: 2800000, guid: dd4da8accf2fd4b52b468539f4591e14, type: 3}
     Alpha: 0.1
     Renderer: {fileID: 6339212850874606846}
-  - OverrideMaterial: {fileID: 0}
+  - Layer: 20
+    OverrideMaterial: {fileID: 0}
     OverrideTexture: {fileID: 2800000, guid: a8c3f94a62f9f460d92f3918df963167, type: 3}
     Alpha: 0.55
     Renderer: {fileID: 8315990453089958468}

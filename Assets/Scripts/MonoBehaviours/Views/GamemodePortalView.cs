@@ -4,12 +4,28 @@ using UnityEngine;
 
 namespace LunraGames.SubLight.Views
 {
-	public class GamemodePortalView : View, IGamemodePortalView
+    public enum GamemodePortalTransitions
+    {
+        Unknown = 0,
+        None = 10,
+        Previous = 20,
+        Next = 30
+    }
+
+    public class GamemodePortalView : View, IGamemodePortalView
 	{
 		[Serializable]
 		struct ParallaxEntry
 		{
+            public enum Layers
+            {
+                Unknown = 0,
+                Default = 10,
+                Icon = 20
+            }
+
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+            public Layers Layer;
             public Material OverrideMaterial;
 			public Texture2D OverrideTexture;
 			public float Alpha;
@@ -99,7 +115,17 @@ namespace LunraGames.SubLight.Views
 				else entry.Renderer.material = new Material(entry.OverrideMaterial);
 				if (entry.OverrideTexture != null) entry.Renderer.material.SetTexture(ShaderConstants.HoloGamemodePortalParallax.PrimaryTexture, entry.OverrideTexture);
 				entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.Alpha, entry.Alpha);
-			}
+
+                switch (entry.Layer)
+                {
+                    case ParallaxEntry.Layers.Default:
+                    case ParallaxEntry.Layers.Icon:
+                        break;
+                    default:
+                        Debug.LogError("Unrecognized Parallax Layer: " + entry.Layer);
+                        break;
+                }
+            }
 
 			startButtonRoot.SetParent(startButtonAnchor, false);
 			startButtonRoot.localPosition = Vector3.zero;
