@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -14,9 +13,6 @@ namespace LunraGames.SubLight
 		{
 			public static class CreateGameBlock
 			{
-				public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089"; // Milkyway
-				public const string GalaxyTargetId = "a6603c5e-f151-45aa-96bb-30905e781573"; // Andromeda
-
 				public const ToolbarSelections ToolbarSelection = ToolbarSelections.Communication;
 			}
 
@@ -69,8 +65,9 @@ namespace LunraGames.SubLight
 			model.GameId.Value = model.Name.Value;
 
 			model.Seed.Value = info.GameSeed;
-			model.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, Defaults.CreateGameBlock.GalaxyId);
-			model.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, Defaults.CreateGameBlock.GalaxyTargetId);
+			model.GamemodeId = StringExtensions.GetNonNullOrEmpty(info.GamemodeId, App.BuildPreferences.DefaultGamemodeId);
+			model.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, App.BuildPreferences.DefaultGalaxyId);
+			model.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, App.BuildPreferences.DefaultGalaxyTargetId);
 			model.Universe = universeService.CreateUniverse(info);
 
 			var initialTime = DayTime.Zero;
