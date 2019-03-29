@@ -15,6 +15,7 @@ namespace LunraGames.SubLight.Presenters
 		GamemodePortalLanguageBlock language;
 
 		int selectionIndex;
+		int? selectionIndexFirstPlayable;
 		Action<GamemodeInfoModel> selection;
 		Action back;
 
@@ -41,14 +42,20 @@ namespace LunraGames.SubLight.Presenters
 					LockText = currentGamemode.IsInDevelopment ? language.InDevelopmentDescription.Value.Value : language.LockedDescription.Value.Value,
 					Icon = currentGamemode.Icon
 				};
+				if (!selectionIndexFirstPlayable.HasValue && !currentGamemode.IsInDevelopment.Value) selectionIndexFirstPlayable = i;
 			}
 
+			if (gamemodes.Length == 0) Debug.LogError("No gamemodes were loaded");
+			else if (!selectionIndexFirstPlayable.HasValue) Debug.LogError("No playable gamemodes are available");
+
+			App.Callbacks.Escape += OnEscape;
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Heartbeat.Update += OnUpdate;
 		}
 
 		protected override void OnUnBind()
 		{
+			App.Callbacks.Escape -= OnEscape;
 			App.Callbacks.HoloColorRequest -= OnHoloColorRequest;
 			App.Heartbeat.Update -= OnUpdate;
 		}
@@ -63,6 +70,12 @@ namespace LunraGames.SubLight.Presenters
 			if (back == null) throw new ArgumentNullException("back");
 
 			if (View.Visible) Debug.LogError("Trying to show gamemode portal when it's already visible, unpredictable behaviour may occur.");
+
+			if (selectionIndexFirstPlayable.HasValue)
+			{
+				selectionIndex = Mathf.Clamp(selectionIndex, 0, gamemodes.Length - 1);
+				if (gamemodes[selectionIndex].IsInDevelopment.Value) selectionIndex = selectionIndexFirstPlayable.Value;
+			}
 
 			this.selection = selection;
 			this.back = back;
@@ -85,7 +98,22 @@ namespace LunraGames.SubLight.Presenters
 			ShowView(instant: instant);
 		}
 
+		protected virtual bool NotInteractable
+		{
+			get
+			{
+				return View.TransitionState != TransitionStates.Shown;
+			}
+		}
+
 		#region Events
+		void OnEscape()
+		{
+			if (NotInteractable) return;
+
+			OnBackClick();
+		}
+
 		void OnHoloColorRequest(HoloColorRequest request)
 		{
 			View.HoloColor = request.Color;
@@ -102,7 +130,7 @@ namespace LunraGames.SubLight.Presenters
         #region View Events
         void OnStartClick()
         {
-            if (View.TransitionState != TransitionStates.Shown) return;
+			if (NotInteractable) return;
 
 			View.Closed += OnClosedStart;
 			CloseView();
@@ -110,9 +138,9 @@ namespace LunraGames.SubLight.Presenters
 
         void OnNextClick()
         {
-            if (View.TransitionState != TransitionStates.Shown) return;
+			if (NotInteractable) return;
 
-            selectionIndex = (selectionIndex + 1) % gamemodeBlocks.Length;
+			selectionIndex = (selectionIndex + 1) % gamemodeBlocks.Length;
 
             View.SetGamemode(
                 gamemodeBlocks[selectionIndex],
@@ -123,9 +151,9 @@ namespace LunraGames.SubLight.Presenters
 
         void OnPreviousClick()
         {
-            if (View.TransitionState != TransitionStates.Shown) return;
+			if (NotInteractable) return;
 
-            selectionIndex--;
+			selectionIndex--;
 
             if (selectionIndex < 0) selectionIndex = gamemodeBlocks.Length + selectionIndex;
 
@@ -138,7 +166,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnBackClick()
 		{
-			if (View.TransitionState != TransitionStates.Shown) return;
+			if (NotInteractable) return;
 
 			View.Closed += OnClosedBack;
 			CloseView();
@@ -146,7 +174,20 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnClosedStart()
 		{
-			selection(gamemodes[selectionIndex]);
+			var gamemodeSelected = gamemodes[selectionIndex];
+
+			if (gamemodeSelected.IsInDevelopment.Value)
+			{
+				App.Callbacks.DialogRequest(
+					DialogRequest.Confirm(
+						language.UnavailableInDevelopment.Message,
+						DialogStyles.Error,
+						language.UnavailableInDevelopment.Title,
+						() => Show(selection, back)
+					)
+				);
+			}
+			else selection(gamemodeSelected);
 		}
 
 		void OnClosedBack()

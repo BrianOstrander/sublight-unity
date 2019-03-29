@@ -105,7 +105,18 @@ namespace LunraGames.SubLight
 						Back = LanguageStringModel.Override("Back"),
 
 						InDevelopmentDescription = LanguageStringModel.Override("<b>Unavailable:</b> In development"),
-						LockedDescription = LanguageStringModel.Override("<b>Locked:</b> Requirements not met")
+						LockedDescription = LanguageStringModel.Override("<b>Locked:</b> Requirements not met"),
+
+						UnavailableInDevelopment = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("In Development"),
+							Message = LanguageStringModel.Override("The selected gamemode is in development, and is not yet available.")
+						},
+						UnavailableLocked = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Locked"),
+							Message = LanguageStringModel.Override("The selected gamemode is locked, you need to meet the requirements before it will unlock.")
+						}
 					}
 				);
 

@@ -11,5 +11,8 @@ namespace LunraGames.SubLight
 
 		public LanguageStringModel InDevelopmentDescription;
 		public LanguageStringModel LockedDescription;
+
+		public DialogLanguageBlock UnavailableInDevelopment;
+		public DialogLanguageBlock UnavailableLocked;
 	}
 }
