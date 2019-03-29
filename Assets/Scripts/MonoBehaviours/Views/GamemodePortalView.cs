@@ -23,6 +23,7 @@ namespace LunraGames.SubLight.Views
         public string StartText;
         public Texture2D Icon;
         public LockStates LockState;
+		public string LockText;
     }
 
     public class GamemodePortalView : View, IGamemodePortalView
@@ -73,6 +74,9 @@ namespace LunraGames.SubLight.Views
         [SerializeField] CanvasGroup[] transitionGroups;
         [SerializeField] AnimationCurve transitionIconOpacityCurve;
         [SerializeField] AnimationCurve transitionIconOffsetCurve;
+
+		[SerializeField] CanvasGroup lockGroup;
+		[SerializeField] TextMeshProUGUI lockLabel;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
         GamemodeBlock currentGamemode;
@@ -254,9 +258,15 @@ namespace LunraGames.SubLight.Views
             descriptionLabel.text = gamemode.Description;
             startLabel.text = gamemode.StartText;
 
+			lockGroup.alpha = gamemode.LockState == GamemodeBlock.LockStates.Unlocked ? 0f : 1f;
+			lockLabel.text = gamemode.LockText;
+
 			foreach (var entry in parallaxEntries.Where(e => e.Layer == ParallaxEntry.Layers.Icon))
 			{
-				entry.Renderer.material.SetTexture(ShaderConstants.HoloGamemodePortalParallax.PrimaryTexture, gamemode.Icon);
+				entry.Renderer.material.SetTexture(
+					ShaderConstants.HoloGamemodePortalParallax.PrimaryTexture,
+					gamemode.Icon == null ? entry.OverrideTexture : gamemode.Icon // Don't simplify this with ??, unity broke it.
+				);
 			}
 
 			transitionHasSetData = true;

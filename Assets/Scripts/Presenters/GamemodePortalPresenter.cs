@@ -28,7 +28,6 @@ namespace LunraGames.SubLight.Presenters
 			for (var i = 0; i < gamemodeBlocks.Length; i++)
 			{
 				var currentGamemode = this.gamemodes[i];
-				Debug.Log(currentGamemode.Name.Value);
 				gamemodeBlocks[i] = new GamemodeBlock
 				{
 					Title = currentGamemode.Title.Value,
@@ -36,6 +35,7 @@ namespace LunraGames.SubLight.Presenters
 					Description = currentGamemode.Description.Value,
 					StartText = currentGamemode.IsInDevelopment ? language.Locked.Value.Value : language.Start.Value.Value,
 					LockState = currentGamemode.IsInDevelopment ? GamemodeBlock.LockStates.InDevelopment : GamemodeBlock.LockStates.Unlocked,
+					LockText = currentGamemode.IsInDevelopment ? language.InDevelopmentDescription.Value.Value : language.LockedDescription.Value.Value,
 					Icon = currentGamemode.Icon
 				};
 			}

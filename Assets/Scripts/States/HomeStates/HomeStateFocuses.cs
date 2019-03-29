@@ -100,8 +100,8 @@ namespace LunraGames.SubLight
 						Locked = LanguageStringModel.Override("Locked"),
 						Back = LanguageStringModel.Override("Back"),
 
-						InDevelopmentDescription = LanguageStringModel.Override("<b>Unavailable:</b> Gamemode is currently in development."),
-						LockedDescription = LanguageStringModel.Override("<b>Locked:</b> Gamemode needs to be unlocked before playing.")
+						InDevelopmentDescription = LanguageStringModel.Override("<b>Unavailable:</b> In development"),
+						LockedDescription = LanguageStringModel.Override("<b>Locked:</b> Requirements not met")
 					}
 				).Show();
 
