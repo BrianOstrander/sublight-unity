@@ -35,6 +35,7 @@ namespace LunraGames.SubLight
 		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
 
 		public GalaxyPreviewModel PreviewGalaxy;
+		public List<GamemodeInfoModel> Gamemodes = new List<GamemodeInfoModel>();
 
 		public Action<GameModel, bool, bool> StartGame;
 
@@ -76,6 +77,7 @@ namespace LunraGames.SubLight
 			SM.PushBlocking(InitializeInput, "InitializeInput");
 			SM.PushBlocking(InitializeCallbacks, "InitializeCallbacks");
 			SM.PushBlocking(InitializeLoadGalaxy, "InitializeLoadGalaxy");
+			SM.PushBlocking(InitializeGamemodes, "InitializeGamemodes");
 			SM.PushBlocking(InitializeNewGameBlock, "InitializingNewGameBlock");
 			SM.PushBlocking(InitializeContinueGame, "InitializeContinueGame");
 			SM.PushBlocking(done => Focuses.InitializePresenters(Payload, done), "InitializePresenters");
@@ -140,6 +142,51 @@ namespace LunraGames.SubLight
 			Payload.PreviewGalaxy = result.TypedModel;
 
 			done();
+		}
+
+		void InitializeGamemodes(Action done)
+		{
+			App.M.List<GamemodeInfoModel>(result => OnListInitializeGamemodes(result, done));
+		}
+
+		void OnListInitializeGamemodes(SaveLoadArrayRequest<SaveModel> result, Action done)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				Debug.LogError("Unable to load a list of gamemodes");
+				done();
+				return;
+			}
+
+			OnLoadInitializeGamemodes(
+				null,
+				result.Models.ToList(),
+				done
+			);
+		}
+
+		void OnLoadInitializeGamemodes(
+			SaveLoadRequest<GamemodeInfoModel>? result,
+			List<SaveModel> remaining,
+			Action done
+		)
+		{
+			if (result.HasValue)
+			{
+				if (result.Value.Status != RequestStatus.Success) Debug.LogError("Unable to load gamemode with error " + result.Value.Error);
+				else Payload.Gamemodes.Add(result.Value.TypedModel);
+			}
+
+			if (remaining.None())
+			{
+				done();
+				return;
+			}
+
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+
+			App.M.Load<GamemodeInfoModel>(next, loadResult => OnLoadInitializeGamemodes(loadResult, remaining, done));
 		}
 
 		void InitializeNewGameBlock(Action done)

@@ -36,8 +36,9 @@ namespace LunraGames.SubLight
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, 9 },
 					{ SaveTypes.GalaxyDistant, 9 },
-					{ SaveTypes.GalaxyInfo, 9 }
+					{ SaveTypes.GalaxyInfo, 9 },
 					// --
+					{ SaveTypes.GamemodeInfo, 9 }
 				};
 			}
 		}
@@ -58,8 +59,9 @@ namespace LunraGames.SubLight
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, false },
 					{ SaveTypes.GalaxyDistant, false },
-					{ SaveTypes.GalaxyInfo, false }
+					{ SaveTypes.GalaxyInfo, false },
 					// --
+					{ SaveTypes.GamemodeInfo, false }
 				};
 			}
 		}
@@ -110,6 +112,7 @@ namespace LunraGames.SubLight
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
 				// --
+				case SaveTypes.GamemodeInfo: return Path.Combine(InternalPath, "gamemodes");
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}

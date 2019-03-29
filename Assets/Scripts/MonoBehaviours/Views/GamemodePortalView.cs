@@ -254,7 +254,12 @@ namespace LunraGames.SubLight.Views
             descriptionLabel.text = gamemode.Description;
             startLabel.text = gamemode.StartText;
 
-            transitionHasSetData = true;
+			foreach (var entry in parallaxEntries.Where(e => e.Layer == ParallaxEntry.Layers.Icon))
+			{
+				entry.Renderer.material.SetTexture(ShaderConstants.HoloGamemodePortalParallax.PrimaryTexture, gamemode.Icon);
+			}
+
+			transitionHasSetData = true;
         }
 
 		void OnSetGamemodeAnimation(float scalar)

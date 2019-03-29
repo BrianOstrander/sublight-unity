@@ -92,7 +92,18 @@ namespace LunraGames.SubLight
 
 				// Additional presenters
 
-				new GamemodePortalPresenter().Show();
+				new GamemodePortalPresenter(
+					payload.Gamemodes.ToArray(),
+					new GamemodePortalLanguageBlock
+					{
+						Start = LanguageStringModel.Override("Start"),
+						Locked = LanguageStringModel.Override("Locked"),
+						Back = LanguageStringModel.Override("Back"),
+
+						InDevelopmentDescription = LanguageStringModel.Override("<b>Unavailable:</b> Gamemode is currently in development."),
+						LockedDescription = LanguageStringModel.Override("<b>Locked:</b> Gamemode needs to be unlocked before playing.")
+					}
+				).Show();
 
 				done();
 			}

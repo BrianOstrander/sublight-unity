@@ -1,43 +1,45 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+
+using UnityEngine;
 
 using LunraGames.SubLight.Views;
+using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
 	public class GamemodePortalPresenter : Presenter<IGamemodePortalView>, IPresenterCloseShowOptions
 	{
-        static GamemodeBlock[] allGamemodes =
-        {
-            new GamemodeBlock
-            {
-                Title = "Game",
-                SubTitle = "A New Home",
-                Description = "An interstellar ark with a thousand refugees has left Sol. You are tasked with finding a hospitable planet, one with an Earth-like climate. However, your resources are running low and your interstellar ark is falling apart.",
-                StartText = "Start",
-                LockState = GamemodeBlock.LockStates.Unlocked
-            },
-            new GamemodeBlock
-            {
-                Title = "Game",
-                SubTitle = "Outrun the Void",
-                Description = "Earth is gone, and the wake of its destruction is expanding outwards, towards your interstellar ark. Humanity’s only chance for survival is to flee from one star system to another, gathering vital resources along the way. The critical choices you make will have consequences for generations to come.",
-                StartText = "Start",
-                LockState = GamemodeBlock.LockStates.InDevelopment
-            },
-            new GamemodeBlock
-            {
-                Title = "Game",
-                SubTitle = "Marathon",
-                Description = "The grim black reaches of space beckon your people. This is a voyage of discovery, endurance, and ultimately... failure. Try to keep your interstellar ark alive for as long as possible, and see how far you can go!",
-                StartText = "Start",
-                LockState = GamemodeBlock.LockStates.InDevelopment
-            }
-        };
+		GamemodeInfoModel[] gamemodes;
+		GamemodeBlock[] gamemodeBlocks;
+		GamemodePortalLanguageBlock language;
 
-        int selectedGamemode;
+		int selectedGamemode;
 
-        public GamemodePortalPresenter()
+		public GamemodePortalPresenter(
+			GamemodeInfoModel[] gamemodes,
+			GamemodePortalLanguageBlock language
+		)
 		{
+			this.gamemodes = gamemodes.OrderBy(g => g.OrderWeight.Value).ToArray();
+			this.language = language;
+
+			gamemodeBlocks = new GamemodeBlock[this.gamemodes.Length];
+
+			for (var i = 0; i < gamemodeBlocks.Length; i++)
+			{
+				var currentGamemode = this.gamemodes[i];
+				Debug.Log(currentGamemode.Name.Value);
+				gamemodeBlocks[i] = new GamemodeBlock
+				{
+					Title = currentGamemode.Title.Value,
+					SubTitle = currentGamemode.SubTitle.Value,
+					Description = currentGamemode.Description.Value,
+					StartText = currentGamemode.IsInDevelopment ? language.Locked.Value.Value : language.Start.Value.Value,
+					LockState = currentGamemode.IsInDevelopment ? GamemodeBlock.LockStates.InDevelopment : GamemodeBlock.LockStates.Unlocked,
+					Icon = currentGamemode.Icon
+				};
+			}
+
 			App.Callbacks.HoloColorRequest += OnHoloColorRequest;
 			App.Heartbeat.Update += OnUpdate;
 		}
@@ -60,7 +62,7 @@ namespace LunraGames.SubLight.Presenters
             View.PreviousClick = OnPreviousClick;
 
             View.SetGamemode(
-                allGamemodes[selectedGamemode],
+                gamemodeBlocks[selectedGamemode],
                 true
             );
 
@@ -101,10 +103,10 @@ namespace LunraGames.SubLight.Presenters
         {
             if (View.TransitionState != TransitionStates.Shown) return;
 
-            selectedGamemode = (selectedGamemode + 1) % allGamemodes.Length;
+            selectedGamemode = (selectedGamemode + 1) % gamemodeBlocks.Length;
 
             View.SetGamemode(
-                allGamemodes[selectedGamemode],
+                gamemodeBlocks[selectedGamemode],
                 false,
                 true
             );
@@ -116,10 +118,10 @@ namespace LunraGames.SubLight.Presenters
 
             selectedGamemode--;
 
-            if (selectedGamemode < 0) selectedGamemode = allGamemodes.Length + selectedGamemode;
+            if (selectedGamemode < 0) selectedGamemode = gamemodeBlocks.Length + selectedGamemode;
 
             View.SetGamemode(
-                allGamemodes[selectedGamemode],
+                gamemodeBlocks[selectedGamemode],
                 false,
                 false
             );
