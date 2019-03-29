@@ -68,8 +68,9 @@ namespace LunraGames.SubLight.Views
         [SerializeField] TextMeshProUGUI subTitleLabel;
         [SerializeField] TextMeshProUGUI descriptionLabel;
         [SerializeField] TextMeshProUGUI startLabel;
+		[SerializeField] TextMeshProUGUI backLabel;
 
-        [SerializeField] float transitionDuration;
+		[SerializeField] float transitionDuration;
         [SerializeField] AnimationCurve transitionGroupsOpacityCurve;
         [SerializeField] CanvasGroup[] transitionGroups;
         [SerializeField] AnimationCurve transitionIconOpacityCurve;
@@ -134,8 +135,11 @@ namespace LunraGames.SubLight.Views
 		public Action StartClick { set; private get; }
 		public Action NextClick { set; private get; }
 		public Action PreviousClick { set; private get; }
+		public Action BackClick { set; private get; }
 
-        public void SetGamemode(GamemodeBlock gamemode, bool instant = false, bool toRight = false)
+		public string BackText { set { backLabel.text = value ?? string.Empty; } }
+
+		public void SetGamemode(GamemodeBlock gamemode, bool instant = false, bool toRight = false)
         {
             transitionHasSetData = false;
 
@@ -226,6 +230,8 @@ namespace LunraGames.SubLight.Views
 
 			lastTransitionIconOpacity = 0f;
 			lastTransitionIconOffset = 0f;
+
+			BackText = string.Empty;
         }
 
         protected override void OnIdle(float delta)
@@ -309,8 +315,15 @@ namespace LunraGames.SubLight.Views
 
             PreviousClick();
         }
-        #endregion
-    }
+
+		public void OnBackClick()
+		{
+			if (transitionRemaining.HasValue) return;
+
+			BackClick();
+		}
+		#endregion
+	}
 
     public interface IGamemodePortalView : IView, IHoloColorView
     {
@@ -318,7 +331,10 @@ namespace LunraGames.SubLight.Views
         Action StartClick { set; }
         Action NextClick { set; }
         Action PreviousClick { set; }
+		Action BackClick { set; }
 
-        void SetGamemode(GamemodeBlock gamemode, bool instant = false, bool toRight = false);
+		string BackText { set; }
+
+		void SetGamemode(GamemodeBlock gamemode, bool instant = false, bool toRight = false);
     }
 }

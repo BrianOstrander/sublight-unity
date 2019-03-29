@@ -66,6 +66,9 @@ namespace LunraGames.SubLight.Presenters
                 true
             );
 
+			View.BackText = language.Back.Value.Value;
+			View.BackClick = OnBackClick;
+
 			ShowView(parent, instant);
 		}
 
@@ -126,6 +129,11 @@ namespace LunraGames.SubLight.Presenters
                 false
             );
         }
-        #endregion
-    }
+
+		void OnBackClick()
+		{
+
+		}
+		#endregion
+	}
 }

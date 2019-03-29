@@ -1,14 +1,14 @@
 {
   "isInDevelopment": true,
   "gamemodeId": "b851666b-1696-43c5-871b-6e7775037fdd",
-  "name": "Outrun the Void",
+  "name": "The Void",
   "orderWeight": 100,
   "title": "Game",
-  "subTitle": "Outrun the Void",
+  "subTitle": "The Void",
   "description": "Earth is gone, and the wake of its destruction is expanding outwards, towards your interstellar ark. Humanity’s only chance for survival is to flee from one star system to another, gathering vital resources along the way. The critical choices you make will have consequences for generations to come.",
-  "gamemodeKey": "outrun_the_void",
+  "gamemodeKey": "the_void",
   "version": 9,
-  "meta": "Outrun the Void",
+  "meta": "The Void",
   "metaKeyValues": {
     "GamemodeId": "b851666b-1696-43c5-871b-6e7775037fdd"
   },
