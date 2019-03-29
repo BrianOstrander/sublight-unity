@@ -139,6 +139,8 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region Models
+		public GamemodeInfoModel Gamemode { get; set; }
+
 		public GalaxyInfoModel Galaxy { get; set; }
 		public GalaxyInfoModel GalaxyTarget { get; set; }
 

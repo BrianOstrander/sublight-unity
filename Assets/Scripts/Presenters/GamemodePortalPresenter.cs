@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
@@ -7,13 +8,15 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
-	public class GamemodePortalPresenter : Presenter<IGamemodePortalView>, IPresenterCloseShowOptions
+	public class GamemodePortalPresenter : Presenter<IGamemodePortalView>
 	{
 		GamemodeInfoModel[] gamemodes;
 		GamemodeBlock[] gamemodeBlocks;
 		GamemodePortalLanguageBlock language;
 
-		int selectedGamemode;
+		int selectionIndex;
+		Action<GamemodeInfoModel> selection;
+		Action back;
 
 		public GamemodePortalPresenter(
 			GamemodeInfoModel[] gamemodes,
@@ -50,9 +53,19 @@ namespace LunraGames.SubLight.Presenters
 			App.Heartbeat.Update -= OnUpdate;
 		}
 
-		public void Show(Transform parent = null, bool instant = false)
+		public void Show(
+			Action<GamemodeInfoModel> selection,
+			Action back,
+			bool instant = false
+		)
 		{
-			if (View.Visible) return;
+			if (selection == null) throw new ArgumentNullException("selection");
+			if (back == null) throw new ArgumentNullException("back");
+
+			if (View.Visible) Debug.LogError("Trying to show gamemode portal when it's already visible, unpredictable behaviour may occur.");
+
+			this.selection = selection;
+			this.back = back;
 
 			View.Reset();
 
@@ -62,21 +75,14 @@ namespace LunraGames.SubLight.Presenters
             View.PreviousClick = OnPreviousClick;
 
             View.SetGamemode(
-                gamemodeBlocks[selectedGamemode],
+                gamemodeBlocks[selectionIndex],
                 true
             );
 
 			View.BackText = language.Back.Value.Value;
 			View.BackClick = OnBackClick;
 
-			ShowView(parent, instant);
-		}
-
-		public void Close(bool instant = false)
-		{
-			if (!View.Visible) return;
-
-			CloseView(instant);
+			ShowView(instant: instant);
 		}
 
 		#region Events
@@ -98,18 +104,18 @@ namespace LunraGames.SubLight.Presenters
         {
             if (View.TransitionState != TransitionStates.Shown) return;
 
-            View.Closed += () => Show();
-            Close();
+			View.Closed += OnClosedStart;
+			CloseView();
         }
 
         void OnNextClick()
         {
             if (View.TransitionState != TransitionStates.Shown) return;
 
-            selectedGamemode = (selectedGamemode + 1) % gamemodeBlocks.Length;
+            selectionIndex = (selectionIndex + 1) % gamemodeBlocks.Length;
 
             View.SetGamemode(
-                gamemodeBlocks[selectedGamemode],
+                gamemodeBlocks[selectionIndex],
                 false,
                 true
             );
@@ -119,12 +125,12 @@ namespace LunraGames.SubLight.Presenters
         {
             if (View.TransitionState != TransitionStates.Shown) return;
 
-            selectedGamemode--;
+            selectionIndex--;
 
-            if (selectedGamemode < 0) selectedGamemode = gamemodeBlocks.Length + selectedGamemode;
+            if (selectionIndex < 0) selectionIndex = gamemodeBlocks.Length + selectionIndex;
 
             View.SetGamemode(
-                gamemodeBlocks[selectedGamemode],
+                gamemodeBlocks[selectionIndex],
                 false,
                 false
             );
@@ -132,7 +138,20 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnBackClick()
 		{
+			if (View.TransitionState != TransitionStates.Shown) return;
 
+			View.Closed += OnClosedBack;
+			CloseView();
+		}
+
+		void OnClosedStart()
+		{
+			selection(gamemodes[selectionIndex]);
+		}
+
+		void OnClosedBack()
+		{
+			back();
 		}
 		#endregion
 	}

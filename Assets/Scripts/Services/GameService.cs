@@ -167,20 +167,50 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Initialization
-		void OnInitializeGame(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		void OnInitializeGame(
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
 		{
 			model.Context.FocusTransform.Value = FocusTransform.Default;
+
+			if (string.IsNullOrEmpty(model.GamemodeId))
+			{
+				done(RequestResult.Failure("No GamemodeId to load").Log(), null);
+				return;
+			}
+			App.M.Load<GamemodeInfoModel>(model.GamemodeId, result => OnLoadGamemode(result, instructions, model, done));
+		}
+
+		void OnLoadGamemode(
+			SaveLoadRequest<GamemodeInfoModel> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure("Unable to load gamemode, resulted in " + result.Status + " and error: " + result.Error).Log(), null);
+				return;
+			}
+			model.Context.Gamemode = result.TypedModel;
 
 			if (string.IsNullOrEmpty(model.GalaxyId))
 			{
 				done(RequestResult.Failure("No GalaxyId to load").Log(), null);
 				return;
 			}
-			App.M.Load<GalaxyInfoModel>(model.GalaxyId, result => OnLoadGalaxy(result, instructions, model, done));
-
+			App.M.Load<GalaxyInfoModel>(model.GalaxyId, galaxyResult => OnLoadGalaxy(galaxyResult, instructions, model, done));
 		}
 
-		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		void OnLoadGalaxy(
+			SaveLoadRequest<GalaxyInfoModel> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
 		{
 			if (result.Status != RequestStatus.Success)
 			{

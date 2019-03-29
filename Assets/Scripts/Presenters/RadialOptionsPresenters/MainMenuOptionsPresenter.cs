@@ -39,7 +39,16 @@ namespace LunraGames.SubLight.Presenters
 			CloseView(instant);
 		}
 
-		void OnShow(bool longTransition, Transform parent = null, bool instant = false)
+		public void ShowQuick()
+		{
+			OnShow(false);
+		}
+
+		void OnShow(
+			bool longTransition,
+			Transform parent = null,
+			bool instant = false
+		)
 		{
 			if (View.Visible) return;
 
@@ -87,7 +96,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				if (View.TransitionState != TransitionStates.Shown) return;
 				View.Closed += done;
-				CloseView();
+				payload.ToggleMainMenu(false);
 			};
 		}
 
@@ -101,7 +110,7 @@ namespace LunraGames.SubLight.Presenters
 						DialogStyles.Warning,
 						language.NewGameOverwriteConfirm.Title,
 						StartNewGame,
-						() => OnShow(false)
+						() => payload.ToggleMainMenu(true)
 					)
 				);
 			}
@@ -138,7 +147,7 @@ namespace LunraGames.SubLight.Presenters
 					LanguageStringModel.Override("Your browser should open to a feedback form, if not visit <b>strangestar.games/contact</b> to send us a message!"),
 					DialogStyles.Neutral,
 					LanguageStringModel.Override("Feedback"),
-					confirmClick: () => OnShow(false)
+					confirmClick: () => payload.ToggleMainMenu(true)
 				)
 			);
 		}
@@ -161,7 +170,7 @@ namespace LunraGames.SubLight.Presenters
 					DialogStyles.Warning,
 					language.QuitConfirm.Title,
 					PushQuitRequest,
-					() => OnShow(false)
+					() => payload.ToggleMainMenu(true)
 				)
 			);
 		}
@@ -172,7 +181,7 @@ namespace LunraGames.SubLight.Presenters
 				DialogRequest.Confirm(
 					LanguageStringModel.Override("This feature is not implemented yet."),
 					DialogStyles.Warning,
-					confirmClick: () => OnShow(false)
+					confirmClick: () => payload.ToggleMainMenu(true)
 				)
 			);
 		}
@@ -188,7 +197,7 @@ namespace LunraGames.SubLight.Presenters
 				() =>
 				{
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(HomeState.Focuses.GetMainMenuFocus()));
-					OnShow(false);
+					payload.ToggleMainMenu(true);
 				}
 			);
 		}
@@ -197,10 +206,39 @@ namespace LunraGames.SubLight.Presenters
 		#region Game Utility
 		void StartNewGame()
 		{
-			App.GameService.CreateGame(payload.NewGameBlock, OnStartNewGame);
+			payload.GamemodePortal.Show(
+				OnStartNewGameGamemodePortalSelection,
+				OnStartNewGameGamemodePortalBack
+			);
 		}
 
-		void OnStartNewGame(RequestResult result, GameModel model)
+		void OnStartNewGameGamemodePortalSelection(GamemodeInfoModel gamemode)
+		{
+			if (gamemode == null)
+			{
+				Debug.LogError("Gamemode returned null, this should never happen, returning to main menu.");
+				App.Callbacks.DialogRequest(
+					DialogRequest.Confirm(
+						language.NewGameError.Message,
+						DialogStyles.Error,
+						language.NewGameError.Title,
+						() => payload.ToggleMainMenu(true)
+					)
+				);
+				return;
+			}
+			var newGameBlock = payload.NewGameBlock;
+			newGameBlock.GamemodeId = gamemode.GamemodeId.Value;
+
+			App.GameService.CreateGame(newGameBlock, OnStartNewGameCreateGame);
+		}
+
+		void OnStartNewGameGamemodePortalBack()
+		{
+			payload.ToggleMainMenu(true);
+		}
+
+		void OnStartNewGameCreateGame(RequestResult result, GameModel model)
 		{
 			if (result.IsNotSuccess)
 			{
@@ -209,7 +247,7 @@ namespace LunraGames.SubLight.Presenters
 						language.NewGameError.Message,
 						DialogStyles.Error,
 						language.NewGameError.Title,
-						() => OnShow(false)
+						() => payload.ToggleMainMenu(true)
 					)
 				);
 				return;
@@ -226,7 +264,7 @@ namespace LunraGames.SubLight.Presenters
 						language.ContinueGameError.Message,
 						DialogStyles.Error,
 						language.ContinueGameError.Title,
-						() => OnShow(false)
+						() => payload.ToggleMainMenu(true)
 					)
 				);
 				return;

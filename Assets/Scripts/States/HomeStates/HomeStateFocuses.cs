@@ -30,15 +30,19 @@ namespace LunraGames.SubLight
 
 				payload.Changelog = ChangelogPresenter.CreateDefault();
 
+				IPresenterCloseShowOptions mainLogoPresenter;
+				MainMenuOptionsPresenter mainOptionsPresenter;
+				IPresenterCloseShowOptions mainGalaxyPresenter;
+
 				payload.DelayedPresenterShows[0f] = new IPresenterCloseShowOptions[]
 				{
 					new FocusLipPresenter(SetFocusLayers.Home),
-					new GenericPresenter<IMainMenuLogoView>()
+					mainLogoPresenter = new GenericPresenter<IMainMenuLogoView>()
 				};
 
 				payload.DelayedPresenterShows[1f] = new IPresenterCloseShowOptions[]
 				{
-					new MainMenuOptionsPresenter(
+					mainOptionsPresenter = new MainMenuOptionsPresenter(
 						payload,
 						new MainMenuLanguageBlock
 						{
@@ -87,12 +91,12 @@ namespace LunraGames.SubLight
 
 				payload.DelayedPresenterShows[1.5f] = new IPresenterCloseShowOptions[]
 				{
-					new MainMenuGalaxyPresenter(payload.PreviewGalaxy)
+					mainGalaxyPresenter = new MainMenuGalaxyPresenter(payload.DefaultGalaxy)
 				};
 
 				// Additional presenters
 
-				new GamemodePortalPresenter(
+				payload.GamemodePortal = new GamemodePortalPresenter(
 					payload.Gamemodes.ToArray(),
 					new GamemodePortalLanguageBlock
 					{
@@ -103,7 +107,25 @@ namespace LunraGames.SubLight
 						InDevelopmentDescription = LanguageStringModel.Override("<b>Unavailable:</b> In development"),
 						LockedDescription = LanguageStringModel.Override("<b>Locked:</b> Requirements not met")
 					}
-				).Show();
+				);
+
+				// TODO: This could be more elegent...
+
+				payload.ToggleMainMenu = show =>
+				{
+					if (show)
+					{
+						mainLogoPresenter.Show();
+						mainOptionsPresenter.ShowQuick();
+						mainGalaxyPresenter.Show();
+					}
+					else
+					{
+						mainLogoPresenter.Close();
+						mainOptionsPresenter.Close();
+						mainGalaxyPresenter.Close();
+					}
+				};
 
 				done();
 			}

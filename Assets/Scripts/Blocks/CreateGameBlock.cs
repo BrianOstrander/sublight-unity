@@ -4,6 +4,8 @@
 	{
 		public int GameSeed;
 
+		public string GamemodeId;
+
 		public int GalaxySeed;
 		public string GalaxyId;
 		public string GalaxyTargetId;

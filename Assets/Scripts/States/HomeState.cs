@@ -34,7 +34,8 @@ namespace LunraGames.SubLight
 		public float MenuAnimationMultiplier;
 		public Dictionary<float, IPresenterCloseShowOptions[]> DelayedPresenterShows = new Dictionary<float, IPresenterCloseShowOptions[]>();
 
-		public GalaxyPreviewModel PreviewGalaxy;
+		public GalaxyPreviewModel DefaultGalaxy;
+		public GamemodeInfoModel DefaultGamemode;
 		public List<GamemodeInfoModel> Gamemodes = new List<GamemodeInfoModel>();
 
 		public Action<GameModel, bool, bool> StartGame;
@@ -42,6 +43,9 @@ namespace LunraGames.SubLight
 		public bool IgnoreMaskOnEnd;
 
 		public ChangelogPresenter Changelog;
+		public GamemodePortalPresenter GamemodePortal;
+
+		public Action<bool> ToggleMainMenu;
 	}
 
 	public partial class HomeState : State<HomePayload>
@@ -118,16 +122,17 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var milkyWay = result.Models.FirstOrDefault(m => m.Meta == "Milky Way");
+			if (string.IsNullOrEmpty(App.BuildPreferences.DefaultGalaxyId)) Debug.LogError("DefaultGalaxyId in BuildPreferences is null or empty, unpredictable behaviour may occur");
+			var defaultGalaxy = result.Models.FirstOrDefault(m => m.GetMetaKey(MetaKeyConstants.GalaxyInfo.GalaxyId) == App.BuildPreferences.DefaultGalaxyId);
 			
-			if (milkyWay == null)
+			if (defaultGalaxy == null)
 			{
-				Debug.LogError("No galaxies named \"Milky Way\" were listed");
+				Debug.LogError("No default galaxy with id \"" + App.BuildPreferences.DefaultGalaxyId + "\" was found");
 				done();
 				return;
 			}
 
-			App.M.Load<GalaxyPreviewModel>(milkyWay, loadResult => OnLoadInitializeLoadGalaxy(loadResult, done));
+			App.M.Load<GalaxyPreviewModel>(defaultGalaxy, loadResult => OnLoadInitializeLoadGalaxy(loadResult, done));
 		}
 
 		void OnLoadInitializeLoadGalaxy(SaveLoadRequest<GalaxyPreviewModel> result, Action done)
@@ -139,7 +144,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			Payload.PreviewGalaxy = result.TypedModel;
+			Payload.DefaultGalaxy = result.TypedModel;
 
 			done();
 		}
@@ -179,6 +184,11 @@ namespace LunraGames.SubLight
 
 			if (remaining.None())
 			{
+				if (string.IsNullOrEmpty(App.BuildPreferences.DefaultGamemodeId)) Debug.LogError("DefaultGamemodeId in BuildPreferences is null or empty, unpredictable behaviour may occur");
+				Payload.DefaultGamemode = Payload.Gamemodes.FirstOrDefault(g => g.GetMetaKey(MetaKeyConstants.GamemodeInfo.GamemodeId) == App.BuildPreferences.DefaultGamemodeId);
+
+				if (Payload.DefaultGamemode == null) Debug.LogError("No default gamemode with id \"" + App.BuildPreferences.DefaultGamemodeId + "\" was found");
+
 				done();
 				return;
 			}
@@ -191,9 +201,15 @@ namespace LunraGames.SubLight
 
 		void InitializeNewGameBlock(Action done)
 		{
-			if (Payload.PreviewGalaxy == null)
+			if (Payload.DefaultGamemode == null)
 			{
-				Debug.LogError("Unable to initialize the new game block without a preview galaxy");
+				Debug.LogError("Unable to initialize the new game block with a default gamemode");
+				done();
+				return;
+			}
+			if (Payload.DefaultGalaxy == null)
+			{
+				Debug.LogError("Unable to initialize the new game block without a default galaxy");
 				done();
 				return;
 			}
@@ -202,8 +218,10 @@ namespace LunraGames.SubLight
 			{
 				GameSeed = DemonUtility.NextInteger,
 
+				GamemodeId = Payload.DefaultGamemode.GamemodeId.Value,
+
 				GalaxySeed = DemonUtility.NextInteger,
-				GalaxyId = Payload.PreviewGalaxy.GalaxyId.Value,
+				GalaxyId = Payload.DefaultGalaxy.GalaxyId.Value
 				//GalaxyTargetId = TODO: Figure out how this should obtain this value...
 
 				// Any other values should only be set if specified by developer preferences...
@@ -217,6 +235,7 @@ namespace LunraGames.SubLight
 					case AutoGameOptions.OverrideGame:
 						Debug.LogWarning("Developer Auto Game or Override Specified");
 						DevPrefs.GameSeed.Set(ref gameBlock.GameSeed);
+						DevPrefs.GamemodeId.Set(ref gameBlock.GamemodeId);
 						DevPrefs.GalaxySeed.Set(ref gameBlock.GalaxySeed);
 						DevPrefs.GalaxyId.Set(ref gameBlock.GalaxyId);
 						DevPrefs.ToolbarSelection.Set(ref gameBlock.ToolbarSelection);

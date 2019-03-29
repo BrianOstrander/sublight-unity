@@ -33,6 +33,7 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsToggle<DevPrefsInt, int> GameSeed = new DevPrefsToggle<DevPrefsInt, int>(new DevPrefsInt(ProjectConstants.PrefsPrefix + "GameSeed"));
 		public static readonly DevPrefsToggle<DevPrefsInt, int> GalaxySeed = new DevPrefsToggle<DevPrefsInt, int>(new DevPrefsInt(ProjectConstants.PrefsPrefix + "GalaxySeed"));
 		public static readonly DevPrefsToggle<DevPrefsString, string> GalaxyId = new DevPrefsToggle<DevPrefsString, string>(new DevPrefsString(ProjectConstants.PrefsPrefix + "GalaxyId"));
+		public static readonly DevPrefsToggle<DevPrefsString, string> GamemodeId = new DevPrefsToggle<DevPrefsString, string>(new DevPrefsString(ProjectConstants.PrefsPrefix + "GamemodeId"));
 		public static readonly DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections> ToolbarSelection = new DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections>(new DevPrefsEnum<ToolbarSelections>(ProjectConstants.PrefsPrefix + "ToolbarSelection"));
 		#endregion
 	}

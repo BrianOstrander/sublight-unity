@@ -229,6 +229,7 @@ namespace LunraGames.SubLight
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GameSeed, p => p.Value = EditorGUILayout.IntField("Game Seed", p));
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxySeed, p => p.Value = EditorGUILayout.IntField("Galaxy Seed", p));
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxyId, p => p.Value = EditorGUILayout.TextField("Galaxy Id", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GamemodeId, p => p.Value = EditorGUILayout.TextField("Gamemode Id", p));
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.ToolbarSelection, p => p.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Toolbar Selection"), "- Select an Override -", DevPrefs.ToolbarSelection.Value));
 						break;
 					case AutoGameOptions.ContinueGame:

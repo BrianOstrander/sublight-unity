@@ -18,6 +18,8 @@ MonoBehaviour:
   BlogUrl: https://strangestar.games/blog/
   DiscordUrl: https://discord.gg/6FaGvnS
   TwitterUrl: https://twitter.com/spacew00t
+  DefaultGalaxyId: bed1e465-32ad-4eae-8135-d01eac75a089
+  DefaultGamemodeId: 407a9dbd-f75d-43d7-8705-b951b234b59b
   Analytics:
     IgnoreStateChange: 0
     IgnoreGameStart: 0
