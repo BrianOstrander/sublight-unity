@@ -63,7 +63,8 @@ namespace LunraGames.SubLight.Presenters
 		public void Show(
 			Action<GamemodeInfoModel> selection,
 			Action back,
-			bool instant = false
+			bool instant = false,
+			bool resetIndex = true
 		)
 		{
 			if (selection == null) throw new ArgumentNullException("selection");
@@ -74,7 +75,7 @@ namespace LunraGames.SubLight.Presenters
 			if (selectionIndexFirstPlayable.HasValue)
 			{
 				selectionIndex = Mathf.Clamp(selectionIndex, 0, gamemodes.Length - 1);
-				if (gamemodes[selectionIndex].IsInDevelopment.Value) selectionIndex = selectionIndexFirstPlayable.Value;
+				if (resetIndex && gamemodes[selectionIndex].IsInDevelopment.Value) selectionIndex = selectionIndexFirstPlayable.Value;
 			}
 
 			this.selection = selection;
@@ -183,7 +184,7 @@ namespace LunraGames.SubLight.Presenters
 						language.UnavailableInDevelopment.Message,
 						DialogStyles.Error,
 						language.UnavailableInDevelopment.Title,
-						() => Show(selection, back)
+						() => Show(selection, back, resetIndex: false)
 					)
 				);
 			}

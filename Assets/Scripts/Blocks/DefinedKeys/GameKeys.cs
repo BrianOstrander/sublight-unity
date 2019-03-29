@@ -82,6 +82,9 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Strings
+		public readonly String GamemodeId;
+		public readonly String GamemodeKey;
+
 		public readonly String NavigationSelection;
 		public readonly String NavigationSelectionName;
 		public readonly String NavigationHighlight;
@@ -225,6 +228,16 @@ namespace LunraGames.SubLight
 
 			Strings = new String[]
 			{
+				Create(
+					ref GamemodeId,
+					"gamemode_id",
+					"The id of the active gamemode."
+				),
+				Create(
+					ref GamemodeKey,
+					"gamemode_key",
+					"The key of the active gamemode."
+				),
 				Create(
 					ref NavigationSelection,
 					"navigation_selection",

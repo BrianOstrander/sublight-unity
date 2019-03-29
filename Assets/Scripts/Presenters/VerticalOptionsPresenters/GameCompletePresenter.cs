@@ -282,6 +282,13 @@ namespace LunraGames.SubLight.Presenters
 					var homePayload = new HomePayload();
 					homePayload.MainCamera = payload.MainCamera;
 					homePayload.AutoRetryNewGame = autoNewgame;
+					homePayload.AutoRetryNewGameBlock = new CreateGameBlock
+					{
+						GamemodeId = model.GamemodeId,
+
+						GalaxyId = model.GalaxyId,
+						GalaxyTargetId = model.GalaxyTargetId
+					};
 					App.SM.RequestState(homePayload);
 				},
 				description

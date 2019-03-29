@@ -26,6 +26,7 @@ namespace LunraGames.SubLight
 		/// Did a game request us to automatically restart?
 		/// </summary>
 		public bool AutoRetryNewGame;
+		public CreateGameBlock AutoRetryNewGameBlock;
 
 		public bool CanContinueSave { get { return ContinueSave != null; } }
 		public GameModel ContinueSave;
@@ -241,6 +242,13 @@ namespace LunraGames.SubLight
 						DevPrefs.ToolbarSelection.Set(ref gameBlock.ToolbarSelection);
 						break;
 				}
+			}
+			else if (Payload.AutoRetryNewGame)
+			{
+				gameBlock.GamemodeId = Payload.AutoRetryNewGameBlock.GamemodeId;
+
+				gameBlock.GalaxyId = Payload.AutoRetryNewGameBlock.GalaxyId;
+				gameBlock.GalaxyTargetId = Payload.AutoRetryNewGameBlock.GalaxyTargetId;
 			}
 
 			Payload.NewGameBlock = gameBlock;
