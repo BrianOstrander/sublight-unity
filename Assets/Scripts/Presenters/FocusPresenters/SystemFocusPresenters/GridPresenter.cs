@@ -312,16 +312,26 @@ namespace LunraGames.SubLight.Presenters
 			grid.RangeRadius = scaleTransform.GetUnityScale(model.KeyValues.Get(KeyDefines.Game.TransitRange));
 
 			CelestialSystemStateBlock? targetBlock = null;
-			switch (model.Context.CelestialSystemStateLastSelected.Value.State)
+			var transitRangeNormal = 0f;
+			switch (model.Context.TransitState.Value.State)
 			{
-				case CelestialSystemStateBlock.States.Selected:
-					targetBlock = model.Context.CelestialSystemStateLastSelected.Value;
+				case TransitState.States.Complete:
+					switch (model.Context.CelestialSystemStateLastSelected.Value.State)
+					{
+						case CelestialSystemStateBlock.States.Selected:
+							targetBlock = model.Context.CelestialSystemStateLastSelected.Value;
+							break;
+					}
 					break;
 				default:
-					switch (model.Context.CelestialSystemState.Value.State)
+					targetBlock = model.Context.CelestialSystemStateLastSelected.Value;
+					var transitStep = model.Context.TransitState.Value.CurrentStep;
+					switch (transitStep.Step)
 					{
-						case CelestialSystemStateBlock.States.Highlighted:
-							targetBlock = model.Context.CelestialSystemState.Value;
+						case TransitState.Steps.Prepare: transitRangeNormal = 0f; break;
+						case TransitState.Steps.Finalize: transitRangeNormal = 1f; break;
+						case TransitState.Steps.Transit:
+							transitRangeNormal = transitStep.Progress;
 							break;
 					}
 					break;
@@ -332,6 +342,8 @@ namespace LunraGames.SubLight.Presenters
 				grid.TargetRangeVisible = true;
 				grid.TargetRangeOrigin = scaleTransform.GetUnityPosition(targetBlock.Value.Position);
 				grid.TargetRangeRadius = scaleTransform.GetUnityScale(model.Context.TransitKeyValues.Value.Get(KeyDefines.Game.TransitRange));
+
+				grid.RangeRadius = grid.RangeRadius + ((grid.TargetRangeRadius - grid.RangeRadius) * transitRangeNormal);
 			}
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
@@ -719,7 +731,6 @@ namespace LunraGames.SubLight.Presenters
 					break;
 				case TransitState.States.Complete:
 					model.Context.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Animation);
-					SetGrid();
 					break;
 			}
 		}

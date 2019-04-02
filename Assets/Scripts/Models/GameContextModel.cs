@@ -249,13 +249,10 @@ namespace LunraGames.SubLight.Models
 		{
 			celestialSystemStateListener.Value = block;
 
-			var calculateTransit = false;
-
 			switch (block.State)
 			{
 				case CelestialSystemStateBlock.States.UnSelected:
 				case CelestialSystemStateBlock.States.Selected:
-					calculateTransit = true;
 					CelestialSystemStateLastSelected.Value = block;
 					model.KeyValues.Set(
 						KeyDefines.Game.NavigationSelectionName,
@@ -268,7 +265,7 @@ namespace LunraGames.SubLight.Models
 					break;
 			}
 
-			if (calculateTransit)
+			if (block.State == CelestialSystemStateBlock.States.Selected)
 			{
 				var gameKeyValues = model.KeyValues.Duplicate;
 				var distance = UniversePosition.Distance(CurrentSystem.Value.Position.Value, block.Position);
