@@ -23,6 +23,10 @@ namespace LunraGames.SubLight.Views
 			public Vector2 Offset;
 			public Vector3 RangeOrigin;
 			public float RangeRadius;
+
+			public bool TargetRangeVisible;
+			public Vector3 TargetRangeOrigin;
+			public float TargetRangeRadius;
 		}
 
 		[Serializable]
@@ -34,6 +38,9 @@ namespace LunraGames.SubLight.Views
 			public Color Secondary;
 			public Color Tertiary;
 
+			public Color TargetPrimary;
+			public float TargetProgress;
+
 			public GridColors Lerp(GridColors other, float normal)
 			{
 				return new GridColors
@@ -43,6 +50,8 @@ namespace LunraGames.SubLight.Views
 					Primary = Color.Lerp(Primary, other.Primary, normal),
 					Secondary = Color.Lerp(Secondary, other.Secondary, normal),
 					Tertiary = Color.Lerp(Tertiary, other.Tertiary, normal),
+					TargetPrimary = Color.Lerp(TargetPrimary, other.TargetPrimary, normal),
+					TargetProgress = Mathf.Lerp(TargetProgress, other.TargetProgress, normal)
 				};
 			}
 		}
@@ -135,6 +144,7 @@ namespace LunraGames.SubLight.Views
 		public Vector3 GridUnityOrigin { get { return gridMesh.transform.position; } }
 		public float GridUnityRadius { get { return gridUnityRadius; } }
 		public Action<bool> Dragging { set; private get; }
+		public Action Click { set; private get; }
 		public bool Highlighted { get; private set; }
 
 		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
@@ -197,6 +207,13 @@ namespace LunraGames.SubLight.Views
 					background.renderQueue = renderQueue;
 					background.SetVector(ShaderConstants.HoloGridBackgroundRange.RangeOrigin, block.RangeOrigin);
 					background.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeRadius, block.RangeRadius);
+
+					if (block.TargetRangeVisible)
+					{
+						background.SetVector(ShaderConstants.HoloGridBackgroundRange.TargetRangeOrigin, block.TargetRangeOrigin);
+						background.SetFloat(ShaderConstants.HoloGridBackgroundRange.TargetRangeRadius, block.TargetRangeRadius);
+					}
+
 					OnSetGridSelection(background, gridBackgroundColorsLast);
 
 					hazard.renderQueue = renderQueue + 1;
@@ -299,6 +316,9 @@ namespace LunraGames.SubLight.Views
 			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorPrimary, colors.Primary);
 			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorSecondary, colors.Secondary);
 			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorTertiary, colors.Tertiary);
+
+			material.SetColor(ShaderConstants.HoloGridBackgroundRange.TargetRangeColorPrimary, colors.TargetPrimary);
+			material.SetFloat(ShaderConstants.HoloGridBackgroundRange.TargetRangeProgress, colors.TargetProgress);
 		}
 
 		public override void Reset()
@@ -307,6 +327,7 @@ namespace LunraGames.SubLight.Views
 
 			Grids = null;
 			Dragging = ActionExtensions.GetEmpty<bool>();
+			Click = ActionExtensions.Empty;
 			Highlighted = false;
 			SetRadius(0f, true);
 
@@ -396,6 +417,11 @@ namespace LunraGames.SubLight.Views
 		{
 			Dragging(false);
 		}
+
+		public void OnClick()
+		{
+			Click();
+		}
 		#endregion
 
 		void OnDrawGizmosSelected()
@@ -430,6 +456,7 @@ namespace LunraGames.SubLight.Views
 		float GridUnityRadius { get; }
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
+		Action Click { set; }
 		GridView.Grid[] Grids { set; }
 		AnimationCurve HideScaleAlpha { get; }
 		AnimationCurve RevealScaleAlpha { get; }

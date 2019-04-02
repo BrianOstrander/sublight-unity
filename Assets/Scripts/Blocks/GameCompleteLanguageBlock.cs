@@ -12,7 +12,8 @@ namespace LunraGames.SubLight
 		public LanguageStringModel SuccessHeader;
 		public LanguageStringModel SuccessBody;
 
-		public LanguageStringModel Retry;
+		public LanguageStringModel RetryFailure;
+		public LanguageStringModel RetrySuccess;
 		public LanguageStringModel MainMenu;
 
 		public LanguageStringModel RetryTitle;

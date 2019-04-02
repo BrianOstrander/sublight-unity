@@ -1,0 +1,218 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "849c6f37-9380-4d0d-9657-9bb0136f0db3",
+  "name": "Transit Limited - Out of Range",
+  "trigger": "NavigationSelectOutOfRange",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [
+      {
+        "operation": "LessThan",
+        "filterId": "453b936b-94be-4262-8a0e-ad7f6e0a755a",
+        "group": "All",
+        "Input0": {
+          "AddressId": "a871234c-dd4e-4e5d-bd53-c0fc6f6ea0f9",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_range_ratio"
+        },
+        "Input1": {
+          "AddressId": "af3e8269-dc81-44c5-8cfa-f79f2df69291",
+          "Source": "LocalValue",
+          "LocalValue": 1.0
+        }
+      }
+    ],
+    "enumerationKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "55c62752-a059-431f-adc7-ee7cc41e4dd2",
+        "name": "keep going"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "GameComplete",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "condition": 20,
+                  "icon_override": 1040
+                },
+                "strings": {
+                  "title": "Population Starved",
+                  "header": "There simply wasn't enough rations to go around...",
+                  "body": ""
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "f4c33a63-151a-45b3-9e95-9843863bf34d"
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "7b9dc27a-e4d8-440a-bf0d-38700d18da60",
+        "name": "give up - rations"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "GameComplete",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "condition": 20,
+                  "icon_override": 1030
+                },
+                "strings": {
+                  "title": "Out of Propellant",
+                  "header": "Without propellant for our ark, we're done for...",
+                  "body": null
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "c4981fbb-6a62-48b6-9e07-2f05e75c46cf"
+            }
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "f710ba38-43dc-4ecf-9997-a83e549899f9",
+        "name": "give up - propellant"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "System Out of Range",
+              "message": "Without additional <b>rations</b>, this system is out of range. If no systems are in range, you'll need to end our voyage.",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Error",
+              "successLogId": "55c62752-a059-431f-adc7-ee7cc41e4dd2",
+              "failureLogId": "7b9dc27a-e4d8-440a-bf0d-38700d18da60",
+              "successText": "Keep Going",
+              "failureText": "Give Up",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThan",
+                    "filterId": "af14b22d-7e76-4d58-9437-32c5ec05b0e2",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "03d412ac-0aa4-4a40-bcce-073899b706ad",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "rations_fulfillment"
+                    },
+                    "Input1": {
+                      "AddressId": "4df9f3be-8086-4960-a544-c72d5e7e9f71",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "propellant_fulfillment"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a19c7b3b-d202-4b2c-9504-346408ea7581"
+            }
+          },
+          {
+            "entry": {
+              "title": "System Out of Range",
+              "message": "Without additional <b>propellant</b>, this system is out of range. If no systems are in range, you'll need to end our voyage.",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Error",
+              "successLogId": "55c62752-a059-431f-adc7-ee7cc41e4dd2",
+              "failureLogId": "f710ba38-43dc-4ecf-9997-a83e549899f9",
+              "successText": "Keep Going",
+              "failureText": "Give Up",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThan",
+                    "filterId": "1887bdb2-0d96-49c0-8e8f-119813cd7933",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "4e3b5eb5-6a7b-4c64-a6c0-6cb60112a98a",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "propellant_fulfillment"
+                    },
+                    "Input1": {
+                      "AddressId": "308dd65f-71a8-4a03-96d3-7dd9948bd42b",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "rations_fulfillment"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "10f13ada-df30-4fb8-a206-ae7ce4bf6539"
+            },
+            "index": 1
+          }
+        ],
+        "beginning": true,
+        "logId": "6d113c2f-ddcb-4690-addb-7d1ef37139a5"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 9,
+  "meta": "Transit Limited - Out of Range",
+  "metaKeyValues": {
+    "EncounterId": "849c6f37-9380-4d0d-9657-9bb0136f0db3"
+  },
+  "created": "2019-04-02T11:42:48.258075-07:00",
+  "modified": "2019-04-02T11:42:48.258075-07:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

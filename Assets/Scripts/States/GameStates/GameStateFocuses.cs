@@ -89,7 +89,15 @@ namespace LunraGames.SubLight
 						SavingComplete = LanguageStringModel.Override("Success!"),
 						SavingError = saveErrorLanguage,
 						ReturningToMainMenu = returningToMainMenuLanguage,
-						Quiting = LanguageStringModel.Override("Quitting...")
+						Quiting = LanguageStringModel.Override("Quitting..."),
+
+						TryAgain = LanguageStringModel.Override("Restart"),
+						TryAgainConfirm = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Restart Game"),
+							Message = LanguageStringModel.Override("Are you sure you want start a new game?")
+						},
+						TryAgainStarted = LanguageStringModel.Override("Starting a New Game...")
 					},
 					PreferencesPresenter.CreateDefault(
 						() =>
@@ -114,7 +122,8 @@ namespace LunraGames.SubLight
 						SuccessHeader = LanguageStringModel.Override("Finally, the long voyage is over..."),
 						SuccessBody = LanguageStringModel.Override(string.Empty),
 
-						Retry = LanguageStringModel.Override("Try Again"),
+						RetryFailure = LanguageStringModel.Override("Try Again"),
+						RetrySuccess = LanguageStringModel.Override("Try Again"),
 						MainMenu = mainMenuLanguage,
 
 						RetryTitle = LanguageStringModel.Override("Starting New Game..."),
@@ -194,15 +203,15 @@ namespace LunraGames.SubLight
 					gridTimeTransitLanguage
 				);
 
-				new GridVelocityPresenter(
-					payload.Game,
-					new GridVelocityLanguageBlock
-					{
-						Velocity = LanguageStringModel.Override("Velocity"),
-						Resource = LanguageStringModel.Override("Propellant"),
-						ResourceWarning = LanguageStringModel.Override("Insufficient Propellant")
-					}
-				);
+				//new GridVelocityPresenter(
+				//	payload.Game,
+				//	new GridVelocityLanguageBlock
+				//	{
+				//		Velocity = LanguageStringModel.Override("Velocity"),
+				//		Resource = LanguageStringModel.Override("Propellant"),
+				//		ResourceWarning = LanguageStringModel.Override("Insufficient Propellant")
+				//	}
+				//);
 
 				new TransitPresenter(
 					payload.Game,
