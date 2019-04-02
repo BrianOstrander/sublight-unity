@@ -28,6 +28,7 @@
         }
       }
     ],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -59,6 +60,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "a737ee6b-672b-40b5-a7ca-47980c77ac5c"
@@ -74,6 +76,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
+  "ignore": true,
   "version": 9,
   "meta": "Failure: No Propellent",
   "metaKeyValues": {

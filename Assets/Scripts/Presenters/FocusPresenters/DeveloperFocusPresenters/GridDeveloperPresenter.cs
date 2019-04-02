@@ -8,6 +8,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight.Presenters
 {
+	/*
 	public class GridDeveloperPresenter : DeveloperFocusPresenter<ISystemScratchView, SystemFocusDetails>
 	{
 		static class LinkIds
@@ -68,12 +69,11 @@ namespace LunraGames.SubLight.Presenters
 			OnRefreshMessage(true);
 		}
 
-		/* Better to hide this until I actually need it.
-		string GetLink(string linkId, Dictionary<string, Action> target, Action callback)
-		{
-			return GetLink(linkId, linkId, target, callback);
-		}
-		*/
+		// Better to hide this until I actually need it.
+		//string GetLink(string linkId, Dictionary<string, Action> target, Action callback)
+		//{
+		//	return GetLink(linkId, linkId, target, callback);
+		//}
 
 		string GetLink(string linkId, string message, Dictionary<string, Action> target, Action callback)
 		{
@@ -592,4 +592,5 @@ namespace LunraGames.SubLight.Presenters
 		}
 		#endregion
 	}
+	*/
 }

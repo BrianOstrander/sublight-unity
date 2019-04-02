@@ -27,6 +27,7 @@
     ],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -59,6 +60,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "567c343a-2fe5-43a1-a2bb-ad8e516e6296"
@@ -75,6 +77,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
+  "ignore": true,
   "version": 9,
   "meta": "Failure: Population Starved",
   "metaKeyValues": {

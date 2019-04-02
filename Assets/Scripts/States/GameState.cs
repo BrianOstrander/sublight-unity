@@ -597,6 +597,7 @@ namespace LunraGames.SubLight
 				Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears
 			);
 
+			/*
 			Payload.Game.KeyValues.Set(
 				KeyDefines.Game.TransitsWithoutRationsUntilFailure,
 				Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRationsMaximum) - Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRations)
@@ -621,6 +622,7 @@ namespace LunraGames.SubLight
 				propellantUsage: Payload.Game.KeyValues.Get(KeyDefines.Game.PropellantUsage),
 				propellantUsageLimit: Mathf.FloorToInt(Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant.Amount))
 			);
+			*/
 		}
 
 		void OnCheckForEncounters()
@@ -1007,12 +1009,12 @@ namespace LunraGames.SubLight
 			switch (target)
 			{
 				case KeyValueTargets.Game:
-					if (key == KeyDefines.Game.PropellantUsage.Key)
-					{
-						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
-							propellantUsage: Mathf.Min(value, Payload.Game.Ship.Velocity.Value.PropellantUsageLimit)
-						);
-					}
+					//if (key == KeyDefines.Game.PropellantUsage.Key)
+					//{
+					//	Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+					//		propellantUsage: Mathf.Min(value, Payload.Game.Ship.Velocity.Value.PropellantUsageLimit)
+					//	);
+					//}
 					break;
 			}
 		}
@@ -1066,16 +1068,16 @@ namespace LunraGames.SubLight
 			switch (target)
 			{
 				case KeyValueTargets.Game:
-					if (key == KeyDefines.Game.TransitRangeMinimum.Key) Payload.Game.Ship.SetRangeMinimum(value);
-					else if (key == KeyDefines.Game.TransitVelocityMinimum.Key)
-					{
-						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
-							profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
-								velocityMinimumLightYears: value
-							)
-						);
-					}
-					else if (key == KeyDefines.Game.Propellant.Amount.Key)
+					//if (key == KeyDefines.Game.TransitRangeMinimum.Key) Payload.Game.Ship.SetRangeMinimum(value);
+					//else if (key == KeyDefines.Game.TransitVelocityMinimum.Key)
+					//{
+					//	Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
+					//		profile: Payload.Game.Ship.Velocity.Value.Profile.Duplicate(
+					//			velocityMinimumLightYears: value
+					//		)
+					//	);
+					//}
+					if (key == KeyDefines.Game.Propellant.Amount.Key)
 					{
 						Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
 							propellantUsage: Mathf.Min(Payload.Game.Ship.Velocity.Value.PropellantUsage, Mathf.FloorToInt(value)),

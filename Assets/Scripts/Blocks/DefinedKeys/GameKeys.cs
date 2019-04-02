@@ -59,24 +59,6 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Integers
-		public readonly Integer Rationing;
-		public readonly Integer RationingMinimum;
-		public readonly Integer RationingMaximum;
-
-		public readonly Integer PropellantUsage;
-
-		public readonly Integer TransitsWithoutRations;
-		public readonly Integer TransitsWithoutRationsMaximum;
-		public readonly Integer TransitsWithoutRationsUntilFailure;
-
-		public readonly Integer TransitsWithOverPopulation;
-		public readonly Integer TransitsWithOverPopulationMaximum;
-		public readonly Integer TransitsWithOverPopulationUntilFailure;
-
-		public readonly Integer TransitsWithUnderPopulation;
-		public readonly Integer TransitsWithUnderPopulationMaximum;
-		public readonly Integer TransitsWithUnderPopulationUntilFailure;
-
 		public readonly Integer SurfaceProbeCount;
 		public readonly Integer SurfaceProbeScanLevel;
 		#endregion
@@ -104,18 +86,20 @@ namespace LunraGames.SubLight
 		public readonly Float PreviousTransitYearsElapsedShip;
 
 		public readonly Float Population;
-		public readonly Float PopulationMinimum;
-		public readonly Float PopulationMaximumMultiplier;
-		public readonly Float PopulationMaximum;
-		public readonly Float PopulationRationingMultiplier;
 
 		public readonly Float ShipPopulationMinimum;
 		public readonly Float ShipPopulationMaximum;
 
 		public readonly Float RationsConsumptionMultiplier;
+		public readonly Float PropellantConsumptionMultiplier;
 
-		public readonly Float TransitRangeMinimum;
-		public readonly Float TransitVelocityMinimum;
+		public readonly Float TransitRangeMaximum;
+		public readonly Float TransitRange;
+
+		public readonly Float TransitVelocity;
+
+		public readonly Float PropellantFulfillment;
+		public readonly Float RationsFulfillment;
 		#endregion
 
 		#region Resources
@@ -137,81 +121,6 @@ namespace LunraGames.SubLight
 
 			Integers = new Integer[]
 			{
-				Create(
-					ref Rationing,
-					"rationing",
-					"How severe the rationing is, zero is sufficient, less than zero is insufficient, and more than zero is plentiful.",
-					true
-				),
-				Create(
-					ref RationingMinimum,
-					"rationing_minimum",
-					"The minimum possible amount rationing can be set to, should be less than zero.",
-					true
-				),
-				Create(
-					ref RationingMaximum,
-					"rationing_maximum",
-					"The maximum possible amount rationing can be set to, should be greater than zero.",
-					true
-				),
-				Create(
-					ref PropellantUsage,
-					"propellant_usage",
-					"The current propellant multiplier used for transits.",
-					true
-				),
-				Create(
-					ref TransitsWithoutRations,
-					"transits_without_rations",
-					"How many transits without even the meagerest of rations. Resets upon a transit with at least meager rations.",
-					true
-				),
-				Create(
-					ref TransitsWithoutRationsMaximum,
-					"transits_without_rations_maximum",
-					"The maximum number of transits without rations before failure.",
-					true
-				),
-				Create(
-					ref TransitsWithoutRationsUntilFailure,
-					"transits_without_rations_until_failure",
-					"How many more transits without rations can the ship survive."
-				),
-				Create(
-					ref TransitsWithOverPopulation,
-					"transits_with_over_population",
-					"How many transits with too many people onboard. Resets to zero once there is enough space for everyone.",
-					true
-				),
-				Create(
-					ref TransitsWithOverPopulationMaximum,
-					"transits_with_over_population_maximum",
-					"The maximum number of transits with overpopulation before failure.",
-					true
-				),
-				Create(
-					ref TransitsWithOverPopulationUntilFailure,
-					"transits_with_over_population_until_failure",
-					"How many more transits with overpopulation can the ship survive."
-				),
-				Create(
-					ref TransitsWithUnderPopulation,
-					"transits_with_under_population",
-					"How many transits with less population than the minimum. Rests to zero once there the minimum number of people is reached.",
-					true
-				),
-				Create(
-					ref TransitsWithUnderPopulationMaximum,
-					"transits_with_under_population_maximum",
-					"The maximum number of transits with underpopulation before failure.",
-					true
-				),
-				Create(
-					ref TransitsWithUnderPopulationUntilFailure,
-					"transits_with_under_population_until_failure",
-					"How many more transits with underpopulation can the ship survive."
-				),
 				Create(
 					ref SurfaceProbeCount,
 					"surface_probe_count",
@@ -305,29 +214,6 @@ namespace LunraGames.SubLight
 					"The number of years elapsed during the last transit, from the ship reference point."
 				),
 				Create(
-					ref PopulationMinimum,
-					"population_minimum",
-					"The minimum population allowed in the game.",
-					true
-				),
-				Create(
-					ref PopulationMaximumMultiplier,
-					"population_maximum_multiplier",
-					"The multiplier used to find the maximum population allowed in the game, multiplied with the ship's maximum population.",
-					true
-				),
-				Create(
-					ref PopulationMaximum,
-					"population_maximum",
-					"The current population maximum allowed in game, using the ship's maximum and the population maximum multiplier."
-				),
-				Create(
-					ref PopulationRationingMultiplier,
-					"population_rationing_multiplier",
-					"The change in population by rationing level, when rations are insufficient or plentiful.",
-					true
-				),
-				Create(
 					ref ShipPopulationMinimum,
 					"ship_population_minimum",
 					"The minimum population required to operate the ship, below this and underpopulation will be a problem.",
@@ -352,16 +238,37 @@ namespace LunraGames.SubLight
 					true
 				),
 				Create(
-					ref TransitRangeMinimum,
-					"transit_range_minimum",
-					"The minimum range of this ship in universe units.",
+					ref PropellantConsumptionMultiplier,
+					KeyDefines.Resources.Propellant + "_consumption_multiplier",
+					"The amount of " + KeyDefines.Resources.Propellant + " consumed during a transit.",
 					true
 				),
 				Create(
-					ref TransitVelocityMinimum,
-					"transit_velocity_minimum",
-					"The minimum velocity, as a fraction of light speed, that the ship can travel. Only values between zero and one are valid.",
+					ref TransitRangeMaximum,
+					"transit_range_maximum",
+					"The maximum range of this ship in universe units.",
 					true
+				),
+				Create(
+					ref TransitRange,
+					"transit_range",
+					"The current range of this ship in universe units."
+				),
+				Create(
+					ref TransitVelocity,
+					"transit_velocity",
+					"The ship's velocity, as a fraction of light speed, that the ship can travel. Only values between zero and one are valid.",
+					true
+				),
+				Create(
+					ref PropellantFulfillment,
+					"propellant_fulfillment",
+					"The current fraction of propellant available to reach the maximum transit range. Greater than 1.0 is good."
+				),
+				Create(
+					ref RationsFulfillment,
+					"rations_fulfillment",
+					"The current fraction of rations available to reach the maximum transit range. Greater than 1.0 is good."
 				)
 			};
 

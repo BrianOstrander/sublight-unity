@@ -135,7 +135,7 @@ namespace LunraGames.SubLight
 			{
 				var payload = state.Payload;
 
-				new GridDeveloperPresenter(payload.Game);
+				//new GridDeveloperPresenter(payload.Game);
 
 				InitializeSystemPresenters(state, done);
 			}
@@ -194,15 +194,15 @@ namespace LunraGames.SubLight
 					gridTimeTransitLanguage
 				);
 
-				new GridVelocityPresenter(
-					payload.Game,
-					new GridVelocityLanguageBlock
-					{
-						Velocity = LanguageStringModel.Override("Velocity"),
-						Resource = LanguageStringModel.Override("Propellant"),
-						ResourceWarning = LanguageStringModel.Override("Insufficient Propellant")
-					}
-				);
+				//new GridVelocityPresenter(
+				//	payload.Game,
+				//	new GridVelocityLanguageBlock
+				//	{
+				//		Velocity = LanguageStringModel.Override("Velocity"),
+				//		Resource = LanguageStringModel.Override("Propellant"),
+				//		ResourceWarning = LanguageStringModel.Override("Insufficient Propellant")
+				//	}
+				//);
 
 				new TransitPresenter(
 					payload.Game,

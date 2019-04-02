@@ -66,51 +66,6 @@ namespace LunraGames.SubLight
 			resourcesTotal = resourcesFromSystem + gameSource.Get(shipResource.Amount);
 		}
 
-		public static bool RationsValidation(
-			float duration,
-			KeyValueListModel gameSource,
-			KeyValueListModel systemSource,
-			out int rationingMinimum,
-			out int rationingMaximum,
-			out int rationingLimit,
-			out bool rationsInsufficientForLimit
-		)
-		{
-			if (gameSource == null) throw new ArgumentNullException("gameSource");
-			if (systemSource == null) throw new ArgumentNullException("systemSource");
-
-			rationingMinimum = gameSource.Get(KeyDefines.Game.RationingMinimum);
-			rationingMaximum = gameSource.Get(KeyDefines.Game.RationingMaximum);
-			rationingLimit = rationingMinimum;
-			rationsInsufficientForLimit = true;
-
-			var rationingDelta = (rationingMaximum - rationingMinimum) + 1;
-
-			// TODO: Maybe put these somewhere... in like a constant or something?
-			if (rationingDelta < 3 || 17 < rationingDelta) return false;
-
-			float rationsTotal;
-			ResourcesAvailable(
-				gameSource,
-				systemSource,
-				KeyDefines.Game.Rations,
-				KeyDefines.CelestialSystem.Rations,
-				out rationsTotal
-			);
-
-			var population = gameSource.Get(KeyDefines.Game.Population);
-			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
-
-			for (var i = rationingMinimum; i <= rationingMaximum; i++)
-			{
-				if (rationsTotal < RationsConsumed(duration, population, rationsConsumptionMultiplier, i)) break;
-				rationingLimit = i;
-				rationsInsufficientForLimit = false;
-			}
-
-			return true;
-		}
-
 		public static void ApplyTransit(
 			float duration,
 			KeyValueListModel gameSource,
@@ -120,6 +75,7 @@ namespace LunraGames.SubLight
 			if (gameSource == null) throw new ArgumentNullException("gameSource");
 			if (systemSource == null) throw new ArgumentNullException("systemSource");
 
+			/*
 			// -- To Update
 
 			//float? rations = null;
@@ -320,6 +276,7 @@ namespace LunraGames.SubLight
 					metallicsRemainingInSystem
 				);
 			}
+			*/
 		}
 	}
 }
