@@ -42,7 +42,7 @@ MonoBehaviour:
     Entries:
     - Index: 0
       Change: 10
-      Description: Playable build for Windows and macOS
+      Description: Playable build for Windows and MacOS.
   - Title: Proxima Centauri
     Description: Incorporating feedback from the first alpha of <b>SubLight</b>, this
       one includes plenty of bugfixes, improvements, and a few new features.
@@ -56,37 +56,68 @@ MonoBehaviour:
     - Index: 0
       Change: 10
       Description: Scanning for habitable planets added, this is the start of a sandbox
-        mode
+        mode.
     - Index: 1
       Change: 10
-      Description: "A trail now shows where you\u2019ve been"
+      Description: "A trail now shows where you\u2019ve been."
     - Index: 2
       Change: 10
-      Description: Support for showing changelogs when opening a new version
+      Description: Support for showing changelogs when opening a new version.
     - Index: 3
       Change: 10
-      Description: Added in a new resource, <b>Metallics</b>, for future updates
+      Description: Added in a new resource, <b>Metallics</b>, for future updates.
     - Index: 4
       Change: 20
-      Description: New introduction to the game
+      Description: New introduction to the game.
     - Index: 5
       Change: 20
-      Description: Time delay between the appearance of conversation entries
+      Description: Time delay between the appearance of conversation entries.
     - Index: 6
       Change: 20
-      Description: Velocity can now be set in a temporary menu
+      Description: Velocity can now be set in a temporary menu.
     - Index: 7
       Change: 20
-      Description: Options for increasing the scale of interfaces added to <b>Preferences</b>
+      Description: Options for increasing the scale of interfaces added to <b>Preferences</b>.
     - Index: 8
       Change: 30
-      Description: Minor bug-fixes
+      Description: Minor bug-fixes.
   - Title: Barnard's Star
-    Description: 
+    Description: This version of <b>SubLight</b> experiments with a new method of
+      interstellar travel, in addition to bugfixes, improvements, and new features.
     ReleaseType: Feature
     Cyle: Alpha
     Version: 9
     Year: 2019
     Month: 4
     Day: 2
-    Entries: []
+    Entries:
+    - Index: 10
+      Change: 10
+      Description: Resources and propellant now determine the distance an ark can
+        travel.
+    - Index: 20
+      Change: 10
+      Description: A gamemode selector, with the ability to see ones in development.
+    - Index: 30
+      Change: 20
+      Description: Option to restart game from pause menu.
+    - Index: 40
+      Change: 20
+      Description: Option to restart game from success screen.
+    - Index: 50
+      Change: 30
+      Description: Unused toolbars are now hidden.
+    - Index: 60
+      Change: 30
+      Description: Player's ark now starts at Alpha Centauri.
+    - Index: 70
+      Change: 30
+      Description: The target waypoint from <b>The Void</b> gamemode no longer appears
+        in <b>A New Home</b>.
+    - Index: 80
+      Change: 30
+      Description: Red Dwarfs will no longer be some of the largest objects in the
+        galaxy.
+    - Index: 15
+      Change: 10
+      Description: Distribution of resources varies by system classification.
