@@ -61,6 +61,7 @@ namespace LunraGames.SubLight
 			if (!systemSource.Get(systemResource.Discovered))
 			{
 				resourcesFromSystem = systemSource.Get(systemResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMaximum);
+				resourcesFromSystem *= gameSource.Get(KeyDefines.Game.ResourceAbundance);
 			}
 
 			resourcesTotal = resourcesFromSystem + gameSource.Get(shipResource.Amount);
@@ -140,7 +141,7 @@ namespace LunraGames.SubLight
 
 			gameSource.Set(
 				KeyDefines.Game.Propellant.Amount,
-				Mathf.Floor(propellant)
+				propellant
 			);
 
 			if (!systemSource.Get(KeyDefines.CelestialSystem.Propellant.Discovered))
@@ -153,6 +154,39 @@ namespace LunraGames.SubLight
 				systemSource.Set(
 					KeyDefines.CelestialSystem.Propellant.GatheredAmount,
 					propellantRemainingInSystem
+				);
+			}
+
+			float metallicsTotal;
+			float metallicsFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				KeyDefines.Game.Metallics,
+				KeyDefines.CelestialSystem.Metallics,
+				out metallicsTotal,
+				out metallicsFromSystem
+			);
+
+			var metallicsMaximum = gameSource.Get(KeyDefines.Game.Metallics.Maximum);
+			var metallics = Mathf.Min(metallicsMaximum, metallicsTotal);
+			var metallicsRemainingInSystem = Mathf.Min(Mathf.Max(0f, metallicsTotal - metallics), metallicsFromSystem);
+
+			gameSource.Set(
+				KeyDefines.Game.Metallics.Amount,
+				metallics
+			);
+
+			if (!systemSource.Get(KeyDefines.CelestialSystem.Metallics.Discovered))
+			{
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Metallics.Discovered,
+					true
+				);
+
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Metallics.GatheredAmount,
+					metallicsRemainingInSystem
 				);
 			}
 
@@ -390,6 +424,11 @@ namespace LunraGames.SubLight
 			gameSource.Set(
 				KeyDefines.Game.TransitRange,
 				transitRange
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.TransitRangeRatio,
+				transitRange / transitRangeMaximum
 			);
 
 			gameSource.Set(

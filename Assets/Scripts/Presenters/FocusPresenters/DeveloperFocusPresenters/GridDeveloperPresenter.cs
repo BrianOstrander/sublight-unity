@@ -159,7 +159,7 @@ namespace LunraGames.SubLight.Presenters
 
 			result += DeveloperStrings.GetBold("Rations: ");
 			if (rationsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0 < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
+			else if (0f < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
 			else result += "Invalid Amount " + rationsPercent + "%";
 
 			result += "\n";
@@ -175,13 +175,13 @@ namespace LunraGames.SubLight.Presenters
 				out propellantFromSystem
 			);
 
-			propellantFromSystem = Mathf.Floor(propellantFromSystem);
-			var propellantAbsolute = Mathf.FloorToInt(propellantFromSystem);
+			var propellantNormal = propellantFromSystem / Model.KeyValues.Get(KeyDefines.Game.Propellant.Maximum);
+			var propellantPercent = Mathf.FloorToInt(propellantNormal * 100f);
 
 			result += DeveloperStrings.GetBold("Propellant: ");
-			if (Mathf.Approximately(0f, propellantFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantAbsolute, Color.green);
-			else result += "Invalid Amount " + propellantFromSystem;
+			if (propellantPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
+			else result += "Invalid Amount " + propellantPercent + "%";
 
 			result += "\n";
 
@@ -401,18 +401,18 @@ namespace LunraGames.SubLight.Presenters
 		{
 			result += "\n";
 
-			var propellant = Mathf.FloorToInt(gameSource.Get(KeyDefines.Game.Propellant.Amount));
-			var propellantMaximum = Mathf.FloorToInt(gameSource.Get(KeyDefines.Game.Propellant.Maximum));
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
 
-			result += DeveloperStrings.GetBold("Propellant: ") + propellant;
+			result += DeveloperStrings.GetBold("Propellant: ") + propellant.ToString("N2");
 
-			var currentPropellant = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount));
-			if (0 < Mathf.Abs(propellant - currentPropellant))
+			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount);
+			if (!Mathf.Approximately(0f, propellant - currentPropellant))
 			{
 				var propellantDelta = propellant - currentPropellant;
 				result += DeveloperStrings.GetColor(
 					DeveloperStrings.GetSize(
-						(propellantDelta < 0f ? " " : " +") + propellantDelta,
+						(propellantDelta < 0f ? " " : " +") + propellantDelta.ToString("N2"),
 						0.4f
 					),
 					(propellantDelta < 0f ? Color.red : Color.green).NewS(0.65f)
@@ -573,8 +573,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.DialogRequest(
 				DialogRequest.Confirm(
 					LanguageStringModel.Override(
-						"SubLight is a work in progress, and the current interfaces do not always represent the final product." +
-						"\n - Use the <b>Rationing</b> slider to select how strict your ark's rationing is"
+						"SubLight is a work in progress, and the current interfaces do not always represent the final product."
 					),
 					title: LanguageStringModel.Override("Work In Progress")
 				)

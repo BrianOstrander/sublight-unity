@@ -175,6 +175,7 @@ namespace LunraGames.SubLight
 		void OnPresentersShown()
 		{
 			SM.Push(OnUpdateKeyValues, "InitialUpdateKeyValues");
+			SM.Push(() => GameplayUtility.CalculateFulfillment(Payload.Game.KeyValues), "InitialCalculateFulfillment");
 
 			var triggers = new List<EncounterTriggers>(Payload.Game.EncounterTriggers.Value);
 
@@ -598,7 +599,10 @@ namespace LunraGames.SubLight
 				Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears
 			);
 
-			GameplayUtility.CalculateFulfillment(Payload.Game.KeyValues);
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitHistoryCount,
+				Payload.Game.TransitHistory.Count
+			);
 
 			/*
 			Payload.Game.KeyValues.Set(

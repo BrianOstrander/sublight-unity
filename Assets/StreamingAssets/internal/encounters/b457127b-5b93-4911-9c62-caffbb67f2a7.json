@@ -856,6 +856,47 @@
               "entryId": "807361c7-6a2d-4eed-83b4-f5df1156b307"
             },
             "index": 47
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "ebbb1d29-777c-4291-8520-657eae85c612",
+                  "Source": "LocalValue",
+                  "LocalValue": 1.0
+                },
+                "Input1": {
+                  "AddressId": "6cae2764-2ba3-49f9-8fa3-c902e9e52d25",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "6f224c47-cac5-4b3c-a46e-0dfb4c01de2e",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "62e742d1-f310-44e2-8a7a-aa2aaacb0a20",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "71819dc1-c680-40bd-930c-d6248e6179d0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "resource_abundance"
+                }
+              },
+              "entryId": "0c81351a-cfc1-458a-88e7-863109b29f3a"
+            },
+            "index": 48
           }
         ],
         "index": 1,

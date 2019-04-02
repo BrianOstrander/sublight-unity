@@ -61,6 +61,7 @@ namespace LunraGames.SubLight
 		#region Integers
 		public readonly Integer SurfaceProbeCount;
 		public readonly Integer SurfaceProbeScanLevel;
+		public readonly Integer TransitHistoryCount;
 		#endregion
 
 		#region Strings
@@ -92,11 +93,14 @@ namespace LunraGames.SubLight
 
 		public readonly Float TransitRangeMaximum;
 		public readonly Float TransitRange;
+		public readonly Float TransitRangeRatio;
 
 		public readonly Float TransitVelocity;
 
 		public readonly Float PropellantFulfillment;
 		public readonly Float RationsFulfillment;
+
+		public readonly Float ResourceAbundance;
 		#endregion
 
 		#region Resources
@@ -129,6 +133,11 @@ namespace LunraGames.SubLight
 					"surface_probe_scan_level",
 					"todo desc",
 					true // TODO: should be readable???
+				),
+				Create(
+					ref TransitHistoryCount,
+					"transit_history_count",
+					"The number of systems visited."
 				)
 			};
 
@@ -240,6 +249,11 @@ namespace LunraGames.SubLight
 					"The current range of this ship in universe units."
 				),
 				Create(
+					ref TransitRangeRatio,
+					"transit_range_ratio",
+					"The ratio, from 0.0 to 1.0, of how far the ship's transit range is compared to the maximum."
+				),
+				Create(
 					ref TransitVelocity,
 					"transit_velocity",
 					"The ship's velocity, as a fraction of light speed, that the ship can travel. Only values between zero and one are valid.",
@@ -254,6 +268,12 @@ namespace LunraGames.SubLight
 					ref RationsFulfillment,
 					"rations_fulfillment",
 					"The current fraction of rations available to reach the maximum transit range. Greater than 1.0 is good."
+				),
+				Create(
+					ref ResourceAbundance,
+					"resource_abundance",
+					"The multiplier for how many resources are available in each system.",
+					true
 				)
 			};
 

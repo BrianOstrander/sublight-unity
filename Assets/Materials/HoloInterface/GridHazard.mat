@@ -102,7 +102,7 @@ Material:
     - Vector1_C384AA28: 0.7
     - Vector1_C9F244F9: 4
     - Vector1_E9271C64: 0.465
-    - _Alpha: 1
+    - _Alpha: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
