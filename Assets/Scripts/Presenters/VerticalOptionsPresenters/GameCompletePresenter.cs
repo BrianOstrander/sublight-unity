@@ -226,14 +226,12 @@ namespace LunraGames.SubLight.Presenters
 			if (!string.IsNullOrEmpty(header)) entries.Add(LabelVerticalOptionsEntry.CreateHeader(header));
 			if (!string.IsNullOrEmpty(body)) entries.Add(LabelVerticalOptionsEntry.CreateBody(body));
 
-			switch (condition)
-			{
-				case EncounterEvents.GameComplete.Conditions.Failure:
-					entries.Add(
-						ButtonVerticalOptionsEntry.CreateButton(language.Retry.Value, OnClickRetry)
-					);
-					break;
-			}
+			entries.Add(
+				ButtonVerticalOptionsEntry.CreateButton(
+					condition == EncounterEvents.GameComplete.Conditions.Success ? language.RetrySuccess.Value : language.RetryFailure.Value,
+					OnClickRetry
+				)
+			);
 
 			entries.Add(
 				ButtonVerticalOptionsEntry.CreateButton(language.MainMenu.Value, OnClickMainMenu)
