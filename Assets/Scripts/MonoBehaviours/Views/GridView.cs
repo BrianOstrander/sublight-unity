@@ -23,6 +23,10 @@ namespace LunraGames.SubLight.Views
 			public Vector2 Offset;
 			public Vector3 RangeOrigin;
 			public float RangeRadius;
+
+			public bool TargetRangeVisible;
+			public Vector3 TargetRangeOrigin;
+			public float TargetRangeRadius;
 		}
 
 		[Serializable]
@@ -156,6 +160,9 @@ namespace LunraGames.SubLight.Views
 
 		public Action DrawGizmos { set; private get; }
 
+		Vector3 subPos;
+		float subRange;
+
 		public Grid[] Grids
 		{
 			set
@@ -204,6 +211,12 @@ namespace LunraGames.SubLight.Views
 					hazard.SetFloat(ShaderConstants.HoloGridRange.RangeRadius, block.RangeRadius);
 					hazard.SetFloat(ShaderConstants.HoloGridRange.RadiusV, block.RangeRadius);
 					OnSetGridSelection(hazard, gridHazardColorsLast);
+
+					if (block.TargetRangeVisible)
+					{
+						subPos = block.TargetRangeOrigin;
+						subRange = block.TargetRangeRadius;
+					}
 
 					grid.renderQueue = renderQueue + 2;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
@@ -404,6 +417,9 @@ namespace LunraGames.SubLight.Views
 #if UNITY_EDITOR
 			Handles.color = Color.red;
 			Handles.DrawWireDisc(GridUnityOrigin, Vector3.up, gridDragRadius);
+
+			Handles.color = Color.yellow;
+			Handles.DrawWireDisc(subPos.NewY(GridUnityOrigin.y), Vector3.up, subRange);
 #endif
 		}
 	}

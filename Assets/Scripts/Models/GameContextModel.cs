@@ -56,6 +56,10 @@ namespace LunraGames.SubLight.Models
 		ListenerProperty<CelestialSystemStateBlock> celestialSystemStateListener;
 		public readonly ReadonlyProperty<CelestialSystemStateBlock> CelestialSystemState;
 
+		KeyValueListModel transitKeyValues = new KeyValueListModel();
+		ListenerProperty<KeyValueListModel> transitKeyValuesListener;
+		public readonly ReadonlyProperty<KeyValueListModel> TransitKeyValues;
+
 		TransitStateRequest transitStateRequest;
 		public ListenerProperty<TransitStateRequest> TransitStateRequest;
 
@@ -188,6 +192,12 @@ namespace LunraGames.SubLight.Models
 				out celestialSystemStateListener
 			);
 
+			TransitKeyValues = new ReadonlyProperty<KeyValueListModel>(
+				value => transitKeyValues = value,
+				() => transitKeyValues,
+				out transitKeyValuesListener
+			);
+
 			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
 			TransitState = new ListenerProperty<TransitState>(value => transitState = value, () => transitState);
 
@@ -239,10 +249,13 @@ namespace LunraGames.SubLight.Models
 		{
 			celestialSystemStateListener.Value = block;
 
+			var calculateTransit = false;
+
 			switch (block.State)
 			{
 				case CelestialSystemStateBlock.States.UnSelected:
 				case CelestialSystemStateBlock.States.Selected:
+					calculateTransit = true;
 					CelestialSystemStateLastSelected.Value = block;
 					model.KeyValues.Set(
 						KeyDefines.Game.NavigationSelectionName,
@@ -253,6 +266,22 @@ namespace LunraGames.SubLight.Models
 						block.State == CelestialSystemStateBlock.States.Selected ? block.System.ShrunkPosition : null
 					);
 					break;
+				case CelestialSystemStateBlock.States.Highlighted:
+					calculateTransit = true;
+					break;
+			}
+
+			if (calculateTransit)
+			{
+				var gameKeyValues = model.KeyValues.Duplicate;
+				var distance = UniversePosition.Distance(CurrentSystem.Value.Position.Value, block.Position);
+				GameplayUtility.ApplyTransit(
+					RelativityUtility.TransitTime(gameKeyValues.Get(KeyDefines.Game.TransitVelocity), UniversePosition.ToLightYearDistance(distance)).ShipTime.TotalYears,
+					distance,
+					gameKeyValues,
+					block.System.KeyValues.Duplicate
+				);
+				transitKeyValuesListener.Value = gameKeyValues;
 			}
 		}
 

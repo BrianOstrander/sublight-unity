@@ -179,7 +179,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Position.Changed += OnShipPosition;
 			OnShipPosition(model.Ship.Position.Value);
 
-			//model.Ship.Range.Changed += OnTravelRange;
+			model.Context.TransitKeyValues.Changed += OnTransitKeyValues;
 			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			model.Context.TransitState.Changed += OnTransitState;
@@ -196,7 +196,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Context.Grid.HazardOffset.Changed -= OnGridHazardOffset;
 
 			model.Ship.Position.Changed -= OnShipPosition;
-			//model.Ship.Range.Changed -= OnTravelRange;
+			model.Context.TransitKeyValues.Changed -= OnTransitKeyValues;
 			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			model.Context.TransitState.Changed -= OnTransitState;
@@ -309,6 +309,29 @@ namespace LunraGames.SubLight.Presenters
 			grid.Progress = progress;
 			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Position.Value);
 			grid.RangeRadius = scaleTransform.GetUnityScale(model.KeyValues.Get(KeyDefines.Game.TransitRange));
+
+			CelestialSystemStateBlock? targetBlock = null;
+			switch (model.Context.CelestialSystemStateLastSelected.Value.State)
+			{
+				case CelestialSystemStateBlock.States.Selected:
+					targetBlock = model.Context.CelestialSystemStateLastSelected.Value;
+					break;
+				default:
+					switch (model.Context.CelestialSystemState.Value.State)
+					{
+						case CelestialSystemStateBlock.States.Highlighted:
+							targetBlock = model.Context.CelestialSystemState.Value;
+							break;
+					}
+					break;
+			}
+
+			if (targetBlock.HasValue)
+			{
+				grid.TargetRangeVisible = true;
+				grid.TargetRangeOrigin = scaleTransform.GetUnityPosition(targetBlock.Value.Position);
+				grid.TargetRangeRadius = scaleTransform.GetUnityScale(model.Context.TransitKeyValues.Value.Get(KeyDefines.Game.TransitRange));
+			}
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
@@ -620,9 +643,9 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		void OnTravelRange(TransitRange range)
+		void OnTransitKeyValues(KeyValueListModel transitKeyValues)
 		{
-			if (tweenState == TweenStates.Complete) SetGrid();
+			SetGrid();
 		}
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
@@ -631,6 +654,10 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (block.State)
 			{
+				case CelestialSystemStateBlock.States.Highlighted:
+					Debug.Log("highlighted lol!");
+					SetGrid();
+					break;
 				case CelestialSystemStateBlock.States.UnSelected:
 					View.SetGridSelected(GridStates.Idle);
 					break;
@@ -686,6 +713,7 @@ namespace LunraGames.SubLight.Presenters
 					break;
 				case TransitState.States.Complete:
 					model.Context.GridInput.Value = new GridInputRequest(GridInputRequest.States.Complete, GridInputRequest.Transforms.Animation);
+					SetGrid();
 					break;
 			}
 		}

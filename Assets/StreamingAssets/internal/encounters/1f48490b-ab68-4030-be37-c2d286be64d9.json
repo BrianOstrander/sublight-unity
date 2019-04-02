@@ -1,4 +1,5 @@
 {
+  "orderWeight": 999,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "encounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f",
@@ -10,6 +11,7 @@
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -36,6 +38,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "5113f38f-1b0f-44c8-818f-828ccb56d133"
@@ -51,7 +54,6 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "ignore": true,
   "version": 9,
   "meta": "SystemIdle Default",
   "metaKeyValues": {
