@@ -342,6 +342,11 @@ namespace LunraGames.SubLight
 			public const string RangeColorTertiary = "_RangeColorTertiary";
 			public const string RangeThreshold = "_RangeThreshold";
 			public const string RangeFalloffGradient = "_RangeFalloffGradient";
+
+			public const string TargetRangeColorPrimary = "_TargetRangeColorPrimary";
+			public const string TargetRangeOrigin = "_TargetRangeOrigin";
+			public const string TargetRangeRadius = "_TargetRangeRadius";
+			public const string TargetRangeProgress = "_TargetRangeProgress";
 		}
 
 		public static class HoloGridRange

@@ -38,6 +38,9 @@ namespace LunraGames.SubLight.Views
 			public Color Secondary;
 			public Color Tertiary;
 
+			public Color TargetPrimary;
+			public float TargetProgress;
+
 			public GridColors Lerp(GridColors other, float normal)
 			{
 				return new GridColors
@@ -47,6 +50,8 @@ namespace LunraGames.SubLight.Views
 					Primary = Color.Lerp(Primary, other.Primary, normal),
 					Secondary = Color.Lerp(Secondary, other.Secondary, normal),
 					Tertiary = Color.Lerp(Tertiary, other.Tertiary, normal),
+					TargetPrimary = Color.Lerp(TargetPrimary, other.TargetPrimary, normal),
+					TargetProgress = Mathf.Lerp(TargetProgress, other.TargetProgress, normal)
 				};
 			}
 		}
@@ -139,6 +144,7 @@ namespace LunraGames.SubLight.Views
 		public Vector3 GridUnityOrigin { get { return gridMesh.transform.position; } }
 		public float GridUnityRadius { get { return gridUnityRadius; } }
 		public Action<bool> Dragging { set; private get; }
+		public Action Click { set; private get; }
 		public bool Highlighted { get; private set; }
 
 		public AnimationCurve HideScaleAlpha { get { return hideScaleAlpha; } }
@@ -159,9 +165,6 @@ namespace LunraGames.SubLight.Views
 		public CurveRange GridHazardOffsetMultiplierCurve { get { return gridHazardOffsetMultiplierCurve; } }
 
 		public Action DrawGizmos { set; private get; }
-
-		Vector3 subPos;
-		float subRange;
 
 		public Grid[] Grids
 		{
@@ -204,6 +207,13 @@ namespace LunraGames.SubLight.Views
 					background.renderQueue = renderQueue;
 					background.SetVector(ShaderConstants.HoloGridBackgroundRange.RangeOrigin, block.RangeOrigin);
 					background.SetFloat(ShaderConstants.HoloGridBackgroundRange.RangeRadius, block.RangeRadius);
+
+					if (block.TargetRangeVisible)
+					{
+						background.SetVector(ShaderConstants.HoloGridBackgroundRange.TargetRangeOrigin, block.TargetRangeOrigin);
+						background.SetFloat(ShaderConstants.HoloGridBackgroundRange.TargetRangeRadius, block.TargetRangeRadius);
+					}
+
 					OnSetGridSelection(background, gridBackgroundColorsLast);
 
 					hazard.renderQueue = renderQueue + 1;
@@ -211,12 +221,6 @@ namespace LunraGames.SubLight.Views
 					hazard.SetFloat(ShaderConstants.HoloGridRange.RangeRadius, block.RangeRadius);
 					hazard.SetFloat(ShaderConstants.HoloGridRange.RadiusV, block.RangeRadius);
 					OnSetGridSelection(hazard, gridHazardColorsLast);
-
-					if (block.TargetRangeVisible)
-					{
-						subPos = block.TargetRangeOrigin;
-						subRange = block.TargetRangeRadius;
-					}
 
 					grid.renderQueue = renderQueue + 2;
 					grid.SetFloat(ShaderConstants.HoloGridBasic.Tiling, block.Tiling);
@@ -312,6 +316,9 @@ namespace LunraGames.SubLight.Views
 			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorPrimary, colors.Primary);
 			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorSecondary, colors.Secondary);
 			material.SetColor(ShaderConstants.HoloGridBackgroundRange.RangeColorTertiary, colors.Tertiary);
+
+			material.SetColor(ShaderConstants.HoloGridBackgroundRange.TargetRangeColorPrimary, colors.TargetPrimary);
+			material.SetFloat(ShaderConstants.HoloGridBackgroundRange.TargetRangeProgress, colors.TargetProgress);
 		}
 
 		public override void Reset()
@@ -320,6 +327,7 @@ namespace LunraGames.SubLight.Views
 
 			Grids = null;
 			Dragging = ActionExtensions.GetEmpty<bool>();
+			Click = ActionExtensions.Empty;
 			Highlighted = false;
 			SetRadius(0f, true);
 
@@ -409,6 +417,11 @@ namespace LunraGames.SubLight.Views
 		{
 			Dragging(false);
 		}
+
+		public void OnClick()
+		{
+			Click();
+		}
 		#endregion
 
 		void OnDrawGizmosSelected()
@@ -417,9 +430,6 @@ namespace LunraGames.SubLight.Views
 #if UNITY_EDITOR
 			Handles.color = Color.red;
 			Handles.DrawWireDisc(GridUnityOrigin, Vector3.up, gridDragRadius);
-
-			Handles.color = Color.yellow;
-			Handles.DrawWireDisc(subPos.NewY(GridUnityOrigin.y), Vector3.up, subRange);
 #endif
 		}
 	}
@@ -446,6 +456,7 @@ namespace LunraGames.SubLight.Views
 		float GridUnityRadius { get; }
 		bool Highlighted { get; }
 		Action<bool> Dragging { set; }
+		Action Click { set; }
 		GridView.Grid[] Grids { set; }
 		AnimationCurve HideScaleAlpha { get; }
 		AnimationCurve RevealScaleAlpha { get; }

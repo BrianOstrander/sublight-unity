@@ -205,6 +205,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
+			View.Click = OnClick;
 			View.SetGridSelected(
 				model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected ? GridStates.Selected : GridStates.Idle,
 				true
@@ -565,6 +566,15 @@ namespace LunraGames.SubLight.Presenters
 			this.isDragging = isDragging;
 		}
 
+		void OnClick()
+		{
+			if (wasDragging || View.TransitionState != TransitionStates.Shown || tweenState != TweenStates.Complete || model.Context.CelestialSystemStateLastSelected.Value.State != CelestialSystemStateBlock.States.Selected) return;
+
+			model.Context.SetCelestialSystemState(
+				CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemStateLastSelected.Value.Position, model.Context.CelestialSystemStateLastSelected.Value.System)
+          	);
+		}
+
 		void OnCurrentGesture(Gesture gesture) { lastgesture = gesture; }
 
 		void OnCheckDragging(float delta)
@@ -654,10 +664,6 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (block.State)
 			{
-				case CelestialSystemStateBlock.States.Highlighted:
-					Debug.Log("highlighted lol!");
-					SetGrid();
-					break;
 				case CelestialSystemStateBlock.States.UnSelected:
 					View.SetGridSelected(GridStates.Idle);
 					break;

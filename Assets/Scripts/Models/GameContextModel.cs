@@ -266,9 +266,6 @@ namespace LunraGames.SubLight.Models
 						block.State == CelestialSystemStateBlock.States.Selected ? block.System.ShrunkPosition : null
 					);
 					break;
-				case CelestialSystemStateBlock.States.Highlighted:
-					calculateTransit = true;
-					break;
 			}
 
 			if (calculateTransit)
