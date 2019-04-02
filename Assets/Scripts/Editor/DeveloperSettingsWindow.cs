@@ -170,7 +170,7 @@ namespace LunraGames.SubLight
 			{
 				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PushColor(Color.white.NewV(0.7f));
 				{
-					DevPrefs.TimeScaling.Value = EditorGUILayout.Slider("Time Scale", DevPrefs.TimeScaling.Value, 0f, 1f);
+					DevPrefs.TimeScaling.Value = EditorGUILayout.Slider("Time Scale", DevPrefs.TimeScaling.Value, 0f, 4f);
 				}
 				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PopColor();
 
