@@ -87,9 +87,6 @@ namespace LunraGames.SubLight
 
 		public readonly Float Population;
 
-		public readonly Float ShipPopulationMinimum;
-		public readonly Float ShipPopulationMaximum;
-
 		public readonly Float RationsConsumptionMultiplier;
 		public readonly Float PropellantConsumptionMultiplier;
 
@@ -212,18 +209,6 @@ namespace LunraGames.SubLight
 					ref PreviousTransitYearsElapsedShip,
 					"previous_transit_years_elapsed_ship",
 					"The number of years elapsed during the last transit, from the ship reference point."
-				),
-				Create(
-					ref ShipPopulationMinimum,
-					"ship_population_minimum",
-					"The minimum population required to operate the ship, below this and underpopulation will be a problem.",
-					true
-				),
-				Create(
-					ref ShipPopulationMaximum,
-					"ship_population_maximum",
-					"The maximum population allowed aboard the ship before overpopulation becomes a problem.",
-					true
 				),
 				Create(
 					ref Population,

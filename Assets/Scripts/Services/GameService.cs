@@ -78,7 +78,7 @@ namespace LunraGames.SubLight
 
 			// Ship ---
 			// TODO: Should this set minimum range be removed? It should just be set by the rules encounter, no?
-			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			//model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
 			// --------
 
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;

@@ -94,7 +94,7 @@ namespace LunraGames.SubLight.Presenters
 			if (Model.Context.CurrentSystem.Value == system) visitState = Celestial.VisitStates.Current;
 			else visitState = system.Visited.Value ? Celestial.VisitStates.Visited : Celestial.VisitStates.NotVisited;
 
-			if (UniversePosition.Distance(system.Position.Value, Model.Ship.Position.Value) <= Model.Ship.Range.Value.Total)
+			if (UniversePosition.Distance(system.Position.Value, Model.Ship.Position.Value) <= Model.KeyValues.Get(KeyDefines.Game.TransitRange))
 			{
 				rangeState = Celestial.RangeStates.InRange;
 			}

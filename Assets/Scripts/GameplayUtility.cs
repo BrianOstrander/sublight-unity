@@ -67,13 +67,39 @@ namespace LunraGames.SubLight
 		}
 
 		public static void ApplyTransit(
-			float duration,
+			float duration, // In ship years
+			float distance, // The distance in universe units we're traveling
 			KeyValueListModel gameSource,
 			KeyValueListModel systemSource
 		)
 		{
 			if (gameSource == null) throw new ArgumentNullException("gameSource");
 			if (systemSource == null) throw new ArgumentNullException("systemSource");
+
+			var population = gameSource.Get(KeyDefines.Game.Population);
+			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
+			var propellantConsumptionMultiplier = gameSource.Get(KeyDefines.Game.PropellantConsumptionMultiplier);
+
+			var rationsConsumptionPerYear = rationsConsumptionMultiplier * population;
+
+			var rationsConsumed = rationsConsumptionPerYear * duration;
+			var propellantConsumed = distance * propellantConsumptionMultiplier;
+
+			var rations = Mathf.Max(0f, gameSource.Get(KeyDefines.Game.Rations.Amount) - rationsConsumed);
+			var propellant = Mathf.Max(0f, gameSource.Get(KeyDefines.Game.Propellant.Amount) - propellantConsumed);
+
+
+			gameSource.Set(
+				KeyDefines.Game.Rations.Amount,
+				rations
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.Propellant.Amount,
+				propellant
+			);
+
+			CalculateFulfillment(gameSource);
 
 			/*
 			// -- To Update
@@ -277,6 +303,47 @@ namespace LunraGames.SubLight
 				);
 			}
 			*/
+		}
+
+		public static void CalculateFulfillment(
+			KeyValueListModel gameSource
+		)
+		{
+			if (gameSource == null) throw new ArgumentNullException("gameSource");
+
+			var population = gameSource.Get(KeyDefines.Game.Population);
+			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
+			var propellantConsumptionMultiplier = gameSource.Get(KeyDefines.Game.PropellantConsumptionMultiplier);
+			var transitRangeMaximum = gameSource.Get(KeyDefines.Game.TransitRangeMaximum);
+			var transitVelocity = gameSource.Get(KeyDefines.Game.TransitVelocity);
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+
+			var rationsConsumptionPerYear = rationsConsumptionMultiplier * population;
+			var shipYearsPerObserverYears = 1f / (1f / Mathf.Sqrt(1f - (Mathf.Pow(transitVelocity, 2f) / 1f)));
+			var shipYearsToTransitMaximumRange = shipYearsPerObserverYears * (transitRangeMaximum / transitVelocity);
+
+			var propellantFulfillment = propellant / propellantConsumptionMultiplier;
+			var rationsRequiredToReachMaximumRange = rationsConsumptionPerYear * shipYearsToTransitMaximumRange;
+			var rationsFulfillment = gameSource.Get(KeyDefines.Game.Rations.Amount) / rationsRequiredToReachMaximumRange;
+
+			var minimumFulfillment = Mathf.Min(propellantFulfillment, rationsFulfillment);
+
+			var transitRange = Mathf.Min(minimumFulfillment * transitRangeMaximum, transitRangeMaximum);
+
+			gameSource.Set(
+				KeyDefines.Game.TransitRange,
+				transitRange
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.RationsFulfillment,
+				rationsFulfillment
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.PropellantFulfillment,
+				propellantFulfillment
+			);
 		}
 	}
 }

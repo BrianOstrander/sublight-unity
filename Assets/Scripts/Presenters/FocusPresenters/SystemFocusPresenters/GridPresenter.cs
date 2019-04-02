@@ -179,7 +179,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Position.Changed += OnShipPosition;
 			OnShipPosition(model.Ship.Position.Value);
 
-			model.Ship.Range.Changed += OnTravelRange;
+			//model.Ship.Range.Changed += OnTravelRange;
 			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			model.Context.TransitState.Changed += OnTransitState;
@@ -196,7 +196,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Context.Grid.HazardOffset.Changed -= OnGridHazardOffset;
 
 			model.Ship.Position.Changed -= OnShipPosition;
-			model.Ship.Range.Changed -= OnTravelRange;
+			//model.Ship.Range.Changed -= OnTravelRange;
 			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			model.Context.TransitState.Changed -= OnTransitState;
@@ -308,7 +308,7 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Position.Value);
-			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Range.Value.Total);
+			grid.RangeRadius = scaleTransform.GetUnityScale(model.KeyValues.Get(KeyDefines.Game.TransitRange));
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
