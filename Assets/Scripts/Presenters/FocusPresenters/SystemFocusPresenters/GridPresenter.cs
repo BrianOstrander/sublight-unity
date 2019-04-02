@@ -667,7 +667,7 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnTransitKeyValues(KeyValueListModel transitKeyValues)
 		{
-			SetGrid();
+			if (model.Context.TransitState.Value.State == TransitState.States.Complete) SetGrid();
 		}
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)
