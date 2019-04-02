@@ -130,6 +130,9 @@ namespace LunraGames.SubLight
 
 			var classification = hackGenerator.NextFloat;
 
+			var rationsMultiplier = 1f - classification;
+			var propellantMultiplier = classification;
+
 			if (classification < 0.8f)
 			{
 				systemModel.PrimaryClassification.Value = SystemClassifications.Stellar;

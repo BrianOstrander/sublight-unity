@@ -135,7 +135,7 @@ namespace LunraGames.SubLight
 			{
 				var payload = state.Payload;
 
-				//new GridDeveloperPresenter(payload.Game);
+				new GridDeveloperPresenter(payload.Game);
 
 				InitializeSystemPresenters(state, done);
 			}
