@@ -40,6 +40,9 @@ namespace LunraGames.SubLight
 
 						switch (entry.EncounterEvent.Value)
 						{
+							case EncounterEvents.Types.Custom:
+								OnHandleEventCustom(state, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.Debug:
 								OnHandleEventDebugLog(state, entry, currOnEventDone);
 								break;
@@ -70,6 +73,24 @@ namespace LunraGames.SubLight
 
 				App.SM.PushBlocking<GameState>(onCallEvents, onHaltingCondition, "CallEncounterEvents");
 				App.SM.Push<GameState>(onHaltingDone, "CallEncounterEventsDone");
+			}
+
+			static void OnHandleEventCustom(
+				GameState state,
+				EncounterEventEntryModel entry,
+				Action done
+			)
+			{
+				var request = new EncounterEventsCustomRequest(
+					entry.KeyValues,
+					entry.IsHalting ? done : null
+				);
+
+				Debug.Log("Handling custom event: " + request.EventName);
+
+				App.Callbacks.EncounterEventsCustom(request);
+
+				if (!entry.IsHalting) done();
 			}
 
 			static void OnHandleEventDebugLog(

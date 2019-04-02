@@ -1399,7 +1399,7 @@ namespace LunraGames.SubLight
 					EditorGUILayout.HelpBox("No event type has been specified.", MessageType.Error);
 					break;
 				case EncounterEvents.Types.Custom:
-					EditorGUILayout.HelpBox("Editing custom events is not supported yet.", MessageType.Warning);
+					OnEncounterEventLogEdgeCustom(entry);
 					break;
 				case EncounterEvents.Types.Debug:
 					OnEncounterEventLogEdgeDebugLog(entry);
@@ -1435,6 +1435,23 @@ namespace LunraGames.SubLight
 				entry.IsHalting.Value
 			);
 			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PopColor();
+		}
+
+		void OnEncounterEventLogEdgeCustom(
+			EncounterEventEntryModel entry
+		)
+		{
+			var customEventName = entry.KeyValues.GetString(EncounterEvents.Custom.StringKeys.CustomEventName);
+			var wasNullOrEmpty = string.IsNullOrEmpty(customEventName);
+
+			if (wasNullOrEmpty) EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
+			{
+				entry.KeyValues.SetString(
+					EncounterEvents.Custom.StringKeys.CustomEventName,
+					EditorGUILayout.TextField(new GUIContent("Custom Event Name"), customEventName)
+				);
+			}
+			if (wasNullOrEmpty) EditorGUILayoutExtensions.PopBackgroundColor();
 		}
 
 		void OnEncounterEventLogEdgeDebugLog(

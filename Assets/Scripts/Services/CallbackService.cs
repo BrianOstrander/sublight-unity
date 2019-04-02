@@ -135,6 +135,10 @@ namespace LunraGames.SubLight
 		/// The camera transform request.
 		/// </summary>
 		public Action<CameraTransformRequest> CameraTransformRequest = ActionExtensions.GetEmpty<CameraTransformRequest>();
+		/// <summary>
+		/// Called when a custom event fires.
+		/// </summary>
+		public Action<EncounterEventsCustomRequest> EncounterEventsCustom = ActionExtensions.GetEmpty<EncounterEventsCustomRequest>();
 		#endregion
 
 		// TODO: Think about moving these to state or GameModel...

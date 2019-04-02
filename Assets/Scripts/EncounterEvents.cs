@@ -16,6 +16,14 @@ namespace LunraGames.SubLight
 			Delay = 70
 		}
 
+		public static class Custom
+		{
+			public static class StringKeys
+			{
+				public const string CustomEventName = "custom_event_name";
+			}
+		}
+
 		public static class Debug
 		{
 			public enum Severities
