@@ -12,7 +12,8 @@ namespace LunraGames.SubLight
 			ToolbarSelection = 30,
 			DumpKeyValues = 40,
 			GameComplete = 50,
-			TriggerQueue = 60
+			TriggerQueue = 60,
+			Delay = 70
 		}
 
 		public static class Debug
@@ -104,6 +105,25 @@ namespace LunraGames.SubLight
 				{
 					return "push_" + TriggerNormalized(trigger);
 				}
+			}
+		}
+
+		public static class Delay
+		{
+			public enum Triggers
+			{
+				Unknown = 0,
+				Time = 10
+			}
+
+			public static class EnumKeys
+			{
+				public const string Trigger = "trigger";
+			}
+
+			public static class FloatKeys
+			{
+				public const string TimeDuration = "time_duration";
 			}
 		}
 	}

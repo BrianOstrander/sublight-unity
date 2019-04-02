@@ -1416,6 +1416,9 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.TriggerQueue:
 					OnEncounterEventLogEdgePopTriggers(entry);
 					break;
+				case EncounterEvents.Types.Delay:
+					OnEncounterEventLogEdgeDelay(entry);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
 					break;
@@ -1572,6 +1575,40 @@ namespace LunraGames.SubLight
 				}
 			}
 			EditorGUILayoutExtensions.PopIndent();
+		}
+
+		void OnEncounterEventLogEdgeDelay(
+			EncounterEventEntryModel entry
+		)
+		{
+			var trigger = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Trigger"),
+				"- Select a Trigger -",
+				entry.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger),
+				Color.red
+			);
+
+			entry.KeyValues.SetEnumeration(
+				EncounterEvents.Delay.EnumKeys.Trigger,
+				trigger
+			);
+
+			switch (trigger)
+			{
+				case EncounterEvents.Delay.Triggers.Unknown: break;
+				case EncounterEvents.Delay.Triggers.Time:
+					entry.KeyValues.SetFloat(
+						EncounterEvents.Delay.FloatKeys.TimeDuration,
+						EditorGUILayout.FloatField(
+							new GUIContent("Duration"),
+							entry.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration)
+						)
+					);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized Trigger: " + trigger, MessageType.Error);
+					break;
+			}
 		}
 
 		#endregion

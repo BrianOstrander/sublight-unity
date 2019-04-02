@@ -52,6 +52,9 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.TriggerQueue:
 								OnHandleEventPopTriggers(state, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.Delay:
+								OnHandleEventDelay(state, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
 								currOnEventDone();
@@ -230,6 +233,36 @@ namespace LunraGames.SubLight
 				state.Payload.Game.EncounterTriggers.Value = result.ToArray();
 
 				done();
+			}
+		}
+
+		static void OnHandleEventDelay(
+				GameState state,
+				EncounterEventEntryModel entry,
+				Action done
+			)
+		{
+			var trigger = entry.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger);
+
+			switch (trigger)
+			{
+				case EncounterEvents.Delay.Triggers.Time:
+					var timeDuration = entry.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration);
+					if (float.IsNaN(timeDuration))
+					{
+						Debug.LogError("Specified Time Duration was NaN");
+						done();
+						return;
+					}
+
+					App.Heartbeat.Wait(
+						done,
+						Mathf.Max(0f, timeDuration)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Trigger: " + trigger);
+					break;
 			}
 		}
 	}
