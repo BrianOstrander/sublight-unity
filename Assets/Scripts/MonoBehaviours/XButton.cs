@@ -33,7 +33,20 @@ namespace LunraGames.SubLight
 		XButtonSoundObject globalSounds;
 		[SerializeField]
 		XButtonSoundBlock localSounds;
-		public XButtonSoundBlock Sounds 
+
+		public XButtonSoundObject GlobalSounds
+		{
+			set { globalSounds = value; }
+			get { return globalSounds; }
+		}
+
+		public XButtonSoundBlock LocalSounds
+		{
+			set { localSounds = value; }
+			get { return localSounds; }
+		}
+
+		public XButtonSoundBlock Sounds
 		{
 			get { return globalSounds == null ? localSounds : globalSounds.Block; }
 		}

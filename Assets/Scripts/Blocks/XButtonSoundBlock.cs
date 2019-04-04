@@ -1,11 +1,15 @@
-using UnityEngine;
 using System;
+
+using UnityEngine;
+using UnityEngine.Audio;
 
 namespace LunraGames.SubLight
 {
 	[Serializable]
 	public struct XButtonSoundBlock 
 	{
+		public AudioMixerGroup Mixer;
+
 		public AudioClip DisabledSound;
 		public AudioClip PressedSound;
 		public AudioClip EnteredSound;
