@@ -27,6 +27,7 @@
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": [
       {
         "operation": "NotCompleted",
@@ -46,6 +47,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "keyValueType": "Boolean",
@@ -85,6 +87,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "keyValueType": "Boolean",
@@ -124,6 +127,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "keyValueType": "Boolean",
@@ -167,6 +171,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -174,6 +179,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -181,6 +187,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "b51c79af-b42e-4028-a73a-1413548a46d8"
@@ -196,6 +203,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -203,6 +211,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -210,6 +219,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "d8e33a04-4b4c-4d94-804a-128fe6a1301e"
@@ -237,6 +247,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -244,6 +255,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -251,6 +263,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "e93a5d80-2485-4efd-a1a4-3cf99ff93562"
@@ -266,6 +279,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -273,6 +287,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -280,6 +295,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "7e0d2a32-9b77-468c-8a16-d0a23e383756"
@@ -296,6 +312,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -303,6 +320,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -310,6 +328,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "dea85c05-48c6-4e6a-a02a-452374bb350a"
@@ -336,6 +355,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -343,6 +363,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -350,6 +371,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "67744702-7f6f-41d7-85b7-69302bbe4666"
@@ -365,6 +387,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -372,6 +395,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -379,6 +403,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "2973e9ba-0672-4876-b620-e924d27efd6d"
@@ -395,6 +420,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -402,6 +428,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -409,6 +436,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "a371882e-5f8a-402f-b4ec-dd330d2609e5"
@@ -436,6 +464,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -443,6 +472,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -450,6 +480,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "f78c2144-dd18-456c-aac1-50a5b7c08a29"
@@ -465,6 +496,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -472,6 +504,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -479,6 +512,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "81e7b69d-7faf-45e1-9107-c0c76beed86f"
@@ -495,6 +529,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -502,6 +537,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -509,6 +545,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "1d3e75b8-654b-4a7b-b9f6-cf8c800895ac"
@@ -535,6 +572,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -542,6 +580,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -549,6 +588,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "3bdbd49f-d7e6-4c4c-a28c-813f0f003266"
@@ -564,6 +604,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -571,6 +612,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -578,6 +620,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "8db053bb-3cda-4a03-a8fb-cbe16ee5b786"
@@ -593,6 +636,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -601,6 +645,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -608,6 +653,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "fca54c10-f48a-43e0-8a0f-5d300d9b7e6e"
@@ -634,6 +680,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -641,6 +688,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -648,6 +696,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "5825adc3-2aa2-43fa-bb9e-21eaf2067ebc"
@@ -662,6 +711,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -670,6 +720,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -677,6 +728,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "558f4861-7ea8-400e-be35-9883381c72d9"
@@ -703,6 +755,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -710,6 +763,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -717,6 +771,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "96b026f7-54f2-47e2-b6a5-969e706c6cc8"
@@ -731,6 +786,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -739,6 +795,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -746,6 +803,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "d4967dd4-3833-495b-a2ec-9730f475776a"
@@ -761,6 +819,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -769,6 +828,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -776,6 +836,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "72796938-59e7-4571-b630-395a13fee47f"
@@ -802,6 +863,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -809,6 +871,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -816,6 +879,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "ab78cedb-328f-495a-ad86-bf101a142165"
@@ -831,6 +895,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -839,6 +904,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -846,6 +912,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "ef07ed94-4a7f-4966-94c0-99c793bd2825"
@@ -874,6 +941,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -882,6 +950,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -889,6 +958,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "b87a8179-4a07-408c-a9c3-c5eeff429927"
@@ -904,6 +974,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -912,6 +983,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -919,6 +991,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "e4b033dd-4538-4967-9313-b09d9756dfb9"
@@ -935,6 +1008,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -943,6 +1017,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -950,6 +1025,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "06ea8407-6b50-40f3-b23a-2922870d5a3e"
@@ -965,6 +1041,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -972,6 +1049,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -979,6 +1057,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "464d3cff-1e6e-4b89-bbb9-e4b8d46773ff"
@@ -1008,6 +1087,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -1015,6 +1095,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -1022,6 +1103,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "e1a8a41d-b98a-496c-926f-7994dbe86fbc"
@@ -1038,6 +1120,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -1045,6 +1128,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -1052,6 +1136,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "4a064e99-1c96-43d0-935f-8006632e2af9"
@@ -1069,6 +1154,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -1076,6 +1162,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -1100,6 +1187,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "47f0c6cb-afe6-4c65-ada7-6275a3599b9f"
@@ -1117,6 +1205,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -1124,6 +1213,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -1148,6 +1238,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "78054689-f104-4117-80e7-59f8b0c45249"
@@ -1165,6 +1256,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -1172,6 +1264,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -1179,6 +1272,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "555965af-9888-4f8e-bfc4-fbdd21a32c29"
@@ -1205,12 +1299,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 10,
                   "lock_state": 0
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -1218,6 +1311,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "782a4ce4-c7ae-4807-9518-398a94273011"
@@ -1236,12 +1330,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 30,
                   "lock_state": 10
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -1249,6 +1342,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "9ef4edb9-e273-47da-acb2-e422b2bd0a99"
@@ -1267,12 +1361,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 10,
                   "lock_state": 0
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -1280,6 +1373,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "0c4f0012-a697-4305-96cd-fdf4535ed424"
@@ -1308,6 +1402,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "a6202f01-dbf6-4651-b18f-4222f10d6d16"
@@ -1323,7 +1418,7 @@
           {
             "entry": {
               "title": "Navigation",
-              "message": "This is the navigation view. As you travel, make sure to stay supplied with <b>Rations</b> for feeding your population, <b>Propellant</b> for fueling your interstellar transits, and <b>Metallics</b> for any damage that may need repairing.",
+              "message": "This is the navigation view. As you travel, make sure to stay supplied with <b>rations</b> for feeding your population, <b>propellant</b> for fueling your interstellar transits, and <b>metallics</b> for any damage that may need repairing.",
               "dialogType": "Confirm",
               "dialogStyle": "Neutral",
               "successText": "Understood",
@@ -1332,6 +1427,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "22d899ca-c5a1-4b01-a9bc-45fe2ebc8646"
@@ -1358,6 +1454,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "817cd05f-20d1-4fc1-971b-bc4a353e5a2f"
@@ -2782,7 +2879,7 @@
       }
     ]
   },
-  "version": 8,
+  "version": 9,
   "meta": "Exposition",
   "metaKeyValues": {
     "EncounterId": "63245462-5804-41cb-b51d-910c68529a7a"

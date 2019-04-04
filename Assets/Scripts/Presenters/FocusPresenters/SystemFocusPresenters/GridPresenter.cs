@@ -179,7 +179,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Ship.Position.Changed += OnShipPosition;
 			OnShipPosition(model.Ship.Position.Value);
 
-			model.Ship.Range.Changed += OnTravelRange;
+			model.Context.TransitKeyValues.Changed += OnTransitKeyValues;
 			model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 
 			model.Context.TransitState.Changed += OnTransitState;
@@ -196,7 +196,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Context.Grid.HazardOffset.Changed -= OnGridHazardOffset;
 
 			model.Ship.Position.Changed -= OnShipPosition;
-			model.Ship.Range.Changed -= OnTravelRange;
+			model.Context.TransitKeyValues.Changed -= OnTransitKeyValues;
 			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
 			model.Context.TransitState.Changed -= OnTransitState;
@@ -205,6 +205,7 @@ namespace LunraGames.SubLight.Presenters
 		protected override void OnUpdateEnabled()
 		{
 			View.Dragging = OnDragging;
+			View.Click = OnClick;
 			View.SetGridSelected(
 				model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected ? GridStates.Selected : GridStates.Idle,
 				true
@@ -308,7 +309,42 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Position.Value);
-			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Range.Value.Total);
+			grid.RangeRadius = scaleTransform.GetUnityScale(model.KeyValues.Get(KeyDefines.Game.TransitRange));
+
+			CelestialSystemStateBlock? targetBlock = null;
+			var transitRangeNormal = 0f;
+			switch (model.Context.TransitState.Value.State)
+			{
+				case TransitState.States.Complete:
+					switch (model.Context.CelestialSystemStateLastSelected.Value.State)
+					{
+						case CelestialSystemStateBlock.States.Selected:
+							targetBlock = model.Context.CelestialSystemStateLastSelected.Value;
+							break;
+					}
+					break;
+				default:
+					targetBlock = model.Context.CelestialSystemStateLastSelected.Value;
+					var transitStep = model.Context.TransitState.Value.CurrentStep;
+					switch (transitStep.Step)
+					{
+						case TransitState.Steps.Prepare: transitRangeNormal = 0f; break;
+						case TransitState.Steps.Finalize: transitRangeNormal = 1f; break;
+						case TransitState.Steps.Transit:
+							transitRangeNormal = transitStep.Progress;
+							break;
+					}
+					break;
+			}
+
+			if (targetBlock.HasValue)
+			{
+				grid.TargetRangeVisible = true;
+				grid.TargetRangeOrigin = scaleTransform.GetUnityPosition(targetBlock.Value.Position);
+				grid.TargetRangeRadius = scaleTransform.GetUnityScale(model.Context.TransitKeyValues.Value.Get(KeyDefines.Game.TransitRange));
+
+				grid.RangeRadius = grid.RangeRadius + ((grid.TargetRangeRadius - grid.RangeRadius) * transitRangeNormal);
+			}
 
 			var zoomProgress = View.ZoomCurve.Evaluate(progress);
 			var zoomScalar = 1f;
@@ -542,6 +578,15 @@ namespace LunraGames.SubLight.Presenters
 			this.isDragging = isDragging;
 		}
 
+		void OnClick()
+		{
+			if (wasDragging || View.TransitionState != TransitionStates.Shown || tweenState != TweenStates.Complete || model.Context.CelestialSystemStateLastSelected.Value.State != CelestialSystemStateBlock.States.Selected) return;
+
+			model.Context.SetCelestialSystemState(
+				CelestialSystemStateBlock.UnSelect(model.Context.CelestialSystemStateLastSelected.Value.Position, model.Context.CelestialSystemStateLastSelected.Value.System)
+          	);
+		}
+
 		void OnCurrentGesture(Gesture gesture) { lastgesture = gesture; }
 
 		void OnCheckDragging(float delta)
@@ -620,9 +665,9 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
-		void OnTravelRange(TransitRange range)
+		void OnTransitKeyValues(KeyValueListModel transitKeyValues)
 		{
-			if (tweenState == TweenStates.Complete) SetGrid();
+			if (model.Context.TransitState.Value.State == TransitState.States.Complete) SetGrid();
 		}
 
 		void OnCelestialSystemState(CelestialSystemStateBlock block)

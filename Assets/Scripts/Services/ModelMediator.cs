@@ -146,6 +146,7 @@ namespace LunraGames.SubLight
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				// --
+				case SaveTypes.GamemodeInfo: return typeof(GamemodeInfoModel);
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -166,6 +167,7 @@ namespace LunraGames.SubLight
 			// -- Interacted
 			if (type == typeof(InteractedEncounterInfoListModel)) return new SaveTypes[] { SaveTypes.InteractedEncounterInfoList };
 			// --
+			if (type == typeof(GamemodeInfoModel)) return new SaveTypes[] { SaveTypes.GamemodeInfo };
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 
@@ -178,6 +180,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.GalaxyDistant:
 				case SaveTypes.GalaxyInfo:
 					return MetaKeyConstants.GalaxyInfo.GalaxyId;
+				case SaveTypes.GamemodeInfo: return MetaKeyConstants.GamemodeInfo.GamemodeId;
 				default:
 					Debug.LogWarning("Save type " + saveType + " has no unique id key and loading by default ids has not been tested");
 					return null;

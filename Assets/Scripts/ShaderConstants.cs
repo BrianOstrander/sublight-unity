@@ -342,6 +342,11 @@ namespace LunraGames.SubLight
 			public const string RangeColorTertiary = "_RangeColorTertiary";
 			public const string RangeThreshold = "_RangeThreshold";
 			public const string RangeFalloffGradient = "_RangeFalloffGradient";
+
+			public const string TargetRangeColorPrimary = "_TargetRangeColorPrimary";
+			public const string TargetRangeOrigin = "_TargetRangeOrigin";
+			public const string TargetRangeRadius = "_TargetRangeRadius";
+			public const string TargetRangeProgress = "_TargetRangeProgress";
 		}
 
 		public static class HoloGridRange
@@ -612,6 +617,27 @@ namespace LunraGames.SubLight
 			/// The opacity
 			/// </summary>
 			public const string WorldOriginHeight = "_WorldOriginHeight";
+			public const string Alpha = "_Alpha";
+		}
+
+        public static class HoloGamemodePortalRim
+        {
+            /// <summary>
+            /// The name of the shader.
+            /// </summary>
+            public const string Name = "SubLight/Holo/GamemodePortalRim";
+            public const string PrimaryColor = "_PrimaryColor";
+        }
+
+        public static class HoloGamemodePortalParallax
+		{
+			/// <summary>
+			/// The name of the shader.
+			/// </summary>
+			public const string Name = "SubLight/Holo/GamemodePortalParallax";
+			public const string PrimaryTexture = "_PrimaryTexture";
+			public const string ParallaxCoordinates = "_ParallaxCoordinates";
+			public const string ChromaticOffsetScale = "_ChromaticOffsetScale";
 			public const string Alpha = "_Alpha";
 		}
 

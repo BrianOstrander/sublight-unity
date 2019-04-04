@@ -128,7 +128,16 @@ namespace LunraGames.SubLight
 
 					if (current != null)
 					{
-						isEnabled = isEnabled && (current.ValueType == entry.ValueType);
+						switch (current.ValueType)
+						{
+							case KeyValueTypes.Integer:
+							case KeyValueTypes.Enumeration:
+								isEnabled &= entry.ValueType == KeyValueTypes.Integer || entry.ValueType == KeyValueTypes.Enumeration;
+								break;
+							default:
+								isEnabled &= current.ValueType == entry.ValueType;
+								break;
+						}
 						GUI.color = isEnabled ? normalColor : Color.gray;
 					}
 
@@ -167,7 +176,19 @@ namespace LunraGames.SubLight
 						{
 							if (entry.IsCurrent) EditorGUILayoutExtensions.PushContentColor(CurrentContentColor);
 							{
+								EditorGUILayoutExtensions.PushEnabled(isEnabled);
+								{
+									if (entry.IsCurrent != EditorGUILayout.Toggle(GUIContent.none, entry.IsCurrent, GUILayout.Width(32f)) && !entry.IsCurrent)
+									{
+										OnSelection(entry);
+									}
+								}
+								EditorGUILayoutExtensions.PopEnabled();
+
+								GUILayout.Space(-20f);
+
 								entry.Expanded = EditorGUILayout.Foldout(entry.Expanded, new GUIContent(ObjectNames.NicifyVariableName(entry.Key.Replace('_', ' ')), entry.Key), true);
+
 
 								var accessText = string.Empty;
 								var accessTooltip = string.Empty;
@@ -192,17 +213,6 @@ namespace LunraGames.SubLight
 								GUILayout.Label(entry.Target.ToString(), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false));
 							}
 							if (entry.IsCurrent) EditorGUILayoutExtensions.PopContentColor();
-
-							GUILayout.Space(-10f);
-
-							EditorGUILayoutExtensions.PushEnabled(isEnabled);
-							{
-								if (entry.IsCurrent != EditorGUILayout.Toggle(GUIContent.none, entry.IsCurrent, GUILayout.Width(32f)) && !entry.IsCurrent)
-								{
-									OnSelection(entry);
-								}
-							}
-							EditorGUILayoutExtensions.PopEnabled();
 						}
 						GUILayout.EndHorizontal();
 

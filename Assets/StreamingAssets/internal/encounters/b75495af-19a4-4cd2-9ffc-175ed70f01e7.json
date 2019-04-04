@@ -160,12 +160,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 30,
                   "lock_state": 10
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -191,12 +190,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 10,
                   "lock_state": 0
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -222,12 +220,11 @@
               "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {},
-                "strings": {},
-                "enums": {
+                "integers": {
                   "selection": 10,
                   "lock_state": 0
                 },
+                "strings": {},
                 "floats": {}
               },
               "filtering": {
@@ -423,7 +420,7 @@
     ]
   },
   "ignore": true,
-  "version": 8,
+  "version": 9,
   "meta": "Tutorial: Intro",
   "metaKeyValues": {
     "EncounterId": "bf8956db-4fb2-4688-a806-068321c9de3c"

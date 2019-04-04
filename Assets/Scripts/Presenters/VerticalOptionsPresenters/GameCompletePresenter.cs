@@ -81,7 +81,14 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			var theme = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsThemes.Success : VerticalOptionsThemes.Error;
-			var icon = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsIcons.GameSuccess : VerticalOptionsIcons.GameFailure;
+			var icon = keyValues.GetEnumeration<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride);
+
+			switch (icon)
+			{
+				case VerticalOptionsIcons.Unknown:
+					icon = condition == EncounterEvents.GameComplete.Conditions.Success ? VerticalOptionsIcons.GameSuccess : VerticalOptionsIcons.GameFailure;
+					break;
+			}
 
 			title = string.IsNullOrEmpty(title) ? defaultTitle : title;
 			header = string.IsNullOrEmpty(header) ? defaultHeader : header;
@@ -94,7 +101,7 @@ namespace LunraGames.SubLight.Presenters
 
 				var newMessage = string.Empty;
 
-				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.PlanetCount));
+				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScannableBodyIndex));
 				newMessage += "We've sent a probe to the surface, here are the results.\n\n";
 
 				var scanLevel = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeScanLevel);
@@ -219,14 +226,12 @@ namespace LunraGames.SubLight.Presenters
 			if (!string.IsNullOrEmpty(header)) entries.Add(LabelVerticalOptionsEntry.CreateHeader(header));
 			if (!string.IsNullOrEmpty(body)) entries.Add(LabelVerticalOptionsEntry.CreateBody(body));
 
-			switch (condition)
-			{
-				case EncounterEvents.GameComplete.Conditions.Failure:
-					entries.Add(
-						ButtonVerticalOptionsEntry.CreateButton(language.Retry.Value, OnClickRetry)
-					);
-					break;
-			}
+			entries.Add(
+				ButtonVerticalOptionsEntry.CreateButton(
+					condition == EncounterEvents.GameComplete.Conditions.Success ? language.RetrySuccess.Value : language.RetryFailure.Value,
+					OnClickRetry
+				)
+			);
 
 			entries.Add(
 				ButtonVerticalOptionsEntry.CreateButton(language.MainMenu.Value, OnClickMainMenu)
@@ -275,6 +280,13 @@ namespace LunraGames.SubLight.Presenters
 					var homePayload = new HomePayload();
 					homePayload.MainCamera = payload.MainCamera;
 					homePayload.AutoRetryNewGame = autoNewgame;
+					homePayload.AutoRetryNewGameBlock = new CreateGameBlock
+					{
+						GamemodeId = model.GamemodeId,
+
+						GalaxyId = model.GalaxyId,
+						GalaxyTargetId = model.GalaxyTargetId
+					};
 					App.SM.RequestState(homePayload);
 				},
 				description
@@ -298,7 +310,7 @@ namespace LunraGames.SubLight.Presenters
 			var gameCompletion = handler.Events.Value.FirstOrDefault(e => e.EncounterEvent.Value == EncounterEvents.Types.GameComplete);
 			if (gameCompletion == null) return;
 
-			var condition = gameCompletion.KeyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition);
+			var condition = gameCompletion.KeyValues.GetEnumeration<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition);
 
 			var details = model.SaveDetails.Value;
 			details.IsCompleted = true;

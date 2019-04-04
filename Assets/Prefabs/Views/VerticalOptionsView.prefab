@@ -3442,6 +3442,12 @@ MonoBehaviour:
     Sprite: {fileID: 21300000, guid: 6d6fbce7d3fe4484aba7293ff1df4b4f, type: 3}
   - Icon: 90
     Sprite: {fileID: 21300000, guid: f9d26d0a9fc3d48b5b94e7f721cb6916, type: 3}
+  - Icon: 1020
+    Sprite: {fileID: 21300000, guid: 2d780f3f4277248e196968f49e8dbd4f, type: 3}
+  - Icon: 1030
+    Sprite: {fileID: 21300000, guid: cb040b91600f646d3a65245f17792422, type: 3}
+  - Icon: 1040
+    Sprite: {fileID: 21300000, guid: 1fc02d3b7cf7d452a91157e9e4989eee, type: 3}
   primaryColorGraphics:
   - {fileID: 7414643357384007153}
   - {fileID: 9673063455839720}

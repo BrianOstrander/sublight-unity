@@ -27,6 +27,7 @@
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": [
       {
         "operation": "NotCompleted",
@@ -47,7 +48,7 @@
           {
             "entry": {
               "title": "Navigation",
-              "message": "You've <b>selected</b> a system, click it again to <b>confirm</b> your transit. This will consume rations and propellant, but you can gain those back by traveling to systems with resources!<br><br>If you're low on <b>rations</b> you can change your <b>rationing</b> level, but be careful not to starve your whole population! When rationing is <b>insufficient</b> your population will <b>decrease</b>. If you increase your rationing, your population will <b>increase</b>, but make sure not to let your population get too high either, your life support will fail!",
+              "message": "You've <b>selected</b> a system, click it again to <b>confirm</b> your transit. This will consume rations and propellant, but you can gain those back by traveling to systems with resources!",
               "dialogType": "Confirm",
               "dialogStyle": "Neutral",
               "successText": "Understood",
@@ -56,6 +57,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "f10825a3-c2ff-4b5b-b017-a4b993879efc"
@@ -70,7 +72,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 8,
+  "version": 9,
   "meta": "Tutorial: Navigation Confirm",
   "metaKeyValues": {
     "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"

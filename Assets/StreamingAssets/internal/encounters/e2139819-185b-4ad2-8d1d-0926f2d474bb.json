@@ -1,0 +1,290 @@
+{
+  "orderWeight": 10,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "47165b82-d3ee-4b25-8b58-de330ddc2587",
+  "name": "Transit Limited - Low",
+  "trigger": "TransitComplete",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [
+      {
+        "operation": "GreaterThan",
+        "index": 1,
+        "filterId": "911eb4f6-8284-4c91-ab55-54a8a4e4ffa5",
+        "group": "All",
+        "Input0": {
+          "AddressId": "a47ef9c8-1fc6-4b30-859c-fd4f3abefe42",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_history_count"
+        },
+        "Input1": {
+          "AddressId": "41a60c86-ee98-4686-9288-9072dcbccf5e",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_limited_history_delay_low"
+        }
+      }
+    ],
+    "stringKeyValues": [],
+    "floatKeyValues": [
+      {
+        "operation": "LessThanOrEquals",
+        "filterId": "8c6a4ef4-6aaf-41aa-a4b9-2174730c0285",
+        "group": "All",
+        "Input0": {
+          "AddressId": "5d782505-1437-4264-9969-2b7c897e70d2",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_range_ratio"
+        },
+        "Input1": {
+          "AddressId": "6a7beff5-c9ca-40ca-b090-9d2c003c225e",
+          "Source": "LocalValue",
+          "LocalValue": 0.75
+        }
+      },
+      {
+        "operation": "GreaterThan",
+        "index": 2,
+        "filterId": "f24911b8-7a4d-47e9-a07a-5680dded4517",
+        "group": "All",
+        "Input0": {
+          "AddressId": "cae51569-da8c-402c-ab7d-a6fcb8fd59ea",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_range_ratio"
+        },
+        "Input1": {
+          "AddressId": "85571c6b-67a0-4b4a-a32b-03563e4895f8",
+          "Source": "LocalValue",
+          "LocalValue": 0.3
+        }
+      }
+    ],
+    "enumerationKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "e836a6f9-1464-4c5d-984b-81c03486d4cd",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transit_history_count"
+                },
+                "Input1": {
+                  "AddressId": "7828baa9-06bb-4b55-8706-b67504a801a0",
+                  "Source": "LocalValue",
+                  "LocalValue": 5
+                },
+                "MinimumClamping": {
+                  "AddressId": "dfea5e8f-e3b1-4d2e-b834-015bc73ebe02",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "867abbd1-e4be-4ccc-8984-4744788b31f5",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "074ec01d-35b0-48d7-b33d-ee8c66a2096f",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transit_limited_history_delay_low"
+                }
+              },
+              "entryId": "fac152e9-e9c7-4c3e-9ebb-b8dc3e5a348d"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "71a185e8-88bc-41c4-841c-8ad17b7e18c2",
+        "fallbackLogId": "e7329799-cf31-4004-a5ea-4909e5d9edcc"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "TriggerQueue",
+              "keyValues": {
+                "booleans": {
+                  "pop_none": false,
+                  "pop_load": false,
+                  "pop_initializerules": false,
+                  "pop_navigationselect": false,
+                  "pop_navigationselectoutofrange": false,
+                  "pop_transitcomplete": false,
+                  "pop_resourcerequest": false,
+                  "pop_resourceconsume": false,
+                  "pop_systemidle": false
+                },
+                "integers": {
+                  "push_none": 0,
+                  "push_load": 0,
+                  "push_initializerules": 0,
+                  "push_navigationselect": 0,
+                  "push_navigationselectoutofrange": 0,
+                  "push_transitcomplete": 1,
+                  "push_resourcerequest": 0,
+                  "push_resourceconsume": 0,
+                  "push_systemidle": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "f7bf6b86-448c-40d4-9c0d-d33e1575d683"
+            }
+          }
+        ],
+        "index": 1,
+        "logId": "e7329799-cf31-4004-a5ea-4909e5d9edcc",
+        "fallbackLogId": "9dc80e75-0c24-4529-90a5-86f487179cef"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Rations Low",
+              "message": "Our ark is low on <b>rations</b>, limiting the distance we can travel. Look for systems rich with resources to keep going.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Warning",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThan",
+                    "filterId": "f39e53c7-a487-41a2-8347-9f079d6e0e7a",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "682077ae-ea9a-4533-9742-8123f961fdd0",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "rations_fulfillment"
+                    },
+                    "Input1": {
+                      "AddressId": "d6379845-9cac-4694-b909-dbf948010844",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "propellant_fulfillment"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "17b58255-5694-434c-8f0a-1fe9357137a0"
+            }
+          },
+          {
+            "entry": {
+              "title": "Propellant Low",
+              "message": "Our ark is low on <b>propellant</b>, limiting the distance we can travel. Look for systems rich with resources to keep going.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Warning",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThan",
+                    "filterId": "b452479e-94c9-495e-800d-f384cdf7d3a9",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "763e1ef3-3af5-4ca9-9386-2ffa5f83cf74",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "propellant_fulfillment"
+                    },
+                    "Input1": {
+                      "AddressId": "f4a8b313-2aea-4851-9c2c-c565cbfb672b",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "rations_fulfillment"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "5d62b66a-7b1a-402c-af58-a9b1a9575c96"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "title": "Resources Low",
+              "message": "Without enough <b>rations</b> and <b>propellant</b>, the distance we can travel is being restricted. Look for systems with more of these resources to keep going.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Warning",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d7ded89c-2900-4897-98ac-c4c971dd1763"
+            },
+            "index": 2
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "9dc80e75-0c24-4529-90a5-86f487179cef"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 9,
+  "meta": "Transit Limited - Low",
+  "metaKeyValues": {
+    "EncounterId": "47165b82-d3ee-4b25-8b58-de330ddc2587"
+  },
+  "created": "2019-04-02T10:22:57.664683-07:00",
+  "modified": "2019-04-02T10:22:57.664683-07:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

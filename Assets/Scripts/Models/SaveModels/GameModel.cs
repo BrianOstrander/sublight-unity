@@ -66,12 +66,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] EncounterStatusListModel encounterStatuses = new EncounterStatusListModel();
 		[JsonIgnore] public EncounterStatusListModel EncounterStatuses { get { return encounterStatuses; } }
 
-		[JsonProperty] string galaxyId;
-		[JsonIgnore] public string GalaxyId { get { return galaxyId; } set { galaxyId = value; } }
-
-		[JsonProperty] string galaxyTargetId;
-		[JsonIgnore] public string GalaxyTargetId { get { return galaxyTargetId; } set { galaxyTargetId = value; } }
-
 		[JsonProperty] UniverseModel universe;
 		/// <summary>
 		/// Gets or sets the universe.
@@ -82,6 +76,17 @@ namespace LunraGames.SubLight.Models
 		/// </remarks>
 		/// <value>The universe.</value>
 		[JsonIgnore] public UniverseModel Universe { get { return universe; } set { universe = value; } }
+		#endregion
+
+		#region Serialized Model Ids
+		[JsonProperty] string galaxyId;
+		[JsonIgnore] public string GalaxyId { get { return galaxyId; } set { galaxyId = value; } }
+
+		[JsonProperty] string galaxyTargetId;
+		[JsonIgnore] public string GalaxyTargetId { get { return galaxyTargetId; } set { galaxyTargetId = value; } }
+
+		[JsonProperty] string gamemodeId;
+		[JsonIgnore] public string GamemodeId { get { return gamemodeId; } set { gamemodeId = value; } }
 		#endregion
 
 		#region Non Serialized Models

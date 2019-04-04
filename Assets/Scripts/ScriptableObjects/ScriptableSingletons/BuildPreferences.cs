@@ -52,6 +52,10 @@ namespace LunraGames.SubLight
 		public string DiscordUrl;
 		public string TwitterUrl;
 
+		public string DefaultGamemodeId;
+		public string DefaultGalaxyId;
+		public string DefaultGalaxyTargetId;
+
 		public AnalyticsPreferences Analytics;
 
 		public Changelog[] ChangeLogs;

@@ -16,9 +16,9 @@ namespace LunraGames.SubLight.Presenters
 		{
 			Model.Context.TransitState.Changed += OnTransitState;
 			Model.Context.Grid.HazardOffset.Changed += OnGridHazardOffset;
-			Model.Ship.Range.Changed += OnTransitRange;
+			//Model.Ship.Range.Changed += OnTransitRange;
 
-			OnTransitRange(Model.Ship.Range);
+			//OnTransitRange(Model.Ship.Range);
 		}
 
 		protected override void OnUnBind()
@@ -27,7 +27,7 @@ namespace LunraGames.SubLight.Presenters
 
 			Model.Context.TransitState.Changed -= OnTransitState;
 			Model.Context.Grid.HazardOffset.Changed -= OnGridHazardOffset;
-			Model.Ship.Range.Changed -= OnTransitRange;
+			//Model.Ship.Range.Changed -= OnTransitRange;
 		}
 
 		protected override void OnShowView()

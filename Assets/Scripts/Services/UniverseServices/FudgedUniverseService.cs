@@ -130,6 +130,9 @@ namespace LunraGames.SubLight
 
 			var classification = hackGenerator.NextFloat;
 
+			var rationsAbundance = 1f - classification;
+			var propellantAbundance = classification;
+
 			if (classification < 0.8f)
 			{
 				systemModel.PrimaryClassification.Value = SystemClassifications.Stellar;
@@ -137,43 +140,35 @@ namespace LunraGames.SubLight
 				var classificationSecondary = hackGenerator.NextFloat;
 				systemModel.IconScale.Value = classificationSecondary;
 
-				if (classificationSecondary < 0.5f)
+				if (classificationSecondary < 0.54f)
 				{
 					systemModel.SecondaryClassification.Value = "Red Dwarf";
 					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.53f, 1f);
 				}
-				else if (classificationSecondary < 0.65f)
+				else if (classificationSecondary < 0.69f)
 				{
 					systemModel.SecondaryClassification.Value = "Yellow Dwarf";
 					systemModel.IconColor.Value = Color.HSVToRGB(0.161f, 0.53f, 1f);
 				}
-				else if (classificationSecondary < 0.75f)
+				else if (classificationSecondary < 0.79f)
 				{
 					systemModel.SecondaryClassification.Value = "Red Giant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.59f, 1f);
 				}
-				else if (classificationSecondary < 0.83f)
+				else if (classificationSecondary < 0.87f)
 				{
 					systemModel.SecondaryClassification.Value = "Blue Giant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0.586f, 0.61f, 1f);
 				}
-				else if (classificationSecondary < 0.9f)
+				else if (classificationSecondary < 0.94f)
 				{
 					systemModel.SecondaryClassification.Value = "Red Hypergiant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.63f, 1f);
 				}
-				else if (classificationSecondary < 0.96f)
+				else
 				{
 					systemModel.SecondaryClassification.Value = "Blue Hypergiant";
 					systemModel.IconColor.Value = Color.HSVToRGB(0.555f, 0.61f, 1f);
-				}
-				else
-				{
-					// TODO: LOL DUPE
-					systemModel.SecondaryClassification.Value = "Red Dwarf";
-					systemModel.IconColor.Value = Color.HSVToRGB(0f, 0.53f, 1f);
-					//systemModel.SecondaryClassification.Value = "White Dwarf";
-					//systemModel.IconColor.Value = Color.HSVToRGB(0f, 0f, 1f);
 				}
 			}
 			else
@@ -200,8 +195,8 @@ namespace LunraGames.SubLight
 				}
 			}
 
-			if (hackGenerator.NextFloat < 0.15f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.PlanetCount, 0);
-			else systemModel.KeyValues.Set(KeyDefines.CelestialSystem.PlanetCount, hackGenerator.GetNextInteger(1, GDCHackGlobals.PlanetCountMaximum + 1));
+			if (hackGenerator.NextFloat < 0.15f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.ScannableBodyIndex, 0);
+			else systemModel.KeyValues.Set(KeyDefines.CelestialSystem.ScannableBodyIndex, hackGenerator.GetNextInteger(1, GDCHackGlobals.PlanetCountMaximum + 1));
 
 			SetHabitable(hackGenerator, systemModel, KeyDefines.CelestialSystem.HabitableAtmosphere);
 			SetHabitable(hackGenerator, systemModel, KeyDefines.CelestialSystem.HabitableGravity);
@@ -215,9 +210,6 @@ namespace LunraGames.SubLight
 			SetScan(hackGenerator, systemModel, KeyDefines.CelestialSystem.ScanLevelWater);
 			SetScan(hackGenerator, systemModel, KeyDefines.CelestialSystem.ScanLevelResources);
 
-			if (hackGenerator.NextFloat < 0.25f) systemModel.KeyValues.Set(KeyDefines.CelestialSystem.AnomalyIndex, hackGenerator.GetNextInteger(1, GDCHackGlobals.AnomalyMaximum + 1));
-			else systemModel.KeyValues.Set(KeyDefines.CelestialSystem.AnomalyIndex, 0);
-
 			systemModel.SpecifiedEncounters.Value = new SpecifiedEncounterEntry[]
 			{
 				new SpecifiedEncounterEntry
@@ -229,8 +221,8 @@ namespace LunraGames.SubLight
 
 			var resourceGenerator = new Demon(SystemModel.Seeds.Resources(systemModel.Seed));
 
-			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Rations.GatherMultiplier, resourceGenerator.NextFloat);
-			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Propellant.GatherMultiplier, resourceGenerator.NextFloat);
+			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Rations.GatherMultiplier, resourceGenerator.NextFloat * rationsAbundance);
+			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Propellant.GatherMultiplier, resourceGenerator.NextFloat * propellantAbundance);
 			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Metallics.GatherMultiplier, resourceGenerator.NextFloat);
 
 			return systemModel;

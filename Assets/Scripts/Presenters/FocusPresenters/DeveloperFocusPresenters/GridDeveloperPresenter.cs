@@ -34,7 +34,6 @@ namespace LunraGames.SubLight.Presenters
 
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 			Model.Context.TransitState.Changed += OnTransitState;
-			Model.Ship.Velocity.Changed += OnVelocity;
 		}
 
 		protected override void OnUnBind()
@@ -45,7 +44,6 @@ namespace LunraGames.SubLight.Presenters
 
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Model.Context.TransitState.Changed -= OnTransitState;
-			Model.Ship.Velocity.Changed -= OnVelocity;
 		}
 
 		protected override void OnUpdateEnabled()
@@ -68,12 +66,11 @@ namespace LunraGames.SubLight.Presenters
 			OnRefreshMessage(true);
 		}
 
-		/* Better to hide this until I actually need it.
-		string GetLink(string linkId, Dictionary<string, Action> target, Action callback)
-		{
-			return GetLink(linkId, linkId, target, callback);
-		}
-		*/
+		// Better to hide this until I actually need it.
+		//string GetLink(string linkId, Dictionary<string, Action> target, Action callback)
+		//{
+		//	return GetLink(linkId, linkId, target, callback);
+		//}
 
 		string GetLink(string linkId, string message, Dictionary<string, Action> target, Action callback)
 		{
@@ -100,8 +97,8 @@ namespace LunraGames.SubLight.Presenters
 			var result = string.Empty;
 
 			result = GetLink(LinkIds.LearnMore, DeveloperStrings.GetSize("Temporary Interface [ Learn More ]", 0.4f), target, OnLearnMore);
-			result = AppendRationing(result, target, gameSource);
-			result = AppendPropellantUsage(result, target, gameSource);
+			//result = AppendRationing(result, target, gameSource);
+			//result = AppendPropellantUsage(result, target, gameSource);
 
 			return result;
 		}
@@ -117,7 +114,7 @@ namespace LunraGames.SubLight.Presenters
 			if (system == null) throw new ArgumentNullException("system");
 			var result = string.Empty;
 
-			result = AppendPopulationMessage(result, target, gameSource);
+			//result = AppendPopulationMessage(result, target, gameSource);
 			result = AppendRations(result, target, gameSource);
 			result = AppendPropellant(result, target, gameSource);
 			result = AppendMetallics(result, target, gameSource);
@@ -162,7 +159,7 @@ namespace LunraGames.SubLight.Presenters
 
 			result += DeveloperStrings.GetBold("Rations: ");
 			if (rationsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0 < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
+			else if (0f < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
 			else result += "Invalid Amount " + rationsPercent + "%";
 
 			result += "\n";
@@ -178,13 +175,13 @@ namespace LunraGames.SubLight.Presenters
 				out propellantFromSystem
 			);
 
-			propellantFromSystem = Mathf.Floor(propellantFromSystem);
-			var propellantAbsolute = Mathf.FloorToInt(propellantFromSystem);
+			var propellantNormal = propellantFromSystem / Model.KeyValues.Get(KeyDefines.Game.Propellant.Maximum);
+			var propellantPercent = Mathf.FloorToInt(propellantNormal * 100f);
 
 			result += DeveloperStrings.GetBold("Propellant: ");
-			if (Mathf.Approximately(0f, propellantFromSystem)) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantAbsolute, Color.green);
-			else result += "Invalid Amount " + propellantFromSystem;
+			if (propellantPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
+			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
+			else result += "Invalid Amount " + propellantPercent + "%";
 
 			result += "\n";
 
@@ -223,144 +220,143 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		string AppendPopulationMessage(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
-		{
-			result += "\n";
+		//string AppendPopulationMessage(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
+		//{
+		//	result += "\n";
 
-			var population = gameSource.Get(KeyDefines.Game.Population);
-			var shipPopulationMinimum = gameSource.Get(KeyDefines.Game.ShipPopulationMinimum);
-			var shipPopulationMaximum = gameSource.Get(KeyDefines.Game.ShipPopulationMaximum);
+		//	var population = gameSource.Get(KeyDefines.Game.Population);
+		//	var shipPopulationMinimum = gameSource.Get(KeyDefines.Game.ShipPopulationMinimum);
+		//	var shipPopulationMaximum = gameSource.Get(KeyDefines.Game.ShipPopulationMaximum);
 
-			result += DeveloperStrings.GetBold("Population: ") + population.ToString("N0");
+		//	result += DeveloperStrings.GetBold("Population: ") + population.ToString("N0");
 
-			var currentPopulation = Model.KeyValues.Get(KeyDefines.Game.Population);
-			if (1f < Mathf.Abs(population - currentPopulation))
-			{
-				var populationDelta = population - currentPopulation;
-				result += DeveloperStrings.GetColor(
-					DeveloperStrings.GetSize(
-						(populationDelta < 0f ? " " : " +") + populationDelta.ToString("N0"),
-						0.4f
-					),
-					(populationDelta < 0f ? Color.red : Color.green).NewS(0.65f)
-				);
-			}
+		//	var currentPopulation = Model.KeyValues.Get(KeyDefines.Game.Population);
+		//	if (1f < Mathf.Abs(population - currentPopulation))
+		//	{
+		//		var populationDelta = population - currentPopulation;
+		//		result += DeveloperStrings.GetColor(
+		//			DeveloperStrings.GetSize(
+		//				(populationDelta < 0f ? " " : " +") + populationDelta.ToString("N0"),
+		//				0.4f
+		//			),
+		//			(populationDelta < 0f ? Color.red : Color.green).NewS(0.65f)
+		//		);
+		//	}
 
-			result += "\n\t" + DeveloperStrings.GetRatio(
-				population,
-				shipPopulationMinimum,
-				shipPopulationMaximum,
-				DeveloperStrings.RatioThemes.ProgressBar,
-				new DeveloperStrings.RatioColor(Color.green, Color.red, true)
-			);
+		//	result += "\n\t" + DeveloperStrings.GetRatio(
+		//		population,
+		//		shipPopulationMinimum,
+		//		shipPopulationMaximum,
+		//		DeveloperStrings.RatioThemes.ProgressBar,
+		//		new DeveloperStrings.RatioColor(Color.green, Color.red, true)
+		//	);
 
-			return result;
-		}
+		//	return result;
+		//}
 
-		string AppendRationing(
-			string result,
-			Dictionary<string, Action> target,
-			KeyValueListModel gameSource
-		)
-		{
-			var rationing = gameSource.Get(KeyDefines.Game.Rationing);
-			var rationingMinimum = gameSource.Get(KeyDefines.Game.RationingMinimum);
-			var rationingMaximum = gameSource.Get(KeyDefines.Game.RationingMaximum);
-			var rationingDelta = (rationingMaximum - rationingMinimum) + 1;
-			if (3 <= rationingDelta && rationingDelta <= 17)
-			{
-				result += "\n";
+		//string AppendRationing(
+		//	string result,
+		//	Dictionary<string, Action> target,
+		//	KeyValueListModel gameSource
+		//)
+		//{
+		//	var rationing = gameSource.Get(KeyDefines.Game.Rationing);
+		//	var rationingMinimum = gameSource.Get(KeyDefines.Game.RationingMinimum);
+		//	var rationingMaximum = gameSource.Get(KeyDefines.Game.RationingMaximum);
+		//	var rationingDelta = (rationingMaximum - rationingMinimum) + 1;
+		//	if (3 <= rationingDelta && rationingDelta <= 17)
+		//	{
+		//		result += "\n";
 
-				var boundrySaturation = 0.45f;
-				var normalSaturation = 0.65f;
+		//		var boundrySaturation = 0.45f;
+		//		var normalSaturation = 0.65f;
 
-				result += DeveloperStrings.GetBold("Rationing: ");
+		//		result += DeveloperStrings.GetBold("Rationing: ");
 
-				var rationingDescription = string.Empty;
+		//		var rationingDescription = string.Empty;
 
-				switch (rationing)
-				{
-					case 2: rationingDescription = "Plentiful"; break;
-					case 1: rationingDescription = "Generous"; break;
-					case 0: rationingDescription = "Sufficient"; break;
-					case -1: rationingDescription = "Minimal"; break;
-					case -2: rationingDescription = "Meager"; break;
-					default:
-						rationingDescription = rationing < 0 ? "Starved" : "Gorged";
-						break;
-				}
+		//		switch (rationing)
+		//		{
+		//			case 2: rationingDescription = "Plentiful"; break;
+		//			case 1: rationingDescription = "Generous"; break;
+		//			case 0: rationingDescription = "Sufficient"; break;
+		//			case -1: rationingDescription = "Minimal"; break;
+		//			case -2: rationingDescription = "Meager"; break;
+		//			default:
+		//				rationingDescription = rationing < 0 ? "Starved" : "Gorged";
+		//				break;
+		//		}
 
-				if (rationing == 0) result += rationingDescription;
-				else result += DeveloperStrings.GetColor(rationingDescription, rationing < 0 ? Color.red : Color.green);
+		//		if (rationing == 0) result += rationingDescription;
+		//		else result += DeveloperStrings.GetColor(rationingDescription, rationing < 0 ? Color.red : Color.green);
 
-				result += "\n\t" + DeveloperStrings.GetColor("|", Color.red.NewS(boundrySaturation)) + DeveloperStrings.GetColorTagBegin(Color.red.NewS(normalSaturation));
+		//		result += "\n\t" + DeveloperStrings.GetColor("|", Color.red.NewS(boundrySaturation)) + DeveloperStrings.GetColorTagBegin(Color.red.NewS(normalSaturation));
 
-				for (var i = rationingMinimum; i < (rationingMaximum + 1); i++)
-				{
-					if (i == 0) result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColorTagBegin(Color.white);
+		//		for (var i = rationingMinimum; i < (rationingMaximum + 1); i++)
+		//		{
+		//			if (i == 0) result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColorTagBegin(Color.white);
 
-					var currRationing = string.Empty;
-					if (i == rationing)
-					{
-						var currentColor = Color.white;
-						if (i < 0) currentColor = Color.red;
-						else if (0 < i) currentColor = Color.green;
+		//			var currRationing = string.Empty;
+		//			if (i == rationing)
+		//			{
+		//				var currentColor = Color.white;
+		//				if (i < 0) currentColor = Color.red;
+		//				else if (0 < i) currentColor = Color.green;
 
-						currRationing = DeveloperStrings.GetColor(" + ", currentColor);
-					}
-					else currRationing = " — "; // Special dash, copy paste to preserve!
+		//				currRationing = DeveloperStrings.GetColor(" + ", currentColor);
+		//			}
+		//			else currRationing = " — "; // Special dash, copy paste to preserve!
 
-					var currIndex = i;
-					result += GetLink(LinkIds.RationingPrefix + i, currRationing, target, () => OnSetRationing(currIndex));
+		//			var currIndex = i;
+		//			result += GetLink(LinkIds.RationingPrefix + i, currRationing, target, () => OnSetRationing(currIndex));
 
-					if (i == 0) result += DeveloperStrings.GetColorTagBegin(Color.green.NewS(normalSaturation));
-				}
+		//			if (i == 0) result += DeveloperStrings.GetColorTagBegin(Color.green.NewS(normalSaturation));
+		//		}
 
-				result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColor("|", Color.green.NewS(boundrySaturation));
-			}
+		//		result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColor("|", Color.green.NewS(boundrySaturation));
+		//	}
 
-			return result;
-		}
+		//	return result;
+		//}
 
-		string AppendPropellantUsage(
-			string result,
-			Dictionary<string, Action> target,
-			KeyValueListModel gameSource
-		)
-		{
-			result += "\nPropellant Usage\n\t";
+		//string AppendPropellantUsage(
+		//	string result,
+		//	Dictionary<string, Action> target,
+		//	KeyValueListModel gameSource
+		//)
+		//{
+		//	result += "\nPropellant Usage\n\t";
 
-			var boundrySaturation = 0.45f;
-			var normalSaturation = 0.65f;
-			var unusedSaturation = 0.45f;
+		//	var boundrySaturation = 0.45f;
+		//	var normalSaturation = 0.65f;
+		//	var unusedSaturation = 0.45f;
 
-			result += DeveloperStrings.GetColor("|", Color.blue.NewS(boundrySaturation)) + DeveloperStrings.GetColorTagBegin(Color.blue.NewS(normalSaturation));
+		//	result += DeveloperStrings.GetColor("|", Color.blue.NewS(boundrySaturation)) + DeveloperStrings.GetColorTagBegin(Color.blue.NewS(normalSaturation));
 
-			var currentPropellant = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount));
-			var currentPropellantUsage = Model.KeyValues.Get(KeyDefines.Game.PropellantUsage);
-			var currentPropellantMaximum = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Maximum));
+		//	var currentPropellant = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount));
+		//	var currentPropellantUsage = Model.KeyValues.Get(KeyDefines.Game.PropellantUsage);
+		//	var currentPropellantMaximum = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Maximum));
 
-			for (var i = 1; i <= currentPropellantMaximum; i++)
-			{
-				if (i - 1 == currentPropellantUsage)
-				{
-					result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColorTagBegin(Color.blue.NewS(unusedSaturation));
-				}
+		//	for (var i = 1; i <= currentPropellantMaximum; i++)
+		//	{
+		//		if (i - 1 == currentPropellantUsage)
+		//		{
+		//			result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColorTagBegin(Color.blue.NewS(unusedSaturation));
+		//		}
 
-				if (i - 1 == currentPropellant) result += DeveloperStrings.GetColorTagBegin(Color.white);
+		//		if (i - 1 == currentPropellant) result += DeveloperStrings.GetColorTagBegin(Color.white);
 
-				var currPropellantUsage = string.Empty;
-				currPropellantUsage = i == currentPropellantUsage ? " + " : " — "; // Special hyphen, copy paste!
+		//		var currPropellantUsage = string.Empty;
+		//		currPropellantUsage = i == currentPropellantUsage ? " + " : " — "; // Special hyphen, copy paste!
 
-				var currIndex = i;
-				result += GetLink(LinkIds.PropellantUsagePrefix + i, currPropellantUsage, target, () => OnSetPropellantUsage(currIndex));
-			}
+		//		var currIndex = i;
+		//		result += GetLink(LinkIds.PropellantUsagePrefix + i, currPropellantUsage, target, () => OnSetPropellantUsage(currIndex));
+		//	}
 
-			result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColor("|", Color.blue.NewS(boundrySaturation));
+		//	result += DeveloperStrings.GetColorTagEnd() + DeveloperStrings.GetColor("|", Color.blue.NewS(boundrySaturation));
 
-			return result;
-		}
-
+		//	return result;
+		//}
 
 		string AppendRations(
 			string result,
@@ -405,18 +401,18 @@ namespace LunraGames.SubLight.Presenters
 		{
 			result += "\n";
 
-			var propellant = Mathf.FloorToInt(gameSource.Get(KeyDefines.Game.Propellant.Amount));
-			var propellantMaximum = Mathf.FloorToInt(gameSource.Get(KeyDefines.Game.Propellant.Maximum));
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
 
-			result += DeveloperStrings.GetBold("Propellant: ") + propellant;
+			result += DeveloperStrings.GetBold("Propellant: ") + propellant.ToString("N2");
 
-			var currentPropellant = Mathf.FloorToInt(Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount));
-			if (0 < Mathf.Abs(propellant - currentPropellant))
+			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount);
+			if (!Mathf.Approximately(0f, propellant - currentPropellant))
 			{
 				var propellantDelta = propellant - currentPropellant;
 				result += DeveloperStrings.GetColor(
 					DeveloperStrings.GetSize(
-						(propellantDelta < 0f ? " " : " +") + propellantDelta,
+						(propellantDelta < 0f ? " " : " +") + propellantDelta.ToString("N2"),
 						0.4f
 					),
 					(propellantDelta < 0f ? Color.red : Color.green).NewS(0.65f)
@@ -484,11 +480,6 @@ namespace LunraGames.SubLight.Presenters
 			OnRefreshMessage();
 		}
 
-		void OnVelocity(VelocityProfileState velocity)
-		{
-			OnRefreshMessage();
-		}
-
 		void OnTransitState(TransitState transitState)
 		{
 			OnRefreshMessage();
@@ -529,20 +520,19 @@ namespace LunraGames.SubLight.Presenters
 
 			if (system != Model.Context.CurrentSystem.Value)
 			{
-				var currVelocity = Model.Ship.Velocity.Value.Current.RelativisticLightYears;
-				var currDistance = UniversePosition.ToLightYearDistance(
-					UniversePosition.Distance(
-						Model.Context.CurrentSystem.Value.Position.Value,
-						system.Position.Value
-					)
+				var currVelocity = Model.KeyValues.Get(KeyDefines.Game.TransitVelocity);
+				var currDistance = UniversePosition.Distance(
+					Model.Context.CurrentSystem.Value.Position.Value,
+					system.Position.Value
 				);
 
 				gameSource = gameSource.Duplicate;
 				GameplayUtility.ApplyTransit(
 					RelativityUtility.TransitTime(
 						currVelocity,
-						currDistance
+						UniversePosition.ToLightYearDistance(currDistance)
 					).ShipTime.TotalYears,
+					currDistance,
 					gameSource,
 					system.KeyValues.Duplicate
 				);
@@ -570,12 +560,12 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnSetRationing(int rationing)
 		{
-			App.Callbacks.KeyValueRequest(KeyValueRequest.SetDefined(KeyDefines.Game.Rationing, rationing));
+			//App.Callbacks.KeyValueRequest(KeyValueRequest.SetDefined(KeyDefines.Game.Rationing, rationing));
 		}
 
 		void OnSetPropellantUsage(int propellantUsage)
 		{
-			App.Callbacks.KeyValueRequest(KeyValueRequest.SetDefined(KeyDefines.Game.PropellantUsage, propellantUsage));
+			//App.Callbacks.KeyValueRequest(KeyValueRequest.SetDefined(KeyDefines.Game.PropellantUsage, propellantUsage));
 		}
 
 		void OnLearnMore()
@@ -583,8 +573,7 @@ namespace LunraGames.SubLight.Presenters
 			App.Callbacks.DialogRequest(
 				DialogRequest.Confirm(
 					LanguageStringModel.Override(
-						"SubLight is a work in progress, and the current interfaces do not always represent the final product." +
-						"\n - Use the <b>Rationing</b> slider to select how strict your ark's rationing is"
+						"SubLight is a work in progress, and the current interfaces do not always represent the final product."
 					),
 					title: LanguageStringModel.Override("Work In Progress")
 				)

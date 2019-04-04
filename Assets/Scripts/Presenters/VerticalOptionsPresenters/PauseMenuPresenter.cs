@@ -110,6 +110,48 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
+		void PushTryAgainRequest()
+		{
+			// Pause menu should be close should already be closed or on the state machine's stack.
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Reset();
+					View.Shown += done;
+					View.SetEntries(
+						VerticalOptionsThemes.Neutral,
+						LabelVerticalOptionsEntry.CreateTitle(language.TryAgainStarted.Value, VerticalOptionsIcons.Return)
+					);
+					ShowView();
+				},
+				"ShowingPauseMenuTryingAgain"
+			);
+
+			SM.PushBlocking(
+				done => App.Heartbeat.Wait(done, 0.5f),
+				"WaitingPauseMenuForMinimumTryingAgain"
+			);
+
+			SM.Push(
+				() =>
+				{
+					var homePayload = new HomePayload();
+					homePayload.MainCamera = payload.MainCamera;
+					homePayload.AutoRetryNewGame = true;
+					homePayload.AutoRetryNewGameBlock = new CreateGameBlock
+					{
+						GamemodeId = model.GamemodeId,
+
+						GalaxyId = model.GalaxyId,
+						GalaxyTargetId = model.GalaxyTargetId
+					};
+					App.SM.RequestState(homePayload);
+				},
+				"RequestingMainMenuFromPauseMenuForRetry"
+			);
+		}
+
 		void PushMainMenuRequest()
 		{
 			// Pause menu should be close should already be closed or on the state machine's stack.
@@ -200,6 +242,7 @@ namespace LunraGames.SubLight.Presenters
 				LabelVerticalOptionsEntry.CreateHeader(SaveMessage),
 				ButtonVerticalOptionsEntry.CreateButton(language.Resume.Value, OnClickResume),
 				saveEntry,
+				ButtonVerticalOptionsEntry.CreateButton(language.TryAgain.Value, OnClickTryAgain),
 				ButtonVerticalOptionsEntry.CreateButton(language.Preferences.Value, OnClickPreferences),
 				ButtonVerticalOptionsEntry.CreateButton(language.MainMenu.Value, OnClickMainMenu),
 				ButtonVerticalOptionsEntry.CreateButton(language.Quit.Value, OnClickQuit)
@@ -447,6 +490,40 @@ namespace LunraGames.SubLight.Presenters
 					reFocus: false
 				),
 				"ShowingPreferencesFromPauseMenu"
+			);
+		}
+
+		void OnClickTryAgain()
+		{
+			if (NotInteractable) return;
+
+			state = States.Animating;
+
+			SM.PushBlocking(
+				done =>
+				{
+					View.Closed += done;
+					CloseView();
+				},
+				"ClosingPauseMenuForTryAgain"
+			);
+
+			SM.PushBlocking(
+				done =>
+				{
+					App.Callbacks.DialogRequest(
+						DialogRequest.ConfirmDeny(
+							language.TryAgainConfirm.Message,
+							DialogStyles.Error,
+							language.TryAgainConfirm.Title,
+							PushTryAgainRequest,
+							() => Show(),
+							done: result => done(),
+							overrideFocuseHandling: true
+						)
+					);
+				},
+				"ShowingDialogFromTryAgainClick"
 			);
 		}
 

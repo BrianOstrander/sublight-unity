@@ -29,7 +29,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.RelativeDayTime.Changed += OnDayTime;
 			model.Context.CelestialSystemStateLastSelected.Changed += OnSelectedSystem;
-			model.Ship.Velocity.Changed += OnVelocity;
+			//model.Ship.Velocity.Changed += OnVelocity;
 			model.Context.TransitState.Changed += OnTransitState;
 		}
 
@@ -41,7 +41,7 @@ namespace LunraGames.SubLight.Presenters
 
 			model.RelativeDayTime.Changed -= OnDayTime;
 			model.Context.CelestialSystemStateLastSelected.Changed -= OnSelectedSystem;
-			model.Ship.Velocity.Changed -= OnVelocity;
+			//model.Ship.Velocity.Changed -= OnVelocity;
 			model.Context.TransitState.Changed -= OnTransitState;
 		}
 
@@ -79,6 +79,7 @@ namespace LunraGames.SubLight.Presenters
 
 			if (block.State == CelestialSystemStateBlock.States.Selected)
 			{
+				/*
 				var distance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(block.Position, model.Ship.Position.Value));
 				var transitDelta = RelativityUtility.TransitTime(model.Ship.Velocity.Value.Current.RelativisticLightYears, distance);
 
@@ -87,7 +88,7 @@ namespace LunraGames.SubLight.Presenters
 
 				result.AbsoluteTimes[ReferenceFrames.Ship] = model.RelativeDayTime.Value.ShipTime + result.DeltaTimes[ReferenceFrames.Ship];
 				result.AbsoluteTimes[ReferenceFrames.Galactic] = model.RelativeDayTime.Value.GalacticTime + result.DeltaTimes[ReferenceFrames.Galactic];
-
+*/
 				return result;
 			}
 
@@ -128,13 +129,13 @@ namespace LunraGames.SubLight.Presenters
 			View.TimeStampTransition();
 		}
 
-		void OnVelocity(VelocityProfileState velocity)
-		{
-			if (!View.Visible) return;
+		//void OnVelocity(VelocityProfileState velocity)
+		//{
+		//	if (!View.Visible) return;
 
-			View.TimeStamp = GetTimeStamp(model.Context.CelestialSystemStateLastSelected.Value);
-			if (model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected) View.ReferenceFrameTransition();
-		}
+		//	View.TimeStamp = GetTimeStamp(model.Context.CelestialSystemStateLastSelected.Value);
+		//	if (model.Context.CelestialSystemStateLastSelected.Value.State == CelestialSystemStateBlock.States.Selected) View.ReferenceFrameTransition();
+		//}
 
 		void OnReferenceFrameSelection(ReferenceFrames referenceFrame)
 		{

@@ -5,7 +5,9 @@ using System.Linq;
 using LunraGamesEditor;
 
 using UnityEditor;
+
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LunraGames.SubLight
 {
@@ -28,9 +30,16 @@ namespace LunraGames.SubLight
 
 		DevPrefsInt currentTab;
 
+        [SerializeField]
+        GameObject stagedPrefab;
+        [SerializeField]
+        bool stagedPrefabEnabled;
+
 		public DeveloperSettingsWindow()
 		{
 			currentTab = new DevPrefsInt(KeyPrefix + "CurrentTab");
+
+            EditorApplication.playModeStateChanged += OnPlaymodeStateChanged;
 		}
 
 		[MenuItem("Window/Lunra Games/Development Settings")]
@@ -83,7 +92,25 @@ namespace LunraGames.SubLight
 
 			#region Utility
 			GUILayout.Label("Utility", EditorStyles.boldLabel);
-			GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal();
+            {
+                var wasStagedPrefabEnabled = !stagedPrefabEnabled;
+                if (wasStagedPrefabEnabled) EditorGUILayoutExtensions.PushColor(Color.grey);
+                {
+                    GUILayout.Label("Staged", GUILayout.ExpandWidth(false));
+                    stagedPrefab = (GameObject)EditorGUILayout.ObjectField(stagedPrefab, typeof(GameObject), false);
+                    stagedPrefabEnabled = EditorGUILayout.Toggle(stagedPrefabEnabled, GUILayout.Width(14f));
+                    EditorGUILayoutExtensions.PushEnabled(stagedPrefab != null);
+                    {
+                        if (GUILayout.Button("Load", GUILayout.ExpandWidth(false))) OnLoadStagedPrefab();
+                    }
+                    EditorGUILayoutExtensions.PopEnabled();
+                }
+                if (wasStagedPrefabEnabled) EditorGUILayoutExtensions.PopColor();
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
 			{
 				GUILayout.BeginVertical();
 				{
@@ -143,7 +170,7 @@ namespace LunraGames.SubLight
 			{
 				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PushColor(Color.white.NewV(0.7f));
 				{
-					DevPrefs.TimeScaling.Value = EditorGUILayout.Slider("Time Scale", DevPrefs.TimeScaling.Value, 0f, 1f);
+					DevPrefs.TimeScaling.Value = EditorGUILayout.Slider("Time Scale", DevPrefs.TimeScaling.Value, 0f, 4f);
 				}
 				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PopColor();
 
@@ -169,6 +196,7 @@ namespace LunraGames.SubLight
 				GUILayout.BeginVertical();
 				{
 					DevPrefs.SkipMainMenuAnimations.Value = GUILayout.Toggle(DevPrefs.SkipMainMenuAnimations, "Skip Main Menu Animations");
+					DevPrefs.HideMainMenu.Value = GUILayout.Toggle(DevPrefs.HideMainMenu, "Hide Main Menu");
 				}
 				GUILayout.EndVertical();
 				GUILayout.BeginVertical();
@@ -201,6 +229,7 @@ namespace LunraGames.SubLight
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GameSeed, p => p.Value = EditorGUILayout.IntField("Game Seed", p));
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxySeed, p => p.Value = EditorGUILayout.IntField("Galaxy Seed", p));
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GalaxyId, p => p.Value = EditorGUILayout.TextField("Galaxy Id", p));
+						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.GamemodeId, p => p.Value = EditorGUILayout.TextField("Gamemode Id", p));
 						EditorGUILayoutDevPrefsToggle.Field(DevPrefs.ToolbarSelection, p => p.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Toolbar Selection"), "- Select an Override -", DevPrefs.ToolbarSelection.Value));
 						break;
 					case AutoGameOptions.ContinueGame:
@@ -286,5 +315,22 @@ namespace LunraGames.SubLight
 					App.SM.Is(StateMachine.States.Game, StateMachine.Events.Idle);
 			}
 		}
-	}
+
+        #region Events
+        void OnPlaymodeStateChanged(PlayModeStateChange playmode)
+        {
+            switch (playmode)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    if (stagedPrefabEnabled && stagedPrefab != null) OnLoadStagedPrefab();
+                    break;
+            }
+        }
+
+        void OnLoadStagedPrefab()
+        {
+            AssetDatabase.OpenAsset(stagedPrefab);
+        }
+        #endregion
+    }
 }

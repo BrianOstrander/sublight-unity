@@ -27,6 +27,7 @@
     ],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -42,15 +43,15 @@
               "encounterEvent": "GameComplete",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "condition": 20,
+                  "icon_override": 1020
+                },
                 "strings": {
                   "title": "Life Support Failure",
                   "message": "The ark's systems couldn't handle the strain of such a large population...",
                   "header": "The ark's systems couldn't handle the strain of such a large population...",
                   "body": ""
-                },
-                "enums": {
-                  "condition": 20
                 },
                 "floats": {}
               },
@@ -59,6 +60,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "c6b1e6a7-26de-41a9-be0d-f2cbd5279052"
@@ -74,7 +76,8 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "ignore": true,
+  "version": 9,
   "meta": "Failure: Over Population",
   "metaKeyValues": {
     "EncounterId": "7608d6ec-6695-4c37-b470-b388ae4848f3"

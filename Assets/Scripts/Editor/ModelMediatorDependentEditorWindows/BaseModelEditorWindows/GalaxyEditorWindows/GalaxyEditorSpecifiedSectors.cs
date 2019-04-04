@@ -615,7 +615,25 @@ namespace LunraGames.SubLight
 
 					GUILayout.Label("Key Values", EditorStyles.boldLabel);
 
-					foreach (var definedKeyValue in KeyDefines.CelestialSystem.All)
+					var keyValuesExceptions = new IKeyDefinition[]
+					{
+						KeyDefines.CelestialSystem.Index,
+						KeyDefines.CelestialSystem.Seed,
+						KeyDefines.CelestialSystem.Name,
+						KeyDefines.CelestialSystem.Visited,
+						KeyDefines.CelestialSystem.ClassificationPrimary,
+						KeyDefines.CelestialSystem.ClassificationSecondary,
+						KeyDefines.CelestialSystem.IconColor.Hue,
+						KeyDefines.CelestialSystem.IconColor.Saturation,
+						KeyDefines.CelestialSystem.IconColor.Value,
+						KeyDefines.CelestialSystem.IconColor.Alpha,
+						KeyDefines.CelestialSystem.IconScale,
+						KeyDefines.CelestialSystem.PlayerBegin,
+						KeyDefines.CelestialSystem.PlayerEnd,
+						KeyDefines.CelestialSystem.Specified
+					}.Select(k => k.Key);
+
+					foreach (var definedKeyValue in KeyDefines.CelestialSystem.All.Where(k => !keyValuesExceptions.Contains(k.Key)))
 					{
 						SpecifiedSectorsDrawSystemKeyValue(
 							system.KeyValues,
@@ -662,6 +680,13 @@ namespace LunraGames.SubLight
 						content,
 						keyValues,
 						definition as KeyDefinitions.Float
+					);
+					break;
+				case KeyValueTypes.Enumeration:
+					SpecifiedSectorsDrawSystemKeyValue(
+						content,
+						keyValues,
+						definition as KeyDefinitions.IEnumeration
 					);
 					break;
 				default:
@@ -715,6 +740,18 @@ namespace LunraGames.SubLight
 			keyValues.SetFloat(
 				definition.Key,
 				EditorGUILayout.FloatField(content, keyValues.GetFloat(definition.Key))
+			);
+		}
+
+		void SpecifiedSectorsDrawSystemKeyValue(
+			GUIContent content,
+			KeyValueListModel keyValues,
+			KeyDefinitions.IEnumeration definition
+		)
+		{
+			keyValues.SetInteger(
+				definition.Key,
+				EditorGUILayoutExtensions.IntegerEnumPopup(content, keyValues.GetInteger(definition.Key), definition.EnumerationType)
 			);
 		}
 

@@ -61,58 +61,15 @@ namespace LunraGames.SubLight
 			if (!systemSource.Get(systemResource.Discovered))
 			{
 				resourcesFromSystem = systemSource.Get(systemResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMultiplier) * gameSource.Get(shipResource.GatherMaximum);
+				resourcesFromSystem *= gameSource.Get(KeyDefines.Game.ResourceAbundance);
 			}
 
 			resourcesTotal = resourcesFromSystem + gameSource.Get(shipResource.Amount);
 		}
 
-		public static bool RationsValidation(
-			float duration,
-			KeyValueListModel gameSource,
-			KeyValueListModel systemSource,
-			out int rationingMinimum,
-			out int rationingMaximum,
-			out int rationingLimit,
-			out bool rationsInsufficientForLimit
-		)
-		{
-			if (gameSource == null) throw new ArgumentNullException("gameSource");
-			if (systemSource == null) throw new ArgumentNullException("systemSource");
-
-			rationingMinimum = gameSource.Get(KeyDefines.Game.RationingMinimum);
-			rationingMaximum = gameSource.Get(KeyDefines.Game.RationingMaximum);
-			rationingLimit = rationingMinimum;
-			rationsInsufficientForLimit = true;
-
-			var rationingDelta = (rationingMaximum - rationingMinimum) + 1;
-
-			// TODO: Maybe put these somewhere... in like a constant or something?
-			if (rationingDelta < 3 || 17 < rationingDelta) return false;
-
-			float rationsTotal;
-			ResourcesAvailable(
-				gameSource,
-				systemSource,
-				KeyDefines.Game.Rations,
-				KeyDefines.CelestialSystem.Rations,
-				out rationsTotal
-			);
-
-			var population = gameSource.Get(KeyDefines.Game.Population);
-			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
-
-			for (var i = rationingMinimum; i <= rationingMaximum; i++)
-			{
-				if (rationsTotal < RationsConsumed(duration, population, rationsConsumptionMultiplier, i)) break;
-				rationingLimit = i;
-				rationsInsufficientForLimit = false;
-			}
-
-			return true;
-		}
-
 		public static void ApplyTransit(
-			float duration,
+			float duration, // In ship years
+			float distance, // The distance in universe units we're traveling
 			KeyValueListModel gameSource,
 			KeyValueListModel systemSource
 		)
@@ -120,6 +77,122 @@ namespace LunraGames.SubLight
 			if (gameSource == null) throw new ArgumentNullException("gameSource");
 			if (systemSource == null) throw new ArgumentNullException("systemSource");
 
+			var population = gameSource.Get(KeyDefines.Game.Population);
+			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
+			var propellantConsumptionMultiplier = gameSource.Get(KeyDefines.Game.PropellantConsumptionMultiplier);
+
+			var rationsConsumptionPerYear = rationsConsumptionMultiplier * population;
+
+			var rationsConsumed = rationsConsumptionPerYear * duration;
+			var propellantConsumed = distance * propellantConsumptionMultiplier;
+
+			//var rations = Mathf.Max(0f, gameSource.Get(KeyDefines.Game.Rations.Amount) - rationsConsumed);
+			//var propellant = Mathf.Max(0f, gameSource.Get(KeyDefines.Game.Propellant.Amount) - propellantConsumed);
+
+			float rationsTotal;
+			float rationsFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				KeyDefines.Game.Rations,
+				KeyDefines.CelestialSystem.Rations,
+				out rationsTotal,
+				out rationsFromSystem
+			);
+
+			rationsTotal = Mathf.Max(0f, rationsTotal - rationsConsumed);
+			var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
+			var rations = Mathf.Min(rationsMaximum, rationsTotal);
+			var rationsRemainingInSystem = Mathf.Min(Mathf.Max(0f, rationsTotal - rations), rationsFromSystem);
+
+			gameSource.Set(
+				KeyDefines.Game.Rations.Amount,
+				rations
+			);
+
+			if (!systemSource.Get(KeyDefines.CelestialSystem.Rations.Discovered))
+			{
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Rations.Discovered,
+					true
+				);
+
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Rations.GatheredAmount,
+					rationsFromSystem - rationsRemainingInSystem
+				);
+			}
+
+			float propellantTotal;
+			float propellantFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				KeyDefines.Game.Propellant,
+				KeyDefines.CelestialSystem.Propellant,
+				out propellantTotal,
+				out propellantFromSystem
+			);
+
+			propellantTotal = Mathf.Max(0f, propellantTotal - propellantConsumed);
+			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
+			var propellant = Mathf.Min(propellantMaximum, propellantTotal);
+			var propellantRemainingInSystem = Mathf.Min(Mathf.Max(0f, propellantTotal - propellant), propellantFromSystem);
+
+			gameSource.Set(
+				KeyDefines.Game.Propellant.Amount,
+				propellant
+			);
+
+			if (!systemSource.Get(KeyDefines.CelestialSystem.Propellant.Discovered))
+			{
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Propellant.Discovered,
+					true
+				);
+
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Propellant.GatheredAmount,
+					propellantRemainingInSystem
+				);
+			}
+
+			float metallicsTotal;
+			float metallicsFromSystem;
+			ResourcesAvailable(
+				gameSource,
+				systemSource,
+				KeyDefines.Game.Metallics,
+				KeyDefines.CelestialSystem.Metallics,
+				out metallicsTotal,
+				out metallicsFromSystem
+			);
+
+			var metallicsMaximum = gameSource.Get(KeyDefines.Game.Metallics.Maximum);
+			var metallics = Mathf.Min(metallicsMaximum, metallicsTotal);
+			var metallicsRemainingInSystem = Mathf.Min(Mathf.Max(0f, metallicsTotal - metallics), metallicsFromSystem);
+
+			gameSource.Set(
+				KeyDefines.Game.Metallics.Amount,
+				metallics
+			);
+
+			if (!systemSource.Get(KeyDefines.CelestialSystem.Metallics.Discovered))
+			{
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Metallics.Discovered,
+					true
+				);
+
+				systemSource.Set(
+					KeyDefines.CelestialSystem.Metallics.GatheredAmount,
+					metallicsRemainingInSystem
+				);
+			}
+
+			CalculateFulfillment(gameSource);
+
+			/*
 			// -- To Update
 
 			//float? rations = null;
@@ -320,6 +393,53 @@ namespace LunraGames.SubLight
 					metallicsRemainingInSystem
 				);
 			}
+			*/
+		}
+
+		public static void CalculateFulfillment(
+			KeyValueListModel gameSource
+		)
+		{
+			if (gameSource == null) throw new ArgumentNullException("gameSource");
+
+			var population = gameSource.Get(KeyDefines.Game.Population);
+			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
+			var propellantConsumptionMultiplier = gameSource.Get(KeyDefines.Game.PropellantConsumptionMultiplier);
+			var transitRangeMaximum = gameSource.Get(KeyDefines.Game.TransitRangeMaximum);
+			var transitVelocity = gameSource.Get(KeyDefines.Game.TransitVelocity);
+			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
+
+			var rationsConsumptionPerYear = rationsConsumptionMultiplier * population;
+			var shipYearsPerObserverYears = 1f / (1f / Mathf.Sqrt(1f - (Mathf.Pow(transitVelocity, 2f) / 1f)));
+			var shipYearsToTransitMaximumRange = shipYearsPerObserverYears * (UniversePosition.ToLightYearDistance(transitRangeMaximum) / transitVelocity);
+
+			var propellantFulfillment = propellant / propellantConsumptionMultiplier;
+			var rationsRequiredToReachMaximumRange = rationsConsumptionPerYear * shipYearsToTransitMaximumRange;
+			var rationsFulfillment = gameSource.Get(KeyDefines.Game.Rations.Amount) / rationsRequiredToReachMaximumRange;
+
+			var minimumFulfillment = Mathf.Min(propellantFulfillment, rationsFulfillment);
+
+			var transitRange = Mathf.Min(minimumFulfillment * transitRangeMaximum, transitRangeMaximum);
+
+			gameSource.Set(
+				KeyDefines.Game.TransitRange,
+				transitRange
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.TransitRangeRatio,
+				transitRange / transitRangeMaximum
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.RationsFulfillment,
+				rationsFulfillment
+			);
+
+			gameSource.Set(
+				KeyDefines.Game.PropellantFulfillment,
+				propellantFulfillment
+			);
 		}
 	}
 }

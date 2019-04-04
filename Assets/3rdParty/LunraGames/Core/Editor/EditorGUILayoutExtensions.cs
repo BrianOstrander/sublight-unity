@@ -202,7 +202,7 @@ namespace LunraGamesEditor
 			var name = Enum.GetName(value.GetType(), value);
 			var originalNames = options == null ? Enum.GetNames(value.GetType()) : options.Select(o => Enum.GetName(value.GetType(), o)).ToArray();
 			var names = originalNames.ToArray();
-			names[0] = primaryReplacement;
+			if (!string.IsNullOrEmpty(primaryReplacement)) names[0] = primaryReplacement;
 			var selection = 0;
 			foreach (var currName in names)
 			{
@@ -214,6 +214,52 @@ namespace LunraGamesEditor
 			else selection = EditorGUILayout.Popup(selection, names, style, guiOptions);
 
 			return (T)Enum.Parse(value.GetType(), originalNames[selection]);
+		}
+
+		public static int IntegerEnumPopup(
+			GUIContent content,
+			int value,
+			Type enumerationType
+		)
+		{
+			int result;
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.PrefixLabel(content);
+				var wasIndent = EditorGUI.indentLevel;
+				EditorGUI.indentLevel = 0;
+				result = IntegerEnumPopupValue(
+					value,
+					enumerationType
+				);
+				EditorGUI.indentLevel = wasIndent;
+			}
+			GUILayout.EndHorizontal();
+			return result;
+		}
+
+		public static int IntegerEnumPopupValue(
+			int value,
+			Type enumerationType
+		)
+		{
+			var enumerationValues = Enum.GetValues(enumerationType);
+
+			var enumerationNames = new string[enumerationValues.Length];
+			var enumerationIndices = new int[enumerationNames.Length];
+
+			for (var i = 0; i < enumerationValues.Length; i++)
+			{
+				var currentEnumerationValue = enumerationValues.GetValue(i);
+				enumerationNames[i] = Enum.GetName(enumerationType, currentEnumerationValue);
+				enumerationIndices[i] = (int)currentEnumerationValue;
+			}
+
+			return EditorGUILayout.IntPopup(
+				value,
+				enumerationNames,
+				enumerationIndices
+			);
 		}
 
 		public static void PushColor(Color color)

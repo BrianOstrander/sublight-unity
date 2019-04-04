@@ -40,6 +40,13 @@
 		GreaterThan = 60
 	}
 
+	public enum EnumerationFilterOperations
+	{
+		Unknown = 0,
+		Equals = 10,
+		NotEquals = 20
+	}
+
 	/* I don't think we need this... it's the only thing you can do with bools...
 	public enum BooleanValueFilterOperations
 	{

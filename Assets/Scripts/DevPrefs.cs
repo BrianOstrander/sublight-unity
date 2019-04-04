@@ -6,6 +6,7 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsBool WindInEditMode = new DevPrefsBool(ProjectConstants.PrefsPrefix + "WindInEditMode");
 		public static readonly DevPrefsBool ApplyXButtonStyleInEditMode = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ApplyXButtonStyleInEditMode", true);
 		public static readonly DevPrefsBool SkipMainMenuAnimations = new DevPrefsBool(ProjectConstants.PrefsPrefix + "SkipMainMenuAnimations");
+		public static readonly DevPrefsBool HideMainMenu = new DevPrefsBool(ProjectConstants.PrefsPrefix + "HideMainMenu");
 		public static readonly DevPrefsBool ShowHoloHelper = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ShowHoloHelper");
 		public static readonly DevPrefsBool ShowUxHelper = new DevPrefsBool(ProjectConstants.PrefsPrefix + "ShowUxHelper");
 		public static readonly DevPrefsBool IgnoreGuiExitExceptions = new DevPrefsBool(ProjectConstants.PrefsPrefix + "IgnoreGuiExitExceptions");
@@ -32,6 +33,7 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsToggle<DevPrefsInt, int> GameSeed = new DevPrefsToggle<DevPrefsInt, int>(new DevPrefsInt(ProjectConstants.PrefsPrefix + "GameSeed"));
 		public static readonly DevPrefsToggle<DevPrefsInt, int> GalaxySeed = new DevPrefsToggle<DevPrefsInt, int>(new DevPrefsInt(ProjectConstants.PrefsPrefix + "GalaxySeed"));
 		public static readonly DevPrefsToggle<DevPrefsString, string> GalaxyId = new DevPrefsToggle<DevPrefsString, string>(new DevPrefsString(ProjectConstants.PrefsPrefix + "GalaxyId"));
+		public static readonly DevPrefsToggle<DevPrefsString, string> GamemodeId = new DevPrefsToggle<DevPrefsString, string>(new DevPrefsString(ProjectConstants.PrefsPrefix + "GamemodeId"));
 		public static readonly DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections> ToolbarSelection = new DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections>(new DevPrefsEnum<ToolbarSelections>(ProjectConstants.PrefsPrefix + "ToolbarSelection"));
 		#endregion
 	}

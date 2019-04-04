@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -14,9 +13,6 @@ namespace LunraGames.SubLight
 		{
 			public static class CreateGameBlock
 			{
-				public const string GalaxyId = "bed1e465-32ad-4eae-8135-d01eac75a089"; // Milkyway
-				public const string GalaxyTargetId = "a6603c5e-f151-45aa-96bb-30905e781573"; // Andromeda
-
 				public const ToolbarSelections ToolbarSelection = ToolbarSelections.Communication;
 			}
 
@@ -69,8 +65,9 @@ namespace LunraGames.SubLight
 			model.GameId.Value = model.Name.Value;
 
 			model.Seed.Value = info.GameSeed;
-			model.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, Defaults.CreateGameBlock.GalaxyId);
-			model.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, Defaults.CreateGameBlock.GalaxyTargetId);
+			model.GamemodeId = StringExtensions.GetNonNullOrEmpty(info.GamemodeId, App.BuildPreferences.DefaultGamemodeId);
+			model.GalaxyId = StringExtensions.GetNonNullOrEmpty(info.GalaxyId, App.BuildPreferences.DefaultGalaxyId);
+			model.GalaxyTargetId = StringExtensions.GetNonNullOrEmpty(info.GalaxyTargetId, App.BuildPreferences.DefaultGalaxyTargetId);
 			model.Universe = universeService.CreateUniverse(info);
 
 			var initialTime = DayTime.Zero;
@@ -81,7 +78,7 @@ namespace LunraGames.SubLight
 
 			// Ship ---
 			// TODO: Should this set minimum range be removed? It should just be set by the rules encounter, no?
-			model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
+			//model.Ship.SetRangeMinimum(Defaults.TransitRangeMinimum);
 			// --------
 
 			model.ToolbarSelection.Value = info.ToolbarSelection == ToolbarSelections.Unknown ? Defaults.CreateGameBlock.ToolbarSelection : info.ToolbarSelection;
@@ -167,20 +164,52 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Initialization
-		void OnInitializeGame(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		void OnInitializeGame(
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
 		{
 			model.Context.FocusTransform.Value = FocusTransform.Default;
+
+			if (string.IsNullOrEmpty(model.GamemodeId))
+			{
+				done(RequestResult.Failure("No GamemodeId to load").Log(), null);
+				return;
+			}
+			App.M.Load<GamemodeInfoModel>(model.GamemodeId, result => OnLoadGamemode(result, instructions, model, done));
+		}
+
+		void OnLoadGamemode(
+			SaveLoadRequest<GamemodeInfoModel> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure("Unable to load gamemode, resulted in " + result.Status + " and error: " + result.Error).Log(), null);
+				return;
+			}
+			model.Context.Gamemode = result.TypedModel;
+			model.KeyValues.Set(KeyDefines.Game.GamemodeId, model.Context.Gamemode.GamemodeId.Value);
+			model.KeyValues.Set(KeyDefines.Game.GamemodeKey, model.Context.Gamemode.GamemodeKey.Value);
 
 			if (string.IsNullOrEmpty(model.GalaxyId))
 			{
 				done(RequestResult.Failure("No GalaxyId to load").Log(), null);
 				return;
 			}
-			App.M.Load<GalaxyInfoModel>(model.GalaxyId, result => OnLoadGalaxy(result, instructions, model, done));
-
+			App.M.Load<GalaxyInfoModel>(model.GalaxyId, galaxyResult => OnLoadGalaxy(galaxyResult, instructions, model, done));
 		}
 
-		void OnLoadGalaxy(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		void OnLoadGalaxy(
+			SaveLoadRequest<GalaxyInfoModel> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -270,7 +299,7 @@ namespace LunraGames.SubLight
 			var endWaypoint = new WaypointModel();
 			endWaypoint.SetLocation(endSystem);
 			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
-			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
+			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
 			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
 			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
 			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, end);

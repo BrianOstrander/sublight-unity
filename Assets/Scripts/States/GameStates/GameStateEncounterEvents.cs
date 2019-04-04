@@ -40,6 +40,9 @@ namespace LunraGames.SubLight
 
 						switch (entry.EncounterEvent.Value)
 						{
+							case EncounterEvents.Types.Custom:
+								OnHandleEventCustom(state, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.Debug:
 								OnHandleEventDebugLog(state, entry, currOnEventDone);
 								break;
@@ -51,6 +54,9 @@ namespace LunraGames.SubLight
 								break;
 							case EncounterEvents.Types.TriggerQueue:
 								OnHandleEventPopTriggers(state, entry, currOnEventDone);
+								break;
+							case EncounterEvents.Types.Delay:
+								OnHandleEventDelay(state, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
@@ -69,13 +75,31 @@ namespace LunraGames.SubLight
 				App.SM.Push<GameState>(onHaltingDone, "CallEncounterEventsDone");
 			}
 
+			static void OnHandleEventCustom(
+				GameState state,
+				EncounterEventEntryModel entry,
+				Action done
+			)
+			{
+				var request = new EncounterEventsCustomRequest(
+					entry.KeyValues,
+					entry.IsHalting ? done : null
+				);
+
+				Debug.Log("Handling custom event: " + request.EventName);
+
+				App.Callbacks.EncounterEventsCustom(request);
+
+				if (!entry.IsHalting) done();
+			}
+
 			static void OnHandleEventDebugLog(
 				GameState state,
 				EncounterEventEntryModel entry,
 				Action done
 			)
 			{
-				var severity = entry.KeyValues.GetEnum(EncounterEvents.Debug.EnumKeys.Severity, EncounterEvents.Debug.Severities.Error);
+				var severity = entry.KeyValues.GetEnumeration(EncounterEvents.Debug.EnumKeys.Severity, EncounterEvents.Debug.Severities.Error);
 				var message = entry.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message);
 				if (string.IsNullOrEmpty(message)) message = "< no message was provided >";
 
@@ -117,12 +141,12 @@ namespace LunraGames.SubLight
 			)
 			{
 				var currentSelection = state.Payload.Game.ToolbarSelection.Value;
-				var targetSelection = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
+				var targetSelection = entry.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
 
 				if (targetSelection == ToolbarSelections.Unknown) targetSelection = currentSelection;
 
 				var currentLocking = state.Payload.Game.ToolbarLocking.Value ? EncounterEvents.ToolbarSelection.LockStates.Lock : EncounterEvents.ToolbarSelection.LockStates.UnLock;
-				var targetLocking = entry.KeyValues.GetEnum(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
+				var targetLocking = entry.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
 
 				if (targetLocking == EncounterEvents.ToolbarSelection.LockStates.Unknown) targetLocking = currentLocking;
 
@@ -154,7 +178,7 @@ namespace LunraGames.SubLight
 				Action done
 			)
 			{
-				var dumpTarget = entry.KeyValues.GetEnum(EncounterEvents.DumpKeyValues.EnumKeys.Target, KeyValueTargets.Unknown);
+				var dumpTarget = entry.KeyValues.GetEnumeration(EncounterEvents.DumpKeyValues.EnumKeys.Target, KeyValueTargets.Unknown);
 
 				var values = EnumExtensions.GetValues(KeyValueTargets.Unknown);
 
@@ -230,6 +254,36 @@ namespace LunraGames.SubLight
 				state.Payload.Game.EncounterTriggers.Value = result.ToArray();
 
 				done();
+			}
+		}
+
+		static void OnHandleEventDelay(
+				GameState state,
+				EncounterEventEntryModel entry,
+				Action done
+			)
+		{
+			var trigger = entry.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger);
+
+			switch (trigger)
+			{
+				case EncounterEvents.Delay.Triggers.Time:
+					var timeDuration = entry.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration);
+					if (float.IsNaN(timeDuration))
+					{
+						Debug.LogError("Specified Time Duration was NaN");
+						done();
+						return;
+					}
+
+					App.Heartbeat.Wait(
+						done,
+						Mathf.Max(0f, timeDuration)
+					);
+					break;
+				default:
+					Debug.LogError("Unrecognized Trigger: " + trigger);
+					break;
 			}
 		}
 	}

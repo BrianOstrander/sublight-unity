@@ -27,17 +27,18 @@ namespace LunraGames.SubLight
 				return new Dictionary<SaveTypes, int>
 				{
 					{ SaveTypes.Game, -1 },
-					{ SaveTypes.Preferences, -1 },
-					{ SaveTypes.EncounterInfo, 0 },
+					{ SaveTypes.Preferences, 8 },
+					{ SaveTypes.EncounterInfo, 9 },
 					{ SaveTypes.InteractedEncounterInfoList, -1 },
 					// -- Meta Key Values
-					{ SaveTypes.GlobalKeyValues, -1 },
-					{ SaveTypes.PreferencesKeyValues, -1 },
+					{ SaveTypes.GlobalKeyValues, 8 },
+					{ SaveTypes.PreferencesKeyValues, 8 },
 					// -- Galaxies
-					{ SaveTypes.GalaxyPreview, 7 },
-					{ SaveTypes.GalaxyDistant, 7 },
-					{ SaveTypes.GalaxyInfo, 7 }
+					{ SaveTypes.GalaxyPreview, 9 },
+					{ SaveTypes.GalaxyDistant, 9 },
+					{ SaveTypes.GalaxyInfo, 9 },
 					// --
+					{ SaveTypes.GamemodeInfo, 9 }
 				};
 			}
 		}
@@ -58,8 +59,9 @@ namespace LunraGames.SubLight
 					// -- Galaxies
 					{ SaveTypes.GalaxyPreview, false },
 					{ SaveTypes.GalaxyDistant, false },
-					{ SaveTypes.GalaxyInfo, false }
+					{ SaveTypes.GalaxyInfo, false },
 					// --
+					{ SaveTypes.GamemodeInfo, false }
 				};
 			}
 		}
@@ -110,6 +112,7 @@ namespace LunraGames.SubLight
 				// -- Interacted
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
 				// --
+				case SaveTypes.GamemodeInfo: return Path.Combine(InternalPath, "gamemodes");
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}

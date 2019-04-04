@@ -56,6 +56,10 @@ namespace LunraGames.SubLight.Models
 		ListenerProperty<CelestialSystemStateBlock> celestialSystemStateListener;
 		public readonly ReadonlyProperty<CelestialSystemStateBlock> CelestialSystemState;
 
+		KeyValueListModel transitKeyValues = new KeyValueListModel();
+		ListenerProperty<KeyValueListModel> transitKeyValuesListener;
+		public readonly ReadonlyProperty<KeyValueListModel> TransitKeyValues;
+
 		TransitStateRequest transitStateRequest;
 		public ListenerProperty<TransitStateRequest> TransitStateRequest;
 
@@ -139,6 +143,8 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region Models
+		public GamemodeInfoModel Gamemode { get; set; }
+
 		public GalaxyInfoModel Galaxy { get; set; }
 		public GalaxyInfoModel GalaxyTarget { get; set; }
 
@@ -184,6 +190,12 @@ namespace LunraGames.SubLight.Models
 				value => celestialSystemState = value,
 				() => celestialSystemState,
 				out celestialSystemStateListener
+			);
+
+			TransitKeyValues = new ReadonlyProperty<KeyValueListModel>(
+				value => transitKeyValues = value,
+				() => transitKeyValues,
+				out transitKeyValuesListener
 			);
 
 			TransitStateRequest = new ListenerProperty<TransitStateRequest>(value => transitStateRequest = value, () => transitStateRequest);
@@ -251,6 +263,19 @@ namespace LunraGames.SubLight.Models
 						block.State == CelestialSystemStateBlock.States.Selected ? block.System.ShrunkPosition : null
 					);
 					break;
+			}
+
+			if (block.State == CelestialSystemStateBlock.States.Selected)
+			{
+				var gameKeyValues = model.KeyValues.Duplicate;
+				var distance = UniversePosition.Distance(CurrentSystem.Value.Position.Value, block.Position);
+				GameplayUtility.ApplyTransit(
+					RelativityUtility.TransitTime(gameKeyValues.Get(KeyDefines.Game.TransitVelocity), UniversePosition.ToLightYearDistance(distance)).ShipTime.TotalYears,
+					distance,
+					gameKeyValues,
+					block.System.KeyValues.Duplicate
+				);
+				transitKeyValuesListener.Value = gameKeyValues;
 			}
 		}
 

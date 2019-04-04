@@ -30,15 +30,19 @@ namespace LunraGames.SubLight
 
 				payload.Changelog = ChangelogPresenter.CreateDefault();
 
+				IPresenterCloseShowOptions mainLogoPresenter;
+				MainMenuOptionsPresenter mainOptionsPresenter;
+				IPresenterCloseShowOptions mainGalaxyPresenter;
+
 				payload.DelayedPresenterShows[0f] = new IPresenterCloseShowOptions[]
 				{
 					new FocusLipPresenter(SetFocusLayers.Home),
-					new GenericPresenter<IMainMenuLogoView>()
+					mainLogoPresenter = new GenericPresenter<IMainMenuLogoView>()
 				};
 
 				payload.DelayedPresenterShows[1f] = new IPresenterCloseShowOptions[]
 				{
-					new MainMenuOptionsPresenter(
+					mainOptionsPresenter = new MainMenuOptionsPresenter(
 						payload,
 						new MainMenuLanguageBlock
 						{
@@ -87,7 +91,51 @@ namespace LunraGames.SubLight
 
 				payload.DelayedPresenterShows[1.5f] = new IPresenterCloseShowOptions[]
 				{
-					new MainMenuGalaxyPresenter(payload.PreviewGalaxy)
+					mainGalaxyPresenter = new MainMenuGalaxyPresenter(payload.DefaultGalaxy)
+				};
+
+				// Additional presenters
+
+				payload.GamemodePortal = new GamemodePortalPresenter(
+					payload.Gamemodes.ToArray(),
+					new GamemodePortalLanguageBlock
+					{
+						Start = LanguageStringModel.Override("Start"),
+						Locked = LanguageStringModel.Override("Locked"),
+						Back = LanguageStringModel.Override("Back"),
+
+						InDevelopmentDescription = LanguageStringModel.Override("<b>Unavailable:</b> In development"),
+						LockedDescription = LanguageStringModel.Override("<b>Locked:</b> Requirements not met"),
+
+						UnavailableInDevelopment = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("In Development"),
+							Message = LanguageStringModel.Override("The selected gamemode is in development, and is not yet available.")
+						},
+						UnavailableLocked = new DialogLanguageBlock
+						{
+							Title = LanguageStringModel.Override("Locked"),
+							Message = LanguageStringModel.Override("The selected gamemode is locked, you need to meet the requirements before it will unlock.")
+						}
+					}
+				);
+
+				// TODO: This could be more elegent...
+
+				payload.ToggleMainMenu = show =>
+				{
+					if (show)
+					{
+						mainLogoPresenter.Show();
+						mainOptionsPresenter.ShowQuick();
+						mainGalaxyPresenter.Show();
+					}
+					else
+					{
+						mainLogoPresenter.Close();
+						mainOptionsPresenter.Close();
+						mainGalaxyPresenter.Close();
+					}
 				};
 
 				done();

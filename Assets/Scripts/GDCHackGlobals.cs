@@ -7,7 +7,6 @@ namespace LunraGames.SubLight
 		public const int PlanetCountMaximum = 6;
 		public const int ScanLevelMaximum = 2;
 		public const int HabitableMaximum = 3;
-		public const int AnomalyMaximum = 1;
 
 		public const string PlanetDetectedTrigger = "planet*detected";
 		public const string SurfaceResultsTrigger = "surface*results";

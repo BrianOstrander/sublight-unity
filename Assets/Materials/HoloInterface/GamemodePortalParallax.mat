@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GamemodePortalParallax
+  m_Shader: {fileID: 4800000, guid: fedf378ad94844cf880ff130eff7f990, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CrtMask:
+        m_Texture: {fileID: 2800000, guid: 836571256fb6d481e98176ffe9977553, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GradientMask:
+        m_Texture: {fileID: 2800000, guid: 61d7e96e73e7c497abe98dcc47999273, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HazardMask:
+        m_Texture: {fileID: 2800000, guid: a4e438f63dac34c57a2b397fcd75a3a5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LensNormal:
+        m_Texture: {fileID: 2800000, guid: 635107ac8f1bd4ad8ab869d032e95753, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PrimaryTexture:
+        m_Texture: {fileID: 2800000, guid: dd4da8accf2fd4b52b468539f4591e14, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Alpha: 0.33
+    - _AlphaClip: 0
+    - _Blend: 0
+    - _BumpScale: 1
+    - _ChromaticAberrationScaling: 1.6
+    - _ChromaticOffsetScale: 0.25
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DstBlend: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _HazardOpacity: 1
+    - _HazardSpeed: 0.1
+    - _HazardTiling: 4
+    - _LensNormalStrength: 0.56
+    - _Metallic: 0
+    - _OcclusionStrength: 1
+    - _ReceiveShadows: 1
+    - _Saturation: 1
+    - _ScrollSpeed: 0.01
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Surface: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    m_Colors:
+    - Vector2_6F8D0B85: {r: 25, g: 25, b: 0, a: 0}
+    - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _CrtScaling: {r: 35, g: 35, b: 0, a: 0}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GradientRange: {r: 0.66, g: 0.95, b: 0, a: 0}
+    - _ParallaxCoordinates: {r: 0, g: 0, b: 0, a: 0}
+    - _ParallaxScrollRange: {r: -0.2, g: 0.2, b: 0, a: 0}
+    - _ParallaxZoomRange: {r: 0.2, g: 0.64, b: 0, a: 0}
+    - _PrimaryChromaticOffset: {r: -1, g: 0, b: 0, a: 0}
+    - _PrimaryColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SecondaryChromaticOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _TertiaryChromaticOffset: {r: 1, g: 0, b: 0, a: 0}

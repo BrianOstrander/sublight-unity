@@ -28,6 +28,7 @@
         }
       }
     ],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -43,14 +44,14 @@
               "encounterEvent": "GameComplete",
               "keyValues": {
                 "booleans": {},
-                "integers": {},
+                "integers": {
+                  "condition": 20,
+                  "icon_override": 1030
+                },
                 "strings": {
                   "title": "Out of Propellant",
                   "header": "Without propellant for our ark, we're done for...",
                   "body": null
-                },
-                "enums": {
-                  "condition": 20
                 },
                 "floats": {}
               },
@@ -59,6 +60,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "a737ee6b-672b-40b5-a7ca-47980c77ac5c"
@@ -74,7 +76,8 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 7,
+  "ignore": true,
+  "version": 9,
   "meta": "Failure: No Propellent",
   "metaKeyValues": {
     "EncounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867"

@@ -48,9 +48,9 @@ namespace LunraGames.SubLight.Presenters
 			View.Buttons = new ToolbarButtonBlock[] 
 			{
 				new ToolbarButtonBlock(LanguageStringModel.Override("Navigation"), View.GetIcon(SetFocusLayers.System), () => OnTransitionClick(ToolbarSelections.System)),
-				new ToolbarButtonBlock(LanguageStringModel.Override("Logistics"), View.GetIcon(SetFocusLayers.Ship), () => OnTransitionClick(ToolbarSelections.Ship)),
+				//new ToolbarButtonBlock(LanguageStringModel.Override("Logistics"), View.GetIcon(SetFocusLayers.Ship), () => OnTransitionClick(ToolbarSelections.Ship)),
 				new ToolbarButtonBlock(LanguageStringModel.Override("Communications"), View.GetIcon(SetFocusLayers.Communication), () => OnTransitionClick(ToolbarSelections.Communication)),
-				new ToolbarButtonBlock(LanguageStringModel.Override("Encyclopedia"), View.GetIcon(SetFocusLayers.Encyclopedia), () => OnTransitionClick(ToolbarSelections.Encyclopedia))
+				//new ToolbarButtonBlock(LanguageStringModel.Override("Encyclopedia"), View.GetIcon(SetFocusLayers.Encyclopedia), () => OnTransitionClick(ToolbarSelections.Encyclopedia))
 			};
 
 			ShowView(parent, instant);

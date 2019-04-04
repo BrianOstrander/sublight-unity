@@ -8,6 +8,7 @@ using UnityEngine;
 using LunraGamesEditor;
 
 using LunraGames.SubLight.Models;
+using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight
 {
@@ -620,6 +621,7 @@ namespace LunraGames.SubLight
 					setOutput = result => edge.Entry.BooleanValue.Value.Output = (KeyValueAddress<bool>)result;
 					break;
 				case KeyValueTypes.Integer:
+				case KeyValueTypes.Enumeration:
 					output = (edge.Entry.IntegerValue.Value = KeyValueEntryModel.IntegerBlock.Default).Output;
 					setOutput = result => edge.Entry.IntegerValue.Value.Output = (KeyValueAddress<int>)result;
 					break;
@@ -666,6 +668,9 @@ namespace LunraGames.SubLight
 					break;
 				case KeyValueTypes.Float:
 					OnKeyValueLogEdgeEntry(entry.FloatValue);
+					break;
+				case KeyValueTypes.Enumeration:
+					OnKeyValueLogEdgeEntryEnumeration(entry.IntegerValue);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized KeyValueType: " + entry.KeyValueType.Value, MessageType.Error);
@@ -751,6 +756,8 @@ namespace LunraGames.SubLight
 							result => block.Input1 = result
 						);
 						break;
+					case KeyValueEntryModel.BooleanBlock.Operations.Random:
+						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
 						break;
@@ -780,6 +787,7 @@ namespace LunraGames.SubLight
 				{
 					case KeyValueEntryModel.IntegerBlock.Operations.Set:
 					case KeyValueEntryModel.IntegerBlock.Operations.Clamp:
+					case KeyValueEntryModel.IntegerBlock.Operations.Random:
 						block.Input1 = KeyValueAddress<int>.Default;
 						break;
 				}
@@ -805,6 +813,7 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.IntegerBlock.Operations.Multiply:
 					case KeyValueEntryModel.IntegerBlock.Operations.Divide:
 					case KeyValueEntryModel.IntegerBlock.Operations.Modulo:
+					case KeyValueEntryModel.IntegerBlock.Operations.Random:
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
@@ -923,7 +932,12 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.FloatBlock.Operations.Round:
 					case KeyValueEntryModel.FloatBlock.Operations.Floor:
 					case KeyValueEntryModel.FloatBlock.Operations.Ceiling:
+					case KeyValueEntryModel.FloatBlock.Operations.Random:
 						block.Input1 = KeyValueAddress<float>.Default;
+						break;
+					case KeyValueEntryModel.FloatBlock.Operations.RandomNormal:
+						block.Input1 = KeyValueAddress<float>.Default;
+						block.Input0 = KeyValueAddress<float>.Default;
 						break;
 				}
 			}
@@ -951,6 +965,7 @@ namespace LunraGames.SubLight
 					case KeyValueEntryModel.FloatBlock.Operations.Multiply:
 					case KeyValueEntryModel.FloatBlock.Operations.Divide:
 					case KeyValueEntryModel.FloatBlock.Operations.Modulo:
+					case KeyValueEntryModel.FloatBlock.Operations.Random:
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
@@ -960,6 +975,8 @@ namespace LunraGames.SubLight
 							() => block.Input1,
 							result => block.Input1 = result
 						);
+						break;
+					case KeyValueEntryModel.FloatBlock.Operations.RandomNormal:
 						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
@@ -1002,6 +1019,47 @@ namespace LunraGames.SubLight
 				{
 					block.MaximumClampingEnabled = !block.MaximumClampingEnabled;
 					if (!block.MinimumClampingEnabled) block.MaximumClamping = KeyValueAddress<float>.Default;
+				}
+			}
+			GUILayout.EndHorizontal();
+		}
+
+		void OnKeyValueLogEdgeEntryEnumeration(
+			KeyValueEntryModel.IntegerBlock block
+		)
+		{
+			OnKeyValueLogEdgeEntryBeginFirstLine(block);
+
+			var previousOperation = block.Operation;
+			block.Operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				GUIContent.none,
+				"- Operation -",
+				block.Operation,
+				Color.red,
+				new KeyValueEntryModel.IntegerBlock.Operations[] { KeyValueEntryModel.IntegerBlock.Operations.Unknown, KeyValueEntryModel.IntegerBlock.Operations.Set },
+				GUILayout.Width(LogFloats.KeyValueOperationWidth)
+			);
+
+			OnKeyValueLogEdgeEntryEndFirstLine();
+
+			GUILayout.BeginHorizontal();
+			{
+				switch (block.Operation)
+				{
+					case KeyValueEntryModel.IntegerBlock.Operations.Set:
+						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
+						EditorGUILayoutKeyDefinition.Value(
+							() => block.Input0,
+							result => block.Input0 = result,
+							keyValueOverride: KeyValueTypes.Enumeration,
+							keyValueOverrideRelated: block.Output
+						);
+
+						GUILayout.FlexibleSpace();
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
+						break;
 				}
 			}
 			GUILayout.EndHorizontal();
@@ -1341,7 +1399,7 @@ namespace LunraGames.SubLight
 					EditorGUILayout.HelpBox("No event type has been specified.", MessageType.Error);
 					break;
 				case EncounterEvents.Types.Custom:
-					EditorGUILayout.HelpBox("Editing custom events is not supported yet.", MessageType.Warning);
+					OnEncounterEventLogEdgeCustom(entry);
 					break;
 				case EncounterEvents.Types.Debug:
 					OnEncounterEventLogEdgeDebugLog(entry);
@@ -1357,6 +1415,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterEvents.Types.TriggerQueue:
 					OnEncounterEventLogEdgePopTriggers(entry);
+					break;
+				case EncounterEvents.Types.Delay:
+					OnEncounterEventLogEdgeDelay(entry);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
@@ -1376,16 +1437,33 @@ namespace LunraGames.SubLight
 			if (model.AlwaysHalting.Value) EditorGUILayoutExtensions.PopColor();
 		}
 
+		void OnEncounterEventLogEdgeCustom(
+			EncounterEventEntryModel entry
+		)
+		{
+			var customEventName = entry.KeyValues.GetString(EncounterEvents.Custom.StringKeys.CustomEventName);
+			var wasNullOrEmpty = string.IsNullOrEmpty(customEventName);
+
+			if (wasNullOrEmpty) EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
+			{
+				entry.KeyValues.SetString(
+					EncounterEvents.Custom.StringKeys.CustomEventName,
+					EditorGUILayout.TextField(new GUIContent("Custom Event Name"), customEventName)
+				);
+			}
+			if (wasNullOrEmpty) EditorGUILayoutExtensions.PopBackgroundColor();
+		}
+
 		void OnEncounterEventLogEdgeDebugLog(
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.Debug.EnumKeys.Severity,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Severity"),
 					"- Select A Severity -",
-					entry.KeyValues.GetEnum<EncounterEvents.Debug.Severities>(EncounterEvents.Debug.EnumKeys.Severity)
+					entry.KeyValues.GetEnumeration<EncounterEvents.Debug.Severities>(EncounterEvents.Debug.EnumKeys.Severity)
 				)
 			);
 			entry.KeyValues.SetString(
@@ -1398,21 +1476,21 @@ namespace LunraGames.SubLight
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.ToolbarSelection.EnumKeys.Selection,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Selection"),
 					"- No Change -",
-					entry.KeyValues.GetEnum<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
+					entry.KeyValues.GetEnumeration<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
 				)
 			);
 
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.ToolbarSelection.EnumKeys.LockState,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Locking"),
 					"- No Change -",
-					entry.KeyValues.GetEnum<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
+					entry.KeyValues.GetEnumeration<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
 				)
 			);
 		}
@@ -1421,12 +1499,12 @@ namespace LunraGames.SubLight
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.DumpKeyValues.EnumKeys.Target,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Target"),
 					"All",
-					entry.KeyValues.GetEnum<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
+					entry.KeyValues.GetEnumeration<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
 				)
 			);
 		}
@@ -1435,13 +1513,23 @@ namespace LunraGames.SubLight
 			EncounterEventEntryModel entry
 		)
 		{
-			entry.KeyValues.SetEnum(
+			entry.KeyValues.SetEnumeration(
 				EncounterEvents.GameComplete.EnumKeys.Condition,
 				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 					new GUIContent("Condition"),
 					"- Select a Condition -",
-					entry.KeyValues.GetEnum<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
+					entry.KeyValues.GetEnumeration<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
 					Color.red
+				)
+			);
+
+			entry.KeyValues.SetEnumeration(
+				EncounterEvents.GameComplete.EnumKeys.IconOverride,
+				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					new GUIContent("Icon Override"),
+					"- Select an Icon -",
+					entry.KeyValues.GetEnumeration<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride),
+					Color.yellow
 				)
 			);
 
@@ -1504,6 +1592,40 @@ namespace LunraGames.SubLight
 				}
 			}
 			EditorGUILayoutExtensions.PopIndent();
+		}
+
+		void OnEncounterEventLogEdgeDelay(
+			EncounterEventEntryModel entry
+		)
+		{
+			var trigger = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Trigger"),
+				"- Select a Trigger -",
+				entry.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger),
+				Color.red
+			);
+
+			entry.KeyValues.SetEnumeration(
+				EncounterEvents.Delay.EnumKeys.Trigger,
+				trigger
+			);
+
+			switch (trigger)
+			{
+				case EncounterEvents.Delay.Triggers.Unknown: break;
+				case EncounterEvents.Delay.Triggers.Time:
+					entry.KeyValues.SetFloat(
+						EncounterEvents.Delay.FloatKeys.TimeDuration,
+						EditorGUILayout.FloatField(
+							new GUIContent("Duration"),
+							entry.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration)
+						)
+					);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized Trigger: " + trigger, MessageType.Error);
+					break;
+			}
 		}
 
 		#endregion
