@@ -34,6 +34,8 @@ namespace LunraGames.SubLight
 			SM.PushBlocking(InitializeListeners, "InitializeListeners");
 			SM.PushBlocking(InitializeMetaKeyValues, "InitializeMetakeyValues");
 			SM.PushBlocking(InitializeAnalytics, "InitializeAnalytics");
+			SM.PushBlocking(InitializeAudio, "InitializeAudio");
+			SM.PushBlocking(InitializeSaveMetaKeys, "InitializeSaveMetaKeys");
 
 			if (DevPrefs.WipeGameSavesOnStart) SM.PushBlocking(WipeGameSaves, "WipeGameSaves");
 		}
@@ -232,6 +234,41 @@ namespace LunraGames.SubLight
 					else App.Restart("Initializing Analytics failed with status " + status);
 				},
 				StateMachine.States.Initialize
+			);
+		}
+
+		void InitializeAudio(Action done)
+		{
+			App.Audio.Initialize(
+				status =>
+				{
+					if (status == RequestStatus.Success)
+					{
+						App.Log("Audio Initialized", LogTypes.Initialization);
+						done();
+					}
+					else App.Restart("Initializing Audio failed with status " + status);
+				}
+			);
+		}
+
+		/// <summary>
+		/// We do this incase any other initializations have updated the meta
+		/// keys.
+		/// </summary>
+		/// <param name="done">Done.</param>
+		void InitializeSaveMetaKeys(Action done)
+		{
+			App.MetaKeyValues.Save(
+				result =>
+				{
+					if (result.Status == RequestStatus.Success)
+					{
+						App.Log("Meta Keys Initialized Saved", LogTypes.Initialization);
+						done();
+					}
+					else App.Restart("Initializing Save Meta Keys Faild with status " + result.Status);
+				}
 			);
 		}
 

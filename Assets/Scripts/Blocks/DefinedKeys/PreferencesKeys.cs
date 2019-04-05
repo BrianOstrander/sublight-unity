@@ -11,12 +11,17 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Integers
+		public readonly Integer AudioLevelsInitializedVersion;
 		#endregion
 
 		#region Strings
 		#endregion
 
 		#region Floats
+		public readonly Float UserAudioLevel;
+		public readonly Float AmbientAudioLevel;
+		public readonly Float EffectsAudioLevel;
+		public readonly Float MusicAudioLevel;
 		#endregion
 
 		public IKeyDefinition[] BlockedDuringGame { get; private set; }
@@ -41,6 +46,7 @@ namespace LunraGames.SubLight
 					ref InterfaceLarge,
 					"interface_large",
 					"True if the interface should be large. This is temporary until proper integer based scaling is added.",
+					canRead: false,
 					created: AppendReloadHomeRequired
 				),
 				Create(
@@ -52,7 +58,12 @@ namespace LunraGames.SubLight
 
 			Integers = new Integer[]
 			{
-
+				Create(
+					ref AudioLevelsInitializedVersion,
+					"audio_levels_initialized_version",
+					"The version the audio levels were last initialized at, zero means they've never been initialized.",
+					canRead: false
+				)
 			};
 
 			Strings = new String[]
@@ -62,7 +73,30 @@ namespace LunraGames.SubLight
 
 			Floats = new Float[]
 			{
-
+				Create(
+					ref UserAudioLevel,
+					"user_audio_level",
+					"The user audio level from 0.0 to 1.0. This is the master for all others.",
+					canRead: false
+				),
+				Create(
+					ref AmbientAudioLevel,
+					"ambient_audio_level",
+					"The ambient audio level from 0.0 to 1.0.",
+					canRead: false
+				),
+				Create(
+					ref EffectsAudioLevel,
+					"effects_audio_level",
+					"The effects audio level from 0.0 to 1.0.",
+					canRead: false
+				),
+				Create(
+					ref MusicAudioLevel,
+					"music_audio_level",
+					"The music audio level from 0.0 to 1.0.",
+					canRead: false
+				)
 			};
 
 			Enumerations = new IEnumeration[]

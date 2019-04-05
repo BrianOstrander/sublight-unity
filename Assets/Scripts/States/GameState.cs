@@ -170,6 +170,8 @@ namespace LunraGames.SubLight
 				OnPresentersShown,
 				0.21f
 			);
+
+			App.Audio.SetSnapshot(AudioSnapshots.Master.Normal);
 		}
 
 		void OnPresentersShown()
@@ -270,9 +272,11 @@ namespace LunraGames.SubLight
 			{
 				case DialogRequest.States.Request:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus(Payload.Game.ToolbarSelection.Value)));
+					App.Audio.SetSnapshot(AudioSnapshots.Master.Paused);
 					break;
 				case DialogRequest.States.Completing:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(Payload.Game.ToolbarSelection.Value)));
+					App.Audio.SetSnapshot(AudioSnapshots.Master.Normal);
 					break;
 			}
 		}
