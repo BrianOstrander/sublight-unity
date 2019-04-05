@@ -12,8 +12,6 @@ namespace LunraGames.SubLight
 		CallbackService callbacks;
 		IModelMediator modelMediator;
 		KeyValueService keyValues;
-		ILogService logger;
-
 
 		GlobalKeyValuesModel globals;
 		PreferencesKeyValuesModel preferences;
@@ -25,19 +23,16 @@ namespace LunraGames.SubLight
 		public MetaKeyValueService(
 			CallbackService callbacks,
 			IModelMediator modelMediator,
-			KeyValueService keyValues,
-			ILogService logger
+			KeyValueService keyValues
 		)
 		{
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
 			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
 			if (keyValues == null) throw new ArgumentNullException("keyValues");
-			if (logger == null) throw new ArgumentNullException("logger");
 
 			this.callbacks = callbacks;
 			this.modelMediator = modelMediator;
 			this.keyValues = keyValues;
-			this.logger = logger;
 		}
 
 		#region Initialize
@@ -86,7 +81,7 @@ namespace LunraGames.SubLight
 
 			if (result.Length == 0)
 			{
-				logger.Log("No existing " + typeof(T).Name + ", generating defaults", LogTypes.Initialization);
+				if (DevPrefs.LoggingInitialization) Debug.Log("No existing " + typeof(T).Name + ", generating defaults");
 				modelMediator.Save(
 					modelMediator.Create<T>(),
 					saveResult => OnInitializedSaved(saveResult, done)
@@ -97,7 +92,7 @@ namespace LunraGames.SubLight
 				var toLoad = result.Models.Where(p => p.SupportedVersion.Value).OrderBy(p => p.Version.Value).LastOrDefault();
 				if (toLoad == null)
 				{
-					logger.Log("No supported " + typeof(T).Name + ", generating defaults", LogTypes.Initialization);
+					if (DevPrefs.LoggingInitialization) Debug.Log("No supported " + typeof(T).Name + ", generating defaults");
 					modelMediator.Save(
 						modelMediator.Create<T>(),
 						saveResult => OnInitializedSaved(saveResult, done)
@@ -105,7 +100,7 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					logger.Log("Loading existing " + typeof(T).Name, LogTypes.Initialization);
+					if (DevPrefs.LoggingInitialization) Debug.Log("Loading existing " + typeof(T).Name);
 					modelMediator.Load<T>(
 						toLoad,
 						loadResult => OnInitializeLoad(loadResult, done)
@@ -124,7 +119,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			logger.Log("Loaded " + typeof(T).Name + " from " + result.Model.Path, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded " + typeof(T).Name + " from " + result.Model.Path);
 			modelMediator.Save(
 				result.TypedModel,
 				saveResult => OnInitializedSaved(saveResult, done)
@@ -141,7 +136,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			logger.Log("Saved " + typeof(T).Name + " " + result.Model.Path, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Saved " + typeof(T).Name + " " + result.Model.Path);
 
 			switch (result.Model.SaveType)
 			{

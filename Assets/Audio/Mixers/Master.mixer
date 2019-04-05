@@ -13,6 +13,7 @@ AudioMixerController:
   - {fileID: 245908584384727910}
   - {fileID: 245860292878298160}
   - {fileID: 245821630492981286}
+  - {fileID: 245163901715073746}
   m_StartSnapshot: {fileID: 245908584384727910}
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
@@ -40,7 +41,7 @@ AudioMixerController:
     - 9dc00dd71dbe84e24a9a69f4ad952bc2
     name: View
   m_CurrentViewIndex: 0
-  m_TargetSnapshot: {fileID: 245860292878298160}
+  m_TargetSnapshot: {fileID: 245821630492981286}
 --- !u!243 &24300002
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -419,6 +420,36 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!245 &245163901715073746
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MainMenu
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: 08fc6c848ac224fd99a2b030cea746a9
+  m_FloatValues:
+    d59c4510893944b7b99c05a342f6d1b4: -0.26422894
+    a1477670b3fba4673ba61b20457965f6: 0
+    679c3b41a7f1b4bd780294011d5f6a18: 0
+    90cdf651e390946cfa4b9abc418d8f4c: 1
+    2dec1153333ab415e8e10105252701eb: 10
+    9b9e0624460784369a72c39557bfd15e: 1
+    44870916d9cb146ccbe11b5d9376e19b: -0
+    c972b06654e7443849ebebe0df286e61: 0.921
+    67773ea65571e4cfea84f5c18edd49f5: 10
+    22c793f643a924da188e159079e5268b: 0
+    a48d7917b30d140c59b95eb862817bf9: 0
+    ce72581a97fef436ba264925937be711: -9720
+    9bfffd7a829bb4938804dc5d44dd5998: 1
+    2759e4bc7e79a46c3a07a18116cdda76: 3307
+    287502fc1dfcb43a2ba8395cf82dfcfc: 1817
+    b361d3aecf2f4485e9377b6fdaffd237: 246
+    eb0fc1eedc20b421685346eb237dce58: 162
+    ba2b06cfe90b1455f9881fafd2fe667e: -80
+    c4aa23efa47424009ad932e75113a8df: -4.653025
+  m_TransitionOverrides: {}
 --- !u!245 &245821630492981286
 AudioMixerSnapshotController:
   m_ObjectHideFlags: 0
@@ -455,7 +486,7 @@ AudioMixerSnapshotController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Normal
+  m_Name: Default
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 291fc7336486d48a5bc9a80edfffc8c7
   m_FloatValues:

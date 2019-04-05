@@ -1,5 +1,7 @@
 using System;
 
+using UnityEngine;
+
 namespace LunraGames.SubLight
 {
 	public interface IStatePayload {}
@@ -61,7 +63,7 @@ namespace LunraGames.SubLight
 					End();
 					break;
 			}
-			App.Log("State is now " + state + "." + stateEvent + " - Payload " + payload.GetType(), LogTypes.StateMachine);
+			if (DevPrefs.LoggingStateMachine) Debug.Log("State is now " + state + "." + stateEvent + " - Payload " + payload.GetType());
 			App.Callbacks.StateChange(new StateChange(state, stateEvent, payload));
 		}
 

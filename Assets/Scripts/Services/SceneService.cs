@@ -62,7 +62,6 @@ namespace LunraGames.SubLight
 
 	public class SceneService
 	{
-		ILogService logging;
 		CallbackService callbacks;
 		SceneSkybox sceneSkybox;
 
@@ -71,16 +70,13 @@ namespace LunraGames.SubLight
 		GameModel model;
 
 		public SceneService(
-			ILogService logging,
 			CallbackService callbacks,
 			SceneSkybox sceneSkybox
 		)
 		{
-			if (logging == null) throw new ArgumentNullException("logging");
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
 			if (sceneSkybox == null) throw new ArgumentNullException("sceneSkybox");
 
-			this.logging = logging;
 			this.callbacks = callbacks;
 			this.sceneSkybox = sceneSkybox;
 
@@ -113,7 +109,7 @@ namespace LunraGames.SubLight
 		#region Load Scenes
 		void LoadScenes()
 		{
-			logging.Log("Loading Scenes", LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Loading Scenes");
 			callbacks.SceneLoad += OnSceneLoaded;
 			foreach (var scene in current.Scenes) SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
 		}
@@ -122,13 +118,13 @@ namespace LunraGames.SubLight
 		{
 			if (!current.Scenes.Contains(scene.name)) return;
 
-			logging.Log("Loaded Scene: " + scene.name, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded Scene: " + scene.name);
 
 			current.ProcessedScenes.Add(scene.name);
 
 			if (current.Scenes.Length != current.ProcessedScenes.Count) return;
 
-			logging.Log("All Scenes Loaded", LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("All Scenes Loaded");
 
 			foreach (var tag in current.Tags)
 			{
@@ -174,13 +170,13 @@ namespace LunraGames.SubLight
 		{
 			if (!current.Scenes.Contains(scene.name)) return;
 
-			logging.Log("Unloaded Scene: " + scene.name, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Unloaded Scene: " + scene.name);
 
 			current.ProcessedScenes.Add(scene.name);
 
 			if (current.Scenes.Length != current.ProcessedScenes.Count) return;
 
-			logging.Log("All Scenes Unloaded", LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("All Scenes Unloaded");
 
 			callbacks.SceneUnload -= OnSceneUnloaded;
 			OnAllScenesProcessed();

@@ -72,7 +72,7 @@ namespace LunraGames.SubLight
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("ModelMediator Initialized", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("ModelMediator Initialized");
 						done();
 					}
 					else App.Restart("Initializing ModelMediator failed with status " + status);
@@ -89,7 +89,7 @@ namespace LunraGames.SubLight
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("ViewMediator Initialized", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("ViewMediator Initialized");
 						done();
 					}
 					else App.Restart("Initializing ViewMediator failed with status " + status);
@@ -104,7 +104,7 @@ namespace LunraGames.SubLight
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("PresenterMediator Initialized", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("PresenterMediator Initialized");
 						done();
 					}
 					else App.Restart("Initializing PresenterMediator failed with status " + status);
@@ -129,7 +129,7 @@ namespace LunraGames.SubLight
 
 			if (result.Length == 0)
 			{
-				App.Log("No existing preferences, generating defaults", LogTypes.Initialization);
+				if (DevPrefs.LoggingInitialization) Debug.Log("No existing preferences, generating defaults");
 				App.M.Save(
 					App.M.Create<PreferencesModel>(), 
 					saveResult => OnSavedPreferences(saveResult, done)
@@ -140,7 +140,7 @@ namespace LunraGames.SubLight
 				var toLoad = result.Models.Where(p => p.SupportedVersion.Value).OrderBy(p => p.Version.Value).LastOrDefault();
 				if (toLoad == null)
 				{
-					App.Log("No supported preferences, generating defaults", LogTypes.Initialization);
+					if (DevPrefs.LoggingInitialization) Debug.Log("No supported preferences, generating defaults");
 					App.M.Save(
 						App.M.Create<PreferencesModel>(),
 						saveResult => OnSavedPreferences(saveResult, done)
@@ -148,7 +148,7 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					App.Log("Loading existing preferences", LogTypes.Initialization);
+					if (DevPrefs.LoggingInitialization) Debug.Log("Loading existing preferences");
 					App.M.Load<PreferencesModel>(
 						toLoad,
 						loadResult => OnLoadPreferences(loadResult, done)
@@ -165,7 +165,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			App.Log("Loaded preferences from "+result.Model.Path, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded preferences from "+result.Model.Path);
 			App.M.Save(
 				result.TypedModel,
 				saveResult => OnSavedPreferences(saveResult, done)
@@ -180,7 +180,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			App.Log("Saved preferences to " + result.Model.Path, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Saved preferences to " + result.Model.Path);
 			App.SetPreferences(result.TypedModel);
 			done();
 		}
@@ -193,7 +193,7 @@ namespace LunraGames.SubLight
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("Encounters Initialized", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("Encounters Initialized");
 						done();
 					}
 					else App.Restart("Initializing Encounters failed with status " + status);
@@ -213,7 +213,7 @@ namespace LunraGames.SubLight
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("Meta KVs Initialized", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("Meta KVs Initialized");
 						done();
 					}
 					else App.Restart("Initializing Meta KVs failed with status " + status);
@@ -228,7 +228,7 @@ namespace LunraGames.SubLight
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("Analytics Initialized", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("Analytics Initialized");
 						done();
 					}
 					else App.Restart("Initializing Analytics failed with status " + status);
@@ -244,7 +244,7 @@ namespace LunraGames.SubLight
 				{
 					if (status == RequestStatus.Success)
 					{
-						App.Log("Audio Initialized", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("Audio Initialized");
 						done();
 					}
 					else App.Restart("Initializing Audio failed with status " + status);
@@ -264,7 +264,7 @@ namespace LunraGames.SubLight
 				{
 					if (result.Status == RequestStatus.Success)
 					{
-						App.Log("Meta Keys Initialized Saved", LogTypes.Initialization);
+						if (DevPrefs.LoggingInitialization) Debug.Log("Meta Keys Initialized Saved");
 						done();
 					}
 					else App.Restart("Initializing Save Meta Keys Faild with status " + result.Status);

@@ -98,7 +98,7 @@ namespace LunraGames.SubLight.Presenters
 
 			ShowView(instant: instant);
 
-			App.Audio.SetSnapshot(AudioSnapshots.Master.Paused);
+			App.Audio.SetSnapshot(AudioSnapshots.Master.Home.GamemodeSelection);
 		}
 
 		protected virtual bool NotInteractable
@@ -174,7 +174,7 @@ namespace LunraGames.SubLight.Presenters
 			View.Closed += OnClosedBack;
 			CloseView();
 
-			App.Audio.SetSnapshot(AudioSnapshots.Master.Normal);
+			App.Audio.SetSnapshot(AudioSnapshots.Master.Home.MainMenu);
 		}
 
 		void OnClosedStart()

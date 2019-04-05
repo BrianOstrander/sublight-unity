@@ -171,7 +171,7 @@ namespace LunraGames.SubLight
 				0.21f
 			);
 
-			App.Audio.SetSnapshot(AudioSnapshots.Master.Normal);
+			App.Audio.SetSnapshot(AudioSnapshots.Master.Game.Get(Payload.Game.ToolbarSelection.Value));
 		}
 
 		void OnPresentersShown()
@@ -272,11 +272,11 @@ namespace LunraGames.SubLight
 			{
 				case DialogRequest.States.Request:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus(Payload.Game.ToolbarSelection.Value)));
-					App.Audio.SetSnapshot(AudioSnapshots.Master.Paused);
+					App.Audio.SetSnapshot(AudioSnapshots.Master.Shared.Paused);
 					break;
 				case DialogRequest.States.Completing:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetToolbarSelectionFocus(Payload.Game.ToolbarSelection.Value)));
-					App.Audio.SetSnapshot(AudioSnapshots.Master.Normal);
+					App.Audio.SetSnapshot(AudioSnapshots.Master.Game.Get(Payload.Game.ToolbarSelection.Value));
 					break;
 			}
 		}

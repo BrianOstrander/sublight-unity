@@ -262,8 +262,14 @@ namespace LunraGames.SubLight
 		public void SetSnapshot(string snapshot, float transitionTime = 1f)
 		{
 			var instance = audioConfiguration.MasterMixer.FindSnapshot(snapshot);
-			if (instance == null) Debug.LogError("No snapshot found named " + snapshot);
-			else instance.TransitionTo(transitionTime);
+			if (instance == null)
+			{
+				Debug.LogError("No snapshot found named " + snapshot);
+				return;
+			}
+
+			if (DevPrefs.LoggingAudio) Debug.Log("Transitioning to AudioSnapshot: " + snapshot);
+			instance.TransitionTo(transitionTime);
 		}
 
 		#region Utility
