@@ -5,12 +5,14 @@
   "encounterId": "b88c6f13-6794-4198-8613-eda1e54a4a09",
   "name": "No Planets In System",
   "trigger": "TransitComplete",
+  "defaultEndLogId": "ba6f1ac1-6e0d-413d-8395-0e0b2eef8161",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": [
       {
         "operation": "NotCompleted",
@@ -24,7 +26,15 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "ba6f1ac1-6e0d-413d-8395-0e0b2eef8161",
+        "name": "< End Encounter >"
+      }
+    ],
     "dialogLogs": [
       {
         "dialogs": [
@@ -42,6 +52,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "ec9db2b6-f394-4369-914b-7a5d8d1a6a55"
@@ -56,7 +67,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "No Planets In System",
   "metaKeyValues": {
     "EncounterId": "b88c6f13-6794-4198-8613-eda1e54a4a09"

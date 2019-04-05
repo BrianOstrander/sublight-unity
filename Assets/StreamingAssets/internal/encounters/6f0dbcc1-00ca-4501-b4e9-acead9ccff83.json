@@ -5,6 +5,7 @@
   "encounterId": "4d443864-2fcd-4e8c-9934-7fb46faaec6b",
   "name": "Transit Limited - Critical",
   "trigger": "TransitComplete",
+  "defaultEndLogId": "531de101-de64-4846-acc0-34c9f09ebdb6",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -152,6 +153,13 @@
         "index": 1,
         "logId": "139596b6-a320-44c4-9a0e-683e4565f581",
         "fallbackLogId": "5203cec4-63e8-4ef5-9b0f-3a4085f34942"
+      },
+      {
+        "entries": [],
+        "index": 3,
+        "ending": true,
+        "logId": "531de101-de64-4846-acc0-34c9f09ebdb6",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [
@@ -261,7 +269,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "Transit Limited - Critical",
   "metaKeyValues": {
     "EncounterId": "4d443864-2fcd-4e8c-9934-7fb46faaec6b"

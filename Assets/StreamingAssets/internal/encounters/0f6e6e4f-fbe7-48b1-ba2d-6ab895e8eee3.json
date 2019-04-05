@@ -5,6 +5,7 @@
   "encounterId": "7608d6ec-6695-4c37-b470-b388ae4848f3",
   "name": "Failure: Over Population",
   "trigger": "TransitComplete",
+  "defaultEndLogId": "4eea7d41-2f91-425e-a639-c8de2558bb12",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -70,6 +71,13 @@
         "beginning": true,
         "ending": true,
         "logId": "eac33ea2-ce17-4261-b355-62f20ea236c2"
+      },
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "4eea7d41-2f91-425e-a639-c8de2558bb12",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [],
@@ -77,7 +85,7 @@
     "conversationLogs": []
   },
   "ignore": true,
-  "version": 9,
+  "version": 10,
   "meta": "Failure: Over Population",
   "metaKeyValues": {
     "EncounterId": "7608d6ec-6695-4c37-b470-b388ae4848f3"

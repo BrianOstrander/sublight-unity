@@ -5,6 +5,7 @@
   "encounterId": "63245462-5804-41cb-b51d-910c68529a7a",
   "name": "Exposition",
   "trigger": "Load",
+  "defaultEndLogId": "4ce263e3-6eb9-4ed5-82c7-48f797ea9bdc",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [
@@ -1383,6 +1384,13 @@
         "index": 47,
         "ending": true,
         "logId": "4f3d2d30-ab88-4617-a16c-399e1e41b31b"
+      },
+      {
+        "entries": [],
+        "index": 49,
+        "ending": true,
+        "logId": "4ce263e3-6eb9-4ed5-82c7-48f797ea9bdc",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [
@@ -2879,7 +2887,7 @@
       }
     ]
   },
-  "version": 9,
+  "version": 10,
   "meta": "Exposition",
   "metaKeyValues": {
     "EncounterId": "63245462-5804-41cb-b51d-910c68529a7a"

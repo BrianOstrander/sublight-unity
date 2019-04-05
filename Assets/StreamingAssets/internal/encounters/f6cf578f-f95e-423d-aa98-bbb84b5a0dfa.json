@@ -1,0 +1,128 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "encounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c",
+  "name": "Stellar Catacombs",
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "c121616c-364e-46ca-af49-3b047155c7ef",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [
+      {
+        "operation": "Equals",
+        "index": 1,
+        "filterId": "206d4e50-42f6-4eb1-a1dc-6f5ba1597dec",
+        "group": "All",
+        "Input0": {
+          "AddressId": "26870b83-d11d-4a7e-91af-1441f0169ca6",
+          "Source": "KeyValue",
+          "ForeignTarget": "CelestialSystem",
+          "ForeignKey": "classification_primary"
+        },
+        "Input1": {
+          "AddressId": "55ffd1e4-b251-420b-8f81-e8cf29257d15",
+          "Source": "LocalValue",
+          "LocalValue": 10
+        }
+      }
+    ],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "3b5a91a3-50bf-4f49-9750-da6118d2c7ee",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 0
+                },
+                "strings": {
+                  "message": "ok ended in rendvous"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1765d723-56aa-4532-a1ae-b1057e5073a6"
+            },
+            "index": 1
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "3bcb0e0d-b9e9-429f-a5b0-cb6e6e6add7c"
+      },
+      {
+        "entries": [],
+        "index": 3,
+        "ending": true,
+        "logId": "c121616c-364e-46ca-af49-3b047155c7ef",
+        "name": "< End Encounter >"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Object of Interest",
+              "message": "<b>CLASSIFICATION</b> HABITAT\n<b>GROSS MASS</b> APROX. 100,000 METRIC TONS\n<b>STATUS</b> DERELICT\n\n<b>ANALYSIS</b> Optical sensors picked up a large object in close proximity to this star's corona. Attempts to continue scanning were interrupted by an increase in stellar activity. A boarding party will be required for further data collection.",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Warning",
+              "successLogId": "3bcb0e0d-b9e9-429f-a5b0-cb6e6e6add7c",
+              "successText": "Rendezvous",
+              "failureText": "Ignore",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "066ee7ce-05c5-40b7-89f9-cc95d78bce55"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "bfe5ad44-8fbc-4b37-9113-9d90f79eede3",
+        "fallbackLogId": "c121616c-364e-46ca-af49-3b047155c7ef"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 10,
+  "meta": "Stellar Catacombs",
+  "metaKeyValues": {
+    "EncounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c"
+  },
+  "created": "2019-04-05T11:38:06.551348-07:00",
+  "modified": "2019-04-05T11:38:06.551348-07:00",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

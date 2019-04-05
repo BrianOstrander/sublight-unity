@@ -4,6 +4,7 @@
   "encounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf",
   "name": "Planets Detected",
   "trigger": "TransitComplete",
+  "defaultEndLogId": "9d8bbbd1-c4a9-4d36-864c-1b674bd02956",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -578,6 +579,13 @@
         "ending": true,
         "logId": "45103b30-cdeb-421f-a67e-4f0ea4b4b791",
         "name": "chosen"
+      },
+      {
+        "entries": [],
+        "index": 21,
+        "ending": true,
+        "logId": "9d8bbbd1-c4a9-4d36-864c-1b674bd02956",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [
@@ -872,7 +880,7 @@
       }
     ]
   },
-  "version": 9,
+  "version": 10,
   "meta": "Planets Detected",
   "metaKeyValues": {
     "EncounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf"

@@ -5,6 +5,7 @@
   "encounterId": "2ecf3799-264f-43b7-adec-383b09571ef5",
   "name": "Tutorial: Navigation Confirm",
   "trigger": "NavigationSelect",
+  "defaultEndLogId": "2d6d6aa2-ebef-4fc0-8ba5-8d4526a378ef",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [
@@ -41,7 +42,15 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "2d6d6aa2-ebef-4fc0-8ba5-8d4526a378ef",
+        "name": "< End Encounter >"
+      }
+    ],
     "dialogLogs": [
       {
         "dialogs": [
@@ -72,7 +81,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "Tutorial: Navigation Confirm",
   "metaKeyValues": {
     "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"

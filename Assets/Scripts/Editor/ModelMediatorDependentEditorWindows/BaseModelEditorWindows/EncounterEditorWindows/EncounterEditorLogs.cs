@@ -17,6 +17,7 @@ namespace LunraGames.SubLight
 		static class LogStrings
 		{
 			public const string SelectOrCreateLog = "- Select Or Create Log -";
+			public const string DefaultEndLogName = "< End Encounter >";
 		}
 
 		static class LogFloats
@@ -34,6 +35,7 @@ namespace LunraGames.SubLight
 		enum LogsAppendSources
 		{
 			Unknown = 0,
+			Automatic = 5,
 			Toolbar = 10,
 			LogFallback = 20,
 			EdgeSpawn = 30,
@@ -94,6 +96,7 @@ namespace LunraGames.SubLight
 			SettingsGui += LogsSettingsGui;
 
 			BeforeLoadSelection += LogsBeforeLoadSelection;
+			AfterLoadSelection += LogsAfterLoadSelection;
 		}
 
 		#region Events
@@ -125,6 +128,29 @@ namespace LunraGames.SubLight
 		void LogsBeforeLoadSelection()
 		{
 			LogsFocusedLogIdsPop();
+		}
+
+		void LogsAfterLoadSelection(EncounterInfoModel model)
+		{
+			if (string.IsNullOrEmpty(model.DefaultEndLogId.Value))
+			{
+				Debug.LogWarning("Default log id was never instantiated, doing that now");
+				model.DefaultEndLogId.Value = AppendNewLog(EncounterLogTypes.Event, model, LogsAppendSources.Automatic);
+				var endLogInstance = model.Logs.GetLogFirstOrDefault(model.DefaultEndLogId.Value);
+				endLogInstance.Ending.Value = true;
+				endLogInstance.Name.Value = LogStrings.DefaultEndLogName;
+				return;
+			}
+
+			var defaultEndLog = model.Logs.GetLogFirstOrDefault(model.DefaultEndLogId.Value);
+
+			if (defaultEndLog == null)
+			{
+				Debug.LogError("A default end log id \"" + model.DefaultEndLogId.Value + "\" is specified, but could not be found.");
+				return;
+			}
+
+			// Eventually you can do some changes to the default end log here, if needed...
 		}
 		#endregion
 
@@ -433,20 +459,28 @@ namespace LunraGames.SubLight
 				}
 				else if (isDeleting)
 				{
-					deleted = EditorGUILayoutExtensions.XButton(true);
+					EditorGUILayoutExtensions.PushEnabled(infoModel.DefaultEndLogId.Value != model.LogId.Value);
+					{
+						deleted = EditorGUILayoutExtensions.XButton(true);
+					}
+					EditorGUILayoutExtensions.PopEnabled();
 				}
 				else
 				{
 					const float TitleOptionWidth = 42f;
 
-					if (GUILayout.Button(new GUIContent("Name", "Name this log so it can be referred to easily in log dropdowns."), EditorStyles.miniButtonLeft, GUILayout.Width(TitleOptionWidth)))
+					EditorGUILayoutExtensions.PushEnabled(infoModel.DefaultEndLogId.Value != model.LogId.Value);
 					{
-						FlexiblePopupDialog.Show(
-							"Editing Log Name",
-							new Vector2(400f, 22f),
-							() => { model.Name.Value = EditorGUILayoutExtensions.TextDynamic(model.Name.Value); }
-						);
+						if (GUILayout.Button(new GUIContent("Name", "Name this log so it can be referred to easily in log dropdowns."), EditorStyles.miniButtonLeft, GUILayout.Width(TitleOptionWidth)))
+						{
+							FlexiblePopupDialog.Show(
+								"Editing Log Name",
+								new Vector2(400f, 22f),
+								() => { model.Name.Value = EditorGUILayoutExtensions.TextDynamic(model.Name.Value); }
+							);
+						}
 					}
+					EditorGUILayoutExtensions.PopEnabled();
 
 					if (!isCollapsed)
 					{
@@ -480,11 +514,15 @@ namespace LunraGames.SubLight
 
 					if (!isCollapsed)
 					{
-						if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+						EditorGUILayoutExtensions.PushEnabled(infoModel.DefaultEndLogId.Value != model.LogId.Value);
 						{
-							beginning = model.LogId;
+							if (EditorGUILayout.ToggleLeft("Beginning", model.Beginning.Value, GUILayout.Width(70f)) && !model.Beginning.Value)
+							{
+								beginning = model.LogId;
+							}
+							model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(55f));
 						}
-						model.Ending.Value = EditorGUILayout.ToggleLeft("Ending", model.Ending.Value, GUILayout.Width(55f));
+						EditorGUILayoutExtensions.PopEnabled();
 					}
 
 					EditorGUIExtensions.PauseChangeCheck();

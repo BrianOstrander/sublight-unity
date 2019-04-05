@@ -4,6 +4,7 @@
   "encounterId": "aeed5299-be4d-4913-bd15-4cdf75bf9a4d",
   "name": "Select Cygnus X-1 Out Of Range",
   "trigger": "NavigationSelectOutOfRange",
+  "defaultEndLogId": "6a43954b-0c88-4ac7-ab7f-0fcf87e4bdcc",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -28,6 +29,7 @@
       }
     ],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": [
       {
         "operation": "NotCompleted",
@@ -41,7 +43,15 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "6a43954b-0c88-4ac7-ab7f-0fcf87e4bdcc",
+        "name": "< End Encounter >"
+      }
+    ],
     "dialogLogs": [
       {
         "dialogs": [
@@ -57,6 +67,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "840f75a8-9dcd-485f-b2f9-e7b3b0b8c60e"
@@ -71,7 +82,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "Select Cygnus X-1 Out Of Range",
   "metaKeyValues": {
     "EncounterId": "aeed5299-be4d-4913-bd15-4cdf75bf9a4d"

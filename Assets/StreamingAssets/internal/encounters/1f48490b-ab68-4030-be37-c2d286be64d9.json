@@ -5,6 +5,7 @@
   "encounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f",
   "name": "SystemIdle Default",
   "trigger": "SystemIdle",
+  "defaultEndLogId": "80b2ca2e-c56b-4d1a-a9c9-032e426bd03d",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -48,13 +49,20 @@
         "beginning": true,
         "ending": true,
         "logId": "3a7bcb90-a21f-4b30-ba88-e95c8fb97163"
+      },
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "80b2ca2e-c56b-4d1a-a9c9-032e426bd03d",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "SystemIdle Default",
   "metaKeyValues": {
     "EncounterId": "ffdcb704-3073-4fef-bd31-f855adafa53f"
