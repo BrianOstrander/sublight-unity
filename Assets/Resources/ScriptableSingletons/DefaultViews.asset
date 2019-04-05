@@ -33,8 +33,6 @@ MonoBehaviour:
       type: 3}
   - PrefabRoot: {fileID: 1720247192398142, guid: d120f99e8e87a4836b0833a5997c685c,
       type: 3}
-  - PrefabRoot: {fileID: 1195028611831994, guid: 6b43128e56aba450cae50c4bde7f72aa,
-      type: 3}
   - PrefabRoot: {fileID: 1959422631565708, guid: a9cb1598c1c734ab7bf44d11885a3370,
       type: 3}
   - PrefabRoot: {fileID: 1424868229221662, guid: d92a9d576fb3540e99650767216cbe36,

@@ -503,7 +503,7 @@ MonoBehaviour:
   - {fileID: 114954709548874530}
   - {fileID: 114448235029720574}
   - {fileID: 114302945113044058}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 7a0d426aedc764aac83d3d02f55008cd, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}

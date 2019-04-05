@@ -1836,7 +1836,7 @@ MonoBehaviour:
     Override: 0
     Value: 0
   leafs: []
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 7a0d426aedc764aac83d3d02f55008cd, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
