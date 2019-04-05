@@ -97,6 +97,8 @@ namespace LunraGames.SubLight.Presenters
 			View.BackClick = OnBackClick;
 
 			ShowView(instant: instant);
+
+			App.Audio.SetSnapshot(AudioSnapshots.Master.Paused);
 		}
 
 		protected virtual bool NotInteractable
@@ -171,6 +173,8 @@ namespace LunraGames.SubLight.Presenters
 
 			View.Closed += OnClosedBack;
 			CloseView();
+
+			App.Audio.SetSnapshot(AudioSnapshots.Master.Normal);
 		}
 
 		void OnClosedStart()

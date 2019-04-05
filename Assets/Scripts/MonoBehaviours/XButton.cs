@@ -219,11 +219,11 @@ namespace LunraGames.SubLight
 			if (!IsActive()) return;
 			if (!IsInteractable())
 			{
-				if (Sounds.PressedSound != null) App.Audio.PlayClip(Sounds.DisabledSound);
+				if (Sounds.PressedSound != null) App.Audio.Play(Sounds.DisabledSound, AudioService.Groups.EffectsInterface);
 				return;
 			}
 			StopHighlightSound();
-			if (Sounds.PressedSound != null) App.Audio.PlayClip(Sounds.PressedSound);
+			if (Sounds.PressedSound != null) App.Audio.Play(Sounds.PressedSound, AudioService.Groups.EffectsInterface);
 			if (onClick != null) onClick.Invoke();
 			dragging = false;
 		}
@@ -236,7 +236,7 @@ namespace LunraGames.SubLight
 
 			if (State == SelectionState.Pressed) return;
 
-			if (Sounds.EnteredSound != null) App.Audio.PlayClip(Sounds.EnteredSound);
+			if (Sounds.EnteredSound != null) App.Audio.Play(Sounds.EnteredSound, AudioService.Groups.EffectsInterface);
 			State = SelectionState.Highlighted;
 			HighlightSoundBegin();
 			if (onEnter != null) onEnter.Invoke();

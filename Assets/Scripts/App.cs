@@ -119,7 +119,8 @@ namespace LunraGames.SubLight
 			Transform canvasRoot,
 			Transform gameCanvasRoot,
 			Transform overlayCanvasRoot,
-			SceneSkybox sceneSkybox
+			SceneSkybox sceneSkybox,
+			AudioConfiguration audioConfiguration
 		)
 		{
 			Time.timeScale = DevPrefs.ApplyTimeScaling.Value ? DevPrefs.TimeScaling.Value : 1f;
@@ -138,7 +139,6 @@ namespace LunraGames.SubLight
 			heartbeat = new Heartbeat();
 			presenterMediator = new PresenterMediator(Heartbeat);
 			viewMediator = new ViewMediator(Heartbeat, Callbacks);
-			audioService = new AudioService(audioRoot);
 			stateMachine = new StateMachine(
 				Heartbeat,
 				new InitializeState(),
@@ -192,6 +192,14 @@ namespace LunraGames.SubLight
 			focus = new FocusService(Heartbeat, Callbacks);
 			analytics = new AnalyticsService(
 				Callbacks,
+				BuildPreferences
+			);
+
+			audioService = new AudioService(
+				audioRoot, 
+				audioConfiguration, 
+				Heartbeat,
+				MetaKeyValues,
 				BuildPreferences
 			);
 
