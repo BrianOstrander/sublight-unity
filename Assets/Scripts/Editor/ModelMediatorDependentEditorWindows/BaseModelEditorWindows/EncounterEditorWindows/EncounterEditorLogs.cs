@@ -2126,6 +2126,28 @@ namespace LunraGames.SubLight
 			ConversationEncounterLogModel model
 		)
 		{
+			Color? promptValidation = null;
+
+			if (model.Edges.Any(e => e.Entry.ConversationType.Value == ConversationTypes.Prompt)) promptValidation = Color.red;
+
+			GUILayout.BeginHorizontal();
+			{
+				model.Style.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					new GUIContent("Button Configuration"),
+					"- Select Style -",
+					model.Style.Value,
+					promptValidation
+				);
+
+				model.Theme.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					GUIContent.none,
+					"- Select Theme -",
+					model.Theme.Value,
+					promptValidation
+				);
+			}
+			GUILayout.EndHorizontal();
+
 			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
 				GUIContent.none,
 				"- Append a Conversation Entry -",
@@ -2186,11 +2208,6 @@ namespace LunraGames.SubLight
 					break;
 				default: EditorGUILayout.HelpBox("Unrecognized ConversationEvent: " + entry.ConversationType.Value, MessageType.Error); break;
 			}
-
-			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
-				"Message",
-				entry.Message.Value
-			);
 		}
 
 		void OnConversationLogEdgeMessage(ConversationEntryModel entry)
@@ -2205,6 +2222,11 @@ namespace LunraGames.SubLight
 				entry.ConversationType.Value = isIncoming ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
 			}
 
+			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
+				"Message",
+				entry.Message.Value
+			);
+			
 			entry.MessageInfo.Value = block;
 		}
 
@@ -2212,12 +2234,46 @@ namespace LunraGames.SubLight
 		{
 			var block = entry.PromptInfo.Value;
 
-			GUILayout.BeginHorizontal();
+			block.Behaviour = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Behaviour"),
+				"- Select Behaviour -",
+				block.Behaviour,
+				Color.red
+			);
+
+			switch (block.Behaviour)
 			{
-				block.Style = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Button Configuration"), "- Select Style -", block.Style);
-				block.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(GUIContent.none, "- Select Theme -", block.Theme);
+				case ConversationButtonPromptBehaviours.ButtonOnly:
+				case ConversationButtonPromptBehaviours.PrintMessage:
+				case ConversationButtonPromptBehaviours.PrintOverride:
+					entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
+						"Message",
+						entry.Message.Value
+					);
+					break;
+				case ConversationButtonPromptBehaviours.Continue:
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized PromptBehaviour: " + block.Behaviour, MessageType.Error);
+					break;
 			}
-			GUILayout.EndHorizontal();
+
+			switch (block.Behaviour)
+			{
+				case ConversationButtonPromptBehaviours.ButtonOnly:
+				case ConversationButtonPromptBehaviours.PrintMessage:
+				case ConversationButtonPromptBehaviours.Continue:
+					break;
+				case ConversationButtonPromptBehaviours.PrintOverride:
+					block.MessageOverride = EditorGUILayoutExtensions.TextDynamic(
+						"Message Override",
+						block.MessageOverride
+					);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized PromptBehaviour: " + block.Behaviour, MessageType.Error);
+					break;
+			}
 
 			entry.PromptInfo.Value = block;
 		}

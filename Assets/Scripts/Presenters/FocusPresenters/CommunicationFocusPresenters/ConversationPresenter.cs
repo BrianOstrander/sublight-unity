@@ -11,11 +11,41 @@ namespace LunraGames.SubLight.Presenters
 {
 	public class ConversationPresenter : CommunicationFocusPresenter<IConversationView>
 	{
+		struct ConversationQueueEntry
+		{
+			public enum Types
+			{
+				Unknown = 0,
+				UnProcessed = 10,
+				Processed = 20
+			}
+
+			public Types Type;
+			public ConversationEntryModel UnProcessedEntry;
+			public MessageConversationBlock ProcessedBlock;
+
+			public ConversationQueueEntry(ConversationEntryModel unProcessedEntry)
+			{
+				Type = Types.UnProcessed;
+				UnProcessedEntry = unProcessedEntry;
+				ProcessedBlock = default(MessageConversationBlock);
+			}
+
+			public ConversationQueueEntry(MessageConversationBlock processedBlock)
+			{
+				Type = Types.Processed;
+				UnProcessedEntry = null;
+				ProcessedBlock = processedBlock;
+			}
+		}
+
 		GameModel model;
 		ConversationInstanceModel instanceModel;
+		ConversationLanguageBlock language;
 
-		List<ConversationEntryModel> remainingEntries = new List<ConversationEntryModel>();
-		Action onNoneRemaining;
+		ConversationHandlerModel currentHandler;
+		List<ConversationQueueEntry> entryQueue = new List<ConversationQueueEntry>();
+		Action onEntryQueueEmpty;
 
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
@@ -26,11 +56,13 @@ namespace LunraGames.SubLight.Presenters
 
 		public ConversationPresenter(
 			GameModel model,
-			ConversationInstanceModel instanceModel
+			ConversationInstanceModel instanceModel,
+			ConversationLanguageBlock language
 		)
 		{
 			this.model = model;
 			this.instanceModel = instanceModel;
+			this.language = language;
 
 			this.instanceModel.Show.Value = OnShowInstance;
 			this.instanceModel.Close.Value = OnCloseInstance;
@@ -84,64 +116,77 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnHandleConversation(ConversationHandlerModel handler)
 		{
-			if (remainingEntries.Any())
+			if (entryQueue.Any())
 			{
 				Debug.LogError("Handling conversation before remaining entries have been processed, unpredictable behaviour may occur");
-				remainingEntries.Clear();
+				entryQueue.Clear();
 			}
 
-			remainingEntries.AddRange(handler.Entries.Value);
-			onNoneRemaining = handler.HaltingDone.Value;
+			currentHandler = handler;
+			entryQueue.AddRange(handler.Entries.Value.Select(e => new ConversationQueueEntry(e)));
+			onEntryQueueEmpty = handler.HaltingDone.Value;
 
-			OnHandleRemaining();
+			OnHandleEntryQueue();
 		}
 
-		void OnHandleRemaining()
+		void OnHandleEntryQueue()
 		{
-			if (remainingEntries.None())
+			if (entryQueue.None())
 			{
-				var oldOnNoneRemaining = onNoneRemaining;
-				onNoneRemaining = null;
-				oldOnNoneRemaining();
+				var oldOnEntryQueueEmpty = onEntryQueueEmpty;
+				onEntryQueueEmpty = null;
+				oldOnEntryQueueEmpty();
 				return;
 			}
 
 			var additions = new List<IConversationBlock>();
-			var newRemainingEntries = new List<ConversationEntryModel>();
-			Action onAdditionsDone = OnHandleRemaining;
+			var newEntryQueue = new List<ConversationQueueEntry>();
+			Action onAdditionsDone = OnHandleEntryQueue;
 			var isHalting = false;
 
-			foreach (var entry in remainingEntries)
+			foreach (var currentEntry in entryQueue)
 			{
-				if (isHalting) newRemainingEntries.Add(entry);
+				if (isHalting) newEntryQueue.Add(currentEntry);
 				else
 				{
-					switch (entry.ConversationType.Value)
+					switch (currentEntry.Type)
 					{
-						case ConversationTypes.MessageIncoming:
-						case ConversationTypes.MessageOutgoing:
-							isHalting = true;
-							additions.Add(
-								new MessageConversationBlock
-								{
-									Type = entry.ConversationType.Value,
-									Message = entry.Message.Value
-								}
-							);
+						case ConversationQueueEntry.Types.UnProcessed:
+							switch (currentEntry.UnProcessedEntry.ConversationType.Value)
+							{
+								case ConversationTypes.MessageIncoming:
+								case ConversationTypes.MessageOutgoing:
+									isHalting = true;
+									additions.Add(
+										new MessageConversationBlock
+										{
+											Type = currentEntry.UnProcessedEntry.ConversationType.Value,
+											Message = currentEntry.UnProcessedEntry.Message.Value
+										}
+									);
+									break;
+								case ConversationTypes.Prompt:
+									isHalting = true;
+									onAdditionsDone = () => OnHandlePrompt(currentEntry.UnProcessedEntry);
+									break;
+								default:
+									Debug.LogError("Unrecognized ConversationType: " + currentEntry.UnProcessedEntry.ConversationType.Value + ", skipping...");
+									break;
+							}
 							break;
-						case ConversationTypes.Prompt:
+						case ConversationQueueEntry.Types.Processed:
 							isHalting = true;
-							onAdditionsDone = () => OnHandlePrompt(entry);
+							additions.Add(currentEntry.ProcessedBlock);
 							break;
 						default:
-							Debug.LogError("Unrecognized ConversationType: " + entry.ConversationType.Value + ", skipping...");
+							Debug.LogError("Unrecognized queue entry: " + currentEntry.Type+", skipping...");
 							break;
 					}
 				}
 			}
 
-			remainingEntries.Clear();
-			remainingEntries.AddRange(newRemainingEntries);
+			entryQueue.Clear();
+			entryQueue.AddRange(newEntryQueue);
 
 			if (additions.None()) onAdditionsDone();
 			else View.AddToConversation(false, onAdditionsDone, additions.ToArray());
@@ -149,16 +194,70 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnHandlePrompt(ConversationEntryModel entry)
 		{
+			var promptBlock = new ConversationButtonBlock
+			{
+				Interactable = true,
+				Click = () => OnHandlePromptClick(entry)
+			};
+
+			switch (entry.PromptInfo.Value.Behaviour)
+			{
+				case ConversationButtonPromptBehaviours.PrintOverride:
+				case ConversationButtonPromptBehaviours.PrintMessage:
+				case ConversationButtonPromptBehaviours.ButtonOnly:
+					promptBlock.Message = entry.Message;
+					break;
+				case ConversationButtonPromptBehaviours.Continue:
+					promptBlock.Message = language.ContinuePrompt.Value;
+					break;
+				default:
+					Debug.LogError("Unrecognized PromptBehaviour: " + entry.PromptInfo.Value.Behaviour);
+					break;
+			}
+
 			instanceModel.OnPrompt.Value(
-				entry.PromptInfo.Value.Style,
-				entry.PromptInfo.Value.Theme,
-				new ConversationButtonBlock
-				{
-					Message = entry.Message,
-					Interactable = true,
-					Click = OnHandleRemaining
-				}
+				currentHandler.Log.Value.Style.Value,
+				currentHandler.Log.Value.Theme.Value,
+				promptBlock
 			);
+		}
+
+		void OnHandlePromptClick(ConversationEntryModel entry)
+		{
+			switch (entry.PromptInfo.Value.Behaviour)
+			{
+				case ConversationButtonPromptBehaviours.ButtonOnly:
+				case ConversationButtonPromptBehaviours.Continue:
+					break;
+				case ConversationButtonPromptBehaviours.PrintMessage:
+					entryQueue.Insert(
+						0,
+						new ConversationQueueEntry(
+							new MessageConversationBlock
+							{
+								Type = ConversationTypes.MessageOutgoing,
+								Message = entry.Message.Value
+							}
+						)
+					);
+					break;
+				case ConversationButtonPromptBehaviours.PrintOverride:
+					entryQueue.Insert(
+						0,
+						new ConversationQueueEntry(
+							new MessageConversationBlock
+							{
+								Type = ConversationTypes.MessageOutgoing,
+								Message = entry.PromptInfo.Value.MessageOverride
+							}
+						)
+					);
+					break;
+				default:
+					Debug.Log("Unrecognized PromptBehaviour: " + entry.PromptInfo.Value.Behaviour+", skipping...");
+					break;
+			}
+			OnHandleEntryQueue();
 		}
 		#endregion
 	}

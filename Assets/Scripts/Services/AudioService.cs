@@ -148,7 +148,8 @@ namespace LunraGames.SubLight
 
 		void OnMusicDone(IAudioInstance instance)
 		{
-			Debug.Log("done playing music track, starting next one");
+			if (DevPrefs.LoggingAudio.Value) Debug.Log("Done playing music track, starting next one");
+
 			Play(
 				audioConfiguration.Music.First(),
 				Groups.Music,

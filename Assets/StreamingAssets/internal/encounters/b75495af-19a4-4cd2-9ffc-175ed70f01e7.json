@@ -349,8 +349,7 @@
               "conversationType": "Prompt",
               "message": "Understood",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "19401f2b-ef8a-47be-9300-01d74eea84f8"
             },
@@ -377,8 +376,7 @@
               "conversationType": "Prompt",
               "message": "No promises!",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "7e5c1afc-adf8-41bd-bffd-247b5c0c6e97"
             },
@@ -401,6 +399,8 @@
             "index": 9
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 2,
         "logId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
         "fallbackLogId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2",

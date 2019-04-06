@@ -12,6 +12,7 @@ namespace LunraGames.SubLight.Presenters
 	public class BustPresenter : CommunicationFocusPresenter<IBustView>
 	{
 		GameModel model;
+		ConversationLanguageBlock conversationLanguage;
 
 		BustEntryModel lastFocus;
 		ConversationInstanceModel lastConversationFocus;
@@ -27,9 +28,13 @@ namespace LunraGames.SubLight.Presenters
 			return model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Processing && lastFocus != null;
 		}
 
-		public BustPresenter(GameModel model)
+		public BustPresenter(
+			GameModel model,
+			ConversationLanguageBlock conversationLanguage
+		)
 		{
 			this.model = model;
+			this.conversationLanguage = conversationLanguage;
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 
@@ -212,7 +217,7 @@ namespace LunraGames.SubLight.Presenters
 			var conversationModel = new ConversationInstanceModel();
 			conversationModel.BustId.Value = bustId;
 			conversationModel.OnPrompt.Value = OnPrompt;
-			new ConversationPresenter(model, conversationModel);
+			new ConversationPresenter(model, conversationModel, conversationLanguage);
 
 			conversationInstances.Add(conversationModel);
 		}
