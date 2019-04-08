@@ -631,6 +631,11 @@ namespace LunraGamesEditor
 			return value;
 		}
 
+		public static bool ToggleButtonCompact(string label, bool value, GUIStyle style = null, params GUILayoutOption[] options)
+		{
+			return ToggleButtonValue(value, label, label, style, options);
+		}
+
 		public static bool ToggleButtonValue(bool value, string trueText = "True", string falseText = "False", GUIStyle style = null, params GUILayoutOption[] options)
 		{
 			options = options.Prepend(GUILayout.Width(48f)).ToArray();

@@ -36,5 +36,11 @@ namespace LunraGames.SubLight
 		public static readonly DevPrefsToggle<DevPrefsString, string> GamemodeId = new DevPrefsToggle<DevPrefsString, string>(new DevPrefsString(ProjectConstants.PrefsPrefix + "GamemodeId"));
 		public static readonly DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections> ToolbarSelection = new DevPrefsToggle<DevPrefsEnum<ToolbarSelections>, ToolbarSelections>(new DevPrefsEnum<ToolbarSelections>(ProjectConstants.PrefsPrefix + "ToolbarSelection"));
 		#endregion
+
+		#region Logging
+		public static readonly DevPrefsBool LoggingInitialization = new DevPrefsBool(ProjectConstants.PrefsPrefix + "LoggingInitialization");
+		public static readonly DevPrefsBool LoggingStateMachine = new DevPrefsBool(ProjectConstants.PrefsPrefix + "LoggingStateMachine");
+		public static readonly DevPrefsBool LoggingAudio = new DevPrefsBool(ProjectConstants.PrefsPrefix + "LoggingAudio");
+		#endregion
 	}
 }

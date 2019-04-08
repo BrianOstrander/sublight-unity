@@ -5,6 +5,7 @@
   "encounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330",
   "name": "InitializeRules Default",
   "trigger": "InitializeRules",
+  "defaultEndLogId": "9eaf08e3-231f-4500-9007-4219ede472d0",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -967,13 +968,20 @@
         "index": 2,
         "ending": true,
         "logId": "dfc53016-7b51-4254-9400-52b1ad7244e0"
+      },
+      {
+        "entries": [],
+        "index": 3,
+        "ending": true,
+        "logId": "9eaf08e3-231f-4500-9007-4219ede472d0",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "InitializeRules Default",
   "metaKeyValues": {
     "EncounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330"

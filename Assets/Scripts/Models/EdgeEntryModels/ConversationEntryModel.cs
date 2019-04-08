@@ -23,14 +23,14 @@ namespace LunraGames.SubLight.Models
 				{
 					return new PromptBlock
 					{
-						Style = ConversationButtonStyles.Conversation,
-						Theme = ConversationThemes.Crew
+						Behaviour = ConversationButtonPromptBehaviours.ButtonOnly
 					};
 				}
 			}
 
-			public ConversationButtonStyles Style;
-			public ConversationThemes Theme;
+			public ConversationButtonPromptBehaviours Behaviour;
+
+			public string MessageOverride;
 		}
 
 		//[Serializable]
@@ -41,20 +41,16 @@ namespace LunraGames.SubLight.Models
 		//}
 
 		[JsonProperty] ConversationTypes conversationType;
+		[JsonIgnore] public readonly ListenerProperty<ConversationTypes> ConversationType;
+
 		[JsonProperty] string message;
+		[JsonIgnore] public readonly ListenerProperty<string> Message;
 
 		[JsonProperty] MessageBlock messageInfo;
+		[JsonIgnore] public readonly ListenerProperty<MessageBlock> MessageInfo;
+
 		[JsonProperty] PromptBlock promptInfo;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<ConversationTypes> ConversationType;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> Message;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<MessageBlock> MessageInfo;
-		[JsonIgnore]
-		public readonly ListenerProperty<PromptBlock> PromptInfo;
+		[JsonIgnore] public readonly ListenerProperty<PromptBlock> PromptInfo;
 
 		public ConversationEntryModel()
 		{

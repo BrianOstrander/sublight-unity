@@ -155,10 +155,10 @@ namespace LunraGames.SubLight
 			GUILayout.Label("Logging", EditorStyles.boldLabel);
 			GUILayout.BeginHorizontal();
 			{
-				foreach (var logType in Enum.GetValues(typeof(LogTypes)).Cast<LogTypes>())
-				{
-					EditorLogService.SetLogActive(logType, GUILayout.Toggle(EditorLogService.GetLogActive(logType), logType.ToString(), "Button"));
-				}
+				var loggingOptions = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
+				DevPrefs.LoggingInitialization.Value = EditorGUILayoutExtensions.ToggleButtonCompact("Initialization", DevPrefs.LoggingInitialization.Value, options: loggingOptions);
+				DevPrefs.LoggingStateMachine.Value = EditorGUILayoutExtensions.ToggleButtonCompact("StateMachine", DevPrefs.LoggingStateMachine.Value, options: loggingOptions);
+				DevPrefs.LoggingAudio.Value = EditorGUILayoutExtensions.ToggleButtonCompact("Audio", DevPrefs.LoggingAudio.Value, options: loggingOptions);
 			}
 			GUILayout.EndHorizontal();
 			#endregion

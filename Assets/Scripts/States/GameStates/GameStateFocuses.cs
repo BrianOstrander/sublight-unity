@@ -407,7 +407,13 @@ namespace LunraGames.SubLight
 			{
 				var payload = state.Payload;
 
-				new BustPresenter(payload.Game);
+				new BustPresenter(
+					payload.Game,
+					new ConversationLanguageBlock
+					{
+						ContinuePrompt = LanguageStringModel.Override(" . . . ")
+					}
+				);
 				new ConversationButtonsPresenter(payload.Game);
 
 				InitializeEncyclopediaPresenters(state, done);

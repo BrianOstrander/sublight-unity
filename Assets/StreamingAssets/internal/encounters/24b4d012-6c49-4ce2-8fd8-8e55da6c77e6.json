@@ -5,6 +5,7 @@
   "encounterId": "96169d75-e290-4dd2-be4c-6309cf35b5ad",
   "name": "Failure: Under Population",
   "trigger": "TransitComplete",
+  "defaultEndLogId": "0a5fbeff-e61d-4380-b9ad-f40087d301c1",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -70,6 +71,13 @@
         "beginning": true,
         "ending": true,
         "logId": "54e55068-fc5c-4c15-a2fc-507d25578365"
+      },
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "0a5fbeff-e61d-4380-b9ad-f40087d301c1",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [],
@@ -77,7 +85,7 @@
     "conversationLogs": []
   },
   "ignore": true,
-  "version": 9,
+  "version": 10,
   "meta": "Failure: Under Population",
   "metaKeyValues": {
     "EncounterId": "96169d75-e290-4dd2-be4c-6309cf35b5ad"

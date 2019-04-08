@@ -12,7 +12,6 @@ namespace LunraGames.SubLight
 	public class EncounterService
 	{
 		IModelMediator modelMediator;
-		ILogService logger;
 		CallbackService callbacks;
 		ValueFilterService valueFilter;
 
@@ -20,15 +19,13 @@ namespace LunraGames.SubLight
 		InteractedEncounterInfoListModel interactedEncounters;
 		bool currentlySaving;
 
-		public EncounterService(IModelMediator modelMediator, ILogService logger, CallbackService callbacks, ValueFilterService valueFilter)
+		public EncounterService(IModelMediator modelMediator, CallbackService callbacks, ValueFilterService valueFilter)
 		{
 			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
-			if (logger == null) throw new ArgumentNullException("logger");
 			if (callbacks == null) throw new ArgumentNullException("callbacks");
 			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
 
 			this.modelMediator = modelMediator;
-			this.logger = logger;
 			this.callbacks = callbacks;
 			this.valueFilter = valueFilter;
 		}
@@ -82,11 +79,11 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			logger.Log("Loaded " + encounters.Count + " encounters", LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded " + encounters.Count + " encounters");
 
 			if (result.Length == 0)
 			{
-				logger.Log("No existing interacted encounters, generating defaults", LogTypes.Initialization);
+				if (DevPrefs.LoggingInitialization) Debug.Log("No existing interacted encounters, generating defaults");
 				modelMediator.Save(
 					UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>()),
 					saveResult => OnSavedInteractedEncounters(saveResult, done)
@@ -97,7 +94,7 @@ namespace LunraGames.SubLight
 				var toLoad = result.Models.Where(p => p.SupportedVersion.Value).OrderBy(p => p.Version.Value).LastOrDefault();
 				if (toLoad == null)
 				{
-					logger.Log("No supported interacted encounters, generating defaults", LogTypes.Initialization);
+					if (DevPrefs.LoggingInitialization) Debug.Log("No supported interacted encounters, generating defaults");
 					modelMediator.Save(
 						UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>()),
 						saveResult => OnSavedInteractedEncounters(saveResult, done)
@@ -105,7 +102,7 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					logger.Log("Loading existing interacted encounters", LogTypes.Initialization);
+					if (DevPrefs.LoggingInitialization) Debug.Log("Loading existing interacted encounters");
 					modelMediator.Load<InteractedEncounterInfoListModel>(
 						toLoad,
 						loadResult => OnLoadInteractedEncounters(loadResult, done)
@@ -123,7 +120,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			logger.Log("Loaded interacted encounters from " + result.Model.Path, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded interacted encounters from " + result.Model.Path);
 			modelMediator.Save(
 				UpdateInteractedEncounters(encounters, result.TypedModel),
 				saveResult => OnSavedInteractedEncounters(saveResult, done)
@@ -139,7 +136,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			logger.Log("Saved interacted encounters to " + result.Model.Path, LogTypes.Initialization);
+			if (DevPrefs.LoggingInitialization) Debug.Log("Saved interacted encounters to " + result.Model.Path);
 
 			currentlySaving = false;
 			interactedEncounters = result.TypedModel;

@@ -1407,24 +1407,28 @@ MonoBehaviour:
     m_RotationOrder: 4
   defaultTheme:
     normal:
+      Sounds: {fileID: 11400000, guid: 7a0d426aedc764aac83d3d02f55008cd, type: 2}
       LabelStyle: {fileID: 11400000, guid: f3bc55c13578d46d4be9259ebabbe411, type: 2}
       BulletStyle: {fileID: 11400000, guid: 4accf2ee815c44149bd584b1495b619b, type: 2}
       UnderlineStyle: {fileID: 11400000, guid: 9a3d1ed5eeffc40059a71b09abaf45f2, type: 2}
       BackgroundStyle: {fileID: 11400000, guid: 30e032382a5844e52832f387990a47d3,
         type: 2}
     used:
+      Sounds: {fileID: 0}
       LabelStyle: {fileID: 11400000, guid: 852b6843590b1487d9600750b13a0d5e, type: 2}
       BulletStyle: {fileID: 11400000, guid: 87af661ad09f6443ba2b6a571b74dc30, type: 2}
       UnderlineStyle: {fileID: 11400000, guid: 7b7a93c6969da49a59afc8cbc0c8cf41, type: 2}
       BackgroundStyle: {fileID: 11400000, guid: e3d8588c3fa40451a8d730c810271270,
         type: 2}
     notInteractable:
+      Sounds: {fileID: 11400000, guid: 36355392e233446d0a55cc1706130478, type: 2}
       LabelStyle: {fileID: 11400000, guid: 108438a3033cb46f696d73ea35b93532, type: 2}
       BulletStyle: {fileID: 11400000, guid: 37351736f6a2a4640830027cde426f51, type: 2}
       UnderlineStyle: {fileID: 11400000, guid: d68dfc78e661a446581c0616a5f50173, type: 2}
       BackgroundStyle: {fileID: 11400000, guid: 026057134724a4bf58d2a7484021ef50,
         type: 2}
     selected:
+      Sounds: {fileID: 0}
       LabelStyle: {fileID: 11400000, guid: cf851093e2449469186c3d21fbec5ee8, type: 2}
       BulletStyle: {fileID: 11400000, guid: 50f77c09c756649c4a91c4ab46442181, type: 2}
       UnderlineStyle: {fileID: 11400000, guid: 7d126df797c1a44e6aea4c6438cd9508, type: 2}

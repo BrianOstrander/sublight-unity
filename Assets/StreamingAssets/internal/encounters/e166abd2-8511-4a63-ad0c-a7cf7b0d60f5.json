@@ -5,6 +5,7 @@
   "encounterId": "f4fc7b5c-a661-4089-abb4-0f46efafdf02",
   "name": "Success: Reached Sag",
   "trigger": "TransitComplete",
+  "defaultEndLogId": "7852f49a-05c0-4850-a668-db202dd0d33f",
   "filtering": {
     "showValues": true,
     "falseByDefault": true,
@@ -29,6 +30,7 @@
         }
       }
     ],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -60,6 +62,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "6049e75c-93b0-4f20-a6c5-def6da7e9055"
@@ -69,13 +72,20 @@
         "beginning": true,
         "ending": true,
         "logId": "ecc535b3-31e7-460b-8af2-b0dbba947bcd"
+      },
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "7852f49a-05c0-4850-a668-db202dd0d33f",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "Success: Reached Sag",
   "metaKeyValues": {
     "EncounterId": "f4fc7b5c-a661-4089-abb4-0f46efafdf02"

@@ -5,6 +5,7 @@
   "encounterId": "b764f4ba-be4b-48f1-8770-ff998c00ae82",
   "name": "Select Sol",
   "trigger": "NavigationSelect",
+  "defaultEndLogId": "e45b0073-cf1c-4891-9a5f-7e433c70433c",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -28,6 +29,7 @@
       }
     ],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": []
   },
   "logs": {
@@ -41,6 +43,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "keyValueType": "String",
@@ -69,7 +72,15 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 2,
+        "ending": true,
+        "logId": "e45b0073-cf1c-4891-9a5f-7e433c70433c",
+        "name": "< End Encounter >"
+      }
+    ],
     "dialogLogs": [
       {
         "dialogs": [
@@ -85,6 +96,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "39d27b80-c5ea-4959-a7eb-8ec8ab7c73e3"
@@ -99,7 +111,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "Select Sol",
   "metaKeyValues": {
     "EncounterId": "b764f4ba-be4b-48f1-8770-ff998c00ae82"

@@ -9,40 +9,34 @@ namespace LunraGames.SubLight.Models
 {
 	public class ConversationInstanceModel : Model
 	{
+		#region Serialized
 		[SerializeField] string bustId;
+		[JsonIgnore] public readonly ListenerProperty<string> BustId;
+		#endregion
+
 		[SerializeField] bool isFocused;
+		[JsonIgnore] public readonly ListenerProperty<bool> IsFocused;
 
 		Action<bool> show;
+		[JsonIgnore] public readonly ListenerProperty<Action<bool>> Show;
+
 		Action<bool> close;
+		[JsonIgnore] public readonly ListenerProperty<Action<bool>> Close;
+
 		Action destroy;
+		[JsonIgnore] public readonly ListenerProperty<Action> Destroy;
 
 		Func<bool> isShown;
+		[JsonIgnore] public readonly ListenerProperty<Func<bool>> IsShown;
+
 		Func<bool> isClosed;
+		[JsonIgnore] public readonly ListenerProperty<Func<bool>> IsClosed;
+
 		Func<bool> isDestroyed;
+		[JsonIgnore] public readonly ListenerProperty<Func<bool>> IsDestroyed;
 
 		Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock> onPrompt;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<string> BustId;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> IsFocused;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<Action<bool>> Show;
-		[JsonIgnore]
-		public readonly ListenerProperty<Action<bool>> Close;
-		[JsonIgnore]
-		public readonly ListenerProperty<Action> Destroy;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<Func<bool>> IsShown;
-		[JsonIgnore]
-		public readonly ListenerProperty<Func<bool>> IsClosed;
-		[JsonIgnore]
-		public readonly ListenerProperty<Func<bool>> IsDestroyed;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock>> OnPrompt;
+		[JsonIgnore] public readonly ListenerProperty<Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock>> OnPrompt;
 
 		public ConversationInstanceModel()
 		{

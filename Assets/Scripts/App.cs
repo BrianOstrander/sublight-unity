@@ -46,9 +46,6 @@ namespace LunraGames.SubLight
 		StateMachine stateMachine;
 		public static StateMachine SM { get { return instance.stateMachine; } }
 
-		ILogService logging;
-		public static ILogService Logging { get { return instance.logging; } }
-
 		IInputService input;
 		public static IInputService Input { get { return instance.input; } }
 
@@ -119,7 +116,8 @@ namespace LunraGames.SubLight
 			Transform canvasRoot,
 			Transform gameCanvasRoot,
 			Transform overlayCanvasRoot,
-			SceneSkybox sceneSkybox
+			SceneSkybox sceneSkybox,
+			AudioConfiguration audioConfiguration
 		)
 		{
 			Time.timeScale = DevPrefs.ApplyTimeScaling.Value ? DevPrefs.TimeScaling.Value : 1f;
@@ -138,7 +136,6 @@ namespace LunraGames.SubLight
 			heartbeat = new Heartbeat();
 			presenterMediator = new PresenterMediator(Heartbeat);
 			viewMediator = new ViewMediator(Heartbeat, Callbacks);
-			audioService = new AudioService(audioRoot);
 			stateMachine = new StateMachine(
 				Heartbeat,
 				new InitializeState(),
@@ -151,14 +148,12 @@ namespace LunraGames.SubLight
 			if (Application.isEditor)
 			{
 #if UNITY_EDITOR
-				logging = new EditorLogService();
 				input = new EditorInputService(Heartbeat, Callbacks);
 				modelMediator = new DesktopModelMediator();
 #endif
 			}
 			else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.WindowsPlayer)
 			{
-				logging = new DesktopLogService();
 				input = new DesktopInputService(Heartbeat, Callbacks);
 				modelMediator = new DesktopModelMediator();
 			}
@@ -167,12 +162,12 @@ namespace LunraGames.SubLight
 				throw new Exception("Unknown platform");
 			}
 
-			scenes = new SceneService(Logging, Callbacks, sceneSkybox);
+			scenes = new SceneService(Callbacks, sceneSkybox);
 			gameService = new GameService(M, Universe);
 			keyValues = new KeyValueService(Callbacks);
-			metaKeyValues = new MetaKeyValueService(Callbacks, M, KeyValues, Logging);
+			metaKeyValues = new MetaKeyValueService(Callbacks, M, KeyValues);
 			valueFilter = new ValueFilterService(Callbacks);
-			encounters = new EncounterService(M, Logging, Callbacks, ValueFilter);
+			encounters = new EncounterService(M, Callbacks, ValueFilter);
 
 			encounterHandler = new EncounterHandlerService(
 				Heartbeat,
@@ -192,6 +187,14 @@ namespace LunraGames.SubLight
 			focus = new FocusService(Heartbeat, Callbacks);
 			analytics = new AnalyticsService(
 				Callbacks,
+				BuildPreferences
+			);
+
+			audioService = new AudioService(
+				audioRoot, 
+				audioConfiguration, 
+				Heartbeat,
+				MetaKeyValues,
 				BuildPreferences
 			);
 
@@ -245,21 +248,6 @@ namespace LunraGames.SubLight
 		public void OnApplicationPause(bool paused) { }
 
 		public void OnApplicationQuit() { }
-
-		#endregion
-
-		#region Utility
-		/// <summary>
-		/// Log the specified info message, a convenience method for the LogService.
-		/// </summary>
-		/// <param name="message">Message.</param>
-		/// <param name="logType">Log type.</param>
-		/// <param name="context">Context.</param>
-		/// <param name="onlyOnce">If set to <c>true</c> only once.</param>
-		public static void Log(object message, LogTypes logType = LogTypes.Uncatagorized, Object context = null, bool onlyOnce = false)
-		{
-			if (instance != null && instance.logging != null) Logging.Log(message, logType, context, onlyOnce);
-		}
 
 		#endregion
 	}

@@ -5,6 +5,7 @@
   "encounterId": "bf8956db-4fb2-4688-a806-068321c9de3c",
   "name": "Tutorial: Intro",
   "trigger": "Load",
+  "defaultEndLogId": "fa9a9a2f-7694-4e35-acb9-641f10d52a7a",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [
@@ -27,6 +28,7 @@
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": [
       {
         "operation": "NotCompleted",
@@ -46,6 +48,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "keyValueType": "Boolean",
@@ -90,6 +93,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -97,6 +101,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -104,6 +109,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "ff595f91-7f51-4e9d-b143-c22f7c903294"
@@ -119,6 +125,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "interactableFiltering": {
@@ -126,6 +133,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "enabledFiltering": {
@@ -133,6 +141,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "872cd24d-ab8e-4ad4-9a72-b6df3d708d0e"
@@ -172,6 +181,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "52bcbeb3-38ca-47bd-8ff3-703e8e0c70ad"
@@ -202,6 +212,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "16a4b59d-a837-403f-8c97-41959e834c58"
@@ -232,6 +243,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "622a7d6d-6d35-4b31-a757-61da17140afe"
@@ -242,6 +254,13 @@
         "ending": true,
         "logId": "0d98de0d-76ae-47b2-9e11-0df7f5334166",
         "name": "IgnoreTutorialEnd"
+      },
+      {
+        "entries": [],
+        "index": 10,
+        "ending": true,
+        "logId": "fa9a9a2f-7694-4e35-acb9-641f10d52a7a",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [
@@ -259,6 +278,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "e8de6ddd-de03-48c0-a0dc-ef55398e0521"
@@ -329,8 +349,7 @@
               "conversationType": "Prompt",
               "message": "Understood",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "19401f2b-ef8a-47be-9300-01d74eea84f8"
             },
@@ -357,8 +376,7 @@
               "conversationType": "Prompt",
               "message": "No promises!",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "7e5c1afc-adf8-41bd-bffd-247b5c0c6e97"
             },
@@ -381,6 +399,8 @@
             "index": 9
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 2,
         "logId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
         "fallbackLogId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2",
@@ -420,7 +440,7 @@
     ]
   },
   "ignore": true,
-  "version": 9,
+  "version": 10,
   "meta": "Tutorial: Intro",
   "metaKeyValues": {
     "EncounterId": "bf8956db-4fb2-4688-a806-068321c9de3c"

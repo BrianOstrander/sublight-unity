@@ -5,6 +5,7 @@
   "encounterId": "4565b965-7247-4c0d-9c6b-0dd0baf08705",
   "name": "Tutorial: Navigation Out Of Range",
   "trigger": "NavigationSelectOutOfRange",
+  "defaultEndLogId": "e60605d1-e9e0-465f-bf83-31d6354b8cd4",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [
@@ -27,6 +28,7 @@
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
+    "enumerationKeyValues": [],
     "encounterInteractions": [
       {
         "operation": "NotCompleted",
@@ -40,7 +42,15 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "e60605d1-e9e0-465f-bf83-31d6354b8cd4",
+        "name": "< End Encounter >"
+      }
+    ],
     "dialogLogs": [
       {
         "dialogs": [
@@ -56,6 +66,7 @@
                 "integerKeyValues": [],
                 "stringKeyValues": [],
                 "floatKeyValues": [],
+                "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
               "entryId": "38af4b0f-89ef-43eb-85a5-9f07619df1c3"
@@ -70,7 +81,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "Tutorial: Navigation Out Of Range",
   "metaKeyValues": {
     "EncounterId": "4565b965-7247-4c0d-9c6b-0dd0baf08705"

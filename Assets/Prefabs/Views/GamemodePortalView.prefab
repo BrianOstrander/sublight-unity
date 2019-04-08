@@ -1542,7 +1542,7 @@ MonoBehaviour:
   leafs:
   - {fileID: 2782529010162955670}
   - {fileID: 2138381994139087466}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 7a0d426aedc764aac83d3d02f55008cd, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -1709,7 +1709,7 @@ MonoBehaviour:
     Value: 0
   leafs:
   - {fileID: 7406762061522779046}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 7a0d426aedc764aac83d3d02f55008cd, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -1979,7 +1979,7 @@ MonoBehaviour:
     Value: 0
   leafs:
   - {fileID: 8321133847094643123}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 7a0d426aedc764aac83d3d02f55008cd, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}
@@ -2686,7 +2686,7 @@ MonoBehaviour:
   - {fileID: 8229406886762986575}
   - {fileID: 5108030903214414799}
   - {fileID: 810457098737379746}
-  globalSounds: {fileID: 0}
+  globalSounds: {fileID: 11400000, guid: 69579b7e27f5749418815035bc521509, type: 2}
   localSounds:
     DisabledSound: {fileID: 0}
     PressedSound: {fileID: 0}

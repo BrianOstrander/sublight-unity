@@ -36,7 +36,6 @@ namespace LunraGames.SubLight
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
-				model.Hook.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Hook", "The description given to the player before entering this encounter."), model.Hook.Value, leftOffset: false);
 
 				Color? triggerColor = null;
 				var triggerContent = new GUIContent("Trigger", "What triggers this encounter to appear upon entering a system with it.");

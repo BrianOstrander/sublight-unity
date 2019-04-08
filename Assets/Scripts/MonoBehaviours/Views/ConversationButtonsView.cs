@@ -19,6 +19,8 @@ namespace LunraGames.SubLight.Views
 	{
 		public struct State
 		{
+			public XButtonSoundBlock Sounds;
+
 			public XButtonStyleBlock LabelStyle;
 			public XButtonStyleBlock BulletStyle;
 			public XButtonStyleBlock UnderlineStyle;
@@ -48,6 +50,8 @@ namespace LunraGames.SubLight.Views
 			[Serializable]
 			public struct State
 			{
+				public XButtonSoundObject Sounds;
+
 				public XButtonStyleObject LabelStyle;
 				public XButtonStyleObject BulletStyle;
 				public XButtonStyleObject UnderlineStyle;
@@ -71,6 +75,8 @@ namespace LunraGames.SubLight.Views
 				return new State
 				{
 					// You'll be tempted to use ?? here, don't do that, Unity messes with null Objects.
+					Sounds = target.Sounds == null ? normal.Sounds : target.Sounds,
+
 					LabelStyle = target.LabelStyle == null ? normal.LabelStyle : target.LabelStyle,
 					BulletStyle = target.BulletStyle == null ? normal.BulletStyle : target.BulletStyle,
 					UnderlineStyle = target.UnderlineStyle == null ? normal.UnderlineStyle : target.UnderlineStyle,
@@ -150,6 +156,8 @@ namespace LunraGames.SubLight.Views
 		{
 			return new ConversationButtonThemeBlock.State
 			{
+				Sounds = baseState.Sounds.Block,
+
 				LabelStyle = GetModifiedStateTheme(baseState.LabelStyle, modifier),
 				BulletStyle = GetModifiedStateTheme(baseState.BulletStyle, modifier),
 				UnderlineStyle = GetModifiedStateTheme(baseState.UnderlineStyle, modifier),
@@ -202,6 +210,8 @@ namespace LunraGames.SubLight.Views
 
 				if (!block.Interactable) style = theme.NotInteractable;
 				else if (block.Used) style = theme.Used;
+
+				entry.Instance.Button.LocalSounds = style.Sounds;
 
 				entry.Instance.LabelArea.LocalStyle = style.LabelStyle;
 				entry.Instance.BulletArea.LocalStyle = style.BulletStyle;

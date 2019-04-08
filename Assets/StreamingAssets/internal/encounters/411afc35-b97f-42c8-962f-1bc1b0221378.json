@@ -5,6 +5,7 @@
   "encounterId": "63245462-5804-41cb-b51d-910c68529a7a",
   "name": "Exposition",
   "trigger": "Load",
+  "defaultEndLogId": "4ce263e3-6eb9-4ed5-82c7-48f797ea9bdc",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [
@@ -1383,6 +1384,13 @@
         "index": 47,
         "ending": true,
         "logId": "4f3d2d30-ab88-4617-a16c-399e1e41b31b"
+      },
+      {
+        "entries": [],
+        "index": 49,
+        "ending": true,
+        "logId": "4ce263e3-6eb9-4ed5-82c7-48f797ea9bdc",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [
@@ -1582,8 +1590,7 @@
               "conversationType": "Prompt",
               "message": "Me?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "dac6520c-4c59-4d4e-a70a-37e0880a73a4"
             },
@@ -1610,8 +1617,7 @@
               "conversationType": "Prompt",
               "message": "I will do my best",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "c8b7e8fa-4694-4154-a12a-f53e904fc8e7"
             },
@@ -1638,8 +1644,7 @@
               "conversationType": "Prompt",
               "message": "Thank you",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "19ab6c45-ff76-4887-b9cb-3f86c6845bc7"
             },
@@ -1658,8 +1663,7 @@
               "conversationType": "Prompt",
               "message": "It's good to be back online",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "066f74af-8bbe-4784-9c50-50dcb7346779"
             },
@@ -1670,14 +1674,15 @@
               "conversationType": "Prompt",
               "message": "Ecliptic thinks highly of you",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "90ae49d6-47ab-403f-9147-20a238c1c9d2"
             },
             "index": 6
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 43,
         "logId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
         "fallbackLogId": "cd7a8803-df97-4ab4-a811-87fb531c70a8"
@@ -1696,8 +1701,7 @@
               "conversationType": "Prompt",
               "message": "SUBMIT STATUS REPORT",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "5d641943-112b-4c0c-aa69-55e7364e8daa"
             },
@@ -1716,8 +1720,7 @@
               "conversationType": "Prompt",
               "message": "SUBMIT STATUS REPORT",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "9e48a028-dfb7-4e7e-9dff-217b9439d639"
             },
@@ -1748,6 +1751,8 @@
             "index": 5
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 3,
         "logId": "a4b620db-22d2-45e2-9c4d-6fdec6363c8e",
         "fallbackLogId": "faa8e51f-f292-4643-baa1-aabad3989acb"
@@ -1767,8 +1772,7 @@
               "conversationType": "Prompt",
               "message": "AUTHENTICATE CREDENTIALS",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "121a248b-c016-4860-8997-19112ca5bbc2"
             },
@@ -1782,6 +1786,8 @@
             }
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 5,
         "logId": "d521d33c-6d27-4e03-95da-d0d8c6748dc7",
         "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
@@ -1801,8 +1807,7 @@
               "conversationType": "Prompt",
               "message": "SLIGHTLY BETTER",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "26d57811-14b1-4d73-ad30-510707d30374"
             },
@@ -1837,8 +1842,7 @@
               "conversationType": "Prompt",
               "message": "Much better",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "f07a75c1-27cf-4c7b-9a61-3ffdc3d6ef27"
             },
@@ -1857,8 +1861,7 @@
               "conversationType": "Prompt",
               "message": "Fine by me",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "9be39e1a-6313-45e8-8f1e-83030f2c1e53"
             },
@@ -1888,6 +1891,8 @@
             }
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 6,
         "logId": "58e61556-4d14-4639-b901-a7eeaf8b23df",
         "fallbackLogId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9",
@@ -1908,8 +1913,7 @@
               "conversationType": "Prompt",
               "message": "Whatever",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "1e7238bc-439d-41b6-8b52-8f2f100ad8c7"
             },
@@ -1931,6 +1935,8 @@
             }
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 8,
         "logId": "b363455f-9b3b-4a13-88f1-0d0600ea0855",
         "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
@@ -2119,8 +2125,7 @@
               "conversationType": "Prompt",
               "message": "Yes?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "e95f72b8-68d3-42f7-a05f-27ed6375acb7"
             },
@@ -2139,8 +2144,7 @@
               "conversationType": "Prompt",
               "message": "I'm joking",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "f2a4875a-c33c-4409-94ba-885da30a7642"
             },
@@ -2170,6 +2174,8 @@
             }
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 19,
         "logId": "903b6655-85c9-4772-84fb-be92b14135cb",
         "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
@@ -2189,8 +2195,7 @@
               "conversationType": "Prompt",
               "message": "Ready",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "b5eb4749-7c9e-4e96-84ff-23e66f9859e6"
             },
@@ -2213,6 +2218,8 @@
             "index": 3
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 20,
         "logId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
         "fallbackLogId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
@@ -2294,8 +2301,7 @@
               "conversationType": "Prompt",
               "message": "Is there a problem?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "a5b1c82c-512d-4ffa-9a40-4bcab000f29a"
             },
@@ -2322,8 +2328,7 @@
               "conversationType": "Prompt",
               "message": "Okay",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "cfbb4d39-f6f0-4cd0-8b51-e161fb9faed4"
             },
@@ -2353,6 +2358,8 @@
             }
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 26,
         "logId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc",
         "fallbackLogId": "bf88fe92-7f73-4471-920b-94e21456615a"
@@ -2402,8 +2409,7 @@
               "conversationType": "Prompt",
               "message": "Ready",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "cff30950-c535-4fe7-9a05-fc3fff033294"
             },
@@ -2426,6 +2432,8 @@
             "index": 4
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 30,
         "logId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
         "fallbackLogId": "b455788b-fef1-4ec8-86fa-715db1052389"
@@ -2444,8 +2452,7 @@
               "conversationType": "Prompt",
               "message": "What happened?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "eb93c40a-24f6-4415-844a-530e86af1019"
             },
@@ -2472,8 +2479,7 @@
               "conversationType": "Prompt",
               "message": "What now?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "0701e051-1383-4991-ba58-be90c87b7686"
             },
@@ -2500,8 +2506,7 @@
               "conversationType": "Prompt",
               "message": "Indefinitely?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "ad46b356-d9b1-4c65-b51c-9ac163848dc8"
             },
@@ -2524,6 +2529,8 @@
             "index": 9
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 32,
         "logId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
@@ -2573,8 +2580,7 @@
               "conversationType": "Prompt",
               "message": "What happened to the Cecilia?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "3be629e0-d362-49d0-a304-b2f246e2e397"
             },
@@ -2597,6 +2603,8 @@
             "index": 4
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 35,
         "logId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
@@ -2623,8 +2631,7 @@
               "conversationType": "Prompt",
               "message": "I'm open to suggestions",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "d3e74aec-e06f-4e6d-85d5-10318ae16427"
             },
@@ -2651,8 +2658,7 @@
               "conversationType": "Prompt",
               "message": "Habitable?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "b46b5be3-346b-4c1b-b39e-ce851135f7b5"
             },
@@ -2675,6 +2681,8 @@
             "index": 7
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 36,
         "logId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
@@ -2701,8 +2709,7 @@
               "conversationType": "Prompt",
               "message": "I'm ready to meet the chancellor",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "fc7abb74-b7bf-45c3-8799-fb73438016cd"
             },
@@ -2717,6 +2724,8 @@
             "index": 3
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 37,
         "logId": "d2f38944-23e2-4e35-815a-3f057aae8073",
         "fallbackLogId": "0169c02a-80cd-434b-bb6a-1189119bb774"
@@ -2743,8 +2752,7 @@
               "conversationType": "Prompt",
               "message": "What about telescopic observations?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "409e73c0-2dbf-4d6f-b06a-fcd3208b6084"
             },
@@ -2771,8 +2779,7 @@
               "conversationType": "Prompt",
               "message": "Impossible!",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "35268221-8984-4b8f-b5dc-389c4c0225b7"
             },
@@ -2795,6 +2802,8 @@
             "index": 7
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 39,
         "logId": "690595df-9cac-4dff-9482-66898f4fc0f9",
         "fallbackLogId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2"
@@ -2821,8 +2830,7 @@
               "conversationType": "Prompt",
               "message": "What does that mean?",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "278f0b4a-8099-48f1-bb6c-e915bc0921d4"
             },
@@ -2849,8 +2857,7 @@
               "conversationType": "Prompt",
               "message": "Oh...",
               "promptInfo": {
-                "Style": "Conversation",
-                "Theme": "Crew"
+                "Behaviour": "ButtonOnly"
               },
               "entryId": "7993d6fa-b1ac-4186-a7b8-5bfd0ac871e2"
             },
@@ -2873,13 +2880,15 @@
             "index": 7
           }
         ],
+        "style": "Conversation",
+        "theme": "Crew",
         "index": 40,
         "logId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"
       }
     ]
   },
-  "version": 9,
+  "version": 10,
   "meta": "Exposition",
   "metaKeyValues": {
     "EncounterId": "63245462-5804-41cb-b51d-910c68529a7a"

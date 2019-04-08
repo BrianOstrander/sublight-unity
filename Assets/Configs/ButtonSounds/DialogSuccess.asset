@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,6 +13,7 @@ MonoBehaviour:
   m_Name: DialogSuccess
   m_EditorClassIdentifier: 
   Block:
+    Mixer: {fileID: 243917276596842796, guid: 0953a82e3fa034e8bba5e04f69753ba5, type: 2}
     DisabledSound: {fileID: 8300000, guid: 28b2b442a1b6e4cf09c0ce48afed381b, type: 3}
     PressedSound: {fileID: 8300000, guid: e03f2bec8b3924b508b606e8da1fe833, type: 3}
     EnteredSound: {fileID: 0}

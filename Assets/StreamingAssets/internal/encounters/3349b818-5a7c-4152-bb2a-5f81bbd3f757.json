@@ -5,6 +5,7 @@
   "encounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867",
   "name": "Failure: No Propellent",
   "trigger": "TransitComplete",
+  "defaultEndLogId": "1893bc38-3ee8-48c7-a678-70aa607ff3e1",
   "filtering": {
     "showValues": true,
     "booleanKeyValues": [],
@@ -70,6 +71,13 @@
         "beginning": true,
         "ending": true,
         "logId": "b8ffcbff-ed26-473e-8009-ae933b20c6a5"
+      },
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "1893bc38-3ee8-48c7-a678-70aa607ff3e1",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [],
@@ -77,7 +85,7 @@
     "conversationLogs": []
   },
   "ignore": true,
-  "version": 9,
+  "version": 10,
   "meta": "Failure: No Propellent",
   "metaKeyValues": {
     "EncounterId": "0f4ceedf-ccaa-49f9-b20b-297f2afd2867"

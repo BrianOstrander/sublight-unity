@@ -4,6 +4,7 @@
   "encounterId": "92c100e3-6cbc-43c7-bbc2-7d45927cd750",
   "name": "Test",
   "trigger": "None",
+  "defaultEndLogId": "7a494b4c-f99f-468c-8e49-93b1b914656a",
   "filtering": {
     "booleanKeyValues": [],
     "integerKeyValues": [],
@@ -128,13 +129,20 @@
         "index": 1,
         "ending": true,
         "logId": "8820a229-56c0-4ab7-a61a-a164ff8ef3e8"
+      },
+      {
+        "entries": [],
+        "index": 2,
+        "ending": true,
+        "logId": "7a494b4c-f99f-468c-8e49-93b1b914656a",
+        "name": "< End Encounter >"
       }
     ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 9,
+  "version": 10,
   "meta": "Test",
   "metaKeyValues": {
     "EncounterId": "92c100e3-6cbc-43c7-bbc2-7d45927cd750"

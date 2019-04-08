@@ -29,6 +29,8 @@ namespace LunraGames.SubLight
 		BuildPreferences buildPreferences;
 		[SerializeField]
 		SceneSkybox sceneSkybox;
+		[SerializeField]
+		AudioConfiguration audioConfiguration;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		App app;
@@ -44,7 +46,8 @@ namespace LunraGames.SubLight
 				canvasRoot,
 				gameCanvasRoot,
 				overlayCanvasRoot,
-				sceneSkybox
+				sceneSkybox,
+				audioConfiguration
 			);
 			DontDestroyOnLoad(gameObject);
 			app.Awake();

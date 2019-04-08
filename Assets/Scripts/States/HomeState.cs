@@ -352,7 +352,9 @@ namespace LunraGames.SubLight
 				() =>
 				{
 					App.Callbacks.HoloColorRequest(new HoloColorRequest(new Color(1f, 0.25f, 0.11f)));
-					App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultRevealDuration, OnIdleShow));
+					var finalRevealDuration = Payload.MenuAnimationMultiplier * CameraMaskRequest.DefaultRevealDuration;
+					App.Audio.SetSnapshot(AudioSnapshots.Master.Home.MainMenu, finalRevealDuration * 2f);
+					App.Callbacks.CameraMaskRequest(CameraMaskRequest.Reveal(finalRevealDuration, OnIdleShow));
 				},
 				"HomeIdleDefaults"
 			);
@@ -540,9 +542,11 @@ namespace LunraGames.SubLight
 			{
 				case DialogRequest.States.Request:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetPriorityFocus()));
+					App.Audio.SetSnapshot(AudioSnapshots.Master.Shared.Paused);
 					break;
 				case DialogRequest.States.Completing:
 					App.Callbacks.SetFocusRequest(SetFocusRequest.Request(Focuses.GetMainMenuFocus()));
+					App.Audio.SetSnapshot(AudioSnapshots.Master.Home.MainMenu);
 					break;
 			}
 		}
@@ -577,6 +581,8 @@ namespace LunraGames.SubLight
 				},
 				"StartGameRequestState"
 			);
+
+			App.Audio.SetSnapshot(AudioSnapshots.Master.Shared.Transition);
 		}
 		#endregion
 	}
