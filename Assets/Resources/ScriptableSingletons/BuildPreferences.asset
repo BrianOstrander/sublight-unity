@@ -122,14 +122,24 @@ MonoBehaviour:
       Change: 10
       Description: Distribution of resources varies by system classification.
   - Title: Luhman
-    Description: 
+    Description: This update adds a new sound system, musical track, effects, and
+      an additional encounter.
     ReleaseType: Feature
     Cyle: Alpha
     Version: 10
     Year: 2019
     Month: 4
-    Day: 12
+    Day: 5
     Entries:
     - Index: 10
       Change: 10
-      Description: 
+      Description: New musical track <b>Relativity</b> by Ian Earle.
+    - Index: 20
+      Change: 10
+      Description: Sound effects for most buttons.
+    - Index: 30
+      Change: 10
+      Description: Audio ducking support.
+    - Index: 40
+      Change: 10
+      Description: New encounter <b>Stellar Catacombs</b>.
