@@ -1,6 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
-  "randomAppearance": 0.3,
+  "randomAppearance": 0.5,
   "encounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c",
   "name": "Stellar Catacombs",
   "trigger": "TransitComplete",
@@ -525,7 +525,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "We've sampled several of the deceased, it looks like the oldest ones were interned here several thousand years ago...",
+              "message": "We've sampled several of the deceased, it looks like the oldest ones were interred here several thousand years ago...",
               "entryId": "def0f10f-86a3-4f79-ab58-d5cd721b57bf"
             }
           },
@@ -682,7 +682,7 @@
       }
     ]
   },
-  "version": 10,
+  "version": 11,
   "meta": "Stellar Catacombs",
   "metaKeyValues": {
     "EncounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c"

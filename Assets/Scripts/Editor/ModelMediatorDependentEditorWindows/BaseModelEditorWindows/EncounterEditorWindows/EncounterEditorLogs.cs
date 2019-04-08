@@ -135,10 +135,7 @@ namespace LunraGames.SubLight
 			if (string.IsNullOrEmpty(model.DefaultEndLogId.Value))
 			{
 				Debug.LogWarning("Default log id was never instantiated, doing that now");
-				model.DefaultEndLogId.Value = AppendNewLog(EncounterLogTypes.Event, model, LogsAppendSources.Automatic);
-				var endLogInstance = model.Logs.GetLogFirstOrDefault(model.DefaultEndLogId.Value);
-				endLogInstance.Ending.Value = true;
-				endLogInstance.Name.Value = LogStrings.DefaultEndLogName;
+				LogsCreateDefaultEndLog(model);
 				return;
 			}
 
@@ -151,6 +148,14 @@ namespace LunraGames.SubLight
 			}
 
 			// Eventually you can do some changes to the default end log here, if needed...
+		}
+
+		void LogsCreateDefaultEndLog(EncounterInfoModel model)
+		{
+			model.DefaultEndLogId.Value = AppendNewLog(EncounterLogTypes.Event, model, LogsAppendSources.Automatic);
+			var endLogInstance = model.Logs.GetLogFirstOrDefault(model.DefaultEndLogId.Value);
+			endLogInstance.Ending.Value = true;
+			endLogInstance.Name.Value = LogStrings.DefaultEndLogName;
 		}
 		#endregion
 

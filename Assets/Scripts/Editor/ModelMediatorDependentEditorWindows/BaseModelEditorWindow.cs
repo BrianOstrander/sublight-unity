@@ -126,6 +126,7 @@ namespace LunraGames.SubLight
 						"New " + readableModelName + " Model",
 						value =>
 						{
+							BeforeLoadSelection();
 							SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
 						},
 						doneText: "Create",
@@ -137,7 +138,7 @@ namespace LunraGames.SubLight
 
 		void OnNewModelSaveDone(SaveLoadRequest<M> result)
 		{
-			selectedStatus = result.Status;
+			//selectedStatus = result.Status;
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
@@ -145,8 +146,9 @@ namespace LunraGames.SubLight
 			}
 			AssetDatabase.Refresh();
 			modelListStatus = RequestStatus.Cancel;
-			modelSelectedPath.Value = result.TypedModel.Path;
-			ModelSelection = result.TypedModel;
+			//modelSelectedPath.Value = result.TypedModel.Path;
+			//ModelSelection = result.TypedModel;
+			OnLoadSelection(result.Model);
 		}
 
 		void OnLoadList()
