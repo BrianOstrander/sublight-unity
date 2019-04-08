@@ -143,3 +143,16 @@ MonoBehaviour:
     - Index: 40
       Change: 10
       Description: New encounter <b>Stellar Catacombs</b>.
+  - Title: Luhman
+    Description: This update adds a new sound system, musical track, effects, and
+      an additional encounter.
+    ReleaseType: Feature
+    Cyle: Alpha
+    Version: 10
+    Year: 2019
+    Month: 4
+    Day: 12
+    Entries:
+    - Index: 10
+      Change: 10
+      Description: 
