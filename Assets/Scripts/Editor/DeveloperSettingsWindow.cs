@@ -166,9 +166,11 @@ namespace LunraGames.SubLight
 
 		void OnGameTab()
 		{
+			var disabledColor = Color.white.NewV(0.7f);
+
 			GUILayout.BeginHorizontal();
 			{
-				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PushColor(Color.white.NewV(0.7f));
+				if (!DevPrefs.ApplyTimeScaling.Value) EditorGUILayoutExtensions.PushColor(disabledColor);
 				{
 					DevPrefs.TimeScaling.Value = EditorGUILayout.Slider("Time Scale", DevPrefs.TimeScaling.Value, 0f, 4f);
 				}
@@ -242,10 +244,10 @@ namespace LunraGames.SubLight
 			}
 			EditorGUILayoutExtensions.PopIndent();
 
-			var encounterNotOverriding = !DevPrefs.EncounterIdOverrideActive;
-			if (encounterNotOverriding) EditorGUILayoutExtensions.PushColor(Color.gray);
+			GUILayout.BeginHorizontal();
 			{
-				GUILayout.BeginHorizontal();
+				var encounterNotOverriding = !DevPrefs.EncounterIdOverrideActive;
+				if (encounterNotOverriding) EditorGUILayoutExtensions.PushColor(disabledColor);
 				{
 					EditorGUILayout.PrefixLabel(new GUIContent("Encounter Overriding", "If a valid trigger and Encounter Id are selected, the specified Encounter will run when the appropriate trigger occurs."));
 					DevPrefs.EncounterIdOverrideTrigger.Value = EditorGUILayoutExtensions.HelpfulEnumPopup(
@@ -255,11 +257,44 @@ namespace LunraGames.SubLight
 						guiOptions: GUILayout.Width(120f)
 					);
 					DevPrefs.EncounterIdOverride.Value = EditorGUILayout.TextField(DevPrefs.EncounterIdOverride.Value);
-					DevPrefs.EncounterIdOverrideIgnore.Value = !EditorGUILayout.Toggle(!DevPrefs.EncounterIdOverrideIgnore.Value, GUILayout.Width(18f));
 				}
-				GUILayout.EndHorizontal();
+				if (encounterNotOverriding) EditorGUILayoutExtensions.PopColor();
+				DevPrefs.EncounterIdOverrideIgnore.Value = !EditorGUILayout.Toggle(!DevPrefs.EncounterIdOverrideIgnore.Value, GUILayout.Width(18f));
+
+				EditorGUILayoutExtensions.PushEnabled(IsInGameState);
+				{
+					if (GUILayout.Button(new GUIContent("Start", "Starts this encounter if none are currently active."), EditorStyles.miniButton, GUILayout.Width(64f)))
+					{
+						var gamePayload = (App.SM.CurrentHandler as GameState).Payload;
+
+						if (gamePayload.Game.EncounterResume.Value.CanResume)
+						{
+							Debug.LogError("Cannot start an encounter while one is active.");
+						}
+						else
+						{
+							var encounterPush = App.Encounters.GetEncounter(DevPrefs.EncounterIdOverride.Value);
+							if (encounterPush == null) Debug.LogError("Unable to push encounter, could not find one with a matching id");
+							else
+							{
+								App.Callbacks.EncounterRequest(
+									EncounterRequest.Request(
+										gamePayload.Game,
+										encounterPush,
+										DevPrefs.EncounterIdOverrideTrigger.Value
+									)
+								);
+							}
+						}
+					}
+					//if (GUILayout.Button(new GUIContent("Stop", "Stops an encounter if one is playing."), EditorStyles.miniButtonRight, GUILayout.Width(64f)))
+					//{
+
+					//}
+				}
+				EditorGUILayoutExtensions.PopEnabled();
 			}
-			if (encounterNotOverriding) EditorGUILayoutExtensions.PopColor();
+			GUILayout.EndHorizontal();
 		}
 
 		void OnLocalTab()
