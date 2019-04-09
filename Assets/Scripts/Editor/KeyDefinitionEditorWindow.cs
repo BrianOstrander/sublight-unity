@@ -281,7 +281,7 @@ namespace LunraGames.SubLight
 			);
 			closeHandled = true;
 			Close();
-			GUIUtility.keyboardControl = 0;
+			EditorGUIExtensions.ResetControls();
 		}
 
 		void OnDestroy()

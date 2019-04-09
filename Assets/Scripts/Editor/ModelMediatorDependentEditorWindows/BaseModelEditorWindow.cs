@@ -193,7 +193,7 @@ namespace LunraGames.SubLight
 
 		void OnLoadSelectionDone(SaveLoadRequest<M> result)
 		{
-			GUIUtility.keyboardControl = 0;
+			EditorGUIExtensions.ResetControls();
 			selectedStatus = result.Status;
 			if (result.Status != RequestStatus.Success)
 			{
@@ -647,7 +647,7 @@ namespace LunraGames.SubLight
 				}
 				toolbarIndex++;
 			}
-			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) GUIUtility.keyboardControl = 0;
+			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) EditorGUIExtensions.ResetControls();
 			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
 		}
 

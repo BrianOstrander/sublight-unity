@@ -18,11 +18,14 @@ namespace LunraGames.SubLight
 		{
 			public const string SelectOrCreateLog = "- Select Or Create Log -";
 			public const string DefaultEndLogName = "< End Encounter >";
+			public const string EdgeEntryAppendPrefix = "Append";
+			public const string EdgeEntryInsertPrefix = "Insert";
 		}
 
 		static class LogFloats
 		{
 			public const float KeyValueOperationWidth = 80f;
+			public const float AppendEntryWidthMaximum = 300f;
 		}
 
 		class EncounterEditorLogCache
@@ -2219,11 +2222,27 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
+			OnEdgedLog<ConversationEncounterLogModel, ConversationEdgeModel>(
+				infoModel,
+				model,
+				OnConversationLogEdge,
+				OnConversationLogSpawnOptions
+			);
+		}
+
+		void OnConversationLogSpawnOptions(
+			EncounterInfoModel infoModel,
+			ConversationEncounterLogModel model,
+			string prefix,
+			int index = int.MaxValue
+		)
+		{
 			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
 				GUIContent.none,
-				"- Append a Conversation Entry -",
+				"- " + (string.IsNullOrEmpty(prefix) ? LogStrings.EdgeEntryAppendPrefix : prefix) + " a Conversation Entry -",
 				ConversationTypes.Unknown,
-				EnumExtensions.GetValues(ConversationTypes.AttachmentIncoming) // Attachments aren't supported yet...
+				EnumExtensions.GetValues(ConversationTypes.AttachmentIncoming), // Attachments aren't supported yet...
+				GUILayout.MaxWidth(LogFloats.AppendEntryWidthMaximum)
 			);
 
 			switch (appendSelection)
@@ -2231,18 +2250,15 @@ namespace LunraGames.SubLight
 				case ConversationTypes.Unknown: break;
 				case ConversationTypes.MessageIncoming:
 				case ConversationTypes.MessageOutgoing:
-					OnEdgedLogSpawn(model, edge => OnConversationLogSpawnMessage(appendSelection, edge));
+					OnEdgedLogSpawn(model, edge => OnConversationLogSpawnMessage(appendSelection, edge), index);
 					break;
 				case ConversationTypes.Prompt:
-					OnEdgedLogSpawn(model, OnConversationLogSpawnPrompt);
+					OnEdgedLogSpawn(model, OnConversationLogSpawnPrompt, index);
 					break;
 				default:
 					Debug.LogError("Unrecognized ConversationType: " + appendSelection);
 					break;
-
 			}
-
-			OnEdgedLog<ConversationEncounterLogModel, ConversationEdgeModel>(infoModel, model, OnConversationLogEdge);
 		}
 
 		void OnConversationLogSpawnMessage(
@@ -2354,11 +2370,14 @@ namespace LunraGames.SubLight
 		void OnEdgedLog<L, E>(
 			EncounterInfoModel infoModel,
 			L model,
-			Action<EncounterInfoModel, L, E> edgeEditor
+			Action<EncounterInfoModel, L, E> edgeEditor,
+			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions = null
 		)
 			where L : IEdgedEncounterLogModel<E>
 			where E : class, IEdgeModel
 		{
+			if (edgeSpawnOptions != null) edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryAppendPrefix, int.MaxValue);
+
 			var deleted = string.Empty;
 			var isAlternate = false;
 
@@ -2404,8 +2423,22 @@ namespace LunraGames.SubLight
 
 						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
 						{
-
-							if (OnEdgedLogEdgeHeader(current, i, sortedCount, isMoving, isDeleting, out currMoveDelta)) deleted = current.EdgeId;
+							if (
+								OnEdgedLogEdgeHeader(
+									infoModel,
+									model,
+									current,
+									i,
+									sortedCount,
+									isMoving,
+									isDeleting,
+									out currMoveDelta,
+									edgeSpawnOptions
+								)
+							)
+							{
+								deleted = current.EdgeId;
+							}
 
 							if (currMoveDelta != 0)
 							{
@@ -2437,36 +2470,67 @@ namespace LunraGames.SubLight
 				indexSwap0.EdgeIndex = swap1;
 				indexSwap1.EdgeIndex = swap0;
 			}
+
+			if (edgeSpawnOptions != null && model.Edges.Any()) edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryAppendPrefix, int.MaxValue);
 		}
 
 		void OnEdgedLogSpawn<E>(
 			IEdgedEncounterLogModel<E> model,
-			Action<E> initialize = null
+			Action<E> initialize = null,
+			int index = int.MaxValue
 		)
 			where E : class, IEdgeModel, new()
 		{
 			ModelSelectionModified = true;
 
-			var index = 0;
 			if (model.Edges.Any())
 			{
-				index = model.Edges.OrderBy(e => e.EdgeIndex).Last().EdgeIndex + 1;
+				var ordered = model.Edges.OrderBy(e => e.EdgeIndex);
+
+				if (index == int.MinValue) index = ordered.First().EdgeIndex;
+				else if (index == int.MaxValue) index = ordered.Last().EdgeIndex + 1;
+
+				var currentIndex = ordered.First().EdgeIndex;
+				var replacementIndex = 0;
+				var wasReplaced = false;
+				foreach (var edge in ordered)
+				{
+					if (edge.EdgeIndex == index)
+					{
+						replacementIndex++;
+						wasReplaced = true;
+					}
+					
+					edge.EdgeIndex = replacementIndex;
+					
+					replacementIndex++;
+				}
+
+				if (!wasReplaced) index = replacementIndex;
 			}
+			else index = 0;
+
 			var result = new E();
 			result.EdgeId = Guid.NewGuid().ToString();
 			result.EdgeIndex = index;
 			if (initialize != null) initialize(result);
 			model.Edges = model.Edges.Append(result).ToArray();
+
+			EditorGUIExtensions.ResetControls();
 		}
 
-		bool OnEdgedLogEdgeHeader<E>(
+		bool OnEdgedLogEdgeHeader<L, E>(
+			EncounterInfoModel infoModel,
+			L model,
 			E edge,
 			int count,
 			int maxCount,
 			bool isMoving,
 			bool isDeleting,
-			out int indexDelta
+			out int indexDelta,
+			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions // This could be null, check for it...
 		)
+			where L : IEdgedEncounterLogModel<E>
 			where E : class, IEdgeModel
 		{
 			var deleted = false;
@@ -2481,6 +2545,10 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PopEnabled();
 				if (isMoving)
 				{
+					GUILayout.FlexibleSpace();
+					if (edgeSpawnOptions == null) GUILayout.Label("Entry Insertion Not Supported   |");
+					else edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryInsertPrefix, edge.EdgeIndex);
+
 					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
 					EditorGUILayoutExtensions.PushEnabled(0 < count);
 					{
@@ -2595,7 +2663,7 @@ namespace LunraGames.SubLight
 		int LogsSetFocusedLogIdsIndex(int index)
 		{
 			logsFocusedLogIdsIndex.Value = index;
-			GUIUtility.keyboardControl = 0;
+			EditorGUIExtensions.ResetControls();
 			return index;
 		}
 

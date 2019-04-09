@@ -6,6 +6,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight.Presenters
 {
+	// TODO: Is this class actually used?
 	public class ButtonEncounterLogPresenter : EntryEncounterLogPresenter<ButtonEncounterLogModel, IButtonEncounterLogView>
 	{
 		ButtonLogBlock[] buttons;
