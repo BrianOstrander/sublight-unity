@@ -370,7 +370,7 @@
               "bustId": "ExtraOps",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "TitleSource": "Unidentified",
+                "TitleSource": "Habitat",
                 "TitleClassification": "Derelict",
                 "TransmitionType": "Transmission",
                 "TransmitionStrength": "Strong",
@@ -396,7 +396,7 @@
               "bustId": "Doctor",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "TitleSource": "Unidentified",
+                "TitleSource": "Habitat",
                 "TitleClassification": "Derelict",
                 "TransmitionType": "Transmission",
                 "TransmitionStrength": "Strong",
