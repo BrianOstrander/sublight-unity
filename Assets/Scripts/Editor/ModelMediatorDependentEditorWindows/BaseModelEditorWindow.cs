@@ -433,7 +433,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnModelEditorUpdate()
+		void OnModelEditorUpdate(float delta = 0f)
 		{
 			if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isPlayingOrWillChangePlaymode != lastIsPlayingOrWillChangePlaymode)
 			{

@@ -26,6 +26,7 @@ namespace LunraGames.SubLight
 		{
 			public const float KeyValueOperationWidth = 80f;
 			public const float AppendEntryWidthMaximum = 300f;
+			public const float HighlightEntryDuration = 1f;
 		}
 
 		class EncounterEditorLogCache
@@ -33,6 +34,50 @@ namespace LunraGames.SubLight
 			public string[] BustIdsInitialized;
 			public string[] BustIdsMissingInitialization;
 			public bool BustIdsNormalizationMismatch;
+		}
+
+		class LogEdgeVisualOverride
+		{
+			public enum Controls
+			{
+				Unknown = 0,
+				Static = 10,
+				Decay = 20
+			}
+
+			public enum Effects
+			{
+				Unknown = 0,
+				Highlight = 10
+			}
+
+			public string EdgeId;
+
+			public Controls Control;
+			public Effects Effect;
+
+			public int FrameCount;
+
+			public float Duration;
+			public float DurationRemaining;
+
+			public float InverseNormal { get { return DurationRemaining / Duration; } }
+			public float Normal { get { return 1f - InverseNormal; } }
+			public float QuartNormal { get { return Mathf.Pow(Normal, 4f); } }
+
+			public LogEdgeVisualOverride(
+				string edgeId,
+				Controls control,
+				Effects effect,
+				float duration
+			)
+			{
+				EdgeId = edgeId;
+				Control = control;
+				Effect = effect;
+				Duration = duration;
+				DurationRemaining = duration;
+			}
 		}
 
 		enum LogsAppendSources
@@ -80,6 +125,39 @@ namespace LunraGames.SubLight
 
 		EncounterEditorLogCache logCache;
 
+		#region Log Edge Visual Overrides
+		List<LogEdgeVisualOverride> logEdgeVisualOverrides = new List<LogEdgeVisualOverride>();
+
+		void LogAddEdgeVisualOverrideHighlight(string edgeId)
+		{
+			var existing = logEdgeVisualOverrides.FirstOrDefault(e => e.EdgeId == edgeId);
+			if (existing == null)
+			{
+				logEdgeVisualOverrides.Add(
+					new LogEdgeVisualOverride(
+						edgeId,
+						LogEdgeVisualOverride.Controls.Decay,
+						LogEdgeVisualOverride.Effects.Highlight,
+						LogFloats.HighlightEntryDuration
+					)
+				);
+				return;
+			}
+
+			switch (existing.Control)
+			{
+				case LogEdgeVisualOverride.Controls.Static: break;
+				case LogEdgeVisualOverride.Controls.Decay:
+					existing.Duration = LogFloats.HighlightEntryDuration;
+					existing.DurationRemaining = LogFloats.HighlightEntryDuration;
+					break;
+				default:
+					Debug.LogError("Unrecognized EdgeVisualOverrideControl: " + existing.Control);
+					break;
+			}
+		}
+		#endregion
+
 		void LogsConstruct()
 		{
 			var currPrefix = KeyPrefix + "Logs";
@@ -100,6 +178,8 @@ namespace LunraGames.SubLight
 
 			BeforeLoadSelection += LogsBeforeLoadSelection;
 			AfterLoadSelection += LogsAfterLoadSelection;
+
+			EditorUpdate += LogsInspectorUpdate;
 		}
 
 		#region Events
@@ -159,6 +239,42 @@ namespace LunraGames.SubLight
 			var endLogInstance = model.Logs.GetLogFirstOrDefault(model.DefaultEndLogId.Value);
 			endLogInstance.Ending.Value = true;
 			endLogInstance.Name.Value = LogStrings.DefaultEndLogName;
+		}
+
+		void LogsInspectorUpdate(float delta = 0f)
+		{
+			if (logEdgeVisualOverrides.None()) return;
+
+			var newOverrides = new List<LogEdgeVisualOverride>();
+			var wasUpdated = false;
+
+			foreach (var current in logEdgeVisualOverrides)
+			{
+				current.FrameCount++;
+
+				if (current.Control == LogEdgeVisualOverride.Controls.Static || current.FrameCount == 1)
+				{
+					newOverrides.Add(current);
+					continue;
+				}
+
+				if (current.Control != LogEdgeVisualOverride.Controls.Decay)
+				{
+					Debug.LogError("Unrecognized EdgeVisualControl: " + current.Control);
+					continue;
+				}
+
+				wasUpdated = true;
+
+				current.DurationRemaining = Mathf.Max(0f, current.DurationRemaining - delta);
+				if (Mathf.Approximately(0f, current.DurationRemaining)) continue;
+
+				newOverrides.Add(current);
+			}
+
+			logEdgeVisualOverrides = newOverrides;
+
+			if (wasUpdated) Repaint();
 		}
 		#endregion
 
@@ -2413,6 +2529,9 @@ namespace LunraGames.SubLight
 						EditorGUILayout.HelpBox("There are edges with duplicate Ids, unexpected behaviour may occur.", MessageType.Error);
 					}
 
+					var normalBackgroundColor = Color.white;
+					var alternateBackgroundColor = Color.grey.NewV(0.5f);
+
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var current = sorted[i];
@@ -2421,7 +2540,23 @@ namespace LunraGames.SubLight
 
 						isAlternate = !isAlternate;
 
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
+						var currentColor = isAlternate ? alternateBackgroundColor : normalBackgroundColor;
+						var currentEffect = logEdgeVisualOverrides.FirstOrDefault(e => e.EdgeId == current.EdgeId);
+
+						if (currentEffect != null)
+						{
+							switch (currentEffect.Effect)
+							{
+								case LogEdgeVisualOverride.Effects.Highlight:
+									currentColor = Color.Lerp(Color.yellow, currentColor, currentEffect.QuartNormal);
+									break;
+								default:
+									Debug.LogError("Unrecognized EdgeVisualOverrideEffect: " + currentEffect.Effect);
+									break;
+							}
+						}
+
+						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, currentColor);
 						{
 							if (
 								OnEdgedLogEdgeHeader(
@@ -2517,6 +2652,8 @@ namespace LunraGames.SubLight
 			model.Edges = model.Edges.Append(result).ToArray();
 
 			EditorGUIExtensions.ResetControls();
+
+			LogAddEdgeVisualOverrideHighlight(result.EdgeId);
 		}
 
 		bool OnEdgedLogEdgeHeader<L, E>(
