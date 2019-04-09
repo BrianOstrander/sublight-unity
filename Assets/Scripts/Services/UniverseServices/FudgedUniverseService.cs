@@ -185,7 +185,7 @@ namespace LunraGames.SubLight
 				}
 				else if (classificationSecondary < 0.45f)
 				{
-					systemModel.SecondaryClassification.Value = "Pulsar";
+					systemModel.SecondaryClassification.Value = "Neutron Star";
 					systemModel.IconColor.Value = Color.HSVToRGB(0.583f, 0.17f, 1f);
 				}
 				else
@@ -215,7 +215,7 @@ namespace LunraGames.SubLight
 				new SpecifiedEncounterEntry
 				{
 					Trigger = EncounterTriggers.NavigationSelect,
-					EncounterId = "2ecf3799-264f-43b7-adec-383b09571ef5"
+					EncounterId = "2ecf3799-264f-43b7-adec-383b09571ef5" // TODO: This should not be hardcoded...
 				}
 			};
 
@@ -224,6 +224,8 @@ namespace LunraGames.SubLight
 			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Rations.GatherMultiplier, resourceGenerator.NextFloat * rationsAbundance);
 			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Propellant.GatherMultiplier, resourceGenerator.NextFloat * propellantAbundance);
 			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Metallics.GatherMultiplier, resourceGenerator.NextFloat);
+
+			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.IconPings, resourceGenerator.NextFloat < 0.1f);
 
 			return systemModel;
 		}

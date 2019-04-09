@@ -13,7 +13,8 @@ namespace LunraGames.SubLight
 			DumpKeyValues = 40,
 			GameComplete = 50,
 			TriggerQueue = 60,
-			Delay = 70
+			Delay = 70,
+			RefreshSystem = 80
 		}
 
 		public static class Custom

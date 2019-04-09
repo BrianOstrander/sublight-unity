@@ -226,18 +226,29 @@ namespace LunraGames.SubLight
 
 			if (remaining.None())
 			{
-				done(RequestResult.Success(), OnGetNextEncounterSelect(filtered));
+				OnGetNextEncounterSelect(
+					done,
+					model,
+					remaining,
+					filtered
+				);
 				return;
 			}
 
 			var next = remaining.First();
-			remaining.RemoveAt(0);
 
 			if (orderWeight != next.OrderWeight && filtered.Any())
 			{
-				done(RequestResult.Success(), OnGetNextEncounterSelect(filtered));
+				OnGetNextEncounterSelect(
+					done,
+					model,
+					remaining,
+					filtered
+				);
 				return;
 			}
+
+			remaining.RemoveAt(0);
 
 			if (!Mathf.Approximately(next.RandomAppearance.Value, 1f) && next.RandomAppearance.Value < DemonUtility.NextFloat)
 			{
@@ -270,12 +281,40 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		EncounterInfoModel OnGetNextEncounterSelect(
+		void OnGetNextEncounterSelect(
+			Action<RequestResult, EncounterInfoModel> done,
+			GameModel model,
+			List<EncounterInfoModel> remaining,
 			List<EncounterInfoModel> filtered
 		)
 		{
-			if (filtered.None()) return null;
+			if (filtered.None())
+			{
+				if (remaining.None())
+				{
+					done(RequestResult.Success(), null);
+					return;
+				}
 
+				OnGetNextEncounterFilter(
+					done,
+					model,
+					remaining.First().OrderWeight.Value,
+					remaining.ToList(),
+					new List<EncounterInfoModel>()
+				);
+
+				return;
+			}
+
+			done(
+				RequestResult.Success(),
+				filtered.RandomWeighted(
+					e => e.RandomWeightMultiplier.Value
+				)
+			);
+
+			/*
 			var ordered = filtered.OrderBy(f => f.RandomWeightMultiplier.Value);
 			var keyed = new List<KeyValuePair<float, EncounterInfoModel>>();
 			var offset = 0f;
@@ -291,10 +330,12 @@ namespace LunraGames.SubLight
 			{
 				if ((Mathf.Approximately(entry.Key, lastOffset) || lastOffset < selectedOffset) && selectedOffset < entry.Key)
 				{
-					return entry.Value;
+					done(RequestResult.Success(), entry.Value);
+					return;
 				}
 			}
-			return keyed.Last().Value;
+			done(RequestResult.Success(), keyed.Last().Value);
+			*/
 		}
 		#endregion
 

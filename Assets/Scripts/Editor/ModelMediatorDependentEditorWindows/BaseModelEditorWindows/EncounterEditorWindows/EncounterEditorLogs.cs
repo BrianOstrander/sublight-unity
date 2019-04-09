@@ -357,7 +357,7 @@ namespace LunraGames.SubLight
 					result = NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
 				case EncounterLogTypes.Switch:
-					result = NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = OnNewEncoutnerLog(NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning)).LogId.Value;
 					break;
 				case EncounterLogTypes.Button:
 					result = NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
@@ -403,6 +403,12 @@ namespace LunraGames.SubLight
 			result.Beginning.Value = isBeginning;
 			model.Logs.All.Value = model.Logs.All.Value.Append(result).ToArray();
 			return result;
+		}
+
+		SwitchEncounterLogModel OnNewEncoutnerLog(SwitchEncounterLogModel model)
+		{
+			model.SelectionMethod.Value = SwitchEncounterLogModel.SelectionMethods.FirstFilter;
+			return model;
 		}
 
 		bool OnLogBegin(
@@ -1115,6 +1121,13 @@ namespace LunraGames.SubLight
 			SwitchEncounterLogModel model
 		)
 		{
+			model.SelectionMethod.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Selection Method"),
+				"- Select Selection Method -",
+				model.SelectionMethod.Value,
+				Color.red
+			);
+
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Append New Switch"),
 				new GUIContent("- Select Target Log -"),
@@ -1139,6 +1152,7 @@ namespace LunraGames.SubLight
 			string targetLogId
 		)
 		{
+			edge.Entry.RandomWeight.Value = 1f;
 			edge.Entry.NextLogId.Value = targetLogId;
 		}
 
@@ -1149,6 +1163,19 @@ namespace LunraGames.SubLight
 		)
 		{
 			var entry = edge.Entry;
+
+			switch (model.SelectionMethod.Value)
+			{
+				case SwitchEncounterLogModel.SelectionMethods.FirstFilter:
+				case SwitchEncounterLogModel.SelectionMethods.Random:
+					break;
+				case SwitchEncounterLogModel.SelectionMethods.RandomWeighted:
+					entry.RandomWeight.Value = EditorGUILayout.FloatField("Random Weight", entry.RandomWeight.Value);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized SelectionMethod: " + model.SelectionMethod.Value, MessageType.Error);
+					break;
+			}
 
 			entry.NextLogId.Changed = newLogId => ModelSelectionModified = true;
 
@@ -1462,6 +1489,9 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.Delay:
 					OnEncounterEventLogEdgeDelay(entry);
 					break;
+				case EncounterEvents.Types.RefreshSystem:
+					OnEncounterEventLogEdgeRefreshSystem(entry);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
 					break;
@@ -1669,6 +1699,18 @@ namespace LunraGames.SubLight
 					EditorGUILayout.HelpBox("Unrecognized Trigger: " + trigger, MessageType.Error);
 					break;
 			}
+		}
+
+		void OnEncounterEventLogEdgeRefreshSystem(
+			EncounterEventEntryModel entry
+		)
+		{
+			OnEncounterEventLogEdgeNoModifications();
+		}
+
+		void OnEncounterEventLogEdgeNoModifications()
+		{
+			EditorGUILayout.HelpBox("No values to modify for this event.", MessageType.Info);
 		}
 
 		#endregion

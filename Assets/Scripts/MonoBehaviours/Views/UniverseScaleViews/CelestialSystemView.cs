@@ -283,6 +283,8 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		ParticleSystem minimizedParticles;
 		[SerializeField]
+		ParticleSystem minimizedPingParticles;
+		[SerializeField]
 		float minimizedParticlesBaseAlpha;
 
 		[SerializeField]
@@ -349,6 +351,9 @@ namespace LunraGames.SubLight.Views
 				var minimizedParticlesMain = minimizedParticles.main;
 				minimizedParticlesMain.startColor = minimizedParticleColors.Evaluate(0f).NewA(OpacityStack);
 
+				var minimizedParticlesPingMain = minimizedPingParticles.main;
+				minimizedParticlesPingMain.startColor = minimizedParticleColors.Evaluate(0f).NewA(OpacityStack);
+
 				var selectedParticlesMain = selectedParticles.main;
 				selectedParticlesMain.startColor = selectedParticleColors.Evaluate(0f).NewA(OpacityStack);
 			}
@@ -362,6 +367,11 @@ namespace LunraGames.SubLight.Views
 				colorGraphic.transform.localScale = scale;
 				minimizeGraphic.transform.localScale = scale;
 			}
+		}
+
+		public void IconPings(bool enabled, float intensity = 0f)
+		{
+			minimizedPingParticles.gameObject.SetActive(enabled);
 		}
 
 		public Action Enter { set; private get; }
@@ -551,6 +561,8 @@ namespace LunraGames.SubLight.Views
 
 			IconColor = Color.white;
 			IconScale = 1f;
+
+			IconPings(false);
 
 			dragTrail.emitting = false;
 			dragTrailDelay = 3;
@@ -978,6 +990,9 @@ namespace LunraGames.SubLight.Views
 			var minimizedParticlesMain = minimizedParticles.main;
 			minimizedParticlesMain.startColor = minimizedParticleColors.Evaluate(value).NewA(OpacityStack);
 
+			var minimizedPingParticlesMain = minimizedPingParticles.main;
+			minimizedPingParticlesMain.startColor = minimizedParticleColors.Evaluate(value).NewA(OpacityStack);
+
 			var selectedParticlesMain = selectedParticles.main;
 			selectedParticlesMain.startColor = selectedParticleColors.Evaluate(value).NewA(OpacityStack);
 		}
@@ -1066,6 +1081,8 @@ namespace LunraGames.SubLight.Views
 
 		Color IconColor { set; }
 		float IconScale { set; }
+
+		void IconPings(bool enabled, float intensity = 0f);
 
 		Action Enter { set; }
 		Action Exit { set; }

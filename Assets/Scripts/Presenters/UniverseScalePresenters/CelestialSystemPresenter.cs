@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using UnityEngine;
 
@@ -38,6 +39,7 @@ namespace LunraGames.SubLight.Presenters
 			instanceModel.ActiveSystem.Changed += OnActiveSystem;
 
 			App.Callbacks.Click += OnGlobalClick;
+			App.Callbacks.EncounterRequest += OnEncounterRequest;
 
 			Model.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 			Model.Context.CameraTransformAbsolute.Changed += OnCameraTransform;
@@ -54,6 +56,7 @@ namespace LunraGames.SubLight.Presenters
 			instanceModel.ActiveSystem.Changed -= OnActiveSystem;
 
 			App.Callbacks.Click -= OnGlobalClick;
+			App.Callbacks.EncounterRequest -= OnEncounterRequest;
 
 			Model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Model.Context.CameraTransformAbsolute.Changed -= OnCameraTransform;
@@ -195,6 +198,35 @@ namespace LunraGames.SubLight.Presenters
 			}
 		}
 
+		void OnEncounterRequest(EncounterRequest request)
+		{
+			if (instanceModel.ActiveSystem.Value == null ||
+				!(
+					Model.Ship.Position.Value.SectorEquals(instanceModel.ActiveSystem.Value.Position) &&
+					Model.Ship.SystemIndex.Value == instanceModel.ActiveSystem.Value.Index
+			   	)
+		   	)
+			{
+				return;
+			}
+
+			switch (request.State)
+			{
+				case EncounterRequest.States.Handle:
+					request.TryHandle<EncounterEventHandlerModel>(OnHandleEvent);
+					break;
+			}
+		}
+
+		public void OnHandleEvent(EncounterEventHandlerModel handler)
+		{
+			// They should already be filtered at this point...
+			var refreshSystem = handler.Events.Value.FirstOrDefault(e => e.EncounterEvent.Value == EncounterEvents.Types.RefreshSystem);
+			if (refreshSystem == null) return;
+
+			RefreshFromKeyValues();
+		}
+
 		protected override void OnShowView()
 		{
 			var activeSystem = instanceModel.ActiveSystem.Value;
@@ -211,19 +243,28 @@ namespace LunraGames.SubLight.Presenters
 
 			UpdateStates(activeSystem);
 
-			View.DetailsName = activeSystem.Name.Value;
-			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
-
 			var lightyearDistance = UniversePosition.ToLightYearDistance(UniversePosition.Distance(Model.Ship.Position.Value, activeSystem.Position.Value));
 			var lightyearText = lightyearDistance < 10f ? lightyearDistance.ToString("N1") : Mathf.RoundToInt(lightyearDistance).ToString("N0");
 
 			View.Distance = lightyearText;
 			View.DistanceUnit = language.DistanceUnit.Value;
 
+			RefreshFromKeyValues();
+
+			ApplyStates(true);
+		}
+
+		void RefreshFromKeyValues()
+		{
+			var activeSystem = instanceModel.ActiveSystem.Value;
+
+			View.DetailsName = activeSystem.Name.Value;
+			View.DetailsDescription = language.PrimaryClassifications[activeSystem.PrimaryClassification.Value].Value.Value + " - " + activeSystem.SecondaryClassification.Value;
+
 			View.IconColor = activeSystem.IconColor.Value;
 			View.IconScale = activeSystem.IconScale.Value;
 
-			ApplyStates(true);
+			View.IconPings(activeSystem.KeyValues.Get(KeyDefines.CelestialSystem.IconPings));
 		}
 
 		void OnEnter()

@@ -81,7 +81,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 10,
+  "version": 11,
   "meta": "Tutorial: Navigation Out Of Range",
   "metaKeyValues": {
     "EncounterId": "4565b965-7247-4c0d-9c6b-0dd0baf08705"

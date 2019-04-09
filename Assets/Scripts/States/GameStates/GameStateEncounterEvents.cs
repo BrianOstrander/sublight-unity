@@ -58,6 +58,7 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.Delay:
 								OnHandleEventDelay(state, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.RefreshSystem:
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
 								currOnEventDone();

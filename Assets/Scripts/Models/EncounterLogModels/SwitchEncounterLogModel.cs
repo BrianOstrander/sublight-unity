@@ -4,10 +4,19 @@ namespace LunraGames.SubLight.Models
 {
 	public class SwitchEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<SwitchEdgeModel>
 	{
-		[JsonProperty] SwitchEdgeModel[] switches = new SwitchEdgeModel[0];
+		public enum SelectionMethods
+		{
+			Unknown = 0,
+			FirstFilter = 10,
+			Random = 20,
+			RandomWeighted = 30
+		}
 
-		[JsonIgnore]
-		public readonly ListenerProperty<SwitchEdgeModel[]> Switches;
+		[JsonProperty] SelectionMethods selectionMethod;
+		[JsonIgnore] public readonly ListenerProperty<SelectionMethods> SelectionMethod;
+
+		[JsonProperty] SwitchEdgeModel[] switches = new SwitchEdgeModel[0];
+		[JsonIgnore] public readonly ListenerProperty<SwitchEdgeModel[]> Switches;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Switch; } }
 
@@ -16,6 +25,7 @@ namespace LunraGames.SubLight.Models
 
 		public SwitchEncounterLogModel()
 		{
+			SelectionMethod = new ListenerProperty<SelectionMethods>(value => selectionMethod = value, () => selectionMethod);
 			Switches = new ListenerProperty<SwitchEdgeModel[]>(value => switches = value, () => switches);
 		}
 
