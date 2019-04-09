@@ -14,7 +14,8 @@ namespace LunraGames.SubLight
 			GameComplete = 50,
 			TriggerQueue = 60,
 			Delay = 70,
-			RefreshSystem = 80
+			RefreshSystem = 80,
+			AudioSnapshot = 90
 		}
 
 		public static class Custom
@@ -133,6 +134,19 @@ namespace LunraGames.SubLight
 			public static class FloatKeys
 			{
 				public const string TimeDuration = "time_duration";
+			}
+		}
+
+		public static class AudioSnapshot
+		{
+			public static class StringKeys
+			{
+				public const string SnapshotName = "snapshot_name";
+			}
+
+			public static class FloatKeys
+			{
+				public const string TransitionDuration = "transition_duration";
 			}
 		}
 	}

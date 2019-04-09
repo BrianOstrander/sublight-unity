@@ -20,43 +20,19 @@
     "encyclopediaLogs": [],
     "eventLogs": [
       {
-        "alwaysHalting": true,
         "entries": [
           {
             "entry": {
-              "encounterEvent": "Debug",
+              "encounterEvent": "AudioSnapshot",
+              "isHalting": true,
               "keyValues": {
                 "booleans": {},
-                "integers": {
-                  "severity": 0
-                },
+                "integers": {},
                 "strings": {
-                  "message": "Starting"
+                  "snapshot_name": "Paused"
                 },
-                "floats": {}
-              },
-              "filtering": {
-                "booleanKeyValues": [],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [],
-                "enumerationKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "df9e6b1b-9dec-416b-b515-ea43a431c5c3"
-            }
-          },
-          {
-            "entry": {
-              "encounterEvent": "Delay",
-              "keyValues": {
-                "booleans": {},
-                "integers": {
-                  "trigger": 10
-                },
-                "strings": {},
                 "floats": {
-                  "time_duration": 15.0
+                  "transition_duration": 10.0
                 }
               },
               "filtering": {
@@ -67,14 +43,45 @@
                 "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "7586c6e3-7773-495b-948e-7aefc1220ff3"
+              "entryId": "a40c0f90-cb39-4ee3-b87f-fe1ea0668503"
             },
-            "index": 3
+            "index": 1
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 0
+                },
+                "strings": {
+                  "message": "Starting pause"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e462a517-1d77-4450-a5e0-29664e6a7664"
+            }
           }
         ],
         "beginning": true,
         "logId": "dd22f0eb-b128-46d3-9eb0-58b08bab7255",
-        "fallbackLogId": "8820a229-56c0-4ab7-a61a-a164ff8ef3e8"
+        "fallbackLogId": "7247415b-44d6-41a8-b5bd-1a2da8e97b52"
+      },
+      {
+        "entries": [],
+        "index": 3,
+        "ending": true,
+        "logId": "7a494b4c-f99f-468c-8e49-93b1b914656a",
+        "name": "< End Encounter >"
       },
       {
         "entries": [
@@ -87,7 +94,7 @@
                   "severity": 0
                 },
                 "strings": {
-                  "message": "15 seconds passed"
+                  "message": "Done with test..."
                 },
                 "floats": {}
               },
@@ -99,19 +106,21 @@
                 "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "17cc3d9b-f1a6-4409-b2bc-7a5bc6cdec0d"
+              "entryId": "0cf2c740-ade0-4673-a739-a93125b18a3f"
             }
           },
           {
             "entry": {
-              "encounterEvent": "Custom",
+              "encounterEvent": "AudioSnapshot",
               "keyValues": {
                 "booleans": {},
                 "integers": {},
                 "strings": {
-                  "custom_event_name": "some_test_event_lol"
+                  "snapshot_name": "Default"
                 },
-                "floats": {}
+                "floats": {
+                  "transition_duration": 0.0
+                }
               },
               "filtering": {
                 "booleanKeyValues": [],
@@ -121,21 +130,14 @@
                 "enumerationKeyValues": [],
                 "encounterInteractions": []
               },
-              "entryId": "9c3ceee9-e7bb-4fed-81e8-9bb84de5d53d"
+              "entryId": "0d4fadc7-05dc-41b5-ad5a-87d721916818"
             },
             "index": 1
           }
         ],
-        "index": 1,
-        "ending": true,
-        "logId": "8820a229-56c0-4ab7-a61a-a164ff8ef3e8"
-      },
-      {
-        "entries": [],
         "index": 2,
-        "ending": true,
-        "logId": "7a494b4c-f99f-468c-8e49-93b1b914656a",
-        "name": "< End Encounter >"
+        "logId": "7247415b-44d6-41a8-b5bd-1a2da8e97b52",
+        "fallbackLogId": "7a494b4c-f99f-468c-8e49-93b1b914656a"
       }
     ],
     "dialogLogs": [],

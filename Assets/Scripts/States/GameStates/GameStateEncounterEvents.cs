@@ -58,6 +58,9 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.Delay:
 								OnHandleEventDelay(state, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.AudioSnapshot:
+								OnHandleEventAudioSnapshot(state, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.RefreshSystem:
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
@@ -259,10 +262,10 @@ namespace LunraGames.SubLight
 		}
 
 		static void OnHandleEventDelay(
-				GameState state,
-				EncounterEventEntryModel entry,
-				Action done
-			)
+			GameState state,
+			EncounterEventEntryModel entry,
+			Action done
+		)
 		{
 			var trigger = entry.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger);
 
@@ -286,6 +289,30 @@ namespace LunraGames.SubLight
 					Debug.LogError("Unrecognized Trigger: " + trigger);
 					break;
 			}
+		}
+
+		static void OnHandleEventAudioSnapshot(
+			GameState state,
+			EncounterEventEntryModel entry,
+			Action done
+		)
+		{
+			var snapshotName = entry.KeyValues.GetString(EncounterEvents.AudioSnapshot.StringKeys.SnapshotName);
+			var transitionDuration = Mathf.Max(0f, entry.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration));
+
+			if (string.IsNullOrEmpty(snapshotName))
+			{
+				Debug.LogError("Encounter event specified a null or empty AudioSnapshot.SnapshotName");
+				done();
+				return;
+			}
+
+			App.Audio.SetSnapshot(snapshotName, transitionDuration);
+
+			App.Heartbeat.Wait(
+				done,
+				transitionDuration
+			);
 		}
 	}
 }

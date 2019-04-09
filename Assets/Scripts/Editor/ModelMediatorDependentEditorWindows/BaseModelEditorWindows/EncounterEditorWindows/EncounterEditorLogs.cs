@@ -1492,6 +1492,9 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.RefreshSystem:
 					OnEncounterEventLogEdgeRefreshSystem(entry);
 					break;
+				case EncounterEvents.Types.AudioSnapshot:
+					OnEncounterEventLogEdgeAudioSnapshot(entry);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
 					break;
@@ -1706,6 +1709,27 @@ namespace LunraGames.SubLight
 		)
 		{
 			OnEncounterEventLogEdgeNoModifications();
+		}
+
+		void OnEncounterEventLogEdgeAudioSnapshot(
+			EncounterEventEntryModel entry
+		)
+		{
+			entry.KeyValues.SetString(
+				EncounterEvents.AudioSnapshot.StringKeys.SnapshotName,
+				EditorGUILayout.TextField(
+					new GUIContent("Snapshot Name"),
+					entry.KeyValues.GetString(EncounterEvents.AudioSnapshot.StringKeys.SnapshotName)
+				)
+			);
+
+			entry.KeyValues.SetFloat(
+				EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration,
+				EditorGUILayout.FloatField(
+					new GUIContent("Transition Duration"),
+					entry.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration)
+				)
+			);
 		}
 
 		void OnEncounterEventLogEdgeNoModifications()
