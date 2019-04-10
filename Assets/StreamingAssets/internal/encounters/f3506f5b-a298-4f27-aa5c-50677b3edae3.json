@@ -587,6 +587,8 @@
               "bustId": "ExtraOps",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Style": "Conversation",
+                "Theme": "AwayTeam",
                 "TitleSource": "Propellant Tank",
                 "TitleClassification": "Discarded",
                 "TransmitionType": "Transmission",

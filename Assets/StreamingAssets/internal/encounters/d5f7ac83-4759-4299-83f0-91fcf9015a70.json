@@ -653,6 +653,8 @@
               "bustId": "AI",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Style": "Conversation",
+                "Theme": "Crew",
                 "TitleSource": "Ursula",
                 "TitleClassification": "Interstellar Ark",
                 "TransmitionType": "Transmission",
