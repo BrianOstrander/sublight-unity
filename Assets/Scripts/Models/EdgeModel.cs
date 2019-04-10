@@ -10,10 +10,13 @@ namespace LunraGames.SubLight.Models
 		int EdgeIndex { get; set; }
 		string EdgeId { get; set; }
 		bool EdgeIgnore { get; set; }
+		float EdgeIndent { get; }
 	}
 
 	public abstract class EdgeModel : Model, IEdgeModel
 	{
+		protected const float DefaultIndent = 32f;
+
 		[JsonProperty] int index;
 		[JsonProperty] bool ignore;
 
@@ -61,5 +64,8 @@ namespace LunraGames.SubLight.Models
 			get { return Ignore.Value; }
 			set { Ignore.Value = value; }
 		}
+
+		[JsonIgnore]
+		public virtual float EdgeIndent { get { return 0f; } }
 	}
 }

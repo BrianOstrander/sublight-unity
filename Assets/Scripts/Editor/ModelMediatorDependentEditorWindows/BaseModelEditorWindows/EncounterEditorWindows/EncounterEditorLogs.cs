@@ -92,6 +92,7 @@ namespace LunraGames.SubLight
 
 		EditorPrefsFloat logsListScroll;
 		EditorPrefsFloat logsStackScroll;
+		EditorPrefsBool logsEdgeIndentsEnabled;
 		EditorPrefsBool logsShowNameSource;
 		EditorPrefsBool logsShowHaltingInfo;
 		EditorPrefsBool logsShowHaltingWarnings;
@@ -164,6 +165,7 @@ namespace LunraGames.SubLight
 
 			logsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			logsStackScroll = new EditorPrefsFloat(currPrefix + "StackScroll");
+			logsEdgeIndentsEnabled = new EditorPrefsBool(currPrefix + "EdgeIndentsEnabled", true);
 			logsShowNameSource = new EditorPrefsBool(currPrefix + "ShowNameSource");
 			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
@@ -187,6 +189,7 @@ namespace LunraGames.SubLight
 		{
 			logsShowNameSource.Value = EditorGUILayout.Toggle(new GUIContent("Show Source of Log Names", "Prefixes the source of the name for a log, if it's an Id or form the actual Name field."), logsShowNameSource.Value);
 			logsJumpFromToolbarAppend.Value = EditorGUILayout.Toggle(new GUIContent("Jump To Log When Created From Toolbar", "When enabled, the editor will focus logs when created from the top toolbar area."), logsJumpFromToolbarAppend.Value);
+			logsEdgeIndentsEnabled.Value = EditorGUILayout.Toggle(new GUIContent("Edge Indenting", "Certain logs, like conversations, support indenting some edges for clarity."), logsEdgeIndentsEnabled.Value);
 			GUILayout.Label("Tips and Warnings", EditorStyles.boldLabel);
 			GUILayout.Label("Unless there are performance problems with the editor, these should be kept enabled.");
 			logsShowHaltingInfo.Value = EditorGUILayout.Toggle(new GUIContent("Halting Info", "Show a tooltip if certain logs cause an encounter to halt gracefully."), logsShowHaltingInfo.Value);
@@ -2532,6 +2535,8 @@ namespace LunraGames.SubLight
 					var normalBackgroundColor = Color.white;
 					var alternateBackgroundColor = Color.grey.NewV(0.5f);
 
+					var isGlobalIndentingSupported = logsEdgeIndentsEnabled.Value;
+
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var current = sorted[i];
@@ -2554,6 +2559,14 @@ namespace LunraGames.SubLight
 									Debug.LogError("Unrecognized EdgeVisualOverrideEffect: " + currentEffect.Effect);
 									break;
 							}
+						}
+
+						var isIndented = isGlobalIndentingSupported && !Mathf.Approximately(0f, current.EdgeIndent);
+
+						if (isIndented)
+						{
+							EditorGUILayout.BeginHorizontal();
+							GUILayout.Space(current.EdgeIndent);
 						}
 
 						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, currentColor);
@@ -2586,6 +2599,11 @@ namespace LunraGames.SubLight
 							last = current;
 						}
 						EditorGUILayoutExtensions.EndVertical();
+
+						if (isIndented)
+						{
+							EditorGUILayout.EndHorizontal();
+						}
 					}
 				}
 				GUILayout.EndVertical();

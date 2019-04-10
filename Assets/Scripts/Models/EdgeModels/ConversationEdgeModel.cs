@@ -17,5 +17,19 @@ namespace LunraGames.SubLight.Models
 				return Entry.ConversationType.Value.ToString();
 			}
 		}
+
+		public override float EdgeIndent
+		{
+			get
+			{
+				switch (entry.ConversationType.Value)
+				{
+					case ConversationTypes.MessageOutgoing:
+					case ConversationTypes.Prompt:
+						return DefaultIndent;
+				}
+				return 0f;
+			}
+		}
 	}
 }
