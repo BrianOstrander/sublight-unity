@@ -22,6 +22,46 @@ namespace LunraGames.SubLight
 			public Action<M> Callback;
 		}
 
+		class BatchProgress
+		{
+			public enum States
+			{
+				Unknown = 0,
+				NeverRun = 10,
+				InProgress = 20,
+				Complete = 30
+			}
+
+			public static BatchProgress Default
+			{
+				get
+				{
+					return new BatchProgress
+					{
+						State = States.NeverRun,
+						ModelsRemaining = new List<SaveModel>(),
+						ModelsCompleted = new List<SaveModel>(),
+						ErrorCount = 0,
+						Log = String.Empty
+					};
+				}
+			}
+
+			public States State;
+			public List<SaveModel> ModelsRemaining;
+			public List<SaveModel> ModelsCompleted;
+			public int ErrorCount;
+			public string Log;
+
+			public BatchModelOperationCache<M>.Entry Operation;
+			public SaveModel ModelProcessing;
+
+			public string GetLogPrefix()
+			{
+				return "[ " + ModelsCompleted.Count + " ] ";
+			}
+		}
+
 		enum ModelSelectionStates
 		{
 			Unknown = 0,
@@ -46,6 +86,8 @@ namespace LunraGames.SubLight
 		EditorPrefsInt modelSelectedToolbar;
 		EditorPrefsBool modelShowIgnored;
 
+		BatchModelOperationCache<M> batchCache;
+
 		bool lastIsPlayingOrWillChangePlaymode;
 		int frameDelayRemaining;
 		List<ToolbarEntry> toolbars = new List<ToolbarEntry>();
@@ -66,6 +108,8 @@ namespace LunraGames.SubLight
 		protected M ModelSelection;
 		protected bool ModelSelectionModified;
 
+		BatchProgress batchProgress = BatchProgress.Default;
+
 		protected static void OnInitialize(string windowName)
 		{
 			GetWindow(typeof(T), false, windowName).Show();
@@ -83,11 +127,26 @@ namespace LunraGames.SubLight
 			modelSelectedToolbar = new EditorPrefsInt(KeyPrefix + "ModelSelectedToolbar");
 			modelShowIgnored = new EditorPrefsBool(KeyPrefix + "ModelShowIgnored", true);
 
+			batchCache = new BatchModelOperationCache<M>();
+
 			Enable += OnModelEnable;
 			Disable += OnModelDisable;
 			Gui += OnModelGui;
 			Save += OnModelSave;
 			EditorUpdate += OnModelEditorUpdate;
+		}
+
+		bool BaseIsEnabled
+		{
+			get
+			{
+				switch (batchProgress.State)
+				{
+					case BatchProgress.States.InProgress:
+						return false;
+				}
+				return true;
+			}
 		}
 
 		#region Creating, Saving, & Loading
@@ -138,7 +197,6 @@ namespace LunraGames.SubLight
 
 		void OnNewModelSaveDone(SaveLoadRequest<M> result)
 		{
-			//selectedStatus = result.Status;
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
@@ -146,9 +204,18 @@ namespace LunraGames.SubLight
 			}
 			AssetDatabase.Refresh();
 			modelListStatus = RequestStatus.Cancel;
-			//modelSelectedPath.Value = result.TypedModel.Path;
-			//ModelSelection = result.TypedModel;
 			OnLoadSelection(result.Model);
+		}
+
+		void OnShowBatches()
+		{
+			AskForSaveIfModifiedBeforeContinuing(
+				() =>
+				{
+					TriggerDeselect();
+					Debug.Log("show batches here");
+				}
+			);
 		}
 
 		void OnLoadList()
@@ -171,19 +238,14 @@ namespace LunraGames.SubLight
 			if (modelList.FirstOrDefault(e => e.Path.Value == ModelSelection.Path.Value) != null) return;
 
 			// Model doesn't exist so we clear selections
-			modelSelectionState.Value = ModelSelectionStates.Browsing;
-			selectedStatus = RequestStatus.Failure;
-			ModelSelection = null;
-			ModelSelectionModified = false;
-			Deselect();
+			TriggerDeselect();
 		}
 
 		void OnLoadSelection(SaveModel model)
 		{
 			if (model == null)
 			{
-				modelSelectedPath.Value = null;
-				selectedStatus = RequestStatus.Failure;
+				TriggerDeselect();
 				return;
 			}
 			selectedStatus = RequestStatus.Unknown;
@@ -212,37 +274,41 @@ namespace LunraGames.SubLight
 		#region Base Drawing
 		void DrawAll()
 		{
-			OnModelEditorUpdate();
-			if (lastIsPlayingOrWillChangePlaymode)
+			EditorGUILayoutExtensions.PushEnabled(BaseIsEnabled);
 			{
-				EditorGUILayout.HelpBox("Cannot edit in playmode.", MessageType.Info);
-				return;
-			}
-			if (0 < frameDelayRemaining) return; // Adding a helpbox messes with this...
-
-			OnModelCheckStatus();
-
-			if (modelListStatus != RequestStatus.Success) return;
-			if (selectedStatus != RequestStatus.Success && modelSelectionState.Value == ModelSelectionStates.Selected) return;
-
-			if (modelTabState.Value == ModelTabStates.Maximized)
-			{
-				GUILayout.BeginHorizontal();
+				OnModelEditorUpdate();
+				if (lastIsPlayingOrWillChangePlaymode)
 				{
-					DrawSelector();
-
-					GUILayout.BeginVertical();
-					{
-						DrawTabs();
-					}
-					GUILayout.EndVertical();
+					EditorGUILayout.HelpBox("Cannot edit in playmode.", MessageType.Info);
+					return;
 				}
-				GUILayout.EndHorizontal();
+				if (0 < frameDelayRemaining) return; // Adding a helpbox messes with this...
+
+				OnModelCheckStatus();
+
+				if (modelListStatus != RequestStatus.Success) return;
+				if (selectedStatus != RequestStatus.Success && modelSelectionState.Value == ModelSelectionStates.Selected) return;
+
+				if (modelTabState.Value == ModelTabStates.Maximized)
+				{
+					GUILayout.BeginHorizontal();
+					{
+						DrawSelector();
+
+						GUILayout.BeginVertical();
+						{
+							DrawTabs();
+						}
+						GUILayout.EndVertical();
+					}
+					GUILayout.EndHorizontal();
+				}
+				else
+				{
+					DrawTabs();
+				}
 			}
-			else
-			{
-				DrawTabs();
-			}
+			EditorGUILayoutExtensions.PopEnabled();
 		}
 
 		void DrawSelector()
@@ -284,6 +350,7 @@ namespace LunraGames.SubLight
 					const float modelSelectorWidth = 72f;
 					if (GUILayout.Button("New", EditorStyles.toolbarButton, GUILayout.Width(modelSelectorWidth))) OnNewModel();
 					if (GUILayout.Button("Refresh", EditorStyles.toolbarButton, GUILayout.Width(modelSelectorWidth))) OnLoadList();
+					if (GUILayout.Button("B", EditorStyles.toolbarButton, GUILayout.Width(16f))) OnShowBatches();
 				}
 				GUILayout.EndHorizontal();
 
@@ -568,8 +635,8 @@ namespace LunraGames.SubLight
 
 				if (model == null)
 				{
-					EditorGUILayout.HelpBox("Select a model to begin editing.", MessageType.Info);
-					onDraw = null;
+					GUILayout.Label("Select a model to begin editing");
+					onDraw = nullModel => DrawBatchEditor();
 				}
 				else
 				{
@@ -599,6 +666,185 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			if (onDraw != null) onDraw(model);
+		}
+
+		protected void DrawBatchEditor()
+		{
+			switch (batchProgress.State)
+			{
+				case BatchProgress.States.NeverRun:
+					DrawBatchEditorBrowsing();
+					break;
+				case BatchProgress.States.InProgress:
+				case BatchProgress.States.Complete:
+					DrawBatchEditorShared();
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unknown batch progress: " + batchProgress.State, MessageType.Error);
+					break;
+			}
+		}
+
+		void DrawBatchEditorBrowsing()
+		{
+			if (batchCache.Entries.None())
+			{
+				EditorGUILayout.HelpBox("No batch operations were found, use the BatchModelOperation attribute to define a new one.", MessageType.Info);
+				return;
+			}
+
+			foreach (var batch in batchCache.Entries)
+			{
+				GUILayout.BeginVertical(EditorStyles.helpBox);
+				{
+					GUILayout.BeginHorizontal();
+					{
+						GUILayout.BeginVertical();
+						{
+							GUILayout.Label(batch.Name, EditorStyles.boldLabel);
+							GUILayout.Label(batch.Description);
+						}
+						GUILayout.EndVertical();
+
+						EditorGUILayoutExtensions.PushEnabled(modelListStatus == RequestStatus.Success);
+						{
+							if (GUILayout.Button("Run", GUILayout.Height(48f))) RunBatchOperation(batch);
+						}
+						EditorGUILayoutExtensions.PopEnabled();
+					}
+					GUILayout.EndHorizontal();
+
+					GUILayout.Space(4f);
+				}
+				GUILayout.EndVertical();
+			}
+		}
+
+		void DrawBatchEditorShared()
+		{
+			var statusCount = "[ " + batchProgress.ModelsCompleted.Count + " / " + (batchProgress.ModelsCompleted.Count + batchProgress.ModelsRemaining.Count) + " ]";
+			var status = "Operation \"" + batchProgress.Operation.Name + "\" is "+batchProgress.State+" - "+statusCount;
+
+			var enabled = batchProgress.ModelsRemaining.Count == 0 && batchProgress.ModelProcessing == null;
+			if (enabled && batchProgress.State != BatchProgress.States.Complete)
+			{
+				batchProgress.State = BatchProgress.States.Complete;
+				OnLoadList();
+			}
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label(status);
+				EditorGUILayoutExtensions.PushEnabled(enabled);
+				{
+					if (GUILayout.Button("Acknowledge", GUILayout.Width(120f)))
+					{
+						batchProgress = BatchProgress.Default;
+					}
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+			GUILayout.EndHorizontal();
+
+			EditorGUILayout.TextArea(batchProgress.Log);
+
+			if (!enabled && batchProgress.ModelProcessing == null)
+			{
+				batchProgress.ModelProcessing = batchProgress.ModelsRemaining.First();
+				batchProgress.ModelsRemaining.RemoveAt(0);
+
+				SaveLoadService.Load<M>(
+					batchProgress.ModelProcessing,
+					OnBatchOperationLoaded
+				);
+			}
+		}
+
+		void OnBatchOperationLoaded(
+			SaveLoadRequest<M> result
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				batchProgress.ErrorCount++;
+				var error = batchProgress.GetLogPrefix() + "Unable to load model for batch processing, ignoring...\n";
+				Debug.LogError(error);
+				batchProgress.Log += error;
+				OnBatchOperationNext();
+				return;
+			}
+
+			batchProgress.Operation.Run(
+				result.TypedModel,
+				OnBatchOperationRun
+			);
+		}
+
+		void OnBatchOperationRun(
+			M typedModel,
+			RequestResult result
+		)
+		{
+			if (result.IsNotSuccess)
+			{
+				var error = batchProgress.GetLogPrefix() + "Returned error from batch operation: " + result.Message+"\n";
+				Debug.LogError(error);
+				batchProgress.Log += error;
+				OnBatchOperationNext();
+				return;
+			}
+
+			SaveLoadService.Save(
+				typedModel,
+				saveResult => OnBatchOperationSaved(saveResult, result),
+				false
+			);
+		}
+
+		void OnBatchOperationSaved(
+			SaveLoadRequest<M> result,
+			RequestResult batchResult
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				batchProgress.ErrorCount++;
+				var error = batchProgress.GetLogPrefix() + "Unable to save model for batch processing, ignoring...\n";
+				Debug.LogError(error);
+				batchProgress.Log += error;
+				OnBatchOperationNext();
+				return;
+			}
+
+			var resultMessage = batchProgress.GetLogPrefix() + (string.IsNullOrEmpty(batchResult.Message) ? "Processed successfully..." : batchResult.Message) + "\n";
+			batchProgress.Log += resultMessage;
+			OnBatchOperationNext();
+		}
+
+		void OnBatchOperationNext()
+		{
+			if (batchProgress.ModelProcessing != null)
+			{
+				batchProgress.ModelsCompleted.Add(batchProgress.ModelProcessing);
+			}
+
+			batchProgress.ModelProcessing = null;
+
+			Repaint();
+		}
+
+
+		void RunBatchOperation(BatchModelOperationCache<M>.Entry operation)
+		{
+			batchProgress = new BatchProgress();
+			batchProgress.State = BatchProgress.States.InProgress;
+			batchProgress.ModelsRemaining = modelList.ToList();
+			batchProgress.ModelsCompleted = new List<SaveModel>();
+			batchProgress.Operation = operation;
+
+			batchProgress.Log = "Beginning batch operation \""+operation.Name+"\" on "+batchProgress.ModelsRemaining.Count+" models.\n";
+
+			OnBatchOperationNext();
 		}
 		#endregion
 
@@ -649,6 +895,16 @@ namespace LunraGames.SubLight
 			}
 			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) EditorGUIExtensions.ResetControls();
 			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+		}
+
+		protected void TriggerDeselect()
+		{
+			modelSelectedPath.Value = null;
+			modelSelectionState.Value = ModelSelectionStates.Browsing;
+			selectedStatus = RequestStatus.Failure;
+			ModelSelection = null;
+			ModelSelectionModified = false;
+			Deselect();
 		}
 
 		void AskForSaveIfModifiedBeforeContinuing(
