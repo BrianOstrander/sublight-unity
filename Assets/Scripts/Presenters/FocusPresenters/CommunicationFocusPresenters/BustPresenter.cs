@@ -22,8 +22,8 @@ namespace LunraGames.SubLight.Presenters
 
 		List<ConversationInstanceModel> conversationInstances = new List<ConversationInstanceModel>();
 
-		ConversationPromptButtonsPresenter buttonsPresenterPrompt;
-		ConversationButtonsPresenter buttonPresenterPrimary;
+		ConversationPromptButtonsPresenter promptButtonsPresenter;
+		ConversationButtonsPresenter primaryButtonsPresenter;
 
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
@@ -42,8 +42,8 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 
-			buttonsPresenterPrompt = new ConversationPromptButtonsPresenter();
-			buttonPresenterPrimary = new ConversationButtonsPresenter(model);
+			promptButtonsPresenter = new ConversationPromptButtonsPresenter();
+			primaryButtonsPresenter = new ConversationButtonsPresenter(model);
 		}
 
 		protected override void OnUnBind()
@@ -171,7 +171,7 @@ namespace LunraGames.SubLight.Presenters
 					focusEntry.FocusInfo.Value.Instant,
 					focusBustId => focusCompleted = true
 				);
-				buttonPresenterPrimary.Theme = focusEntryInitialization.InitializeInfo.Value.Theme;
+				primaryButtonsPresenter.Theme = focusEntryInitialization.InitializeInfo.Value.Theme;
 				lastConversationFocus.Show.Value(false);
 				if (oldConversationFocus != null && !oldConversationFocus.IsClosed.Value()) oldConversationFocus.Close.Value(false);
 			};
@@ -239,8 +239,8 @@ namespace LunraGames.SubLight.Presenters
  
 		void OnPrompt(ConversationButtonBlock prompt)
 		{
-			buttonsPresenterPrompt.Theme = lastFocusInitialization.InitializeInfo.Value.Theme;
-			buttonsPresenterPrompt.HandleButtons(prompt);
+			promptButtonsPresenter.Theme = lastFocusInitialization.InitializeInfo.Value.Theme;
+			promptButtonsPresenter.HandleButtons(prompt);
 		}
 	}
 	#endregion
