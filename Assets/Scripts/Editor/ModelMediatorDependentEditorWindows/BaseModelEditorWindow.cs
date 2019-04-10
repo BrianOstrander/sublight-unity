@@ -214,11 +214,7 @@ namespace LunraGames.SubLight
 		void OnShowBatches()
 		{
 			AskForSaveIfModifiedBeforeContinuing(
-				() =>
-				{
-					TriggerDeselect();
-					Debug.Log("show batches here");
-				}
+				TriggerDeselect
 			);
 		}
 
@@ -639,7 +635,7 @@ namespace LunraGames.SubLight
 
 				if (model == null)
 				{
-					GUILayout.Label("Select a model to begin editing");
+					GUILayout.Label("Select a model to begin editing or run a batch operation");
 					onDraw = nullModel => DrawBatchEditor();
 				}
 				else
@@ -718,13 +714,14 @@ namespace LunraGames.SubLight
 
 						EditorGUILayoutExtensions.PushEnabled(modelListStatus == RequestStatus.Success);
 						{
-							const float RunBatchWidth = 48f;
+							const float RunBatchHeight = 48f;
+							const float RunBatchWidth = 64f;
 							EditorGUILayoutExtensions.PushColorValidation(Color.red);
 							{
-								if (GUILayout.Button("Run", EditorStyles.miniButtonLeft, GUILayout.Height(RunBatchWidth))) RunBatchOperation(batch, true);
+								if (GUILayout.Button("Run", EditorStyles.miniButtonLeft, GUILayout.Height(RunBatchHeight), GUILayout.Width(RunBatchWidth))) RunBatchOperation(batch, true);
 							}
 							EditorGUILayoutExtensions.PopColorValidation();
-							if (GUILayout.Button("Test", EditorStyles.miniButtonRight, GUILayout.Height(RunBatchWidth))) RunBatchOperation(batch, false);
+							if (GUILayout.Button("Test", EditorStyles.miniButtonRight, GUILayout.Height(RunBatchHeight), GUILayout.Width(RunBatchWidth))) RunBatchOperation(batch, false);
 						}
 						EditorGUILayoutExtensions.PopEnabled();
 					}

@@ -228,10 +228,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 4,
         "logId": "faa8e51f-f292-4643-baa1-aabad3989acb",
         "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
@@ -337,10 +333,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 7,
         "logId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9"
       },
@@ -445,10 +437,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 12,
         "logId": "f3350f98-db1a-4e62-a07c-194d8c2ef7b2",
         "fallbackLogId": "78e0cff5-575c-42cd-b8a6-640c425ca05f"
@@ -554,10 +542,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 16,
         "logId": "c3d7b444-8a50-47c9-a52d-258b3040a496"
       },
@@ -662,10 +646,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 21,
         "logId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
         "name": "diagnostics empathy options 1"
@@ -737,10 +717,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 25,
         "logId": "5982532f-463e-492e-b22f-0ae4f26cd1e3",
         "fallbackLogId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc"
@@ -845,10 +821,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 27,
         "logId": "bf88fe92-7f73-4471-920b-94e21456615a",
         "fallbackLogId": "5650d662-d20d-484f-971c-2da43fc70f3f"
@@ -921,10 +893,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 29,
         "logId": "6aae87e3-2d48-4483-86f5-2989584471df",
         "fallbackLogId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
@@ -1066,10 +1034,6 @@
             "index": 3
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 31,
         "logId": "b455788b-fef1-4ec8-86fa-715db1052389",
         "fallbackLogId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
@@ -1281,10 +1245,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 34,
         "logId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
         "name": "ask about operational objectives"
@@ -1480,23 +1440,6 @@
           {
             "entry": {
               "bustId": "Chancellor",
-              "bustEvent": "Initialize",
-              "initializeInfo": {
-                "TitleSource": "Ursula",
-                "TitleClassification": "Interstellar Ark",
-                "TransmitionType": "Transmission",
-                "TransmitionStrength": "Internal",
-                "TransmitionStrengthIcon": "Hidden",
-                "PlacardName": "G. Williams",
-                "PlacardDescription": "Ark Chancellor",
-                "AvatarType": "Static"
-              },
-              "entryId": "33e63635-9fcb-4dcb-aca5-f446d4d5b1e9"
-            }
-          },
-          {
-            "entry": {
-              "bustId": "Chancellor",
               "bustEvent": "Focus",
               "entryId": "437ddd43-6f5b-4eea-a281-ef7c3506eb49"
             },
@@ -1506,7 +1449,7 @@
         "index": 42,
         "logId": "0169c02a-80cd-434b-bb6a-1189119bb774",
         "fallbackLogId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
-        "name": "Vee Williams Initialize"
+        "name": "Chancellor Focus"
       },
       {
         "entries": [
@@ -1515,6 +1458,7 @@
               "bustId": "Diagnostics",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Theme": "Internal",
                 "TitleSource": "Ursula",
                 "TitleClassification": "Interstellar Ark",
                 "TransmitionType": "Datalink",
@@ -1534,6 +1478,25 @@
               "bustId": "Diagnostics",
               "bustEvent": "Focus",
               "entryId": "4b11be1b-1578-4964-8919-47b72b292086"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "bustId": "Chancellor",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "Internal",
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "G. Williams",
+                "PlacardDescription": "Ark Chancellor",
+                "AvatarType": "Static"
+              },
+              "entryId": "1a5f3963-afff-4300-8b46-1c6b0e15061c"
             },
             "index": 1
           }
@@ -1681,8 +1644,6 @@
             "index": 6
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 43,
         "logId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
         "fallbackLogId": "cd7a8803-df97-4ab4-a811-87fb531c70a8"
@@ -1751,8 +1712,6 @@
             "index": 5
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 3,
         "logId": "a4b620db-22d2-45e2-9c4d-6fdec6363c8e",
         "fallbackLogId": "faa8e51f-f292-4643-baa1-aabad3989acb"
@@ -1786,8 +1745,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 5,
         "logId": "d521d33c-6d27-4e03-95da-d0d8c6748dc7",
         "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
@@ -1891,8 +1848,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 6,
         "logId": "58e61556-4d14-4639-b901-a7eeaf8b23df",
         "fallbackLogId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9",
@@ -1935,8 +1890,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 8,
         "logId": "b363455f-9b3b-4a13-88f1-0d0600ea0855",
         "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
@@ -2174,8 +2127,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 19,
         "logId": "903b6655-85c9-4772-84fb-be92b14135cb",
         "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
@@ -2218,8 +2169,6 @@
             "index": 3
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 20,
         "logId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
         "fallbackLogId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
@@ -2358,8 +2307,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 26,
         "logId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc",
         "fallbackLogId": "bf88fe92-7f73-4471-920b-94e21456615a"
@@ -2432,8 +2379,6 @@
             "index": 4
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 30,
         "logId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
         "fallbackLogId": "b455788b-fef1-4ec8-86fa-715db1052389"
@@ -2529,8 +2474,6 @@
             "index": 9
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 32,
         "logId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
@@ -2603,8 +2546,6 @@
             "index": 4
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 35,
         "logId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
@@ -2681,8 +2622,6 @@
             "index": 7
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 36,
         "logId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
@@ -2724,8 +2663,6 @@
             "index": 3
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 37,
         "logId": "d2f38944-23e2-4e35-815a-3f057aae8073",
         "fallbackLogId": "0169c02a-80cd-434b-bb6a-1189119bb774"
@@ -2802,8 +2739,6 @@
             "index": 7
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 39,
         "logId": "690595df-9cac-4dff-9482-66898f4fc0f9",
         "fallbackLogId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2"
@@ -2880,8 +2815,6 @@
             "index": 7
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 40,
         "logId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"

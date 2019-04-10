@@ -220,10 +220,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 5,
         "logId": "17f40cc1-5915-48b4-8542-c5e3cf2f4561",
         "name": "Main Options"
@@ -296,10 +292,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 8,
         "logId": "cd6daa7a-122b-4744-bdba-8acb4b93617c"
       },
@@ -371,10 +363,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 13,
         "logId": "385f3661-9edf-4efe-aabc-d459b422d635"
       },
@@ -446,10 +434,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 17,
         "logId": "f71a0da5-56ff-46e4-a6f8-de2bca071a05"
       }
@@ -653,6 +637,7 @@
               "bustId": "AI",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Theme": "Internal",
                 "TitleSource": "Ursula",
                 "TitleClassification": "Interstellar Ark",
                 "TransmitionType": "Transmission",

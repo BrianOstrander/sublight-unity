@@ -16,8 +16,6 @@ namespace LunraGames.SubLight.Presenters
 			return base.CanShow() && model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Processing;
 		}
 
-		public override ConversationButtonStyles Style { get { return ConversationButtonStyles.Conversation; } }
-
 		public ConversationButtonsPresenter(GameModel model)
 		{
 			this.model = model;
@@ -50,8 +48,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnConversationHandleButtons(ButtonHandlerModel handler)
 		{
-			if (handler.Log.Value.Style.Value != ConversationButtonStyles.Conversation) return;
-
 			var buttonBlocks = new List<ConversationButtonBlock>();
 
 			foreach (var entry in handler.Buttons.Value)
@@ -65,7 +61,7 @@ namespace LunraGames.SubLight.Presenters
 				buttonBlocks.Add(block);
 			}
 
-			HandleButtons(handler.Log.Value.ConversationStyle.Value.Theme, buttonBlocks.ToArray());
+			HandleButtons(buttonBlocks.ToArray());
 		}
 		#endregion
 	}

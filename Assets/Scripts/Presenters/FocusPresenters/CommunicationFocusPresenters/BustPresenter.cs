@@ -14,12 +14,16 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 		ConversationLanguageBlock conversationLanguage;
 
+		List<BustEntryModel> initializationInfos = new List<BustEntryModel>();
+
 		BustEntryModel lastFocus;
+		BustEntryModel lastFocusInitialization;
 		ConversationInstanceModel lastConversationFocus;
 
 		List<ConversationInstanceModel> conversationInstances = new List<ConversationInstanceModel>();
 
-		List<IButtonsPresenter> buttonPresenters;
+		ConversationPromptButtonsPresenter promptButtonsPresenter;
+		ConversationButtonsPresenter primaryButtonsPresenter;
 
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
 
@@ -38,10 +42,8 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 
-			buttonPresenters = new List<IButtonsPresenter>
-			{
-				new ConversationPromptButtonsPresenter()
-			};
+			promptButtonsPresenter = new ConversationPromptButtonsPresenter();
+			primaryButtonsPresenter = new ConversationButtonsPresenter(model);
 		}
 
 		protected override void OnUnBind()
@@ -49,8 +51,6 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
-
-			foreach (var presenter in buttonPresenters) App.P.UnRegister(presenter);
 		}
 
 		#region Events
@@ -60,12 +60,14 @@ namespace LunraGames.SubLight.Presenters
 			{
 				case EncounterRequest.States.Request:
 					View.Reset();
+					initializationInfos.Clear();
 					break;
 				case EncounterRequest.States.Handle:
 					request.TryHandle<BustHandlerModel>(OnHandleBust);
 					break;
 				case EncounterRequest.States.PrepareComplete:
 					lastFocus = null;
+					lastFocusInitialization = null;
 					lastConversationFocus = null;
 
 					foreach (var conversationInstance in conversationInstances)
@@ -98,6 +100,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			var hadMultipleFocuses = false;
 			BustEntryModel focusEntry = null;
+			BustEntryModel focusEntryInitialization = null;
 			var initializeBlocks = new List<BustBlock>();
 			var initializeConversationIds = new List<string>();
 
@@ -108,6 +111,7 @@ namespace LunraGames.SubLight.Presenters
 				switch (entry.BustEvent.Value)
 				{
 					case BustEntryModel.Events.Initialize:
+						initializationInfos = initializationInfos.Where(i => i.BustId.Value != entry.BustId.Value).Append(entry).ToList();
 						initializeBlocks.Add(OnInitializeInfoToBlock(entry.BustId.Value, entry.InitializeInfo.Value));
 						initializeConversationIds.Add(entry.BustId.Value);
 						break;
@@ -141,7 +145,10 @@ namespace LunraGames.SubLight.Presenters
 
 			if (View.TransitionState != TransitionStates.Shown) ShowView(instant: true);
 
+			focusEntryInitialization = initializationInfos.FirstOrDefault(i => i.BustId.Value == focusEntry.BustId.Value);
+
 			lastFocus = focusEntry;
+			lastFocusInitialization = focusEntryInitialization;
 			var newConversationFocus = conversationInstances.First(i => i.BustId.Value == focusEntry.BustId.Value);
 			var oldConversationFocus = lastConversationFocus;
 
@@ -164,6 +171,7 @@ namespace LunraGames.SubLight.Presenters
 					focusEntry.FocusInfo.Value.Instant,
 					focusBustId => focusCompleted = true
 				);
+				primaryButtonsPresenter.Theme = focusEntryInitialization.InitializeInfo.Value.Theme;
 				lastConversationFocus.Show.Value(false);
 				if (oldConversationFocus != null && !oldConversationFocus.IsClosed.Value()) oldConversationFocus.Close.Value(false);
 			};
@@ -229,18 +237,10 @@ namespace LunraGames.SubLight.Presenters
 			return block;
 		}
  
-		void OnPrompt(ConversationButtonStyles style, ConversationThemes theme, ConversationButtonBlock prompt)
+		void OnPrompt(ConversationButtonBlock prompt)
 		{
-			var buttonsPresenter = buttonPresenters.FirstOrDefault(p => p.Style == style);
-
-			if (buttonsPresenter == null)
-			{
-				Debug.LogError("Unrecognized Style: " + style + ", skipping prompt");
-				if (prompt.Click != null) prompt.Click();
-				return;
-			}
-			
-			buttonsPresenter.HandleButtons(theme, prompt);
+			promptButtonsPresenter.Theme = lastFocusInitialization.InitializeInfo.Value.Theme;
+			promptButtonsPresenter.HandleButtons(prompt);
 		}
 	}
 	#endregion

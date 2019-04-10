@@ -149,10 +149,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 6,
         "logId": "0f71953e-f647-4d43-83ae-3e0a1cdfe422",
         "fallbackLogId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
@@ -298,6 +294,7 @@
               "bustId": "IntroBust",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Theme": "AwayTeam",
                 "TitleSource": "Earth",
                 "TitleClassification": "Terrestrial",
                 "TransmitionType": "Transmission",
@@ -399,8 +396,6 @@
             "index": 9
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 2,
         "logId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
         "fallbackLogId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2",

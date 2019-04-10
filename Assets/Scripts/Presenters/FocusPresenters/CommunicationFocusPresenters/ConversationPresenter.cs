@@ -216,8 +216,6 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			instanceModel.OnPrompt.Value(
-				currentHandler.Log.Value.Style.Value,
-				currentHandler.Log.Value.Theme.Value,
 				promptBlock
 			);
 		}

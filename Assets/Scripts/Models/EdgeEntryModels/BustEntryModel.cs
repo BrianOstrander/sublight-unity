@@ -38,6 +38,8 @@ namespace LunraGames.SubLight.Models
 				{
 					return new InitializeBlock
 					{
+						Theme = ConversationThemes.AwayTeam,
+
 						TitleClassification = "Interstellar Ark",
 
 						TransmitionType = "Transmission",
@@ -47,6 +49,8 @@ namespace LunraGames.SubLight.Models
 					};
 				}
 			}
+
+			public ConversationThemes Theme;
 
 			public string TitleSource;
 			public string TitleClassification;
