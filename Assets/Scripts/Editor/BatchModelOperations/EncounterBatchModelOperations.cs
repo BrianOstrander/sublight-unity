@@ -186,7 +186,7 @@ namespace LunraGames.SubLight
 				switch (initializeInfo.TransmitionStrengthIcon)
 				{
 					case BustEntryModel.TransmissionStrengths.Hidden:
-						initializeInfo.Theme = ConversationThemes.Crew;
+						initializeInfo.Theme = ConversationThemes.Internal;
 						initializeInfo.Style = ConversationButtonStyles.Conversation;
 						break;
 					default:

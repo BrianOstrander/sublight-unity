@@ -65,7 +65,7 @@ namespace LunraGames.SubLight.Presenters
 				buttonBlocks.Add(block);
 			}
 
-			HandleButtons(handler.Log.Value.ConversationStyle.Value.Theme, buttonBlocks.ToArray());
+			HandleButtons(buttonBlocks.ToArray());
 		}
 		#endregion
 	}

@@ -2291,6 +2291,29 @@ namespace LunraGames.SubLight
 			}
 			EditorGUILayoutExtensions.PopIndent();
 
+			GUILayout.Label("Button Style & Theme", EditorStyles.boldLabel);
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				GUILayout.BeginHorizontal();
+				{
+					block.Style = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+						new GUIContent("Button Configuration"),
+						"- Select Style -",
+						block.Style,
+						Color.red
+					);
+
+					block.Theme = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+						GUIContent.none,
+						"- Select Theme -",
+						block.Theme,
+						Color.red
+					);
+				}
+				GUILayout.EndHorizontal();
+			}
+			EditorGUILayoutExtensions.PopIndent();
+
 			entry.InitializeInfo.Value = block;
 		}
 
@@ -2319,28 +2342,6 @@ namespace LunraGames.SubLight
 			ConversationEncounterLogModel model
 		)
 		{
-			Color? promptValidation = null;
-
-			if (model.Edges.Any(e => e.Entry.ConversationType.Value == ConversationTypes.Prompt)) promptValidation = Color.red;
-
-			GUILayout.BeginHorizontal();
-			{
-				model.Style.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-					new GUIContent("Button Configuration"),
-					"- Select Style -",
-					model.Style.Value,
-					promptValidation
-				);
-
-				model.Theme.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-					GUIContent.none,
-					"- Select Theme -",
-					model.Theme.Value,
-					promptValidation
-				);
-			}
-			GUILayout.EndHorizontal();
-
 			OnEdgedLog<ConversationEncounterLogModel, ConversationEdgeModel>(
 				infoModel,
 				model,

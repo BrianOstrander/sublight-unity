@@ -11,7 +11,8 @@ namespace LunraGames.SubLight.Presenters
 	public interface IButtonsPresenter : IPresenter
 	{
 		ConversationButtonStyles Style { get; }
-		void HandleButtons(ConversationThemes theme, params ConversationButtonBlock[] buttons);
+		ConversationThemes Theme { set; }
+		void HandleButtons(params ConversationButtonBlock[] buttons);
 	}
 
 	public abstract class ButtonsPresenter<V> : CommunicationFocusPresenter<V>, IButtonsPresenter
@@ -24,25 +25,27 @@ namespace LunraGames.SubLight.Presenters
 
 		public abstract ConversationButtonStyles Style { get; }
 
-		public void HandleButtons(ConversationThemes theme, params ConversationButtonBlock[] buttons)
+		public ConversationThemes Theme { set; private get; }
+
+		public void HandleButtons(params ConversationButtonBlock[] buttons)
 		{
-			OnHandleButtons(theme, buttons);
+			OnHandleButtons(buttons);
 		}
 
 		#region Events
-		void OnHandleButtons(ConversationThemes theme, params ConversationButtonBlock[] buttons)
+		void OnHandleButtons(params ConversationButtonBlock[] buttons)
 		{
 			isProcessingButtons = true;
 
 			var selectedTheme = View.DefaultTheme;
 
-			switch (theme)
+			switch (Theme)
 			{
-				case ConversationThemes.Crew: selectedTheme = View.CrewTheme; break;
+				case ConversationThemes.Internal: selectedTheme = View.CrewTheme; break;
 				case ConversationThemes.AwayTeam: selectedTheme = View.AwayTeamTheme; break;
 				case ConversationThemes.Foreigner: selectedTheme = View.ForeignerTheme; break;
 				case ConversationThemes.Downlink: selectedTheme = View.DownlinkTheme; break;
-				default: Debug.LogError("Unrecognized Theme: " + theme); break;
+				default: Debug.LogError("Unrecognized Theme: " + Theme); break;
 			}
 
 			if (View.Visible) CloseView(true);

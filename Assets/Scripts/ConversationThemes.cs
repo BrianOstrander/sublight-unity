@@ -7,6 +7,7 @@
 	{
 		Unknown = 0,
 		Crew = 10,
+		Internal = 10,
 		AwayTeam = 20,
 		Foreigner = 30,
 		Downlink = 40
