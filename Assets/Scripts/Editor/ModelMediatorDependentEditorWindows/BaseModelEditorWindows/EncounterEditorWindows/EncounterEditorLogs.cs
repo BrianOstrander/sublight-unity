@@ -1330,45 +1330,6 @@ namespace LunraGames.SubLight
 			ButtonEncounterLogModel model
 		)
 		{
-			var wasStyle = model.Style.Value;
-			var newStyle = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				new GUIContent("Style"),
-				"- Select Button Style -",
-				model.Style.Value
-			);
-
-			if (wasStyle != newStyle)
-			{
-				if (wasStyle != ConversationButtonStyles.Unknown)
-				{
-					// Value has changed, and not to Unknown, so we warn the user data may be lost.
-					if (EditorUtility.DisplayDialog(
-						"Overwrite Button Style",
-						"Changing the button style will overwrite style specific data, and cannot be recovered.",
-						"Continue",
-						"Cancel"
-					))
-					{
-						OnButtonLogApplyStyle(infoModel, model, newStyle);
-					}
-					throw new ExitGUIException(); // We do this because opening a dialog messes everything up for some reason...
-				}
-				OnButtonLogApplyStyle(infoModel, model, newStyle);
-			}
-
-			switch (model.Style.Value)
-			{
-				case ConversationButtonStyles.Conversation:
-					OnButtonLogBustStyle(infoModel, model);
-					break;
-				case ConversationButtonStyles.Unknown:
-					EditorGUILayout.HelpBox("A style must be specified for this button.", MessageType.Error);
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized Style: " + model.Style.Value, MessageType.Error);
-					break;
-			}
-
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Append New Button"),
 				new GUIContent("- Select Target Log -"),
@@ -1386,56 +1347,6 @@ namespace LunraGames.SubLight
 			);
 
 			OnEdgedLog<ButtonEncounterLogModel, ButtonEdgeModel>(infoModel, model, OnButtonLogEdge);
-		}
-
-		void OnButtonLogBustStyle(
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model
-		)
-		{
-			var style = model.ConversationStyle.Value;
-
-			style.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				new GUIContent("Theme"),
-				"- Select Button Theme -",
-				style.Theme
-			);
-
-			if (style.Theme == ConversationThemes.Unknown) EditorGUILayout.HelpBox("A theme must be specified.", MessageType.Error);
-
-			model.ConversationStyle.Value = style;
-		}
-
-		void OnButtonLogApplyStyle(
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
-			ConversationButtonStyles style
-		)
-		{
-			var styleApplied = true;
-			Action onApplyStyle = null;
-
-			switch (style)
-			{
-				case ConversationButtonStyles.Conversation:
-					onApplyStyle = () => model.ConversationStyle.Value = ButtonEncounterLogModel.ConversationStyleBlock.Default;
-					break;
-				default:
-					Debug.LogError("Unrecognized Style: " + style);
-					styleApplied = false;
-					break;
-			}
-
-			if (styleApplied)
-			{
-				// Reset other styles here.
-				model.ConversationStyle.Value = default(ButtonEncounterLogModel.ConversationStyleBlock);
-
-				if (onApplyStyle == null) Debug.LogError("onApplyStyle cannot be null");
-				else onApplyStyle();
-
-				model.Style.Value = style;
-			}
 		}
 
 		void OnButtonLogSpawn(

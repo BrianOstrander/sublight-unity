@@ -6,7 +6,6 @@
 	public enum ConversationThemes
 	{
 		Unknown = 0,
-		Crew = 10,
 		Internal = 10,
 		AwayTeam = 20,
 		Foreigner = 30,

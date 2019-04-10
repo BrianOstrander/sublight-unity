@@ -50,8 +50,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnConversationHandleButtons(ButtonHandlerModel handler)
 		{
-			if (handler.Log.Value.Style.Value != ConversationButtonStyles.Conversation) return;
-
 			var buttonBlocks = new List<ConversationButtonBlock>();
 
 			foreach (var entry in handler.Buttons.Value)

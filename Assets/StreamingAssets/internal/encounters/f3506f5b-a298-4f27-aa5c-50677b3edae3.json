@@ -396,10 +396,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "AwayTeam"
-        },
         "index": 5,
         "logId": "60596497-75b8-4f4a-b578-2f8626a38041"
       }
@@ -794,8 +790,6 @@
             "index": 18
           }
         ],
-        "style": "Conversation",
-        "theme": "AwayTeam",
         "index": 4,
         "logId": "a51bbffe-38f4-4cf0-baed-b1c57270a1cd",
         "fallbackLogId": "60596497-75b8-4f4a-b578-2f8626a38041"
@@ -829,8 +823,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "theme": "AwayTeam",
         "index": 6,
         "logId": "56509b13-f43c-4f03-8411-ae1ee20d7c1c",
         "fallbackLogId": "86dd4471-d2da-4cca-9561-26722a9fd0fd"
@@ -864,8 +856,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "theme": "AwayTeam",
         "index": 7,
         "logId": "a3355b93-eb7c-4117-9b52-2d2dcd947c33",
         "fallbackLogId": "d948b4ce-e642-4838-a771-034f0ebd4c67"
@@ -899,8 +889,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "theme": "AwayTeam",
         "index": 8,
         "logId": "ec87c89d-1448-4893-ba96-7fdf6e824708",
         "fallbackLogId": "438e4c4c-aab8-4f0f-9e5e-4460435fea76"
