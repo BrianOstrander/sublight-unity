@@ -22,8 +22,7 @@ namespace LunraGames.SubLight.Presenters
 
 		List<ConversationInstanceModel> conversationInstances = new List<ConversationInstanceModel>();
 
-		List<IButtonsPresenter> buttonPresenters;
-
+		ConversationPromptButtonsPresenter buttonsPresenterPrompt;
 		ConversationButtonsPresenter buttonPresenterPrimary;
 
 		protected override bool CanReset() { return false; } // View should be reset on the beginning of an encounter.
@@ -43,11 +42,7 @@ namespace LunraGames.SubLight.Presenters
 
 			App.Callbacks.EncounterRequest += OnEncounterRequest;
 
-			buttonPresenters = new List<IButtonsPresenter>
-			{
-				new ConversationPromptButtonsPresenter()
-			};
-
+			buttonsPresenterPrompt = new ConversationPromptButtonsPresenter();
 			buttonPresenterPrimary = new ConversationButtonsPresenter(model);
 		}
 
@@ -56,8 +51,6 @@ namespace LunraGames.SubLight.Presenters
 			base.OnUnBind();
 
 			App.Callbacks.EncounterRequest -= OnEncounterRequest;
-
-			foreach (var presenter in buttonPresenters) App.P.UnRegister(presenter);
 		}
 
 		#region Events
@@ -246,18 +239,8 @@ namespace LunraGames.SubLight.Presenters
  
 		void OnPrompt(ConversationButtonBlock prompt)
 		{
-			var style = lastFocusInitialization.InitializeInfo.Value.Style;
-			var buttonsPresenter = buttonPresenters.FirstOrDefault(p => p.Style == style);
-
-			if (buttonsPresenter == null)
-			{
-				Debug.LogError("Unrecognized Style: " + style + ". Attempting to skip prompt...");
-				if (prompt.Click != null) prompt.Click();
-				return;
-			}
-
-			buttonsPresenter.Theme = lastFocusInitialization.InitializeInfo.Value.Theme;
-			buttonsPresenter.HandleButtons(prompt); // TODO LOL REMOVE
+			buttonsPresenterPrompt.Theme = lastFocusInitialization.InitializeInfo.Value.Theme;
+			buttonsPresenterPrompt.HandleButtons(prompt);
 		}
 	}
 	#endregion

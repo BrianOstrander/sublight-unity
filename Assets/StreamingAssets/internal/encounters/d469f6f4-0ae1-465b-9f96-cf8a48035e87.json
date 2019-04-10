@@ -450,7 +450,6 @@
               "bustId": "ExtraOps",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "Style": "Conversation",
                 "Theme": "AwayTeam",
                 "TitleSource": "Noctis",
                 "TitleClassification": "Interstellar Ark",
@@ -470,7 +469,6 @@
               "bustId": "Doctor",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "Style": "Conversation",
                 "Theme": "AwayTeam",
                 "TitleSource": "Noctis",
                 "TitleClassification": "Interstellar Ark",

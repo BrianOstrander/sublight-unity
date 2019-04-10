@@ -362,7 +362,6 @@
               "bustId": "ExtraOps",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "Style": "Conversation",
                 "Theme": "AwayTeam",
                 "TitleSource": "Habitat",
                 "TitleClassification": "Derelict",
@@ -390,7 +389,6 @@
               "bustId": "Doctor",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "Style": "Conversation",
                 "Theme": "AwayTeam",
                 "TitleSource": "Habitat",
                 "TitleClassification": "Derelict",

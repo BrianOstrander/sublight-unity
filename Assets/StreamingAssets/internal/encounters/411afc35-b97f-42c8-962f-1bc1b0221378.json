@@ -1458,7 +1458,6 @@
               "bustId": "Diagnostics",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "Style": "Conversation",
                 "Theme": "Internal",
                 "TitleSource": "Ursula",
                 "TitleClassification": "Interstellar Ark",
@@ -1487,7 +1486,6 @@
               "bustId": "Chancellor",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "Style": "Conversation",
                 "Theme": "Internal",
                 "TitleSource": "Ursula",
                 "TitleClassification": "Interstellar Ark",

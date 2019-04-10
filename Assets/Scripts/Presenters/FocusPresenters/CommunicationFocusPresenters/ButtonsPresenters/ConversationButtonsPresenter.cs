@@ -16,8 +16,6 @@ namespace LunraGames.SubLight.Presenters
 			return base.CanShow() && model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Processing;
 		}
 
-		public override ConversationButtonStyles Style { get { return ConversationButtonStyles.Conversation; } }
-
 		public ConversationButtonsPresenter(GameModel model)
 		{
 			this.model = model;

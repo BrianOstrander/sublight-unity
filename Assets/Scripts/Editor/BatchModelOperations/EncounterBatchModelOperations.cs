@@ -187,18 +187,16 @@ namespace LunraGames.SubLight
 				{
 					case BustEntryModel.TransmissionStrengths.Hidden:
 						initializeInfo.Theme = ConversationThemes.Internal;
-						initializeInfo.Style = ConversationButtonStyles.Conversation;
 						break;
 					default:
 						initializeInfo.Theme = ConversationThemes.AwayTeam;
-						initializeInfo.Style = ConversationButtonStyles.Conversation;
 						break;
 				}
 
-				if (bust.InitializeInfo.Value.Theme != initializeInfo.Theme || bust.InitializeInfo.Value.Style != initializeInfo.Style)
+				if (bust.InitializeInfo.Value.Theme != initializeInfo.Theme)
 				{
 					if (write) bust.InitializeInfo.Value = initializeInfo;
-					modifications += "+ " + bust.BustId.Value + " modified to Style." + initializeInfo.Style + " & Theme." + initializeInfo.Theme;
+					modifications += "+ " + bust.BustId.Value + " modified to Theme." + initializeInfo.Theme;
 					modificationCount++;
 				}
 				else modifications += "- " + bust.BustId.Value + " unmodified...";

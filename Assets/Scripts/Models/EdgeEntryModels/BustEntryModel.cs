@@ -38,7 +38,6 @@ namespace LunraGames.SubLight.Models
 				{
 					return new InitializeBlock
 					{
-						Style = ConversationButtonStyles.Conversation,
 						Theme = ConversationThemes.AwayTeam,
 
 						TitleClassification = "Interstellar Ark",
@@ -51,7 +50,6 @@ namespace LunraGames.SubLight.Models
 				}
 			}
 
-			public ConversationButtonStyles Style;
 			public ConversationThemes Theme;
 
 			public string TitleSource;

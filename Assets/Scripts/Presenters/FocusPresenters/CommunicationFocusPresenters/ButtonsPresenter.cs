@@ -10,7 +10,6 @@ namespace LunraGames.SubLight.Presenters
 {
 	public interface IButtonsPresenter : IPresenter
 	{
-		ConversationButtonStyles Style { get; }
 		ConversationThemes Theme { set; }
 		void HandleButtons(params ConversationButtonBlock[] buttons);
 	}
@@ -22,8 +21,6 @@ namespace LunraGames.SubLight.Presenters
 
 		protected override bool CanReset() { return !isProcessingButtons; }
 		protected override bool CanShow() { return isProcessingButtons; }
-
-		public abstract ConversationButtonStyles Style { get; }
 
 		public ConversationThemes Theme { set; private get; }
 

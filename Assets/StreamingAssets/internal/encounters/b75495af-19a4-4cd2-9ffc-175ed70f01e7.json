@@ -294,7 +294,6 @@
               "bustId": "IntroBust",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "Style": "Conversation",
                 "Theme": "AwayTeam",
                 "TitleSource": "Earth",
                 "TitleClassification": "Terrestrial",
