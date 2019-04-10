@@ -2205,16 +2205,12 @@ namespace LunraGames.SubLight
 			GUILayout.Label("Button Theme", EditorStyles.boldLabel);
 			EditorGUILayoutExtensions.PushIndent();
 			{
-				GUILayout.BeginHorizontal();
-				{
-					block.Theme = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-						GUIContent.none,
-						"- Select Theme -",
-						block.Theme,
-						Color.red
-					);
-				}
-				GUILayout.EndHorizontal();
+				block.Theme = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					GUIContent.none,
+					"- Select Theme -",
+					block.Theme,
+					Color.red
+				);
 			}
 			EditorGUILayoutExtensions.PopIndent();
 
