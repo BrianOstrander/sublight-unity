@@ -138,7 +138,6 @@ namespace LunraGames.SubLight
 
 		void OnNewModelSaveDone(SaveLoadRequest<M> result)
 		{
-			//selectedStatus = result.Status;
 			if (result.Status != RequestStatus.Success)
 			{
 				Debug.LogError(result.Error);
@@ -146,9 +145,18 @@ namespace LunraGames.SubLight
 			}
 			AssetDatabase.Refresh();
 			modelListStatus = RequestStatus.Cancel;
-			//modelSelectedPath.Value = result.TypedModel.Path;
-			//ModelSelection = result.TypedModel;
 			OnLoadSelection(result.Model);
+		}
+
+		void OnShowBatches()
+		{
+			AskForSaveIfModifiedBeforeContinuing(
+				() =>
+				{
+					TriggerDeselect();
+					Debug.Log("show batches here");
+				}
+			);
 		}
 
 		void OnLoadList()
@@ -171,19 +179,14 @@ namespace LunraGames.SubLight
 			if (modelList.FirstOrDefault(e => e.Path.Value == ModelSelection.Path.Value) != null) return;
 
 			// Model doesn't exist so we clear selections
-			modelSelectionState.Value = ModelSelectionStates.Browsing;
-			selectedStatus = RequestStatus.Failure;
-			ModelSelection = null;
-			ModelSelectionModified = false;
-			Deselect();
+			TriggerDeselect();
 		}
 
 		void OnLoadSelection(SaveModel model)
 		{
 			if (model == null)
 			{
-				modelSelectedPath.Value = null;
-				selectedStatus = RequestStatus.Failure;
+				TriggerDeselect();
 				return;
 			}
 			selectedStatus = RequestStatus.Unknown;
@@ -284,6 +287,7 @@ namespace LunraGames.SubLight
 					const float modelSelectorWidth = 72f;
 					if (GUILayout.Button("New", EditorStyles.toolbarButton, GUILayout.Width(modelSelectorWidth))) OnNewModel();
 					if (GUILayout.Button("Refresh", EditorStyles.toolbarButton, GUILayout.Width(modelSelectorWidth))) OnLoadList();
+					if (GUILayout.Button("B", EditorStyles.toolbarButton, GUILayout.Width(16f))) OnShowBatches();
 				}
 				GUILayout.EndHorizontal();
 
@@ -568,8 +572,8 @@ namespace LunraGames.SubLight
 
 				if (model == null)
 				{
-					EditorGUILayout.HelpBox("Select a model to begin editing.", MessageType.Info);
-					onDraw = null;
+					GUILayout.Label("Select a model to begin editing");
+					onDraw = nullModel => DrawBatchEditor();
 				}
 				else
 				{
@@ -599,6 +603,11 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			if (onDraw != null) onDraw(model);
+		}
+
+		protected void DrawBatchEditor()
+		{
+			GUILayout.Label("lol batch here");
 		}
 		#endregion
 
@@ -649,6 +658,16 @@ namespace LunraGames.SubLight
 			}
 			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) EditorGUIExtensions.ResetControls();
 			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+		}
+
+		protected void TriggerDeselect()
+		{
+			modelSelectedPath.Value = null;
+			modelSelectionState.Value = ModelSelectionStates.Browsing;
+			selectedStatus = RequestStatus.Failure;
+			ModelSelection = null;
+			ModelSelectionModified = false;
+			Deselect();
 		}
 
 		void AskForSaveIfModifiedBeforeContinuing(
