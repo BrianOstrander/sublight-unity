@@ -17,7 +17,7 @@ namespace LunraGames.SubLight
 		{
 			public MethodInfo Method;
 			public BatchModelOperation Operation;
-			public Action<T, Action<T, RequestResult>> Run;
+			public Action<T, Action<T, RequestResult>, bool> Run;
 
 			public string Name
 			{
@@ -63,9 +63,9 @@ namespace LunraGames.SubLight
 
 					var validationPrefix = typeName + " batch operation \"" + method.Name + "\" ";
 
-					if (parameters.Length != 2)
+					if (parameters.Length != 3)
 					{
-						Debug.LogError(validationPrefix + "requires 2 parameters");
+						Debug.LogError(validationPrefix + "requires 3 parameters");
 						continue;
 					}
 					if (parameters[0].ParameterType != typeof(T))
@@ -78,13 +78,18 @@ namespace LunraGames.SubLight
 						Debug.LogError(validationPrefix + "requires the second parameter be of type " + doneType.Name);
 						continue;
 					}
+					if (parameters[2].ParameterType != typeof(bool))
+					{
+						Debug.LogError(validationPrefix + "requires the third parameter be of type " + typeof(bool).Name);
+						continue;
+					}
 
 					Entries.Add(
 						new Entry
 						{
 							Method = method,
 							Operation = attribute,
-							Run = (model, done) =>
+							Run = (model, done, write) =>
 							{
 								if (model == null) throw new ArgumentNullException("model");
 								if (done == null) throw new ArgumentNullException("done");
@@ -96,7 +101,8 @@ namespace LunraGames.SubLight
 										new object[]
 										{
 											model,
-											done
+											done,
+											write
 										}
 									);
 								}
