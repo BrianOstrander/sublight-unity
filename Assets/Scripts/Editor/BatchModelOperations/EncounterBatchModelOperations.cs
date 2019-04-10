@@ -10,6 +10,7 @@ namespace LunraGames.SubLight
 {
 	public static class EncounterBatchModelOperations
 	{
+		#region Update Versions
 		[BatchModelOperation(typeof(EncounterInfoModel))]
 		static void UpdateVersions(
 			EncounterInfoModel model,
@@ -17,16 +18,23 @@ namespace LunraGames.SubLight
 			bool write
 		)
 		{
-			var message = string.Empty;
+			var result = GetUnmodifiedResult(model);
 
 			if (model.Version.Value != BuildPreferences.Instance.Info.Version)
 			{
-				message = "Updated version of " + model.Name.Value + " from " + model.Version.Value + " to " + BuildPreferences.Instance.Info.Version;
+				result = GetModifiedResult(
+					model,
+					1,
+					1,
+					"\n\tUpdated version of " + model.Name.Value + " from " + model.Version.Value + " to " + BuildPreferences.Instance.Info.Version
+				);
 			}
 
-			done(model, RequestResult.Success(message));
+			done(model, RequestResult.Success(result));
 		}
+		#endregion
 
+		#region Append Periods
 		[BatchModelOperation(typeof(EncounterInfoModel))]
 		static void AppendPeriods(
 			EncounterInfoModel model,
@@ -34,8 +42,6 @@ namespace LunraGames.SubLight
 			bool write
 		)
 		{
-			var result = "Unmodified...";
-
 			var errors = string.Empty;
 
 			var entries = new List<KeyValuePair<Func<string>, Action<string>>>();
@@ -80,7 +86,7 @@ namespace LunraGames.SubLight
 						}
 						break;
 					default:
-						errors += "\tUnrecognized ConversationEntryType: " + entry.ConversationType.Value + "\n";
+						errors += "\n\tUnrecognized ConversationEntryType: " + entry.ConversationType.Value;
 						break;
 				}
 			}
@@ -97,35 +103,41 @@ namespace LunraGames.SubLight
 
 			if (entries.None())
 			{
-				done(model, RequestResult.Success(result));
+				done(model, RequestResult.Success(GetUnmodifiedResult(model)));
 				return;
 			}
 
-			var modifiedEntries = 0;
-			result = string.Empty;
+			var modifications = string.Empty;
+			var modificationCount = 0;
 
 			foreach (var entry in entries)
 			{
-				result += "\n\t";
+				modifications += "\n\t";
 
 				var beginValue = entry.Key();
 				var endValue = beginValue;
 
 				var modified = AppendPeriodsUpdate(beginValue, ref endValue);
 
-				var beginValueShort = AppendPeriodsShorten(beginValue);
-				var endValueShort = AppendPeriodsShorten(endValue);
+				var beginValueShort = ShortenValue(beginValue);
+				var endValueShort = ShortenValue(endValue);
 
 				if (modified)
 				{
-					modifiedEntries++;
-					result += "+ \"" + beginValueShort + "\" modified to \"" + endValueShort + "\"";
+					modificationCount++;
+					modifications += "+ \"" + beginValueShort + "\" modified to \"" + endValueShort + "\"";
 					if (write) entry.Value(endValue);
 				}
-				else result += "- \"" + beginValueShort + "\" unmodified";
+				else modifications += "- \"" + beginValueShort + "\" unmodified";
 			}
 
-			result = modifiedEntries + " of " + entries.Count + " modified:" + result;
+			var result = GetModifiedResult(
+				model,
+				modificationCount,
+				entries.Count,
+				modifications,
+				errors
+			);
 
 			done(model, RequestResult.Success(result));
 		}
@@ -145,20 +157,106 @@ namespace LunraGames.SubLight
 
 			return true;
 		}
+		#endregion
 
-		static string AppendPeriodsShorten(
-			string value
+		#region Consolidate Conversation Themes
+		[BatchModelOperation(typeof(EncounterInfoModel))]
+		static void ConsolidateConversationThemes(
+			EncounterInfoModel model,
+			Action<EncounterInfoModel, RequestResult> done,
+			bool write
 		)
 		{
-			const int MaximumLength = 64;
+			var errors = string.Empty;
+
+			var bustEntries = model.Logs.GetLogs<BustEncounterLogModel>()
+								   .SelectMany(l => l.Entries.Value)
+								   .Select(e => e.Entry)
+								   .Where(e => e.BustEvent.Value == BustEntryModel.Events.Initialize);
+
+			var modifications = string.Empty;
+			var modificationCount = 0;
+
+			foreach (var bust in bustEntries)
+			{
+				modifications += "\n\t";
+
+				var initializeInfo = bust.InitializeInfo.Value;
+
+				switch (initializeInfo.TransmitionStrengthIcon)
+				{
+					case BustEntryModel.TransmissionStrengths.Hidden:
+						initializeInfo.Theme = ConversationThemes.Crew;
+						initializeInfo.Style = ConversationButtonStyles.Conversation;
+						break;
+					default:
+						initializeInfo.Theme = ConversationThemes.AwayTeam;
+						initializeInfo.Style = ConversationButtonStyles.Conversation;
+						break;
+				}
+
+				if (bust.InitializeInfo.Value.Theme != initializeInfo.Theme || bust.InitializeInfo.Value.Style != initializeInfo.Style)
+				{
+					if (write) bust.InitializeInfo.Value = initializeInfo;
+					modifications += "+ " + bust.BustId.Value + " modified to Style." + initializeInfo.Style + " & Theme." + initializeInfo.Theme;
+					modificationCount++;
+				}
+				else modifications += "- " + bust.BustId.Value + " unmodified...";
+			}
+
+			var result = GetModifiedResult(
+				model,
+				modificationCount,
+				bustEntries.Count(),
+				modifications,
+				errors
+			);
+
+			done(model, RequestResult.Success(result));
+		}
+		#endregion
+
+		#region Shared
+		static string GetUnmodifiedResult(SaveModel model)
+		{
+			return GetName(model) + " was unmodified...";
+		}
+
+		static string GetModifiedResult(
+			SaveModel model,
+			int modificationCount,
+			int possibleModificationCount,
+			string modifications,
+			string errors = null
+		)
+		{
+			if (modificationCount == 0 && possibleModificationCount == 0) return GetUnmodifiedResult(model);
+			var result = GetName(model) + " had " + modificationCount + " of " + possibleModificationCount + " matches modified..." + modifications;
+			if (string.IsNullOrEmpty(errors)) return result;
+			return result += "\n\n\tErrors:" + errors;
+		}
+
+		static string GetName(SaveModel model)
+		{
+			//return model.SaveType + " \"" + (string.IsNullOrEmpty(model.Meta.Value) ? ShortenValue(model.Path.Value) : model.Meta.Value) + "\"";
+			return "\"" + (string.IsNullOrEmpty(model.Meta.Value) ? ShortenValue(model.Path.Value) : model.Meta.Value) + "\"";
+		}
+
+		static string ShortenValue(
+			string value,
+			int maximumLength = 64
+		)
+		{
+			maximumLength = Mathf.Max(maximumLength, 2);
 
 			if (string.IsNullOrEmpty(value)) return value;
-			if (value.Length < MaximumLength) return value;
+			if (value.Length < maximumLength) return value;
 
-			var begin = value.Substring(0, MaximumLength / 2);
-			var end = value.Substring(value.Length - (MaximumLength / 2));
+			var begin = value.Substring(0, maximumLength / 2);
+			var end = value.Substring(value.Length - (maximumLength / 2));
 
 			return begin + " . . . " + end;
 		}
+		#endregion
 	}
 }
