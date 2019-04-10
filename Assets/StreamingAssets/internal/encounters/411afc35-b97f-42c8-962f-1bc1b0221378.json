@@ -1480,23 +1480,6 @@
           {
             "entry": {
               "bustId": "Chancellor",
-              "bustEvent": "Initialize",
-              "initializeInfo": {
-                "TitleSource": "Ursula",
-                "TitleClassification": "Interstellar Ark",
-                "TransmitionType": "Transmission",
-                "TransmitionStrength": "Internal",
-                "TransmitionStrengthIcon": "Hidden",
-                "PlacardName": "G. Williams",
-                "PlacardDescription": "Ark Chancellor",
-                "AvatarType": "Static"
-              },
-              "entryId": "33e63635-9fcb-4dcb-aca5-f446d4d5b1e9"
-            }
-          },
-          {
-            "entry": {
-              "bustId": "Chancellor",
               "bustEvent": "Focus",
               "entryId": "437ddd43-6f5b-4eea-a281-ef7c3506eb49"
             },
@@ -1506,7 +1489,7 @@
         "index": 42,
         "logId": "0169c02a-80cd-434b-bb6a-1189119bb774",
         "fallbackLogId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
-        "name": "Vee Williams Initialize"
+        "name": "Chancellor Focus"
       },
       {
         "entries": [
@@ -1534,6 +1517,24 @@
               "bustId": "Diagnostics",
               "bustEvent": "Focus",
               "entryId": "4b11be1b-1578-4964-8919-47b72b292086"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "bustId": "Chancellor",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "G. Williams",
+                "PlacardDescription": "Ark Chancellor",
+                "AvatarType": "Static"
+              },
+              "entryId": "1a5f3963-afff-4300-8b46-1c6b0e15061c"
             },
             "index": 1
           }
