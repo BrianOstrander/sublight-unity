@@ -80,7 +80,6 @@ namespace LunraGames.SubLight.Views
 		[SerializeField] TextMeshProUGUI lockLabel;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
-        GamemodeBlock currentGamemode;
         GamemodeBlock targetGamemode;
         bool transitionToRight;
         float? transitionRemaining;
@@ -108,7 +107,7 @@ namespace LunraGames.SubLight.Views
 
 				var currMultiplier = 1f;
 				var currZoom = 0.5f * ((Mathf.Clamp01(1f - deltaMagnitude) * 0.75f) + 0.25f);
-				var currZoomScalar = deltaMagnitude;
+
 				foreach (var entry in parallaxEntries)
 				{
 					entry.Renderer.material.SetFloat(ShaderConstants.HoloGamemodePortalParallax.ChromaticOffsetScale, chromaticAberration);
@@ -145,7 +144,6 @@ namespace LunraGames.SubLight.Views
 
 			if (instant)
 			{
-				currentGamemode = gamemode;
 				targetGamemode = gamemode;
 				transitionToRight = false;
 				transitionRemaining = null;
@@ -154,7 +152,6 @@ namespace LunraGames.SubLight.Views
 				return;
 			}
 
-            currentGamemode = targetGamemode;
             targetGamemode = gamemode;
             transitionToRight = toRight;
             transitionRemaining = transitionDuration;
@@ -218,7 +215,6 @@ namespace LunraGames.SubLight.Views
 			NextClick = ActionExtensions.Empty;
 			PreviousClick = ActionExtensions.Empty;
 
-			currentGamemode = new GamemodeBlock();
 			targetGamemode = new GamemodeBlock();
 			transitionToRight = false;
 			transitionRemaining = null;

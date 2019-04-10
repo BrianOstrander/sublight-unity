@@ -43,7 +43,6 @@ namespace LunraGames.SubLight.Presenters
 		ConversationInstanceModel instanceModel;
 		ConversationLanguageBlock language;
 
-		ConversationHandlerModel currentHandler;
 		List<ConversationQueueEntry> entryQueue = new List<ConversationQueueEntry>();
 		Action onEntryQueueEmpty;
 
@@ -122,7 +121,6 @@ namespace LunraGames.SubLight.Presenters
 				entryQueue.Clear();
 			}
 
-			currentHandler = handler;
 			entryQueue.AddRange(handler.Entries.Value.Select(e => new ConversationQueueEntry(e)));
 			onEntryQueueEmpty = handler.HaltingDone.Value;
 
