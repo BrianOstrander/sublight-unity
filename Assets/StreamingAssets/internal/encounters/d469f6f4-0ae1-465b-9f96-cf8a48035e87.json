@@ -110,7 +110,7 @@
           },
           {
             "entry": {
-              "message": "Let's see what we can salvage",
+              "message": "Let's see what we can salvage.",
               "nextLogId": "37760955-899c-4072-b23d-080a2cee11c5",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -153,7 +153,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Thaw a crew member",
+              "message": "Thaw a crew member.",
               "nextLogId": "df399d6e-e9b0-4575-b3b9-d3364ca3e0ba",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -185,7 +185,7 @@
           },
           {
             "entry": {
-              "message": "We shouldn't disturb them",
+              "message": "We shouldn't disturb them.",
               "nextLogId": "d17db3c4-2c36-4ad0-a4cf-57097c31eded",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -218,7 +218,7 @@
           },
           {
             "entry": {
-              "message": "See what we can salvage",
+              "message": "See what we can salvage.",
               "nextLogId": "37760955-899c-4072-b23d-080a2cee11c5",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -261,7 +261,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "We've disturbed them enough",
+              "message": "We've disturbed them enough.",
               "nextLogId": "c0065482-0578-47e6-84f5-0454ecd975ee",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -293,7 +293,7 @@
           },
           {
             "entry": {
-              "message": "We can't ignore the opportunity to salvage their ship",
+              "message": "We can't ignore the opportunity to salvage their ship.",
               "nextLogId": "dd5f930d-395d-4e1d-be30-54f103283d92",
               "usedFiltering": {
                 "falseByDefault": true,

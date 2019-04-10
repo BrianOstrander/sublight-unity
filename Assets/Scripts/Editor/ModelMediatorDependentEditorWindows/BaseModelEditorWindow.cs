@@ -42,7 +42,8 @@ namespace LunraGames.SubLight
 						ModelsRemaining = new List<SaveModel>(),
 						ModelsCompleted = new List<SaveModel>(),
 						ErrorCount = 0,
-						Log = String.Empty
+						Log = String.Empty,
+						Write = false
 					};
 				}
 			}
@@ -52,6 +53,7 @@ namespace LunraGames.SubLight
 			public List<SaveModel> ModelsCompleted;
 			public int ErrorCount;
 			public string Log;
+			public bool Write;
 
 			public BatchModelOperationCache<M>.Entry Operation;
 			public SaveModel ModelProcessing;
@@ -85,6 +87,7 @@ namespace LunraGames.SubLight
 		EditorPrefsString modelSelectedPath;
 		EditorPrefsInt modelSelectedToolbar;
 		EditorPrefsBool modelShowIgnored;
+		EditorPrefsFloat modelBatchScroll;
 
 		BatchModelOperationCache<M> batchCache;
 
@@ -126,6 +129,7 @@ namespace LunraGames.SubLight
 			modelSelectedPath = new EditorPrefsString(KeyPrefix + "ModelSelectedPath");
 			modelSelectedToolbar = new EditorPrefsInt(KeyPrefix + "ModelSelectedToolbar");
 			modelShowIgnored = new EditorPrefsBool(KeyPrefix + "ModelShowIgnored", true);
+			modelBatchScroll = new EditorPrefsFloat(KeyPrefix + "ModelBatchScroll");
 
 			batchCache = new BatchModelOperationCache<M>();
 
@@ -667,22 +671,28 @@ namespace LunraGames.SubLight
 
 			if (onDraw != null) onDraw(model);
 		}
+		#endregion
 
-		protected void DrawBatchEditor()
+		#region Batch Operations
+		void DrawBatchEditor()
 		{
-			switch (batchProgress.State)
+			modelBatchScroll.VerticalScroll = GUILayout.BeginScrollView(modelBatchScroll.VerticalScroll);
 			{
-				case BatchProgress.States.NeverRun:
-					DrawBatchEditorBrowsing();
-					break;
-				case BatchProgress.States.InProgress:
-				case BatchProgress.States.Complete:
-					DrawBatchEditorShared();
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unknown batch progress: " + batchProgress.State, MessageType.Error);
-					break;
+				switch (batchProgress.State)
+				{
+					case BatchProgress.States.NeverRun:
+						DrawBatchEditorBrowsing();
+						break;
+					case BatchProgress.States.InProgress:
+					case BatchProgress.States.Complete:
+						DrawBatchEditorShared();
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unknown batch progress: " + batchProgress.State, MessageType.Error);
+						break;
+				}
 			}
+			GUILayout.EndScrollView();
 		}
 
 		void DrawBatchEditorBrowsing()
@@ -708,7 +718,13 @@ namespace LunraGames.SubLight
 
 						EditorGUILayoutExtensions.PushEnabled(modelListStatus == RequestStatus.Success);
 						{
-							if (GUILayout.Button("Run", GUILayout.Height(48f))) RunBatchOperation(batch);
+							const float RunBatchWidth = 48f;
+							EditorGUILayoutExtensions.PushColorValidation(Color.red);
+							{
+								if (GUILayout.Button("Run", EditorStyles.miniButtonLeft, GUILayout.Height(RunBatchWidth))) RunBatchOperation(batch, true);
+							}
+							EditorGUILayoutExtensions.PopColorValidation();
+							if (GUILayout.Button("Test", EditorStyles.miniButtonRight, GUILayout.Height(RunBatchWidth))) RunBatchOperation(batch, false);
 						}
 						EditorGUILayoutExtensions.PopEnabled();
 					}
@@ -723,12 +739,15 @@ namespace LunraGames.SubLight
 		void DrawBatchEditorShared()
 		{
 			var statusCount = "[ " + batchProgress.ModelsCompleted.Count + " / " + (batchProgress.ModelsCompleted.Count + batchProgress.ModelsRemaining.Count) + " ]";
-			var status = "Operation \"" + batchProgress.Operation.Name + "\" is "+batchProgress.State+" - "+statusCount;
+			var statusType = batchProgress.Write ? "Writing" : "Testing";
+			var status = statusType + " operation \"" + batchProgress.Operation.Name + "\" is "+batchProgress.State+" - "+statusCount;
 
 			var enabled = batchProgress.ModelsRemaining.Count == 0 && batchProgress.ModelProcessing == null;
 			if (enabled && batchProgress.State != BatchProgress.States.Complete)
 			{
 				batchProgress.State = BatchProgress.States.Complete;
+				batchProgress.Log += "\n[ DONE ]\n\n"+ statusType + " completed with " + batchProgress.ErrorCount + " error(s)";
+				modelBatchScroll.Value = float.MaxValue;
 				OnLoadList();
 			}
 
@@ -776,7 +795,8 @@ namespace LunraGames.SubLight
 
 			batchProgress.Operation.Run(
 				result.TypedModel,
-				OnBatchOperationRun
+				OnBatchOperationRun,
+				batchProgress.Write
 			);
 		}
 
@@ -794,26 +814,39 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			SaveLoadService.Save(
-				typedModel,
-				saveResult => OnBatchOperationSaved(saveResult, result),
-				false
-			);
+			if (batchProgress.Write)
+			{
+				SaveLoadService.Save(
+					typedModel,
+					saveResult => OnBatchOperationSaved(saveResult, result),
+					false
+				);
+			}
+			else
+			{
+				OnBatchOperationSaved(
+					null,
+					result
+				);
+			}
 		}
 
 		void OnBatchOperationSaved(
-			SaveLoadRequest<M> result,
+			SaveLoadRequest<M>? result,
 			RequestResult batchResult
 		)
 		{
-			if (result.Status != RequestStatus.Success)
+			if (result.HasValue) // If null, it means we're not writing so don't check the result.
 			{
-				batchProgress.ErrorCount++;
-				var error = batchProgress.GetLogPrefix() + "Unable to save model for batch processing, ignoring...\n";
-				Debug.LogError(error);
-				batchProgress.Log += error;
-				OnBatchOperationNext();
-				return;
+				if (result.Value.Status != RequestStatus.Success)
+				{
+					batchProgress.ErrorCount++;
+					var error = batchProgress.GetLogPrefix() + "Unable to save model for batch processing, ignoring...\n";
+					Debug.LogError(error);
+					batchProgress.Log += error;
+					OnBatchOperationNext();
+					return;
+				}
 			}
 
 			var resultMessage = batchProgress.GetLogPrefix() + (string.IsNullOrEmpty(batchResult.Message) ? "Processed successfully..." : batchResult.Message) + "\n";
@@ -830,17 +863,23 @@ namespace LunraGames.SubLight
 
 			batchProgress.ModelProcessing = null;
 
+			modelBatchScroll.Value = float.MaxValue;
+
 			Repaint();
 		}
 
 
-		void RunBatchOperation(BatchModelOperationCache<M>.Entry operation)
+		void RunBatchOperation(
+			BatchModelOperationCache<M>.Entry operation,
+			bool write
+		)
 		{
 			batchProgress = new BatchProgress();
 			batchProgress.State = BatchProgress.States.InProgress;
 			batchProgress.ModelsRemaining = modelList.ToList();
 			batchProgress.ModelsCompleted = new List<SaveModel>();
 			batchProgress.Operation = operation;
+			batchProgress.Write = write;
 
 			batchProgress.Log = "Beginning batch operation \""+operation.Name+"\" on "+batchProgress.ModelsRemaining.Count+" models.\n";
 

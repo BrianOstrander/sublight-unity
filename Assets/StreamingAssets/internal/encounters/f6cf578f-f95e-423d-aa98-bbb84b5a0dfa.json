@@ -95,7 +95,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "This place shouldn't be disturbed",
+              "message": "This place shouldn't be disturbed.",
               "nextLogId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -127,7 +127,7 @@
           },
           {
             "entry": {
-              "message": "The hull is worth salvaging for metal",
+              "message": "The hull is worth salvaging for metal.",
               "nextLogId": "effa99de-9dbb-48b7-8d31-195afb81bcd7",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -170,7 +170,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Let them drift",
+              "message": "Let them drift.",
               "nextLogId": "eb4043ed-848d-42e4-8955-145d964aa098",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -202,7 +202,7 @@
           },
           {
             "entry": {
-              "message": "You're right, let's not disturb them",
+              "message": "You're right, let's not disturb them.",
               "nextLogId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -641,7 +641,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "The hull is worth salvaging for metal",
+              "message": "The hull is worth salvaging for metal.",
               "entryId": "7aed0405-1f1d-4529-8401-e2e73419a5da"
             }
           },
