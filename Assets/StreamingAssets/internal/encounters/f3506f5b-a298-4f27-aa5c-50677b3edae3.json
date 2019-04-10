@@ -299,7 +299,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Let's leave it alone",
+              "message": "Let's leave it alone.",
               "nextLogId": "56509b13-f43c-4f03-8411-ae1ee20d7c1c",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -331,7 +331,7 @@
           },
           {
             "entry": {
-              "message": "Refurbish the tank for propellant",
+              "message": "Refurbish the tank for propellant.",
               "nextLogId": "a3355b93-eb7c-4117-9b52-2d2dcd947c33",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -364,7 +364,7 @@
           },
           {
             "entry": {
-              "message": "Convert the tank to store rations",
+              "message": "Convert the tank to store rations.",
               "nextLogId": "ec87c89d-1448-4893-ba96-7fdf6e824708",
               "usedFiltering": {
                 "falseByDefault": true,

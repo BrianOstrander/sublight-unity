@@ -120,10 +120,7 @@ namespace LunraGames.SubLight
 				{
 					modifiedEntries++;
 					result += "+ \"" + beginValueShort + "\" modified to \"" + endValueShort + "\"";
-					if (write)
-					{
-						// TODO RUN MODIFICATION HERE!
-					}
+					if (write) entry.Value(endValue);
 				}
 				else result += "- \"" + beginValueShort + "\" unmodified";
 			}

@@ -565,7 +565,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Rescue neither, the shuttle is too valuable",
+              "message": "Rescue neither, the shuttle is too valuable.",
               "nextLogId": "3c421712-05b7-44fd-8e7c-175cd78a74c9",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -597,7 +597,7 @@
           },
           {
             "entry": {
-              "message": "Rescue the experienced propulsion engineer",
+              "message": "Rescue the experienced propulsion engineer.",
               "nextLogId": "666f8eb3-4538-490b-83c6-09463b0c2da4",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -630,7 +630,7 @@
           },
           {
             "entry": {
-              "message": "[ EMPATHY ] Rescue the rookie crew member",
+              "message": "[ EMPATHY ] Rescue the rookie crew member.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -674,7 +674,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "No",
+              "message": "No.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -705,7 +705,7 @@
           },
           {
             "entry": {
-              "message": "[ EMPATHY ] Yes",
+              "message": "[ EMPATHY ] Yes.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -749,7 +749,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Engage diplomatically",
+              "message": "Engage diplomatically.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -780,7 +780,7 @@
           },
           {
             "entry": {
-              "message": "[ AGGRESSION ] Reciprocate threats",
+              "message": "[ AGGRESSION ] Reciprocate threats.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -813,7 +813,7 @@
           },
           {
             "entry": {
-              "message": "[ EMPATHY ] Plead for mercy",
+              "message": "[ EMPATHY ] Plead for mercy.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -857,7 +857,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "No",
+              "message": "No.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -889,7 +889,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ AGGRESSION ] Yes",
+              "message": "[ AGGRESSION ] Yes.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -935,7 +935,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ DECEPTION ] Lie, and say the children have been ejected",
+              "message": "[ DECEPTION ] Lie, and say the children have been ejected.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -968,7 +968,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ EMPATHY ] Make an emotional appeal to the entity",
+              "message": "[ EMPATHY ] Make an emotional appeal to the entity.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -1002,7 +1002,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ AGGRESSION ] Threaten violence against the entity",
+              "message": "[ AGGRESSION ] Threaten violence against the entity.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -1147,7 +1147,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "I'm ready to proceed",
+              "message": "I'm ready to proceed.",
               "nextLogId": "d2f38944-23e2-4e35-815a-3f057aae8073",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -1615,7 +1615,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I will do my best",
+              "message": "I will do my best.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1626,7 +1626,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I will do my best",
+              "message": "I will do my best.",
               "entryId": "1820773f-3129-4d05-acd0-a64227976c3e"
             },
             "index": 13
@@ -1634,7 +1634,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "I know you will, good luck",
+              "message": "I know you will, good luck.",
               "entryId": "bab542bc-afaf-453f-876c-923f43cc880c"
             },
             "index": 14
@@ -1642,7 +1642,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Thank you",
+              "message": "Thank you.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1653,7 +1653,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Thank you",
+              "message": "Thank you.",
               "entryId": "0e57a610-7f0f-494f-b05e-41d90f3552f7"
             },
             "index": 16
@@ -1661,7 +1661,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "It's good to be back online",
+              "message": "It's good to be back online.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1672,7 +1672,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Ecliptic thinks highly of you",
+              "message": "Ecliptic thinks highly of you.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1840,7 +1840,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Much better",
+              "message": "Much better.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1859,7 +1859,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Fine by me",
+              "message": "Fine by me.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1870,7 +1870,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Fine by me",
+              "message": "Fine by me.",
               "entryId": "25a1cb7a-e092-4dac-8a38-0924ff472642"
             },
             "index": 9
@@ -1911,7 +1911,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Whatever",
+              "message": "Whatever.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1922,7 +1922,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Whatever",
+              "message": "Whatever.",
               "entryId": "e699c26c-047a-4c0d-9402-86bafc31776c"
             },
             "index": 3
@@ -2142,7 +2142,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I'm joking",
+              "message": "I'm joking.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2193,7 +2193,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Ready",
+              "message": "Ready.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2261,7 +2261,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I rescue the propulsion engineer",
+              "message": "I rescue the propulsion engineer.",
               "entryId": "45582890-1e36-479f-a3ff-2d729eb5611e"
             }
           }
@@ -2326,7 +2326,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Okay",
+              "message": "Okay.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2337,7 +2337,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Okay",
+              "message": "Okay.",
               "entryId": "70fd39b9-4e73-4e9f-bdbb-1b12da580758"
             },
             "index": 6
@@ -2353,7 +2353,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "No",
+              "message": "No.",
               "entryId": "97850c82-4cfc-4c63-a14f-2d1acfeaefc1"
             }
           }
@@ -2369,7 +2369,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I try to engage diplomatically",
+              "message": "I try to engage diplomatically.",
               "entryId": "411aef53-072e-441e-837f-ff1f6a64165d"
             }
           },
@@ -2392,7 +2392,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "No",
+              "message": "No.",
               "entryId": "0f57a33a-8dbd-4d5f-8805-cf34faebb697"
             }
           },
@@ -2407,7 +2407,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Ready",
+              "message": "Ready.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2418,7 +2418,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Ready",
+              "message": "Ready.",
               "entryId": "696a44ba-e969-41bd-b5c8-7a846220914a"
             },
             "index": 3
@@ -2629,7 +2629,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I'm open to suggestions",
+              "message": "I'm open to suggestions.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2640,7 +2640,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I'm open to suggestions",
+              "message": "I'm open to suggestions.",
               "entryId": "f88a80f0-af92-4f46-8555-9eaa71557233"
             },
             "index": 3
@@ -2692,7 +2692,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I'm ready to proceed",
+              "message": "I'm ready to proceed.",
               "entryId": "274f36f0-c4ab-4e9b-8371-0f89199cc1db"
             }
           },
@@ -2707,7 +2707,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I'm ready to meet the chancellor",
+              "message": "I'm ready to meet the chancellor.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2718,7 +2718,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I'm ready to meet the chancellor",
+              "message": "I'm ready to meet the chancellor.",
               "entryId": "d0c4bf52-23e7-4287-94aa-e7d3cb345281"
             },
             "index": 3

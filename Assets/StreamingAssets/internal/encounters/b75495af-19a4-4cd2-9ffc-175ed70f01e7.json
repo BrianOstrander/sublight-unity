@@ -86,7 +86,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Cool",
+              "message": "Cool.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -117,7 +117,7 @@
           },
           {
             "entry": {
-              "message": "I don't need a tutorial",
+              "message": "I don't need a tutorial.",
               "nextLogId": "35b44710-45c9-4a1a-86e4-ad943de63b43",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -347,7 +347,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Understood",
+              "message": "Understood.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -366,7 +366,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Understood",
+              "message": "Understood.",
               "entryId": "55e89881-ced1-457f-8837-02c79abf1247"
             },
             "index": 5
