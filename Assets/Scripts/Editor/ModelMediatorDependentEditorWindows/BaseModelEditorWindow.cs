@@ -726,7 +726,11 @@ namespace LunraGames.SubLight
 			var status = "Operation \"" + batchProgress.Operation.Name + "\" is "+batchProgress.State+" - "+statusCount;
 
 			var enabled = batchProgress.ModelsRemaining.Count == 0 && batchProgress.ModelProcessing == null;
-			if (enabled) batchProgress.State = BatchProgress.States.Complete;
+			if (enabled && batchProgress.State != BatchProgress.States.Complete)
+			{
+				batchProgress.State = BatchProgress.States.Complete;
+				OnLoadList();
+			}
 
 			GUILayout.BeginHorizontal();
 			{
@@ -772,11 +776,11 @@ namespace LunraGames.SubLight
 
 			batchProgress.Operation.Run(
 				result.TypedModel,
-				OnBatchOperationDone
+				OnBatchOperationRun
 			);
 		}
 
-		void OnBatchOperationDone(
+		void OnBatchOperationRun(
 			M typedModel,
 			RequestResult result
 		)
@@ -790,7 +794,29 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var resultMessage = batchProgress.GetLogPrefix() + (string.IsNullOrEmpty(result.Message) ? "Processed successfully..." : result.Message) + "\n";
+			SaveLoadService.Save(
+				typedModel,
+				saveResult => OnBatchOperationSaved(saveResult, result),
+				false
+			);
+		}
+
+		void OnBatchOperationSaved(
+			SaveLoadRequest<M> result,
+			RequestResult batchResult
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				batchProgress.ErrorCount++;
+				var error = batchProgress.GetLogPrefix() + "Unable to save model for batch processing, ignoring...\n";
+				Debug.LogError(error);
+				batchProgress.Log += error;
+				OnBatchOperationNext();
+				return;
+			}
+
+			var resultMessage = batchProgress.GetLogPrefix() + (string.IsNullOrEmpty(batchResult.Message) ? "Processed successfully..." : batchResult.Message) + "\n";
 			batchProgress.Log += resultMessage;
 			OnBatchOperationNext();
 		}
