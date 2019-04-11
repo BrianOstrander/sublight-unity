@@ -609,7 +609,7 @@ namespace LunraGames.SubLight
 							FlexiblePopupDialog.Show(
 								"Editing Log Name",
 								new Vector2(400f, 22f),
-								() => { model.Name.Value = EditorGUILayoutExtensions.TextDynamic(model.Name.Value); }
+								() => { model.Name.Value = EditorGUILayout.TextField(model.Name.Value); }
 							);
 						}
 					}
@@ -621,8 +621,8 @@ namespace LunraGames.SubLight
 						{
 							FlexiblePopupDialog.Show(
 								"Editing Log Notes",
-								new Vector2(400f, 22f),
-								() => { model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value); }
+								new Vector2(400f, 22f * 3f),
+								() => { model.Notes.Value = EditorGUILayoutExtensions.TextAreaWrapped(model.Notes.Value, GUILayout.ExpandHeight(true)); }
 							);
 						}
 					}
@@ -1433,9 +1433,9 @@ namespace LunraGames.SubLight
 		)
 		{
 			var entry = edge.Entry;
-			entry.Title.Value = EditorGUILayoutExtensions.TextDynamic("Title", entry.Title.Value);
-			entry.Header.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
-			entry.Body.Value = EditorGUILayoutExtensions.TextDynamic("Body", entry.Body.Value);
+			entry.Title.Value = EditorGUILayout.TextField("Title", entry.Title.Value);
+			entry.Header.Value = EditorGUILayout.TextField(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
+			entry.Body.Value = EditorGUILayoutExtensions.TextAreaWrapped("Body", entry.Body.Value);
 			entry.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), entry.Priority.Value);
 			entry.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), entry.OrderWeight.Value);
 		}
@@ -1822,7 +1822,7 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			entry.Title.Value = EditorGUILayout.TextField("Title", entry.Title.Value);
-			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", entry.Message.Value);
+			entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped("Message", entry.Message.Value);
 
 			switch (entry.DialogType.Value)
 			{
@@ -2246,7 +2246,8 @@ namespace LunraGames.SubLight
 				infoModel,
 				model,
 				OnConversationLogEdge,
-				OnConversationLogSpawnOptions
+				OnConversationLogSpawnOptions,
+				OnConversationLogEdgeHeaderLeft
 			);
 		}
 
@@ -2296,6 +2297,40 @@ namespace LunraGames.SubLight
 			edge.Entry.PromptInfo.Value = ConversationEntryModel.PromptBlock.Default;
 		}
 
+		void OnConversationLogEdgeHeaderLeft(
+			EncounterInfoModel infoModel,
+			ConversationEncounterLogModel model,
+			ConversationEdgeModel edge
+		)
+		{
+			switch (edge.Entry.ConversationType.Value)
+			{
+				case ConversationTypes.MessageIncoming:
+				case ConversationTypes.MessageOutgoing:
+					var isIncoming = edge.Entry.ConversationType.Value == ConversationTypes.MessageIncoming;
+
+					if (EditorGUILayoutExtensions.ToggleButtonArray(isIncoming, "Incoming", "Outgoing") != isIncoming)
+					{
+						isIncoming = !isIncoming;
+						edge.Entry.ConversationType.Value = isIncoming ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
+					}
+					break;
+				case ConversationTypes.Prompt:
+					var promptBlock = edge.Entry.PromptInfo.Value;
+
+					promptBlock.Behaviour = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+						GUIContent.none,
+						"- Select Behaviour -",
+						promptBlock.Behaviour,
+						Color.red,
+						guiOptions: new GUILayoutOption[] { GUILayout.Width(90f) }
+					);
+
+					edge.Entry.PromptInfo.Value = promptBlock;
+					break;
+			}
+		}
+
 		void OnConversationLogEdge(
 			EncounterInfoModel infoModel,
 			ConversationEncounterLogModel model,
@@ -2321,16 +2356,7 @@ namespace LunraGames.SubLight
 		{
 			var block = entry.MessageInfo.Value;
 
-			var isIncoming = entry.ConversationType.Value == ConversationTypes.MessageIncoming;
-
-			if (EditorGUILayoutExtensions.ToggleButtonArray("Alignment", isIncoming, "Incoming", "Outgoing") != isIncoming)
-			{
-				isIncoming = !isIncoming;
-				entry.ConversationType.Value = isIncoming ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
-			}
-
-			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
-				"Message",
+			entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
 				entry.Message.Value
 			);
 			
@@ -2341,20 +2367,12 @@ namespace LunraGames.SubLight
 		{
 			var block = entry.PromptInfo.Value;
 
-			block.Behaviour = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-				new GUIContent("Behaviour"),
-				"- Select Behaviour -",
-				block.Behaviour,
-				Color.red
-			);
-
 			switch (block.Behaviour)
 			{
 				case ConversationButtonPromptBehaviours.ButtonOnly:
 				case ConversationButtonPromptBehaviours.PrintMessage:
 				case ConversationButtonPromptBehaviours.PrintOverride:
-					entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
-						"Message",
+					entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
 						entry.Message.Value
 					);
 					break;
@@ -2372,8 +2390,7 @@ namespace LunraGames.SubLight
 				case ConversationButtonPromptBehaviours.Continue:
 					break;
 				case ConversationButtonPromptBehaviours.PrintOverride:
-					block.MessageOverride = EditorGUILayoutExtensions.TextDynamic(
-						"Message Override",
+					block.MessageOverride = EditorGUILayoutExtensions.TextAreaWrapped(
 						block.MessageOverride
 					);
 					break;
@@ -2391,7 +2408,8 @@ namespace LunraGames.SubLight
 			EncounterInfoModel infoModel,
 			L model,
 			Action<EncounterInfoModel, L, E> edgeEditor,
-			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions = null
+			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions = null,
+			Action<EncounterInfoModel, L, E> edgeHeaderLeft = null
 		)
 			where L : IEdgedEncounterLogModel<E>
 			where E : class, IEdgeModel
@@ -2482,7 +2500,8 @@ namespace LunraGames.SubLight
 									isMoving,
 									isDeleting,
 									out currMoveDelta,
-									edgeSpawnOptions
+									edgeSpawnOptions,
+									edgeHeaderLeft
 								)
 							)
 							{
@@ -2584,7 +2603,8 @@ namespace LunraGames.SubLight
 			bool isMoving,
 			bool isDeleting,
 			out int indexDelta,
-			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions // This could be null, check for it...
+			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions = null,
+			Action<EncounterInfoModel, L, E> edgeHeaderLeft = null
 		)
 			where L : IEdgedEncounterLogModel<E>
 			where E : class, IEdgeModel
@@ -2596,7 +2616,7 @@ namespace LunraGames.SubLight
 			{
 				EditorGUILayoutExtensions.PushEnabled(!edge.EdgeIgnore);
 				{
-					GUILayout.Label("#" + (count + 1) + " | " + edge.EdgeName);
+					GUILayout.Label("#" + (count + 1) + " | " + edge.EdgeName, GUILayout.ExpandWidth(false));
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 				if (isMoving)
@@ -2623,10 +2643,13 @@ namespace LunraGames.SubLight
 				}
 				else if (isDeleting)
 				{
+					GUILayout.FlexibleSpace();
 					deleted = EditorGUILayoutExtensions.XButton(true);
 				}
 				else
 				{
+					if (edgeHeaderLeft != null) edgeHeaderLeft(infoModel, model, edge);
+					GUILayout.FlexibleSpace();
 					GUILayout.Label(new GUIContent("Ignore", "Ignoring this entry will cause encounters to skip it."), GUILayout.ExpandWidth(false));
 					edge.EdgeIgnore = GUILayout.Toggle(edge.EdgeIgnore, GUIContent.none, GUILayout.ExpandWidth(false));
 				}
