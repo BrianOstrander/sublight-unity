@@ -311,6 +311,7 @@ namespace LunraGames.SubLight
 							var logIsFocused = logsFocusedLogIdsIndex.Value == currLogIdIndex;
 							var log = model.Logs.GetLogFirstOrDefault(logId);
 							var logName = EditorGUILayoutEncounter.GetReadableLogName(
+								log == null ? EncounterLogTypes.Unknown : log.LogType,
 								logId,
 								log == null ? null : log.Name.Value,
 								log == null

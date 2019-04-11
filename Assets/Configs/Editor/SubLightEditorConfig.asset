@@ -673,18 +673,18 @@ MonoBehaviour:
     m_Margin:
       m_Left: 4
       m_Right: 4
-      m_Top: 4
-      m_Bottom: 36
+      m_Top: 0
+      m_Bottom: 0
     m_Padding:
       m_Left: 10
       m_Right: 10
       m_Top: 8
-      m_Bottom: 0
+      m_Bottom: 34
     m_Overflow:
       m_Left: 0
       m_Right: 0
       m_Top: 0
-      m_Bottom: 32
+      m_Bottom: 0
     m_Font: {fileID: 0}
     m_FontSize: 0
     m_FontStyle: 0
@@ -740,8 +740,8 @@ MonoBehaviour:
     m_Margin:
       m_Left: 4
       m_Right: 4
-      m_Top: 4
-      m_Bottom: 4
+      m_Top: 0
+      m_Bottom: 0
     m_Padding:
       m_Left: 10
       m_Right: 10
@@ -751,7 +751,7 @@ MonoBehaviour:
       m_Left: 0
       m_Right: 0
       m_Top: 0
-      m_Bottom: 23
+      m_Bottom: 0
     m_Font: {fileID: 0}
     m_FontSize: 0
     m_FontStyle: 0
