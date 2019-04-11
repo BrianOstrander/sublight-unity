@@ -1465,7 +1465,7 @@
                 "TransmitionStrength": "Internal",
                 "TransmitionStrengthIcon": "Hidden",
                 "PlacardName": "Ecliptic",
-                "PlacardDescription": "Diagnostics Custodian",
+                "PlacardDescription": "Diagnostic Custodian",
                 "AvatarType": "Static",
                 "AvatarStaticIndex": 2,
                 "AvatarStaticTerminalTextVisible": true
