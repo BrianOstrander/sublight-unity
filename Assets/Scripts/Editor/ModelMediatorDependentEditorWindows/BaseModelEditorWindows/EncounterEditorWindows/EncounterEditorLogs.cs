@@ -287,11 +287,12 @@ namespace LunraGames.SubLight
 			{
 				EditorGUILayoutExtensions.PushEnabled(LogsIsFocusedOnStack);
 				{
-					EditorGUILayoutExtensions.PushEnabled(0 < logsFocusedLogIdsIndex.Value);
+					if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarLastImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
 					{
-						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarLastImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) LogsFocusedLogIdsOffsetIndex(-1);
+						if (0 < logsFocusedLogIdsIndex.Value) LogsFocusedLogIdsOffsetIndex(-1);
+						else LogsFocusedLogIdsPop();
 					}
-					EditorGUILayoutExtensions.PopEnabled();
+
 					EditorGUILayoutExtensions.PushEnabled(logsFocusedLogIdsIndex.Value < LogsFocusedLogIdsStack.Count() - 1);
 					{
 						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarNextImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) LogsFocusedLogIdsOffsetIndex(1);
@@ -345,6 +346,12 @@ namespace LunraGames.SubLight
 				);
 
 				if (appendResult != EncounterLogTypes.Unknown) AppendNewLog(appendResult, model, LogsAppendSources.Toolbar);
+
+				if (GUILayout.Button("Collapse", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+				{
+					foreach (var log in model.Logs.All.Value) log.Collapsed.Value = true;
+					EditorGUIExtensions.ResetControls();
+				}
 			}
 			GUILayout.EndHorizontal();
 
@@ -559,7 +566,7 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				var nameSourcePrefix = logsShowNameSource.Value ? (model.HasName ? ".Name:" : ".LogId:") : ":";
-				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " <b>" + (model.HasName ? model.Name.Value : model.LogId.Value) + "</b>";
+				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " " + (model.HasName ? ("<b>" + model.Name.Value + "</b>") : Shorten(model.LogId.Value, 8));
 				GUILayout.Label(new GUIContent(header, model.LogId.Value), SubLightEditorConfig.Instance.EncounterEditorLogEntryIndex);
 				if (isMoving)
 				{
@@ -663,6 +670,7 @@ namespace LunraGames.SubLight
 						if (model.Collapsed.Value == EditorGUILayout.Toggle(!model.Collapsed.Value, EditorStyles.foldout, GUILayout.Width(14f)))
 						{
 							model.Collapsed.Value = !model.Collapsed.Value;
+							EditorGUIExtensions.ResetControls();
 						}
 					}
 					EditorGUIExtensions.UnPauseChangeCheck();

@@ -396,9 +396,8 @@ namespace LunraGames.SubLight
 				{
 					var modelPath = model.IsInternal ? model.InternalPath : model.Path;
 					var modelId = GetModelId(model);
-					var modelName = modelId;
-					if (string.IsNullOrEmpty(modelName)) modelName = "< No Id >";
-					else if (8 < modelName.Length) modelName = modelName.Substring(0, 8) + "...";
+
+					var modelName = Shorten(modelId, 8, "< No Id >");
 
 					GUILayout.BeginHorizontal();
 					{
@@ -989,6 +988,18 @@ namespace LunraGames.SubLight
 					done();
 					break;
 			}
+		}
+
+		// TODO: Move this to some util?
+		protected string Shorten(
+			string value,
+			int maximumLength,
+			string missingValue = "< Missing >"
+		)
+		{
+			if (string.IsNullOrEmpty(value)) return missingValue;
+			if (maximumLength < value.Length) return value.Substring(0, maximumLength) + "...";
+			return value;
 		}
   		#endregion
 	}
