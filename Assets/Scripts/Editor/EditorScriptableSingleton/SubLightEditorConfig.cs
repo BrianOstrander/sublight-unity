@@ -65,9 +65,12 @@ namespace LunraGames.SubLight
 		[SerializeField]
 		SkinColor encounterEditorLogEntryBackgroundColor = SkinColor.Default;
 		public Color EncounterEditorLogEntryBackgroundColor { get { return encounterEditorLogEntryBackgroundColor; } }
+
+		[Header("- Specifying non-zero top or bottom margins will cause issues")]
 		[SerializeField]
 		GUIStyle encounterEditorLogEntryBackground;
 		public GUIStyle EncounterEditorLogEntryBackground { get { return encounterEditorLogEntryBackground; } }
+		[Header("- Specifying non-zero top or bottom margins will cause issues")]
 		[SerializeField]
 		GUIStyle encounterEditorLogEntryCollapsedBackground;
 		public GUIStyle EncounterEditorLogEntryCollapsedBackground { get { return encounterEditorLogEntryCollapsedBackground; } }
