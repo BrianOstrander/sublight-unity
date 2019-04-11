@@ -125,6 +125,7 @@ namespace LunraGames.SubLight
 		#endregion
 
 		EncounterEditorLogCache logCache;
+		Dictionary<string, Rect> logRectCache = new Dictionary<string, Rect>();
 
 		#region Log Edge Visual Overrides
 		List<LogEdgeVisualOverride> logEdgeVisualOverrides = new List<LogEdgeVisualOverride>();
@@ -328,6 +329,23 @@ namespace LunraGames.SubLight
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 
+				EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
+				{
+					if (GUILayout.Button(new GUIContent("-", "Collapse all logs"), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+					{
+						foreach (var log in model.Logs.All.Value) log.Collapsed.Value = true;
+						EditorGUIExtensions.ResetControls();
+						LogsBustHeightCache();
+					}
+					if (GUILayout.Button(new GUIContent("+", "Collapse all logs"), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+					{
+						foreach (var log in model.Logs.All.Value) log.Collapsed.Value = false;
+						EditorGUIExtensions.ResetControls();
+						LogsBustHeightCache();
+					}
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+
 				EditorGUILayoutEncounter.SelectLogPopup(
 					LogsFocusedLogIdsPeek(),
 					new GUIContent("Filter"),
@@ -346,12 +364,6 @@ namespace LunraGames.SubLight
 				);
 
 				if (appendResult != EncounterLogTypes.Unknown) AppendNewLog(appendResult, model, LogsAppendSources.Toolbar);
-
-				if (GUILayout.Button("Collapse", EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
-				{
-					foreach (var log in model.Logs.All.Value) log.Collapsed.Value = true;
-					EditorGUIExtensions.ResetControls();
-				}
 			}
 			GUILayout.EndHorizontal();
 
@@ -383,10 +395,25 @@ namespace LunraGames.SubLight
 						if (-1 < logsFocusedLogIdsIndex.Value) focusedLogId = LogsFocusedLogIdsStack.ElementAtOrDefault(logsFocusedLogIdsIndex.Value);
 
 						var checkForFocus = !string.IsNullOrEmpty(focusedLogId);
+						var totalShown = 0;
+
+						GUILayout.Space(4f);
 
 						for (var i = 0; i < sortedCount; i++)
 						{
 							var log = sorted[i];
+
+							Rect logRect;
+							if (logRectCache.TryGetValue(log.LogId.Value, out logRect))
+							{
+								if (logRect.yMax < logsListScroll.Value || logsListScroll.Value < (logRect.yMin - position.height))
+								{
+									GUILayout.Space(logRect.height);
+									continue;
+								}
+							}
+
+							totalShown++;
 
 							if (checkForFocus && focusedLogId != log.LogId.Value) continue;
 
@@ -416,7 +443,14 @@ namespace LunraGames.SubLight
 							OnLogEnd(model, log);
 
 							lastLog = log;
+
+							if (Event.current.type == EventType.Repaint)
+							{
+								logRectCache[log.LogId.Value] = GUILayoutUtility.GetLastRect();
+							}
 						}
+
+						//Debug.Log(totalShown);
 
 						if (!string.IsNullOrEmpty(deleted))
 						{
@@ -671,6 +705,7 @@ namespace LunraGames.SubLight
 						{
 							model.Collapsed.Value = !model.Collapsed.Value;
 							EditorGUIExtensions.ResetControls();
+							LogsBustHeightCache();
 						}
 					}
 					EditorGUIExtensions.UnPauseChangeCheck();
@@ -2724,6 +2759,11 @@ namespace LunraGames.SubLight
 		{
 			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value).Count(i => i == bustId);
 		}
+
+		void LogsBustHeightCache()
+		{
+			logRectCache.Clear();
+		}
 		#endregion
 
 		#region Log Stack Utility
@@ -2751,6 +2791,7 @@ namespace LunraGames.SubLight
 		{
 			logsFocusedLogIdsIndex.Value = index;
 			EditorGUIExtensions.ResetControls();
+			LogsBustHeightCache();
 			return index;
 		}
 
