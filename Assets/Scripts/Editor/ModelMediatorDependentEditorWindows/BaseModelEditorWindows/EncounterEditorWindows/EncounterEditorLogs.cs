@@ -31,6 +31,7 @@ namespace LunraGames.SubLight
 
 		class EncounterEditorLogCache
 		{
+			public string EncounterId;
 			public string[] BustIdsInitialized;
 			public string[] BustIdsMissingInitialization;
 			public bool BustIdsNormalizationMismatch;
@@ -199,10 +200,11 @@ namespace LunraGames.SubLight
 
 		void LogsToolbar(EncounterInfoModel model)
 		{
-			if (ModelSelectionModified || logCache == null)
+			if (ModelSelectionModified || logCache == null || model.EncounterId.Value != logCache.EncounterId)
 			{
 				logCache = new EncounterEditorLogCache
 				{
+					EncounterId = model.EncounterId.Value,
 					BustIdsInitialized = GetAllBustIdsInitialized(model),
 					BustIdsMissingInitialization = GetAllBustIdsMissingInitialization(model),
 					BustIdsNormalizationMismatch = GetAllBustIds(model).Length != GetAllBustIdsNormalized(model).Length
