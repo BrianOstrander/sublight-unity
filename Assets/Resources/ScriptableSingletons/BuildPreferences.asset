@@ -143,16 +143,38 @@ MonoBehaviour:
     - Index: 40
       Change: 10
       Description: New encounter <b>Stellar Catacombs</b>.
-  - Title: Luhman
-    Description: This update adds a new sound system, musical track, effects, and
-      an additional encounter.
+  - Title: Wolf
+    Description: This update adds a several new encounters and a way to find interesting
+      systems.
     ReleaseType: Feature
     Cyle: Alpha
-    Version: 10
+    Version: 11
     Year: 2019
     Month: 4
     Day: 12
     Entries:
     - Index: 10
       Change: 10
-      Description: 
+      Description: New encounter <b>Noctis</b>.
+    - Index: 20
+      Change: 10
+      Description: New encounter <b>Wax Sky</b>.
+    - Index: 30
+      Change: 10
+      Description: New encounter <b>Lone Probe</b>.
+    - Index: 40
+      Change: 10
+      Description: New encounter <b>False Alarm</b>.
+    - Index: 50
+      Change: 10
+      Description: Certain systems now <b>ping</b> to indicate a possible encounter.
+    - Index: 60
+      Change: 10
+      Description: Emotive circuits can now be fixed for Aurora (encounters using
+        these responses to be added).
+    - Index: 70
+      Change: 20
+      Description: Corrected spelling in the <b>Stellar Catacombs</b> encounter.
+    - Index: 80
+      Change: 20
+      Description: Unified grammar across new and old encounters.
