@@ -834,12 +834,11 @@ namespace LunraGames.SubLight
 		{
 			if (!valid) return;
 
-			Payload.Game.EncounterResume.Value = new EncounterResume(encounter.EncounterId.Value, trigger);
-
 			App.Callbacks.EncounterRequest(
 				EncounterRequest.Request(
 					Payload.Game,
-					encounter
+					encounter,
+					trigger
 				)
 			);
 		}
@@ -849,6 +848,10 @@ namespace LunraGames.SubLight
 			switch (request.State)
 			{
 				case EncounterRequest.States.Request:
+					Payload.Game.EncounterResume.Value = new EncounterResume(
+						request.Encounter.EncounterId.Value,
+						request.Trigger
+					);
 					break;
 				case EncounterRequest.States.Handle:
 					if (request.TryHandle<EncounterEventHandlerModel>(handler => Encounter.OnHandleEvent(this, handler))) break;

@@ -153,6 +153,7 @@ namespace LunraGames.SubLight
 				var nextLog = model == null ? null : infoModel.Logs.GetNextLogFirstOrDefault(model.Index.Value);
 				content = new GUIContent(
 					GetReadableLogName(
+						nextLog == null ? EncounterLogTypes.Unknown : nextLog.LogType,
 						selectedLogId,
 						selectedLogNull ? null : selectedLog.Name.Value,
 						missingHandling != EncounterLogMissingHandling.None && selectedLogNull,
@@ -483,7 +484,7 @@ namespace LunraGames.SubLight
 					new MenuEntry
 					{
 						LogId = logId,
-						Name = GetReadableLogName(logId, log.Name.Value, isNext: isNext),
+						Name = GetReadableLogName(log.LogType, logId, log.Name.Value, isNext: isNext),
 						IsNamed = !string.IsNullOrEmpty(log.Name.Value),
 						IsSelected = !isLogIdNullOrEmpty && logId == selectedLogId,
 						IsNext = isNext,
@@ -497,6 +498,7 @@ namespace LunraGames.SubLight
 		}
 
 		public static string GetReadableLogName(
+			EncounterLogTypes logType,
 			string logId,
 			string name,
 			bool missing = false,
@@ -509,6 +511,8 @@ namespace LunraGames.SubLight
 			{
 				return shortId + " < Missing!";
 			}
+
+			shortId = logType + " - " + shortId;
 
 			var result = string.IsNullOrEmpty(name) ? shortId : name;
 

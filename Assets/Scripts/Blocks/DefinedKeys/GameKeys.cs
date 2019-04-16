@@ -56,6 +56,9 @@ namespace LunraGames.SubLight
 
 		#region Booleans
 		public readonly Boolean IgnoreSystemOutOfRangeWarning;
+		public readonly Boolean UnlockedDeception;
+		public readonly Boolean UnlockedEmpathy;
+		public readonly Boolean UnlockedAggression;
 		#endregion
 
 		#region Integers
@@ -117,6 +120,24 @@ namespace LunraGames.SubLight
 					ref IgnoreSystemOutOfRangeWarning,
 					"ignore_system_out_of_range_warning",
 					"True if the player has been warned about clicking on out of range systems already."
+				),
+				Create(
+					ref UnlockedDeception,
+					"unlocked_deception",
+					"True if the player has unlocked deception.",
+					true
+				),
+				Create(
+					ref UnlockedEmpathy,
+					"unlocked_empathy",
+					"True if the player has unlocked empathy.",
+					true
+				),
+				Create(
+					ref UnlockedAggression,
+					"unlocked_aggression",
+					"True if the player has unlocked aggression.",
+					true
 				)
 			};
 

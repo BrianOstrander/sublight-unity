@@ -156,7 +156,7 @@ namespace LunraGames.SubLight.Presenters
 				var maxScanLevel = Mathf.Max(allScanLevels);
 
 				var anyScansObscured = 0 < maxScanLevel;
-				var anyScanOutOfRange = scanLevel < maxScanLevel;
+
 				var anyScansObscuredButScannable = allScanLevels.Any(s => 0 < s && s <= scanLevel);
 				var allScansAreInRange = allScanLevels.None(s => scanLevel < s);
 
@@ -265,7 +265,7 @@ namespace LunraGames.SubLight.Presenters
 
 				var newMessage = string.Empty;
 
-				var planetReadable = GDCHackGlobals.PlanetPositionReadable(systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScannableBodyIndex));
+
 				newMessage += "We've sent a probe to the surface, here are the results.\n\n";
 
 				var scanLevel = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeScanLevel);
@@ -275,25 +275,6 @@ namespace LunraGames.SubLight.Presenters
 				var systemScanLevelTemperature = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelTemperature);
 				var systemScanLevelWater = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelWater);
 				var systemScanLevelResources = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.ScanLevelResources);
-
-				var allScanLevels = new int[]
-				{
-					systemScanLevelAtmosphere,
-					systemScanLevelGravity,
-					systemScanLevelTemperature,
-					systemScanLevelWater,
-					systemScanLevelResources
-				};
-
-				var maxScanLevel = Mathf.Max(allScanLevels);
-
-				var anyScansObscured = 0 < maxScanLevel;
-				var anyScanOutOfRange = scanLevel < maxScanLevel;
-				var anyScansObscuredButScannable = allScanLevels.Any(s => 0 < s && s <= scanLevel);
-				var allScansAreInRange = allScanLevels.None(s => scanLevel < s);
-
-				var probesLeft = game.KeyValues.Get(KeyDefines.Game.SurfaceProbeCount);
-				//var anyProbesLeft = 0 < probesLeft;
 
 				newMessage += GDCHackGlobals.GetReading(
 					systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableAtmosphere),

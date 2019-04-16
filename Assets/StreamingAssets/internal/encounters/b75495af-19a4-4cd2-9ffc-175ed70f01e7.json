@@ -86,7 +86,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Cool",
+              "message": "Cool.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -117,7 +117,7 @@
           },
           {
             "entry": {
-              "message": "I don't need a tutorial",
+              "message": "I don't need a tutorial.",
               "nextLogId": "35b44710-45c9-4a1a-86e4-ad943de63b43",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -149,10 +149,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 6,
         "logId": "0f71953e-f647-4d43-83ae-3e0a1cdfe422",
         "fallbackLogId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
@@ -298,6 +294,7 @@
               "bustId": "IntroBust",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Theme": "AwayTeam",
                 "TitleSource": "Earth",
                 "TitleClassification": "Terrestrial",
                 "TransmitionType": "Transmission",
@@ -347,7 +344,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Understood",
+              "message": "Understood.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -366,7 +363,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Understood",
+              "message": "Understood.",
               "entryId": "55e89881-ced1-457f-8837-02c79abf1247"
             },
             "index": 5
@@ -399,8 +396,6 @@
             "index": 9
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 2,
         "logId": "72419e71-44f7-4c83-a7ef-3612b76cc58d",
         "fallbackLogId": "302ef854-d21a-4685-ad4f-09c2ed4e7ce2",
@@ -440,7 +435,7 @@
     ]
   },
   "ignore": true,
-  "version": 10,
+  "version": 11,
   "meta": "Tutorial: Intro",
   "metaKeyValues": {
     "EncounterId": "bf8956db-4fb2-4688-a806-068321c9de3c"

@@ -120,5 +120,13 @@ namespace LunraGamesEditor
 			//if (IsOnScreen(result)) return result;
 			//return new Rect((new Vector2(Screen.width * 0.5f, Screen.height * 0.5f)) - (size * 0.5f), size);
 		}
+
+		/// <summary>
+		/// Deselects any buttons, moves the cursor out of text boxes, etc.
+		/// </summary>
+		public static void ResetControls()
+		{
+			GUIUtility.keyboardControl = 0;
+		}
 	}
 }

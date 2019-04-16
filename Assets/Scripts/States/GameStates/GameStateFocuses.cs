@@ -414,7 +414,6 @@ namespace LunraGames.SubLight
 						ContinuePrompt = LanguageStringModel.Override(" . . . ")
 					}
 				);
-				new ConversationButtonsPresenter(payload.Game);
 
 				InitializeEncyclopediaPresenters(state, done);
 			}

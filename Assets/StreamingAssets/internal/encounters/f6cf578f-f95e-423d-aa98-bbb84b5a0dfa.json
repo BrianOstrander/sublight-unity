@@ -1,6 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
-  "randomAppearance": 0.3,
+  "randomAppearance": 0.5,
   "encounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c",
   "name": "Stellar Catacombs",
   "trigger": "TransitComplete",
@@ -95,7 +95,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "This place shouldn't be disturbed",
+              "message": "This place shouldn't be disturbed.",
               "nextLogId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -127,7 +127,7 @@
           },
           {
             "entry": {
-              "message": "The hull is worth salvaging for metal",
+              "message": "The hull is worth salvaging for metal.",
               "nextLogId": "effa99de-9dbb-48b7-8d31-195afb81bcd7",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -159,10 +159,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "AwayTeam"
-        },
         "index": 9,
         "logId": "132fc619-c36d-4886-bab9-97f4ad8d3dab"
       },
@@ -170,7 +166,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Let them drift",
+              "message": "Let them drift.",
               "nextLogId": "eb4043ed-848d-42e4-8955-145d964aa098",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -202,7 +198,7 @@
           },
           {
             "entry": {
-              "message": "You're right, let's not disturb them",
+              "message": "You're right, let's not disturb them.",
               "nextLogId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -234,10 +230,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "AwayTeam"
-        },
         "index": 12,
         "logId": "67e66152-22ec-4660-b399-512d4366ae1c"
       }
@@ -370,7 +362,8 @@
               "bustId": "ExtraOps",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "TitleSource": "Unidentified",
+                "Theme": "AwayTeam",
+                "TitleSource": "Habitat",
                 "TitleClassification": "Derelict",
                 "TransmitionType": "Transmission",
                 "TransmitionStrength": "Strong",
@@ -396,7 +389,8 @@
               "bustId": "Doctor",
               "bustEvent": "Initialize",
               "initializeInfo": {
-                "TitleSource": "Unidentified",
+                "Theme": "AwayTeam",
+                "TitleSource": "Habitat",
                 "TitleClassification": "Derelict",
                 "TransmitionType": "Transmission",
                 "TransmitionStrength": "Strong",
@@ -514,8 +508,6 @@
             "index": 6
           }
         ],
-        "style": "Conversation",
-        "theme": "AwayTeam",
         "index": 6,
         "logId": "70b9114d-a7ad-4651-b7e2-b4b714acbeb5",
         "fallbackLogId": "c91765b2-1afe-4d2e-9479-d7cbc88c6cb1"
@@ -525,7 +517,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "We've sampled several of the deceased, it looks like the oldest ones were interned here several thousand years ago...",
+              "message": "We've sampled several of the deceased, it looks like the oldest ones were interred here several thousand years ago...",
               "entryId": "def0f10f-86a3-4f79-ab58-d5cd721b57bf"
             }
           },
@@ -594,8 +586,6 @@
             "index": 6
           }
         ],
-        "style": "Conversation",
-        "theme": "AwayTeam",
         "index": 8,
         "logId": "e595cac7-5227-4ae2-86e3-5c1b7fdbf900",
         "fallbackLogId": "132fc619-c36d-4886-bab9-97f4ad8d3dab"
@@ -629,8 +619,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "theme": "AwayTeam",
         "index": 10,
         "logId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
         "fallbackLogId": "c121616c-364e-46ca-af49-3b047155c7ef",
@@ -641,7 +629,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "The hull is worth salvaging for metal",
+              "message": "The hull is worth salvaging for metal.",
               "entryId": "7aed0405-1f1d-4529-8401-e2e73419a5da"
             }
           },
@@ -682,7 +670,7 @@
       }
     ]
   },
-  "version": 10,
+  "version": 11,
   "meta": "Stellar Catacombs",
   "metaKeyValues": {
     "EncounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c"

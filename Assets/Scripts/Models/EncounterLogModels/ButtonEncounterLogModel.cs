@@ -6,37 +6,10 @@ namespace LunraGames.SubLight.Models
 {
 	public class ButtonEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
 	{
-		[Serializable]
-		public struct ConversationStyleBlock
-		{
-			public static ConversationStyleBlock Default
-			{
-				get
-				{
-					return new ConversationStyleBlock
-					{
-						Theme = ConversationThemes.Foreigner
-					};
-				}
-			}
-
-			public ConversationThemes Theme;
-		}
-
 		[JsonProperty] ButtonEdgeModel[] buttons = new ButtonEdgeModel[0];
-
-		[JsonProperty] ConversationButtonStyles style;
-
-		[JsonProperty] ConversationStyleBlock conversationStyle;
 
 		[JsonIgnore]
 		public readonly ListenerProperty<ButtonEdgeModel[]> Buttons;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<ConversationButtonStyles> Style;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<ConversationStyleBlock> ConversationStyle;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Button; } }
 
@@ -46,10 +19,6 @@ namespace LunraGames.SubLight.Models
 		public ButtonEncounterLogModel()
 		{
 			Buttons = new ListenerProperty<ButtonEdgeModel[]>(value => buttons = value, () => buttons);
-
-			Style = new ListenerProperty<ConversationButtonStyles>(value => style = value, () => style);
-
-			ConversationStyle = new ListenerProperty<ConversationStyleBlock>(value => conversationStyle = value, () => conversationStyle);
 		}
 
 		[JsonIgnore]

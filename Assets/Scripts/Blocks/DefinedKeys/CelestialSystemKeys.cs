@@ -47,6 +47,7 @@ namespace LunraGames.SubLight
 		public readonly Boolean Specified;
 		public readonly Boolean PlayerBegin;
 		public readonly Boolean PlayerEnd;
+		public readonly Boolean IconPings;
 		#endregion
 
 		#region Integers
@@ -114,6 +115,12 @@ namespace LunraGames.SubLight
 					ref PlayerEnd,
 					"player_end",
 					"True if this system is where the game ends."
+				),
+				Create(
+					ref IconPings,
+					"icon_pings",
+					"True if this system emits radio pings. This also effects the types of encounters that occur.",
+					true
 				)
 			};
 
@@ -204,6 +211,11 @@ namespace LunraGames.SubLight
 
 			Floats = new Float[]
 			{
+				Create(
+					ref IconScale,
+					"icon_scale",
+					"Scale of the system's icon from 0.0 to 1.0."
+				),
 				Create(
 					ref IconScale,
 					"icon_scale",

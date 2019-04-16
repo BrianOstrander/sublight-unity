@@ -12,8 +12,11 @@ namespace LunraGames.SubLight
 		protected Action Enable = ActionExtensions.Empty;
 		protected Action Disable = ActionExtensions.Empty;
 		protected Action Gui = ActionExtensions.Empty;
-		protected Action EditorUpdate = ActionExtensions.Empty;
+		protected Action<float> EditorUpdate = ActionExtensions.GetEmpty<float>();
+		protected Action InspectorUpdate = ActionExtensions.Empty;
 		protected Action<Action<RequestStatus>> Save = ActionExtensions.GetEmpty<Action<RequestStatus>>();
+
+		DateTime? lastEditorUpdate;
 
 		EditorModelMediator editorSaveLoadService;
 		protected IModelMediator SaveLoadService
@@ -52,7 +55,15 @@ namespace LunraGames.SubLight
 
 		void Update()
 		{
-			EditorUpdate();
+			var now = DateTime.Now;
+			lastEditorUpdate = lastEditorUpdate ?? now;
+			EditorUpdate((float)(now - lastEditorUpdate.Value).TotalSeconds);
+			lastEditorUpdate = now;
+		}
+
+		void OnInspectorUpdate()
+		{
+			InspectorUpdate();
 		}
 
 		void OnSaveLoadInitialized(RequestStatus status)

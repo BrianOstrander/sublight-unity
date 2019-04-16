@@ -18,18 +18,67 @@ namespace LunraGames.SubLight
 		{
 			public const string SelectOrCreateLog = "- Select Or Create Log -";
 			public const string DefaultEndLogName = "< End Encounter >";
+			public const string EdgeEntryAppendPrefix = "Append";
+			public const string EdgeEntryInsertPrefix = "Insert";
 		}
 
 		static class LogFloats
 		{
 			public const float KeyValueOperationWidth = 80f;
+			public const float AppendEntryWidthMaximum = 300f;
+			public const float HighlightEntryDuration = 1f;
 		}
 
 		class EncounterEditorLogCache
 		{
+			public string EncounterId;
 			public string[] BustIdsInitialized;
 			public string[] BustIdsMissingInitialization;
 			public bool BustIdsNormalizationMismatch;
+		}
+
+		class LogEdgeVisualOverride
+		{
+			public enum Controls
+			{
+				Unknown = 0,
+				Static = 10,
+				Decay = 20
+			}
+
+			public enum Effects
+			{
+				Unknown = 0,
+				Highlight = 10
+			}
+
+			public string EdgeId;
+
+			public Controls Control;
+			public Effects Effect;
+
+			public int FrameCount;
+
+			public float Duration;
+			public float DurationRemaining;
+
+			public float InverseNormal { get { return DurationRemaining / Duration; } }
+			public float Normal { get { return 1f - InverseNormal; } }
+			public float QuartNormal { get { return Mathf.Pow(Normal, 4f); } }
+
+			public LogEdgeVisualOverride(
+				string edgeId,
+				Controls control,
+				Effects effect,
+				float duration
+			)
+			{
+				EdgeId = edgeId;
+				Control = control;
+				Effect = effect;
+				Duration = duration;
+				DurationRemaining = duration;
+			}
 		}
 
 		enum LogsAppendSources
@@ -44,6 +93,7 @@ namespace LunraGames.SubLight
 
 		EditorPrefsFloat logsListScroll;
 		EditorPrefsFloat logsStackScroll;
+		EditorPrefsBool logsEdgeIndentsEnabled;
 		EditorPrefsBool logsShowNameSource;
 		EditorPrefsBool logsShowHaltingInfo;
 		EditorPrefsBool logsShowHaltingWarnings;
@@ -76,6 +126,40 @@ namespace LunraGames.SubLight
 		#endregion
 
 		EncounterEditorLogCache logCache;
+		Dictionary<string, Rect> logRectCache = new Dictionary<string, Rect>();
+
+		#region Log Edge Visual Overrides
+		List<LogEdgeVisualOverride> logEdgeVisualOverrides = new List<LogEdgeVisualOverride>();
+
+		void LogAddEdgeVisualOverrideHighlight(string edgeId)
+		{
+			var existing = logEdgeVisualOverrides.FirstOrDefault(e => e.EdgeId == edgeId);
+			if (existing == null)
+			{
+				logEdgeVisualOverrides.Add(
+					new LogEdgeVisualOverride(
+						edgeId,
+						LogEdgeVisualOverride.Controls.Decay,
+						LogEdgeVisualOverride.Effects.Highlight,
+						LogFloats.HighlightEntryDuration
+					)
+				);
+				return;
+			}
+
+			switch (existing.Control)
+			{
+				case LogEdgeVisualOverride.Controls.Static: break;
+				case LogEdgeVisualOverride.Controls.Decay:
+					existing.Duration = LogFloats.HighlightEntryDuration;
+					existing.DurationRemaining = LogFloats.HighlightEntryDuration;
+					break;
+				default:
+					Debug.LogError("Unrecognized EdgeVisualOverrideControl: " + existing.Control);
+					break;
+			}
+		}
+		#endregion
 
 		void LogsConstruct()
 		{
@@ -83,6 +167,7 @@ namespace LunraGames.SubLight
 
 			logsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
 			logsStackScroll = new EditorPrefsFloat(currPrefix + "StackScroll");
+			logsEdgeIndentsEnabled = new EditorPrefsBool(currPrefix + "EdgeIndentsEnabled", true);
 			logsShowNameSource = new EditorPrefsBool(currPrefix + "ShowNameSource");
 			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
 			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
@@ -97,6 +182,8 @@ namespace LunraGames.SubLight
 
 			BeforeLoadSelection += LogsBeforeLoadSelection;
 			AfterLoadSelection += LogsAfterLoadSelection;
+
+			EditorUpdate += LogsInspectorUpdate;
 		}
 
 		#region Events
@@ -104,6 +191,7 @@ namespace LunraGames.SubLight
 		{
 			logsShowNameSource.Value = EditorGUILayout.Toggle(new GUIContent("Show Source of Log Names", "Prefixes the source of the name for a log, if it's an Id or form the actual Name field."), logsShowNameSource.Value);
 			logsJumpFromToolbarAppend.Value = EditorGUILayout.Toggle(new GUIContent("Jump To Log When Created From Toolbar", "When enabled, the editor will focus logs when created from the top toolbar area."), logsJumpFromToolbarAppend.Value);
+			logsEdgeIndentsEnabled.Value = EditorGUILayout.Toggle(new GUIContent("Edge Indenting", "Certain logs, like conversations, support indenting some edges for clarity."), logsEdgeIndentsEnabled.Value);
 			GUILayout.Label("Tips and Warnings", EditorStyles.boldLabel);
 			GUILayout.Label("Unless there are performance problems with the editor, these should be kept enabled.");
 			logsShowHaltingInfo.Value = EditorGUILayout.Toggle(new GUIContent("Halting Info", "Show a tooltip if certain logs cause an encounter to halt gracefully."), logsShowHaltingInfo.Value);
@@ -112,10 +200,11 @@ namespace LunraGames.SubLight
 
 		void LogsToolbar(EncounterInfoModel model)
 		{
-			if (ModelSelectionModified || logCache == null)
+			if (ModelSelectionModified || logCache == null || model.EncounterId.Value != logCache.EncounterId)
 			{
 				logCache = new EncounterEditorLogCache
 				{
+					EncounterId = model.EncounterId.Value,
 					BustIdsInitialized = GetAllBustIdsInitialized(model),
 					BustIdsMissingInitialization = GetAllBustIdsMissingInitialization(model),
 					BustIdsNormalizationMismatch = GetAllBustIds(model).Length != GetAllBustIdsNormalized(model).Length
@@ -135,10 +224,7 @@ namespace LunraGames.SubLight
 			if (string.IsNullOrEmpty(model.DefaultEndLogId.Value))
 			{
 				Debug.LogWarning("Default log id was never instantiated, doing that now");
-				model.DefaultEndLogId.Value = AppendNewLog(EncounterLogTypes.Event, model, LogsAppendSources.Automatic);
-				var endLogInstance = model.Logs.GetLogFirstOrDefault(model.DefaultEndLogId.Value);
-				endLogInstance.Ending.Value = true;
-				endLogInstance.Name.Value = LogStrings.DefaultEndLogName;
+				LogsCreateDefaultEndLog(model);
 				return;
 			}
 
@@ -152,6 +238,50 @@ namespace LunraGames.SubLight
 
 			// Eventually you can do some changes to the default end log here, if needed...
 		}
+
+		void LogsCreateDefaultEndLog(EncounterInfoModel model)
+		{
+			model.DefaultEndLogId.Value = AppendNewLog(EncounterLogTypes.Event, model, LogsAppendSources.Automatic);
+			var endLogInstance = model.Logs.GetLogFirstOrDefault(model.DefaultEndLogId.Value);
+			endLogInstance.Ending.Value = true;
+			endLogInstance.Name.Value = LogStrings.DefaultEndLogName;
+		}
+
+		void LogsInspectorUpdate(float delta = 0f)
+		{
+			if (logEdgeVisualOverrides.None()) return;
+
+			var newOverrides = new List<LogEdgeVisualOverride>();
+			var wasUpdated = false;
+
+			foreach (var current in logEdgeVisualOverrides)
+			{
+				current.FrameCount++;
+
+				if (current.Control == LogEdgeVisualOverride.Controls.Static || current.FrameCount == 1)
+				{
+					newOverrides.Add(current);
+					continue;
+				}
+
+				if (current.Control != LogEdgeVisualOverride.Controls.Decay)
+				{
+					Debug.LogError("Unrecognized EdgeVisualControl: " + current.Control);
+					continue;
+				}
+
+				wasUpdated = true;
+
+				current.DurationRemaining = Mathf.Max(0f, current.DurationRemaining - delta);
+				if (Mathf.Approximately(0f, current.DurationRemaining)) continue;
+
+				newOverrides.Add(current);
+			}
+
+			logEdgeVisualOverrides = newOverrides;
+
+			if (wasUpdated) Repaint();
+		}
 		#endregion
 
 		void DrawLogsToolbar(EncounterInfoModel model)
@@ -160,11 +290,12 @@ namespace LunraGames.SubLight
 			{
 				EditorGUILayoutExtensions.PushEnabled(LogsIsFocusedOnStack);
 				{
-					EditorGUILayoutExtensions.PushEnabled(0 < logsFocusedLogIdsIndex.Value);
+					if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarLastImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
 					{
-						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarLastImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) LogsFocusedLogIdsOffsetIndex(-1);
+						if (0 < logsFocusedLogIdsIndex.Value) LogsFocusedLogIdsOffsetIndex(-1);
+						else LogsFocusedLogIdsPop();
 					}
-					EditorGUILayoutExtensions.PopEnabled();
+
 					EditorGUILayoutExtensions.PushEnabled(logsFocusedLogIdsIndex.Value < LogsFocusedLogIdsStack.Count() - 1);
 					{
 						if (GUILayout.Button(new GUIContent(SubLightEditorConfig.Instance.EncounterEditorLogToolbarNextImage), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false))) LogsFocusedLogIdsOffsetIndex(1);
@@ -182,6 +313,7 @@ namespace LunraGames.SubLight
 							var logIsFocused = logsFocusedLogIdsIndex.Value == currLogIdIndex;
 							var log = model.Logs.GetLogFirstOrDefault(logId);
 							var logName = EditorGUILayoutEncounter.GetReadableLogName(
+								log == null ? EncounterLogTypes.Unknown : log.LogType,
 								logId,
 								log == null ? null : log.Name.Value,
 								log == null
@@ -197,6 +329,23 @@ namespace LunraGames.SubLight
 						GUILayout.EndHorizontal();
 					}
 					GUILayout.EndScrollView();
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+
+				EditorGUILayoutExtensions.PushEnabled(!LogsIsFocusedOnStack);
+				{
+					if (GUILayout.Button(new GUIContent("-", "Collapse all logs"), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+					{
+						foreach (var log in model.Logs.All.Value) log.Collapsed.Value = true;
+						EditorGUIExtensions.ResetControls();
+						LogsBustHeightCache();
+					}
+					if (GUILayout.Button(new GUIContent("+", "Collapse all logs"), EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
+					{
+						foreach (var log in model.Logs.All.Value) log.Collapsed.Value = false;
+						EditorGUIExtensions.ResetControls();
+						LogsBustHeightCache();
+					}
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 
@@ -249,10 +398,25 @@ namespace LunraGames.SubLight
 						if (-1 < logsFocusedLogIdsIndex.Value) focusedLogId = LogsFocusedLogIdsStack.ElementAtOrDefault(logsFocusedLogIdsIndex.Value);
 
 						var checkForFocus = !string.IsNullOrEmpty(focusedLogId);
+						var totalShown = 0;
+
+						GUILayout.Space(4f);
 
 						for (var i = 0; i < sortedCount; i++)
 						{
 							var log = sorted[i];
+
+							Rect logRect;
+							if (logRectCache.TryGetValue(log.LogId.Value, out logRect))
+							{
+								if (logRect.yMax < logsListScroll.Value || logsListScroll.Value < (logRect.yMin - position.height))
+								{
+									GUILayout.Space(logRect.height);
+									continue;
+								}
+							}
+
+							totalShown++;
 
 							if (checkForFocus && focusedLogId != log.LogId.Value) continue;
 
@@ -282,7 +446,14 @@ namespace LunraGames.SubLight
 							OnLogEnd(model, log);
 
 							lastLog = log;
+
+							if (Event.current.type == EventType.Repaint)
+							{
+								logRectCache[log.LogId.Value] = GUILayoutUtility.GetLastRect();
+							}
 						}
+
+						//Debug.Log(totalShown);
 
 						if (!string.IsNullOrEmpty(deleted))
 						{
@@ -352,7 +523,7 @@ namespace LunraGames.SubLight
 					result = NewEncounterLog<KeyValueEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
 				case EncounterLogTypes.Switch:
-					result = NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					result = OnNewEncoutnerLog(NewEncounterLog<SwitchEncounterLogModel>(infoModel, nextIndex, isBeginning)).LogId.Value;
 					break;
 				case EncounterLogTypes.Button:
 					result = NewEncounterLog<ButtonEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
@@ -400,6 +571,12 @@ namespace LunraGames.SubLight
 			return result;
 		}
 
+		SwitchEncounterLogModel OnNewEncoutnerLog(SwitchEncounterLogModel model)
+		{
+			model.SelectionMethod.Value = SwitchEncounterLogModel.SelectionMethods.FirstFilter;
+			return model;
+		}
+
 		bool OnLogBegin(
 			int count,
 			int maxCount,
@@ -426,7 +603,7 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				var nameSourcePrefix = logsShowNameSource.Value ? (model.HasName ? ".Name:" : ".LogId:") : ":";
-				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " <b>" + (model.HasName ? model.Name.Value : model.LogId.Value) + "</b>";
+				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " " + (model.HasName ? ("<b>" + model.Name.Value + "</b>") : Shorten(model.LogId.Value, 8));
 				GUILayout.Label(new GUIContent(header, model.LogId.Value), SubLightEditorConfig.Instance.EncounterEditorLogEntryIndex);
 				if (isMoving)
 				{
@@ -476,7 +653,7 @@ namespace LunraGames.SubLight
 							FlexiblePopupDialog.Show(
 								"Editing Log Name",
 								new Vector2(400f, 22f),
-								() => { model.Name.Value = EditorGUILayoutExtensions.TextDynamic(model.Name.Value); }
+								() => { model.Name.Value = EditorGUILayout.TextField(model.Name.Value); }
 							);
 						}
 					}
@@ -488,8 +665,8 @@ namespace LunraGames.SubLight
 						{
 							FlexiblePopupDialog.Show(
 								"Editing Log Notes",
-								new Vector2(400f, 22f),
-								() => { model.Notes.Value = EditorGUILayoutExtensions.TextDynamic(model.Notes.Value); }
+								new Vector2(400f, 22f * 3f),
+								() => { model.Notes.Value = EditorGUILayoutExtensions.TextAreaWrapped(model.Notes.Value, GUILayout.ExpandHeight(true)); }
 							);
 						}
 					}
@@ -530,6 +707,8 @@ namespace LunraGames.SubLight
 						if (model.Collapsed.Value == EditorGUILayout.Toggle(!model.Collapsed.Value, EditorStyles.foldout, GUILayout.Width(14f)))
 						{
 							model.Collapsed.Value = !model.Collapsed.Value;
+							EditorGUIExtensions.ResetControls();
+							LogsBustHeightCache();
 						}
 					}
 					EditorGUIExtensions.UnPauseChangeCheck();
@@ -1110,6 +1289,13 @@ namespace LunraGames.SubLight
 			SwitchEncounterLogModel model
 		)
 		{
+			model.SelectionMethod.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Selection Method"),
+				"- Select Selection Method -",
+				model.SelectionMethod.Value,
+				Color.red
+			);
+
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Append New Switch"),
 				new GUIContent("- Select Target Log -"),
@@ -1134,6 +1320,7 @@ namespace LunraGames.SubLight
 			string targetLogId
 		)
 		{
+			edge.Entry.RandomWeight.Value = 1f;
 			edge.Entry.NextLogId.Value = targetLogId;
 		}
 
@@ -1144,6 +1331,19 @@ namespace LunraGames.SubLight
 		)
 		{
 			var entry = edge.Entry;
+
+			switch (model.SelectionMethod.Value)
+			{
+				case SwitchEncounterLogModel.SelectionMethods.FirstFilter:
+				case SwitchEncounterLogModel.SelectionMethods.Random:
+					break;
+				case SwitchEncounterLogModel.SelectionMethods.RandomWeighted:
+					entry.RandomWeight.Value = EditorGUILayout.FloatField("Random Weight", entry.RandomWeight.Value);
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized SelectionMethod: " + model.SelectionMethod.Value, MessageType.Error);
+					break;
+			}
 
 			entry.NextLogId.Changed = newLogId => ModelSelectionModified = true;
 
@@ -1176,45 +1376,6 @@ namespace LunraGames.SubLight
 			ButtonEncounterLogModel model
 		)
 		{
-			var wasStyle = model.Style.Value;
-			var newStyle = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				new GUIContent("Style"),
-				"- Select Button Style -",
-				model.Style.Value
-			);
-
-			if (wasStyle != newStyle)
-			{
-				if (wasStyle != ConversationButtonStyles.Unknown)
-				{
-					// Value has changed, and not to Unknown, so we warn the user data may be lost.
-					if (EditorUtility.DisplayDialog(
-						"Overwrite Button Style",
-						"Changing the button style will overwrite style specific data, and cannot be recovered.",
-						"Continue",
-						"Cancel"
-					))
-					{
-						OnButtonLogApplyStyle(infoModel, model, newStyle);
-					}
-					throw new ExitGUIException(); // We do this because opening a dialog messes everything up for some reason...
-				}
-				OnButtonLogApplyStyle(infoModel, model, newStyle);
-			}
-
-			switch (model.Style.Value)
-			{
-				case ConversationButtonStyles.Conversation:
-					OnButtonLogBustStyle(infoModel, model);
-					break;
-				case ConversationButtonStyles.Unknown:
-					EditorGUILayout.HelpBox("A style must be specified for this button.", MessageType.Error);
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized Style: " + model.Style.Value, MessageType.Error);
-					break;
-			}
-
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Append New Button"),
 				new GUIContent("- Select Target Log -"),
@@ -1232,56 +1393,6 @@ namespace LunraGames.SubLight
 			);
 
 			OnEdgedLog<ButtonEncounterLogModel, ButtonEdgeModel>(infoModel, model, OnButtonLogEdge);
-		}
-
-		void OnButtonLogBustStyle(
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model
-		)
-		{
-			var style = model.ConversationStyle.Value;
-
-			style.Theme = EditorGUILayoutExtensions.HelpfulEnumPopup(
-				new GUIContent("Theme"),
-				"- Select Button Theme -",
-				style.Theme
-			);
-
-			if (style.Theme == ConversationThemes.Unknown) EditorGUILayout.HelpBox("A theme must be specified.", MessageType.Error);
-
-			model.ConversationStyle.Value = style;
-		}
-
-		void OnButtonLogApplyStyle(
-			EncounterInfoModel infoModel,
-			ButtonEncounterLogModel model,
-			ConversationButtonStyles style
-		)
-		{
-			var styleApplied = true;
-			Action onApplyStyle = null;
-
-			switch (style)
-			{
-				case ConversationButtonStyles.Conversation:
-					onApplyStyle = () => model.ConversationStyle.Value = ButtonEncounterLogModel.ConversationStyleBlock.Default;
-					break;
-				default:
-					Debug.LogError("Unrecognized Style: " + style);
-					styleApplied = false;
-					break;
-			}
-
-			if (styleApplied)
-			{
-				// Reset other styles here.
-				model.ConversationStyle.Value = default(ButtonEncounterLogModel.ConversationStyleBlock);
-
-				if (onApplyStyle == null) Debug.LogError("onApplyStyle cannot be null");
-				else onApplyStyle();
-
-				model.Style.Value = style;
-			}
 		}
 
 		void OnButtonLogSpawn(
@@ -1368,9 +1479,9 @@ namespace LunraGames.SubLight
 		)
 		{
 			var entry = edge.Entry;
-			entry.Title.Value = EditorGUILayoutExtensions.TextDynamic("Title", entry.Title.Value);
-			entry.Header.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
-			entry.Body.Value = EditorGUILayoutExtensions.TextDynamic("Body", entry.Body.Value);
+			entry.Title.Value = EditorGUILayout.TextField("Title", entry.Title.Value);
+			entry.Header.Value = EditorGUILayout.TextField(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), entry.Header.Value);
+			entry.Body.Value = EditorGUILayoutExtensions.TextAreaWrapped("Body", entry.Body.Value);
 			entry.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), entry.Priority.Value);
 			entry.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), entry.OrderWeight.Value);
 		}
@@ -1456,6 +1567,12 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterEvents.Types.Delay:
 					OnEncounterEventLogEdgeDelay(entry);
+					break;
+				case EncounterEvents.Types.RefreshSystem:
+					OnEncounterEventLogEdgeRefreshSystem(entry);
+					break;
+				case EncounterEvents.Types.AudioSnapshot:
+					OnEncounterEventLogEdgeAudioSnapshot(entry);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
@@ -1666,6 +1783,39 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		void OnEncounterEventLogEdgeRefreshSystem(
+			EncounterEventEntryModel entry
+		)
+		{
+			OnEncounterEventLogEdgeNoModifications();
+		}
+
+		void OnEncounterEventLogEdgeAudioSnapshot(
+			EncounterEventEntryModel entry
+		)
+		{
+			entry.KeyValues.SetString(
+				EncounterEvents.AudioSnapshot.StringKeys.SnapshotName,
+				EditorGUILayout.TextField(
+					new GUIContent("Snapshot Name"),
+					entry.KeyValues.GetString(EncounterEvents.AudioSnapshot.StringKeys.SnapshotName)
+				)
+			);
+
+			entry.KeyValues.SetFloat(
+				EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration,
+				EditorGUILayout.FloatField(
+					new GUIContent("Transition Duration"),
+					entry.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration)
+				)
+			);
+		}
+
+		void OnEncounterEventLogEdgeNoModifications()
+		{
+			EditorGUILayout.HelpBox("No values to modify for this event.", MessageType.Info);
+		}
+
 		#endregion
 
 		#region Dialog Logs
@@ -1718,7 +1868,7 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			entry.Title.Value = EditorGUILayout.TextField("Title", entry.Title.Value);
-			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic("Message", entry.Message.Value);
+			entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped("Message", entry.Message.Value);
 
 			switch (entry.DialogType.Value)
 			{
@@ -2098,6 +2248,18 @@ namespace LunraGames.SubLight
 			}
 			EditorGUILayoutExtensions.PopIndent();
 
+			GUILayout.Label("Button Theme", EditorStyles.boldLabel);
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				block.Theme = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					GUIContent.none,
+					"- Select Theme -",
+					block.Theme,
+					Color.red
+				);
+			}
+			EditorGUILayoutExtensions.PopIndent();
+
 			entry.InitializeInfo.Value = block;
 		}
 
@@ -2126,33 +2288,28 @@ namespace LunraGames.SubLight
 			ConversationEncounterLogModel model
 		)
 		{
-			Color? promptValidation = null;
+			OnEdgedLog<ConversationEncounterLogModel, ConversationEdgeModel>(
+				infoModel,
+				model,
+				OnConversationLogEdge,
+				OnConversationLogSpawnOptions,
+				OnConversationLogEdgeHeaderLeft
+			);
+		}
 
-			if (model.Edges.Any(e => e.Entry.ConversationType.Value == ConversationTypes.Prompt)) promptValidation = Color.red;
-
-			GUILayout.BeginHorizontal();
-			{
-				model.Style.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-					new GUIContent("Button Configuration"),
-					"- Select Style -",
-					model.Style.Value,
-					promptValidation
-				);
-
-				model.Theme.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-					GUIContent.none,
-					"- Select Theme -",
-					model.Theme.Value,
-					promptValidation
-				);
-			}
-			GUILayout.EndHorizontal();
-
+		void OnConversationLogSpawnOptions(
+			EncounterInfoModel infoModel,
+			ConversationEncounterLogModel model,
+			string prefix,
+			int index = int.MaxValue
+		)
+		{
 			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
 				GUIContent.none,
-				"- Append a Conversation Entry -",
+				"- " + (string.IsNullOrEmpty(prefix) ? LogStrings.EdgeEntryAppendPrefix : prefix) + " a Conversation Entry -",
 				ConversationTypes.Unknown,
-				EnumExtensions.GetValues(ConversationTypes.AttachmentIncoming) // Attachments aren't supported yet...
+				EnumExtensions.GetValues(ConversationTypes.AttachmentIncoming), // Attachments aren't supported yet...
+				GUILayout.MaxWidth(LogFloats.AppendEntryWidthMaximum)
 			);
 
 			switch (appendSelection)
@@ -2160,18 +2317,15 @@ namespace LunraGames.SubLight
 				case ConversationTypes.Unknown: break;
 				case ConversationTypes.MessageIncoming:
 				case ConversationTypes.MessageOutgoing:
-					OnEdgedLogSpawn(model, edge => OnConversationLogSpawnMessage(appendSelection, edge));
+					OnEdgedLogSpawn(model, edge => OnConversationLogSpawnMessage(appendSelection, edge), index);
 					break;
 				case ConversationTypes.Prompt:
-					OnEdgedLogSpawn(model, OnConversationLogSpawnPrompt);
+					OnEdgedLogSpawn(model, OnConversationLogSpawnPrompt, index);
 					break;
 				default:
 					Debug.LogError("Unrecognized ConversationType: " + appendSelection);
 					break;
-
 			}
-
-			OnEdgedLog<ConversationEncounterLogModel, ConversationEdgeModel>(infoModel, model, OnConversationLogEdge);
 		}
 
 		void OnConversationLogSpawnMessage(
@@ -2187,6 +2341,40 @@ namespace LunraGames.SubLight
 		{
 			edge.Entry.ConversationType.Value = ConversationTypes.Prompt;
 			edge.Entry.PromptInfo.Value = ConversationEntryModel.PromptBlock.Default;
+		}
+
+		void OnConversationLogEdgeHeaderLeft(
+			EncounterInfoModel infoModel,
+			ConversationEncounterLogModel model,
+			ConversationEdgeModel edge
+		)
+		{
+			switch (edge.Entry.ConversationType.Value)
+			{
+				case ConversationTypes.MessageIncoming:
+				case ConversationTypes.MessageOutgoing:
+					var isIncoming = edge.Entry.ConversationType.Value == ConversationTypes.MessageIncoming;
+
+					if (EditorGUILayoutExtensions.ToggleButtonArray(isIncoming, "Incoming", "Outgoing") != isIncoming)
+					{
+						isIncoming = !isIncoming;
+						edge.Entry.ConversationType.Value = isIncoming ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
+					}
+					break;
+				case ConversationTypes.Prompt:
+					var promptBlock = edge.Entry.PromptInfo.Value;
+
+					promptBlock.Behaviour = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+						GUIContent.none,
+						"- Select Behaviour -",
+						promptBlock.Behaviour,
+						Color.red,
+						guiOptions: new GUILayoutOption[] { GUILayout.Width(90f) }
+					);
+
+					edge.Entry.PromptInfo.Value = promptBlock;
+					break;
+			}
 		}
 
 		void OnConversationLogEdge(
@@ -2214,16 +2402,7 @@ namespace LunraGames.SubLight
 		{
 			var block = entry.MessageInfo.Value;
 
-			var isIncoming = entry.ConversationType.Value == ConversationTypes.MessageIncoming;
-
-			if (EditorGUILayoutExtensions.ToggleButtonArray("Alignment", isIncoming, "Incoming", "Outgoing") != isIncoming)
-			{
-				isIncoming = !isIncoming;
-				entry.ConversationType.Value = isIncoming ? ConversationTypes.MessageIncoming : ConversationTypes.MessageOutgoing;
-			}
-
-			entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
-				"Message",
+			entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
 				entry.Message.Value
 			);
 			
@@ -2234,20 +2413,12 @@ namespace LunraGames.SubLight
 		{
 			var block = entry.PromptInfo.Value;
 
-			block.Behaviour = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-				new GUIContent("Behaviour"),
-				"- Select Behaviour -",
-				block.Behaviour,
-				Color.red
-			);
-
 			switch (block.Behaviour)
 			{
 				case ConversationButtonPromptBehaviours.ButtonOnly:
 				case ConversationButtonPromptBehaviours.PrintMessage:
 				case ConversationButtonPromptBehaviours.PrintOverride:
-					entry.Message.Value = EditorGUILayoutExtensions.TextDynamic(
-						"Message",
+					entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
 						entry.Message.Value
 					);
 					break;
@@ -2265,8 +2436,7 @@ namespace LunraGames.SubLight
 				case ConversationButtonPromptBehaviours.Continue:
 					break;
 				case ConversationButtonPromptBehaviours.PrintOverride:
-					block.MessageOverride = EditorGUILayoutExtensions.TextDynamic(
-						"Message Override",
+					block.MessageOverride = EditorGUILayoutExtensions.TextAreaWrapped(
 						block.MessageOverride
 					);
 					break;
@@ -2283,11 +2453,15 @@ namespace LunraGames.SubLight
 		void OnEdgedLog<L, E>(
 			EncounterInfoModel infoModel,
 			L model,
-			Action<EncounterInfoModel, L, E> edgeEditor
+			Action<EncounterInfoModel, L, E> edgeEditor,
+			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions = null,
+			Action<EncounterInfoModel, L, E> edgeHeaderLeft = null
 		)
 			where L : IEdgedEncounterLogModel<E>
 			where E : class, IEdgeModel
 		{
+			if (edgeSpawnOptions != null) edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryAppendPrefix, int.MaxValue);
+
 			var deleted = string.Empty;
 			var isAlternate = false;
 
@@ -2323,6 +2497,11 @@ namespace LunraGames.SubLight
 						EditorGUILayout.HelpBox("There are edges with duplicate Ids, unexpected behaviour may occur.", MessageType.Error);
 					}
 
+					var normalBackgroundColor = Color.white;
+					var alternateBackgroundColor = Color.grey.NewV(0.5f);
+
+					var isGlobalIndentingSupported = logsEdgeIndentsEnabled.Value;
+
 					for (var i = 0; i < sortedCount; i++)
 					{
 						var current = sorted[i];
@@ -2331,10 +2510,49 @@ namespace LunraGames.SubLight
 
 						isAlternate = !isAlternate;
 
-						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, Color.grey.NewV(0.5f), isAlternate);
-						{
+						var currentColor = isAlternate ? alternateBackgroundColor : normalBackgroundColor;
+						var currentEffect = logEdgeVisualOverrides.FirstOrDefault(e => e.EdgeId == current.EdgeId);
 
-							if (OnEdgedLogEdgeHeader(current, i, sortedCount, isMoving, isDeleting, out currMoveDelta)) deleted = current.EdgeId;
+						if (currentEffect != null)
+						{
+							switch (currentEffect.Effect)
+							{
+								case LogEdgeVisualOverride.Effects.Highlight:
+									currentColor = Color.Lerp(Color.yellow, currentColor, currentEffect.QuartNormal);
+									break;
+								default:
+									Debug.LogError("Unrecognized EdgeVisualOverrideEffect: " + currentEffect.Effect);
+									break;
+							}
+						}
+
+						var isIndented = isGlobalIndentingSupported && !Mathf.Approximately(0f, current.EdgeIndent);
+
+						if (isIndented)
+						{
+							EditorGUILayout.BeginHorizontal();
+							GUILayout.Space(current.EdgeIndent);
+						}
+
+						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, currentColor);
+						{
+							if (
+								OnEdgedLogEdgeHeader(
+									infoModel,
+									model,
+									current,
+									i,
+									sortedCount,
+									isMoving,
+									isDeleting,
+									out currMoveDelta,
+									edgeSpawnOptions,
+									edgeHeaderLeft
+								)
+							)
+							{
+								deleted = current.EdgeId;
+							}
 
 							if (currMoveDelta != 0)
 							{
@@ -2347,6 +2565,11 @@ namespace LunraGames.SubLight
 							last = current;
 						}
 						EditorGUILayoutExtensions.EndVertical();
+
+						if (isIndented)
+						{
+							EditorGUILayout.EndHorizontal();
+						}
 					}
 				}
 				GUILayout.EndVertical();
@@ -2366,36 +2589,70 @@ namespace LunraGames.SubLight
 				indexSwap0.EdgeIndex = swap1;
 				indexSwap1.EdgeIndex = swap0;
 			}
+
+			if (edgeSpawnOptions != null && model.Edges.Any()) edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryAppendPrefix, int.MaxValue);
 		}
 
 		void OnEdgedLogSpawn<E>(
 			IEdgedEncounterLogModel<E> model,
-			Action<E> initialize = null
+			Action<E> initialize = null,
+			int index = int.MaxValue
 		)
 			where E : class, IEdgeModel, new()
 		{
 			ModelSelectionModified = true;
 
-			var index = 0;
 			if (model.Edges.Any())
 			{
-				index = model.Edges.OrderBy(e => e.EdgeIndex).Last().EdgeIndex + 1;
+				var ordered = model.Edges.OrderBy(e => e.EdgeIndex);
+
+				if (index == int.MinValue) index = ordered.First().EdgeIndex;
+				else if (index == int.MaxValue) index = ordered.Last().EdgeIndex + 1;
+
+				var currentIndex = ordered.First().EdgeIndex;
+				var replacementIndex = 0;
+				var wasReplaced = false;
+				foreach (var edge in ordered)
+				{
+					if (edge.EdgeIndex == index)
+					{
+						replacementIndex++;
+						wasReplaced = true;
+					}
+					
+					edge.EdgeIndex = replacementIndex;
+					
+					replacementIndex++;
+				}
+
+				if (!wasReplaced) index = replacementIndex;
 			}
+			else index = 0;
+
 			var result = new E();
 			result.EdgeId = Guid.NewGuid().ToString();
 			result.EdgeIndex = index;
 			if (initialize != null) initialize(result);
 			model.Edges = model.Edges.Append(result).ToArray();
+
+			EditorGUIExtensions.ResetControls();
+
+			LogAddEdgeVisualOverrideHighlight(result.EdgeId);
 		}
 
-		bool OnEdgedLogEdgeHeader<E>(
+		bool OnEdgedLogEdgeHeader<L, E>(
+			EncounterInfoModel infoModel,
+			L model,
 			E edge,
 			int count,
 			int maxCount,
 			bool isMoving,
 			bool isDeleting,
-			out int indexDelta
+			out int indexDelta,
+			Action<EncounterInfoModel, L, string, int> edgeSpawnOptions = null,
+			Action<EncounterInfoModel, L, E> edgeHeaderLeft = null
 		)
+			where L : IEdgedEncounterLogModel<E>
 			where E : class, IEdgeModel
 		{
 			var deleted = false;
@@ -2405,11 +2662,15 @@ namespace LunraGames.SubLight
 			{
 				EditorGUILayoutExtensions.PushEnabled(!edge.EdgeIgnore);
 				{
-					GUILayout.Label("#" + (count + 1) + " | " + edge.EdgeName);
+					GUILayout.Label("#" + (count + 1) + " | " + edge.EdgeName, GUILayout.ExpandWidth(false));
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 				if (isMoving)
 				{
+					GUILayout.FlexibleSpace();
+					if (edgeSpawnOptions == null) GUILayout.Label("Entry Insertion Not Supported   |");
+					else edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryInsertPrefix, edge.EdgeIndex);
+
 					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
 					EditorGUILayoutExtensions.PushEnabled(0 < count);
 					{
@@ -2428,10 +2689,13 @@ namespace LunraGames.SubLight
 				}
 				else if (isDeleting)
 				{
+					GUILayout.FlexibleSpace();
 					deleted = EditorGUILayoutExtensions.XButton(true);
 				}
 				else
 				{
+					if (edgeHeaderLeft != null) edgeHeaderLeft(infoModel, model, edge);
+					GUILayout.FlexibleSpace();
 					GUILayout.Label(new GUIContent("Ignore", "Ignoring this entry will cause encounters to skip it."), GUILayout.ExpandWidth(false));
 					edge.EdgeIgnore = GUILayout.Toggle(edge.EdgeIgnore, GUIContent.none, GUILayout.ExpandWidth(false));
 				}
@@ -2498,6 +2762,11 @@ namespace LunraGames.SubLight
 		{
 			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Select(e => e.Entry.BustId.Value).Count(i => i == bustId);
 		}
+
+		void LogsBustHeightCache()
+		{
+			logRectCache.Clear();
+		}
 		#endregion
 
 		#region Log Stack Utility
@@ -2524,7 +2793,8 @@ namespace LunraGames.SubLight
 		int LogsSetFocusedLogIdsIndex(int index)
 		{
 			logsFocusedLogIdsIndex.Value = index;
-			GUIUtility.keyboardControl = 0;
+			EditorGUIExtensions.ResetControls();
+			LogsBustHeightCache();
 			return index;
 		}
 

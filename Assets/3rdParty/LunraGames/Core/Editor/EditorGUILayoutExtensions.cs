@@ -631,6 +631,28 @@ namespace LunraGamesEditor
 			return value;
 		}
 
+		public static string TextAreaWrapped(string value, params GUILayoutOption[] options)
+		{
+			return TextAreaWrapped(GUIContent.none, value, options);
+		}
+
+		public static string TextAreaWrapped(string label, string value, params GUILayoutOption[] options)
+		{
+			return TextAreaWrapped(new GUIContent(label), value, options);
+		}
+
+		public static string TextAreaWrapped(GUIContent content, string value, params GUILayoutOption[] options)
+		{
+			var textStyle = PushTextAreaWordWrap(true);
+			{
+				if (!GUIContentExtensions.IsNullOrNone(content)) GUILayout.Label(content);
+				value = EditorGUILayout.TextArea(value, textStyle, options);
+			}
+			PopTextAreaWordWrap();
+
+			return value;
+		}
+
 		public static bool ToggleButtonCompact(string label, bool value, GUIStyle style = null, params GUILayoutOption[] options)
 		{
 			return ToggleButtonValue(value, label, label, style, options);

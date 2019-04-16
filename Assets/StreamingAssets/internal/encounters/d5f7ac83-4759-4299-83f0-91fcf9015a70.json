@@ -89,7 +89,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "Launch a surface probe",
+              "message": "Launch a surface probe.",
               "nextLogId": "50de4d0e-66f4-4cfc-92c2-373c5ff0aff7",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -155,7 +155,7 @@
           },
           {
             "entry": {
-              "message": "Settle here",
+              "message": "Settle here.",
               "nextLogId": "3ab6aaaa-9f04-4df2-a8b0-20136592edbe",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -220,10 +220,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 5,
         "logId": "17f40cc1-5915-48b4-8542-c5e3cf2f4561",
         "name": "Main Options"
@@ -232,7 +228,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Yes",
+              "message": "Yes.",
               "nextLogId": "aaf9cbf2-4e7f-4282-a019-cc0be781c5c7",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -264,7 +260,7 @@
           },
           {
             "entry": {
-              "message": "No",
+              "message": "No.",
               "nextLogId": "9765b822-ac66-4837-8e26-d4dfa5088be7",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -296,10 +292,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 8,
         "logId": "cd6daa7a-122b-4744-bdba-8acb4b93617c"
       },
@@ -307,7 +299,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Yes, it's time to end our long voyage",
+              "message": "Yes, it's time to end our long voyage.",
               "nextLogId": "28eddc69-8ec6-4764-b2ec-f0e1088778bc",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -339,7 +331,7 @@
           },
           {
             "entry": {
-              "message": "No, there will be better systems out there",
+              "message": "No, there will be better systems out there.",
               "nextLogId": "b1623248-9220-4bc2-9dcd-8a7c018d0806",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -371,10 +363,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 13,
         "logId": "385f3661-9edf-4efe-aabc-d459b422d635"
       },
@@ -382,7 +370,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Yes, it's time to end our long voyage",
+              "message": "Yes, it's time to end our long voyage.",
               "nextLogId": "7839400a-32da-4629-b61f-56cfef5a5447",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -414,7 +402,7 @@
           },
           {
             "entry": {
-              "message": "No, nevermind",
+              "message": "No, nevermind.",
               "nextLogId": "5101e85c-f507-4127-a8d8-40a4ca7015d6",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -446,10 +434,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 17,
         "logId": "f71a0da5-56ff-46e4-a6f8-de2bca071a05"
       }
@@ -653,6 +637,7 @@
               "bustId": "AI",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Theme": "Internal",
                 "TitleSource": "Ursula",
                 "TitleClassification": "Interstellar Ark",
                 "TransmitionType": "Transmission",
@@ -752,7 +737,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Understood",
+              "message": "Understood.",
               "entryId": "a925e3e8-efb1-499b-9d87-a38e57b8ace9"
             },
             "index": 1
@@ -810,7 +795,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Understood",
+              "message": "Understood.",
               "entryId": "e6279a73-60ec-469c-ab8c-6d1525739fb1"
             },
             "index": 1
@@ -846,7 +831,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Understood",
+              "message": "Understood.",
               "entryId": "c6dc9e19-6aa9-4c09-a606-9f9dc1fcfd0c"
             },
             "index": 1
@@ -861,7 +846,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "No, nevermind",
+              "message": "No, nevermind.",
               "entryId": "fa9b4ba3-6fab-4d3b-893a-609ec083c0fc"
             }
           },
@@ -880,7 +865,7 @@
       }
     ]
   },
-  "version": 10,
+  "version": 11,
   "meta": "Planets Detected",
   "metaKeyValues": {
     "EncounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf"

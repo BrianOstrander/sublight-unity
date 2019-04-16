@@ -3,6 +3,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+using UnityEngine;
+
+using LunraGames.NumberDemon;
+
 namespace LunraGames
 {
 	public static class LinqExtensions
@@ -47,8 +51,31 @@ namespace LunraGames
 			return entries.ElementAt(UnityEngine.Random.Range(0, entries.Count()));
 		}
 
+		public static T RandomWeighted<T>(this IEnumerable<T> entries, Func<T, float> getWeight, T fallback = default(T))
+		{
+			var ordered = entries.OrderBy(getWeight);
+			var keyed = new List<KeyValuePair<float, T>>();
+			var offset = 0f;
+			foreach (var entry in ordered)
+			{
+				offset += getWeight(entry);
+				keyed.Add(new KeyValuePair<float, T>(offset, entry));
+			}
+			var selectedOffset = DemonUtility.GetNextFloat(max: offset);
+
+			var lastOffset = 0f;
+			foreach (var entry in keyed)
+			{
+				if ((Mathf.Approximately(entry.Key, lastOffset) || lastOffset < selectedOffset) && selectedOffset < entry.Key)
+				{
+					return entry.Value;
+				}
+			}
+			return keyed.Last().Value;
+		}
+
 #if !CSHARP_7_3_OR_NEWER
-		
+
 		public static IEnumerable<T> Append<T>(this IEnumerable<T> entries, T element)
 		{
 			if (entries == null) throw new ArgumentNullException("entries");

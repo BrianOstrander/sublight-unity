@@ -35,8 +35,8 @@ namespace LunraGames.SubLight.Models
 		Func<bool> isDestroyed;
 		[JsonIgnore] public readonly ListenerProperty<Func<bool>> IsDestroyed;
 
-		Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock> onPrompt;
-		[JsonIgnore] public readonly ListenerProperty<Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock>> OnPrompt;
+		Action<ConversationButtonBlock> onPrompt;
+		[JsonIgnore] public readonly ListenerProperty<Action<ConversationButtonBlock>> OnPrompt;
 
 		public ConversationInstanceModel()
 		{
@@ -51,7 +51,7 @@ namespace LunraGames.SubLight.Models
 			IsClosed = new ListenerProperty<Func<bool>>(value => isClosed = value, () => isClosed);
 			IsDestroyed = new ListenerProperty<Func<bool>>(value => isDestroyed = value, () => isDestroyed);
 
-			OnPrompt = new ListenerProperty<Action<ConversationButtonStyles, ConversationThemes, ConversationButtonBlock>>(value => onPrompt = value, () => onPrompt);
+			OnPrompt = new ListenerProperty<Action<ConversationButtonBlock>>(value => onPrompt = value, () => onPrompt);
 		}
 	}
 }

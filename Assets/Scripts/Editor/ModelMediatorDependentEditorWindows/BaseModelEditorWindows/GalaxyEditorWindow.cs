@@ -150,7 +150,7 @@ namespace LunraGames.SubLight
 			labelsSelectedLabel = label;
 			labelsSelectedLabelId.Value = labelsSelectedLabel == null ? null : labelsSelectedLabel.LabelId.Value;
 			if (state != LabelStates.Unknown) labelsLabelState = state;
-			GUIUtility.keyboardControl = 0;
+			EditorGUIExtensions.ResetControls();
 		}
 
 		void DrawPreviews(

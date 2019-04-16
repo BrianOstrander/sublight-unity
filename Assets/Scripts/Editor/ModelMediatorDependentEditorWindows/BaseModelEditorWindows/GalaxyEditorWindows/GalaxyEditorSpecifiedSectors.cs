@@ -174,7 +174,7 @@ namespace LunraGames.SubLight
 											{
 												specifiedSectorSelectedSystem = system;
 												specifiedSectorsSelectedSystemIndex.Value = system.Index.Value;
-												GUIUtility.keyboardControl = 0;
+												EditorGUIExtensions.ResetControls();
 											}
 										}
 										EditorGUILayoutExtensions.PopEnabled();
@@ -499,7 +499,7 @@ namespace LunraGames.SubLight
 				specifiedSectorsSelectedSystemIndex.Value = specifiedSectorSelectedSystem == null ? -1 : specifiedSectorSelectedSystem.Index.Value;
 			}
 
-			GUIUtility.keyboardControl = 0;
+			EditorGUIExtensions.ResetControls();
 		}
 
 		void SpecifiedSectorsDetails(GalaxyInfoModel model, SectorModel sector)
@@ -771,7 +771,7 @@ namespace LunraGames.SubLight
 
 			specifiedSectorSelectedSystem = result;
 			specifiedSectorsSelectedSystemIndex.Value = result.Index.Value;
-			GUIUtility.keyboardControl = 0;
+			EditorGUIExtensions.ResetControls();
 
 			ModelSelectionModified = true;
 		}

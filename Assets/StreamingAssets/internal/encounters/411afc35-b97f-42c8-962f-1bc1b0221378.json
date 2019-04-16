@@ -228,10 +228,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 4,
         "logId": "faa8e51f-f292-4643-baa1-aabad3989acb",
         "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
@@ -337,10 +333,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 7,
         "logId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9"
       },
@@ -445,10 +437,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 12,
         "logId": "f3350f98-db1a-4e62-a07c-194d8c2ef7b2",
         "fallbackLogId": "78e0cff5-575c-42cd-b8a6-640c425ca05f"
@@ -554,10 +542,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 16,
         "logId": "c3d7b444-8a50-47c9-a52d-258b3040a496"
       },
@@ -565,7 +549,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Rescue neither, the shuttle is too valuable",
+              "message": "Rescue neither, the shuttle is too valuable.",
               "nextLogId": "3c421712-05b7-44fd-8e7c-175cd78a74c9",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -597,7 +581,7 @@
           },
           {
             "entry": {
-              "message": "Rescue the experienced propulsion engineer",
+              "message": "Rescue the experienced propulsion engineer.",
               "nextLogId": "666f8eb3-4538-490b-83c6-09463b0c2da4",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -630,7 +614,7 @@
           },
           {
             "entry": {
-              "message": "[ EMPATHY ] Rescue the rookie crew member",
+              "message": "[ EMPATHY ] Rescue the rookie crew member.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -662,10 +646,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 21,
         "logId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
         "name": "diagnostics empathy options 1"
@@ -674,7 +654,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "No",
+              "message": "No.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -705,7 +685,7 @@
           },
           {
             "entry": {
-              "message": "[ EMPATHY ] Yes",
+              "message": "[ EMPATHY ] Yes.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -737,10 +717,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 25,
         "logId": "5982532f-463e-492e-b22f-0ae4f26cd1e3",
         "fallbackLogId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc"
@@ -749,7 +725,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "Engage diplomatically",
+              "message": "Engage diplomatically.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -780,7 +756,7 @@
           },
           {
             "entry": {
-              "message": "[ AGGRESSION ] Reciprocate threats",
+              "message": "[ AGGRESSION ] Reciprocate threats.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -813,7 +789,7 @@
           },
           {
             "entry": {
-              "message": "[ EMPATHY ] Plead for mercy",
+              "message": "[ EMPATHY ] Plead for mercy.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -845,10 +821,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 27,
         "logId": "bf88fe92-7f73-4471-920b-94e21456615a",
         "fallbackLogId": "5650d662-d20d-484f-971c-2da43fc70f3f"
@@ -857,7 +829,7 @@
         "buttons": [
           {
             "entry": {
-              "message": "No",
+              "message": "No.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -889,7 +861,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ AGGRESSION ] Yes",
+              "message": "[ AGGRESSION ] Yes.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -921,10 +893,6 @@
             "index": 1
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 29,
         "logId": "6aae87e3-2d48-4483-86f5-2989584471df",
         "fallbackLogId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
@@ -935,7 +903,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ DECEPTION ] Lie, and say the children have been ejected",
+              "message": "[ DECEPTION ] Lie, and say the children have been ejected.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -968,7 +936,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ EMPATHY ] Make an emotional appeal to the entity",
+              "message": "[ EMPATHY ] Make an emotional appeal to the entity.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -1002,7 +970,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "[ AGGRESSION ] Threaten violence against the entity",
+              "message": "[ AGGRESSION ] Threaten violence against the entity.",
               "usedFiltering": {
                 "falseByDefault": true,
                 "booleanKeyValues": [],
@@ -1066,10 +1034,6 @@
             "index": 3
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 31,
         "logId": "b455788b-fef1-4ec8-86fa-715db1052389",
         "fallbackLogId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
@@ -1147,7 +1111,7 @@
           {
             "showFiltering": true,
             "entry": {
-              "message": "I'm ready to proceed",
+              "message": "I'm ready to proceed.",
               "nextLogId": "d2f38944-23e2-4e35-815a-3f057aae8073",
               "usedFiltering": {
                 "falseByDefault": true,
@@ -1281,10 +1245,6 @@
             "index": 2
           }
         ],
-        "style": "Conversation",
-        "conversationStyle": {
-          "Theme": "Crew"
-        },
         "index": 34,
         "logId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
         "name": "ask about operational objectives"
@@ -1480,23 +1440,6 @@
           {
             "entry": {
               "bustId": "Chancellor",
-              "bustEvent": "Initialize",
-              "initializeInfo": {
-                "TitleSource": "Ursula",
-                "TitleClassification": "Interstellar Ark",
-                "TransmitionType": "Transmission",
-                "TransmitionStrength": "Internal",
-                "TransmitionStrengthIcon": "Hidden",
-                "PlacardName": "G. Williams",
-                "PlacardDescription": "Ark Chancellor",
-                "AvatarType": "Static"
-              },
-              "entryId": "33e63635-9fcb-4dcb-aca5-f446d4d5b1e9"
-            }
-          },
-          {
-            "entry": {
-              "bustId": "Chancellor",
               "bustEvent": "Focus",
               "entryId": "437ddd43-6f5b-4eea-a281-ef7c3506eb49"
             },
@@ -1506,7 +1449,7 @@
         "index": 42,
         "logId": "0169c02a-80cd-434b-bb6a-1189119bb774",
         "fallbackLogId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
-        "name": "Vee Williams Initialize"
+        "name": "Chancellor Focus"
       },
       {
         "entries": [
@@ -1515,13 +1458,14 @@
               "bustId": "Diagnostics",
               "bustEvent": "Initialize",
               "initializeInfo": {
+                "Theme": "Internal",
                 "TitleSource": "Ursula",
                 "TitleClassification": "Interstellar Ark",
                 "TransmitionType": "Datalink",
                 "TransmitionStrength": "Internal",
                 "TransmitionStrengthIcon": "Hidden",
                 "PlacardName": "Ecliptic",
-                "PlacardDescription": "Diagnostics Custodian",
+                "PlacardDescription": "Diagnostic Custodian",
                 "AvatarType": "Static",
                 "AvatarStaticIndex": 2,
                 "AvatarStaticTerminalTextVisible": true
@@ -1534,6 +1478,25 @@
               "bustId": "Diagnostics",
               "bustEvent": "Focus",
               "entryId": "4b11be1b-1578-4964-8919-47b72b292086"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "bustId": "Chancellor",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "Internal",
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "G. Williams",
+                "PlacardDescription": "Ark Chancellor",
+                "AvatarType": "Static"
+              },
+              "entryId": "1a5f3963-afff-4300-8b46-1c6b0e15061c"
             },
             "index": 1
           }
@@ -1615,7 +1578,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I will do my best",
+              "message": "I will do my best.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1626,7 +1589,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I will do my best",
+              "message": "I will do my best.",
               "entryId": "1820773f-3129-4d05-acd0-a64227976c3e"
             },
             "index": 13
@@ -1634,7 +1597,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "I know you will, good luck",
+              "message": "I know you will, good luck.",
               "entryId": "bab542bc-afaf-453f-876c-923f43cc880c"
             },
             "index": 14
@@ -1642,7 +1605,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Thank you",
+              "message": "Thank you.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1653,7 +1616,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Thank you",
+              "message": "Thank you.",
               "entryId": "0e57a610-7f0f-494f-b05e-41d90f3552f7"
             },
             "index": 16
@@ -1661,7 +1624,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "It's good to be back online",
+              "message": "It's good to be back online.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1672,7 +1635,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Ecliptic thinks highly of you",
+              "message": "Ecliptic thinks highly of you.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1681,8 +1644,6 @@
             "index": 6
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 43,
         "logId": "40b791ff-77a9-4f12-90fa-dffc47973f8a",
         "fallbackLogId": "cd7a8803-df97-4ab4-a811-87fb531c70a8"
@@ -1751,8 +1712,6 @@
             "index": 5
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 3,
         "logId": "a4b620db-22d2-45e2-9c4d-6fdec6363c8e",
         "fallbackLogId": "faa8e51f-f292-4643-baa1-aabad3989acb"
@@ -1786,8 +1745,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 5,
         "logId": "d521d33c-6d27-4e03-95da-d0d8c6748dc7",
         "fallbackLogId": "58e61556-4d14-4639-b901-a7eeaf8b23df"
@@ -1840,7 +1797,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Much better",
+              "message": "Much better.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1859,7 +1816,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Fine by me",
+              "message": "Fine by me.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1870,7 +1827,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Fine by me",
+              "message": "Fine by me.",
               "entryId": "25a1cb7a-e092-4dac-8a38-0924ff472642"
             },
             "index": 9
@@ -1891,8 +1848,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 6,
         "logId": "58e61556-4d14-4639-b901-a7eeaf8b23df",
         "fallbackLogId": "c53bdfb4-cbb6-4ca4-9f1c-28348419f9f9",
@@ -1911,7 +1866,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Whatever",
+              "message": "Whatever.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -1922,7 +1877,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Whatever",
+              "message": "Whatever.",
               "entryId": "e699c26c-047a-4c0d-9402-86bafc31776c"
             },
             "index": 3
@@ -1935,8 +1890,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 8,
         "logId": "b363455f-9b3b-4a13-88f1-0d0600ea0855",
         "fallbackLogId": "850e31a9-b288-41d9-80eb-77cd13190100",
@@ -2142,7 +2095,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I'm joking",
+              "message": "I'm joking.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2174,8 +2127,6 @@
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 19,
         "logId": "903b6655-85c9-4772-84fb-be92b14135cb",
         "fallbackLogId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
@@ -2193,7 +2144,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Ready",
+              "message": "Ready.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2218,8 +2169,6 @@
             "index": 3
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 20,
         "logId": "1e5bd5cf-de60-408e-9d23-4851712bc0da",
         "fallbackLogId": "7d4ce469-a2bd-4ce9-8a04-54a35b2677a8",
@@ -2261,7 +2210,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I rescue the propulsion engineer",
+              "message": "I rescue the propulsion engineer.",
               "entryId": "45582890-1e36-479f-a3ff-2d729eb5611e"
             }
           }
@@ -2326,7 +2275,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Okay",
+              "message": "Okay.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2337,7 +2286,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Okay",
+              "message": "Okay.",
               "entryId": "70fd39b9-4e73-4e9f-bdbb-1b12da580758"
             },
             "index": 6
@@ -2353,13 +2302,11 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "No",
+              "message": "No.",
               "entryId": "97850c82-4cfc-4c63-a14f-2d1acfeaefc1"
             }
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 26,
         "logId": "722c361b-e09d-4cb2-a6e2-cc27f1a43cbc",
         "fallbackLogId": "bf88fe92-7f73-4471-920b-94e21456615a"
@@ -2369,7 +2316,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I try to engage diplomatically",
+              "message": "I try to engage diplomatically.",
               "entryId": "411aef53-072e-441e-837f-ff1f6a64165d"
             }
           },
@@ -2392,7 +2339,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "No",
+              "message": "No.",
               "entryId": "0f57a33a-8dbd-4d5f-8805-cf34faebb697"
             }
           },
@@ -2407,7 +2354,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Ready",
+              "message": "Ready.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2418,7 +2365,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "Ready",
+              "message": "Ready.",
               "entryId": "696a44ba-e969-41bd-b5c8-7a846220914a"
             },
             "index": 3
@@ -2432,8 +2379,6 @@
             "index": 4
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 30,
         "logId": "136b96fb-4073-4361-9f0b-60016e2b8f7e",
         "fallbackLogId": "b455788b-fef1-4ec8-86fa-715db1052389"
@@ -2529,8 +2474,6 @@
             "index": 9
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 32,
         "logId": "e82fd28d-d36a-4533-b80c-2c4e9de25178",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538",
@@ -2603,8 +2546,6 @@
             "index": 4
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 35,
         "logId": "de663ae3-7420-42cc-915e-d2ede2a998ab",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
@@ -2629,7 +2570,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I'm open to suggestions",
+              "message": "I'm open to suggestions.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2640,7 +2581,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I'm open to suggestions",
+              "message": "I'm open to suggestions.",
               "entryId": "f88a80f0-af92-4f46-8555-9eaa71557233"
             },
             "index": 3
@@ -2681,8 +2622,6 @@
             "index": 7
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 36,
         "logId": "1be5aade-d3fc-4a4c-a748-3d6594dca46e",
         "fallbackLogId": "5c930539-739e-4f6e-b664-40baf347e621"
@@ -2692,7 +2631,7 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I'm ready to proceed",
+              "message": "I'm ready to proceed.",
               "entryId": "274f36f0-c4ab-4e9b-8371-0f89199cc1db"
             }
           },
@@ -2707,7 +2646,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "I'm ready to meet the chancellor",
+              "message": "I'm ready to meet the chancellor.",
               "promptInfo": {
                 "Behaviour": "ButtonOnly"
               },
@@ -2718,14 +2657,12 @@
           {
             "entry": {
               "conversationType": "MessageOutgoing",
-              "message": "I'm ready to meet the chancellor",
+              "message": "I'm ready to meet the chancellor.",
               "entryId": "d0c4bf52-23e7-4287-94aa-e7d3cb345281"
             },
             "index": 3
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 37,
         "logId": "d2f38944-23e2-4e35-815a-3f057aae8073",
         "fallbackLogId": "0169c02a-80cd-434b-bb6a-1189119bb774"
@@ -2802,8 +2739,6 @@
             "index": 7
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 39,
         "logId": "690595df-9cac-4dff-9482-66898f4fc0f9",
         "fallbackLogId": "a34ad566-0892-4d43-b9cb-3c80f36e05d2"
@@ -2880,15 +2815,13 @@
             "index": 7
           }
         ],
-        "style": "Conversation",
-        "theme": "Crew",
         "index": 40,
         "logId": "aeb753cf-6e31-4dbd-860f-0629c8a41a8c",
         "fallbackLogId": "5a6fa340-149b-42d8-9f5d-9a0d42cc0538"
       }
     ]
   },
-  "version": 10,
+  "version": 11,
   "meta": "Exposition",
   "metaKeyValues": {
     "EncounterId": "63245462-5804-41cb-b51d-910c68529a7a"
