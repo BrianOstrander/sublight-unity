@@ -176,7 +176,7 @@ namespace LunraGames.SubLight
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				App.Restart("Saving preferences failed with status" + result.Status);
+				App.Restart("Saving preferences failed with status " + result.Status);
 				return;
 			}
 
