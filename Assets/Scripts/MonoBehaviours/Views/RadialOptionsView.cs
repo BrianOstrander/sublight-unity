@@ -173,23 +173,24 @@ namespace LunraGames.SubLight.Views
 		void OnDrawGizmos()
 		{
 #if UNITY_EDITOR
-			Gizmos.color = Color.green;
-			Gizmos.DrawLine(optionsAnchor.position, optionsAnchor.position + (optionsAnchor.forward * 1f));
-			Handles.color = Color.green;
-			Handles.DrawWireDisc(optionsAnchor.position, optionsAnchor.forward, optionsRadiusMultiplier);
+			// 2019 broke this, don't know why.
+			//Gizmos.color = Color.green;
+			//Gizmos.DrawLine(optionsAnchor.position, optionsAnchor.position + (optionsAnchor.forward * 1f));
+			//Handles.color = Color.green;
+			//Handles.DrawWireDisc(optionsAnchor.position, optionsAnchor.forward, optionsRadiusMultiplier);
 
-			Gizmos.DrawLine(optionsAnchor.position, GetPosition(1f, 0, true));
-			Gizmos.DrawLine(optionsAnchor.position, GetPosition(1f, 0, false));
+			//Gizmos.DrawLine(optionsAnchor.position, GetPosition(1f, 0, true));
+			//Gizmos.DrawLine(optionsAnchor.position, GetPosition(1f, 0, false));
 
-			for (var c = 0; c < 2; c++)
-			{
-				var isLeft = c == 0;
-				for (var i = 0; i < previewCount / 2; i++)
-				{
-					var pos = GetPosition(1f, i, isLeft);
-					Gizmos.DrawWireSphere(pos, 0.1f);
-				}	
-			}
+			//for (var c = 0; c < 2; c++)
+			//{
+			//	var isLeft = c == 0;
+			//	for (var i = 0; i < previewCount / 2; i++)
+			//	{
+			//		var pos = GetPosition(1f, i, isLeft);
+			//		Gizmos.DrawWireSphere(pos, 0.1f);
+			//	}	
+			//}
 #endif
 		}
 	}
