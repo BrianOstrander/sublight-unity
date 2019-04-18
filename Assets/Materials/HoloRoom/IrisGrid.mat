@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: IrisGrid
   m_Shader: {fileID: 4800000, guid: 14cddd1bb4d9d424cbc1de80cd46ed3d, type: 3}
   m_ShaderKeywords: 
@@ -18,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_3217D0C9:
+        m_Texture: {fileID: 2800000, guid: 98192518b0652405f8efe797b8ed02e1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_5DE4870D:
         m_Texture: {fileID: 2800000, guid: fe4bd57908bd74ad8883c0f0823cf58d, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -54,6 +59,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 172a135ecfed84bae8477d33ae9327cb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GridRamp:
+        m_Texture: {fileID: 2800000, guid: ff6e9e1eaab1b4b3e80957642c0b0d7b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: dffef66376be4fa480fb02b19edbe903, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -75,11 +84,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_29A59091: 4
     - Vector1_2E2A859B: 0.332
+    - Vector1_56B03C2D: 0
     - Vector1_9EC3C678: -0.5
     - Vector1_A87B78D3: 0
     - Vector1_C384AA28: 0.7
     - Vector1_C9F244F9: 4
+    - Vector1_E8B2DBE6: 0.7
     - Vector1_E9271C64: 0.465
     - _AlphaClip: 0
     - _Blend: 0

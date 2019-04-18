@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Label
   m_Shader: {fileID: 4800000, guid: 56c4c2cbc04a44a1380fe83e8f63db2b, type: 3}
   m_ShaderKeywords: 
@@ -22,6 +23,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: dc4ebab170be54e8aa11c5cb69086efd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - Texture2D_25773BB5:
+        m_Texture: {fileID: 2800000, guid: 2f36f0fa9d01a4320af8fff67935effd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_8903CF1D:
         m_Texture: {fileID: 2800000, guid: 2f36f0fa9d01a4320af8fff67935effd, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -32,6 +37,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - Texture2D_DE5629E8:
         m_Texture: {fileID: 2800000, guid: 0fd387714a537427ba719f9ea0412a66, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_DEB2FB2C:
+        m_Texture: {fileID: 2800000, guid: dc4ebab170be54e8aa11c5cb69086efd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_FBE5042E:

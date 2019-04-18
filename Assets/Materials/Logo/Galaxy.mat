@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Galaxy
   m_Shader: {fileID: 4800000, guid: e67e4871523014d329da9ecb3c75a275, type: 3}
   m_ShaderKeywords: 
@@ -18,8 +19,20 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_5D134B04:
+        m_Texture: {fileID: 2800000, guid: 0fd387714a537427ba719f9ea0412a66, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_7AF28E34:
+        m_Texture: {fileID: 2800000, guid: a014fd93fe41542f0bedcfbd36710855, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_AD531C4E:
         m_Texture: {fileID: 2800000, guid: a014fd93fe41542f0bedcfbd36710855, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_D7E0C9F4:
+        m_Texture: {fileID: 2800000, guid: e799a61e3bd5a4c309efa86875c07ee3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_DE5629E8:
@@ -72,6 +85,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_510468DC: -0.007
+    - Vector1_8DAC7811: 0
+    - Vector1_B57BEEC8: 0
     - Vector1_F6923881: 0.01
     - _AlphaClip: 0
     - _Blend: 0
