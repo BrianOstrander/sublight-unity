@@ -318,6 +318,8 @@ namespace LunraGames.SubLight
 				waypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
 				waypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, systemInstance.Position.Value);
 
+				waypoint.Name.Value = systemInstance.KeyValues.Get(KeyDefines.CelestialSystem.SpecifiedWaypointName);
+
 				model.Waypoints.AddWaypoint(waypoint);
 			}
 
