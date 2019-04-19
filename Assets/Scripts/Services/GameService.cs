@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -304,6 +305,44 @@ namespace LunraGames.SubLight
 
 			// --- This will require more steps once specified sector placement gets more complicated...
 			var specifiedSectorInstances = model.Context.Galaxy.GetSpecifiedSectors();
+
+			var allSectorPositions = new List<KeyValuePair<string, Vector3Int>>();
+
+			foreach (var sectorInstance in specifiedSectorInstances)
+			{
+				switch (sectorInstance.SpecifiedPlacement.Value)
+				{
+					case SectorModel.SpecifiedPlacements.Position:
+						allSectorPositions.Add(new KeyValuePair<string, Vector3Int>(sectorInstance.Name.Value, sectorInstance.Position.Value.SectorInteger));
+						break;
+					case SectorModel.SpecifiedPlacements.PositionList:
+						foreach (var position in sectorInstance.PositionList.Value) allSectorPositions.Add(new KeyValuePair<string, Vector3Int>(sectorInstance.Name.Value, position.SectorInteger));
+						sectorInstance.Position.Value = sectorInstance.PositionList.Value.Random();
+						break;
+					default:
+						Debug.LogError("Unrecognized Placement: " + sectorInstance.SpecifiedPlacement.Value + " in specified sector \"" + sectorInstance.Name.Value + "\", attempting to skip...");
+						break;
+				}
+			}
+
+			var uniqueSectorPositions = new List<Vector3Int>();
+
+			foreach (var entry in allSectorPositions)
+			{
+				var position = entry.Value;
+				if (uniqueSectorPositions.Any(p => p.x == position.x && p.y == position.y && p.z == position.z))
+				{
+					done(
+						RequestResult.Failure(
+							"Provided galaxy has multiple sector positions specified for ( " + position + " ) at least one is on specified sector \"" + entry.Key + "\""
+						).Log(),
+						null
+					);
+					return;
+				}
+				uniqueSectorPositions.Add(position);
+			}
+
 			// TODO: clone specified sector instances, set any positions, etc...
 			model.Universe.Sectors.Value = specifiedSectorInstances;
 			// ---

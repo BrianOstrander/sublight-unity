@@ -421,9 +421,6 @@
       "name": "PlayerBegin",
       "seed": 1234324,
       "specified": true,
-      "position": {
-        "Sector": {"x":79.0,"z":25.0}
-      },
       "systemCount": 5,
       "systems": [
         {
@@ -755,15 +752,17 @@
             }
           }
         }
-      ]
+      ],
+      "specifiedPlacement": "Position",
+      "position": {
+        "Sector": {"x":79.0,"z":25.0}
+      },
+      "positionList": []
     },
     {
       "name": "PlayerEnd",
       "seed": 528735376,
       "specified": true,
-      "position": {
-        "Sector": {"x":89.0,"z":28.0}
-      },
       "systemCount": 1,
       "systems": [
         {
@@ -830,15 +829,17 @@
             }
           }
         }
-      ]
+      ],
+      "specifiedPlacement": "Position",
+      "position": {
+        "Sector": {"x":89.0,"z":28.0}
+      },
+      "positionList": []
     },
     {
       "name": "NewHomeEden",
       "seed": 1802454498,
       "specified": true,
-      "position": {
-        "Sector": {"x":83.0,"z":26.0}
-      },
       "systemCount": 1,
       "systems": [
         {
@@ -899,6 +900,18 @@
               "icon_scale": 0.47
             }
           }
+        }
+      ],
+      "specifiedPlacement": "PositionList",
+      "position": {
+        "Sector": {"x":83.0,"z":26.0}
+      },
+      "positionList": [
+        {
+          "Sector": {"x":83.0,"z":26.0}
+        },
+        {
+          "Sector": {"x":76.0,"z":27.0}
         }
       ]
     }

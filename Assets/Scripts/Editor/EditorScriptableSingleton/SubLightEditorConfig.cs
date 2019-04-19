@@ -117,6 +117,10 @@ namespace LunraGames.SubLight
 		public GUIStyle GalaxyEditorGalaxyTargetStyle { get { return galaxyEditorGalaxyTargetStyle; } }
 
 		[SerializeField]
+		GUIStyle galaxyEditorGalaxyTargetMinorStyle;
+		public GUIStyle GalaxyEditorGalaxyTargetMinorStyle { get { return galaxyEditorGalaxyTargetMinorStyle; } }
+
+		[SerializeField]
 		GUIStyle galaxyEditorLabelAnchorStyle;
 		public GUIStyle GalaxyEditorLabelAnchorStyle { get { return galaxyEditorLabelAnchorStyle; } }
 

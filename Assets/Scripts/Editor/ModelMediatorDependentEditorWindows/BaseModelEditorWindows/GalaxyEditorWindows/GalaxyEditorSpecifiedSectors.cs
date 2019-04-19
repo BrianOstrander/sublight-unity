@@ -347,21 +347,49 @@ namespace LunraGames.SubLight
 			specifiedSectorsIsOverAnAllSector = false;
 			if (specifiedSectorsSelectedSector == null)
 			{
-				// TODO: show all!
+				// TODO: show all! <- is this done???
 				SpecifiedSectorsShowAll(model, displayArea);
 				return;
 			}
 
-			var positionInPreview = true;
 			var normalizedSectorPosition = UniversePosition.NormalizedSector(specifiedSectorsSelectedSector.Position.Value, model.GalaxySize);
-
-			var positionInWindow = NormalToWindow(normalizedSectorPosition, displayArea, out positionInPreview);
+			var positionInWindow = NormalToWindow(normalizedSectorPosition, displayArea, out var positionInPreview);
 
 			var positionColor = specifiedSectorsState == SpecifiedSectorsStates.UpdatingSector ? Color.cyan.NewS(0.25f) : Color.cyan;
 
 			EditorGUILayoutExtensions.PushColor(positionInPreview ? positionColor : positionColor.NewA(positionColor.a * 0.5f));
 			{
-				GUI.Box(CenteredScreen(positionInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Sector Position"), SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyle);
+				GUI.Box(
+					CenteredScreen(positionInWindow, new Vector2(16f, 16f)),
+					new GUIContent(string.Empty, "Sector Position"),
+					SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyle
+				);
+
+				switch (specifiedSectorsSelectedSector.SpecifiedPlacement.Value)
+				{
+					case SectorModel.SpecifiedPlacements.Unknown:
+					case SectorModel.SpecifiedPlacements.Position:
+						break;
+					case SectorModel.SpecifiedPlacements.PositionList:
+						for (var i = 0; i < specifiedSectorsSelectedSector.PositionList.Value.Length; i++)
+						{
+							if (i == 0) continue;
+
+							var currentNormalizedSectorPosition = UniversePosition.NormalizedSector(specifiedSectorsSelectedSector.PositionList.Value[i], model.GalaxySize);
+							var currentPositionInWindow = NormalToWindow(currentNormalizedSectorPosition, displayArea, out var currentPositionInPreview);
+
+							GUI.Box(
+								CenteredScreen(currentPositionInWindow, new Vector2(16f, 16f)),
+								new GUIContent(string.Empty, "Sector Position"),
+								SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetMinorStyle
+							);
+						}
+						break;
+					default:
+						Debug.LogError("Unrecognized Placement: " + specifiedSectorsSelectedSector.SpecifiedPlacement.Value);
+						break;
+				}
+
 			}
 			EditorGUILayoutExtensions.PopColor();
 
@@ -529,23 +557,155 @@ namespace LunraGames.SubLight
 					EditorGUILayoutExtensions.PopEnabled();
 				}
 
-				GUILayout.BeginHorizontal(EditorStyles.helpBox);
+				var previousPlacement = sector.SpecifiedPlacement.Value;
+
+				GUILayout.BeginHorizontal();
 				{
-					GUILayout.BeginVertical();
+					sector.SpecifiedPlacement.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+						new GUIContent("Placement"),
+						"- Select Placement -",
+						sector.SpecifiedPlacement.Value,
+						Color.red,
+						guiOptions: new GUILayoutOption[] { GUILayout.MaxWidth(300f) }
+					);
+
+					switch (previousPlacement)
 					{
-						sector.Position.Value = EditorGUILayoutUniversePosition.FieldSector("Sector", sector.Position.Value).LocalZero;
+						case SectorModel.SpecifiedPlacements.PositionList:
+							if (GUILayout.Button("Append Position", GUILayout.ExpandWidth(false)))
+							{
+								sector.PositionList.Value = sector.PositionList.Value.Append(sector.PositionList.Value[0]).ToArray();
+							}
+
+							GUILayout.FlexibleSpace();
+							break;
 					}
-					GUILayout.EndVertical();
-					EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
-					if (GUILayout.Button("Update Sector", GUILayout.Width(100f), GUILayout.Height(36f)))
-					{
-						specifiedSectorsState = SpecifiedSectorsStates.UpdatingSector;
-					}
-					EditorGUILayoutExtensions.PopBackgroundColor();
 				}
 				GUILayout.EndHorizontal();
+
+				if (previousPlacement != sector.SpecifiedPlacement.Value)
+				{
+					switch (sector.SpecifiedPlacement.Value)
+					{
+						case SectorModel.SpecifiedPlacements.Unknown: break;
+						case SectorModel.SpecifiedPlacements.Position:
+							sector.PositionList.Value = new UniversePosition[0];
+							break;
+						case SectorModel.SpecifiedPlacements.PositionList:
+							sector.PositionList.Value = new UniversePosition[] { sector.Position.Value };
+							break;
+						default:
+							Debug.LogError("Unrecognized Placement: " + sector.SpecifiedPlacement.Value);
+							break;
+					}
+				}
+
+				switch (sector.SpecifiedPlacement.Value)
+				{
+					case SectorModel.SpecifiedPlacements.Position:
+						sector.Position.Value = SpecifiedSectorsSectorPosition(
+							sector.Position.Value,
+							"Sector",
+							out bool unusedDeletion,
+							true
+						);
+						break;
+					case SectorModel.SpecifiedPlacements.PositionList:
+						var deletionEnabled = 1 < sector.PositionList.Value.Length;
+						int? positionListDeletion = null;
+
+						var positionList = sector.PositionList.Value;
+
+						for (var i = 0; i < sector.PositionList.Value.Length; i++)
+						{
+							positionList[i] = SpecifiedSectorsSectorPosition(
+								positionList[i],
+								i == 0 ? "Default Sector" : "Sector",
+								out bool positionDeleted,
+								i == 0,
+								deletionEnabled
+							);
+
+							if (positionDeleted)
+							{
+								positionListDeletion = i;
+							}
+						}
+
+						if (positionListDeletion.HasValue)
+						{
+							var deletionResult = positionList.ToList();
+							deletionResult.RemoveAt(positionListDeletion.Value);
+							positionList = deletionResult.ToArray();
+						}
+
+						sector.PositionList.Value = positionList;
+						sector.Position.Value = positionList[0];
+
+						break;
+					default:
+						EditorGUILayout.HelpBox("Unrecognized Placement: " + sector.SpecifiedPlacement.Value, MessageType.Error);
+						break;
+				}
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+		}
+
+		UniversePosition SpecifiedSectorsSectorPosition(
+			UniversePosition sectorPosition,
+			string fieldName,
+			out bool deleted,
+			bool updatable = false,
+			bool deletable = false
+		)
+		{
+			const float UpdateHeight = 36f;
+			const float DeletionWidth = 18f;
+
+			deleted = false;
+
+			GUILayout.BeginHorizontal(EditorStyles.helpBox);
+			{
+				GUILayout.BeginVertical();
+				{
+					sectorPosition = EditorGUILayoutUniversePosition.FieldSector(fieldName, sectorPosition).LocalZero;
+				}
+				GUILayout.EndVertical();
+
+				EditorGUILayoutExtensions.PushBackgroundColor(Color.cyan);
+				{
+					var updateStyle = EditorStyles.miniButtonLeft;
+					var updateWidth = 100f;
+
+					if (!deletable)
+					{
+						updateStyle = EditorStyles.miniButton;
+						updateWidth += DeletionWidth;
+					}
+
+					EditorGUILayoutExtensions.PushEnabled(updatable);
+					{
+						if (GUILayout.Button("Update Sector", updateStyle, GUILayout.Width(updateWidth), GUILayout.Height(UpdateHeight)))
+						{
+							specifiedSectorsState = SpecifiedSectorsStates.UpdatingSector;
+						}
+					}
+					EditorGUILayoutExtensions.PopEnabled();
+
+					if (deletable)
+					{
+						EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
+						{
+							if (GUILayout.Button("x", EditorStyles.miniButtonRight, GUILayout.Width(DeletionWidth), GUILayout.Height(UpdateHeight))) deleted = true;
+						}
+						EditorGUILayoutExtensions.PopBackgroundColor();
+					}
+				}
+				EditorGUILayoutExtensions.PopBackgroundColor();
+			}
+			GUILayout.EndHorizontal();
+
+			return sectorPosition;
 		}
 
 		void SpecifiedSectorsDrawSystem(

@@ -208,18 +208,14 @@ namespace LunraGames.SubLight
 				previewClickable
 			);
 
-			if (drawOnPreview != null) drawOnPreview(displayArea);
+			drawOnPreview?.Invoke(displayArea);
 		}
 
 		void DrawGalaxyTargets(GalaxyInfoModel model, Rect displayArea, GUIStyle style)
 		{
-			var galacticOriginInPreview = true;
-			var playerStartInPreview = true;
-			var gameEndInPreview = true;
-
-			var galacticOriginInWindow = NormalToWindow(model.GalaxyOriginNormal, displayArea, out galacticOriginInPreview);
-			var playerStartInWindow = NormalToWindow(model.PlayerBeginNormal, displayArea, out playerStartInPreview);
-			var gameEndInWindow = NormalToWindow(model.PlayerEndNormal, displayArea, out gameEndInPreview);
+			var galacticOriginInWindow = NormalToWindow(model.GalaxyOriginNormal, displayArea, out var galacticOriginInPreview);
+			var playerStartInWindow = NormalToWindow(model.PlayerBeginNormal, displayArea, out var playerStartInPreview);
+			var gameEndInWindow = NormalToWindow(model.PlayerEndNormal, displayArea, out var gameEndInPreview);
 
 			EditorGUILayoutExtensions.PushColor(galacticOriginInPreview ? Color.yellow : Color.yellow.NewA(0.5f));
 			{

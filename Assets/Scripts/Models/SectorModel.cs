@@ -6,35 +6,47 @@ namespace LunraGames.SubLight.Models
 {
 	public class SectorModel : Model
 	{
+		public enum SpecifiedPlacements
+		{
+			Unknown = 0,
+			Position = 10,
+			PositionList = 20
+		}
+
 		public static class Seeds
 		{
 			public static int Position(int seed) { return DemonUtility.CantorPairs(seed, 1); }
 		}
 
 		[JsonProperty] string name;
+		[JsonIgnore] public readonly ListenerProperty<string> Name;
+
 		[JsonProperty] int seed;
+		[JsonIgnore] public readonly ListenerProperty<int> Seed;
+
 		[JsonProperty] bool visited;
+		[JsonIgnore] public readonly ListenerProperty<bool> Visited;
+
 		[JsonProperty] bool specified;
-		[JsonProperty] UniversePosition position;
+		[JsonIgnore] public readonly ListenerProperty<bool> Specified;
+
 		[JsonProperty] int systemCount;
+		[JsonIgnore] public readonly ListenerProperty<int> SystemCount;
+
 		[JsonProperty] SystemModel[] systems = new SystemModel[0];
+		[JsonIgnore] public readonly ListenerProperty<SystemModel[]> Systems;
 
+		[JsonProperty] SpecifiedPlacements specifiedPlacement;
+		[JsonIgnore] public readonly ListenerProperty<SpecifiedPlacements> SpecifiedPlacement;
+
+		[JsonProperty] UniversePosition position;
+		[JsonIgnore] public readonly ListenerProperty<UniversePosition> Position;
+
+		[JsonProperty] UniversePosition[] positionList = new UniversePosition[0];
+		[JsonIgnore] public readonly ListenerProperty<UniversePosition[]> PositionList;
+
+		// I think this is just a hack for now.
 		public int sectorOffset;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<string> Name;
-		[JsonIgnore]
-		public readonly ListenerProperty<int> Seed;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> Visited;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> Specified;
-		[JsonIgnore]
-		public readonly ListenerProperty<UniversePosition> Position;
-		[JsonIgnore]
-		public readonly ListenerProperty<int> SystemCount;
-		[JsonIgnore]
-		public readonly ListenerProperty<SystemModel[]> Systems;
 
 		bool isGenerated;
 		[JsonIgnore]
@@ -50,9 +62,12 @@ namespace LunraGames.SubLight.Models
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			Visited = new ListenerProperty<bool>(value => visited = value, () => visited);
 			Specified = new ListenerProperty<bool>(value => specified = value, () => specified);
-			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position, OnPosition);
 			SystemCount = new ListenerProperty<int>(value => systemCount = value, () => systemCount);
 			Systems = new ListenerProperty<SystemModel[]>(value => systems = value, () => systems);
+
+			SpecifiedPlacement = new ListenerProperty<SpecifiedPlacements>(value => specifiedPlacement = value, () => specifiedPlacement);
+			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position, OnPosition);
+			PositionList = new ListenerProperty<UniversePosition[]>(value => positionList = value, () => positionList);
 		}
 
 		#region Events
