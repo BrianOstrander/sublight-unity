@@ -1574,6 +1574,9 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.AudioSnapshot:
 					OnEncounterEventLogEdgeAudioSnapshot(entry);
 					break;
+				case EncounterEvents.Types.Waypoint:
+					OnEncounterEventLogEdgeWaypoint(entry);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
 					break;
@@ -1807,6 +1810,36 @@ namespace LunraGames.SubLight
 				EditorGUILayout.FloatField(
 					new GUIContent("Transition Duration"),
 					entry.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration)
+				)
+			);
+		}
+
+		void OnEncounterEventLogEdgeWaypoint(
+			EncounterEventEntryModel entry
+		)
+		{
+
+			var waypointId = entry.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
+			var waypointIdInvalid = string.IsNullOrEmpty(waypointId);
+
+			EditorGUILayoutExtensions.PushColorValidation(Color.red, waypointIdInvalid);
+			{
+				entry.KeyValues.SetString(
+					EncounterEvents.Waypoint.StringKeys.WaypointId,
+					EditorGUILayout.TextField(
+						new GUIContent("Waypoint Id"),
+						waypointId
+					)
+				);
+			}
+			EditorGUILayoutExtensions.PopColorValidation(waypointIdInvalid);
+
+			entry.KeyValues.SetEnumeration(
+				EncounterEvents.Waypoint.EnumKeys.Visibility,
+				EditorGUILayoutExtensions.HelpfulEnumPopup(
+					new GUIContent("Visibility"),
+					"- No Change -",
+					entry.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility)
 				)
 			);
 		}

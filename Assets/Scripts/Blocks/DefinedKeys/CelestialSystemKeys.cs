@@ -48,6 +48,7 @@ namespace LunraGames.SubLight
 		public readonly Boolean PlayerBegin;
 		public readonly Boolean PlayerEnd;
 		public readonly Boolean IconPings;
+		public readonly Boolean HasSpecifiedWaypoint;
 		#endregion
 
 		#region Integers
@@ -72,6 +73,9 @@ namespace LunraGames.SubLight
 		#region Strings
 		public readonly String Name;
 		public readonly String ClassificationSecondary;
+
+		public readonly String SpecifiedWaypointName;
+		public readonly String SpecifiedWaypointId;
 		#endregion
 
 		#region Floats
@@ -121,6 +125,11 @@ namespace LunraGames.SubLight
 					"icon_pings",
 					"True if this system emits radio pings. This also effects the types of encounters that occur.",
 					true
+				),
+				Create(
+					ref HasSpecifiedWaypoint,
+					"has_specified_waypoint",
+					"True if a waypoint has been specified in this system."
 				)
 			};
 
@@ -206,6 +215,16 @@ namespace LunraGames.SubLight
 					ref ClassificationSecondary,
 					"classification_secondary",
 					"A description of the system based on the primary classification."
+				),
+				Create(
+					ref SpecifiedWaypointName,
+					"specified_waypoint_name",
+					"The name of the waypoint specified in this system."
+				),
+				Create(
+					ref SpecifiedWaypointId,
+					"specified_waypoint_id",
+					"The id used to reference the waypoint in this system."
 				)
 			};
 

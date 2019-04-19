@@ -11,24 +11,6 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		// TODO: Do we need this???
-		public struct Waypoint
-		{
-			public readonly string WaypointId;
-			public readonly WaypointModel Model;
-			public readonly WaypointPresenter[] Presenters;
-
-			public Waypoint(
-				WaypointModel model,
-				WaypointPresenter[] presenters
-			)
-			{
-				WaypointId = model.WaypointId.Value;
-				Model = model;
-				Presenters = presenters;
-			}
-		}
-
 		public int LocalSectorOffset = 2; // Not set anywhere else at the moment...
 		public int LocalSectorOffsetTotal { get { return (LocalSectorOffset * 2) + 1; } }
 		public int LocalSectorCount { get { return LocalSectorOffsetTotal * LocalSectorOffsetTotal; } }
@@ -43,9 +25,6 @@ namespace LunraGames.SubLight
 		public UniverseScales LastUniverseFocusToScale;
 
 		public UniverseScaleModel LastActiveScale;
-
-		// TODO: Why does this exist???
-		public List<Waypoint> Waypoints = new List<Waypoint>();
 	}
 
 	public partial class GameState : State<GamePayload>

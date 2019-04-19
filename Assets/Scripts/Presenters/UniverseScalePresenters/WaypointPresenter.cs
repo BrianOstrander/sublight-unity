@@ -26,6 +26,7 @@ namespace LunraGames.SubLight.Presenters
 			this.waypoint = waypoint;
 			this.language = language;
 
+			waypoint.VisibilityState.Changed += OnVisibilityState;
 			waypoint.Location.Changed += OnWaypointLocation;
 
 			ScaleModel.Transform.Changed += OnScaleTransform;
@@ -73,6 +74,24 @@ namespace LunraGames.SubLight.Presenters
 		}
 
 		#region Events
+		void OnVisibilityState(WaypointModel.VisibilityStates visibility)
+		{
+			if (!ScaleModel.IsVisible) return;
+
+			switch (visibility)
+			{
+				case WaypointModel.VisibilityStates.Visible:
+					if (View.TransitionState == TransitionStates.Closed) ShowViewInstant();
+					break;
+				case WaypointModel.VisibilityStates.Hidden:
+					if (View.TransitionState == TransitionStates.Shown) CloseViewInstant();
+					break;
+				default:
+					Debug.LogError("Unrecognized VisibilityState: " + visibility);
+					break;
+			}
+		}
+
 		void OnScaleTransform(UniverseTransform universeTransform)
 		{
 			if (!View.Visible) return;

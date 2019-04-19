@@ -15,7 +15,8 @@ namespace LunraGames.SubLight
 			TriggerQueue = 60,
 			Delay = 70,
 			RefreshSystem = 80,
-			AudioSnapshot = 90
+			AudioSnapshot = 90,
+			Waypoint = 100
 		}
 
 		public static class Custom
@@ -147,6 +148,19 @@ namespace LunraGames.SubLight
 			public static class FloatKeys
 			{
 				public const string TransitionDuration = "transition_duration";
+			}
+		}
+
+		public static class Waypoint
+		{
+			public static class EnumKeys
+			{
+				public const string Visibility = "visibility";
+			}
+
+			public static class StringKeys
+			{
+				public const string WaypointId = "waypoint_id";
 			}
 		}
 	}

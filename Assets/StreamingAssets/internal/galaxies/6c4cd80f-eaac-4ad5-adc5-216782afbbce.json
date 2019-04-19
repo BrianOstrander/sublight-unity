@@ -78,6 +78,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -114,6 +115,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -150,6 +152,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -199,6 +202,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -235,6 +239,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -271,6 +276,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -307,6 +313,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -355,6 +362,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     },
@@ -403,6 +411,7 @@
         "integerKeyValues": [],
         "stringKeyValues": [],
         "floatKeyValues": [],
+        "enumerationKeyValues": [],
         "encounterInteractions": []
       }
     }
@@ -440,7 +449,9 @@
               "visited": true,
               "specified": true,
               "player_begin": false,
-              "player_end": false
+              "player_end": false,
+              "icon_pings": false,
+              "has_specified_waypoint": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -462,7 +473,9 @@
             },
             "strings": {
               "name": "Sol",
-              "classification_secondary": "Yellow Dwarf"
+              "classification_secondary": "Yellow Dwarf",
+              "specified_waypoint_name": null,
+              "specified_waypoint_id": null
             },
             "floats": {
               "generated_rations": 0.0,
@@ -776,7 +789,9 @@
               "visited": false,
               "specified": true,
               "player_begin": false,
-              "player_end": true
+              "player_end": true,
+              "icon_pings": false,
+              "has_specified_waypoint": false
             },
             "integers": {
               "index": 0,
@@ -796,7 +811,9 @@
             },
             "strings": {
               "name": "Cygnus X-1",
-              "classification_secondary": "Super Massive Black Hole"
+              "classification_secondary": "Super Massive Black Hole",
+              "specified_waypoint_name": null,
+              "specified_waypoint_id": null
             },
             "floats": {
               "gather_multiplier_rations": 0.0,
@@ -814,13 +831,83 @@
           }
         }
       ]
+    },
+    {
+      "name": "NewHomeEden",
+      "seed": 1802454498,
+      "specified": true,
+      "position": {
+        "Sector": {"x":83.0,"z":26.0}
+      },
+      "systemCount": 1,
+      "systems": [
+        {
+          "position": {
+            "Sector": {"x":83.0,"z":26.0},
+            "Local": {"x":0.25,"y":0.25,"z":0.25}
+          },
+          "bodies": [],
+          "specifiedEncounters": [
+            {
+              "Trigger": "NavigationSelect"
+            },
+            {
+              "Trigger": "TransitComplete"
+            }
+          ],
+          "keyValues": {
+            "booleans": {
+              "specified": true,
+              "icon_pings": false,
+              "has_specified_waypoint": true,
+              "discovered_rations": false,
+              "discovered_propellant": false,
+              "discovered_metallics": false
+            },
+            "integers": {
+              "seed": 1807912795,
+              "scannable_body_index": 0,
+              "habitable_atmosphere": 0,
+              "habitable_gravity": 0,
+              "habitable_temperature": 0,
+              "habitable_water": 0,
+              "habitable_resources": 0,
+              "scan_level_atmosphere": 0,
+              "scan_level_gravity": 0,
+              "scan_level_temperature": 0,
+              "scan_level_water": 0,
+              "scan_level_resources": 0,
+              "classification_primary": 10
+            },
+            "strings": {
+              "specified_waypoint_name": "Eden",
+              "specified_waypoint_id": "nh_eden",
+              "name": "Eden",
+              "classification_secondary": "Yellow Dwarf"
+            },
+            "floats": {
+              "icon_color_hue": 0.119444452,
+              "icon_color_saturation": 0.5294118,
+              "icon_color_value": 1.0,
+              "icon_color_alpha": 1.0,
+              "gather_multiplier_rations": 0.0,
+              "gather_amount_rations": 0.0,
+              "gather_multiplier_propellant": 0.0,
+              "gather_amount_propellant": 0.0,
+              "gather_multiplier_metallics": 0.0,
+              "gather_amount_metallics": 0.0,
+              "icon_scale": 0.47
+            }
+          }
+        }
+      ]
     }
   ],
   "galaxyRadius": 100,
   "galaxySize": {
     "Sector": {"x":200.0,"y":200.0,"z":200.0}
   },
-  "version": 9,
+  "version": 12,
   "meta": "Milky Way",
   "metaKeyValues": {
     "GalaxyId": "bed1e465-32ad-4eae-8135-d01eac75a089"

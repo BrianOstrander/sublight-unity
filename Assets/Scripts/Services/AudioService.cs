@@ -273,6 +273,17 @@ namespace LunraGames.SubLight
 			instance.TransitionTo(transitionTime);
 		}
 
+		/// <summary>
+		/// Disables the default listener.
+		/// </summary>
+		/// <remarks>
+		/// Kind of a kludge, we have a default audio listener to avoid some annoying warnings on startup...
+		/// </remarks>
+		public void DisableDefaultListener()
+		{
+			audioConfiguration.DefaultAudioListener.enabled = false;
+		}
+
 		#region Utility
 		float ToDecibel(float normalized)
 		{

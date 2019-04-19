@@ -31,21 +31,6 @@ namespace LunraGames.SubLight.Models
 			Hidden = 20
 		}
 
-		public enum VisitStates
-		{
-			Unknown = 0,
-			NotVisited = 10,
-			Current = 20,
-			Visited = 30
-		}
-
-		public enum RangeStates
-		{
-			Unknown = 0,
-			InRange = 10,
-			OutOfRange = 20
-		}
-
 		public static WaypointModel Zero
 		{
 			get
@@ -75,12 +60,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] VisibilityStates visibilityState;
 		[JsonIgnore] public readonly ListenerProperty<VisibilityStates> VisibilityState;
 
-		[JsonProperty] VisitStates visitState;
-		[JsonIgnore] public readonly ListenerProperty<VisitStates> VisitState;
-
-		[JsonProperty] RangeStates rangeState;
-		[JsonIgnore] public readonly ListenerProperty<RangeStates> RangeState;
-
 		[JsonProperty] LocationDetails location;
 		readonly ListenerProperty<LocationDetails> locationListener;
 		[JsonIgnore] public readonly ReadonlyProperty<LocationDetails> Location;
@@ -93,8 +72,6 @@ namespace LunraGames.SubLight.Models
 			Priority = new ListenerProperty<int>(value => priority = value, () => priority);
 			Distance = new ListenerProperty<float>(value => distance = value, () => distance);
 			VisibilityState = new ListenerProperty<VisibilityStates>(value => visibilityState = value, () => visibilityState);
-			VisitState = new ListenerProperty<VisitStates>(value => visitState = value, () => visitState);
-			RangeState = new ListenerProperty<RangeStates>(value => rangeState = value, () => rangeState);
 
 			Location = new ReadonlyProperty<LocationDetails>(value => location = value, () => location, out locationListener);
 		}

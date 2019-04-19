@@ -280,18 +280,15 @@ namespace LunraGames.SubLight
 			shipWaypoint.SetLocation(begin);
 			shipWaypoint.WaypointId.Value = WaypointIds.Ship;
 			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
-			shipWaypoint.VisitState.Value = WaypointModel.VisitStates.Current;
-			shipWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
 			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
+			// --- May be depricated eventually...
 			model.Waypoints.AddWaypoint(shipWaypoint);
 
 			var beginWaypoint = new WaypointModel();
 			beginWaypoint.SetLocation(beginSystem);
 			beginWaypoint.WaypointId.Value = WaypointIds.BeginSystem;
 			beginWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
-			beginWaypoint.VisitState.Value = WaypointModel.VisitStates.Visited;
-			beginWaypoint.RangeState.Value = WaypointModel.RangeStates.InRange;
 			beginWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
 			model.Waypoints.AddWaypoint(beginWaypoint);
@@ -300,13 +297,31 @@ namespace LunraGames.SubLight
 			endWaypoint.SetLocation(endSystem);
 			endWaypoint.WaypointId.Value = WaypointIds.EndSystem;
 			endWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
-			endWaypoint.VisitState.Value = WaypointModel.VisitStates.NotVisited;
-			endWaypoint.RangeState.Value = WaypointModel.RangeStates.OutOfRange;
 			endWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, end);
 
 			model.Waypoints.AddWaypoint(endWaypoint);
+			// --- 
 
-			model.Universe.Sectors.Value = model.Context.Galaxy.GetSpecifiedSectors();
+			// --- This will require more steps once specified sector placement gets more complicated...
+			var specifiedSectorInstances = model.Context.Galaxy.GetSpecifiedSectors();
+			// TODO: clone specified sector instances, set any positions, etc...
+			model.Universe.Sectors.Value = specifiedSectorInstances;
+			// ---
+
+			foreach (var systemInstance in specifiedSectorInstances.SelectMany(s => s.Systems.Value))
+			{
+				if (!systemInstance.KeyValues.Get(KeyDefines.CelestialSystem.HasSpecifiedWaypoint)) continue;
+
+				var waypoint = new WaypointModel();
+				waypoint.SetLocation(systemInstance);
+				waypoint.WaypointId.Value = systemInstance.KeyValues.Get(KeyDefines.CelestialSystem.SpecifiedWaypointId);
+				waypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Hidden;
+				waypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, systemInstance.Position.Value);
+
+				waypoint.Name.Value = systemInstance.KeyValues.Get(KeyDefines.CelestialSystem.SpecifiedWaypointName);
+
+				model.Waypoints.AddWaypoint(waypoint);
+			}
 
 			SetContext(instructions, model, done);
 		}
