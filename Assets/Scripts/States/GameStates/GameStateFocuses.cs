@@ -329,7 +329,6 @@ namespace LunraGames.SubLight
 					Unit = new PluralLanguageStringBlock(LanguageStringModel.Override("Light\nYear"), LanguageStringModel.Override("Light\nYears"))
 				};
 
-				var waypointEntries = new List<GamePayload.Waypoint>();
 				foreach (var waypoint in payload.Game.Waypoints.Waypoints.Value)
 				{
 					var waypointLanguage = new WaypointLanguageBlock
@@ -349,14 +348,7 @@ namespace LunraGames.SubLight
 							)
 						);
 					}
-					waypointEntries.Add(
-						new GamePayload.Waypoint(
-							waypoint,
-							waypointPresenters.ToArray()
-						)
-					);
 				}
-				payload.Waypoints = waypointEntries;
 
 				if (payload.Game.Context.TransitHistoryLineCount.Value < 2)
 				{
