@@ -117,7 +117,7 @@ namespace LunraGames.SubLight.Presenters
 				var systemWater = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableWater);
 				var systemResources = systemModel.KeyValues.Get(KeyDefines.CelestialSystem.HabitableResources);
 
-				var finalScore = systemAtmosphere + systemGravity + systemTemperature + systemWater + systemResources;
+				var finalScore = systemAtmosphere + systemGravity + systemTemperature + systemWater + systemResources + 5; // The 5 is for off by one stuff...
 
 				newMessage += GDCHackGlobals.GetReading(
 					systemAtmosphere,
@@ -186,7 +186,7 @@ namespace LunraGames.SubLight.Presenters
 				}
 				else if (finalScore == 20)
 				{
-					title += "A Perfect World";
+					title = "A Perfect World";
 					newMessage += "This planet is such a jewel, how could we have been so lucky to find it?!";
 				}
 				else
