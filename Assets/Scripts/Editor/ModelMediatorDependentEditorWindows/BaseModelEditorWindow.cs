@@ -402,17 +402,19 @@ namespace LunraGames.SubLight
 					GUILayout.BeginHorizontal();
 					{
 						var isIgnored = model.Ignore.Value;
-						if (isIgnored) EditorGUILayoutExtensions.PushColor(new Color(0.65f, 0.65f, 0.65f));
-						{
-							var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta;
-							if (32 < metaName.Length) metaName = metaName.Substring(0, 29) + "...";
-							GUILayout.Label(new GUIContent(metaName, "Name is set by Meta field."), EditorStyles.boldLabel, GUILayout.Height(14f));
-							GUILayout.FlexibleSpace();
-							GUILayout.Label(modelName, EditorStyles.boldLabel);
-						}
-						if (isIgnored) EditorGUILayoutExtensions.PopColor();
+						var labelStyle = new GUIStyle(EditorStyles.boldLabel);
+						labelStyle.normal.textColor = isIgnored ? SubLightEditorConfig.Instance.SharedModelEditorModelsEntryLabelIgnoredColor : labelStyle.normal.textColor;
+						labelStyle.fixedHeight = 18;
+
+						var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta;
+						if (32 < metaName.Length) metaName = metaName.Substring(0, 29) + "...";
+						GUILayout.Label(new GUIContent(metaName, "Name is set by Meta field."), labelStyle, GUILayout.Height(14f));
+						GUILayout.FlexibleSpace();
+						GUILayout.Label(modelName, labelStyle);
 					}
 					GUILayout.EndHorizontal();
+
+					GUILayout.Space(-4f);
 
 					GUILayout.BeginHorizontal();
 					{
@@ -423,6 +425,7 @@ namespace LunraGames.SubLight
 						}
 						if (GUILayout.Button(new GUIContent("Reveal", "Selects the model in the project."), EditorStyles.miniButtonMid))
 						{
+							EditorUtility.FocusProjectWindow();
 							EditorUtility.FocusProjectWindow();
 							Selection.activeObject = AssetDatabase.LoadAssetAtPath<Object>(model.InternalPath);
 						}

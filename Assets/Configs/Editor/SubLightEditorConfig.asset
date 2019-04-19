@@ -86,6 +86,9 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  sharedModelEditorModelsEntryLabelIgnoredColor:
+    pro: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+    personal: {r: 0.45, g: 0.45, b: 0.45, a: 1}
   sharedModelEditorModelsEntryBackgroundColor:
     pro: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     personal: {r: 1, g: 1, b: 1, a: 1}

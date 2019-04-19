@@ -24,6 +24,9 @@ namespace LunraGames.SubLight
 		public GUIStyle SharedModelEditorModelsBackground { get { return sharedModelEditorModelsBackground; } }
 
 		[SerializeField]
+		SkinColor sharedModelEditorModelsEntryLabelIgnoredColor = SkinColor.Default;
+		public Color SharedModelEditorModelsEntryLabelIgnoredColor { get { return sharedModelEditorModelsEntryLabelIgnoredColor; } }
+		[SerializeField]
 		SkinColor sharedModelEditorModelsEntryBackgroundColor = SkinColor.Default;
 		public Color SharedModelEditorModelsEntryBackgroundColor { get { return sharedModelEditorModelsEntryBackgroundColor; } }
 		[SerializeField]
