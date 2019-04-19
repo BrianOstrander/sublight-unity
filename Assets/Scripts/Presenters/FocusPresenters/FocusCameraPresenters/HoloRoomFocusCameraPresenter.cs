@@ -24,6 +24,7 @@ namespace LunraGames.SubLight.Presenters
 		CameraTransformRequest transformAnimation;
 		float? animationRemaining;
 
+		bool hasDisabledDefaultListener;
 
 		public HoloRoomFocusCameraPresenter() : base(null)
 		{
@@ -64,6 +65,16 @@ namespace LunraGames.SubLight.Presenters
 
 			gameModel = null;
 			gameBinded = false;
+		}
+
+		protected override void OnUpdateEnabled()
+		{
+			base.OnUpdateEnabled();
+			if (!hasDisabledDefaultListener)
+			{
+				hasDisabledDefaultListener = true;
+				App.Audio.DisableDefaultListener();
+			}
 		}
 
 		#region Events

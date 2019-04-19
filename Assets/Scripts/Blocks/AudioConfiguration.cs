@@ -11,5 +11,6 @@ namespace LunraGames.SubLight
 		public AudioMixer MasterMixer;
 		public AudioMixerGroupBlock[] AudioGroups;
 		public AudioClip[] Music;
+		public AudioListener DefaultAudioListener;
 	}
 }

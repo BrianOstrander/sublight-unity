@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -28,6 +29,18 @@ namespace LunraGames.SubLight.Models
 		public void RemoveWaypoint(WaypointModel waypoint)
 		{
 			waypointsListener.Value = waypointsListener.Value.Where(w => w != waypoint).ToArray();
+		}
+
+		public WaypointModel GetWaypointFirstOrDefault(string waypointId)
+		{
+			return GetWaypointFirstOrDefault(w => w.WaypointId.Value == waypointId);
+		}
+
+		public WaypointModel GetWaypointFirstOrDefault(Func<WaypointModel, bool> predicate)
+		{
+			if (predicate == null) throw new ArgumentNullException("predicate");
+
+			return Waypoints.Value.FirstOrDefault(predicate);
 		}
 	}
 }

@@ -61,6 +61,9 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.AudioSnapshot:
 								OnHandleEventAudioSnapshot(state, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.Waypoint:
+								OnHandleEventWaypoint(state, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.RefreshSystem:
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
@@ -313,6 +316,43 @@ namespace LunraGames.SubLight
 				done,
 				transitionDuration
 			);
+		}
+
+		static void OnHandleEventWaypoint(
+			GameState state,
+			EncounterEventEntryModel entry,
+			Action done
+		)
+		{
+			var waypointId = entry.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
+			var visibility = entry.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility);
+
+			if (string.IsNullOrEmpty(waypointId))
+			{
+				Debug.LogError("A waypoint encounter event specified a null or empty WaypointId, this is not valid. Attempting to skip...");
+				done();
+				return;
+			}
+
+			var waypoint = state.Payload.Game.Waypoints.GetWaypointFirstOrDefault(waypointId);
+
+			if (waypoint == null)
+			{
+				// Threw a warning here just in case... might not be needed...
+				Debug.LogWarning("Unable to find waypoint with id \"" + waypointId + "\", this may result in unpredictable behaviour. Attempting to skip...");
+				done();
+				return;
+			}
+
+			switch (visibility)
+			{
+				case WaypointModel.VisibilityStates.Unknown: break;
+				default:
+					waypoint.VisibilityState.Value = visibility;
+					break;
+			}
+
+			done();
 		}
 	}
 }

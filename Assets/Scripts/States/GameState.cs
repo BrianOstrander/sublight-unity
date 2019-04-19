@@ -11,8 +11,8 @@ namespace LunraGames.SubLight
 {
 	public class GamePayload : IStatePayload
 	{
-		// TODO: Do we need this???
-		public struct Waypoint
+		// TODO: Do we need this??? -- ANSWER: Probably not...
+		public class Waypoint
 		{
 			public readonly string WaypointId;
 			public readonly WaypointModel Model;
@@ -44,7 +44,7 @@ namespace LunraGames.SubLight
 
 		public UniverseScaleModel LastActiveScale;
 
-		// TODO: Why does this exist???
+		// TODO: Why does this exist??? -- ANSWER: probably not...
 		public List<Waypoint> Waypoints = new List<Waypoint>();
 	}
 
