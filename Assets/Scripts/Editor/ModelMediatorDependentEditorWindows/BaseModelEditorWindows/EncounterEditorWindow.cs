@@ -44,5 +44,10 @@ namespace LunraGames.SubLight
 			return model.GetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId);
 		}
 		#endregion
+
+		protected override bool CanEditDuringPlaymode()
+		{
+			return true;
+		}
 	}
 }
