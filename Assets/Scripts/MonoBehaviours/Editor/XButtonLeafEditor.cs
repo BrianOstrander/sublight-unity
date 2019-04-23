@@ -47,7 +47,6 @@ namespace LunraGames.SubLight
 			EditorGUILayout.PropertyField(particleSystemsProperty, true);
 
 			serializedObject.ApplyModifiedProperties();
-			EditorUtility.SetDirty(target);
 		}
 	}
 }
