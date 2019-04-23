@@ -315,7 +315,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "The message it's relaying is heavily degraded, but I'll do my best to parse it.",
+              "message": "The message is heavily degraded, I'll do my best to parse it.",
               "entryId": "12362b85-d3ab-4b99-81ea-795fc2e15ddc"
             },
             "index": 2
@@ -341,7 +341,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Transmitting on all frequences, the interstellar ark Oasis has discovered <b>d293IHdoeSBhcmUgeW9</b>",
+              "message": "Transmitting on all frequences, the interstellar ark Oasis has discovered <i>-UNPARSED-</i>",
               "entryId": "c8ab7e6c-8123-4ca2-a069-aaa48ff2a69d"
             }
           },
@@ -376,7 +376,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Oxygen, <b>G9rYXkgd2hhdGV2ZXIga</b> and water... it has everything... a <b>aXQgd293IHdoeSBhcmUge</b> human habitation!",
+              "message": "Oxygen, <i>-UNPARSED-</i> and water... it has everything... a <i>-UNPARSED-</i> human habitation!",
               "entryId": "170f1290-08e3-4ac9-ac71-d2a7f38bbcee"
             },
             "index": 4
@@ -394,7 +394,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "We're attaching <b>WluZyB0b</b> coordinates for <b>G9sIG9rYXkgd2hhdGV</b> in need of shelter...",
+              "message": "We're attaching <i>-UNPARSED-</i> coordinates for <i>-UNPARSED-</i> in need of shelter...",
               "entryId": "600ed449-cb57-4051-9dd1-8fcd8ecd00ac"
             },
             "index": 6
@@ -412,7 +412,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Administrator <b>BhcmUgeW91IHRyeW</b> signing off...",
+              "message": "Administrator <i>-UNPARSED-</i> signing off...",
               "entryId": "e666a958-4dd3-4e12-923f-c9d661f0950a"
             },
             "index": 8
@@ -490,19 +490,11 @@
           },
           {
             "entry": {
-              "conversationType": "MessageOutgoing",
-              "message": "How old is the message?",
-              "entryId": "b146734a-fc7a-4fb2-b502-1cf501b68de7"
-            },
-            "index": 5
-          },
-          {
-            "entry": {
               "conversationType": "MessageIncoming",
               "message": "Without the meta data, it's hard to tell, but given the signal degredation...",
               "entryId": "5cee5afb-01e8-4c4c-8f2b-0aa10219f9ee"
             },
-            "index": 6
+            "index": 7
           },
           {
             "entry": {
@@ -512,7 +504,7 @@
               },
               "entryId": "94922ead-b9d3-4b22-ba78-7297c2937a7b"
             },
-            "index": 7
+            "index": 8
           },
           {
             "entry": {
@@ -520,7 +512,7 @@
               "message": "I'd say it's been bouncing between automated relays for several millennia.",
               "entryId": "a49337cd-88d9-4a49-9801-3041c59a2bed"
             },
-            "index": 8
+            "index": 9
           },
           {
             "entry": {
@@ -532,7 +524,7 @@
               },
               "entryId": "5088ae63-8b98-4b25-8d07-bd0d0683200d"
             },
-            "index": 9
+            "index": 10
           },
           {
             "entry": {
@@ -540,7 +532,7 @@
               "message": "Well...",
               "entryId": "75d14f80-a26d-4605-88fa-6e5e180f732f"
             },
-            "index": 10
+            "index": 11
           },
           {
             "entry": {
@@ -551,7 +543,7 @@
               },
               "entryId": "679c8475-03f8-4841-8e0c-bb7ba4797f5a"
             },
-            "index": 11
+            "index": 12
           },
           {
             "entry": {
@@ -559,7 +551,7 @@
               "message": "We could track down the last relay this transmission came from, and see if it has a higher quality copy.",
               "entryId": "c197cbea-31f4-4eaf-88a0-e9a70b2683ff"
             },
-            "index": 12
+            "index": 13
           },
           {
             "entry": {
@@ -570,7 +562,7 @@
               },
               "entryId": "ee8e82c2-3d4f-417f-81e8-07925b96a711"
             },
-            "index": 13
+            "index": 14
           },
           {
             "entry": {
@@ -578,7 +570,7 @@
               "message": "Alright, I've plotted a course.",
               "entryId": "3920cb5f-a956-4e93-a934-2b7fc10108ca"
             },
-            "index": 14
+            "index": 15
           },
           {
             "entry": {
@@ -589,7 +581,18 @@
               },
               "entryId": "6e3475bf-fe44-41a2-a765-dcfe7fce9c87"
             },
-            "index": 15
+            "index": 16
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "How old is the message?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "e099d25d-b026-4bdf-9564-62edb5cdbe15"
+            },
+            "index": 5
           }
         ],
         "index": 7,

@@ -1040,6 +1040,29 @@
               },
               "entryId": "2a691874-7b51-483d-8d4c-a6fd7738464d"
             }
+          },
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "target": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1c506328-7033-4e56-bd58-c84075336cfa"
+            },
+            "index": 1
           }
         ],
         "index": 1,
@@ -1458,7 +1481,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "They'd be passing through the thickest region of the planetary, the chance of a fatal collision with debris is extremely high.",
+              "message": "They'd be passing through the thickest region of the planetary rings, the chance of a fatal collision with debris is extremely high.",
               "entryId": "00730238-43d0-44a0-a386-7840af51a342"
             },
             "index": 16
@@ -1606,7 +1629,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "Understood",
+              "message": "Understood.",
               "entryId": "9e45adb1-e6d2-4bef-bbd2-e6400a02b479"
             },
             "index": 4
@@ -1640,7 +1663,7 @@
           {
             "entry": {
               "conversationType": "Prompt",
-              "message": "Excellent",
+              "message": "Excellent.",
               "promptInfo": {
                 "Behaviour": "PrintMessage"
               },
@@ -1922,6 +1945,25 @@
               "message": "Keep going!",
               "entryId": "60f68269-7b6a-4d3e-b6ab-6258de913f42"
             }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Copy that.",
+              "entryId": "73b88794-786f-40fa-b26e-00ca786213b8"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Update?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "bf704e15-4457-4e44-b1ba-9eb4f0131f96"
+            },
+            "index": 2
           }
         ],
         "index": 24,
@@ -1936,6 +1978,25 @@
               "message": "Bail!",
               "entryId": "cd14268f-0851-4200-b163-e3b331059f99"
             }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Firing thrusters...",
+              "entryId": "90ef2706-a703-4dd2-9a3f-d1b5ae03566f"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Update?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "fbd00df2-a3d0-4d6f-b923-81e911328345"
+            },
+            "index": 2
           }
         ],
         "index": 25,
@@ -2096,6 +2157,17 @@
               "entryId": "9b470e57-8902-4346-b395-90cc0428ce15"
             },
             "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "d041563e-a460-45d9-ab43-84c7bbccee8f"
+            },
+            "index": 3
           }
         ],
         "index": 35,
@@ -2235,6 +2307,17 @@
               "entryId": "03277daf-1afe-4534-bac8-16c698c780cf"
             },
             "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "7a357c77-a80f-418e-9853-6a98fd62fa2a"
+            },
+            "index": 5
           }
         ],
         "index": 40,
@@ -2269,11 +2352,22 @@
               "entryId": "77ff45fa-2ce7-4f54-a91b-0e64690aab51"
             },
             "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "c488d2bf-9b7c-4d82-9dfd-b6ee2e1590f6"
+            },
+            "index": 3
           }
         ],
         "index": 41,
         "logId": "ed0d9680-0db4-4d6c-9588-1fc63999d097",
-        "fallbackLogId": "fb78f0fa-4f8a-4653-9066-a041df0a9207"
+        "fallbackLogId": "73617e43-d3c8-42a3-b118-2d6b6522a8bd"
       },
       {
         "entries": [
@@ -2297,7 +2391,7 @@
           {
             "entry": {
               "conversationType": "MessageIncoming",
-              "message": "With that, we can track down the last relay Oasis' message passed through. Perhaps we'll have better lock there...",
+              "message": "With that, we can track down the last relay Oasis' message passed through. Perhaps we'll have better luck there...",
               "entryId": "68e1eece-a257-42c6-8888-16e629625abe"
             },
             "index": 2
@@ -2321,6 +2415,17 @@
               "entryId": "d67a2b29-e8b7-4fed-8979-12be9a73a9ec"
             },
             "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "2a60501e-71e2-41be-be63-6073b28235f4"
+            },
+            "index": 5
           }
         ],
         "index": 42,

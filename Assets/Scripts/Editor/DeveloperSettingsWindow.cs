@@ -9,6 +9,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using LunraGames.SubLight.Models;
+
 namespace LunraGames.SubLight
 {
 	public interface ILocalDeveloperSettingsWindow
@@ -267,25 +269,43 @@ namespace LunraGames.SubLight
 					{
 						var gamePayload = (App.SM.CurrentHandler as GameState).Payload;
 
+						Action onStartEncounter = () =>
+						{
+							App.M.Load<EncounterInfoModel>(
+								DevPrefs.EncounterIdOverride.Value,
+								encounterResult =>
+								{
+									if (encounterResult.Status != RequestStatus.Success)
+									{
+										Debug.LogError("Loading override encounter returned status: " + encounterResult.Status + " and error: " + encounterResult.Error);
+										return;
+									}
+
+									if (encounterResult.TypedModel == null) Debug.LogError("Unable to push encounter, could not find one with a matching id");
+									else
+									{
+										EditorUtilityExtensions.GetGameWindow().Focus();
+										App.Callbacks.EncounterRequest(
+											EncounterRequest.Request(
+												gamePayload.Game,
+												encounterResult.TypedModel,
+												DevPrefs.EncounterIdOverrideTrigger.Value
+											)
+										);
+									}
+								}
+							);
+						};
+
 						if (gamePayload.Game.EncounterResume.Value.CanResume)
 						{
-							Debug.LogError("Cannot start an encounter while one is active.");
+							Debug.LogWarning("Interrupting active encounter to start a new one...");
+							//Debug.LogError("Cannot start an encounter while one is active.");
+							App.Callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
+							App.Heartbeat.Wait(onStartEncounter, 0.25f);
+							EditorUtilityExtensions.GetGameWindow().Focus();
 						}
-						else
-						{
-							var encounterPush = App.Encounters.GetEncounter(DevPrefs.EncounterIdOverride.Value);
-							if (encounterPush == null) Debug.LogError("Unable to push encounter, could not find one with a matching id");
-							else
-							{
-								App.Callbacks.EncounterRequest(
-									EncounterRequest.Request(
-										gamePayload.Game,
-										encounterPush,
-										DevPrefs.EncounterIdOverrideTrigger.Value
-									)
-								);
-							}
-						}
+						else onStartEncounter();
 					}
 					//if (GUILayout.Button(new GUIContent("Stop", "Stops an encounter if one is playing."), EditorStyles.miniButtonRight, GUILayout.Width(64f)))
 					//{

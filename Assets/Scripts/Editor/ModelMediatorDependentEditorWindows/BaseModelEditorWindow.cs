@@ -277,12 +277,16 @@ namespace LunraGames.SubLight
 			EditorGUILayoutExtensions.PushEnabled(BaseIsEnabled);
 			{
 				OnModelEditorUpdate();
-				if (lastIsPlayingOrWillChangePlaymode)
+
+				if (!CanEditDuringPlaymode())
 				{
-					EditorGUILayout.HelpBox("Cannot edit in playmode.", MessageType.Info);
-					return;
+					if (lastIsPlayingOrWillChangePlaymode)
+					{
+						EditorGUILayout.HelpBox("Cannot edit in playmode.", MessageType.Info);
+						return;
+					}
+					if (0 < frameDelayRemaining) return; // Adding a helpbox messes with this...
 				}
-				if (0 < frameDelayRemaining) return; // Adding a helpbox messes with this...
 
 				OnModelCheckStatus();
 
@@ -504,7 +508,7 @@ namespace LunraGames.SubLight
 
 		void OnModelEditorUpdate(float delta = 0f)
 		{
-			if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isPlayingOrWillChangePlaymode != lastIsPlayingOrWillChangePlaymode)
+			if ((EditorApplication.isPlayingOrWillChangePlaymode && !CanEditDuringPlaymode()) || EditorApplication.isPlayingOrWillChangePlaymode != lastIsPlayingOrWillChangePlaymode)
 			{
 				modelListStatus = RequestStatus.Cancel;
 				modelList = new SaveModel[0];
@@ -668,6 +672,11 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			if (onDraw != null) onDraw(model);
+		}
+
+		protected virtual bool CanEditDuringPlaymode()
+		{
+			return false;
 		}
 		#endregion
 

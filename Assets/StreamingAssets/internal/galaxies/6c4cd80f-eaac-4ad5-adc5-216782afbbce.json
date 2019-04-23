@@ -514,7 +514,9 @@
               "visited": true,
               "specified": true,
               "player_begin": true,
-              "player_end": false
+              "player_end": false,
+              "icon_pings": false,
+              "has_specified_waypoint": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -538,7 +540,9 @@
             },
             "strings": {
               "name": "Alpha Centauri",
-              "classification_secondary": "Yellow Dwarf"
+              "classification_secondary": "Yellow Dwarf",
+              "specified_waypoint_name": null,
+              "specified_waypoint_id": null
             },
             "floats": {
               "generated_rations": 0.0,
@@ -647,7 +651,9 @@
               "visited": false,
               "specified": true,
               "player_begin": false,
-              "player_end": false
+              "player_end": false,
+              "icon_pings": false,
+              "has_specified_waypoint": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -669,7 +675,9 @@
             },
             "strings": {
               "name": "Sirius",
-              "classification_secondary": "Dwarf"
+              "classification_secondary": "Dwarf",
+              "specified_waypoint_name": null,
+              "specified_waypoint_id": null
             },
             "floats": {
               "generated_rations": 5.0,
@@ -854,7 +862,7 @@
             },
             {
               "Trigger": "TransitComplete",
-              "EncounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf"
+              "EncounterId": "c665b949-9d98-414f-8151-d26ad67cb6d9"
             }
           ],
           "keyValues": {
@@ -954,16 +962,18 @@
               "scan_level_gravity": 0,
               "scan_level_temperature": 0,
               "scan_level_water": 0,
-              "scan_level_resources": 0
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
             "strings": {
               "specified_waypoint_name": "Oasis Relay",
               "specified_waypoint_id": "oasis_relay_0",
-              "name": "Oasis Relay"
+              "name": "Oasis Relay",
+              "classification_secondary": "Red Dwarf"
             },
             "floats": {
               "icon_color_hue": 0.0,
-              "icon_color_saturation": 0.0,
+              "icon_color_saturation": 0.53,
               "icon_color_value": 1.0,
               "icon_color_alpha": 1.0,
               "gather_multiplier_rations": 0.0,
@@ -1023,16 +1033,18 @@
               "scan_level_gravity": 0,
               "scan_level_temperature": 0,
               "scan_level_water": 0,
-              "scan_level_resources": 0
+              "scan_level_resources": 0,
+              "classification_primary": 10
             },
             "strings": {
               "specified_waypoint_name": "Oasis Relay # 2",
               "specified_waypoint_id": "oasis_relay_1",
-              "name": "Oasis Relay #2"
+              "name": "Oasis Relay #2",
+              "classification_secondary": "Yellow Dwarf"
             },
             "floats": {
-              "icon_color_hue": 0.0,
-              "icon_color_saturation": 0.0,
+              "icon_color_hue": 0.119444452,
+              "icon_color_saturation": 0.5294118,
               "icon_color_value": 1.0,
               "icon_color_alpha": 1.0,
               "gather_multiplier_rations": 0.0,
@@ -1040,7 +1052,8 @@
               "gather_multiplier_propellant": 0.0,
               "gather_amount_propellant": 0.0,
               "gather_multiplier_metallics": 0.0,
-              "gather_amount_metallics": 0.0
+              "gather_amount_metallics": 0.0,
+              "icon_scale": 0.463
             }
           }
         }
