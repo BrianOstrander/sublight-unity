@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "bf8956db-4fb2-4688-a806-068321c9de3c",
   "name": "Tutorial: Intro",
   "trigger": "Load",
   "defaultEndLogId": "fa9a9a2f-7694-4e35-acb9-641f10d52a7a",
@@ -435,13 +434,12 @@
     ]
   },
   "ignore": true,
-  "version": 11,
+  "version": 12,
   "meta": "Tutorial: Intro",
-  "metaKeyValues": {
-    "EncounterId": "bf8956db-4fb2-4688-a806-068321c9de3c"
-  },
+  "metaKeyValues": {},
   "created": "2019-02-22T17:56:13.94163-08:00",
   "modified": "2019-02-22T17:56:13.94163-08:00",
+  "id": "bf8956db-4fb2-4688-a806-068321c9de3c",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

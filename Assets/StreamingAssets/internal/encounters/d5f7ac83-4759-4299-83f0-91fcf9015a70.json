@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf",
   "name": "Planets Detected",
   "trigger": "TransitComplete",
   "defaultEndLogId": "9d8bbbd1-c4a9-4d36-864c-1b674bd02956",
@@ -865,13 +864,12 @@
       }
     ]
   },
-  "version": 11,
+  "version": 12,
   "meta": "Planets Detected",
-  "metaKeyValues": {
-    "EncounterId": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf"
-  },
+  "metaKeyValues": {},
   "created": "2019-03-20T11:59:11.309393-07:00",
   "modified": "2019-03-20T11:59:11.309393-07:00",
+  "id": "88d2f2b8-f4f4-408e-9c8a-1f37c627d9bf",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

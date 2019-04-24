@@ -2,7 +2,6 @@
   "orderWeight": 10,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "47165b82-d3ee-4b25-8b58-de330ddc2587",
   "name": "Transit Limited - Low",
   "trigger": "TransitComplete",
   "defaultEndLogId": "8a902a20-a150-44e2-a7ea-4737a23b22cd",
@@ -286,13 +285,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Transit Limited - Low",
-  "metaKeyValues": {
-    "EncounterId": "47165b82-d3ee-4b25-8b58-de330ddc2587"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-02T10:22:57.664683-07:00",
   "modified": "2019-04-02T10:22:57.664683-07:00",
+  "id": "47165b82-d3ee-4b25-8b58-de330ddc2587",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

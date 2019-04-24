@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "aeed5299-be4d-4913-bd15-4cdf75bf9a4d",
   "name": "Select Cygnus X-1 Out Of Range",
   "trigger": "NavigationSelectOutOfRange",
   "defaultEndLogId": "6a43954b-0c88-4ac7-ab7f-0fcf87e4bdcc",
@@ -82,13 +81,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Select Cygnus X-1 Out Of Range",
-  "metaKeyValues": {
-    "EncounterId": "aeed5299-be4d-4913-bd15-4cdf75bf9a4d"
-  },
+  "metaKeyValues": {},
   "created": "2019-02-26T18:49:05.38876-08:00",
   "modified": "2019-02-26T18:49:05.38876-08:00",
+  "id": "aeed5299-be4d-4913-bd15-4cdf75bf9a4d",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

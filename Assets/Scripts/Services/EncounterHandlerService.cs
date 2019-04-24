@@ -114,8 +114,8 @@ namespace LunraGames.SubLight
 					);
 					break;
 				case EncounterRequest.States.Complete:
-					encounterService.GetEncounterInteraction(configuration.Encounter.EncounterId).TimesCompleted.Value++;
-					configuration.Model.EncounterStatuses.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.EncounterId));
+					encounterService.GetEncounterInteraction(configuration.Encounter.Id).TimesCompleted.Value++;
+					configuration.Model.EncounterStatuses.SetEncounterStatus(EncounterStatus.Completed(configuration.Encounter.Id));
 
 					configuration.Model.Context.EncounterState.Current.Value = configuration.Model.Context.EncounterState.Current.Value.NewState(EncounterStateModel.States.Ending);
 
@@ -158,7 +158,7 @@ namespace LunraGames.SubLight
 
 			App.Analytics.EncounterBegin(model, encounter);
 
-			model.Context.EncounterState.Current.Value = new EncounterStateModel.Details(EncounterStateModel.States.Processing, encounter.EncounterId.Value);
+			model.Context.EncounterState.Current.Value = new EncounterStateModel.Details(EncounterStateModel.States.Processing, encounter.Id.Value);
 
 			configuration.Model = model;
 			configuration.Encounter = encounter;
@@ -180,7 +180,7 @@ namespace LunraGames.SubLight
 			nextLog = configuration.Encounter.Logs.Beginning;
 			if (nextLog == null)
 			{
-				Debug.LogError("No beginning found for encounter " + configuration.Encounter.EncounterId.Value);
+				Debug.LogError("No beginning found for encounter " + configuration.Encounter.Id.Value);
 
 				callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
 				return;

@@ -204,7 +204,7 @@ namespace LunraGames.SubLight
 			{
 				{ GameFields.TotalTransits, gameModel.TransitHistory.Count },
 
-				{ EncounterFields.Id, encounter.EncounterId.Value },
+				{ EncounterFields.Id, encounter.Id.Value },
 				{ EncounterFields.Name, encounter.Name.Value }
 			};
 
@@ -224,7 +224,7 @@ namespace LunraGames.SubLight
 				"encounter_end",
 				new Dictionary<string, object>
 				{
-					{ EncounterFields.Id, encounter.EncounterId.Value },
+					{ EncounterFields.Id, encounter.Id.Value },
 					{ EncounterFields.Name, encounter.Name.Value }
 				}
 			);

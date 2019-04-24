@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "2ecf3799-264f-43b7-adec-383b09571ef5",
   "name": "Tutorial: Navigation Confirm",
   "trigger": "NavigationSelect",
   "defaultEndLogId": "2d6d6aa2-ebef-4fc0-8ba5-8d4526a378ef",
@@ -81,13 +80,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Tutorial: Navigation Confirm",
-  "metaKeyValues": {
-    "EncounterId": "2ecf3799-264f-43b7-adec-383b09571ef5"
-  },
+  "metaKeyValues": {},
   "created": "2019-02-22T18:12:03.02069-08:00",
   "modified": "2019-02-22T18:12:03.02069-08:00",
+  "id": "2ecf3799-264f-43b7-adec-383b09571ef5",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

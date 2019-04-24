@@ -6,34 +6,12 @@ using UnityEngine;
 
 using LunraGames.SubLight.Models;
 
+using Shared = LunraGames.SubLight.SharedBatchModelOperations;
+
 namespace LunraGames.SubLight
 {
 	public static class EncounterBatchModelOperations
 	{
-		#region Update Versions
-		[BatchModelOperation(typeof(EncounterInfoModel))]
-		static void UpdateVersions(
-			EncounterInfoModel model,
-			Action<EncounterInfoModel, RequestResult> done,
-			bool write
-		)
-		{
-			var result = GetUnmodifiedResult(model);
-
-			if (model.Version.Value != BuildPreferences.Instance.Info.Version)
-			{
-				result = GetModifiedResult(
-					model,
-					1,
-					1,
-					"\n\tUpdated version of " + model.Name.Value + " from " + model.Version.Value + " to " + BuildPreferences.Instance.Info.Version
-				);
-			}
-
-			done(model, RequestResult.Success(result));
-		}
-		#endregion
-
 		#region Append Periods
 		[BatchModelOperation(typeof(EncounterInfoModel))]
 		static void AppendPeriods(
@@ -86,7 +64,7 @@ namespace LunraGames.SubLight
 						}
 						break;
 					default:
-						errors += "\n\tUnrecognized ConversationEntryType: " + entry.ConversationType.Value;
+						errors += Shared.ModificationPrefix + "Unrecognized ConversationEntryType: " + entry.ConversationType.Value;
 						break;
 				}
 			}
@@ -103,7 +81,7 @@ namespace LunraGames.SubLight
 
 			if (entries.None())
 			{
-				done(model, RequestResult.Success(GetUnmodifiedResult(model)));
+				done(model, RequestResult.Success(Shared.GetUnmodifiedResult(model)));
 				return;
 			}
 
@@ -112,15 +90,15 @@ namespace LunraGames.SubLight
 
 			foreach (var entry in entries)
 			{
-				modifications += "\n\t";
+				modifications += Shared.ModificationPrefix;
 
 				var beginValue = entry.Key();
 				var endValue = beginValue;
 
 				var modified = AppendPeriodsUpdate(beginValue, ref endValue);
 
-				var beginValueShort = ShortenValue(beginValue);
-				var endValueShort = ShortenValue(endValue);
+				var beginValueShort = Shared.ShortenValue(beginValue);
+				var endValueShort = Shared.ShortenValue(endValue);
 
 				if (modified)
 				{
@@ -131,7 +109,7 @@ namespace LunraGames.SubLight
 				else modifications += "- \"" + beginValueShort + "\" unmodified";
 			}
 
-			var result = GetModifiedResult(
+			var result = Shared.GetModifiedResult(
 				model,
 				modificationCount,
 				entries.Count,
@@ -202,7 +180,7 @@ namespace LunraGames.SubLight
 				else modifications += "- " + bust.BustId.Value + " unmodified...";
 			}
 
-			var result = GetModifiedResult(
+			var result = Shared.GetModifiedResult(
 				model,
 				modificationCount,
 				bustEntries.Count(),
@@ -211,49 +189,6 @@ namespace LunraGames.SubLight
 			);
 
 			done(model, RequestResult.Success(result));
-		}
-		#endregion
-
-		#region Shared
-		static string GetUnmodifiedResult(SaveModel model)
-		{
-			return GetName(model) + " was unmodified...";
-		}
-
-		static string GetModifiedResult(
-			SaveModel model,
-			int modificationCount,
-			int possibleModificationCount,
-			string modifications,
-			string errors = null
-		)
-		{
-			if (modificationCount == 0 && possibleModificationCount == 0) return GetUnmodifiedResult(model);
-			var result = GetName(model) + " had " + modificationCount + " of " + possibleModificationCount + " matches modified..." + modifications;
-			if (string.IsNullOrEmpty(errors)) return result;
-			return result += "\n\n\tErrors:" + errors;
-		}
-
-		static string GetName(SaveModel model)
-		{
-			//return model.SaveType + " \"" + (string.IsNullOrEmpty(model.Meta.Value) ? ShortenValue(model.Path.Value) : model.Meta.Value) + "\"";
-			return "\"" + (string.IsNullOrEmpty(model.Meta.Value) ? ShortenValue(model.Path.Value) : model.Meta.Value) + "\"";
-		}
-
-		static string ShortenValue(
-			string value,
-			int maximumLength = 64
-		)
-		{
-			maximumLength = Mathf.Max(maximumLength, 2);
-
-			if (string.IsNullOrEmpty(value)) return value;
-			if (value.Length < maximumLength) return value;
-
-			var begin = value.Substring(0, maximumLength / 2);
-			var end = value.Substring(value.Length - (maximumLength / 2));
-
-			return begin + " . . . " + end;
 		}
 		#endregion
 	}

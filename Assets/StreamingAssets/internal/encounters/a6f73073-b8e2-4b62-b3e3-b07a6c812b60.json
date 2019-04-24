@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "12ed3b78-5f70-4e10-869f-ed9713dd2c5c",
   "name": "Resource Cheat",
   "trigger": "None",
   "defaultEndLogId": "e7bae251-6d54-41a6-b559-ddeb483fb9c7",
@@ -124,11 +123,10 @@
   },
   "version": 12,
   "meta": "Resource Cheat",
-  "metaKeyValues": {
-    "EncounterId": "12ed3b78-5f70-4e10-869f-ed9713dd2c5c"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-22T17:27:31.328597-07:00",
   "modified": "2019-04-22T17:27:31.328597-07:00",
+  "id": "12ed3b78-5f70-4e10-869f-ed9713dd2c5c",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

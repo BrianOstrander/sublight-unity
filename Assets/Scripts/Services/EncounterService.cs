@@ -147,13 +147,13 @@ namespace LunraGames.SubLight
 
 		InteractedEncounterInfoListModel UpdateInteractedEncounters(List<EncounterInfoModel> allEncounters, InteractedEncounterInfoListModel target)
 		{
-			var allEncounterIds = allEncounters.Select(e => e.EncounterId.Value);
+			var allEncounterIds = allEncounters.Select(e => e.Id.Value);
 			var existingTargets = target.Encounters.Value.Where(e => allEncounterIds.Contains(e.EncounterId));
 			var newTargets = new List<InteractedEncounterInfoModel>();
 
 			foreach (var encounter in allEncounters)
 			{
-				var entry = existingTargets.FirstOrDefault(t => t.EncounterId.Value == encounter.EncounterId.Value);
+				var entry = existingTargets.FirstOrDefault(t => t.EncounterId.Value == encounter.Id.Value);
 				if (entry == null) continue;
 				newTargets.Add(entry);
 			}
@@ -175,7 +175,7 @@ namespace LunraGames.SubLight
 		/// </summary>
 		public EncounterInfoModel GetEncounter(string encounter)
 		{
-			return encounters.FirstOrDefault(e => e.EncounterId.Value == encounter);
+			return encounters.FirstOrDefault(e => e.Id.Value == encounter);
 		}
 
 		/// <summary>

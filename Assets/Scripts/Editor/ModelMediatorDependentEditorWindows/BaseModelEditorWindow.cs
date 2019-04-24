@@ -818,6 +818,7 @@ namespace LunraGames.SubLight
 				var error = batchProgress.GetLogPrefix() + "Returned error from batch operation: " + result.Message+"\n";
 				Debug.LogError(error);
 				batchProgress.Log += error;
+				batchProgress.ErrorCount++;
 				OnBatchOperationNext();
 				return;
 			}
@@ -912,12 +913,24 @@ namespace LunraGames.SubLight
 			modelAlwaysAllowSaving.Value = EditorGUILayout.Toggle(new GUIContent("Always Allow Saving", "When enabled the 'Save' button always be clickable."), modelAlwaysAllowSaving.Value);
 			SettingsGui();
 		}
+
 		#endregion
 
 		#region Required
-		protected abstract void AssignModelId(M model, string id);
+		// TODO: MAKE THIS NOT VIRTUAL
+		protected virtual void AssignModelId(M model, string id)
+		{
+			if (string.IsNullOrEmpty(id)) throw new ArgumentException("Cannot have null or empty id", nameof(id));
+			model.Id.Value = id;
+		}
+		// TODO: MAKE THIS NOT VIRTUAL
+		protected virtual string GetModelId(SaveModel model)
+		{
+			if (model == null) throw new ArgumentNullException(nameof(model));
+			return model.Id.Value;
+		}
+
 		protected abstract void AssignModelName(M model, string name);
-		protected abstract string GetModelId(SaveModel model);
 		#endregion
 
 		#region Child Events

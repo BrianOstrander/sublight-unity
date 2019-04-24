@@ -10,7 +10,7 @@
 
 		public static class EncounterInfo
 		{
-			public const string EncounterId = "EncounterId";
+
 		}
 
 		public static class GalaxyInfo

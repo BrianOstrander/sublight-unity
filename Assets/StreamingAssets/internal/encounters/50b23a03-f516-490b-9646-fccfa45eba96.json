@@ -2,7 +2,6 @@
   "orderWeight": 499,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "09e81463-7815-4e14-a0a8-122aee012ba5",
   "name": "Radio Ping - First Visit",
   "trigger": "TransitComplete",
   "defaultEndLogId": "72756096-0eec-4661-9b90-d0f2eff0282f",
@@ -97,13 +96,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Radio Ping - First Visit",
-  "metaKeyValues": {
-    "EncounterId": "09e81463-7815-4e14-a0a8-122aee012ba5"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-08T13:33:13.953268-07:00",
   "modified": "2019-04-08T13:33:13.953268-07:00",
+  "id": "09e81463-7815-4e14-a0a8-122aee012ba5",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

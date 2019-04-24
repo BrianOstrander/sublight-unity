@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 0.5,
-  "encounterId": "01f6df75-0021-4fe0-85c3-6e76fb49580a",
   "name": "Emotive Upgrade",
   "trigger": "TransitComplete",
   "defaultEndLogId": "95110c2f-cdfb-480b-8a83-03e81b27c48d",
@@ -1075,13 +1074,12 @@
       }
     ]
   },
-  "version": 11,
+  "version": 12,
   "meta": "Emotive Upgrade",
-  "metaKeyValues": {
-    "EncounterId": "01f6df75-0021-4fe0-85c3-6e76fb49580a"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-10T16:45:30.470946-07:00",
   "modified": "2019-04-10T16:45:30.470946-07:00",
+  "id": "01f6df75-0021-4fe0-85c3-6e76fb49580a",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

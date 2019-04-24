@@ -2,7 +2,6 @@
   "orderWeight": 10,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "c665b949-9d98-414f-8151-d26ad67cb6d9",
   "name": "Oasis End",
   "trigger": "None",
   "defaultEndLogId": "74c9757f-3f57-4cdc-8a6d-402a9896f29e",
@@ -299,11 +298,10 @@
   },
   "version": 12,
   "meta": "Oasis End",
-  "metaKeyValues": {
-    "EncounterId": "c665b949-9d98-414f-8151-d26ad67cb6d9"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-22T17:36:05.490892-07:00",
   "modified": "2019-04-22T17:36:05.490892-07:00",
+  "id": "c665b949-9d98-414f-8151-d26ad67cb6d9",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

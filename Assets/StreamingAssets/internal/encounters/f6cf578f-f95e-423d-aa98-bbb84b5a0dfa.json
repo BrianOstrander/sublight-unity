@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 0.5,
-  "encounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c",
   "name": "Stellar Catacombs",
   "trigger": "TransitComplete",
   "defaultEndLogId": "c121616c-364e-46ca-af49-3b047155c7ef",
@@ -670,13 +669,12 @@
       }
     ]
   },
-  "version": 11,
+  "version": 12,
   "meta": "Stellar Catacombs",
-  "metaKeyValues": {
-    "EncounterId": "7657f55f-e935-4d7b-8cd0-687c129aa36c"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-05T11:38:06.551348-07:00",
   "modified": "2019-04-05T11:38:06.551348-07:00",
+  "id": "7657f55f-e935-4d7b-8cd0-687c129aa36c",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

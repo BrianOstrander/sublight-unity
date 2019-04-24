@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "8e248105-b984-4995-a985-681a50994a4d",
   "name": "Test",
   "trigger": "None",
   "defaultEndLogId": "03c37765-9c90-4781-9e68-0e922015f27b",
@@ -116,11 +115,10 @@
   },
   "version": 12,
   "meta": "Test",
-  "metaKeyValues": {
-    "EncounterId": "8e248105-b984-4995-a985-681a50994a4d"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-18T16:22:25.901445-07:00",
   "modified": "2019-04-18T16:22:25.901445-07:00",
+  "id": "8e248105-b984-4995-a985-681a50994a4d",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

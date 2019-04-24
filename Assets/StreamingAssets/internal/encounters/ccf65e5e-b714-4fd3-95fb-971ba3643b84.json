@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "be878586-508a-4eb1-a192-864244df59c0",
   "name": "Oasis Relay Trial: Ring Dive",
   "trigger": "None",
   "defaultEndLogId": "e1e3bf63-9e3f-4411-bdc8-c46e77a59fa3",
@@ -2436,11 +2435,10 @@
   },
   "version": 12,
   "meta": "Oasis Relay Trial: Ring Dive",
-  "metaKeyValues": {
-    "EncounterId": "be878586-508a-4eb1-a192-864244df59c0"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-22T13:03:20.651643-07:00",
   "modified": "2019-04-22T13:03:20.651643-07:00",
+  "id": "be878586-508a-4eb1-a192-864244df59c0",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

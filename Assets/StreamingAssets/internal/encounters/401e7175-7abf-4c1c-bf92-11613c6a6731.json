@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "b88c6f13-6794-4198-8613-eda1e54a4a09",
   "name": "No Planets In System",
   "trigger": "TransitComplete",
   "defaultEndLogId": "ba6f1ac1-6e0d-413d-8395-0e0b2eef8161",
@@ -67,13 +66,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "No Planets In System",
-  "metaKeyValues": {
-    "EncounterId": "b88c6f13-6794-4198-8613-eda1e54a4a09"
-  },
+  "metaKeyValues": {},
   "created": "2019-03-20T11:52:04.907557-07:00",
   "modified": "2019-03-20T11:52:04.907557-07:00",
+  "id": "b88c6f13-6794-4198-8613-eda1e54a4a09",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

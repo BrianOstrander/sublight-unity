@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "facb9f8f-7623-4aeb-8c3a-97165ea6e7fd",
   "name": "Radio Ping - False Alarms",
   "trigger": "TransitComplete",
   "defaultEndLogId": "788d7484-d51b-4edf-9d67-d04d18677610",
@@ -864,13 +863,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Radio Ping - False Alarms",
-  "metaKeyValues": {
-    "EncounterId": "facb9f8f-7623-4aeb-8c3a-97165ea6e7fd"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-08T14:24:42.58445-07:00",
   "modified": "2019-04-08T14:24:42.58445-07:00",
+  "id": "facb9f8f-7623-4aeb-8c3a-97165ea6e7fd",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

@@ -32,7 +32,7 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 				model.RandomWeightMultiplier.Value = Mathf.Max(0f, EditorGUILayout.FloatField(new GUIContent("Random Weight Multiplier", "The chance of it appearing relative to others among its Order Weight grouping."), model.RandomWeightMultiplier.Value));
 				model.RandomAppearance.Value = Mathf.Clamp01(EditorGUILayout.FloatField(new GUIContent("Random Appearance", "Chance it won't be shown at all each time encounters are chosen."), model.RandomAppearance.Value));
-				model.EncounterId.Value = model.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, EditorGUILayout.TextField("Encounter Id", model.EncounterId.Value));
+				model.Id.Value = EditorGUILayout.TextField("Id", model.Id.Value);
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);

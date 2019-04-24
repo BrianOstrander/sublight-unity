@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 0.5,
-  "encounterId": "fd95fa90-e503-4161-b6ed-38929c52763e",
   "name": "Noctis",
   "trigger": "TransitComplete",
   "defaultEndLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b",
@@ -904,13 +903,12 @@
       }
     ]
   },
-  "version": 11,
+  "version": 12,
   "meta": "Noctis",
-  "metaKeyValues": {
-    "EncounterId": "fd95fa90-e503-4161-b6ed-38929c52763e"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-08T09:36:14.672045-07:00",
   "modified": "2019-04-08T09:36:14.672045-07:00",
+  "id": "fd95fa90-e503-4161-b6ed-38929c52763e",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

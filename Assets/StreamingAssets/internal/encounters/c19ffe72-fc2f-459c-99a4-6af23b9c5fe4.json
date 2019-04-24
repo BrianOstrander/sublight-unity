@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "20e2741a-5f74-4d18-8628-43fcc9105ab7",
   "name": "Oasis Relay Terminal: Scuttled",
   "trigger": "None",
   "defaultEndLogId": "2d90ab39-4a25-457b-9379-73f0f043745e",
@@ -384,11 +383,10 @@
   },
   "version": 12,
   "meta": "Oasis Relay Terminal: Scuttled",
-  "metaKeyValues": {
-    "EncounterId": "20e2741a-5f74-4d18-8628-43fcc9105ab7"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-22T15:37:51.762097-07:00",
   "modified": "2019-04-22T15:37:51.762097-07:00",
+  "id": "20e2741a-5f74-4d18-8628-43fcc9105ab7",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

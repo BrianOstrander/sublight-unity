@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "63245462-5804-41cb-b51d-910c68529a7a",
   "name": "Exposition",
   "trigger": "Load",
   "defaultEndLogId": "4ce263e3-6eb9-4ed5-82c7-48f797ea9bdc",
@@ -2821,13 +2820,12 @@
       }
     ]
   },
-  "version": 11,
+  "version": 12,
   "meta": "Exposition",
-  "metaKeyValues": {
-    "EncounterId": "63245462-5804-41cb-b51d-910c68529a7a"
-  },
+  "metaKeyValues": {},
   "created": "2019-03-07T14:05:01.96034-08:00",
   "modified": "2019-03-07T14:05:01.96034-08:00",
+  "id": "63245462-5804-41cb-b51d-910c68529a7a",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

@@ -828,7 +828,7 @@ namespace LunraGames.SubLight
 			{
 				case EncounterRequest.States.Request:
 					Payload.Game.EncounterResume.Value = new EncounterResume(
-						request.Encounter.EncounterId.Value,
+						request.Encounter.Id.Value,
 						request.Trigger
 					);
 					break;

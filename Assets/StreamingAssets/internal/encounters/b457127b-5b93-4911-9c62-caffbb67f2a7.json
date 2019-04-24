@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330",
   "name": "InitializeRules Default",
   "trigger": "InitializeRules",
   "defaultEndLogId": "9eaf08e3-231f-4500-9007-4219ede472d0",
@@ -981,13 +980,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "InitializeRules Default",
-  "metaKeyValues": {
-    "EncounterId": "6c7f9095-46c2-40e0-bfde-bc7a45508330"
-  },
+  "metaKeyValues": {},
   "created": "2019-02-18T19:16:17.499742-08:00",
   "modified": "2019-02-18T19:16:17.499742-08:00",
+  "id": "6c7f9095-46c2-40e0-bfde-bc7a45508330",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

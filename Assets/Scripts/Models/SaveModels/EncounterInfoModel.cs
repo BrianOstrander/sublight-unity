@@ -25,12 +25,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore] public readonly ListenerProperty<float> RandomAppearance;
 
-		[JsonProperty] string encounterId;
-		/// <summary>
-		/// The encounter identifier.
-		/// </summary>
-		[JsonIgnore] public readonly ListenerProperty<string> EncounterId;
-
 		[JsonProperty] string name;
 		/// <summary>
 		/// The name of this encounter, will be seen by the player and listed as
@@ -75,7 +69,6 @@ namespace LunraGames.SubLight.Models
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
 			RandomWeightMultiplier = new ListenerProperty<float>(value => randomWeightMultiplier = value, () => randomWeightMultiplier);
 			RandomAppearance = new ListenerProperty<float>(value => randomAppearance = value, () => randomAppearance);
-			EncounterId = new ListenerProperty<string>(value => encounterId = value, () => encounterId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Trigger = new ListenerProperty<EncounterTriggers>(value => trigger = value, () => trigger);

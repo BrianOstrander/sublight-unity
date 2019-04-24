@@ -171,22 +171,6 @@ namespace LunraGames.SubLight
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 
-		protected string GetUniqueIdKey(SaveTypes saveType)
-		{
-			switch (saveType)
-			{
-				case SaveTypes.EncounterInfo: return MetaKeyConstants.EncounterInfo.EncounterId;
-				case SaveTypes.GalaxyPreview: 
-				case SaveTypes.GalaxyDistant:
-				case SaveTypes.GalaxyInfo:
-					return MetaKeyConstants.GalaxyInfo.GalaxyId;
-				case SaveTypes.GamemodeInfo: return MetaKeyConstants.GamemodeInfo.GamemodeId;
-				default:
-					Debug.LogWarning("Save type " + saveType + " has no unique id key and loading by default ids has not been tested");
-					return null;
-			}
-		}
-
 		public abstract void Initialize(IBuildInfo info, Action<RequestStatus> done);
 
 		/// <summary>
@@ -281,10 +265,7 @@ namespace LunraGames.SubLight
 				));
 				return;
 			}
-			var uniqueIdKey = GetUniqueIdKey(ToEnum(typeof(M)).FirstOrDefault());
-			SaveModel result;
-			if (string.IsNullOrEmpty(uniqueIdKey)) result = results.Models.FirstOrDefault(m => m.Id.Value == modelId);
-			else result = results.Models.FirstOrDefault(m => m.GetMetaKey(uniqueIdKey) == modelId);
+			var result = results.Models.FirstOrDefault(m => m.Id.Value == modelId);
 
 			if (result == null)
 			{

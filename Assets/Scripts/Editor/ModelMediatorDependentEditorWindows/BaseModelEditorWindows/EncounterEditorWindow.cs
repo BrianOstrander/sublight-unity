@@ -28,20 +28,10 @@ namespace LunraGames.SubLight
 
 			return model;
 		}
-		
-		protected override void AssignModelId(EncounterInfoModel model, string id)
-		{
-			model.EncounterId.Value = model.SetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId, Guid.NewGuid().ToString());
-		}
 
 		protected override void AssignModelName(EncounterInfoModel model, string name)
 		{
 			model.Name.Value = name;
-		}
-
-		protected override string GetModelId(SaveModel model)
-		{
-			return model.GetMetaKey(MetaKeyConstants.EncounterInfo.EncounterId);
 		}
 		#endregion
 

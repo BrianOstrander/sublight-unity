@@ -2,7 +2,6 @@
   "orderWeight": 15,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "4d443864-2fcd-4e8c-9934-7fb46faaec6b",
   "name": "Transit Limited - Critical",
   "trigger": "TransitComplete",
   "defaultEndLogId": "531de101-de64-4846-acc0-34c9f09ebdb6",
@@ -269,13 +268,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Transit Limited - Critical",
-  "metaKeyValues": {
-    "EncounterId": "4d443864-2fcd-4e8c-9934-7fb46faaec6b"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-02T10:48:00.737332-07:00",
   "modified": "2019-04-02T10:48:00.737332-07:00",
+  "id": "4d443864-2fcd-4e8c-9934-7fb46faaec6b",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

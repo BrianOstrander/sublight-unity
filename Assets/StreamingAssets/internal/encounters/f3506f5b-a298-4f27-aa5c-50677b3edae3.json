@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 0.5,
-  "encounterId": "427513da-5833-49a6-9f7c-21bd6e85583e",
   "name": "Wax Sky",
   "trigger": "TransitComplete",
   "defaultEndLogId": "86dd4471-d2da-4cca-9561-26722a9fd0fd",
@@ -894,13 +893,12 @@
       }
     ]
   },
-  "version": 11,
+  "version": 12,
   "meta": "Wax Sky",
-  "metaKeyValues": {
-    "EncounterId": "427513da-5833-49a6-9f7c-21bd6e85583e"
-  },
+  "metaKeyValues": {},
   "created": "2019-04-09T09:59:53.041572-07:00",
   "modified": "2019-04-09T09:59:53.041572-07:00",
+  "id": "427513da-5833-49a6-9f7c-21bd6e85583e",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

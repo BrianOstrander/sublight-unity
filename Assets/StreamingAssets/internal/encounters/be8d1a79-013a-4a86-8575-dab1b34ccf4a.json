@@ -2,7 +2,6 @@
   "orderWeight": 510,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "b764f4ba-be4b-48f1-8770-ff998c00ae82",
   "name": "Select Sol",
   "trigger": "NavigationSelect",
   "defaultEndLogId": "e45b0073-cf1c-4891-9a5f-7e433c70433c",
@@ -111,13 +110,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Select Sol",
-  "metaKeyValues": {
-    "EncounterId": "b764f4ba-be4b-48f1-8770-ff998c00ae82"
-  },
+  "metaKeyValues": {},
   "created": "2019-02-26T13:14:25.874144-08:00",
   "modified": "2019-02-26T13:14:25.874144-08:00",
+  "id": "b764f4ba-be4b-48f1-8770-ff998c00ae82",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

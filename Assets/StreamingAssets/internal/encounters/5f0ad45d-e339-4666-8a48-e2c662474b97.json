@@ -2,7 +2,6 @@
   "orderWeight": 499,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "encounterId": "1a588196-06e3-470c-8828-879698af5662",
   "name": "Exposition Ignored",
   "trigger": "Load",
   "defaultEndLogId": "7fc59fd7-3c8d-4e7b-925b-b5aadde25300",
@@ -81,13 +80,12 @@
     "bustLogs": [],
     "conversationLogs": []
   },
-  "version": 11,
+  "version": 12,
   "meta": "Exposition Ignored",
-  "metaKeyValues": {
-    "EncounterId": "1a588196-06e3-470c-8828-879698af5662"
-  },
+  "metaKeyValues": {},
   "created": "2019-03-26T11:29:29.063017-07:00",
   "modified": "2019-03-26T11:29:29.063017-07:00",
+  "id": "1a588196-06e3-470c-8828-879698af5662",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }

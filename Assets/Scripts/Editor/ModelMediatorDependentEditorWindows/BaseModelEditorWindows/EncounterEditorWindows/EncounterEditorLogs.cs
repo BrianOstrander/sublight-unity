@@ -200,11 +200,11 @@ namespace LunraGames.SubLight
 
 		void LogsToolbar(EncounterInfoModel model)
 		{
-			if (ModelSelectionModified || logCache == null || model.EncounterId.Value != logCache.EncounterId)
+			if (ModelSelectionModified || logCache == null || model.Id.Value != logCache.EncounterId)
 			{
 				logCache = new EncounterEditorLogCache
 				{
-					EncounterId = model.EncounterId.Value,
+					EncounterId = model.Id.Value,
 					BustIdsInitialized = GetAllBustIdsInitialized(model),
 					BustIdsMissingInitialization = GetAllBustIdsMissingInitialization(model),
 					BustIdsNormalizationMismatch = GetAllBustIds(model).Length != GetAllBustIdsNormalized(model).Length

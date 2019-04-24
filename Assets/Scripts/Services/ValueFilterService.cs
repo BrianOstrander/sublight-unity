@@ -483,7 +483,7 @@ namespace LunraGames.SubLight
 			Action<ValueFilterGroups, bool> done
 		)
 		{
-			var encounterId = string.IsNullOrEmpty(filter.FilterValue.Value) ? (encounterModel == null ? null : encounterModel.EncounterId.Value) : filter.FilterValue.Value;
+			var encounterId = string.IsNullOrEmpty(filter.FilterValue.Value) ? (encounterModel == null ? null : encounterModel.Id.Value) : filter.FilterValue.Value;
 			var operation = filter.Operation.Value;
 			var encounterInteraction = model.EncounterStatuses.GetEncounterStatus(encounterId);
 			var result = false;
