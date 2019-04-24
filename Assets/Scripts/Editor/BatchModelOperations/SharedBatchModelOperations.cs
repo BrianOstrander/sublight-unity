@@ -95,7 +95,7 @@ namespace LunraGames.SubLight
 				model,
 				done,
 				write,
-				model.GalaxyId.Value
+				model.Id.Value
 			);
 		}
 
@@ -137,7 +137,9 @@ namespace LunraGames.SubLight
 				case SaveTypes.EncounterInfo:
 					CheckMetaId("EncounterId");
 					break;
-				//case SaveTypes.GalaxyInfo:
+				case SaveTypes.GalaxyInfo:
+					CheckMetaId("GalaxyId");
+					break;
 				case SaveTypes.GamemodeInfo:
 					CheckMetaId("GamemodeId");
 					break;

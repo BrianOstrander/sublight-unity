@@ -124,7 +124,7 @@ namespace LunraGames.SubLight
 			}
 
 			if (string.IsNullOrEmpty(App.BuildPreferences.DefaultGalaxyId)) Debug.LogError("DefaultGalaxyId in BuildPreferences is null or empty, unpredictable behaviour may occur");
-			var defaultGalaxy = result.Models.FirstOrDefault(m => m.GetMetaKey(MetaKeyConstants.GalaxyInfo.GalaxyId) == App.BuildPreferences.DefaultGalaxyId);
+			var defaultGalaxy = result.Models.FirstOrDefault(m => m.Id.Value == App.BuildPreferences.DefaultGalaxyId);
 			
 			if (defaultGalaxy == null)
 			{
@@ -222,7 +222,7 @@ namespace LunraGames.SubLight
 				GamemodeId = Payload.DefaultGamemode.Id.Value,
 
 				GalaxySeed = DemonUtility.NextInteger,
-				GalaxyId = Payload.DefaultGalaxy.GalaxyId.Value
+				GalaxyId = Payload.DefaultGalaxy.Id.Value
 				//GalaxyTargetId = TODO: Figure out how this should obtain this value...
 
 				// Any other values should only be set if specified by developer preferences...

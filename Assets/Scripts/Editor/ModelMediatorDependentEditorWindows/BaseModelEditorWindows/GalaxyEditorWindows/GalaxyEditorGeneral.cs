@@ -33,7 +33,7 @@ namespace LunraGames.SubLight
 			{
 				model.IsPlayable.Value = EditorGUILayout.Toggle(new GUIContent("Is Playable", "Can the player start a game in this galaxy?"), model.IsPlayable.Value);
 
-				model.GalaxyId.Value = model.SetMetaKey(MetaKeyConstants.GalaxyInfo.GalaxyId, EditorGUILayout.TextField("Galaxy Id", model.GalaxyId.Value));
+				model.Id.Value = EditorGUILayout.TextField("Galaxy Id", model.Id.Value);
 
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				model.Meta.Value = model.Name;

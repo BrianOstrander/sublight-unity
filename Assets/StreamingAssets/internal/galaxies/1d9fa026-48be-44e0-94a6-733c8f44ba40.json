@@ -1,5 +1,4 @@
 {
-  "galaxyId": "a6603c5e-f151-45aa-96bb-30905e781573",
   "name": "Andromeda",
   "universeNormal": {"x":-1.0,"y":1.0,"z":1.0},
   "alertHeightMultiplier": 2.0,
@@ -28,9 +27,7 @@
   },
   "version": 12,
   "meta": "Andromeda",
-  "metaKeyValues": {
-    "GalaxyId": "a6603c5e-f151-45aa-96bb-30905e781573"
-  },
+  "metaKeyValues": {},
   "created": "2018-11-12T15:25:32.146355-08:00",
   "modified": "2018-11-12T15:25:32.146355-08:00",
   "id": "a6603c5e-f151-45aa-96bb-30905e781573",

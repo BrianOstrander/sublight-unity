@@ -59,19 +59,9 @@ namespace LunraGames.SubLight
 		}
 
 		#region Model Overrides
-		protected override void AssignModelId(GalaxyInfoModel model, string id)
-		{
-			model.GalaxyId.Value = model.SetMetaKey(MetaKeyConstants.GalaxyInfo.GalaxyId, Guid.NewGuid().ToString());
-		}
-
 		protected override void AssignModelName(GalaxyInfoModel model, string name)
 		{
 			model.Name.Value = name;
-		}
-
-		protected override string GetModelId(SaveModel model)
-		{
-			return model.GetMetaKey(MetaKeyConstants.GalaxyInfo.GalaxyId);
 		}
 		#endregion
 

@@ -8,6 +8,8 @@
 			public const string False = null;
 		}
 
+		// Not sure these are needed... they're left over from when there were meta ids...
+
 		public static class EncounterInfo
 		{
 
@@ -15,7 +17,7 @@
 
 		public static class GalaxyInfo
 		{
-			public const string GalaxyId = "GalaxyId";
+
 		}
 
 		public static class GamemodeInfo

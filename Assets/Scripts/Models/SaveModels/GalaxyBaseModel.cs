@@ -20,7 +20,6 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonProperty] bool isPlayable;
-		[JsonProperty] string galaxyId;
 		[JsonProperty] string name;
 		[JsonProperty] string description;
 
@@ -41,8 +40,6 @@ namespace LunraGames.SubLight.Models
 
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> IsPlayable;
-		[JsonIgnore]
-		public readonly ListenerProperty<string> GalaxyId;
 		[JsonIgnore]
 		public readonly ListenerProperty<string> Name;
 		[JsonIgnore]
@@ -134,7 +131,6 @@ namespace LunraGames.SubLight.Models
 		public GalaxyBaseModel()
 		{
 			IsPlayable = new ListenerProperty<bool>(value => isPlayable = value, () => isPlayable);
-			GalaxyId = new ListenerProperty<string>(value => galaxyId = value, () => galaxyId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 
