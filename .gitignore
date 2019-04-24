@@ -17,5 +17,8 @@ bin
 *.DS_Store
 *.mdb
 *.mdb.meta
-Local.meta
+Assets/Local.meta
 Assets/Local
+
+**/CurvedUI/Demo Scenes/
+**/CurvedUI/Demo Scenes.meta

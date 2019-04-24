@@ -131,10 +131,10 @@ namespace LunraGames.SubLight.Views
 			Gizmos.DrawWireSphere(PositionArea.position, 0.05f);
 
 #if UNITY_EDITOR
-			Handles.color = Color.yellow;
-			Handles.Label(PositionArea.position, new GUIContent(waypointName));
-			Handles.color = Color.red;
-			Handles.DrawWireDisc(Root.position, Vector3.up, lipRadius);
+			//Handles.color = Color.yellow;
+			//Handles.Label(PositionArea.position, new GUIContent(waypointName));
+			//Handles.color = Color.red;
+			//Handles.DrawWireDisc(Root.position, Vector3.up, lipRadius);
 #endif
 
 		}

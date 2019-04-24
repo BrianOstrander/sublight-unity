@@ -80,7 +80,6 @@ namespace LunraGames.SubLight
 			EditorGUILayout.PropertyField(onDragEndProperty);
 
 			serializedObject.ApplyModifiedProperties();
-			EditorUtility.SetDirty(target);
 		}
 
 		void AddChildAndSiblingLeafs()

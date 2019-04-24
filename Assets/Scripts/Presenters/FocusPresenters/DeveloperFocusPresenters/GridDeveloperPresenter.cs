@@ -18,8 +18,6 @@ namespace LunraGames.SubLight.Presenters
 			public const string LearnMore = "learn_more";
 		}
 
-		static float GetMessageAngle(int index = 0) { return (25f + ((Mathf.Abs(index) - 1) * 30f)) * (index < 0 ? -1f : 1); }
-
 		protected override DeveloperViews DeveloperView { get { return DeveloperViews.Grid; } }
 
 		DeveloperMessageEntry shipMessage;
@@ -50,17 +48,17 @@ namespace LunraGames.SubLight.Presenters
 		{
 			shipMessage = View.CreateEntry(
 				OnClickLink,
-				GetMessageAngle(-1)
+				-0.278f
 			);
 
 			resourceMessage = View.CreateEntry(
 				OnClickLink,
-				GetMessageAngle(1)
+				0.278f
 			);
 
 			systemMessage = View.CreateEntry(
 				OnClickLink,
-				GetMessageAngle(2)
+				0.61f
 			);
 
 			OnRefreshMessage(true);
