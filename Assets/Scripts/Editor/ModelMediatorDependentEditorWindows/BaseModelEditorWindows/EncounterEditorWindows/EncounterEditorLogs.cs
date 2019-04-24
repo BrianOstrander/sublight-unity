@@ -189,6 +189,7 @@ namespace LunraGames.SubLight
 		#region Events
 		void LogsSettingsGui()
 		{
+			GUILayout.Label("Logs", EditorStyles.boldLabel);
 			logsShowNameSource.Value = EditorGUILayout.Toggle(new GUIContent("Show Source of Log Names", "Prefixes the source of the name for a log, if it's an Id or form the actual Name field."), logsShowNameSource.Value);
 			logsJumpFromToolbarAppend.Value = EditorGUILayout.Toggle(new GUIContent("Jump To Log When Created From Toolbar", "When enabled, the editor will focus logs when created from the top toolbar area."), logsJumpFromToolbarAppend.Value);
 			logsEdgeIndentsEnabled.Value = EditorGUILayout.Toggle(new GUIContent("Edge Indenting", "Certain logs, like conversations, support indenting some edges for clarity."), logsEdgeIndentsEnabled.Value);

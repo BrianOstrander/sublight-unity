@@ -267,45 +267,7 @@ namespace LunraGames.SubLight
 				{
 					if (GUILayout.Button(new GUIContent("Start", "Starts this encounter if none are currently active."), EditorStyles.miniButton, GUILayout.Width(64f)))
 					{
-						var gamePayload = (App.SM.CurrentHandler as GameState).Payload;
-
-						Action onStartEncounter = () =>
-						{
-							App.M.Load<EncounterInfoModel>(
-								DevPrefs.EncounterIdOverride.Value,
-								encounterResult =>
-								{
-									if (encounterResult.Status != RequestStatus.Success)
-									{
-										Debug.LogError("Loading override encounter returned status: " + encounterResult.Status + " and error: " + encounterResult.Error);
-										return;
-									}
-
-									if (encounterResult.TypedModel == null) Debug.LogError("Unable to push encounter, could not find one with a matching id");
-									else
-									{
-										EditorUtilityExtensions.GetGameWindow().Focus();
-										App.Callbacks.EncounterRequest(
-											EncounterRequest.Request(
-												gamePayload.Game,
-												encounterResult.TypedModel,
-												DevPrefs.EncounterIdOverrideTrigger.Value
-											)
-										);
-									}
-								}
-							);
-						};
-
-						if (gamePayload.Game.EncounterResume.Value.CanResume)
-						{
-							Debug.LogWarning("Interrupting active encounter to start a new one...");
-							//Debug.LogError("Cannot start an encounter while one is active.");
-							App.Callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
-							App.Heartbeat.Wait(onStartEncounter, 0.25f);
-							EditorUtilityExtensions.GetGameWindow().Focus();
-						}
-						else onStartEncounter();
+						StartEncounter();
 					}
 					//if (GUILayout.Button(new GUIContent("Stop", "Stops an encounter if one is playing."), EditorStyles.miniButtonRight, GUILayout.Width(64f)))
 					//{
@@ -360,17 +322,6 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		bool IsInGameState
-		{
-			get
-			{
-				return Application.isPlaying && 
-					App.HasInstance && 
-					App.SM != null && 
-					App.SM.Is(StateMachine.States.Game, StateMachine.Events.Idle);
-			}
-		}
-
         #region Events
         void OnPlaymodeStateChanged(PlayModeStateChange playmode)
         {
@@ -386,6 +337,62 @@ namespace LunraGames.SubLight
         {
             AssetDatabase.OpenAsset(stagedPrefab);
         }
-        #endregion
-    }
+		#endregion
+
+		#region Shared
+		public static bool IsInGameState
+		{
+			get
+			{
+				return Application.isPlaying &&
+					App.HasInstance &&
+					App.SM != null &&
+					App.SM.Is(StateMachine.States.Game, StateMachine.Events.Idle);
+			}
+		}
+
+		public static void StartEncounter()
+		{
+			var gamePayload = (App.SM.CurrentHandler as GameState).Payload;
+
+			Action onStartEncounter = () =>
+			{
+				App.M.Load<EncounterInfoModel>(
+					DevPrefs.EncounterIdOverride.Value,
+					encounterResult =>
+					{
+						if (encounterResult.Status != RequestStatus.Success)
+						{
+							Debug.LogError("Loading override encounter returned status: " + encounterResult.Status + " and error: " + encounterResult.Error);
+							return;
+						}
+
+						if (encounterResult.TypedModel == null) Debug.LogError("Unable to push encounter, could not find one with a matching id");
+						else
+						{
+							EditorUtilityExtensions.GetGameWindow().Focus();
+							App.Callbacks.EncounterRequest(
+								EncounterRequest.Request(
+									gamePayload.Game,
+									encounterResult.TypedModel,
+									DevPrefs.EncounterIdOverrideTrigger.Value
+								)
+							);
+						}
+					}
+				);
+			};
+
+			if (gamePayload.Game.EncounterResume.Value.CanResume)
+			{
+				Debug.LogWarning("Interrupting active encounter to start a new one... This behaviour is very buggy right now!");
+				//Debug.LogError("Cannot start an encounter while one is active.");
+				App.Callbacks.EncounterRequest(EncounterRequest.Controls(false, true));
+				App.Heartbeat.Wait(onStartEncounter, 0.25f);
+				EditorUtilityExtensions.GetGameWindow().Focus();
+			}
+			else onStartEncounter();
+		}
+		#endregion
+	}
 }

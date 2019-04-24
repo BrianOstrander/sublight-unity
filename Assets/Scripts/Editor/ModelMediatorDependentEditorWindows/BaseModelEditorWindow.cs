@@ -78,6 +78,8 @@ namespace LunraGames.SubLight
 			Maximized = 20
 		}
 
+		protected const float ToolbarWidth = 64f;
+
 		string readableModelName;
 
 		EditorPrefsBool modelAlwaysAllowSaving;
@@ -659,12 +661,14 @@ namespace LunraGames.SubLight
 
 					GUILayout.FlexibleSpace();
 
-					if (GUILayout.Button("Settings", EditorStyles.toolbarButton, GUILayout.Width(64f))) ShowSettingsDialog();
+					OnDrawPreSettings(model);
+
+					if (GUILayout.Button("Settings", EditorStyles.toolbarButton, GUILayout.Width(ToolbarWidth))) ShowSettingsDialog();
 
 					EditorGUILayoutExtensions.PushEnabled(modelAlwaysAllowSaving.Value || ModelSelectionModified || (!Event.current.shift && Event.current.control));
 					{
 						var saveContent = ModelSelectionModified ? new GUIContent("*Save*", "There are unsaved changes.") : new GUIContent("Save", "There are no unsaved changes.");
-						if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(64f))) Save(null);
+						if (GUILayout.Button(saveContent, EditorStyles.toolbarButton, GUILayout.Width(ToolbarWidth))) Save(null);
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
@@ -955,6 +959,11 @@ namespace LunraGames.SubLight
 			}
 			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) EditorGUIExtensions.ResetControls();
 			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+		}
+
+		protected virtual void OnDrawPreSettings(M model)
+		{
+
 		}
 
 		protected void TriggerDeselect()
