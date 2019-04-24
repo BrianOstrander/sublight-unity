@@ -137,7 +137,7 @@ namespace LunraGames.SubLight
 
 			var eventData = new Dictionary<string, object>
 			{
-				{ GameFields.Id, gameModel.GameId.Value},
+				{ GameFields.Id, gameModel.Id.Value},
 				{ GameFields.Seed, gameModel.Seed.Value },
 				{ GameFields.GalaxyId, gameModel.GalaxyId },
 				{ GameFields.GalaxyTargetId, gameModel.GalaxyTargetId },
@@ -159,7 +159,7 @@ namespace LunraGames.SubLight
 
 			var eventData = new Dictionary<string, object>
 			{
-				{ GameFields.Id, gameModel.GameId.Value},
+				{ GameFields.Id, gameModel.Id.Value},
 
 				{ GameFields.Condition, condition },
 				{ GameFields.ConditionTitle, title },
@@ -180,7 +180,7 @@ namespace LunraGames.SubLight
 
 			var eventData = new Dictionary<string, object>
 			{
-				{ GameFields.Id, gameModel.GameId.Value},
+				{ GameFields.Id, gameModel.Id.Value},
 				{ GameFields.Seed, gameModel.Seed.Value },
 				{ GameFields.GalaxyId, gameModel.GalaxyId },
 				{ GameFields.GalaxyTargetId, gameModel.GalaxyTargetId },

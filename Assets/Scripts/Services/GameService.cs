@@ -63,7 +63,7 @@ namespace LunraGames.SubLight
 			var model = modelMediator.Create<GameModel>();
 
 			model.Name.Value = Guid.NewGuid().ToString();
-			model.GameId.Value = model.Name.Value;
+			model.Id.Value = model.Name.Value;
 
 			model.Seed.Value = info.GameSeed;
 			model.GamemodeId = StringExtensions.GetNonNullOrEmpty(info.GamemodeId, App.BuildPreferences.DefaultGamemodeId);

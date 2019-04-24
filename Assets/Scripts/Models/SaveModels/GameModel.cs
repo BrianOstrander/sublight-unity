@@ -13,9 +13,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string name;
 		[JsonIgnore] public readonly ListenerProperty<string> Name;
 
-		[JsonProperty] string gameId;
-		[JsonIgnore] public readonly ListenerProperty<string> GameId;
-
 		[JsonProperty] int seed;
 		/// <summary>
 		/// The game seed.
@@ -107,7 +104,6 @@ namespace LunraGames.SubLight.Models
 			SaveType = SaveTypes.Game;
 
 			Name = new ListenerProperty<string>(value => name = value, () => name);
-			GameId = new ListenerProperty<string>(value => gameId = value, () => gameId);
 			Seed = new ListenerProperty<int>(value => seed = value, () => seed);
 			RelativeDayTime = new ListenerProperty<RelativeDayTime>(value => relativeDayTime = value, () => relativeDayTime);
 			ToolbarSelection = new ListenerProperty<ToolbarSelections>(value => toolbarSelection = value, () => toolbarSelection);
