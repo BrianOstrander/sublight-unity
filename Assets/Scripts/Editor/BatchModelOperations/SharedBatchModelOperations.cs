@@ -106,7 +106,7 @@ namespace LunraGames.SubLight
 				model,
 				done,
 				write,
-				model.GamemodeId.Value
+				model.Id.Value
 			);
 		}
 
@@ -138,8 +138,9 @@ namespace LunraGames.SubLight
 					CheckMetaId("EncounterId");
 					break;
 				//case SaveTypes.GalaxyInfo:
-				//case SaveTypes.GamemodeInfo:
-					//break;
+				case SaveTypes.GamemodeInfo:
+					CheckMetaId("GamemodeId");
+					break;
 				default:
 					errors.Add(ModificationPrefix + "Unrecognized SaveType: " + model.SaveType);
 					break;

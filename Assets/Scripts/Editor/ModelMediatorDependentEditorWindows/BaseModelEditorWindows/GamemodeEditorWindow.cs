@@ -26,19 +26,9 @@ namespace LunraGames.SubLight
 			return model;
 		}
 
-		protected override void AssignModelId(GamemodeInfoModel model, string id)
-		{
-			model.GamemodeId.Value = model.SetMetaKey(MetaKeyConstants.GamemodeInfo.GamemodeId, Guid.NewGuid().ToString());
-		}
-
 		protected override void AssignModelName(GamemodeInfoModel model, string name)
 		{
 			model.Name.Value = name;
-		}
-
-		protected override string GetModelId(SaveModel model)
-		{
-			return model.GetMetaKey(MetaKeyConstants.GamemodeInfo.GamemodeId);
 		}
 		#endregion
 	}

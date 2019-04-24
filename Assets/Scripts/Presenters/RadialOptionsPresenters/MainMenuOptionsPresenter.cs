@@ -228,7 +228,7 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 			var newGameBlock = payload.NewGameBlock;
-			newGameBlock.GamemodeId = gamemode.GamemodeId.Value;
+			newGameBlock.GamemodeId = gamemode.Id.Value;
 
 			App.GameService.CreateGame(newGameBlock, OnStartNewGameCreateGame);
 		}

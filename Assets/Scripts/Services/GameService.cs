@@ -194,7 +194,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 			model.Context.Gamemode = result.TypedModel;
-			model.KeyValues.Set(KeyDefines.Game.GamemodeId, model.Context.Gamemode.GamemodeId.Value);
+			model.KeyValues.Set(KeyDefines.Game.GamemodeId, model.Context.Gamemode.Id.Value);
 			model.KeyValues.Set(KeyDefines.Game.GamemodeKey, model.Context.Gamemode.GamemodeKey.Value);
 
 			if (string.IsNullOrEmpty(model.GalaxyId))

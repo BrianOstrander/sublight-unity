@@ -32,7 +32,7 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 
 				model.IsInDevelopment.Value = EditorGUILayout.Toggle("In Development", model.IsInDevelopment.Value);
-				model.GamemodeId.Value = model.SetMetaKey(MetaKeyConstants.GamemodeInfo.GamemodeId, EditorGUILayout.TextField("Gamemode Id", model.GamemodeId.Value));
+				model.Id.Value = EditorGUILayout.TextField("Gamemode Id", model.Id.Value);
 				model.GamemodeKey.Value = EditorGUILayout.TextField(new GUIContent("Gamemode Key", "Used by encounters and other logic to know the current gamemode."), model.GamemodeKey.Value);
 
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);

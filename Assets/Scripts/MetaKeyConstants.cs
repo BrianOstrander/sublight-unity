@@ -20,7 +20,7 @@
 
 		public static class GamemodeInfo
 		{
-			public const string GamemodeId = "GamemodeId";
+
 		}
 
 		public static class Game

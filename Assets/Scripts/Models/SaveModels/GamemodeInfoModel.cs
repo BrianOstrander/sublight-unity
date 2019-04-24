@@ -17,9 +17,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool isInDevelopment;
 		[JsonIgnore] public readonly ListenerProperty<bool> IsInDevelopment;
 
-		[JsonProperty] string gamemodeId;
-		[JsonIgnore] public readonly ListenerProperty<string> GamemodeId;
-
 		[JsonProperty] string name;
 		[JsonIgnore] public readonly ListenerProperty<string> Name;
 
@@ -47,7 +44,6 @@ namespace LunraGames.SubLight.Models
 			SiblingBehaviour = SiblingBehaviours.All;
 
 			IsInDevelopment = new ListenerProperty<bool>(value => isInDevelopment = value, () => isInDevelopment);
-			GamemodeId = new ListenerProperty<string>(value => gamemodeId = value, () => gamemodeId);
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
 			Title = new ListenerProperty<string>(value => title = value, () => title);

@@ -186,7 +186,7 @@ namespace LunraGames.SubLight
 			if (remaining.None())
 			{
 				if (string.IsNullOrEmpty(App.BuildPreferences.DefaultGamemodeId)) Debug.LogError("DefaultGamemodeId in BuildPreferences is null or empty, unpredictable behaviour may occur");
-				Payload.DefaultGamemode = Payload.Gamemodes.FirstOrDefault(g => g.GetMetaKey(MetaKeyConstants.GamemodeInfo.GamemodeId) == App.BuildPreferences.DefaultGamemodeId);
+				Payload.DefaultGamemode = Payload.Gamemodes.FirstOrDefault(g => g.Id.Value == App.BuildPreferences.DefaultGamemodeId);
 
 				if (Payload.DefaultGamemode == null) Debug.LogError("No default gamemode with id \"" + App.BuildPreferences.DefaultGamemodeId + "\" was found");
 
@@ -219,7 +219,7 @@ namespace LunraGames.SubLight
 			{
 				GameSeed = DemonUtility.NextInteger,
 
-				GamemodeId = Payload.DefaultGamemode.GamemodeId.Value,
+				GamemodeId = Payload.DefaultGamemode.Id.Value,
 
 				GalaxySeed = DemonUtility.NextInteger,
 				GalaxyId = Payload.DefaultGalaxy.GalaxyId.Value
