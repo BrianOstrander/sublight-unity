@@ -44,11 +44,8 @@ namespace LunraGames.SubLight
 
 		public InputService(Heartbeat heartbeat, CallbackService callbacks)
 		{
-			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
-			if (callbacks == null) throw new ArgumentNullException("callbacks");
-
-			this.heartbeat = heartbeat;
-			this.callbacks = callbacks;
+			this.heartbeat = heartbeat ?? throw new ArgumentNullException("heartbeat");
+			this.callbacks = callbacks ?? throw new ArgumentNullException("callbacks");
 		}
 
 		public void SetEnabled(bool isEnabled)
@@ -74,6 +71,8 @@ namespace LunraGames.SubLight
 		#region Events
 		protected virtual void OnUpdate(float delta)
 		{
+			if (!IsFocused()) return;
+
 			if (IsEscapeUp()) callbacks.Escape();
 
 			var clickDown = IsClickDown();
@@ -307,6 +306,7 @@ namespace LunraGames.SubLight
 			return results.ToArray();
 		}
 		#endregion
+		protected virtual bool IsFocused() { return true; }
 		protected virtual bool IsEscapeUp() { return false; }
 		/// <summary>
 		/// Gets the maximum duration of the click, holding down the input longer will not be a click.
