@@ -387,6 +387,10 @@ namespace LunraGames.SubLight
 					}
 				}
 
+				new SystemCurveIdlePresenter(
+					payload.Game
+				);
+
 				InitializeShipPresenters(state, done);
 			}
 

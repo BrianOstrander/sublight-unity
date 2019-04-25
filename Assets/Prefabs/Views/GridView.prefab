@@ -57,8 +57,8 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: -2
+  m_SortingLayerID: -1540079097
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!114 &114417741134423250
 MonoBehaviour:
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 114028086418360608}
   - component: {fileID: 114199377612940250}
   m_Layer: 12
-  m_Name: Collision
+  m_Name: GridCollision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

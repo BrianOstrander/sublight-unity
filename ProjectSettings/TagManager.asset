@@ -40,6 +40,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: GridBackboard
+    uniqueID: 2754888199
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: GridContents
+    uniqueID: 1778521
     locked: 0
