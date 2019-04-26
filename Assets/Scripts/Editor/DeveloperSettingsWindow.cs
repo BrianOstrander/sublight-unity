@@ -30,18 +30,28 @@ namespace LunraGames.SubLight
 			"Local"
 		};
 
-		DevPrefsInt currentTab;
+		EditorPrefsInt currentTab;
 
-        [SerializeField]
+		EditorPrefsBool transitTimeEnabled;
+		EditorPrefsFloat transitTimeDelta;
+
+		[SerializeField]
         GameObject stagedPrefab;
         [SerializeField]
         bool stagedPrefabEnabled;
 
+		float? transitTimeLastRealtime;
+		float transitTimeCurrent;
+
 		public DeveloperSettingsWindow()
 		{
-			currentTab = new DevPrefsInt(KeyPrefix + "CurrentTab");
+			currentTab = new EditorPrefsInt(KeyPrefix + "CurrentTab");
+
+			transitTimeEnabled = new EditorPrefsBool(KeyPrefix + "TransitTimeEnabled");
+			transitTimeDelta = new EditorPrefsFloat(KeyPrefix + "TransitTimeDelta");
 
             EditorApplication.playModeStateChanged += OnPlaymodeStateChanged;
+			EditorApplication.update += OnUpdate;
 		}
 
 		[MenuItem("Window/Lunra Games/Development Settings")]
@@ -90,6 +100,18 @@ namespace LunraGames.SubLight
 
 			DevPrefs.WindInEditMode.Value = GUILayout.Toggle(DevPrefs.WindInEditMode, "Wind In Edit Mode");
 			DevPrefs.ApplyXButtonStyleInEditMode.Value = GUILayout.Toggle(DevPrefs.ApplyXButtonStyleInEditMode, "Apply XButton Styles In Edit Mode");
+
+			GUILayout.BeginHorizontal();
+			{
+				var transitTimeWasDisabled = !(transitTimeEnabled.Value && !EditorApplication.isPlayingOrWillChangePlaymode);
+				if (transitTimeWasDisabled) EditorGUILayoutExtensions.PushColor(Color.white.NewV(0.7f));
+				{
+					transitTimeDelta.Value = EditorGUILayout.Slider("Transit Time", transitTimeDelta.Value, 0f, 1f);
+					transitTimeEnabled.Value = EditorGUILayout.Toggle(transitTimeEnabled.Value, GUILayout.Width(12f));
+				}
+				if (transitTimeWasDisabled) EditorGUILayoutExtensions.PopColor();
+			}
+			GUILayout.EndHorizontal();
 			#endregion
 
 			#region Utility
@@ -337,6 +359,23 @@ namespace LunraGames.SubLight
         {
             AssetDatabase.OpenAsset(stagedPrefab);
         }
+
+		void OnUpdate()
+		{
+			if (EditorApplication.isPlayingOrWillChangePlaymode || !transitTimeEnabled.Value) return;
+
+			var currentRealtime = Time.realtimeSinceStartup;
+			transitTimeLastRealtime = transitTimeLastRealtime.HasValue ? transitTimeLastRealtime : currentRealtime;
+
+			var delta = (currentRealtime - transitTimeLastRealtime).Value;
+
+			transitTimeCurrent += delta * (1f + transitTimeDelta.Value);
+
+			Shader.SetGlobalFloat(ShaderConstants.Globals.TransitTimeElapsed, transitTimeCurrent);
+			Shader.SetGlobalFloat(ShaderConstants.Globals.TransitTimeNormal, transitTimeCurrent % 1f);
+
+			transitTimeLastRealtime = currentRealtime;
+		}
 		#endregion
 
 		#region Shared
