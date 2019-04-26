@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using UnityEngine.Serialization;
+
+using UnityEngine;
 using UnityEngine.UI;
 
 using CurvedUI;
@@ -17,9 +19,9 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Gradient moodGradientIcon;
 		[SerializeField]
-		Gradient moodGradientLabel;
+		Gradient moodGradientTitle;
 		[SerializeField]
-		Gradient moodGradientLabelBackground;
+		Gradient moodGradientTitleBackground;
 		[SerializeField]
 		Gradient moodGradientProgressTop;
 		[SerializeField]
@@ -28,14 +30,43 @@ namespace LunraGames.SubLight.Views
 		CurveRange moodHashAlphaCurve = CurveRange.Normal;
 
 		[SerializeField]
+		float moodHighlightDuration;
+		[SerializeField]
+		CurveRange moodProgressVerticalOffset;
+		[SerializeField]
+		CurveRange moodIconMaximizedOpacity;
+		[SerializeField]
+		CurveRange moodIconMaximizedScale;
+		[SerializeField]
+		Vector2 moodIconMaximizedSize;
+
+		[SerializeField]
+		CurveRange moodTitleVerticalOffset;
+		[SerializeField]
+		CurveRange moodTitleOpacity;
+
+		[SerializeField]
 		SystemCurveIdleMoodLeaf moodInstance;
 		[SerializeField]
 		Graphic[] moodGraphicIcons;
+		[SerializeField]
+		Graphic[] moodGraphicTitles;
+		[SerializeField]
+		Graphic[] moodGraphicTitleBackgrounds;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+
+		bool moodHighlighted;
+		float moodHighlightElapsed;
+		float moodHighlightElapsedLast;
 
 		public override void Reset()
 		{
 			base.Reset();
+
+			moodHighlighted = false;
+			moodHighlightElapsed = 0f;
+			moodHighlightElapsedLast = 0f;
+			MoodUpdateHighlight();
 
 			SetMood(string.Empty, 0.5f, 0.5f);
 
@@ -48,10 +79,15 @@ namespace LunraGames.SubLight.Views
 			var difference = 1f - (0.5f + (differenceDelta * 0.5f)); // Value from 0.0 to 1.0 where equivelent values are 0.5
 
 			var hashAlpha = moodHashAlphaCurve.Evaluate(Mathf.Abs(differenceDelta));
-			var labelColor = moodGradientLabel.Evaluate(difference);
 
 			var iconColor = moodGradientIcon.Evaluate(difference);
 			foreach (var graphic in moodGraphicIcons) graphic.color = iconColor;
+
+			var titleColor = moodGradientTitle.Evaluate(difference);
+			foreach (var graphic in moodGraphicTitles) graphic.color = titleColor;
+
+			var titleBackgroundColor = moodGradientTitleBackground.Evaluate(difference);
+			foreach (var graphic in moodGraphicTitleBackgrounds) graphic.color = titleBackgroundColor;
 
 			SetMoodSlider(
 				valueTop,
@@ -113,6 +149,17 @@ namespace LunraGames.SubLight.Views
 		{
 			base.OnIdle(delta);
 
+			if (moodHighlighted) moodHighlightElapsed = Mathf.Min(moodHighlightDuration, moodHighlightElapsed + delta);
+			else moodHighlightElapsed = Mathf.Max(0f, moodHighlightElapsed - delta);
+
+			if (!Mathf.Approximately(moodHighlightElapsed, moodHighlightElapsedLast))
+			{
+				MoodUpdateHighlight();
+
+				moodHighlightElapsedLast = moodHighlightElapsed;
+			}
+
+			// TEST STUFF
 			testOffsetTop = (testOffsetTop + (delta * testOffsetSpeed));
 			testOffsetBottom = (testOffsetBottom + (delta * testOffsetSpeed));
 
@@ -138,13 +185,44 @@ namespace LunraGames.SubLight.Views
 				testReversedBottom = !testReversedBottom;
 			}
 
-
 			SetMood(
 				string.Empty,
 				testReversedTop ? (1f - testOffsetTop) : testOffsetTop,
 				testReversedBottom ? (1f - testOffsetBottom) : testOffsetBottom
 			);
 		}
+
+		void MoodUpdateHighlight()
+		{
+			var progress = moodHighlightElapsed / moodHighlightDuration;
+			moodInstance.ProgressArea.localPosition = moodInstance.ProgressArea.localPosition.NewY(
+				moodProgressVerticalOffset.Evaluate(progress)
+			);
+			moodInstance.IconMaximizedArea.sizeDelta = moodIconMaximizedSize * moodIconMaximizedScale.Evaluate(progress);
+			moodInstance.IconMaximizedGroup.alpha = moodIconMaximizedOpacity.Evaluate(progress);
+
+			moodInstance.TitleGroup.alpha = moodTitleOpacity.Evaluate(progress);
+			moodInstance.TitleArea.localPosition = moodInstance.TitleArea.localPosition.NewY(
+				moodTitleVerticalOffset.Evaluate(progress)
+			);
+		}
+
+		#region Mood Events
+		public void OnMoodEnter()
+		{
+			moodHighlighted = true;
+		}
+
+		public void OnMoodExit()
+		{
+			moodHighlighted = false;
+		}
+
+		public void OnMoodClick()
+		{
+			Debug.Log("todo");
+		}
+		#endregion
 	}
 
 	public interface ISystemCurveIdleView : IView
