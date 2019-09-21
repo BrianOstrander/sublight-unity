@@ -5,10 +5,13 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using CurvedUI;
 
-
 #if CURVEDUI_STEAMVR_LEGACY || CURVEDUI_STEAMVR_2
 using Valve.VR;
 #endif 
+
+[assembly: CurvedUI.OptionalDependency("Valve.VR.InteractionSystem.Player", "CURVEDUI_STEAMVR_INT")]
+
+
 
 [ExecuteInEditMode]
 #if CURVEDUI_GOOGLEVR
@@ -16,10 +19,6 @@ public class CurvedUIInputModule : GvrPointerInputModule {
 #else
 public class CurvedUIInputModule : StandaloneInputModule {
 #endif
-
-
-
-
 
     //SETTINGS-------------------------------------------------//
     #region SETTINGS
@@ -159,7 +158,6 @@ public class CurvedUIInputModule : StandaloneInputModule {
         Instance = this;
         base.Awake();
 
-
         //Gaze setup
         if (gazeTimedClickProgressImage != null)
             gazeTimedClickProgressImage.fillAmount = 0;
@@ -175,7 +173,15 @@ public class CurvedUIInputModule : StandaloneInputModule {
 #endif
     }
 
-
+    protected virtual void Update()
+    {
+        if (Time.frameCount % 120 == 0)//do it only once every 120 frames
+        {
+            //check if we don't have extra eventSystem on the scene, as this may mess up interactions.
+            if (EventSystem.current != null && EventSystem.current.gameObject != this.gameObject)
+                Debug.LogError("CURVEDUI: Second EventSystem component detected. This can make UI unusable. Make sure there is only one EventSystem component on the scene. Click on this message to have the extra one selected.", EventSystem.current.gameObject);
+        }
+    }
 
     protected override void Start()
     {
@@ -696,7 +702,19 @@ public class CurvedUIInputModule : StandaloneInputModule {
         }
         else
         {
-            Debug.LogError("CURVEDUI: Can't find SteamVR_PlayArea component on the scene. Add a reference to it manually to CurvedUIInputModule on EventSystem gameobject.", this.gameObject);
+
+#if CURVEDUI_STEAMVR_INT
+            //Optional - SteamVR Interaction System
+            Valve.VR.InteractionSystem.Player PlayerComponent = FindObjectOfType<Valve.VR.InteractionSystem.Player>();
+
+            if(PlayerComponent != null)
+            {
+                m_rightController = PlayerComponent.rightHand.gameObject;
+                m_leftController = PlayerComponent.leftHand.gameObject;
+            }
+            else
+#endif
+                Debug.LogError("CURVEDUI: Can't find SteamVR_PlayArea component or InteractionSystem.Player component on the scene. One of these is required. Add a reference to it manually to CurvedUIInputModule on EventSystem gameobject.", this.gameObject);
         }
 
         if (m_steamVRClickAction == null)
@@ -704,7 +722,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
     }
 
 #else
-    {}
+            { }
 #endif //end of CURVEDUI_STEAMVR_2 if
 
     #endregion //end of STEAMVR_2 region

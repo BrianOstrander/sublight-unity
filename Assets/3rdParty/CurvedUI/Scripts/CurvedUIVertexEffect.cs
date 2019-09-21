@@ -11,8 +11,7 @@ using UnityEditor;
 using TMPro;
 #endif
 
-
-
+[assembly: CurvedUI.OptionalDependency("TMPro.TextMeshProUGUI", "CURVEDUI_TMP")]
 
 namespace CurvedUI
 {
@@ -247,18 +246,10 @@ namespace CurvedUI
         //Best place to modify the vertices of the object.
         public override void ModifyMesh(VertexHelper vh)
         {
-            if (!this.IsActive())
-                return;
-
-            if (mySettings == null) FindParentSettings();
-
-            if (mySettings == null || !mySettings.enabled || mySettings.Angle == 1)
-                return;
-
+            if (!ShouldModify()) return;
 
             //check for changes in text font material that would mean a retesselation in required to get fresh UV's
             CheckTextFontMaterial();
-
 
             //TESSELATING VERTICES--------------------------------------------------------//
             //tesselate (subdivide) the vertices of the UI object if we need more of them
@@ -274,7 +265,6 @@ namespace CurvedUI
 
                 vh.GetUIVertexStream(m_tesselatedVerts);
 
-
                 //subdivide them
                 TesselateGeometry(m_tesselatedVerts);
 
@@ -285,9 +275,6 @@ namespace CurvedUI
                 tesselationRequired = false;
                 curvingRequired = true;
             }
-
-
-
 
 
             //CURVING VERTICES ---------------------------------------------------------//
@@ -324,7 +311,6 @@ namespace CurvedUI
             }
 
 
-
             //SAVE CURVED VERTICES TO THE VERTEX HELPER------------------------//
             //They can come as quads or as triangles.
             vh.Clear();
@@ -341,6 +327,39 @@ namespace CurvedUI
             else vh.AddUIVertexTriangleStream(m_curvedVerts);
 
         }
+
+
+        //This is called by canvas after UI object's mesh is generated, but before it is rendered.
+        //Best place to modify the vertices of the object.
+        public void ModifyTMPMesh(ref List<UIVertex> vertexList)
+        {
+            if (!ShouldModify()) return;
+
+            //check for changes in text font material that would mean a retesselation in required to get fresh UV's
+            CheckTextFontMaterial();
+
+            //TESSELATING VERTICES--------------------------------------------------------//
+            //not needed in TMP object, skip to curving
+            tesselationRequired = false;
+            curvingRequired = true;
+
+            //CURVING VERTICES ---------------------------------------------------------//
+            if (curvingRequired)
+            {
+                //update transformation matrices we're going to use in curving the verts.
+                CanvasToWorld = myCanvas.transform.localToWorldMatrix;
+                CanvasToLocal = myCanvas.transform.worldToLocalMatrix;
+                MyToWorld = transform.localToWorldMatrix;
+                MyToLocal = transform.worldToLocalMatrix;
+
+                //Debug.Log("verts:" + m_curvedVerts.Count + " tess'd:" + m_tesselatedVerts.Count);
+                for (int i = 0; i < vertexList.Count; i++)
+                    vertexList[i] = CurveVertex(vertexList[i], mySettings.Angle, mySettings.GetCyllinderRadiusInCanvasSpace(), (myCanvas.transform as RectTransform).rect.size);
+
+                //set flags
+                curvingRequired = false;
+            }
+        }
         #endregion
 
 
@@ -349,6 +368,17 @@ namespace CurvedUI
 
 
         #region HELPERS
+        bool ShouldModify()
+        {
+            if (!this.IsActive()) return false;
+
+            if (mySettings == null) FindParentSettings();
+
+            if (mySettings == null || !mySettings.enabled || mySettings.Angle == 1) return false;
+
+            return true;
+        }
+
         void CheckTextFontMaterial()
         {
             //we check for a sudden change in text's fontMaterialTexture. This is a very hacky way, but the only one working reliably for now.

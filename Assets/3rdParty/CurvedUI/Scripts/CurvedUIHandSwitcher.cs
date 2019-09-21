@@ -10,16 +10,16 @@ namespace CurvedUI {
     /// </summary>
     public class CurvedUIHandSwitcher : MonoBehaviour
     {
-
+#pragma warning disable 0649
+#pragma warning disable 414
         [SerializeField]
         GameObject LaserBeam;
 
-#pragma warning disable 414
         [SerializeField]
         [Tooltip("If true, when player clicks the trigger on the other hand, we'll instantly set it as UI controlling hand and move the pointer to it.")]
         bool autoSwitchHands = true;
 #pragma warning restore 414
-
+#pragma warning restore 0649
 
 
 

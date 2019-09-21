@@ -13,7 +13,7 @@ namespace CurvedUI
     {
 #if CURVEDUI_TMP || TMP_PRESENT
 
-
+        //saved references
         VertexHelper vh;
         Mesh straightMesh;
         Mesh curvedMesh;
@@ -22,31 +22,26 @@ namespace CurvedUI
 
         public void UpdateSubmesh(bool tesselate, bool curve)
         {
+            //find required components
             if (TMPsub == null)
                 TMPsub = gameObject.GetComponent<TMP_SubMeshUI>();
 
             if (TMPsub == null) return;
 
             if (crvdVE == null)
-                 crvdVE = gameObject.AddComponentIfMissing<CurvedUIVertexEffect>();
+                crvdVE = gameObject.AddComponentIfMissing<CurvedUIVertexEffect>();
 
 
+            //perform tesselatio and curving
             if (tesselate || straightMesh == null || vh == null || (!Application.isPlaying))
             {
-                //Debug.Log("Submesh: tesselate", this.gameObject);
                 vh = new VertexHelper(TMPsub.mesh);
 
                 //save straight mesh - it will be curved then every time the object moves on the canvas.
                 straightMesh = new Mesh();
                 vh.FillMesh(straightMesh);
 
-                //we do it differently now
-                //curve and save mesh 
-                //crvdVE.ModifyMesh(vh);
-                //curvedMesh = new Mesh();
-                //vh.FillMesh(curvedMesh);
-
-               curve = true;
+                curve = true;
             }
 
 
@@ -58,9 +53,9 @@ namespace CurvedUI
                 curvedMesh = new Mesh();
                 vh.FillMesh(curvedMesh);
                 crvdVE.CurvingRequired = true;
-
             }
 
+            //upload mesh to TMP object's renderer
             TMPsub.canvasRenderer.SetMesh(curvedMesh);
         }
 
