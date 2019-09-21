@@ -90,6 +90,10 @@ namespace CurvedUI
             {
                 if (pointingAtCanvas)
                 {
+                    //first frame gaze enters canvas. Make sure we dont click immidiately upon entering canvas
+                    if (!pointingAtCanvasLastFrame)
+                        ResetGazeTimedClick();
+
                     ProcessGazeTimedClick();
 
                     //save current selectablesUnderGaze

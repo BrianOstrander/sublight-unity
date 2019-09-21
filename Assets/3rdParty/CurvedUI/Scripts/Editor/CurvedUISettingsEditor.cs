@@ -60,13 +60,19 @@ namespace CurvedUI {
             {
                 CUIeventSystemPresent = (FindObjectsOfType(typeof(CurvedUIEventSystem)).Length > 0);
                 //Debug.Log("OnEnable: found CUI Event system: " + CUIeventSystemPresent);
-            }        
+            }
 
+            //hacky way to make sure event is connected only once, but it works!
+#if UNITY_2018 || UNITY_2019
+            EditorApplication.hierarchyChanged -= AddCurvedUIComponents;
+            EditorApplication.hierarchyChanged -= AddCurvedUIComponents;
+            EditorApplication.hierarchyChanged += AddCurvedUIComponents;
+#else
             //hacky way to make sure event is connected only once, but it works!
             EditorApplication.hierarchyWindowChanged -= AddCurvedUIComponents;
             EditorApplication.hierarchyWindowChanged -= AddCurvedUIComponents;
             EditorApplication.hierarchyWindowChanged += AddCurvedUIComponents;
-
+#endif
 
 
 
@@ -109,7 +115,7 @@ namespace CurvedUI {
             }
 #endif
         }
-		#endregion 
+#endregion
 
 
 
@@ -129,7 +135,7 @@ namespace CurvedUI {
 
 
             //Version----------------------------------------------//
-            GUILayout.Label("Version 2.7", EditorStyles.miniLabel);
+            GUILayout.Label("Version 2.8", EditorStyles.miniLabel);
 
 
             //vr event system warning------------------------------//
@@ -237,7 +243,7 @@ namespace CurvedUI {
                 GUILayout.Label("Smoothness of the curve. Bigger values mean more subdivisions. Decrease for better performance. Default 1", EditorStyles.helpBox);
                 GUILayout.EndHorizontal();
 
-#if  CURVEDUI_STEAMVR_LEGACY || CURVEDUI_STEAMVR_2 || CURVEDUI_GOOGLEVR || CURVEDUI_OCULUSVR
+#if CURVEDUI_STEAMVR_LEGACY || CURVEDUI_STEAMVR_2 || CURVEDUI_GOOGLEVR || CURVEDUI_OCULUSVR
                 //controller override
                 GUILayout.Space(20);
                 CurvedUIInputModule.Instance.ControllerTransformOverride = (Transform)EditorGUILayout.ObjectField("Controller Override", CurvedUIInputModule.Instance.ControllerTransformOverride, typeof(Transform), true);
@@ -286,7 +292,7 @@ namespace CurvedUI {
 
 
 
-        #region CUSTOM GUI ELEMENTS
+#region CUSTOM GUI ELEMENTS
         void DrawControlMethods()
         {
             GUILayout.Label("Global Settings", EditorStyles.boldLabel);
@@ -310,7 +316,7 @@ namespace CurvedUI {
 					DrawCustomDefineSwitcher("");
 #else
                     GUILayout.Label("Basic Controller. Mouse on screen", EditorStyles.helpBox);
-                    #endif
+#endif
                     break;
                 }// end of MOUSE
 
@@ -346,7 +352,7 @@ namespace CurvedUI {
 #else
                     GUILayout.Label("Mouse controller that is independent of the camera view. Use WorldSpaceMouseOnCanvas function to get its position.", EditorStyles.helpBox);
                     CurvedUIInputModule.Instance.WorldSpaceMouseSensitivity = EditorGUILayout.FloatField("Mouse Sensitivity", CurvedUIInputModule.Instance.WorldSpaceMouseSensitivity);
-					#endif
+#endif
 					break;
                 }// end of WORLD_MOUSE
 
@@ -390,28 +396,45 @@ namespace CurvedUI {
                 {
 #if CURVEDUI_STEAMVR_2
 					GUILayout.Label("Use SteamVR controllers to interact with canvas. Requires SteamVR Plugin 2.0 or later.", EditorStyles.helpBox);
-                    CurvedUIInputModule.Instance.UsedHand = (CurvedUIInputModule.Hand)EditorGUILayout.EnumPopup("Hand", CurvedUIInputModule.Instance.UsedHand);
+                   
 
-                    //Find currently selected action in CurvedUIInputModule
-                    int curSelected = steamVRActionsPaths.Length-1;
-                    for (int i = 0; i < steamVRActions.Length; i++)
-                    {      
-                        if (steamVRActions[i] == CurvedUIInputModule.Instance.SteamVRClickAction)
-                            curSelected = i;
-                    }
-
-                    //Show popup
-                    int newSelected = EditorGUILayout.Popup("Click With", curSelected, steamVRActionsPaths, EditorStyles.popup);
-
-                    //assign selected SteamVR Action to CurvedUIInputMOdule
-                    if(curSelected != newSelected)
+                    if(steamVRActions != null)
                     {
-                        //none has been selected
-                        if (newSelected >= steamVRActions.Length)
-                            CurvedUIInputModule.Instance.SteamVRClickAction = null;
-                        else
-                            CurvedUIInputModule.Instance.SteamVRClickAction = steamVRActions[newSelected];
+                        CurvedUIInputModule.Instance.UsedHand = (CurvedUIInputModule.Hand)EditorGUILayout.EnumPopup("Hand", CurvedUIInputModule.Instance.UsedHand);
+
+                        //Find currently selected action in CurvedUIInputModule
+                        int curSelected = steamVRActionsPaths.Length - 1;
+                        for (int i = 0; i < steamVRActions.Length; i++)
+                        {
+                            //no action selected? select one that most likely deals with UI
+                            if(CurvedUIInputModule.Instance.SteamVRClickAction == null && steamVRActions[i].GetShortName().Contains("UI"))
+                                CurvedUIInputModule.Instance.SteamVRClickAction = steamVRActions[i];
+
+                            //otherwise show currently selected
+                            if (steamVRActions[i] == CurvedUIInputModule.Instance.SteamVRClickAction) //otherwise show selected
+                                curSelected = i;
+                        }
+
+                        //Show popup
+                        int newSelected = EditorGUILayout.Popup("Click With", curSelected, steamVRActionsPaths, EditorStyles.popup);
+
+                        //assign selected SteamVR Action to CurvedUIInputMOdule
+                        if (curSelected != newSelected)
+                        {
+                            //none has been selected
+                            if (newSelected >= steamVRActions.Length)
+                                CurvedUIInputModule.Instance.SteamVRClickAction = null;
+                            else
+                                CurvedUIInputModule.Instance.SteamVRClickAction = steamVRActions[newSelected];
+                        }
                     }
+                    else
+                    {
+                        //draw error
+                        EditorGUILayout.HelpBox("No SteamVR Actions set up. Configure your SteamVR plugin first in Window > Steam VR Input", MessageType.Error);
+
+                    }
+
 #else
                     GUILayout.Label("For SteamVR plugin 2.0 or above.", EditorStyles.helpBox);
                     DrawCustomDefineSwitcher(ControlMethodDefineDict[CurvedUIInputModule.CUIControlMethod.STEAMVR_2]);
@@ -515,12 +538,12 @@ namespace CurvedUI {
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
         }
-        #endregion
+#endregion
 
 
 
 
-        #region HELPER FUNCTIONS
+#region HELPER FUNCTIONS
         Dictionary<CurvedUIInputModule.CUIControlMethod, string> ControlMethodDefineDict {
             get
             {
@@ -609,7 +632,7 @@ namespace CurvedUI {
 
 	        DestroyImmediate(target);
    		}
-        #endregion
+#endregion
 
     }
 }
