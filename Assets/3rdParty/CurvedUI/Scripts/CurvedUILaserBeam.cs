@@ -10,7 +10,7 @@ namespace CurvedUI
     /// </summary>
     public class CurvedUILaserBeam : MonoBehaviour
     {
-
+#pragma warning disable 0649
         [SerializeField]
         Transform LaserBeamTransform;
         [SerializeField]
@@ -19,7 +19,7 @@ namespace CurvedUI
         bool CollideWithMyLayerOnly = false;
         [SerializeField]
         bool hideWhenNotAimingAtCanvas = false;
-
+#pragma warning restore 0649
 
         // Update is called once per frame
         protected void Update()
