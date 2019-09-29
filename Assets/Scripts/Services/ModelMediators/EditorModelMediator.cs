@@ -12,7 +12,8 @@ namespace LunraGames.SubLight
 				{
 					{ SaveTypes.EncounterInfo, true },
 					{ SaveTypes.GalaxyInfo, true },
-					{ SaveTypes.GamemodeInfo, true }
+					{ SaveTypes.GamemodeInfo, true },
+					{ SaveTypes.ModuleTrait, true }
 					// --
 				};
 			}

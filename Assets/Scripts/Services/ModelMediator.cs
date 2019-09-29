@@ -147,6 +147,7 @@ namespace LunraGames.SubLight
 				case SaveTypes.InteractedEncounterInfoList: return typeof(InteractedEncounterInfoListModel);
 				// --
 				case SaveTypes.GamemodeInfo: return typeof(GamemodeInfoModel);
+				case SaveTypes.ModuleTrait: return typeof(ModuleTraitModel);
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
@@ -168,6 +169,7 @@ namespace LunraGames.SubLight
 			if (type == typeof(InteractedEncounterInfoListModel)) return new SaveTypes[] { SaveTypes.InteractedEncounterInfoList };
 			// --
 			if (type == typeof(GamemodeInfoModel)) return new SaveTypes[] { SaveTypes.GamemodeInfo };
+			if (type == typeof(ModuleTraitModel)) return new SaveTypes[] { SaveTypes.ModuleTrait };
 			throw new ArgumentOutOfRangeException("type", type.FullName + " is not handled.");
 		}
 
