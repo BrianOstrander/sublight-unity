@@ -14,6 +14,7 @@
 obj
 bin
 .vs
+.idea
 *.DS_Store
 *.mdb
 *.mdb.meta
