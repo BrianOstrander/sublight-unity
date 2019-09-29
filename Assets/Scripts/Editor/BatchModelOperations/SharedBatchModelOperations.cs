@@ -260,7 +260,7 @@ namespace LunraGames.SubLight
 						(model as GalaxyInfoModel).Name.Value = name;
 						break;
 					case SaveTypes.GamemodeInfo:
-						(model as GalaxyInfoModel).Name.Value = name;
+						(model as GamemodeInfoModel).Name.Value = name;
 						break;
 					default:
 						errors.Add(ModificationPrefix + "Unrecognized SaveType: " + model.SaveType);
