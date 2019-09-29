@@ -23,6 +23,7 @@ namespace LunraGames.SubLight.Models
 		bool supportedVersion;
 		string path;
 		List<string> specifiedSiblings = new List<string>();
+		// TODO: Can I now have this just be a property with a default value set (using new C# 7 features?)
 		Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
 		[JsonProperty] bool ignore;
