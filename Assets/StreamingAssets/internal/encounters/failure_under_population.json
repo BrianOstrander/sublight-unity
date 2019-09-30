@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Failure: Under Population",
   "trigger": "TransitComplete",
   "defaultEndLogId": "0a5fbeff-e61d-4380-b9ad-f40087d301c1",
   "filtering": {
@@ -85,7 +84,6 @@
   },
   "ignore": true,
   "version": 12,
-  "meta": "Failure: Under Population",
   "metaKeyValues": {},
   "created": "2019-02-20T08:24:00.834883-08:00",
   "modified": "2019-02-20T08:24:00.834883-08:00",

@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Planets Detected",
   "trigger": "TransitComplete",
   "defaultEndLogId": "9d8bbbd1-c4a9-4d36-864c-1b674bd02956",
   "filtering": {
@@ -865,7 +864,6 @@
     ]
   },
   "version": 12,
-  "meta": "Planets Detected",
   "metaKeyValues": {},
   "created": "2019-03-20T11:59:11.309393-07:00",
   "modified": "2019-03-20T11:59:11.309393-07:00",

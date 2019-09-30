@@ -2,7 +2,6 @@
   "orderWeight": 10,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Oasis End",
   "trigger": "None",
   "defaultEndLogId": "74c9757f-3f57-4cdc-8a6d-402a9896f29e",
   "filtering": {
@@ -297,7 +296,6 @@
     ]
   },
   "version": 12,
-  "meta": "Oasis End",
   "metaKeyValues": {},
   "created": "2019-04-22T17:36:05.490892-07:00",
   "modified": "2019-04-22T17:36:05.490892-07:00",

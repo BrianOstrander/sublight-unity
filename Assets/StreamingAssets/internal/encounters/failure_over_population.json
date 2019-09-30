@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Failure: Over Population",
   "trigger": "TransitComplete",
   "defaultEndLogId": "4eea7d41-2f91-425e-a639-c8de2558bb12",
   "filtering": {
@@ -85,7 +84,6 @@
   },
   "ignore": true,
   "version": 12,
-  "meta": "Failure: Over Population",
   "metaKeyValues": {},
   "created": "2019-02-20T08:24:16.376915-08:00",
   "modified": "2019-02-20T08:24:16.376915-08:00",

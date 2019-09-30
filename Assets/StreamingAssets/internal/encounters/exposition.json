@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Exposition",
   "trigger": "Load",
   "defaultEndLogId": "4ce263e3-6eb9-4ed5-82c7-48f797ea9bdc",
   "filtering": {
@@ -2821,7 +2820,6 @@
     ]
   },
   "version": 12,
-  "meta": "Exposition",
   "metaKeyValues": {},
   "created": "2019-03-07T14:05:01.96034-08:00",
   "modified": "2019-03-07T14:05:01.96034-08:00",

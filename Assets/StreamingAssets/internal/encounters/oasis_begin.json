@@ -2,7 +2,6 @@
   "orderWeight": 10,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Oasis Begin",
   "trigger": "TransitComplete",
   "defaultEndLogId": "038fa4db-9a9c-4d13-9498-fec411b6bf03",
   "filtering": {
@@ -601,7 +600,6 @@
     ]
   },
   "version": 12,
-  "meta": "Oasis Begin",
   "metaKeyValues": {},
   "created": "2019-04-22T12:21:37.916424-07:00",
   "modified": "2019-04-22T12:21:37.916424-07:00",

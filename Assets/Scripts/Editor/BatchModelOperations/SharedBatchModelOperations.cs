@@ -237,7 +237,8 @@ namespace LunraGames.SubLight
 				switch (model.SaveType)
 				{
 					case SaveTypes.EncounterInfo:
-						return (model as EncounterInfoModel).Name;
+//						return (model as EncounterInfoModel).Name;
+						return null;
 					case SaveTypes.GalaxyInfo:
 						return (model as GalaxyInfoModel).Name;
 					case SaveTypes.GamemodeInfo:
@@ -340,7 +341,7 @@ namespace LunraGames.SubLight
 
 		public static string GetName(SaveModel model)
 		{
-			return "\"" + (string.IsNullOrEmpty(model.Meta.Value) ? ShortenValue(model.Path.Value) : model.Meta.Value) + "\"";
+			return "\"" + (string.IsNullOrEmpty(model.Id.Value) ? ShortenValue(model.Path.Value) : model.Id.Value) + "\"";
 		}
 
 		public static string ShortenValue(

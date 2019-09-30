@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "No Planets In System",
   "trigger": "TransitComplete",
   "defaultEndLogId": "ba6f1ac1-6e0d-413d-8395-0e0b2eef8161",
   "filtering": {
@@ -67,7 +66,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "No Planets In System",
   "metaKeyValues": {},
   "created": "2019-03-20T11:52:04.907557-07:00",
   "modified": "2019-03-20T11:52:04.907557-07:00",

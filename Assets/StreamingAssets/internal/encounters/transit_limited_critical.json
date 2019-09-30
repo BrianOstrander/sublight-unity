@@ -2,7 +2,6 @@
   "orderWeight": 15,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Transit Limited - Critical",
   "trigger": "TransitComplete",
   "defaultEndLogId": "531de101-de64-4846-acc0-34c9f09ebdb6",
   "filtering": {
@@ -269,7 +268,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Transit Limited - Critical",
   "metaKeyValues": {},
   "created": "2019-04-02T10:48:00.737332-07:00",
   "modified": "2019-04-02T10:48:00.737332-07:00",

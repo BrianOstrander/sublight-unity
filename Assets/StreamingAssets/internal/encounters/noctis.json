@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 0.5,
-  "name": "Noctis",
   "trigger": "TransitComplete",
   "defaultEndLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b",
   "filtering": {
@@ -904,7 +903,6 @@
     ]
   },
   "version": 12,
-  "meta": "Noctis",
   "metaKeyValues": {},
   "created": "2019-04-08T09:36:14.672045-07:00",
   "modified": "2019-04-08T09:36:14.672045-07:00",

@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Test",
   "trigger": "None",
   "defaultEndLogId": "03c37765-9c90-4781-9e68-0e922015f27b",
   "filtering": {
@@ -114,7 +113,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Test",
   "metaKeyValues": {},
   "created": "2019-04-18T16:22:25.901445-07:00",
   "modified": "2019-04-18T16:22:25.901445-07:00",

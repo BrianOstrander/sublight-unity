@@ -2,7 +2,6 @@
   "orderWeight": 10,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Transit Limited - Low",
   "trigger": "TransitComplete",
   "defaultEndLogId": "8a902a20-a150-44e2-a7ea-4737a23b22cd",
   "filtering": {
@@ -286,7 +285,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Transit Limited - Low",
   "metaKeyValues": {},
   "created": "2019-04-02T10:22:57.664683-07:00",
   "modified": "2019-04-02T10:22:57.664683-07:00",

@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Transit Limited - Out of Range",
   "trigger": "NavigationSelectOutOfRange",
   "defaultEndLogId": "cdfc9ef7-5d52-4926-8e43-fbf0d08e6390",
   "filtering": {
@@ -214,7 +213,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Transit Limited - Out of Range",
   "metaKeyValues": {},
   "created": "2019-04-02T11:42:48.258075-07:00",
   "modified": "2019-04-02T11:42:48.258075-07:00",

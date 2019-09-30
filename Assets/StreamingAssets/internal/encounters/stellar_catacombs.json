@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 0.5,
-  "name": "Stellar Catacombs",
   "trigger": "TransitComplete",
   "defaultEndLogId": "c121616c-364e-46ca-af49-3b047155c7ef",
   "filtering": {
@@ -670,7 +669,6 @@
     ]
   },
   "version": 12,
-  "meta": "Stellar Catacombs",
   "metaKeyValues": {},
   "created": "2019-04-05T11:38:06.551348-07:00",
   "modified": "2019-04-05T11:38:06.551348-07:00",

@@ -2,7 +2,6 @@
   "orderWeight": 499,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Radio Ping - First Visit",
   "trigger": "TransitComplete",
   "defaultEndLogId": "72756096-0eec-4661-9b90-d0f2eff0282f",
   "filtering": {
@@ -97,7 +96,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Radio Ping - First Visit",
   "metaKeyValues": {},
   "created": "2019-04-08T13:33:13.953268-07:00",
   "modified": "2019-04-08T13:33:13.953268-07:00",

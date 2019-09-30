@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Resource Cheat",
   "trigger": "None",
   "defaultEndLogId": "e7bae251-6d54-41a6-b559-ddeb483fb9c7",
   "filtering": {
@@ -122,7 +121,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Resource Cheat",
   "metaKeyValues": {},
   "created": "2019-04-22T17:27:31.328597-07:00",
   "modified": "2019-04-22T17:27:31.328597-07:00",

@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Tutorial: Navigation Confirm",
   "trigger": "NavigationSelect",
   "defaultEndLogId": "2d6d6aa2-ebef-4fc0-8ba5-8d4526a378ef",
   "filtering": {
@@ -81,7 +80,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Tutorial: Navigation Confirm",
   "metaKeyValues": {},
   "created": "2019-02-22T18:12:03.02069-08:00",
   "modified": "2019-02-22T18:12:03.02069-08:00",

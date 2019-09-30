@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "InitializeRules Default",
   "trigger": "InitializeRules",
   "defaultEndLogId": "9eaf08e3-231f-4500-9007-4219ede472d0",
   "filtering": {
@@ -981,7 +980,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "InitializeRules Default",
   "metaKeyValues": {},
   "created": "2019-02-18T19:16:17.499742-08:00",
   "modified": "2019-02-18T19:16:17.499742-08:00",

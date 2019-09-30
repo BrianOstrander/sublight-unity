@@ -201,12 +201,11 @@ namespace LunraGames.SubLight
 			return min <= version;
 		}
 
-		public M Create<M>(string meta = null) where M : SaveModel, new()
+		public M Create<M>() where M : SaveModel, new()
 		{
 			var result = new M();
 			result.SupportedVersion.Value = true;
 			result.Version.Value = BuildInfo.Version;
-			result.Meta.Value = meta;
 			result.Path.Value = GetUniquePath(result.SaveType);
 			result.Created.Value = DateTime.MinValue;
 			result.Modified.Value = DateTime.MinValue;
@@ -425,7 +424,7 @@ namespace LunraGames.SubLight
 	public interface IModelMediator
 	{
 		void Initialize(IBuildInfo info, Action<RequestStatus> done);
-		M Create<M>(string meta = null) where M : SaveModel, new();
+		M Create<M>() where M : SaveModel, new();
 		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null, bool updateModified = true) where M : SaveModel;
 		void Load<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 		void Load<M>(string modelId, Action<SaveLoadRequest<M>> done) where M : SaveModel;

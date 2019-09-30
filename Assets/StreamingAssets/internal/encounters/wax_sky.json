@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 0.5,
-  "name": "Wax Sky",
   "trigger": "TransitComplete",
   "defaultEndLogId": "86dd4471-d2da-4cca-9561-26722a9fd0fd",
   "filtering": {
@@ -894,7 +893,6 @@
     ]
   },
   "version": 12,
-  "meta": "Wax Sky",
   "metaKeyValues": {},
   "created": "2019-04-09T09:59:53.041572-07:00",
   "modified": "2019-04-09T09:59:53.041572-07:00",

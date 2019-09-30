@@ -66,7 +66,8 @@ namespace LunraGames.SubLight
 
 		protected override void AssignModelName(EncounterInfoModel model, string name)
 		{
-			model.Name.Value = name;
+			// TODO: Should probably make this virtual not abstract...
+//			model.Name.Value = name;
 		}
 		#endregion
 

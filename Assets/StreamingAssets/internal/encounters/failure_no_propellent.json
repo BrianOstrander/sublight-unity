@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Failure: No Propellent",
   "trigger": "TransitComplete",
   "defaultEndLogId": "1893bc38-3ee8-48c7-a678-70aa607ff3e1",
   "filtering": {
@@ -85,7 +84,6 @@
   },
   "ignore": true,
   "version": 12,
-  "meta": "Failure: No Propellent",
   "metaKeyValues": {},
   "created": "2019-02-20T18:27:36.566984-08:00",
   "modified": "2019-02-20T18:27:36.566984-08:00",

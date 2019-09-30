@@ -27,11 +27,10 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndHorizontal();
 
-				model.Id.Value = EditorGUILayout.TextField("Module Trait Id", model.Id.Value);
+				DrawIdField(model);
 				
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The name of this trait visible to the player."), model.Name.Value);
-				model.Meta.Value = model.Name;
-
+				
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The description of this trait given to the player."), model.Description.Value, leftOffset: false);
 
 				// TODO: other fields here

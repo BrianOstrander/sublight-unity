@@ -2,7 +2,6 @@
   "orderWeight": 499,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Exposition Ignored",
   "trigger": "Load",
   "defaultEndLogId": "7fc59fd7-3c8d-4e7b-925b-b5aadde25300",
   "filtering": {
@@ -81,7 +80,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Exposition Ignored",
   "metaKeyValues": {},
   "created": "2019-03-26T11:29:29.063017-07:00",
   "modified": "2019-03-26T11:29:29.063017-07:00",

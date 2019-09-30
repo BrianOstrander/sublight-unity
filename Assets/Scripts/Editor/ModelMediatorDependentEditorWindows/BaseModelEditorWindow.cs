@@ -364,7 +364,7 @@ namespace LunraGames.SubLight
 				modelSelectorScroll.VerticalScroll = GUILayout.BeginScrollView(modelSelectorScroll.VerticalScroll);
 				{
 					var isAlternate = false;
-					foreach (var model in modelList.OrderBy(m => m.Meta.Value))
+					foreach (var model in modelList.OrderBy(m => m.Id.Value))
 					{
 						if (!modelShowIgnored.Value && model.Ignore.Value) ignoredCount++;
 						else OnDrawModel(model, ref isAlternate);
@@ -412,7 +412,7 @@ namespace LunraGames.SubLight
 						labelStyle.normal.textColor = isIgnored ? SubLightEditorConfig.Instance.SharedModelEditorModelsEntryLabelIgnoredColor : labelStyle.normal.textColor;
 						labelStyle.fixedHeight = 18;
 
-						var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta;
+						var metaName = string.IsNullOrEmpty(model.Id.Value) ? "< No Meta >" : model.Id.Value;
 						if (32 < metaName.Length) metaName = metaName.Substring(0, 29) + "...";
 						GUILayout.Label(new GUIContent(metaName, "Name is set by Meta field."), labelStyle, GUILayout.Height(14f));
 						GUILayout.FlexibleSpace();
@@ -627,7 +627,6 @@ namespace LunraGames.SubLight
 		protected virtual M CreateModel(string name)
 		{
 			var model = SaveLoadService.Create<M>();
-			model.Meta.Value = name;
 			AssignModelId(model, Guid.NewGuid().ToString());
 			AssignModelName(model, name);
 			return model;
@@ -648,7 +647,7 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
+					var metaName = string.IsNullOrEmpty(model.Id.Value) ? "< No Id > " : model.Id.Value;
 
 					GUILayout.Label(metaName, GUILayout.ExpandWidth(false));
 
@@ -681,6 +680,21 @@ namespace LunraGames.SubLight
 		protected virtual bool CanEditDuringPlaymode()
 		{
 			return false;
+		}
+
+		protected virtual void DrawIdField(M model)
+		{
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayoutExtensions.PushEnabled(false);
+				{
+					EditorGUILayout.TextField("Id", model.Id.Value);
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+				
+				if (GUILayout.Button("Rename", GUILayout.ExpandWidth(false))) Debug.LogWarning("logic for renaming here!");
+			}
+			GUILayout.EndHorizontal();
 		}
 		#endregion
 
@@ -992,7 +1006,7 @@ namespace LunraGames.SubLight
 
 			var result = EditorUtility.DisplayDialogComplex(
 				"Unsaved Changes to " + readableModelName,
-				"There are unsaved changes to \"" + ModelSelection.Meta.Value + "\", would you like to save them before continuing?",
+				"There are unsaved changes to \"" + ModelSelection.Id.Value + "\", would you like to save them before continuing?",
 				"Save",
 				"Cancel",
 				"Don't Save"

@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Success: Reached Sag",
   "trigger": "TransitComplete",
   "defaultEndLogId": "7852f49a-05c0-4850-a668-db202dd0d33f",
   "filtering": {
@@ -85,7 +84,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Success: Reached Sag",
   "metaKeyValues": {},
   "created": "2019-02-22T17:40:08.021759-08:00",
   "modified": "2019-02-22T17:40:08.021759-08:00",

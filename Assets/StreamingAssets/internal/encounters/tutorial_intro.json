@@ -2,7 +2,6 @@
   "orderWeight": 500,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Tutorial: Intro",
   "trigger": "Load",
   "defaultEndLogId": "fa9a9a2f-7694-4e35-acb9-641f10d52a7a",
   "filtering": {
@@ -435,7 +434,6 @@
   },
   "ignore": true,
   "version": 12,
-  "meta": "Tutorial: Intro",
   "metaKeyValues": {},
   "created": "2019-02-22T17:56:13.94163-08:00",
   "modified": "2019-02-22T17:56:13.94163-08:00",

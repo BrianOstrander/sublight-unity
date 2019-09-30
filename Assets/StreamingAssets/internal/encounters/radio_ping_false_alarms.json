@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Radio Ping - False Alarms",
   "trigger": "TransitComplete",
   "defaultEndLogId": "788d7484-d51b-4edf-9d67-d04d18677610",
   "filtering": {
@@ -864,7 +863,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Radio Ping - False Alarms",
   "metaKeyValues": {},
   "created": "2019-04-08T14:24:42.58445-07:00",
   "modified": "2019-04-08T14:24:42.58445-07:00",

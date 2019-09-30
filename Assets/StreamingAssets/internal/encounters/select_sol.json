@@ -2,7 +2,6 @@
   "orderWeight": 510,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Select Sol",
   "trigger": "NavigationSelect",
   "defaultEndLogId": "e45b0073-cf1c-4891-9a5f-7e433c70433c",
   "filtering": {
@@ -111,7 +110,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Select Sol",
   "metaKeyValues": {},
   "created": "2019-02-26T13:14:25.874144-08:00",
   "modified": "2019-02-26T13:14:25.874144-08:00",

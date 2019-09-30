@@ -2,7 +2,6 @@
   "orderWeight": 510,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Tutorial: Navigation Out Of Range",
   "trigger": "NavigationSelectOutOfRange",
   "defaultEndLogId": "e60605d1-e9e0-465f-bf83-31d6354b8cd4",
   "filtering": {
@@ -81,7 +80,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Tutorial: Navigation Out Of Range",
   "metaKeyValues": {},
   "created": "2019-02-26T18:45:40.448678-08:00",
   "modified": "2019-02-26T18:45:40.448678-08:00",

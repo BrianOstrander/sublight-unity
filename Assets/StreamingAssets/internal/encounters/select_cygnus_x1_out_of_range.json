@@ -1,7 +1,6 @@
 {
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "name": "Select Cygnus X-1 Out Of Range",
   "trigger": "NavigationSelectOutOfRange",
   "defaultEndLogId": "6a43954b-0c88-4ac7-ab7f-0fcf87e4bdcc",
   "filtering": {
@@ -82,7 +81,6 @@
     "conversationLogs": []
   },
   "version": 12,
-  "meta": "Select Cygnus X-1 Out Of Range",
   "metaKeyValues": {},
   "created": "2019-02-26T18:49:05.38876-08:00",
   "modified": "2019-02-26T18:49:05.38876-08:00",

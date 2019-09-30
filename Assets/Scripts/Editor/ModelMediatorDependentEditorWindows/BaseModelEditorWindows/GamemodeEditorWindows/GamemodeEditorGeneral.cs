@@ -32,7 +32,7 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 
 				model.IsInDevelopment.Value = EditorGUILayout.Toggle("In Development", model.IsInDevelopment.Value);
-				model.Id.Value = EditorGUILayout.TextField("Gamemode Id", model.Id.Value);
+				DrawIdField(model);
 				
 				model.Category.Value = EditorGUILayout.TextField(new GUIContent("Category", "The larger category this gamemode belongs to."), model.Category.Value);
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The name of this gamemode visible to the player."), model.Name.Value);
