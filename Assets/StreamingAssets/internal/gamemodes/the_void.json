@@ -1,11 +1,9 @@
 {
   "isInDevelopment": true,
-  "name": "the_void",
   "orderWeight": 100,
-  "title": "Game",
-  "subTitle": "The Void",
+  "category": "Game",
+  "name": "The Void",
   "description": "Earth is gone, and the wake of its destruction is expanding outwards, towards your interstellar ark. Humanity’s only chance for survival is to flee from one star system to another, gathering vital resources along the way. The critical choices you make will have consequences for generations to come.",
-  "gamemodeKey": "the_void",
   "version": 12,
   "meta": "The Void",
   "metaKeyValues": {},

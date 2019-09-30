@@ -20,11 +20,11 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] int orderWeight;
 		[JsonIgnore] public readonly ListenerProperty<int> OrderWeight;
 
-		[JsonProperty] string title;
-		[JsonIgnore] public readonly ListenerProperty<string> Title;
+		[JsonProperty] string category;
+		[JsonIgnore] public readonly ListenerProperty<string> Category;
 
-		[JsonProperty] string subTitle;
-		[JsonIgnore] public readonly ListenerProperty<string> SubTitle;
+		[JsonProperty] string name;
+		[JsonIgnore] public readonly ListenerProperty<string> Name;
 
 		[JsonProperty] string description;
 		[JsonIgnore] public readonly ListenerProperty<string> Description;
@@ -39,8 +39,8 @@ namespace LunraGames.SubLight.Models
 
 			IsInDevelopment = new ListenerProperty<bool>(value => isInDevelopment = value, () => isInDevelopment);
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
-			Title = new ListenerProperty<string>(value => title = value, () => title);
-			SubTitle = new ListenerProperty<string>(value => subTitle = value, () => subTitle);
+			Category = new ListenerProperty<string>(value => category = value, () => category);
+			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 		}
 

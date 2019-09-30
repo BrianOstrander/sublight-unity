@@ -1,10 +1,8 @@
 {
-  "name": "a_new_home",
   "orderWeight": 50,
-  "title": "Game",
-  "subTitle": "A New Home",
+  "category": "Game",
+  "name": "A New Home",
   "description": "An interstellar ark with a thousand refugees has left Sol. You are tasked with finding a hospitable planet, one with an Earth-like climate. However, your resources are running low and your interstellar ark is falling apart.",
-  "gamemodeKey": "a_new_home",
   "version": 12,
   "meta": "A New Home",
   "metaKeyValues": {},
