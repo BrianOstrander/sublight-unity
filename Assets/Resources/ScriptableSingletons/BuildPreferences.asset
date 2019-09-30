@@ -19,8 +19,8 @@ MonoBehaviour:
   DiscordUrl: https://discord.gg/6FaGvnS
   TwitterUrl: https://twitter.com/spacew00t
   DefaultGamemodeId: a_new_home
-  DefaultGalaxyId: bed1e465-32ad-4eae-8135-d01eac75a089
-  DefaultGalaxyTargetId: a6603c5e-f151-45aa-96bb-30905e781573
+  DefaultGalaxyId: milky_way
+  DefaultGalaxyTargetId: andromeda
   Analytics:
     IgnoreStateChange: 0
     IgnoreGameStart: 0
