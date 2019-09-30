@@ -1,5 +1,5 @@
 {
-  "name": "A New Home",
+  "name": "a_new_home",
   "orderWeight": 50,
   "title": "Game",
   "subTitle": "A New Home",
@@ -10,7 +10,7 @@
   "metaKeyValues": {},
   "created": "2019-03-28T16:25:53.614539-07:00",
   "modified": "2019-03-28T16:25:53.614539-07:00",
-  "id": "407a9dbd-f75d-43d7-8705-b951b234b59b",
+  "id": "a_new_home",
   "SaveType": "GamemodeInfo",
   "SiblingBehaviour": "All"
 }

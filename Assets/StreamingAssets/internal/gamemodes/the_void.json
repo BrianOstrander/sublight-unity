@@ -1,6 +1,6 @@
 {
   "isInDevelopment": true,
-  "name": "The Void",
+  "name": "the_void",
   "orderWeight": 100,
   "title": "Game",
   "subTitle": "The Void",
@@ -11,7 +11,7 @@
   "metaKeyValues": {},
   "created": "2019-03-28T16:28:29.748456-07:00",
   "modified": "2019-03-28T16:28:29.748456-07:00",
-  "id": "b851666b-1696-43c5-871b-6e7775037fdd",
+  "id": "the_void",
   "SaveType": "GamemodeInfo",
   "SiblingBehaviour": "All"
 }

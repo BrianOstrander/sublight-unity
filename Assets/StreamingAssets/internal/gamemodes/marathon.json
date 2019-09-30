@@ -1,6 +1,6 @@
 {
   "isInDevelopment": true,
-  "name": "Marathon",
+  "name": "marathon",
   "orderWeight": 150,
   "title": "Game",
   "subTitle": "Marathon",
@@ -11,7 +11,7 @@
   "metaKeyValues": {},
   "created": "2019-03-28T16:29:28.576922-07:00",
   "modified": "2019-03-28T16:29:28.576922-07:00",
-  "id": "80991f19-ee95-4f72-8850-a953639f1300",
+  "id": "marathon",
   "SaveType": "GamemodeInfo",
   "SiblingBehaviour": "All"
 }
