@@ -26,7 +26,8 @@ namespace LunraGames.SubLight
 
 		protected override void AssignModelName(GamemodeInfoModel model, string name)
 		{
-			model.Name.Value = name;
+			// TODO: Do something here?
+//			model.Name.Value = name;
 		}
 		#endregion
 	}

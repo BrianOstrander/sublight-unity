@@ -17,9 +17,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool isInDevelopment;
 		[JsonIgnore] public readonly ListenerProperty<bool> IsInDevelopment;
 
-		[JsonProperty] string name;
-		[JsonIgnore] public readonly ListenerProperty<string> Name;
-
 		[JsonProperty] int orderWeight;
 		[JsonIgnore] public readonly ListenerProperty<int> OrderWeight;
 
@@ -32,9 +29,6 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] string description;
 		[JsonIgnore] public readonly ListenerProperty<string> Description;
 
-		[JsonProperty] string gamemodeKey;
-		[JsonIgnore] public readonly ListenerProperty<string> GamemodeKey;
-
 		[JsonIgnore] public Texture2D Icon { get { return GetTexture(TextureNames.Icon); } }
 
 		public GamemodeInfoModel()
@@ -44,12 +38,10 @@ namespace LunraGames.SubLight.Models
 			SiblingBehaviour = SiblingBehaviours.All;
 
 			IsInDevelopment = new ListenerProperty<bool>(value => isInDevelopment = value, () => isInDevelopment);
-			Name = new ListenerProperty<string>(value => name = value, () => name);
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
 			Title = new ListenerProperty<string>(value => title = value, () => title);
 			SubTitle = new ListenerProperty<string>(value => subTitle = value, () => subTitle);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
-			GamemodeKey = new ListenerProperty<string>(value => gamemodeKey = value, () => gamemodeKey);
 		}
 
 		protected override void OnPrepareTexture(string name, Texture2D texture)

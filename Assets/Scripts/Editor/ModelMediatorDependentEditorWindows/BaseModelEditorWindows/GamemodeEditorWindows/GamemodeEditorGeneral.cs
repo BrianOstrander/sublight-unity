@@ -33,11 +33,7 @@ namespace LunraGames.SubLight
 
 				model.IsInDevelopment.Value = EditorGUILayout.Toggle("In Development", model.IsInDevelopment.Value);
 				model.Id.Value = EditorGUILayout.TextField("Gamemode Id", model.Id.Value);
-				model.GamemodeKey.Value = EditorGUILayout.TextField(new GUIContent("Gamemode Key", "Used by encounters and other logic to know the current gamemode."), model.GamemodeKey.Value);
-
-				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
-				model.Meta.Value = model.Name;
-
+				
 				model.Title.Value = EditorGUILayout.TextField(new GUIContent("Title", "The larger category this gamemode belongs to."), model.Title.Value);
 				model.SubTitle.Value = EditorGUILayout.TextField(new GUIContent("SubTitle", "The name of this gamemode visible to the player."), model.SubTitle.Value);
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The description given to the player of this gamemode."), model.Description.Value, leftOffset: false);
