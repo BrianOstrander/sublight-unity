@@ -1,9 +1,40 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
+using LunraGames.SubLight.Models;
+using UnityEngine;
 
 namespace LunraGames.SubLight
 {
 	public class EditorModelMediator : DesktopModelMediator 
 	{
+		List<SaveModel> cache = new List<SaveModel>();
+		
+		static EditorModelMediator instance;
+		public static EditorModelMediator Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
+					instance = new EditorModelMediator(true);
+					instance.Initialize(BuildPreferences.Instance.Info, instance.OnInstanceInitialized);
+				}
+				return instance;
+			}
+		}
+
+		void OnInstanceInitialized(RequestStatus status)
+		{
+			switch (status)
+			{
+				case RequestStatus.Success: break;
+				default:
+					Debug.LogError("Editor time save load service returned: " + status);
+					return;
+			}
+//			Debug.Log("initialized editor time model mediator");
+		}
+		
 		Dictionary<SaveTypes, bool> CanSaveOverrides
 		{
 			get
@@ -39,3 +70,4 @@ namespace LunraGames.SubLight
 		public EditorModelMediator(bool readableSaves = false) : base(readableSaves) {}
 	}
 }
+#endif

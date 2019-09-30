@@ -7,7 +7,7 @@ using UnityEngine;
 
 using LunraGames.SubLight.Models;
 using LunraGamesEditor;
-
+using UnityEngine.UIElements;
 using DefinedState = LunraGames.SubLight.KeyDefinitionEditorWindow.DefinedState;
 
 namespace LunraGames.SubLight
@@ -448,9 +448,35 @@ namespace LunraGames.SubLight
 		{
 			OnOneLineHandleBegin(model);
 			{
-				GUILayout.Label(new GUIContent("Encounter Id", "The Id of the encounter for this filter."), GUILayout.ExpandWidth(false));
+				var isValidating = !string.IsNullOrEmpty(model.FilterValue.Value);
+				var validationColor = Color.white;
+				var labelContent = new GUIContent("Encounter Id", "The Id of the encounter for this filter.");
+				
+				if (isValidating)
+				{
+					switch (model.EncounterIdIsValid)
+					{
+						case RequestStatus.Success:
+							isValidating = false;
+							break;
+						case RequestStatus.Failure:
+							validationColor = Color.red;
+							labelContent.tooltip += " Error: An encounter with this Id has not been found.";
+							break;
+						default:
+							validationColor = Color.yellow;
+							labelContent.tooltip += " Warning: Currently searching for an encounter with a matching Id.";
+							break;
+					}
+				}
 
-				model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
+				EditorGUILayoutExtensions.PushColorValidation(validationColor, isValidating);
+				{
+					GUILayout.Label(labelContent, GUILayout.ExpandWidth(false));
+
+					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
+				}
+				EditorGUILayoutExtensions.PopColorValidation(isValidating);
 
 				if (string.IsNullOrEmpty(model.FilterValue.Value))
 				{
@@ -462,6 +488,19 @@ namespace LunraGames.SubLight
 					}
 					EditorGUILayoutExtensions.PopColor();
 				}
+				else
+				{
+					switch (model.EncounterIdIsValid)
+					{
+						case RequestStatus.Unknown:
+							model.EncounterIdIsValid = RequestStatus.Cancel;
+							EditorModelMediator.Instance.Load<EncounterInfoModel>(
+								model.FilterValue.Value,
+								result => OnHandleEncounterIdValidated(result, model)
+							);
+							break;
+					}
+				}
 
 				GUILayout.Label("Needs To Be", GUILayout.Width(OperatorWidth));
 
@@ -472,6 +511,22 @@ namespace LunraGames.SubLight
 				);
 			}
 			OnOneLineHandleEnd(model, ref deleted);
+		}
+
+		static void OnHandleEncounterIdValidated(
+			SaveLoadRequest<EncounterInfoModel> result,
+			EncounterInteractionFilterEntryModel model
+		)
+		{
+			switch (result.Status)
+			{
+				case RequestStatus.Success:
+					model.EncounterIdIsValid = RequestStatus.Success;
+					break;
+				default:
+					model.EncounterIdIsValid = RequestStatus.Failure;
+					break;
+			}
 		}
 		#endregion
 	}
