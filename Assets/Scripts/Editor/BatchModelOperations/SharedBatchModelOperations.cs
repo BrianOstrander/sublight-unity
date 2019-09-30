@@ -219,11 +219,10 @@ namespace LunraGames.SubLight
 		{
 			var result = GetUnmodifiedResult(model);
 
-			
 			var modifications = new List<string>();
 			var errors = new List<string>();
 			
-			string SanitizeName(string name)
+			string ConvertNameToId(string name)
 			{
 				return name
 					.Replace(":", "")
@@ -242,47 +241,15 @@ namespace LunraGames.SubLight
 					case SaveTypes.GalaxyInfo:
 						return (model as GalaxyInfoModel).Name;
 					case SaveTypes.GamemodeInfo:
-//						return (model as GamemodeInfoModel).Name;
-						return null;
+						return (model as GamemodeInfoModel).Name;
 					default:
 						errors.Add(ModificationPrefix + "Unrecognized SaveType: " + model.SaveType);
 						return null;
 				}
 			}
 			
-			void SetName(string name)
-			{
-				switch (model.SaveType)
-				{
-					case SaveTypes.EncounterInfo:
-						(model as EncounterInfoModel).Name.Value = name;
-						break;
-					case SaveTypes.GalaxyInfo:
-						(model as GalaxyInfoModel).Name.Value = name;
-						break;
-					case SaveTypes.GamemodeInfo:
-//						(model as GamemodeInfoModel).Name.Value = name;
-						break;
-					default:
-						errors.Add(ModificationPrefix + "Unrecognized SaveType: " + model.SaveType);
-						break;
-				}
-			}
-
-			var oldName = GetName();
 			var oldId = model.Id.Value;
-			var newName = SanitizeName(oldName);
-			var newId = newName;
-
-			if (oldName != newName)
-			{
-				var currModification = ModificationPrefix + "Renaming...";
-				currModification += ModificationPrefix + "\tFrom: \t" + oldName;
-				currModification += ModificationPrefix + "\tTo: \t" + newName;
-				modifications.Add(currModification);
-//				modifications.Add(ModificationPrefix + "Renaming from \"" + oldName + "\" to \"" + newName + "\"");
-				if (write) SetName(newName);
-			}
+			var newId = ConvertNameToId(GetName());
 
 			if (oldId != newId)
 			{
@@ -309,9 +276,6 @@ namespace LunraGames.SubLight
 				
 				modifications.Add(currModification);
 				
-//				modifications.Add(ModificationPrefix + "Reassigning Id from \"" + oldId + "\" to \"" + newId + "\"");
-//				modifications.Add(ModificationPrefix + "Moving file from \"" + oldPath + "\" to \"" + newPath + "\"");
-				
 				if (write)
 				{
 					model.Id.Value = newId;
@@ -327,11 +291,7 @@ namespace LunraGames.SubLight
 				
 					modifications.Add(currModification);
 					
-//					modifications.Add(ModificationPrefix + "Moving sibling directory from \"" + oldSiblingDirectory + "\" to \"" + newSiblingDirectory + "\"");
-					if (write)
-					{
-						Directory.Move(oldSiblingDirectory, newSiblingDirectory);
-					}
+					if (write) Directory.Move(oldSiblingDirectory, newSiblingDirectory);
 				}
 			}
 
@@ -345,7 +305,7 @@ namespace LunraGames.SubLight
 				result = GetModifiedResult(
 					model,
 					modifications.Count,
-					model.HasSiblingDirectory ? 4 : 3,
+					model.HasSiblingDirectory ? 3 : 2,
 					allModifications,
 					allErrors
 				);
