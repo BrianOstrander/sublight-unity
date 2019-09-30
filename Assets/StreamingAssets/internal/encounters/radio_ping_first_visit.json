@@ -1,0 +1,107 @@
+{
+  "orderWeight": 499,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "name": "Radio Ping - First Visit",
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "72756096-0eec-4661-9b90-d0f2eff0282f",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [
+      {
+        "index": 1,
+        "filterId": "907184c6-26dc-4710-9d1a-8d0c903bb856",
+        "group": "All",
+        "Input0": {
+          "AddressId": "e89d62ea-1ac4-4d68-8142-368e769f3947",
+          "Source": "KeyValue",
+          "ForeignTarget": "Preferences",
+          "ForeignKey": "ignore_tutorial"
+        },
+        "Input1": {
+          "AddressId": "a1bb8a85-8929-46a4-90bb-7af414bad9ec",
+          "Source": "LocalValue"
+        }
+      },
+      {
+        "index": 2,
+        "filterId": "2ef7f072-e48f-41dc-8733-fc9a4967fc4c",
+        "group": "All",
+        "Input0": {
+          "AddressId": "b76980c8-c012-46e3-bdb4-c1840259a65e",
+          "Source": "KeyValue",
+          "ForeignTarget": "CelestialSystem",
+          "ForeignKey": "icon_pings"
+        },
+        "Input1": {
+          "AddressId": "815710ab-7076-4e8c-a702-42d3f2a908bb",
+          "Source": "LocalValue",
+          "LocalValue": true
+        }
+      }
+    ],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "ed7bb7ba-9829-44b9-ac9f-360f10b03544",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "ending": true,
+        "logId": "72756096-0eec-4661-9b90-d0f2eff0282f",
+        "name": "< End Encounter >"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Radio Source Identified",
+              "message": "This system was emitting a radio signal that looked artificial in nature. However, it appears it was just interference from the system's magnetosphere. Continue to look for other systems with radio emissions, we might have better luck next time.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "7badff16-083c-465a-af9f-ce3dca72a3b9"
+            }
+          }
+        ],
+        "index": 1,
+        "beginning": true,
+        "logId": "ac0648d2-80d7-4b78-80b6-7089566411b6",
+        "fallbackLogId": "72756096-0eec-4661-9b90-d0f2eff0282f"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 12,
+  "meta": "Radio Ping - First Visit",
+  "metaKeyValues": {},
+  "created": "2019-04-08T13:33:13.953268-07:00",
+  "modified": "2019-04-08T13:33:13.953268-07:00",
+  "id": "radio_ping_first_visit",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

@@ -1,0 +1,392 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "name": "Oasis Relay Terminal: Scuttled",
+  "trigger": "None",
+  "defaultEndLogId": "2d90ab39-4a25-457b-9379-73f0f043745e",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [
+      {
+        "index": 2,
+        "filterId": "a0dc8467-22e0-48b9-b0ac-99343cee6f05",
+        "group": "All",
+        "Input0": {
+          "AddressId": "e59797fc-aad2-4812-a602-2a0b2f37d765",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "oasis_searching_for_relays"
+        },
+        "Input1": {
+          "AddressId": "9038c904-9a67-47e5-ab28-e8cf01d3e85b",
+          "Source": "LocalValue",
+          "LocalValue": true
+        }
+      }
+    ],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "ca9fc532-4e1e-41bc-81ca-3f41297ddea4",
+        "group": "All"
+      },
+      {
+        "operation": "Completed",
+        "filterValue": "c07cfde1-c1ea-448c-9609-69795e611136",
+        "index": 1,
+        "filterId": "e34bd311-a887-459e-952d-73a98dbc42c1",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "cae9dda2-7647-4f69-a393-a403f23ff2ca",
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "AddressId": "babdf2fe-3061-4ac8-8da2-e45b9eb58b77",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "dca0da60-b9e5-4c78-9a18-84e76399d7e4",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "oasis_searching_for_relays"
+                }
+              },
+              "entryId": "b0050799-c312-4196-84b1-acde6ba0af83"
+            }
+          }
+        ],
+        "index": 2,
+        "logId": "a2500663-d6db-4285-b6fc-c1eb32b1a208",
+        "fallbackLogId": "d703bcf3-861a-4763-b21d-2af53d423cc1"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Waypoint",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "visibility": 10
+                },
+                "strings": {
+                  "waypoint_id": "oasis_end"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "dbdf36a7-2f29-4e77-bfb2-307b152a7b05"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d19276d3-5afc-454f-9ca2-cf4509f2ffac"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "encounterEvent": "Waypoint",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "visibility": 20
+                },
+                "strings": {
+                  "waypoint_id": "oasis_relay_1"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "f2be9429-9cd7-473e-9d2c-8af387865bc7"
+            }
+          }
+        ],
+        "ending": true,
+        "logId": "2d90ab39-4a25-457b-9379-73f0f043745e",
+        "name": "< End Encounter >"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9d7e4442-31d9-4716-b6e8-ebae99eef84e"
+            }
+          }
+        ],
+        "index": 1,
+        "beginning": true,
+        "logId": "89ea1352-0e8f-46d7-a437-f23eeaa38bf6",
+        "fallbackLogId": "a2500663-d6db-4285-b6fc-c1eb32b1a208"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "Internal",
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Datalink",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "Ecliptic",
+                "PlacardDescription": "Diagnostic Custodian",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 2,
+                "AvatarStaticTerminalTextVisible": true
+              },
+              "entryId": "3a8871c4-b660-47fa-b5cc-accdc332c200"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Focus",
+              "entryId": "340eb2fc-1de7-4dde-b4a8-e34c4e156c1b"
+            },
+            "index": 1
+          }
+        ],
+        "index": 3,
+        "logId": "d703bcf3-861a-4763-b21d-2af53d423cc1",
+        "fallbackLogId": "8a961e26-e73b-4913-bfed-17072c327942"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We've located the automated relay in this system.",
+              "entryId": "bae7a75c-6620-4f6d-af47-910f382f8069"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Is it intact?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "7f5d47c6-1af9-4403-b2bc-778a3198a64c"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Yes, we're hailing it now.",
+              "entryId": "a77b5f0e-4bb7-428f-979a-10ccdba7b156"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "da19fa45-f75e-473c-b19a-1a338d49d396"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We got it!",
+              "entryId": "2b066025-ea02-4a82-b991-7e33322d3e8b"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "The complete message?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "ccc19051-e3dd-4b18-8ccb-55a36cec077f"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "No... but enough.",
+              "entryId": "23b13b7d-6857-4682-8357-1514009c21dc"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "The coordinates?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "6f1022c9-27f2-4953-a8ed-3894923c2661"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Yes, the message had been marked for erasure, but hadn't been entirely overwritten yet.",
+              "entryId": "c2262b2e-ebed-45ae-8364-d56491360ee0"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "0d567de1-82d6-4217-996b-bf1dcd0710a9"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're lucky, this was our last lead.",
+              "entryId": "a35f4d7b-9a6e-4112-827f-840a913471cc"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Indeed.",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Indeed, plot a course to Oasis!"
+              },
+              "entryId": "112ad179-87b1-45bd-b420-357ec0fdce53"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood.",
+              "entryId": "b2717aa4-98b3-4321-a624-c348e68aa1b4"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "52ef82b1-361a-412a-b73c-8b4b86cbb1a5"
+            },
+            "index": 13
+          }
+        ],
+        "index": 4,
+        "logId": "8a961e26-e73b-4913-bfed-17072c327942",
+        "fallbackLogId": "2d90ab39-4a25-457b-9379-73f0f043745e"
+      }
+    ]
+  },
+  "version": 12,
+  "meta": "Oasis Relay Terminal: Scuttled",
+  "metaKeyValues": {},
+  "created": "2019-04-22T15:37:51.762097-07:00",
+  "modified": "2019-04-22T15:37:51.762097-07:00",
+  "id": "oasis_relay_terminal_scuttled",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

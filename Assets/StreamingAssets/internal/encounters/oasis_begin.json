@@ -1,0 +1,611 @@
+{
+  "orderWeight": 10,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "name": "Oasis Begin",
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "038fa4db-9a9c-4d13-9498-fec411b6bf03",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [
+      {
+        "filterId": "99a45c18-76ba-4508-aeb9-b6bb77f8d03b",
+        "group": "All",
+        "Input0": {
+          "AddressId": "c81ded91-d77d-4a43-b67c-c83fa0928ae5",
+          "Source": "KeyValue",
+          "ForeignTarget": "CelestialSystem",
+          "ForeignKey": "icon_pings"
+        },
+        "Input1": {
+          "AddressId": "79286977-ed4f-4f3c-bfaf-e09b9d4b5fb9",
+          "Source": "LocalValue",
+          "LocalValue": true
+        }
+      }
+    ],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "index": 1,
+        "filterId": "c5aa1af3-1dbc-43ab-a232-be2597f79a7f",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "78294b91-fae0-4621-b91d-ded4098b222c",
+                  "Source": "LocalValue",
+                  "LocalValue": true
+                },
+                "Input1": {
+                  "AddressId": "4d3d0e9f-fef9-4079-870d-1159b251f833",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "175ab063-8c10-4e32-9bcd-002690cdaa94",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "oasis_searching_for_relays"
+                }
+              },
+              "entryId": "f286488f-77c4-4638-bcc7-51d5cfdfb670"
+            }
+          }
+        ],
+        "index": 10,
+        "logId": "4b475fe9-fc70-42e8-b263-f68e7ecfe1b9",
+        "fallbackLogId": "038fa4db-9a9c-4d13-9498-fec411b6bf03"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "ending": true,
+        "logId": "038fa4db-9a9c-4d13-9498-fec411b6bf03",
+        "name": "< End Encounter >"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "3b15b942-ba3c-498b-9cf9-edfbe5bf3f07"
+            }
+          }
+        ],
+        "index": 1,
+        "beginning": true,
+        "logId": "93b15ba4-8cf4-466e-aee8-0cd6b01a08e9",
+        "fallbackLogId": "bfb455fe-91db-4a6e-86a8-f6bdbd83fa5e"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e5534ce9-b4a3-47c7-82ca-768498231e2a"
+            }
+          },
+          {
+            "entry": {
+              "encounterEvent": "Waypoint",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "visibility": 10
+                },
+                "strings": {
+                  "waypoint_id": "oasis_relay_0"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9f413223-70fc-42ab-b140-91ef035be23b"
+            },
+            "index": 1
+          }
+        ],
+        "index": 8,
+        "logId": "1b8fb4d9-e81e-4535-8cd4-29970d45c68d",
+        "fallbackLogId": "a7d20d1d-e5b1-40f8-9803-a3bd402f7b79"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Search for Oasis",
+              "message": "The search for Oasis is on! Waypoints appear as an arrow at the edge of your navigation area. Follow the one marked <b>Oasis Relay</b> to find the next automated relay.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Neutral",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "7d606ea5-31e8-4a6d-b286-c01de3a4dc23"
+            }
+          }
+        ],
+        "index": 9,
+        "logId": "a7d20d1d-e5b1-40f8-9803-a3bd402f7b79",
+        "fallbackLogId": "4b475fe9-fc70-42e8-b263-f68e7ecfe1b9"
+      }
+    ],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "Internal",
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Datalink",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "Ecliptic",
+                "PlacardDescription": "Diagnostic Custodian",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 2,
+                "AvatarStaticTerminalTextVisible": true
+              },
+              "entryId": "b266a504-0372-4ca8-9c1d-d549fb4a71af"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Focus",
+              "entryId": "563416c3-307e-48a6-a398-984f448436bd"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "bustId": "Relay",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "Foreigner",
+                "TitleSource": "IDR-54A",
+                "TitleClassification": "Automated Relay",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "IA Oasis",
+                "PlacardDescription": "Message Playback",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 7,
+                "AvatarStaticTerminalTextVisible": true
+              },
+              "entryId": "ce3773a8-4e4a-4f41-b433-bcb4e03b8cac"
+            },
+            "index": 2
+          }
+        ],
+        "index": 2,
+        "logId": "bfb455fe-91db-4a6e-86a8-f6bdbd83fa5e",
+        "fallbackLogId": "e99ff8a7-31a0-4808-818a-fb2eb51d8942"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Relay",
+              "bustEvent": "Focus",
+              "entryId": "08262d69-e3b7-4e99-bd85-62eb29cfb894"
+            }
+          }
+        ],
+        "index": 4,
+        "logId": "8ea826e3-8945-4f79-82f1-b2a7141edacc",
+        "fallbackLogId": "8a065c52-6adf-4614-b14b-7f978b20de14"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Focus",
+              "entryId": "28838b3a-9622-4248-98af-2487715089fd"
+            }
+          }
+        ],
+        "index": 6,
+        "logId": "45a7f5a7-53cd-46f8-b154-ef013b02c4fe",
+        "fallbackLogId": "f71fe6ef-72cf-4097-a98d-32acb00df147"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're receiving a hail from an automated communication relay in this system.",
+              "entryId": "7bcb7339-c9e3-4dce-b0a2-17f7d1f325c7"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "a32806b7-07ce-4c59-af77-0159bfefc281"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The message is heavily degraded, I'll do my best to parse it.",
+              "entryId": "12362b85-d3ab-4b99-81ea-795fc2e15ddc"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Let's hear it.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "4c383b87-b80f-4075-9374-24620e338ff7"
+            },
+            "index": 3
+          }
+        ],
+        "index": 3,
+        "logId": "e99ff8a7-31a0-4808-818a-fb2eb51d8942",
+        "fallbackLogId": "8ea826e3-8945-4f79-82f1-b2a7141edacc"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Transmitting on all frequences, the interstellar ark Oasis has discovered <i>-UNPARSED-</i>",
+              "entryId": "c8ab7e6c-8123-4ca2-a069-aaa48ff2a69d"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "4f6eb6a5-a501-462a-8ff2-dad2e428c480"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It's... beautiful... absolutely beautiful...",
+              "entryId": "183cee69-cc15-4267-bfb0-bb88fa1031d1"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "cc723686-8618-4a33-a73b-91d84433e576"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Oxygen, <i>-UNPARSED-</i> and water... it has everything... a <i>-UNPARSED-</i> human habitation!",
+              "entryId": "170f1290-08e3-4ac9-ac71-d2a7f38bbcee"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "04aa87a4-82b3-45fd-b3df-bdc62e3e5623"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're attaching <i>-UNPARSED-</i> coordinates for <i>-UNPARSED-</i> in need of shelter...",
+              "entryId": "600ed449-cb57-4051-9dd1-8fcd8ecd00ac"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "44a172f3-f8e6-489b-94ea-179d38e69331"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Administrator <i>-UNPARSED-</i> signing off...",
+              "entryId": "e666a958-4dd3-4e12-923f-c9d661f0950a"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "END OF MESSAGE",
+              "entryId": "f8003e70-0f5e-477d-a81a-497b728d4812"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "...",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "e6a4dca6-6bae-4667-85eb-d18b2f4a151b"
+            },
+            "index": 10
+          }
+        ],
+        "index": 5,
+        "logId": "8a065c52-6adf-4614-b14b-7f978b20de14",
+        "fallbackLogId": "45a7f5a7-53cd-46f8-b154-ef013b02c4fe"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "That's all we have.",
+              "entryId": "9e821e23-3e8c-463c-95d2-168e957ae797"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Any coordinates?",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Any coordinates for the system they mentioned?"
+              },
+              "entryId": "26b3a1ab-fa8f-45a2-9665-efb6997488f1"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Unfortunately that sequence of the message has been destroyed, along with the rest of the transmission's meta data.",
+              "entryId": "fa4663dc-a8f4-487c-9082-300afbc19e8d"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "ae32aa2a-fd27-4121-9c17-ef10d95c57d1"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm sorry Aurora, there's no amount of signal analysis that's going to bring those coordinates back.",
+              "entryId": "24b11a2f-acc9-48d8-bea2-f8e563eae444"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Without the meta data, it's hard to tell, but given the signal degredation...",
+              "entryId": "5cee5afb-01e8-4c4c-8f2b-0aa10219f9ee"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "94922ead-b9d3-4b22-ba78-7297c2937a7b"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'd say it's been bouncing between automated relays for several millennia.",
+              "entryId": "a49337cd-88d9-4a49-9801-3041c59a2bed"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Is there nothing we can do?",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Is there nothing we can do to recover the original message?"
+              },
+              "entryId": "5088ae63-8b98-4b25-8d07-bd0d0683200d"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Well...",
+              "entryId": "75d14f80-a26d-4605-88fa-6e5e180f732f"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Yes?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "679c8475-03f8-4841-8e0c-bb7ba4797f5a"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We could track down the last relay this transmission came from, and see if it has a higher quality copy.",
+              "entryId": "c197cbea-31f4-4eaf-88a0-e9a70b2683ff"
+            },
+            "index": 13
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Let's do it.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "ee8e82c2-3d4f-417f-81e8-07925b96a711"
+            },
+            "index": 14
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Alright, I've plotted a course.",
+              "entryId": "3920cb5f-a956-4e93-a934-2b7fc10108ca"
+            },
+            "index": 15
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "6e3475bf-fe44-41a2-a765-dcfe7fce9c87"
+            },
+            "index": 16
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "How old is the message?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "e099d25d-b026-4bdf-9564-62edb5cdbe15"
+            },
+            "index": 5
+          }
+        ],
+        "index": 7,
+        "logId": "f71fe6ef-72cf-4097-a98d-32acb00df147",
+        "fallbackLogId": "1b8fb4d9-e81e-4535-8cd4-29970d45c68d"
+      }
+    ]
+  },
+  "version": 12,
+  "meta": "Oasis Begin",
+  "metaKeyValues": {},
+  "created": "2019-04-22T12:21:37.916424-07:00",
+  "modified": "2019-04-22T12:21:37.916424-07:00",
+  "id": "oasis_begin",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

@@ -1,0 +1,680 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 0.5,
+  "name": "Stellar Catacombs",
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "c121616c-364e-46ca-af49-3b047155c7ef",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [
+      {
+        "operation": "Equals",
+        "index": 1,
+        "filterId": "206d4e50-42f6-4eb1-a1dc-6f5ba1597dec",
+        "group": "All",
+        "Input0": {
+          "AddressId": "26870b83-d11d-4a7e-91af-1441f0169ca6",
+          "Source": "KeyValue",
+          "ForeignTarget": "CelestialSystem",
+          "ForeignKey": "classification_primary"
+        },
+        "Input1": {
+          "AddressId": "55ffd1e4-b251-420b-8f81-e8cf29257d15",
+          "Source": "LocalValue",
+          "LocalValue": 10
+        }
+      }
+    ],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "3b5a91a3-50bf-4f49-9750-da6118d2c7ee",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "52f9382d-5da6-4e34-bcda-d54a0fe39ca2",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "metallics_maximum"
+                },
+                "Input1": {
+                  "AddressId": "338769e3-a57b-4a13-a664-a85621a3507f",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "6a054d4f-2a53-4599-b6ae-5d4ce731351a",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "34e63109-c412-445d-8c31-95d3843b7724",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "ab0d4491-afbb-4eb3-ae27-8c99552a593d",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "metallics"
+                }
+              },
+              "entryId": "11fddee1-2da2-4212-8196-9252f05e2230"
+            }
+          }
+        ],
+        "index": 14,
+        "logId": "aef42f77-dac6-4d27-9e87-7ef31dc00857",
+        "fallbackLogId": "0923afd0-f223-4810-8fba-e4038b02ffbd"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "This place shouldn't be disturbed.",
+              "nextLogId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1f28018c-fc25-4e89-bdd8-26fcb6b40ba6"
+            }
+          },
+          {
+            "entry": {
+              "message": "The hull is worth salvaging for metal.",
+              "nextLogId": "effa99de-9dbb-48b7-8d31-195afb81bcd7",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "8604a100-acab-4c20-906d-aea29ce1b839"
+            },
+            "index": 1
+          }
+        ],
+        "index": 9,
+        "logId": "132fc619-c36d-4886-bab9-97f4ad8d3dab"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Let them drift.",
+              "nextLogId": "eb4043ed-848d-42e4-8955-145d964aa098",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "d0a0418d-aede-4254-af3d-c167743776c6"
+            }
+          },
+          {
+            "entry": {
+              "message": "You're right, let's not disturb them.",
+              "nextLogId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "e9d04065-3600-4d09-9425-799c617e4578"
+            },
+            "index": 1
+          }
+        ],
+        "index": 12,
+        "logId": "67e66152-22ec-4660-b399-512d4366ae1c"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "28900e48-72b3-487d-a736-d0a16aa09912"
+            }
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "c121616c-364e-46ca-af49-3b047155c7ef",
+        "name": "< End Encounter >"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "32b913f2-c68d-437a-92d0-1460b4e033a0"
+            }
+          }
+        ],
+        "index": 4,
+        "logId": "6cfdd75d-5ce6-4351-b0e8-de59310dc156",
+        "fallbackLogId": "4d96fa72-0f99-4f3e-b552-6eded8a3cdb6"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Object of Interest",
+              "message": "<b>CLASSIFICATION</b> HABITAT\n<b>GROSS MASS</b> APROX. 100,000 METRIC TONS\n<b>STATUS</b> DERELICT\n\n<b>ANALYSIS</b> Optical sensors picked up a large object in close proximity to this star's corona. Attempts to continue scanning were interrupted by an increase in stellar activity. A boarding party will be required for further data collection.",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Warning",
+              "successLogId": "6cfdd75d-5ce6-4351-b0e8-de59310dc156",
+              "successText": "Rendezvous",
+              "failureText": "Ignore",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "066ee7ce-05c5-40b7-89f9-cc95d78bce55"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "bfe5ad44-8fbc-4b37-9113-9d90f79eede3",
+        "fallbackLogId": "c121616c-364e-46ca-af49-3b047155c7ef"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Resources Acquired",
+              "message": "The bodies the derelict once entombed are set afloat, in orbit around the host star. With time, the intense radiation and exposure to heat will destroy the bodies, disintegrating them.\n\nYour cargo bays are filled with raw metal from the derelict's hull. Your work is done here...",
+              "dialogType": "Confirm",
+              "dialogStyle": "Warning",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "73825e90-49c0-499e-9738-1d9a78f8b25f"
+            }
+          }
+        ],
+        "index": 15,
+        "logId": "0923afd0-f223-4810-8fba-e4038b02ffbd",
+        "fallbackLogId": "c121616c-364e-46ca-af49-3b047155c7ef"
+      }
+    ],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "ExtraOps",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "AwayTeam",
+                "TitleSource": "Habitat",
+                "TitleClassification": "Derelict",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "S. Travis",
+                "PlacardDescription": "Extravehicular Operations",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 4
+              },
+              "entryId": "60dccce9-f786-4967-96dd-7b2249b01be7"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "ExtraOps",
+              "bustEvent": "Focus",
+              "entryId": "8e486c3d-cb4d-4c71-9e2c-b6786abebcf3"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "bustId": "Doctor",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "AwayTeam",
+                "TitleSource": "Habitat",
+                "TitleClassification": "Derelict",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "P. Yates",
+                "PlacardDescription": "Medical Officer",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 5
+              },
+              "entryId": "373f41ae-4d96-42fa-bf9e-66cdcfc9621e"
+            },
+            "index": 1
+          }
+        ],
+        "index": 5,
+        "logId": "4d96fa72-0f99-4f3e-b552-6eded8a3cdb6",
+        "fallbackLogId": "70b9114d-a7ad-4651-b7e2-b4b714acbeb5"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Doctor",
+              "bustEvent": "Focus",
+              "entryId": "e8e76e08-4094-4e3c-a3b8-f21cc4972366"
+            }
+          }
+        ],
+        "index": 7,
+        "logId": "c91765b2-1afe-4d2e-9479-d7cbc88c6cb1",
+        "fallbackLogId": "e595cac7-5227-4ae2-86e3-5c1b7fdbf900"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "This derelict has been sweltering at the edge of the star’s corona for some time, our team could barely pry the airlock open.",
+              "entryId": "0da85e1e-14b2-486d-bd26-204303eaee1f"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The deeper we searched the habitat, the older and more decrepit the remains got. Some can’t even be touched without falling apart, to dust...",
+              "entryId": "260aa595-4242-41ed-a87b-fdd533bf178b"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "c6fa30b9-4dd6-4a43-aa99-9ffe7b51c1e4"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "7bf6a0c2-fefa-4203-b679-f17c0c02498e"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< Switch Frequency >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "64c3fbcf-3876-45e8-8418-441bbbae0074"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Dr. Yates has been conducting a carbon isotope analysis on the bodies... I suggest you check in with them.",
+              "entryId": "3007b48e-8cc0-4333-a995-875898651eb4"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Inside is… nightmarish…",
+              "entryId": "8315f062-d220-460f-aed2-e61a4dc39601"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It’s a catacomb in there... stacks upon stacks of corpses, all mummified by the intense heat and hard vacuum. There must be thousands of them, each dressed in finely painted linen, ceremonial clothes painstakingly crafted to look like space suits. Some of them even have useless little trinkets fashioned after instruments - like flashlights, geiger counters, and oxygen tanks. All of them woven out of the same tough, organic, vine-like material.",
+              "entryId": "cc34a9d8-2d92-411f-85ad-7ac5587ef055"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "76cf2bbf-581b-4de9-b833-f04f5f41bb51"
+            },
+            "index": 6
+          }
+        ],
+        "index": 6,
+        "logId": "70b9114d-a7ad-4651-b7e2-b4b714acbeb5",
+        "fallbackLogId": "c91765b2-1afe-4d2e-9479-d7cbc88c6cb1"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We've sampled several of the deceased, it looks like the oldest ones were interred here several thousand years ago...",
+              "entryId": "def0f10f-86a3-4f79-ab58-d5cd721b57bf"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "However, we found unsealed tombs on the lower decks, with relatively fresh bodies.",
+              "entryId": "d7964431-8085-411f-ba96-024003486d5b"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Yes, less than a century old.",
+              "entryId": "676ea551-5a8d-44ff-9e9e-a67b691815a6"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "395be263-0575-427b-ac1c-ff9e038c1e12"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Relatively fresh?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "60990df0-051a-484e-a252-c28cd53fc7d6"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'd hesitate to say this place is abandoned, there's plenty of room for more deceased here among the lower decks.",
+              "entryId": "93fcc56f-5d80-4251-89a7-73a42265ade9"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm not superstitious... but there's something about this place that makes my skin crawl...",
+              "entryId": "337a6e0b-24fc-4b46-b768-fc6f4767e2bd"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Anything else?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "a7c99b9a-bd22-4027-ada1-2a3487df6d9d"
+            },
+            "index": 6
+          }
+        ],
+        "index": 8,
+        "logId": "e595cac7-5227-4ae2-86e3-5c1b7fdbf900",
+        "fallbackLogId": "132fc619-c36d-4886-bab9-97f4ad8d3dab"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "This place shouldn't be disturbed.",
+              "entryId": "f90326a2-95b4-4e47-912f-17dba4629774"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I was hoping you'd say that, I'll tell the team to pack up.",
+              "entryId": "12db44ab-4489-4b7e-acbe-1cf3f776bc4a"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Transmission >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "1cc99738-29df-426e-8f80-860ec63b565b"
+            },
+            "index": 2
+          }
+        ],
+        "index": 10,
+        "logId": "32e87fae-9cf7-4464-9d9f-db55df9252cc",
+        "fallbackLogId": "c121616c-364e-46ca-af49-3b047155c7ef",
+        "name": "place shouldn't be disturbed"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "The hull is worth salvaging for metal.",
+              "entryId": "7aed0405-1f1d-4529-8401-e2e73419a5da"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We'll have to do something about the bodies...",
+              "entryId": "85566ca3-9072-47a8-b9d7-6054ba6c4384"
+            },
+            "index": 1
+          }
+        ],
+        "index": 11,
+        "logId": "effa99de-9dbb-48b7-8d31-195afb81bcd7",
+        "fallbackLogId": "67e66152-22ec-4660-b399-512d4366ae1c"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Let them drift, who cares?",
+              "entryId": "6b538318-fb03-4837-88cc-ce9370770001"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It's your call... I'll let the team know.",
+              "entryId": "703d567d-cf19-4534-aaf2-d7202bb4a18c"
+            },
+            "index": 1
+          }
+        ],
+        "index": 13,
+        "logId": "eb4043ed-848d-42e4-8955-145d964aa098",
+        "fallbackLogId": "aef42f77-dac6-4d27-9e87-7ef31dc00857"
+      }
+    ]
+  },
+  "version": 12,
+  "meta": "Stellar Catacombs",
+  "metaKeyValues": {},
+  "created": "2019-04-05T11:38:06.551348-07:00",
+  "modified": "2019-04-05T11:38:06.551348-07:00",
+  "id": "stellar_catacombs",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

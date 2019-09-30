@@ -1,0 +1,95 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "name": "Success: Reached Sag",
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "7852f49a-05c0-4850-a668-db202dd0d33f",
+  "filtering": {
+    "showValues": true,
+    "falseByDefault": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [
+      {
+        "operation": "LessThanOrEquals",
+        "filterId": "70af4706-bf3a-42af-9ea8-d6694186e20b",
+        "group": "All",
+        "Input0": {
+          "AddressId": "66baf34e-74cc-498e-84bd-9482540efa5d",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "distance_to_end"
+        },
+        "Input1": {
+          "AddressId": "8c84eef6-4b41-4d5d-8750-fdcc4f974645",
+          "Source": "LocalValue",
+          "LocalValue": 0.1
+        }
+      }
+    ],
+    "enumerationKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "GameComplete",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "condition": 10,
+                  "icon_override": 0
+                },
+                "strings": {
+                  "title": "Gravity Assist",
+                  "header": "Your ark has succesfully reached its destination!",
+                  "body": null
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "6049e75c-93b0-4f20-a6c5-def6da7e9055"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "ecc535b3-31e7-460b-8af2-b0dbba947bcd"
+      },
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "7852f49a-05c0-4850-a668-db202dd0d33f",
+        "name": "< End Encounter >"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 12,
+  "meta": "Success: Reached Sag",
+  "metaKeyValues": {},
+  "created": "2019-02-22T17:40:08.021759-08:00",
+  "modified": "2019-02-22T17:40:08.021759-08:00",
+  "id": "success_reached_sag",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}
