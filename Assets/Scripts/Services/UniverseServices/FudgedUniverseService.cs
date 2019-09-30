@@ -215,7 +215,7 @@ namespace LunraGames.SubLight
 				new SpecifiedEncounterEntry
 				{
 					Trigger = EncounterTriggers.NavigationSelect,
-					EncounterId = "2ecf3799-264f-43b7-adec-383b09571ef5" // TODO: This should not be hardcoded...
+					EncounterId = "tutorial_navigation_confirm" // TODO: This should not be hardcoded...
 				}
 			};
 

@@ -129,6 +129,8 @@ namespace LunraGames.SubLight
 	{
 		protected IBuildInfo BuildInfo { get; set; }
 
+		protected virtual bool SuppressErrorLogging => false;
+
 		protected Type ToType(SaveTypes saveType)
 		{
 			switch(saveType)
@@ -272,7 +274,7 @@ namespace LunraGames.SubLight
 			if (result == null)
 			{
 				var error = "A model with Id " + modelId + " was not found";
-				Debug.LogError(error);
+				if (!SuppressErrorLogging) Debug.LogError(error);
 				done(SaveLoadRequest<M>.Failure(
 					null,
 					null,

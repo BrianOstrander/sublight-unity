@@ -7,8 +7,6 @@ namespace LunraGames.SubLight
 {
 	public class EditorModelMediator : DesktopModelMediator 
 	{
-		List<SaveModel> cache = new List<SaveModel>();
-		
 		static EditorModelMediator instance;
 		public static EditorModelMediator Instance
 		{
@@ -32,8 +30,9 @@ namespace LunraGames.SubLight
 					Debug.LogError("Editor time save load service returned: " + status);
 					return;
 			}
-//			Debug.Log("initialized editor time model mediator");
 		}
+
+		protected override bool SuppressErrorLogging => true;
 		
 		Dictionary<SaveTypes, bool> CanSaveOverrides
 		{
