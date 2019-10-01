@@ -60,7 +60,7 @@ namespace LunraGames.SubLight
 		{
 			if (done == null) throw new ArgumentNullException("done");
 
-			var model = modelMediator.Create<GameModel>();
+			var model = modelMediator.Create<GameModel>(App.M.CreateUniqueId());
 
 			model.Name.Value = Guid.NewGuid().ToString();
 			model.Id.Value = model.Name.Value;

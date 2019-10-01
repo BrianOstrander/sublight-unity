@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Net.Configuration;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -187,18 +188,110 @@ namespace LunraGames.SubLight
 			AskForSaveIfModifiedBeforeContinuing(
 				() =>
 				{
-					TextDialogPopup.Show(
-						"New " + readableModelName + " Model",
-						value =>
+					EditorModelMediator.Instance.List<M>(
+						results =>
 						{
-							BeforeLoadSelection();
-							SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
-						},
-						doneText: "Create",
-						description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
+							switch (results.Status)
+							{
+								case RequestStatus.Success:
+									var modelName = string.Empty;
+									var modelId = string.Empty;
+									var modelIdPreview = string.Empty;
+									
+									FlexiblePopupDialog.Show(
+										"New " + readableModelName + " Model",
+										new Vector2(400f, 100f),
+										close => OnNewModelGui(
+											close,
+											ref modelName,
+											ref modelId,
+											ref modelIdPreview,
+											results.Models.Select(m => m.Id.Value).ToArray()
+										)
+									);
+									break;
+								default:
+									Debug.LogError(
+										"Listing models of type "+typeof(M)+" returned status "+results.Status+" and error: "+results.Error
+									);
+									break;
+							}
+							
+						}
 					);
+//					TextDialogPopup.Show(
+//						"New " + readableModelName + " Model",
+//						value =>
+//						{
+//							BeforeLoadSelection();
+//							SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
+//						},
+//						doneText: "Create",
+//						description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
+//					);
 				}
 			);
+		}
+
+		void OnNewModelGui(
+			Action close,
+			ref string modelName,
+			ref string modelId,
+			ref string modelIdPreview,
+			string[] existingModelIds
+		)
+		{
+			GUILayout.Label(
+				"Enter a name for this new " + readableModelName + " model.",
+				TextDialogPopup.Styles.DescriptionLabel
+			);
+
+			var oldModelName = modelName;
+			modelName = GUILayout.TextField(
+				modelName,
+				TextDialogPopup.Styles.TextField,
+				GUILayout.ExpandWidth(true)
+			);
+
+			if (oldModelName != modelName)
+			{
+				modelId = modelName.Replace(' ', '_').ToLower();
+				if (!modelId.Replace("_", "").All(Char.IsLetterOrDigit))
+				{
+					modelIdPreview = "Invalid Id! Must contain only alphanumeric characters.";
+					modelId = null;
+				}
+				else if (existingModelIds.Contains(modelId))
+				{
+					modelIdPreview = "Invalid Id! An existing model with that id exists.";
+					modelId = null;
+				}
+				else modelIdPreview = modelId;
+			}
+			
+			GUILayout.Label(
+				modelIdPreview,
+				TextDialogPopup.Styles.DescriptionLabel
+			);
+
+			GUILayout.FlexibleSpace();
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button("Cancel", TextDialogPopup.Styles.Button)) close();
+				EditorGUILayoutExtensions.PushEnabled(!string.IsNullOrEmpty(modelId));
+				{
+					if (GUILayout.Button("Create", TextDialogPopup.Styles.Button))
+					{
+						close();
+						BeforeLoadSelection();
+						SaveLoadService.Save(CreateModel(modelId, modelName), OnNewModelSaveDone);
+					}
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+			GUILayout.EndHorizontal();
 		}
 
 		void OnNewModelSaveDone(SaveLoadRequest<M> result)
@@ -412,11 +505,9 @@ namespace LunraGames.SubLight
 						labelStyle.normal.textColor = isIgnored ? SubLightEditorConfig.Instance.SharedModelEditorModelsEntryLabelIgnoredColor : labelStyle.normal.textColor;
 						labelStyle.fixedHeight = 18;
 
-						var metaName = string.IsNullOrEmpty(model.Id.Value) ? "< No Meta >" : model.Id.Value;
+						var metaName = string.IsNullOrEmpty(model.Id.Value) ? "< No Id >" : model.Id.Value;
 						if (32 < metaName.Length) metaName = metaName.Substring(0, 29) + "...";
-						GUILayout.Label(new GUIContent(metaName, "Name is set by Meta field."), labelStyle, GUILayout.Height(14f));
-						GUILayout.FlexibleSpace();
-						GUILayout.Label(modelName, labelStyle);
+						GUILayout.Label(new GUIContent(metaName, "Id for this model."), labelStyle);
 					}
 					GUILayout.EndHorizontal();
 
@@ -624,10 +715,10 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Defaults
-		protected virtual M CreateModel(string name)
+		protected virtual M CreateModel(string id, string name)
 		{
-			var model = SaveLoadService.Create<M>();
-			AssignModelId(model, Guid.NewGuid().ToString());
+			var model = SaveLoadService.Create<M>(id);
+			AssignModelId(model, id);
 			AssignModelName(model, name);
 			return model;
 		}
@@ -926,7 +1017,7 @@ namespace LunraGames.SubLight
 
 		protected virtual Vector2 GetSettingsDialogSize { get { return new Vector2(500f, 200f); } }
 
-		protected virtual void OnSettingsGui()
+		protected virtual void OnSettingsGui(Action close)
 		{
 			modelAlwaysAllowSaving.Value = EditorGUILayout.Toggle(new GUIContent("Always Allow Saving", "When enabled the 'Save' button always be clickable."), modelAlwaysAllowSaving.Value);
 			SettingsGui();

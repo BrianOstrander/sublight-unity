@@ -83,7 +83,7 @@ namespace LunraGames.SubLight
 			{
 				if (DevPrefs.LoggingInitialization) Debug.Log("No existing " + typeof(T).Name + ", generating defaults");
 				modelMediator.Save(
-					modelMediator.Create<T>(),
+					modelMediator.Create<T>(App.M.CreateUniqueId()),
 					saveResult => OnInitializedSaved(saveResult, done)
 				);
 			}
@@ -94,7 +94,7 @@ namespace LunraGames.SubLight
 				{
 					if (DevPrefs.LoggingInitialization) Debug.Log("No supported " + typeof(T).Name + ", generating defaults");
 					modelMediator.Save(
-						modelMediator.Create<T>(),
+						modelMediator.Create<T>(App.M.CreateUniqueId()),
 						saveResult => OnInitializedSaved(saveResult, done)
 					);
 				}

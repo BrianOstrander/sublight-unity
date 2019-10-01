@@ -53,9 +53,9 @@ namespace LunraGames.SubLight
 		}
 
 		#region Model Overrides
-		protected override EncounterInfoModel CreateModel(string name)
+		protected override EncounterInfoModel CreateModel(string id, string name)
 		{
-			var model = base.CreateModel(name);
+			var model = base.CreateModel(id, name);
 
 			model.RandomWeightMultiplier.Value = 1f;
 			model.RandomAppearance.Value = 1f;

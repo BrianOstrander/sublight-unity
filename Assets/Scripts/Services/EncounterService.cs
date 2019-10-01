@@ -85,7 +85,7 @@ namespace LunraGames.SubLight
 			{
 				if (DevPrefs.LoggingInitialization) Debug.Log("No existing interacted encounters, generating defaults");
 				modelMediator.Save(
-					UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>()),
+					UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>(App.M.CreateUniqueId())),
 					saveResult => OnSavedInteractedEncounters(saveResult, done)
 				);
 			}
@@ -96,7 +96,7 @@ namespace LunraGames.SubLight
 				{
 					if (DevPrefs.LoggingInitialization) Debug.Log("No supported interacted encounters, generating defaults");
 					modelMediator.Save(
-						UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>()),
+						UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>(App.M.CreateUniqueId())),
 						saveResult => OnSavedInteractedEncounters(saveResult, done)
 					);
 				}

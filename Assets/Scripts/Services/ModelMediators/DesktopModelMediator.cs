@@ -120,12 +120,15 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		protected override string GetUniquePath(SaveTypes saveType)
+		protected override string GetUniquePath(SaveTypes saveType, string id)
 		{
-			var path = Path.Combine(GetPath(saveType), Guid.NewGuid().ToString() + Extension);
+			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			if (!id.Replace("_", "").Any(Char.IsLetterOrDigit)) throw new ArgumentException("Id \"" + id + "\" contains non alphanumeric characters", nameof(id));
+			
+			var path = Path.Combine(GetPath(saveType), id + Extension);
 
-			// TODO: Check that path doesn't exist.
-
+			if (File.Exists(path)) throw new Exception("Id is not unique, a file exists at path: " + path);
+			
 			return path;
 		}
 

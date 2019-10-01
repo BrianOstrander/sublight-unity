@@ -15,19 +15,9 @@ namespace LunraGames.SubLight
 		}
 
 		#region Model Overrides
-		protected override GamemodeInfoModel CreateModel(string name)
-		{
-			var model = base.CreateModel(name);
-
-			// Any overrides are here...
-
-			return model;
-		}
-
 		protected override void AssignModelName(GamemodeInfoModel model, string name)
 		{
-			// TODO: Do something here?
-//			model.Name.Value = name;
+			model.Name.Value = name;
 		}
 		#endregion
 	}

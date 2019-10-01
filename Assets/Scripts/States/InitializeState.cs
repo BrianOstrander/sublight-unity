@@ -131,7 +131,7 @@ namespace LunraGames.SubLight
 			{
 				if (DevPrefs.LoggingInitialization) Debug.Log("No existing preferences, generating defaults");
 				App.M.Save(
-					App.M.Create<PreferencesModel>(), 
+					App.M.Create<PreferencesModel>(App.M.CreateUniqueId()), 
 					saveResult => OnSavedPreferences(saveResult, done)
 				);
 			}
@@ -142,7 +142,7 @@ namespace LunraGames.SubLight
 				{
 					if (DevPrefs.LoggingInitialization) Debug.Log("No supported preferences, generating defaults");
 					App.M.Save(
-						App.M.Create<PreferencesModel>(),
+						App.M.Create<PreferencesModel>(App.M.CreateUniqueId()),
 						saveResult => OnSavedPreferences(saveResult, done)
 					);
 				}

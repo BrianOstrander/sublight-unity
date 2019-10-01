@@ -654,7 +654,7 @@ namespace LunraGames.SubLight
 							FlexiblePopupDialog.Show(
 								"Editing Log Name",
 								new Vector2(400f, 22f),
-								() => { model.Name.Value = EditorGUILayout.TextField(model.Name.Value); }
+								close => { model.Name.Value = EditorGUILayout.TextField(model.Name.Value); }
 							);
 						}
 					}
@@ -667,7 +667,7 @@ namespace LunraGames.SubLight
 							FlexiblePopupDialog.Show(
 								"Editing Log Notes",
 								new Vector2(400f, 22f * 3f),
-								() => { model.Notes.Value = EditorGUILayoutExtensions.TextAreaWrapped(model.Notes.Value, GUILayout.ExpandHeight(true)); }
+								close => { model.Notes.Value = EditorGUILayoutExtensions.TextAreaWrapped(model.Notes.Value, GUILayout.ExpandHeight(true)); }
 							);
 						}
 					}

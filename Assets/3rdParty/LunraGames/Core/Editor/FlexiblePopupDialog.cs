@@ -7,7 +7,7 @@ namespace LunraGamesEditor
 {
 	public class FlexiblePopupDialog : EditorWindow
 	{
-		Action onGui;
+		Action<Action> onGui;
 		Action onClose;
 		Action onLostFocus;
 		bool lostFocusCloses;
@@ -17,7 +17,7 @@ namespace LunraGamesEditor
 		public static void Show(
 			string title,
 			Vector2 size,
-			Action onGui,
+			Action<Action> onGui,
 			Action onClose = null,
 			Action onLostFocus = null,
 			bool lostFocusCloses = true
@@ -42,7 +42,7 @@ namespace LunraGamesEditor
 
 		void OnGUI()
 		{
-			onGui();
+			onGui(Close);
 		}
 
 		void OnDestroy()

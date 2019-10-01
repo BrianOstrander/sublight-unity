@@ -189,7 +189,7 @@ namespace LunraGames.SubLight
 		/// <value>Can save if true.</value>
 		protected abstract Dictionary<SaveTypes, bool> CanSave { get; }
 
-		protected abstract string GetUniquePath(SaveTypes saveType);
+		protected abstract string GetUniquePath(SaveTypes saveType, string id);
 
 		protected bool IsSupportedVersion(SaveTypes type, int version)
 		{
@@ -201,12 +201,12 @@ namespace LunraGames.SubLight
 			return min <= version;
 		}
 
-		public M Create<M>() where M : SaveModel, new()
+		public M Create<M>(string id) where M : SaveModel, new()
 		{
 			var result = new M();
 			result.SupportedVersion.Value = true;
 			result.Version.Value = BuildInfo.Version;
-			result.Path.Value = GetUniquePath(result.SaveType);
+			result.Path.Value = GetUniquePath(result.SaveType, id);
 			result.Created.Value = DateTime.MinValue;
 			result.Modified.Value = DateTime.MinValue;
 			return result;
@@ -418,17 +418,21 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		public string CreateUniqueId() { return Guid.NewGuid().ToString().Replace("-", "_"); }
+
 		protected abstract void OnRead(string path, Action<ReadWriteRequest> done);
 	}
 
 	public interface IModelMediator
 	{
 		void Initialize(IBuildInfo info, Action<RequestStatus> done);
-		M Create<M>() where M : SaveModel, new();
+		M Create<M>(string id) where M : SaveModel, new();
 		void Save<M>(M model, Action<SaveLoadRequest<M>> done = null, bool updateModified = true) where M : SaveModel;
 		void Load<M>(SaveModel model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 		void Load<M>(string modelId, Action<SaveLoadRequest<M>> done) where M : SaveModel;
 		void List<M>(Action<SaveLoadArrayRequest<SaveModel>> done) where M : SaveModel;
 		void Delete<M>(M model, Action<SaveLoadRequest<M>> done) where M : SaveModel;
+
+		string CreateUniqueId();
 	}
 }

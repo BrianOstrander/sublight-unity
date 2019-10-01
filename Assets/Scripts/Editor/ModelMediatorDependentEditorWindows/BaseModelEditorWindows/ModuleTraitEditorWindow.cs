@@ -13,19 +13,10 @@ namespace LunraGames.SubLight
 
 		public ModuleTraitEditorWindow() : base("LG_SL_ModuleTraitEditor_", "Module Trait")
 		{
-			//GeneralConstruct();
+			GeneralConstruct();
 		}
 
 		#region Model Overrides
-		protected override ModuleTraitModel CreateModel(string name)
-		{
-			var model = base.CreateModel(name);
-
-			// Any overrides are here...
-
-			return model;
-		}
-
 		protected override void AssignModelName(ModuleTraitModel model, string name)
 		{
 			model.Name.Value = name;
