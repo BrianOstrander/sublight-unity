@@ -33,7 +33,19 @@ namespace LunraGames.SubLight
 				
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The description of this trait given to the player."), model.Description.Value, leftOffset: false);
 
-				// TODO: other fields here
+				model.Severity.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					new GUIContent("Severity", "Critical traits will cause game ending encounters to occur."),
+					"- Severity -",
+					model.Severity.Value,
+					Color.red
+				);
+
+				model.CompatibleModuleTypes.Value = EditorGUILayoutExtensions.EnumArray<ModuleTypes>(
+					new GUIContent("Compatible Modules", "All modules types this trait can be applied to."),
+					model.CompatibleModuleTypes.Value
+				);
+				
+				// TODO: Other fields here...
 			}
 			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
 

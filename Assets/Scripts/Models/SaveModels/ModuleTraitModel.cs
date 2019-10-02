@@ -20,10 +20,16 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] ModuleTraitSeverity severity;
 		[JsonIgnore] public readonly ListenerProperty<ModuleTraitSeverity> Severity;
 
-		[JsonProperty] ModuleTypes compatibleModuleTypes;
-		[JsonIgnore] public readonly ListenerProperty<ModuleTypes> CompatibleModuleTypes;
+		[JsonProperty] ModuleTypes[] compatibleModuleTypes = new ModuleTypes[0];
+		[JsonIgnore] public readonly ListenerProperty<ModuleTypes[]> CompatibleModuleTypes;
 
-		[JsonProperty] string[] incompatibleTraitIds;
+		[JsonProperty] string[] familyIds = new string[0];
+		[JsonIgnore] public readonly ListenerProperty<string[]> FamilyIds;
+		
+		[JsonProperty] string[] incompatibleFamilyIds = new string[0];
+		[JsonIgnore] public readonly ListenerProperty<string[]> IncompatibleFamilyIds;
+
+		[JsonProperty] private string[] incompatibleTraitIds = new string[0];
 		[JsonIgnore] public readonly ListenerProperty<string[]> IncompatibleTraitIds;
 
 		public ModuleTraitModel()
@@ -32,7 +38,9 @@ namespace LunraGames.SubLight.Models
 			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
 			Severity = new ListenerProperty<ModuleTraitSeverity>(value => severity = value, () => severity);
-			CompatibleModuleTypes = new ListenerProperty<ModuleTypes>(value => compatibleModuleTypes = value, () => compatibleModuleTypes);
+			CompatibleModuleTypes = new ListenerProperty<ModuleTypes[]>(value => compatibleModuleTypes = value, () => compatibleModuleTypes);
+			FamilyIds = new ListenerProperty<string[]>(value => familyIds = value, () => familyIds);
+			IncompatibleFamilyIds = new ListenerProperty<string[]>(value => incompatibleFamilyIds = value, () => incompatibleFamilyIds);
 			IncompatibleTraitIds = new ListenerProperty<string[]>(value => incompatibleTraitIds = value, () => incompatibleTraitIds);
 		}
 	}
