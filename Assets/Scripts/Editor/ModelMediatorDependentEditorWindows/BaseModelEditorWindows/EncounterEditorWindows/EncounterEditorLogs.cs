@@ -12,7 +12,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight
 {
-	public partial class EncounterEditorWindow
+	public class LogsEncounterEditorTab : ModelEditorTab<EncounterEditorWindow, EncounterInfoModel>
 	{
 		static class LogStrings
 		{
@@ -161,33 +161,22 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		void LogsConstruct()
+		public LogsEncounterEditorTab(EncounterEditorWindow window) : base(window, "Logs")
 		{
-			var currPrefix = KeyPrefix + "Logs";
+			logsListScroll = new EditorPrefsFloat(TabKeyPrefix + "ListScroll");
+			logsStackScroll = new EditorPrefsFloat(TabKeyPrefix + "StackScroll");
+			logsEdgeIndentsEnabled = new EditorPrefsBool(TabKeyPrefix + "EdgeIndentsEnabled", true);
+			logsShowNameSource = new EditorPrefsBool(TabKeyPrefix + "ShowNameSource");
+			logsShowHaltingInfo = new EditorPrefsBool(TabKeyPrefix + "ShowHaltingInfo", true);
+			logsShowHaltingWarnings = new EditorPrefsBool(TabKeyPrefix + "ShowHaltingWarnings", true);
+			logsJumpFromToolbarAppend = new EditorPrefsBool(TabKeyPrefix + "JumpFromToolbarAppend", true);
 
-			logsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
-			logsStackScroll = new EditorPrefsFloat(currPrefix + "StackScroll");
-			logsEdgeIndentsEnabled = new EditorPrefsBool(currPrefix + "EdgeIndentsEnabled", true);
-			logsShowNameSource = new EditorPrefsBool(currPrefix + "ShowNameSource");
-			logsShowHaltingInfo = new EditorPrefsBool(currPrefix + "ShowHaltingInfo", true);
-			logsShowHaltingWarnings = new EditorPrefsBool(currPrefix + "ShowHaltingWarnings", true);
-			logsJumpFromToolbarAppend = new EditorPrefsBool(currPrefix + "JumpFromToolbarAppend", true);
-
-			logsFocusedLogIdsIndex = new EditorPrefsInt(currPrefix + "FocusedLogsIdsIndex");
-			logsFocusedLogIds = new EditorPrefsString(currPrefix + "FocusedLogIds");
-
-			RegisterToolbar("Logs", LogsToolbar);
-
-			SettingsGui += LogsSettingsGui;
-
-			BeforeLoadSelection += LogsBeforeLoadSelection;
-			AfterLoadSelection += LogsAfterLoadSelection;
-
-			EditorUpdate += LogsInspectorUpdate;
+			logsFocusedLogIdsIndex = new EditorPrefsInt(TabKeyPrefix + "FocusedLogsIdsIndex");
+			logsFocusedLogIds = new EditorPrefsString(TabKeyPrefix + "FocusedLogIds");
 		}
 
 		#region Events
-		void LogsSettingsGui()
+		public override void SettingsGui()
 		{
 			GUILayout.Label("Logs", EditorStyles.boldLabel);
 			logsShowNameSource.Value = EditorGUILayout.Toggle(new GUIContent("Show Source of Log Names", "Prefixes the source of the name for a log, if it's an Id or form the actual Name field."), logsShowNameSource.Value);
@@ -199,9 +188,9 @@ namespace LunraGames.SubLight
 			logsShowHaltingWarnings.Value = EditorGUILayout.Toggle(new GUIContent("Halting Warnings", "Show a warning if certain logs cause an encounter to halt in possibly dangerous ways."), logsShowHaltingWarnings.Value);
 		}
 
-		void LogsToolbar(EncounterInfoModel model)
+		public override void Gui(EncounterInfoModel model)
 		{
-			if (ModelSelectionModified || logCache == null || model.Id.Value != logCache.EncounterId)
+			if (Window.ModelSelectionModified || logCache == null || model.Id.Value != logCache.EncounterId)
 			{
 				logCache = new EncounterEditorLogCache
 				{
@@ -215,12 +204,12 @@ namespace LunraGames.SubLight
 			DrawLogsToolbar(model);
 		}
 
-		void LogsBeforeLoadSelection()
+		public override void BeforeLoadSelection()
 		{
 			LogsFocusedLogIdsPop();
 		}
 
-		void LogsAfterLoadSelection(EncounterInfoModel model)
+		public override void AfterLoadSelection(EncounterInfoModel model)
 		{
 			if (string.IsNullOrEmpty(model.DefaultEndLogId.Value))
 			{
@@ -248,7 +237,7 @@ namespace LunraGames.SubLight
 			endLogInstance.Name.Value = LogStrings.DefaultEndLogName;
 		}
 
-		void LogsInspectorUpdate(float delta = 0f)
+		public override void EditorUpdate(float delta)
 		{
 			if (logEdgeVisualOverrides.None()) return;
 
@@ -281,7 +270,7 @@ namespace LunraGames.SubLight
 
 			logEdgeVisualOverrides = newOverrides;
 
-			if (wasUpdated) Repaint();
+			if (wasUpdated) Window.Repaint();
 		}
 		#endregion
 
@@ -410,7 +399,7 @@ namespace LunraGames.SubLight
 							Rect logRect;
 							if (logRectCache.TryGetValue(log.LogId.Value, out logRect))
 							{
-								if (logRect.yMax < logsListScroll.Value || logsListScroll.Value < (logRect.yMin - position.height))
+								if (logRect.yMax < logsListScroll.Value || logsListScroll.Value < (logRect.yMin - Window.position.height))
 								{
 									GUILayout.Space(logRect.height);
 									continue;
@@ -498,7 +487,7 @@ namespace LunraGames.SubLight
 							indexSwap1.Index.Value = swap0;
 						}
 					}
-					EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+					EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 				}
 				GUILayout.EndVertical();
 			}
@@ -513,7 +502,7 @@ namespace LunraGames.SubLight
 		{
 			if (logType == EncounterLogTypes.Unknown) return null;
 
-			ModelSelectionModified = true;
+			Window.ModelSelectionModified = true;
 
 			var isBeginning = infoModel.Logs.All.Value.Length == 0;
 			var nextIndex = infoModel.Logs.All.Value.OrderBy(l => l.Index.Value).Select(l => l.Index.Value).LastOrFallback(-1) + 1;
@@ -604,7 +593,7 @@ namespace LunraGames.SubLight
 			GUILayout.BeginHorizontal();
 			{
 				var nameSourcePrefix = logsShowNameSource.Value ? (model.HasName ? ".Name:" : ".LogId:") : ":";
-				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " " + (model.HasName ? ("<b>" + model.Name.Value + "</b>") : Shorten(model.LogId.Value, 8));
+				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " " + (model.HasName ? ("<b>" + model.Name.Value + "</b>") : Window.Shorten(model.LogId.Value, 8));
 				GUILayout.Label(new GUIContent(header, model.LogId.Value), SubLightEditorConfig.Instance.EncounterEditorLogEntryIndex);
 				if (isMoving)
 				{
@@ -827,7 +816,7 @@ namespace LunraGames.SubLight
 			string key = null
 		)
 		{
-			ModelSelectionModified = true;
+			Window.ModelSelectionModified = true;
 			edge.Entry.KeyValueType.Value = keyValueType;
 			IKeyValueAddress output = null;
 			Action<IKeyValueAddress> setOutput;
@@ -1346,7 +1335,7 @@ namespace LunraGames.SubLight
 					break;
 			}
 
-			entry.NextLogId.Changed = newLogId => ModelSelectionModified = true;
+			entry.NextLogId.Changed = newLogId => Window.ModelSelectionModified = true;
 
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent("Target Log"),
@@ -1414,7 +1403,7 @@ namespace LunraGames.SubLight
 
 			entry.Message.Value = EditorGUILayout.TextField("Message", entry.Message.Value);
 
-			entry.NextLogId.Changed = newLogId => ModelSelectionModified = true;
+			entry.NextLogId.Changed = newLogId => Window.ModelSelectionModified = true;
 
 			GUILayout.BeginHorizontal();
 			{
@@ -2634,7 +2623,7 @@ namespace LunraGames.SubLight
 		)
 			where E : class, IEdgeModel, new()
 		{
-			ModelSelectionModified = true;
+			Window.ModelSelectionModified = true;
 
 			if (model.Edges.Any())
 			{
@@ -2745,7 +2734,7 @@ namespace LunraGames.SubLight
 			EncounterLogModel model
 		)
 		{
-			model.FallbackLogId.Changed = newLogId => ModelSelectionModified = true;
+			model.FallbackLogId.Changed = newLogId => Window.ModelSelectionModified = true;
 
 			EditorGUILayoutEncounter.AppendSelectOrBlankLogPopup(
 				new GUIContent(model.RequiresFallbackLog ? "Next Log" : "Fallback Log", "The encounter will fallthrough to this log if not overridden."),

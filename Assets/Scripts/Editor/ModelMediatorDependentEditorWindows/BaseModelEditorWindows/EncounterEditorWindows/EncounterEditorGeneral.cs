@@ -10,16 +10,11 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public partial class EncounterEditorWindow
+	public class GeneralEncounterEditorTab : ModelEditorTab<EncounterEditorWindow, EncounterInfoModel>
 	{
-		void GeneralConstruct()
-		{
-			//var currPrefix = KeyPrefix + "General";
+		public GeneralEncounterEditorTab(EncounterEditorWindow window) : base(window, "General") { }
 
-			RegisterToolbar("General", GeneralToolbar);
-		}
-
-		void GeneralToolbar(EncounterInfoModel model)
+		public override void Gui(EncounterInfoModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
@@ -32,7 +27,7 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 				model.RandomWeightMultiplier.Value = Mathf.Max(0f, EditorGUILayout.FloatField(new GUIContent("Random Weight Multiplier", "The chance of it appearing relative to others among its Order Weight grouping."), model.RandomWeightMultiplier.Value));
 				model.RandomAppearance.Value = Mathf.Clamp01(EditorGUILayout.FloatField(new GUIContent("Random Appearance", "Chance it won't be shown at all each time encounters are chosen."), model.RandomAppearance.Value));
-				DrawIdField(model);
+				EditorGUILayoutModel.Id(model);
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The internal description for notes and production purposes."), model.Description.Value, leftOffset: false);
 
 				Color? triggerColor = null;
@@ -60,7 +55,7 @@ namespace LunraGames.SubLight
 
 				EditorGUILayoutValueFilter.Field(new GUIContent("Filtering", "These checks determine if the encounter will be selected."), model.Filtering, alternateColor);
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 		}
 	}
 }

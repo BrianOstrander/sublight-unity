@@ -12,26 +12,22 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public partial class GalaxyEditorWindow
+	public class TargetsGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		EditorPrefsInt targetsSelectedPreview;
 		EditorPrefsInt targetsPreviewSize;
 		EditorPrefsBool targetsPreviewMinimized;
-
-		void TargetsConstruct()
+		
+		public TargetsGalaxyEditorTab(GalaxyEditorWindow window) : base(window, "Targets")
 		{
-			var currPrefix = KeyPrefix + "Targets";
-
-			targetsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
-			targetsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
-			targetsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
-
-			RegisterToolbar("Targets", TargetsToolbar);
+			targetsSelectedPreview = new EditorPrefsInt(TabKeyPrefix + "SelectedPreview");
+			targetsPreviewSize = new EditorPrefsInt(TabKeyPrefix + "PreviewSize");
+			targetsPreviewMinimized = new EditorPrefsBool(TabKeyPrefix + "PreviewMinimized");
 		}
 
-		void TargetsToolbar(GalaxyInfoModel model)
+		public override void Gui(GalaxyInfoModel model)
 		{
-			if (HorizontalPreviewSupported())
+			if (Window.HorizontalPreviewSupported())
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -109,19 +105,19 @@ namespace LunraGames.SubLight
 				model.UniverseNormal.Value = EditorGUILayout.Vector3Field(new GUIContent("Universe Normal", "The up direction of this galaxy within the universe."), model.UniverseNormal.Value);
 				model.AlertHeightMultiplier.Value = EditorGUILayout.FloatField(new GUIContent("Alert Height Multiplier", "The additional offset of any alerts on this galaxy."), model.AlertHeightMultiplier.Value);
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 		}
 
 		void TargetsToolbarSecondary(GalaxyInfoModel model)
 		{
-			DrawPreviews(
+			Window.DrawPreviews(
 				model,
 				targetsSelectedPreview,
 				targetsPreviewSize,
 				targetsPreviewMinimized,
 				true,
 				clickPosition => TargetsPrimaryClickPreview(model, clickPosition),
-				drawOnPreview: displayArea => DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyle)
+				drawOnPreview: displayArea => Window.DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyle)
 			);
 		}
 
@@ -133,7 +129,7 @@ namespace LunraGames.SubLight
 				{
 					OptionPopupDialog.Entry.Create(
 						"Galaxy Origin",
-						() => { model.GalaxyOriginNormal = clickPosition; ModelSelectionModified = true; },
+						() => { model.GalaxyOriginNormal = clickPosition; Window.ModelSelectionModified = true; },
 						color: Color.yellow
 					),
 					OptionPopupDialog.Entry.Create(
@@ -159,7 +155,7 @@ namespace LunraGames.SubLight
 			if (found)
 			{
 				model.PlayerBeginNormal = clickPosition;
-				ModelSelectionModified = true;
+				Window.ModelSelectionModified = true;
 				return;
 			}
 			EditorUtility.DisplayDialog("Missing System", "Specify a begin sector and system in the Specified Sectors tab first.", "Okay");
@@ -173,7 +169,7 @@ namespace LunraGames.SubLight
 			if (found)
 			{
 				model.PlayerEndNormal = clickPosition;
-				ModelSelectionModified = true;
+				Window.ModelSelectionModified = true;
 				return;
 			}
 			EditorUtility.DisplayDialog("Missing System", "Specify an end sector and system in the Specified Sectors tab first.", "Okay");

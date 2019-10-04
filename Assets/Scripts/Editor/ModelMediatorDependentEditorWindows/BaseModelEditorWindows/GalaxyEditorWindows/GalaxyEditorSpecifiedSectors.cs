@@ -10,9 +10,11 @@ using LunraGames.NumberDemon;
 
 using LunraGames.SubLight.Models;
 
+using LabelStates = LunraGames.SubLight.LabelsGalaxyEditorTab.LabelStates;
+
 namespace LunraGames.SubLight
 {
-	public partial class GalaxyEditorWindow
+	public class SpecifiedSectorsGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		enum SpecifiedSectorsStates
 		{
@@ -39,29 +41,30 @@ namespace LunraGames.SubLight
 		SectorModel specifiedSectorsSelectedSector;
 		SystemModel specifiedSectorSelectedSystem;
 		bool specifiedSectorsIsOverAnAllSector;
-
-		void SpecifiedSectorsConstruct()
+		
+		LabelsGalaxyEditorTab labelTab;
+		
+		public SpecifiedSectorsGalaxyEditorTab(
+			GalaxyEditorWindow window,
+			LabelsGalaxyEditorTab labelTab
+		) : base(window, "Specified Sectors", "Specified Sectors")
 		{
-			var currPrefix = KeyPrefix + "SpecifiedSectors";
+			this.labelTab = labelTab;
+			
+			specifiedSectorsScroll = new EditorPrefsFloat(TabKeyPrefix + "Scroll");
+			specifiedSectorsSelectedSectorName = new EditorPrefsString(TabKeyPrefix + "SelectedSectorName");
+			specifiedSectorsPreviewSize = new EditorPrefsInt(TabKeyPrefix + "PreviewSize");
+			specifiedSectorsPreviewMinimized = new EditorPrefsBool(TabKeyPrefix + "PreviewMinimized");
+			specifiedSectorsSelectedPreview = new EditorPrefsInt(TabKeyPrefix + "SelectedPreview");
+			specifiedSectorsSystemsScroll = new EditorPrefsFloat(TabKeyPrefix + "SystemsScroll");
+			specifiedSectorsShowTargets = new EditorPrefsBool(TabKeyPrefix + "ShowTargets");
+			specifiedSectorsShowDerivedValues = new EditorPrefsBool(TabKeyPrefix + "ShowDerivedValues");
 
-			specifiedSectorsScroll = new EditorPrefsFloat(currPrefix + "Scroll");
-			specifiedSectorsSelectedSectorName = new EditorPrefsString(currPrefix + "SelectedSectorName");
-			specifiedSectorsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
-			specifiedSectorsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
-			specifiedSectorsSelectedPreview = new EditorPrefsInt(currPrefix + "SelectedPreview");
-			specifiedSectorsSystemsScroll = new EditorPrefsFloat(currPrefix + "SystemsScroll");
-			specifiedSectorsShowTargets = new EditorPrefsBool(currPrefix + "ShowTargets");
-			specifiedSectorsShowDerivedValues = new EditorPrefsBool(currPrefix + "ShowDerivedValues");
-
-			specifiedSectorsSelectedSystemIndex = new EditorPrefsInt(currPrefix + "SelectedSystemIndex");
-			specifiedSectorsSystemDetailsScroll = new EditorPrefsFloat(currPrefix + "SystemDetailsScroll");
-
-			RegisterToolbar("Specified Sectors", SpecifiedSectorsToolbar);
-
-			BeforeLoadSelection += SpecifiedSectorsBeforeLoadSelection;
+			specifiedSectorsSelectedSystemIndex = new EditorPrefsInt(TabKeyPrefix + "SelectedSystemIndex");
+			specifiedSectorsSystemDetailsScroll = new EditorPrefsFloat(TabKeyPrefix + "SystemDetailsScroll");
 		}
 
-		void SpecifiedSectorsToolbar(GalaxyInfoModel model)
+		public override void Gui(GalaxyInfoModel model)
 		{
 			if (string.IsNullOrEmpty(specifiedSectorsSelectedSectorName.Value))
 			{
@@ -115,7 +118,7 @@ namespace LunraGames.SubLight
 											SpecifiedSectorsSelectSpecifiedSector(null);
 										}
 										model.RemoveSpecifiedSector(specifiedSector);
-										ModelSelectionModified = true;
+										Window.ModelSelectionModified = true;
 									}
 								}
 							}
@@ -184,7 +187,7 @@ namespace LunraGames.SubLight
 											if (EditorGUILayoutExtensions.XButton(true))
 											{
 												deletedSystem = system.Index.Value;
-												ModelSelectionModified = true;
+												Window.ModelSelectionModified = true;
 											}
 										}
 									}
@@ -244,7 +247,7 @@ namespace LunraGames.SubLight
 							}
 							EditorGUILayoutExtensions.PopEnabled();
 
-							EditorGUILayoutExtensions.PushEnabled(labelsLabelState != LabelStates.Idle);
+							EditorGUILayoutExtensions.PushEnabled(labelTab.labelsLabelState != LabelStates.Idle);
 							EditorGUILayoutExtensions.PushColor(Color.red);
 							if (GUILayout.Button("Cancel"))
 							{
@@ -257,7 +260,7 @@ namespace LunraGames.SubLight
 										SpecifiedSectorsSelectSpecifiedSector(specifiedSectorsSelectedSector);
 										break;
 								}
-								labelsLabelState = LabelStates.Idle;
+								labelTab.labelsLabelState = LabelStates.Idle;
 							}
 							EditorGUILayoutExtensions.PopColor();
 							EditorGUILayoutExtensions.PopEnabled();
@@ -318,7 +321,7 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			DrawPreviews(
+			Window.DrawPreviews(
 				model,
 				specifiedSectorsSelectedPreview,
 				specifiedSectorsPreviewSize,
@@ -353,14 +356,14 @@ namespace LunraGames.SubLight
 			}
 
 			var normalizedSectorPosition = UniversePosition.NormalizedSector(specifiedSectorsSelectedSector.Position.Value, model.GalaxySize);
-			var positionInWindow = NormalToWindow(normalizedSectorPosition, displayArea, out var positionInPreview);
+			var positionInWindow = Window.NormalToWindow(normalizedSectorPosition, displayArea, out var positionInPreview);
 
 			var positionColor = specifiedSectorsState == SpecifiedSectorsStates.UpdatingSector ? Color.cyan.NewS(0.25f) : Color.cyan;
 
 			EditorGUILayoutExtensions.PushColor(positionInPreview ? positionColor : positionColor.NewA(positionColor.a * 0.5f));
 			{
 				GUI.Box(
-					CenteredScreen(positionInWindow, new Vector2(16f, 16f)),
+					Window.CenteredScreen(positionInWindow, new Vector2(16f, 16f)),
 					new GUIContent(string.Empty, "Sector Position"),
 					SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyle
 				);
@@ -376,10 +379,10 @@ namespace LunraGames.SubLight
 							if (i == 0) continue;
 
 							var currentNormalizedSectorPosition = UniversePosition.NormalizedSector(specifiedSectorsSelectedSector.PositionList.Value[i], model.GalaxySize);
-							var currentPositionInWindow = NormalToWindow(currentNormalizedSectorPosition, displayArea, out var currentPositionInPreview);
+							var currentPositionInWindow = Window.NormalToWindow(currentNormalizedSectorPosition, displayArea, out var currentPositionInPreview);
 
 							GUI.Box(
-								CenteredScreen(currentPositionInWindow, new Vector2(16f, 16f)),
+								Window.CenteredScreen(currentPositionInWindow, new Vector2(16f, 16f)),
 								new GUIContent(string.Empty, "Sector Position"),
 								SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetMinorStyle
 							);
@@ -393,7 +396,7 @@ namespace LunraGames.SubLight
 			}
 			EditorGUILayoutExtensions.PopColor();
 
-			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyleSmall);
+			if (specifiedSectorsShowTargets.Value) Window.DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyleSmall);
 		}
 
 		void SpecifiedSectorsShowAll(
@@ -415,9 +418,9 @@ namespace LunraGames.SubLight
 				var positionInPreview = true;
 				var normalizedSectorPosition = UniversePosition.NormalizedSector(sector.Position.Value, model.GalaxySize);
 
-				var positionInWindow = NormalToWindow(normalizedSectorPosition, displayArea, out positionInPreview);
+				var positionInWindow = Window.NormalToWindow(normalizedSectorPosition, displayArea, out positionInPreview);
 
-				var selectCurrentArea = CenteredScreen(positionInWindow, new Vector2(16f, 16f));
+				var selectCurrentArea = Window.CenteredScreen(positionInWindow, new Vector2(16f, 16f));
 
 				if (GUI.Button(selectCurrentArea, new GUIContent(string.Empty, sector.Name.Value), SubLightEditorConfig.Instance.GalaxyEditorSpecifiedSectorTargetStyle))
 				{
@@ -429,7 +432,7 @@ namespace LunraGames.SubLight
 				EditorGUILayoutExtensions.PopColor();
 			}
 
-			if (specifiedSectorsShowTargets.Value) DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyleSmall);
+			if (specifiedSectorsShowTargets.Value) Window.DrawGalaxyTargets(model, displayArea, SubLightEditorConfig.Instance.GalaxyEditorGalaxyTargetStyleSmall);
 		}
 
 		void SpecifiedSectorsPrimaryClickPreview(GalaxyInfoModel model, Vector3 clickPosition)
@@ -450,7 +453,7 @@ namespace LunraGames.SubLight
 						{
 							specifiedSectorsSelectedSector.Name.Value = value;
 							model.AddSpecifiedSector(specifiedSectorsSelectedSector);
-							ModelSelectionModified = true;
+							Window.ModelSelectionModified = true;
 							specifiedSectorsState = SpecifiedSectorsStates.Idle;
 						},
 						() =>
@@ -462,16 +465,16 @@ namespace LunraGames.SubLight
 				case SpecifiedSectorsStates.SelectingSector:
 					specifiedSectorsSelectedSector.Position.Value = UniversePosition.Lerp(clickPosition, UniversePosition.Zero, model.GalaxySize).LocalZero;
 					model.AddSpecifiedSector(specifiedSectorsSelectedSector);
-					ModelSelectionModified = true;
+					Window.ModelSelectionModified = true;
 					specifiedSectorsState = SpecifiedSectorsStates.Idle;
 					break;
 				case SpecifiedSectorsStates.UpdatingSector:
 					specifiedSectorsSelectedSector.Position.Value = UniversePosition.Lerp(clickPosition, UniversePosition.Zero, model.GalaxySize).LocalZero;
-					ModelSelectionModified = true;
+					Window.ModelSelectionModified = true;
 					specifiedSectorsState = SpecifiedSectorsStates.Idle;
 					break;
 				default:
-					Debug.LogError("Unrecognized state " + labelsLabelState);
+					Debug.LogError("Unrecognized state " + labelTab.labelsLabelState);
 					break;
 			}
 		}
@@ -503,7 +506,7 @@ namespace LunraGames.SubLight
 			return result;
 		}
 
-		void SpecifiedSectorsBeforeLoadSelection()
+		public override void BeforeLoadSelection()
 		{
 			SpecifiedSectorsSelectSpecifiedSector(null);
 		}
@@ -648,7 +651,7 @@ namespace LunraGames.SubLight
 						break;
 				}
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 		}
 
 		UniversePosition SpecifiedSectorsSectorPosition(
@@ -803,7 +806,7 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndScrollView();
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 		}
 
 		void SpecifiedSectorsDrawSystemKeyValue(
@@ -933,7 +936,7 @@ namespace LunraGames.SubLight
 			specifiedSectorsSelectedSystemIndex.Value = result.Index.Value;
 			EditorGUIExtensions.ResetControls();
 
-			ModelSelectionModified = true;
+			Window.ModelSelectionModified = true;
 		}
 	}
 }

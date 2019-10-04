@@ -7,19 +7,16 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public partial class GalaxyEditorWindow
+	public class GenerationGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		EditorPrefsFloat generationBarScroll;
 
-		void GenerationConstruct()
+		public GenerationGalaxyEditorTab(GalaxyEditorWindow window) : base(window, "Generation")
 		{
-			var currPrefix = "Generation";
-			generationBarScroll = new EditorPrefsFloat(currPrefix + "BarScroll");
-
-			RegisterToolbar("Generation", GenerationToolbar);
+			generationBarScroll = new EditorPrefsFloat(TabKeyPrefix + "BarScroll");
 		}
 
-		void GenerationToolbar(GalaxyInfoModel model)
+		public override void Gui(GalaxyInfoModel model)
 		{
 			generationBarScroll.Value = GUILayout.BeginScrollView(new Vector2(0f, generationBarScroll), false, true).y;
 			{
@@ -31,7 +28,7 @@ namespace LunraGames.SubLight
 
 					model.SectorSystemChance.Value = EditorGUILayoutAnimationCurve.Field(new GUIContent("Sector System Chance", "The bodymap is a linear gradient that is evaluated along a curve, then remapped between the minimum and maximum sector body count."), model.SectorSystemChance.Value);
 				}
-				EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+				EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 			}
 			GUILayout.EndScrollView();
 		}

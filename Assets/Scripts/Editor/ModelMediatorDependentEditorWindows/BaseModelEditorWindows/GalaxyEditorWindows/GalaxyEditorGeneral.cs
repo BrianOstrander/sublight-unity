@@ -10,30 +10,26 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public partial class GalaxyEditorWindow
+	public class GeneralGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		DevPrefsInt generalPreviewSize;
 		EditorPrefsBool generalPreviewMinimized;
 		EditorPrefsFloat generalPreviewBarScroll;
 
-		void GeneralConstruct()
+		public GeneralGalaxyEditorTab(GalaxyEditorWindow window) : base(window, "General")
 		{
-			var currPrefix = KeyPrefix + "General";
-
-			generalPreviewSize = new DevPrefsInt(currPrefix + "PreviewSize");
-			generalPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
-			generalPreviewBarScroll = new EditorPrefsFloat(currPrefix + "PreviewBarScroll");
-
-			RegisterToolbar("General", GeneralToolbar);
+			generalPreviewSize = new DevPrefsInt(TabKeyPrefix + "PreviewSize");
+			generalPreviewMinimized = new EditorPrefsBool(TabKeyPrefix + "PreviewMinimized");
+			generalPreviewBarScroll = new EditorPrefsFloat(TabKeyPrefix + "PreviewBarScroll");
 		}
 
-		void GeneralToolbar(GalaxyInfoModel model)
+		public override void Gui(GalaxyInfoModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
 				model.IsPlayable.Value = EditorGUILayout.Toggle(new GUIContent("Is Playable", "Can the player start a game in this galaxy?"), model.IsPlayable.Value);
 
-				DrawIdField(model);
+				EditorGUILayoutModel.Id(model);
 
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The internal name for production purposes."), model.Name.Value);
 				
@@ -41,7 +37,7 @@ namespace LunraGames.SubLight
 
 				model.EncyclopediaEntryId.Value = EditorGUILayout.TextField(new GUIContent("Encyclopedia Entry Id", "The encyclopedia entry opened when viewing the details of this galaxy."), model.EncyclopediaEntryId.Value);
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 
 			GUILayout.FlexibleSpace();
 
@@ -53,7 +49,7 @@ namespace LunraGames.SubLight
 				else
 				{
 					GUILayout.Label(new GUIContent("Preview Size"), GUILayout.Width(78f));
-					generalPreviewSize.Value = Mathf.Clamp(EditorGUILayout.IntSlider(generalPreviewSize.Value, PreviewConstants.MinimumSize, PreviewConstants.MaximumSize, GUILayout.Width(150f)), PreviewConstants.MinimumSize, PreviewConstants.MaximumSize);
+					generalPreviewSize.Value = Mathf.Clamp(EditorGUILayout.IntSlider(generalPreviewSize.Value, GalaxyEditorWindow.PreviewConstants.MinimumSize, GalaxyEditorWindow.PreviewConstants.MaximumSize, GUILayout.Width(150f)), GalaxyEditorWindow.PreviewConstants.MinimumSize, GalaxyEditorWindow.PreviewConstants.MaximumSize);
 				}
 				if (GUILayout.Button(previewText, GUILayout.Width(24f))) generalPreviewMinimized.Value = !generalPreviewMinimized.Value;
 			}

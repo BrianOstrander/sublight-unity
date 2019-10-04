@@ -13,7 +13,7 @@ namespace LunraGames.SubLight
 
 		public ModuleTraitEditorWindow() : base("LG_SL_ModuleTraitEditor_", "Module Trait")
 		{
-			GeneralConstruct();
+			RegisterToolbar(new GeneralModuleTraitEditorTab(this));
 		}
 
 		#region Model Overrides

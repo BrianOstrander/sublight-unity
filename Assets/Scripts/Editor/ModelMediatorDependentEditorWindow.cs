@@ -7,7 +7,7 @@ namespace LunraGames.SubLight
 {
 	public abstract class ModelMediatorDependentEditorWindow : EditorWindow
 	{
-		protected readonly string KeyPrefix;
+		public readonly string KeyPrefix;
 
 		protected Action Enable = ActionExtensions.Empty;
 		protected Action Disable = ActionExtensions.Empty;

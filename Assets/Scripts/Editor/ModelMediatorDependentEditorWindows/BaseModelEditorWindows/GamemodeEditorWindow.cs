@@ -11,7 +11,7 @@ namespace LunraGames.SubLight
 
 		public GamemodeEditorWindow() : base("LG_SL_GamemodeEditor_", "Gamemode")
 		{
-			GeneralConstruct();
+			RegisterToolbar(new GamemodeEditorTab(this));
 		}
 
 		#region Model Overrides

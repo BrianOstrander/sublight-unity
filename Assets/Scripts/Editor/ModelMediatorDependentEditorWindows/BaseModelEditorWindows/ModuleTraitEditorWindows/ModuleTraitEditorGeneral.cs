@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 using LunraGamesEditor;
@@ -7,16 +9,17 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public partial class ModuleTraitEditorWindow
+	public class GeneralModuleTraitEditorTab : ModelEditorTab<ModuleTraitEditorWindow, ModuleTraitModel>
 	{
-		void GeneralConstruct()
-		{
-			//var currPrefix = KeyPrefix + "General";
+		const float GeneralCheckCooldown = 0.5f;
+		
+		ModuleTraitModel generalCurrentModel;
 
-			RegisterToolbar("General", GeneralToolbar);
-		}
+		DateTime? generalCheckTime;
 
-		void GeneralToolbar(ModuleTraitModel model)
+		public GeneralModuleTraitEditorTab(ModuleTraitEditorWindow window) : base(window, "General") { }
+
+		public override void Gui(ModuleTraitModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
@@ -27,7 +30,7 @@ namespace LunraGames.SubLight
 				}
 				GUILayout.EndHorizontal();
 
-				DrawIdField(model);
+				EditorGUILayoutModel.Id(model);
 				
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The name of this trait visible to the player."), model.Name.Value);
 				
@@ -41,14 +44,50 @@ namespace LunraGames.SubLight
 				);
 
 				model.CompatibleModuleTypes.Value = EditorGUILayoutExtensions.EnumArray<ModuleTypes>(
-					new GUIContent("Compatible Modules", "All modules types this trait can be applied to."),
+					new GUIContent("Compatible Modules", "All modules types this trait can be applied to. Leaving this empty will allow it to be added to any Module Type."),
 					model.CompatibleModuleTypes.Value
+				);
+
+				// Color? incompatibleTraitIdsValidation = model.IncompatibleTraitIds.Value.Any(i => string.IsNullOrEmpty(i))
+				model.IncompatibleTraitIds.Value = EditorGUILayoutExtensions.StringArray(
+					"Incompatible Trait Ids",
+					model.IncompatibleTraitIds.Value
 				);
 				
 				// TODO: Other fields here...
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
-
+			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 		}
+		
+		#region General Events
+		void OnGeneralAfterLoadSelection(ModuleTraitModel model)
+		{
+			if (generalCurrentModel != null)
+			{
+				generalCurrentModel.IncompatibleTraitIds.Changed -= OnGeneralIncompatibleTraitIds;
+			}
+			generalCurrentModel = model;
+			generalCheckTime = DateTime.MinValue;
+			
+			generalCurrentModel.IncompatibleTraitIds.Changed += OnGeneralIncompatibleTraitIds;
+			
+			GeneralUpdateCheckTime();
+		}
+		#endregion
+		
+		#region Model Events
+		void OnGeneralIncompatibleTraitIds(string[] value) => GeneralResetCheckTime();
+
+		#endregion
+
+		void GeneralUpdateCheckTime()
+		{
+			if (generalCheckTime.HasValue && DateTime.Now < generalCheckTime) return;
+			generalCheckTime = null;
+			
+			
+		}
+		
+		void GeneralResetCheckTime() => generalCheckTime = DateTime.Now + TimeSpan.FromSeconds(GeneralCheckCooldown);
 	}
 }

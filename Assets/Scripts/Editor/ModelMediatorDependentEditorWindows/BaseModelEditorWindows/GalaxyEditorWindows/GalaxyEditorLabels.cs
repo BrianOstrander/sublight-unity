@@ -12,7 +12,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public partial class GalaxyEditorWindow
+	public class LabelsGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		static class LabelsConstants
 		{
@@ -21,7 +21,7 @@ namespace LunraGames.SubLight
 			public const int AllLabelsCurveSamplingGalactic = 15;
 		}
 
-		enum LabelStates
+		public enum LabelStates
 		{
 			Unknown = 0,
 			Idle = 10,
@@ -46,38 +46,32 @@ namespace LunraGames.SubLight
 		EditorPrefsFloat labelsDetailsScroll;
 		EditorPrefsEnum<LabelColorCodes> labelsColorCodeBy;
 
-		LabelStates labelsLabelState = LabelStates.Idle;
+		public LabelStates labelsLabelState = LabelStates.Idle;
 		GalaxyLabelModel labelsLastSelectedLabel;
 		GalaxyLabelModel labelsSelectedLabel;
 		bool labelsIsOverAnAllLabel;
 
-		void LabelsConstruct()
+		public LabelsGalaxyEditorTab(GalaxyEditorWindow window) : base (window, "Labels")
 		{
-			var currPrefix = KeyPrefix + "Labels";
-
-			labelsPreviewSize = new EditorPrefsInt(currPrefix + "PreviewSize");
-			labelsPreviewMinimized = new EditorPrefsBool(currPrefix + "PreviewMinimized");
-			labelsSelectedLabelId = new EditorPrefsString(currPrefix + "SelectedLabelId");
-			labelsSelectedUniverseScale = new EditorPrefsInt(currPrefix + "SelectedUniverseScale");
-			labelsListScroll = new EditorPrefsFloat(currPrefix + "ListScroll");
-			labelsDetailsScroll = new EditorPrefsFloat(currPrefix + "DetailsScroll");
-			labelsColorCodeBy = new EditorPrefsEnum<LabelColorCodes>(currPrefix + "ColorCodeBy");
-
-			RegisterToolbar("Labels", LabelsToolbar);
-
-			BeforeLoadSelection += LabelsBeforeLoadSelection;
+			labelsPreviewSize = new EditorPrefsInt(TabKeyPrefix + "PreviewSize");
+			labelsPreviewMinimized = new EditorPrefsBool(TabKeyPrefix + "PreviewMinimized");
+			labelsSelectedLabelId = new EditorPrefsString(TabKeyPrefix + "SelectedLabelId");
+			labelsSelectedUniverseScale = new EditorPrefsInt(TabKeyPrefix + "SelectedUniverseScale");
+			labelsListScroll = new EditorPrefsFloat(TabKeyPrefix + "ListScroll");
+			labelsDetailsScroll = new EditorPrefsFloat(TabKeyPrefix + "DetailsScroll");
+			labelsColorCodeBy = new EditorPrefsEnum<LabelColorCodes>(TabKeyPrefix + "ColorCodeBy");
 		}
 
-		void LabelsBeforeLoadSelection()
+		public override void BeforeLoadSelection()
 		{
 			SelectLabel(null);
 		}
 
-		void LabelsToolbar(GalaxyInfoModel model)
+		public override void Gui(GalaxyInfoModel model)
 		{
 			var selectedScale = UniverseScales.Quadrant;
 
-			if (HorizontalPreviewSupported())
+			if (Window.HorizontalPreviewSupported())
 			{
 				GUILayout.BeginHorizontal();
 				{
@@ -215,7 +209,7 @@ namespace LunraGames.SubLight
 									SelectLabel(null);
 								}
 								model.RemoveLabel(label);
-								ModelSelectionModified = true;
+								Window.ModelSelectionModified = true;
 							}
 						}
 						GUILayout.EndHorizontal();
@@ -230,7 +224,7 @@ namespace LunraGames.SubLight
 							if (GUILayout.Button(new GUIContent(groupValue, "Copy group id"), GUILayout.Width(124f)))
 							{
 								EditorGUIUtility.systemCopyBuffer = label.GroupId.Value;
-								ShowNotification(new GUIContent("Copied Group Id to Clipboard"));
+								Window.ShowNotification(new GUIContent("Copied Group Id to Clipboard"));
 							}
 							EditorGUILayoutExtensions.PopBackgroundColor();
 						}
@@ -405,7 +399,7 @@ namespace LunraGames.SubLight
 							}
 							GUILayout.EndHorizontal();
 						}
-						EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+						EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 					}
 					EditorGUILayoutExtensions.PopEnabled();
 				}
@@ -420,17 +414,17 @@ namespace LunraGames.SubLight
 			switch (selectedScale)
 			{
 				case UniverseScales.Quadrant:
-					selectedPreviewIndex = PreviewConstants.DetailsIndex;
+					selectedPreviewIndex = GalaxyEditorWindow.PreviewConstants.DetailsIndex;
 					break;
 				case UniverseScales.Galactic:
-					selectedPreviewIndex = PreviewConstants.FullPreviewIndex;
+					selectedPreviewIndex = GalaxyEditorWindow.PreviewConstants.FullPreviewIndex;
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized scale " + selectedScale, MessageType.Error);
 					break;
 			}
 
-			DrawPreviews(
+			Window.DrawPreviews(
 				model,
 				null,
 				labelsPreviewSize,
@@ -455,14 +449,14 @@ namespace LunraGames.SubLight
 			var beginInPreview = true;
 			var endInPreview = true;
 
-			var beginAnchorInWindow = NormalToWindow(labelsSelectedLabel.BeginAnchorNormal.Value, displayArea, out beginInPreview);
-			var endAnchorInWindow = NormalToWindow(labelsSelectedLabel.EndAnchorNormal.Value, displayArea, out endInPreview);
+			var beginAnchorInWindow = Window.NormalToWindow(labelsSelectedLabel.BeginAnchorNormal.Value, displayArea, out beginInPreview);
+			var endAnchorInWindow = Window.NormalToWindow(labelsSelectedLabel.EndAnchorNormal.Value, displayArea, out endInPreview);
 
 			var beginColor = labelsLabelState == LabelStates.UpdatingBegin ? Color.cyan.NewS(0.25f) : Color.cyan;
 
 			EditorGUILayoutExtensions.PushColor(beginInPreview ? beginColor : beginColor.NewA(beginColor.a * 0.5f));
 			{
-				GUI.Box(CenteredScreen(beginAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor Begin"), SubLightEditorConfig.Instance.GalaxyEditorLabelAnchorStyle);
+				GUI.Box(Window.CenteredScreen(beginAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor Begin"), SubLightEditorConfig.Instance.GalaxyEditorLabelAnchorStyle);
 			}
 			EditorGUILayoutExtensions.PopColor();
 
@@ -474,7 +468,7 @@ namespace LunraGames.SubLight
 					var endColor = labelsLabelState == LabelStates.UpdatingEnd ? Color.magenta.NewS(0.25f) : Color.magenta;
 					EditorGUILayoutExtensions.PushColor(endInPreview ? endColor : endColor.NewA(endColor.a * 0.5f));
 					{
-						GUI.Box(CenteredScreen(endAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor End"), SubLightEditorConfig.Instance.GalaxyEditorLabelAnchorStyle);
+						GUI.Box(Window.CenteredScreen(endAnchorInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Anchor End"), SubLightEditorConfig.Instance.GalaxyEditorLabelAnchorStyle);
 					}
 					EditorGUILayoutExtensions.PopColor();
 					break;
@@ -495,7 +489,7 @@ namespace LunraGames.SubLight
 
 				EditorGUILayoutExtensions.PushColor(Color.yellow);
 				{
-					GUI.Box(CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.GalaxyEditorLabelCurvePointStyle);
+					GUI.Box(Window.CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.GalaxyEditorLabelCurvePointStyle);
 				}
 				EditorGUILayoutExtensions.PopColor();
 			}
@@ -522,8 +516,8 @@ namespace LunraGames.SubLight
 				var beginInPreview = true;
 				var endInPreview = true;
 
-				var beginAnchorInWindow = NormalToWindow(label.BeginAnchorNormal.Value, displayArea, out beginInPreview);
-				var endAnchorInWindow = NormalToWindow(label.EndAnchorNormal.Value, displayArea, out endInPreview);
+				var beginAnchorInWindow = Window.NormalToWindow(label.BeginAnchorNormal.Value, displayArea, out beginInPreview);
+				var endAnchorInWindow = Window.NormalToWindow(label.EndAnchorNormal.Value, displayArea, out endInPreview);
 
 				var previewCurveInfo = label.CurveInfo.Value; // We modify this to make changes for rendering to the screen...
 				previewCurveInfo.FlipCurve = !previewCurveInfo.FlipCurve;
@@ -537,12 +531,12 @@ namespace LunraGames.SubLight
 					var curvePos = previewCurveInfo.Evaluate(currBegin, currEnd, progress, false);
 					var curvePosInWindow = new Vector2(curvePos.x, curvePos.z);
 
-					GUI.Box(CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.GalaxyEditorLabelCurvePointStyle);
+					GUI.Box(Window.CenteredScreen(curvePosInWindow, new Vector2(16f, 16f)), new GUIContent(string.Empty, "Position on Curve"), SubLightEditorConfig.Instance.GalaxyEditorLabelCurvePointStyle);
 				}
 
 				var centerPos = previewCurveInfo.Evaluate(currBegin, currEnd, 0.5f, false);
 				var centerPosInWindow = new Vector2(centerPos.x, centerPos.z);
-				var selectCurrentArea = CenteredScreen(centerPosInWindow, new Vector2(16f, 16f));
+				var selectCurrentArea = Window.CenteredScreen(centerPosInWindow, new Vector2(16f, 16f));
 
 				if (GUI.Button(selectCurrentArea, new GUIContent(string.Empty, label.Name.Value), SubLightEditorConfig.Instance.GalaxyEditorLabelCurveCenterStyle))
 				{
@@ -587,17 +581,17 @@ namespace LunraGames.SubLight
 				case LabelStates.SelectingEnd:
 					labelsSelectedLabel.EndAnchorNormal.Value = clickPosition;
 					model.AddLabel(labelsSelectedLabel);
-					ModelSelectionModified = true;
+					Window.ModelSelectionModified = true;
 					labelsLabelState = LabelStates.Idle;
 					break;
 				case LabelStates.UpdatingBegin:
 					labelsSelectedLabel.BeginAnchorNormal.Value = clickPosition;
-					ModelSelectionModified = true;
+					Window.ModelSelectionModified = true;
 					labelsLabelState = LabelStates.Idle;
 					break;
 				case LabelStates.UpdatingEnd:
 					labelsSelectedLabel.EndAnchorNormal.Value = clickPosition;
-					ModelSelectionModified = true;
+					Window.ModelSelectionModified = true;
 					labelsLabelState = LabelStates.Idle;
 					break;
 				default:
@@ -633,6 +627,14 @@ namespace LunraGames.SubLight
 			result.Scale.Value = scale;
 
 			return result;
+		}
+		
+		public void SelectLabel(GalaxyLabelModel label, LabelStates state = LabelStates.Idle)
+		{
+			labelsSelectedLabel = label;
+			labelsSelectedLabelId.Value = labelsSelectedLabel == null ? null : labelsSelectedLabel.LabelId.Value;
+			if (state != LabelStates.Unknown) labelsLabelState = state;
+			EditorGUIExtensions.ResetControls();
 		}
 	}
 }

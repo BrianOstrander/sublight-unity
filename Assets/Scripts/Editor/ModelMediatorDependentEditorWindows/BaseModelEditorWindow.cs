@@ -17,12 +17,6 @@ namespace LunraGames.SubLight
 		where T : BaseModelEditorWindow<T, M>
 		where M : SaveModel, new()
 	{
-		struct ToolbarEntry
-		{
-			public string Name;
-			public Action<M> Callback;
-		}
-
 		class BatchProgress
 		{
 			public enum States
@@ -96,7 +90,7 @@ namespace LunraGames.SubLight
 
 		bool lastIsPlayingOrWillChangePlaymode;
 		int frameDelayRemaining;
-		List<ToolbarEntry> toolbars = new List<ToolbarEntry>();
+		List<ModelEditorTab<T, M>> toolbars = new List<ModelEditorTab<T, M>>();
 
 		// Unknown: Query in progress
 		// Cancel: Qued for Query
@@ -112,7 +106,7 @@ namespace LunraGames.SubLight
 		RequestStatus selectedStatus;
 
 		protected M ModelSelection;
-		protected bool ModelSelectionModified;
+		public bool ModelSelectionModified; // TODO: Eeek should this be public? Tabs need it though...
 
 		BatchProgress batchProgress = BatchProgress.Default;
 
@@ -678,9 +672,9 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Child Utilities
-		protected void RegisterToolbar(string name, Action<M> callback)
+		protected void RegisterToolbar(ModelEditorTab<T, M> tab)
 		{
-			toolbars.Add(new ToolbarEntry { Name = name, Callback = callback });
+			toolbars.Add(tab);
 		}
 
 		protected GUIContent GetTabStateLabel()
@@ -745,7 +739,7 @@ namespace LunraGames.SubLight
 					switch (toolbars.Count)
 					{
 						case 0: break;
-						case 1: onDraw = toolbars.First().Callback; break;
+						case 1: onDraw = toolbars.First().Gui; break;
 						default: onDraw = OnDrawToolbar(); break;
 					}
 
@@ -771,21 +765,6 @@ namespace LunraGames.SubLight
 		protected virtual bool CanEditDuringPlaymode()
 		{
 			return false;
-		}
-
-		protected virtual void DrawIdField(M model)
-		{
-			GUILayout.BeginHorizontal();
-			{
-				EditorGUILayoutExtensions.PushEnabled(false);
-				{
-					EditorGUILayout.TextField("Id", model.Id.Value);
-				}
-				EditorGUILayoutExtensions.PopEnabled();
-				
-				if (GUILayout.Button("Rename", GUILayout.ExpandWidth(false))) Debug.LogWarning("logic for renaming here!");
-			}
-			GUILayout.EndHorizontal();
 		}
 		#endregion
 
@@ -1063,7 +1042,7 @@ namespace LunraGames.SubLight
 				toolbarIndex++;
 			}
 			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) EditorGUIExtensions.ResetControls();
-			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Gui;
 		}
 
 		protected virtual void OnDrawPreSettings(M model)
@@ -1130,7 +1109,7 @@ namespace LunraGames.SubLight
 		}
 
 		// TODO: Move this to some util?
-		protected string Shorten(
+		public string Shorten(
 			string value,
 			int maximumLength,
 			string missingValue = "< Missing >"

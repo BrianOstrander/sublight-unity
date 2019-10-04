@@ -26,9 +26,9 @@ namespace LunraGames.SubLight
 			baseRunEncounterTrigger = new EditorPrefsEnum<EncounterTriggers>(currPrefix + "RunEncounterTrigger", EncounterTriggers.Load);
 
 			SettingsGui += BaseSettingsGui;
-
-			GeneralConstruct();
-			LogsConstruct();
+			
+			RegisterToolbar(new GeneralEncounterEditorTab(this));
+			RegisterToolbar(new LogsEncounterEditorTab(this));
 		}
 
 		void BaseSettingsGui()

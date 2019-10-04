@@ -10,16 +10,11 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public partial class GamemodeEditorWindow
+	public class GamemodeEditorTab : ModelEditorTab<GamemodeEditorWindow, GamemodeInfoModel>
 	{
-		void GeneralConstruct()
-		{
-			//var currPrefix = KeyPrefix + "General";
-
-			RegisterToolbar("General", GeneralToolbar);
-		}
-
-		void GeneralToolbar(GamemodeInfoModel model)
+		public GamemodeEditorTab(GamemodeEditorWindow window) : base(window, "General") { }
+		
+		public override void Gui(GamemodeInfoModel model)
 		{
 			EditorGUIExtensions.BeginChangeCheck();
 			{
@@ -32,13 +27,13 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 
 				model.IsInDevelopment.Value = EditorGUILayout.Toggle("In Development", model.IsInDevelopment.Value);
-				DrawIdField(model);
+				EditorGUILayoutModel.Id(model);
 				
 				model.Category.Value = EditorGUILayout.TextField(new GUIContent("Category", "The larger category this gamemode belongs to."), model.Category.Value);
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The name of this gamemode visible to the player."), model.Name.Value);
 				model.Description.Value = EditorGUILayoutExtensions.TextDynamic(new GUIContent("Description", "The description given to the player of this gamemode."), model.Description.Value, leftOffset: false);
 			}
-			EditorGUIExtensions.EndChangeCheck(ref ModelSelectionModified);
+			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 
 			var icon = model.Icon;
 

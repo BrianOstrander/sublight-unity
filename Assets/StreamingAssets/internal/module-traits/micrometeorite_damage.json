@@ -1,0 +1,15 @@
+{
+  "name": "micrometeorite damage",
+  "severity": "Negative",
+  "compatibleModuleTypes": [],
+  "familyIds": [],
+  "incompatibleFamilyIds": [],
+  "incompatibleTraitIds": [],
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-10-02T08:23:10.19142-07:00",
+  "modified": "2019-10-02T08:23:10.19142-07:00",
+  "id": "micrometeorite_damage",
+  "SaveType": "ModuleTrait",
+  "SiblingBehaviour": "None"
+}
