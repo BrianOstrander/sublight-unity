@@ -4,6 +4,7 @@ namespace LunraGames.SubLight.Models
 {
 	public class ModuleTraitModel : SaveModel
 	{
+		#region Serialized
 		[JsonProperty] string name;
 		/// <summary>
 		/// The name of this encounter, will be seen by the player and listed as
@@ -31,6 +32,7 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] string[] incompatibleIds = new string[0];
 		[JsonIgnore] public readonly ListenerProperty<string[]> IncompatibleIds;
+		#endregion
 
 		public ModuleTraitModel()
 		{

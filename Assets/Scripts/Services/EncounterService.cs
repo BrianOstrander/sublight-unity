@@ -19,15 +19,15 @@ namespace LunraGames.SubLight
 		InteractedEncounterInfoListModel interactedEncounters;
 		bool currentlySaving;
 
-		public EncounterService(IModelMediator modelMediator, CallbackService callbacks, ValueFilterService valueFilter)
+		public EncounterService(
+			IModelMediator modelMediator,
+			CallbackService callbacks,
+			ValueFilterService valueFilter
+		)
 		{
-			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
-			if (callbacks == null) throw new ArgumentNullException("callbacks");
-			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
-
-			this.modelMediator = modelMediator;
-			this.callbacks = callbacks;
-			this.valueFilter = valueFilter;
+			this.modelMediator = modelMediator ?? throw new ArgumentNullException(nameof(modelMediator));
+			this.callbacks = callbacks ?? throw new ArgumentNullException(nameof(callbacks));
+			this.valueFilter = valueFilter ?? throw new ArgumentNullException(nameof(valueFilter));
 		}
 
 		#region Initialization
