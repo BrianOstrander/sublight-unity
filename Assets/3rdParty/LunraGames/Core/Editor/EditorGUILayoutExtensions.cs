@@ -415,12 +415,32 @@ namespace LunraGamesEditor
 			return clicked;
 		}
 
-		public static string[] StringArray(string name, string[] values, string defaultValue = null, Color? color = null)
+		public static string[] StringArray(
+			string name,
+			string[] values,
+			string defaultValue = null,
+			Color? color = null
+		)
+		{
+			return StringArray(
+				new GUIContent(name),
+				values,
+				defaultValue,
+				color
+			);
+		}
+		
+		public static string[] StringArray(
+			GUIContent content,
+			string[] values,
+			string defaultValue = null,
+			Color? color = null
+		)
 		{
 			BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
 				values = StringArrayValue(
-					name,
+					content,
 					values,
 					defaultValue
 				);
@@ -429,13 +449,30 @@ namespace LunraGamesEditor
 			return values;
 		}
 
-		public static string[] StringArrayValue(string name, string[] values, string defaultValue = null)
+		public static string[] StringArrayValue(
+			string name,
+			string[] values,
+			string defaultValue = null
+		)
 		{
-			if (values == null) throw new ArgumentNullException("values");
+			return StringArrayValue(
+				new GUIContent(name),
+				values,
+				defaultValue
+			);
+		}
+		
+		public static string[] StringArrayValue(
+			GUIContent content,
+			string[] values,
+			string defaultValue = null
+		)
+		{
+			if (values == null) throw new ArgumentNullException(nameof(values));
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(name);
+				GUILayout.Label(content);
 				if (GUILayout.Button("Prepend", EditorStyles.miniButtonLeft, GUILayout.Width(90f))) values = values.Prepend(defaultValue).ToArray();
 				if (GUILayout.Button("Append", EditorStyles.miniButtonRight, GUILayout.Width(90f))) values = values.Append(defaultValue).ToArray();
 			}

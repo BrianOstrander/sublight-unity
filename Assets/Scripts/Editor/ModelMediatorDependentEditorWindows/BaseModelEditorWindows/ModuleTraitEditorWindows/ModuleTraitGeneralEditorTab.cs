@@ -11,11 +11,11 @@ namespace LunraGames.SubLight
 {
 	public class ModuleTraitGeneralEditorTab : ModelEditorTab<ModuleTraitEditorWindow, ModuleTraitModel>
 	{
-		const float GeneralCheckCooldown = 0.5f;
+		const float CheckCooldown = 0.5f;
 		
-		ModuleTraitModel generalCurrentModel;
+		ModuleTraitModel currentModel;
 
-		DateTime? generalCheckTime;
+		DateTime? checkTime;
 
 		public ModuleTraitGeneralEditorTab(ModuleTraitEditorWindow window) : base(window, "General") { }
 
@@ -31,6 +31,11 @@ namespace LunraGames.SubLight
 				GUILayout.EndHorizontal();
 
 				EditorGUILayoutModel.Id(model);
+
+				model.FamilyIds.Value = EditorGUILayoutExtensions.StringArray(
+					new GUIContent("Family Ids", "The family ids this module trait belongs to."),
+					model.FamilyIds.Value
+				);
 				
 				model.Name.Value = EditorGUILayout.TextField(new GUIContent("Name", "The name of this trait visible to the player."), model.Name.Value);
 				
@@ -43,15 +48,19 @@ namespace LunraGames.SubLight
 					Color.red
 				);
 
-				model.CompatibleModuleTypes.Value = EditorGUILayoutExtensions.EnumArray<ModuleTypes>(
+				model.CompatibleModuleTypes.Value = EditorGUILayoutExtensions.EnumArray(
 					new GUIContent("Compatible Modules", "All modules types this trait can be applied to. Leaving this empty will allow it to be added to any Module Type."),
 					model.CompatibleModuleTypes.Value
 				);
 
-				// Color? incompatibleTraitIdsValidation = model.IncompatibleTraitIds.Value.Any(i => string.IsNullOrEmpty(i))
-				model.IncompatibleTraitIds.Value = EditorGUILayoutExtensions.StringArray(
-					"Incompatible Trait Ids",
-					model.IncompatibleTraitIds.Value
+				model.IncompatibleIds.Value = EditorGUILayoutExtensions.StringArray(
+					new GUIContent("Incompatible Ids", "Ids of module traits that cannot be applied to the same module as this trait."),
+					model.IncompatibleIds.Value
+				);
+				
+				model.IncompatibleFamilyIds.Value = EditorGUILayoutExtensions.StringArray(
+					new GUIContent("Incompatible Family Ids", "Ids of family module traits that cannot be applied to the same module as this trait."),
+					model.IncompatibleIds.Value
 				);
 				
 				// TODO: Other fields here...
@@ -62,14 +71,14 @@ namespace LunraGames.SubLight
 		#region General Events
 		void OnGeneralAfterLoadSelection(ModuleTraitModel model)
 		{
-			if (generalCurrentModel != null)
+			if (currentModel != null)
 			{
-				generalCurrentModel.IncompatibleTraitIds.Changed -= OnGeneralIncompatibleTraitIds;
+				currentModel.IncompatibleIds.Changed -= OnGeneralIncompatibleTraitIds;
 			}
-			generalCurrentModel = model;
-			generalCheckTime = DateTime.MinValue;
+			currentModel = model;
+			checkTime = DateTime.MinValue;
 			
-			generalCurrentModel.IncompatibleTraitIds.Changed += OnGeneralIncompatibleTraitIds;
+			currentModel.IncompatibleIds.Changed += OnGeneralIncompatibleTraitIds;
 			
 			GeneralUpdateCheckTime();
 		}
@@ -82,12 +91,12 @@ namespace LunraGames.SubLight
 
 		void GeneralUpdateCheckTime()
 		{
-			if (generalCheckTime.HasValue && DateTime.Now < generalCheckTime) return;
-			generalCheckTime = null;
+			if (checkTime.HasValue && DateTime.Now < checkTime) return;
+			checkTime = null;
 			
 			
 		}
 		
-		void GeneralResetCheckTime() => generalCheckTime = DateTime.Now + TimeSpan.FromSeconds(GeneralCheckCooldown);
+		void GeneralResetCheckTime() => checkTime = DateTime.Now + TimeSpan.FromSeconds(CheckCooldown);
 	}
 }
