@@ -10,13 +10,13 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class GeneralGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
+	public class GalaxyGeneralEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		DevPrefsInt generalPreviewSize;
 		EditorPrefsBool generalPreviewMinimized;
 		EditorPrefsFloat generalPreviewBarScroll;
 
-		public GeneralGalaxyEditorTab(GalaxyEditorWindow window) : base(window, "General")
+		public GalaxyGeneralEditorTab(GalaxyEditorWindow window) : base(window, "General")
 		{
 			generalPreviewSize = new DevPrefsInt(TabKeyPrefix + "PreviewSize");
 			generalPreviewMinimized = new EditorPrefsBool(TabKeyPrefix + "PreviewMinimized");

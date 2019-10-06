@@ -27,8 +27,8 @@ namespace LunraGames.SubLight
 
 			SettingsGui += BaseSettingsGui;
 			
-			RegisterToolbar(new GeneralEncounterEditorTab(this));
-			RegisterToolbar(new LogsEncounterEditorTab(this));
+			RegisterToolbar(new EncounterGeneralEditorTab(this));
+			RegisterToolbar(new EncounterLogsEditorTab(this));
 		}
 
 		void BaseSettingsGui()

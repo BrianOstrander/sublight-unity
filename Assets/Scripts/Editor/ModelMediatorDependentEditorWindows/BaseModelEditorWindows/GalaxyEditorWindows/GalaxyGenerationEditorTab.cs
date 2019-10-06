@@ -7,11 +7,11 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class GenerationGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
+	public class GalaxyGenerationEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		EditorPrefsFloat generationBarScroll;
 
-		public GenerationGalaxyEditorTab(GalaxyEditorWindow window) : base(window, "Generation")
+		public GalaxyGenerationEditorTab(GalaxyEditorWindow window) : base(window, "Generation")
 		{
 			generationBarScroll = new EditorPrefsFloat(TabKeyPrefix + "BarScroll");
 		}

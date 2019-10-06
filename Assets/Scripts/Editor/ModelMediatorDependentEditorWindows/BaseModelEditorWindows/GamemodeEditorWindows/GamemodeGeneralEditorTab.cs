@@ -10,9 +10,9 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class GamemodeEditorTab : ModelEditorTab<GamemodeEditorWindow, GamemodeInfoModel>
+	public class GamemodeGeneralEditorTab : ModelEditorTab<GamemodeEditorWindow, GamemodeInfoModel>
 	{
-		public GamemodeEditorTab(GamemodeEditorWindow window) : base(window, "General") { }
+		public GamemodeGeneralEditorTab(GamemodeEditorWindow window) : base(window, "General") { }
 		
 		public override void Gui(GamemodeInfoModel model)
 		{

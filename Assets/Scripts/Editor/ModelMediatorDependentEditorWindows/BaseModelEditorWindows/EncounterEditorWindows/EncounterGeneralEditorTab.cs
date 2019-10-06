@@ -1,8 +1,5 @@
-﻿using System.IO;
-
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 using LunraGamesEditor;
 
@@ -10,9 +7,9 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class GeneralEncounterEditorTab : ModelEditorTab<EncounterEditorWindow, EncounterInfoModel>
+	public class EncounterGeneralEditorTab : ModelEditorTab<EncounterEditorWindow, EncounterInfoModel>
 	{
-		public GeneralEncounterEditorTab(EncounterEditorWindow window) : base(window, "General") { }
+		public EncounterGeneralEditorTab(EncounterEditorWindow window) : base(window, "General") { }
 
 		public override void Gui(EncounterInfoModel model)
 		{

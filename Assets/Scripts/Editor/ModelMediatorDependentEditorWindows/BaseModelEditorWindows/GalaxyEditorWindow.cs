@@ -51,14 +51,14 @@ namespace LunraGames.SubLight
 
 		public GalaxyEditorWindow() : base("LG_SL_GalaxyEditor_", "Galaxy")
 		{
-			RegisterToolbar(new GeneralGalaxyEditorTab(this));
-			RegisterToolbar(new TargetsGalaxyEditorTab(this));
+			RegisterToolbar(new GalaxyGeneralEditorTab(this));
+			RegisterToolbar(new GalaxyTargetsEditorTab(this));
 
-			var labelTab = new LabelsGalaxyEditorTab(this);
+			var labelTab = new GalaxyLabelsEditorTab(this);
 			
 			RegisterToolbar(labelTab);
-			RegisterToolbar(new SpecifiedSectorsGalaxyEditorTab(this, labelTab));
-			RegisterToolbar(new GenerationGalaxyEditorTab(this));
+			RegisterToolbar(new GalaxySpecifiedSectorsEditorTab(this, labelTab));
+			RegisterToolbar(new GalaxyGenerationEditorTab(this));
 		}
 
 		#region Model Overrides

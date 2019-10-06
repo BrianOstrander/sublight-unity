@@ -1,14 +1,22 @@
 {
-  "name": "micrometeorite damage",
+  "name": "Micrometeorite Damage",
+  "description": "Sustained impacts by microscopic debris in deep space have compromised the hull of this module.",
   "severity": "Negative",
-  "compatibleModuleTypes": [],
+  "compatibleModuleTypes": [
+    "Propulsion",
+    "PowerProduction",
+    "RationManagement",
+    "LifeSupport",
+    "LivingQuarters",
+    "Navigation"
+  ],
   "familyIds": [],
   "incompatibleFamilyIds": [],
   "incompatibleTraitIds": [],
   "version": 12,
   "metaKeyValues": {},
-  "created": "2019-10-02T08:23:10.19142-07:00",
-  "modified": "2019-10-02T08:23:10.19142-07:00",
+  "created": "2019-10-06T08:46:53.158097-07:00",
+  "modified": "2019-10-06T08:46:53.158097-07:00",
   "id": "micrometeorite_damage",
   "SaveType": "ModuleTrait",
   "SiblingBehaviour": "None"

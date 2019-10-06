@@ -12,7 +12,7 @@ using LunraGames.SubLight.Views;
 
 namespace LunraGames.SubLight
 {
-	public class LogsEncounterEditorTab : ModelEditorTab<EncounterEditorWindow, EncounterInfoModel>
+	public class EncounterLogsEditorTab : ModelEditorTab<EncounterEditorWindow, EncounterInfoModel>
 	{
 		static class LogStrings
 		{
@@ -161,7 +161,7 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		public LogsEncounterEditorTab(EncounterEditorWindow window) : base(window, "Logs")
+		public EncounterLogsEditorTab(EncounterEditorWindow window) : base(window, "Logs")
 		{
 			logsListScroll = new EditorPrefsFloat(TabKeyPrefix + "ListScroll");
 			logsStackScroll = new EditorPrefsFloat(TabKeyPrefix + "StackScroll");

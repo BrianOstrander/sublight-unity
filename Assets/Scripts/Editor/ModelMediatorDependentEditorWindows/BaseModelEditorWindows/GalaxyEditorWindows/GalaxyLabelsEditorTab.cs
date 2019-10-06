@@ -12,7 +12,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class LabelsGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
+	public class GalaxyLabelsEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		static class LabelsConstants
 		{
@@ -51,7 +51,7 @@ namespace LunraGames.SubLight
 		GalaxyLabelModel labelsSelectedLabel;
 		bool labelsIsOverAnAllLabel;
 
-		public LabelsGalaxyEditorTab(GalaxyEditorWindow window) : base (window, "Labels")
+		public GalaxyLabelsEditorTab(GalaxyEditorWindow window) : base (window, "Labels")
 		{
 			labelsPreviewSize = new EditorPrefsInt(TabKeyPrefix + "PreviewSize");
 			labelsPreviewMinimized = new EditorPrefsBool(TabKeyPrefix + "PreviewMinimized");

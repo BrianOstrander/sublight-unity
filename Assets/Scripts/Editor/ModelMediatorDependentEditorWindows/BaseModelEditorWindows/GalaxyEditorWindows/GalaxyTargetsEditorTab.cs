@@ -12,13 +12,13 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class TargetsGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
+	public class GalaxyTargetsEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		EditorPrefsInt targetsSelectedPreview;
 		EditorPrefsInt targetsPreviewSize;
 		EditorPrefsBool targetsPreviewMinimized;
 		
-		public TargetsGalaxyEditorTab(GalaxyEditorWindow window) : base(window, "Targets")
+		public GalaxyTargetsEditorTab(GalaxyEditorWindow window) : base(window, "Targets")
 		{
 			targetsSelectedPreview = new EditorPrefsInt(TabKeyPrefix + "SelectedPreview");
 			targetsPreviewSize = new EditorPrefsInt(TabKeyPrefix + "PreviewSize");

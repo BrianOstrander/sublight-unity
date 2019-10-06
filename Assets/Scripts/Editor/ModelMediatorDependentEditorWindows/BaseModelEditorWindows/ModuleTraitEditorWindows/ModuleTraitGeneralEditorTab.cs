@@ -9,7 +9,7 @@ using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
-	public class GeneralModuleTraitEditorTab : ModelEditorTab<ModuleTraitEditorWindow, ModuleTraitModel>
+	public class ModuleTraitGeneralEditorTab : ModelEditorTab<ModuleTraitEditorWindow, ModuleTraitModel>
 	{
 		const float GeneralCheckCooldown = 0.5f;
 		
@@ -17,7 +17,7 @@ namespace LunraGames.SubLight
 
 		DateTime? generalCheckTime;
 
-		public GeneralModuleTraitEditorTab(ModuleTraitEditorWindow window) : base(window, "General") { }
+		public ModuleTraitGeneralEditorTab(ModuleTraitEditorWindow window) : base(window, "General") { }
 
 		public override void Gui(ModuleTraitModel model)
 		{

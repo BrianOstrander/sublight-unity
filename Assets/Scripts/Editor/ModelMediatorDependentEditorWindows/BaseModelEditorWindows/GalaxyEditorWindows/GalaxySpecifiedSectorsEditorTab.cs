@@ -10,11 +10,11 @@ using LunraGames.NumberDemon;
 
 using LunraGames.SubLight.Models;
 
-using LabelStates = LunraGames.SubLight.LabelsGalaxyEditorTab.LabelStates;
+using LabelStates = LunraGames.SubLight.GalaxyLabelsEditorTab.LabelStates;
 
 namespace LunraGames.SubLight
 {
-	public class SpecifiedSectorsGalaxyEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
+	public class GalaxySpecifiedSectorsEditorTab : ModelEditorTab<GalaxyEditorWindow, GalaxyInfoModel>
 	{
 		enum SpecifiedSectorsStates
 		{
@@ -42,14 +42,14 @@ namespace LunraGames.SubLight
 		SystemModel specifiedSectorSelectedSystem;
 		bool specifiedSectorsIsOverAnAllSector;
 		
-		LabelsGalaxyEditorTab labelTab;
+		GalaxyLabelsEditorTab galaxyLabelTab;
 		
-		public SpecifiedSectorsGalaxyEditorTab(
+		public GalaxySpecifiedSectorsEditorTab(
 			GalaxyEditorWindow window,
-			LabelsGalaxyEditorTab labelTab
+			GalaxyLabelsEditorTab galaxyLabelTab
 		) : base(window, "Specified Sectors", "Specified Sectors")
 		{
-			this.labelTab = labelTab;
+			this.galaxyLabelTab = galaxyLabelTab;
 			
 			specifiedSectorsScroll = new EditorPrefsFloat(TabKeyPrefix + "Scroll");
 			specifiedSectorsSelectedSectorName = new EditorPrefsString(TabKeyPrefix + "SelectedSectorName");
@@ -247,7 +247,7 @@ namespace LunraGames.SubLight
 							}
 							EditorGUILayoutExtensions.PopEnabled();
 
-							EditorGUILayoutExtensions.PushEnabled(labelTab.labelsLabelState != LabelStates.Idle);
+							EditorGUILayoutExtensions.PushEnabled(galaxyLabelTab.labelsLabelState != LabelStates.Idle);
 							EditorGUILayoutExtensions.PushColor(Color.red);
 							if (GUILayout.Button("Cancel"))
 							{
@@ -260,7 +260,7 @@ namespace LunraGames.SubLight
 										SpecifiedSectorsSelectSpecifiedSector(specifiedSectorsSelectedSector);
 										break;
 								}
-								labelTab.labelsLabelState = LabelStates.Idle;
+								galaxyLabelTab.labelsLabelState = LabelStates.Idle;
 							}
 							EditorGUILayoutExtensions.PopColor();
 							EditorGUILayoutExtensions.PopEnabled();
@@ -474,7 +474,7 @@ namespace LunraGames.SubLight
 					specifiedSectorsState = SpecifiedSectorsStates.Idle;
 					break;
 				default:
-					Debug.LogError("Unrecognized state " + labelTab.labelsLabelState);
+					Debug.LogError("Unrecognized state " + galaxyLabelTab.labelsLabelState);
 					break;
 			}
 		}
