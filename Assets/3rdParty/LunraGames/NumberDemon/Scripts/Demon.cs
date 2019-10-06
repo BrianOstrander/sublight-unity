@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
 using Random = System.Random;
 
 namespace LunraGames.NumberDemon
@@ -52,6 +55,15 @@ namespace LunraGames.NumberDemon
 			if (Mathf.Approximately(min, max)) return min;
 			var delta = max - min;
 			return min + (NextFloat * delta);
+		}
+
+		public T GetNextFrom<T>(
+			IEnumerable<T> entries,
+			T fallback = default
+		)
+		{
+			if (entries == null || entries.None()) return fallback;
+			return entries.ElementAt(GetNextInteger(0, entries.Count()));
 		}
 		#endregion
 

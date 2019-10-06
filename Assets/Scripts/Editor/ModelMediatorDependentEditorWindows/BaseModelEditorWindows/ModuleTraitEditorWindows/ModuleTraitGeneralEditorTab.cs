@@ -61,8 +61,6 @@ namespace LunraGames.SubLight
 					new GUIContent("Incompatible Family Ids", "Ids of family module traits that cannot be applied to the same module as this trait."),
 					model.IncompatibleIds.Value
 				);
-				
-				// TODO: Other fields here...
 			}
 			EditorGUIExtensions.EndChangeCheck(ref Window.ModelSelectionModified);
 		}

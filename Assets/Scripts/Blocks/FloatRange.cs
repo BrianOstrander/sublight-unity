@@ -10,8 +10,8 @@ namespace LunraGames.SubLight
 	[Serializable]
 	public struct FloatRange
 	{
-		public static FloatRange Zero { get { return new FloatRange(0f, 0f); } }
-		public static FloatRange Normal { get { return new FloatRange(0f, 1f); } }
+		public static FloatRange Zero => new FloatRange(0f, 0f);
+		public static FloatRange Normal => new FloatRange(0f, 1f);
 
 		[FormerlySerializedAs("x"), SerializeField]
 		float primary;
@@ -19,11 +19,13 @@ namespace LunraGames.SubLight
 		float secondary;
 
 		[JsonIgnore]
-		public float Primary { get { return primary; } }
+		public float Primary => primary;
+
 		[JsonIgnore]
-		public float Secondary { get { return secondary; } }
+		public float Secondary => secondary;
+
 		[JsonIgnore]
-		public float Delta { get { return Secondary - Primary; } }
+		public float Delta => Secondary - Primary;
 
 		public FloatRange(float primary, float secondary)
 		{

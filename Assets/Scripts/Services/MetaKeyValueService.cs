@@ -16,8 +16,8 @@ namespace LunraGames.SubLight
 		GlobalKeyValuesModel globals;
 		PreferencesKeyValuesModel preferences;
 
-		public KeyValueListModel GlobalKeyValues { get { return globals.KeyValues; } }
-		public KeyValueListModel PreferencesKeyValues { get { return preferences.KeyValues; } }
+		public KeyValueListModel GlobalKeyValues => globals.KeyValues;
+		public KeyValueListModel PreferencesKeyValues => preferences.KeyValues;
 		bool currentlySaving;
 
 		public MetaKeyValueService(
@@ -26,9 +26,9 @@ namespace LunraGames.SubLight
 			KeyValueService keyValues
 		)
 		{
-			if (callbacks == null) throw new ArgumentNullException("callbacks");
-			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
-			if (keyValues == null) throw new ArgumentNullException("keyValues");
+			if (callbacks == null) throw new ArgumentNullException(nameof(callbacks));
+			if (modelMediator == null) throw new ArgumentNullException(nameof(modelMediator));
+			if (keyValues == null) throw new ArgumentNullException(nameof(keyValues));
 
 			this.callbacks = callbacks;
 			this.modelMediator = modelMediator;
