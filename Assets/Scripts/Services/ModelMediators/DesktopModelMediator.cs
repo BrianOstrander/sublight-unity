@@ -132,12 +132,12 @@ namespace LunraGames.SubLight
 			return path;
 		}
 
-		protected override void OnLoad<M>(SaveModel model, Action<SaveLoadRequest<M>> done)
+		protected override void OnLoad<M>(SaveModel model, Action<ModelResult<M>> done)
 		{
 			var result = Serialization.DeserializeJson<M>(File.ReadAllText(model.Path));
 			if (result == null)
 			{
-				done(SaveLoadRequest<M>.Failure(model, null, "Null result"));
+				done(ModelResult<M>.Failure(model, null, "Null result"));
 				return;
 			}
 
@@ -145,17 +145,17 @@ namespace LunraGames.SubLight
 			result.Path.Value = model.Path;
 
 			if (result.HasSiblingDirectory) LoadSiblingFiles(model, result, done);
-			else done(SaveLoadRequest<M>.Success(model, result));
+			else done(ModelResult<M>.Success(model, result));
 		}
 
-		protected override void OnSave<M>(M model, Action<SaveLoadRequest<M>> done = null)
+		protected override void OnSave<M>(M model, Action<ModelResult<M>> done = null)
 		{
 			File.WriteAllText(model.Path, Serialization.Serialize(model, formatting: readableSaves ? Formatting.Indented : Formatting.None));
 			if (model.HasSiblingDirectory) Directory.CreateDirectory(model.SiblingDirectory);
-			done(SaveLoadRequest<M>.Success(model, model));
+			done(ModelResult<M>.Success(model, model));
 		}
 
-		protected override void OnList<M>(Action<SaveLoadArrayRequest<SaveModel>> done)
+		protected override void OnIndex<M>(Action<ModelIndexResult<SaveModel>> done)
 		{
 			var path = GetPath(ToEnum(typeof(M)).FirstOrDefault());
 			var results = new List<SaveModel>();
@@ -177,13 +177,13 @@ namespace LunraGames.SubLight
 				}
 			}
 			var array = results.ToArray();
-			done(SaveLoadArrayRequest<SaveModel>.Success(array));
+			done(ModelIndexResult<SaveModel>.Success(array));
 		}
 
-		protected override void OnDelete<M>(M model, Action<SaveLoadRequest<M>> done)
+		protected override void OnDelete<M>(M model, Action<ModelResult<M>> done)
 		{
 			File.Delete(model.Path);
-			done(SaveLoadRequest<M>.Success(model, model));
+			done(ModelResult<M>.Success(model, model));
 		}
 
 		protected override void OnRead(string path, Action<ReadWriteRequest> done)
@@ -200,18 +200,18 @@ namespace LunraGames.SubLight
 		}
 
 		#region Sibling Loading
-		void LoadSiblingFiles<M>(SaveModel model, M result, Action<SaveLoadRequest<M>> done)
+		void LoadSiblingFiles<M>(SaveModel model, M result, Action<ModelResult<M>> done)
 			where M : SaveModel
 		{
 			OnLoadSiblingFiles(Directory.GetFiles(result.SiblingDirectory).ToList(), model, result, done);
 		}
 
-		void OnLoadSiblingFiles<M>(List<string> remainingFiles, SaveModel model, M result, Action<SaveLoadRequest<M>> done)
+		void OnLoadSiblingFiles<M>(List<string> remainingFiles, SaveModel model, M result, Action<ModelResult<M>> done)
 			where M : SaveModel
 		{
 			if (remainingFiles.None())
 			{
-				done(SaveLoadRequest<M>.Success(model, result));
+				done(ModelResult<M>.Success(model, result));
 				return;
 			}
 

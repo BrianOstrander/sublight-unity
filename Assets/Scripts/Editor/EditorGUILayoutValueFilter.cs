@@ -514,7 +514,7 @@ namespace LunraGames.SubLight
 		}
 
 		static void OnHandleEncounterIdValidated(
-			SaveLoadRequest<EncounterInfoModel> result,
+			ModelResult<EncounterInfoModel> result,
 			EncounterInteractionFilterEntryModel model
 		)
 		{

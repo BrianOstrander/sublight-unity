@@ -900,7 +900,7 @@ namespace LunraGames.SubLight
 						Payload.Game.SaveDetails.Value.IsCompleted ? MetaKeyConstants.Values.True : MetaKeyConstants.Values.False
 					);
 
-					App.M.Save(Payload.Game, result => OnSaveDone(result, request));
+					App.M.Save(Payload.Game, result => OnSaveRequestSaved(result, request));
 					break;
 				case SaveRequest.States.Complete:
 					if (request.Done != null) request.Done(request);
@@ -911,7 +911,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnSaveDone(SaveLoadRequest<GameModel> result, SaveRequest request)
+		void OnSaveRequestSaved(ModelResult<GameModel> result, SaveRequest request)
 		{
 			if (result.Status != RequestStatus.Success)
 			{

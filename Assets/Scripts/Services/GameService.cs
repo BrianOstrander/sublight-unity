@@ -126,12 +126,12 @@ namespace LunraGames.SubLight
 		{
 			if (done == null) throw new ArgumentNullException("done");
 
-			App.M.List<GameModel>(result => OnContinueGameList(result, done));
+			App.M.Index<GameModel>(result => OnContinueGameIndex(result, done));
 		}
 		#endregion
 
 		#region Continue Game
-		void OnContinueGameList(SaveLoadArrayRequest<SaveModel> result, Action<RequestResult, GameModel> done)
+		void OnContinueGameIndex(ModelIndexResult<SaveModel> result, Action<RequestResult, GameModel> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -151,7 +151,7 @@ namespace LunraGames.SubLight
 			App.M.Load<GameModel>(continueGame, loadResult => OnContinueGameLoad(loadResult, done));
 		}
 
-		void OnContinueGameLoad(SaveLoadRequest<GameModel> result, Action<RequestResult, GameModel> done)
+		void OnContinueGameLoad(ModelResult<GameModel> result, Action<RequestResult, GameModel> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -182,7 +182,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnLoadGamemode(
-			SaveLoadRequest<GamemodeInfoModel> result,
+			ModelResult<GamemodeInfoModel> result,
 			LoadInstructions instructions,
 			GameModel model,
 			Action<RequestResult, GameModel> done
@@ -205,7 +205,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnLoadGalaxy(
-			SaveLoadRequest<GalaxyInfoModel> result,
+			ModelResult<GalaxyInfoModel> result,
 			LoadInstructions instructions,
 			GameModel model,
 			Action<RequestResult, GameModel> done
@@ -227,7 +227,7 @@ namespace LunraGames.SubLight
 			App.M.Load<GalaxyInfoModel>(model.GalaxyTargetId, targetResult => OnLoadGalaxyTarget(targetResult, instructions, model, done));
 		}
 
-		void OnLoadGalaxyTarget(SaveLoadRequest<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		void OnLoadGalaxyTarget(ModelResult<GalaxyInfoModel> result, LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -444,11 +444,11 @@ namespace LunraGames.SubLight
 			model.Context.TransitHistoryLineDistance.Value = Defaults.TransitHistoryLineDistance;
 			model.Context.TransitHistoryLineCount.Value = Defaults.TransitHistoryLineCount;
 
-			modelMediator.Save(model, result => OnSaveGame(result, instructions, model, done));
+			modelMediator.Save(model, result => OnGameSaved(result, instructions, model, done));
 		}
 
-		void OnSaveGame(
-			SaveLoadRequest<GameModel> result,
+		void OnGameSaved(
+			ModelResult<GameModel> result,
 			LoadInstructions instructions,
 			GameModel model,
 			Action<RequestResult, GameModel> done

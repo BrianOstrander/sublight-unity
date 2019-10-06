@@ -116,10 +116,10 @@ namespace LunraGames.SubLight
 		#region Preferences
 		void InitializePreferences(Action done)
 		{
-			App.M.List<PreferencesModel>(result => OnListPreferences(result, done));
+			App.M.Index<PreferencesModel>(result => OnInitializePreferencesIndex(result, done));
 		}
 
-		void OnListPreferences(SaveLoadArrayRequest<SaveModel> result, Action done)
+		void OnInitializePreferencesIndex(ModelIndexResult<SaveModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -132,7 +132,7 @@ namespace LunraGames.SubLight
 				if (DevPrefs.LoggingInitialization) Debug.Log("No existing preferences, generating defaults");
 				App.M.Save(
 					App.M.Create<PreferencesModel>(App.M.CreateUniqueId()), 
-					saveResult => OnSavedPreferences(saveResult, done)
+					saveResult => OnInitializePreferencesSaved(saveResult, done)
 				);
 			}
 			else
@@ -143,7 +143,7 @@ namespace LunraGames.SubLight
 					if (DevPrefs.LoggingInitialization) Debug.Log("No supported preferences, generating defaults");
 					App.M.Save(
 						App.M.Create<PreferencesModel>(App.M.CreateUniqueId()),
-						saveResult => OnSavedPreferences(saveResult, done)
+						saveResult => OnInitializePreferencesSaved(saveResult, done)
 					);
 				}
 				else
@@ -151,13 +151,13 @@ namespace LunraGames.SubLight
 					if (DevPrefs.LoggingInitialization) Debug.Log("Loading existing preferences");
 					App.M.Load<PreferencesModel>(
 						toLoad,
-						loadResult => OnLoadPreferences(loadResult, done)
+						loadResult => OnInitializePreferencesLoad(loadResult, done)
 					);
 				}
 			}
 		}
 
-		void OnLoadPreferences(SaveLoadRequest<PreferencesModel> result, Action done)
+		void OnInitializePreferencesLoad(ModelResult<PreferencesModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -168,11 +168,11 @@ namespace LunraGames.SubLight
 			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded preferences from "+result.Model.Path);
 			App.M.Save(
 				result.TypedModel,
-				saveResult => OnSavedPreferences(saveResult, done)
+				saveResult => OnInitializePreferencesSaved(saveResult, done)
 			);
 		}
 
-		void OnSavedPreferences(SaveLoadRequest<PreferencesModel> result, Action done)
+		void OnInitializePreferencesSaved(ModelResult<PreferencesModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -282,15 +282,15 @@ namespace LunraGames.SubLight
 					return;
 			}
 
-			App.M.List<GameModel>(result => OnWipeGameSavesLoad(result, done));
+			App.M.Index<GameModel>(result => OnWipeGameSavesLoad(result, done));
 		}
 
-		void OnWipeGameSavesLoad(SaveLoadArrayRequest<SaveModel> result, Action done)
+		void OnWipeGameSavesLoad(ModelIndexResult<SaveModel> result, Action done)
 		{
-			OnWipeGameSavesDelete(RequestStatus.Success, default(SaveLoadRequest<SaveModel>), result.Models.ToList(), done);
+			OnWipeGameSavesDelete(RequestStatus.Success, default(ModelResult<SaveModel>), result.Models.ToList(), done);
 		}
 
-		void OnWipeGameSavesDelete(RequestStatus status, SaveLoadRequest<SaveModel> result, List<SaveModel> remaining, Action done)
+		void OnWipeGameSavesDelete(RequestStatus status, ModelResult<SaveModel> result, List<SaveModel> remaining, Action done)
 		{
 			if (remaining.Count == 0)
 			{

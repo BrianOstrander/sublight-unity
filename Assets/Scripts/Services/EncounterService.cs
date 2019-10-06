@@ -34,21 +34,21 @@ namespace LunraGames.SubLight
 		public void Initialize(Action<RequestStatus> done)
 		{
 			currentlySaving = true;
-			modelMediator.List<EncounterInfoModel>(result => OnListEncounters(result, done));
+			modelMediator.Index<EncounterInfoModel>(result => OnInitializeIndexed(result, done));
 		}
 
-		void OnListEncounters(SaveLoadArrayRequest<SaveModel> result, Action<RequestStatus> done)
+		void OnInitializeIndexed(ModelIndexResult<SaveModel> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Listing encounters failed with status " + result.Status + " and error:\n" + result.Error);
+				Debug.LogError("Indexing encounters failed with status " + result.Status + " and error:\n" + result.Error);
 				done(result.Status);
 				return;
 			}
-			OnLoadEncounter(null, default(SaveLoadRequest<EncounterInfoModel>), result.Models.ToList(), done);
+			OnInitializeEncounterLoaded(null, default(ModelResult<EncounterInfoModel>), result.Models.ToList(), done);
 		}
 
-		void OnLoadEncounter(RequestStatus? status, SaveLoadRequest<EncounterInfoModel> result, List<SaveModel> remaining, Action<RequestStatus> done)
+		void OnInitializeEncounterLoaded(RequestStatus? status, ModelResult<EncounterInfoModel> result, List<SaveModel> remaining, Action<RequestStatus> done)
 		{
 			if (status.HasValue)
 			{
@@ -61,20 +61,20 @@ namespace LunraGames.SubLight
 
 			if (remaining.Count == 0)
 			{
-				modelMediator.List<InteractedEncounterInfoListModel>(interactableResult => OnListInteractedEncounters(interactableResult, done));
+				modelMediator.Index<InteractedEncounterInfoListModel>(interactableResult => OnInitializeInteractedEncountersIndexed(interactableResult, done));
 				return;
 			}
 
 			var next = remaining[0];
 			remaining.RemoveAt(0);
-			modelMediator.Load<EncounterInfoModel>(next, loadResult => OnLoadEncounter(loadResult.Status, loadResult, remaining, done));
+			modelMediator.Load<EncounterInfoModel>(next, loadResult => OnInitializeEncounterLoaded(loadResult.Status, loadResult, remaining, done));
 		}
 
-		void OnListInteractedEncounters(SaveLoadArrayRequest<SaveModel> result, Action<RequestStatus> done)
+		void OnInitializeInteractedEncountersIndexed(ModelIndexResult<SaveModel> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Listing interacted encounters failed with status " + result.Status + " and error:\n" + result.Error);
+				Debug.LogError("Indexing interacted encounters failed with status " + result.Status + " and error:\n" + result.Error);
 				done(result.Status);
 				return;
 			}
@@ -85,8 +85,8 @@ namespace LunraGames.SubLight
 			{
 				if (DevPrefs.LoggingInitialization) Debug.Log("No existing interacted encounters, generating defaults");
 				modelMediator.Save(
-					UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>(App.M.CreateUniqueId())),
-					saveResult => OnSavedInteractedEncounters(saveResult, done)
+					OnInitializeUpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>(App.M.CreateUniqueId())),
+					saveResult => OnInitializeInteractedEncountersSaved(saveResult, done)
 				);
 			}
 			else
@@ -96,8 +96,8 @@ namespace LunraGames.SubLight
 				{
 					if (DevPrefs.LoggingInitialization) Debug.Log("No supported interacted encounters, generating defaults");
 					modelMediator.Save(
-						UpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>(App.M.CreateUniqueId())),
-						saveResult => OnSavedInteractedEncounters(saveResult, done)
+						OnInitializeUpdateInteractedEncounters(encounters, modelMediator.Create<InteractedEncounterInfoListModel>(App.M.CreateUniqueId())),
+						saveResult => OnInitializeInteractedEncountersSaved(saveResult, done)
 					);
 				}
 				else
@@ -105,13 +105,13 @@ namespace LunraGames.SubLight
 					if (DevPrefs.LoggingInitialization) Debug.Log("Loading existing interacted encounters");
 					modelMediator.Load<InteractedEncounterInfoListModel>(
 						toLoad,
-						loadResult => OnLoadInteractedEncounters(loadResult, done)
+						loadResult => OnInitializeInteractedEncountersLoaded(loadResult, done)
 					);
 				}
 			}
 		}
 
-		void OnLoadInteractedEncounters(SaveLoadRequest<InteractedEncounterInfoListModel> result, Action<RequestStatus> done)
+		void OnInitializeInteractedEncountersLoaded(ModelResult<InteractedEncounterInfoListModel> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -122,12 +122,12 @@ namespace LunraGames.SubLight
 
 			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded interacted encounters from " + result.Model.Path);
 			modelMediator.Save(
-				UpdateInteractedEncounters(encounters, result.TypedModel),
-				saveResult => OnSavedInteractedEncounters(saveResult, done)
+				OnInitializeUpdateInteractedEncounters(encounters, result.TypedModel),
+				saveResult => OnInitializeInteractedEncountersSaved(saveResult, done)
 			);
 		}
 
-		void OnSavedInteractedEncounters(SaveLoadRequest<InteractedEncounterInfoListModel> result, Action<RequestStatus> done)
+		void OnInitializeInteractedEncountersSaved(ModelResult<InteractedEncounterInfoListModel> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -145,7 +145,7 @@ namespace LunraGames.SubLight
 			done(RequestStatus.Success);
 		}
 
-		InteractedEncounterInfoListModel UpdateInteractedEncounters(List<EncounterInfoModel> allEncounters, InteractedEncounterInfoListModel target)
+		InteractedEncounterInfoListModel OnInitializeUpdateInteractedEncounters(List<EncounterInfoModel> allEncounters, InteractedEncounterInfoListModel target)
 		{
 			var allEncounterIds = allEncounters.Select(e => e.Id.Value);
 			var existingTargets = target.Encounters.Value.Where(e => allEncounterIds.Contains(e.EncounterId));
@@ -190,9 +190,9 @@ namespace LunraGames.SubLight
 			GameModel model
 		)
 		{
-			if (done == null) throw new ArgumentNullException("done");
-			if (trigger == EncounterTriggers.Unknown) throw new ArgumentOutOfRangeException("trigger", "Trigger \"" + trigger + "\" not supported");
-			if (model == null) throw new ArgumentNullException("model");
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			if (trigger == EncounterTriggers.Unknown) throw new ArgumentOutOfRangeException(nameof(trigger), "Trigger \"" + trigger + "\" not supported");
+			if (model == null) throw new ArgumentNullException(nameof(model));
 
 			var remaining = encounters.Where(e => !e.Ignore.Value && e.Trigger.Value == trigger).OrderByDescending(e => e.OrderWeight.Value);
 
@@ -313,29 +313,6 @@ namespace LunraGames.SubLight
 					e => e.RandomWeightMultiplier.Value
 				)
 			);
-
-			/*
-			var ordered = filtered.OrderBy(f => f.RandomWeightMultiplier.Value);
-			var keyed = new List<KeyValuePair<float, EncounterInfoModel>>();
-			var offset = 0f;
-			foreach (var encounter in ordered)
-			{
-				offset += encounter.RandomWeightMultiplier.Value;
-				keyed.Add(new KeyValuePair<float, EncounterInfoModel>(offset, encounter));
-			}
-			var selectedOffset = DemonUtility.GetNextFloat(max: offset);
-
-			var lastOffset = 0f;
-			foreach (var entry in keyed)
-			{
-				if ((Mathf.Approximately(entry.Key, lastOffset) || lastOffset < selectedOffset) && selectedOffset < entry.Key)
-				{
-					done(RequestResult.Success(), entry.Value);
-					return;
-				}
-			}
-			done(RequestResult.Success(), keyed.Last().Value);
-			*/
 		}
 		#endregion
 
@@ -351,7 +328,7 @@ namespace LunraGames.SubLight
 			modelMediator.Save(interactedEncounters, OnTrySaved);
 		}
 
-		void OnTrySaved(SaveLoadRequest<InteractedEncounterInfoListModel> result)
+		void OnTrySaved(ModelResult<InteractedEncounterInfoListModel> result)
 		{
 			currentlySaving = false;
 

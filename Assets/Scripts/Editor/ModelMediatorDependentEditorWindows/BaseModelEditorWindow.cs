@@ -182,7 +182,7 @@ namespace LunraGames.SubLight
 			AskForSaveIfModifiedBeforeContinuing(
 				() =>
 				{
-					EditorModelMediator.Instance.List<M>(
+					EditorModelMediator.Instance.Index<M>(
 						results =>
 						{
 							switch (results.Status)
@@ -280,7 +280,7 @@ namespace LunraGames.SubLight
 					{
 						close();
 						BeforeLoadSelection();
-						SaveLoadService.Save(CreateModel(modelId, modelName), OnNewModelSaveDone);
+						SaveLoadService.Save(CreateModel(modelId, modelName), OnNewModelSaved);
 					}
 				}
 				EditorGUILayoutExtensions.PopEnabled();
@@ -288,7 +288,7 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 		}
 
-		void OnNewModelSaveDone(SaveLoadRequest<M> result)
+		void OnNewModelSaved(ModelResult<M> result)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -310,10 +310,10 @@ namespace LunraGames.SubLight
 		void OnLoadList()
 		{
 			modelListStatus = RequestStatus.Unknown;
-			SaveLoadService.List<M>(OnLoadListDone);
+			SaveLoadService.Index<M>(OnIndexDone);
 		}
 
-		void OnLoadListDone(SaveLoadArrayRequest<SaveModel> result)
+		void OnIndexDone(ModelIndexResult<SaveModel> result)
 		{
 			modelListStatus = result.Status;
 			if (result.Status != RequestStatus.Success)
@@ -339,10 +339,10 @@ namespace LunraGames.SubLight
 			}
 			selectedStatus = RequestStatus.Unknown;
 			modelSelectedPath.Value = model.Path;
-			SaveLoadService.Load<M>(model, OnLoadSelectionDone);
+			SaveLoadService.Load<M>(model, OnLoadSelectionLoaded);
 		}
 
-		void OnLoadSelectionDone(SaveLoadRequest<M> result)
+		void OnLoadSelectionLoaded(ModelResult<M> result)
 		{
 			EditorGUIExtensions.ResetControls();
 			selectedStatus = result.Status;
@@ -622,12 +622,12 @@ namespace LunraGames.SubLight
 			}
 			SaveLoadService.Save(
 				ModelSelection,
-				result => OnModelSaveDone(result, done),
+				result => OnModelSaved(result, done),
 				false
 			);
 		}
 
-		void OnModelSaveDone(SaveLoadRequest<M> result, Action<RequestStatus> done)
+		void OnModelSaved(ModelResult<M> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -876,7 +876,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnBatchOperationLoaded(
-			SaveLoadRequest<M> result
+			ModelResult<M> result
 		)
 		{
 			if (result.Status != RequestStatus.Success)
@@ -929,7 +929,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnBatchOperationSaved(
-			SaveLoadRequest<M>? result,
+			ModelResult<M>? result,
 			RequestResult batchResult
 		)
 		{
