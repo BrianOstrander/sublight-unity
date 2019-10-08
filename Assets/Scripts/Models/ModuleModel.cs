@@ -35,7 +35,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] float navigationVelocity;
 		[JsonIgnore] public readonly ListenerProperty<float> NavigationVelocity;
 		
-		[JsonProperty] string[] traitIds;
+		[JsonProperty] string[] traitIds = new string[0];
 		[JsonIgnore] public readonly ListenerProperty<string[]> TraitIds;
 		
 		[JsonProperty] float repairCost;

@@ -5,11 +5,47 @@ using UnityEngine;
 
 using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
+using UnityEditor;
 
 namespace LunraGames.SubLight
 {
 	public abstract class ModuleService : IModuleService
 	{
+		public struct Result
+		{
+			public readonly RequestStatus Status;
+			public readonly ModuleModel Module;
+			public readonly string Error;
+
+			public static Result Success(ModuleModel module)
+			{
+				return new Result(
+					RequestStatus.Success,
+					module
+				);
+			}
+
+			public static Result Failure(ModuleModel module, string error)
+			{
+				return new Result(
+					RequestStatus.Failure,
+					module,
+					error
+				);
+			}
+
+			Result(
+				RequestStatus status,
+				ModuleModel module,
+				string error = null
+			)
+			{
+				Status = status;
+				Module = module;
+				Error = error;
+			}
+		}
+		
 		public struct ModuleConstraint
 		{
 			public static ModuleConstraint Default => new ModuleConstraint
@@ -58,6 +94,16 @@ namespace LunraGames.SubLight
 		{
 			public ModuleTraitSeverity Severity;
 			public IntegerRange Count;
+			
+			public TraitLimit(
+				ModuleTraitSeverity severity,
+				int countMinimum = 1,
+				int countMaximum = 1
+			)
+			{
+				Severity = severity;
+				Count = new IntegerRange(countMinimum, countMaximum);
+			}
 		}
 
 		protected struct GenerationInfo
@@ -77,17 +123,25 @@ namespace LunraGames.SubLight
 		}
 		
 		protected readonly IModelMediator ModelMediator;
-		protected readonly GameModel Model;
 		
 		protected List<ModuleTraitModel> Traits { get; private set; }
+		protected bool Initialized { get; private set; }
+
+		protected bool IsNotInitialized(Action<Result> done)
+		{
+			if (!Initialized)
+			{
+				done(Result.Failure(null, nameof(ModuleService) + " is not initialized"));
+				return true;
+			}
+			return false;
+		}
 		
 		public ModuleService(
-			IModelMediator modelMediator,
-			GameModel model
+			IModelMediator modelMediator
 		)
 		{
 			ModelMediator = modelMediator ?? throw new ArgumentNullException(nameof(modelMediator));
-			Model = model ?? throw new ArgumentNullException(nameof(model));
 		}
 		
 		#region Initialization
@@ -113,6 +167,9 @@ namespace LunraGames.SubLight
 			}
 
 			Traits = results.Models.Select(m => m.TypedModel).ToList();
+			Initialized = true;
+
+			done(RequestStatus.Success);
 		}
 		#endregion
 
@@ -120,9 +177,10 @@ namespace LunraGames.SubLight
 
 		public void Generate(
 			ModuleConstraint constraint,
-			Action<RequestResult, ModuleModel> done
+			Action<Result> done
 		)
 		{
+			if (IsNotInitialized(done)) return;
 			if (constraint.ValidTypes == null) throw new ArgumentNullException(nameof(constraint.ValidTypes));
 			if (constraint.ManufacturerIds == null) throw new ArgumentNullException(nameof(constraint.ManufacturerIds));
 			if (constraint.TraitLimits == null) throw new ArgumentNullException(nameof(constraint.TraitLimits));
@@ -132,7 +190,7 @@ namespace LunraGames.SubLight
 
 			var result = new ModuleModel();
 
-			var random = new Demon(10); // TODO: Remove this non random thing.
+			var random = new Demon();
 			
 			var info = GetInfo(
 				random.NextInteger,
@@ -188,22 +246,21 @@ namespace LunraGames.SubLight
 
 		public void AddTraits(
 			ModuleModel module,
-			TraitConstraint constraint,
+			TraitConstraint traitConstraint,
 			TraitLimit[] traitLimits,
-			Action<RequestResult, ModuleModel> done
+			Action<Result> done
 		)
 		{
-			if (constraint.IncompatibleIds == null) throw new ArgumentNullException(nameof(constraint.IncompatibleIds));
-			if (constraint.IncompatibleFamilyIds == null) throw new ArgumentNullException(nameof(constraint.IncompatibleFamilyIds));
-			if (constraint.RequiredCompatibleIds == null) throw new ArgumentNullException(nameof(constraint.RequiredCompatibleIds));
-			if (constraint.RequiredCompatibleFamilyIds == null) throw new ArgumentNullException(nameof(constraint.RequiredCompatibleFamilyIds));
-			if (constraint.ValidSeverity == null) throw new ArgumentNullException(nameof(constraint.ValidSeverity));
+			if (IsNotInitialized(done)) return;
+			if (traitConstraint.IncompatibleIds == null) throw new ArgumentNullException(nameof(traitConstraint.IncompatibleIds));
+			if (traitConstraint.IncompatibleFamilyIds == null) throw new ArgumentNullException(nameof(traitConstraint.IncompatibleFamilyIds));
+			if (traitConstraint.RequiredCompatibleIds == null) throw new ArgumentNullException(nameof(traitConstraint.RequiredCompatibleIds));
+			if (traitConstraint.RequiredCompatibleFamilyIds == null) throw new ArgumentNullException(nameof(traitConstraint.RequiredCompatibleFamilyIds));
+			if (traitConstraint.ValidSeverity == null) throw new ArgumentNullException(nameof(traitConstraint.ValidSeverity));
 			
 			var remaining = new Dictionary<ModuleTraitSeverity, int>();
 			
-			// TODO: Add checking for duplicate severity entries.
-			
-			var random = new Demon(99); // TODO: Remove this nonrandom thing.
+			var random = new Demon();
 			
 			foreach (var traitLimit in traitLimits)
 			{
@@ -211,44 +268,57 @@ namespace LunraGames.SubLight
 					traitLimit.Count.Primary,
 					traitLimit.Count.Secondary
 				);
-				if (0 < count) remaining.Add(traitLimit.Severity, count);
+				
+				if (0 < count)
+				{
+					if (remaining.ContainsKey(traitLimit.Severity)) Debug.LogError("Module trait Severity \"" + traitLimit.Severity + "\" is specified multiple times, ignoring duplicates");
+					else remaining.Add(traitLimit.Severity, count);
+				}
 			}
-			
-			
+
+			OnAddTraits(
+				null,
+				module,
+				traitConstraint,
+				remaining,
+				done
+			);
 		}
 
 		void OnAddTraits(
 			ModuleTraitModel result,
 			ModuleModel module,
-			TraitConstraint constraint,
+			TraitConstraint traitConstraint,
 			Dictionary<ModuleTraitSeverity, int> remaining,
-			Action<RequestResult, ModuleModel> done
+			Action<Result> done
 		)
 		{
 			if (result != null)
 			{
 				module.TraitIds.Value = module.TraitIds.Value.Append(result.Id.Value).ToArray();
-				constraint.IncompatibleIds = constraint.IncompatibleIds.Union(result.IncompatibleIds.Value).ToArray();
-				constraint.IncompatibleFamilyIds = constraint.IncompatibleFamilyIds.Union(result.IncompatibleFamilyIds.Value).ToArray();
-				constraint.RequiredCompatibleIds = constraint.RequiredCompatibleIds.Append(result.Id.Value).ToArray();
+				traitConstraint.IncompatibleIds = traitConstraint.IncompatibleIds.Union(result.IncompatibleIds.Value).ToArray();
+				traitConstraint.IncompatibleFamilyIds = traitConstraint.IncompatibleFamilyIds.Union(result.IncompatibleFamilyIds.Value).ToArray();
+				traitConstraint.RequiredCompatibleIds = traitConstraint.RequiredCompatibleIds.Append(result.Id.Value).ToArray();
 				remaining[result.Severity] = remaining[result.Severity] - 1;
 			}
 
-			constraint.ValidSeverity = remaining.Where(kv => 0 < kv.Value).Select(kv => kv.Key).ToArray();
+			traitConstraint.ValidSeverity = remaining.Where(kv => 0 < kv.Value).Select(kv => kv.Key).ToArray();
 
-			if (constraint.ValidSeverity.None())
+			var nextTrait = traitConstraint.ValidSeverity.None() ? null : Traits.Where(t => IsTraitValid(t, module.Type, traitConstraint)).Random();
+			
+			if (nextTrait == null)
 			{
-				done(RequestResult.Success(), module);
+				done(Result.Success(module));
 				return;	
 			}
 			
-			// OnAddTraits(
-			// 	Traits.Where(t => IsTraitValid(t, module.Type.Value, constraint)).Random(),
-			// 	
-			// );
-			// var possibleTraits = Traits.Where(t => !);
-
-			Debug.LogWarning("TODO REST OF THIS LOGIC");
+			OnAddTraits(
+				nextTrait,
+				module,
+				traitConstraint,
+				remaining,
+				done
+			);
 		}
 
 		bool IsTraitValid(
@@ -295,14 +365,14 @@ namespace LunraGames.SubLight
 
 		void Generate(
 			ModuleService.ModuleConstraint constraint,
-			Action<RequestResult, ModuleModel> done
+			Action<ModuleService.Result> done
 		);
 		
 		void AddTraits(
 			ModuleModel module,
-			ModuleService.TraitConstraint constraint,
+			ModuleService.TraitConstraint traitConstraint,
 			ModuleService.TraitLimit[] traitLimits,
-			Action<RequestResult, ModuleModel> done
+			Action<ModuleService.Result> done
 		);
 	}
 }
