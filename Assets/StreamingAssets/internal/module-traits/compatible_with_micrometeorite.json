@@ -1,0 +1,15 @@
+{
+  "name": "compatible_with_micrometeorite",
+  "severity": "Negative",
+  "compatibleModuleTypes": [],
+  "familyIds": [],
+  "incompatibleFamilyIds": [],
+  "incompatibleIds": [],
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-10-09T07:54:34.861459-07:00",
+  "modified": "2019-10-09T07:54:34.861459-07:00",
+  "id": "compatible_with_micrometeorite",
+  "SaveType": "ModuleTrait",
+  "SiblingBehaviour": "None"
+}

@@ -23,13 +23,7 @@ namespace LunraGames.SubLight
 		{
 			idListener = new ListenerProperty<string>(value => id = value, () => id);
 		}
-		
-		public override string ToString()
-		{
-			return Serialization.Serialize(
-				this,
-				formatting: Formatting.Indented
-			);
-		}
+
+		public override string ToString() => this.ToReadableJson();
 	}
 }

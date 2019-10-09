@@ -3,7 +3,9 @@
   "description": "Sustained impacts by microscopic debris in deep space have compromised the hull of this module.",
   "severity": "Negative",
   "compatibleModuleTypes": [],
-  "familyIds": [],
+  "familyIds": [
+    "micrometeorite"
+  ],
   "incompatibleFamilyIds": [],
   "incompatibleIds": [],
   "version": 12,
