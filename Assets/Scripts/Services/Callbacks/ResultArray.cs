@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 
+using UnityEngine;
+
 namespace LunraGames.SubLight
 {
 	public struct ResultArray<T>
@@ -38,6 +40,18 @@ namespace LunraGames.SubLight
 			Error = error;
 		}
 
+		public ResultArray<T> Log()
+		{
+			switch (Status)
+			{
+				case RequestStatus.Failure: Debug.LogError(this); break;
+				case RequestStatus.Cancel: Debug.LogWarning(this); break;
+				case RequestStatus.Success: Debug.Log(this); break;
+				default: Debug.LogError("Unrecognized RequestStatus: " + Status + ", result:\n" + this); break;
+			}
+			return this;
+		}
+		
 		public override string ToString()
 		{
 			var result = "ResultArray<" + typeof(T).Name + ">.Status : " + Status;

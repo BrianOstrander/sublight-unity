@@ -444,7 +444,33 @@ namespace LunraGames.SubLight
 			model.Context.TransitHistoryLineDistance.Value = Defaults.TransitHistoryLineDistance;
 			model.Context.TransitHistoryLineCount.Value = Defaults.TransitHistoryLineCount;
 
-			modelMediator.Save(model, result => OnGameSaved(result, instructions, model, done));
+			model.Context.ModuleService = new FudgedModuleService(modelMediator); 
+			model.Context.ModuleService.Initialize(
+				result => OnInitializeModuleService(
+					result,
+					instructions,
+					model,
+					done
+				)
+			);
+		}
+		
+		void OnInitializeModuleService(
+			Result<IModuleService> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure(result.Error).Log(), null);
+				return;
+			}
+			
+			Debug.LogWarning("TODO: set default ship modules here!");
+			
+			modelMediator.Save(model, saveResult => OnGameSaved(saveResult, instructions, model, done));
 		}
 
 		void OnGameSaved(

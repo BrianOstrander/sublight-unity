@@ -1,4 +1,6 @@
-﻿namespace LunraGames.SubLight
+﻿using UnityEngine;
+
+namespace LunraGames.SubLight
 {
 	public struct Result<T>
 	{
@@ -32,6 +34,18 @@
 			Status = status;
 			Payload = payload;
 			Error = error;
+		}
+		
+		public Result<T> Log()
+		{
+			switch (Status)
+			{
+				case RequestStatus.Failure: Debug.LogError(this); break;
+				case RequestStatus.Cancel: Debug.LogWarning(this); break;
+				case RequestStatus.Success: Debug.Log(this); break;
+				default: Debug.LogError("Unrecognized RequestStatus: " + Status + ", result:\n" + this); break;
+			}
+			return this;
 		}
 
 		public override string ToString()

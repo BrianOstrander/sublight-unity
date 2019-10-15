@@ -149,7 +149,7 @@ namespace LunraGames.SubLight
 		
 		#region Initialization
 		public void Initialize(
-			Action<RequestStatus> done
+			Action<Result<IModuleService>> done
 		)
 		{
 			if (done == null) throw new ArgumentNullException(nameof(done));
@@ -159,20 +159,21 @@ namespace LunraGames.SubLight
 
 		void OnInitializeLoadedAll(
 			ModelArrayResult<ModuleTraitModel> results,
-			Action<RequestStatus> done
+			Action<Result<IModuleService>> done
 		)
 		{
 			if (results.Status != RequestStatus.Success)
 			{
-				Debug.LogError("Loading all module traits failed with status: "+results.Status+" and error: "+results.Error);
-				done(results.Status);
+				var error = "Loading all module traits failed with status: " + results.Status + " and error: " + results.Error;
+				Debug.LogError(error);
+				done(Result<IModuleService>.Failure(default, error));
 				return;
 			}
 
 			Traits = results.Models.Select(m => m.TypedModel).ToList();
 			Initialized = true;
 
-			done(RequestStatus.Success);
+			done(Result<IModuleService>.Success(this));
 		}
 		#endregion
 
@@ -489,7 +490,7 @@ namespace LunraGames.SubLight
 
 	public interface IModuleService
 	{
-		void Initialize(Action<RequestStatus> done);
+		void Initialize(Action<Result<IModuleService>> done);
 		
 		ModuleTraitModel GetTrait(string id);
 

@@ -113,7 +113,7 @@ namespace LunraGames.SubLight.Models
 			ElapsedTime = new ListenerProperty<TimeSpan>(value => elapsedTime = value, () => elapsedTime);
 			SaveDetails = new ListenerProperty<GameSaveDetails>(value => saveDetails = value, () => saveDetails);
 
-			Context = new GameContextModel(this, Ship);
+			Context = new GameContextModel(this);
 		}
 	}
 }

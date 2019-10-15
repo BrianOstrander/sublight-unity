@@ -16,7 +16,6 @@ namespace LunraGames.SubLight.Models
 #pragma warning disable CS0414 // The private field is assigned but its value is never used.
 		GameModel model;
 #pragma warning restore CS0414 // The private field is assigned but its value is never used.
-		ShipModel ship;
 		
 		CameraTransformRequest cameraTransformAbsolute = CameraTransformRequest.Default;
 		readonly ListenerProperty<CameraTransformRequest> cameraTransformAbsoluteListener;
@@ -156,13 +155,13 @@ namespace LunraGames.SubLight.Models
 		public Action<SystemModel> NavigationSelectionOutOfRange = ActionExtensions.GetEmpty<SystemModel>();
   		#endregion
 
-		public GameContextModel(
-			GameModel model,
-			ShipModel ship
-		)
+        #region Services
+        public IModuleService ModuleService { get; set; }
+        #endregion
+        
+		public GameContextModel(GameModel model)
 		{
 			this.model = model;
-			this.ship = ship;
 
 			CameraTransformAbsolute = new ReadonlyProperty<CameraTransformRequest>(
 				value => cameraTransformAbsolute = value,
@@ -282,7 +281,7 @@ namespace LunraGames.SubLight.Models
 		public void SetCurrentSystem(SystemModel system)
 		{
 			currentSystemListener.Value = system;
-			ship.SystemIndex.Value = system == null ? -1 : system.Index.Value;
+			model.Ship.SystemIndex.Value = system == null ? -1 : system.Index.Value;
 
 			if (CelestialSystemKeyValueListener != null)
 			{
