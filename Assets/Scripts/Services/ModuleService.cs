@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Net.Configuration;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -12,38 +13,32 @@ namespace LunraGames.SubLight
 {
 	public abstract class ModuleService : IModuleService
 	{
-		public struct Result
+		public static class Payloads
 		{
-			public readonly RequestStatus Status;
-			public readonly ModuleModel Module;
-			public readonly string Error;
-
-			public static Result Success(ModuleModel module)
+			public struct GenerateTraits
 			{
-				return new Result(
-					RequestStatus.Success,
-					module
-				);
+				public ModuleModel Module;
+				public ModuleTraitModel[] Appended;
+				
+				public override string ToString() => this.ToReadableJson();
 			}
-
-			public static Result Failure(ModuleModel module, string error)
+			
+			public struct AppendTraits
 			{
-				return new Result(
-					RequestStatus.Failure,
-					module,
-					error
-				);
+				public ModuleModel Module;
+				public ModuleTraitModel[] Appended;
+				public ModuleTraitModel[] Ignored;
+				
+				public override string ToString() => this.ToReadableJson();
 			}
-
-			Result(
-				RequestStatus status,
-				ModuleModel module,
-				string error = null
-			)
+			
+			public struct CanAppendTraits
 			{
-				Status = status;
-				Module = module;
-				Error = error;
+				public ModuleModel Module;
+				public ModuleTraitModel[] Valid;
+				public ModuleTraitModel[] Invalid;
+
+				public override string ToString() => this.ToReadableJson();
 			}
 		}
 		
@@ -185,7 +180,7 @@ namespace LunraGames.SubLight
 
 		public void GenerateModule(
 			ModuleConstraint constraint,
-			Action<Result> done
+			Action<Result<ModuleModel>> done
 		)
 		{
 			CheckInitialization();
@@ -195,6 +190,8 @@ namespace LunraGames.SubLight
 			if (constraint.ValidTypes.None()) constraint.ValidTypes = EnumExtensions.GetValues(ModuleTypes.Unknown);
 			if (constraint.ManufacturerIds.None()) constraint.ManufacturerIds = new string[] { null }; // TODO: Actually list manufacturer ids
 
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			
 			var result = new ModuleModel();
 
 			var random = new Demon();
@@ -243,16 +240,18 @@ namespace LunraGames.SubLight
 					break;
 			}
 			
-			done(Result.Success(result));
+			done(Result<ModuleModel>.Success(result));
 		}
 
 		public void GenerateTraits(
 			ModuleModel module,
-			Action<Result> done,
+			Action<Result<Payloads.GenerateTraits>> done,
 			params TraitLimit[] traitLimits
 		)
 		{
 			CheckInitialization();
+			if (module == null) throw new ArgumentNullException(nameof(module));
+			if (done == null) throw new ArgumentNullException(nameof(done));
 
 			var traitConstraint = GetTraitConstraint(module);
 			
@@ -279,6 +278,7 @@ namespace LunraGames.SubLight
 				module,
 				traitConstraint,
 				remaining,
+				new List<ModuleTraitModel>(), 
 				done
 			);
 		}
@@ -288,26 +288,33 @@ namespace LunraGames.SubLight
 			ModuleModel module,
 			TraitConstraint traitConstraint,
 			Dictionary<ModuleTraitSeverity, int> remaining,
-			Action<Result> done
+			List<ModuleTraitModel> appended,
+			Action<Result<Payloads.GenerateTraits>> done
 		)
 		{
 			if (result != null)
 			{
-				module.TraitIds.Value = module.TraitIds.Value.Append(result.Id.Value).ToArray();
-				traitConstraint = AppendTraitConstraint(
-					result,
-					traitConstraint
-				);
+				AppendTraitToModule(result, module);
+				appended.Add(result);
+				AppendTraitToConstraint(result, ref traitConstraint);
 				remaining[result.Severity] = remaining[result.Severity] - 1;
 			}
 
 			var validSeverity = remaining.Where(kv => 0 < kv.Value).Select(kv => kv.Key);
 			
-			var nextTrait = validSeverity.None() ? null : Traits.Where(t => IsTraitValid(t, traitConstraint, validSeverity)).Random();
+			var nextTrait = validSeverity.None() ? null : Traits.Where(t => validSeverity.Contains(t.Severity.Value)).Where(t => IsTraitValid(t, traitConstraint)).Random();
 			
 			if (nextTrait == null)
 			{
-				done(Result.Success(module));
+				done(
+				Result<Payloads.GenerateTraits>.Success(
+						new Payloads.GenerateTraits
+						{
+							Module = module,
+							Appended = appended.ToArray()
+						}
+					)
+				);
 				return;	
 			}
 			
@@ -316,17 +323,105 @@ namespace LunraGames.SubLight
 				module,
 				traitConstraint,
 				remaining,
+				appended,
 				done
+			);
+		}
+		
+		public void AppendTraits(
+			ModuleModel module,
+			Action<Result<Payloads.AppendTraits>> done,
+			params string[] ids
+		)
+		{
+			CheckInitialization();
+			if (module == null) throw new ArgumentNullException(nameof(module));
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			
+			CanAppendTraits(
+				module,
+				result => OnAppendTraits(result, done),
+				ids
+			);
+		}
+
+		void OnAppendTraits(
+			Result<Payloads.CanAppendTraits> result,
+			Action<Result<Payloads.AppendTraits>> done
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				var error = nameof(CanAppendTraits) + " failed with status: " + result.Status + " and error: " + result.Error;
+				done(Result<Payloads.AppendTraits>.Failure(default, error));
+				return;	
+			}
+
+			foreach (var validTrait in result.Payload.Valid) AppendTraitToModule(validTrait, result.Payload.Module);
+			
+			done(
+				Result<Payloads.AppendTraits>.Success(
+					new Payloads.AppendTraits
+					{
+						Module = result.Payload.Module,
+						Appended = result.Payload.Valid,
+						Ignored = result.Payload.Invalid
+					}
+				)
+			);
+		}
+		
+		public void CanAppendTraits(
+			ModuleModel module,
+			Action<Result<Payloads.CanAppendTraits>> done,
+			params string[] ids
+		)
+		{
+			CheckInitialization();
+			if (module == null) throw new ArgumentNullException(nameof(module));
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			
+			var traitConstraint = GetTraitConstraint(module);
+			
+			var valid = new List<ModuleTraitModel>();
+			var invalid = new List<ModuleTraitModel>();
+
+			foreach (var id in ids)
+			{
+				var current = GetTrait(id);
+				if (current == null)
+				{
+					var error = "No ModuleTrait with id \"" + id + "\" found";
+					Debug.LogError(error);
+					done(Result<Payloads.CanAppendTraits>.Failure(default, error));
+					return;
+				}
+
+				if (IsTraitValid(current, traitConstraint))
+				{
+					valid.Add(current);
+					AppendTraitToConstraint(current, ref traitConstraint);
+				}
+				else invalid.Add(current);
+			}
+
+			done(
+				Result<Payloads.CanAppendTraits>.Success(
+					new Payloads.CanAppendTraits
+					{
+						Module = module,
+						Valid = valid.ToArray(),
+						Invalid = invalid.ToArray()
+					}
+				)
 			);
 		}
 
 		bool IsTraitValid(
 			ModuleTraitModel trait,
-			TraitConstraint constraint,
-			IEnumerable<ModuleTraitSeverity> validSeverity
+			TraitConstraint constraint
 		)
 		{
-			if (!validSeverity.Contains(trait.Severity.Value)) return false;
 			if (constraint.ExistingIds.Contains(trait.Id.Value)) return false;
 			if (trait.CompatibleModuleTypes.Value.Any() && constraint.ValidTypes.Any() && constraint.ValidTypes.Intersect(trait.CompatibleModuleTypes.Value).None()) return false;
 			if (constraint.IncompatibleIds.Contains(trait.Id.Value)) return false;
@@ -346,15 +441,15 @@ namespace LunraGames.SubLight
 			
 			foreach (var trait in Traits.Where(t => module.TraitIds.Value.Contains(t.Id.Value)))
 			{
-				result = AppendTraitConstraint(trait, result);
+				AppendTraitToConstraint(trait, ref result);
 			}
 
 			return result;
 		}
 
-		TraitConstraint AppendTraitConstraint(
+		void AppendTraitToConstraint(
 			ModuleTraitModel trait,
-			TraitConstraint traitConstraint
+			ref TraitConstraint traitConstraint
 		)
 		{
 			traitConstraint.ExistingIds = traitConstraint.ExistingIds.Append(trait.Id.Value).Distinct().ToArray();
@@ -362,8 +457,14 @@ namespace LunraGames.SubLight
 			traitConstraint.IncompatibleFamilyIds = traitConstraint.IncompatibleFamilyIds.Union(trait.IncompatibleFamilyIds.Value).ToArray();
 			traitConstraint.RequiredCompatibleIds = traitConstraint.RequiredCompatibleIds.Append(trait.Id.Value).ToArray();
 			traitConstraint.RequiredCompatibleFamilyIds = traitConstraint.RequiredCompatibleFamilyIds.Union(trait.FamilyIds.Value).ToArray();
+		}
 
-			return traitConstraint;
+		void AppendTraitToModule(
+			ModuleTraitModel trait,
+			ModuleModel module
+		)
+		{
+			module.TraitIds.Value = module.TraitIds.Value.Append(trait.Id.Value).ToArray();
 		}
 		
 		#region Child Generators
@@ -394,13 +495,25 @@ namespace LunraGames.SubLight
 
 		void GenerateModule(
 			ModuleService.ModuleConstraint constraint,
-			Action<ModuleService.Result> done
+			Action<Result<ModuleModel>> done
 		);
 		
 		void GenerateTraits(
 			ModuleModel module,
-			Action<ModuleService.Result> done,
+			Action<Result<ModuleService.Payloads.GenerateTraits>> done,
 			params ModuleService.TraitLimit[] traitLimits
+		);
+
+		void AppendTraits(
+			ModuleModel module,
+			Action<Result<ModuleService.Payloads.AppendTraits>> done,
+			params string[] ids
+		);
+
+		void CanAppendTraits(
+			ModuleModel module,
+			Action<Result<ModuleService.Payloads.CanAppendTraits>> done,
+			params string[] ids
 		);
 	}
 }

@@ -17,7 +17,12 @@ namespace LunraGames.SubLight
 				}
 				EditorGUILayoutExtensions.PopEnabled();
 			
-				if (GUILayout.Button("Rename", GUILayout.ExpandWidth(false))) Debug.LogWarning("logic for renaming here!");
+				EditorGUIExtensions.PauseChangeCheck();
+				{
+					if (GUILayout.Button("Copy", EditorStyles.miniButtonLeft, GUILayout.ExpandWidth(false))) EditorGUIUtility.systemCopyBuffer = model.Id.Value;
+				}
+				EditorGUIExtensions.UnPauseChangeCheck();
+				if (GUILayout.Button("Rename", EditorStyles.miniButtonRight, GUILayout.ExpandWidth(false))) Debug.LogWarning("logic for renaming here!");
 			}
 			GUILayout.EndHorizontal();			
 		}
