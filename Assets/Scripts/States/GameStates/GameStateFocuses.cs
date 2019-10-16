@@ -392,6 +392,8 @@ namespace LunraGames.SubLight
 
 			static void InitializeShipPresenters(GameState state, Action done)
 			{
+				new ModuleBrowserPresenter(state.Payload.Game);
+				
 				InitializeCommunicationPresenters(state, done);
 			}
 

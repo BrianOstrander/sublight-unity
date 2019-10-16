@@ -193,6 +193,7 @@ namespace LunraGames.SubLight
 				null // TODO: Actually provide a manufacturer.
 			);
 
+			result.Id.Value = Guid.NewGuid().ToString();
 			result.Type.Value = info.Type;
 			result.Name.Value = GetName(info);
 			result.YearManufactured.Value = GetYearManufactured(info);
