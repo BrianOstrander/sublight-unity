@@ -62,9 +62,9 @@ namespace LunraGames.SubLight
 					result += " - " + Error;
 					break;
 			}
-			result += "\n--- Payloads ---\n";
+			result += "\n--- Payloads ---";
 
-			foreach (var entry in Results) result += entry.ToString();
+			foreach (var entry in Results) result += "\n" + entry.ToString() + "\n~~~~~~~~~~~~~~~~~";
 
 			return result;
 		}

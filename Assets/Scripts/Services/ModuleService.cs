@@ -130,16 +130,6 @@ namespace LunraGames.SubLight
 			if (!Initialized) throw new Exception(typeof(ModeService).Name + " has not been initialized");
 		}
 		
-		// protected bool IsNotInitialized(Action<Result> done)
-		// {
-		// 	if (!Initialized)
-		// 	{
-		// 		done(Result.Failure(null, nameof(ModuleService) + " is not initialized"));
-		// 		return true;
-		// 	}
-		// 	return false;
-		// }
-		
 		public ModuleService(
 			IModelMediator modelMediator
 		)
@@ -242,6 +232,36 @@ namespace LunraGames.SubLight
 			}
 			
 			done(Result<ModuleModel>.Success(result));
+		}
+
+		public void GenerateModules(
+			ModuleConstraint[] constraints,
+			Action<ResultArray<ModuleModel>> done
+		)
+		{
+			var results = new List<Result<ModuleModel>>();
+			foreach (var constraint in constraints)
+			{
+				GenerateModule(
+					constraint,
+					result =>
+					{
+						results.Add(result);
+						if (result.Status != RequestStatus.Success)
+						{
+							done(
+								ResultArray<ModuleModel>.Failure(
+									results.ToArray(),
+									nameof(GenerateModule) + " failed with status: " + result.Status + " and error: " + result.Error
+								).Log()
+							);
+							return;
+						}
+
+						if (results.Count == constraints.Length) done(ResultArray<ModuleModel>.Success(results.ToArray()));
+					}
+				);
+			}
 		}
 
 		public void GenerateTraits(
@@ -353,8 +373,12 @@ namespace LunraGames.SubLight
 		{
 			if (result.Status != RequestStatus.Success)
 			{
-				var error = nameof(CanAppendTraits) + " failed with status: " + result.Status + " and error: " + result.Error;
-				done(Result<Payloads.AppendTraits>.Failure(default, error));
+				done(
+					Result<Payloads.AppendTraits>.Failure(
+						default,
+						nameof(CanAppendTraits) + " failed with status: " + result.Status + " and error: " + result.Error
+					).Log()
+				);
 				return;	
 			}
 
@@ -392,9 +416,12 @@ namespace LunraGames.SubLight
 				var current = GetTrait(id);
 				if (current == null)
 				{
-					var error = "No ModuleTrait with id \"" + id + "\" found";
-					Debug.LogError(error);
-					done(Result<Payloads.CanAppendTraits>.Failure(default, error));
+					done(
+						Result<Payloads.CanAppendTraits>.Failure(
+							default,
+							"No ModuleTrait with id \"" + id + "\" found"
+						).Log()
+					);
 					return;
 				}
 
@@ -497,6 +524,11 @@ namespace LunraGames.SubLight
 		void GenerateModule(
 			ModuleService.ModuleConstraint constraint,
 			Action<Result<ModuleModel>> done
+		);
+		
+		void GenerateModules(
+			ModuleService.ModuleConstraint[] constraints,
+			Action<ResultArray<ModuleModel>> done
 		);
 		
 		void GenerateTraits(

@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 	{
 		public static IntegerRange Zero => new IntegerRange(0, 0);
 		public static IntegerRange Normal => new IntegerRange(0, 1);
+		public static IntegerRange Constant(int value) => new IntegerRange(value, value);
 
 		[SerializeField]
 		int primary;

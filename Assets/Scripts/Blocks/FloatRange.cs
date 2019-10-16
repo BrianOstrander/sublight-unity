@@ -12,6 +12,7 @@ namespace LunraGames.SubLight
 	{
 		public static FloatRange Zero => new FloatRange(0f, 0f);
 		public static FloatRange Normal => new FloatRange(0f, 1f);
+		public static FloatRange Constant(float value) => new FloatRange(value, value);
 
 		[FormerlySerializedAs("x"), SerializeField]
 		float primary;

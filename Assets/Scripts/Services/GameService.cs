@@ -106,10 +106,7 @@ namespace LunraGames.SubLight
 			if (done == null) throw new ArgumentNullException("done");
 
 			OnInitializeGame(
-				new LoadInstructions
-				{
-					// Nothing to do here...
-				}.ApplyDefaults(),
+				new LoadInstructions().ApplyDefaults(),
 				model,
 				done
 			);
@@ -236,28 +233,50 @@ namespace LunraGames.SubLight
 			}
 			model.Context.GalaxyTarget = result.TypedModel;
 
+			model.Context.ModuleService = new FudgedModuleService(modelMediator); 
+			model.Context.ModuleService.Initialize(
+				initializeModuleServiceResult => OnInitializeModuleService(
+					initializeModuleServiceResult,
+					instructions,
+					model,
+					done
+				)
+			);
+		}
+		
+		void OnInitializeModuleService(
+			Result<IModuleService> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure(result.Error).Log(), null);
+				return;
+			}
+
 			if (instructions.IsFirstLoad) OnInitializeFirstLoad(instructions, model, done);
 			else SetContext(instructions, model, done);
 		}
-
-		void OnInitializeFirstLoad(LoadInstructions instructions, GameModel model, Action<RequestResult, GameModel> done)
+		
+		void OnInitializeFirstLoad(
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
 		{
-			// By this point the galaxy and target galaxy should already be set.
+			// By this point the galaxy and target galaxy should already be set. ModuleService should be initialized.
 
-			var beginFound = false;
-			SectorModel beginSector;
-			SystemModel beginSystem;
-			var begin = model.Context.Galaxy.GetPlayerBegin(out beginFound, out beginSector, out beginSystem);
+			var begin = model.Context.Galaxy.GetPlayerBegin(out var beginFound, out _, out var beginSystem);
 			if (!beginFound)
 			{
 				done(RequestResult.Failure("Provided galaxy has no player begin defined").Log(), null);
 				return;
 			}
 
-			var endFound = false;
-			SectorModel endSector;
-			SystemModel endSystem;
-			var end = model.Context.Galaxy.GetPlayerEnd(out endFound, out endSector, out endSystem);
+			var end = model.Context.Galaxy.GetPlayerEnd(out var endFound, out _, out var endSystem);
 			if (!endFound)
 			{
 				done(RequestResult.Failure("Provided galaxy has no player end defined").Log(), null);
@@ -282,7 +301,7 @@ namespace LunraGames.SubLight
 			shipWaypoint.VisibilityState.Value = WaypointModel.VisibilityStates.Visible;
 			shipWaypoint.Distance.Value = UniversePosition.Distance(model.Ship.Position.Value, begin);
 
-			// --- May be depricated eventually...
+			// --- May be deprecated eventually...
 			model.Waypoints.AddWaypoint(shipWaypoint);
 
 			var beginWaypoint = new WaypointModel();
@@ -361,6 +380,61 @@ namespace LunraGames.SubLight
 				model.Waypoints.AddWaypoint(waypoint);
 			}
 
+			// -- Module Generation
+			var moduleTypes = EnumExtensions.GetValues(ModuleTypes.Unknown);
+
+			var defaultPowerProduction = (float) moduleTypes.Length;
+			var defaultPowerConsumption = 1f;
+
+			var moduleConstraints = new List<ModuleService.ModuleConstraint>();
+
+			foreach (var moduleType in moduleTypes)
+			{
+				var current = ModuleService.ModuleConstraint.Default;
+				current.ValidTypes = new[] {moduleType};
+
+				switch (moduleType)
+				{
+					case ModuleTypes.PowerProduction:
+						current.PowerProduction = FloatRange.Constant(defaultPowerProduction);
+						break;
+					default:
+						current.PowerConsumption = FloatRange.Constant(defaultPowerConsumption);
+						break;
+				}
+
+				moduleConstraints.Add(current);
+			}
+
+			model.Context.ModuleService.GenerateModules(
+				moduleConstraints.ToArray(),
+				generateModulesResult =>
+				{
+					OnGenerateModules(
+						generateModulesResult,
+						instructions,
+						model,
+						done
+					);
+				}
+			);
+		}
+
+		void OnGenerateModules(
+			ResultArray<ModuleModel> result,
+			LoadInstructions instructions,
+			GameModel model,
+			Action<RequestResult, GameModel> done
+		)
+		{
+			if (result.Status != RequestStatus.Success)
+			{
+				done(RequestResult.Failure(result.Error).Log(), null);
+				return;
+			}
+
+			model.Ship.Modules.Value = result.Payloads;
+			
 			SetContext(instructions, model, done);
 		}
 
@@ -444,35 +518,9 @@ namespace LunraGames.SubLight
 			model.Context.TransitHistoryLineDistance.Value = Defaults.TransitHistoryLineDistance;
 			model.Context.TransitHistoryLineCount.Value = Defaults.TransitHistoryLineCount;
 
-			model.Context.ModuleService = new FudgedModuleService(modelMediator); 
-			model.Context.ModuleService.Initialize(
-				result => OnInitializeModuleService(
-					result,
-					instructions,
-					model,
-					done
-				)
-			);
-		}
-		
-		void OnInitializeModuleService(
-			Result<IModuleService> result,
-			LoadInstructions instructions,
-			GameModel model,
-			Action<RequestResult, GameModel> done
-		)
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				done(RequestResult.Failure(result.Error).Log(), null);
-				return;
-			}
-			
-			Debug.LogWarning("TODO: set default ship modules here!");
-			
 			modelMediator.Save(model, saveResult => OnGameSaved(saveResult, instructions, model, done));
 		}
-
+		
 		void OnGameSaved(
 			ModelResult<GameModel> result,
 			LoadInstructions instructions,
