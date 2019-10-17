@@ -1529,8 +1529,8 @@ MonoBehaviour:
   detailsGroup: {fileID: 8950995814060838672}
   nameLabel: {fileID: 5534186750645117421}
   typeLabel: {fileID: 2387981729622767645}
-  yearManufacturedTitleLabel: {fileID: 7805773457143736218}
-  yearManufacturedLabel: {fileID: 9132670149698349503}
+  yearManufacturedTitleLabel: {fileID: 8525449617370789325}
+  yearManufacturedLabel: {fileID: 2690527329582012865}
   powerProductionTitleLabel: {fileID: 7805773457143736218}
   powerProductionLabel: {fileID: 9132670149698349503}
   powerConsumptionTitleLabel: {fileID: 7746795131663514629}
