@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -44,6 +47,17 @@ namespace LunraGames.SubLight.Models
 			FamilyIds = new ListenerProperty<string[]>(value => familyIds = value, () => familyIds);
 			IncompatibleFamilyIds = new ListenerProperty<string[]>(value => incompatibleFamilyIds = value, () => incompatibleFamilyIds);
 			IncompatibleIds = new ListenerProperty<string[]>(value => incompatibleIds = value, () => incompatibleIds);
+		}
+	}
+
+	public static class ModuleTraitModelLinq
+	{
+		public static IEnumerable<ModuleTraitModel> HighestSeverity(this IEnumerable<ModuleTraitModel> entries)
+		{;
+			var ordered = entries.OrderByDescending(e => e.Severity.Value);
+			if (ordered.None()) return ordered;
+
+			return entries.Where(e => e.Severity.Value == ordered.First().Severity.Value);
 		}
 	}
 }

@@ -1,0 +1,19 @@
+{
+  "name": "Faulty Airlocks",
+  "severity": "Negative",
+  "compatibleModuleTypes": [],
+  "familyIds": [
+    "airlocks"
+  ],
+  "incompatibleFamilyIds": [
+    "airlocks"
+  ],
+  "incompatibleIds": [],
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-10-17T08:47:39.095692-07:00",
+  "modified": "2019-10-17T08:47:39.095692-07:00",
+  "id": "faulty_airlocks",
+  "SaveType": "ModuleTrait",
+  "SiblingBehaviour": "None"
+}

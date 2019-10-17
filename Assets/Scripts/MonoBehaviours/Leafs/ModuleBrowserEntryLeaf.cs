@@ -9,8 +9,10 @@ namespace LunraGames.SubLight.Views
 	{
 		public TextMeshProUGUI NameLabel;
 		public TextMeshProUGUI TypeLabel;
-		public Graphic[] SeverityGraphicsPrimary;
-		public Graphic[] SeverityGraphicsSecondary;
+		public TextMeshProUGUI SeverityLabel;
+		public XButtonLeaf SeverityPrimary;
+		public XButtonLeaf SeveritySecondary;
+		public GameObject SelectedArea;
 
 		public XButton Button;
 	}
