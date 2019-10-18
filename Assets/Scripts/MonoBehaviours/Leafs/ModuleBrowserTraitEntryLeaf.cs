@@ -10,7 +10,7 @@ namespace LunraGames.SubLight.Views
 		public TextMeshProUGUI NameLabel;
 		public TextMeshProUGUI SeverityLabel;
 		public TextMeshProUGUI DescriptionLabel;
-		public Graphic[] SeverityGraphicsPrimary;
-		public Graphic[] SeverityGraphicsSecondary;
+		public XButtonLeaf SeverityPrimary;
+		public XButtonLeaf SeveritySecondary;
 	}
 }

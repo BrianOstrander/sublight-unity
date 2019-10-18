@@ -1,5 +1,6 @@
 {
   "name": "Failing Airlocks",
+  "description": "Airlocks on this module are in critical condition, and may catastrophically fail at any moment.",
   "severity": "Critical",
   "compatibleModuleTypes": [],
   "familyIds": [

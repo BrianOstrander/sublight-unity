@@ -1,5 +1,6 @@
 {
   "name": "Faulty Airlocks",
+  "description": "Functionality of the airlocks on this module has degraded, leaving them prone to leaks and jams at inopportune times.",
   "severity": "Negative",
   "compatibleModuleTypes": [],
   "familyIds": [

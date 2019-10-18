@@ -60,8 +60,18 @@ namespace LunraGames.SubLight.Presenters
 				current.DefiningSeverityText = current.DefiningSeverity.ToString();
 
 				var currentTraits = new List<ModuleBrowserBlock.TraitBlock>();
-				
-				// TODO: Trait stuff here...
+
+				foreach (var trait in moduleTraits)
+				{
+					var currentTrait = new ModuleBrowserBlock.TraitBlock();
+					currentTrait.Name = trait.Name.Value;
+					currentTrait.Description = trait.Description.Value;
+					
+					currentTrait.SeverityText = trait.Severity.Value.ToString();
+					currentTrait.Severity = trait.Severity.Value;
+					
+					currentTraits.Add(currentTrait);
+				}
 
 				current.Traits = currentTraits.ToArray();
 				

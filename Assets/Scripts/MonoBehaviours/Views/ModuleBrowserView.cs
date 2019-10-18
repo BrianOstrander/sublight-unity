@@ -11,8 +11,9 @@ namespace LunraGames.SubLight.Views
 		public struct TraitBlock
 		{
 			public string Name;
-			public string SeverityText;
 			public string Description;
+			
+			public string SeverityText;
 			public ModuleTraitSeverity Severity;
 		}
 
@@ -38,9 +39,11 @@ namespace LunraGames.SubLight.Views
 		[Serializable]
 		struct SeverityStyleEntry
 		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 			public ModuleTraitSeverity Severity;
 			public XButtonStyleObject StylePrimary;
 			public XButtonStyleObject StyleSecondary;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 		}
 		
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
@@ -51,7 +54,7 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform traitArea;
 		[SerializeField]
-		ModuleBrowserEntryLeaf traitPrefab;
+		ModuleBrowserTraitEntryLeaf traitPrefab;
 
 		[SerializeField]
 		SeverityStyleEntry[] severityStyles;
@@ -139,6 +142,21 @@ namespace LunraGames.SubLight.Views
 					powerConsumptionTitleLabel.text = current.Value.PowerConsumptionTitle;
 					powerConsumptionLabel.text = current.Value.PowerConsumption;
 					descriptionLabel.text = current.Value.Description;
+					
+					traitArea.ClearChildren();
+
+					foreach (var trait in current.Value.Traits)
+					{
+						var currentTrait = traitArea.gameObject.InstantiateChild(traitPrefab, setActive: true);
+						currentTrait.NameLabel.text = trait.Name;
+						currentTrait.SeverityLabel.text = trait.SeverityText;
+						currentTrait.DescriptionLabel.text = trait.Description;
+						
+						var style = severityStyles.FirstOrDefault(s => s.Severity == trait.Severity);
+
+						currentTrait.SeverityPrimary.GlobalStyle = style.StylePrimary;
+						currentTrait.SeveritySecondary.GlobalStyle = style.StyleSecondary;
+					}
 				}
 				else detailsGroup.alpha = 0f;
 
@@ -161,6 +179,7 @@ namespace LunraGames.SubLight.Views
 			Selection = ActionExtensions.GetEmpty<string>();
 			
 			entryPrefab.gameObject.SetActive(false);
+			traitPrefab.gameObject.SetActive(false);
 		}
 
 		#region Events
