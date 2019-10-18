@@ -454,14 +454,15 @@ namespace LunraGames.SubLight
 				
 				if (isValidating)
 				{
-					switch (model.EncounterIdIsValid)
+					switch (model.ValidationState)
 					{
-						case RequestStatus.Success:
+						case ValidatedFilterStates.Valid:
 							isValidating = false;
 							break;
-						case RequestStatus.Failure:
+						case ValidatedFilterStates.Invalid:
 							validationColor = Color.red;
-							labelContent.tooltip += " Error: An encounter with this Id has not been found.";
+							var issueSeperator = model.ValidationIssues.Length == 0 ? "; " : string.Empty;
+							foreach (var issue in model.ValidationIssues) labelContent.tooltip += " Invalid: " + issue + issueSeperator;
 							break;
 						default:
 							validationColor = Color.yellow;
@@ -490,10 +491,10 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					switch (model.EncounterIdIsValid)
+					switch (model.ValidationState)
 					{
-						case RequestStatus.Unknown:
-							model.EncounterIdIsValid = RequestStatus.Cancel;
+						case ValidatedFilterStates.Unknown:
+							model.SetValidation(ValidatedFilterStates.Processing);
 							EditorModelMediator.Instance.Load<EncounterInfoModel>(
 								model.FilterValue.Value,
 								result => OnHandleEncounterIdValidated(result, model)
@@ -521,10 +522,10 @@ namespace LunraGames.SubLight
 			switch (result.Status)
 			{
 				case RequestStatus.Success:
-					model.EncounterIdIsValid = RequestStatus.Success;
+					model.SetValidation(ValidatedFilterStates.Valid);
 					break;
 				default:
-					model.EncounterIdIsValid = RequestStatus.Failure;
+					model.SetValidation(ValidatedFilterStates.Invalid, "An encounter with this Id has not been found");
 					break;
 			}
 		}
