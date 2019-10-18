@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Net.Configuration;
 using UnityEngine;
 
 using LunraGames.SubLight.Models;
@@ -106,6 +106,9 @@ namespace LunraGames.SubLight
 					break;
 				case ValueFilterTypes.EncounterInteraction:
 					OnHandle(current as EncounterInteractionFilterEntryModel, model, encounterModel, filterDone);
+					break;
+				case ValueFilterTypes.ModuleTrait:
+					OnHandle(current as ModuleTraitFilterEntryModel, model, filterDone);
 					break;
 				default:
 					Debug.LogError("Unrecognized FilterType: " + current.FilterType + ", skipping...");
@@ -513,6 +516,81 @@ namespace LunraGames.SubLight
 			}
 
 			done(filter.Group.Value, result);
+		}
+		
+		void OnHandle(
+			ModuleTraitFilterEntryModel filter,
+			GameModel model,
+			Action<ValueFilterGroups, bool> done
+		)
+		{
+			var result = false;
+
+			switch (filter.Operation.Value)
+			{
+				case ModuleTraitFilterOperations.Exists:
+					// model.Context.ModuleService.
+					var modules = model.Ship.Modules.Value;
+					if (filter.ValidModuleTypes.Value.Any()) modules = modules.Where(m => filter.ValidModuleTypes.Value.Contains(m.Type.Value)).ToArray();
+					result = modules.Any(m => m.TraitIds.Value.Contains(filter.FilterValue.Value));
+					break;
+				case ModuleTraitFilterOperations.CanAppend:
+					OnHandleModuleTraitCanAdd(
+						model,
+						filter,
+						model.Ship.Modules.Value.ToList(),
+						done
+					);
+					return;
+				default:
+					Debug.LogError("Unrecognized " + nameof(ModuleTraitFilterOperations) + ": " + filter.Operation.Value);
+					break;
+			}
+			
+			done(filter.Group.Value, result);
+		}
+
+		void OnHandleModuleTraitCanAdd(
+			GameModel model,
+			ModuleTraitFilterEntryModel filter,
+			List<ModuleModel> remaining,
+			Action<ValueFilterGroups, bool> done
+		)
+		{
+			if (remaining.None())
+			{
+				done(filter.Group.Value, false);
+				return;
+			}
+			
+			var module = remaining.First();
+			remaining.RemoveAt(0);
+			
+			model.Context.ModuleService.CanAppendTraits(
+				module,
+				canAppendResult =>
+				{
+					switch (canAppendResult.Status)
+					{
+						case RequestStatus.Success:
+							if (canAppendResult.Payload.Valid.Any()) done(filter.Group.Value, true);
+							else
+							{
+								OnHandleModuleTraitCanAdd(
+									model,
+									filter,
+									remaining,
+									done
+								);
+							}
+							break;
+						default:
+							canAppendResult.Log();
+							break;
+					}
+				},
+				filter.FilterValue.Value
+			);
 		}
 		#endregion
 	}

@@ -1,0 +1,148 @@
+{
+  "orderWeight": 999,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "TransitComplete",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [],
+    "moduleTraits": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [
+      {
+        "selectionMethod": "FirstFilter",
+        "switches": [
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "3f941da2-c329-450d-930f-eb4910dbe27d",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": [
+                  {
+                    "operation": "Exists",
+                    "validModuleTypes": [],
+                    "filterValue": "micrometeorite_damage",
+                    "filterId": "de381836-492d-4c70-a393-15a6d1fe937d",
+                    "group": "All"
+                  }
+                ]
+              },
+              "entryId": "487a4e18-5805-4c9f-a814-2c8e27456bd0"
+            }
+          },
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "fb6500ec-dfc9-460e-86ff-d3430f9eeb16",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "58ac8358-686a-44c4-87dd-f38d6c66fe4b"
+            },
+            "index": 1
+          }
+        ],
+        "beginning": true,
+        "logId": "d360c5e5-b4ee-41d0-85df-bb4606b799a9"
+      }
+    ],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "Has micrometeorite_damage!!!!"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "46d7215a-3092-4cf2-97d9-79c86a2d64bb"
+            }
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "3f941da2-c329-450d-930f-eb4910dbe27d"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "Does NOT have micrometeorite_damage"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "97fed7b2-35e7-49ad-9733-ba0512a5081e"
+            }
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "fb6500ec-dfc9-460e-86ff-d3430f9eeb16"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-10-18T09:24:02.921501-07:00",
+  "modified": "2019-10-18T09:24:02.921501-07:00",
+  "id": "trait_test",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

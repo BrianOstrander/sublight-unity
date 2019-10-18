@@ -1,5 +1,12 @@
 ﻿namespace LunraGames.SubLight
 {
+	public enum ModuleTraitFilterOperations
+	{
+		Unknown = 0,
+		Exists = 10,
+		CanAppend = 20
+	}
+	
 	public enum EncounterInteractionFilterOperations
 	{
 		Unknown = 0,

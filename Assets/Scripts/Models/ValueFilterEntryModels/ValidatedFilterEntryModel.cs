@@ -10,7 +10,7 @@ namespace LunraGames.SubLight.Models
 		Invalid = 30
 	}
 	
-	public abstract class ValidatedFilterEntryModel<T> : ValueFilterEntryModel<T>
+	public abstract class ValidatedFilterEntryModel<T> : ValueFilterEntryModel<T>, IValidatedFilterEntryModel
 	{
 		
 #if UNITY_EDITOR
@@ -35,7 +35,17 @@ namespace LunraGames.SubLight.Models
 		}
 		
 #if UNITY_EDITOR
-		protected void ResetValidation(T value) => SetValidation(ValidatedFilterStates.Unknown);
+		protected void ResetValidation(T value = default) => SetValidation(ValidatedFilterStates.Unknown);
+#endif
+	}
+	
+	public interface IValidatedFilterEntryModel : IValueFilterEntryModel
+	{
+#if UNITY_EDITOR
+		void SetValidation(
+			ValidatedFilterStates state,
+			params string[] issues
+		);
 #endif
 	}
 }

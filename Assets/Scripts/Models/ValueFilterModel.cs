@@ -25,7 +25,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] FloatKeyValueFilterEntryModel[] floatKeyValues = new FloatKeyValueFilterEntryModel[0];
 		[JsonProperty] EnumerationKeyValueFilterEntryModel[] enumerationKeyValues = new EnumerationKeyValueFilterEntryModel[0];
 		[JsonProperty] EncounterInteractionFilterEntryModel[] encounterInteractions = new EncounterInteractionFilterEntryModel[0];
-
+		[JsonProperty] ModuleTraitFilterEntryModel[] moduleTraits = new ModuleTraitFilterEntryModel[0];
 		#endregion
 
 		#region Derived Values
@@ -58,6 +58,7 @@ namespace LunraGames.SubLight.Models
 			var newFloatKeyValues = new List<FloatKeyValueFilterEntryModel>();
 			var newEnumerationKeyValues = new List<EnumerationKeyValueFilterEntryModel>();
 			var newEncounterInteractions = new List<EncounterInteractionFilterEntryModel>();
+			var newModuleTraits = new List<ModuleTraitFilterEntryModel>();
 
 			foreach (var filter in newFilters)
 			{
@@ -81,6 +82,9 @@ namespace LunraGames.SubLight.Models
 					case ValueFilterTypes.EncounterInteraction:
 						newEncounterInteractions.Add(filter as EncounterInteractionFilterEntryModel);
 						break;
+					case ValueFilterTypes.ModuleTrait:
+						newModuleTraits.Add(filter as ModuleTraitFilterEntryModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized FilterType" + filter.FilterType);
 						break;
@@ -93,6 +97,7 @@ namespace LunraGames.SubLight.Models
 			floatKeyValues = newFloatKeyValues.ToArray();
 			enumerationKeyValues = newEnumerationKeyValues.ToArray();
 			encounterInteractions = newEncounterInteractions.ToArray();
+			moduleTraits = newModuleTraits.ToArray();
 		}
 
 		IValueFilterEntryModel[] OnGetFilters()
@@ -102,6 +107,7 @@ namespace LunraGames.SubLight.Models
 				                   								  .Concat(floatKeyValues)
 				                   								  .Concat(enumerationKeyValues)
 																  .Concat(encounterInteractions)
+															      .Concat(moduleTraits)
 																  .ToArray();
 		}
 		#endregion

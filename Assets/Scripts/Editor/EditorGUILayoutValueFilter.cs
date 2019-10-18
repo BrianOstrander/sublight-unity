@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 
 using UnityEditor;
@@ -169,7 +170,20 @@ namespace LunraGames.SubLight
 									OnHandle(filter as EnumerationKeyValueFilterEntryModel, ref deleted);
 									break;
 								case ValueFilterTypes.EncounterInteraction:
-									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
+									OnHandleIdValidated<EncounterInteractionFilterEntryModel, EncounterInteractionFilterOperations, EncounterInfoModel>(
+										filter as EncounterInteractionFilterEntryModel,
+										new GUIContent("Encounter Id", "The Id of the encounter for this filter."),
+										(filter as EncounterInteractionFilterEntryModel).Operation,
+										ref deleted
+									);
+									break;
+								case ValueFilterTypes.ModuleTrait:
+									OnHandleIdValidated<ModuleTraitFilterEntryModel, ModuleTraitFilterOperations, ModuleTraitModel>(
+										filter as ModuleTraitFilterEntryModel,
+										new GUIContent("Module Trait Id", "The Id of the module trait for this filter."),
+										(filter as ModuleTraitFilterEntryModel).Operation,
+										ref deleted
+									);
 									break;
 								default:
 									EditorGUILayout.HelpBox("Unrecognized FilterType: " + filter.FilterType, MessageType.Error);
@@ -241,6 +255,8 @@ namespace LunraGames.SubLight
 					return OnCreateKeyValue(Create<EnumerationKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.EncounterInteraction:
 					return Create<EncounterInteractionFilterEntryModel>(model, index, group, filterId);
+				case ValueFilterTypes.ModuleTrait:
+					return Create<ModuleTraitFilterEntryModel>(model, index, group, filterId);
 				default: Debug.LogError("Unrecognized FilterType: " + type); break;
 			}
 			return null;
@@ -441,6 +457,7 @@ namespace LunraGames.SubLight
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
 
+		/*
 		static void OnHandle(
 			EncounterInteractionFilterEntryModel model,
 			ref string deleted
@@ -497,7 +514,7 @@ namespace LunraGames.SubLight
 							model.SetValidation(ValidatedFilterStates.Processing);
 							EditorModelMediator.Instance.Load<EncounterInfoModel>(
 								model.FilterValue.Value,
-								result => OnHandleEncounterIdValidated(result, model)
+								result => OnHandleSaveModelIdValidated(result, model)
 							);
 							break;
 					}
@@ -513,19 +530,101 @@ namespace LunraGames.SubLight
 			}
 			OnOneLineHandleEnd(model, ref deleted);
 		}
+		*/
 
-		static void OnHandleEncounterIdValidated(
-			ModelResult<EncounterInfoModel> result,
-			EncounterInteractionFilterEntryModel model
+		static void OnHandleIdValidated<V, O, M>(
+			V model,
+			GUIContent content,
+			ListenerProperty<O> operation,
+			ref string deleted
 		)
+			where V : ValidatedFilterEntryModel<string>
+			where O : Enum
+			where M : SaveModel
+		{
+			OnOneLineHandleBegin(model);
+			{
+				var isValidating = !string.IsNullOrEmpty(model.FilterValue.Value);
+				var validationColor = Color.white;
+				// var labelContent = new GUIContent("Module Trait Id", "The Id of the module trait for this filter.");
+				
+				if (isValidating)
+				{
+					switch (model.ValidationState)
+					{
+						case ValidatedFilterStates.Valid:
+							isValidating = false;
+							break;
+						case ValidatedFilterStates.Invalid:
+							validationColor = Color.red;
+							var issueSeperator = model.ValidationIssues.Length == 0 ? "; " : string.Empty;
+							foreach (var issue in model.ValidationIssues) content.tooltip += " Invalid: " + issue + issueSeperator;
+							break;
+						default:
+							validationColor = Color.yellow;
+							content.tooltip += " Warning: Currently searching for a matching Id.";
+							break;
+					}
+				}
+
+				EditorGUILayoutExtensions.PushColorValidation(validationColor, isValidating);
+				{
+					GUILayout.Label(content, GUILayout.ExpandWidth(false));
+
+					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
+				}
+				EditorGUILayoutExtensions.PopColorValidation(isValidating);
+
+				if (string.IsNullOrEmpty(model.FilterValue.Value))
+				{
+					const float CurrentLabelOffset = 53f;
+					GUILayout.Space(-CurrentLabelOffset);
+					EditorGUILayoutExtensions.PushColor(Color.gray);
+					{
+						GUILayout.Label("Current", GUILayout.Width(CurrentLabelOffset));
+					}
+					EditorGUILayoutExtensions.PopColor();
+				}
+				else
+				{
+					switch (model.ValidationState)
+					{
+						case ValidatedFilterStates.Unknown:
+							model.SetValidation(ValidatedFilterStates.Processing);
+							EditorModelMediator.Instance.Load<M>(
+								model.FilterValue.Value,
+								result => OnHandleSaveModelIdValidated(result, model)
+							);
+							break;
+					}
+				}
+
+				GUILayout.Label("Needs To Be", GUILayout.Width(OperatorWidth));
+
+				operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+					"- Select Operation -",
+					operation.Value,
+					Color.red
+				);
+			}
+			OnOneLineHandleEnd(model, ref deleted);
+		}
+
+		static void OnHandleSaveModelIdValidated<M, V>(
+			ModelResult<M> result,
+			V model
+		)
+			where M : SaveModel
+			where V : IValidatedFilterEntryModel
 		{
 			switch (result.Status)
 			{
 				case RequestStatus.Success:
+					// TODO: Check that module type constraints are possible!
 					model.SetValidation(ValidatedFilterStates.Valid);
 					break;
 				default:
-					model.SetValidation(ValidatedFilterStates.Invalid, "An encounter with this Id has not been found");
+					model.SetValidation(ValidatedFilterStates.Invalid, "A " + result.SaveModelType.Name + " with this Id has not been found");
 					break;
 			}
 		}
