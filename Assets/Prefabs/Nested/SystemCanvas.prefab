@@ -105,8 +105,8 @@ GameObject:
   - component: {fileID: 1064750022642192138}
   - component: {fileID: 7639808049948034410}
   - component: {fileID: 1543523904510915742}
-  - component: {fileID: 5369547779957023485}
   - component: {fileID: 2173165061007780179}
+  - component: {fileID: 4486963859507933432}
   m_Layer: 12
   m_Name: Canvas
   m_TagString: Untagged
@@ -152,8 +152,8 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: -1
+  m_SortingLayerID: -1540079097
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &1543523904510915742
 MonoBehaviour:
@@ -177,18 +177,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!225 &5369547779957023485
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1404256750327042567}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &2173165061007780179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shape: 2
-  quality: 2
+  quality: 3
   interactable: 1
   blocksRaycasts: 1
   raycastMyLayerOnly: 1
@@ -213,6 +201,24 @@ MonoBehaviour:
   ringFill: 0.5
   ringExternalDiamater: 1000
   ringFlipVertical: 0
+--- !u!114 &4486963859507933432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404256750327042567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba045fa4943b5428da9ef8508c8ada33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  showDebug: 0
 --- !u!1 &6302877934222190916
 GameObject:
   m_ObjectHideFlags: 0

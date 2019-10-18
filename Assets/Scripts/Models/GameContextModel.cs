@@ -114,6 +114,23 @@ namespace LunraGames.SubLight.Models
 		int transitHistoryLineCount;
 		public readonly ListenerProperty<int> TransitHistoryLineCount;
 
+		float transitTimeNormal;
+		/// <summary>
+		/// The fraction component of TransitTimeElapsed.
+		/// </summary>
+		public readonly ListenerProperty<float> TransitTimeNormal;
+
+		float transitTimeElapsed;
+		/// <summary>
+		/// The player's game speeds up when in transit, this keeps track of the
+		/// total elapsed time.
+		/// </summary>
+		/// <remarks>
+		/// No idea what happens when this rolls over, so don't use it for
+		/// mission critical stuff, lol.
+		/// </remarks>
+		public readonly ListenerProperty<float> TransitTimeElapsed;
+
 		#region Read Only Listeners
 		UniverseScaleModel activeScale;
 		ListenerProperty<UniverseScaleModel> activeScaleListener;
@@ -216,6 +233,9 @@ namespace LunraGames.SubLight.Models
 
 			TransitHistoryLineDistance = new ListenerProperty<float>(value => transitHistoryLineDistance = value, () => transitHistoryLineDistance);
 			TransitHistoryLineCount = new ListenerProperty<int>(value => transitHistoryLineCount = value, () => transitHistoryLineCount);
+
+			TransitTimeNormal = new ListenerProperty<float>(value => transitTimeNormal = value, () => transitTimeNormal);
+			TransitTimeElapsed = new ListenerProperty<float>(value => transitTimeElapsed = value, () => transitTimeElapsed);
 		}
 
 		#region Events
