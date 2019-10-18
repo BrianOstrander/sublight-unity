@@ -1,0 +1,912 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 0.5,
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "f943c4ed-dbe2-47a3-b4cd-f19d33886150",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "d7e83248-78dd-416f-943d-6ec85e5bdeb4",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_maximum"
+                },
+                "Input1": {
+                  "AddressId": "1feadb2c-bdf0-4f58-b454-4e52929c1d3b",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "63a26305-8c51-4f69-abca-a5485b7b6939",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "14a04ae1-2ecf-4d9c-99b8-749984c40ba2",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "f4e2ec47-99ee-4582-aff1-1a3eee009aa3",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant"
+                }
+              },
+              "entryId": "90bdefd0-1ee6-4baa-a285-9a5844c2d820"
+            }
+          }
+        ],
+        "index": 14,
+        "logId": "0f76d738-55eb-49d2-84bc-c8b39a2bbb09",
+        "fallbackLogId": "48b72872-4143-4c84-95be-79d963205dd9",
+        "name": "salvage"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Are they... alive?",
+              "nextLogId": "290f79ef-5995-49a8-80de-bf20539717c0",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "4241de52-aa7a-49eb-a0be-535bbce421a2"
+            }
+          },
+          {
+            "entry": {
+              "message": "Let's see what we can salvage.",
+              "nextLogId": "37760955-899c-4072-b23d-080a2cee11c5",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "8d3be8d7-9716-4e18-b4b3-83c16c8e2b49"
+            },
+            "index": 1
+          }
+        ],
+        "index": 5,
+        "logId": "2d6a0e0c-ba7b-4a62-8d7f-a12e8bae71b0"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Thaw a crew member.",
+              "nextLogId": "df399d6e-e9b0-4575-b3b9-d3364ca3e0ba",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "382e9e14-39cb-4f07-b697-3fc4f0881fb6"
+            }
+          },
+          {
+            "entry": {
+              "message": "We shouldn't disturb them.",
+              "nextLogId": "d17db3c4-2c36-4ad0-a4cf-57097c31eded",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "02947a38-c472-498f-bd8b-450b490371ca"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "See what we can salvage.",
+              "nextLogId": "37760955-899c-4072-b23d-080a2cee11c5",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "454a482f-f997-48b2-bb30-4df0287a0372"
+            },
+            "index": 2
+          }
+        ],
+        "index": 7,
+        "logId": "65b6016f-d59b-48a3-9a65-bea7aee8a37a"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "We've disturbed them enough.",
+              "nextLogId": "c0065482-0578-47e6-84f5-0454ecd975ee",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "25e4b212-d254-4b0d-8d76-3eb8cf681fe7"
+            }
+          },
+          {
+            "entry": {
+              "message": "We can't ignore the opportunity to salvage their ship.",
+              "nextLogId": "dd5f930d-395d-4e1d-be30-54f103283d92",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "63d71716-947f-4afa-9db2-9272c544a1a8"
+            },
+            "index": 1
+          }
+        ],
+        "index": 11,
+        "logId": "86a1f327-92fe-45ae-817c-2662d2694ef0"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1a341ff5-738c-40bd-a1c4-5b414bbca248"
+            }
+          }
+        ],
+        "ending": true,
+        "logId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b",
+        "name": "< End Encounter >"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "49f41340-73bd-4934-b5bd-5b68e5603f09"
+            }
+          }
+        ],
+        "index": 2,
+        "logId": "8b61f7a8-98e6-4509-98dc-8cd00fb4c2a1",
+        "fallbackLogId": "82d70227-c6ac-438a-88b9-4e805b24db4f"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Object of Interest",
+              "message": "<b>CLASSIFICATION</b> NOCTIS, INTERSTELLAR ARK\n<b>GROSS MASS</b> APROX. 1,200,000 METRIC TONS\n<b>STATUS</b> UNKNOWN\n\n<b>ANALYSIS</b> Communications array performed 3 hail(s), 0 acknowledged. Optical and thermal analysis indicates low-level electrical activity onboard. Hull contains a single identifier: <b>NOCTIS</b>",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Warning",
+              "successLogId": "8b61f7a8-98e6-4509-98dc-8cd00fb4c2a1",
+              "failureLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b",
+              "successText": "Rendezvous",
+              "failureText": "Ignore",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "afda88a5-56eb-448f-95ea-06dee307dc2a"
+            }
+          }
+        ],
+        "index": 1,
+        "beginning": true,
+        "logId": "17a0cc0b-df49-422e-9f00-b5ee0a7acdf0",
+        "fallbackLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Resources Acquired",
+              "message": "As your ark siphons the last drops of propellant from the Noctis, its ancient reactors sputter out. Power drops below critical levels, and a long forgotten safety override trips the emergency thaw cycle on each flask. One by one, the frost-bitten remains of the dead crew are brought to room temperature.\n\nThe smell of death floods the ship, spilling from each flask as they open for the first time in centuries. Unable to bear the stench any longer, your own crew returns to their shuttle.\n\nWith your propellant tanks full, you turn your ark starward, away from this horrible place.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Neutral",
+              "successText": "Understood",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "da1ddbd7-4fa9-419d-94c6-bac2f425e457"
+            }
+          }
+        ],
+        "index": 17,
+        "logId": "48b72872-4143-4c84-95be-79d963205dd9",
+        "fallbackLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b"
+      }
+    ],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "ExtraOps",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "AwayTeam",
+                "TitleSource": "Noctis",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "H. Richmond",
+                "PlacardDescription": "Extravehicular Operations",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 5
+              },
+              "entryId": "f58c394a-bb69-4bb5-b897-bffbb20c5f0b"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Doctor",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "AwayTeam",
+                "TitleSource": "Noctis",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "A. Yu",
+                "PlacardDescription": "Medical Officer",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 4
+              },
+              "entryId": "9af6f5f7-ab10-4f3d-b088-5470bc061d5b"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "bustId": "ExtraOps",
+              "bustEvent": "Focus",
+              "entryId": "2070f5eb-b805-4e93-918c-60d71fd03b34"
+            },
+            "index": 2
+          }
+        ],
+        "index": 3,
+        "logId": "82d70227-c6ac-438a-88b9-4e805b24db4f",
+        "fallbackLogId": "30c763a1-ede6-4433-ac09-4c0d4e685be3"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Doctor",
+              "bustEvent": "Focus",
+              "entryId": "116d0876-43a8-49b6-9568-355d50f073cd"
+            }
+          }
+        ],
+        "index": 9,
+        "logId": "b7e8b8ef-9de0-415a-bb7e-e9c977c5d209",
+        "fallbackLogId": "deae3d28-1bf7-450d-aaa1-e6edf4871a71"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The equipment onboard this ship is primitive, but highly specialized. Life support is on standby, wired to a single timer. On closer inspection we noticed the timer was busted, halted with 50 years left...",
+              "entryId": "58c64e8a-c13a-4481-9926-aa5dd0b567be"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What about the crew?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage",
+                "MessageOverride": "What about the crew?"
+              },
+              "entryId": "8428503d-cdc5-45f7-9760-e30abab90a5b"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I think we've found the crew...",
+              "entryId": "09e3c46e-5e86-497f-a522-2dd17151dbca"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "9e329b07-909a-4b78-a321-de608faeb6a4"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "There are several hundred human sized flasks, each with a crew member’s name, chilled to 77 K with liquid nitrogen. The flasks do a good job of blocking our x-ray scans, so I had Dr. Yu run a sonogram on one. Sure enough, there’s people in them.",
+              "entryId": "42e8ddd8-2423-40d2-92a4-9cb808264d94"
+            },
+            "index": 4
+          }
+        ],
+        "index": 4,
+        "logId": "30c763a1-ede6-4433-ac09-4c0d4e685be3",
+        "fallbackLogId": "2d6a0e0c-ba7b-4a62-8d7f-a12e8bae71b0"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Are they... alive?",
+              "entryId": "e429c796-f31d-41bb-a6f7-350332d4ab38"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Dr. Yu found a prep room for the preservation procedure, apparently these people purposefully entombed themselves, alive, in these flasks.",
+              "entryId": "3f436f82-6941-41ec-a9f9-33b6ed551b4d"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "586832c5-2994-4ec8-8880-33c384cb5c50"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "According to their diagnostic manuals, they believed it was possible to revive themselves at the end of their ark’s journey. The doc has been able to decipher the controls on each flask... we have the ability to cut off the flow of liquid nitrogen and run a “thaw” cycle.",
+              "entryId": "78888ed8-cf7a-4740-92e3-136ed588e23d"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're not sure...",
+              "entryId": "5b4434ae-be9b-4e60-986f-30e85bfe0807"
+            },
+            "index": 1
+          }
+        ],
+        "index": 6,
+        "logId": "290f79ef-5995-49a8-80de-bf20539717c0",
+        "fallbackLogId": "65b6016f-d59b-48a3-9a65-bea7aee8a37a"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Thaw a crew member.",
+              "entryId": "bc0adcf8-f649-41c4-86b9-1d723742d65a"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'll let Dr. Yu know.",
+              "entryId": "a0f19512-8805-4329-b423-08577fef7bd2"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< Check in with Dr. Yu >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "e4040f62-b44a-4d76-885f-35dbf8b936af"
+            },
+            "index": 2
+          }
+        ],
+        "index": 8,
+        "logId": "df399d6e-e9b0-4575-b3b9-d3364ca3e0ba",
+        "fallbackLogId": "b7e8b8ef-9de0-415a-bb7e-e9c977c5d209"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We’ve run the thaw cycle on a senior officer’s flask, it’s not pretty...",
+              "entryId": "6c30bfec-1ebd-47b4-982b-efea9fd7609a"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "a8a399b2-3fdb-47ce-826e-b1acbd6ab09d"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I’ve never seen anything like it, the officer’s body came out of the thaw cycle looking like cooked meat.",
+              "entryId": "861a78c8-cb66-42bb-a71d-61cbb9f00611"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The smell alone… dear god...",
+              "entryId": "3488b8b7-d764-4c6d-8821-2c83f82c4afd"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I could barely stand to be in the room with it...",
+              "entryId": "51936d35-06b3-4354-8375-de5276d8aa14"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What?",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Doctor, please, what happened?"
+              },
+              "entryId": "93c82ffd-e951-4910-b759-e261bc71a045"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "A malfunction?",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Was it a malfunction in the thaw cycle?"
+              },
+              "entryId": "e38d24de-8b1f-4e42-9c85-3aabe5d3d70b"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "No… I believe it’s a more subtle flaw with the entire concept.",
+              "entryId": "ee8e22a7-7d73-4cb6-b1f0-23d3e206e69f"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "e9df5612-60cf-485e-8bc1-7f27c64827cc"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "When these bodies were preserved, all cellular activity stopped. Sure, this staved off the effects of aging, but it also halted their body’s natural repair process. This left them incapable of repairing any damage from radiation.",
+              "entryId": "54e0245a-6202-4ef0-9e71-073c50820df4"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "12b666a2-ea01-4caf-b246-26d4cd3798b7"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The lead lining of the flasks protected them from environmental radiation, but they neglected the naturally occurring sources in their own body. Radioactive isotopes like Carbon-14 and Potassium-40 slowly cooked them, all while they lied dormant in these flasks for centuries. ",
+              "entryId": "08c1689a-47fb-43d1-9808-a17fac7f29d8"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Is there anything we can do for them?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "a720ed24-10c2-4fa0-90d6-2f52dc0453da"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm afraid not, they've been dead a long time now...",
+              "entryId": "9cb14224-2817-441f-b7ab-f36684cddef5"
+            },
+            "index": 13
+          }
+        ],
+        "index": 10,
+        "logId": "deae3d28-1bf7-450d-aaa1-e6edf4871a71",
+        "fallbackLogId": "86a1f327-92fe-45ae-817c-2662d2694ef0"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Agreed, it's time we moved on.",
+              "entryId": "2908365b-54d4-4902-a50a-137d026a0d6c"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Transmission >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "f13e0148-91a1-4283-8e67-cc9fd5bb0e7d"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "We've disturbed them enough.",
+              "entryId": "541d0260-1aec-4d94-a65a-d1f7c5d11206"
+            }
+          }
+        ],
+        "index": 12,
+        "logId": "c0065482-0578-47e6-84f5-0454ecd975ee",
+        "fallbackLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "We can't ignore the opportunity to salvage their ship.",
+              "entryId": "89440b4d-e998-4d34-a49f-4a2c65a0b05d"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Transmission >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "7a179025-a723-4587-be5a-35d13a040c10"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Feels like grave robbing, but I understand.",
+              "entryId": "6a1423a4-1ca0-4d9b-9953-50d2693f652c"
+            },
+            "index": 1
+          }
+        ],
+        "index": 13,
+        "logId": "dd5f930d-395d-4e1d-be30-54f103283d92",
+        "fallbackLogId": "0f76d738-55eb-49d2-84bc-c8b39a2bbb09"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Let's see what we can salvage.",
+              "entryId": "7b59297f-50df-4b3d-839a-3817659722f3"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It's your call...",
+              "entryId": "b81ddac9-38f8-408d-8f2b-e2e30942d6af"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Transmission >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "5bd0d5b4-6f44-4bf2-9dbe-e0fcdcbb4e82"
+            },
+            "index": 2
+          }
+        ],
+        "index": 15,
+        "logId": "37760955-899c-4072-b23d-080a2cee11c5",
+        "fallbackLogId": "0f76d738-55eb-49d2-84bc-c8b39a2bbb09"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We shouldn't disturb them.",
+              "entryId": "b0ac149f-19af-4dbf-8f2a-758851b7b7a4"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Agreed, this place gives me the creeps.",
+              "entryId": "c4ce0a32-f8fd-4faa-82f6-98dae53d9499"
+            },
+            "index": 1
+          }
+        ],
+        "index": 16,
+        "logId": "d17db3c4-2c36-4ad0-a4cf-57097c31eded",
+        "fallbackLogId": "1b2a54b6-9e3a-4f04-9731-0fb579c8854b"
+      }
+    ]
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-04-08T09:36:14.672045-07:00",
+  "modified": "2019-04-08T09:36:14.672045-07:00",
+  "id": "noctis",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

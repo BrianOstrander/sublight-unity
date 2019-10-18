@@ -7,7 +7,7 @@ namespace LunraGames.SubLight
 {
 	public abstract class ModelMediatorDependentEditorWindow : EditorWindow
 	{
-		protected readonly string KeyPrefix;
+		public readonly string KeyPrefix;
 
 		protected Action Enable = ActionExtensions.Empty;
 		protected Action Disable = ActionExtensions.Empty;
@@ -18,19 +18,7 @@ namespace LunraGames.SubLight
 
 		DateTime? lastEditorUpdate;
 
-		EditorModelMediator editorSaveLoadService;
-		protected IModelMediator SaveLoadService
-		{
-			get
-			{
-				if (editorSaveLoadService == null)
-				{
-					editorSaveLoadService = new EditorModelMediator(true);
-					editorSaveLoadService.Initialize(BuildPreferences.Instance.Info, OnSaveLoadInitialized);
-				}
-				return editorSaveLoadService;
-			}
-		}
+		protected IModelMediator SaveLoadService => EditorModelMediator.Instance;
 
 		public ModelMediatorDependentEditorWindow(string keyPrefix)
 		{
@@ -64,12 +52,6 @@ namespace LunraGames.SubLight
 		void OnInspectorUpdate()
 		{
 			InspectorUpdate();
-		}
-
-		void OnSaveLoadInitialized(RequestStatus status)
-		{
-			if (status == RequestStatus.Success) return;
-			Debug.LogError("Editor time save load service returned: " + status);
 		}
 		#endregion
 	}

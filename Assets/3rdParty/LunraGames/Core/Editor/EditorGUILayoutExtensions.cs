@@ -76,7 +76,7 @@ namespace LunraGamesEditor
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
-			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			if (!EnumsEqual(value, default)) defaultValueColor = null;
 			PushColorValidation(defaultValueColor);
 			var result = HelpfulEnumPopup(
 				content,
@@ -96,7 +96,7 @@ namespace LunraGamesEditor
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
-			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			if (!EnumsEqual(value, default)) defaultValueColor = null;
 			PushColorValidation(defaultValueColor);
 			var result = HelpfulEnumPopupValue(
 				primaryReplacement,
@@ -115,7 +115,7 @@ namespace LunraGamesEditor
 			params GUILayoutOption[] guiOptions
 		) where T : struct, IConvertible
 		{
-			if (Enum.GetName(value.GetType(), value) != Enum.GetName(value.GetType(), default(T))) defaultValueColor = null;
+			if (!EnumsEqual(value, default)) defaultValueColor = null;
 			PushColorValidation(defaultValueColor);
 			var result = HelpfulEnumPopupValue(
 				primaryReplacement,
@@ -415,12 +415,32 @@ namespace LunraGamesEditor
 			return clicked;
 		}
 
-		public static string[] StringArray(string name, string[] values, string defaultValue = null, Color? color = null)
+		public static string[] StringArray(
+			string name,
+			string[] values,
+			string defaultValue = null,
+			Color? color = null
+		)
+		{
+			return StringArray(
+				new GUIContent(name),
+				values,
+				defaultValue,
+				color
+			);
+		}
+		
+		public static string[] StringArray(
+			GUIContent content,
+			string[] values,
+			string defaultValue = null,
+			Color? color = null
+		)
 		{
 			BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
 				values = StringArrayValue(
-					name,
+					content,
 					values,
 					defaultValue
 				);
@@ -429,15 +449,32 @@ namespace LunraGamesEditor
 			return values;
 		}
 
-		public static string[] StringArrayValue(string name, string[] values, string defaultValue = null)
+		public static string[] StringArrayValue(
+			string name,
+			string[] values,
+			string defaultValue = null
+		)
 		{
-			if (values == null) throw new ArgumentNullException("values");
+			return StringArrayValue(
+				new GUIContent(name),
+				values,
+				defaultValue
+			);
+		}
+		
+		public static string[] StringArrayValue(
+			GUIContent content,
+			string[] values,
+			string defaultValue = null
+		)
+		{
+			if (values == null) throw new ArgumentNullException(nameof(values));
 
 			GUILayout.BeginHorizontal();
 			{
-				GUILayout.Label(name);
-				if (GUILayout.Button("Preappend", GUILayout.Width(90f))) values = values.Prepend(defaultValue).ToArray();
-				if (GUILayout.Button("Append", GUILayout.Width(90f))) values = values.Append(defaultValue).ToArray();
+				GUILayout.Label(content);
+				if (GUILayout.Button("Prepend", EditorStyles.miniButtonLeft, GUILayout.Width(90f))) values = values.Prepend(defaultValue).ToArray();
+				if (GUILayout.Button("Append", EditorStyles.miniButtonRight, GUILayout.Width(90f))) values = values.Append(defaultValue).ToArray();
 			}
 			GUILayout.EndHorizontal();
 
@@ -543,8 +580,16 @@ namespace LunraGamesEditor
 			GUILayout.BeginHorizontal();
 			{
 				GUILayout.Label(content);
-				if (GUILayout.Button("Preappend", GUILayout.Width(90f))) values = values.Prepend(defaultValue).ToArray();
-				if (GUILayout.Button("Append", GUILayout.Width(90f))) values = values.Append(defaultValue).ToArray();
+				if (GUILayout.Button("Prepend", EditorStyles.miniButtonLeft, GUILayout.Width(90f))) values = values.Prepend(defaultValue).ToArray();
+				if (GUILayout.Button("Append", EditorStyles.miniButtonMid, GUILayout.Width(90f))) values = values.Append(defaultValue).ToArray();
+				var allPossibleOptions = (options ?? Enum.GetValues(typeof(T)).Cast<T>()).ExceptOne(defaultValue).ToArray();
+				var missingValues = allPossibleOptions.Where(v => !values.Contains(v));
+				
+				PushEnabled(missingValues.Any());
+				{
+					if (GUILayout.Button("All", EditorStyles.miniButtonRight, GUILayout.Width(90f))) values = allPossibleOptions;
+				}
+				PopEnabled();
 			}
 			GUILayout.EndHorizontal();
 
@@ -560,11 +605,22 @@ namespace LunraGamesEditor
 					{
 						GUILayout.Space(16f);
 						GUILayout.Label("[ " + i + " ]", GUILayout.Width(32f));
-						values[i] = HelpfulEnumPopupValue(
-							primaryReplacemnt,
-							values[i],
-							options
-						);
+						
+						Color? validationColor = null;
+
+						if (EnumsEqual(values[i], default)) validationColor = Color.red;
+						else if (1 < values.Count(v => Convert.ToInt32(v) == Convert.ToInt32(values[i]))) validationColor = Color.yellow;
+
+						PushColorValidation(validationColor);
+						{
+							values[i] = HelpfulEnumPopupValue(
+								primaryReplacemnt,
+								values[i],
+								options
+							);
+						}
+						PopColorValidation();
+						
 						if (XButton()) deletedIndex = i;
 					}
 					GUILayout.EndHorizontal();
@@ -769,5 +825,17 @@ namespace LunraGamesEditor
 		{
 			GUILayout.EndHorizontal();
 		}
+		
+		#region Shared
+
+		static bool EnumsEqual<T>(
+			T value0,
+			T value1
+		) where T : struct, IConvertible
+		{
+			// TODO: Should this use integer values instead?
+			return Enum.GetName(value0.GetType(), value0) == Enum.GetName(value1.GetType(), value1);
+		}
+		#endregion
 	}
 }

@@ -17,23 +17,17 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] bool isInDevelopment;
 		[JsonIgnore] public readonly ListenerProperty<bool> IsInDevelopment;
 
-		[JsonProperty] string name;
-		[JsonIgnore] public readonly ListenerProperty<string> Name;
-
 		[JsonProperty] int orderWeight;
 		[JsonIgnore] public readonly ListenerProperty<int> OrderWeight;
 
-		[JsonProperty] string title;
-		[JsonIgnore] public readonly ListenerProperty<string> Title;
+		[JsonProperty] string category;
+		[JsonIgnore] public readonly ListenerProperty<string> Category;
 
-		[JsonProperty] string subTitle;
-		[JsonIgnore] public readonly ListenerProperty<string> SubTitle;
+		[JsonProperty] string name;
+		[JsonIgnore] public readonly ListenerProperty<string> Name;
 
 		[JsonProperty] string description;
 		[JsonIgnore] public readonly ListenerProperty<string> Description;
-
-		[JsonProperty] string gamemodeKey;
-		[JsonIgnore] public readonly ListenerProperty<string> GamemodeKey;
 
 		[JsonIgnore] public Texture2D Icon { get { return GetTexture(TextureNames.Icon); } }
 
@@ -44,12 +38,10 @@ namespace LunraGames.SubLight.Models
 			SiblingBehaviour = SiblingBehaviours.All;
 
 			IsInDevelopment = new ListenerProperty<bool>(value => isInDevelopment = value, () => isInDevelopment);
-			Name = new ListenerProperty<string>(value => name = value, () => name);
 			OrderWeight = new ListenerProperty<int>(value => orderWeight = value, () => orderWeight);
-			Title = new ListenerProperty<string>(value => title = value, () => title);
-			SubTitle = new ListenerProperty<string>(value => subTitle = value, () => subTitle);
+			Category = new ListenerProperty<string>(value => category = value, () => category);
+			Name = new ListenerProperty<string>(value => name = value, () => name);
 			Description = new ListenerProperty<string>(value => description = value, () => description);
-			GamemodeKey = new ListenerProperty<string>(value => gamemodeKey = value, () => gamemodeKey);
 		}
 
 		protected override void OnPrepareTexture(string name, Texture2D texture)

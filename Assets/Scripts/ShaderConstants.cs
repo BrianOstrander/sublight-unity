@@ -14,6 +14,17 @@ namespace LunraGames.SubLight
 			/// Intensity of the wind.
 			/// </summary>
 			public const string WindIntensity = "_WindIntensity";
+
+			/// <summary>
+			/// A value constantly looping from 0.0 to 1.0, speeding up or
+			/// slowing down depending on what the transit state is.
+			/// </summary>
+			public const string TransitTimeNormal = "_TransitTimeNormal";
+			/// <summary>
+			/// A value constantly counting up at the rate the game is playing,
+			/// and accounting for the time increase in transit.
+			/// </summary>
+			public const string TransitTimeElapsed = "_TransitTimeElapsed";
 		}
 
 		public static class Cursor

@@ -16,8 +16,8 @@ namespace LunraGames.SubLight
 		GlobalKeyValuesModel globals;
 		PreferencesKeyValuesModel preferences;
 
-		public KeyValueListModel GlobalKeyValues { get { return globals.KeyValues; } }
-		public KeyValueListModel PreferencesKeyValues { get { return preferences.KeyValues; } }
+		public KeyValueListModel GlobalKeyValues => globals.KeyValues;
+		public KeyValueListModel PreferencesKeyValues => preferences.KeyValues;
 		bool currentlySaving;
 
 		public MetaKeyValueService(
@@ -26,9 +26,9 @@ namespace LunraGames.SubLight
 			KeyValueService keyValues
 		)
 		{
-			if (callbacks == null) throw new ArgumentNullException("callbacks");
-			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
-			if (keyValues == null) throw new ArgumentNullException("keyValues");
+			if (callbacks == null) throw new ArgumentNullException(nameof(callbacks));
+			if (modelMediator == null) throw new ArgumentNullException(nameof(modelMediator));
+			if (keyValues == null) throw new ArgumentNullException(nameof(keyValues));
 
 			this.callbacks = callbacks;
 			this.modelMediator = modelMediator;
@@ -44,8 +44,8 @@ namespace LunraGames.SubLight
 
 		void OnInitializeGlobals(Action<RequestStatus> done)
 		{
-			modelMediator.List<GlobalKeyValuesModel>(
-				result => OnInitializeList<GlobalKeyValuesModel>(
+			modelMediator.Index<GlobalKeyValuesModel>(
+				result => OnInitializeIndex<GlobalKeyValuesModel>(
 					result,
 					globalResult => OnInitializePreferences(globalResult, done)
 				)
@@ -61,15 +61,15 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			modelMediator.List<PreferencesKeyValuesModel>(
-				listResult => OnInitializeList<PreferencesKeyValuesModel>(
+			modelMediator.Index<PreferencesKeyValuesModel>(
+				listResult => OnInitializeIndex<PreferencesKeyValuesModel>(
 					listResult,
 					preferencesResult => OnInitializeKeyValues(preferencesResult, done)
 				)
 			);
 		}
 
-		void OnInitializeList<T>(SaveLoadArrayRequest<SaveModel> result, Action<RequestStatus> done)
+		void OnInitializeIndex<T>(ModelIndexResult<SaveModel> result, Action<RequestStatus> done)
 			where T : SaveModel, new()
 		{
 			if (result.Status != RequestStatus.Success)
@@ -83,8 +83,8 @@ namespace LunraGames.SubLight
 			{
 				if (DevPrefs.LoggingInitialization) Debug.Log("No existing " + typeof(T).Name + ", generating defaults");
 				modelMediator.Save(
-					modelMediator.Create<T>(),
-					saveResult => OnInitializedSaved(saveResult, done)
+					modelMediator.Create<T>(App.M.CreateUniqueId()),
+					saveResult => OnInitializeSaved(saveResult, done)
 				);
 			}
 			else
@@ -94,8 +94,8 @@ namespace LunraGames.SubLight
 				{
 					if (DevPrefs.LoggingInitialization) Debug.Log("No supported " + typeof(T).Name + ", generating defaults");
 					modelMediator.Save(
-						modelMediator.Create<T>(),
-						saveResult => OnInitializedSaved(saveResult, done)
+						modelMediator.Create<T>(App.M.CreateUniqueId()),
+						saveResult => OnInitializeSaved(saveResult, done)
 					);
 				}
 				else
@@ -109,7 +109,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnInitializeLoad<T>(SaveLoadRequest<T> result, Action<RequestStatus> done)
+		void OnInitializeLoad<T>(ModelResult<T> result, Action<RequestStatus> done)
 			where T : SaveModel, new()
 		{
 			if (result.Status != RequestStatus.Success)
@@ -122,11 +122,11 @@ namespace LunraGames.SubLight
 			if (DevPrefs.LoggingInitialization) Debug.Log("Loaded " + typeof(T).Name + " from " + result.Model.Path);
 			modelMediator.Save(
 				result.TypedModel,
-				saveResult => OnInitializedSaved(saveResult, done)
+				saveResult => OnInitializeSaved(saveResult, done)
 			);
 		}
 
-		void OnInitializedSaved<T>(SaveLoadRequest<T> result, Action<RequestStatus> done)
+		void OnInitializeSaved<T>(ModelResult<T> result, Action<RequestStatus> done)
 			where T : SaveModel, new()
 		{
 			if (result.Status != RequestStatus.Success)
@@ -237,7 +237,7 @@ namespace LunraGames.SubLight
 			modelMediator.Save(globals, globalsResult => OnTrySaveGlobals(globalsResult, done));
 		}
 
-		void OnTrySaveGlobals(SaveLoadRequest<GlobalKeyValuesModel> result, Action<RequestResult> done)
+		void OnTrySaveGlobals(ModelResult<GlobalKeyValuesModel> result, Action<RequestResult> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -252,7 +252,7 @@ namespace LunraGames.SubLight
 			modelMediator.Save(preferences, preferencesResult => OnTrySavePreferences(preferencesResult, done));
 		}
 
-		void OnTrySavePreferences(SaveLoadRequest<PreferencesKeyValuesModel> result, Action<RequestResult> done)
+		void OnTrySavePreferences(ModelResult<PreferencesKeyValuesModel> result, Action<RequestResult> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{

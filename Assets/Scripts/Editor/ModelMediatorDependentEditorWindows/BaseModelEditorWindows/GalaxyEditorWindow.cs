@@ -11,7 +11,7 @@ namespace LunraGames.SubLight
 {
 	public partial class GalaxyEditorWindow : BaseModelEditorWindow<GalaxyEditorWindow, GalaxyInfoModel>
 	{
-		static class PreviewConstants
+		public static class PreviewConstants
 		{
 			public static string[] Names =
 			{
@@ -51,11 +51,14 @@ namespace LunraGames.SubLight
 
 		public GalaxyEditorWindow() : base("LG_SL_GalaxyEditor_", "Galaxy")
 		{
-			GeneralConstruct();
-			TargetsConstruct();
-			LabelsConstruct();
-			SpecifiedSectorsConstruct();
-			GenerationConstruct();
+			RegisterToolbar(new GalaxyGeneralEditorTab(this));
+			RegisterToolbar(new GalaxyTargetsEditorTab(this));
+
+			var labelTab = new GalaxyLabelsEditorTab(this);
+			
+			RegisterToolbar(labelTab);
+			RegisterToolbar(new GalaxySpecifiedSectorsEditorTab(this, labelTab));
+			RegisterToolbar(new GalaxyGenerationEditorTab(this));
 		}
 
 		#region Model Overrides
@@ -74,14 +77,14 @@ namespace LunraGames.SubLight
 			return new Vector3(previewOffset.x / preview.width, 0f, 1f - (previewOffset.y / preview.height));
 		}
 
-		Vector2 NormalToWindow(Vector3 normalPosition, Rect preview, out bool inPreview)
+		public Vector2 NormalToWindow(Vector3 normalPosition, Rect preview, out bool inPreview)
 		{
 			var result = preview.min + new Vector2(preview.width * normalPosition.x, preview.height * (1f - normalPosition.z));
 			inPreview = preview.Contains(result);
 			return new Vector2(Mathf.Clamp(result.x, preview.xMin, preview.xMax), Mathf.Clamp(result.y, preview.yMin, preview.yMax));
 		}
 
-		Rect CenteredScreen(Vector2 screenPosition, Vector2 size)
+		public Rect CenteredScreen(Vector2 screenPosition, Vector2 size)
 		{
 			return new Rect(screenPosition - (size * 0.5f), size);
 		}
@@ -135,15 +138,7 @@ namespace LunraGames.SubLight
 			return lastPreviewRect;
 		}
 
-		void SelectLabel(GalaxyLabelModel label, LabelStates state = LabelStates.Idle)
-		{
-			labelsSelectedLabel = label;
-			labelsSelectedLabelId.Value = labelsSelectedLabel == null ? null : labelsSelectedLabel.LabelId.Value;
-			if (state != LabelStates.Unknown) labelsLabelState = state;
-			EditorGUIExtensions.ResetControls();
-		}
-
-		void DrawPreviews(
+		public void DrawPreviews(
 			GalaxyInfoModel model,
 			EditorPrefsInt previewSelected,
 			EditorPrefsInt previewSize,
@@ -201,7 +196,7 @@ namespace LunraGames.SubLight
 			drawOnPreview?.Invoke(displayArea);
 		}
 
-		void DrawGalaxyTargets(GalaxyInfoModel model, Rect displayArea, GUIStyle style)
+		public void DrawGalaxyTargets(GalaxyInfoModel model, Rect displayArea, GUIStyle style)
 		{
 			var galacticOriginInWindow = NormalToWindow(model.GalaxyOriginNormal, displayArea, out var galacticOriginInPreview);
 			var playerStartInWindow = NormalToWindow(model.PlayerBeginNormal, displayArea, out var playerStartInPreview);
@@ -226,7 +221,7 @@ namespace LunraGames.SubLight
 			EditorGUILayoutExtensions.PopColor();
 		}
 
-		bool HorizontalPreviewSupported(float ratio = 1.25f)
+		public bool HorizontalPreviewSupported(float ratio = 1.25f)
 		{
 			return ratio < (position.width / position.height);
 		}

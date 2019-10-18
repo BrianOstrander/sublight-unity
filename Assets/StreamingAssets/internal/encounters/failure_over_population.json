@@ -1,0 +1,93 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "4eea7d41-2f91-425e-a639-c8de2558bb12",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [
+      {
+        "operation": "LessThanOrEquals",
+        "filterId": "aeb4cd6f-2079-4025-a315-52f605abc1ea",
+        "group": "All",
+        "Input0": {
+          "AddressId": "132e62a1-17c1-4f18-b691-229b534a039e",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transits_with_over_population_until_failure"
+        },
+        "Input1": {
+          "AddressId": "98e29a46-df04-4e69-92d8-20212d583803",
+          "Source": "LocalValue"
+        }
+      }
+    ],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "GameComplete",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "condition": 20,
+                  "icon_override": 1020
+                },
+                "strings": {
+                  "title": "Life Support Failure",
+                  "message": "The ark's systems couldn't handle the strain of such a large population...",
+                  "header": "The ark's systems couldn't handle the strain of such a large population...",
+                  "body": ""
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "c6b1e6a7-26de-41a9-be0d-f2cbd5279052"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "eac33ea2-ce17-4261-b355-62f20ea236c2"
+      },
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "4eea7d41-2f91-425e-a639-c8de2558bb12",
+        "name": "< End Encounter >"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "ignore": true,
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-02-20T08:24:16.376915-08:00",
+  "modified": "2019-02-20T08:24:16.376915-08:00",
+  "id": "failure_over_population",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

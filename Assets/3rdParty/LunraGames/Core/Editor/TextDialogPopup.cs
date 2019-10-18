@@ -16,7 +16,7 @@ namespace LunraGamesEditor
 			}
 		}
 
-		static class Styles
+		public static class Styles
 		{
 			static GUIStyle _DescriptionLabel;
 

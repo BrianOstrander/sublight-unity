@@ -51,7 +51,6 @@ namespace LunraGames.SubLight
 
 		static class EncounterFields
 		{
-			public const string Name = "encounter_name";
 			public const string Id = "encounter_id";
 		}
 
@@ -204,8 +203,7 @@ namespace LunraGames.SubLight
 			{
 				{ GameFields.TotalTransits, gameModel.TransitHistory.Count },
 
-				{ EncounterFields.Id, encounter.Id.Value },
-				{ EncounterFields.Name, encounter.Name.Value }
+				{ EncounterFields.Id, encounter.Id.Value }
 			};
 
 			AnalyticsEvent.Custom(
@@ -224,8 +222,7 @@ namespace LunraGames.SubLight
 				"encounter_end",
 				new Dictionary<string, object>
 				{
-					{ EncounterFields.Id, encounter.Id.Value },
-					{ EncounterFields.Name, encounter.Name.Value }
+					{ EncounterFields.Id, encounter.Id.Value }
 				}
 			);
 		}

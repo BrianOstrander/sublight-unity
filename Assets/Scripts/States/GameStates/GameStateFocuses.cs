@@ -387,11 +387,17 @@ namespace LunraGames.SubLight
 					}
 				}
 
+				new SystemCurveIdlePresenter(
+					payload.Game
+				);
+
 				InitializeShipPresenters(state, done);
 			}
 
 			static void InitializeShipPresenters(GameState state, Action done)
 			{
+				new ModuleBrowserPresenter(state.Payload.Game);
+				
 				InitializeCommunicationPresenters(state, done);
 			}
 

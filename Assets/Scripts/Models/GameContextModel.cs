@@ -16,7 +16,6 @@ namespace LunraGames.SubLight.Models
 #pragma warning disable CS0414 // The private field is assigned but its value is never used.
 		GameModel model;
 #pragma warning restore CS0414 // The private field is assigned but its value is never used.
-		ShipModel ship;
 		
 		CameraTransformRequest cameraTransformAbsolute = CameraTransformRequest.Default;
 		readonly ListenerProperty<CameraTransformRequest> cameraTransformAbsoluteListener;
@@ -115,6 +114,23 @@ namespace LunraGames.SubLight.Models
 		int transitHistoryLineCount;
 		public readonly ListenerProperty<int> TransitHistoryLineCount;
 
+		float transitTimeNormal;
+		/// <summary>
+		/// The fraction component of TransitTimeElapsed.
+		/// </summary>
+		public readonly ListenerProperty<float> TransitTimeNormal;
+
+		float transitTimeElapsed;
+		/// <summary>
+		/// The player's game speeds up when in transit, this keeps track of the
+		/// total elapsed time.
+		/// </summary>
+		/// <remarks>
+		/// No idea what happens when this rolls over, so don't use it for
+		/// mission critical stuff, lol.
+		/// </remarks>
+		public readonly ListenerProperty<float> TransitTimeElapsed;
+
 		#region Read Only Listeners
 		UniverseScaleModel activeScale;
 		ListenerProperty<UniverseScaleModel> activeScaleListener;
@@ -156,13 +172,13 @@ namespace LunraGames.SubLight.Models
 		public Action<SystemModel> NavigationSelectionOutOfRange = ActionExtensions.GetEmpty<SystemModel>();
   		#endregion
 
-		public GameContextModel(
-			GameModel model,
-			ShipModel ship
-		)
+        #region Services
+        public IModuleService ModuleService { get; set; }
+        #endregion
+        
+		public GameContextModel(GameModel model)
 		{
 			this.model = model;
-			this.ship = ship;
 
 			CameraTransformAbsolute = new ReadonlyProperty<CameraTransformRequest>(
 				value => cameraTransformAbsolute = value,
@@ -217,6 +233,9 @@ namespace LunraGames.SubLight.Models
 
 			TransitHistoryLineDistance = new ListenerProperty<float>(value => transitHistoryLineDistance = value, () => transitHistoryLineDistance);
 			TransitHistoryLineCount = new ListenerProperty<int>(value => transitHistoryLineCount = value, () => transitHistoryLineCount);
+
+			TransitTimeNormal = new ListenerProperty<float>(value => transitTimeNormal = value, () => transitTimeNormal);
+			TransitTimeElapsed = new ListenerProperty<float>(value => transitTimeElapsed = value, () => transitTimeElapsed);
 		}
 
 		#region Events
@@ -282,7 +301,7 @@ namespace LunraGames.SubLight.Models
 		public void SetCurrentSystem(SystemModel system)
 		{
 			currentSystemListener.Value = system;
-			ship.SystemIndex.Value = system == null ? -1 : system.Index.Value;
+			model.Ship.SystemIndex.Value = system == null ? -1 : system.Index.Value;
 
 			if (CelestialSystemKeyValueListener != null)
 			{

@@ -82,6 +82,9 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Context.TransitState.Changed += OnTransitState;
 
+			Payload.Game.Context.TransitTimeNormal.Changed += OnTransitTimeNormal;
+			Payload.Game.Context.TransitTimeElapsed.Changed += OnTransitTimeElapsed;
+
 			done();
 		}
 
@@ -206,6 +209,9 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Context.TransitState.Changed -= OnTransitState;
 
+			Payload.Game.Context.TransitTimeNormal.Changed -= OnTransitTimeNormal;
+			Payload.Game.Context.TransitTimeElapsed.Changed -= OnTransitTimeElapsed;
+
 			foreach (var scaleTransformProperty in EnumExtensions.GetValues(UniverseScales.Unknown).Select(s => Payload.Game.Context.GetScale(s).Transform))
 			{
 				scaleTransformProperty.Changed -= OnScaleTransform;
@@ -241,6 +247,9 @@ namespace LunraGames.SubLight
 		#region Events
 		void OnUpdate(float delta)
 		{
+			Payload.Game.Context.TransitTimeElapsed.Value += delta * (1f + Payload.Game.Context.TransitState.Value.RelativeTimeScalar);
+			Payload.Game.Context.TransitTimeNormal.Value = Payload.Game.Context.TransitTimeElapsed.Value % 1f;
+
 			if (Payload.Game.Context.ElapsedTimeBlockers.None) Payload.Game.ElapsedTime.Value += TimeSpan.FromSeconds(delta);
 		}
 
@@ -485,6 +494,16 @@ namespace LunraGames.SubLight
 			{
 				case TransitState.States.Complete: OnTransitComplete(transitState); break;
 			}
+		}
+
+		void OnTransitTimeNormal(float transitTimeNormal)
+		{
+			Shader.SetGlobalFloat(ShaderConstants.Globals.TransitTimeNormal, transitTimeNormal);
+		}
+
+		void OnTransitTimeElapsed(float transitTimeElapsed)
+		{
+			Shader.SetGlobalFloat(ShaderConstants.Globals.TransitTimeElapsed, transitTimeElapsed);
 		}
 
 		void OnTransitComplete(TransitState transitState)
@@ -900,7 +919,7 @@ namespace LunraGames.SubLight
 						Payload.Game.SaveDetails.Value.IsCompleted ? MetaKeyConstants.Values.True : MetaKeyConstants.Values.False
 					);
 
-					App.M.Save(Payload.Game, result => OnSaveDone(result, request));
+					App.M.Save(Payload.Game, result => OnSaveRequestSaved(result, request));
 					break;
 				case SaveRequest.States.Complete:
 					if (request.Done != null) request.Done(request);
@@ -911,7 +930,7 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnSaveDone(SaveLoadRequest<GameModel> result, SaveRequest request)
+		void OnSaveRequestSaved(ModelResult<GameModel> result, SaveRequest request)
 		{
 			if (result.Status != RequestStatus.Success)
 			{

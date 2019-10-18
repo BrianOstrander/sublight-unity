@@ -23,11 +23,11 @@ namespace LunraGames.SubLight.Models
 		bool supportedVersion;
 		string path;
 		List<string> specifiedSiblings = new List<string>();
+		// TODO: Can I now have this just be a property with a default value set (using new C# 7 features?)
 		Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
 		[JsonProperty] bool ignore;
 		[JsonProperty] int version;
-		[JsonProperty] string meta;
 		[JsonProperty] Dictionary<string, string> metaKeyValues = new Dictionary<string, string>();
 		[JsonProperty] DateTime created;
 		[JsonProperty] DateTime modified;
@@ -67,11 +67,6 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		[JsonIgnore]
 		public readonly ListenerProperty<int> Version;
-		/// <summary>
-		/// Typically used to store the name or some identifying data.
-		/// </summary>
-		[JsonIgnore]
-		public readonly ListenerProperty<string> Meta;
 		/// <summary>
 		/// More identifying data.
 		/// </summary>
@@ -169,7 +164,6 @@ namespace LunraGames.SubLight.Models
 			Path = new ListenerProperty<string>(value => path = value, () => path);
 			Ignore = new ListenerProperty<bool>(value => ignore = value, () => ignore);
 			Version = new ListenerProperty<int>(value => version = value, () => version);
-			Meta = new ListenerProperty<string>(value => meta = value, () => meta);
 			MetaKeyValues = new ListenerProperty<Dictionary<string, string>>(OnSetKeyValues, OnGetMetaKeyValues);
 			Created = new ListenerProperty<DateTime>(value => created = value, () => created);
 			Modified = new ListenerProperty<DateTime>(value => modified = value, () => modified);

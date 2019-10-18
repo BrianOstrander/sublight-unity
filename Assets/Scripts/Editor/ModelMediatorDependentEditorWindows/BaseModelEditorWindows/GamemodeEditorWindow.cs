@@ -1,6 +1,4 @@
-﻿using System;
-
-using UnityEditor;
+﻿using UnityEditor;
 
 using LunraGames.SubLight.Models;
 
@@ -13,19 +11,10 @@ namespace LunraGames.SubLight
 
 		public GamemodeEditorWindow() : base("LG_SL_GamemodeEditor_", "Gamemode")
 		{
-			GeneralConstruct();
+			RegisterToolbar(new GamemodeGeneralEditorTab(this));
 		}
 
 		#region Model Overrides
-		protected override GamemodeInfoModel CreateModel(string name)
-		{
-			var model = base.CreateModel(name);
-
-			// Any overrides are here...
-
-			return model;
-		}
-
 		protected override void AssignModelName(GamemodeInfoModel model, string name)
 		{
 			model.Name.Value = name;

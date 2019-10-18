@@ -111,10 +111,10 @@ namespace LunraGames.SubLight
 
 		void InitializeLoadGalaxy(Action done)
 		{
-			App.M.List<GalaxyPreviewModel>(result => OnListInitializeLoadGalaxy(result, done));
+			App.M.Index<GalaxyPreviewModel>(result => OnInitializeLoadGalaxyIndex(result, done));
 		}
 
-		void OnListInitializeLoadGalaxy(SaveLoadArrayRequest<SaveModel> result, Action done)
+		void OnInitializeLoadGalaxyIndex(ModelIndexResult<SaveModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -133,10 +133,10 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			App.M.Load<GalaxyPreviewModel>(defaultGalaxy, loadResult => OnLoadInitializeLoadGalaxy(loadResult, done));
+			App.M.Load<GalaxyPreviewModel>(defaultGalaxy, loadResult => OnInitializeLoadGalaxyLoad(loadResult, done));
 		}
 
-		void OnLoadInitializeLoadGalaxy(SaveLoadRequest<GalaxyPreviewModel> result, Action done)
+		void OnInitializeLoadGalaxyLoad(ModelResult<GalaxyPreviewModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -152,10 +152,10 @@ namespace LunraGames.SubLight
 
 		void InitializeGamemodes(Action done)
 		{
-			App.M.List<GamemodeInfoModel>(result => OnListInitializeGamemodes(result, done));
+			App.M.Index<GamemodeInfoModel>(result => OnInitializeGamemodesIndex(result, done));
 		}
 
-		void OnListInitializeGamemodes(SaveLoadArrayRequest<SaveModel> result, Action done)
+		void OnInitializeGamemodesIndex(ModelIndexResult<SaveModel> result, Action done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -164,15 +164,15 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			OnLoadInitializeGamemodes(
+			OnInitializeGamemodesLoad(
 				null,
 				result.Models.ToList(),
 				done
 			);
 		}
 
-		void OnLoadInitializeGamemodes(
-			SaveLoadRequest<GamemodeInfoModel>? result,
+		void OnInitializeGamemodesLoad(
+			ModelResult<GamemodeInfoModel>? result,
 			List<SaveModel> remaining,
 			Action done
 		)
@@ -197,7 +197,7 @@ namespace LunraGames.SubLight
 			var next = remaining.First();
 			remaining.RemoveAt(0);
 
-			App.M.Load<GamemodeInfoModel>(next, loadResult => OnLoadInitializeGamemodes(loadResult, remaining, done));
+			App.M.Load<GamemodeInfoModel>(next, loadResult => OnInitializeGamemodesLoad(loadResult, remaining, done));
 		}
 
 		void InitializeNewGameBlock(Action done)

@@ -1,0 +1,75 @@
+{
+  "orderWeight": 500,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "ba6f1ac1-6e0d-413d-8395-0e0b2eef8161",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "49f85ce5-9806-4426-a167-c40a7f6eead1",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [],
+        "index": 1,
+        "ending": true,
+        "logId": "ba6f1ac1-6e0d-413d-8395-0e0b2eef8161",
+        "name": "< End Encounter >"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "No Planets Detected",
+              "message": "This system lacks any terrestrial bodies suitable for settlement. If any are detected in future systems, you will be alerted.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "failureLogId": "0874751f-5363-4dd1-8968-3a4a7026017a",
+              "successText": "Understood",
+              "failureText": "Ignore",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "ec9db2b6-f394-4369-914b-7a5d8d1a6a55"
+            }
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "c70519e1-1a1e-4c31-b961-7697cc609a69"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-03-20T11:52:04.907557-07:00",
+  "modified": "2019-03-20T11:52:04.907557-07:00",
+  "id": "no_planets_in_system",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Net.Configuration;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -16,12 +17,6 @@ namespace LunraGames.SubLight
 		where T : BaseModelEditorWindow<T, M>
 		where M : SaveModel, new()
 	{
-		struct ToolbarEntry
-		{
-			public string Name;
-			public Action<M> Callback;
-		}
-
 		class BatchProgress
 		{
 			public enum States
@@ -95,7 +90,7 @@ namespace LunraGames.SubLight
 
 		bool lastIsPlayingOrWillChangePlaymode;
 		int frameDelayRemaining;
-		List<ToolbarEntry> toolbars = new List<ToolbarEntry>();
+		List<ModelEditorTab<T, M>> toolbars = new List<ModelEditorTab<T, M>>();
 
 		// Unknown: Query in progress
 		// Cancel: Qued for Query
@@ -111,7 +106,7 @@ namespace LunraGames.SubLight
 		RequestStatus selectedStatus;
 
 		protected M ModelSelection;
-		protected bool ModelSelectionModified;
+		public bool ModelSelectionModified; // TODO: Eeek should this be public? Tabs need it though...
 
 		BatchProgress batchProgress = BatchProgress.Default;
 
@@ -187,21 +182,113 @@ namespace LunraGames.SubLight
 			AskForSaveIfModifiedBeforeContinuing(
 				() =>
 				{
-					TextDialogPopup.Show(
-						"New " + readableModelName + " Model",
-						value =>
+					EditorModelMediator.Instance.Index<M>(
+						results =>
 						{
-							BeforeLoadSelection();
-							SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
-						},
-						doneText: "Create",
-						description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
+							switch (results.Status)
+							{
+								case RequestStatus.Success:
+									var modelName = string.Empty;
+									var modelId = string.Empty;
+									var modelIdPreview = string.Empty;
+									
+									FlexiblePopupDialog.Show(
+										"New " + readableModelName + " Model",
+										new Vector2(400f, 100f),
+										close => OnNewModelGui(
+											close,
+											ref modelName,
+											ref modelId,
+											ref modelIdPreview,
+											results.Models.Select(m => m.Id.Value).ToArray()
+										)
+									);
+									break;
+								default:
+									Debug.LogError(
+										"Listing models of type "+typeof(M)+" returned status "+results.Status+" and error: "+results.Error
+									);
+									break;
+							}
+							
+						}
 					);
+//					TextDialogPopup.Show(
+//						"New " + readableModelName + " Model",
+//						value =>
+//						{
+//							BeforeLoadSelection();
+//							SaveLoadService.Save(CreateModel(value), OnNewModelSaveDone);
+//						},
+//						doneText: "Create",
+//						description: "Enter a name for this new " + readableModelName + " model. This will also be used for the meta key."
+//					);
 				}
 			);
 		}
 
-		void OnNewModelSaveDone(SaveLoadRequest<M> result)
+		void OnNewModelGui(
+			Action close,
+			ref string modelName,
+			ref string modelId,
+			ref string modelIdPreview,
+			string[] existingModelIds
+		)
+		{
+			GUILayout.Label(
+				"Enter a name for this new " + readableModelName + " model.",
+				TextDialogPopup.Styles.DescriptionLabel
+			);
+
+			var oldModelName = modelName;
+			modelName = GUILayout.TextField(
+				modelName,
+				TextDialogPopup.Styles.TextField,
+				GUILayout.ExpandWidth(true)
+			);
+
+			if (oldModelName != modelName)
+			{
+				modelId = modelName.Replace(' ', '_').ToLower();
+				if (!modelId.Replace("_", "").All(Char.IsLetterOrDigit))
+				{
+					modelIdPreview = "Invalid Id! Must contain only alphanumeric characters.";
+					modelId = null;
+				}
+				else if (existingModelIds.Contains(modelId))
+				{
+					modelIdPreview = "Invalid Id! An existing model with that id exists.";
+					modelId = null;
+				}
+				else modelIdPreview = modelId;
+			}
+			
+			GUILayout.Label(
+				modelIdPreview,
+				TextDialogPopup.Styles.DescriptionLabel
+			);
+
+			GUILayout.FlexibleSpace();
+
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button("Cancel", TextDialogPopup.Styles.Button)) close();
+				EditorGUILayoutExtensions.PushEnabled(!string.IsNullOrEmpty(modelId));
+				{
+					if (GUILayout.Button("Create", TextDialogPopup.Styles.Button))
+					{
+						close();
+						BeforeLoadSelection();
+						SaveLoadService.Save(CreateModel(modelId, modelName), OnNewModelSaved);
+					}
+				}
+				EditorGUILayoutExtensions.PopEnabled();
+			}
+			GUILayout.EndHorizontal();
+		}
+
+		void OnNewModelSaved(ModelResult<M> result)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -223,10 +310,10 @@ namespace LunraGames.SubLight
 		void OnLoadList()
 		{
 			modelListStatus = RequestStatus.Unknown;
-			SaveLoadService.List<M>(OnLoadListDone);
+			SaveLoadService.Index<M>(OnIndexDone);
 		}
 
-		void OnLoadListDone(SaveLoadArrayRequest<SaveModel> result)
+		void OnIndexDone(ModelIndexResult<SaveModel> result)
 		{
 			modelListStatus = result.Status;
 			if (result.Status != RequestStatus.Success)
@@ -252,10 +339,10 @@ namespace LunraGames.SubLight
 			}
 			selectedStatus = RequestStatus.Unknown;
 			modelSelectedPath.Value = model.Path;
-			SaveLoadService.Load<M>(model, OnLoadSelectionDone);
+			SaveLoadService.Load<M>(model, OnLoadSelectionLoaded);
 		}
 
-		void OnLoadSelectionDone(SaveLoadRequest<M> result)
+		void OnLoadSelectionLoaded(ModelResult<M> result)
 		{
 			EditorGUIExtensions.ResetControls();
 			selectedStatus = result.Status;
@@ -364,7 +451,7 @@ namespace LunraGames.SubLight
 				modelSelectorScroll.VerticalScroll = GUILayout.BeginScrollView(modelSelectorScroll.VerticalScroll);
 				{
 					var isAlternate = false;
-					foreach (var model in modelList.OrderBy(m => m.Meta.Value))
+					foreach (var model in modelList.OrderBy(m => m.Id.Value))
 					{
 						if (!modelShowIgnored.Value && model.Ignore.Value) ignoredCount++;
 						else OnDrawModel(model, ref isAlternate);
@@ -412,11 +499,9 @@ namespace LunraGames.SubLight
 						labelStyle.normal.textColor = isIgnored ? SubLightEditorConfig.Instance.SharedModelEditorModelsEntryLabelIgnoredColor : labelStyle.normal.textColor;
 						labelStyle.fixedHeight = 18;
 
-						var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta >" : model.Meta;
+						var metaName = string.IsNullOrEmpty(model.Id.Value) ? "< No Id >" : model.Id.Value;
 						if (32 < metaName.Length) metaName = metaName.Substring(0, 29) + "...";
-						GUILayout.Label(new GUIContent(metaName, "Name is set by Meta field."), labelStyle, GUILayout.Height(14f));
-						GUILayout.FlexibleSpace();
-						GUILayout.Label(modelName, labelStyle);
+						GUILayout.Label(new GUIContent(metaName, "Id for this model."), labelStyle);
 					}
 					GUILayout.EndHorizontal();
 
@@ -537,12 +622,12 @@ namespace LunraGames.SubLight
 			}
 			SaveLoadService.Save(
 				ModelSelection,
-				result => OnModelSaveDone(result, done),
+				result => OnModelSaved(result, done),
 				false
 			);
 		}
 
-		void OnModelSaveDone(SaveLoadRequest<M> result, Action<RequestStatus> done)
+		void OnModelSaved(ModelResult<M> result, Action<RequestStatus> done)
 		{
 			if (result.Status != RequestStatus.Success)
 			{
@@ -587,9 +672,9 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Child Utilities
-		protected void RegisterToolbar(string name, Action<M> callback)
+		protected void RegisterToolbar(ModelEditorTab<T, M> tab)
 		{
-			toolbars.Add(new ToolbarEntry { Name = name, Callback = callback });
+			toolbars.Add(tab);
 		}
 
 		protected GUIContent GetTabStateLabel()
@@ -624,11 +709,10 @@ namespace LunraGames.SubLight
 		#endregion
 
 		#region Defaults
-		protected virtual M CreateModel(string name)
+		protected virtual M CreateModel(string id, string name)
 		{
-			var model = SaveLoadService.Create<M>();
-			model.Meta.Value = name;
-			AssignModelId(model, Guid.NewGuid().ToString());
+			var model = SaveLoadService.Create<M>(id);
+			AssignModelId(model, id);
 			AssignModelName(model, name);
 			return model;
 		}
@@ -648,14 +732,14 @@ namespace LunraGames.SubLight
 				}
 				else
 				{
-					var metaName = string.IsNullOrEmpty(model.Meta) ? "< No Meta > " : model.Meta;
+					var metaName = string.IsNullOrEmpty(model.Id.Value) ? "< No Id > " : model.Id.Value;
 
 					GUILayout.Label(metaName, GUILayout.ExpandWidth(false));
 
 					switch (toolbars.Count)
 					{
 						case 0: break;
-						case 1: onDraw = toolbars.First().Callback; break;
+						case 1: onDraw = toolbars.First().Gui; break;
 						default: onDraw = OnDrawToolbar(); break;
 					}
 
@@ -792,7 +876,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnBatchOperationLoaded(
-			SaveLoadRequest<M> result
+			ModelResult<M> result
 		)
 		{
 			if (result.Status != RequestStatus.Success)
@@ -845,7 +929,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnBatchOperationSaved(
-			SaveLoadRequest<M>? result,
+			ModelResult<M>? result,
 			RequestResult batchResult
 		)
 		{
@@ -912,7 +996,7 @@ namespace LunraGames.SubLight
 
 		protected virtual Vector2 GetSettingsDialogSize { get { return new Vector2(500f, 200f); } }
 
-		protected virtual void OnSettingsGui()
+		protected virtual void OnSettingsGui(Action close)
 		{
 			modelAlwaysAllowSaving.Value = EditorGUILayout.Toggle(new GUIContent("Always Allow Saving", "When enabled the 'Save' button always be clickable."), modelAlwaysAllowSaving.Value);
 			SettingsGui();
@@ -958,7 +1042,7 @@ namespace LunraGames.SubLight
 				toolbarIndex++;
 			}
 			if (modelSelectedToolbar.Value != modelSelectedToolbarPrevious) EditorGUIExtensions.ResetControls();
-			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Callback;
+			return toolbars[Mathf.Clamp(modelSelectedToolbar, 0, toolbars.Count - 1)].Gui;
 		}
 
 		protected virtual void OnDrawPreSettings(M model)
@@ -992,7 +1076,7 @@ namespace LunraGames.SubLight
 
 			var result = EditorUtility.DisplayDialogComplex(
 				"Unsaved Changes to " + readableModelName,
-				"There are unsaved changes to \"" + ModelSelection.Meta.Value + "\", would you like to save them before continuing?",
+				"There are unsaved changes to \"" + ModelSelection.Id.Value + "\", would you like to save them before continuing?",
 				"Save",
 				"Cancel",
 				"Don't Save"
@@ -1025,7 +1109,7 @@ namespace LunraGames.SubLight
 		}
 
 		// TODO: Move this to some util?
-		protected string Shorten(
+		public string Shorten(
 			string value,
 			int maximumLength,
 			string missingValue = "< Missing >"

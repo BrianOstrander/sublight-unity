@@ -20,6 +20,8 @@
 		GalaxyDistant = 62,
 		GalaxyInfo = 64,
 
-		GamemodeInfo = 70
+		GamemodeInfo = 70,
+
+		ModuleTrait = 80
 	}
 }

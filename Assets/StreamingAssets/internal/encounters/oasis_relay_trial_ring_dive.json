@@ -1,0 +1,2442 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "None",
+  "defaultEndLogId": "e1e3bf63-9e3f-4411-bdc8-c46e77a59fa3",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [
+      {
+        "index": 2,
+        "filterId": "68a791b7-aa3a-4c1e-adc3-46dca1da648a",
+        "group": "All",
+        "Input0": {
+          "AddressId": "ef77793c-eeb1-4c39-89e7-5db90204cda3",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "oasis_searching_for_relays"
+        },
+        "Input1": {
+          "AddressId": "54cc17ac-a721-426b-969d-40dc46bcb660",
+          "Source": "LocalValue",
+          "LocalValue": true
+        }
+      }
+    ],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "d5580912-43e2-4cf8-8241-399934a1c515",
+        "group": "All"
+      },
+      {
+        "operation": "Completed",
+        "filterValue": "oasis_begin",
+        "index": 1,
+        "filterId": "cce8eb8e-b01d-4a97-9bb0-032ffc55dbdc",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "07c8e5a4-427e-48b0-a1b7-29ef7be1b22f",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.3
+                },
+                "Input1": {
+                  "AddressId": "54fb7dcd-4e51-471a-b96b-c4a5d4073e56",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "431bc9ae-2043-4254-96a2-df1450f3f145",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "0c3fe867-d7d1-4f2e-b658-3e2fe2d9d30d",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "a4b30f77-963a-49a4-88c6-7abf78a0dd5c",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                }
+              },
+              "entryId": "d080fafe-7dd7-4f6c-a615-c1f6d34dd3df"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "7569def8-3001-4483-aad3-f28f6dc09c7f",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.4
+                },
+                "Input1": {
+                  "AddressId": "d46bd75b-b585-40c1-8ed2-9c305b6d9c49",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "a3e1d1ea-9192-436c-ba2b-a69a15eb836f",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "067ad303-500a-4d51-abf1-65013d74c2f7",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "8bf70f63-6075-4513-ab98-5970b67083ef",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                }
+              },
+              "entryId": "faf11ca5-45b2-4a74-86fc-a5845c2cb934"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "RandomNormal",
+                "Input0": {
+                  "AddressId": "6708bc6c-bb26-4572-ad85-1a77e55f7cc1",
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "AddressId": "98494765-5ef4-4225-a123-5c10486b59f3",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "079f9fea-95e8-4081-b3ec-edcb2bc02463",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "89350b7f-355e-4c7d-951f-44b17cc443a4",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "c2d12cc7-fa00-4736-aace-8347aa969825",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_result"
+                }
+              },
+              "entryId": "81162d2c-f9c7-4498-8c1a-82a318e3513f"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "RandomNormal",
+                "Input0": {
+                  "AddressId": "30db0c33-2db6-4ee4-baef-55fa1cce969f",
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "AddressId": "a3e904d0-070e-4dbc-b3e3-8faa98e97b07",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "d2283468-bbcb-492d-8f98-231ac70004c0",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "52831076-b3b4-4012-8dd0-9b2da1480a76",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "af67cdfe-1f78-4cee-b3a1-39579e6516ad",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_result"
+                }
+              },
+              "entryId": "9e2c5a73-1953-4c11-a183-cac7c994bc12"
+            },
+            "index": 3
+          }
+        ],
+        "logId": "8954a18d-b214-4920-a11e-24f281bfebf8",
+        "fallbackLogId": "7d2c21b2-2e8d-47ea-9773-ac4d4aa08d11"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "e8f43988-86e6-4215-be50-d0da3b79ac91",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                },
+                "Input1": {
+                  "AddressId": "589b3591-e5e3-4948-8785-bbbfe128c95d",
+                  "Source": "LocalValue",
+                  "LocalValue": 1.5
+                },
+                "MinimumClamping": {
+                  "AddressId": "8c84e99b-67ff-4e02-9bec-a470d9f09739",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "5ec1e33d-4597-4335-bdc9-bd5f789f108e",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "41ff88d6-e325-4f3b-b16b-c60b0f612fd1",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                }
+              },
+              "entryId": "20988a61-e567-4108-982d-4bdb22873d9b"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "c34a31e2-82f6-40f5-9dbf-0f2d893f55fc",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                },
+                "Input1": {
+                  "AddressId": "1188a837-701a-4393-b8dc-6f96eb4938fa",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.75
+                },
+                "MinimumClamping": {
+                  "AddressId": "602862e6-7227-4baf-a2a7-ca16232775e3",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "a3ae4e4e-65a5-4217-890b-8eb1b0107824",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "c2761ec1-c68f-4cd3-ab4b-c9fd88317704",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                }
+              },
+              "entryId": "903d1a42-b30a-48fa-b3dd-a3b8cffebd6f"
+            },
+            "index": 1
+          }
+        ],
+        "index": 18,
+        "logId": "940b4fd6-29c3-47eb-839e-0f89a22860df",
+        "fallbackLogId": "a836215c-6fdc-4fc6-9e44-b8c0d2c37695"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "29475c13-e9f4-4b4e-afcc-6eb2668870c3",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                },
+                "Input1": {
+                  "AddressId": "749e5e3b-43ee-4b9f-bf8d-1cef73edcf68",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.75
+                },
+                "MinimumClamping": {
+                  "AddressId": "19d7e933-e9d4-4399-9d76-cf1d90b9db64",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "7a635f12-c141-449a-b980-6532f831ed98",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "591db7e1-c4c7-46ba-bef4-6db92a1a1185",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                }
+              },
+              "entryId": "8b5ff15e-f969-4144-807d-f5c8fdba8cfb"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "bae5672e-7ad5-4d5e-acfc-36c376a820c9",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                },
+                "Input1": {
+                  "AddressId": "ca6114f8-b086-477c-acc3-07bbf0928481",
+                  "Source": "LocalValue",
+                  "LocalValue": 1.5
+                },
+                "MinimumClamping": {
+                  "AddressId": "03feff3c-8eaf-4bb4-b9a0-ecfdc63468ac",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "177529b4-811f-4718-ae60-08963e94e710",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "db361ad8-e5bd-4c21-a648-f423f0517e5a",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                }
+              },
+              "entryId": "662b2d1f-fa8f-4307-92e2-2412abd26c2c"
+            },
+            "index": 1
+          }
+        ],
+        "index": 19,
+        "logId": "0e3dd3e0-f997-447c-abad-588697c412fa",
+        "fallbackLogId": "cf99b6a5-e586-4454-aa5e-6d974e1f4735"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "1a21939d-31cb-45e4-8151-d311321b3803",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                },
+                "Input1": {
+                  "AddressId": "4d026e29-8168-424f-9ec1-0c9bd14006dd",
+                  "Source": "LocalValue",
+                  "LocalValue": 1.5
+                },
+                "MinimumClamping": {
+                  "AddressId": "23445419-a283-450f-ab6f-818fc4af7848",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "33f8b130-9bc3-4ccf-900c-ba2402a244e2",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "a29bae1f-447a-4ff0-8cc1-606e8f1404b1",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                }
+              },
+              "entryId": "2e8caa58-b64e-4f5c-8999-aa190d796abd"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "868c6daa-0b50-484c-a59d-8852f5562aeb",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                },
+                "Input1": {
+                  "AddressId": "04cfe53c-ca7f-4bf9-8be6-3bb48477a0e8",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.75
+                },
+                "MinimumClamping": {
+                  "AddressId": "811e0a46-04cc-4a48-b3ee-5baffa08bc9c",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "21553bc8-aadb-4ae5-8a38-c3a59058b8c2",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "ff679e09-e9ed-47b2-a6ba-0ec3fd0008b5",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                }
+              },
+              "entryId": "3f4a8d51-8dff-4230-83dc-3db868ae20fe"
+            },
+            "index": 1
+          }
+        ],
+        "index": 22,
+        "logId": "302fc7cd-7f79-4185-84b8-5a5fa9d2ac3f",
+        "fallbackLogId": "eaf73245-5527-44d2-9f69-1f2e55c985bd",
+        "name": "risk crew keep going!"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "ef38e47b-db5d-461a-abbe-da09c71b75d7",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                },
+                "Input1": {
+                  "AddressId": "3fbed382-66e1-4635-a569-96087ef22bdd",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.75
+                },
+                "MinimumClamping": {
+                  "AddressId": "0c8478e5-a808-4872-86e3-05fde5af1102",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "67d87669-6db2-4958-90b5-d5cf24c1ba21",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "e0e375f4-d0fa-49b4-a58e-56df342b64d0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "get_data_chance"
+                }
+              },
+              "entryId": "1eaf0ca1-dfbb-45b0-a969-81d86ae6e721"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "a77028bb-f099-4aba-82e9-7e59a7aacb1c",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                },
+                "Input1": {
+                  "AddressId": "f80f91a4-16e6-4396-8ce6-b75525cc97e0",
+                  "Source": "LocalValue",
+                  "LocalValue": 1.5
+                },
+                "MinimumClamping": {
+                  "AddressId": "83e86ae2-dbca-44ee-a46c-cf6853afa365",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "1a4cf1e4-71dd-4f8c-bd8e-990774f604e3",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "d732ea9f-8012-40cf-9db3-42336cec3027",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "safe_crew_chance"
+                }
+              },
+              "entryId": "2fccc7f1-7df3-4886-a4a7-f0fc8c60f153"
+            },
+            "index": 1
+          }
+        ],
+        "index": 23,
+        "logId": "545f87b0-2b47-4ac8-bbf5-dac68891f7fa",
+        "fallbackLogId": "0dfa9208-3e59-4a72-bfb2-3cec7171d9da",
+        "name": "risk crew bail!"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Boolean",
+              "booleanValue": {
+                "Operation": "Set",
+                "Input0": {
+                  "AddressId": "4ff8ef1e-e289-4cde-b551-eefd70584d90",
+                  "Source": "LocalValue"
+                },
+                "Input1": {
+                  "AddressId": "e8cdb5f8-3265-454b-a8e9-9ef4df4a0656",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "01d79b48-870e-4e72-a630-ce5f4a93d26d",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "oasis_searching_for_relays"
+                }
+              },
+              "entryId": "d49812d2-47a2-424b-b550-2a070a736ad3"
+            }
+          }
+        ],
+        "index": 36,
+        "logId": "d6e52feb-0edd-43b5-a68a-1f5f1831ec00",
+        "fallbackLogId": "e1e3bf63-9e3f-4411-bdc8-c46e77a59fa3"
+      }
+    ],
+    "switchLogs": [
+      {
+        "selectionMethod": "FirstFilter",
+        "switches": [
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "32e3f846-ad41-43b4-b6c0-02724483d31a",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThanOrEquals",
+                    "filterId": "a771a7f4-640d-419f-8383-e6ca9c90cc16",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "750a9f93-c146-4782-aec0-291ee0310bb3",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "get_data_result"
+                    },
+                    "Input1": {
+                      "AddressId": "afa4097e-bffc-4efd-8760-800dcb93095b",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "get_data_chance"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "bc4d232d-8272-4da9-8042-85710c1841ef"
+            }
+          }
+        ],
+        "index": 7,
+        "logId": "a1c929ea-520f-4f1b-9e73-1688620b8290",
+        "fallbackLogId": "b2b5ba2b-532c-4711-9fd0-faaf7c22ed17",
+        "name": "risk relay get data"
+      },
+      {
+        "selectionMethod": "FirstFilter",
+        "switches": [
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "ac2a34e3-8f1a-4592-ac92-c70eaf207e1e",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThanOrEquals",
+                    "filterId": "6643e6f0-aa04-466b-ab18-7f77c5e46edc",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "552150d1-5b17-4512-b5be-353dd546137b",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "safe_crew_result"
+                    },
+                    "Input1": {
+                      "AddressId": "ff4a498a-2168-4ed0-be84-a3805a6ee5c5",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "safe_crew_chance"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "3e3e0c20-351d-4df3-896f-e886d733bda7"
+            }
+          }
+        ],
+        "index": 27,
+        "logId": "70d6f17c-c06d-49d3-8f0f-1014cac4556a",
+        "fallbackLogId": "2365d5e1-ec0d-49f4-89f6-fc40fff54c30",
+        "name": "risk crew dead check"
+      },
+      {
+        "selectionMethod": "FirstFilter",
+        "switches": [
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "ed0d9680-0db4-4d6c-9588-1fc63999d097",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThanOrEquals",
+                    "filterId": "8bc34a06-5f13-4fba-bec8-cba0d6dcd708",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "bdf851d2-883a-4a99-9c35-50940b07a707",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "get_data_result"
+                    },
+                    "Input1": {
+                      "AddressId": "0d05f5ab-79ce-4cfb-a04a-e9e79fcbb7fa",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "get_data_chance"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "88b4ce82-f3a9-4461-a01f-2569e968fc7c"
+            }
+          }
+        ],
+        "index": 31,
+        "logId": "a0697e9d-cdce-48be-9a03-5eb169661145",
+        "fallbackLogId": "f8e5cc31-ebf5-4f68-a4a9-3f9fc3f33048",
+        "name": "risk crew ecliptic data check"
+      },
+      {
+        "selectionMethod": "FirstFilter",
+        "switches": [
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "7c5b3447-588a-4250-b879-da6a3d128d39",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThanOrEquals",
+                    "filterId": "8ae7c53a-0a60-4a4f-a9a8-1b03b14b5bfe",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "c306223e-0c8a-4c54-a376-978f07709bfe",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "get_data_result"
+                    },
+                    "Input1": {
+                      "AddressId": "ba8005a4-c2ad-463f-bbef-e7c64b3f2812",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "get_data_chance"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "96f5b828-dbc8-4ce2-9117-cfada4b73c24"
+            }
+          }
+        ],
+        "index": 32,
+        "logId": "7e953102-3b4c-445c-8b02-58736c190bce",
+        "fallbackLogId": "d4072fd4-3eb0-46bd-93de-9bcf9f9b50f4",
+        "name": "risk crew desmond data check"
+      }
+    ],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Risk losing the relay.",
+              "nextLogId": "96686b21-fafb-403c-8661-4e5f03a928eb",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "986718b9-6ca8-4c9c-aa3f-a7386f4a3c9b"
+            }
+          },
+          {
+            "entry": {
+              "message": "Risk losing a crew member.",
+              "nextLogId": "040f05d2-623e-4b55-9a57-ce7e381ee042",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "c141dee6-027b-4141-bada-a92a9312de18"
+            },
+            "index": 1
+          }
+        ],
+        "index": 5,
+        "logId": "7b18e20d-9917-4bc2-bdd2-0dcfcafa43a6",
+        "name": "risk decision"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Stay on course.",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "8edaf21c-ef73-4c7e-974c-a2e7b4acb723"
+            }
+          },
+          {
+            "entry": {
+              "message": "Avoid the debris.",
+              "nextLogId": "0e3dd3e0-f997-447c-abad-588697c412fa",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "c3e16f73-6128-492b-9a0b-2ba0119814c6"
+            },
+            "index": 1
+          }
+        ],
+        "index": 15,
+        "logId": "9d0a734e-7347-4a4c-9e9c-b7210dc3b717",
+        "fallbackLogId": "940b4fd6-29c3-47eb-839e-0f89a22860df",
+        "name": "risk crew first debris"
+      },
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Keep going!",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "25e393c8-577a-4720-9a3b-1ad0817a1e33"
+            }
+          },
+          {
+            "entry": {
+              "message": "Bail!",
+              "nextLogId": "545f87b0-2b47-4ac8-bbf5-dac68891f7fa",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0a55833e-48ec-466c-a3a9-4fcef17b610e"
+            },
+            "index": 1
+          }
+        ],
+        "index": 21,
+        "logId": "f2a0bdd3-81f2-44ec-90b3-1680f69014e9",
+        "fallbackLogId": "302fc7cd-7f79-4185-84b8-5a5fa9d2ac3f"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "2a691874-7b51-483d-8d4c-a6fd7738464d"
+            }
+          },
+          {
+            "entry": {
+              "encounterEvent": "DumpKeyValues",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "target": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1c506328-7033-4e56-bd58-c84075336cfa"
+            },
+            "index": 1
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "e1e3bf63-9e3f-4411-bdc8-c46e77a59fa3",
+        "name": "< End Encounter >"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "5c9108b3-0f9d-4e23-a332-8bd5180d6932"
+            }
+          },
+          {
+            "entry": {
+              "encounterEvent": "Waypoint",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "visibility": 20
+                },
+                "strings": {
+                  "waypoint_id": "oasis_relay_0"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "deb62875-5a8e-4f3e-a930-ff9737ac99c8"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "encounterEvent": "RefreshSystem",
+              "keyValues": {
+                "booleans": {},
+                "integers": {},
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "f987e0b1-6d87-46c0-bd92-fa526f4a8f93"
+            },
+            "index": 2
+          }
+        ],
+        "index": 2,
+        "beginning": true,
+        "logId": "1e7efd5d-99a3-467f-b89b-ee01807d73d5",
+        "fallbackLogId": "8954a18d-b214-4920-a11e-24f281bfebf8"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Waypoint",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "visibility": 10
+                },
+                "strings": {
+                  "waypoint_id": "oasis_end"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "0d72927b-69d1-4c52-929a-5688cc6c866b"
+            }
+          }
+        ],
+        "index": 10,
+        "logId": "73617e43-d3c8-42a3-b118-2d6b6522a8bd",
+        "fallbackLogId": "d6e52feb-0edd-43b5-a68a-1f5f1831ec00",
+        "name": "oasis end"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Waypoint",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "visibility": 10
+                },
+                "strings": {
+                  "waypoint_id": "oasis_relay_1"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a24ee8d1-2e53-48e7-a696-3ba0c8fb7b49"
+            }
+          }
+        ],
+        "index": 11,
+        "logId": "fb78f0fa-4f8a-4653-9066-a041df0a9207",
+        "fallbackLogId": "e1e3bf63-9e3f-4411-bdc8-c46e77a59fa3",
+        "name": "set next relay waypoint visible"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "Internal",
+                "TitleSource": "Ursula",
+                "TitleClassification": "Interstellar Ark",
+                "TransmitionType": "Datalink",
+                "TransmitionStrength": "Internal",
+                "TransmitionStrengthIcon": "Hidden",
+                "PlacardName": "Ecliptic",
+                "PlacardDescription": "Diagnostic Custodian",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 2,
+                "AvatarStaticTerminalTextVisible": true
+              },
+              "entryId": "20d529fe-9da0-49f8-9e59-f027d1ba2ecb"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "Desmond",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "AwayTeam",
+                "TitleSource": "Utility Boon #2",
+                "TitleClassification": "Extra Vehicular",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "D. Fisher",
+                "PlacardDescription": "Pilot",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 8
+              },
+              "entryId": "01e278cb-9ffe-4706-b19a-456c15afc389"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Focus",
+              "entryId": "43991a6e-d9bf-408b-b6f0-5ad2b06c489f"
+            },
+            "index": 2
+          }
+        ],
+        "index": 3,
+        "logId": "7d2c21b2-2e8d-47ea-9773-ac4d4aa08d11",
+        "fallbackLogId": "37a1d770-d4aa-49fb-8ed5-96cbd599bff0"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Desmond",
+              "bustEvent": "Focus",
+              "entryId": "c7ad28c1-74e6-4c68-af57-fa05955ab4a8"
+            }
+          }
+        ],
+        "index": 13,
+        "logId": "42d3436a-4f52-40c8-bdf7-c4ffbc3f8fb1",
+        "fallbackLogId": "ff870070-09c5-4443-921d-8e85d8e878e6"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Focus",
+              "entryId": "c7b441e7-79f6-4dda-9477-f575c1612c0c"
+            }
+          }
+        ],
+        "index": 29,
+        "logId": "2365d5e1-ec0d-49f4-89f6-fc40fff54c30",
+        "fallbackLogId": "936b9c0a-4a61-43af-86ef-0088acb03186"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Focus",
+              "entryId": "0bb18ae2-826a-4c1b-b22f-d9295c8dd5bf"
+            }
+          }
+        ],
+        "index": 34,
+        "logId": "383a66ce-cbf5-40b2-8fd2-86010e0d40a7",
+        "fallbackLogId": "627410cb-a990-4796-81c5-3b9d0a979fbe"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "Ecliptic",
+              "bustEvent": "Focus",
+              "entryId": "814b3eb1-78d5-47e3-a176-0d23e88190ee"
+            }
+          }
+        ],
+        "index": 39,
+        "logId": "97edac89-f41b-4dc7-9b85-364682fcdbd5",
+        "fallbackLogId": "aaa9ab6d-168b-4910-94b9-50c023ffb326"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I've located the automated relay we're looking for, in orbit around a gas giant.",
+              "entryId": "4e92e76d-f383-40fb-8a51-ce630d24291f"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "a15ac77c-de2f-4a38-b324-1a424ab039c8"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "But we have a problem...",
+              "entryId": "4bf40142-37b0-4216-a269-1351de3eb32b"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Yes?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "a1a3bec0-98d5-4068-9ff3-9ce5c0ad6f0e"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Its orbit has decayed, wedging the relay deep inside the planet's ring system.",
+              "entryId": "94bd66d2-9b82-4979-b1a8-b24b2bfaa722"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Options?",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "What are our options?"
+              },
+              "entryId": "5e5b035f-cb20-4f7a-94f7-b067c059b3ae"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "If we request a memory dump, the relay will need to re-orient its primary dish towards us.",
+              "entryId": "47e3213e-ea8c-4db2-8d8d-6f05b3851654"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "c1adea70-04df-43f9-be7e-845b597813c1"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It's a terribly old piece of equipment, in an extremely hazardous orbit — I’m concerned its navigation systems will fail catastrophically. In the process, we’ll lose any data it has onboard.",
+              "entryId": "b8c822b2-1ba8-45a1-8e3e-428292752b43"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What's the alternative?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "13a6fb66-afc8-45a7-886f-d15a073db2b7"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I hesitate to suggest it...",
+              "entryId": "6d3789c5-65b6-4b77-8d46-4a21de3ba561"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "ca7b08c1-cfd2-44f8-b968-961fb950dc85"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "A crew member, equipped with a propulsion boon, could dive through the rings and request the memory dump for us.",
+              "entryId": "697dcdfd-4f23-4985-bb6c-2cc209960490"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "84b0e7bf-048f-4678-863c-c3c4db5dea74"
+            },
+            "index": 13
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Their orbit would bring them directly in front of the relay's primary dish, optimal conditions for a clean transmission.",
+              "entryId": "ed6c7a40-9eb1-4c27-80ea-8eadfd9112de"
+            },
+            "index": 14
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What's the risk to the crew member?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "0185a1ea-9c5c-4c4a-8c06-9ed9777af60d"
+            },
+            "index": 15
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "They'd be passing through the thickest region of the planetary rings, the chance of a fatal collision with debris is extremely high.",
+              "entryId": "00730238-43d0-44a0-a386-7840af51a342"
+            },
+            "index": 16
+          }
+        ],
+        "index": 4,
+        "logId": "37a1d770-d4aa-49fb-8ed5-96cbd599bff0",
+        "fallbackLogId": "7b18e20d-9917-4bc2-bdd2-0dcfcafa43a6"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "This relay is expendable, our people are not. Request the memory dump.",
+              "entryId": "668a548a-eb95-4d3e-94d3-5823d29a3265"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood, transmitting request.",
+              "entryId": "d4594c82-aea9-492e-baba-b3103f6af68b"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "5e2ec24a-7c9a-47f6-af68-e0d46162b479"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It's re-orienting... there's a 5% error in its orbital correction...",
+              "entryId": "70a8b3dd-f302-4211-a9ee-eeccb90fb9fa"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "0f34c39f-b43f-4d36-aaf0-62ec0efb1bed"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Receiving data... but its orbit has drifted by another 10%...",
+              "entryId": "faec0ac0-0f0e-4349-ba02-823046730e4e"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "a09a9c14-1644-40ef-ae3b-e822122ddc64"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're losing it, seconds to impact!",
+              "entryId": "c9ab9668-5bf7-448a-bcda-7c0399229076"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Connection terminated...",
+              "entryId": "92a61260-0d47-4411-a6cc-1c5087b42b21"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Did we get it?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "fa91b5ef-dc60-4d17-b1e4-13b82e11001f"
+            },
+            "index": 9
+          }
+        ],
+        "index": 6,
+        "logId": "96686b21-fafb-403c-8661-4e5f03a928eb",
+        "fallbackLogId": "a1c929ea-520f-4f1b-9e73-1688620b8290",
+        "name": "risk relay"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Negative, we only got a partial transmission",
+              "entryId": "22578c0e-f0b7-4118-8471-3f41b85b6271"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Anything useful?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "84c8f473-16fb-4d4c-bf75-ff10a2eb3af7"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We recovered a transmission manifest, it could lead us to another relay with the message from Oasis. Perhaps we'll have better luck with the next one.",
+              "entryId": "d69258a2-3832-495e-9128-decdc1e7567b"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Plot a course.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "2adfc232-995f-4a67-abda-ed8d489faa0d"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood.",
+              "entryId": "9e45adb1-e6d2-4bef-bbd2-e6400a02b479"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "0f84c79e-a521-4e23-8e02-b89e4e295163"
+            },
+            "index": 5
+          }
+        ],
+        "index": 8,
+        "logId": "b2b5ba2b-532c-4711-9fd0-faaf7c22ed17",
+        "fallbackLogId": "fb78f0fa-4f8a-4653-9066-a041df0a9207",
+        "name": "risk relay fail"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Confirmed, we got what we need!",
+              "entryId": "13d57f54-1f40-4c4f-a870-28f669ddfdb4"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Excellent.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "6fa1edb5-fcde-435d-8f95-7183025a037f"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Plotting course to Oasis!",
+              "entryId": "66796c0d-847e-4a55-8092-63b4bfc1835d"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "6d075b79-83bf-4d14-8242-d84c3dff6d71"
+            },
+            "index": 3
+          }
+        ],
+        "index": 9,
+        "logId": "32e3f846-ad41-43b4-b6c0-02724483d31a",
+        "fallbackLogId": "73617e43-d3c8-42a3-b118-2d6b6522a8bd",
+        "name": "risk relay success"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "It's worth risking a crew member to retrieve this message intact.",
+              "entryId": "06ac8e3a-116a-4ab8-a59e-a0c4741b1bc5"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood, I'll run a selection diagnostic to find a suitable crew member for the operation.",
+              "entryId": "eb71910e-ed29-4d37-a6cd-82cd8211806a"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "6e6f27d5-eb98-425f-b16b-6a30bf445e16"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'll alert you when we're ready to proceed.",
+              "entryId": "ce8c95dd-949a-4f95-a530-8720551ef5cd"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< Check In >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "4e6027b5-9f09-45a6-96c9-4fdce3d44074"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We're ready. We have our pilot, Desmond Fisher, in position.",
+              "entryId": "770bd979-285e-4ec2-b4e4-c52198e1d178"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< Switch Frequency >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "6bcb48e3-bbc2-4bca-a856-c6c823265423"
+            },
+            "index": 6
+          }
+        ],
+        "index": 12,
+        "logId": "040f05d2-623e-4b55-9a57-ce7e381ee042",
+        "fallbackLogId": "42d3436a-4f52-40c8-bdf7-c4ffbc3f8fb1",
+        "name": "risk crew"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm hailing the relay now...",
+              "entryId": "d820bf6f-c251-4bde-b83a-bbf825c81f75"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "92fe0285-556f-4d44-bce4-c980f0546f8b"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Looking good, data is flowing in.",
+              "entryId": "504e898f-b1f8-4ea3-8f3b-5b08c819a8ed"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "b251db50-a9d7-47c2-a6d4-2f7946e46c54"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Hold on, scanners are picking up debris ahead.",
+              "entryId": "09c11320-6823-49b7-925a-52e475096dca"
+            },
+            "index": 4
+          }
+        ],
+        "index": 14,
+        "logId": "ff870070-09c5-4443-921d-8e85d8e878e6",
+        "fallbackLogId": "9d0a734e-7347-4a4c-9e9c-b7210dc3b717"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I hope this is worth it...",
+              "entryId": "aac1fc9f-befb-471a-b6a4-bd059fdaa1ab"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "You're doing great.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "653c02cf-d291-4392-8949-240ee5bf7af6"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Stay on course.",
+              "entryId": "83cd90d2-778c-46a8-b73c-9ccd1664ee33"
+            }
+          }
+        ],
+        "index": 16,
+        "logId": "a836215c-6fdc-4fc6-9e44-b8c0d2c37695",
+        "fallbackLogId": "269dd435-1821-4718-934d-761e2df04a7a",
+        "name": "risk crew stay course first debris"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Avoid the debris.",
+              "entryId": "abe3b67e-2317-4b75-9ef1-33d2ea65740f"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "With pleasure, adjusting orbit...",
+              "entryId": "58196079-b337-48a5-aa0d-eb675168a234"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Good.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "7357ed92-9886-40c6-b383-2f8dc208f8c3"
+            },
+            "index": 2
+          }
+        ],
+        "index": 17,
+        "logId": "cf99b6a5-e586-4454-aa5e-6d974e1f4735",
+        "fallbackLogId": "269dd435-1821-4718-934d-761e2df04a7a",
+        "name": "risk crew avoid first debris"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Data collection is at 50%... bandwidth holding steady...",
+              "entryId": "5a52a963-de19-4766-bc03-f1ac695be5df"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "10d818e6-6bc3-4f49-a3a7-9a86691b48e0"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Oh god...",
+              "entryId": "c8de8d77-58a8-4e3e-87fa-7995defb5697"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Report!",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "13816a42-b545-42a8-9c13-a302b2ba9a11"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Picking up a field of low albedo debris ahead, long range scanners missed it!",
+              "entryId": "1ce4edd6-264c-499f-9640-00104471ba30"
+            },
+            "index": 4
+          }
+        ],
+        "index": 20,
+        "logId": "269dd435-1821-4718-934d-761e2df04a7a",
+        "fallbackLogId": "f2a0bdd3-81f2-44ec-90b3-1680f69014e9",
+        "name": "risk crew 50% data"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Keep going!",
+              "entryId": "60f68269-7b6a-4d3e-b6ab-6258de913f42"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Copy that.",
+              "entryId": "73b88794-786f-40fa-b26e-00ca786213b8"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Update?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "bf704e15-4457-4e44-b1ba-9eb4f0131f96"
+            },
+            "index": 2
+          }
+        ],
+        "index": 24,
+        "logId": "eaf73245-5527-44d2-9f69-1f2e55c985bd",
+        "fallbackLogId": "d5ad3dd5-ea89-44c0-904b-cb6ec9e85dcd"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Bail!",
+              "entryId": "cd14268f-0851-4200-b163-e3b331059f99"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Firing thrusters...",
+              "entryId": "90ef2706-a703-4dd2-9a3f-d1b5ae03566f"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Update?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "fbd00df2-a3d0-4d6f-b923-81e911328345"
+            },
+            "index": 2
+          }
+        ],
+        "index": 25,
+        "logId": "0dfa9208-3e59-4a72-bfb2-3cec7171d9da",
+        "fallbackLogId": "d5ad3dd5-ea89-44c0-904b-cb6ec9e85dcd"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Report!",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "f355743f-222b-46b8-8b0a-49a78c796b4f"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Pilot D. Fisher, report?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "1e2eb57b-95e5-465b-a34c-1513d107274d"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Desmond?",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Desmond... are you there?"
+              },
+              "entryId": "81ac27d1-586a-49b8-9bc1-36db70b4dee5"
+            },
+            "index": 2
+          }
+        ],
+        "index": 26,
+        "logId": "d5ad3dd5-ea89-44c0-904b-cb6ec9e85dcd",
+        "fallbackLogId": "70d6f17c-c06d-49d3-8f0f-1014cac4556a",
+        "name": "risk crew await response"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm sorry Aurora... we lost him...",
+              "entryId": "e0547911-3767-425f-8882-1d5edc4bb5e3"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "f12b296e-1f47-49c2-ba4c-b2a2b02e3685"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "However, it wasn't all in vain.",
+              "entryId": "97e0caf3-946e-4403-83ee-18c08cbab937"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Yes?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "07d027fe-85ef-40e0-b19f-ef0b60a5e214"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Desmond was able to trigger a high bandwidth message before impact...",
+              "entryId": "51bb81fc-5038-4f52-bc6e-1ce725c83331"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "e90beed0-e5af-4694-973b-0dac446d3654"
+            },
+            "index": 5
+          }
+        ],
+        "index": 30,
+        "logId": "936b9c0a-4a61-43af-86ef-0088acb03186",
+        "fallbackLogId": "a0697e9d-cdce-48be-9a03-5eb169661145"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I got it, all of it! Transmitting it to Ecliptic now...",
+              "entryId": "014e6546-c3d9-4bda-b9c0-c80a756b1da0"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< Switch Frequency >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "6ffc711a-123a-433c-89f2-bb7a60d837e7"
+            },
+            "index": 1
+          }
+        ],
+        "index": 33,
+        "logId": "7c5b3447-588a-4250-b879-da6a3d128d39",
+        "fallbackLogId": "383a66ce-cbf5-40b2-8fd2-86010e0d40a7"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "He did it, we've got the coordinates to Oasis!",
+              "entryId": "7b40b423-d8c4-4b4a-beae-769a5f1ec3ec"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood.",
+              "entryId": "7c41cbe4-2281-4070-97be-0e37b92f3444"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Intercept pilot D. Fisher and plot a course to Oasis.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "9b470e57-8902-4346-b395-90cc0428ce15"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "d041563e-a460-45d9-ab43-84c7bbccee8f"
+            },
+            "index": 3
+          }
+        ],
+        "index": 35,
+        "logId": "627410cb-a990-4796-81c5-3b9d0a979fbe",
+        "fallbackLogId": "73617e43-d3c8-42a3-b118-2d6b6522a8bd"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Still in one piece over here!",
+              "entryId": "d194fe22-e5be-4267-8f3b-36ff36aba761"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Excellent!",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Excellent! And the data?"
+              },
+              "entryId": "ec5e4151-e12d-46ef-ae91-fec5e8f744d0"
+            },
+            "index": 1
+          }
+        ],
+        "index": 37,
+        "logId": "ac2a34e3-8f1a-4592-ac92-c70eaf207e1e",
+        "fallbackLogId": "7e953102-3b4c-445c-8b02-58736c190bce"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'm sorry...",
+              "entryId": "bd78f100-2528-4d40-936f-dee36dcbc640"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "e505c5cd-94cd-4b8c-8c8f-244a943ab1cd"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The dump was a success, but a debris strike toasted the memory cache onboard...",
+              "entryId": "4061ff08-9cc6-483b-ab08-ddefb002341a"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "bc5555b3-55a0-41d4-a327-9b5541d892e1"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I'll transmit what I can to Ecliptic.",
+              "entryId": "6a03c5aa-4f2d-42c6-b84a-41efb0a6329d"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< Switch Frequency >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "287decb6-b156-4b90-90bb-e67435347a1b"
+            },
+            "index": 5
+          }
+        ],
+        "index": 38,
+        "logId": "d4072fd4-3eb0-46bd-93de-9bcf9f9b50f4",
+        "fallbackLogId": "97edac89-f41b-4dc7-9b85-364682fcdbd5"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Pilot Fisher is correct, most of the memory dump has been lost...",
+              "entryId": "e67dae14-73f6-4929-81f6-431d60bb4417"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Can we salvage anything?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "0f045477-75f2-4541-ba2a-34e0743ce436"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The communication manifest looks intact. With it, we can track down the last relay Oasis' message passed through. Perhaps we'll have better luck there...",
+              "entryId": "278f9bc0-1f0e-44f2-ac4e-cb5fe12cfcdb"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Intercept pilot D. Fisher and plot a course.",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "a2436bec-4550-4774-86bd-e8cda33526a7"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood.",
+              "entryId": "03277daf-1afe-4534-bac8-16c698c780cf"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "7a357c77-a80f-418e-9853-6a98fd62fa2a"
+            },
+            "index": 5
+          }
+        ],
+        "index": 40,
+        "logId": "aaa9ab6d-168b-4910-94b9-50c023ffb326",
+        "fallbackLogId": "fb78f0fa-4f8a-4653-9066-a041df0a9207"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It's got what we need, coordinates to Oasis...",
+              "entryId": "a227a829-8920-47b4-a26f-b7858c518e79"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "It's time to move on...",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Thank you, it's time to move on..."
+              },
+              "entryId": "ff38739b-6994-4b53-9b85-854b2e5594a0"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I understand, I'll plot a course to Oasis.",
+              "entryId": "77ff45fa-2ce7-4f54-a91b-0e64690aab51"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "c488d2bf-9b7c-4d82-9dfd-b6ee2e1590f6"
+            },
+            "index": 3
+          }
+        ],
+        "index": 41,
+        "logId": "ed0d9680-0db4-4d6c-9588-1fc63999d097",
+        "fallbackLogId": "73617e43-d3c8-42a3-b118-2d6b6522a8bd"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It's just a fragment of the total dump, but it contains a communication manifest from the relay.",
+              "entryId": "4fe560d6-a837-4733-8d5a-f35091051732"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "fa171a33-5962-4be7-a6f4-f70099879b82"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "With that, we can track down the last relay Oasis' message passed through. Perhaps we'll have better luck there...",
+              "entryId": "68e1eece-a257-42c6-8888-16e629625abe"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "It's time to move on...",
+              "promptInfo": {
+                "Behaviour": "PrintOverride",
+                "MessageOverride": "Thank you, it's time to move on..."
+              },
+              "entryId": "1443ad19-a6eb-48f2-b15d-fd918e333f23"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "I understand, I'll plot a course to the next relay.",
+              "entryId": "d67a2b29-e8b7-4fed-8979-12be9a73a9ec"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Datalink >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "2a60501e-71e2-41be-be63-6073b28235f4"
+            },
+            "index": 5
+          }
+        ],
+        "index": 42,
+        "logId": "f8e5cc31-ebf5-4f68-a4a9-3f9fc3f33048",
+        "fallbackLogId": "fb78f0fa-4f8a-4653-9066-a041df0a9207"
+      }
+    ]
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-04-22T13:03:20.651643-07:00",
+  "modified": "2019-04-22T13:03:20.651643-07:00",
+  "id": "oasis_relay_trial_ring_dive",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

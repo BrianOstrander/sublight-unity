@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.IO;
 using UnityEngine;
 
 using LunraGames.SubLight.Models;
@@ -175,6 +175,147 @@ namespace LunraGames.SubLight
 			else done(model, RequestResult.Failure(result));
 		}
 		#endregion
+		
+		#region Consolidate Filenames
+		
+		private const string ConsolidateFilenamesDescription = "Renames files so their id is equal to their filename. WARNING: This is possibly destructive!";
+		
+		[BatchModelOperation(typeof(EncounterInfoModel), description: ConsolidateFilenamesDescription)]
+		static void ConsolidateFilenames(EncounterInfoModel model, Action<EncounterInfoModel, RequestResult> done, bool write)
+		{
+			ConsolidateFilenamesShared(
+				model,
+				done,
+				write
+			);
+		}
+
+		[BatchModelOperation(typeof(GalaxyInfoModel), description: ConsolidateFilenamesDescription)]
+		static void ConsolidateFilenames(GalaxyInfoModel model, Action<GalaxyInfoModel, RequestResult> done, bool write)
+		{
+			ConsolidateFilenamesShared(
+				model,
+				done,
+				write
+			);
+		}
+
+		[BatchModelOperation(typeof(GamemodeInfoModel), description: ConsolidateFilenamesDescription)]
+		static void ConsolidateFilenames(GamemodeInfoModel model, Action<GamemodeInfoModel, RequestResult> done, bool write)
+		{
+			ConsolidateFilenamesShared(
+				model,
+				done,
+				write
+			);
+		}
+
+		static void ConsolidateFilenamesShared<T>(
+			T model,
+			Action<T, RequestResult> done,
+			bool write
+		)
+			where T : SaveModel
+		{
+			var result = GetUnmodifiedResult(model);
+
+			var modifications = new List<string>();
+			var errors = new List<string>();
+			
+			string ConvertNameToId(string name)
+			{
+				return name
+					.Replace(":", "")
+					.Replace("-", "")
+					.Replace("  ", " ")
+					.Replace(' ', '_')
+					.ToLower();
+			}
+			
+			string GetName()
+			{
+				switch (model.SaveType)
+				{
+					case SaveTypes.EncounterInfo:
+//						return (model as EncounterInfoModel).Name;
+						return null;
+					case SaveTypes.GalaxyInfo:
+						return (model as GalaxyInfoModel).Name;
+					case SaveTypes.GamemodeInfo:
+						return (model as GamemodeInfoModel).Name;
+					default:
+						errors.Add(ModificationPrefix + "Unrecognized SaveType: " + model.SaveType);
+						return null;
+				}
+			}
+			
+			var oldId = model.Id.Value;
+			var newId = ConvertNameToId(GetName());
+
+			if (oldId != newId)
+			{
+				var oldPath = model.Path.Value;
+				var newPath = Path.Combine(Directory.GetParent(model.Path.Value).FullName, newId + Path.GetExtension(oldPath));
+
+				var oldSiblingDirectory = model.SiblingDirectory;
+				var newSiblingDirectory = oldSiblingDirectory == null
+					? null
+					: Path.Combine(
+						  Directory.GetParent(newPath).FullName,
+						  Path.GetFileNameWithoutExtension(newPath)
+					  ) + Path.DirectorySeparatorChar;
+
+				var currModification = ModificationPrefix + "Reassigning Id...";
+				currModification += ModificationPrefix + "\tFrom: \t" + oldId;
+				currModification += ModificationPrefix + "\tTo: \t" + newId;
+				
+				modifications.Add(currModification);
+
+				currModification = ModificationPrefix + "Moving file...";
+				currModification += ModificationPrefix + "\tFrom: \t" + oldPath;
+				currModification += ModificationPrefix + "\tTo: \t" + newPath;
+				
+				modifications.Add(currModification);
+				
+				if (write)
+				{
+					model.Id.Value = newId;
+					model.Path.Value = newPath; 
+					File.Delete(oldPath);
+				}
+
+				if (oldSiblingDirectory != newSiblingDirectory)
+				{
+					currModification = ModificationPrefix + "Moving sibling directory...";
+					currModification += ModificationPrefix + "\tFrom: \t" + oldSiblingDirectory;
+					currModification += ModificationPrefix + "\tTo: \t" + newSiblingDirectory;
+				
+					modifications.Add(currModification);
+					
+					if (write) Directory.Move(oldSiblingDirectory, newSiblingDirectory);
+				}
+			}
+
+			if (modifications.Any() || errors.Any())
+			{
+				var allModifications = string.Empty;
+				foreach (var modification in modifications) allModifications += modification;
+				var allErrors = string.Empty;
+				foreach (var error in errors) allErrors += error;
+
+				result = GetModifiedResult(
+					model,
+					modifications.Count,
+					model.HasSiblingDirectory ? 3 : 2,
+					allModifications,
+					allErrors
+				);
+			}
+			
+			if (errors.None()) done(model, RequestResult.Success(result));
+			else done(model, RequestResult.Failure(result));
+		}
+		#endregion
 
 		#region Shared
 		public const string ModificationPrefix = "\n\t";
@@ -200,7 +341,7 @@ namespace LunraGames.SubLight
 
 		public static string GetName(SaveModel model)
 		{
-			return "\"" + (string.IsNullOrEmpty(model.Meta.Value) ? ShortenValue(model.Path.Value) : model.Meta.Value) + "\"";
+			return "\"" + (string.IsNullOrEmpty(model.Id.Value) ? ShortenValue(model.Path.Value) : model.Id.Value) + "\"";
 		}
 
 		public static string ShortenValue(

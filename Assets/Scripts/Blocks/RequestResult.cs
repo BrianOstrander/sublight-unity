@@ -2,6 +2,7 @@
 
 namespace LunraGames.SubLight
 {
+	// TODO: Use Result and ResultArray instead!
 	public struct RequestResult
 	{
 		public static RequestResult Success(string message = null) { return new RequestResult(RequestStatus.Success, message); }

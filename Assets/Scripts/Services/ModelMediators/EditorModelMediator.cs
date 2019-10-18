@@ -1,9 +1,39 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
+using LunraGames.SubLight.Models;
+using UnityEngine;
 
 namespace LunraGames.SubLight
 {
 	public class EditorModelMediator : DesktopModelMediator 
 	{
+		static EditorModelMediator instance;
+		public static EditorModelMediator Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
+					instance = new EditorModelMediator(true);
+					instance.Initialize(BuildPreferences.Instance.Info, instance.OnInstanceInitialized);
+				}
+				return instance;
+			}
+		}
+
+		void OnInstanceInitialized(RequestStatus status)
+		{
+			switch (status)
+			{
+				case RequestStatus.Success: break;
+				default:
+					Debug.LogError("Editor time save load service returned: " + status);
+					return;
+			}
+		}
+
+		protected override bool SuppressErrorLogging => true;
+		
 		Dictionary<SaveTypes, bool> CanSaveOverrides
 		{
 			get
@@ -12,7 +42,8 @@ namespace LunraGames.SubLight
 				{
 					{ SaveTypes.EncounterInfo, true },
 					{ SaveTypes.GalaxyInfo, true },
-					{ SaveTypes.GamemodeInfo, true }
+					{ SaveTypes.GamemodeInfo, true },
+					{ SaveTypes.ModuleTrait, true }
 					// --
 				};
 			}
@@ -38,3 +69,4 @@ namespace LunraGames.SubLight
 		public EditorModelMediator(bool readableSaves = false) : base(readableSaves) {}
 	}
 }
+#endif

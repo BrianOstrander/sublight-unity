@@ -1,0 +1,902 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 0.5,
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "86dd4471-d2da-4cca-9561-26722a9fd0fd",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [
+      {
+        "operation": "NotCompleted",
+        "filterId": "9e5b0c17-32fd-4f8e-8aad-d2f5fd714da6",
+        "group": "All"
+      }
+    ]
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "56abddb3-b81d-47f4-87d7-3e3197f64218",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_maximum"
+                },
+                "Input1": {
+                  "AddressId": "10049192-5005-4428-baa7-073a40b0b7ca",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.25
+                },
+                "MinimumClamping": {
+                  "AddressId": "2b73f799-dcf0-4476-af85-d89972b3f8e1",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "ac95f4d8-0ed7-4372-89ca-a56f52c64131",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "2329187e-fd55-4392-8fe1-d3c651d1d453",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "propellant_addition"
+                }
+              },
+              "entryId": "b05da229-eed7-488b-9346-9d6e82280a51"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Ceiling",
+                "Input0": {
+                  "AddressId": "2026a372-a02c-4d45-bdfb-33fe3e419afb",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "propellant_addition"
+                },
+                "Input1": {
+                  "AddressId": "a3afbb3c-73ad-473c-b74e-ddab7e04bc1f",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "046fe558-9c40-449e-854d-8535dc30bf12",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "7e3f3474-4fe9-497f-9624-3d113a9ae3ec",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "086728a1-28f5-4cb5-9e58-7b5c5e4c21ea",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "propellant_addition"
+                }
+              },
+              "entryId": "6ebcf8f6-92a2-400c-92f5-b1108eba58d6"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "a6df43e0-29f7-4439-8a34-2bd190d990ed",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_maximum"
+                },
+                "Input1": {
+                  "AddressId": "36ac5453-3798-4474-87da-c914d6b3f882",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "propellant_addition"
+                },
+                "MinimumClamping": {
+                  "AddressId": "9a15d089-e355-4f9f-b833-2fedd15bb489",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "3bdae03f-5d0c-4964-be55-b3657d229468",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "59c8ea76-e714-4352-afb3-5961c084835f",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "propellant_maximum"
+                }
+              },
+              "entryId": "5082a521-7e6d-4b87-b6c1-ee75079ef5e2"
+            },
+            "index": 2
+          }
+        ],
+        "index": 9,
+        "logId": "d948b4ce-e642-4838-a771-034f0ebd4c67",
+        "fallbackLogId": "a0be7c50-a12e-4ba4-9ee9-c4de25edb791"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Multiply",
+                "Input0": {
+                  "AddressId": "e32c36df-db4d-4b91-a911-6a64e5a4dc33",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_maximum"
+                },
+                "Input1": {
+                  "AddressId": "5d2fd484-d710-4b97-a74d-b76226dc4f89",
+                  "Source": "LocalValue",
+                  "LocalValue": 0.25
+                },
+                "MinimumClamping": {
+                  "AddressId": "a611cf41-5868-4b7a-a922-f11e2097ae8e",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "60a7b582-07d7-4203-992f-39608737122b",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "657255c8-134e-49df-9977-bd86129d6d82",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "rations_addition"
+                }
+              },
+              "entryId": "a6ffa8e1-263b-4065-9d8a-ee89662aff08"
+            }
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Ceiling",
+                "Input0": {
+                  "AddressId": "2e6f1947-a54f-41ab-b6eb-d6daa609d09e",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "rations_addition"
+                },
+                "Input1": {
+                  "AddressId": "543d65a8-d516-4b2a-ba0f-27d4bcf2ffab",
+                  "Source": "LocalValue"
+                },
+                "MinimumClamping": {
+                  "AddressId": "45f03b33-ce50-4445-86de-3479745f119d",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "b80587f4-1c6b-4665-9907-5a2b4c0864cd",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "507a37af-0e2c-4262-ac47-c363f5fa3dc0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "rations_addition"
+                }
+              },
+              "entryId": "e941e43d-92ce-48f1-bf16-fe8b8e95d37a"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Float",
+              "floatValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "91d052a9-0547-4ca1-9f68-03d0ae58e360",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_maximum"
+                },
+                "Input1": {
+                  "AddressId": "0b94bda8-06b5-41ba-b500-69e08cbab684",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Encounter",
+                  "ForeignKey": "rations_addition"
+                },
+                "MinimumClamping": {
+                  "AddressId": "807dda0c-3856-4107-a08c-8b5970e7b1d7",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "025a44ce-778d-49ec-8bb5-ee6c1a4d217f",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "eb179c63-a44d-4a38-a68d-ba470cde86ae",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "rations_maximum"
+                }
+              },
+              "entryId": "934fe2d1-2f6d-493a-98c0-eb96539401ed"
+            },
+            "index": 2
+          }
+        ],
+        "index": 11,
+        "logId": "438e4c4c-aab8-4f0f-9e5e-4460435fea76",
+        "fallbackLogId": "a0be7c50-a12e-4ba4-9ee9-c4de25edb791"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "buttons": [
+          {
+            "entry": {
+              "message": "Let's leave it alone.",
+              "nextLogId": "56509b13-f43c-4f03-8411-ae1ee20d7c1c",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "9c9006ba-0ec2-4906-b228-58e9f9e7b49a"
+            }
+          },
+          {
+            "entry": {
+              "message": "Refurbish the tank for propellant.",
+              "nextLogId": "a3355b93-eb7c-4117-9b52-2d2dcd947c33",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "5701942f-22e2-4f04-8084-f86427d1881c"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "message": "Convert the tank to store rations.",
+              "nextLogId": "ec87c89d-1448-4893-ba96-7fdf6e824708",
+              "usedFiltering": {
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "interactableFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "enabledFiltering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "21b8ee2a-6c1c-4bcc-843c-769ceb698591"
+            },
+            "index": 2
+          }
+        ],
+        "index": 5,
+        "logId": "60596497-75b8-4f4a-b578-2f8626a38041"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 10,
+                  "lock_state": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a83837a5-673c-4f38-8940-191712a7e3ab"
+            }
+          }
+        ],
+        "ending": true,
+        "logId": "86dd4471-d2da-4cca-9561-26722a9fd0fd",
+        "name": "< End Encounter >"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "ToolbarSelection",
+              "isHalting": true,
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "selection": 30,
+                  "lock_state": 10
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "7256ecef-4715-4665-9a29-bdc794e19e3c"
+            }
+          }
+        ],
+        "index": 2,
+        "logId": "d2c08cca-d4fe-4a2e-a30b-945a7c80fad0",
+        "fallbackLogId": "e56c3c5a-a5f0-49f6-b3ff-e58d1b2cb7e6"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Object of Interest",
+              "message": "<b>CLASSIFICATION</b> PROPELLANT TANK\n<b>GROSS MASS</b> APROX. 8,000 METRIC TONS\n<b>STATUS</b> DISCARDED\n\n<b>ANALYSIS</b> A full spectral analysis of a gas giant in this system found a discarded propellant tank. Thermal readings indicate it's depleted, but it might be in a condition to supplement our own storage needs.",
+              "dialogType": "ConfirmDeny",
+              "dialogStyle": "Warning",
+              "successLogId": "d2c08cca-d4fe-4a2e-a30b-945a7c80fad0",
+              "successText": "Rendezvous",
+              "failureText": "Ignore",
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "aa7d9f0d-133d-4428-b55c-8fdee3137a8e"
+            }
+          }
+        ],
+        "index": 1,
+        "beginning": true,
+        "logId": "3061a038-890c-4a4e-8954-c5aa5c9479e9",
+        "fallbackLogId": "86dd4471-d2da-4cca-9561-26722a9fd0fd"
+      },
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Additional Storage",
+              "message": "After weeks of intense physical exertion, your crew has managed to scrape away the layers of wax and polish off the paint from the exterior hull. The discarded wax and flecks of paint now litter the former orbit of the tank.\n\nWith your refurbished rations tank in tow, you turn your ark starward.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Warning",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "GreaterThan",
+                    "filterId": "14cb3779-a325-4dc1-8671-4eb8fbc3b4a4",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "fd545ef1-b2cb-4b6e-8b90-b7aee415ce64",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "rations_addition"
+                    },
+                    "Input1": {
+                      "AddressId": "9c90930d-a309-42e2-8ca1-06e34af91a60",
+                      "Source": "LocalValue"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "90e14979-7235-4457-a533-cf65584f94cd"
+            }
+          },
+          {
+            "entry": {
+              "title": "Additional Storage",
+              "message": "After weeks of intense physical exertion, your crew has managed to scrape away the layers of wax and polish off the paint from the exterior hull. The discarded wax and flecks of paint now litter the former orbit of the tank.\n\nWith your refurbished propellant tank in tow, you turn your ark starward.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Warning",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "GreaterThan",
+                    "ignore": true,
+                    "filterId": "de592593-cfe4-433b-8919-3f18412329e8",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "0fc6f30c-272f-4752-9040-ce7d14c1be2c",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Encounter",
+                      "ForeignKey": "propellant_addition"
+                    },
+                    "Input1": {
+                      "AddressId": "49f9d7fb-2705-4196-b723-c84d6a2eae89",
+                      "Source": "LocalValue"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "28836f44-dd52-40ad-bee0-72320c130081"
+            },
+            "index": 1
+          }
+        ],
+        "index": 12,
+        "logId": "a0be7c50-a12e-4ba4-9ee9-c4de25edb791",
+        "fallbackLogId": "86dd4471-d2da-4cca-9561-26722a9fd0fd",
+        "name": "dialog result"
+      }
+    ],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "bustId": "ExtraOps",
+              "bustEvent": "Initialize",
+              "initializeInfo": {
+                "Theme": "AwayTeam",
+                "TitleSource": "Propellant Tank",
+                "TitleClassification": "Discarded",
+                "TransmitionType": "Transmission",
+                "TransmitionStrength": "Strong",
+                "TransmitionStrengthIcon": "Strong",
+                "PlacardName": "W. Davis",
+                "PlacardDescription": "Extravehicular Operations",
+                "AvatarType": "Static",
+                "AvatarStaticIndex": 4
+              },
+              "entryId": "6b413986-7491-4c8e-875e-fdb14fbf815b"
+            }
+          },
+          {
+            "entry": {
+              "bustId": "ExtraOps",
+              "bustEvent": "Focus",
+              "entryId": "cb5c87e5-3b97-4a03-a06e-55319339dffe"
+            },
+            "index": 1
+          }
+        ],
+        "index": 3,
+        "logId": "e56c3c5a-a5f0-49f6-b3ff-e58d1b2cb7e6",
+        "fallbackLogId": "a51bbffe-38f4-4cf0-baed-b1c57270a1cd"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "From a distance, it looked like a standard propellant tank...",
+              "entryId": "32fa844f-840d-43e0-9057-457281a534bd"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "54ad05f3-9b21-4dc2-a541-cc2f60abcd4c"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "However, it has some unique modifications, to say the least.",
+              "entryId": "c3f0eb2e-375c-4805-b524-28f84f542f64"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Like?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "eedfdb62-e1d8-43d0-b866-33207313aeca"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The entire exterior is painted... hand painted, in fact. We’ve catalogued a variety of designs, mostly spiraling geometric ones. They all converge on a makeshift airlock.",
+              "entryId": "b49912d6-5327-4e55-b73d-0386d2767e22"
+            },
+            "index": 4
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Is the airlock functional?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "e2f6cc11-d50a-47a8-a01e-4267de033411"
+            },
+            "index": 5
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "It was finicky, we had to provide our own power source, but we got it to cycle.",
+              "entryId": "04cb670f-b1c7-454b-9a2d-9dcc3cd838f5"
+            },
+            "index": 6
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "Is the interior of the tank intact?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "40401643-51e9-4529-80b1-038799f68ea3"
+            },
+            "index": 7
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Yes...",
+              "entryId": "ecb934cf-aeea-4284-9799-64111dd0f234"
+            },
+            "index": 8
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "But?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "879bfaa3-46c5-421a-81e9-3cbd3f08660f"
+            },
+            "index": 9
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "b78eb8c0-057e-4dcc-bed5-35f2b88665ad"
+            },
+            "index": 11
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Well, I don’t think this was jettisoned as a propellant tank...",
+              "entryId": "f32f88be-e14b-4e29-9c0f-0f7a7dae99a0"
+            },
+            "index": 10
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The interior is entirely covered with layer upon layer of extinguished candles and discarded wax.",
+              "entryId": "03f9157a-5b6e-45a2-8ad3-e211ed44bdc4"
+            },
+            "index": 12
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "What?",
+              "promptInfo": {
+                "Behaviour": "PrintMessage"
+              },
+              "entryId": "360337b0-5852-4de5-b0b7-e0be3136be82"
+            },
+            "index": 13
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Our carbon analysis indicates the lowest strata of wax was burned several thousand years ago, and the topmost only a century ago.",
+              "entryId": "26819a83-b92e-4e96-8b4e-498b27d2d0ce"
+            },
+            "index": 14
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "6bb57d67-d891-4c60-904c-aaea92b22a18"
+            },
+            "index": 15
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "The atmosphere is stale, but breathable, the wax did a good job of plugging micrometeorite impacts in the hull.",
+              "entryId": "fe997bea-e392-4838-95ea-dacd94b593e4"
+            },
+            "index": 16
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "promptInfo": {
+                "Behaviour": "Continue"
+              },
+              "entryId": "1a1041d7-7c33-4c40-9ccd-4ff8dbeaf959"
+            },
+            "index": 17
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "With a bit of work, we could refurbish this to a functional propellant tank again, or convert it to store additional rations. It's your call.",
+              "entryId": "48065c4d-242c-4ebc-a559-d4a825a1d48f"
+            },
+            "index": 18
+          }
+        ],
+        "index": 4,
+        "logId": "a51bbffe-38f4-4cf0-baed-b1c57270a1cd",
+        "fallbackLogId": "60596497-75b8-4f4a-b578-2f8626a38041"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Let's leave it alone.",
+              "entryId": "76b88677-8eaa-481c-8a53-48ab928d1237"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "Understood.",
+              "entryId": "d1ba4d8e-5b8d-4947-8a31-d557e52ed4b4"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Transmission >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "b5e3be27-96bf-4e97-9ceb-82a2b668688c"
+            },
+            "index": 2
+          }
+        ],
+        "index": 6,
+        "logId": "56509b13-f43c-4f03-8411-ae1ee20d7c1c",
+        "fallbackLogId": "86dd4471-d2da-4cca-9561-26722a9fd0fd"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Refurbish the tank for propellant.",
+              "entryId": "169bb67c-54fc-4dab-bae6-b0c75ebebd74"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We'll have to gut the stuff inside and remove the exterior paint, but okay.",
+              "entryId": "d4d47ec0-d3a8-4cdb-b9da-99e4132cd0b0"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Transmission >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "7f8a6b06-c7ae-4b98-8b18-885258b063ea"
+            },
+            "index": 2
+          }
+        ],
+        "index": 7,
+        "logId": "a3355b93-eb7c-4117-9b52-2d2dcd947c33",
+        "fallbackLogId": "d948b4ce-e642-4838-a771-034f0ebd4c67"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "conversationType": "MessageOutgoing",
+              "message": "Convert the tank to store rations.",
+              "entryId": "3a0f2552-ef34-4bd8-a7d4-c1e9c51cfb87"
+            }
+          },
+          {
+            "entry": {
+              "conversationType": "MessageIncoming",
+              "message": "We'll have to gut the stuff inside and remove the exterior paint, but okay.",
+              "entryId": "a649b344-bdeb-48b2-b655-6cd32f74d02c"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "conversationType": "Prompt",
+              "message": "< End Transmission >",
+              "promptInfo": {
+                "Behaviour": "ButtonOnly"
+              },
+              "entryId": "ffd52189-7d23-48c2-916a-50468b41b770"
+            },
+            "index": 2
+          }
+        ],
+        "index": 8,
+        "logId": "ec87c89d-1448-4893-ba96-7fdf6e824708",
+        "fallbackLogId": "438e4c4c-aab8-4f0f-9e5e-4460435fea76"
+      }
+    ]
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-04-09T09:59:53.041572-07:00",
+  "modified": "2019-04-09T09:59:53.041572-07:00",
+  "id": "wax_sky",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

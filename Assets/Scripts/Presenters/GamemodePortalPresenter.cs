@@ -34,8 +34,8 @@ namespace LunraGames.SubLight.Presenters
 				var currentGamemode = this.gamemodes[i];
 				gamemodeBlocks[i] = new GamemodeBlock
 				{
-					Title = currentGamemode.Title.Value,
-					SubTitle = currentGamemode.SubTitle.Value,
+					Title = currentGamemode.Category.Value,
+					SubTitle = currentGamemode.Name.Value,
 					Description = currentGamemode.Description.Value,
 					StartText = currentGamemode.IsInDevelopment ? language.Locked.Value.Value : language.Start.Value.Value,
 					LockState = currentGamemode.IsInDevelopment ? GamemodeBlock.LockStates.InDevelopment : GamemodeBlock.LockStates.Unlocked,

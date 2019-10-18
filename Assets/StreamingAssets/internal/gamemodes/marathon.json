@@ -1,0 +1,14 @@
+{
+  "isInDevelopment": true,
+  "orderWeight": 150,
+  "category": "Game",
+  "name": "Marathon",
+  "description": "The grim black reaches of space beckon your people. This is a voyage of discovery, endurance, and ultimately... failure. Try to keep your interstellar ark alive for as long as possible, and see how far you can go!",
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-03-28T16:29:28.576922-07:00",
+  "modified": "2019-03-28T16:29:28.576922-07:00",
+  "id": "marathon",
+  "SaveType": "GamemodeInfo",
+  "SiblingBehaviour": "All"
+}

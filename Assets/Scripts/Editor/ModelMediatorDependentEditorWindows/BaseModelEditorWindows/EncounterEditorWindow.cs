@@ -26,9 +26,9 @@ namespace LunraGames.SubLight
 			baseRunEncounterTrigger = new EditorPrefsEnum<EncounterTriggers>(currPrefix + "RunEncounterTrigger", EncounterTriggers.Load);
 
 			SettingsGui += BaseSettingsGui;
-
-			GeneralConstruct();
-			LogsConstruct();
+			
+			RegisterToolbar(new EncounterGeneralEditorTab(this));
+			RegisterToolbar(new EncounterLogsEditorTab(this));
 		}
 
 		void BaseSettingsGui()
@@ -53,9 +53,9 @@ namespace LunraGames.SubLight
 		}
 
 		#region Model Overrides
-		protected override EncounterInfoModel CreateModel(string name)
+		protected override EncounterInfoModel CreateModel(string id, string name)
 		{
-			var model = base.CreateModel(name);
+			var model = base.CreateModel(id, name);
 
 			model.RandomWeightMultiplier.Value = 1f;
 			model.RandomAppearance.Value = 1f;
@@ -66,7 +66,8 @@ namespace LunraGames.SubLight
 
 		protected override void AssignModelName(EncounterInfoModel model, string name)
 		{
-			model.Name.Value = name;
+			// TODO: Should probably make this virtual not abstract...
+//			model.Name.Value = name;
 		}
 		#endregion
 

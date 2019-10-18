@@ -1,0 +1,277 @@
+{
+  "orderWeight": 15,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "531de101-de64-4846-acc0-34c9f09ebdb6",
+  "filtering": {
+    "showValues": true,
+    "booleanKeyValues": [],
+    "integerKeyValues": [
+      {
+        "operation": "GreaterThan",
+        "index": 1,
+        "filterId": "e2547046-0127-4c8f-95e8-91fe540ae1ce",
+        "group": "All",
+        "Input0": {
+          "AddressId": "716be6a8-e8c5-4800-9e84-930592b372b6",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_history_count"
+        },
+        "Input1": {
+          "AddressId": "0fdb6371-1a5d-4eb4-86fa-4ab473add9dd",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_limited_history_delay_critical"
+        }
+      }
+    ],
+    "stringKeyValues": [],
+    "floatKeyValues": [
+      {
+        "operation": "LessThanOrEquals",
+        "filterId": "251c7422-c74c-499d-a167-587567679146",
+        "group": "All",
+        "Input0": {
+          "AddressId": "5701d456-0f16-44f4-a921-c43d7a40ec2e",
+          "Source": "KeyValue",
+          "ForeignTarget": "Game",
+          "ForeignKey": "transit_range_ratio"
+        },
+        "Input1": {
+          "AddressId": "527a98bc-f7cd-4174-b2bd-274e2b962d70",
+          "Source": "LocalValue",
+          "LocalValue": 0.3
+        }
+      }
+    ],
+    "enumerationKeyValues": [],
+    "encounterInteractions": []
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "keyValueType": "Integer",
+              "integerValue": {
+                "Operation": "Add",
+                "Input0": {
+                  "AddressId": "3b741c42-eeea-43f0-a58b-f0de63c526c0",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transit_history_count"
+                },
+                "Input1": {
+                  "AddressId": "ad17c9f1-bb15-4264-a22f-e53625fbcb09",
+                  "Source": "LocalValue",
+                  "LocalValue": 5
+                },
+                "MinimumClamping": {
+                  "AddressId": "c3508120-644c-4a1e-9013-97cf62796fa2",
+                  "Source": "LocalValue"
+                },
+                "MaximumClamping": {
+                  "AddressId": "fbd1d448-5883-4143-9d4f-214f2d1a4c40",
+                  "Source": "LocalValue"
+                },
+                "Output": {
+                  "AddressId": "2d061750-4592-4e24-8597-8197415b506a",
+                  "Source": "KeyValue",
+                  "ForeignTarget": "Game",
+                  "ForeignKey": "transit_limited_history_delay_critical"
+                }
+              },
+              "entryId": "bd990e3d-ff15-4167-bb86-d8961ee18d99"
+            }
+          }
+        ],
+        "beginning": true,
+        "logId": "9e29b925-f332-4ef0-a9a1-841c001edcae",
+        "fallbackLogId": "139596b6-a320-44c4-9a0e-683e4565f581"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "TriggerQueue",
+              "keyValues": {
+                "booleans": {
+                  "pop_none": false,
+                  "pop_load": false,
+                  "pop_initializerules": false,
+                  "pop_navigationselect": false,
+                  "pop_navigationselectoutofrange": false,
+                  "pop_transitcomplete": false,
+                  "pop_resourcerequest": false,
+                  "pop_resourceconsume": false,
+                  "pop_systemidle": false
+                },
+                "integers": {
+                  "push_none": 0,
+                  "push_load": 0,
+                  "push_initializerules": 0,
+                  "push_navigationselect": 0,
+                  "push_navigationselectoutofrange": 0,
+                  "push_transitcomplete": 1,
+                  "push_resourcerequest": 0,
+                  "push_resourceconsume": 0,
+                  "push_systemidle": 0
+                },
+                "strings": {},
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "a8c03f5f-8444-4d71-9439-6c83f5975ddb"
+            }
+          }
+        ],
+        "index": 1,
+        "logId": "139596b6-a320-44c4-9a0e-683e4565f581",
+        "fallbackLogId": "5203cec4-63e8-4ef5-9b0f-3a4085f34942"
+      },
+      {
+        "entries": [],
+        "index": 3,
+        "ending": true,
+        "logId": "531de101-de64-4846-acc0-34c9f09ebdb6",
+        "name": "< End Encounter >"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "dialogs": [
+          {
+            "entry": {
+              "title": "Rations Critically Low",
+              "message": "People will starve if you don't find more <b>rations</b> for them to eat! Look for systems rich with these resources.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThan",
+                    "filterId": "063c7494-dfc2-4d57-82ae-3904b6023ffe",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "2cbee828-3350-4979-bdd4-3d7f28dec493",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "rations_fulfillment"
+                    },
+                    "Input1": {
+                      "AddressId": "d5d4fad3-7474-4201-b7aa-38d6bb62df0f",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "propellant_fulfillment"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "3aa97c2f-e5e9-4495-a8a8-c8c7c4c2b904"
+            }
+          },
+          {
+            "entry": {
+              "title": "Propellant Critically Low",
+              "message": "Our ark is running extremely low on <b>propellant</b>, look for systems rich with resources to refuel.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [
+                  {
+                    "operation": "LessThan",
+                    "filterId": "b34942ac-b201-46da-8190-7a74d440872b",
+                    "group": "All",
+                    "Input0": {
+                      "AddressId": "508eb326-7268-4a15-8ecb-bff7516922e0",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "propellant_fulfillment"
+                    },
+                    "Input1": {
+                      "AddressId": "a5dd0379-fd10-45cd-b9e7-54d76874591a",
+                      "Source": "KeyValue",
+                      "ForeignTarget": "Game",
+                      "ForeignKey": "rations_fulfillment"
+                    }
+                  }
+                ],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "c57ecb18-aee4-4adb-be44-ea1b92a075ab"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "title": "Resources Critically Low",
+              "message": "Our ark is running extremely low on on <b>propellant</b> and <b>rations</b>, look for systems rich in resources.",
+              "dialogType": "Confirm",
+              "dialogStyle": "Error",
+              "successText": "Understood",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": []
+              },
+              "entryId": "1b245643-f582-4380-b570-7f0046080266"
+            },
+            "index": 2
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "5203cec4-63e8-4ef5-9b0f-3a4085f34942"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-04-02T10:48:00.737332-07:00",
+  "modified": "2019-04-02T10:48:00.737332-07:00",
+  "id": "transit_limited_critical",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

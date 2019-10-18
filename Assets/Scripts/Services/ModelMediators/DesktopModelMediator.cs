@@ -38,7 +38,8 @@ namespace LunraGames.SubLight
 					{ SaveTypes.GalaxyDistant, 9 },
 					{ SaveTypes.GalaxyInfo, 9 },
 					// --
-					{ SaveTypes.GamemodeInfo, 9 }
+					{ SaveTypes.GamemodeInfo, 9 },
+					{ SaveTypes.ModuleTrait, 12 }
 				};
 			}
 		}
@@ -61,7 +62,8 @@ namespace LunraGames.SubLight
 					{ SaveTypes.GalaxyDistant, false },
 					{ SaveTypes.GalaxyInfo, false },
 					// --
-					{ SaveTypes.GamemodeInfo, false }
+					{ SaveTypes.GamemodeInfo, false },
+					{ SaveTypes.ModuleTrait, false }
 				};
 			}
 		}
@@ -113,25 +115,29 @@ namespace LunraGames.SubLight
 				case SaveTypes.InteractedEncounterInfoList: return Path.Combine(ParentPath, "interacted-encounters");
 				// --
 				case SaveTypes.GamemodeInfo: return Path.Combine(InternalPath, "gamemodes");
+				case SaveTypes.ModuleTrait: return Path.Combine(InternalPath, "module-traits");
 				default: throw new ArgumentOutOfRangeException("saveType", saveType + " is not handled.");
 			}
 		}
 
-		protected override string GetUniquePath(SaveTypes saveType)
+		protected override string GetUniquePath(SaveTypes saveType, string id)
 		{
-			var path = Path.Combine(GetPath(saveType), Guid.NewGuid().ToString() + Extension);
+			if (string.IsNullOrEmpty(id)) throw new ArgumentNullException(nameof(id));
+			if (!id.Replace("_", "").Any(Char.IsLetterOrDigit)) throw new ArgumentException("Id \"" + id + "\" contains non alphanumeric characters", nameof(id));
+			
+			var path = Path.Combine(GetPath(saveType), id + Extension);
 
-			// TODO: Check that path doesn't exist.
-
+			if (File.Exists(path)) throw new Exception("Id is not unique, a file exists at path: " + path);
+			
 			return path;
 		}
 
-		protected override void OnLoad<M>(SaveModel model, Action<SaveLoadRequest<M>> done)
+		protected override void OnLoad<M>(SaveModel model, Action<ModelResult<M>> done)
 		{
 			var result = Serialization.DeserializeJson<M>(File.ReadAllText(model.Path));
 			if (result == null)
 			{
-				done(SaveLoadRequest<M>.Failure(model, null, "Null result"));
+				done(ModelResult<M>.Failure(model, null, "Null result"));
 				return;
 			}
 
@@ -139,17 +145,17 @@ namespace LunraGames.SubLight
 			result.Path.Value = model.Path;
 
 			if (result.HasSiblingDirectory) LoadSiblingFiles(model, result, done);
-			else done(SaveLoadRequest<M>.Success(model, result));
+			else done(ModelResult<M>.Success(model, result));
 		}
 
-		protected override void OnSave<M>(M model, Action<SaveLoadRequest<M>> done = null)
+		protected override void OnSave<M>(M model, Action<ModelResult<M>> done = null)
 		{
 			File.WriteAllText(model.Path, Serialization.Serialize(model, formatting: readableSaves ? Formatting.Indented : Formatting.None));
 			if (model.HasSiblingDirectory) Directory.CreateDirectory(model.SiblingDirectory);
-			done(SaveLoadRequest<M>.Success(model, model));
+			done(ModelResult<M>.Success(model, model));
 		}
 
-		protected override void OnList<M>(Action<SaveLoadArrayRequest<SaveModel>> done)
+		protected override void OnIndex<M>(Action<ModelIndexResult<SaveModel>> done)
 		{
 			var path = GetPath(ToEnum(typeof(M)).FirstOrDefault());
 			var results = new List<SaveModel>();
@@ -171,13 +177,13 @@ namespace LunraGames.SubLight
 				}
 			}
 			var array = results.ToArray();
-			done(SaveLoadArrayRequest<SaveModel>.Success(array));
+			done(ModelIndexResult<SaveModel>.Success(array));
 		}
 
-		protected override void OnDelete<M>(M model, Action<SaveLoadRequest<M>> done)
+		protected override void OnDelete<M>(M model, Action<ModelResult<M>> done)
 		{
 			File.Delete(model.Path);
-			done(SaveLoadRequest<M>.Success(model, model));
+			done(ModelResult<M>.Success(model, model));
 		}
 
 		protected override void OnRead(string path, Action<ReadWriteRequest> done)
@@ -194,18 +200,18 @@ namespace LunraGames.SubLight
 		}
 
 		#region Sibling Loading
-		void LoadSiblingFiles<M>(SaveModel model, M result, Action<SaveLoadRequest<M>> done)
+		void LoadSiblingFiles<M>(SaveModel model, M result, Action<ModelResult<M>> done)
 			where M : SaveModel
 		{
 			OnLoadSiblingFiles(Directory.GetFiles(result.SiblingDirectory).ToList(), model, result, done);
 		}
 
-		void OnLoadSiblingFiles<M>(List<string> remainingFiles, SaveModel model, M result, Action<SaveLoadRequest<M>> done)
+		void OnLoadSiblingFiles<M>(List<string> remainingFiles, SaveModel model, M result, Action<ModelResult<M>> done)
 			where M : SaveModel
 		{
 			if (remainingFiles.None())
 			{
-				done(SaveLoadRequest<M>.Success(model, result));
+				done(ModelResult<M>.Success(model, result));
 				return;
 			}
 
