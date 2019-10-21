@@ -7,9 +7,9 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] EncounterEventEntryModel entry = new EncounterEventEntryModel();
 
 		[JsonIgnore]
-		public EncounterEventEntryModel Entry { get { return entry; } }
+		public EncounterEventEntryModel Entry => entry;
 
-		public override EdgeEntryModel RawEntry { get { return Entry; } }
-		public override string EdgeName { get { return Entry.EncounterEvent.Value.ToString(); } }
+		public override EdgeEntryModel RawEntry => Entry;
+		public override string EdgeName => Entry.EncounterEvent.Value.ToString();
 	}
 }

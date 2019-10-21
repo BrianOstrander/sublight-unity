@@ -16,8 +16,11 @@ namespace LunraGames.SubLight
 			Delay = 70,
 			RefreshSystem = 80,
 			AudioSnapshot = 90,
-			Waypoint = 100
+			Waypoint = 100,
+			ModuleTrait = 110
 		}
+		
+		static string EnumNormalized(Enum trigger) { return Enum.GetName(trigger.GetType(), trigger).ToLower(); }
 
 		public static class Custom
 		{
@@ -100,13 +103,13 @@ namespace LunraGames.SubLight
 		{
 			public const int PushDisabled = 0;
 
-			static string TriggerNormalized(EncounterTriggers trigger) { return Enum.GetName(typeof(EncounterTriggers), trigger).ToLower(); }
-
+			// static string TriggerNormalized(EncounterTriggers trigger) { return Enum.GetName(typeof(EncounterTriggers), trigger).ToLower(); }
+			
 			public static class BooleanKeys
 			{
 				public static string PopTrigger(EncounterTriggers trigger)
 				{
-					return "pop_" + TriggerNormalized(trigger);
+					return "pop_" + EnumNormalized(trigger);
 				}
 			}
 
@@ -114,7 +117,7 @@ namespace LunraGames.SubLight
 			{
 				public static string PushTrigger(EncounterTriggers trigger)
 				{
-					return "push_" + TriggerNormalized(trigger);
+					return "push_" + EnumNormalized(trigger);
 				}
 			}
 		}
@@ -161,6 +164,32 @@ namespace LunraGames.SubLight
 			public static class StringKeys
 			{
 				public const string WaypointId = "waypoint_id";
+			}
+		}
+		
+		public static class ModuleTrait
+		{
+			public enum Operations
+			{
+				Unknown = 0,
+				AppendByTraitId = 10,
+				RemoveByTraitId = 100,
+				RemoveByFamilyId = 110
+			}
+
+			public static class EnumKeys
+			{
+				public const string Operation = "operation";
+			}
+
+			public static class StringKeys
+			{
+				public const string OperationId = "operation_id";
+			}
+			
+			public static class BooleanKeys
+			{
+				public static string ModuleTypeIsValid(ModuleTypes moduleType) => "module_type_" + EnumNormalized(moduleType) + "_is_valid";
 			}
 		}
 	}

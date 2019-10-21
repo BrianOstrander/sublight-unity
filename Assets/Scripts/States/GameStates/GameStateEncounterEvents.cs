@@ -64,6 +64,9 @@ namespace LunraGames.SubLight
 							case EncounterEvents.Types.Waypoint:
 								OnHandleEventWaypoint(state, entry, currOnEventDone);
 								break;
+							case EncounterEvents.Types.ModuleTrait:
+								OnHandleEventModuleTrait(state, entry, currOnEventDone);
+								break;
 							case EncounterEvents.Types.RefreshSystem:
 							case EncounterEvents.Types.GameComplete:
 								// Some presenter takes care of this.
@@ -353,6 +356,79 @@ namespace LunraGames.SubLight
 			}
 
 			done();
+		}
+		
+		static void OnHandleEventModuleTrait(
+			GameState state,
+			EncounterEventEntryModel entry,
+			Action done
+		)
+		{
+			var operationId = entry.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId);
+			var operation = entry.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation);
+
+			var moduleTypes = new List<ModuleTypes>();
+			var allModuleTypes = EnumExtensions.GetValues(ModuleTypes.Unknown);
+			
+			foreach (var moduleType in allModuleTypes)
+			{
+				if (entry.KeyValues.GetBoolean(EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType))) moduleTypes.Add(moduleType);
+			}
+
+			if (moduleTypes.None()) moduleTypes = allModuleTypes.ToList();
+			
+			Debug.LogWarning("THIS IS FAKE AND DOESN'T PROPERLY FUNCTION LIKE INTENDED YOU NEED TO ACTUALLY USE THE MODULE SERVICE HERE!!!");
+			
+			foreach (var module in state.Payload.Game.Ship.Modules.Value.Where(m => moduleTypes.Contains(m.Type.Value )))
+			{
+				switch (operation)
+				{
+					case EncounterEvents.ModuleTrait.Operations.AppendByTraitId:
+						module.TraitIds.Value = module.TraitIds.Value.Append(operationId).Distinct().ToArray(); 
+						break;
+					case EncounterEvents.ModuleTrait.Operations.RemoveByTraitId:
+						module.TraitIds.Value = module.TraitIds.Value.ExceptOne(operationId).ToArray();
+						break;
+					// TODO REMOVE BY FAMILY ID!
+					default:
+						Debug.LogError("Unrecognized " + EncounterEvents.ModuleTrait.StringKeys.OperationId + ": " + operation);
+						break;
+				}
+			}
+
+			state.Payload.Game.Ship.Modules.Value = state.Payload.Game.Ship.Modules.Value;
+
+			/*
+			var waypointId = entry.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
+			var visibility = entry.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility);
+
+			if (string.IsNullOrEmpty(waypointId))
+			{
+				Debug.LogError("A waypoint encounter event specified a null or empty WaypointId, this is not valid. Attempting to skip...");
+				done();
+				return;
+			}
+
+			var waypoint = state.Payload.Game.Waypoints.GetWaypointFirstOrDefault(waypointId);
+
+			if (waypoint == null)
+			{
+				// Threw a warning here just in case... might not be needed...
+				Debug.LogWarning("Unable to find waypoint with id \"" + waypointId + "\", this may result in unpredictable behaviour. Attempting to skip...");
+				done();
+				return;
+			}
+
+			switch (visibility)
+			{
+				case WaypointModel.VisibilityStates.Unknown: break;
+				default:
+					waypoint.VisibilityState.Value = visibility;
+					break;
+			}
+
+			done();
+			*/
 		}
 	}
 }

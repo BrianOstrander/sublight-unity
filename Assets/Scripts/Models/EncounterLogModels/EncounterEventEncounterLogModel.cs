@@ -13,9 +13,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<EncounterEventEdgeModel[]> Entries;
 
-		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Event; } }
+		public override EncounterLogTypes LogType => EncounterLogTypes.Event;
 
-		public override bool EditableDuration { get { return false; } }
+		public override bool EditableDuration => false;
 
 		public EncounterEventEncounterLogModel()
 		{
