@@ -434,7 +434,7 @@ namespace LunraGames.SubLight
 			}
 
 			model.Ship.Modules.Value = result.Payloads;
-			
+
 			SetContext(instructions, model, done);
 		}
 

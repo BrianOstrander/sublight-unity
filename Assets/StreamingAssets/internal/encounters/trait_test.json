@@ -32,8 +32,10 @@
                 "encounterInteractions": [],
                 "moduleTraits": [
                   {
-                    "operation": "Exists",
-                    "validModuleTypes": [],
+                    "operation": "Present",
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
                     "filterValue": "micrometeorite_damage",
                     "filterId": "de381836-492d-4c70-a393-15a6d1fe937d",
                     "group": "All"
@@ -80,7 +82,7 @@
                   "severity": 10
                 },
                 "strings": {
-                  "message": "Has micrometeorite_damage!!!!"
+                  "message": "Micrometeorite damage is present on propulsion"
                 },
                 "floats": {}
               },
@@ -112,7 +114,7 @@
                   "severity": 10
                 },
                 "strings": {
-                  "message": "Does NOT have micrometeorite_damage"
+                  "message": "Micrometeorite damage is NOT present on propulsion"
                 },
                 "floats": {}
               },

@@ -528,13 +528,13 @@ namespace LunraGames.SubLight
 
 			switch (filter.Operation.Value)
 			{
-				case ModuleTraitFilterOperations.Exists:
+				case ModuleTraitFilterOperations.Present:
 					// model.Context.ModuleService.
 					var modules = model.Ship.Modules.Value;
 					if (filter.ValidModuleTypes.Value.Any()) modules = modules.Where(m => filter.ValidModuleTypes.Value.Contains(m.Type.Value)).ToArray();
 					result = modules.Any(m => m.TraitIds.Value.Contains(filter.FilterValue.Value));
 					break;
-				case ModuleTraitFilterOperations.CanAppend:
+				case ModuleTraitFilterOperations.Appendable:
 					OnHandleModuleTraitCanAdd(
 						model,
 						filter,

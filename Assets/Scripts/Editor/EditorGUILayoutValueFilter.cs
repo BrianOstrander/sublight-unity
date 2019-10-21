@@ -182,7 +182,8 @@ namespace LunraGames.SubLight
 										filter as ModuleTraitFilterEntryModel,
 										new GUIContent("Module Trait Id", "The Id of the module trait for this filter."),
 										(filter as ModuleTraitFilterEntryModel).Operation,
-										ref deleted
+										ref deleted,
+										OnHandleModuleTraitSecondLine
 									);
 									break;
 								default:
@@ -457,86 +458,12 @@ namespace LunraGames.SubLight
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
 
-		/*
-		static void OnHandle(
-			EncounterInteractionFilterEntryModel model,
-			ref string deleted
-		)
-		{
-			OnOneLineHandleBegin(model);
-			{
-				var isValidating = !string.IsNullOrEmpty(model.FilterValue.Value);
-				var validationColor = Color.white;
-				var labelContent = new GUIContent("Encounter Id", "The Id of the encounter for this filter.");
-				
-				if (isValidating)
-				{
-					switch (model.ValidationState)
-					{
-						case ValidatedFilterStates.Valid:
-							isValidating = false;
-							break;
-						case ValidatedFilterStates.Invalid:
-							validationColor = Color.red;
-							var issueSeperator = model.ValidationIssues.Length == 0 ? "; " : string.Empty;
-							foreach (var issue in model.ValidationIssues) labelContent.tooltip += " Invalid: " + issue + issueSeperator;
-							break;
-						default:
-							validationColor = Color.yellow;
-							labelContent.tooltip += " Warning: Currently searching for an encounter with a matching Id.";
-							break;
-					}
-				}
-
-				EditorGUILayoutExtensions.PushColorValidation(validationColor, isValidating);
-				{
-					GUILayout.Label(labelContent, GUILayout.ExpandWidth(false));
-
-					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
-				}
-				EditorGUILayoutExtensions.PopColorValidation(isValidating);
-
-				if (string.IsNullOrEmpty(model.FilterValue.Value))
-				{
-					const float CurrentLabelOffset = 53f;
-					GUILayout.Space(-CurrentLabelOffset);
-					EditorGUILayoutExtensions.PushColor(Color.gray);
-					{
-						GUILayout.Label("Current", GUILayout.Width(CurrentLabelOffset));
-					}
-					EditorGUILayoutExtensions.PopColor();
-				}
-				else
-				{
-					switch (model.ValidationState)
-					{
-						case ValidatedFilterStates.Unknown:
-							model.SetValidation(ValidatedFilterStates.Processing);
-							EditorModelMediator.Instance.Load<EncounterInfoModel>(
-								model.FilterValue.Value,
-								result => OnHandleSaveModelIdValidated(result, model)
-							);
-							break;
-					}
-				}
-
-				GUILayout.Label("Needs To Be", GUILayout.Width(OperatorWidth));
-
-				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
-					"- Select Operation -",
-					model.Operation.Value,
-					Color.red
-				);
-			}
-			OnOneLineHandleEnd(model, ref deleted);
-		}
-		*/
-
 		static void OnHandleIdValidated<V, O, M>(
 			V model,
 			GUIContent content,
 			ListenerProperty<O> operation,
-			ref string deleted
+			ref string deleted,
+			Action<V> handleSecondLine = null
 		)
 			where V : ValidatedFilterEntryModel<string>
 			where O : Enum
@@ -546,7 +473,6 @@ namespace LunraGames.SubLight
 			{
 				var isValidating = !string.IsNullOrEmpty(model.FilterValue.Value);
 				var validationColor = Color.white;
-				// var labelContent = new GUIContent("Module Trait Id", "The Id of the module trait for this filter.");
 				
 				if (isValidating)
 				{
@@ -608,6 +534,17 @@ namespace LunraGames.SubLight
 				);
 			}
 			OnOneLineHandleEnd(model, ref deleted);
+
+			handleSecondLine?.Invoke(model);
+		}
+
+		static void OnHandleModuleTraitSecondLine(ModuleTraitFilterEntryModel model)
+		{
+			model.ValidModuleTypes.Value = EditorGUILayoutExtensions.EnumArray(
+				new GUIContent("Valid Module Types"),
+				model.ValidModuleTypes.Value,
+				"- Module Type -"
+			);
 		}
 
 		static void OnHandleSaveModelIdValidated<M, V>(
