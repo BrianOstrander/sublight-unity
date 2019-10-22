@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System.Linq;
 using System.Collections.Generic;
 using LunraGames.SubLight.Models;
 using UnityEngine;
@@ -7,6 +8,14 @@ namespace LunraGames.SubLight
 {
 	public class EditorModelMediator : DesktopModelMediator 
 	{
+		public enum ValidationStates
+		{
+			Unknown = 0,
+			Processing = 10,
+			Valid = 20,
+			Invalid = 30
+		}
+		
 		static EditorModelMediator instance;
 		public static EditorModelMediator Instance
 		{
@@ -67,6 +76,55 @@ namespace LunraGames.SubLight
 		}
 
 		public EditorModelMediator(bool readableSaves = false) : base(readableSaves) {}
+		
+		#region Utility
+		class ValidationEntry
+		{
+			public string Id;
+			public ValidationStates ValidationState;
+			public List<string> Issues = new List<string>();
+		}
+		
+		static List<ValidationEntry> Cache = new List<ValidationEntry>();
+
+		public static ValidationStates IsValidModel<M>(string id)
+			where M : SaveModel
+		{
+			if (string.IsNullOrEmpty(id)) return ValidationStates.Invalid;
+			
+			var cached = Cache.FirstOrDefault(c => c.Id == id);
+
+			if (cached == null)
+			{
+				cached = new ValidationEntry
+				{
+					Id = id,
+					ValidationState = ValidationStates.Processing
+				};
+				Cache.Add(cached);
+				
+				Instance.Load<M>(
+					id,
+					result =>
+					{
+						switch (result.Status)
+						{
+							case RequestStatus.Success:
+								cached.ValidationState = ValidationStates.Valid;
+								break;
+							default:
+								cached.ValidationState = ValidationStates.Invalid;
+								var error = string.IsNullOrEmpty(result.Error) ? "Undefined ModelMediator load error" : result.Error;
+								cached.Issues = cached.Issues.Append(error).Distinct().ToList();
+								break;
+						}
+					}
+				);
+			}
+
+			return cached.ValidationState;
+		}
+		#endregion
 	}
 }
 #endif

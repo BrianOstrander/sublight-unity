@@ -3,8 +3,9 @@
 	public enum ModuleTraitFilterOperations
 	{
 		Unknown = 0,
-		Present = 10,
-		Appendable = 20
+		PresentTraitId = 10,
+		AppendableTraitId = 20,
+		PresentFamilyId = 100
 	}
 	
 	public enum EncounterInteractionFilterOperations

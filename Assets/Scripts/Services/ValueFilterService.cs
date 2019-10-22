@@ -526,22 +526,26 @@ namespace LunraGames.SubLight
 		{
 			var result = false;
 
+			var modules = model.Ship.Modules.Value;
+			if (filter.ValidModuleTypes.Value.Any()) modules = modules.Where(m => filter.ValidModuleTypes.Value.Contains(m.Type.Value)).ToArray();
+			
 			switch (filter.Operation.Value)
 			{
-				case ModuleTraitFilterOperations.Present:
-					// model.Context.ModuleService.
-					var modules = model.Ship.Modules.Value;
-					if (filter.ValidModuleTypes.Value.Any()) modules = modules.Where(m => filter.ValidModuleTypes.Value.Contains(m.Type.Value)).ToArray();
+				case ModuleTraitFilterOperations.PresentTraitId:
 					result = modules.Any(m => m.TraitIds.Value.Contains(filter.FilterValue.Value));
 					break;
-				case ModuleTraitFilterOperations.Appendable:
+				case ModuleTraitFilterOperations.AppendableTraitId:
 					OnHandleModuleTraitCanAdd(
 						model,
 						filter,
-						model.Ship.Modules.Value.ToList(),
+						modules.ToList(),
 						done
 					);
 					return;
+				case ModuleTraitFilterOperations.PresentFamilyId:
+					var traitIdsInFamily = model.Context.ModuleService.GetTraitsByFamilyId(filter.FilterValue.Value).Select(t => t.Id.Value);
+					result = modules.Any(m => m.TraitIds.Value.Intersect(traitIdsInFamily).Any());
+					break;
 				default:
 					Debug.LogError("Unrecognized " + nameof(ModuleTraitFilterOperations) + ": " + filter.Operation.Value);
 					break;

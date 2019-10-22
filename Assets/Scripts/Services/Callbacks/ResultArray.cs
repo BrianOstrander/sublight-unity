@@ -40,14 +40,15 @@ namespace LunraGames.SubLight
 			Error = error;
 		}
 
-		public ResultArray<T> Log()
+		public ResultArray<T> Log(string message = null)
 		{
+			message = string.IsNullOrEmpty(message) ? string.Empty : (message + "\n");
 			switch (Status)
 			{
-				case RequestStatus.Failure: Debug.LogError(this); break;
-				case RequestStatus.Cancel: Debug.LogWarning(this); break;
-				case RequestStatus.Success: Debug.Log(this); break;
-				default: Debug.LogError("Unrecognized RequestStatus: " + Status + ", result:\n" + this); break;
+				case RequestStatus.Failure: Debug.LogError(message + this); break;
+				case RequestStatus.Cancel: Debug.LogWarning(message + this); break;
+				case RequestStatus.Success: Debug.Log(message + this); break;
+				default: Debug.LogError(message + "Unrecognized RequestStatus: " + Status + ", result:\n" + this); break;
 			}
 			return this;
 		}

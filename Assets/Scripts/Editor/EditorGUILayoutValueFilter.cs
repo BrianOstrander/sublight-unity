@@ -180,7 +180,7 @@ namespace LunraGames.SubLight
 								case ValueFilterTypes.ModuleTrait:
 									OnHandleIdValidated<ModuleTraitFilterEntryModel, ModuleTraitFilterOperations, ModuleTraitModel>(
 										filter as ModuleTraitFilterEntryModel,
-										new GUIContent("Module Trait Id", "The Id of the module trait for this filter."),
+										new GUIContent("Module Trait Operation Id", "The Id required for the operation specified by this module trait filter."),
 										(filter as ModuleTraitFilterEntryModel).Operation,
 										ref deleted,
 										OnHandleModuleTraitSecondLine

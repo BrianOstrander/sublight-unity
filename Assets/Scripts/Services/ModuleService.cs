@@ -168,8 +168,9 @@ namespace LunraGames.SubLight
 		#endregion
 
 		public ModuleTraitModel GetTrait(string id) => Traits.FirstOrDefault(t => t.Id.Value == id);
-		
-		public ModuleTraitModel[] GetTraits(params string[] ids) => Traits.Where(t => ids.Contains(t.Id.Value)).ToArray();
+		public ModuleTraitModel[] GetTraits(Func<ModuleTraitModel, bool> predicate) => Traits.Where(predicate).ToArray();
+		public ModuleTraitModel[] GetTraits(params string[] ids) => GetTraits(t => ids.Contains(t.Id.Value));
+		public ModuleTraitModel[] GetTraitsByFamilyId(string familyId) => GetTraits(t => t.FamilyIds.Value.Contains(familyId));
 
 		public void GenerateModule(
 			ModuleConstraint constraint,
@@ -523,7 +524,9 @@ namespace LunraGames.SubLight
 		void Initialize(Action<Result<IModuleService>> done);
 		
 		ModuleTraitModel GetTrait(string id);
+		ModuleTraitModel[] GetTraits(Func<ModuleTraitModel, bool> predicate);
 		ModuleTraitModel[] GetTraits(params string[] ids);
+		ModuleTraitModel[] GetTraitsByFamilyId(string familyId);
 
 		void GenerateModule(
 			ModuleService.ModuleConstraint constraint,
