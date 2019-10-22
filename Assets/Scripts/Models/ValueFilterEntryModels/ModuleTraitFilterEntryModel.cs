@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class ModuleTraitFilterEntryModel : ValidatedFilterEntryModel<string>
+	public class ModuleTraitFilterEntryModel : ValueFilterEntryModel<string>
 	{
 		[JsonProperty] ModuleTraitFilterOperations operation;
 		[JsonIgnore] public readonly ListenerProperty<ModuleTraitFilterOperations> Operation;
@@ -16,10 +16,6 @@ namespace LunraGames.SubLight.Models
 		{
 			Operation = new ListenerProperty<ModuleTraitFilterOperations>(value => operation = value, () => operation);
 			ValidModuleTypes = new ListenerProperty<ModuleTypes[]>(value => validModuleTypes = value, () => validModuleTypes);
-			
-#if UNITY_EDITOR
-			ValidModuleTypes.Changed += value => ResetValidation();
-#endif
 		}
 	}
 }

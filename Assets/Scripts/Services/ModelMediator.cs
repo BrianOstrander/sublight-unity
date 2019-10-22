@@ -89,6 +89,8 @@ namespace LunraGames.SubLight
 			Models = models;
 			Error = error;
 		}
+
+		public M[] TypedModels => Models.Select(m => m.TypedModel).ToArray();
 	}
 
 	public struct ModelIndexResult<M> where M : SaveModel

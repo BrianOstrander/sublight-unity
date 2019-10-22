@@ -174,6 +174,7 @@ namespace LunraGames.SubLight
 										filter as EncounterInteractionFilterEntryModel,
 										new GUIContent("Encounter Id", "The Id of the encounter for this filter."),
 										(filter as EncounterInteractionFilterEntryModel).Operation,
+										typedFilter => EditorModelMediator.Instance.IsValidModel<EncounterInfoModel>(typedFilter.FilterValue.Value),
 										ref deleted
 									);
 									break;
@@ -182,6 +183,16 @@ namespace LunraGames.SubLight
 										filter as ModuleTraitFilterEntryModel,
 										new GUIContent("Module Trait Operation Id", "The Id required for the operation specified by this module trait filter."),
 										(filter as ModuleTraitFilterEntryModel).Operation,
+										typedFilter =>
+										{
+											switch (typedFilter.Operation.Value)
+											{
+												case ModuleTraitFilterOperations.PresentFamilyId:
+													return EditorModelMediator.Instance.IsValidModuleTraitFamilyId(typedFilter.FilterValue.Value);
+												default:
+													return EditorModelMediator.Instance.IsValidModel<ModuleTraitModel>(typedFilter.FilterValue.Value);
+											}
+										},
 										ref deleted,
 										OnHandleModuleTraitSecondLine
 									);
@@ -462,47 +473,32 @@ namespace LunraGames.SubLight
 			V model,
 			GUIContent content,
 			ListenerProperty<O> operation,
+			Func<V, EditorModelMediator.Validation> getValidation,
 			ref string deleted,
 			Action<V> handleSecondLine = null
 		)
-			where V : ValidatedFilterEntryModel<string>
+			where V : ValueFilterEntryModel<string>
 			where O : Enum
 			where M : SaveModel
 		{
 			OnOneLineHandleBegin(model);
 			{
-				var isValidating = !string.IsNullOrEmpty(model.FilterValue.Value);
-				var validationColor = Color.white;
+				var validation = getValidation(model);
 				
-				if (isValidating)
-				{
-					switch (model.ValidationState)
-					{
-						case ValidatedFilterStates.Valid:
-							isValidating = false;
-							break;
-						case ValidatedFilterStates.Invalid:
-							validationColor = Color.red;
-							var issueSeperator = model.ValidationIssues.Length == 0 ? "; " : string.Empty;
-							foreach (var issue in model.ValidationIssues) content.tooltip += " Invalid: " + issue + issueSeperator;
-							break;
-						default:
-							validationColor = Color.yellow;
-							content.tooltip += " Warning: Currently searching for a matching Id.";
-							break;
-					}
-				}
-
-				EditorGUILayoutExtensions.PushColorValidation(validationColor, isValidating);
+				content.tooltip += "\n" + validation.Tooltip;
+				var validationColor = validation.Color;
+				
+				EditorGUILayoutExtensions.PushColorValidation(validationColor);
 				{
 					GUILayout.Label(content, GUILayout.ExpandWidth(false));
 
 					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
 				}
-				EditorGUILayoutExtensions.PopColorValidation(isValidating);
+				EditorGUILayoutExtensions.PopColorValidation(validationColor);
 
 				if (string.IsNullOrEmpty(model.FilterValue.Value))
 				{
+					// TODO: Toggle this behaviour if allowed!
 					const float CurrentLabelOffset = 53f;
 					GUILayout.Space(-CurrentLabelOffset);
 					EditorGUILayoutExtensions.PushColor(Color.gray);
@@ -510,19 +506,6 @@ namespace LunraGames.SubLight
 						GUILayout.Label("Current", GUILayout.Width(CurrentLabelOffset));
 					}
 					EditorGUILayoutExtensions.PopColor();
-				}
-				else
-				{
-					switch (model.ValidationState)
-					{
-						case ValidatedFilterStates.Unknown:
-							model.SetValidation(ValidatedFilterStates.Processing);
-							EditorModelMediator.Instance.Load<M>(
-								model.FilterValue.Value,
-								result => OnHandleSaveModelIdValidated(result, model)
-							);
-							break;
-					}
 				}
 
 				GUILayout.Label("Needs To Be", GUILayout.Width(OperatorWidth));
@@ -545,25 +528,6 @@ namespace LunraGames.SubLight
 				model.ValidModuleTypes.Value,
 				"- Module Type -"
 			);
-		}
-
-		static void OnHandleSaveModelIdValidated<M, V>(
-			ModelResult<M> result,
-			V model
-		)
-			where M : SaveModel
-			where V : IValidatedFilterEntryModel
-		{
-			switch (result.Status)
-			{
-				case RequestStatus.Success:
-					// TODO: Check that module type constraints are possible!
-					model.SetValidation(ValidatedFilterStates.Valid);
-					break;
-				default:
-					model.SetValidation(ValidatedFilterStates.Invalid, "A " + result.SaveModelType.Name + " with this Id has not been found");
-					break;
-			}
 		}
 		#endregion
 	}

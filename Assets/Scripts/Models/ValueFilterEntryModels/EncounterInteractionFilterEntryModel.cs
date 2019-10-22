@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncounterInteractionFilterEntryModel : ValidatedFilterEntryModel<string>
+	public class EncounterInteractionFilterEntryModel : ValueFilterEntryModel<string>
 	{
 		[JsonProperty] EncounterInteractionFilterOperations operation;
 		[JsonIgnore] public ListenerProperty<EncounterInteractionFilterOperations> Operation;

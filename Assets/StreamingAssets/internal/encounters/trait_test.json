@@ -239,7 +239,7 @@
                   "severity": 10
                 },
                 "strings": {
-                  "message": null
+                  "message": "micrometeorite_damage is present"
                 },
                 "floats": {}
               },
@@ -275,7 +275,7 @@
                   "severity": 10
                 },
                 "strings": {
-                  "message": null
+                  "message": "micrometeorite_damage is appendable"
                 },
                 "floats": {}
               },
@@ -311,7 +311,7 @@
                   "severity": 10
                 },
                 "strings": {
-                  "message": null
+                  "message": "micrometeorite familyid is present"
                 },
                 "floats": {}
               },
@@ -337,6 +337,32 @@
               "entryId": "3708072f-2ff4-4b63-ab32-005d9adf038e"
             },
             "index": 3
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "-----------------------"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "2e5af23c-c47b-4e5e-8c4d-736608164851"
+            },
+            "index": 4
           }
         ],
         "beginning": true,
