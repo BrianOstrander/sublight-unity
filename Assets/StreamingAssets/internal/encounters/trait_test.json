@@ -255,7 +255,9 @@
                 "moduleTraits": [
                   {
                     "operation": "PresentTraitId",
-                    "validModuleTypes": [],
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
                     "filterValue": "micrometeorite_damage",
                     "filterId": "7451c236-03ab-4d90-ad03-37935e165c90",
                     "group": "All"
@@ -291,7 +293,9 @@
                 "moduleTraits": [
                   {
                     "operation": "AppendableTraitId",
-                    "validModuleTypes": [],
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
                     "filterValue": "micrometeorite_damage",
                     "filterId": "90bbefda-7c7a-4719-8648-527eb34d3347",
                     "group": "All"
@@ -327,7 +331,9 @@
                 "moduleTraits": [
                   {
                     "operation": "PresentFamilyId",
-                    "validModuleTypes": [],
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
                     "filterValue": "micrometeorite",
                     "filterId": "49305e96-9b5e-4f35-b8b2-8852c8a7a35a",
                     "group": "All"
@@ -374,6 +380,7 @@
     "bustLogs": [],
     "conversationLogs": []
   },
+  "ignore": true,
   "version": 12,
   "metaKeyValues": {},
   "created": "2019-10-18T09:24:02.921501-07:00",
