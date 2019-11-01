@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 using LunraGames.SubLight.Models;
@@ -63,6 +63,9 @@ namespace LunraGames.SubLight
 								break;
 							case EncounterEvents.Types.Waypoint:
 								OnHandleEventWaypoint(state, entry, currOnEventDone);
+								break;
+							case EncounterEvents.Types.ModuleTrait:
+								OnHandleEventModuleTrait(state, entry, currOnEventDone);
 								break;
 							case EncounterEvents.Types.RefreshSystem:
 							case EncounterEvents.Types.GameComplete:
@@ -352,6 +355,153 @@ namespace LunraGames.SubLight
 					break;
 			}
 
+			done();
+		}
+		
+		static void OnHandleEventModuleTrait(
+			GameState state,
+			EncounterEventEntryModel entry,
+			Action done
+		)
+		{
+			var operationId = entry.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId);
+			var operation = entry.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation);
+
+			var moduleTypes = new List<ModuleTypes>();
+			var allModuleTypes = EnumExtensions.GetValues(ModuleTypes.Unknown);
+			
+			foreach (var moduleType in allModuleTypes)
+			{
+				if (entry.KeyValues.GetBoolean(EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType))) moduleTypes.Add(moduleType);
+			}
+
+			if (moduleTypes.None()) moduleTypes = allModuleTypes.ToList();
+
+			var modules = state.Payload.Game.Ship.Modules.Value.Where(m => moduleTypes.Contains(m.Type.Value)).ToList();
+			
+			foreach (var module in state.Payload.Game.Ship.Modules.Value.Where(m => moduleTypes.Contains(m.Type.Value )))
+			{
+				switch (operation)
+				{
+					case EncounterEvents.ModuleTrait.Operations.AppendByTraitId:
+						OnHandleEventModuleTraitAppendByTraitIdNext(
+							state,
+							modules,
+							operationId,
+							done
+						);
+						break;
+					case EncounterEvents.ModuleTrait.Operations.RemoveByTraitId:
+						OnHandleEventModuleTraitRemoveByTraitIdNext(
+							state,
+							modules,
+							operationId,
+							done
+						);
+						break;
+					case EncounterEvents.ModuleTrait.Operations.RemoveByFamilyId:
+						OnHandleEventModuleTraitRemoveByFamilyIdNext(
+							state,
+							modules,
+							operationId,
+							done
+						);
+						break;
+					default:
+						Debug.LogError("Unrecognized " + EncounterEvents.ModuleTrait.EnumKeys.Operation + ": " + operation);
+						break;
+				}
+			}
+		}
+
+		static void OnHandleEventModuleTraitAppendByTraitIdNext(
+			GameState state,
+			List<ModuleModel> remaining,
+			string traitId,
+			Action done
+		)
+		{
+			if (remaining.None())
+			{
+				OnHandleEventModuleTraitOperationDone(state, done);
+				return;
+			}
+
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+			
+			state.Payload.Game.Context.ModuleService.AppendTraits(
+				next,
+				result =>
+				{
+					switch (result.Status)
+					{
+						case RequestStatus.Success:
+							if (result.Payload.Appended.Any())
+							{
+								// TODO: Add to audit log here...	
+							}
+							OnHandleEventModuleTraitAppendByTraitIdNext(
+								state,
+								remaining,
+								traitId,
+								done
+							);
+							break;
+						default:
+							result.Log("Appending trait by encounter event failed");
+							done();
+							break;
+					}
+				},
+				traitId
+			);
+		}
+		
+		static void OnHandleEventModuleTraitRemoveByTraitIdNext(
+			GameState state,
+			List<ModuleModel> remaining,
+			string traitId,
+			Action done
+		)
+		{
+			foreach (var module in remaining)
+			{
+				var traitIdsRemoved = module.TraitIds.Value.Where(t => t == traitId); 
+				if (traitIdsRemoved.None()) continue;
+				
+				// TODO: Add to audit log here...
+				module.TraitIds.Value = module.TraitIds.Value.Except(traitIdsRemoved).ToArray();
+			}
+			OnHandleEventModuleTraitOperationDone(state, done);
+		}
+		
+		static void OnHandleEventModuleTraitRemoveByFamilyIdNext(
+			GameState state,
+			List<ModuleModel> remaining,
+			string familyId,
+			Action done
+		)
+		{
+			var traitIdsInFamily = state.Payload.Game.Context.ModuleService.GetTraitsByFamilyId(familyId).Select(t => t.Id.Value);
+			foreach (var module in remaining)
+			{
+				var traitIdsRemoved = module.TraitIds.Value.Where(t => traitIdsInFamily.Contains(t));
+				if (traitIdsRemoved.None()) continue;
+				
+				// TODO: Add to audit log here...
+				module.TraitIds.Value = module.TraitIds.Value.Except(traitIdsRemoved).ToArray();
+			}
+			OnHandleEventModuleTraitOperationDone(state, done);
+		}
+
+		static void OnHandleEventModuleTraitOperationDone(
+			GameState state,
+			Action done
+		)
+		{
+			Debug.LogWarning("TODO: Append to audit log here!");
+			state.Payload.Game.Ship.Modules.Value = state.Payload.Game.Ship.Modules.Value;
 			done();
 		}
 	}

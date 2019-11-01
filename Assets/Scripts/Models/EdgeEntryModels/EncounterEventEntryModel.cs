@@ -14,11 +14,11 @@ namespace LunraGames.SubLight.Models
 
 		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
 		[JsonIgnore]
-		public KeyValueListModel KeyValues { get { return keyValues; } }
+		public KeyValueListModel KeyValues => keyValues;
 
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default(true);
 		[JsonIgnore]
-		public ValueFilterModel Filtering { get { return filtering; } }
+		public ValueFilterModel Filtering => filtering;
 
 		public EncounterEventEntryModel()
 		{

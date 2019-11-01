@@ -13,6 +13,9 @@
 		// -- EncounterInteractions
 		EncounterInteraction = 100,
 
+		// -- Miscellaneous
+		ModuleTrait = 200
+		
 		// -- Something else
 		// SomethingElseBoolean = 300
 	}

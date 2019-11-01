@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 
 using UnityEditor;
@@ -169,7 +170,32 @@ namespace LunraGames.SubLight
 									OnHandle(filter as EnumerationKeyValueFilterEntryModel, ref deleted);
 									break;
 								case ValueFilterTypes.EncounterInteraction:
-									OnHandle(filter as EncounterInteractionFilterEntryModel, ref deleted);
+									OnHandleIdValidated<EncounterInteractionFilterEntryModel, EncounterInteractionFilterOperations, EncounterInfoModel>(
+										filter as EncounterInteractionFilterEntryModel,
+										new GUIContent("Encounter Id", "The Id of the encounter for this filter."),
+										(filter as EncounterInteractionFilterEntryModel).Operation,
+										typedFilter => EditorModelMediator.Instance.IsValidModel<EncounterInfoModel>(typedFilter.FilterValue.Value),
+										ref deleted
+									);
+									break;
+								case ValueFilterTypes.ModuleTrait:
+									OnHandleIdValidated<ModuleTraitFilterEntryModel, ModuleTraitFilterOperations, ModuleTraitModel>(
+										filter as ModuleTraitFilterEntryModel,
+										new GUIContent("Module Trait Operation Id", "The Id required for the operation specified by this module trait filter."),
+										(filter as ModuleTraitFilterEntryModel).Operation,
+										typedFilter =>
+										{
+											switch (typedFilter.Operation.Value)
+											{
+												case ModuleTraitFilterOperations.PresentFamilyId:
+													return EditorModelMediator.Instance.IsValidModuleTraitFamilyId(typedFilter.FilterValue.Value);
+												default:
+													return EditorModelMediator.Instance.IsValidModel<ModuleTraitModel>(typedFilter.FilterValue.Value);
+											}
+										},
+										ref deleted,
+										OnHandleModuleTraitSecondLine
+									);
 									break;
 								default:
 									EditorGUILayout.HelpBox("Unrecognized FilterType: " + filter.FilterType, MessageType.Error);
@@ -241,6 +267,8 @@ namespace LunraGames.SubLight
 					return OnCreateKeyValue(Create<EnumerationKeyValueFilterEntryModel>(model, index, group, filterId), keyValueCreateInfo);
 				case ValueFilterTypes.EncounterInteraction:
 					return Create<EncounterInteractionFilterEntryModel>(model, index, group, filterId);
+				case ValueFilterTypes.ModuleTrait:
+					return Create<ModuleTraitFilterEntryModel>(model, index, group, filterId);
 				default: Debug.LogError("Unrecognized FilterType: " + type); break;
 			}
 			return null;
@@ -441,45 +469,36 @@ namespace LunraGames.SubLight
 			OnHandleKeyValueEnd(model, ref deleted);
 		}
 
-		static void OnHandle(
-			EncounterInteractionFilterEntryModel model,
-			ref string deleted
+		static void OnHandleIdValidated<V, O, M>(
+			V model,
+			GUIContent content,
+			ListenerProperty<O> operation,
+			Func<V, EditorModelMediator.Validation> getValidation,
+			ref string deleted,
+			Action<V> handleSecondLine = null
 		)
+			where V : ValueFilterEntryModel<string>
+			where O : Enum
+			where M : SaveModel
 		{
 			OnOneLineHandleBegin(model);
 			{
-				var isValidating = !string.IsNullOrEmpty(model.FilterValue.Value);
-				var validationColor = Color.white;
-				var labelContent = new GUIContent("Encounter Id", "The Id of the encounter for this filter.");
+				var validation = getValidation(model);
 				
-				if (isValidating)
+				content.tooltip += "\n" + validation.Tooltip;
+				var validationColor = validation.Color;
+				
+				EditorGUILayoutExtensions.PushColorValidation(validationColor);
 				{
-					switch (model.EncounterIdIsValid)
-					{
-						case RequestStatus.Success:
-							isValidating = false;
-							break;
-						case RequestStatus.Failure:
-							validationColor = Color.red;
-							labelContent.tooltip += " Error: An encounter with this Id has not been found.";
-							break;
-						default:
-							validationColor = Color.yellow;
-							labelContent.tooltip += " Warning: Currently searching for an encounter with a matching Id.";
-							break;
-					}
-				}
-
-				EditorGUILayoutExtensions.PushColorValidation(validationColor, isValidating);
-				{
-					GUILayout.Label(labelContent, GUILayout.ExpandWidth(false));
+					GUILayout.Label(content, GUILayout.ExpandWidth(false));
 
 					model.FilterValue.Value = EditorGUILayout.TextField(model.FilterValue.Value);
 				}
-				EditorGUILayoutExtensions.PopColorValidation(isValidating);
+				EditorGUILayoutExtensions.PopColorValidation(validationColor);
 
 				if (string.IsNullOrEmpty(model.FilterValue.Value))
 				{
+					// TODO: Toggle this behaviour if allowed!
 					const float CurrentLabelOffset = 53f;
 					GUILayout.Space(-CurrentLabelOffset);
 					EditorGUILayoutExtensions.PushColor(Color.gray);
@@ -488,45 +507,27 @@ namespace LunraGames.SubLight
 					}
 					EditorGUILayoutExtensions.PopColor();
 				}
-				else
-				{
-					switch (model.EncounterIdIsValid)
-					{
-						case RequestStatus.Unknown:
-							model.EncounterIdIsValid = RequestStatus.Cancel;
-							EditorModelMediator.Instance.Load<EncounterInfoModel>(
-								model.FilterValue.Value,
-								result => OnHandleEncounterIdValidated(result, model)
-							);
-							break;
-					}
-				}
 
 				GUILayout.Label("Needs To Be", GUILayout.Width(OperatorWidth));
 
-				model.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
+				operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValueValidation(
 					"- Select Operation -",
-					model.Operation.Value,
+					operation.Value,
 					Color.red
 				);
 			}
 			OnOneLineHandleEnd(model, ref deleted);
+
+			handleSecondLine?.Invoke(model);
 		}
 
-		static void OnHandleEncounterIdValidated(
-			ModelResult<EncounterInfoModel> result,
-			EncounterInteractionFilterEntryModel model
-		)
+		static void OnHandleModuleTraitSecondLine(ModuleTraitFilterEntryModel model)
 		{
-			switch (result.Status)
-			{
-				case RequestStatus.Success:
-					model.EncounterIdIsValid = RequestStatus.Success;
-					break;
-				default:
-					model.EncounterIdIsValid = RequestStatus.Failure;
-					break;
-			}
+			model.ValidModuleTypes.Value = EditorGUILayoutExtensions.EnumArray(
+				new GUIContent("Valid Module Types"),
+				model.ValidModuleTypes.Value,
+				"- Module Type -"
+			);
 		}
 		#endregion
 	}

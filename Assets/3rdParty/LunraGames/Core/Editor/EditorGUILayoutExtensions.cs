@@ -34,7 +34,7 @@ namespace LunraGamesEditor
 			Func<T, Color?> getDefaultValueColor,
 			T[] options = null,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			var defaultValueColor = getDefaultValueColor(value);
 			PushColorValidation(defaultValueColor);
@@ -54,7 +54,7 @@ namespace LunraGamesEditor
 			T value,
 			Func<T, Color?> getDefaultValueColor,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			var defaultValueColor = getDefaultValueColor(value);
 			PushColorValidation(defaultValueColor);
@@ -74,7 +74,7 @@ namespace LunraGamesEditor
 			Color? defaultValueColor,
 			T[] options = null,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			if (!EnumsEqual(value, default)) defaultValueColor = null;
 			PushColorValidation(defaultValueColor);
@@ -94,7 +94,7 @@ namespace LunraGamesEditor
 			T value,
 			Color? defaultValueColor,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			if (!EnumsEqual(value, default)) defaultValueColor = null;
 			PushColorValidation(defaultValueColor);
@@ -113,7 +113,7 @@ namespace LunraGamesEditor
 			Color? defaultValueColor,
 			T[] options,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			if (!EnumsEqual(value, default)) defaultValueColor = null;
 			PushColorValidation(defaultValueColor);
@@ -134,7 +134,7 @@ namespace LunraGamesEditor
 			T value,
 			T[] options = null,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			T result;
 			GUILayout.BeginHorizontal();
@@ -159,7 +159,7 @@ namespace LunraGamesEditor
 			string primaryReplacement,
 			T value,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			return HelpfulEnumPopupValue<T>(
 				primaryReplacement,
@@ -174,7 +174,7 @@ namespace LunraGamesEditor
 			T value,
 			T[] options,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			return HelpfulEnumPopupValue(
 				primaryReplacement,
@@ -197,7 +197,7 @@ namespace LunraGamesEditor
 			T[] options,
 			GUIStyle style,
 			params GUILayoutOption[] guiOptions
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			var name = Enum.GetName(value.GetType(), value);
 			var originalNames = options == null ? Enum.GetNames(value.GetType()) : options.Select(o => Enum.GetName(value.GetType(), o)).ToArray();
@@ -513,7 +513,7 @@ namespace LunraGamesEditor
 			T defaultValue = default(T),
 			T[] options = null,
 			Color? color = null
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			return EnumArray(
 				new GUIContent(name),
@@ -532,7 +532,7 @@ namespace LunraGamesEditor
 			T defaultValue = default(T),
 			T[] options = null,
 			Color? color = null
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			BeginVertical(EditorStyles.helpBox, color, color.HasValue);
 			{
@@ -554,7 +554,7 @@ namespace LunraGamesEditor
 			string primaryReplacemnt = null,
 			T defaultValue = default(T),
 			T[] options = null
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			return EnumArrayValue(
 				new GUIContent(name),
@@ -571,7 +571,7 @@ namespace LunraGamesEditor
 			string primaryReplacemnt = null, 
 			T defaultValue = default(T),
 			T[] options = null
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			if (values == null) throw new ArgumentNullException("values");
 
@@ -831,7 +831,7 @@ namespace LunraGamesEditor
 		static bool EnumsEqual<T>(
 			T value0,
 			T value1
-		) where T : struct, IConvertible
+		) where T : Enum
 		{
 			// TODO: Should this use integer values instead?
 			return Enum.GetName(value0.GetType(), value0) == Enum.GetName(value1.GetType(), value1);

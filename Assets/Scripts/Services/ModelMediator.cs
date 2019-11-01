@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ namespace LunraGames.SubLight
 		public readonly M TypedModel;
 		public readonly string Error;
 
+		public Type SaveModelType => typeof(M);
+		
 		public static ModelResult<M> Success(SaveModel model, M typedModel)
 		{
 			return new ModelResult<M>(
@@ -86,6 +89,8 @@ namespace LunraGames.SubLight
 			Models = models;
 			Error = error;
 		}
+
+		public M[] TypedModels => Models.Select(m => m.TypedModel).ToArray();
 	}
 
 	public struct ModelIndexResult<M> where M : SaveModel

@@ -1567,6 +1567,9 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.Waypoint:
 					OnEncounterEventLogEdgeWaypoint(entry);
 					break;
+				case EncounterEvents.Types.ModuleTrait:
+					OnEncounterEventLogEdgeModuleTrait(entry);
+					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + entry.EncounterEvent.Value, MessageType.Error);
 					break;
@@ -1832,6 +1835,76 @@ namespace LunraGames.SubLight
 					entry.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility)
 				)
 			);
+		}
+		
+		void OnEncounterEventLogEdgeModuleTrait(
+			EncounterEventEntryModel entry
+		)
+		{
+			EncounterEvents.ModuleTrait.Operations operation;
+			
+			entry.KeyValues.SetEnumeration(
+				EncounterEvents.ModuleTrait.EnumKeys.Operation,
+				operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+					new GUIContent("Operation"),
+					"- Operation -",
+					entry.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation),
+					Color.red
+				)
+			);
+
+			GUIContent operationIdLabel = null;
+			
+			switch (operation)
+			{
+				case EncounterEvents.ModuleTrait.Operations.Unknown: break;
+				case EncounterEvents.ModuleTrait.Operations.AppendByTraitId:
+				case EncounterEvents.ModuleTrait.Operations.RemoveByTraitId:
+					operationIdLabel = new GUIContent("Trait Id");
+					break;
+				case EncounterEvents.ModuleTrait.Operations.RemoveByFamilyId:
+					operationIdLabel = new GUIContent("Family Id");
+					break;
+				default:
+					EditorGUILayout.HelpBox("Unrecognized Operation: " + operation, MessageType.Error);
+					break;
+			}
+
+			if (operationIdLabel != null)
+			{
+				var operationIdIsInvalid = string.IsNullOrEmpty(entry.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId));
+				// TODO: Actually validate if operation id exists...
+				EditorGUILayoutExtensions.PushColorValidation(Color.red, operationIdIsInvalid);
+				{
+					entry.KeyValues.SetString(
+						EncounterEvents.ModuleTrait.StringKeys.OperationId,
+						EditorGUILayout.TextField(
+							operationIdLabel,
+							entry.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId)
+						)
+					);
+				}
+				EditorGUILayoutExtensions.PopColorValidation(operationIdIsInvalid);
+			}
+			
+			GUILayout.Label("Target Module Types (Select none to apply to all Module Types)");
+
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
+				{
+					var moduleTypeKey = EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType);
+
+					entry.KeyValues.SetBoolean(
+						moduleTypeKey,
+						EditorGUILayout.Toggle(
+							ObjectNames.NicifyVariableName(moduleType.ToString()),
+							entry.KeyValues.GetBoolean(moduleTypeKey)
+						)
+					);
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
 		}
 
 		void OnEncounterEventLogEdgeNoModifications()

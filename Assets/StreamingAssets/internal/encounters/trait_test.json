@@ -1,0 +1,391 @@
+{
+  "orderWeight": 999,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "TransitComplete",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [],
+    "moduleTraits": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [
+      {
+        "selectionMethod": "FirstFilter",
+        "switches": [
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "3f941da2-c329-450d-930f-eb4910dbe27d",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": [
+                  {
+                    "operation": "PresentTraitId",
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
+                    "filterValue": "micrometeorite_damage",
+                    "filterId": "de381836-492d-4c70-a393-15a6d1fe937d",
+                    "group": "All"
+                  }
+                ]
+              },
+              "entryId": "487a4e18-5805-4c9f-a814-2c8e27456bd0"
+            }
+          },
+          {
+            "entry": {
+              "randomWeight": 1.0,
+              "nextLogId": "fb6500ec-dfc9-460e-86ff-d3430f9eeb16",
+              "filtering": {
+                "showValues": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "58ac8358-686a-44c4-87dd-f38d6c66fe4b"
+            },
+            "index": 1
+          }
+        ],
+        "index": 1,
+        "logId": "d360c5e5-b4ee-41d0-85df-bb4606b799a9"
+      }
+    ],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "Removing micrometeorite damage from propulsion"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "56ee1967-ed38-41a9-9098-99abda41a7ee"
+            }
+          },
+          {
+            "entry": {
+              "encounterEvent": "ModuleTrait",
+              "keyValues": {
+                "booleans": {
+                  "module_type_propulsion_is_valid": true,
+                  "module_type_powerproduction_is_valid": false,
+                  "module_type_rationmanagement_is_valid": false,
+                  "module_type_lifesupport_is_valid": false,
+                  "module_type_livingquarters_is_valid": false,
+                  "module_type_navigation_is_valid": false
+                },
+                "integers": {
+                  "operation": 110
+                },
+                "strings": {
+                  "operation_id": "micrometeorite"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "4571d8e3-baaa-4aa9-8617-8bc6fbbdb566"
+            },
+            "index": 1
+          }
+        ],
+        "index": 2,
+        "ending": true,
+        "logId": "3f941da2-c329-450d-930f-eb4910dbe27d",
+        "name": "module trait present"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "Adding micrometeorite damage to propulsion"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "97fed7b2-35e7-49ad-9733-ba0512a5081e"
+            }
+          },
+          {
+            "entry": {
+              "encounterEvent": "ModuleTrait",
+              "keyValues": {
+                "booleans": {
+                  "module_type_propulsion_is_valid": true,
+                  "module_type_powerproduction_is_valid": false,
+                  "module_type_rationmanagement_is_valid": false,
+                  "module_type_lifesupport_is_valid": false,
+                  "module_type_livingquarters_is_valid": false,
+                  "module_type_navigation_is_valid": false
+                },
+                "integers": {
+                  "operation": 10
+                },
+                "strings": {
+                  "operation_id": "micrometeorite_damage"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "74c7e32d-a7a7-4c7a-a257-e158cf95d8ce"
+            },
+            "index": 1
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "fb6500ec-dfc9-460e-86ff-d3430f9eeb16",
+        "name": "module trait not present"
+      },
+      {
+        "entries": [
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "c310d0d5-9544-4ef5-a6af-0b687507ed8c"
+            }
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "micrometeorite_damage is present"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": [
+                  {
+                    "operation": "PresentTraitId",
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
+                    "filterValue": "micrometeorite_damage",
+                    "filterId": "7451c236-03ab-4d90-ad03-37935e165c90",
+                    "group": "All"
+                  }
+                ]
+              },
+              "entryId": "e9e4a3e0-b2d1-4d74-bfce-3638926f9e5b"
+            },
+            "index": 1
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "micrometeorite_damage is appendable"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": [
+                  {
+                    "operation": "AppendableTraitId",
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
+                    "filterValue": "micrometeorite_damage",
+                    "filterId": "90bbefda-7c7a-4719-8648-527eb34d3347",
+                    "group": "All"
+                  }
+                ]
+              },
+              "entryId": "db5d4523-fb7d-4f41-8238-7964080129a7"
+            },
+            "index": 2
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "micrometeorite familyid is present"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "showValues": true,
+                "falseByDefault": true,
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": [
+                  {
+                    "operation": "PresentFamilyId",
+                    "validModuleTypes": [
+                      "Propulsion"
+                    ],
+                    "filterValue": "micrometeorite",
+                    "filterId": "49305e96-9b5e-4f35-b8b2-8852c8a7a35a",
+                    "group": "All"
+                  }
+                ]
+              },
+              "entryId": "3708072f-2ff4-4b63-ab32-005d9adf038e"
+            },
+            "index": 3
+          },
+          {
+            "entry": {
+              "encounterEvent": "Debug",
+              "keyValues": {
+                "booleans": {},
+                "integers": {
+                  "severity": 10
+                },
+                "strings": {
+                  "message": "-----------------------"
+                },
+                "floats": {}
+              },
+              "filtering": {
+                "booleanKeyValues": [],
+                "integerKeyValues": [],
+                "stringKeyValues": [],
+                "floatKeyValues": [],
+                "enumerationKeyValues": [],
+                "encounterInteractions": [],
+                "moduleTraits": []
+              },
+              "entryId": "2e5af23c-c47b-4e5e-8c4d-736608164851"
+            },
+            "index": 4
+          }
+        ],
+        "beginning": true,
+        "logId": "cdf7cea7-64c9-4452-9251-27771e9dba4a",
+        "fallbackLogId": "d360c5e5-b4ee-41d0-85df-bb4606b799a9"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": []
+  },
+  "ignore": true,
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-10-18T09:24:02.921501-07:00",
+  "modified": "2019-10-18T09:24:02.921501-07:00",
+  "id": "trait_test",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}
