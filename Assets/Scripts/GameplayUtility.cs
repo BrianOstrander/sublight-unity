@@ -51,10 +51,10 @@ namespace LunraGames.SubLight
 			out float resourcesFromSystem
 		)
 		{
-			if (gameSource == null) throw new ArgumentNullException("gameSource");
-			if (systemSource == null) throw new ArgumentNullException("systemSource");
-			if (shipResource == null) throw new ArgumentNullException("shipResource");
-			if (systemResource == null) throw new ArgumentNullException("systemResource");
+			if (gameSource == null) throw new ArgumentNullException(nameof(gameSource));
+			if (systemSource == null) throw new ArgumentNullException(nameof(systemSource));
+			if (shipResource == null) throw new ArgumentNullException(nameof(shipResource));
+			if (systemResource == null) throw new ArgumentNullException(nameof(systemResource));
 
 			resourcesFromSystem = 0f;
 
@@ -74,8 +74,8 @@ namespace LunraGames.SubLight
 			KeyValueListModel systemSource
 		)
 		{
-			if (gameSource == null) throw new ArgumentNullException("gameSource");
-			if (systemSource == null) throw new ArgumentNullException("systemSource");
+			if (gameSource == null) throw new ArgumentNullException(nameof(gameSource));
+			if (systemSource == null) throw new ArgumentNullException(nameof(systemSource));
 
 			var population = gameSource.Get(KeyDefines.Game.Population);
 			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);
@@ -89,15 +89,13 @@ namespace LunraGames.SubLight
 			//var rations = Mathf.Max(0f, gameSource.Get(KeyDefines.Game.Rations.Amount) - rationsConsumed);
 			//var propellant = Mathf.Max(0f, gameSource.Get(KeyDefines.Game.Propellant.Amount) - propellantConsumed);
 
-			float rationsTotal;
-			float rationsFromSystem;
 			ResourcesAvailable(
 				gameSource,
 				systemSource,
 				KeyDefines.Game.Rations,
 				KeyDefines.CelestialSystem.Rations,
-				out rationsTotal,
-				out rationsFromSystem
+				out var rationsTotal,
+				out var rationsFromSystem
 			);
 
 			rationsTotal = Mathf.Max(0f, rationsTotal - rationsConsumed);
@@ -123,15 +121,13 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			float propellantTotal;
-			float propellantFromSystem;
 			ResourcesAvailable(
 				gameSource,
 				systemSource,
 				KeyDefines.Game.Propellant,
 				KeyDefines.CelestialSystem.Propellant,
-				out propellantTotal,
-				out propellantFromSystem
+				out var propellantTotal,
+				out var propellantFromSystem
 			);
 
 			propellantTotal = Mathf.Max(0f, propellantTotal - propellantConsumed);
@@ -157,15 +153,13 @@ namespace LunraGames.SubLight
 				);
 			}
 
-			float metallicsTotal;
-			float metallicsFromSystem;
 			ResourcesAvailable(
 				gameSource,
 				systemSource,
 				KeyDefines.Game.Metallics,
 				KeyDefines.CelestialSystem.Metallics,
-				out metallicsTotal,
-				out metallicsFromSystem
+				out var metallicsTotal,
+				out var metallicsFromSystem
 			);
 
 			var metallicsMaximum = gameSource.Get(KeyDefines.Game.Metallics.Maximum);
@@ -400,7 +394,7 @@ namespace LunraGames.SubLight
 			KeyValueListModel gameSource
 		)
 		{
-			if (gameSource == null) throw new ArgumentNullException("gameSource");
+			if (gameSource == null) throw new ArgumentNullException(nameof(gameSource));
 
 			var population = gameSource.Get(KeyDefines.Game.Population);
 			var rationsConsumptionMultiplier = gameSource.Get(KeyDefines.Game.RationsConsumptionMultiplier);

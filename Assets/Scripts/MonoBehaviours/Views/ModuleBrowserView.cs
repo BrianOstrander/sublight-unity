@@ -3,37 +3,49 @@ using System.Linq;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace LunraGames.SubLight.Views
 {
 	public struct ModuleBrowserBlock
 	{
-		public struct TraitBlock
+		public struct ModuleEntry
 		{
-			public string Name;
-			public string Description;
+			public struct TraitBlock
+			{
+				public string Name;
+				public string Description;
 			
-			public string SeverityText;
-			public ModuleTraitSeverity Severity;
-		}
+				public string SeverityText;
+				public ModuleTraitSeverity Severity;
+			}
 
-		public string Id;
-		public string Name;
-		public string Type;
-		public string YearManufacturedTitle;
-		public string YearManufactured;
-		public string PowerProductionTitle;
-		public string PowerProduction;
-		public string PowerConsumptionTitle;
-		public string PowerConsumption;
-		public string Description;
+			public string Id;
+			public string Name;
+			public string Type;
+			public string YearManufacturedTitle;
+			public string YearManufactured;
+			public string PowerProductionTitle;
+			public string PowerProduction;
+			public string PowerConsumptionTitle;
+			public string PowerConsumption;
+			public string Description;
 		
-		public string DefiningSeverityText;
-		public ModuleTraitSeverity DefiningSeverity;
+			public string DefiningSeverityText;
+			public ModuleTraitSeverity DefiningSeverity;
 
-		public TraitBlock[] Traits;
+			public TraitBlock[] Traits;
+		}
+		
+		public ModuleEntry[] Modules;
+
+		public string StatsTitle;
+		public string VelocityTitle;
+		public string VelocityValue;
+		public string NavigationRangeTitle;
+		public string NavigationRangeValue;
 	}
-
+	
 	public class ModuleBrowserView : View, IModuleBrowserView
 	{
 		[Serializable]
@@ -60,6 +72,13 @@ namespace LunraGames.SubLight.Views
 		SeverityStyleEntry[] severityStyles;
 		
 		[SerializeField]
+		TextMeshProUGUI statsTitleLabel;
+		[SerializeField]
+		TextMeshProUGUI velocityLabel;
+		[SerializeField]
+		TextMeshProUGUI navigationRangeLabel;
+		
+		[SerializeField]
 		CanvasGroup detailsGroup;
 		[SerializeField]
 		TextMeshProUGUI nameLabel;
@@ -83,21 +102,26 @@ namespace LunraGames.SubLight.Views
 
 		Dictionary<string, ModuleBrowserEntryLeaf> entryInstances = new Dictionary<string, ModuleBrowserEntryLeaf>();
 		
-		ModuleBrowserBlock[] entries;
-		public ModuleBrowserBlock[] Entries
+		ModuleBrowserBlock info;
+		public ModuleBrowserBlock Info
 		{
 			set
 			{
-				entries = value;
+				info = value;
 				entryArea.ClearChildren();
 				entryInstances.Clear();
-				if (entries == null || entries.None() || (!string.IsNullOrEmpty(Selected) && entries.None(e => e.Id == Selected)))
+
+				statsTitleLabel.text = info.StatsTitle;
+				velocityLabel.text = info.VelocityTitle + ": " + info.VelocityValue;
+				navigationRangeLabel.text = info.NavigationRangeTitle + ": " + info.NavigationRangeValue;
+				
+				if (info.Modules == null || info.Modules.None() || (!string.IsNullOrEmpty(Selected) && info.Modules.None(e => e.Id == Selected)))
 				{
 					Selected = null;
 					return;
 				}
 				
-				foreach (var entry in entries)
+				foreach (var entry in info.Modules)
 				{
 					var current = entryArea.gameObject.InstantiateChild(entryPrefab, setActive: true);
 					entryInstances.Add(entry.Id, current);
@@ -117,7 +141,7 @@ namespace LunraGames.SubLight.Views
 				
 				Selected = Selected; // Kinda weird...
 			}
-			private get => entries;
+			private get => info;
 		}
 
 		string selected;
@@ -127,7 +151,7 @@ namespace LunraGames.SubLight.Views
 			{
 				selected = value;
 
-				var current = Entries?.FirstOrDefault(e => e.Id == selected);
+				var current = Info.Modules?.FirstOrDefault(e => e.Id == selected);
 
 				if (!string.IsNullOrEmpty(selected) && current.HasValue)
 				{
@@ -174,7 +198,7 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
-			Entries = null;
+			Info = default(ModuleBrowserBlock);
 			Selected = null;
 			Selection = ActionExtensions.GetEmpty<string>();
 			
@@ -183,7 +207,7 @@ namespace LunraGames.SubLight.Views
 		}
 
 		#region Events
-		void OnClickEntry(ModuleBrowserBlock block)
+		void OnClickEntry(ModuleBrowserBlock.ModuleEntry block)
 		{
 			Selected = block.Id;
 			Selection(block.Id);
@@ -193,7 +217,7 @@ namespace LunraGames.SubLight.Views
 
 	public interface IModuleBrowserView : IView
 	{
-		ModuleBrowserBlock[] Entries { set; }
+		ModuleBrowserBlock Info { set; }
 		string Selected { set; }
 		Action<string> Selection { set; }
 	}

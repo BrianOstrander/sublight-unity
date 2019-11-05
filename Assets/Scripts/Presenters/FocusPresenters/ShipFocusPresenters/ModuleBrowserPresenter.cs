@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
-
-using UnityEngine;
 
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
@@ -12,12 +9,15 @@ namespace LunraGames.SubLight.Presenters
 	public class ModuleBrowserPresenter : ShipFocusPresenter<IModuleBrowserView>
 	{
 		GameModel model;
+		ModuleBrowserLanguageBlock language;
 		
 		public ModuleBrowserPresenter(
-			GameModel model
+			GameModel model,
+			ModuleBrowserLanguageBlock language
 		)
 		{
 			this.model = model;
+			this.language = language;
 			
 			model.Ship.Modules.Changed += OnModules;
 		}
@@ -35,21 +35,21 @@ namespace LunraGames.SubLight.Presenters
 			UpdateModules(model.Ship.Modules.Value);
 		}
 
-		void UpdateModules(ModuleModel[] modules)
+		void UpdateModules(ModuleStatistics moduleStatistics)
 		{
-			var entries = new List<ModuleBrowserBlock>();
+			var entries = new List<ModuleBrowserBlock.ModuleEntry>();
 
-			foreach (var module in modules)
+			foreach (var module in moduleStatistics.Modules)
 			{
-				var current = new ModuleBrowserBlock();
+				var current = new ModuleBrowserBlock.ModuleEntry();
 				current.Id = module.Id.Value;
 				current.Name = module.Name.Value;
 				current.Type = module.Type.Value.ToString();
-				current.YearManufacturedTitle = "Year Manufactured";
+				current.YearManufacturedTitle = language.YearManufactured.Value;
 				current.YearManufactured = module.YearManufactured.Value;
-				current.PowerProductionTitle = "Power Production";
+				current.PowerProductionTitle = language.PowerProduction.Value;
 				current.PowerProduction = module.PowerProduction.Value.ToString("N2");
-				current.PowerConsumptionTitle = "Power Consumption";
+				current.PowerConsumptionTitle = language.PowerConsumption.Value;
 				current.PowerConsumption = module.PowerConsumption.Value.ToString("N2");
 				current.Description = module.Description;
 
@@ -59,15 +59,15 @@ namespace LunraGames.SubLight.Presenters
 				current.DefiningSeverity = definingTrait?.Severity.Value ?? ModuleTraitSeverity.Neutral;
 				current.DefiningSeverityText = current.DefiningSeverity.ToString();
 
-				var currentTraits = new List<ModuleBrowserBlock.TraitBlock>();
+				var currentTraits = new List<ModuleBrowserBlock.ModuleEntry.TraitBlock>();
 
 				foreach (var trait in moduleTraits)
 				{
-					var currentTrait = new ModuleBrowserBlock.TraitBlock();
+					var currentTrait = new ModuleBrowserBlock.ModuleEntry.TraitBlock();
 					currentTrait.Name = trait.Name.Value;
 					currentTrait.Description = trait.Description.Value;
 					
-					currentTrait.SeverityText = trait.Severity.Value.ToString();
+					currentTrait.SeverityText = language.Severities[trait.Severity.Value].Value;
 					currentTrait.Severity = trait.Severity.Value;
 					
 					currentTraits.Add(currentTrait);
@@ -78,15 +78,24 @@ namespace LunraGames.SubLight.Presenters
 				entries.Add(current);
 			}
 
-			View.Entries = entries.ToArray();
+			View.Info = new ModuleBrowserBlock
+			{
+				Modules = entries.ToArray(),
+				StatsTitle = language.StatsTitle.Value,
+				VelocityTitle = language.Velocity.Value,
+				VelocityValue = moduleStatistics.NavigationVelocity + language.VelocityUnit.Value,
+				NavigationRangeTitle = language.NavigationRange.Value,
+				NavigationRangeValue = moduleStatistics.NavigationRange + " " + language.NavigationRangeUnit.Value
+			};
+			
 			View.Selected = entries.FirstOrDefault().Id;
 			View.Selection = OnSelection;
 		}
 		
 		#region Model Events
-		void OnModules(ModuleModel[] modules)
+		void OnModules(ModuleStatistics moduleStatistics)
 		{
-			if (View.Visible) UpdateModules(modules);
+			if (View.Visible) UpdateModules(moduleStatistics);
 		}
 		#endregion
 

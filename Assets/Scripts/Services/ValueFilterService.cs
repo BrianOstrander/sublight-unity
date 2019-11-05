@@ -526,7 +526,7 @@ namespace LunraGames.SubLight
 		{
 			var result = false;
 
-			var modules = model.Ship.Modules.Value;
+			var modules = model.Ship.Modules.Value.Modules;
 			if (filter.ValidModuleTypes.Value.Any()) modules = modules.Where(m => filter.ValidModuleTypes.Value.Contains(m.Type.Value)).ToArray();
 			
 			switch (filter.Operation.Value)

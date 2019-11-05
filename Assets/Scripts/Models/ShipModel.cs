@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -8,6 +9,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] UniversePosition position;
 		[JsonIgnore] public readonly ListenerProperty<UniversePosition> Position;
 
+		// TODO: This should probably be wrapped into a struct with Position...
 		[JsonProperty] int systemIndex;
 		/// <summary>
 		/// The index of the current system.
@@ -17,23 +19,16 @@ namespace LunraGames.SubLight.Models
 		/// GameModel.SetCurrentSystem or GameService.
 		/// </remarks>
 		[JsonIgnore] public readonly ListenerProperty<int> SystemIndex;
-		
-		[JsonProperty] ModuleModel[] modules = new ModuleModel[0];
-		[JsonIgnore] public readonly ListenerProperty<ModuleModel[]> Modules;
+
+		[JsonProperty] ModuleStatistics modules = ModuleStatistics.Default;
+		[JsonIgnore] public readonly ListenerProperty<ModuleStatistics> Modules;
 		#endregion
 
 		public ShipModel()
 		{
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			SystemIndex = new ListenerProperty<int>(value => systemIndex = value, () => systemIndex);
-			Modules = new ListenerProperty<ModuleModel[]>(value => modules = value, () => modules, OnModules);
+			Modules = new ListenerProperty<ModuleStatistics>(value => modules = value, () => modules);
 		}
-
-		#region Events
-		void OnModules(ModuleModel[] value)
-		{
-			// TODO: Change certain summed values, etc... (power consumption total, etc)
-		}
-		#endregion
 	}
 }

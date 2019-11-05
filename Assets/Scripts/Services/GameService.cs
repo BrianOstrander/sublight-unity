@@ -43,11 +43,8 @@ namespace LunraGames.SubLight
 
 		public GameService(IModelMediator modelMediator, IUniverseService universeService)
 		{
-			if (modelMediator == null) throw new ArgumentNullException("modelMediator");
-			if (universeService == null) throw new ArgumentNullException("universeService");
-
-			this.modelMediator = modelMediator;
-			this.universeService = universeService;
+			this.modelMediator = modelMediator ?? throw new ArgumentNullException(nameof(modelMediator));
+			this.universeService = universeService ?? throw new ArgumentNullException(nameof(universeService));
 		}
 
 		#region Exposed Utilities
@@ -58,7 +55,7 @@ namespace LunraGames.SubLight
 		/// <param name="done">Done.</param>
 		public void CreateGame(CreateGameBlock info, Action<RequestResult, GameModel> done)
 		{
-			if (done == null) throw new ArgumentNullException("done");
+			if (done == null) throw new ArgumentNullException(nameof(done));
 
 			var model = modelMediator.Create<GameModel>(App.M.CreateUniqueId());
 
@@ -433,7 +430,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			model.Ship.Modules.Value = result.Payloads;
+			model.Ship.Modules.Value = new ModuleStatistics(result.Payloads);
 
 			SetContext(instructions, model, done);
 		}

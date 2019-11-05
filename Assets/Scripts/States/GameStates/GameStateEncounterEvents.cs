@@ -377,9 +377,9 @@ namespace LunraGames.SubLight
 
 			if (moduleTypes.None()) moduleTypes = allModuleTypes.ToList();
 
-			var modules = state.Payload.Game.Ship.Modules.Value.Where(m => moduleTypes.Contains(m.Type.Value)).ToList();
+			var modules = state.Payload.Game.Ship.Modules.Value.Modules.Where(m => moduleTypes.Contains(m.Type.Value)).ToList();
 			
-			foreach (var module in state.Payload.Game.Ship.Modules.Value.Where(m => moduleTypes.Contains(m.Type.Value )))
+			foreach (var module in state.Payload.Game.Ship.Modules.Value.Modules.Where(m => moduleTypes.Contains(m.Type.Value )))
 			{
 				switch (operation)
 				{

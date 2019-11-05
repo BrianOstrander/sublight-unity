@@ -396,7 +396,28 @@ namespace LunraGames.SubLight
 
 			static void InitializeShipPresenters(GameState state, Action done)
 			{
-				new ModuleBrowserPresenter(state.Payload.Game);
+				new ModuleBrowserPresenter(
+					state.Payload.Game,
+					new ModuleBrowserLanguageBlock
+					{
+						StatsTitle = LanguageStringModel.Override("Ark Stats"),
+						Velocity = LanguageStringModel.Override("Velocity"),
+						VelocityUnit = LanguageStringModel.Override("c"),
+						NavigationRange = LanguageStringModel.Override("Navigation Radius"),
+						NavigationRangeUnit = LanguageStringModel.Override("ly"),
+						YearManufactured = LanguageStringModel.Override("Year Manufactured"),
+						PowerProduction = LanguageStringModel.Override("Power Production"),
+						PowerConsumption = LanguageStringModel.Override("Power Consumption"),
+						Severities = new Dictionary<ModuleTraitSeverity, LanguageStringModel>
+						{
+							{ ModuleTraitSeverity.Unknown, LanguageStringModel.Override("Unrecognized Severity") },
+							{ ModuleTraitSeverity.Positive, LanguageStringModel.Override("Positive") },
+							{ ModuleTraitSeverity.Neutral, LanguageStringModel.Override("Neutral") },
+							{ ModuleTraitSeverity.Negative, LanguageStringModel.Override("Negative") },
+							{ ModuleTraitSeverity.Critical, LanguageStringModel.Override("Critical") }
+						}
+					}
+				);
 				
 				InitializeCommunicationPresenters(state, done);
 			}
