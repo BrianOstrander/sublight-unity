@@ -17,7 +17,9 @@ namespace LunraGames.SubLight
 				public const ToolbarSelections ToolbarSelection = ToolbarSelections.Communication;
 			}
 
-			public const float TransitRangeMinimum = 1f; // In universe units.
+			public const float TransitRange = 1f; // In universe units.
+			public const float TransitVelocity = 0.1f; // In c
+			public const float ModulePowerConsumption = 1f;
 
 			public const float TransitHistoryLineDistance = 8f; // In universe units.
 			public const int TransitHistoryLineCount = 32;
@@ -380,8 +382,7 @@ namespace LunraGames.SubLight
 			// -- Module Generation
 			var moduleTypes = EnumExtensions.GetValues(ModuleTypes.Unknown);
 
-			var defaultPowerProduction = (float) moduleTypes.Length;
-			var defaultPowerConsumption = 1f;
+			var defaultPowerProduction = moduleTypes.Length * Defaults.ModulePowerConsumption;
 
 			var moduleConstraints = new List<ModuleService.ModuleConstraint>();
 
@@ -396,7 +397,17 @@ namespace LunraGames.SubLight
 						current.PowerProduction = FloatRange.Constant(defaultPowerProduction);
 						break;
 					default:
-						current.PowerConsumption = FloatRange.Constant(defaultPowerConsumption);
+						current.PowerConsumption = FloatRange.Constant(Defaults.ModulePowerConsumption);
+						break;
+				}
+				
+				switch (moduleType)
+				{
+					case ModuleTypes.Navigation:
+						current.TransitRange = FloatRange.Constant(Defaults.TransitRange);
+						break;
+					case ModuleTypes.Propulsion:
+						current.TransitVelocity = FloatRange.Constant(Defaults.TransitVelocity);
 						break;
 				}
 

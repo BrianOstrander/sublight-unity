@@ -29,11 +29,21 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] float powerConsumption;
 		[JsonIgnore] public readonly ListenerProperty<float> PowerConsumption;
 		
-		[JsonProperty] float navigationRange;
-		[JsonIgnore] public readonly ListenerProperty<float> NavigationRange;
+		[JsonProperty] float transitRange;
+		/// <summary>
+		/// Maximum transit range in universe units.
+		/// </summary>
+		/// <remarks>
+		/// This may not be the actual maximum range a player can travel per turn,
+		/// but rather the maximum before certain encounters are triggered.
+		/// </remarks>
+		[JsonIgnore] public readonly ListenerProperty<float> TransitRange;
 		
-		[JsonProperty] float navigationVelocity;
-		[JsonIgnore] public readonly ListenerProperty<float> NavigationVelocity;
+		[JsonProperty] float transitVelocity;
+		/// <summary>
+		/// The maximum velocity as a fraction of the speed of light.
+		/// </summary>
+		[JsonIgnore] public readonly ListenerProperty<float> TransitVelocity;
 		
 		[JsonProperty] string[] traitIds = new string[0];
 		[JsonIgnore] public readonly ListenerProperty<string[]> TraitIds;
@@ -52,8 +62,8 @@ namespace LunraGames.SubLight.Models
 			Type = new ListenerProperty<ModuleTypes>(value => type = value, () => type);
 			PowerProduction = new ListenerProperty<float>(value => powerProduction = value, () => powerProduction);
 			PowerConsumption = new ListenerProperty<float>(value => powerConsumption = value, () => powerConsumption);
-			NavigationRange = new ListenerProperty<float>(value => navigationRange = value, () => navigationRange);
-			NavigationVelocity = new ListenerProperty<float>(value => navigationVelocity = value, () => navigationVelocity);
+			TransitRange = new ListenerProperty<float>(value => transitRange = value, () => transitRange);
+			TransitVelocity = new ListenerProperty<float>(value => transitVelocity = value, () => transitVelocity);
 			TraitIds = new ListenerProperty<string[]>(value => traitIds = value, () => traitIds);
 			RepairCost = new ListenerProperty<float>(value => repairCost = value, () => repairCost);
 		}

@@ -51,6 +51,11 @@ namespace LunraGames.SubLight.Presenters
 				current.PowerProduction = module.PowerProduction.Value.ToString("N2");
 				current.PowerConsumptionTitle = language.PowerConsumption.Value;
 				current.PowerConsumption = module.PowerConsumption.Value.ToString("N2");
+				current.TransitVelocityTitle = language.Velocity.Value;
+				current.TransitVelocity = module.TransitVelocity.Value.ToString("N2");
+				current.TransitRangeTitle = language.NavigationRange.Value;
+				current.TransitRange = UniversePosition.ToLightYearDistance(module.TransitRange.Value).ToString("N2");
+				
 				current.Description = module.Description;
 
 				var moduleTraits = model.Context.ModuleService.GetTraits(module.TraitIds.Value);
@@ -82,10 +87,14 @@ namespace LunraGames.SubLight.Presenters
 			{
 				Modules = entries.ToArray(),
 				StatsTitle = language.StatsTitle.Value,
-				VelocityTitle = language.Velocity.Value,
-				VelocityValue = moduleStatistics.NavigationVelocity + language.VelocityUnit.Value,
-				NavigationRangeTitle = language.NavigationRange.Value,
-				NavigationRangeValue = moduleStatistics.NavigationRange + " " + language.NavigationRangeUnit.Value
+				PowerProductionTitle = language.PowerProduction.Value,
+				PowerProduction = moduleStatistics.PowerProduction.ToString("N2"),
+				PowerConsumptionTitle = language.PowerConsumption.Value,
+				PowerConsumption = moduleStatistics.PowerConsumption.ToString("N2"),
+				TransitVelocityTitle = language.Velocity.Value,
+				TransitVelocity = moduleStatistics.NavigationVelocity + language.VelocityUnit.Value,
+				TransitRangeTitle = language.NavigationRange.Value,
+				TransitRange = moduleStatistics.NavigationRange + " " + language.NavigationRangeUnit.Value
 			};
 			
 			View.Selected = entries.FirstOrDefault().Id;

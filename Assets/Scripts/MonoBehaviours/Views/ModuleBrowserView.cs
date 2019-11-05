@@ -29,6 +29,10 @@ namespace LunraGames.SubLight.Views
 			public string PowerProduction;
 			public string PowerConsumptionTitle;
 			public string PowerConsumption;
+			public string TransitVelocityTitle;
+			public string TransitVelocity;
+			public string TransitRangeTitle;
+			public string TransitRange;
 			public string Description;
 		
 			public string DefiningSeverityText;
@@ -40,10 +44,14 @@ namespace LunraGames.SubLight.Views
 		public ModuleEntry[] Modules;
 
 		public string StatsTitle;
-		public string VelocityTitle;
-		public string VelocityValue;
-		public string NavigationRangeTitle;
-		public string NavigationRangeValue;
+		public string PowerProductionTitle;
+		public string PowerProduction;
+		public string PowerConsumptionTitle;
+		public string PowerConsumption;
+		public string TransitVelocityTitle;
+		public string TransitVelocity;
+		public string TransitRangeTitle;
+		public string TransitRange;
 	}
 	
 	public class ModuleBrowserView : View, IModuleBrowserView
@@ -74,9 +82,13 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		TextMeshProUGUI statsTitleLabel;
 		[SerializeField]
-		TextMeshProUGUI velocityLabel;
+		TextMeshProUGUI powerProductionTotalLabel;
 		[SerializeField]
-		TextMeshProUGUI navigationRangeLabel;
+		TextMeshProUGUI powerConsumptionTotalLabel;
+		[SerializeField]
+		TextMeshProUGUI transitVelocityTotalLabel;
+		[SerializeField]
+		TextMeshProUGUI transitRangeTotalLabel;
 		
 		[SerializeField]
 		CanvasGroup detailsGroup;
@@ -97,6 +109,14 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		TextMeshProUGUI powerConsumptionLabel;
 		[SerializeField]
+		TextMeshProUGUI transitVelocityTitleLabel;
+		[SerializeField]
+		TextMeshProUGUI transitVelocityLabel;
+		[SerializeField]
+		TextMeshProUGUI transitRangeTitleLabel;
+		[SerializeField]
+		TextMeshProUGUI transitRangeLabel;
+		[SerializeField]
 		TextMeshProUGUI descriptionLabel;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
@@ -112,8 +132,10 @@ namespace LunraGames.SubLight.Views
 				entryInstances.Clear();
 
 				statsTitleLabel.text = info.StatsTitle;
-				velocityLabel.text = info.VelocityTitle + ": " + info.VelocityValue;
-				navigationRangeLabel.text = info.NavigationRangeTitle + ": " + info.NavigationRangeValue;
+				powerProductionTotalLabel.text = info.PowerProductionTitle + ": " + info.PowerProduction;
+				powerConsumptionTotalLabel.text = info.PowerConsumptionTitle + ": " + info.PowerConsumption;
+				transitVelocityTotalLabel.text = info.TransitVelocityTitle + ": " + info.TransitVelocity;
+				transitRangeTotalLabel.text = info.TransitRangeTitle + ": " + info.TransitRange;
 				
 				if (info.Modules == null || info.Modules.None() || (!string.IsNullOrEmpty(Selected) && info.Modules.None(e => e.Id == Selected)))
 				{
@@ -165,6 +187,10 @@ namespace LunraGames.SubLight.Views
 					powerProductionLabel.text = current.Value.PowerProduction;
 					powerConsumptionTitleLabel.text = current.Value.PowerConsumptionTitle;
 					powerConsumptionLabel.text = current.Value.PowerConsumption;
+					transitVelocityTitleLabel.text = current.Value.TransitVelocityTitle;
+					transitVelocityLabel.text = current.Value.TransitVelocity;
+					transitRangeTitleLabel.text = current.Value.TransitRangeTitle;
+					transitRangeLabel.text = current.Value.TransitRange;
 					descriptionLabel.text = current.Value.Description;
 					
 					traitArea.ClearChildren();

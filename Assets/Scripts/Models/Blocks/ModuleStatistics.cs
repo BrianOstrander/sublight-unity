@@ -26,8 +26,8 @@ namespace LunraGames.SubLight.Models
 			
 			foreach (var module in modules)
 			{
-				NavigationVelocity += module.NavigationVelocity.Value;
-				NavigationRange += module.NavigationRange.Value;
+				NavigationVelocity += module.TransitVelocity.Value;
+				NavigationRange += module.TransitRange.Value;
 				PowerConsumption += module.PowerConsumption.Value;
 				PowerProduction += module.PowerProduction.Value;
 			}

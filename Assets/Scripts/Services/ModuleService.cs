@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Net.Configuration;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
@@ -49,8 +47,8 @@ namespace LunraGames.SubLight
 				ValidTypes = new ModuleTypes[0],
 				PowerProduction = FloatRange.Zero,
 				PowerConsumption = FloatRange.Zero,
-				NavigationRange = FloatRange.Zero,
-				NavigationVelocity = FloatRange.Zero,
+				TransitRange = FloatRange.Zero,
+				TransitVelocity = FloatRange.Zero,
 				RepairCost = FloatRange.Zero,
 				ManufacturerIds = new string[0] 
 			};
@@ -58,8 +56,18 @@ namespace LunraGames.SubLight
 			public ModuleTypes[] ValidTypes;
 			public FloatRange PowerProduction;
 			public FloatRange PowerConsumption;
-			public FloatRange NavigationRange;
-			public FloatRange NavigationVelocity;
+			/// <summary>
+			/// Maximum transit range in universe units.
+			/// </summary>
+			/// <remarks>
+			/// This may not be the actual maximum range a player can travel per turn,
+			/// but rather the maximum before certain encounters are triggered.
+			/// </remarks>
+			public FloatRange TransitRange;
+			/// <summary>
+			/// The maximum velocity as a fraction of the speed of light.
+			/// </summary>
+			public FloatRange TransitVelocity;
 			public FloatRange RepairCost;
 			public string[] ManufacturerIds;
 			
@@ -222,15 +230,15 @@ namespace LunraGames.SubLight
 					result.PowerConsumption.Value = 0f;
 					break;
 				case ModuleTypes.Navigation:
-					result.NavigationRange.Value = random.GetNextFloat(
-						constraint.NavigationRange.Primary,
-						constraint.NavigationRange.Secondary
+					result.TransitRange.Value = random.GetNextFloat(
+						constraint.TransitRange.Primary,
+						constraint.TransitRange.Secondary
 					);
 					break;
 				case ModuleTypes.Propulsion:
-					result.NavigationVelocity.Value = random.GetNextFloat(
-						constraint.NavigationVelocity.Primary,
-						constraint.NavigationVelocity.Secondary
+					result.TransitVelocity.Value = random.GetNextFloat(
+						constraint.TransitVelocity.Primary,
+						constraint.TransitVelocity.Secondary
 					);
 					break;
 			}
