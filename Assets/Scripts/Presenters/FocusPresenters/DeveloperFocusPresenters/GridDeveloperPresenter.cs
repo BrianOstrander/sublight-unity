@@ -101,25 +101,6 @@ namespace LunraGames.SubLight.Presenters
 			return result;
 		}
 
-		string CreateResourceMessage(
-			Dictionary<string, Action> target,
-			KeyValueListModel gameSource,
-			SystemModel system
-		)
-		{
-			if (target == null) throw new ArgumentNullException("target");
-			if (gameSource == null) throw new ArgumentNullException("gameSource");
-			if (system == null) throw new ArgumentNullException("system");
-			var result = string.Empty;
-
-			//result = AppendPopulationMessage(result, target, gameSource);
-			result = AppendRations(result, target, gameSource);
-			result = AppendPropellant(result, target, gameSource);
-			result = AppendMetallics(result, target, gameSource);
-
-			return result;
-		}
-
 		string CreateSystemMessage(
 			Dictionary<string, Action> target,
 			KeyValueListModel gameSource,
@@ -138,69 +119,6 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			result = AppendSystemName(result, target, "Target System", system);
-
-			result += "\n";
-
-			float rationsTotal;
-			float rationsFromSystem;
-			GameplayUtility.ResourcesAvailable(
-				Model.KeyValues,
-				system.KeyValues,
-				KeyDefines.Game.Rations,
-				KeyDefines.CelestialSystem.Rations,
-				out rationsTotal,
-				out rationsFromSystem
-			);
-
-			var rationsNormal = rationsFromSystem / Model.KeyValues.Get(KeyDefines.Game.Rations.Maximum);
-			var rationsPercent = Mathf.FloorToInt(rationsNormal * 100f);
-
-			result += DeveloperStrings.GetBold("Rations: ");
-			if (rationsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < rationsFromSystem) result += DeveloperStrings.GetColor("+" + rationsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
-			else result += "Invalid Amount " + rationsPercent + "%";
-
-			result += "\n";
-
-			float propellantTotal;
-			float propellantFromSystem;
-			GameplayUtility.ResourcesAvailable(
-				Model.KeyValues,
-				system.KeyValues,
-				KeyDefines.Game.Propellant,
-				KeyDefines.CelestialSystem.Propellant,
-				out propellantTotal,
-				out propellantFromSystem
-			);
-
-			var propellantNormal = propellantFromSystem / Model.KeyValues.Get(KeyDefines.Game.Propellant.Maximum);
-			var propellantPercent = Mathf.FloorToInt(propellantNormal * 100f);
-
-			result += DeveloperStrings.GetBold("Propellant: ");
-			if (propellantPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0f < propellantFromSystem) result += DeveloperStrings.GetColor("+" + propellantPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
-			else result += "Invalid Amount " + propellantPercent + "%";
-
-			result += "\n";
-
-			float metallicsTotal;
-			float metallicsFromSystem;
-			GameplayUtility.ResourcesAvailable(
-				Model.KeyValues,
-				system.KeyValues,
-				KeyDefines.Game.Metallics,
-				KeyDefines.CelestialSystem.Metallics,
-				out metallicsTotal,
-				out metallicsFromSystem
-			);
-
-			var metallicsNormal = metallicsFromSystem / Model.KeyValues.Get(KeyDefines.Game.Metallics.Maximum);
-			var metallicsPercent = Mathf.FloorToInt(metallicsNormal * 100f);
-
-			result += DeveloperStrings.GetBold("Metallics: ");
-			if (metallicsPercent == 0) result += DeveloperStrings.GetColor("NONE", Color.red);
-			else if (0 < metallicsFromSystem) result += DeveloperStrings.GetColor("+" + metallicsPercent + DeveloperStrings.GetSize("%", 0.35f), Color.green);
-			else result += "Invalid Amount " + metallicsPercent + "%";
 
 			return result;
 		}
@@ -356,117 +274,6 @@ namespace LunraGames.SubLight.Presenters
 		//	return result;
 		//}
 
-		string AppendRations(
-			string result,
-			Dictionary<string, Action> target,
-			KeyValueListModel gameSource
-		)
-		{
-			result += "\n";
-
-			var rationsTotal = gameSource.Get(KeyDefines.Game.Rations.Amount);
-			var rationsMaximum = gameSource.Get(KeyDefines.Game.Rations.Maximum);
-
-			result += DeveloperStrings.GetBold("Rations: ") + rationsTotal.ToString("N0");
-
-			var currentRations = Model.KeyValues.Get(KeyDefines.Game.Rations.Amount);
-			if (1f < Mathf.Abs(rationsTotal - currentRations))
-			{
-				var rationsDelta = rationsTotal - currentRations;
-				if (rationsMaximum < rationsTotal) rationsDelta = (rationsDelta + currentRations) - rationsMaximum;
-
-				result += DeveloperStrings.GetColor(
-					DeveloperStrings.GetSize(
-						(rationsDelta < 0f ? " " : " +") + rationsDelta.ToString("N0"),
-						0.4f
-					),
-					(rationsDelta < 0f ? Color.red : Color.green).NewS(0.65f)
-				);
-			}
-
-			result += "\n\t" + DeveloperStrings.GetRatio(
-				rationsTotal,
-				0f,
-				rationsMaximum,
-				DeveloperStrings.RatioThemes.ProgressBar,
-				new DeveloperStrings.RatioColor(Color.red, Color.green)
-			);
-
-			return result;
-		}
-
-		string AppendPropellant(string result, Dictionary<string, Action> target, KeyValueListModel gameSource)
-		{
-			result += "\n";
-
-			var propellant = gameSource.Get(KeyDefines.Game.Propellant.Amount);
-			var propellantMaximum = gameSource.Get(KeyDefines.Game.Propellant.Maximum);
-
-			result += DeveloperStrings.GetBold("Propellant: ") + propellant.ToString("N2");
-
-			var currentPropellant = Model.KeyValues.Get(KeyDefines.Game.Propellant.Amount);
-			if (!Mathf.Approximately(0f, propellant - currentPropellant))
-			{
-				var propellantDelta = propellant - currentPropellant;
-				result += DeveloperStrings.GetColor(
-					DeveloperStrings.GetSize(
-						(propellantDelta < 0f ? " " : " +") + propellantDelta.ToString("N2"),
-						0.4f
-					),
-					(propellantDelta < 0f ? Color.red : Color.green).NewS(0.65f)
-				);
-			}
-
-			result += "\n\t" + DeveloperStrings.GetRatio(
-				propellant,
-				0f,
-				propellantMaximum,
-				DeveloperStrings.RatioThemes.ProgressBar,
-				new DeveloperStrings.RatioColor(Color.red, Color.green)
-			);
-
-			return result;
-		}
-
-		string AppendMetallics(
-			string result,
-			Dictionary<string, Action> target,
-			KeyValueListModel gameSource
-		)
-		{
-			result += "\n";
-
-			var metallicsTotal = gameSource.Get(KeyDefines.Game.Metallics.Amount);
-			var metallicsMaximum = gameSource.Get(KeyDefines.Game.Metallics.Maximum);
-
-			result += DeveloperStrings.GetBold("Metallics: ") + metallicsTotal.ToString("N0");
-
-			var currentMetallics = Model.KeyValues.Get(KeyDefines.Game.Metallics.Amount);
-			if (1f < Mathf.Abs(metallicsTotal - currentMetallics))
-			{
-				var metallicsDelta = metallicsTotal - currentMetallics;
-				if (metallicsMaximum < metallicsTotal) metallicsDelta = (metallicsDelta + currentMetallics) - metallicsMaximum;
-
-				result += DeveloperStrings.GetColor(
-					DeveloperStrings.GetSize(
-						(metallicsDelta < 0f ? " " : " +") + metallicsDelta.ToString("N0"),
-						0.4f
-					),
-					(metallicsDelta < 0f ? Color.red : Color.green).NewS(0.65f)
-				);
-			}
-
-			result += "\n\t" + DeveloperStrings.GetRatio(
-				metallicsTotal,
-				0f,
-				metallicsMaximum,
-				DeveloperStrings.RatioThemes.ProgressBar,
-				new DeveloperStrings.RatioColor(Color.red, Color.green)
-			);
-
-			return result;
-		}
-
 		#region Events
 		void OnKeyValueRequest(KeyValueRequest request)
 		{
@@ -518,26 +325,11 @@ namespace LunraGames.SubLight.Presenters
 
 			if (system != Model.Context.CurrentSystem.Value)
 			{
-				var currVelocity = Model.KeyValues.Get(KeyDefines.Game.TransitVelocity);
-				var currDistance = UniversePosition.Distance(
-					Model.Context.CurrentSystem.Value.Position.Value,
-					system.Position.Value
-				);
-
+				// TODO: I don't think I need to do this anymore...
 				gameSource = gameSource.Duplicate;
-				GameplayUtility.ApplyTransit(
-					RelativityUtility.TransitTime(
-						currVelocity,
-						UniversePosition.ToLightYearDistance(currDistance)
-					).ShipTime.TotalYears,
-					currDistance,
-					gameSource,
-					system.KeyValues.Duplicate
-				);
 			}
 
 			shipMessage.Message(CreateShipMessage(links, gameSource, system));
-			resourceMessage.Message(CreateResourceMessage(links, gameSource, system));
 			systemMessage.Message(CreateSystemMessage(links, gameSource, system));
 		}
 

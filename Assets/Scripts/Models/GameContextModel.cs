@@ -286,15 +286,8 @@ namespace LunraGames.SubLight.Models
 
 			if (block.State == CelestialSystemStateBlock.States.Selected)
 			{
-				var gameKeyValues = model.KeyValues.Duplicate;
-				var distance = UniversePosition.Distance(CurrentSystem.Value.Position.Value, block.Position);
-				GameplayUtility.ApplyTransit(
-					RelativityUtility.TransitTime(gameKeyValues.Get(KeyDefines.Game.TransitVelocity), UniversePosition.ToLightYearDistance(distance)).ShipTime.TotalYears,
-					distance,
-					gameKeyValues,
-					block.System.KeyValues.Duplicate
-				);
-				transitKeyValuesListener.Value = gameKeyValues;
+				// TODO: I don't think I need to do this...
+				transitKeyValuesListener.Value = model.KeyValues.Duplicate;
 			}
 		}
 

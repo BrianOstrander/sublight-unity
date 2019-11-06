@@ -92,9 +92,9 @@ namespace LunraGames.SubLight.Presenters
 				PowerConsumptionTitle = language.PowerConsumption.Value,
 				PowerConsumption = moduleStatistics.PowerConsumption.ToString("N2"),
 				TransitVelocityTitle = language.Velocity.Value,
-				TransitVelocity = moduleStatistics.NavigationVelocity + language.VelocityUnit.Value,
+				TransitVelocity = moduleStatistics.TransitVelocity + language.VelocityUnit.Value,
 				TransitRangeTitle = language.NavigationRange.Value,
-				TransitRange = moduleStatistics.NavigationRange + " " + language.NavigationRangeUnit.Value
+				TransitRange = moduleStatistics.TransitRange + " " + language.NavigationRangeUnit.Value
 			};
 			
 			View.Selected = entries.FirstOrDefault().Id;
