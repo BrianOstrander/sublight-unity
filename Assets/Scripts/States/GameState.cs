@@ -76,7 +76,7 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Waypoints.Waypoints.Changed += OnWaypoints;
 			Payload.Game.Ship.Position.Changed += OnShipPosition;
-			Payload.Game.Ship.Modules.Changed += OnShipModules;
+			Payload.Game.Ship.Statistics.Changed += OnShipStatistics;
 
 			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 			Payload.Game.Context.NavigationSelectionOutOfRange += OnNavigationSelectionOutOfRange;
@@ -203,7 +203,7 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Waypoints.Waypoints.Changed -= OnWaypoints;
 			Payload.Game.Ship.Position.Changed -= OnShipPosition;
-			Payload.Game.Ship.Modules.Changed -= OnShipModules;
+			Payload.Game.Ship.Statistics.Changed -= OnShipStatistics;
 
 			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Payload.Game.Context.NavigationSelectionOutOfRange -= OnNavigationSelectionOutOfRange;
@@ -489,16 +489,16 @@ namespace LunraGames.SubLight
 			}
 		}
 		
-		void OnShipModules(ModuleStatistics modules)
+		void OnShipStatistics(ShipStatistics shipStatistics)
 		{
 			Payload.Game.KeyValues.Set(
 				KeyDefines.Game.TransitRange,
-				modules.TransitRange
+				shipStatistics.TransitRange
 			);
 			
 			Payload.Game.KeyValues.Set(
 				KeyDefines.Game.TransitVelocity,
-				modules.TransitVelocity
+				shipStatistics.TransitVelocity
 			);
 		}
 
@@ -616,12 +616,12 @@ namespace LunraGames.SubLight
 			
 			Payload.Game.KeyValues.Set(
 				KeyDefines.Game.TransitRange,
-				Payload.Game.Ship.Modules.Value.TransitRange
+				Payload.Game.Ship.Statistics.Value.TransitRange
 			);
 			
 			Payload.Game.KeyValues.Set(
 				KeyDefines.Game.TransitVelocity,
-				Payload.Game.Ship.Modules.Value.TransitVelocity
+				Payload.Game.Ship.Statistics.Value.TransitVelocity
 			);
 		}
 

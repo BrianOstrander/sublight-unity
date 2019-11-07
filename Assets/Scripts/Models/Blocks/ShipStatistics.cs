@@ -3,9 +3,9 @@
 namespace LunraGames.SubLight.Models
 {
 	[Serializable]
-	public struct ModuleStatistics
+	public struct ShipStatistics
 	{
-		public static ModuleStatistics Default => new ModuleStatistics(new ModuleModel[0]);
+		public static ShipStatistics Default => new ShipStatistics(new ModuleModel[0]);
 		
 		public readonly ModuleModel[] Modules;
 		public readonly float TransitVelocity;
@@ -13,7 +13,7 @@ namespace LunraGames.SubLight.Models
 		public readonly float PowerConsumption;
 		public readonly float PowerProduction;
 
-		public ModuleStatistics(
+		public ShipStatistics(
 			ModuleModel[] modules
 		)
 		{

@@ -441,7 +441,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			model.Ship.Modules.Value = new ModuleStatistics(result.Payloads);
+			model.Ship.Statistics.Value = new ShipStatistics(result.Payloads);
 
 			SetContext(instructions, model, done);
 		}

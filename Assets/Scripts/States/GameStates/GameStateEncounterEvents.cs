@@ -377,9 +377,9 @@ namespace LunraGames.SubLight
 
 			if (moduleTypes.None()) moduleTypes = allModuleTypes.ToList();
 
-			var modules = state.Payload.Game.Ship.Modules.Value.Modules.Where(m => moduleTypes.Contains(m.Type.Value)).ToList();
+			var modules = state.Payload.Game.Ship.Statistics.Value.Modules.Where(m => moduleTypes.Contains(m.Type.Value)).ToList();
 			
-			foreach (var module in state.Payload.Game.Ship.Modules.Value.Modules.Where(m => moduleTypes.Contains(m.Type.Value )))
+			foreach (var module in state.Payload.Game.Ship.Statistics.Value.Modules.Where(m => moduleTypes.Contains(m.Type.Value )))
 			{
 				switch (operation)
 				{
@@ -501,7 +501,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			Debug.LogWarning("TODO: Append to audit log here!");
-			state.Payload.Game.Ship.Modules.Value = state.Payload.Game.Ship.Modules.Value;
+			state.Payload.Game.Ship.Statistics.Value = state.Payload.Game.Ship.Statistics.Value;
 			done();
 		}
 	}

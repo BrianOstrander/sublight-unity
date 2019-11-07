@@ -46,6 +46,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.Context.GridInput.Changed += OnGridInput;
 			Model.Context.FocusTransform.Changed += OnFocusTransform;
 			Model.Ship.Position.Changed += OnShipPosition;
+			Model.Ship.Statistics.Changed += OnShipStatistics;
 			Model.Context.CurrentSystem.Changed += OnShipCurrentSystem;
 		}
 
@@ -63,6 +64,7 @@ namespace LunraGames.SubLight.Presenters
 			Model.Context.GridInput.Changed -= OnGridInput;
 			Model.Context.FocusTransform.Changed -= OnFocusTransform;
 			Model.Ship.Position.Changed -= OnShipPosition;
+			Model.Ship.Statistics.Changed -= OnShipStatistics;
 			Model.Context.CurrentSystem.Changed -= OnShipCurrentSystem;
 		}
 
@@ -171,6 +173,16 @@ namespace LunraGames.SubLight.Presenters
 			anyChanges = highlightChanged || visitChanged || rangeChanged || selectedChanged || travelChanged;
 		}
 
+		void CheckForAnyUpdates()
+		{
+			if (!instanceModel.HasSystem || !View.Visible) return;
+
+			bool anyChange;
+			UpdateStates(instanceModel.ActiveSystem.Value, out anyChange);
+
+			if (anyChange) ApplyStates(true);
+		}
+		
 		#region Events
 		void OnActiveSystem(SystemModel activeSystem)
 		{
@@ -390,22 +402,17 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnShipPosition(UniversePosition shipPosition)
 		{
-			if (!instanceModel.HasSystem || !View.Visible) return;
+			CheckForAnyUpdates();
+		}
 
-			bool anyChange;
-			UpdateStates(instanceModel.ActiveSystem.Value, out anyChange);
-
-			if (anyChange) ApplyStates(true);
+		void OnShipStatistics(ShipStatistics shipStatistics)
+		{
+			CheckForAnyUpdates();
 		}
 
 		void OnShipCurrentSystem(SystemModel system)
 		{
-			if (!instanceModel.HasSystem || !View.Visible) return;
-
-			bool anyChange;
-			UpdateStates(instanceModel.ActiveSystem.Value, out anyChange);
-
-			if (anyChange) ApplyStates(true);
+			CheckForAnyUpdates();
 		}
 		#endregion
 	}

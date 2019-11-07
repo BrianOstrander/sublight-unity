@@ -177,6 +177,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Context.Grid.HazardOffset.Changed += OnGridHazardOffset;
 
 			model.Ship.Position.Changed += OnShipPosition;
+			model.Ship.Statistics.Changed += OnShipStatistics;
 			OnShipPosition(model.Ship.Position.Value);
 
 			model.Context.TransitKeyValues.Changed += OnTransitKeyValues;
@@ -196,6 +197,7 @@ namespace LunraGames.SubLight.Presenters
 			model.Context.Grid.HazardOffset.Changed -= OnGridHazardOffset;
 
 			model.Ship.Position.Changed -= OnShipPosition;
+			model.Ship.Statistics.Changed -= OnShipStatistics;
 			model.Context.TransitKeyValues.Changed -= OnTransitKeyValues;
 			model.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 
@@ -663,6 +665,11 @@ namespace LunraGames.SubLight.Presenters
 			{
 				transformProperty.Value = transformProperty.Value.Duplicate(ShipPositionOnPlane);
 			}
+		}
+
+		void OnShipStatistics(ShipStatistics shipStatistics)
+		{
+			SetGrid();
 		}
 
 		void OnTransitKeyValues(KeyValueListModel transitKeyValues)

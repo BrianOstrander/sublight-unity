@@ -20,15 +20,15 @@ namespace LunraGames.SubLight.Models
 		/// </remarks>
 		[JsonIgnore] public readonly ListenerProperty<int> SystemIndex;
 
-		[JsonProperty] ModuleStatistics modules = ModuleStatistics.Default;
-		[JsonIgnore] public readonly ListenerProperty<ModuleStatistics> Modules;
+		[JsonProperty] ShipStatistics statistics = ShipStatistics.Default;
+		[JsonIgnore] public readonly ListenerProperty<ShipStatistics> Statistics;
 		#endregion
 
 		public ShipModel()
 		{
 			Position = new ListenerProperty<UniversePosition>(value => position = value, () => position);
 			SystemIndex = new ListenerProperty<int>(value => systemIndex = value, () => systemIndex);
-			Modules = new ListenerProperty<ModuleStatistics>(value => modules = value, () => modules);
+			Statistics = new ListenerProperty<ShipStatistics>(value => statistics = value, () => statistics);
 		}
 	}
 }
