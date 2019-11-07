@@ -2,12 +2,12 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncyclopediaEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<EncyclopediaEdgeModel>
+	public class EncyclopediaEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<EncyclopediaEntryModel>
 	{
-		[JsonProperty] EncyclopediaEdgeModel[] entries = new EncyclopediaEdgeModel[0];
+		[JsonProperty] EncyclopediaEntryModel[] entries = new EncyclopediaEntryModel[0];
 
 		[JsonIgnore]
-		public readonly ListenerProperty<EncyclopediaEdgeModel[]> Entries;
+		public readonly ListenerProperty<EncyclopediaEntryModel[]> Entries;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Encyclopedia; } }
 
@@ -15,11 +15,11 @@ namespace LunraGames.SubLight.Models
 
 		public EncyclopediaEncounterLogModel()
 		{
-			Entries = new ListenerProperty<EncyclopediaEdgeModel[]>(value => entries = value, () => entries);
+			Entries = new ListenerProperty<EncyclopediaEntryModel[]>(value => entries = value, () => entries);
 		}
 
 		[JsonIgnore]
-		public EncyclopediaEdgeModel[] Edges
+		public EncyclopediaEntryModel[] Edges
 		{
 			get { return Entries.Value; }
 			set { Entries.Value = value; }

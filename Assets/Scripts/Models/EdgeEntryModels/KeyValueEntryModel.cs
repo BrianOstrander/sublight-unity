@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class KeyValueEntryModel : EdgeEntryModel
+	public class KeyValueEntryModel : EdgeModel
 	{
 		public interface BaseBlock<T>
 			where T : IConvertible
@@ -245,6 +245,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] FloatBlock floatValue;
 		[JsonIgnore] public readonly ListenerProperty<FloatBlock> FloatValue;
 
+		public override string EdgeName => Name;
+		
 		[JsonIgnore]
 		public string Name
 		{

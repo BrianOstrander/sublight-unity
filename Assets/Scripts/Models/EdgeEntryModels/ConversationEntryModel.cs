@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class ConversationEntryModel : EdgeEntryModel
+	public class ConversationEntryModel : EdgeModel
 	{
 		[Serializable]
 		public struct MessageBlock
@@ -52,6 +52,22 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] PromptBlock promptInfo;
 		[JsonIgnore] public readonly ListenerProperty<PromptBlock> PromptInfo;
 
+		public override string EdgeName => ConversationType.Value.ToString();
+
+		public override float EdgeIndent
+		{
+			get
+			{
+				switch (ConversationType.Value)
+				{
+					case ConversationTypes.MessageOutgoing:
+					case ConversationTypes.Prompt:
+						return DefaultIndent;
+				}
+				return 0f;
+			}
+		}
+		
 		public ConversationEntryModel()
 		{
 			ConversationType = new ListenerProperty<ConversationTypes>(value => conversationType = value, () => conversationType);

@@ -2,10 +2,10 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class ConversationEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<ConversationEdgeModel>
+	public class ConversationEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<ConversationEntryModel>
 	{
-		[JsonProperty] ConversationEdgeModel[] entries = new ConversationEdgeModel[0];
-		[JsonIgnore] public readonly ListenerProperty<ConversationEdgeModel[]> Entries;
+		[JsonProperty] ConversationEntryModel[] entries = new ConversationEntryModel[0];
+		[JsonIgnore] public readonly ListenerProperty<ConversationEntryModel[]> Entries;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Conversation; } }
 
@@ -13,11 +13,11 @@ namespace LunraGames.SubLight.Models
 
 		public ConversationEncounterLogModel()
 		{
-			Entries = new ListenerProperty<ConversationEdgeModel[]>(value => entries = value, () => entries);
+			Entries = new ListenerProperty<ConversationEntryModel[]>(value => entries = value, () => entries);
 		}
 
 		[JsonIgnore]
-		public ConversationEdgeModel[] Edges
+		public ConversationEntryModel[] Edges
 		{
 			get { return Entries.Value; }
 			set { Entries.Value = value; }

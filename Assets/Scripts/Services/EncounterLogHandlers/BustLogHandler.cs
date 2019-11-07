@@ -17,7 +17,7 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var bustEvents = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToArray();
+			var bustEvents = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
 
 			var result = new BustHandlerModel(logModel);
 			// If there are any non-instant focuses this event is halting.

@@ -18,7 +18,7 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var buttons = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
+			var buttons = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToList();
 
 			Action<RequestStatus, List<ButtonLogBlock>> filteringDone = (status, filtered) => OnDone(status, filtered, logModel, nonLinearDone);
 

@@ -22,11 +22,11 @@ namespace LunraGames.SubLight
 
 				if (handler.AlwaysHalting.Value)
 				{
-					foreach (var entry in handler.Events.Value) remainingHaltingEvents.Add(entry.EntryId.Value);
+					foreach (var entry in handler.Events.Value) remainingHaltingEvents.Add(entry.EdgeId);
 				}
 				else if (handler.HasHaltingEvents.Value)
 				{
-					foreach (var entry in handler.Events.Value.Where(e => e.IsHalting.Value)) remainingHaltingEvents.Add(entry.EntryId.Value);
+					foreach (var entry in handler.Events.Value.Where(e => e.IsHalting.Value)) remainingHaltingEvents.Add(entry.EdgeId);
 				}
 
 				Func<bool> onHaltingCondition = () => remainingHaltingEvents.Count == 0;
@@ -35,7 +35,7 @@ namespace LunraGames.SubLight
 				{
 					foreach (var entry in handler.Events.Value)
 					{
-						var currEventId = entry.EntryId.Value; // Not sure if this is necessary, can't remember if the bug was fixed.
+						var currEventId = entry.EdgeId; // Not sure if this is necessary, can't remember if the bug was fixed.
 						Action currOnEventDone = () => onEventDone(currEventId);
 
 						switch (entry.EncounterEvent.Value)

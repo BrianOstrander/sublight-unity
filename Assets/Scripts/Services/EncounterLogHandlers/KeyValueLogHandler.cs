@@ -27,7 +27,7 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var operations = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
+			var operations = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToList();
 
 			OnHandleNextOperation(operations, linearDone);
 		}

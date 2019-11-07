@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncounterEventEntryModel : EdgeEntryModel
+	public class EncounterEventEntryModel : EdgeModel
 	{
 		[JsonProperty] EncounterEvents.Types encounterEvent;
 		[JsonProperty] bool isHalting;
@@ -20,6 +20,8 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public ValueFilterModel Filtering => filtering;
 
+		public override string EdgeName => EncounterEvent.Value.ToString();
+		
 		public EncounterEventEntryModel()
 		{
 			EncounterEvent = new ListenerProperty<EncounterEvents.Types>(value => encounterEvent = value, () => encounterEvent);

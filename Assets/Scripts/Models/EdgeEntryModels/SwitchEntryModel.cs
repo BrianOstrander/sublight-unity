@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class SwitchEntryModel : EdgeEntryModel
+	public class SwitchEntryModel : EdgeModel
 	{
 		[JsonProperty] float randomWeight;
 		[JsonIgnore] public readonly ListenerProperty<float> RandomWeight;
@@ -14,6 +14,8 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public ValueFilterModel Filtering { get { return filtering; } }
 
+		public override string EdgeName => "Switch";
+		
 		public SwitchEntryModel()
 		{
 			RandomWeight = new ListenerProperty<float>(value => randomWeight = value, () => randomWeight);

@@ -18,7 +18,7 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var events = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
+			var events = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToList();
 
 			Action<RequestStatus, List<EncounterEventEntryModel>> filteringDone = (status, filtered) => OnDone(status, filtered, logModel, linearDone);
 

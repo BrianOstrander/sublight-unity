@@ -2,12 +2,12 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class KeyValueEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<KeyValueEdgeModel>
+	public class KeyValueEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<KeyValueEntryModel>
 	{
-		[JsonProperty] KeyValueEdgeModel[] entries = new KeyValueEdgeModel[0];
+		[JsonProperty] KeyValueEntryModel[] entries = new KeyValueEntryModel[0];
 
 		[JsonIgnore]
-		public readonly ListenerProperty<KeyValueEdgeModel[]> Entries;
+		public readonly ListenerProperty<KeyValueEntryModel[]> Entries;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.KeyValue; } }
 
@@ -15,11 +15,11 @@ namespace LunraGames.SubLight.Models
 
 		public KeyValueEncounterLogModel()
 		{
-			Entries = new ListenerProperty<KeyValueEdgeModel[]>(value => entries = value, () => entries);
+			Entries = new ListenerProperty<KeyValueEntryModel[]>(value => entries = value, () => entries);
 		}
 
 		[JsonIgnore]
-		public KeyValueEdgeModel[] Edges
+		public KeyValueEntryModel[] Edges
 		{
 			get { return Entries.Value; }
 			set { Entries.Value = value; }

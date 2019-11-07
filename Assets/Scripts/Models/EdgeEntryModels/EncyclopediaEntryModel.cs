@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncyclopediaEntryModel : EdgeEntryModel
+	public class EncyclopediaEntryModel : EdgeModel
 	{
 		[JsonProperty] string encyclopediaId;
 		[JsonProperty] string title;
@@ -31,6 +31,8 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<int> OrderWeight;
 
+		public override string EdgeName => string.IsNullOrEmpty(Header.Value) ? "Introduction" : "Section";
+		
 		public EncyclopediaEntryModel()
 		{
 			EncyclopediaId = new ListenerProperty<string>(value => encyclopediaId = value, () => encyclopediaId);

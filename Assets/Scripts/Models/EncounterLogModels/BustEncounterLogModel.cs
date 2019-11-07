@@ -2,12 +2,12 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class BustEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<BustEdgeModel>
+	public class BustEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<BustEntryModel>
 	{
-		[JsonProperty] BustEdgeModel[] entries = new BustEdgeModel[0];
+		[JsonProperty] BustEntryModel[] entries = new BustEntryModel[0];
 
 		[JsonIgnore]
-		public readonly ListenerProperty<BustEdgeModel[]> Entries;
+		public readonly ListenerProperty<BustEntryModel[]> Entries;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Bust; } }
 
@@ -15,11 +15,11 @@ namespace LunraGames.SubLight.Models
 
 		public BustEncounterLogModel()
 		{
-			Entries = new ListenerProperty<BustEdgeModel[]>(value => entries = value, () => entries);
+			Entries = new ListenerProperty<BustEntryModel[]>(value => entries = value, () => entries);
 		}
 
 		[JsonIgnore]
-		public BustEdgeModel[] Edges
+		public BustEntryModel[] Edges
 		{
 			get { return Entries.Value; }
 			set { Entries.Value = value; }

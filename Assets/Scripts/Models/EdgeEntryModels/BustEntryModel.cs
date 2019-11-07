@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class BustEntryModel : EdgeEntryModel
+	public class BustEntryModel : EdgeModel
 	{
 		public enum Events
 		{
@@ -92,6 +92,8 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<FocusBlock> FocusInfo;
 
+		public override string EdgeName => (string.IsNullOrEmpty(BustId.Value) ? "< Missing Id >" : BustId.Value) + "." + BustEvent.Value;
+		
 		public BustEntryModel()
 		{
 			BustId = new ListenerProperty<string>(value => bustId = value, () => bustId);

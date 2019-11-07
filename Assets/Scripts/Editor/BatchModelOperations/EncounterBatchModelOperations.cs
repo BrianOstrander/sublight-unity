@@ -26,11 +26,10 @@ namespace LunraGames.SubLight
 
 			var listeners = model.Logs.GetLogs<ButtonEncounterLogModel>()
 								 .SelectMany(l => l.Buttons.Value)
-								 .Select(b => b.Entry.Message);
+								 .Select(b => b.Message);
 
 			var conversationEntries = model.Logs.GetLogs<ConversationEncounterLogModel>()
-							   .SelectMany(l => l.Entries.Value)
-							   .Select(e => e.Entry);
+												.SelectMany(l => l.Entries.Value);
 
 			foreach (var entry in conversationEntries)
 			{
@@ -149,7 +148,6 @@ namespace LunraGames.SubLight
 
 			var bustEntries = model.Logs.GetLogs<BustEncounterLogModel>()
 								   .SelectMany(l => l.Entries.Value)
-								   .Select(e => e.Entry)
 								   .Where(e => e.BustEvent.Value == BustEntryModel.Events.Initialize);
 
 			var modifications = string.Empty;

@@ -18,12 +18,9 @@ namespace LunraGames.SubLight.Models
 		protected const float DefaultIndent = 32f;
 
 		[JsonProperty] int index;
+		[JsonIgnore] public readonly ListenerProperty<int> Index;
 		[JsonProperty] bool ignore;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<int> Index;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> Ignore;
+		[JsonIgnore] public readonly ListenerProperty<bool> Ignore;
 
 		public EdgeModel()
 		{
@@ -32,9 +29,7 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
-		public abstract EdgeEntryModel RawEntry { get; }
-		[JsonIgnore]
-		public abstract string EdgeName { get; }
+		public virtual string EdgeName { get; }
 
 		[JsonIgnore]
 		public int EdgeIndex
@@ -44,18 +39,10 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
-		public string EdgeId
+		public string EdgeId // TODO: Remove this...
 		{
-			get { return RawEntry == null ? null : RawEntry.EntryId.Value; }
-			set
-			{
-				if (RawEntry == null)
-				{
-					Debug.LogError("Unable to set the EdgeId of a null entry");
-					return;
-				}
-				RawEntry.EntryId.Value = value;
-			}
+			get { return Id.Value; }
+			set { Id.Value = value; }
 		}
 
 		[JsonIgnore]

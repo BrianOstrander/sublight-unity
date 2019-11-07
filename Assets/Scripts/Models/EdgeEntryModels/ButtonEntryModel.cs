@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEntryModel : EdgeEntryModel
+	public class ButtonEntryModel : EdgeModel
 	{
 		[JsonProperty] string message;
 		[JsonProperty] string nextLogId;
@@ -38,6 +38,9 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<bool> AutoDisableEnabled;
 
+		[JsonProperty] bool showFiltering;
+		[JsonIgnore] public readonly ListenerProperty<bool> ShowFiltering;
+		
 		/// <summary>
 		/// Does the button look like its already been clicked? This is combined
 		/// with the auto used logic in a OR operation. So the button will look
@@ -63,12 +66,14 @@ namespace LunraGames.SubLight.Models
 		public ValueFilterModel EnabledFiltering { get { return enabledFiltering; } }
 
 		[JsonIgnore]
-		public string AutoDisabledKey { get { return "AutoDisabled_" + EntryId.Value; } }
+		public string AutoDisabledKey { get { return "AutoDisabled_" + EdgeId; } }
 		[JsonIgnore]
-		public string AutoDisabledInteractionsKey { get { return "AutoDisabledInteractions_" + EntryId.Value; } }
+		public string AutoDisabledInteractionsKey { get { return "AutoDisabledInteractions_" + EdgeId; } }
 		[JsonIgnore]
-		public string AutoUsedKey { get { return "AutoUsed_" + EntryId.Value; } }
+		public string AutoUsedKey { get { return "AutoUsed_" + EdgeId; } }
 
+		public override string EdgeName => "Button";
+		
 		public ButtonEntryModel()
 		{
 			Message = new ListenerProperty<string>(value => message = value, () => message);
@@ -76,6 +81,8 @@ namespace LunraGames.SubLight.Models
 			NotAutoUsed = new ListenerProperty<bool>(value => notAutoUsed = value, () => notAutoUsed);
 			AutoDisableInteractions = new ListenerProperty<bool>(value => autoDisableInteractions = value, () => autoDisableInteractions);
 			AutoDisableEnabled = new ListenerProperty<bool>(value => autoDisableEnabled = value, () => autoDisableEnabled);
+			
+			ShowFiltering = new ListenerProperty<bool>(value => showFiltering = value, () => showFiltering);
 		}
 	}
 }
