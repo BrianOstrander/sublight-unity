@@ -2533,7 +2533,7 @@ namespace LunraGames.SubLight
 			Action<EncounterInfoModel, L, E> edgeHeaderLeft = null
 		)
 			where L : IEdgedEncounterLogModel<E>
-			where E : class, IEdgeModel
+			where E : EdgeModel
 		{
 			if (edgeSpawnOptions != null) edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryAppendPrefix, int.MaxValue);
 
@@ -2673,7 +2673,7 @@ namespace LunraGames.SubLight
 			Action<E> initialize = null,
 			int index = int.MaxValue
 		)
-			where E : class, IEdgeModel, new()
+			where E : EdgeModel, new()
 		{
 			Window.ModelSelectionModified = true;
 
@@ -2728,7 +2728,7 @@ namespace LunraGames.SubLight
 			Action<EncounterInfoModel, L, E> edgeHeaderLeft = null
 		)
 			where L : IEdgedEncounterLogModel<E>
-			where E : class, IEdgeModel
+			where E : EdgeModel
 		{
 			var deleted = false;
 			indexDelta = 0;

@@ -4,16 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public interface IEdgeModel : IModel
-	{
-		string EdgeName { get; }
-		int EdgeIndex { get; set; }
-		string EdgeId { get; set; }
-		bool EdgeIgnore { get; set; }
-		float EdgeIndent { get; }
-	}
-
-	public abstract class EdgeModel : Model, IEdgeModel
+	public abstract class EdgeModel : Model
 	{
 		protected const float DefaultIndent = 32f;
 
