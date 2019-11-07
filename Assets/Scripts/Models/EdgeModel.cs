@@ -20,9 +20,9 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
-		public virtual string EdgeName { get; }
+		public virtual string EdgeName => null;
 
 		[JsonIgnore]
-		public virtual float EdgeIndent { get { return 0f; } }
+		public virtual float Indent => 0f;
 	}
 }

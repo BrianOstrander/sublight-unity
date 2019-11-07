@@ -54,7 +54,7 @@ namespace LunraGames.SubLight.Models
 
 		public override string EdgeName => ConversationType.Value.ToString();
 
-		public override float EdgeIndent
+		public override float Indent
 		{
 			get
 			{

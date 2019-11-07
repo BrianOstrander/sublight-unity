@@ -2601,12 +2601,12 @@ namespace LunraGames.SubLight
 							}
 						}
 
-						var isIndented = isGlobalIndentingSupported && !Mathf.Approximately(0f, current.EdgeIndent);
+						var isIndented = isGlobalIndentingSupported && !Mathf.Approximately(0f, current.Indent);
 
 						if (isIndented)
 						{
 							EditorGUILayout.BeginHorizontal();
-							GUILayout.Space(current.EdgeIndent);
+							GUILayout.Space(current.Indent);
 						}
 
 						EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, currentColor);
