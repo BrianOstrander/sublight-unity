@@ -2559,12 +2559,12 @@ namespace LunraGames.SubLight
 					var existingEdgeIds = new List<string>();
 					foreach (var curr in sorted)
 					{
-						if (existingEdgeIds.Contains(curr.EdgeId))
+						if (existingEdgeIds.Contains(curr.Id.Value))
 						{
 							hasDuplicateIds = true;
 							break;
 						}
-						existingEdgeIds.Add(curr.EdgeId);
+						existingEdgeIds.Add(curr.Id.Value);
 					}
 
 					if (hasDuplicateIds)
@@ -2586,7 +2586,7 @@ namespace LunraGames.SubLight
 						isAlternate = !isAlternate;
 
 						var currentColor = isAlternate ? alternateBackgroundColor : normalBackgroundColor;
-						var currentEffect = logEdgeVisualOverrides.FirstOrDefault(e => e.EdgeId == current.EdgeId);
+						var currentEffect = logEdgeVisualOverrides.FirstOrDefault(e => e.EdgeId == current.Id.Value);
 
 						if (currentEffect != null)
 						{
@@ -2626,7 +2626,7 @@ namespace LunraGames.SubLight
 								)
 							)
 							{
-								deleted = current.EdgeId;
+								deleted = current.Id.Value;
 							}
 
 							if (currMoveDelta != 0)
@@ -2653,7 +2653,7 @@ namespace LunraGames.SubLight
 
 			if (!string.IsNullOrEmpty(deleted))
 			{
-				model.Edges = model.Edges.Where(e => e.EdgeId != deleted).ToArray();
+				model.Edges = model.Edges.Where(e => e.Id.Value != deleted).ToArray();
 			}
 
 			if (indexSwap0 != null && indexSwap1 != null)
@@ -2705,14 +2705,14 @@ namespace LunraGames.SubLight
 			else index = 0;
 
 			var result = new E();
-			result.EdgeId = Guid.NewGuid().ToString();
+			result.Id.Value = Guid.NewGuid().ToString();
 			result.Index.Value = index;
 			if (initialize != null) initialize(result);
 			model.Edges = model.Edges.Append(result).ToArray();
 
 			EditorGUIExtensions.ResetControls();
 
-			LogAddEdgeVisualOverrideHighlight(result.EdgeId);
+			LogAddEdgeVisualOverrideHighlight(result.Id.Value);
 		}
 
 		bool OnEdgedLogEdgeHeader<L, E>(

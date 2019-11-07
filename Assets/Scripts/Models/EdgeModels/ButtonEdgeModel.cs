@@ -66,11 +66,11 @@ namespace LunraGames.SubLight.Models
 		public ValueFilterModel EnabledFiltering { get { return enabledFiltering; } }
 
 		[JsonIgnore]
-		public string AutoDisabledKey { get { return "AutoDisabled_" + EdgeId; } }
+		public string AutoDisabledKey { get { return "AutoDisabled_" + Id.Value; } }
 		[JsonIgnore]
-		public string AutoDisabledInteractionsKey { get { return "AutoDisabledInteractions_" + EdgeId; } }
+		public string AutoDisabledInteractionsKey { get { return "AutoDisabledInteractions_" + Id.Value; } }
 		[JsonIgnore]
-		public string AutoUsedKey { get { return "AutoUsed_" + EdgeId; } }
+		public string AutoUsedKey { get { return "AutoUsed_" + Id.Value; } }
 
 		public override string EdgeName => "Button";
 		
