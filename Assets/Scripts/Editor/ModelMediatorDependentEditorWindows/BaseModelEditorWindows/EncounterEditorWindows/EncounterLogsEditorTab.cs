@@ -806,11 +806,11 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 
-			OnEdgedLog<KeyValueEncounterLogModel, KeyValueEntryModel>(infoModel, model, OnKeyValueLogEdge);
+			OnEdgedLog<KeyValueEncounterLogModel, KeyValueEdgeModel>(infoModel, model, OnKeyValueLogEdge);
 		}
 
 		void OnKeyValueLogSpawn(
-			KeyValueEntryModel edge,
+			KeyValueEdgeModel edge,
 			KeyValueTypes keyValueType,
 			KeyValueTargets target = KeyValueTargets.Unknown,
 			string key = null
@@ -824,20 +824,20 @@ namespace LunraGames.SubLight
 			switch (keyValueType)
 			{
 				case KeyValueTypes.Boolean:
-					output = (edge.BooleanValue.Value = KeyValueEntryModel.BooleanBlock.Default).Output;
+					output = (edge.BooleanValue.Value = KeyValueEdgeModel.BooleanBlock.Default).Output;
 					setOutput = result => edge.BooleanValue.Value.Output = (KeyValueAddress<bool>)result;
 					break;
 				case KeyValueTypes.Integer:
 				case KeyValueTypes.Enumeration:
-					output = (edge.IntegerValue.Value = KeyValueEntryModel.IntegerBlock.Default).Output;
+					output = (edge.IntegerValue.Value = KeyValueEdgeModel.IntegerBlock.Default).Output;
 					setOutput = result => edge.IntegerValue.Value.Output = (KeyValueAddress<int>)result;
 					break;
 				case KeyValueTypes.String:
-					output = (edge.StringValue.Value = KeyValueEntryModel.StringBlock.Default).Output;
+					output = (edge.StringValue.Value = KeyValueEdgeModel.StringBlock.Default).Output;
 					setOutput = result => edge.StringValue.Value.Output = (KeyValueAddress<string>)result;
 					break;
 				case KeyValueTypes.Float:
-					output = (edge.FloatValue.Value = KeyValueEntryModel.FloatBlock.Default).Output;
+					output = (edge.FloatValue.Value = KeyValueEdgeModel.FloatBlock.Default).Output;
 					setOutput = result => edge.FloatValue.Value.Output = (KeyValueAddress<float>)result;
 					break;
 				default:
@@ -857,7 +857,7 @@ namespace LunraGames.SubLight
 		void OnKeyValueLogEdge(
 			EncounterInfoModel infoModel,
 			KeyValueEncounterLogModel model,
-			KeyValueEntryModel edge
+			KeyValueEdgeModel edge
 		)
 		{
 			switch (edge.KeyValueType.Value)
@@ -889,7 +889,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnKeyValueLogEdgeEntryBeginFirstLine<T>(
-			KeyValueEntryModel.BaseBlock<T> block
+			KeyValueEdgeModel.BaseBlock<T> block
 		)
 			where T : IConvertible
 		{
@@ -909,7 +909,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel.BooleanBlock block
+			KeyValueEdgeModel.BooleanBlock block
 		)
 		{
 			OnKeyValueLogEdgeEntryBeginFirstLine(block);
@@ -927,7 +927,7 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.BooleanBlock.Operations.Set:
+					case KeyValueEdgeModel.BooleanBlock.Operations.Set:
 						block.Input1 = KeyValueAddress<bool>.Default;
 						break;
 				}
@@ -939,7 +939,7 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.BooleanBlock.Operations.Set:
+					case KeyValueEdgeModel.BooleanBlock.Operations.Set:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
@@ -948,9 +948,9 @@ namespace LunraGames.SubLight
 
 						GUILayout.FlexibleSpace();
 						break;
-					case KeyValueEntryModel.BooleanBlock.Operations.And:
-					case KeyValueEntryModel.BooleanBlock.Operations.Or:
-					case KeyValueEntryModel.BooleanBlock.Operations.Xor:
+					case KeyValueEdgeModel.BooleanBlock.Operations.And:
+					case KeyValueEdgeModel.BooleanBlock.Operations.Or:
+					case KeyValueEdgeModel.BooleanBlock.Operations.Xor:
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
@@ -961,7 +961,7 @@ namespace LunraGames.SubLight
 							result => block.Input1 = result
 						);
 						break;
-					case KeyValueEntryModel.BooleanBlock.Operations.Random:
+					case KeyValueEdgeModel.BooleanBlock.Operations.Random:
 						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
@@ -972,7 +972,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel.IntegerBlock block
+			KeyValueEdgeModel.IntegerBlock block
 		)
 		{
 			OnKeyValueLogEdgeEntryBeginFirstLine(block);
@@ -990,9 +990,9 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.IntegerBlock.Operations.Set:
-					case KeyValueEntryModel.IntegerBlock.Operations.Clamp:
-					case KeyValueEntryModel.IntegerBlock.Operations.Random:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Set:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Clamp:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Random:
 						block.Input1 = KeyValueAddress<int>.Default;
 						break;
 				}
@@ -1004,8 +1004,8 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.IntegerBlock.Operations.Set:
-					case KeyValueEntryModel.IntegerBlock.Operations.Clamp:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Set:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Clamp:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
@@ -1013,12 +1013,12 @@ namespace LunraGames.SubLight
 						);
 						GUILayout.FlexibleSpace();
 						break;
-					case KeyValueEntryModel.IntegerBlock.Operations.Add:
-					case KeyValueEntryModel.IntegerBlock.Operations.Subtract:
-					case KeyValueEntryModel.IntegerBlock.Operations.Multiply:
-					case KeyValueEntryModel.IntegerBlock.Operations.Divide:
-					case KeyValueEntryModel.IntegerBlock.Operations.Modulo:
-					case KeyValueEntryModel.IntegerBlock.Operations.Random:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Add:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Subtract:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Multiply:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Divide:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Modulo:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Random:
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
@@ -1076,7 +1076,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel.StringBlock block
+			KeyValueEdgeModel.StringBlock block
 		)
 		{
 			OnKeyValueLogEdgeEntryBeginFirstLine(block);
@@ -1096,7 +1096,7 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.StringBlock.Operations.Set:
+					case KeyValueEdgeModel.StringBlock.Operations.Set:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
@@ -1114,7 +1114,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnKeyValueLogEdgeEntry(
-			KeyValueEntryModel.FloatBlock block
+			KeyValueEdgeModel.FloatBlock block
 		)
 		{
 			OnKeyValueLogEdgeEntryBeginFirstLine(block);
@@ -1132,15 +1132,15 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.FloatBlock.Operations.Set:
-					case KeyValueEntryModel.FloatBlock.Operations.Clamp:
-					case KeyValueEntryModel.FloatBlock.Operations.Round:
-					case KeyValueEntryModel.FloatBlock.Operations.Floor:
-					case KeyValueEntryModel.FloatBlock.Operations.Ceiling:
-					case KeyValueEntryModel.FloatBlock.Operations.Random:
+					case KeyValueEdgeModel.FloatBlock.Operations.Set:
+					case KeyValueEdgeModel.FloatBlock.Operations.Clamp:
+					case KeyValueEdgeModel.FloatBlock.Operations.Round:
+					case KeyValueEdgeModel.FloatBlock.Operations.Floor:
+					case KeyValueEdgeModel.FloatBlock.Operations.Ceiling:
+					case KeyValueEdgeModel.FloatBlock.Operations.Random:
 						block.Input1 = KeyValueAddress<float>.Default;
 						break;
-					case KeyValueEntryModel.FloatBlock.Operations.RandomNormal:
+					case KeyValueEdgeModel.FloatBlock.Operations.RandomNormal:
 						block.Input1 = KeyValueAddress<float>.Default;
 						block.Input0 = KeyValueAddress<float>.Default;
 						break;
@@ -1153,11 +1153,11 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.FloatBlock.Operations.Set:
-					case KeyValueEntryModel.FloatBlock.Operations.Clamp:
-					case KeyValueEntryModel.FloatBlock.Operations.Round:
-					case KeyValueEntryModel.FloatBlock.Operations.Floor:
-					case KeyValueEntryModel.FloatBlock.Operations.Ceiling:
+					case KeyValueEdgeModel.FloatBlock.Operations.Set:
+					case KeyValueEdgeModel.FloatBlock.Operations.Clamp:
+					case KeyValueEdgeModel.FloatBlock.Operations.Round:
+					case KeyValueEdgeModel.FloatBlock.Operations.Floor:
+					case KeyValueEdgeModel.FloatBlock.Operations.Ceiling:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
@@ -1165,12 +1165,12 @@ namespace LunraGames.SubLight
 						);
 						GUILayout.FlexibleSpace();
 						break;
-					case KeyValueEntryModel.FloatBlock.Operations.Add:
-					case KeyValueEntryModel.FloatBlock.Operations.Subtract:
-					case KeyValueEntryModel.FloatBlock.Operations.Multiply:
-					case KeyValueEntryModel.FloatBlock.Operations.Divide:
-					case KeyValueEntryModel.FloatBlock.Operations.Modulo:
-					case KeyValueEntryModel.FloatBlock.Operations.Random:
+					case KeyValueEdgeModel.FloatBlock.Operations.Add:
+					case KeyValueEdgeModel.FloatBlock.Operations.Subtract:
+					case KeyValueEdgeModel.FloatBlock.Operations.Multiply:
+					case KeyValueEdgeModel.FloatBlock.Operations.Divide:
+					case KeyValueEdgeModel.FloatBlock.Operations.Modulo:
+					case KeyValueEdgeModel.FloatBlock.Operations.Random:
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
 							result => block.Input0 = result
@@ -1181,7 +1181,7 @@ namespace LunraGames.SubLight
 							result => block.Input1 = result
 						);
 						break;
-					case KeyValueEntryModel.FloatBlock.Operations.RandomNormal:
+					case KeyValueEdgeModel.FloatBlock.Operations.RandomNormal:
 						break;
 					default:
 						EditorGUILayout.HelpBox("Unrecognized Operation: " + block.Operation, MessageType.Error);
@@ -1230,7 +1230,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnKeyValueLogEdgeEntryEnumeration(
-			KeyValueEntryModel.IntegerBlock block
+			KeyValueEdgeModel.IntegerBlock block
 		)
 		{
 			OnKeyValueLogEdgeEntryBeginFirstLine(block);
@@ -1241,7 +1241,7 @@ namespace LunraGames.SubLight
 				"- Operation -",
 				block.Operation,
 				Color.red,
-				new KeyValueEntryModel.IntegerBlock.Operations[] { KeyValueEntryModel.IntegerBlock.Operations.Unknown, KeyValueEntryModel.IntegerBlock.Operations.Set },
+				new KeyValueEdgeModel.IntegerBlock.Operations[] { KeyValueEdgeModel.IntegerBlock.Operations.Unknown, KeyValueEdgeModel.IntegerBlock.Operations.Set },
 				GUILayout.Width(LogFloats.KeyValueOperationWidth)
 			);
 
@@ -1251,7 +1251,7 @@ namespace LunraGames.SubLight
 			{
 				switch (block.Operation)
 				{
-					case KeyValueEntryModel.IntegerBlock.Operations.Set:
+					case KeyValueEdgeModel.IntegerBlock.Operations.Set:
 						GUILayout.Label("FROM", SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels);
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input0,
@@ -1300,11 +1300,11 @@ namespace LunraGames.SubLight
 				null
 			);
 
-			OnEdgedLog<SwitchEncounterLogModel, SwitchEntryModel>(infoModel, model, OnSwitchLogEdge);
+			OnEdgedLog<SwitchEncounterLogModel, SwitchEdgeModel>(infoModel, model, OnSwitchLogEdge);
 		}
 
 		void OnSwitchLogSpawn(
-			SwitchEntryModel edge,
+			SwitchEdgeModel edge,
 			string targetLogId
 		)
 		{
@@ -1315,7 +1315,7 @@ namespace LunraGames.SubLight
 		void OnSwitchLogEdge(
 			EncounterInfoModel infoModel,
 			SwitchEncounterLogModel model,
-			SwitchEntryModel edge
+			SwitchEdgeModel edge
 		)
 		{
 			switch (model.SelectionMethod.Value)
@@ -1378,11 +1378,11 @@ namespace LunraGames.SubLight
 				null
 			);
 
-			OnEdgedLog<ButtonEncounterLogModel, ButtonEntryModel>(infoModel, model, OnButtonLogEdge);
+			OnEdgedLog<ButtonEncounterLogModel, ButtonEdgeModel>(infoModel, model, OnButtonLogEdge);
 		}
 
 		void OnButtonLogSpawn(
-			ButtonEntryModel edge,
+			ButtonEdgeModel edge,
 			string targetLogId
 		)
 		{
@@ -1392,7 +1392,7 @@ namespace LunraGames.SubLight
 		void OnButtonLogEdge(
 			EncounterInfoModel infoModel,
 			ButtonEncounterLogModel model,
-			ButtonEntryModel edge
+			ButtonEdgeModel edge
 		)
 		{
 			edge.Message.Value = EditorGUILayout.TextField("Message", edge.Message.Value);
@@ -1446,11 +1446,11 @@ namespace LunraGames.SubLight
 		{
 			if (GUILayout.Button("Append New Encyclopedia Section")) OnEdgedLogSpawn(model, OnEncyclopediaLogSpawn);
 
-			OnEdgedLog<EncyclopediaEncounterLogModel, EncyclopediaEntryModel>(infoModel, model, OnEncyclopediaLogEdge);
+			OnEdgedLog<EncyclopediaEncounterLogModel, EncyclopediaEdgeModel>(infoModel, model, OnEncyclopediaLogEdge);
 		}
 
 		void OnEncyclopediaLogSpawn(
-			EncyclopediaEntryModel edge
+			EncyclopediaEdgeModel edge
 		)
 		{
 			edge.OrderWeight.Value = -1;
@@ -1459,7 +1459,7 @@ namespace LunraGames.SubLight
 		void OnEncyclopediaLogEdge(
 			EncounterInfoModel infoModel,
 			EncyclopediaEncounterLogModel model,
-			EncyclopediaEntryModel edge
+			EncyclopediaEdgeModel edge
 		)
 		{
 			edge.Title.Value = EditorGUILayout.TextField("Title", edge.Title.Value);
@@ -1498,11 +1498,11 @@ namespace LunraGames.SubLight
 
 			if (appendSelection != EncounterEvents.Types.Unknown) OnEdgedLogSpawn(model, edge => OnEncounterEventLogSpawn(edge, appendSelection));
 
-			OnEdgedLog<EncounterEventEncounterLogModel, EncounterEventEntryModel>(infoModel, model, OnEncounterEventLogEdge);
+			OnEdgedLog<EncounterEventEncounterLogModel, EncounterEventEdgeModel>(infoModel, model, OnEncounterEventLogEdge);
 		}
 
 		void OnEncounterEventLogSpawn(
-			EncounterEventEntryModel edge,
+			EncounterEventEdgeModel edge,
 			EncounterEvents.Types type
 		)
 		{
@@ -1519,7 +1519,7 @@ namespace LunraGames.SubLight
 		void OnEncounterEventLogEdge(
 			EncounterInfoModel infoModel,
 			EncounterEventEncounterLogModel model,
-			EncounterEventEntryModel edge
+			EncounterEventEdgeModel edge
 		)
 		{
 			switch (edge.EncounterEvent.Value)
@@ -1579,15 +1579,15 @@ namespace LunraGames.SubLight
 		}
 
 		void OnEncounterEventLogEdgeCustom(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
-			var customEventName = entry.KeyValues.GetString(EncounterEvents.Custom.StringKeys.CustomEventName);
+			var customEventName = edge.KeyValues.GetString(EncounterEvents.Custom.StringKeys.CustomEventName);
 			var wasNullOrEmpty = string.IsNullOrEmpty(customEventName);
 
 			if (wasNullOrEmpty) EditorGUILayoutExtensions.PushBackgroundColor(Color.red);
 			{
-				entry.KeyValues.SetString(
+				edge.KeyValues.SetString(
 					EncounterEvents.Custom.StringKeys.CustomEventName,
 					EditorGUILayout.TextField(new GUIContent("Custom Event Name"), customEventName)
 				);
@@ -1596,102 +1596,102 @@ namespace LunraGames.SubLight
 		}
 
 		void OnEncounterEventLogEdgeDebugLog(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.Debug.EnumKeys.Severity,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Severity"),
 					"- Select A Severity -",
-					entry.KeyValues.GetEnumeration<EncounterEvents.Debug.Severities>(EncounterEvents.Debug.EnumKeys.Severity)
+					edge.KeyValues.GetEnumeration<EncounterEvents.Debug.Severities>(EncounterEvents.Debug.EnumKeys.Severity)
 				)
 			);
-			entry.KeyValues.SetString(
+			edge.KeyValues.SetString(
 				EncounterEvents.Debug.StringKeys.Message,
-				EditorGUILayout.TextField(entry.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message))
+				EditorGUILayout.TextField(edge.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message))
 			);
 		}
 
 		void OnEncounterEventLogEdgeToolbarSelection(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.ToolbarSelection.EnumKeys.Selection,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Selection"),
 					"- No Change -",
-					entry.KeyValues.GetEnumeration<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
+					edge.KeyValues.GetEnumeration<ToolbarSelections>(EncounterEvents.ToolbarSelection.EnumKeys.Selection)
 				)
 			);
 
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.ToolbarSelection.EnumKeys.LockState,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Locking"),
 					"- No Change -",
-					entry.KeyValues.GetEnumeration<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
+					edge.KeyValues.GetEnumeration<EncounterEvents.ToolbarSelection.LockStates>(EncounterEvents.ToolbarSelection.EnumKeys.LockState)
 				)
 			);
 		}
 
 		void OnEncounterEventLogEdgeDumpKeyValues(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.DumpKeyValues.EnumKeys.Target,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Target"),
 					"All",
-					entry.KeyValues.GetEnumeration<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
+					edge.KeyValues.GetEnumeration<KeyValueTargets>(EncounterEvents.DumpKeyValues.EnumKeys.Target)
 				)
 			);
 		}
 
 		void OnEncounterEventLogEdgeGameComplete(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.GameComplete.EnumKeys.Condition,
 				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 					new GUIContent("Condition"),
 					"- Select a Condition -",
-					entry.KeyValues.GetEnumeration<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
+					edge.KeyValues.GetEnumeration<EncounterEvents.GameComplete.Conditions>(EncounterEvents.GameComplete.EnumKeys.Condition),
 					Color.red
 				)
 			);
 
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.GameComplete.EnumKeys.IconOverride,
 				EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 					new GUIContent("Icon Override"),
 					"- Select an Icon -",
-					entry.KeyValues.GetEnumeration<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride),
+					edge.KeyValues.GetEnumeration<VerticalOptionsIcons>(EncounterEvents.GameComplete.EnumKeys.IconOverride),
 					Color.yellow
 				)
 			);
 
-			entry.KeyValues.SetString(
+			edge.KeyValues.SetString(
 				EncounterEvents.GameComplete.StringKeys.Title,
-				EditorGUILayout.TextField("Title", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Title))
+				EditorGUILayout.TextField("Title", edge.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Title))
 			);
 
-			entry.KeyValues.SetString(
+			edge.KeyValues.SetString(
 				EncounterEvents.GameComplete.StringKeys.Header,
-				EditorGUILayout.TextField("Header", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Header))
+				EditorGUILayout.TextField("Header", edge.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Header))
 			);
 
-			entry.KeyValues.SetString(
+			edge.KeyValues.SetString(
 				EncounterEvents.GameComplete.StringKeys.Body,
-				EditorGUILayout.TextField("Body", entry.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Body))
+				EditorGUILayout.TextField("Body", edge.KeyValues.GetString(EncounterEvents.GameComplete.StringKeys.Body))
 			);
 		}
 
 		void OnEncounterEventLogEdgePopTriggers(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
 			GUILayout.Label("Pop the following triggers if on the stack");
@@ -1699,11 +1699,11 @@ namespace LunraGames.SubLight
 			{
 				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
 				{
-					entry.KeyValues.SetBoolean(
+					edge.KeyValues.SetBoolean(
 						EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger),
 						EditorGUILayout.Toggle(
 							ObjectNames.NicifyVariableName(trigger.ToString()),
-							entry.KeyValues.GetBoolean(EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger))
+							edge.KeyValues.GetBoolean(EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger))
 						)
 					);
 				}
@@ -1714,11 +1714,11 @@ namespace LunraGames.SubLight
 			{
 				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
 				{
-					var pushValue = entry.KeyValues.GetInteger(EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger));
+					var pushValue = edge.KeyValues.GetInteger(EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger));
 
 					if (pushValue == EncounterEvents.TriggerQueue.PushDisabled) EditorGUILayoutExtensions.PushColor(Color.gray);
 					{
-						entry.KeyValues.SetInteger(
+						edge.KeyValues.SetInteger(
 							EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger),
 							Mathf.Max(
 								EncounterEvents.TriggerQueue.PushDisabled,
@@ -1736,17 +1736,17 @@ namespace LunraGames.SubLight
 		}
 
 		void OnEncounterEventLogEdgeDelay(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
 			var trigger = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 				new GUIContent("Trigger"),
 				"- Select a Trigger -",
-				entry.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger),
+				edge.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger),
 				Color.red
 			);
 
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.Delay.EnumKeys.Trigger,
 				trigger
 			);
@@ -1755,11 +1755,11 @@ namespace LunraGames.SubLight
 			{
 				case EncounterEvents.Delay.Triggers.Unknown: break;
 				case EncounterEvents.Delay.Triggers.Time:
-					entry.KeyValues.SetFloat(
+					edge.KeyValues.SetFloat(
 						EncounterEvents.Delay.FloatKeys.TimeDuration,
 						EditorGUILayout.FloatField(
 							new GUIContent("Duration"),
-							entry.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration)
+							edge.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration)
 						)
 					);
 					break;
@@ -1770,44 +1770,44 @@ namespace LunraGames.SubLight
 		}
 
 		void OnEncounterEventLogEdgeRefreshSystem(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
 			OnEncounterEventLogEdgeNoModifications();
 		}
 
 		void OnEncounterEventLogEdgeAudioSnapshot(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
-			entry.KeyValues.SetString(
+			edge.KeyValues.SetString(
 				EncounterEvents.AudioSnapshot.StringKeys.SnapshotName,
 				EditorGUILayout.TextField(
 					new GUIContent("Snapshot Name"),
-					entry.KeyValues.GetString(EncounterEvents.AudioSnapshot.StringKeys.SnapshotName)
+					edge.KeyValues.GetString(EncounterEvents.AudioSnapshot.StringKeys.SnapshotName)
 				)
 			);
 
-			entry.KeyValues.SetFloat(
+			edge.KeyValues.SetFloat(
 				EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration,
 				EditorGUILayout.FloatField(
 					new GUIContent("Transition Duration"),
-					entry.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration)
+					edge.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration)
 				)
 			);
 		}
 
 		void OnEncounterEventLogEdgeWaypoint(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
 
-			var waypointId = entry.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
+			var waypointId = edge.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
 			var waypointIdInvalid = string.IsNullOrEmpty(waypointId);
 
 			EditorGUILayoutExtensions.PushColorValidation(Color.red, waypointIdInvalid);
 			{
-				entry.KeyValues.SetString(
+				edge.KeyValues.SetString(
 					EncounterEvents.Waypoint.StringKeys.WaypointId,
 					EditorGUILayout.TextField(
 						new GUIContent("Waypoint Id"),
@@ -1817,28 +1817,28 @@ namespace LunraGames.SubLight
 			}
 			EditorGUILayoutExtensions.PopColorValidation(waypointIdInvalid);
 
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.Waypoint.EnumKeys.Visibility,
 				EditorGUILayoutExtensions.HelpfulEnumPopup(
 					new GUIContent("Visibility"),
 					"- No Change -",
-					entry.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility)
+					edge.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility)
 				)
 			);
 		}
 		
 		void OnEncounterEventLogEdgeModuleTrait(
-			EncounterEventEntryModel entry
+			EncounterEventEdgeModel edge
 		)
 		{
 			EncounterEvents.ModuleTrait.Operations operation;
 			
-			entry.KeyValues.SetEnumeration(
+			edge.KeyValues.SetEnumeration(
 				EncounterEvents.ModuleTrait.EnumKeys.Operation,
 				operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
 					new GUIContent("Operation"),
 					"- Operation -",
-					entry.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation),
+					edge.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation),
 					Color.red
 				)
 			);
@@ -1862,15 +1862,15 @@ namespace LunraGames.SubLight
 
 			if (operationIdLabel != null)
 			{
-				var operationIdIsInvalid = string.IsNullOrEmpty(entry.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId));
+				var operationIdIsInvalid = string.IsNullOrEmpty(edge.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId));
 				// TODO: Actually validate if operation id exists...
 				EditorGUILayoutExtensions.PushColorValidation(Color.red, operationIdIsInvalid);
 				{
-					entry.KeyValues.SetString(
+					edge.KeyValues.SetString(
 						EncounterEvents.ModuleTrait.StringKeys.OperationId,
 						EditorGUILayout.TextField(
 							operationIdLabel,
-							entry.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId)
+							edge.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId)
 						)
 					);
 				}
@@ -1885,11 +1885,11 @@ namespace LunraGames.SubLight
 				{
 					var moduleTypeKey = EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType);
 
-					entry.KeyValues.SetBoolean(
+					edge.KeyValues.SetBoolean(
 						moduleTypeKey,
 						EditorGUILayout.Toggle(
 							ObjectNames.NicifyVariableName(moduleType.ToString()),
-							entry.KeyValues.GetBoolean(moduleTypeKey)
+							edge.KeyValues.GetBoolean(moduleTypeKey)
 						)
 					);
 				}
@@ -1912,11 +1912,11 @@ namespace LunraGames.SubLight
 		{
 			if (GUILayout.Button("Append New Dialog")) OnEdgedLogSpawn(model, OnDialogLogSpawn);
 
-			OnEdgedLog<DialogEncounterLogModel, DialogEntryModel>(infoModel, model, OnDialogLogEdge);
+			OnEdgedLog<DialogEncounterLogModel, DialogEdgeModel>(infoModel, model, OnDialogLogEdge);
 		}
 
 		void OnDialogLogSpawn(
-			DialogEntryModel edge
+			DialogEdgeModel edge
 		)
 		{
 			edge.DialogType.Value = DialogTypes.Confirm;
@@ -1927,7 +1927,7 @@ namespace LunraGames.SubLight
 		void OnDialogLogEdge(
 			EncounterInfoModel infoModel,
 			DialogEncounterLogModel model,
-			DialogEntryModel edge
+			DialogEdgeModel edge
 		)
 		{
 			GUILayout.BeginHorizontal();
@@ -2013,7 +2013,7 @@ namespace LunraGames.SubLight
 		void OnDialogLogEdgeOption(
 			EncounterInfoModel infoModel,
 			DialogEncounterLogModel model,
-			DialogEntryModel edge,
+			DialogEdgeModel edge,
 			RequestStatus option
 		)
 		{
@@ -2090,11 +2090,11 @@ namespace LunraGames.SubLight
 			BustEncounterLogModel model
 		)
 		{
-			if (1 < model.Edges.Count(e => e.BustEvent.Value == BustEntryModel.Events.Focus))
+			if (1 < model.Edges.Count(e => e.BustEvent.Value == BustEdgeModel.Events.Focus))
 			{
 				EditorGUILayout.HelpBox("Multiple Focus events will cause halting issues.", MessageType.Error);
 			}
-			if (model.Edges.Any(e => e.BustEvent.Value == BustEntryModel.Events.Focus && !e.FocusInfo.Value.Instant))
+			if (model.Edges.Any(e => e.BustEvent.Value == BustEdgeModel.Events.Focus && !e.FocusInfo.Value.Instant))
 			{
 				if (logsShowHaltingInfo.Value) EditorGUILayout.HelpBox("This log will halt until all busts are focused.", MessageType.Info);
 			}
@@ -2102,7 +2102,7 @@ namespace LunraGames.SubLight
 			var appendOptions = new List<string>
 			{
 				"- Select Bust Event -",
-				BustEntryModel.Events.Initialize.ToString(),
+				BustEdgeModel.Events.Initialize.ToString(),
 				"--- Focus ---"
 			};
 			var appendOptionsRaw = new List<string>(appendOptions);
@@ -2126,7 +2126,7 @@ namespace LunraGames.SubLight
 			if (appendResult == initializeIndex) OnBustLogEdgeNameNewInitialize(infoModel, model);
 			else if (focusBeginIndex <= appendResult) OnEdgedLogSpawn(model, edge => OnBustLogSpawnFocus(appendOptionsRaw[appendResult], edge));
 
-			OnEdgedLog<BustEncounterLogModel, BustEntryModel>(infoModel, model, OnBustLogEdge);
+			OnEdgedLog<BustEncounterLogModel, BustEdgeModel>(infoModel, model, OnBustLogEdge);
 		}
 
 		void OnBustLogEdgeNameNewInitialize(
@@ -2158,33 +2158,33 @@ namespace LunraGames.SubLight
 
 		void OnBustLogSpawnInitialize(
 			string bustId,
-			BustEntryModel edge
+			BustEdgeModel edge
 		)
 		{
 			edge.BustId.Value = bustId;
-			edge.BustEvent.Value = BustEntryModel.Events.Initialize;
-			edge.InitializeInfo.Value = BustEntryModel.InitializeBlock.Default;
+			edge.BustEvent.Value = BustEdgeModel.Events.Initialize;
+			edge.InitializeInfo.Value = BustEdgeModel.InitializeBlock.Default;
 		}
 
 		void OnBustLogSpawnFocus(
 			string bustId,
-			BustEntryModel edge
+			BustEdgeModel edge
 		)
 		{
 			edge.BustId.Value = bustId;
-			edge.BustEvent.Value = BustEntryModel.Events.Focus;
-			edge.FocusInfo.Value = BustEntryModel.FocusBlock.Default;
+			edge.BustEvent.Value = BustEdgeModel.Events.Focus;
+			edge.FocusInfo.Value = BustEdgeModel.FocusBlock.Default;
 		}
 
 		void OnBustLogEdge(
 			EncounterInfoModel infoModel,
 			BustEncounterLogModel model,
-			BustEntryModel edge
+			BustEdgeModel edge
 		)
 		{
-			if (edge.BustEvent.Value == BustEntryModel.Events.Initialize)
+			if (edge.BustEvent.Value == BustEdgeModel.Events.Initialize)
 			{
-				if (1 < model.Edges.Where(e => e.BustId.Value == edge.BustId.Value && e.BustEvent.Value == BustEntryModel.Events.Initialize).Count())
+				if (1 < model.Edges.Where(e => e.BustId.Value == edge.BustId.Value && e.BustEvent.Value == BustEdgeModel.Events.Initialize).Count())
 				{
 					EditorGUILayout.HelpBox("This Bust Id is initialized multiple times within the same log.", MessageType.Error);
 				}
@@ -2217,8 +2217,8 @@ namespace LunraGames.SubLight
 
 			switch (edge.BustEvent.Value)
 			{
-				case BustEntryModel.Events.Initialize: OnBustLogEdgeInitialize(edge); break;
-				case BustEntryModel.Events.Focus: OnBustLogEdgeFocus(edge); break;
+				case BustEdgeModel.Events.Initialize: OnBustLogEdgeInitialize(edge); break;
+				case BustEdgeModel.Events.Focus: OnBustLogEdgeFocus(edge); break;
 				default: EditorGUILayout.HelpBox("Unrecognized BustEvent: " + edge.BustEvent.Value, MessageType.Error); break;
 			}
 		}
@@ -2282,10 +2282,10 @@ namespace LunraGames.SubLight
 		}
 
 		void OnBustLogEdgeInitialize(
-			BustEntryModel entry
+			BustEdgeModel edge
 		)
 		{
-			var block = entry.InitializeInfo.Value;
+			var block = edge.InitializeInfo.Value;
 
 			GUILayout.Label("Title", EditorStyles.boldLabel);
 			EditorGUILayoutExtensions.PushIndent();
@@ -2318,8 +2318,8 @@ namespace LunraGames.SubLight
 				block.AvatarType = EditorGUILayoutExtensions.HelpfulEnumPopup(new GUIContent("Type"), "- Select Avatar Type -", block.AvatarType);
 				switch (block.AvatarType)
 				{
-					case BustEntryModel.AvatarTypes.Unknown: EditorGUILayout.HelpBox("An Avatar Type must be specified.", MessageType.Error); break;
-					case BustEntryModel.AvatarTypes.Static: block = OnBustLogEdgeInitializeAvatarStatic(block); break;
+					case BustEdgeModel.AvatarTypes.Unknown: EditorGUILayout.HelpBox("An Avatar Type must be specified.", MessageType.Error); break;
+					case BustEdgeModel.AvatarTypes.Static: block = OnBustLogEdgeInitializeAvatarStatic(block); break;
 					default: EditorGUILayout.HelpBox("Unrecognized AvatarType: " + block.AvatarType, MessageType.Error); break;
 				}
 			}
@@ -2337,10 +2337,10 @@ namespace LunraGames.SubLight
 			}
 			EditorGUILayoutExtensions.PopIndent();
 
-			entry.InitializeInfo.Value = block;
+			edge.InitializeInfo.Value = block;
 		}
 
-		BustEntryModel.InitializeBlock OnBustLogEdgeInitializeAvatarStatic(BustEntryModel.InitializeBlock block)
+		BustEdgeModel.InitializeBlock OnBustLogEdgeInitializeAvatarStatic(BustEdgeModel.InitializeBlock block)
 		{
 			block.AvatarStaticIndex = Mathf.Max(0, EditorGUILayout.IntField("Index", block.AvatarStaticIndex));
 			block.AvatarStaticTerminalTextVisible = EditorGUILayout.Toggle("Terminal Text Visible", block.AvatarStaticTerminalTextVisible);
@@ -2348,14 +2348,14 @@ namespace LunraGames.SubLight
 		}
 
 		void OnBustLogEdgeFocus(
-			BustEntryModel entry
+			BustEdgeModel edge
 		)
 		{
-			var block = entry.FocusInfo.Value;
+			var block = edge.FocusInfo.Value;
 
 			block.Instant = EditorGUILayout.Toggle(new GUIContent("Instant", "Determines if the bust is shown instantly. If so, this encounter log will not halt."), block.Instant);
 
-			entry.FocusInfo.Value = block;
+			edge.FocusInfo.Value = block;
 		}
 		#endregion
 
@@ -2365,7 +2365,7 @@ namespace LunraGames.SubLight
 			ConversationEncounterLogModel model
 		)
 		{
-			OnEdgedLog<ConversationEncounterLogModel, ConversationEntryModel>(
+			OnEdgedLog<ConversationEncounterLogModel, ConversationEdgeModel>(
 				infoModel,
 				model,
 				OnConversationLogEdge,
@@ -2407,23 +2407,23 @@ namespace LunraGames.SubLight
 
 		void OnConversationLogSpawnMessage(
 			ConversationTypes type,
-			ConversationEntryModel edge
+			ConversationEdgeModel edge
 		)
 		{
 			edge.ConversationType.Value = type;
-			edge.MessageInfo.Value = ConversationEntryModel.MessageBlock.Default;
+			edge.MessageInfo.Value = ConversationEdgeModel.MessageBlock.Default;
 		}
 
-		void OnConversationLogSpawnPrompt(ConversationEntryModel edge)
+		void OnConversationLogSpawnPrompt(ConversationEdgeModel edge)
 		{
 			edge.ConversationType.Value = ConversationTypes.Prompt;
-			edge.PromptInfo.Value = ConversationEntryModel.PromptBlock.Default;
+			edge.PromptInfo.Value = ConversationEdgeModel.PromptBlock.Default;
 		}
 
 		void OnConversationLogEdgeHeaderLeft(
 			EncounterInfoModel infoModel,
 			ConversationEncounterLogModel model,
-			ConversationEntryModel edge
+			ConversationEdgeModel edge
 		)
 		{
 			switch (edge.ConversationType.Value)
@@ -2457,7 +2457,7 @@ namespace LunraGames.SubLight
 		void OnConversationLogEdge(
 			EncounterInfoModel infoModel,
 			ConversationEncounterLogModel model,
-			ConversationEntryModel edge
+			ConversationEdgeModel edge
 		)
 		{
 			switch (edge.ConversationType.Value)
@@ -2473,28 +2473,28 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnConversationLogEdgeMessage(ConversationEntryModel entry)
+		void OnConversationLogEdgeMessage(ConversationEdgeModel edge)
 		{
-			var block = entry.MessageInfo.Value;
+			var block = edge.MessageInfo.Value;
 
-			entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
-				entry.Message.Value
+			edge.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
+				edge.Message.Value
 			);
 			
-			entry.MessageInfo.Value = block;
+			edge.MessageInfo.Value = block;
 		}
 
-		void OnConversationLogEdgePrompt(ConversationEntryModel entry)
+		void OnConversationLogEdgePrompt(ConversationEdgeModel edge)
 		{
-			var block = entry.PromptInfo.Value;
+			var block = edge.PromptInfo.Value;
 
 			switch (block.Behaviour)
 			{
 				case ConversationButtonPromptBehaviours.ButtonOnly:
 				case ConversationButtonPromptBehaviours.PrintMessage:
 				case ConversationButtonPromptBehaviours.PrintOverride:
-					entry.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
-						entry.Message.Value
+					edge.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(
+						edge.Message.Value
 					);
 					break;
 				case ConversationButtonPromptBehaviours.Continue:
@@ -2520,7 +2520,7 @@ namespace LunraGames.SubLight
 					break;
 			}
 
-			entry.PromptInfo.Value = block;
+			edge.PromptInfo.Value = block;
 		}
 		#endregion
 
@@ -2823,7 +2823,7 @@ namespace LunraGames.SubLight
 
 		string[] GetAllBustIdsInitialized(EncounterInfoModel infoModel)
 		{
-			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Where(e => e.BustEvent.Value == BustEntryModel.Events.Initialize).Select(e => e.BustId.Value).Distinct().ToArray();
+			return infoModel.Logs.GetLogs<BustEncounterLogModel>().SelectMany(l => l.Edges).Where(e => e.BustEvent.Value == BustEdgeModel.Events.Initialize).Select(e => e.BustId.Value).Distinct().ToArray();
 		}
 
 		string[] GetAllBustIdsMissingInitialization(EncounterInfoModel infoModel)

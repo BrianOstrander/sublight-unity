@@ -47,7 +47,7 @@ namespace LunraGames.SubLight
 
 		void OnHandleFilterAll(
 			RequestStatus status,
-			SwitchEntryModel[] filtered,
+			SwitchEdgeModel[] filtered,
 			SwitchEncounterLogModel logModel,
 			Action<string> nonLinearDone
 		)
@@ -93,9 +93,9 @@ namespace LunraGames.SubLight
 			}
 		}
 
-		void OnDone(RequestStatus status, SwitchEntryModel entry, SwitchEncounterLogModel logModel, Action<string> done)
+		void OnDone(RequestStatus status, SwitchEdgeModel edge, SwitchEncounterLogModel logModel, Action<string> done)
 		{
-			if (status == RequestStatus.Success) done(string.IsNullOrEmpty(entry.NextLogId.Value) ? logModel.NextLog : entry.NextLogId.Value);
+			if (status == RequestStatus.Success) done(string.IsNullOrEmpty(edge.NextLogId.Value) ? logModel.NextLog : edge.NextLogId.Value);
 			else done(logModel.NextLog);
 		}
 	}

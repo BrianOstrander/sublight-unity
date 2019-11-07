@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class KeyValueEntryModel : EdgeModel
+	public class KeyValueEdgeModel : EdgeModel
 	{
 		public interface BaseBlock<T>
 			where T : IConvertible
@@ -267,7 +267,7 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 
-		public KeyValueEntryModel()
+		public KeyValueEdgeModel()
 		{
 			KeyValueType = new ListenerProperty<KeyValueTypes>(value => keyValueType = value, () => keyValueType);
 			BooleanValue = new ListenerProperty<BooleanBlock>(value => booleanValue = value, () => booleanValue);

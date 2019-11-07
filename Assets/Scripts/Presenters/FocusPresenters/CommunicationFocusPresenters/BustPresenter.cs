@@ -14,10 +14,10 @@ namespace LunraGames.SubLight.Presenters
 		GameModel model;
 		ConversationLanguageBlock conversationLanguage;
 
-		List<BustEntryModel> initializationInfos = new List<BustEntryModel>();
+		List<BustEdgeModel> initializationInfos = new List<BustEdgeModel>();
 
-		BustEntryModel lastFocus;
-		BustEntryModel lastFocusInitialization;
+		BustEdgeModel lastFocus;
+		BustEdgeModel lastFocusInitialization;
 		ConversationInstanceModel lastConversationFocus;
 
 		List<ConversationInstanceModel> conversationInstances = new List<ConversationInstanceModel>();
@@ -99,8 +99,8 @@ namespace LunraGames.SubLight.Presenters
 		void OnHandleBust(BustHandlerModel handler)
 		{
 			var hadMultipleFocuses = false;
-			BustEntryModel focusEntry = null;
-			BustEntryModel focusEntryInitialization = null;
+			BustEdgeModel focusEdge = null;
+			BustEdgeModel focusEdgeInitialization = null;
 			var initializeBlocks = new List<BustBlock>();
 			var initializeConversationIds = new List<string>();
 
@@ -110,14 +110,14 @@ namespace LunraGames.SubLight.Presenters
 			{
 				switch (entry.BustEvent.Value)
 				{
-					case BustEntryModel.Events.Initialize:
+					case BustEdgeModel.Events.Initialize:
 						initializationInfos = initializationInfos.Where(i => i.BustId.Value != entry.BustId.Value).Append(entry).ToList();
 						initializeBlocks.Add(OnInitializeInfoToBlock(entry.BustId.Value, entry.InitializeInfo.Value));
 						initializeConversationIds.Add(entry.BustId.Value);
 						break;
-					case BustEntryModel.Events.Focus:
-						if (focusEntry != null) hadMultipleFocuses = true;
-						focusEntry = entry;
+					case BustEdgeModel.Events.Focus:
+						if (focusEdge != null) hadMultipleFocuses = true;
+						focusEdge = entry;
 						break;
 					default:
 						Debug.LogError("Unrecognized BustEvent: " + entry.BustEvent.Value);
@@ -131,7 +131,7 @@ namespace LunraGames.SubLight.Presenters
 
 			foreach (var bustId in initializeConversationIds) OnInitializeConversation(bustId);
 
-			if (focusEntry == null)
+			if (focusEdge == null)
 			{
 				onHaltingDone();
 				return;
@@ -145,14 +145,14 @@ namespace LunraGames.SubLight.Presenters
 
 			if (View.TransitionState != TransitionStates.Shown) ShowView(instant: true);
 
-			focusEntryInitialization = initializationInfos.FirstOrDefault(i => i.BustId.Value == focusEntry.BustId.Value);
+			focusEdgeInitialization = initializationInfos.FirstOrDefault(i => i.BustId.Value == focusEdge.BustId.Value);
 
-			lastFocus = focusEntry;
-			lastFocusInitialization = focusEntryInitialization;
-			var newConversationFocus = conversationInstances.First(i => i.BustId.Value == focusEntry.BustId.Value);
+			lastFocus = focusEdge;
+			lastFocusInitialization = focusEdgeInitialization;
+			var newConversationFocus = conversationInstances.First(i => i.BustId.Value == focusEdge.BustId.Value);
 			var oldConversationFocus = lastConversationFocus;
 
-			if (lastConversationFocus != null && lastConversationFocus.BustId.Value != focusEntry.BustId.Value) lastConversationFocus.IsFocused.Value = false;
+			if (lastConversationFocus != null && lastConversationFocus.BustId.Value != focusEdge.BustId.Value) lastConversationFocus.IsFocused.Value = false;
 			else oldConversationFocus = null;
 
 			lastConversationFocus = newConversationFocus;
@@ -167,11 +167,11 @@ namespace LunraGames.SubLight.Presenters
 			Action onCallFocus = () =>
 			{
 				View.FocusBust(
-					focusEntry.BustId.Value,
-					focusEntry.FocusInfo.Value.Instant,
+					focusEdge.BustId.Value,
+					focusEdge.FocusInfo.Value.Instant,
 					focusBustId => focusCompleted = true
 				);
-				primaryButtonsPresenter.Theme = focusEntryInitialization.InitializeInfo.Value.Theme;
+				primaryButtonsPresenter.Theme = focusEdgeInitialization.InitializeInfo.Value.Theme;
 				lastConversationFocus.Show.Value(false);
 				if (oldConversationFocus != null && !oldConversationFocus.IsClosed.Value()) oldConversationFocus.Close.Value(false);
 			};
@@ -180,7 +180,7 @@ namespace LunraGames.SubLight.Presenters
 			SM.Push(onHaltingDone, "HaltingDone");
 		}
 
-		BustBlock OnInitializeInfoToBlock(string bustId, BustEntryModel.InitializeBlock info)
+		BustBlock OnInitializeInfoToBlock(string bustId, BustEdgeModel.InitializeBlock info)
 		{
 			var result = new BustBlock
 			{
@@ -198,17 +198,17 @@ namespace LunraGames.SubLight.Presenters
 
 			switch (info.TransmitionStrengthIcon)
 			{
-				case BustEntryModel.TransmissionStrengths.Hidden: result.TransmitionStrengthIndex = -1; break;
-				case BustEntryModel.TransmissionStrengths.Failed: result.TransmitionStrengthIndex = 0; break;
-				case BustEntryModel.TransmissionStrengths.Weak: result.TransmitionStrengthIndex = 1; break;
-				case BustEntryModel.TransmissionStrengths.Intermittent: result.TransmitionStrengthIndex = 2; break;
-				case BustEntryModel.TransmissionStrengths.Strong: result.TransmitionStrengthIndex = 3; break;
+				case BustEdgeModel.TransmissionStrengths.Hidden: result.TransmitionStrengthIndex = -1; break;
+				case BustEdgeModel.TransmissionStrengths.Failed: result.TransmitionStrengthIndex = 0; break;
+				case BustEdgeModel.TransmissionStrengths.Weak: result.TransmitionStrengthIndex = 1; break;
+				case BustEdgeModel.TransmissionStrengths.Intermittent: result.TransmitionStrengthIndex = 2; break;
+				case BustEdgeModel.TransmissionStrengths.Strong: result.TransmitionStrengthIndex = 3; break;
 				default: Debug.LogError("Unrecognized TransmissionStrength: " + info.TransmitionStrengthIcon); break;
 			}
 
 			switch (info.AvatarType)
 			{
-				case BustEntryModel.AvatarTypes.Static:
+				case BustEdgeModel.AvatarTypes.Static:
 					result = OnInitializeInfoToBlockStaticAvatar(result, info);
 					break;
 				default:
@@ -230,7 +230,7 @@ namespace LunraGames.SubLight.Presenters
 			conversationInstances.Add(conversationModel);
 		}
 
-		BustBlock OnInitializeInfoToBlockStaticAvatar(BustBlock block, BustEntryModel.InitializeBlock info)
+		BustBlock OnInitializeInfoToBlockStaticAvatar(BustBlock block, BustEdgeModel.InitializeBlock info)
 		{
 			block.AvatarStaticIndex = info.AvatarStaticIndex;
 			block.AvatarStaticTerminalTextVisible = info.AvatarStaticTerminalTextVisible;

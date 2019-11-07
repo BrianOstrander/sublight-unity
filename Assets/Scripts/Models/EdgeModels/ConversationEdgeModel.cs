@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class ConversationEntryModel : EdgeModel
+	public class ConversationEdgeModel : EdgeModel
 	{
 		[Serializable]
 		public struct MessageBlock
@@ -68,7 +68,7 @@ namespace LunraGames.SubLight.Models
 			}
 		}
 		
-		public ConversationEntryModel()
+		public ConversationEdgeModel()
 		{
 			ConversationType = new ListenerProperty<ConversationTypes>(value => conversationType = value, () => conversationType);
 			Message = new ListenerProperty<string>(value => message = value, () => message);

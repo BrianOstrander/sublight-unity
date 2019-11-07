@@ -148,7 +148,7 @@ namespace LunraGames.SubLight
 
 			var bustEntries = model.Logs.GetLogs<BustEncounterLogModel>()
 								   .SelectMany(l => l.Entries.Value)
-								   .Where(e => e.BustEvent.Value == BustEntryModel.Events.Initialize);
+								   .Where(e => e.BustEvent.Value == BustEdgeModel.Events.Initialize);
 
 			var modifications = string.Empty;
 			var modificationCount = 0;
@@ -161,7 +161,7 @@ namespace LunraGames.SubLight
 
 				switch (initializeInfo.TransmitionStrengthIcon)
 				{
-					case BustEntryModel.TransmissionStrengths.Hidden:
+					case BustEdgeModel.TransmissionStrengths.Hidden:
 						initializeInfo.Theme = ConversationThemes.Internal;
 						break;
 					default:

@@ -8,10 +8,10 @@ using LunraGames.SubLight.Models;
 
 using LunraGames.NumberDemon;
 
-using BooleanBlock = LunraGames.SubLight.Models.KeyValueEntryModel.BooleanBlock;
-using IntegerBlock = LunraGames.SubLight.Models.KeyValueEntryModel.IntegerBlock;
-using StringBlock = LunraGames.SubLight.Models.KeyValueEntryModel.StringBlock;
-using FloatBlock = LunraGames.SubLight.Models.KeyValueEntryModel.FloatBlock;
+using BooleanBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.BooleanBlock;
+using IntegerBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.IntegerBlock;
+using StringBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.StringBlock;
+using FloatBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.FloatBlock;
 
 namespace LunraGames.SubLight
 {
@@ -33,7 +33,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnHandleNextOperation(
-			List<KeyValueEntryModel> remaining,
+			List<KeyValueEdgeModel> remaining,
 			Action done
 		)
 		{
@@ -56,8 +56,8 @@ namespace LunraGames.SubLight
 
 		void OnHandleNextOperationFiltered(
 			bool result,
-			KeyValueEntryModel next,
-			List<KeyValueEntryModel> remaining,
+			KeyValueEdgeModel next,
+			List<KeyValueEdgeModel> remaining,
 			Action done
 		)
 		{

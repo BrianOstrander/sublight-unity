@@ -4,12 +4,12 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<ButtonEntryModel>
+	public class ButtonEncounterLogModel : EncounterLogModel, IEdgedEncounterLogModel<ButtonEdgeModel>
 	{
-		[JsonProperty] ButtonEntryModel[] buttons = new ButtonEntryModel[0];
+		[JsonProperty] ButtonEdgeModel[] buttons = new ButtonEdgeModel[0];
 
 		[JsonIgnore]
-		public readonly ListenerProperty<ButtonEntryModel[]> Buttons;
+		public readonly ListenerProperty<ButtonEdgeModel[]> Buttons;
 
 		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Button; } }
 
@@ -18,11 +18,11 @@ namespace LunraGames.SubLight.Models
 
 		public ButtonEncounterLogModel()
 		{
-			Buttons = new ListenerProperty<ButtonEntryModel[]>(value => buttons = value, () => buttons);
+			Buttons = new ListenerProperty<ButtonEdgeModel[]>(value => buttons = value, () => buttons);
 		}
 
 		[JsonIgnore]
-		public ButtonEntryModel[] Edges
+		public ButtonEdgeModel[] Edges
 		{
 			get { return Buttons.Value; }
 			set { Buttons.Value = value; }

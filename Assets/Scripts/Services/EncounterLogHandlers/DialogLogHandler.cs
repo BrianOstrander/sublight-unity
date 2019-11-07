@@ -28,7 +28,7 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		void OnDone(RequestStatus status, DialogEntryModel entry, DialogEncounterLogModel logModel, Action<string> done)
+		void OnDone(RequestStatus status, DialogEdgeModel edge, DialogEncounterLogModel logModel, Action<string> done)
 		{
 			if (status != RequestStatus.Success)
 			{
@@ -38,9 +38,9 @@ namespace LunraGames.SubLight
 			}
 
 			var fallthroughId = logModel.NextLog;
-			var successId = GetValidId(entry.SuccessLogId.Value, fallthroughId);
-			var failureId = GetValidId(entry.FailureLogId.Value, fallthroughId);
-			var cancelId = GetValidId(entry.CancelLogId.Value, fallthroughId);
+			var successId = GetValidId(edge.SuccessLogId.Value, fallthroughId);
+			var failureId = GetValidId(edge.FailureLogId.Value, fallthroughId);
+			var cancelId = GetValidId(edge.CancelLogId.Value, fallthroughId);
 
 			Action successClick = () => done(successId);
 			Action failureClick = () => done(failureId);
@@ -51,13 +51,13 @@ namespace LunraGames.SubLight
 			);
 
 			result.Dialog.Value = new DialogLogBlock(
-				entry.Title.Value,
-				entry.Message.Value,
-				entry.DialogType.Value,
-				entry.DialogStyle.Value,
-				entry.SuccessText.Value,
-				entry.FailureText.Value,
-				entry.CancelText.Value,
+				edge.Title.Value,
+				edge.Message.Value,
+				edge.DialogType.Value,
+				edge.DialogStyle.Value,
+				edge.SuccessText.Value,
+				edge.FailureText.Value,
+				edge.CancelText.Value,
 				successClick,
 				failureClick,
 				cancelClick

@@ -20,21 +20,21 @@ namespace LunraGames.SubLight
 		{
 			var events = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToList();
 
-			Action<RequestStatus, List<EncounterEventEntryModel>> filteringDone = (status, filtered) => OnDone(status, filtered, logModel, linearDone);
+			Action<RequestStatus, List<EncounterEventEdgeModel>> filteringDone = (status, filtered) => OnDone(status, filtered, logModel, linearDone);
 
 			OnFilter(
 				null,
 				events,
-				new List<EncounterEventEntryModel>(),
+				new List<EncounterEventEdgeModel>(),
 				filteringDone
 			);
 		}
 
 		void OnFilter(
-			EncounterEventEntryModel result,
-			List<EncounterEventEntryModel> remaining,
-			List<EncounterEventEntryModel> filtered,
-			Action<RequestStatus, List<EncounterEventEntryModel>> filteringDone
+			EncounterEventEdgeModel result,
+			List<EncounterEventEdgeModel> remaining,
+			List<EncounterEventEdgeModel> filtered,
+			Action<RequestStatus, List<EncounterEventEdgeModel>> filteringDone
 		)
 		{
 			if (result != null) filtered.Add(result);
@@ -47,7 +47,7 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			Action<EncounterEventEntryModel> nextDone = filterResult => OnFilter(filterResult, remaining, filtered, filteringDone);
+			Action<EncounterEventEdgeModel> nextDone = filterResult => OnFilter(filterResult, remaining, filtered, filteringDone);
 			var next = remaining.First();
 			remaining.RemoveAt(0);
 
@@ -61,8 +61,8 @@ namespace LunraGames.SubLight
 
 		void OnFiltering(
 			bool filteringResult,
-			EncounterEventEntryModel possibleResult,
-			Action<EncounterEventEntryModel> nextDone
+			EncounterEventEdgeModel possibleResult,
+			Action<EncounterEventEdgeModel> nextDone
 		)
 		{
 			if (filteringResult) nextDone(possibleResult);
@@ -71,7 +71,7 @@ namespace LunraGames.SubLight
 
 		void OnDone(
 			RequestStatus status,
-			List<EncounterEventEntryModel> events,
+			List<EncounterEventEdgeModel> events,
 			EncounterEventEncounterLogModel logModel,
 			Action done
 		)

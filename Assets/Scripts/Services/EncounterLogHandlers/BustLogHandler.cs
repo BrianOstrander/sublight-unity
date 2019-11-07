@@ -21,7 +21,7 @@ namespace LunraGames.SubLight
 
 			var result = new BustHandlerModel(logModel);
 			// If there are any non-instant focuses this event is halting.
-			result.HasHaltingEvents.Value = bustEvents.Any(b => b.BustEvent.Value == BustEntryModel.Events.Focus && !b.FocusInfo.Value.Instant);
+			result.HasHaltingEvents.Value = bustEvents.Any(b => b.BustEvent.Value == BustEdgeModel.Events.Focus && !b.FocusInfo.Value.Instant);
 			result.Entries.Value = bustEvents;
 			result.HaltingDone.Value = linearDone;
 

@@ -87,30 +87,30 @@ namespace LunraGames.SubLight
 
 			static void OnHandleEventCustom(
 				GameState state,
-				EncounterEventEntryModel entry,
+				EncounterEventEdgeModel edge,
 				Action done
 			)
 			{
 				var request = new EncounterEventsCustomRequest(
-					entry.KeyValues,
-					entry.IsHalting ? done : null
+					edge.KeyValues,
+					edge.IsHalting ? done : null
 				);
 
 				Debug.Log("Handling custom event: " + request.EventName);
 
 				App.Callbacks.EncounterEventsCustom(request);
 
-				if (!entry.IsHalting) done();
+				if (!edge.IsHalting) done();
 			}
 
 			static void OnHandleEventDebugLog(
 				GameState state,
-				EncounterEventEntryModel entry,
+				EncounterEventEdgeModel edge,
 				Action done
 			)
 			{
-				var severity = entry.KeyValues.GetEnumeration(EncounterEvents.Debug.EnumKeys.Severity, EncounterEvents.Debug.Severities.Error);
-				var message = entry.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message);
+				var severity = edge.KeyValues.GetEnumeration(EncounterEvents.Debug.EnumKeys.Severity, EncounterEvents.Debug.Severities.Error);
+				var message = edge.KeyValues.GetString(EncounterEvents.Debug.StringKeys.Message);
 				if (string.IsNullOrEmpty(message)) message = "< no message was provided >";
 
 				switch (severity)
@@ -146,17 +146,17 @@ namespace LunraGames.SubLight
 
 			static void OnHandleEventToolbarSelection(
 				GameState state,
-				EncounterEventEntryModel entry,
+				EncounterEventEdgeModel edge,
 				Action done
 			)
 			{
 				var currentSelection = state.Payload.Game.ToolbarSelection.Value;
-				var targetSelection = entry.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
+				var targetSelection = edge.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.Selection, currentSelection);
 
 				if (targetSelection == ToolbarSelections.Unknown) targetSelection = currentSelection;
 
 				var currentLocking = state.Payload.Game.ToolbarLocking.Value ? EncounterEvents.ToolbarSelection.LockStates.Lock : EncounterEvents.ToolbarSelection.LockStates.UnLock;
-				var targetLocking = entry.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
+				var targetLocking = edge.KeyValues.GetEnumeration(EncounterEvents.ToolbarSelection.EnumKeys.LockState, currentLocking);
 
 				if (targetLocking == EncounterEvents.ToolbarSelection.LockStates.Unknown) targetLocking = currentLocking;
 
@@ -184,11 +184,11 @@ namespace LunraGames.SubLight
 
 			static void OnHandleEventDumpKeyValues(
 				GameState state,
-				EncounterEventEntryModel entry,
+				EncounterEventEdgeModel edge,
 				Action done
 			)
 			{
-				var dumpTarget = entry.KeyValues.GetEnumeration(EncounterEvents.DumpKeyValues.EnumKeys.Target, KeyValueTargets.Unknown);
+				var dumpTarget = edge.KeyValues.GetEnumeration(EncounterEvents.DumpKeyValues.EnumKeys.Target, KeyValueTargets.Unknown);
 
 				var values = EnumExtensions.GetValues(KeyValueTargets.Unknown);
 
@@ -239,7 +239,7 @@ namespace LunraGames.SubLight
 
 			static void OnHandleEventPopTriggers(
 				GameState state,
-				EncounterEventEntryModel entry,
+				EncounterEventEdgeModel edge,
 				Action done
 			)
 			{
@@ -248,9 +248,9 @@ namespace LunraGames.SubLight
 
 				foreach (var trigger in EnumExtensions.GetValues(EncounterTriggers.Unknown))
 				{
-					if (entry.KeyValues.GetBoolean(EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger))) popped.Add(trigger);
+					if (edge.KeyValues.GetBoolean(EncounterEvents.TriggerQueue.BooleanKeys.PopTrigger(trigger))) popped.Add(trigger);
 
-					var pushIndex = entry.KeyValues.GetInteger(
+					var pushIndex = edge.KeyValues.GetInteger(
 						EncounterEvents.TriggerQueue.IntegerKeys.PushTrigger(trigger),
 						EncounterEvents.TriggerQueue.PushDisabled
 					);
@@ -269,16 +269,16 @@ namespace LunraGames.SubLight
 
 		static void OnHandleEventDelay(
 			GameState state,
-			EncounterEventEntryModel entry,
+			EncounterEventEdgeModel edge,
 			Action done
 		)
 		{
-			var trigger = entry.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger);
+			var trigger = edge.KeyValues.GetEnumeration<EncounterEvents.Delay.Triggers>(EncounterEvents.Delay.EnumKeys.Trigger);
 
 			switch (trigger)
 			{
 				case EncounterEvents.Delay.Triggers.Time:
-					var timeDuration = entry.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration);
+					var timeDuration = edge.KeyValues.GetFloat(EncounterEvents.Delay.FloatKeys.TimeDuration);
 					if (float.IsNaN(timeDuration))
 					{
 						Debug.LogError("Specified Time Duration was NaN");
@@ -299,12 +299,12 @@ namespace LunraGames.SubLight
 
 		static void OnHandleEventAudioSnapshot(
 			GameState state,
-			EncounterEventEntryModel entry,
+			EncounterEventEdgeModel edge,
 			Action done
 		)
 		{
-			var snapshotName = entry.KeyValues.GetString(EncounterEvents.AudioSnapshot.StringKeys.SnapshotName);
-			var transitionDuration = Mathf.Max(0f, entry.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration));
+			var snapshotName = edge.KeyValues.GetString(EncounterEvents.AudioSnapshot.StringKeys.SnapshotName);
+			var transitionDuration = Mathf.Max(0f, edge.KeyValues.GetFloat(EncounterEvents.AudioSnapshot.FloatKeys.TransitionDuration));
 
 			if (string.IsNullOrEmpty(snapshotName))
 			{
@@ -323,12 +323,12 @@ namespace LunraGames.SubLight
 
 		static void OnHandleEventWaypoint(
 			GameState state,
-			EncounterEventEntryModel entry,
+			EncounterEventEdgeModel edge,
 			Action done
 		)
 		{
-			var waypointId = entry.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
-			var visibility = entry.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility);
+			var waypointId = edge.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
+			var visibility = edge.KeyValues.GetEnumeration<WaypointModel.VisibilityStates>(EncounterEvents.Waypoint.EnumKeys.Visibility);
 
 			if (string.IsNullOrEmpty(waypointId))
 			{
@@ -360,19 +360,19 @@ namespace LunraGames.SubLight
 		
 		static void OnHandleEventModuleTrait(
 			GameState state,
-			EncounterEventEntryModel entry,
+			EncounterEventEdgeModel edge,
 			Action done
 		)
 		{
-			var operationId = entry.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId);
-			var operation = entry.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation);
+			var operationId = edge.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId);
+			var operation = edge.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation);
 
 			var moduleTypes = new List<ModuleTypes>();
 			var allModuleTypes = EnumExtensions.GetValues(ModuleTypes.Unknown);
 			
 			foreach (var moduleType in allModuleTypes)
 			{
-				if (entry.KeyValues.GetBoolean(EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType))) moduleTypes.Add(moduleType);
+				if (edge.KeyValues.GetBoolean(EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType))) moduleTypes.Add(moduleType);
 			}
 
 			if (moduleTypes.None()) moduleTypes = allModuleTypes.ToList();

@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class ButtonEntryModel : EdgeModel
+	public class ButtonEdgeModel : EdgeModel
 	{
 		[JsonProperty] string message;
 		[JsonProperty] string nextLogId;
@@ -74,7 +74,7 @@ namespace LunraGames.SubLight.Models
 
 		public override string EdgeName => "Button";
 		
-		public ButtonEntryModel()
+		public ButtonEdgeModel()
 		{
 			Message = new ListenerProperty<string>(value => message = value, () => message);
 			NextLogId = new ListenerProperty<string>(value => nextLogId = value, () => nextLogId);

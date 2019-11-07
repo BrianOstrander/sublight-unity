@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class BustEntryModel : EdgeModel
+	public class BustEdgeModel : EdgeModel
 	{
 		public enum Events
 		{
@@ -94,7 +94,7 @@ namespace LunraGames.SubLight.Models
 
 		public override string EdgeName => (string.IsNullOrEmpty(BustId.Value) ? "< Missing Id >" : BustId.Value) + "." + BustEvent.Value;
 		
-		public BustEntryModel()
+		public BustEdgeModel()
 		{
 			BustId = new ListenerProperty<string>(value => bustId = value, () => bustId);
 			BustEvent = new ListenerProperty<Events>(value => bustEvent = value, () => bustEvent);

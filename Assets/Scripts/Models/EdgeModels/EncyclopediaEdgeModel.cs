@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public class EncyclopediaEntryModel : EdgeModel
+	public class EncyclopediaEdgeModel : EdgeModel
 	{
 		[JsonProperty] string encyclopediaId;
 		[JsonProperty] string title;
@@ -33,7 +33,7 @@ namespace LunraGames.SubLight.Models
 
 		public override string EdgeName => string.IsNullOrEmpty(Header.Value) ? "Introduction" : "Section";
 		
-		public EncyclopediaEntryModel()
+		public EncyclopediaEdgeModel()
 		{
 			EncyclopediaId = new ListenerProperty<string>(value => encyclopediaId = value, () => encyclopediaId);
 			Title = new ListenerProperty<string>(value => title = value, () => title);
@@ -48,11 +48,11 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		/// <value>The duplicate.</value>
 		[JsonIgnore]
-		public EncyclopediaEntryModel Duplicate
+		public EncyclopediaEdgeModel Duplicate
 		{
 			get
 			{
-				var result = new EncyclopediaEntryModel();
+				var result = new EncyclopediaEdgeModel();
 				result.EncyclopediaId.Value = Guid.NewGuid().ToString();
 				result.Title.Value = Title.Value;
 				result.Header.Value = Header.Value;

@@ -21,20 +21,20 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			public Types Type;
-			public ConversationEntryModel UnProcessedEntry;
+			public ConversationEdgeModel UnProcessedEdge;
 			public MessageConversationBlock ProcessedBlock;
 
-			public ConversationQueueEntry(ConversationEntryModel unProcessedEntry)
+			public ConversationQueueEntry(ConversationEdgeModel unProcessedEdge)
 			{
 				Type = Types.UnProcessed;
-				UnProcessedEntry = unProcessedEntry;
+				UnProcessedEdge = unProcessedEdge;
 				ProcessedBlock = default(MessageConversationBlock);
 			}
 
 			public ConversationQueueEntry(MessageConversationBlock processedBlock)
 			{
 				Type = Types.Processed;
-				UnProcessedEntry = null;
+				UnProcessedEdge = null;
 				ProcessedBlock = processedBlock;
 			}
 		}
@@ -150,7 +150,7 @@ namespace LunraGames.SubLight.Presenters
 					switch (currentEntry.Type)
 					{
 						case ConversationQueueEntry.Types.UnProcessed:
-							switch (currentEntry.UnProcessedEntry.ConversationType.Value)
+							switch (currentEntry.UnProcessedEdge.ConversationType.Value)
 							{
 								case ConversationTypes.MessageIncoming:
 								case ConversationTypes.MessageOutgoing:
@@ -158,17 +158,17 @@ namespace LunraGames.SubLight.Presenters
 									additions.Add(
 										new MessageConversationBlock
 										{
-											Type = currentEntry.UnProcessedEntry.ConversationType.Value,
-											Message = currentEntry.UnProcessedEntry.Message.Value
+											Type = currentEntry.UnProcessedEdge.ConversationType.Value,
+											Message = currentEntry.UnProcessedEdge.Message.Value
 										}
 									);
 									break;
 								case ConversationTypes.Prompt:
 									isHalting = true;
-									onAdditionsDone = () => OnHandlePrompt(currentEntry.UnProcessedEntry);
+									onAdditionsDone = () => OnHandlePrompt(currentEntry.UnProcessedEdge);
 									break;
 								default:
-									Debug.LogError("Unrecognized ConversationType: " + currentEntry.UnProcessedEntry.ConversationType.Value + ", skipping...");
+									Debug.LogError("Unrecognized ConversationType: " + currentEntry.UnProcessedEdge.ConversationType.Value + ", skipping...");
 									break;
 							}
 							break;
@@ -190,26 +190,26 @@ namespace LunraGames.SubLight.Presenters
 			else View.AddToConversation(false, onAdditionsDone, additions.ToArray());
 		}
 
-		void OnHandlePrompt(ConversationEntryModel entry)
+		void OnHandlePrompt(ConversationEdgeModel edge)
 		{
 			var promptBlock = new ConversationButtonBlock
 			{
 				Interactable = true,
-				Click = () => OnHandlePromptClick(entry)
+				Click = () => OnHandlePromptClick(edge)
 			};
 
-			switch (entry.PromptInfo.Value.Behaviour)
+			switch (edge.PromptInfo.Value.Behaviour)
 			{
 				case ConversationButtonPromptBehaviours.PrintOverride:
 				case ConversationButtonPromptBehaviours.PrintMessage:
 				case ConversationButtonPromptBehaviours.ButtonOnly:
-					promptBlock.Message = entry.Message;
+					promptBlock.Message = edge.Message;
 					break;
 				case ConversationButtonPromptBehaviours.Continue:
 					promptBlock.Message = language.ContinuePrompt.Value;
 					break;
 				default:
-					Debug.LogError("Unrecognized PromptBehaviour: " + entry.PromptInfo.Value.Behaviour);
+					Debug.LogError("Unrecognized PromptBehaviour: " + edge.PromptInfo.Value.Behaviour);
 					break;
 			}
 
@@ -218,9 +218,9 @@ namespace LunraGames.SubLight.Presenters
 			);
 		}
 
-		void OnHandlePromptClick(ConversationEntryModel entry)
+		void OnHandlePromptClick(ConversationEdgeModel edge)
 		{
-			switch (entry.PromptInfo.Value.Behaviour)
+			switch (edge.PromptInfo.Value.Behaviour)
 			{
 				case ConversationButtonPromptBehaviours.ButtonOnly:
 				case ConversationButtonPromptBehaviours.Continue:
@@ -232,7 +232,7 @@ namespace LunraGames.SubLight.Presenters
 							new MessageConversationBlock
 							{
 								Type = ConversationTypes.MessageOutgoing,
-								Message = entry.Message.Value
+								Message = edge.Message.Value
 							}
 						)
 					);
@@ -244,13 +244,13 @@ namespace LunraGames.SubLight.Presenters
 							new MessageConversationBlock
 							{
 								Type = ConversationTypes.MessageOutgoing,
-								Message = entry.PromptInfo.Value.MessageOverride
+								Message = edge.PromptInfo.Value.MessageOverride
 							}
 						)
 					);
 					break;
 				default:
-					Debug.Log("Unrecognized PromptBehaviour: " + entry.PromptInfo.Value.Behaviour+", skipping...");
+					Debug.Log("Unrecognized PromptBehaviour: " + edge.PromptInfo.Value.Behaviour+", skipping...");
 					break;
 			}
 			OnHandleEntryQueue();

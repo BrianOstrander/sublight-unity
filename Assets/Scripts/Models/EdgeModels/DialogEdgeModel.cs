@@ -2,7 +2,7 @@
 
 namespace LunraGames.SubLight.Models
 {
-	public class DialogEntryModel : EdgeModel
+	public class DialogEdgeModel : EdgeModel
 	{
 		[JsonProperty] string title;
 		[JsonProperty] string message;
@@ -46,7 +46,7 @@ namespace LunraGames.SubLight.Models
 
 		public override string EdgeName => "Dialog";
 		
-		public DialogEntryModel()
+		public DialogEdgeModel()
 		{
 			Title = new ListenerProperty<string>(value => title = value, () => title);
 			Message = new ListenerProperty<string>(value => message = value, () => message);
