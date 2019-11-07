@@ -2546,7 +2546,7 @@ namespace LunraGames.SubLight
 			var isMoving = !Event.current.shift && Event.current.control;
 			var isDeleting = !Event.current.shift && Event.current.alt;
 
-			var sorted = model.Edges.OrderBy(l => l.EdgeIndex).ToList();
+			var sorted = model.Edges.OrderBy(l => l.Index.Value).ToList();
 			var sortedCount = sorted.Count;
 			E last = null;
 
@@ -2658,11 +2658,11 @@ namespace LunraGames.SubLight
 
 			if (indexSwap0 != null && indexSwap1 != null)
 			{
-				var swap0 = indexSwap0.EdgeIndex;
-				var swap1 = indexSwap1.EdgeIndex;
+				var swap0 = indexSwap0.Index.Value;
+				var swap1 = indexSwap1.Index.Value;
 
-				indexSwap0.EdgeIndex = swap1;
-				indexSwap1.EdgeIndex = swap0;
+				indexSwap0.Index.Value = swap1;
+				indexSwap1.Index.Value = swap0;
 			}
 
 			if (edgeSpawnOptions != null && model.Edges.Any()) edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryAppendPrefix, int.MaxValue);
@@ -2679,23 +2679,23 @@ namespace LunraGames.SubLight
 
 			if (model.Edges.Any())
 			{
-				var ordered = model.Edges.OrderBy(e => e.EdgeIndex);
+				var ordered = model.Edges.OrderBy(e => e.Index.Value);
 
-				if (index == int.MinValue) index = ordered.First().EdgeIndex;
-				else if (index == int.MaxValue) index = ordered.Last().EdgeIndex + 1;
+				if (index == int.MinValue) index = ordered.First().Index.Value;
+				else if (index == int.MaxValue) index = ordered.Last().Index.Value + 1;
 
-				var currentIndex = ordered.First().EdgeIndex;
+				var currentIndex = ordered.First().Index.Value;
 				var replacementIndex = 0;
 				var wasReplaced = false;
 				foreach (var edge in ordered)
 				{
-					if (edge.EdgeIndex == index)
+					if (edge.Index.Value == index)
 					{
 						replacementIndex++;
 						wasReplaced = true;
 					}
 					
-					edge.EdgeIndex = replacementIndex;
+					edge.Index.Value = replacementIndex;
 					
 					replacementIndex++;
 				}
@@ -2706,7 +2706,7 @@ namespace LunraGames.SubLight
 
 			var result = new E();
 			result.EdgeId = Guid.NewGuid().ToString();
-			result.EdgeIndex = index;
+			result.Index.Value = index;
 			if (initialize != null) initialize(result);
 			model.Edges = model.Edges.Append(result).ToArray();
 
@@ -2744,7 +2744,7 @@ namespace LunraGames.SubLight
 				{
 					GUILayout.FlexibleSpace();
 					if (edgeSpawnOptions == null) GUILayout.Label("Entry Insertion Not Supported   |");
-					else edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryInsertPrefix, edge.EdgeIndex);
+					else edgeSpawnOptions(infoModel, model, LogStrings.EdgeEntryInsertPrefix, edge.Index.Value);
 
 					GUILayout.Label("Click to Rearrange", GUILayout.ExpandWidth(false));
 					EditorGUILayoutExtensions.PushEnabled(0 < count);
