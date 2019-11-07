@@ -2635,7 +2635,7 @@ namespace LunraGames.SubLight
 								indexSwap1 = currMoveDelta == 1 ? next : last;
 							}
 
-							if (!current.EdgeIgnore) edgeEditor(infoModel, model, current);
+							if (!current.Ignore.Value) edgeEditor(infoModel, model, current);
 
 							last = current;
 						}
@@ -2735,7 +2735,7 @@ namespace LunraGames.SubLight
 
 			GUILayout.BeginHorizontal();
 			{
-				EditorGUILayoutExtensions.PushEnabled(!edge.EdgeIgnore);
+				EditorGUILayoutExtensions.PushEnabled(!edge.Ignore.Value);
 				{
 					GUILayout.Label("#" + (count + 1) + " | " + edge.EdgeName, GUILayout.ExpandWidth(false));
 				}
@@ -2772,7 +2772,7 @@ namespace LunraGames.SubLight
 					if (edgeHeaderLeft != null) edgeHeaderLeft(infoModel, model, edge);
 					GUILayout.FlexibleSpace();
 					GUILayout.Label(new GUIContent("Ignore", "Ignoring this entry will cause encounters to skip it."), GUILayout.ExpandWidth(false));
-					edge.EdgeIgnore = GUILayout.Toggle(edge.EdgeIgnore, GUIContent.none, GUILayout.ExpandWidth(false));
+					edge.Ignore.Value = GUILayout.Toggle(edge.Ignore.Value, GUIContent.none, GUILayout.ExpandWidth(false));
 				}
 			}
 			GUILayout.EndHorizontal();

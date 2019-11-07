@@ -23,13 +23,6 @@ namespace LunraGames.SubLight.Models
 		public virtual string EdgeName { get; }
 
 		[JsonIgnore]
-		public bool EdgeIgnore
-		{
-			get { return Ignore.Value; }
-			set { Ignore.Value = value; }
-		}
-
-		[JsonIgnore]
 		public virtual float EdgeIndent { get { return 0f; } }
 	}
 }
