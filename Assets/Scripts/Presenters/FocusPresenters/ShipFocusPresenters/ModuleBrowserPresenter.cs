@@ -19,27 +19,27 @@ namespace LunraGames.SubLight.Presenters
 			this.model = model;
 			this.language = language;
 			
-			model.Ship.Modules.Changed += OnModules;
+			model.Ship.Statistics.Changed += OnStatistics;
 		}
 
 		protected override void OnUnBind()
 		{
 			base.OnUnBind();
 			
-			model.Ship.Modules.Changed -= OnModules;
+			model.Ship.Statistics.Changed -= OnStatistics;
 		}
 		
 		protected override void OnUpdateEnabled()
 		{
 			// Debug.Log("uhhh browser enabled...");
-			UpdateModules(model.Ship.Modules.Value);
+			UpdateStatistics(model.Ship.Statistics.Value);
 		}
 
-		void UpdateModules(ModuleStatistics moduleStatistics)
+		void UpdateStatistics(ShipStatistics shipStatistics)
 		{
 			var entries = new List<ModuleBrowserBlock.ModuleEntry>();
 
-			foreach (var module in moduleStatistics.Modules)
+			foreach (var module in shipStatistics.Modules)
 			{
 				var current = new ModuleBrowserBlock.ModuleEntry();
 				current.Id = module.Id.Value;
@@ -88,13 +88,13 @@ namespace LunraGames.SubLight.Presenters
 				Modules = entries.ToArray(),
 				StatsTitle = language.StatsTitle.Value,
 				PowerProductionTitle = language.PowerProduction.Value,
-				PowerProduction = moduleStatistics.PowerProduction.ToString("N2"),
+				PowerProduction = shipStatistics.PowerProduction.ToString("N2"),
 				PowerConsumptionTitle = language.PowerConsumption.Value,
-				PowerConsumption = moduleStatistics.PowerConsumption.ToString("N2"),
+				PowerConsumption = shipStatistics.PowerConsumption.ToString("N2"),
 				TransitVelocityTitle = language.Velocity.Value,
-				TransitVelocity = moduleStatistics.NavigationVelocity + language.VelocityUnit.Value,
+				TransitVelocity = shipStatistics.TransitVelocity + language.VelocityUnit.Value,
 				TransitRangeTitle = language.NavigationRange.Value,
-				TransitRange = moduleStatistics.NavigationRange + " " + language.NavigationRangeUnit.Value
+				TransitRange = shipStatistics.TransitRange + " " + language.NavigationRangeUnit.Value
 			};
 			
 			View.Selected = entries.FirstOrDefault().Id;
@@ -102,9 +102,9 @@ namespace LunraGames.SubLight.Presenters
 		}
 		
 		#region Model Events
-		void OnModules(ModuleStatistics moduleStatistics)
+		void OnStatistics(ShipStatistics shipStatistics)
 		{
-			if (View.Visible) UpdateModules(moduleStatistics);
+			if (View.Visible) UpdateStatistics(shipStatistics);
 		}
 		#endregion
 

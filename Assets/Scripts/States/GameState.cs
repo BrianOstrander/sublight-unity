@@ -12,8 +12,8 @@ namespace LunraGames.SubLight
 	public class GamePayload : IStatePayload
 	{
 		public int LocalSectorOffset = 2; // Not set anywhere else at the moment...
-		public int LocalSectorOffsetTotal { get { return (LocalSectorOffset * 2) + 1; } }
-		public int LocalSectorCount { get { return LocalSectorOffsetTotal * LocalSectorOffsetTotal; } }
+		public int LocalSectorOffsetTotal => (LocalSectorOffset * 2) + 1;
+		public int LocalSectorCount => LocalSectorOffsetTotal * LocalSectorOffsetTotal;
 
 		public GameModel Game;
 
@@ -76,6 +76,7 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Waypoints.Waypoints.Changed += OnWaypoints;
 			Payload.Game.Ship.Position.Changed += OnShipPosition;
+			Payload.Game.Ship.Statistics.Changed += OnShipStatistics;
 
 			Payload.Game.Context.CelestialSystemState.Changed += OnCelestialSystemState;
 			Payload.Game.Context.NavigationSelectionOutOfRange += OnNavigationSelectionOutOfRange;
@@ -159,7 +160,6 @@ namespace LunraGames.SubLight
 		void OnPresentersShown()
 		{
 			SM.Push(OnUpdateKeyValues, "InitialUpdateKeyValues");
-			SM.Push(() => GameplayUtility.CalculateFulfillment(Payload.Game.KeyValues), "InitialCalculateFulfillment");
 
 			var triggers = new List<EncounterTriggers>(Payload.Game.EncounterTriggers.Value);
 
@@ -203,6 +203,7 @@ namespace LunraGames.SubLight
 
 			Payload.Game.Waypoints.Waypoints.Changed -= OnWaypoints;
 			Payload.Game.Ship.Position.Changed -= OnShipPosition;
+			Payload.Game.Ship.Statistics.Changed -= OnShipStatistics;
 
 			Payload.Game.Context.CelestialSystemState.Changed -= OnCelestialSystemState;
 			Payload.Game.Context.NavigationSelectionOutOfRange -= OnNavigationSelectionOutOfRange;
@@ -487,6 +488,19 @@ namespace LunraGames.SubLight
 				waypoint.Distance.Value = UniversePosition.Distance(position, waypoint.Location.Value.Position);
 			}
 		}
+		
+		void OnShipStatistics(ShipStatistics shipStatistics)
+		{
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitRange,
+				shipStatistics.TransitRange
+			);
+			
+			Payload.Game.KeyValues.Set(
+				KeyDefines.Game.TransitVelocity,
+				shipStatistics.TransitVelocity
+			);
+		}
 
 		void OnTransitState(TransitState transitState)
 		{
@@ -519,7 +533,6 @@ namespace LunraGames.SubLight
 				)
 			);
 
-			SM.Push(OnUpdateGameplay, "UpdateGameplay");
 			SM.Push(OnUpdateKeyValues, "UpdateKeyValues");
 
 			PushEncounterTriggers(
@@ -542,18 +555,13 @@ namespace LunraGames.SubLight
 
 			SM.Push(OnCheckForEncounters, description);
 		}
-
-		void OnUpdateGameplay()
-		{
-			// This should probably be run after every transit...
-			GameplayUtility.ApplyTransit(
-				Payload.Game.Context.TransitState.Value.RelativeTimeTotal.ShipTime.TotalYears,
-				Payload.Game.Context.TransitState.Value.DistanceTotal,
-				Payload.Game.KeyValues,
-				Payload.Game.Context.TransitState.Value.EndSystem.KeyValues
-			);
-		}
-
+		
+		/// <summary>
+		/// Updates the Key Value store for the game state.
+		/// </summary>
+		/// <remarks>
+		/// There may be duplicate updates since this is also called when initializing the Key Value store.
+		/// </remarks>
 		void OnUpdateKeyValues()
 		{
 			Payload.Game.KeyValues.Set(
@@ -605,33 +613,16 @@ namespace LunraGames.SubLight
 				KeyDefines.Game.TransitHistoryCount,
 				Payload.Game.TransitHistory.Count
 			);
-
-			/*
+			
 			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.TransitsWithoutRationsUntilFailure,
-				Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRationsMaximum) - Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithoutRations)
+				KeyDefines.Game.TransitRange,
+				Payload.Game.Ship.Statistics.Value.TransitRange
 			);
-
+			
 			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.TransitsWithOverPopulationUntilFailure,
-				Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulationMaximum) - Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithOverPopulation)
+				KeyDefines.Game.TransitVelocity,
+				Payload.Game.Ship.Statistics.Value.TransitVelocity
 			);
-
-			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.TransitsWithUnderPopulationUntilFailure,
-				Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulationMaximum) - Payload.Game.KeyValues.Get(KeyDefines.Game.TransitsWithUnderPopulation)
-			);
-
-			Payload.Game.KeyValues.Set(
-				KeyDefines.Game.PopulationMaximum,
-				Payload.Game.KeyValues.Get(KeyDefines.Game.ShipPopulationMaximum) * Payload.Game.KeyValues.Get(KeyDefines.Game.PopulationMaximumMultiplier)
-			);
-
-			Payload.Game.Ship.Velocity.Value = Payload.Game.Ship.Velocity.Value.Duplicate(
-				propellantUsage: Payload.Game.KeyValues.Get(KeyDefines.Game.PropellantUsage),
-				propellantUsageLimit: Mathf.FloorToInt(Payload.Game.KeyValues.Get(KeyDefines.Game.Propellant.Amount))
-			);
-			*/
 		}
 
 		void OnCheckForEncounters()

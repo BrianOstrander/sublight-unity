@@ -130,9 +130,6 @@ namespace LunraGames.SubLight
 
 			var classification = hackGenerator.NextFloat;
 
-			var rationsAbundance = 1f - classification;
-			var propellantAbundance = classification;
-
 			if (classification < 0.8f)
 			{
 				systemModel.PrimaryClassification.Value = SystemClassifications.Stellar;
@@ -220,10 +217,6 @@ namespace LunraGames.SubLight
 			};
 
 			var resourceGenerator = new Demon(SystemModel.Seeds.Resources(systemModel.Seed));
-
-			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Rations.GatherMultiplier, resourceGenerator.NextFloat * rationsAbundance);
-			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Propellant.GatherMultiplier, resourceGenerator.NextFloat * propellantAbundance);
-			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.Metallics.GatherMultiplier, resourceGenerator.NextFloat);
 
 			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.IconPings, resourceGenerator.NextFloat < 0.1f);
 
