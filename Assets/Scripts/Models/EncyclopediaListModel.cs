@@ -7,26 +7,26 @@ namespace LunraGames.SubLight.Models
 {
 	public class EncyclopediaListModel : Model
 	{
-		[JsonProperty] EncyclopediaEntryModel[] entries = new EncyclopediaEntryModel[0];
+		[JsonProperty] EncyclopediaEdgeModel[] entries = new EncyclopediaEdgeModel[0];
 		[JsonProperty] string[] titles = new string[0];
 
 		[JsonIgnore]
-		readonly ListenerProperty<EncyclopediaEntryModel[]> entriesListener;
+		readonly ListenerProperty<EncyclopediaEdgeModel[]> entriesListener;
 
 		[JsonIgnore]
-		public readonly ReadonlyProperty<EncyclopediaEntryModel[]> Entries;
+		public readonly ReadonlyProperty<EncyclopediaEdgeModel[]> Entries;
 		[JsonIgnore]
-		public readonly DerivedProperty<string[], EncyclopediaEntryModel[]> Titles;
+		public readonly DerivedProperty<string[], EncyclopediaEdgeModel[]> Titles;
 
 		public EncyclopediaListModel()
 		{
-			Entries = new ReadonlyProperty<EncyclopediaEntryModel[]>(
+			Entries = new ReadonlyProperty<EncyclopediaEdgeModel[]>(
 				value => entries = value,
 				() => entries,
 				out entriesListener
 			);
 
-			Titles = new DerivedProperty<string[], EncyclopediaEntryModel[]>(
+			Titles = new DerivedProperty<string[], EncyclopediaEdgeModel[]>(
 				value => titles = value,
 				() => titles,
 				DeriveTitles,
@@ -62,14 +62,14 @@ namespace LunraGames.SubLight.Models
 			return result.ToArray();
 		}
 
-		public EncyclopediaEntryModel Get(string title, string header)
+		public EncyclopediaEdgeModel Get(string title, string header)
 		{
 			return Entries.Value.FirstOrDefault(e => e.Title.Value == title && e.Header.Value == header);
 		}
 
-		public void Add(params EncyclopediaEntryModel[] newEntries)
+		public void Add(params EncyclopediaEdgeModel[] newEntries)
 		{
-			var entriesToAdd = new List<EncyclopediaEntryModel>();
+			var entriesToAdd = new List<EncyclopediaEdgeModel>();
 			var entriesToRemove = new List<string>();
 
 			foreach (var entry in newEntries)
@@ -103,7 +103,7 @@ namespace LunraGames.SubLight.Models
 		#endregion
 
 		#region Events
-		string[] DeriveTitles(EncyclopediaEntryModel[] entries)
+		string[] DeriveTitles(EncyclopediaEdgeModel[] entries)
 		{
 			var uniqueTitles = entries.Select(e => e.Title.Value).Distinct();
 			return titles.IntersectEqual(uniqueTitles) ? titles : uniqueTitles.ToArray();

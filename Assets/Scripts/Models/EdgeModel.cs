@@ -4,26 +4,14 @@ using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
-	public interface IEdgeModel : IModel
-	{
-		string EdgeName { get; }
-		int EdgeIndex { get; set; }
-		string EdgeId { get; set; }
-		bool EdgeIgnore { get; set; }
-		float EdgeIndent { get; }
-	}
-
-	public abstract class EdgeModel : Model, IEdgeModel
+	public abstract class EdgeModel : Model
 	{
 		protected const float DefaultIndent = 32f;
 
 		[JsonProperty] int index;
+		[JsonIgnore] public readonly ListenerProperty<int> Index;
 		[JsonProperty] bool ignore;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<int> Index;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> Ignore;
+		[JsonIgnore] public readonly ListenerProperty<bool> Ignore;
 
 		public EdgeModel()
 		{
@@ -32,40 +20,9 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonIgnore]
-		public abstract EdgeEntryModel RawEntry { get; }
-		[JsonIgnore]
-		public abstract string EdgeName { get; }
+		public virtual string EdgeName => null;
 
 		[JsonIgnore]
-		public int EdgeIndex
-		{
-			get { return Index.Value; }
-			set { Index.Value = value; }
-		}
-
-		[JsonIgnore]
-		public string EdgeId
-		{
-			get { return RawEntry == null ? null : RawEntry.EntryId.Value; }
-			set
-			{
-				if (RawEntry == null)
-				{
-					Debug.LogError("Unable to set the EdgeId of a null entry");
-					return;
-				}
-				RawEntry.EntryId.Value = value;
-			}
-		}
-
-		[JsonIgnore]
-		public bool EdgeIgnore
-		{
-			get { return Ignore.Value; }
-			set { Ignore.Value = value; }
-		}
-
-		[JsonIgnore]
-		public virtual float EdgeIndent { get { return 0f; } }
+		public virtual float Indent => 0f;
 	}
 }

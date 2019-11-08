@@ -4,12 +4,28 @@ namespace LunraGames.SubLight.Models
 {
 	public class EncounterEventEdgeModel : EdgeModel
 	{
-		[JsonProperty] EncounterEventEntryModel entry = new EncounterEventEntryModel();
+		[JsonProperty] EncounterEvents.Types encounterEvent;
+		[JsonProperty] bool isHalting;
 
 		[JsonIgnore]
-		public EncounterEventEntryModel Entry => entry;
+		public readonly ListenerProperty<EncounterEvents.Types> EncounterEvent;
+		[JsonIgnore]
+		public readonly ListenerProperty<bool> IsHalting;
 
-		public override EdgeEntryModel RawEntry => Entry;
-		public override string EdgeName => Entry.EncounterEvent.Value.ToString();
+		[JsonProperty] KeyValueListModel keyValues = new KeyValueListModel();
+		[JsonIgnore]
+		public KeyValueListModel KeyValues => keyValues;
+
+		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default(true);
+		[JsonIgnore]
+		public ValueFilterModel Filtering => filtering;
+
+		public override string EdgeName => EncounterEvent.Value.ToString();
+		
+		public EncounterEventEdgeModel()
+		{
+			EncounterEvent = new ListenerProperty<EncounterEvents.Types>(value => encounterEvent = value, () => encounterEvent);
+			IsHalting = new ListenerProperty<bool>(value => isHalting = value, () => isHalting);
+		}
 	}
 }

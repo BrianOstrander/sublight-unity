@@ -18,7 +18,7 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var buttons = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
+			var buttons = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToList();
 
 			Action<RequestStatus, List<ButtonLogBlock>> filteringDone = (status, filtered) => OnDone(status, filtered, logModel, nonLinearDone);
 
@@ -35,7 +35,7 @@ namespace LunraGames.SubLight
 		void OnFilter(
 			string fallbackLogId,
 			ButtonLogBlock? result,
-			List<ButtonEntryModel> remaining,
+			List<ButtonEdgeModel> remaining,
 			List<ButtonLogBlock> filtered,
 			Action<string> done,
 			Action<RequestStatus, List<ButtonLogBlock>> filteringDone
@@ -86,7 +86,7 @@ namespace LunraGames.SubLight
 
 		void OnAutoDisabled(
 			KeyValueResult<bool>? kvResult,
-			ButtonEntryModel entry,
+			ButtonEdgeModel edge,
 			ButtonLogBlock possibleResult,
 			Action<ButtonLogBlock?> nextDone
 		)
@@ -102,14 +102,14 @@ namespace LunraGames.SubLight
 				}
 			}
 
-			if (entry.AutoDisableInteractions.Value)
+			if (edge.AutoDisableInteractions.Value)
 			{
 				// When this button is pressed, interactions get disabled, so we have to check.
 				Configuration.Callbacks.KeyValueRequest(
 					KeyValueRequest.Get(
 						KeyValueTargets.Encounter,
-						entry.AutoDisabledInteractionsKey,
-						interactionKvResult => OnAutoDisabledInteractions(interactionKvResult, entry, possibleResult, nextDone)
+						edge.AutoDisabledInteractionsKey,
+						interactionKvResult => OnAutoDisabledInteractions(interactionKvResult, edge, possibleResult, nextDone)
 					)
 				);
 			}
@@ -118,7 +118,7 @@ namespace LunraGames.SubLight
 				// Bypass the auto disable interactions check.
 				OnAutoDisabledInteractions(
 					null,
-					entry,
+					edge,
 					possibleResult,
 					nextDone
 				);
@@ -127,7 +127,7 @@ namespace LunraGames.SubLight
 
 		void OnAutoDisabledInteractions(
 			KeyValueResult<bool>? kvResult,
-			ButtonEntryModel entry,
+			ButtonEdgeModel edge,
 			ButtonLogBlock possibleResult,
 			Action<ButtonLogBlock?> nextDone
 		)
@@ -138,14 +138,14 @@ namespace LunraGames.SubLight
 				possibleResult.Interactable = !kvResult.Value.Value;
 			}
 
-			if (!entry.NotAutoUsed.Value)
+			if (!edge.NotAutoUsed.Value)
 			{
 				// When this button is pressed, it gets marked as used, so we have to check to see if that happened.
 				Configuration.Callbacks.KeyValueRequest(
 					KeyValueRequest.Get(
 						KeyValueTargets.Encounter,
-						entry.AutoUsedKey,
-						autoUsedKvResult => OnAutoUsed(autoUsedKvResult, entry, possibleResult, nextDone)
+						edge.AutoUsedKey,
+						autoUsedKvResult => OnAutoUsed(autoUsedKvResult, edge, possibleResult, nextDone)
 					)
 				);
 			}
@@ -154,7 +154,7 @@ namespace LunraGames.SubLight
 				// Bypass the auto used check.
 				OnAutoUsed(
 					null,
-					entry,
+					edge,
 					possibleResult,
 					nextDone
 				);
@@ -163,7 +163,7 @@ namespace LunraGames.SubLight
 
 		void OnAutoUsed(
 			KeyValueResult<bool>? kvResult,
-			ButtonEntryModel entry,
+			ButtonEdgeModel edge,
 			ButtonLogBlock possibleResult,
 			Action<ButtonLogBlock?> nextDone
 		)
@@ -175,8 +175,8 @@ namespace LunraGames.SubLight
 			}
 
 			Configuration.ValueFilter.Filter(
-				filterResult => OnEnabledFiltering(filterResult, entry, possibleResult, nextDone),
-				entry.EnabledFiltering,
+				filterResult => OnEnabledFiltering(filterResult, edge, possibleResult, nextDone),
+				edge.EnabledFiltering,
 				Configuration.Model,
 				Configuration.Encounter
 			);
@@ -184,7 +184,7 @@ namespace LunraGames.SubLight
 
 		void OnEnabledFiltering(
 			bool filteringResult,
-			ButtonEntryModel entry,
+			ButtonEdgeModel edge,
 			ButtonLogBlock possibleResult,
 			Action<ButtonLogBlock?> nextDone
 		)
@@ -200,8 +200,8 @@ namespace LunraGames.SubLight
 			{
 				// It hasn't automatically been disabled, so we check the filter.
 				Configuration.ValueFilter.Filter(
-					filterResult => OnInteractableFiltering(filterResult, entry, possibleResult, nextDone),
-					entry.InteractableFiltering,
+					filterResult => OnInteractableFiltering(filterResult, edge, possibleResult, nextDone),
+					edge.InteractableFiltering,
 					Configuration.Model,
 					Configuration.Encounter
 				);
@@ -211,7 +211,7 @@ namespace LunraGames.SubLight
 				// Already not interactable, so bypass the filter.
 				OnInteractableFiltering(
 					false,
-					entry,
+					edge,
 					possibleResult,
 					nextDone
 				);
@@ -220,7 +220,7 @@ namespace LunraGames.SubLight
 
 		void OnInteractableFiltering(
 			bool filteringResult,
-			ButtonEntryModel entry,
+			ButtonEdgeModel edge,
 			ButtonLogBlock possibleResult,
 			Action<ButtonLogBlock?> nextDone
 		)
@@ -231,8 +231,8 @@ namespace LunraGames.SubLight
 			{
 				// Hasn't been auto marked as used, so we have to check the filter.
 				Configuration.ValueFilter.Filter(
-					filterResult => OnUsedFiltering(filterResult, entry, possibleResult, nextDone),
-					entry.UsedFiltering,
+					filterResult => OnUsedFiltering(filterResult, edge, possibleResult, nextDone),
+					edge.UsedFiltering,
 					Configuration.Model,
 					Configuration.Encounter
 				);
@@ -242,7 +242,7 @@ namespace LunraGames.SubLight
 				// Auto using made it used, so we bypass the filter.
 				OnUsedFiltering(
 					true,
-					entry,
+					edge,
 					possibleResult,
 					nextDone
 				);
@@ -251,7 +251,7 @@ namespace LunraGames.SubLight
 
 		void OnUsedFiltering(
 			bool filteringResult,
-			ButtonEntryModel entry,
+			ButtonEdgeModel edge,
 			ButtonLogBlock possibleResult,
 			Action<ButtonLogBlock?> nextDone
 		)
@@ -280,70 +280,70 @@ namespace LunraGames.SubLight
 		}
 
 		#region Handler Callbacks
-		void OnClick(ButtonEntryModel entry, Action done)
+		void OnClick(ButtonEdgeModel edge, Action done)
 		{
-			if (!entry.NotAutoUsed.Value)
+			if (!edge.NotAutoUsed.Value)
 			{
 				// We need to set this to be used.
 				Configuration.Callbacks.KeyValueRequest(
 					KeyValueRequest.Set(
 						KeyValueTargets.Encounter,
-						entry.AutoUsedKey,
+						edge.AutoUsedKey,
 						true,
-						result => OnClickAutoUse(entry, done)
+						result => OnClickAutoUse(edge, done)
 					)
 				);
 			}
 			else
 			{
 				// Bypass setting it to be used.
-				OnClickAutoUse(entry, done);
+				OnClickAutoUse(edge, done);
 			}
 		}
 
-		void OnClickAutoUse(ButtonEntryModel entry, Action done)
+		void OnClickAutoUse(ButtonEdgeModel edge, Action done)
 		{
-			if (entry.AutoDisableInteractions.Value)
+			if (edge.AutoDisableInteractions.Value)
 			{
 				// We need to disable future interactions with this.
 				Configuration.Callbacks.KeyValueRequest(
 					KeyValueRequest.Set(
 						KeyValueTargets.Encounter,
-						entry.AutoDisabledInteractionsKey,
+						edge.AutoDisabledInteractionsKey,
 						true,
-						result => OnClickAutoDisableInteractions(entry, done)
+						result => OnClickAutoDisableInteractions(edge, done)
 					)
 				);
 			}
 			else
 			{
 				// Bypass setting future interactions.
-				OnClickAutoDisableInteractions(entry, done);
+				OnClickAutoDisableInteractions(edge, done);
 			}
 		}
 
-		void OnClickAutoDisableInteractions(ButtonEntryModel entry, Action done)
+		void OnClickAutoDisableInteractions(ButtonEdgeModel edge, Action done)
 		{
-			if (entry.AutoDisableEnabled.Value)
+			if (edge.AutoDisableEnabled.Value)
 			{
 				// We need to disable this button for future interactions.
 				Configuration.Callbacks.KeyValueRequest(
 					KeyValueRequest.Set(
 						KeyValueTargets.Encounter,
-						entry.AutoDisabledKey,
+						edge.AutoDisabledKey,
 						true,
-						result => OnClickAutoDisableEnabled(entry, done)
+						result => OnClickAutoDisableEnabled(edge, done)
 					)
 				);
 			}
 			else
 			{
 				// Bypass disabling this button.
-				OnClickAutoDisableEnabled(entry, done);
+				OnClickAutoDisableEnabled(edge, done);
 			}
 		}
 
-		void OnClickAutoDisableEnabled(ButtonEntryModel entry, Action done)
+		void OnClickAutoDisableEnabled(ButtonEdgeModel edge, Action done)
 		{
 			done();
 		}

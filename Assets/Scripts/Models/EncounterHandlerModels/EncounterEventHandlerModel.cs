@@ -6,14 +6,14 @@ namespace LunraGames.SubLight.Models
 {
 	public class EncounterEventHandlerModel : EncounterHandlerModel<EncounterEventEncounterLogModel>
 	{
-		[JsonProperty] EncounterEventEntryModel[] events;
+		[JsonProperty] EncounterEventEdgeModel[] events;
 		[JsonProperty] bool alwaysHalting;
 		[JsonProperty] bool hasHaltingEvents;
 
 		Action haltingDone;
 
 		[JsonIgnore]
-		public readonly ListenerProperty<EncounterEventEntryModel[]> Events;
+		public readonly ListenerProperty<EncounterEventEdgeModel[]> Events;
 		/// <summary>
 		/// True if the entire event was marked as halting or any of its entries.
 		/// </summary>
@@ -26,7 +26,7 @@ namespace LunraGames.SubLight.Models
 
 		public EncounterEventHandlerModel(EncounterEventEncounterLogModel log) : base(log)
 		{
-			Events = new ListenerProperty<EncounterEventEntryModel[]>(value => events = value, () => events);
+			Events = new ListenerProperty<EncounterEventEdgeModel[]>(value => events = value, () => events);
 			AlwaysHalting = new ListenerProperty<bool>(value => alwaysHalting = value, () => alwaysHalting);
 			HasHaltingEvents = new ListenerProperty<bool>(value => hasHaltingEvents = value, () => hasHaltingEvents);
 			HaltingDone = new ListenerProperty<Action>(value => haltingDone = value, () => haltingDone);

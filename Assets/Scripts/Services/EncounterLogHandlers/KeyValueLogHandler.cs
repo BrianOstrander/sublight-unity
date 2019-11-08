@@ -8,10 +8,10 @@ using LunraGames.SubLight.Models;
 
 using LunraGames.NumberDemon;
 
-using BooleanBlock = LunraGames.SubLight.Models.KeyValueEntryModel.BooleanBlock;
-using IntegerBlock = LunraGames.SubLight.Models.KeyValueEntryModel.IntegerBlock;
-using StringBlock = LunraGames.SubLight.Models.KeyValueEntryModel.StringBlock;
-using FloatBlock = LunraGames.SubLight.Models.KeyValueEntryModel.FloatBlock;
+using BooleanBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.BooleanBlock;
+using IntegerBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.IntegerBlock;
+using StringBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.StringBlock;
+using FloatBlock = LunraGames.SubLight.Models.KeyValueEdgeModel.FloatBlock;
 
 namespace LunraGames.SubLight
 {
@@ -27,13 +27,13 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var operations = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).Select(e => e.Entry).ToList();
+			var operations = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToList();
 
 			OnHandleNextOperation(operations, linearDone);
 		}
 
 		void OnHandleNextOperation(
-			List<KeyValueEntryModel> remaining,
+			List<KeyValueEdgeModel> remaining,
 			Action done
 		)
 		{
@@ -56,8 +56,8 @@ namespace LunraGames.SubLight
 
 		void OnHandleNextOperationFiltered(
 			bool result,
-			KeyValueEntryModel next,
-			List<KeyValueEntryModel> remaining,
+			KeyValueEdgeModel next,
+			List<KeyValueEdgeModel> remaining,
 			Action done
 		)
 		{

@@ -1,15 +1,16 @@
 {
+  "orderWeight": 999,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
-  "trigger": "None",
-  "defaultEndLogId": "03c37765-9c90-4781-9e68-0e922015f27b",
+  "trigger": "TransitComplete",
   "filtering": {
     "booleanKeyValues": [],
     "integerKeyValues": [],
     "stringKeyValues": [],
     "floatKeyValues": [],
     "enumerationKeyValues": [],
-    "encounterInteractions": []
+    "encounterInteractions": [],
+    "moduleTraits": []
   },
   "logs": {
     "keyValueLogs": [],
@@ -20,102 +21,157 @@
       {
         "entries": [
           {
-            "entry": {
-              "encounterEvent": "Waypoint",
-              "keyValues": {
-                "booleans": {},
-                "integers": {
-                  "visibility": 10
-                },
-                "strings": {
-                  "waypoint_id": "nh_eden"
-                },
-                "floats": {}
+            "encounterEvent": "Custom",
+            "keyValues": {
+              "booleans": {},
+              "integers": {},
+              "strings": {
+                "custom_event_name": null
               },
-              "filtering": {
-                "showValues": true,
-                "booleanKeyValues": [
-                  {
-                    "filterId": "3f803193-ce0a-4f82-b9e9-40732ca05b27",
-                    "group": "All",
-                    "Input0": {
-                      "AddressId": "4e43fd8c-f62e-4fa6-97ee-c952ca265569",
-                      "Source": "KeyValue",
-                      "ForeignTarget": "CelestialSystem",
-                      "ForeignKey": "player_begin"
-                    },
-                    "Input1": {
-                      "AddressId": "5a28400c-3a1f-4e19-b7b5-8241ac8dc61a",
-                      "Source": "LocalValue",
-                      "LocalValue": true
-                    }
-                  }
-                ],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [],
-                "enumerationKeyValues": [],
-                "encounterInteractions": []
-              },
-              "entryId": "aa767107-cce0-4bbd-b24a-5980d2dcb279"
-            }
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "79bb756e-fa30-4888-8bd4-d9f01d43cf74"
           },
           {
-            "entry": {
-              "encounterEvent": "Waypoint",
-              "keyValues": {
-                "booleans": {},
-                "integers": {
-                  "visibility": 20
-                },
-                "strings": {
-                  "waypoint_id": "nh_eden"
-                },
-                "floats": {}
+            "encounterEvent": "Debug",
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "severity": 0
               },
-              "filtering": {
-                "showValues": true,
-                "booleanKeyValues": [
-                  {
-                    "filterId": "b575523e-8f94-4ac1-a8d0-61deba433776",
-                    "group": "All",
-                    "Input0": {
-                      "AddressId": "173aca4d-1a0c-489d-b430-02742e0ada76",
-                      "Source": "KeyValue",
-                      "ForeignTarget": "CelestialSystem",
-                      "ForeignKey": "player_begin"
-                    },
-                    "Input1": {
-                      "AddressId": "2fc9e5d4-b889-4bfe-b213-63fa62503d1e",
-                      "Source": "LocalValue"
-                    }
-                  }
-                ],
-                "integerKeyValues": [],
-                "stringKeyValues": [],
-                "floatKeyValues": [],
-                "enumerationKeyValues": [],
-                "encounterInteractions": []
+              "strings": {
+                "message": null
               },
-              "entryId": "40f3e0c5-c136-4957-bc58-6c8c25764af7"
+              "floats": {}
             },
-            "index": 1
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 1,
+            "id": "338ea64a-bbf9-42a7-bef0-75df7f11f060"
+          },
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 0,
+                "lock_state": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 2,
+            "id": "1128726d-dc0c-4d0f-9f1b-d307387f887b"
+          },
+          {
+            "encounterEvent": "DumpKeyValues",
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "target": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 3,
+            "id": "5aa555b8-2297-4dae-a1fe-913b15235dd0"
+          },
+          {
+            "encounterEvent": "GameComplete",
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "condition": 0,
+                "icon_override": 0
+              },
+              "strings": {
+                "title": null,
+                "header": null,
+                "body": null
+              },
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 4,
+            "id": "bafb5118-858c-43ac-8c67-ac47bac17ea7"
           }
         ],
         "beginning": true,
         "ending": true,
-        "logId": "03c37765-9c90-4781-9e68-0e922015f27b",
-        "name": "< End Encounter >"
+        "logId": "dcb55c22-796a-4fa7-9cf6-a2b22edf381c"
       }
     ],
     "dialogLogs": [],
-    "bustLogs": [],
+    "bustLogs": [
+      {
+        "entries": [
+          {
+            "bustId": "test_bust",
+            "bustEvent": "Initialize",
+            "initializeInfo": {
+              "Theme": "AwayTeam",
+              "TitleClassification": "Interstellar Ark",
+              "TransmitionType": "Transmission",
+              "TransmitionStrength": "Strong",
+              "TransmitionStrengthIcon": "Strong",
+              "AvatarType": "Static"
+            },
+            "id": "dcb1ac7a-045d-49fd-87c7-3c3dc163a202"
+          }
+        ],
+        "index": 1,
+        "logId": "3a0109cf-ba2d-484c-88d4-bd4515733dd3"
+      }
+    ],
     "conversationLogs": []
   },
   "version": 12,
   "metaKeyValues": {},
-  "created": "2019-04-18T16:22:25.901445-07:00",
-  "modified": "2019-04-18T16:22:25.901445-07:00",
+  "created": "2019-11-07T09:08:42.964752-08:00",
+  "modified": "2019-11-07T09:08:42.964752-08:00",
   "id": "test",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
