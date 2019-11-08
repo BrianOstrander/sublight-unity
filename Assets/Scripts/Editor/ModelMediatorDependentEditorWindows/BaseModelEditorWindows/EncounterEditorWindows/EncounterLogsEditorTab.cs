@@ -533,6 +533,9 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Conversation:
 					result = NewEncounterLog<ConversationEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
+				case EncounterLogTypes.Module:
+					result = NewEncounterLog<ModuleEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType: " + logType);
 					break;
@@ -749,6 +752,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Conversation:
 					OnConversationLog(infoModel, model as ConversationEncounterLogModel);
+					break;
+				case EncounterLogTypes.Module:
+					OnModuleLog(infoModel, model as ModuleEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -2524,6 +2530,111 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
+		#region Module Logs
+		void OnModuleLog(
+			EncounterInfoModel infoModel,
+			ModuleEncounterLogModel model
+		)
+		{
+			OnEdgedLog<ModuleEncounterLogModel, ModuleEdgeModel>(
+				infoModel,
+				model,
+				OnModuleLogEdge,
+				OnModuleLogSpawnOptions
+			);
+		}
+		
+		void OnModuleLogSpawnOptions(
+			EncounterInfoModel infoModel,
+			ModuleEncounterLogModel model,
+			string prefix,
+			int index = int.MaxValue
+		)
+		{
+			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				GUIContent.none,
+				"- " + (string.IsNullOrEmpty(prefix) ? LogStrings.EdgeEntryAppendPrefix : prefix) + " a Module Entry -",
+				ModuleEdgeModel.Operations.Unknown,
+				EnumExtensions.GetValues<ModuleEdgeModel.Operations>(),
+				GUILayout.MaxWidth(LogFloats.AppendEntryWidthMaximum)
+			);
+
+			switch (appendSelection)
+			{
+				case ModuleEdgeModel.Operations.Unknown: break;
+				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
+				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
+				case ModuleEdgeModel.Operations.RemoveTraitByFamilyId:
+					OnEdgedLogSpawn(model, edge => OnModuleLogSpawnTrait(appendSelection, edge), index);
+					break;
+				case ModuleEdgeModel.Operations.ReplaceModule:
+					OnEdgedLogSpawn(model, edge => OnModuleLogSpawnModule(appendSelection, edge), index);
+					break;
+				default:
+					Debug.LogError("Unrecognized " + nameof(ModuleEdgeModel.Operations) + ": " + appendSelection);
+					break;
+			}
+		}
+
+		void OnModuleLogSpawnTrait(
+			ModuleEdgeModel.Operations operation,
+			ModuleEdgeModel edge
+		)
+		{
+			edge.Operation.Value = operation;
+			edge.TraitInfo.Value = ModuleEdgeModel.TraitBlock.Default(operation);
+		}
+		
+		void OnModuleLogSpawnModule(
+			ModuleEdgeModel.Operations operation,
+			ModuleEdgeModel edge
+		)
+		{
+			edge.Operation.Value = operation;
+			edge.ModuleInfo.Value = ModuleEdgeModel.ModuleBlock.Default(operation);
+		}
+		
+		void OnModuleLogEdge(
+			EncounterInfoModel infoModel,
+			ModuleEncounterLogModel model,
+			ModuleEdgeModel edge
+		)
+		{
+			switch (edge.Operation.Value)
+			{
+				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
+				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
+				case ModuleEdgeModel.Operations.RemoveTraitByFamilyId:
+					OnModuleLogEdgeTrait(edge);
+					break;
+				case ModuleEdgeModel.Operations.ReplaceModule:
+					OnModuleLogEdgeModule(edge);
+					break;
+				default: EditorGUILayout.HelpBox("Unrecognized " + nameof(ModuleEdgeModel.Operations) + ": " + edge.Operation.Value, MessageType.Error); break;
+			}
+		}
+
+		void OnModuleLogEdgeTrait(ModuleEdgeModel edge)
+		{
+			var block = edge.TraitInfo.Value;
+
+			GUILayout.Label("this is a trait");
+			GUILayout.Label(block.Operation.ToString());
+			
+			edge.TraitInfo.Value = block;
+		}
+
+		void OnModuleLogEdgeModule(ModuleEdgeModel edge)
+		{
+			var block = edge.ModuleInfo.Value;
+
+			GUILayout.Label("this is a module");
+			GUILayout.Label(block.Operation.ToString());
+			
+			edge.ModuleInfo.Value = block;
+		}
+		#endregion
+		
 		#region Edged Logs
 		void OnEdgedLog<L, E>(
 			EncounterInfoModel infoModel,

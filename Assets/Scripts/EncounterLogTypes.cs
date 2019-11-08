@@ -10,6 +10,7 @@
 		Event = 50,
 		Dialog = 60,
 		Bust = 70,
-		Conversation = 80
+		Conversation = 80,
+		Module = 90
 	}
 }
