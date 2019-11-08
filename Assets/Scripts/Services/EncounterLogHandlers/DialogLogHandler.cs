@@ -19,7 +19,7 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var dialogs = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
+			var dialogs = logModel.Edges.Value.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
 
 			FilterFirst(
 				(status, result) => OnDone(status, result, logModel, nonLinearDone),

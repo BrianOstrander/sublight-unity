@@ -5,6 +5,7 @@ using UnityEngine;
 
 using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
+using Newtonsoft.Json;
 using UnityEditor;
 
 namespace LunraGames.SubLight
@@ -40,6 +41,7 @@ namespace LunraGames.SubLight
 			}
 		}
 		
+		[Serializable]
 		public struct ModuleConstraint
 		{
 			public static ModuleConstraint Default => new ModuleConstraint
@@ -96,6 +98,7 @@ namespace LunraGames.SubLight
 			public override string ToString() => this.ToReadableJson();
 		}
 
+		[Serializable]
 		public struct TraitLimit
 		{
 			public ModuleTraitSeverity Severity;

@@ -43,7 +43,7 @@ namespace LunraGames.SubLight
 
 		protected EncounterLogHandlerConfiguration Configuration { get; private set; }
 
-		public EncounterLogHandler(EncounterLogHandlerConfiguration configuration) { Configuration = configuration; }
+		public EncounterLogHandler(EncounterLogHandlerConfiguration configuration) => Configuration = configuration;
 
 		public bool Handle(
 			EncounterLogModel logModel,
@@ -75,8 +75,8 @@ namespace LunraGames.SubLight
 			params E[] remaining
 		)
 		{
-			if (done == null) throw new ArgumentNullException("done");
-			if (getFilter == null) throw new ArgumentNullException("getFilter");
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			if (getFilter == null) throw new ArgumentNullException(nameof(getFilter));
 
 			if (remaining == null || remaining.Length == 0)
 			{
@@ -95,7 +95,7 @@ namespace LunraGames.SubLight
 			Action<RequestStatus, E> done,
 			Func<E, ValueFilterModel> getFilter,
 			List<E> remaining,
-			E target = default(E),
+			E target = default,
 			bool? result = null
 		)
 		{
@@ -107,7 +107,7 @@ namespace LunraGames.SubLight
 
 			if (remaining.None())
 			{
-				done(RequestStatus.Failure, default(E));
+				done(RequestStatus.Failure, default);
 				return;
 			}
 
@@ -128,8 +128,8 @@ namespace LunraGames.SubLight
 			params E[] remaining
 		)
 		{
-			if (done == null) throw new ArgumentNullException("done");
-			if (getFilter == null) throw new ArgumentNullException("getFilter");
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			if (getFilter == null) throw new ArgumentNullException(nameof(getFilter));
 
 			if (remaining == null || remaining.Length == 0)
 			{
@@ -150,7 +150,7 @@ namespace LunraGames.SubLight
 			Func<E, ValueFilterModel> getFilter,
 			List<E> remaining,
 			List<E> passed,
-			E target = default(E),
+			E target = default,
 			bool? result = null
 		)
 		{

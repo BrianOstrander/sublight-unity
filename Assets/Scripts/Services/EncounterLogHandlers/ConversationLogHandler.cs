@@ -18,7 +18,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			var result = new ConversationHandlerModel(logModel);
-			result.Entries.Value = logModel.Edges.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
+			result.Entries.Value = logModel.Edges.Value.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
 			result.HaltingDone.Value = linearDone;
 
 			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));

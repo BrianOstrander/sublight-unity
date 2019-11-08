@@ -17,7 +17,7 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			Configuration.Model.Encyclopedia.Add(logModel.Entries.Value.Select(e => e.Duplicate).ToArray());
+			Configuration.Model.Encyclopedia.Add(logModel.Edges.Value.Select(e => e.Duplicate).ToArray());
 
 			linearDone();
 		}

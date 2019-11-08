@@ -25,11 +25,11 @@ namespace LunraGames.SubLight
 			var entries = new List<KeyValuePair<Func<string>, Action<string>>>();
 
 			var listeners = model.Logs.GetLogs<ButtonEncounterLogModel>()
-								 .SelectMany(l => l.Buttons.Value)
+								 .SelectMany(l => l.Edges.Value)
 								 .Select(b => b.Message);
 
 			var conversationEntries = model.Logs.GetLogs<ConversationEncounterLogModel>()
-												.SelectMany(l => l.Entries.Value);
+												.SelectMany(l => l.Edges.Value);
 
 			foreach (var entry in conversationEntries)
 			{
@@ -147,8 +147,8 @@ namespace LunraGames.SubLight
 			var errors = string.Empty;
 
 			var bustEntries = model.Logs.GetLogs<BustEncounterLogModel>()
-								   .SelectMany(l => l.Entries.Value)
-								   .Where(e => e.BustEvent.Value == BustEdgeModel.Events.Initialize);
+								   .SelectMany(l => l.Edges.Value)
+								   .Where(e => e.Operation.Value == BustEdgeModel.Operations.Initialize);
 
 			var modifications = string.Empty;
 			var modificationCount = 0;

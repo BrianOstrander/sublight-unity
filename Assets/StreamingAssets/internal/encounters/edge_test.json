@@ -1,0 +1,272 @@
+{
+  "orderWeight": 999,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "Load",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [],
+    "moduleTraits": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [
+      {
+        "edges": [
+          {
+            "message": "Button 1",
+            "nextLogId": "9b82c498-f738-4b3f-88cf-79a7c6a0847c",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "4c928cd4-5f32-4e84-b033-51a6706193c8"
+          },
+          {
+            "message": "Button 2",
+            "nextLogId": "9d41b500-3c9d-497b-ab57-ce590cfa0e26",
+            "usedFiltering": {
+              "falseByDefault": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "interactableFiltering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "enabledFiltering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 1,
+            "id": "37bfc3f5-35e0-4061-a492-e68a56519957"
+          }
+        ],
+        "index": 3,
+        "logId": "6ef78e14-5cf0-4406-bc85-7fbfe5fbf4db"
+      }
+    ],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 30,
+                "lock_state": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "7b2db468-b816-4e70-b16c-6856a394e53f"
+          }
+        ],
+        "beginning": true,
+        "logId": "03371181-76f2-44c8-8961-c4cff92c3d87",
+        "fallbackLogId": "8140ec04-d96e-4a31-805b-311a6d9a590d"
+      },
+      {
+        "edges": [
+          {
+            "encounterEvent": "Debug",
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "severity": 10
+              },
+              "strings": {
+                "message": "Test encounter ending..."
+              },
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "08105989-c1eb-4fd6-9c5f-251e60f09d66"
+          },
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 10,
+                "lock_state": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 1,
+            "id": "14eccb96-8d4c-45d0-8f59-d17c241f2fb9"
+          }
+        ],
+        "index": 6,
+        "ending": true,
+        "logId": "7fe77e5a-9dec-41be-8dd1-e95e6f62b8f5",
+        "name": "End event"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [
+      {
+        "edges": [
+          {
+            "bustId": "test bust",
+            "operation": "Initialize",
+            "initializeInfo": {
+              "Theme": "AwayTeam",
+              "TitleClassification": "Interstellar Ark",
+              "TransmitionType": "Transmission",
+              "TransmitionStrength": "Strong",
+              "TransmitionStrengthIcon": "Strong",
+              "PlacardName": "Some Test",
+              "AvatarType": "Static"
+            },
+            "id": "e833969f-197d-4a2d-8c67-7d792507e01b"
+          },
+          {
+            "bustId": "test bust",
+            "operation": "Focus",
+            "index": 1,
+            "id": "7b5fbfc0-00e4-4dbd-a398-fb574dc677d3"
+          }
+        ],
+        "index": 1,
+        "logId": "8140ec04-d96e-4a31-805b-311a6d9a590d",
+        "fallbackLogId": "d9d7bcaf-47cf-47ae-a163-2ed30e75c5ec"
+      }
+    ],
+    "conversationLogs": [
+      {
+        "edges": [
+          {
+            "conversationType": "MessageIncoming",
+            "message": "Hello!",
+            "id": "f2e180c8-b4fc-4b3c-a815-2d935c7f4716"
+          },
+          {
+            "conversationType": "Prompt",
+            "message": "Why hello...",
+            "promptInfo": {
+              "Behaviour": "PrintMessage"
+            },
+            "index": 1,
+            "id": "a0426523-a110-4a41-a894-0e2e0a3ca226"
+          },
+          {
+            "conversationType": "MessageIncoming",
+            "message": "Lets test if buttons work...",
+            "index": 2,
+            "id": "e332711d-22e5-42e2-b3d3-1c758fa3237d"
+          }
+        ],
+        "index": 2,
+        "logId": "d9d7bcaf-47cf-47ae-a163-2ed30e75c5ec",
+        "fallbackLogId": "6ef78e14-5cf0-4406-bc85-7fbfe5fbf4db"
+      },
+      {
+        "edges": [
+          {
+            "conversationType": "MessageIncoming",
+            "message": "Button 1 pressed",
+            "id": "6608f972-91a0-4700-b23d-96b21e92ea87"
+          }
+        ],
+        "index": 4,
+        "logId": "9b82c498-f738-4b3f-88cf-79a7c6a0847c",
+        "fallbackLogId": "7fe77e5a-9dec-41be-8dd1-e95e6f62b8f5"
+      },
+      {
+        "edges": [
+          {
+            "conversationType": "MessageIncoming",
+            "message": "Button 2 pressed",
+            "id": "4d0a5c12-71f7-4156-98c6-dca9706c9115"
+          }
+        ],
+        "index": 5,
+        "logId": "9d41b500-3c9d-497b-ab57-ce590cfa0e26",
+        "fallbackLogId": "7fe77e5a-9dec-41be-8dd1-e95e6f62b8f5"
+      }
+    ]
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-11-07T09:08:42.964752-08:00",
+  "modified": "2019-11-07T09:08:42.964752-08:00",
+  "id": "edge_test",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

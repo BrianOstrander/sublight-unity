@@ -108,19 +108,19 @@ namespace LunraGames.SubLight.Presenters
 
 			foreach (var entry in handler.Entries.Value)
 			{
-				switch (entry.BustEvent.Value)
+				switch (entry.Operation.Value)
 				{
-					case BustEdgeModel.Events.Initialize:
+					case BustEdgeModel.Operations.Initialize:
 						initializationInfos = initializationInfos.Where(i => i.BustId.Value != entry.BustId.Value).Append(entry).ToList();
 						initializeBlocks.Add(OnInitializeInfoToBlock(entry.BustId.Value, entry.InitializeInfo.Value));
 						initializeConversationIds.Add(entry.BustId.Value);
 						break;
-					case BustEdgeModel.Events.Focus:
+					case BustEdgeModel.Operations.Focus:
 						if (focusEdge != null) hadMultipleFocuses = true;
 						focusEdge = entry;
 						break;
 					default:
-						Debug.LogError("Unrecognized BustEvent: " + entry.BustEvent.Value);
+						Debug.LogError("Unrecognized Bust.Operation: " + entry.Operation.Value);
 						break;
 				}
 			}

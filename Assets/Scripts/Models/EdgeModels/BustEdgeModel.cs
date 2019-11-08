@@ -6,7 +6,7 @@ namespace LunraGames.SubLight.Models
 {
 	public class BustEdgeModel : EdgeModel
 	{
-		public enum Events
+		public enum Operations
 		{
 			Unknown = 0,
 			Initialize = 10,
@@ -77,27 +77,23 @@ namespace LunraGames.SubLight.Models
 		}
 
 		[JsonProperty] string bustId;
-		[JsonProperty] Events bustEvent;
+		[JsonIgnore] public readonly ListenerProperty<string> BustId;
+		
+		[JsonProperty] Operations operation;
+		[JsonIgnore] public readonly ListenerProperty<Operations> Operation;
 
 		[JsonProperty] InitializeBlock initializeInfo;
+		[JsonIgnore] public readonly ListenerProperty<InitializeBlock> InitializeInfo;
+		
 		[JsonProperty] FocusBlock focusInfo;
+		[JsonIgnore] public readonly ListenerProperty<FocusBlock> FocusInfo;
 
-		[JsonIgnore]
-		public readonly ListenerProperty<string> BustId;
-		[JsonIgnore]
-		public readonly ListenerProperty<Events> BustEvent;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<InitializeBlock> InitializeInfo;
-		[JsonIgnore]
-		public readonly ListenerProperty<FocusBlock> FocusInfo;
-
-		public override string EdgeName => (string.IsNullOrEmpty(BustId.Value) ? "< Missing Id >" : BustId.Value) + "." + BustEvent.Value;
+		public override string EdgeName => (string.IsNullOrEmpty(BustId.Value) ? "< Missing Id >" : BustId.Value) + "." + Operation.Value;
 		
 		public BustEdgeModel()
 		{
 			BustId = new ListenerProperty<string>(value => bustId = value, () => bustId);
-			BustEvent = new ListenerProperty<Events>(value => bustEvent = value, () => bustEvent);
+			Operation = new ListenerProperty<Operations>(value => operation = value, () => operation);
 
 			InitializeInfo = new ListenerProperty<InitializeBlock>(value => initializeInfo = value, () => initializeInfo);
 			FocusInfo = new ListenerProperty<FocusBlock>(value => focusInfo = value, () => focusInfo);
