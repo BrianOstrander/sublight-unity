@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEditor;
 
 using LunraGames;
+using LunraGames.SubLight;
 
 namespace LunraGamesEditor
 {
@@ -288,6 +289,25 @@ namespace LunraGamesEditor
 			if (color.HasValue) PopColorValidation();
 		}
 
+		public static void PushColorValidation(EditorModelMediator.Validation validation) => PushPopColorValidation(validation, true);
+
+		public static void PopColorValidation(EditorModelMediator.Validation validation) => PushPopColorValidation(validation, false);
+
+		static void PushPopColorValidation(EditorModelMediator.Validation validation, bool push)
+		{
+			Color? color = null;
+			
+			switch (validation.ValidationState)
+			{
+				case EditorModelMediator.ValidationStates.Valid: break;
+				case EditorModelMediator.ValidationStates.Invalid: color = Color.red; break;
+				default: color = Color.yellow; break;
+			}
+			
+			if (push) PushColorValidation(color);
+			else PopColorValidation(color);
+		}
+		
 		/// <summary>
 		/// Works like PushColorCombined, but handles the tinting automatically.
 		/// </summary>

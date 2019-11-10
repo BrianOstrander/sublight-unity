@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -1563,9 +1563,6 @@ namespace LunraGames.SubLight
 				case EncounterEvents.Types.Waypoint:
 					OnEncounterEventLogEdgeWaypoint(edge);
 					break;
-				case EncounterEvents.Types.ModuleTrait:
-					OnEncounterEventLogEdgeModuleTrait(edge);
-					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + edge.EncounterEvent.Value, MessageType.Error);
 					break;
@@ -1833,76 +1830,6 @@ namespace LunraGames.SubLight
 			);
 		}
 		
-		void OnEncounterEventLogEdgeModuleTrait(
-			EncounterEventEdgeModel edge
-		)
-		{
-			EncounterEvents.ModuleTrait.Operations operation;
-			
-			edge.KeyValues.SetEnumeration(
-				EncounterEvents.ModuleTrait.EnumKeys.Operation,
-				operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-					new GUIContent("Operation"),
-					"- Operation -",
-					edge.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation),
-					Color.red
-				)
-			);
-
-			GUIContent operationIdLabel = null;
-			
-			switch (operation)
-			{
-				case EncounterEvents.ModuleTrait.Operations.Unknown: break;
-				case EncounterEvents.ModuleTrait.Operations.AppendByTraitId:
-				case EncounterEvents.ModuleTrait.Operations.RemoveByTraitId:
-					operationIdLabel = new GUIContent("Trait Id");
-					break;
-				case EncounterEvents.ModuleTrait.Operations.RemoveByFamilyId:
-					operationIdLabel = new GUIContent("Family Id");
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized Operation: " + operation, MessageType.Error);
-					break;
-			}
-
-			if (operationIdLabel != null)
-			{
-				var operationIdIsInvalid = string.IsNullOrEmpty(edge.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId));
-				// TODO: Actually validate if operation id exists...
-				EditorGUILayoutExtensions.PushColorValidation(Color.red, operationIdIsInvalid);
-				{
-					edge.KeyValues.SetString(
-						EncounterEvents.ModuleTrait.StringKeys.OperationId,
-						EditorGUILayout.TextField(
-							operationIdLabel,
-							edge.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId)
-						)
-					);
-				}
-				EditorGUILayoutExtensions.PopColorValidation(operationIdIsInvalid);
-			}
-			
-			GUILayout.Label("Target Module Types (Select none to apply to all Module Types)");
-
-			EditorGUILayoutExtensions.PushIndent();
-			{
-				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
-				{
-					var moduleTypeKey = EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType);
-
-					edge.KeyValues.SetBoolean(
-						moduleTypeKey,
-						EditorGUILayout.Toggle(
-							ObjectNames.NicifyVariableName(moduleType.ToString()),
-							edge.KeyValues.GetBoolean(moduleTypeKey)
-						)
-					);
-				}
-			}
-			EditorGUILayoutExtensions.PopIndent();
-		}
-
 		void OnEncounterEventLogEdgeNoModifications()
 		{
 			EditorGUILayout.HelpBox("No values to modify for this event.", MessageType.Info);
@@ -2564,7 +2491,7 @@ namespace LunraGames.SubLight
 				case ModuleEdgeModel.Operations.Unknown: break;
 				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
 				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByFamilyId:
+				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
 					OnEdgedLogSpawn(model, edge => OnModuleLogSpawnTrait(appendSelection, edge), index);
 					break;
 				case ModuleEdgeModel.Operations.ReplaceModule:
@@ -2604,7 +2531,7 @@ namespace LunraGames.SubLight
 			{
 				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
 				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByFamilyId:
+				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
 					OnModuleLogEdgeTrait(edge);
 					break;
 				case ModuleEdgeModel.Operations.ReplaceModule:
@@ -2612,14 +2539,68 @@ namespace LunraGames.SubLight
 					break;
 				default: EditorGUILayout.HelpBox("Unrecognized " + nameof(ModuleEdgeModel.Operations) + ": " + edge.Operation.Value, MessageType.Error); break;
 			}
+			
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "Passing this filter is required to continue to run this key value logic."),
+				edge.Filtering
+			);
 		}
 
 		void OnModuleLogEdgeTrait(ModuleEdgeModel edge)
 		{
 			var block = edge.TraitInfo.Value;
 
-			GUILayout.Label("this is a trait");
-			GUILayout.Label(block.Operation.ToString());
+			edge.Operation.Value = OnModuleLogEdgeOperation(
+				new GUIContent("Operation"),
+				edge.Operation.Value,
+				ModuleEdgeModel.TraitBlock.ValidOperations
+			);
+
+			EditorModelMediator.Validation validation;
+
+			switch (edge.Operation.Value)
+			{
+				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
+				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
+					validation = EditorModelMediator.Instance.IsValidModel<ModuleTraitModel>(block.OperationId);
+					break;
+				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
+					validation = EditorModelMediator.Instance.IsValidModuleTraitFamilyId(block.OperationId);
+					break;
+				default:
+					validation = EditorModelMediator.DefaultValidations.CannotValidate;
+					break;
+			}
+			
+			EditorGUILayoutExtensions.PushColorValidation(validation);
+			{
+				block.OperationId = EditorGUILayout.TextField(
+					validation.GetLabel(block.GetOperationIdName(edge.Operation.Value)),
+					block.OperationId
+				);
+			}
+			EditorGUILayoutExtensions.PopColorValidation(validation);
+			
+			GUILayout.Label("Target Module Types (Select none to apply to all Module Types)");
+			
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
+				{
+					var isValidModule = block.ValidModuleTypes.Contains(moduleType);
+					var isValidModuleToggle = EditorGUILayout.Toggle(
+						ObjectNames.NicifyVariableName(moduleType.ToString()),
+						isValidModule
+					);
+
+					if (isValidModule != isValidModuleToggle)
+					{
+						if (isValidModuleToggle) block.ValidModuleTypes = block.ValidModuleTypes.Append(moduleType).ToArray();
+						else block.ValidModuleTypes = block.ValidModuleTypes.ExceptOne(moduleType).ToArray();
+					}
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
 			
 			edge.TraitInfo.Value = block;
 		}
@@ -2628,10 +2609,32 @@ namespace LunraGames.SubLight
 		{
 			var block = edge.ModuleInfo.Value;
 
-			GUILayout.Label("this is a module");
-			GUILayout.Label(block.Operation.ToString());
+			edge.Operation.Value = OnModuleLogEdgeOperation(
+				new GUIContent("Operation"),
+				edge.Operation.Value,
+				ModuleEdgeModel.ModuleBlock.ValidOperations
+			);
 			
 			edge.ModuleInfo.Value = block;
+		}
+
+		ModuleEdgeModel.Operations OnModuleLogEdgeOperation(
+			GUIContent label,
+			ModuleEdgeModel.Operations operation,
+			ModuleEdgeModel.Operations[] validOperations
+		)
+		{
+			return EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				label,
+				"- Operation -",
+				operation,
+				value =>
+				{
+					if (validOperations.Contains(value)) return null;
+					return Color.red;
+				},
+				validOperations.Prepend(ModuleEdgeModel.Operations.Unknown).ToArray()
+			);
 		}
 		#endregion
 		

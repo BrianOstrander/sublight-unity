@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 
 using UnityEditor;
@@ -8,7 +7,6 @@ using UnityEngine;
 
 using LunraGames.SubLight.Models;
 using LunraGamesEditor;
-using UnityEngine.UIElements;
 using DefinedState = LunraGames.SubLight.KeyDefinitionEditorWindow.DefinedState;
 
 namespace LunraGames.SubLight
@@ -523,11 +521,26 @@ namespace LunraGames.SubLight
 
 		static void OnHandleModuleTraitSecondLine(ModuleTraitFilterEntryModel model)
 		{
-			model.ValidModuleTypes.Value = EditorGUILayoutExtensions.EnumArray(
-				new GUIContent("Valid Module Types"),
-				model.ValidModuleTypes.Value,
-				"- Module Type -"
-			);
+			GUILayout.Label("Valid Module Types (Select none to check all Module Types)");
+			
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
+				{
+					var isValidModule = model.ValidModuleTypes.Value.Contains(moduleType);
+					var isValidModuleToggle = EditorGUILayout.Toggle(
+						ObjectNames.NicifyVariableName(moduleType.ToString()),
+						isValidModule
+					);
+
+					if (isValidModule != isValidModuleToggle)
+					{
+						if (isValidModuleToggle) model.ValidModuleTypes.Value = model.ValidModuleTypes.Value.Append(moduleType).ToArray();
+						else model.ValidModuleTypes.Value = model.ValidModuleTypes.Value.ExceptOne(moduleType).ToArray();
+					}
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
 		}
 		#endregion
 	}

@@ -1,4 +1,5 @@
 {
+  "orderWeight": 999,
   "randomWeightMultiplier": 1.0,
   "randomAppearance": 1.0,
   "trigger": "TransitComplete",
@@ -16,7 +17,39 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 20,
+                "lock_state": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "4023b5ae-eb20-443e-9977-257fec2efea0"
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "16157223-c313-4943-942a-2289a8fd9de4",
+        "name": "Ending"
+      }
+    ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": [],
@@ -25,82 +58,69 @@
         "edges": [
           {
             "filtering": {
+              "showValues": true,
               "booleanKeyValues": [],
               "integerKeyValues": [],
               "stringKeyValues": [],
               "floatKeyValues": [],
               "enumerationKeyValues": [],
               "encounterInteractions": [],
-              "moduleTraits": []
+              "moduleTraits": [
+                {
+                  "operation": "AppendableTraitId",
+                  "validModuleTypes": [
+                    "Propulsion"
+                  ],
+                  "filterValue": "faulty_airlocks",
+                  "filterId": "92a9a8cb-da79-418d-994b-6dd71ea7fc4b",
+                  "group": "All"
+                }
+              ]
             },
             "operation": "AppendTraitByTraitId",
             "traitInfo": {
-              "Operation": "AppendTraitByTraitId",
-              "ValidModuleTypes": []
+              "OperationId": "faulty_airlocks",
+              "ValidModuleTypes": [
+                "Propulsion"
+              ]
             },
             "id": "7dea209b-8635-41da-afc3-f65b40240b19"
           },
           {
             "filtering": {
+              "showValues": true,
               "booleanKeyValues": [],
               "integerKeyValues": [],
               "stringKeyValues": [],
               "floatKeyValues": [],
               "enumerationKeyValues": [],
               "encounterInteractions": [],
-              "moduleTraits": []
+              "moduleTraits": [
+                {
+                  "operation": "PresentFamilyId",
+                  "validModuleTypes": [
+                    "Propulsion"
+                  ],
+                  "filterValue": "airlocks",
+                  "filterId": "b67c0793-7c04-409d-a040-3f0def90fe4a",
+                  "group": "All"
+                }
+              ]
             },
-            "operation": "RemoveTraitByTraitId",
+            "operation": "RemoveTraitByTraitFamilyId",
             "traitInfo": {
-              "Operation": "RemoveTraitByTraitId",
-              "ValidModuleTypes": []
+              "OperationId": "airlocks",
+              "ValidModuleTypes": [
+                "Propulsion"
+              ]
             },
             "index": 1,
-            "id": "fb75f725-de68-4435-a5fb-14be7a528110"
-          },
-          {
-            "filtering": {
-              "booleanKeyValues": [],
-              "integerKeyValues": [],
-              "stringKeyValues": [],
-              "floatKeyValues": [],
-              "enumerationKeyValues": [],
-              "encounterInteractions": [],
-              "moduleTraits": []
-            },
-            "operation": "RemoveTraitByFamilyId",
-            "traitInfo": {
-              "Operation": "RemoveTraitByFamilyId",
-              "ValidModuleTypes": []
-            },
-            "index": 2,
-            "id": "2c806efd-a97c-4c91-98a5-257cb4afef14"
-          },
-          {
-            "filtering": {
-              "booleanKeyValues": [],
-              "integerKeyValues": [],
-              "stringKeyValues": [],
-              "floatKeyValues": [],
-              "enumerationKeyValues": [],
-              "encounterInteractions": [],
-              "moduleTraits": []
-            },
-            "operation": "ReplaceModule",
-            "moduleInfo": {
-              "Operation": "ReplaceModule",
-              "ModuleConstraint": {
-                "ValidTypes": [],
-                "ManufacturerIds": []
-              },
-              "Traits": []
-            },
-            "index": 3,
-            "id": "b7a88eb8-9325-4ef6-8265-311b13fcd853"
+            "id": "e4defd52-a260-4b71-ade2-58c287ee2f00"
           }
         ],
         "beginning": true,
-        "logId": "7cd2b786-8a3c-4fb2-b895-3271a082c518"
+        "logId": "7cd2b786-8a3c-4fb2-b895-3271a082c518",
+        "fallbackLogId": "16157223-c313-4943-942a-2289a8fd9de4"
       }
     ]
   },

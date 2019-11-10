@@ -18,8 +18,6 @@ namespace LunraGames.SubLight
 
 		DateTime? lastEditorUpdate;
 
-		protected IModelMediator SaveLoadService => EditorModelMediator.Instance;
-
 		public ModelMediatorDependentEditorWindow(string keyPrefix)
 		{
 			KeyPrefix = keyPrefix;

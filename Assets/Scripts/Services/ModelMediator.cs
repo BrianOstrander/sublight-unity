@@ -317,7 +317,7 @@ namespace LunraGames.SubLight
 
 			if (result == null)
 			{
-				var error = "A model with Id " + modelId + " was not found";
+				var error = "A model with Id \"" + modelId + "\" was not found";
 				if (!SuppressErrorLogging) Debug.LogError(error);
 				done(ModelResult<M>.Failure(
 					null,

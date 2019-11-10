@@ -78,7 +78,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -115,7 +116,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -152,7 +154,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -202,7 +205,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -239,7 +243,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -276,7 +281,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -313,7 +319,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -362,7 +369,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     },
     {
@@ -411,7 +419,8 @@
         "stringKeyValues": [],
         "floatKeyValues": [],
         "enumerationKeyValues": [],
-        "encounterInteractions": []
+        "encounterInteractions": [],
+        "moduleTraits": []
       }
     }
   ],
@@ -583,7 +592,9 @@
               "visited": false,
               "specified": true,
               "player_begin": false,
-              "player_end": false
+              "player_end": false,
+              "icon_pings": false,
+              "has_specified_waypoint": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -607,7 +618,9 @@
             },
             "strings": {
               "name": "Barnard's Star",
-              "classification_secondary": "Red Dwarf"
+              "classification_secondary": "Red Dwarf",
+              "specified_waypoint_name": null,
+              "specified_waypoint_id": null
             },
             "floats": {
               "generated_rations": 0.0,
@@ -718,7 +731,9 @@
               "visited": false,
               "specified": true,
               "player_begin": false,
-              "player_end": false
+              "player_end": false,
+              "icon_pings": false,
+              "has_specified_waypoint": false
             },
             "integers": {
               "generated_propellant": 0,
@@ -740,7 +755,9 @@
             },
             "strings": {
               "name": "Wolf",
-              "classification_secondary": "Red Dwarf"
+              "classification_secondary": "Red Dwarf",
+              "specified_waypoint_name": null,
+              "specified_waypoint_id": null
             },
             "floats": {
               "generated_rations": 0.0,
@@ -784,7 +801,7 @@
             },
             {
               "Trigger": "TransitComplete",
-              "EncounterId": "f4fc7b5c-a661-4089-abb4-0f46efafdf02"
+              "EncounterId": ""
             }
           ],
           "keyValues": {
@@ -840,226 +857,6 @@
       "specifiedPlacement": "Position",
       "position": {
         "Sector": {"x":86.0,"z":102.0}
-      },
-      "positionList": []
-    },
-    {
-      "name": "OasisEnd",
-      "seed": 1802454498,
-      "specified": true,
-      "systemCount": 1,
-      "systems": [
-        {
-          "position": {
-            "Sector": {"x":87.0,"z":27.0},
-            "Local": {"x":0.25,"y":0.25,"z":0.25}
-          },
-          "bodies": [],
-          "specifiedEncounters": [
-            {
-              "Trigger": "NavigationSelect"
-            },
-            {
-              "Trigger": "TransitComplete",
-              "EncounterId": "c665b949-9d98-414f-8151-d26ad67cb6d9"
-            }
-          ],
-          "keyValues": {
-            "booleans": {
-              "specified": true,
-              "icon_pings": true,
-              "has_specified_waypoint": true,
-              "discovered_rations": false,
-              "discovered_propellant": false,
-              "discovered_metallics": false
-            },
-            "integers": {
-              "seed": 1807912795,
-              "scannable_body_index": 1,
-              "habitable_atmosphere": 3,
-              "habitable_gravity": 3,
-              "habitable_temperature": 3,
-              "habitable_water": 3,
-              "habitable_resources": 3,
-              "scan_level_atmosphere": 0,
-              "scan_level_gravity": 0,
-              "scan_level_temperature": 0,
-              "scan_level_water": 0,
-              "scan_level_resources": 0,
-              "classification_primary": 10
-            },
-            "strings": {
-              "specified_waypoint_name": "Oasis",
-              "specified_waypoint_id": "oasis_end",
-              "name": "Oasis",
-              "classification_secondary": "Yellow Dwarf"
-            },
-            "floats": {
-              "icon_color_hue": 0.119444452,
-              "icon_color_saturation": 0.5294118,
-              "icon_color_value": 1.0,
-              "icon_color_alpha": 1.0,
-              "gather_multiplier_rations": 0.0,
-              "gather_amount_rations": 0.0,
-              "gather_multiplier_propellant": 0.0,
-              "gather_amount_propellant": 0.0,
-              "gather_multiplier_metallics": 0.0,
-              "gather_amount_metallics": 0.0,
-              "icon_scale": 0.47
-            }
-          }
-        }
-      ],
-      "specifiedPlacement": "PositionList",
-      "position": {
-        "Sector": {"x":87.0,"z":27.0}
-      },
-      "positionList": [
-        {
-          "Sector": {"x":87.0,"z":27.0}
-        }
-      ]
-    },
-    {
-      "name": "OasisRelay_0",
-      "seed": 88171253,
-      "specified": true,
-      "systemCount": 1,
-      "systems": [
-        {
-          "position": {
-            "Sector": {"x":80.0,"z":25.0}
-          },
-          "bodies": [],
-          "specifiedEncounters": [
-            {
-              "Trigger": "NavigationSelect"
-            },
-            {
-              "Trigger": "TransitComplete",
-              "EncounterId": "be878586-508a-4eb1-a192-864244df59c0"
-            }
-          ],
-          "keyValues": {
-            "booleans": {
-              "specified": true,
-              "icon_pings": true,
-              "has_specified_waypoint": true,
-              "discovered_rations": false,
-              "discovered_propellant": false,
-              "discovered_metallics": false
-            },
-            "integers": {
-              "seed": 1777131305,
-              "scannable_body_index": 0,
-              "habitable_atmosphere": 0,
-              "habitable_gravity": 0,
-              "habitable_temperature": 0,
-              "habitable_water": 0,
-              "habitable_resources": 0,
-              "scan_level_atmosphere": 0,
-              "scan_level_gravity": 0,
-              "scan_level_temperature": 0,
-              "scan_level_water": 0,
-              "scan_level_resources": 0,
-              "classification_primary": 10
-            },
-            "strings": {
-              "specified_waypoint_name": "Oasis Relay",
-              "specified_waypoint_id": "oasis_relay_0",
-              "name": "Oasis Relay",
-              "classification_secondary": "Red Dwarf"
-            },
-            "floats": {
-              "icon_color_hue": 0.0,
-              "icon_color_saturation": 0.53,
-              "icon_color_value": 1.0,
-              "icon_color_alpha": 1.0,
-              "gather_multiplier_rations": 0.0,
-              "gather_amount_rations": 0.0,
-              "gather_multiplier_propellant": 0.0,
-              "gather_amount_propellant": 0.0,
-              "gather_multiplier_metallics": 0.0,
-              "gather_amount_metallics": 0.0
-            }
-          }
-        }
-      ],
-      "specifiedPlacement": "Position",
-      "position": {
-        "Sector": {"x":80.0,"z":25.0}
-      },
-      "positionList": []
-    },
-    {
-      "name": "OasisRelay_1",
-      "seed": 1875165441,
-      "specified": true,
-      "systemCount": 1,
-      "systems": [
-        {
-          "position": {
-            "Sector": {"x":82.0,"z":26.0}
-          },
-          "bodies": [],
-          "specifiedEncounters": [
-            {
-              "Trigger": "NavigationSelect"
-            },
-            {
-              "Trigger": "TransitComplete",
-              "EncounterId": "20e2741a-5f74-4d18-8628-43fcc9105ab7"
-            }
-          ],
-          "keyValues": {
-            "booleans": {
-              "specified": true,
-              "icon_pings": true,
-              "has_specified_waypoint": true,
-              "discovered_rations": false,
-              "discovered_propellant": false,
-              "discovered_metallics": false
-            },
-            "integers": {
-              "seed": 1374410465,
-              "scannable_body_index": 0,
-              "habitable_atmosphere": 0,
-              "habitable_gravity": 0,
-              "habitable_temperature": 0,
-              "habitable_water": 0,
-              "habitable_resources": 0,
-              "scan_level_atmosphere": 0,
-              "scan_level_gravity": 0,
-              "scan_level_temperature": 0,
-              "scan_level_water": 0,
-              "scan_level_resources": 0,
-              "classification_primary": 10
-            },
-            "strings": {
-              "specified_waypoint_name": "Oasis Relay # 2",
-              "specified_waypoint_id": "oasis_relay_1",
-              "name": "Oasis Relay #2",
-              "classification_secondary": "Yellow Dwarf"
-            },
-            "floats": {
-              "icon_color_hue": 0.119444452,
-              "icon_color_saturation": 0.5294118,
-              "icon_color_value": 1.0,
-              "icon_color_alpha": 1.0,
-              "gather_multiplier_rations": 0.0,
-              "gather_amount_rations": 0.0,
-              "gather_multiplier_propellant": 0.0,
-              "gather_amount_propellant": 0.0,
-              "gather_multiplier_metallics": 0.0,
-              "gather_amount_metallics": 0.0,
-              "icon_scale": 0.463
-            }
-          }
-        }
-      ],
-      "specifiedPlacement": "Position",
-      "position": {
-        "Sector": {"x":82.0,"z":26.0}
       },
       "positionList": []
     }

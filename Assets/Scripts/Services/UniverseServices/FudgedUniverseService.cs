@@ -207,15 +207,6 @@ namespace LunraGames.SubLight
 			SetScan(hackGenerator, systemModel, KeyDefines.CelestialSystem.ScanLevelWater);
 			SetScan(hackGenerator, systemModel, KeyDefines.CelestialSystem.ScanLevelResources);
 
-			systemModel.SpecifiedEncounters.Value = new SpecifiedEncounterEntry[]
-			{
-				new SpecifiedEncounterEntry
-				{
-					Trigger = EncounterTriggers.NavigationSelect,
-					EncounterId = "tutorial_navigation_confirm" // TODO: This should not be hardcoded...
-				}
-			};
-
 			var resourceGenerator = new Demon(SystemModel.Seeds.Resources(systemModel.Seed));
 
 			systemModel.KeyValues.Set(KeyDefines.CelestialSystem.IconPings, resourceGenerator.NextFloat < 0.1f);

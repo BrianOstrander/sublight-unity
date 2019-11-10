@@ -1,5 +1,5 @@
 using System;
-
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -12,57 +12,46 @@ namespace LunraGames.SubLight.Models
 			Unknown = 0,
 			AppendTraitByTraitId = 10,
 			RemoveTraitByTraitId = 100,
-			RemoveTraitByFamilyId = 110,
+			RemoveTraitByTraitFamilyId = 110,
 			ReplaceModule = 200
 		}
 		
 		[Serializable]
 		public struct TraitBlock
 		{
+			public static readonly Operations[] ValidOperations = {
+				Operations.AppendTraitByTraitId,
+				Operations.RemoveTraitByTraitId,
+				Operations.RemoveTraitByTraitFamilyId
+			};
+			
 			public static TraitBlock Default(Operations operation)
 			{
 				var result = new TraitBlock
 				{
-					Operation = operation,
 					ValidModuleTypes = new ModuleTypes[0]
 				};
 				
+				if (operation == Operations.Unknown) Debug.LogError("Operation cannot be \""+operation+"\", it must be specified");
+				else if (!ValidOperations.Contains(operation)) Debug.LogError("Operation \"" + operation + "\" is not a recognized " + nameof(TraitBlock) + " operation");
+				
+				return result;
+			}
+
+			public string OperationId;
+			public ModuleTypes[] ValidModuleTypes;
+
+			public string GetOperationIdName(Operations operation)
+			{
 				switch (operation)
 				{
 					case Operations.AppendTraitByTraitId:
 					case Operations.RemoveTraitByTraitId:
-					case Operations.RemoveTraitByFamilyId:
-						break;
-					case Operations.Unknown:
-						Debug.LogError("Operation cannot be \""+operation+"\", it must be specified");
-						break;
+						return "Trait Id";
+					case Operations.RemoveTraitByTraitFamilyId:
+						return "Trait Family Id";
 					default:
-						Debug.LogError("Operation \"" + operation + "\" is not a recognized " + nameof(TraitBlock) + " operation");
-						break;
-				}
-
-				return result;
-			}
-
-			public Operations Operation;
-			public string OperationId;
-			public ModuleTypes[] ValidModuleTypes;
-
-			[JsonIgnore]
-			public string OperationIdName
-			{
-				get
-				{
-					switch (Operation)
-					{
-						case Operations.AppendTraitByTraitId:
-						case Operations.RemoveTraitByTraitId:
-							return "Trait Id";
-						case Operations.RemoveTraitByFamilyId:
-							return "Trait Family Id";
-						default:
-							return "Unknown Id";
-					}
+						return "Unrecognized Id";
 				}
 			}
 		}
@@ -70,31 +59,24 @@ namespace LunraGames.SubLight.Models
 		[Serializable]
 		public struct ModuleBlock
 		{
+			public static readonly Operations[] ValidOperations = {
+				Operations.ReplaceModule
+			};
+			
 			public static ModuleBlock Default(Operations operation)
 			{
 				var result = new ModuleBlock
 				{
-					Operation = operation,
 					ModuleConstraint = ModuleService.ModuleConstraint.Default,
 					Traits = new ModuleService.TraitLimit[0]
 				};
 				
-				switch (operation)
-				{
-					case Operations.ReplaceModule:
-						break;
-					case Operations.Unknown:
-						Debug.LogError("Operation cannot be \""+operation+"\", it must be specified");
-						break;
-					default:
-						Debug.LogError("Operation \"" + operation + "\" is not a recognized " + nameof(ModuleBlock) + " operation");
-						break;
-				}
-
+				if (operation == Operations.Unknown) Debug.LogError("Operation cannot be \""+operation+"\", it must be specified");
+				else if (!ValidOperations.Contains(operation)) Debug.LogError("Operation \"" + operation + "\" is not a recognized " + nameof(ModuleBlock) + " operation");
+				
 				return result;
 			}
 
-			public Operations Operation;
 			public ModuleService.ModuleConstraint ModuleConstraint;
 			public ModuleService.TraitLimit[] Traits;
 		}
@@ -121,8 +103,8 @@ namespace LunraGames.SubLight.Models
 						return "Append Trait By Trait Id";
 					case Operations.RemoveTraitByTraitId:
 						return "Remove Trait By Trait Id";
-					case Operations.RemoveTraitByFamilyId:
-						return "Remove Trait By Family Id";
+					case Operations.RemoveTraitByTraitFamilyId:
+						return "Remove Trait By Trait Family Id";
 					case Operations.ReplaceModule:
 						return "Replace Module";
 					default:

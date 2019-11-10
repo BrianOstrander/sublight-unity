@@ -260,8 +260,10 @@
         "logId": "9d41b500-3c9d-497b-ab57-ce590cfa0e26",
         "fallbackLogId": "7fe77e5a-9dec-41be-8dd1-e95e6f62b8f5"
       }
-    ]
+    ],
+    "moduleLogs": []
   },
+  "ignore": true,
   "version": 12,
   "metaKeyValues": {},
   "created": "2019-11-07T09:08:42.964752-08:00",
