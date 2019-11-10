@@ -19,7 +19,7 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] DialogEncounterLogModel[] dialogLogs = new DialogEncounterLogModel[0];
 		[JsonProperty] BustEncounterLogModel[] bustLogs = new BustEncounterLogModel[0];
 		[JsonProperty] ConversationEncounterLogModel[] conversationLogs = new ConversationEncounterLogModel[0];
-		[JsonProperty] ModuleEncounterLogModel[] moduleLogs = new ModuleEncounterLogModel[0];
+		[JsonProperty] ModuleTraitEncounterLogModel[] moduleTraitLogs = new ModuleTraitEncounterLogModel[0];
 		#endregion
 
 		#region Derived Values
@@ -102,7 +102,7 @@ namespace LunraGames.SubLight.Models
 			var dialogList = new List<DialogEncounterLogModel>();
 			var bustList = new List<BustEncounterLogModel>();
 			var conversationList = new List<ConversationEncounterLogModel>();
-			var moduleList = new List<ModuleEncounterLogModel>();
+			var moduleTraitList = new List<ModuleTraitEncounterLogModel>();
 
 			foreach (var log in newLogs)
 			{
@@ -132,8 +132,8 @@ namespace LunraGames.SubLight.Models
 					case EncounterLogTypes.Conversation:
 						conversationList.Add(log as ConversationEncounterLogModel);
 						break;
-					case EncounterLogTypes.Module:
-						moduleList.Add(log as ModuleEncounterLogModel);
+					case EncounterLogTypes.ModuleTrait:
+						moduleTraitList.Add(log as ModuleTraitEncounterLogModel);
 						break;
 					default:
 						Debug.LogError("Unrecognized EncounterLogType: " + log.LogType);
@@ -149,7 +149,7 @@ namespace LunraGames.SubLight.Models
 			dialogLogs = dialogList.ToArray();
 			bustLogs = bustList.ToArray();
 			conversationLogs = conversationList.ToArray();
-			moduleLogs = moduleList.ToArray();
+			moduleTraitLogs = moduleTraitList.ToArray();
 		}
 
 		EncounterLogModel[] OnGetLogs()
@@ -161,7 +161,7 @@ namespace LunraGames.SubLight.Models
 					           							 .Concat(dialogLogs)
 					           							 .Concat(bustLogs)
 					           							 .Concat(conversationLogs)
-														 .Concat(moduleLogs)
+														 .Concat(moduleTraitLogs)
 														 .ToArray();
 		}
 		#endregion

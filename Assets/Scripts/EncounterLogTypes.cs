@@ -11,6 +11,6 @@
 		Dialog = 60,
 		Bust = 70,
 		Conversation = 80,
-		Module = 90
+		ModuleTrait = 90
 	}
 }

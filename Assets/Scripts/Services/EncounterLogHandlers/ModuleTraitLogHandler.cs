@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace LunraGames.SubLight
 {
-	public class ModuleLogHandler : EncounterLogHandler<ModuleEncounterLogModel>
+	public class ModuleTraitLogHandler : EncounterLogHandler<ModuleTraitEncounterLogModel>
 	{
-		public override EncounterLogTypes LogType => EncounterLogTypes.Module;
+		public override EncounterLogTypes LogType => EncounterLogTypes.ModuleTrait;
 
-		public ModuleLogHandler(EncounterLogHandlerConfiguration configuration) : base(configuration) { }
+		public ModuleTraitLogHandler(EncounterLogHandlerConfiguration configuration) : base(configuration) { }
 
 		protected override void OnHandle(
-			ModuleEncounterLogModel logModel,
+			ModuleTraitEncounterLogModel logModel,
 			Action linearDone,
 			Action<string> nonLinearDone
 		)
@@ -27,7 +27,7 @@ namespace LunraGames.SubLight
 
 		void OnHandleFilterAll(
 			RequestStatus status,
-			List<ModuleEdgeModel> filtered,
+			List<ModuleTraitEdgeModel> filtered,
 			Action linearDone
 		)
 		{
@@ -40,16 +40,17 @@ namespace LunraGames.SubLight
 						result.Log("The following error interrupted module log handling, unexpected behaviour may occur.");
 						break;
 				}
+
 				Configuration.Model.Ship.Statistics.Value = new ShipStatistics(Configuration.Model.Ship.Statistics.Value.Modules);
 				linearDone();
 			}
-			
+
 			if (status != RequestStatus.Success || filtered.None())
 			{
 				OnDone(Result.Success());
 				return;
 			}
-			
+
 			void OnNext(Result result)
 			{
 				switch (result.Status)
@@ -66,48 +67,38 @@ namespace LunraGames.SubLight
 						break;
 				}
 			}
-			
+
 			var next = filtered.First();
 			filtered.RemoveAt(0);
-			
-			switch (next.Operation.Value)
-			{
-				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
-					OnHandleTraitOperation(next.Operation.Value, next.TraitInfo.Value, OnNext);
-					break;
-				case ModuleEdgeModel.Operations.ReplaceModule:
-					OnHandleModuleOperation(next.Operation.Value, next.ModuleInfo.Value, OnNext);
-					break;
-				default:
-					OnDone(Result.Failure("Unrecognized " + nameof(ModuleEdgeModel.Operations) + ": " + next.Operation.Value));
-					break;
-			}
-		}
 
-		void OnHandleTraitOperation(
-			ModuleEdgeModel.Operations operation,
-			ModuleEdgeModel.TraitBlock block,
-			Action<Result> done
-		)
-		{
-			var moduleTypes = block.ValidModuleTypes.None() ? EnumExtensions.GetValues(ModuleTypes.Unknown) : block.ValidModuleTypes;
+			var moduleTypes = next.ValidModuleTypes.Value.None() ? EnumExtensions.GetValues(ModuleTypes.Unknown) : next.ValidModuleTypes.Value;
 			var modules = Configuration.Model.Ship.Statistics.Value.Modules.Where(m => moduleTypes.Contains(m.Type.Value)).ToList();
 
-			switch (operation)
+			switch (next.Operation.Value)
 			{
-				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
-					OnHandleTraitAppendByTraitIdNext(modules, block.OperationId, done);
+				case ModuleTraitEdgeModel.Operations.AppendTraitByTraitId:
+					OnHandleTraitAppendByTraitIdNext(
+						modules,
+						next.OperationId.Value,
+						OnNext
+					);
 					break;
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
-					OnHandleTraitRemoveByTraitIdNext(modules, block.OperationId, done);
+				case ModuleTraitEdgeModel.Operations.RemoveTraitByTraitId:
+					OnHandleTraitRemoveByTraitIdNext(
+						modules,
+						next.OperationId.Value,
+						OnNext
+					);
 					break;
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
-					OnHandleTraitRemoveByTraitFamilyIdNext(modules, block.OperationId, done);
+				case ModuleTraitEdgeModel.Operations.RemoveTraitByTraitFamilyId:
+					OnHandleTraitRemoveByTraitFamilyIdNext(
+						modules,
+						next.OperationId.Value,
+						OnNext
+					);
 					break;
 				default:
-					done(Result.Failure("Operation \"" + operation + "\" is not a recognized " + nameof(ModuleEdgeModel.TraitBlock) + " operation"));
+					OnDone(Result.Failure("Operation \"" + next.Operation.Value + "\" is not a recognized " + nameof(ModuleTraitEdgeModel) + " operation"));
 					break;
 			}
 		}
@@ -183,16 +174,6 @@ namespace LunraGames.SubLight
 				// TODO: Add to audit log here...
 				module.TraitIds.Value = module.TraitIds.Value.Except(traitIdsRemoved).ToArray();
 			}
-			done(Result.Success());
-		}
-
-		void OnHandleModuleOperation(
-			ModuleEdgeModel.Operations operation,
-			ModuleEdgeModel.ModuleBlock block,
-			Action<Result> done
-		)
-		{
-			Debug.LogError("Module operation not handled yet!");
 			done(Result.Success());
 		}
 	}

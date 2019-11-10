@@ -533,8 +533,8 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Conversation:
 					result = NewEncounterLog<ConversationEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
-				case EncounterLogTypes.Module:
-					result = NewEncounterLog<ModuleEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+				case EncounterLogTypes.ModuleTrait:
+					result = NewEncounterLog<ModuleTraitEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType: " + logType);
@@ -753,8 +753,8 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Conversation:
 					OnConversationLog(infoModel, model as ConversationEncounterLogModel);
 					break;
-				case EncounterLogTypes.Module:
-					OnModuleLog(infoModel, model as ModuleEncounterLogModel);
+				case EncounterLogTypes.ModuleTrait:
+					OnModuleTraitLog(infoModel, model as ModuleTraitEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -2457,23 +2457,23 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
-		#region Module Logs
-		void OnModuleLog(
+		#region Module Trait Logs
+		void OnModuleTraitLog(
 			EncounterInfoModel infoModel,
-			ModuleEncounterLogModel model
+			ModuleTraitEncounterLogModel model
 		)
 		{
-			OnEdgedLog<ModuleEncounterLogModel, ModuleEdgeModel>(
+			OnEdgedLog<ModuleTraitEncounterLogModel, ModuleTraitEdgeModel>(
 				infoModel,
 				model,
-				OnModuleLogEdge,
-				OnModuleLogSpawnOptions
+				OnModuleTraitLogEdge,
+				OnModuleTraitLogSpawnOptions
 			);
 		}
 		
-		void OnModuleLogSpawnOptions(
+		void OnModuleTraitLogSpawnOptions(
 			EncounterInfoModel infoModel,
-			ModuleEncounterLogModel model,
+			ModuleTraitEncounterLogModel model,
 			string prefix,
 			int index = int.MaxValue
 		)
@@ -2481,91 +2481,51 @@ namespace LunraGames.SubLight
 			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
 				GUIContent.none,
 				"- " + (string.IsNullOrEmpty(prefix) ? LogStrings.EdgeEntryAppendPrefix : prefix) + " a Module Entry -",
-				ModuleEdgeModel.Operations.Unknown,
-				EnumExtensions.GetValues<ModuleEdgeModel.Operations>(),
+				ModuleTraitEdgeModel.Operations.Unknown,
+				EnumExtensions.GetValues<ModuleTraitEdgeModel.Operations>(),
 				GUILayout.MaxWidth(LogFloats.AppendEntryWidthMaximum)
 			);
 
 			switch (appendSelection)
 			{
-				case ModuleEdgeModel.Operations.Unknown: break;
-				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
-					OnEdgedLogSpawn(model, edge => OnModuleLogSpawnTrait(appendSelection, edge), index);
-					break;
-				case ModuleEdgeModel.Operations.ReplaceModule:
-					OnEdgedLogSpawn(model, edge => OnModuleLogSpawnModule(appendSelection, edge), index);
-					break;
+				case ModuleTraitEdgeModel.Operations.Unknown: break;
 				default:
-					Debug.LogError("Unrecognized " + nameof(ModuleEdgeModel.Operations) + ": " + appendSelection);
+					OnEdgedLogSpawn(model, edge => OnModuleTraitLogSpawn(appendSelection, edge), index);
 					break;
 			}
 		}
 
-		void OnModuleLogSpawnTrait(
-			ModuleEdgeModel.Operations operation,
-			ModuleEdgeModel edge
+		void OnModuleTraitLogSpawn(
+			ModuleTraitEdgeModel.Operations operation,
+			ModuleTraitEdgeModel edge
 		)
 		{
 			edge.Operation.Value = operation;
-			edge.TraitInfo.Value = ModuleEdgeModel.TraitBlock.Default(operation);
 		}
 		
-		void OnModuleLogSpawnModule(
-			ModuleEdgeModel.Operations operation,
-			ModuleEdgeModel edge
-		)
-		{
-			edge.Operation.Value = operation;
-			edge.ModuleInfo.Value = ModuleEdgeModel.ModuleBlock.Default(operation);
-		}
-		
-		void OnModuleLogEdge(
+		void OnModuleTraitLogEdge(
 			EncounterInfoModel infoModel,
-			ModuleEncounterLogModel model,
-			ModuleEdgeModel edge
+			ModuleTraitEncounterLogModel model,
+			ModuleTraitEdgeModel edge	
 		)
 		{
-			switch (edge.Operation.Value)
-			{
-				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
-					OnModuleLogEdgeTrait(edge);
-					break;
-				case ModuleEdgeModel.Operations.ReplaceModule:
-					OnModuleLogEdgeModule(edge);
-					break;
-				default: EditorGUILayout.HelpBox("Unrecognized " + nameof(ModuleEdgeModel.Operations) + ": " + edge.Operation.Value, MessageType.Error); break;
-			}
-			
-			EditorGUILayoutValueFilter.Field(
-				new GUIContent("Filtering", "Passing this filter is required to continue to run this key value logic."),
-				edge.Filtering
-			);
-		}
-
-		void OnModuleLogEdgeTrait(ModuleEdgeModel edge)
-		{
-			var block = edge.TraitInfo.Value;
-
-			edge.Operation.Value = OnModuleLogEdgeOperation(
-				new GUIContent("Operation"),
+			edge.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Operation"), 
+				"- Operation -",
 				edge.Operation.Value,
-				ModuleEdgeModel.TraitBlock.ValidOperations
+				Color.red
 			);
 
 			EditorModelMediator.Validation validation;
 
 			switch (edge.Operation.Value)
 			{
-				case ModuleEdgeModel.Operations.AppendTraitByTraitId:
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitId:
-					validation = EditorModelMediator.Instance.IsValidModel<ModuleTraitModel>(block.OperationId);
+				case ModuleTraitEdgeModel.Operations.AppendTraitByTraitId:
+				case ModuleTraitEdgeModel.Operations.RemoveTraitByTraitId:
+					validation = EditorModelMediator.Instance.IsValidModel<ModuleTraitModel>(edge.OperationId.Value);
 					break;
-				case ModuleEdgeModel.Operations.RemoveTraitByTraitFamilyId:
-					validation = EditorModelMediator.Instance.IsValidModuleTraitFamilyId(block.OperationId);
+				case ModuleTraitEdgeModel.Operations.RemoveTraitByTraitFamilyId:
+					validation = EditorModelMediator.Instance.IsValidModuleTraitFamilyId(edge.OperationId.Value);
 					break;
 				default:
 					validation = EditorModelMediator.DefaultValidations.CannotValidate;
@@ -2574,9 +2534,9 @@ namespace LunraGames.SubLight
 			
 			EditorGUILayoutExtensions.PushColorValidation(validation);
 			{
-				block.OperationId = EditorGUILayout.TextField(
-					validation.GetLabel(block.GetOperationIdName(edge.Operation.Value)),
-					block.OperationId
+				edge.OperationId.Value = EditorGUILayout.TextField(
+					validation.GetLabel(edge.OperationIdName),
+					edge.OperationId.Value
 				);
 			}
 			EditorGUILayoutExtensions.PopColorValidation(validation);
@@ -2587,7 +2547,7 @@ namespace LunraGames.SubLight
 			{
 				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
 				{
-					var isValidModule = block.ValidModuleTypes.Contains(moduleType);
+					var isValidModule = edge.ValidModuleTypes.Value.Contains(moduleType);
 					var isValidModuleToggle = EditorGUILayout.Toggle(
 						ObjectNames.NicifyVariableName(moduleType.ToString()),
 						isValidModule
@@ -2595,45 +2555,16 @@ namespace LunraGames.SubLight
 
 					if (isValidModule != isValidModuleToggle)
 					{
-						if (isValidModuleToggle) block.ValidModuleTypes = block.ValidModuleTypes.Append(moduleType).ToArray();
-						else block.ValidModuleTypes = block.ValidModuleTypes.ExceptOne(moduleType).ToArray();
+						if (isValidModuleToggle) edge.ValidModuleTypes.Value = edge.ValidModuleTypes.Value.Append(moduleType).ToArray();
+						else edge.ValidModuleTypes.Value = edge.ValidModuleTypes.Value.ExceptOne(moduleType).ToArray();
 					}
 				}
 			}
 			EditorGUILayoutExtensions.PopIndent();
 			
-			edge.TraitInfo.Value = block;
-		}
-
-		void OnModuleLogEdgeModule(ModuleEdgeModel edge)
-		{
-			var block = edge.ModuleInfo.Value;
-
-			edge.Operation.Value = OnModuleLogEdgeOperation(
-				new GUIContent("Operation"),
-				edge.Operation.Value,
-				ModuleEdgeModel.ModuleBlock.ValidOperations
-			);
-			
-			edge.ModuleInfo.Value = block;
-		}
-
-		ModuleEdgeModel.Operations OnModuleLogEdgeOperation(
-			GUIContent label,
-			ModuleEdgeModel.Operations operation,
-			ModuleEdgeModel.Operations[] validOperations
-		)
-		{
-			return EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-				label,
-				"- Operation -",
-				operation,
-				value =>
-				{
-					if (validOperations.Contains(value)) return null;
-					return Color.red;
-				},
-				validOperations.Prepend(ModuleEdgeModel.Operations.Unknown).ToArray()
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "Passing this filter is required to continue to run this key value logic."),
+				edge.Filtering
 			);
 		}
 		#endregion

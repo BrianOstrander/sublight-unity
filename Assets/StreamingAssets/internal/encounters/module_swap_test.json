@@ -41,22 +41,26 @@
               "encounterInteractions": [],
               "moduleTraits": []
             },
-            "id": "4023b5ae-eb20-443e-9977-257fec2efea0"
+            "id": "b6f79226-e007-46a1-b91c-12acfb9d7e10"
           }
         ],
         "index": 1,
         "ending": true,
-        "logId": "16157223-c313-4943-942a-2289a8fd9de4",
-        "name": "Ending"
+        "logId": "bdac79c3-9160-48bc-b3de-f76fdb139381"
       }
     ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": [],
-    "moduleLogs": [
+    "moduleTraitLogs": [
       {
         "edges": [
           {
+            "operation": "AppendTraitByTraitId",
+            "operationId": "faulty_airlocks",
+            "validModuleTypes": [
+              "Propulsion"
+            ],
             "filtering": {
               "showValues": true,
               "booleanKeyValues": [],
@@ -72,21 +76,19 @@
                     "Propulsion"
                   ],
                   "filterValue": "faulty_airlocks",
-                  "filterId": "92a9a8cb-da79-418d-994b-6dd71ea7fc4b",
+                  "filterId": "121da4a8-f103-4ae2-87ac-396fadfe9456",
                   "group": "All"
                 }
               ]
             },
-            "operation": "AppendTraitByTraitId",
-            "traitInfo": {
-              "OperationId": "faulty_airlocks",
-              "ValidModuleTypes": [
-                "Propulsion"
-              ]
-            },
-            "id": "7dea209b-8635-41da-afc3-f65b40240b19"
+            "id": "1cd64768-a641-4754-9ec8-9cc40f61e57a"
           },
           {
+            "operation": "RemoveTraitByTraitId",
+            "operationId": "faulty_airlocks",
+            "validModuleTypes": [
+              "Propulsion"
+            ],
             "filtering": {
               "showValues": true,
               "booleanKeyValues": [],
@@ -97,38 +99,31 @@
               "encounterInteractions": [],
               "moduleTraits": [
                 {
-                  "operation": "PresentFamilyId",
+                  "operation": "PresentTraitId",
                   "validModuleTypes": [
                     "Propulsion"
                   ],
-                  "filterValue": "airlocks",
-                  "filterId": "b67c0793-7c04-409d-a040-3f0def90fe4a",
+                  "filterValue": "faulty_airlocks",
+                  "filterId": "94662d83-e867-417b-b7ca-258763845c42",
                   "group": "All"
                 }
               ]
             },
-            "operation": "RemoveTraitByTraitFamilyId",
-            "traitInfo": {
-              "OperationId": "airlocks",
-              "ValidModuleTypes": [
-                "Propulsion"
-              ]
-            },
             "index": 1,
-            "id": "e4defd52-a260-4b71-ade2-58c287ee2f00"
+            "id": "63273bd5-29a3-4137-acf3-0f5167a78e82"
           }
         ],
         "beginning": true,
-        "logId": "7cd2b786-8a3c-4fb2-b895-3271a082c518",
-        "fallbackLogId": "16157223-c313-4943-942a-2289a8fd9de4"
+        "logId": "a815faf2-9c2f-4661-930f-3e2db4ad4910",
+        "fallbackLogId": "bdac79c3-9160-48bc-b3de-f76fdb139381"
       }
     ]
   },
   "version": 12,
   "metaKeyValues": {},
-  "created": "2019-11-08T09:23:36.576021-08:00",
-  "modified": "2019-11-08T09:23:36.576021-08:00",
-  "id": "module_test",
+  "created": "2019-11-10T14:37:02.97681-08:00",
+  "modified": "2019-11-10T14:37:02.97681-08:00",
+  "id": "module_swap_test",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"
 }
