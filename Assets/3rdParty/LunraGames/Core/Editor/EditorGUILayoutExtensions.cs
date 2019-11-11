@@ -13,6 +13,11 @@ namespace LunraGamesEditor
 {
 	public static class EditorGUILayoutExtensions
 	{
+		static class Constants
+		{
+			public const float LabelWidth = 145f;
+		}
+		
 		struct ColorCombined
 		{
 			public Color ContentColor;
@@ -704,7 +709,7 @@ namespace LunraGamesEditor
 
 			GUILayout.BeginHorizontal();
 			{
-				if (label != null && label != GUIContent.none) GUILayout.Label(label, GUILayout.Width(145f));
+				if (label != null && label != GUIContent.none) GUILayout.Label(label, GUILayout.Width(Constants.LabelWidth));
 
 				var notSelectedContentColor = Color.gray.NewV(0.75f);
 				var notSelectedBackgroundColor = Color.gray.NewV(0.65f);
@@ -721,6 +726,25 @@ namespace LunraGamesEditor
 			return value;
 		}
 
+		public static Vector2 Vector2FieldCompact(
+			GUIContent label,
+			Vector2 value 
+		)
+		{
+			var x = value.x;
+			var y = value.y;
+			
+			GUILayout.BeginHorizontal();
+			{
+				if (label != null && label != GUIContent.none) GUILayout.Label(label, GUILayout.Width(Constants.LabelWidth));
+				x = EditorGUILayout.FloatField(x);
+				y = EditorGUILayout.FloatField(y);
+			}
+			GUILayout.EndHorizontal();
+
+			return new Vector2(x, y);
+		}
+		
 		public static void BeginVertical(GUIStyle style, Color? color, bool useColor = true, params GUILayoutOption[] options)
 		{
 			BeginVertical(style, color.HasValue ? color.Value : GUI.color, useColor, options);

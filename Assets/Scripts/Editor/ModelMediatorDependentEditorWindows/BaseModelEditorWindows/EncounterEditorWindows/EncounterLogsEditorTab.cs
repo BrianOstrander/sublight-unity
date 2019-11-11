@@ -2607,11 +2607,13 @@ namespace LunraGames.SubLight
 			var canBePowerConsumption = !(CanBe(ModuleTypes.PowerProduction) && moduleConstraint.ValidTypes.Length == 1);
 			var canBeTransitRange = CanBe(ModuleTypes.Navigation);
 			var canBeTransitVelocity = CanBe(ModuleTypes.Propulsion);
+
+			const string ModuleSwapRangeTooltip = "The random range for this value.";
 			
 			EditorGUILayoutExtensions.PushEnabled(canBePowerProduction);
 			{
-				moduleConstraint.PowerProduction = EditorGUILayout.Vector2Field(
-					new GUIContent("Power Production"),
+				moduleConstraint.PowerProduction = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent("Power Production", ModuleSwapRangeTooltip),
 					canBePowerProduction ? moduleConstraint.PowerProduction : FloatRange.Zero
 				);
 			}
@@ -2619,8 +2621,8 @@ namespace LunraGames.SubLight
 
 			EditorGUILayoutExtensions.PushEnabled(canBePowerConsumption);
 			{
-				moduleConstraint.PowerConsumption = EditorGUILayout.Vector2Field(
-					new GUIContent("Power Consumption"),
+				moduleConstraint.PowerConsumption = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent("Power Consumption", ModuleSwapRangeTooltip),
 					canBePowerConsumption ? moduleConstraint.PowerConsumption : FloatRange.Zero
 				);
 			}
@@ -2628,8 +2630,8 @@ namespace LunraGames.SubLight
 
 			EditorGUILayoutExtensions.PushEnabled(canBeTransitRange);
 			{
-				moduleConstraint.TransitRange = EditorGUILayout.Vector2Field(
-					new GUIContent("Transit Range"),
+				moduleConstraint.TransitRange = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent("Transit Range", ModuleSwapRangeTooltip),
 					canBeTransitRange ? moduleConstraint.TransitRange : FloatRange.Zero
 				);
 			}
@@ -2637,22 +2639,22 @@ namespace LunraGames.SubLight
 
 			EditorGUILayoutExtensions.PushEnabled(canBeTransitVelocity);
 			{
-				moduleConstraint.TransitVelocity = EditorGUILayout.Vector2Field(
-					new GUIContent("Transit Velocity"),
+				moduleConstraint.TransitVelocity = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent("Transit Velocity", ModuleSwapRangeTooltip),
 					canBeTransitVelocity ? moduleConstraint.TransitVelocity : FloatRange.Zero
 				);
 			}
 			EditorGUILayoutExtensions.PopEnabled();
 
-			moduleConstraint.RepairCost = EditorGUILayout.Vector2Field(
-				new GUIContent("Repair Cost"),
+			moduleConstraint.RepairCost = EditorGUILayoutExtensions.Vector2FieldCompact(
+				new GUIContent("Repair Cost", ModuleSwapRangeTooltip),
 				moduleConstraint.RepairCost
 			);
 
 			if (0 < moduleConstraint.ManufacturerIds.Length) EditorGUILayout.HelpBox("Validation of Manufacturer Ids not done!", MessageType.Error);
 			
 			moduleConstraint.ManufacturerIds = EditorGUILayoutExtensions.StringArray(
-				new GUIContent("ManufacturerIds"),
+				new GUIContent("ManufacturerIds", ModuleSwapRangeTooltip),
 				moduleConstraint.ManufacturerIds
 			);
 			
