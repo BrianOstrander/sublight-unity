@@ -2581,25 +2581,16 @@ namespace LunraGames.SubLight
 			ModuleSwapEncounterLogModel model
 		)
 		{
-			OnEdgedLog<ModuleSwapEncounterLogModel, ModuleSwapEdgeModel>(
-				infoModel,
-				model,
-				OnModuleSwapLogEdge,
-				OnModuleSwapLogSpawnOptions
+			model.Style.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Style"), 
+				"- Select Style -",
+				model.Style.Value,
+				Color.red
 			);
-		}
-		
-		void OnModuleSwapLogSpawnOptions(
-			EncounterInfoModel infoModel,
-			ModuleSwapEncounterLogModel model,
-			string prefix,
-			int index = int.MaxValue
-		)
-		{
-			if (GUILayout.Button(new GUIContent("Append New Module Constraint"), EditorStyles.miniButton, GUILayout.MaxWidth(LogFloats.AppendEntryWidthMaximum)))
-			{
-				OnEdgedLogSpawn(model, null, index);
-			}
+			
+			if (GUILayout.Button(new GUIContent("Append New Module Constraint"))) OnEdgedLogSpawn(model);
+			
+			OnEdgedLog<ModuleSwapEncounterLogModel, ModuleSwapEdgeModel>(infoModel, model, OnModuleSwapLogEdge);
 		}
 
 		void OnModuleSwapLogEdge(

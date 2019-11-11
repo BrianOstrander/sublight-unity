@@ -24,6 +24,7 @@
     "moduleTraitLogs": [],
     "moduleSwapLogs": [
       {
+        "style": "Derelict",
         "edges": [
           {
             "moduleConstraint": {
