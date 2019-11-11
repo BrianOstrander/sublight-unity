@@ -406,10 +406,15 @@ namespace LunraGames.SubLight
 					possibleTraits = possibleTraits.Where(t => t.Severity.Value == limitInstance.Limit.Severity);
 					break;
 			}
+			
+			// Debug.Log("all: "+possibleTraits.Count());
 
 			var possibleTraitsByValidIds = limitInstance.Limit.ValidTraitIds.None() ? possibleTraits : possibleTraits.Where(t => limitInstance.Limit.ValidTraitIds.Contains(t.Id.Value));
 			var possibleTraitsByValidFamilyIds = limitInstance.Limit.ValidTraitFamilyIds.None() ? possibleTraits : possibleTraits.Where(t => t.FamilyIds.Value.Any(f => limitInstance.Limit.ValidTraitFamilyIds.Contains(f)));
 
+			// Debug.Log("validIds: "+possibleTraitsByValidIds.Count());
+			// Debug.Log("validFamilyIds: "+possibleTraitsByValidFamilyIds.Count());
+			
 			var possibleTraitsFinal = new List<ModuleTraitModel>();
 
 			foreach (var trait in possibleTraitsByValidIds.Union(possibleTraitsByValidFamilyIds))
@@ -418,14 +423,8 @@ namespace LunraGames.SubLight
 				if (IsTraitValid(trait, traitConstraint)) possibleTraitsFinal.Add(trait);
 			}
 
-			if (possibleTraitsFinal.None())
-			{
-				OnDone();
-				return;
-			}
-
 			OnGenerateTraits(
-				possibleTraitsFinal.Random(),
+				possibleTraitsFinal.None() ? null : possibleTraitsFinal.Random(),
 				limitInstance,
 				module,
 				traitConstraint,
