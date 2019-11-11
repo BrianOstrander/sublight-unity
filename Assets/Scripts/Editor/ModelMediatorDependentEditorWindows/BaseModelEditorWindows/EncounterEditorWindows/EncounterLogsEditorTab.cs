@@ -2651,10 +2651,38 @@ namespace LunraGames.SubLight
 				moduleConstraint.RepairCost
 			);
 
+			// var traitSeveritySelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
+			// 	new GUIContent("Append Trait Severity Constraint", "Constrain the number of traits generated "), 	
+			// );
+			
+			/*
+			GUILayout.Label("Trait Limits");
+			
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var traitSeverity in EnumExtensions.GetValues(ModuleTraitSeverity.Unknown))
+				{
+					
+					// var isValidModule = moduleConstraint.ValidTypes.Contains(moduleType);
+					// var isValidModuleToggle = EditorGUILayout.Toggle(
+					// 	ObjectNames.NicifyVariableName(moduleType.ToString()),
+					// 	isValidModule
+					// );
+					//
+					// if (isValidModule != isValidModuleToggle)
+					// {
+					// 	if (isValidModuleToggle) moduleConstraint.ValidTypes = moduleConstraint.ValidTypes.Append(moduleType).ToArray();
+					// 	else moduleConstraint.ValidTypes = moduleConstraint.ValidTypes.ExceptOne(moduleType).ToArray();
+					// }
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
+			*/
+			
 			if (0 < moduleConstraint.ManufacturerIds.Length) EditorGUILayout.HelpBox("Validation of Manufacturer Ids not done!", MessageType.Error);
 			
 			moduleConstraint.ManufacturerIds = EditorGUILayoutExtensions.StringArray(
-				new GUIContent("ManufacturerIds", ModuleSwapRangeTooltip),
+				new GUIContent("ManufacturerIds"),
 				moduleConstraint.ManufacturerIds
 			);
 			

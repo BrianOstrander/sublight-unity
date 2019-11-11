@@ -5,7 +5,6 @@ using UnityEngine;
 
 using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
-using Newtonsoft.Json;
 using UnityEditor;
 
 namespace LunraGames.SubLight
@@ -101,18 +100,56 @@ namespace LunraGames.SubLight
 		[Serializable]
 		public struct TraitLimit
 		{
+			/// <summary>
+			/// The valid severity for this limit, specifying Unknown indicates any is valid.
+			/// </summary>
 			public ModuleTraitSeverity Severity;
 			public IntegerRange Count;
+			/// <summary>
+			/// Only traits with these ids are valid.
+			/// </summary>
+			public string[] ValidTraitIds;
+			/// <summary>
+			/// Only traits with these family ids are valid.
+			/// </summary>
+			public string[] ValidTraitFamilyIds;
 			
 			public TraitLimit(
 				ModuleTraitSeverity severity,
 				int countMinimum = 1,
-				int countMaximum = 1
+				int countMaximum = 1,
+				string[] validTraitIds = null,
+				string[] validTraitFamilyIds = null
 			)
 			{
 				Severity = severity;
 				Count = new IntegerRange(countMinimum, countMaximum);
+				ValidTraitIds = validTraitIds ?? new string[0];
+				ValidTraitFamilyIds = validTraitFamilyIds ?? new string[0];
 			}
+		}
+
+		struct TraitLimitInstance
+		{
+			public static TraitLimitInstance Random(TraitLimit limit) => new TraitLimitInstance(limit, DemonUtility.GetNextInteger(limit.Count.Primary, limit.Count.Secondary));
+			public static TraitLimitInstance None => new TraitLimitInstance(default, 0);
+			
+			public readonly TraitLimit Limit;
+			public readonly int RemainingCount;
+
+			TraitLimitInstance(
+				TraitLimit limit,
+				int remainingCount
+			)
+			{
+				Limit = limit;
+				RemainingCount = remainingCount;
+			}
+			
+			public TraitLimitInstance Use() => new TraitLimitInstance(Limit, Mathf.Max(0, RemainingCount - 1));
+
+			public bool NoneRemaining => RemainingCount <= 0;
+			public bool AnyRemaining => 0 < RemainingCount;
 		}
 
 		[Serializable]
@@ -305,31 +342,12 @@ namespace LunraGames.SubLight
 			if (module == null) throw new ArgumentNullException(nameof(module));
 			if (done == null) throw new ArgumentNullException(nameof(done));
 
-			var traitConstraint = GetTraitConstraint(module);
-			
-			var remaining = new Dictionary<ModuleTraitSeverity, int>();
-			
-			var random = new Demon();
-			
-			foreach (var traitLimit in traitLimits)
-			{
-				var count = random.GetNextInteger(
-					traitLimit.Count.Primary,
-					traitLimit.Count.Secondary
-				);
-				
-				if (0 < count)
-				{
-					if (remaining.ContainsKey(traitLimit.Severity)) Debug.LogError("Module trait Severity \"" + traitLimit.Severity + "\" is specified multiple times, ignoring duplicates");
-					else remaining.Add(traitLimit.Severity, count);
-				}
-			}
-
 			OnGenerateTraits(
 				null,
+				TraitLimitInstance.None, 
 				module,
-				traitConstraint,
-				remaining,
+				GetTraitConstraint(module),
+				traitLimits.Select(TraitLimitInstance.Random).Where(l => l.AnyRemaining).ToList(),
 				new List<ModuleTraitModel>(), 
 				done
 			);
@@ -337,29 +355,18 @@ namespace LunraGames.SubLight
 		
 		void OnGenerateTraits(
 			ModuleTraitModel result,
+			TraitLimitInstance limitInstance,
 			ModuleModel module,
 			TraitConstraint traitConstraint,
-			Dictionary<ModuleTraitSeverity, int> remaining,
+			List<TraitLimitInstance> remaining,
 			List<ModuleTraitModel> appended,
 			Action<Result<Payloads.GenerateTraits>> done
 		)
 		{
-			if (result != null)
-			{
-				AppendTraitToModule(result, module);
-				appended.Add(result);
-				AppendTraitToConstraint(result, ref traitConstraint);
-				remaining[result.Severity] = remaining[result.Severity] - 1;
-			}
-
-			var validSeverity = remaining.Where(kv => 0 < kv.Value).Select(kv => kv.Key);
-			
-			var nextTrait = validSeverity.None() ? null : Traits.Where(t => validSeverity.Contains(t.Severity.Value)).Where(t => IsTraitValid(t, traitConstraint)).Random();
-			
-			if (nextTrait == null)
+			void OnDone()
 			{
 				done(
-				Result<Payloads.GenerateTraits>.Success(
+					Result<Payloads.GenerateTraits>.Success(
 						new Payloads.GenerateTraits
 						{
 							Module = module,
@@ -367,11 +374,59 @@ namespace LunraGames.SubLight
 						}
 					)
 				);
-				return;	
 			}
 			
+			if (result != null)
+			{
+				AppendTraitToModule(result, module);
+				appended.Add(result);
+				AppendTraitToConstraint(result, ref traitConstraint);
+			}
+
+			if (limitInstance.NoneRemaining && remaining.Any())
+			{
+				limitInstance = remaining.First();
+				remaining.RemoveAt(0);
+			}
+			
+			if (limitInstance.NoneRemaining)
+			{
+				OnDone();
+				return;
+			}
+
+			limitInstance = limitInstance.Use();
+
+			var possibleTraits = Traits.AsEnumerable();
+
+			switch (limitInstance.Limit.Severity)
+			{
+				case ModuleTraitSeverity.Unknown: break;
+				default:
+					possibleTraits = possibleTraits.Where(t => t.Severity.Value == limitInstance.Limit.Severity);
+					break;
+			}
+
+			var possibleTraitsByValidIds = limitInstance.Limit.ValidTraitIds.None() ? possibleTraits : possibleTraits.Where(t => limitInstance.Limit.ValidTraitIds.Contains(t.Id.Value));
+			var possibleTraitsByValidFamilyIds = limitInstance.Limit.ValidTraitFamilyIds.None() ? possibleTraits : possibleTraits.Where(t => t.FamilyIds.Value.Any(f => limitInstance.Limit.ValidTraitFamilyIds.Contains(f)));
+
+			var possibleTraitsFinal = new List<ModuleTraitModel>();
+
+			foreach (var trait in possibleTraitsByValidIds.Union(possibleTraitsByValidFamilyIds))
+			{
+				if (possibleTraitsFinal.Any(t => t.Id.Value == trait.Id.Value)) continue;
+				if (IsTraitValid(trait, traitConstraint)) possibleTraitsFinal.Add(trait);
+			}
+
+			if (possibleTraitsFinal.None())
+			{
+				OnDone();
+				return;
+			}
+
 			OnGenerateTraits(
-				nextTrait,
+				possibleTraitsFinal.Random(),
+				limitInstance,
 				module,
 				traitConstraint,
 				remaining,
