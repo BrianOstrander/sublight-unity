@@ -20,7 +20,7 @@ namespace LunraGames.SubLight
 		)
 		{
 			FilterAll(
-				(status, result) => OnHandleFilterAll(status, result, linearDone),
+				(status, result) => OnHandleFilterAll(status, result, logModel, linearDone),
 				edge => edge.Filtering,
 				logModel.Edges.Value.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray()		
 			);
@@ -29,6 +29,7 @@ namespace LunraGames.SubLight
 		void OnHandleFilterAll(
 			RequestStatus status,
 			ModuleSwapEdgeModel[] filtered,
+			ModuleSwapEncounterLogModel logModel,
 			Action linearDone
 		)
 		{
@@ -40,12 +41,13 @@ namespace LunraGames.SubLight
 
 			Configuration.Model.Context.ModuleService.GenerateModulesWithTraits(
 				filtered.Select(f => new ModuleService.ModuleConstraintWithTraitLimits(f.ModuleConstraint.Value, f.Traits.Value)).ToArray(),
-				result => OnHandleGeneration(result, linearDone)
+				result => OnHandleGeneration(result, logModel, linearDone)
 			);
 		}
 
 		void OnHandleGeneration(
 			ResultArray<ModuleModel> result,
+			ModuleSwapEncounterLogModel logModel,
 			Action linearDone
 		)
 		{
@@ -58,6 +60,7 @@ namespace LunraGames.SubLight
 					return;
 			}
 
+			/*
 			var text = "The following modules were generated:";
 			var index = 0;
 			foreach (var module in result.Payloads)
@@ -66,50 +69,39 @@ namespace LunraGames.SubLight
 				index++;
 			}
 			Debug.Log(text);
+			*/
 
-			linearDone();
-		}
+			var allModules = result.Payloads;
 
-		/*
-		void OnDone(RequestStatus status, DialogEdgeModel edge, DialogEncounterLogModel logModel, Action<string> done)
-		{
-			if (status != RequestStatus.Success)
+			if (allModules.None())
 			{
-				// No enabled dialogs found.
-				done(logModel.NextLog);
+				linearDone();
 				return;
 			}
 
-			var fallthroughId = logModel.NextLog;
-			var successId = GetValidId(edge.SuccessLogId.Value, fallthroughId);
-			var failureId = GetValidId(edge.FailureLogId.Value, fallthroughId);
-			var cancelId = GetValidId(edge.CancelLogId.Value, fallthroughId);
+			var shipModules = Configuration.Model.Ship.Statistics.Value.Modules.ToList();
+			
+			foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
+			{
+				var modules = allModules.Where(m => m.Type.Value == moduleType);
+				if (modules.None()) continue;
+				if (1 < modules.Count()) Debug.LogWarning("Multiple modules generated for module swap encounter log, picking only the first");
 
-			Action successClick = () => done(successId);
-			Action failureClick = () => done(failureId);
-			Action cancelClick = () => done(cancelId);
+				shipModules.RemoveAll(m => m.Type.Value == moduleType);
+				shipModules.Add(modules.First());
+			}
 
-			var result = new DialogHandlerModel(
-				logModel
-			);
-
-			result.Dialog.Value = new DialogLogBlock(
-				edge.Title.Value,
-				edge.Message.Value,
-				edge.DialogType.Value,
-				edge.DialogStyle.Value,
-				edge.SuccessText.Value,
-				edge.FailureText.Value,
-				edge.CancelText.Value,
-				successClick,
-				failureClick,
-				cancelClick
-			);
-
-			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
+			switch (logModel.Style.Value)
+			{
+				case ModuleSwapEncounterLogModel.Styles.Instant:
+					Configuration.Model.Ship.Statistics.Value = new ShipStatistics(shipModules.ToArray());
+					linearDone();
+					break;
+				default:
+					Debug.LogError("Unrecognized " + nameof(ModuleSwapEncounterLogModel.Style) + ": " + logModel.Style.Value + ", skipping");
+					linearDone();
+					break;
+			}
 		}
-
-		string GetValidId(string target, string fallback) { return string.IsNullOrEmpty(target) ? fallback : target; }
-		*/
 	}
 }

@@ -7,7 +7,8 @@ namespace LunraGames.SubLight.Models
 		public enum Styles
 		{
 			Unknown = 0,
-			Derelict = 10
+			Instant = 10,
+			Derelict = 20
 		}
 		
 		public override EncounterLogTypes LogType => EncounterLogTypes.ModuleSwap;

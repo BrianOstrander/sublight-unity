@@ -17,14 +17,45 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [],
+    "eventLogs": [
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 20,
+                "lock_state": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "3e8fe7bb-0069-45b3-abfd-178f5b7fbd57"
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "cb27678d-e92f-4a92-b4ba-50dc8d964fd1"
+      }
+    ],
     "dialogLogs": [],
     "bustLogs": [],
     "conversationLogs": [],
     "moduleTraitLogs": [],
     "moduleSwapLogs": [
       {
-        "style": "Derelict",
+        "style": "Instant",
         "edges": [
           {
             "moduleConstraint": {
@@ -92,8 +123,8 @@
           }
         ],
         "beginning": true,
-        "ending": true,
-        "logId": "7ff40b42-1843-4151-a6e7-0492828e148a"
+        "logId": "7ff40b42-1843-4151-a6e7-0492828e148a",
+        "fallbackLogId": "cb27678d-e92f-4a92-b4ba-50dc8d964fd1"
       }
     ]
   },
