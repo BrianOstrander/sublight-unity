@@ -332,6 +332,17 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		/// <summary>
+		/// Generates traits on the specified module.
+		/// </summary>
+		/// <remarks>
+		///	The order in which you specify trait limits determines the bias for selecting traits.
+		/// Ones earlier in the list are chosen first, which may exclude later ones. Undecided if this is always going to be the case.
+		/// </remarks>
+		/// <param name="module"></param>
+		/// <param name="done"></param>
+		/// <param name="traitLimits"></param>
+		/// <exception cref="ArgumentNullException"></exception>
 		public void GenerateTraits(
 			ModuleModel module,
 			Action<Result<Payloads.GenerateTraits>> done,
