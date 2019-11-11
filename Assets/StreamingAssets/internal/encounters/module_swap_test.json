@@ -17,21 +17,31 @@
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
-    "eventLogs": [
+    "eventLogs": [],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": [],
+    "moduleTraitLogs": [],
+    "moduleSwapLogs": [
       {
         "edges": [
           {
-            "encounterEvent": "ToolbarSelection",
-            "isHalting": true,
-            "keyValues": {
-              "booleans": {},
-              "integers": {
-                "selection": 20,
-                "lock_state": 0
+            "moduleConstraint": {
+              "ValidTypes": [
+                "Propulsion"
+              ],
+              "PowerConsumption": {
+                "secondary": 1.0
               },
-              "strings": {},
-              "floats": {}
+              "TransitVelocity": {
+                "secondary": 1.0
+              },
+              "RepairCost": {
+                "secondary": 1.0
+              },
+              "ManufacturerIds": []
             },
+            "traits": [],
             "filtering": {
               "booleanKeyValues": [],
               "integerKeyValues": [],
@@ -41,88 +51,55 @@
               "encounterInteractions": [],
               "moduleTraits": []
             },
-            "id": "b6f79226-e007-46a1-b91c-12acfb9d7e10"
-          }
-        ],
-        "index": 1,
-        "ending": true,
-        "logId": "bdac79c3-9160-48bc-b3de-f76fdb139381"
-      }
-    ],
-    "dialogLogs": [],
-    "bustLogs": [],
-    "conversationLogs": [],
-    "moduleTraitLogs": [
-      {
-        "edges": [
-          {
-            "operation": "AppendTraitByTraitId",
-            "operationId": "faulty_airlocks",
-            "validModuleTypes": [
-              "Propulsion"
-            ],
-            "filtering": {
-              "showValues": true,
-              "booleanKeyValues": [],
-              "integerKeyValues": [],
-              "stringKeyValues": [],
-              "floatKeyValues": [],
-              "enumerationKeyValues": [],
-              "encounterInteractions": [],
-              "moduleTraits": [
-                {
-                  "operation": "AppendableTraitId",
-                  "validModuleTypes": [
-                    "Propulsion"
-                  ],
-                  "filterValue": "faulty_airlocks",
-                  "filterId": "121da4a8-f103-4ae2-87ac-396fadfe9456",
-                  "group": "All"
-                }
-              ]
-            },
-            "id": "1cd64768-a641-4754-9ec8-9cc40f61e57a"
+            "id": "beb3e69b-2957-4d1f-96c3-9702e2219953"
           },
           {
-            "operation": "RemoveTraitByTraitId",
-            "operationId": "faulty_airlocks",
-            "validModuleTypes": [
-              "Propulsion"
-            ],
+            "moduleConstraint": {
+              "ValidTypes": [
+                "PowerProduction",
+                "RationManagement",
+                "LifeSupport",
+                "LivingQuarters",
+                "Navigation"
+              ],
+              "PowerProduction": {
+                "secondary": 1.0
+              },
+              "PowerConsumption": {
+                "secondary": 1.0
+              },
+              "TransitRange": {
+                "secondary": 1.0
+              },
+              "RepairCost": {
+                "secondary": 1.0
+              },
+              "ManufacturerIds": []
+            },
+            "traits": [],
             "filtering": {
-              "showValues": true,
               "booleanKeyValues": [],
               "integerKeyValues": [],
               "stringKeyValues": [],
               "floatKeyValues": [],
               "enumerationKeyValues": [],
               "encounterInteractions": [],
-              "moduleTraits": [
-                {
-                  "operation": "PresentTraitId",
-                  "validModuleTypes": [
-                    "Propulsion"
-                  ],
-                  "filterValue": "faulty_airlocks",
-                  "filterId": "94662d83-e867-417b-b7ca-258763845c42",
-                  "group": "All"
-                }
-              ]
+              "moduleTraits": []
             },
             "index": 1,
-            "id": "63273bd5-29a3-4137-acf3-0f5167a78e82"
+            "id": "066b42f9-b4b5-49fc-8e6a-f98eea9d9545"
           }
         ],
         "beginning": true,
-        "logId": "a815faf2-9c2f-4661-930f-3e2db4ad4910",
-        "fallbackLogId": "bdac79c3-9160-48bc-b3de-f76fdb139381"
+        "ending": true,
+        "logId": "7ff40b42-1843-4151-a6e7-0492828e148a"
       }
     ]
   },
   "version": 12,
   "metaKeyValues": {},
-  "created": "2019-11-10T14:37:02.97681-08:00",
-  "modified": "2019-11-10T14:37:02.97681-08:00",
+  "created": "2019-11-10T15:15:26.045188-08:00",
+  "modified": "2019-11-10T15:15:26.045188-08:00",
   "id": "module_swap_test",
   "SaveType": "EncounterInfo",
   "SiblingBehaviour": "None"

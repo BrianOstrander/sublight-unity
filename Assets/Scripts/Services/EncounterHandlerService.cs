@@ -74,7 +74,8 @@ namespace LunraGames.SubLight
 				new DialogLogHandler(configuration),
 				new BustLogHandler(configuration),
 				new ConversationLogHandler(configuration),
-				new ModuleTraitLogHandler(configuration) 
+				new ModuleTraitLogHandler(configuration),
+				new ModuleSwapLogHandler(configuration) 
 			};
 		}
 

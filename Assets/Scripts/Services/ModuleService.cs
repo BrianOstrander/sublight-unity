@@ -115,6 +115,22 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		[Serializable]
+		public struct ModuleConstraintWithTraitLimits
+		{
+			public ModuleConstraint Constraint;
+			public TraitLimit[] Limits;
+
+			public ModuleConstraintWithTraitLimits(
+				ModuleConstraint constraint,
+				params TraitLimit[] limits
+			)
+			{
+				Constraint = constraint;
+				Limits = limits;
+			}
+		}
+
 		protected struct GenerationInfo
 		{
 			public static GenerationInfo Default => new GenerationInfo
@@ -167,7 +183,7 @@ namespace LunraGames.SubLight
 			{
 				var error = "Loading all module traits failed with status: " + results.Status + " and error: " + results.Error;
 				Debug.LogError(error);
-				done(Result<IModuleService>.Failure(default, error));
+				done(Result<IModuleService>.Failure(error));
 				return;
 			}
 
@@ -266,8 +282,8 @@ namespace LunraGames.SubLight
 						{
 							done(
 								ResultArray<ModuleModel>.Failure(
-									results.ToArray(),
-									nameof(GenerateModule) + " failed with status: " + result.Status + " and error: " + result.Error
+									nameof(GenerateModule) + " failed with status: " + result.Status + " and error: " + result.Error,
+									results.ToArray()
 								).Log()
 							);
 							return;
@@ -363,6 +379,74 @@ namespace LunraGames.SubLight
 				done
 			);
 		}
+
+		public void GenerateModulesWithTraits(
+			ModuleConstraintWithTraitLimits[] constraintsWithTraitLimits,
+			Action<ResultArray<ModuleModel>> done
+		)
+		{
+			CheckInitialization();
+			if (constraintsWithTraitLimits == null) throw new ArgumentNullException(nameof(constraintsWithTraitLimits));
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			
+			OnGenerateModulesWithTraits(
+				constraintsWithTraitLimits.ToList(),
+				new List<Result<ModuleModel>>(),
+				result => done(result.LogIfNotSuccess())
+			);
+		}
+
+		void OnGenerateModulesWithTraits(
+			List<ModuleConstraintWithTraitLimits> remaining,
+			List<Result<ModuleModel>> generated,
+			Action<ResultArray<ModuleModel>> done
+		)
+		{
+			if (remaining.None())
+			{
+				done(ResultArray<ModuleModel>.Success(generated.ToArray()));
+				return;
+			}
+
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+			
+			GenerateModule(
+				next.Constraint,
+				generateModuleResult =>
+				{
+					switch (generateModuleResult.Status)
+					{
+						case RequestStatus.Success:
+							GenerateTraits(
+								generateModuleResult.Payload,
+								generateTraitsResult =>
+								{
+									switch (generateTraitsResult.Status)
+									{
+										case RequestStatus.Success:
+											generated.Add(Result<ModuleModel>.Success(generateTraitsResult.Payload.Module));
+											OnGenerateModulesWithTraits(
+												remaining,
+												generated,
+												done
+											);
+											break;
+										default:
+											done(ResultArray<ModuleModel>.Failure(generateTraitsResult.Error));
+											break;
+									}
+								},
+								next.Limits
+							);
+							break;
+						default:
+							done(ResultArray<ModuleModel>.Failure(generateModuleResult.Error));
+							break;
+					}
+				}
+			);
+		}
 		
 		public void AppendTraits(
 			ModuleModel module,
@@ -390,7 +474,6 @@ namespace LunraGames.SubLight
 			{
 				done(
 					Result<Payloads.AppendTraits>.Failure(
-						default,
 						nameof(CanAppendTraits) + " failed with status: " + result.Status + " and error: " + result.Error
 					).Log()
 				);
@@ -433,7 +516,6 @@ namespace LunraGames.SubLight
 				{
 					done(
 						Result<Payloads.CanAppendTraits>.Failure(
-							default,
 							"No ModuleTrait with id \"" + id + "\" found"
 						).Log()
 					);
@@ -553,6 +635,11 @@ namespace LunraGames.SubLight
 			ModuleModel module,
 			Action<Result<ModuleService.Payloads.GenerateTraits>> done,
 			params ModuleService.TraitLimit[] traitLimits
+		);
+		
+		void GenerateModulesWithTraits(
+			ModuleService.ModuleConstraintWithTraitLimits[] constraintsWithTraitLimits,
+			Action<ResultArray<ModuleModel>> done
 		);
 
 		void AppendTraits(

@@ -20,7 +20,7 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		public static ResultArray<T> Failure(Result<T>[] results, string error)
+		public static ResultArray<T> Failure(string error, Result<T>[] results = null)
 		{
 			return new ResultArray<T>(
 				RequestStatus.Failure,
@@ -49,6 +49,16 @@ namespace LunraGames.SubLight
 				case RequestStatus.Cancel: Debug.LogWarning(message + this); break;
 				case RequestStatus.Success: Debug.Log(message + this); break;
 				default: Debug.LogError(message + "Unrecognized RequestStatus: " + Status + ", result:\n" + this); break;
+			}
+			return this;
+		}
+		
+		public ResultArray<T> LogIfNotSuccess(string message = null)
+		{
+			switch (Status)
+			{
+				case RequestStatus.Success: break;
+				default: Log(message); break;
 			}
 			return this;
 		}

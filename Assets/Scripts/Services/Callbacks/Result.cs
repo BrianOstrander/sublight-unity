@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Net;
+using UnityEngine;
 
 namespace LunraGames.SubLight
 {
@@ -71,7 +72,7 @@ namespace LunraGames.SubLight
 			);
 		}
 
-		public static Result<T> Failure(T payload, string error)
+		public static Result<T> Failure(string error, T payload = default)
 		{
 			return new Result<T>(
 				RequestStatus.Failure,
@@ -114,7 +115,9 @@ namespace LunraGames.SubLight
 					result += " - " + Error;
 					break;
 			}
-			return result + "\n- Payload -\n" + Payload.ToReadableJson();
+
+			try { return result + "\n- Payload -\n" + Payload.ToReadableJson(); }
+			catch { return result + "\n- Payload -\n<CANNOT PARSE TO JSON>"; }
 		}
 		
 		public static implicit operator Result(Result<T> r)

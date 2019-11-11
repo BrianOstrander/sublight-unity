@@ -37,7 +37,7 @@ namespace LunraGames.SubLight
 				{
 					case RequestStatus.Success: break;
 					default:
-						result.Log("The following error interrupted module log handling, unexpected behaviour may occur.");
+						result.Log("The following error interrupted module trait log handling, unexpected behaviour may occur.");
 						break;
 				}
 

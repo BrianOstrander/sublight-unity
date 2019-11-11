@@ -536,6 +536,9 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.ModuleTrait:
 					result = NewEncounterLog<ModuleTraitEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
+				case EncounterLogTypes.ModuleSwap:
+					result = NewEncounterLog<ModuleSwapEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType: " + logType);
 					break;
@@ -755,6 +758,9 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.ModuleTrait:
 					OnModuleTraitLog(infoModel, model as ModuleTraitEncounterLogModel);
+					break;
+				case EncounterLogTypes.ModuleSwap:
+					OnModuleSwapLog(infoModel, model as ModuleSwapEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -2566,6 +2572,137 @@ namespace LunraGames.SubLight
 				new GUIContent("Filtering", "Passing this filter is required to continue to run this key value logic."),
 				edge.Filtering
 			);
+		}
+		#endregion
+		
+		#region Module Swap Logs
+		void OnModuleSwapLog(
+			EncounterInfoModel infoModel,
+			ModuleSwapEncounterLogModel model
+		)
+		{
+			OnEdgedLog<ModuleSwapEncounterLogModel, ModuleSwapEdgeModel>(
+				infoModel,
+				model,
+				OnModuleSwapLogEdge,
+				OnModuleSwapLogSpawnOptions
+			);
+		}
+		
+		void OnModuleSwapLogSpawnOptions(
+			EncounterInfoModel infoModel,
+			ModuleSwapEncounterLogModel model,
+			string prefix,
+			int index = int.MaxValue
+		)
+		{
+			if (GUILayout.Button(new GUIContent("Append New Module Constraint"), EditorStyles.miniButton, GUILayout.MaxWidth(LogFloats.AppendEntryWidthMaximum)))
+			{
+				OnEdgedLogSpawn(model, null, index);
+			}
+		}
+
+		void OnModuleSwapLogEdge(
+			EncounterInfoModel infoModel,
+			ModuleSwapEncounterLogModel model,
+			ModuleSwapEdgeModel edge	
+		)
+		{
+			GUILayout.Label("lol this is a module swap edge");
+
+			var moduleConstraint = edge.ModuleConstraint.Value;
+
+			bool CanBe(ModuleTypes moduleType) => moduleConstraint.ValidTypes.None() || moduleConstraint.ValidTypes.Contains(moduleType);
+
+			var canBePowerProduction = CanBe(ModuleTypes.PowerProduction);
+			var canBePowerConsumption = !(CanBe(ModuleTypes.PowerProduction) && moduleConstraint.ValidTypes.Length == 1);
+			var canBeTransitRange = CanBe(ModuleTypes.Navigation);
+			var canBeTransitVelocity = CanBe(ModuleTypes.Propulsion);
+			
+			EditorGUILayoutExtensions.PushEnabled(canBePowerProduction);
+			{
+				moduleConstraint.PowerProduction = EditorGUILayout.Vector2Field(
+					new GUIContent("Power Production"),
+					canBePowerProduction ? moduleConstraint.PowerProduction : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			EditorGUILayoutExtensions.PushEnabled(canBePowerConsumption);
+			{
+				moduleConstraint.PowerConsumption = EditorGUILayout.Vector2Field(
+					new GUIContent("Power Consumption"),
+					canBePowerConsumption ? moduleConstraint.PowerConsumption : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			EditorGUILayoutExtensions.PushEnabled(canBeTransitRange);
+			{
+				moduleConstraint.TransitRange = EditorGUILayout.Vector2Field(
+					new GUIContent("Transit Range"),
+					canBeTransitRange ? moduleConstraint.TransitRange : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			EditorGUILayoutExtensions.PushEnabled(canBeTransitVelocity);
+			{
+				moduleConstraint.TransitVelocity = EditorGUILayout.Vector2Field(
+					new GUIContent("Transit Velocity"),
+					canBeTransitVelocity ? moduleConstraint.TransitVelocity : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			moduleConstraint.RepairCost = EditorGUILayout.Vector2Field(
+				new GUIContent("Repair Cost"),
+				moduleConstraint.RepairCost
+			);
+
+			if (0 < moduleConstraint.ManufacturerIds.Length) EditorGUILayout.HelpBox("Validation of Manufacturer Ids not done!", MessageType.Error);
+			
+			moduleConstraint.ManufacturerIds = EditorGUILayoutExtensions.StringArray(
+				new GUIContent("ManufacturerIds"),
+				moduleConstraint.ManufacturerIds
+			);
+			
+			// EditorGUILayoutExtensions.PushColorValidation(validation);
+			// {
+			// 	edge.OperationId.Value = EditorGUILayout.TextField(
+			// 		validation.GetLabel(edge.OperationIdName),
+			// 		edge.OperationId.Value
+			// 	);
+			// }
+			// EditorGUILayoutExtensions.PopColorValidation(validation);
+			
+			GUILayout.Label("Valid Module Types (Select none to apply to all Module Types)");
+			
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
+				{
+					var isValidModule = moduleConstraint.ValidTypes.Contains(moduleType);
+					var isValidModuleToggle = EditorGUILayout.Toggle(
+						ObjectNames.NicifyVariableName(moduleType.ToString()),
+						isValidModule
+					);
+			
+					if (isValidModule != isValidModuleToggle)
+					{
+						if (isValidModuleToggle) moduleConstraint.ValidTypes = moduleConstraint.ValidTypes.Append(moduleType).ToArray();
+						else moduleConstraint.ValidTypes = moduleConstraint.ValidTypes.ExceptOne(moduleType).ToArray();
+					}
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
+			
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "Passing this filter is required to continue to run this key value logic."),
+				edge.Filtering
+			);
+
+			edge.ModuleConstraint.Value = moduleConstraint;
 		}
 		#endregion
 		
