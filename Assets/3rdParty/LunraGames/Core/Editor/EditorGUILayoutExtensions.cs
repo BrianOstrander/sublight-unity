@@ -436,21 +436,6 @@ namespace LunraGamesEditor
 		}
 
 		public static string[] StringArray(
-			string name,
-			string[] values,
-			string defaultValue = null,
-			Color? color = null
-		)
-		{
-			return StringArray(
-				new GUIContent(name),
-				values,
-				defaultValue,
-				color
-			);
-		}
-		
-		public static string[] StringArray(
 			GUIContent content,
 			string[] values,
 			string defaultValue = null,
@@ -469,19 +454,6 @@ namespace LunraGamesEditor
 			return values;
 		}
 
-		public static string[] StringArrayValue(
-			string name,
-			string[] values,
-			string defaultValue = null
-		)
-		{
-			return StringArrayValue(
-				new GUIContent(name),
-				values,
-				defaultValue
-			);
-		}
-		
 		public static string[] StringArrayValue(
 			GUIContent content,
 			string[] values,
@@ -527,25 +499,6 @@ namespace LunraGamesEditor
 		}
 
 		public static T[] EnumArray<T>(
-			string name,
-			T[] values,
-			string primaryReplacemnt = null,
-			T defaultValue = default(T),
-			T[] options = null,
-			Color? color = null
-		) where T : Enum
-		{
-			return EnumArray(
-				new GUIContent(name),
-				values,
-				primaryReplacemnt,
-				defaultValue,
-				options,
-				color
-			);
-		}
-
-		public static T[] EnumArray<T>(
 			GUIContent content,
 			T[] values,
 			string primaryReplacemnt = null,
@@ -566,23 +519,6 @@ namespace LunraGamesEditor
 			}
 			EndVertical();
 			return values;
-		}
-
-		public static T[] EnumArrayValue<T>(
-			string name,
-			T[] values,
-			string primaryReplacemnt = null,
-			T defaultValue = default(T),
-			T[] options = null
-		) where T : Enum
-		{
-			return EnumArrayValue(
-				new GUIContent(name),
-				values,
-				primaryReplacemnt,
-				defaultValue,
-				options
-			);
 		}
 
 		public static T[] EnumArrayValue<T>(
@@ -656,16 +592,6 @@ namespace LunraGamesEditor
 			return values;
 		}
 
-		public static string TextDynamic(string value, int lengthLimit = 32, bool leftOffset = true)
-		{
-			return TextDynamic(GUIContent.none, value, lengthLimit, leftOffset);
-		}
-
-		public static string TextDynamic(string label, string value, int lengthLimit = 32, bool leftOffset = true)
-		{
-			return TextDynamic(new GUIContent(label), value, lengthLimit, leftOffset);
-		}
-
 		public static string TextDynamic(GUIContent content, string value, int lengthLimit = 32, bool leftOffset = true)
 		{
 			var nullContent = GUIContentExtensions.IsNullOrNone(content);
@@ -712,11 +638,6 @@ namespace LunraGamesEditor
 			return TextAreaWrapped(GUIContent.none, value, options);
 		}
 
-		public static string TextAreaWrapped(string label, string value, params GUILayoutOption[] options)
-		{
-			return TextAreaWrapped(new GUIContent(label), value, options);
-		}
-
 		public static string TextAreaWrapped(GUIContent content, string value, params GUILayoutOption[] options)
 		{
 			var textStyle = PushTextAreaWordWrap(true);
@@ -757,11 +678,6 @@ namespace LunraGamesEditor
 			return value;
 		}
 
-		public static bool ToggleButton(string label, bool value, string trueText = "True", string falseText = "False")
-		{
-			return ToggleButton(new GUIContent(label), value, trueText, falseText);
-		}
-
 		public static bool ToggleButton(GUIContent content, bool value, string trueText = "True", string falseText = "False")
 		{
 			GUILayout.BeginHorizontal();
@@ -780,11 +696,6 @@ namespace LunraGamesEditor
 		public static bool ToggleButtonArray(bool value, string trueText = "True", string falseText = "False")
 		{
 			return ToggleButtonArray(GUIContent.none, value, trueText, falseText);
-		}
-
-		public static bool ToggleButtonArray(string label, bool value, string trueText = "True", string falseText = "False")
-		{
-			return ToggleButtonArray(new GUIContent(label), value, trueText, falseText);
 		}
 
 		public static bool ToggleButtonArray(GUIContent label, bool value, string trueText = "True", string falseText = "False")

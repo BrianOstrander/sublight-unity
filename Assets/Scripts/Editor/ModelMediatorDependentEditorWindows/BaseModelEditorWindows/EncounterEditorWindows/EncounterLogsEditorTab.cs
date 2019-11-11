@@ -1476,7 +1476,7 @@ namespace LunraGames.SubLight
 		{
 			edge.Title.Value = EditorGUILayout.TextField("Title", edge.Title.Value);
 			edge.Header.Value = EditorGUILayout.TextField(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), edge.Header.Value);
-			edge.Body.Value = EditorGUILayoutExtensions.TextAreaWrapped("Body", edge.Body.Value);
+			edge.Body.Value = EditorGUILayoutExtensions.TextAreaWrapped(new GUIContent("Body"), edge.Body.Value);
 			edge.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), edge.Priority.Value);
 			edge.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), edge.OrderWeight.Value);
 		}
@@ -1889,7 +1889,7 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			edge.Title.Value = EditorGUILayout.TextField("Title", edge.Title.Value);
-			edge.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped("Message", edge.Message.Value);
+			edge.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(new GUIContent("Message"), edge.Message.Value);
 
 			switch (edge.DialogType.Value)
 			{
@@ -2599,8 +2599,6 @@ namespace LunraGames.SubLight
 			ModuleSwapEdgeModel edge	
 		)
 		{
-			GUILayout.Label("lol this is a module swap edge");
-
 			var moduleConstraint = edge.ModuleConstraint.Value;
 
 			bool CanBe(ModuleTypes moduleType) => moduleConstraint.ValidTypes.None() || moduleConstraint.ValidTypes.Contains(moduleType);
