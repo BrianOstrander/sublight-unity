@@ -13,7 +13,7 @@ namespace LunraGamesEditor
 {
 	public static class EditorGUILayoutExtensions
 	{
-		static class Constants
+		public static class Constants
 		{
 			public const float LabelWidth = 145f;
 		}

@@ -100,11 +100,25 @@ namespace LunraGames.SubLight
 		[Serializable]
 		public struct TraitLimit
 		{
+			public static TraitLimit WithSeverities(params ModuleTraitSeverity[] validSeverities)
+			{
+				return new TraitLimit(validSeverities);
+			}
+			
+			public static TraitLimit WithTraitIds(params string[] validTraitIds)
+			{
+				return new TraitLimit(validTraitIds: validTraitIds);
+			}
+			
+			public static TraitLimit WithTraitFamilyIds(params string[] validTraitFamilyIds)
+			{
+				return new TraitLimit(validTraitFamilyIds: validTraitFamilyIds);
+			}
+			
 			/// <summary>
 			/// The valid severity for this limit, specifying Unknown indicates any is valid.
 			/// </summary>
-			public ModuleTraitSeverity Severity;
-			public IntegerRange Count;
+			public ModuleTraitSeverity[] ValidSeverities;
 			/// <summary>
 			/// Only traits with these ids are valid.
 			/// </summary>
@@ -113,43 +127,23 @@ namespace LunraGames.SubLight
 			/// Only traits with these family ids are valid.
 			/// </summary>
 			public string[] ValidTraitFamilyIds;
+			/// <summary>
+			/// The order in which this is sorted if in a list of other entries.
+			/// </summary>
+			public int Order;
 			
 			public TraitLimit(
-				ModuleTraitSeverity severity,
-				int countMinimum = 1,
-				int countMaximum = 1,
+				ModuleTraitSeverity[] validSeverities = null,
 				string[] validTraitIds = null,
-				string[] validTraitFamilyIds = null
+				string[] validTraitFamilyIds = null,
+				int order = 0
 			)
 			{
-				Severity = severity;
-				Count = new IntegerRange(countMinimum, countMaximum);
+				ValidSeverities = validSeverities ?? new ModuleTraitSeverity[0];
 				ValidTraitIds = validTraitIds ?? new string[0];
 				ValidTraitFamilyIds = validTraitFamilyIds ?? new string[0];
+				Order = order;
 			}
-		}
-
-		struct TraitLimitInstance
-		{
-			public static TraitLimitInstance Random(TraitLimit limit) => new TraitLimitInstance(limit, DemonUtility.GetNextInteger(limit.Count.Primary, limit.Count.Secondary));
-			public static TraitLimitInstance None => new TraitLimitInstance(default, 0);
-			
-			public readonly TraitLimit Limit;
-			public readonly int RemainingCount;
-
-			TraitLimitInstance(
-				TraitLimit limit,
-				int remainingCount
-			)
-			{
-				Limit = limit;
-				RemainingCount = remainingCount;
-			}
-			
-			public TraitLimitInstance Use() => new TraitLimitInstance(Limit, Mathf.Max(0, RemainingCount - 1));
-
-			public bool NoneRemaining => RemainingCount <= 0;
-			public bool AnyRemaining => 0 < RemainingCount;
 		}
 
 		[Serializable]
@@ -354,27 +348,23 @@ namespace LunraGames.SubLight
 			if (done == null) throw new ArgumentNullException(nameof(done));
 
 			OnGenerateTraits(
-				null,
-				TraitLimitInstance.None, 
 				module,
 				GetTraitConstraint(module),
-				traitLimits.Select(TraitLimitInstance.Random).Where(l => l.AnyRemaining).ToList(),
+				traitLimits.OrderBy(t => t.Order).ToList(),
 				new List<ModuleTraitModel>(), 
 				done
 			);
 		}
 		
 		void OnGenerateTraits(
-			ModuleTraitModel result,
-			TraitLimitInstance limitInstance,
 			ModuleModel module,
 			TraitConstraint traitConstraint,
-			List<TraitLimitInstance> remaining,
+			List<TraitLimit> remaining,
 			List<ModuleTraitModel> appended,
 			Action<Result<Payloads.GenerateTraits>> done
 		)
 		{
-			void OnDone()
+			if (remaining.None())
 			{
 				done(
 					Result<Payloads.GenerateTraits>.Success(
@@ -385,58 +375,29 @@ namespace LunraGames.SubLight
 						}
 					)
 				);
-			}
-			
-			if (result != null)
-			{
-				AppendTraitToModule(result, module);
-				appended.Add(result);
-				AppendTraitToConstraint(result, ref traitConstraint);
-			}
-
-			if (limitInstance.NoneRemaining && remaining.Any())
-			{
-				limitInstance = remaining.First();
-				remaining.RemoveAt(0);
-			}
-			
-			if (limitInstance.NoneRemaining)
-			{
-				OnDone();
 				return;
 			}
 
-			limitInstance = limitInstance.Use();
-
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+			
 			var possibleTraits = Traits.AsEnumerable();
 
-			switch (limitInstance.Limit.Severity)
+			if (next.ValidTraitIds.Any()) possibleTraits = possibleTraits.Where(t => next.ValidTraitIds.Contains(t.Id.Value));
+			if (next.ValidTraitFamilyIds.Any()) possibleTraits = possibleTraits.Where(t => t.FamilyIds.Value.Any(f => next.ValidTraitFamilyIds.Contains(f)));
+			if (next.ValidSeverities.Any()) possibleTraits = possibleTraits.Where(t => next.ValidSeverities.Contains(t.Severity.Value));
+
+			possibleTraits = possibleTraits.Where(t => IsTraitValid(t, traitConstraint));
+
+			if (possibleTraits.Any())
 			{
-				case ModuleTraitSeverity.Unknown: break;
-				default:
-					possibleTraits = possibleTraits.Where(t => t.Severity.Value == limitInstance.Limit.Severity);
-					break;
-			}
-			
-			// Debug.Log("all: "+possibleTraits.Count());
-
-			var possibleTraitsByValidIds = limitInstance.Limit.ValidTraitIds.None() ? possibleTraits : possibleTraits.Where(t => limitInstance.Limit.ValidTraitIds.Contains(t.Id.Value));
-			var possibleTraitsByValidFamilyIds = limitInstance.Limit.ValidTraitFamilyIds.None() ? possibleTraits : possibleTraits.Where(t => t.FamilyIds.Value.Any(f => limitInstance.Limit.ValidTraitFamilyIds.Contains(f)));
-
-			// Debug.Log("validIds: "+possibleTraitsByValidIds.Count());
-			// Debug.Log("validFamilyIds: "+possibleTraitsByValidFamilyIds.Count());
-			
-			var possibleTraitsFinal = new List<ModuleTraitModel>();
-
-			foreach (var trait in possibleTraitsByValidIds.Union(possibleTraitsByValidFamilyIds))
-			{
-				if (possibleTraitsFinal.Any(t => t.Id.Value == trait.Id.Value)) continue;
-				if (IsTraitValid(trait, traitConstraint)) possibleTraitsFinal.Add(trait);
+				var selectedTrait = possibleTraits.Random();
+				AppendTraitToModule(selectedTrait, module);
+				appended.Add(selectedTrait);
+				AppendTraitToConstraint(selectedTrait, ref traitConstraint);
 			}
 
 			OnGenerateTraits(
-				possibleTraitsFinal.None() ? null : possibleTraitsFinal.Random(),
-				limitInstance,
 				module,
 				traitConstraint,
 				remaining,
