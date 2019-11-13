@@ -476,7 +476,7 @@ namespace LunraGames.SubLight
 			Action<V> handleSecondLine = null
 		)
 			where V : ValueFilterEntryModel<string>
-			where O : Enum
+			where O : struct, Enum
 			where M : SaveModel
 		{
 			OnOneLineHandleBegin(model);
