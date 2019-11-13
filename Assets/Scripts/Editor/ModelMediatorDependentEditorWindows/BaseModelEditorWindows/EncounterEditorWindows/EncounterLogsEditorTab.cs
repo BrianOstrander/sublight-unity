@@ -596,7 +596,7 @@ namespace LunraGames.SubLight
 				isAlternate
 			);
 
-			GUILayout.BeginHorizontal();
+			GUILayout.BeginHorizontal(GUILayout.Height(26f));
 			{
 				var nameSourcePrefix = logsShowNameSource.Value ? (model.HasName ? ".Name:" : ".LogId:") : ":";
 				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " " + (model.HasName ? ("<b>" + model.Name.Value + "</b>") : Window.Shorten(model.LogId.Value, 8));
@@ -711,9 +711,6 @@ namespace LunraGames.SubLight
 				}
 			}
 			GUILayout.EndHorizontal();
-
-			if (isDeleting && !isMoving) GUILayout.Space(9f);
-			else GUILayout.Space(8f);
 
 			if (isCollapsed) return deleted;
 
@@ -3009,7 +3006,7 @@ namespace LunraGames.SubLight
 			var deleted = false;
 			indexDelta = 0;
 
-			GUILayout.BeginHorizontal();
+			GUILayout.BeginHorizontal(GUILayout.Height(18f));
 			{
 				EditorGUILayoutExtensions.PushEnabled(!edge.Ignore.Value);
 				{
