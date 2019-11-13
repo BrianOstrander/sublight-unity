@@ -1807,7 +1807,6 @@ namespace LunraGames.SubLight
 			EncounterEventEdgeModel edge
 		)
 		{
-
 			var waypointId = edge.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
 			var waypointIdInvalid = string.IsNullOrEmpty(waypointId);
 
@@ -2751,11 +2750,13 @@ namespace LunraGames.SubLight
 							current.ValidSeverities
 						);
 
+						// TODO: Validate trait ids
 						current.ValidTraitIds = EditorGUILayoutExtensions.StringArray(
 							new GUIContent(ObjectNames.NicifyVariableName(nameof(current.ValidTraitIds)), "Only trait ids specified by this list are generated. Specifying none allows any trait id to be generated."),
 							current.ValidTraitIds
 						);
 						
+						// TODO: Validate trait family ids
 						current.ValidTraitFamilyIds = EditorGUILayoutExtensions.StringArray(
 							new GUIContent(ObjectNames.NicifyVariableName(nameof(current.ValidTraitFamilyIds)), "Only trait family ids specified by this list are generated. Specifying none allows any trait family id to be generated."),
 							current.ValidTraitFamilyIds

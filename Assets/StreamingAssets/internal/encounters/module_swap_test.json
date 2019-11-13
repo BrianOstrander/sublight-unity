@@ -47,11 +47,6 @@
         "index": 1,
         "ending": true,
         "logId": "cb27678d-e92f-4a92-b4ba-50dc8d964fd1"
-      },
-      {
-        "edges": [],
-        "index": 2,
-        "logId": "8895e812-9524-4be8-9b31-904fb7070087"
       }
     ],
     "dialogLogs": [],
@@ -71,6 +66,7 @@
                 "secondary": 1.0
               },
               "TransitVelocity": {
+                "primary": 0.01,
                 "secondary": 1.0
               },
               "RepairCost": {
@@ -78,7 +74,17 @@
               },
               "ManufacturerIds": []
             },
-            "traits": [],
+            "traits": [
+              {
+                "ValidSeverities": [
+                  "Critical"
+                ],
+                "ValidTraitIds": [],
+                "ValidTraitFamilyIds": [
+                  "airlocks"
+                ]
+              }
+            ],
             "filtering": {
               "booleanKeyValues": [],
               "integerKeyValues": [],
@@ -106,6 +112,7 @@
                 "secondary": 1.0
               },
               "TransitRange": {
+                "primary": 0.9,
                 "secondary": 1.0
               },
               "RepairCost": {
