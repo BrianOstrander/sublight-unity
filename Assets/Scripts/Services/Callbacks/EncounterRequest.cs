@@ -66,7 +66,7 @@ namespace LunraGames.SubLight
 		public readonly string SynchronizedId;
 		public readonly EncounterTriggers Trigger;
 
-		public EncounterLogTypes LogType { get { return Model == null ? EncounterLogTypes.Unknown : Model.LogType; } }
+		public EncounterLogTypes LogType => Model?.LogType ?? EncounterLogTypes.Unknown;
 
 		public EncounterRequest(
 			States state,

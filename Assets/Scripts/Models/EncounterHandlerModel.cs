@@ -1,6 +1,4 @@
-﻿using System;
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
 {
@@ -9,6 +7,12 @@ namespace LunraGames.SubLight.Models
 		EncounterLogTypes LogType { get; }
 	}
 
+	/// <summary>
+	/// Handler models are used by the encounter service when a halting encounter log requires
+	/// a presenter or some other runtime binded functionality to process encounter logic.
+	/// For example, a view may be launched that requires user input before the encounter can continue. 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public abstract class EncounterHandlerModel<T> : Model, IEncounterHandlerModel 
 		where T : EncounterLogModel
 	{
@@ -17,7 +21,7 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public readonly ListenerProperty<T> Log;
 
-		public EncounterLogTypes LogType { get { return Log.Value == null ? EncounterLogTypes.Unknown : Log.Value.LogType; } }
+		public EncounterLogTypes LogType => Log.Value?.LogType ?? EncounterLogTypes.Unknown;
 
 		public EncounterHandlerModel(
 			T log

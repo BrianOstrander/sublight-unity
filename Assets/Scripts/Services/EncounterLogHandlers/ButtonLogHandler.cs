@@ -270,13 +270,13 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var result = new ButtonHandlerModel(
+			var request = new ButtonHandlerModel(
 				logModel
 			);
-			result.Log.Value = logModel;
-			result.Buttons.Value = buttons.ToArray();
+			request.Log.Value = logModel;
+			request.Buttons.Value = buttons.ToArray();
 
-			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
+			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(request));
 		}
 
 		#region Handler Callbacks

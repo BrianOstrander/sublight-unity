@@ -51,6 +51,7 @@ namespace LunraGames.SubLight
 				TransitRange = FloatRange.Zero,
 				TransitVelocity = FloatRange.Zero,
 				RepairCost = FloatRange.Zero,
+				Tags = new string[0],
 				ManufacturerIds = new string[0] 
 			};
 
@@ -70,6 +71,7 @@ namespace LunraGames.SubLight
 			/// </summary>
 			public FloatRange TransitVelocity;
 			public FloatRange RepairCost;
+			public string[] Tags;
 			public string[] ManufacturerIds;
 			
 			public override string ToString() => this.ToReadableJson();
@@ -257,6 +259,7 @@ namespace LunraGames.SubLight
 			result.Id.Value = Guid.NewGuid().ToString();
 			result.Type.Value = info.Type;
 			result.Name.Value = GetName(info);
+			result.Tags.Value = constraint.Tags ?? new string[0];
 			result.YearManufactured.Value = GetYearManufactured(info);
 			result.Description.Value = GetDescription(info);
 

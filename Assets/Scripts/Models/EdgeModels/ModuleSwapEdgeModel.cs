@@ -9,7 +9,7 @@ namespace LunraGames.SubLight.Models
 		
 		[JsonProperty] ModuleService.TraitLimit[] traits = new ModuleService.TraitLimit[0];
 		[JsonIgnore] public readonly ListenerProperty<ModuleService.TraitLimit[]> Traits;
-		
+
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
 		[JsonIgnore] public ValueFilterModel Filtering => filtering;
 		

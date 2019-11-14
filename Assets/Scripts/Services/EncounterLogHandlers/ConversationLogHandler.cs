@@ -7,7 +7,7 @@ namespace LunraGames.SubLight
 {
 	public class ConversationLogHandler : EncounterLogHandler<ConversationEncounterLogModel>
 	{
-		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Conversation; } }
+		public override EncounterLogTypes LogType => EncounterLogTypes.Conversation;
 
 		public ConversationLogHandler(EncounterLogHandlerConfiguration configuration) : base(configuration) { }
 
@@ -17,11 +17,11 @@ namespace LunraGames.SubLight
 			Action<string> nonLinearDone
 		)
 		{
-			var result = new ConversationHandlerModel(logModel);
-			result.Entries.Value = logModel.Edges.Value.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
-			result.HaltingDone.Value = linearDone;
+			var request = new ConversationHandlerModel(logModel);
+			request.Entries.Value = logModel.Edges.Value.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
+			request.HaltingDone.Value = linearDone;
 
-			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
+			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(request));
 		}
 	}
 }
