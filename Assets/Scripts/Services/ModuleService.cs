@@ -262,7 +262,8 @@ namespace LunraGames.SubLight
 			result.Tags.Value = constraint.Tags ?? new string[0];
 			result.YearManufactured.Value = GetYearManufactured(info);
 			result.Description.Value = GetDescription(info);
-
+			result.Tags.Value = constraint.Tags;
+			
 			result.PowerConsumption.Value = random.GetNextFloat(
 				constraint.PowerConsumption.Primary,
 				constraint.PowerConsumption.Secondary

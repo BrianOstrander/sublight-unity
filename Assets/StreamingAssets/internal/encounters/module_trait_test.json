@@ -117,7 +117,8 @@
         "logId": "a815faf2-9c2f-4661-930f-3e2db4ad4910",
         "fallbackLogId": "bdac79c3-9160-48bc-b3de-f76fdb139381"
       }
-    ]
+    ],
+    "moduleSwapLogs": []
   },
   "ignore": true,
   "version": 12,

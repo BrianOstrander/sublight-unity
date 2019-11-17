@@ -72,6 +72,9 @@
               "RepairCost": {
                 "secondary": 1.0
               },
+              "Tags": [
+                "some_test_tag"
+              ],
               "ManufacturerIds": []
             },
             "traits": [
@@ -118,6 +121,7 @@
               "RepairCost": {
                 "secondary": 1.0
               },
+              "Tags": [],
               "ManufacturerIds": []
             },
             "traits": [],

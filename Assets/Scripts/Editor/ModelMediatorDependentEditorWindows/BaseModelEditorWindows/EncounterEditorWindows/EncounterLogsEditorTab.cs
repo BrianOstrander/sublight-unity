@@ -2788,6 +2788,11 @@ namespace LunraGames.SubLight
 				new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.ManufacturerIds))),
 				moduleConstraint.ManufacturerIds
 			);
+
+			moduleConstraint.Tags = EditorGUILayoutExtensions.StringArray(
+				new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.Tags)), "Tags can be filtered by and can be used to track modules across multiple encounters."),
+				moduleConstraint.Tags
+			);
 			
 			EditorGUILayoutValueFilter.Field(
 				new GUIContent(ObjectNames.NicifyVariableName(nameof(edge.Filtering)), "Passing this filter is required to continue to run this key value logic."),
