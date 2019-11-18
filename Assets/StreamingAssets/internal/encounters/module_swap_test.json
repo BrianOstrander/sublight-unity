@@ -13,7 +13,46 @@
     "moduleTraits": []
   },
   "logs": {
-    "keyValueLogs": [],
+    "keyValueLogs": [
+      {
+        "edges": [
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "c962eb28-ca2b-4521-b577-0b663d63b274",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "523aff77-d9c8-422e-9b8b-a5ebf4b09302",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "d2b6900e-04e9-4970-9f8a-d835766e2851",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "disable_default_ship_view"
+              }
+            },
+            "id": "5e4bae92-bca7-488b-be93-84c746079070"
+          }
+        ],
+        "beginning": true,
+        "logId": "019ccfa5-766d-493a-9363-72a7e788f390",
+        "fallbackLogId": "a2887bc4-0eee-4522-b0c7-f3602eb36670"
+      }
+    ],
     "switchLogs": [],
     "buttonLogs": [],
     "encyclopediaLogs": [],
@@ -22,7 +61,6 @@
         "edges": [
           {
             "encounterEvent": "ToolbarSelection",
-            "isHalting": true,
             "keyValues": {
               "booleans": {},
               "integers": {
@@ -41,12 +79,42 @@
               "encounterInteractions": [],
               "moduleTraits": []
             },
-            "id": "3e8fe7bb-0069-45b3-abfd-178f5b7fbd57"
+            "id": "3a127f28-ccc8-4f3d-b044-4cb5b19f12ac"
           }
         ],
         "index": 1,
+        "logId": "a2887bc4-0eee-4522-b0c7-f3602eb36670",
+        "fallbackLogId": "7ff40b42-1843-4151-a6e7-0492828e148a"
+      },
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 10,
+                "lock_state": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "489c1a48-92cb-44e4-b243-3a64651e2ddb"
+          }
+        ],
+        "index": 3,
         "ending": true,
-        "logId": "cb27678d-e92f-4a92-b4ba-50dc8d964fd1"
+        "logId": "7d694be2-6a9f-4728-88ef-f5fa34a4551d"
       }
     ],
     "dialogLogs": [],
@@ -138,9 +206,9 @@
             "id": "066b42f9-b4b5-49fc-8e6a-f98eea9d9545"
           }
         ],
-        "beginning": true,
+        "index": 2,
         "logId": "7ff40b42-1843-4151-a6e7-0492828e148a",
-        "fallbackLogId": "cb27678d-e92f-4a92-b4ba-50dc8d964fd1"
+        "fallbackLogId": "7d694be2-6a9f-4728-88ef-f5fa34a4551d"
       }
     ]
   },

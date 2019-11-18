@@ -396,26 +396,43 @@ namespace LunraGames.SubLight
 
 			static void InitializeShipPresenters(GameState state, Action done)
 			{
+				var browserLanguageBlock = new ModuleBrowserLanguageBlock
+				{
+					StatsTitle = LanguageStringModel.Override("Ark Stats"),
+					Velocity = LanguageStringModel.Override("Velocity"),
+					VelocityUnit = LanguageStringModel.Override("c"),
+					NavigationRange = LanguageStringModel.Override("Navigation Radius"),
+					NavigationRangeUnit = LanguageStringModel.Override("ly"),
+					YearManufactured = LanguageStringModel.Override("Year Manufactured"),
+					PowerProduction = LanguageStringModel.Override("Power Production"),
+					PowerConsumption = LanguageStringModel.Override("Power Consumption"),
+					Severities = new Dictionary<ModuleTraitSeverity, LanguageStringModel>
+					{
+						{ModuleTraitSeverity.Unknown, LanguageStringModel.Override("Unrecognized Severity")},
+						{ModuleTraitSeverity.Positive, LanguageStringModel.Override("Positive")},
+						{ModuleTraitSeverity.Neutral, LanguageStringModel.Override("Neutral")},
+						{ModuleTraitSeverity.Negative, LanguageStringModel.Override("Negative")},
+						{ModuleTraitSeverity.Critical, LanguageStringModel.Override("Critical")}
+					}
+				};
+				
 				new ModuleBrowserPresenter(
 					state.Payload.Game,
-					new ModuleBrowserLanguageBlock
+					browserLanguageBlock
+				);
+				
+				new ModuleSwapPresenter(
+					state.Payload.Game,
+					new ModuleSwapLanguageBlock
 					{
-						StatsTitle = LanguageStringModel.Override("Ark Stats"),
-						Velocity = LanguageStringModel.Override("Velocity"),
-						VelocityUnit = LanguageStringModel.Override("c"),
-						NavigationRange = LanguageStringModel.Override("Navigation Radius"),
-						NavigationRangeUnit = LanguageStringModel.Override("ly"),
-						YearManufactured = LanguageStringModel.Override("Year Manufactured"),
-						PowerProduction = LanguageStringModel.Override("Power Production"),
-						PowerConsumption = LanguageStringModel.Override("Power Consumption"),
-						Severities = new Dictionary<ModuleTraitSeverity, LanguageStringModel>
-						{
-							{ ModuleTraitSeverity.Unknown, LanguageStringModel.Override("Unrecognized Severity") },
-							{ ModuleTraitSeverity.Positive, LanguageStringModel.Override("Positive") },
-							{ ModuleTraitSeverity.Neutral, LanguageStringModel.Override("Neutral") },
-							{ ModuleTraitSeverity.Negative, LanguageStringModel.Override("Negative") },
-							{ ModuleTraitSeverity.Critical, LanguageStringModel.Override("Critical") }
-						}
+						Velocity = browserLanguageBlock.Velocity,
+						VelocityUnit = browserLanguageBlock.VelocityUnit,
+						NavigationRange = browserLanguageBlock.NavigationRange,
+						NavigationRangeUnit = browserLanguageBlock.NavigationRangeUnit,
+						YearManufactured = browserLanguageBlock.YearManufactured,
+						PowerProduction = browserLanguageBlock.PowerProduction,
+						PowerConsumption = browserLanguageBlock.PowerConsumption,
+						Severities = browserLanguageBlock.Severities
 					}
 				);
 				

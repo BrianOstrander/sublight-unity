@@ -16,10 +16,14 @@ namespace LunraGames.SubLight.Models
 		
 		[JsonProperty] Styles style;
 		[JsonIgnore] public readonly ListenerProperty<Styles> Style;
+		
+		[JsonProperty] bool isHaltingOnClose;
+		[JsonIgnore] public readonly ListenerProperty<bool> IsHaltingOnClose;
 
 		public ModuleSwapEncounterLogModel()
 		{
 			Style = new ListenerProperty<Styles>(value => style = value, () => style);
+			IsHaltingOnClose = new ListenerProperty<bool>(value => isHaltingOnClose = value, () => isHaltingOnClose);
 		}
 	}
 }

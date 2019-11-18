@@ -117,8 +117,8 @@ namespace LunraGames.SubLight.Views
 			foreach (var module in source.Modules)
 			{
 				var entry = DefaultEntryInitialization(sourceArea.gameObject, module);
-				entry.DownControlGroup.alpha = 1f;
-				entry.UpControlGroup.alpha = 0f;
+				foreach (var control in entry.DownControls) control.SetActive(true);
+				foreach (var control in entry.UpControls) control.SetActive(false);
 			}
 			
 			foreach (var module in destination.Modules)
@@ -126,26 +126,28 @@ namespace LunraGames.SubLight.Views
 				var entry = DefaultEntryInitialization(destinationArea.gameObject, module);
 				if (module.IsForeign)
 				{
-					entry.DownControlGroup.alpha = 0f;
-					entry.UpControlGroup.alpha = 1f;
+					foreach (var control in entry.DownControls) control.SetActive(false);
+					foreach (var control in entry.UpControls) control.SetActive(true);
 				}
 				else
 				{
-					entry.DownControlGroup.alpha = 1f;
-					entry.UpControlGroup.alpha = 0f;	
+					foreach (var control in entry.DownControls) control.SetActive(true);
+					foreach (var control in entry.UpControls) control.SetActive(false);
 				}
 			}
 			
 			foreach (var module in discarded.Modules)
 			{
 				var entry = DefaultEntryInitialization(discardedArea.gameObject, module);
-				entry.DownControlGroup.alpha = 0f;
-				entry.UpControlGroup.alpha = 1f;
+				foreach (var control in entry.DownControls) control.SetActive(false);
+				foreach (var control in entry.UpControls) control.SetActive(true);
 			}
 			
 			
 			SetDetails(null);
 		}
+		
+		public Action ConfirmClick { set; private get; }
 		#endregion
 		
 		#region Local
@@ -161,14 +163,17 @@ namespace LunraGames.SubLight.Views
 			sourceArea.ClearChildren();
 			destinationArea.ClearChildren();
 			discardedArea.ClearChildren();
+
+			ConfirmClick = ActionExtensions.Empty;
 		}
 
 		void SetDetails(ModuleSwapBlock.ModuleEntry? module)
 		{
-			detailsGroup.alpha = module.HasValue ? 1f : 0f;
+			// detailsGroup.alpha = module.HasValue ? 1f : 0f;
 
 			if (!module.HasValue) return;
 
+			/*
 			nameLabel.text = module.Value.Name;
 			typeLabel.text = module.Value.Type;
 			yearManufacturedLabel.text = module.Value.YearManufactured;
@@ -178,6 +183,7 @@ namespace LunraGames.SubLight.Views
 			transitVelocityLabel.text = module.Value.TransitVelocity;
 			transitRangeLabel.text = module.Value.TransitRange;
 
+			*/
 			highlightedModuleId = module.Value.Id;
 		}
 
@@ -191,6 +197,9 @@ namespace LunraGames.SubLight.Views
 		{
 			if (highlightedModuleId == module.Id) SetDetails(null);
 		}
+
+		public void OnConfirmClick() => ConfirmClick();
+		
 		#endregion
 	}
 
@@ -201,5 +210,7 @@ namespace LunraGames.SubLight.Views
 			ModuleSwapBlock destination,
 			ModuleSwapBlock discarded
 		);
+
+		Action ConfirmClick { set; }
 	}
 }

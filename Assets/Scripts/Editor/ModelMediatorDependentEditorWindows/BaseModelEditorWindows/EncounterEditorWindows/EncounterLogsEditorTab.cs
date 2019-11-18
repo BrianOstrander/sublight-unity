@@ -2583,6 +2583,11 @@ namespace LunraGames.SubLight
 				model.Style.Value,
 				Color.red
 			);
+
+			model.IsHaltingOnClose.Value = EditorGUILayout.Toggle(
+				new GUIContent(ObjectNames.NicifyVariableName(nameof(model.IsHaltingOnClose)), "If true the next encounter log model will trigger once close has been called on the swap view."),
+				model.IsHaltingOnClose.Value
+			);
 			
 			if (GUILayout.Button(new GUIContent("Append New Module Constraint"))) OnEdgedLogSpawn(model);
 			

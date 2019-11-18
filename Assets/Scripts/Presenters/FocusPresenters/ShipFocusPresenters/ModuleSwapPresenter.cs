@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 using LunraGames.SubLight.Models;
 using LunraGames.SubLight.Views;
@@ -9,7 +12,11 @@ namespace LunraGames.SubLight.Presenters
 	{
 		GameModel model;
 		ModuleSwapLanguageBlock language;
-		
+
+		ModuleSwapHandlerModel handlerModel;
+
+		protected override bool CanShow() => handlerModel != null;
+
 		public ModuleSwapPresenter(
 			GameModel model,
 			ModuleSwapLanguageBlock language
@@ -30,7 +37,93 @@ namespace LunraGames.SubLight.Presenters
 		
 		protected override void OnUpdateEnabled()
 		{
+			if (handlerModel == null)
+			{
+				Debug.LogError("Swap presenter was enabled when it shouldn't be");
+				return;
+			}
+
+			var state = handlerModel.InitialState.Value;
+
+			ModuleSwapBlock.ModuleEntry GetEntry(ModuleModel module)
+			{
+				var current = new ModuleSwapBlock.ModuleEntry();
+				current.Name = module.Name.Value;
+				current.Description = module.Description.Value;
+				current.Type = module.Type.Value.ToString();
+				
+				var traits = new List<ModuleSwapBlock.ModuleEntry.TraitBlock>();
+
+				var definingTrait = ModuleTraitSeverity.Unknown;
+				foreach (var trait in model.Context.ModuleService.GetTraits(trait => module.TraitIds.Value.Contains(trait.Id.Value)))
+				{
+					traits.Add(
+						new ModuleSwapBlock.ModuleEntry.TraitBlock
+						{
+							Name = trait.Name.Value,
+							Description = trait.Description.Value,
+							SeverityText = language.Severities[trait.Severity].Value.Value,
+							Severity = trait.Severity.Value
+						}
+					);
+					if ((int) definingTrait < (int) trait.Severity.Value) definingTrait = trait.Severity.Value;
+				}
+
+				current.Traits = traits.ToArray();
+
+				current.DefiningSeverity = definingTrait;
+				
+				switch (definingTrait)
+				{
+					case ModuleTraitSeverity.Unknown: break;
+					default:
+						current.DefiningSeverityText = language.Severities[definingTrait].Value.Value;
+						break;
+				}
+
+				return current;
+			}
 			
+			var sourceModules = new List<ModuleSwapBlock.ModuleEntry>();
+			
+			foreach (var module in state.Available)
+			{
+				var entry = GetEntry(module);
+				sourceModules.Add(entry);
+			}
+			
+			var destinationModules = new List<ModuleSwapBlock.ModuleEntry>();
+			
+			foreach (var module in state.Available)
+			{
+				var entry = GetEntry(module);
+				destinationModules.Add(entry);
+			}
+			
+			var discardedModules = new List<ModuleSwapBlock.ModuleEntry>();
+			
+			foreach (var module in state.Available)
+			{
+				var entry = GetEntry(module);
+				discardedModules.Add(entry);
+			}
+			
+			View.SetEntries(
+				new ModuleSwapBlock
+				{
+					Modules = sourceModules.ToArray()
+				},
+				new ModuleSwapBlock
+				{
+					Modules = destinationModules.ToArray()
+				},
+				new ModuleSwapBlock
+				{
+					Modules = discardedModules.ToArray()
+				}
+			);
+			
+			View.ConfirmClick = OnConfirmClick;
 		}
 		
 		#region Callback Events
@@ -55,21 +148,9 @@ namespace LunraGames.SubLight.Presenters
 					return;
 			}
 
-			View.Reset();
+			handlerModel = handler;
 
-			Debug.Log("handle stuff here");
-
-			// if (!View.Visible)
-			// {
-			// 	View.Shown += () => OnEncounterModuleSwapHandleViewShown(handler);
-			// 	
-			// }
-
-		}
-
-		void OnEncounterModuleSwapHandleViewShown(ModuleSwapHandlerModel handler)
-		{
-			
+			ForceShowClose(true);
 		}
 		#endregion
 		
@@ -78,7 +159,22 @@ namespace LunraGames.SubLight.Presenters
 		#endregion
 
 		#region View Events
-		
+		void OnConfirmClick()
+		{
+			if (handlerModel.Log.Value.IsHaltingOnClose.Value) View.Closed += OnConfirmClosed;
+			else OnConfirmClosed();
+			
+			CloseView();
+		}
+
+		void OnConfirmClosed()
+		{
+			handlerModel.FinalState.Value = handlerModel.InitialState.Value;
+			var done = handlerModel.Done.Value; 
+			
+			handlerModel = null;
+			done();
+		}
 		#endregion
 	}
 }

@@ -11,10 +11,10 @@ namespace LunraGames.SubLight.Views
 		public TextMeshProUGUI TypeLabel;
 		public TextMeshProUGUI SeverityLabel;
 		
-		public Image SeverityBackground;
-		
-		public CanvasGroup DownControlGroup;
-		public CanvasGroup UpControlGroup;
+		public Image Background;
+
+		public GameObject[] UpControls;
+		public GameObject[] DownControls;
 		
 		public XButton Button;
 	}

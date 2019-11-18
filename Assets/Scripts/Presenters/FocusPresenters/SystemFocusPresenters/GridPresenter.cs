@@ -311,7 +311,7 @@ namespace LunraGames.SubLight.Presenters
 			grid.IsActive = isActive;
 			grid.Progress = progress;
 			grid.RangeOrigin = scaleTransform.GetUnityPosition(model.Ship.Position.Value);
-			grid.RangeRadius = scaleTransform.GetUnityScale(model.KeyValues.Get(KeyDefines.Game.TransitRange));
+			grid.RangeRadius = scaleTransform.GetUnityScale(model.Ship.Statistics.Value.TransitRange);
 
 			CelestialSystemStateBlock? targetBlock = null;
 			var transitRangeNormal = 0f;
@@ -343,7 +343,7 @@ namespace LunraGames.SubLight.Presenters
 			{
 				grid.TargetRangeVisible = true;
 				grid.TargetRangeOrigin = scaleTransform.GetUnityPosition(targetBlock.Value.Position);
-				grid.TargetRangeRadius = scaleTransform.GetUnityScale(model.Context.TransitKeyValues.Value.Get(KeyDefines.Game.TransitRange));
+				grid.TargetRangeRadius = scaleTransform.GetUnityScale(model.Ship.Statistics.Value.TransitRange);
 
 				grid.RangeRadius = grid.RangeRadius + ((grid.TargetRangeRadius - grid.RangeRadius) * transitRangeNormal);
 			}

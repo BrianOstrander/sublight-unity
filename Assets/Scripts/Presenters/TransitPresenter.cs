@@ -80,7 +80,7 @@ namespace LunraGames.SubLight.Presenters
 
 			transitState.VelocityProgress = 0f;
 			transitState.VelocityLightYearsCurrent = 0f;
-			transitState.VelocityLightYearsMaximum = model.KeyValues.Get(KeyDefines.Game.TransitVelocity); //model.Ship.Velocity.Value.Current.RelativisticLightYears;
+			transitState.VelocityLightYearsMaximum = model.Ship.Statistics.Value.TransitVelocity;
 
 			transitState.DistanceProgress = 0f;
 			transitState.DistanceTotal = UniversePosition.Distance(transitState.BeginSystem.Position, transitState.EndSystem.Position);

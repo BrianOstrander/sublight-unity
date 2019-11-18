@@ -43,6 +43,7 @@ namespace LunraGames.SubLight
 		TransitionStates TransitionState { get; }
 
 		bool Visible { get; }
+		bool NotVisible { get; }
 		/// <summary>
 		/// Called when view is prepared. Add events using += for predictable behaviour.
 		/// </summary>
@@ -316,7 +317,8 @@ namespace LunraGames.SubLight
 			Interactable = true;
 		}
 
-		public bool Visible { get { return TransitionState != TransitionStates.Closed; } }
+		public bool Visible => TransitionState != TransitionStates.Closed;
+		public bool NotVisible => !Visible;
 
 		public void SetLayer(string layer)
 		{
