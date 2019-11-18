@@ -15,6 +15,8 @@ namespace LunraGames.SubLight.Views
 
 		public GameObject[] UpControls;
 		public GameObject[] DownControls;
+		public GameObject[] ActiveControls;
+		public GameObject[] InactiveControls;
 		
 		public XButton Button;
 	}

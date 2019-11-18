@@ -1,5 +1,5 @@
 using System;
-
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace LunraGames.SubLight.Models
@@ -9,19 +9,19 @@ namespace LunraGames.SubLight.Models
 		[Serializable]
 		public struct State
 		{
-			public readonly ModuleModel[] Current;
 			public readonly ModuleModel[] Available;
+			public readonly ModuleModel[] Current;
 			public readonly ModuleModel[] Removed;
 
 			public State(
-				ModuleModel[] current = null,
 				ModuleModel[] available = null,
+				ModuleModel[] current = null,
 				ModuleModel[] removed = null
 			)
 			{
-				Current = current ?? new ModuleModel[0];
-				Available = available ?? new ModuleModel[0];
-				Removed = removed ?? new ModuleModel[0];
+				Available = (available ?? new ModuleModel[0]).OrderBy(m => m.Type.Value).ToArray();
+				Current = (current ?? new ModuleModel[0]).OrderBy(m => m.Type.Value).ToArray();
+				Removed = (removed ?? new ModuleModel[0]).OrderBy(m => m.Type.Value).ToArray();
 			}
 		}
 		

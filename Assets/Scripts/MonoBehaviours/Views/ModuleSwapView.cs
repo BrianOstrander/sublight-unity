@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -18,6 +19,8 @@ namespace LunraGames.SubLight.Views
 			}
 
 			public bool IsForeign;
+			public bool IsBlank;
+			public bool IsInteractable;
 			
 			public string Id;
 			public string Name;
@@ -51,18 +54,18 @@ namespace LunraGames.SubLight.Views
 	{
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
-		TextMeshProUGUI sourceLabel;
+		TextMeshProUGUI availableLabel;
 		[SerializeField]
-		TextMeshProUGUI destinationLabel;
+		TextMeshProUGUI currentLabel;
 		[SerializeField]
-		TextMeshProUGUI discardedLabel;
+		TextMeshProUGUI removedLabel;
 		
 		[SerializeField]
-		Transform sourceArea;
+		Transform availableArea;
 		[SerializeField]
-		Transform destinationArea;
+		Transform currentArea;
 		[SerializeField]
-		Transform discardedArea;
+		Transform removedArea;
 
 		[SerializeField]
 		ModuleSwapEntryLeaf entryPrefab;
@@ -89,22 +92,26 @@ namespace LunraGames.SubLight.Views
 
 		#region Bindings
 		public void SetEntries(
-			ModuleSwapBlock source,
-			ModuleSwapBlock destination,
-			ModuleSwapBlock discarded
+			ModuleSwapBlock available,
+			ModuleSwapBlock current,
+			ModuleSwapBlock removed
 		)
 		{
 			highlightedModuleId = null;
-			sourceArea.ClearChildren();
-			destinationArea.ClearChildren();
-			discardedArea.ClearChildren();
+			availableArea.ClearChildren();
+			currentArea.ClearChildren();
+			removedArea.ClearChildren();
 
 			ModuleSwapEntryLeaf DefaultEntryInitialization(
 				GameObject parent,
 				ModuleSwapBlock.ModuleEntry module
 			)
 			{
-				var entry = parent.InstantiateChild(entryPrefab);
+				var entry = parent.InstantiateChild(entryPrefab, setActive: true);
+
+				foreach (var control in entry.ActiveControls) control.SetActive(!module.IsBlank);
+				foreach (var control in entry.InactiveControls) control.SetActive(module.IsBlank);
+				
 				entry.NameLabel.text = module.Name;
 				entry.SeverityLabel.text = module.DefiningSeverityText;
 				entry.TypeLabel.text = module.Type;
@@ -114,17 +121,23 @@ namespace LunraGames.SubLight.Views
 				return entry;
 			}
 			
-			foreach (var module in source.Modules)
+			foreach (var module in available.Modules)
 			{
-				var entry = DefaultEntryInitialization(sourceArea.gameObject, module);
+				var entry = DefaultEntryInitialization(availableArea.gameObject, module);
 				foreach (var control in entry.DownControls) control.SetActive(true);
 				foreach (var control in entry.UpControls) control.SetActive(false);
 			}
 			
-			foreach (var module in destination.Modules)
+			foreach (var module in current.Modules)
 			{
-				var entry = DefaultEntryInitialization(destinationArea.gameObject, module);
-				if (module.IsForeign)
+				var entry = DefaultEntryInitialization(currentArea.gameObject, module);
+
+				if (!module.IsInteractable)
+				{
+					foreach (var control in entry.DownControls) control.SetActive(false);
+					foreach (var control in entry.UpControls) control.SetActive(false);
+				}
+				else if (module.IsForeign)
 				{
 					foreach (var control in entry.DownControls) control.SetActive(false);
 					foreach (var control in entry.UpControls) control.SetActive(true);
@@ -136,13 +149,16 @@ namespace LunraGames.SubLight.Views
 				}
 			}
 			
-			foreach (var module in discarded.Modules)
+			foreach (var module in removed.Modules)
 			{
-				var entry = DefaultEntryInitialization(discardedArea.gameObject, module);
+				var entry = DefaultEntryInitialization(removedArea.gameObject, module);
 				foreach (var control in entry.DownControls) control.SetActive(false);
 				foreach (var control in entry.UpControls) control.SetActive(true);
 			}
-			
+
+			availableLabel.text = available.SourceType;
+			currentLabel.text = current.SourceType;
+			removedLabel.text = removed.SourceType;
 			
 			SetDetails(null);
 		}
@@ -158,11 +174,13 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
+			entryPrefab.gameObject.SetActive(false);
+			
 			highlightedModuleId = null;
 			
-			sourceArea.ClearChildren();
-			destinationArea.ClearChildren();
-			discardedArea.ClearChildren();
+			availableArea.ClearChildren();
+			currentArea.ClearChildren();
+			removedArea.ClearChildren();
 
 			ConfirmClick = ActionExtensions.Empty;
 		}
@@ -206,9 +224,9 @@ namespace LunraGames.SubLight.Views
 	public interface IModuleSwapView : IView
 	{
 		void SetEntries(
-			ModuleSwapBlock source,
-			ModuleSwapBlock destination,
-			ModuleSwapBlock discarded
+			ModuleSwapBlock available,
+			ModuleSwapBlock current,
+			ModuleSwapBlock removed
 		);
 
 		Action ConfirmClick { set; }

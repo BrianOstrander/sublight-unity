@@ -6,6 +6,10 @@ namespace LunraGames.SubLight
 {
 	public struct ModuleSwapLanguageBlock
 	{
+		public Dictionary<ModuleSwapEncounterLogModel.Styles, LanguageStringModel> AvailableSourceTypeDefaults;
+		public LanguageStringModel CurrentType;
+		public LanguageStringModel RemovedType;
+		
 		public LanguageStringModel Velocity;
 		public LanguageStringModel VelocityUnit;
 		public LanguageStringModel NavigationRange;
@@ -15,5 +19,6 @@ namespace LunraGames.SubLight
 		public LanguageStringModel PowerConsumption;
 
 		public Dictionary<ModuleTraitSeverity, LanguageStringModel> Severities;
+		public Dictionary<ModuleTypes, LanguageStringModel> Types;
 	}
 }

@@ -60,17 +60,6 @@ namespace LunraGames.SubLight
 					return;
 			}
 
-			/*
-			var text = "The following modules were generated:";
-			var index = 0;
-			foreach (var module in result.Payloads)
-			{
-				text += "\n[ " + index + " ] : " + module.ToReadableJson();
-				index++;
-			}
-			Debug.Log(text);
-			*/
-
 			var generatedModules = result.Payloads;
 
 			if (generatedModules.None())
@@ -122,8 +111,8 @@ namespace LunraGames.SubLight
 			var request = new ModuleSwapHandlerModel(logModel);
 
 			request.InitialState.Value = new ModuleSwapHandlerModel.State(
-				Configuration.Model.Ship.Statistics.Value.Modules,
-				generatedModules
+				generatedModules,
+				Configuration.Model.Ship.Statistics.Value.Modules
 			);
 
 			var current = new List<ModuleModel>();
@@ -142,7 +131,7 @@ namespace LunraGames.SubLight
 			}
 			
 			request.FinalState.Value = new ModuleSwapHandlerModel.State(
-				current.ToArray(),
+				current: current.ToArray(),
 				removed: removed.ToArray()
 			);
 
@@ -158,8 +147,8 @@ namespace LunraGames.SubLight
 			var request = new ModuleSwapHandlerModel(logModel);
 
 			request.InitialState.Value = new ModuleSwapHandlerModel.State(
-				Configuration.Model.Ship.Statistics.Value.Modules,
-				generatedModules
+				generatedModules,
+				Configuration.Model.Ship.Statistics.Value.Modules
 			);
 
 			request.FinalState.Value = request.InitialState.Value;

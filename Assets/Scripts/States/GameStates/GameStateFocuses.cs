@@ -413,6 +413,16 @@ namespace LunraGames.SubLight
 						{ModuleTraitSeverity.Neutral, LanguageStringModel.Override("Neutral")},
 						{ModuleTraitSeverity.Negative, LanguageStringModel.Override("Negative")},
 						{ModuleTraitSeverity.Critical, LanguageStringModel.Override("Critical")}
+					},
+					Types = new Dictionary<ModuleTypes, LanguageStringModel>
+					{
+						{ModuleTypes.Unknown, LanguageStringModel.Override("Unrecognized Module Type")},
+						{ModuleTypes.Propulsion, LanguageStringModel.Override("Propulsion")},
+						{ModuleTypes.PowerProduction, LanguageStringModel.Override("Power Production")},
+						{ModuleTypes.RationManagement, LanguageStringModel.Override("Ration Management")},
+						{ModuleTypes.LifeSupport, LanguageStringModel.Override("Life Support")},
+						{ModuleTypes.LivingQuarters, LanguageStringModel.Override("Living Quarters")},
+						{ModuleTypes.Navigation, LanguageStringModel.Override("Navigation")}
 					}
 				};
 				
@@ -425,6 +435,13 @@ namespace LunraGames.SubLight
 					state.Payload.Game,
 					new ModuleSwapLanguageBlock
 					{
+						AvailableSourceTypeDefaults = new Dictionary<ModuleSwapEncounterLogModel.Styles, LanguageStringModel>
+						{
+							{ModuleSwapEncounterLogModel.Styles.Unknown, LanguageStringModel.Override("Unrecognized Style")},
+							{ModuleSwapEncounterLogModel.Styles.Derelict, LanguageStringModel.Override("Derelict Ark")}
+						},
+						CurrentType = LanguageStringModel.Override("Your Ark"),
+						RemovedType = LanguageStringModel.Override("Discarded"),
 						Velocity = browserLanguageBlock.Velocity,
 						VelocityUnit = browserLanguageBlock.VelocityUnit,
 						NavigationRange = browserLanguageBlock.NavigationRange,
@@ -432,7 +449,8 @@ namespace LunraGames.SubLight
 						YearManufactured = browserLanguageBlock.YearManufactured,
 						PowerProduction = browserLanguageBlock.PowerProduction,
 						PowerConsumption = browserLanguageBlock.PowerConsumption,
-						Severities = browserLanguageBlock.Severities
+						Severities = browserLanguageBlock.Severities,
+						Types = browserLanguageBlock.Types
 					}
 				);
 				

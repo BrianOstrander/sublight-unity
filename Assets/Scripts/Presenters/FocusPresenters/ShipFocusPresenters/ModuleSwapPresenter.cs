@@ -43,87 +43,113 @@ namespace LunraGames.SubLight.Presenters
 				return;
 			}
 
-			var state = handlerModel.InitialState.Value;
+			UpdateEntries();
+			
+			View.ConfirmClick = OnConfirmClick;
+		}
 
-			ModuleSwapBlock.ModuleEntry GetEntry(ModuleModel module)
+		void UpdateEntries()
+		{
+			var state = handlerModel.FinalState.Value;
+
+			ModuleSwapBlock.ModuleEntry GetEntry(ModuleModel module, ModuleTypes moduleType)
 			{
 				var current = new ModuleSwapBlock.ModuleEntry();
-				current.Name = module.Name.Value;
-				current.Description = module.Description.Value;
-				current.Type = module.Type.Value.ToString();
+				current.Type = language.Types[moduleType].Value.Value;
 				
-				var traits = new List<ModuleSwapBlock.ModuleEntry.TraitBlock>();
-
-				var definingTrait = ModuleTraitSeverity.Unknown;
-				foreach (var trait in model.Context.ModuleService.GetTraits(trait => module.TraitIds.Value.Contains(trait.Id.Value)))
+				if (module == null)
 				{
-					traits.Add(
-						new ModuleSwapBlock.ModuleEntry.TraitBlock
-						{
-							Name = trait.Name.Value,
-							Description = trait.Description.Value,
-							SeverityText = language.Severities[trait.Severity].Value.Value,
-							Severity = trait.Severity.Value
-						}
-					);
-					if ((int) definingTrait < (int) trait.Severity.Value) definingTrait = trait.Severity.Value;
+					current.Traits = new ModuleSwapBlock.ModuleEntry.TraitBlock[0];
+					current.IsBlank = true;
 				}
-
-				current.Traits = traits.ToArray();
-
-				current.DefiningSeverity = definingTrait;
-				
-				switch (definingTrait)
+				else
 				{
-					case ModuleTraitSeverity.Unknown: break;
-					default:
-						current.DefiningSeverityText = language.Severities[definingTrait].Value.Value;
-						break;
+					current.Name = module.Name.Value;
+					current.Description = module.Description.Value;
+					current.IsInteractable = true;
+					
+					var traits = new List<ModuleSwapBlock.ModuleEntry.TraitBlock>();
+
+					var definingTrait = ModuleTraitSeverity.Unknown;
+					foreach (var trait in model.Context.ModuleService.GetTraits(trait => module.TraitIds.Value.Contains(trait.Id.Value)))
+					{
+						traits.Add(
+							new ModuleSwapBlock.ModuleEntry.TraitBlock
+							{
+								Name = trait.Name.Value,
+								Description = trait.Description.Value,
+								SeverityText = language.Severities[trait.Severity].Value.Value,
+								Severity = trait.Severity.Value
+							}
+						);
+						if ((int) definingTrait < (int) trait.Severity.Value) definingTrait = trait.Severity.Value;
+					}
+
+					current.Traits = traits.ToArray();
+
+					current.DefiningSeverity = definingTrait;
+
+					switch (definingTrait)
+					{
+						case ModuleTraitSeverity.Unknown: break;
+						default:
+							current.DefiningSeverityText = language.Severities[definingTrait].Value.Value;
+							break;
+					}
 				}
 
 				return current;
 			}
 			
-			var sourceModules = new List<ModuleSwapBlock.ModuleEntry>();
+			var availableModules = new List<ModuleSwapBlock.ModuleEntry>();
 			
-			foreach (var module in state.Available)
+			foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
 			{
-				var entry = GetEntry(module);
-				sourceModules.Add(entry);
+				var module = state.Available.FirstOrDefault(m => m.Type.Value == moduleType);
+				var entry = GetEntry(module, moduleType);
+				entry.IsForeign = true;
+				entry.Click = () => OnAvailableClick(module);
+				availableModules.Add(entry);
 			}
 			
-			var destinationModules = new List<ModuleSwapBlock.ModuleEntry>();
-			
-			foreach (var module in state.Available)
+			var currentModules = new List<ModuleSwapBlock.ModuleEntry>();
+
+			foreach (var module in state.Current)
 			{
-				var entry = GetEntry(module);
-				destinationModules.Add(entry);
+				var entry = GetEntry(module, module.Type.Value);
+				entry.IsForeign = handlerModel.InitialState.Value.Available.Any(m => m.Id.Value == module.Id.Value);
+				entry.Click = () => OnCurrentClick(module);
+				entry.IsInteractable = handlerModel.InitialState.Value.Available.Any(m => m.Type.Value == module.Type.Value) || handlerModel.InitialState.Value.Removed.Any(m => m.Type.Value == module.Type.Value);
+				currentModules.Add(entry);
 			}
+
+			var removedModules = new List<ModuleSwapBlock.ModuleEntry>();
 			
-			var discardedModules = new List<ModuleSwapBlock.ModuleEntry>();
-			
-			foreach (var module in state.Available)
+			foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
 			{
-				var entry = GetEntry(module);
-				discardedModules.Add(entry);
+				var module = state.Removed.FirstOrDefault(m => m.Type.Value == moduleType);
+				var entry = GetEntry(module, moduleType);
+				entry.Click = () => OnRemovedClick(module);
+				removedModules.Add(entry);
 			}
 			
 			View.SetEntries(
 				new ModuleSwapBlock
 				{
-					Modules = sourceModules.ToArray()
+					SourceType = language.AvailableSourceTypeDefaults[handlerModel.Log.Value.Style.Value],
+					Modules = availableModules.ToArray()
 				},
 				new ModuleSwapBlock
 				{
-					Modules = destinationModules.ToArray()
+					SourceType = language.CurrentType.Value,
+					Modules = currentModules.ToArray()
 				},
 				new ModuleSwapBlock
 				{
-					Modules = discardedModules.ToArray()
+					SourceType = language.RemovedType.Value,
+					Modules = removedModules.ToArray()
 				}
 			);
-			
-			View.ConfirmClick = OnConfirmClick;
 		}
 		
 		#region Callback Events
@@ -174,6 +200,54 @@ namespace LunraGames.SubLight.Presenters
 			
 			handlerModel = null;
 			done();
+		}
+
+		void OnAvailableClick(ModuleModel module)
+		{
+			if (module == null) return;
+
+			var availableToCurrentModule = module;
+			var currentToRemovedModule = handlerModel.FinalState.Value.Current.First(m => m.Type.Value == module.Type.Value);
+			
+			handlerModel.FinalState.Value = new ModuleSwapHandlerModel.State(
+				handlerModel.FinalState.Value.Available.Where(m => m.Id.Value != availableToCurrentModule.Id.Value).ToArray(),
+				handlerModel.FinalState.Value.Current.Where(m => m.Id.Value != currentToRemovedModule.Id.Value).Append(availableToCurrentModule).ToArray(),
+				handlerModel.FinalState.Value.Removed.Append(currentToRemovedModule).ToArray()
+			);
+			
+			UpdateEntries();
+		}
+		
+		void OnCurrentClick(ModuleModel module)
+		{
+			if (module == null) return;
+
+			if (handlerModel.InitialState.Value.Current.Any(m => m.Id.Value == module.Id.Value))
+			{
+				// It's as if we clicked the available module above this current entry.
+				OnAvailableClick(handlerModel.InitialState.Value.Available.FirstOrDefault(m => m.Type.Value == module.Type.Value));
+			}
+			else if (handlerModel.InitialState.Value.Available.Any(m => m.Id.Value == module.Id.Value))
+			{
+				// We want to move a removed module back to current, and the current back to available.
+				var currentToAvailableModule = module;
+				var removedToCurrentModule = handlerModel.FinalState.Value.Removed.First(m => m.Type.Value == module.Type.Value);
+
+				handlerModel.FinalState.Value = new ModuleSwapHandlerModel.State(
+					handlerModel.FinalState.Value.Available.Append(currentToAvailableModule).ToArray(),
+					handlerModel.FinalState.Value.Current.Where(m => m.Id.Value != currentToAvailableModule.Id.Value).Append(removedToCurrentModule).ToArray(),
+					handlerModel.FinalState.Value.Removed.Where(m => m.Id.Value != removedToCurrentModule.Id.Value).ToArray()
+				);
+				UpdateEntries();
+			}
+		}
+		
+		void OnRemovedClick(ModuleModel module)
+		{
+			if (module == null) return;
+			
+			// It's as if we clicked the current module above this removed entry.
+			OnCurrentClick(handlerModel.FinalState.Value.Current.First(m => m.Type.Value == module.Type.Value));
 		}
 		#endregion
 	}
