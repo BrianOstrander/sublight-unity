@@ -65,7 +65,7 @@
               "booleans": {},
               "integers": {
                 "selection": 20,
-                "lock_state": 0
+                "lock_state": 10
               },
               "strings": {},
               "floats": {}
@@ -95,7 +95,7 @@
               "booleans": {},
               "integers": {
                 "selection": 10,
-                "lock_state": 0
+                "lock_state": 20
               },
               "strings": {},
               "floats": {}

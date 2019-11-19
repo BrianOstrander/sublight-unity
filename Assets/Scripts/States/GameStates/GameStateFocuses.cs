@@ -442,6 +442,7 @@ namespace LunraGames.SubLight
 						},
 						CurrentType = LanguageStringModel.Override("Your Ark"),
 						RemovedType = LanguageStringModel.Override("Discarded"),
+						Confirm = LanguageStringModel.Override("Confirm"),
 						Velocity = browserLanguageBlock.Velocity,
 						VelocityUnit = browserLanguageBlock.VelocityUnit,
 						NavigationRange = browserLanguageBlock.NavigationRange,

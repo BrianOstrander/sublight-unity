@@ -2,6 +2,7 @@
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace LunraGames.SubLight.Views
 {
@@ -52,6 +53,16 @@ namespace LunraGames.SubLight.Views
 	
 	public class ModuleSwapView : View, IModuleSwapView
 	{
+		[Serializable]
+		struct SeverityColorEntry
+		{
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
+			public ModuleTraitSeverity Severity;
+			public Color Primary;
+			public Color Secondary;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
+		}
+		
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value null
 		[SerializeField]
 		TextMeshProUGUI availableLabel;
@@ -67,11 +78,19 @@ namespace LunraGames.SubLight.Views
 		[SerializeField]
 		Transform removedArea;
 
+		[FormerlySerializedAs("entryPrefab")] [SerializeField]
+		ModuleSwapModuleEntryLeaf moduleEntryPrefab;
+
 		[SerializeField]
-		ModuleSwapEntryLeaf entryPrefab;
+		ModuleSwapTraitEntryLeaf traitEntryPrefab;
+
+		[SerializeField]
+		SeverityColorEntry[] severityColors;
 		
 		[SerializeField]
 		CanvasGroup detailsGroup;
+		[SerializeField]
+		Transform traitArea;
 		[SerializeField]
 		TextMeshProUGUI nameLabel;
 		[SerializeField]
@@ -88,6 +107,9 @@ namespace LunraGames.SubLight.Views
 		TextMeshProUGUI transitRangeLabel;
 		[SerializeField]
 		TextMeshProUGUI descriptionLabel;
+		
+		[SerializeField]
+		TextMeshProUGUI confirmLabel;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value null
 
 		#region Bindings
@@ -102,12 +124,12 @@ namespace LunraGames.SubLight.Views
 			currentArea.ClearChildren();
 			removedArea.ClearChildren();
 
-			ModuleSwapEntryLeaf DefaultEntryInitialization(
+			ModuleSwapModuleEntryLeaf DefaultEntryInitialization(
 				GameObject parent,
 				ModuleSwapBlock.ModuleEntry module
 			)
 			{
-				var entry = parent.InstantiateChild(entryPrefab, setActive: true);
+				var entry = parent.InstantiateChild(moduleEntryPrefab, setActive: true);
 
 				foreach (var control in entry.ActiveControls) control.SetActive(!module.IsBlank);
 				foreach (var control in entry.InactiveControls) control.SetActive(module.IsBlank);
@@ -118,6 +140,11 @@ namespace LunraGames.SubLight.Views
 				entry.Button.OnEnter.AddListener(() => OnModuleEnter(module));
 				entry.Button.OnExit.AddListener(() => OnModuleExit(module));
 				entry.Button.OnClick.AddListener(() => module.Click());
+				
+				var colorEntry = severityColors.FirstOrDefault(e => e.Severity == module.DefiningSeverity);
+				foreach (var graphic in entry.PrimaryColors) graphic.color = colorEntry.Primary;
+				foreach (var graphic in entry.SecondaryColors) graphic.color = colorEntry.Secondary;
+				
 				return entry;
 			}
 			
@@ -162,6 +189,8 @@ namespace LunraGames.SubLight.Views
 			
 			SetDetails(null);
 		}
+
+		public string ConfirmText { set => confirmLabel.text = value ?? string.Empty; }
 		
 		public Action ConfirmClick { set; private get; }
 		#endregion
@@ -174,7 +203,8 @@ namespace LunraGames.SubLight.Views
 		{
 			base.Reset();
 
-			entryPrefab.gameObject.SetActive(false);
+			moduleEntryPrefab.gameObject.SetActive(false);
+			traitEntryPrefab.gameObject.SetActive(false);
 			
 			highlightedModuleId = null;
 			
@@ -182,16 +212,22 @@ namespace LunraGames.SubLight.Views
 			currentArea.ClearChildren();
 			removedArea.ClearChildren();
 
+			ConfirmText = null;
 			ConfirmClick = ActionExtensions.Empty;
 		}
 
 		void SetDetails(ModuleSwapBlock.ModuleEntry? module)
 		{
-			// detailsGroup.alpha = module.HasValue ? 1f : 0f;
+			if (!module.HasValue || module.Value.IsBlank)
+			{
+				highlightedModuleId = null;
+				detailsGroup.alpha = 0f;
+				return;
+			}
 
-			if (!module.HasValue) return;
+			highlightedModuleId = module.Value.Id;
+			detailsGroup.alpha = 1f;
 
-			/*
 			nameLabel.text = module.Value.Name;
 			typeLabel.text = module.Value.Type;
 			yearManufacturedLabel.text = module.Value.YearManufactured;
@@ -201,8 +237,19 @@ namespace LunraGames.SubLight.Views
 			transitVelocityLabel.text = module.Value.TransitVelocity;
 			transitRangeLabel.text = module.Value.TransitRange;
 
-			*/
-			highlightedModuleId = module.Value.Id;
+			traitArea.ClearChildren<ModuleSwapTraitEntryLeaf>();
+
+			foreach (var trait in module.Value.Traits)
+			{
+				var entry = traitArea.gameObject.InstantiateChild(traitEntryPrefab, setActive: true);
+				entry.NameLabel.text = trait.Name;
+				entry.SeverityLabel.text = trait.SeverityText;
+				entry.DescriptionLabel.text = trait.Description;
+
+				var colorEntry = severityColors.FirstOrDefault(e => e.Severity == trait.Severity);
+				foreach (var graphic in entry.PrimaryColors) graphic.color = colorEntry.Primary;
+				foreach (var graphic in entry.SecondaryColors) graphic.color = colorEntry.Secondary;
+			}
 		}
 
 		#region Events
@@ -229,6 +276,7 @@ namespace LunraGames.SubLight.Views
 			ModuleSwapBlock removed
 		);
 
+		string ConfirmText { set; }
 		Action ConfirmClick { set; }
 	}
 }

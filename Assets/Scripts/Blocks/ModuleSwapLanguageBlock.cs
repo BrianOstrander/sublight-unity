@@ -10,6 +10,8 @@ namespace LunraGames.SubLight
 		public LanguageStringModel CurrentType;
 		public LanguageStringModel RemovedType;
 		
+		public LanguageStringModel Confirm;
+		
 		public LanguageStringModel Velocity;
 		public LanguageStringModel VelocityUnit;
 		public LanguageStringModel NavigationRange;

@@ -5,7 +5,7 @@ using TMPro;
 
 namespace LunraGames.SubLight.Views
 {
-	public class ModuleSwapEntryLeaf : MonoBehaviour
+	public class ModuleSwapModuleEntryLeaf : MonoBehaviour
 	{
 		public TextMeshProUGUI NameLabel;
 		public TextMeshProUGUI TypeLabel;
@@ -19,5 +19,8 @@ namespace LunraGames.SubLight.Views
 		public GameObject[] InactiveControls;
 		
 		public XButton Button;
+		
+		public Graphic[] PrimaryColors;
+		public Graphic[] SecondaryColors;
 	}
 }

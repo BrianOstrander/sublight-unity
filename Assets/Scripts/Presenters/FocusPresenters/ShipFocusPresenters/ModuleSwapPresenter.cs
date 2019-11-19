@@ -44,7 +44,8 @@ namespace LunraGames.SubLight.Presenters
 			}
 
 			UpdateEntries();
-			
+
+			View.ConfirmText = language.Confirm.Value.Value;
 			View.ConfirmClick = OnConfirmClick;
 		}
 
@@ -64,13 +65,37 @@ namespace LunraGames.SubLight.Presenters
 				}
 				else
 				{
+					current.Id = module.Id.Value;
 					current.Name = module.Name.Value;
+					current.YearManufactured = language.YearManufactured.Value.Value + ": " + module.YearManufactured.Value;
 					current.Description = module.Description.Value;
+					
+					switch (module.Type.Value)
+					{
+						case ModuleTypes.Navigation:
+							current.TransitRange = language.NavigationRange.Value.Value + ": " + module.TransitRange.Value.ToString("N2") + " " + language.NavigationRangeUnit.Value.Value;
+							break;
+						case ModuleTypes.Propulsion:
+							current.TransitVelocity = language.Velocity.Value.Value + ": " + module.TransitVelocity.Value.ToString("N2") + " " + language.VelocityUnit.Value.Value;
+							break;
+						case ModuleTypes.PowerProduction:
+							current.PowerProduction = language.PowerProduction.Value.Value + ": " + module.PowerProduction.Value.ToString("N2");
+							break;
+					}
+
+					switch (module.Type.Value)
+					{
+						case ModuleTypes.PowerProduction: break;
+						default:
+							current.PowerConsumption = language.PowerConsumption.Value.Value + ": " + module.PowerConsumption.Value.ToString("N2");
+							break;
+					}
+					
 					current.IsInteractable = true;
 					
 					var traits = new List<ModuleSwapBlock.ModuleEntry.TraitBlock>();
 
-					var definingTrait = ModuleTraitSeverity.Unknown;
+					var definingTrait = ModuleTraitSeverity.Neutral;
 					foreach (var trait in model.Context.ModuleService.GetTraits(trait => module.TraitIds.Value.Contains(trait.Id.Value)))
 					{
 						traits.Add(
@@ -82,7 +107,7 @@ namespace LunraGames.SubLight.Presenters
 								Severity = trait.Severity.Value
 							}
 						);
-						if ((int) definingTrait < (int) trait.Severity.Value) definingTrait = trait.Severity.Value;
+						if (trait.Severity.Value != ModuleTraitSeverity.Unknown || ((int) definingTrait < (int) trait.Severity.Value)) definingTrait = trait.Severity.Value;
 					}
 
 					current.Traits = traits.ToArray();
@@ -195,7 +220,6 @@ namespace LunraGames.SubLight.Presenters
 
 		void OnConfirmClosed()
 		{
-			handlerModel.FinalState.Value = handlerModel.InitialState.Value;
 			var done = handlerModel.Done.Value; 
 			
 			handlerModel = null;
