@@ -4,10 +4,8 @@ namespace LunraGames.SubLight.Models
 {
 	public class DialogHandlerModel : EncounterHandlerModel<DialogEncounterLogModel>
 	{
-		[JsonProperty] DialogLogBlock dialog;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<DialogLogBlock> Dialog;
+		DialogLogBlock dialog;
+		[JsonIgnore] public readonly ListenerProperty<DialogLogBlock> Dialog;
 
 		public DialogHandlerModel(DialogEncounterLogModel log) : base(log)
 		{

@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 using System.Linq;
 using System.Collections.Generic;
-using System.Xml;
 using LunraGames.SubLight.Models;
 using UnityEngine;
 
@@ -112,11 +111,30 @@ namespace LunraGames.SubLight
 					return result;
 				}
 			}
+
+			public GUIContent GetLabel(
+				string name,
+				string tooltipPrefix = null
+			)
+			{
+				return new GUIContent(
+					name,
+					string.IsNullOrEmpty(tooltipPrefix) ? Tooltip : tooltipPrefix + "\n" + Tooltip
+				);
+			}
 		}
 
-		static class DefaultValidations
+		public static class DefaultValidations
 		{
-			public static Validation NullOrEmptyId = new Validation
+			public static readonly Validation CannotValidate = new Validation
+			{
+				Id = null,
+				Types = EnumExtensions.GetValues<SaveTypes>(),
+				ValidationState = ValidationStates.Invalid,
+				Issues = new List<string>( new [] {"Cannot validate"})
+			};
+			
+			public static readonly Validation NullOrEmptyId = new Validation
 			{
 				Id = null,
 				Types = EnumExtensions.GetValues<SaveTypes>(),
@@ -182,7 +200,7 @@ namespace LunraGames.SubLight
 					ValidationState = ValidationStates.Processing,
 					Issues = new List<string>()
 				};
-				modelValidationCache.Add(cached);
+				moduleTraitFamilyIdValidationCache.Add(cached);
 				
 				LoadAll<ModuleTraitModel>(
 					result =>
@@ -199,7 +217,7 @@ namespace LunraGames.SubLight
 									}
 								}
 								cached.ValidationState = ValidationStates.Invalid;
-								cached.Issues = cached.Issues.Append("No " + nameof(ModuleTraitModel) + " specifies FamilyId: " + familyId).Distinct().ToList();
+								cached.Issues = cached.Issues.Append("No " + nameof(ModuleTraitModel) + " specifies FamilyId \"" + familyId + "\"").Distinct().ToList();
 								break;
 							default:
 								cached.ValidationState = ValidationStates.Invalid;

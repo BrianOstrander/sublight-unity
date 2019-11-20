@@ -1,0 +1,64 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "InitializeRules",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [],
+    "moduleTraits": []
+  },
+  "logs": {
+    "keyValueLogs": [],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 10,
+                "lock_state": 0
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "b2cf9aaa-4a69-4afa-abce-3dcf834fb70b"
+          }
+        ],
+        "beginning": true,
+        "ending": true,
+        "logId": "b3f354f8-7335-4c16-867a-c3f4e8146710"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": [],
+    "moduleTraitLogs": [],
+    "moduleSwapLogs": []
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-11-17T14:34:06.280673-08:00",
+  "modified": "2019-11-17T14:34:06.280673-08:00",
+  "id": "initialize_rules",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

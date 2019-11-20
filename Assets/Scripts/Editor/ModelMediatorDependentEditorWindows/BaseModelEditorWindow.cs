@@ -280,7 +280,7 @@ namespace LunraGames.SubLight
 					{
 						close();
 						BeforeLoadSelection();
-						SaveLoadService.Save(CreateModel(modelId, modelName), OnNewModelSaved);
+						EditorModelMediator.Instance.Save(CreateModel(modelId, modelName), OnNewModelSaved);
 					}
 				}
 				EditorGUILayoutExtensions.PopEnabled();
@@ -310,7 +310,7 @@ namespace LunraGames.SubLight
 		void OnLoadList()
 		{
 			modelListStatus = RequestStatus.Unknown;
-			SaveLoadService.Index<M>(OnIndexDone);
+			EditorModelMediator.Instance.Index<M>(OnIndexDone);
 		}
 
 		void OnIndexDone(ModelIndexResult<SaveModel> result)
@@ -339,7 +339,7 @@ namespace LunraGames.SubLight
 			}
 			selectedStatus = RequestStatus.Unknown;
 			modelSelectedPath.Value = model.Path;
-			SaveLoadService.Load<M>(model, OnLoadSelectionLoaded);
+			EditorModelMediator.Instance.Load<M>(model, OnLoadSelectionLoaded);
 		}
 
 		void OnLoadSelectionLoaded(ModelResult<M> result)
@@ -620,7 +620,7 @@ namespace LunraGames.SubLight
 				if (done != null) done(RequestStatus.Failure);
 				return;
 			}
-			SaveLoadService.Save(
+			EditorModelMediator.Instance.Save(
 				ModelSelection,
 				result => OnModelSaved(result, done),
 				false
@@ -711,7 +711,7 @@ namespace LunraGames.SubLight
 		#region Defaults
 		protected virtual M CreateModel(string id, string name)
 		{
-			var model = SaveLoadService.Create<M>(id);
+			var model = EditorModelMediator.Instance.Create<M>(id);
 			AssignModelId(model, id);
 			AssignModelName(model, name);
 			return model;
@@ -868,7 +868,7 @@ namespace LunraGames.SubLight
 				batchProgress.ModelProcessing = batchProgress.ModelsRemaining.First();
 				batchProgress.ModelsRemaining.RemoveAt(0);
 
-				SaveLoadService.Load<M>(
+				EditorModelMediator.Instance.Load<M>(
 					batchProgress.ModelProcessing,
 					OnBatchOperationLoaded
 				);
@@ -913,7 +913,7 @@ namespace LunraGames.SubLight
 
 			if (batchProgress.Write)
 			{
-				SaveLoadService.Save(
+				EditorModelMediator.Instance.Save(
 					typedModel,
 					saveResult => OnBatchOperationSaved(saveResult, result),
 					false

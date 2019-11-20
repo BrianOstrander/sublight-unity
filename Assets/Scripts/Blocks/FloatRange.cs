@@ -14,9 +14,9 @@ namespace LunraGames.SubLight
 		public static FloatRange Normal => new FloatRange(0f, 1f);
 		public static FloatRange Constant(float value) => new FloatRange(value, value);
 
-		[FormerlySerializedAs("x"), SerializeField]
+		[FormerlySerializedAs("x"), SerializeField, JsonProperty]
 		float primary;
-		[FormerlySerializedAs("y"), SerializeField]
+		[FormerlySerializedAs("y"), SerializeField, JsonProperty]
 		float secondary;
 
 		[JsonIgnore]
@@ -73,5 +73,15 @@ namespace LunraGames.SubLight
 		/// <returns>The clamped.</returns>
 		/// <param name="value">Value.</param>
 		public float ProgressClamped(float value) { return Progress(Mathf.Clamp(value, Mathf.Min(Primary, Secondary), Mathf.Max(Primary, Secondary))); }
+		
+		public static implicit operator FloatRange(Vector2 v)
+		{
+			return new FloatRange(v.x, v.y);
+		}
+		
+		public static implicit operator Vector2(FloatRange f)
+		{
+			return new Vector2(f.Primary, f.Secondary);
+		}
 	}
 }

@@ -39,22 +39,15 @@ namespace LunraGames.SubLight
 			DialogLanguageBlock saveDisabledDuringEncounterLanguage
 		)
 		{
-			if (heartbeat == null) throw new ArgumentNullException("heartbeat");
-			if (callbacks == null) throw new ArgumentNullException("callbacks");
-			if (encounterService == null) throw new ArgumentNullException("encounterService");
-			if (keyValueService == null) throw new ArgumentNullException("keyValueService");
-			if (valueFilter == null) throw new ArgumentNullException("valueFilter");
-			if (currentPreferences == null) throw new ArgumentNullException("currentPreferences");
-			if (stateMachine == null) throw new ArgumentNullException("stateMachine");
-
+			this.heartbeat = heartbeat ?? throw new ArgumentNullException(nameof(heartbeat));
+			this.callbacks = callbacks ?? throw new ArgumentNullException(nameof(callbacks));
+			this.encounterService = encounterService ?? throw new ArgumentNullException(nameof(encounterService));
+			this.keyValueService = keyValueService ?? throw new ArgumentNullException(nameof(keyValueService));
+			this.valueFilter = valueFilter ?? throw new ArgumentNullException(nameof(valueFilter));
+			this.currentPreferences = currentPreferences ?? throw new ArgumentNullException(nameof(currentPreferences));
+			
+			if (stateMachine == null) throw new ArgumentNullException(nameof(stateMachine));
 			sm = new StateMachineWrapper(stateMachine, GetType());
-
-			this.heartbeat = heartbeat;
-			this.callbacks = callbacks;
-			this.encounterService = encounterService;
-			this.keyValueService = keyValueService;
-			this.valueFilter = valueFilter;
-			this.currentPreferences = currentPreferences;
 
 			this.saveDisabledDuringEncounterLanguage = saveDisabledDuringEncounterLanguage;
 
@@ -80,7 +73,9 @@ namespace LunraGames.SubLight
 				new EncounterEventLogHandler(configuration),
 				new DialogLogHandler(configuration),
 				new BustLogHandler(configuration),
-				new ConversationLogHandler(configuration)
+				new ConversationLogHandler(configuration),
+				new ModuleTraitLogHandler(configuration),
+				new ModuleSwapLogHandler(configuration) 
 			};
 		}
 
@@ -144,8 +139,8 @@ namespace LunraGames.SubLight
 			EncounterInfoModel encounter
 		)
 		{
-			if (model == null) throw new ArgumentNullException("model");
-			if (encounter == null) throw new ArgumentNullException("encounter");
+			if (model == null) throw new ArgumentNullException(nameof(model));
+			if (encounter == null) throw new ArgumentNullException(nameof(encounter));
 
 			if (model.Context.EncounterState.Current.Value.State == EncounterStateModel.States.Unknown)
 			{

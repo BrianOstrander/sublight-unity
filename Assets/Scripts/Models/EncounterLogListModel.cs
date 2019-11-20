@@ -19,6 +19,8 @@ namespace LunraGames.SubLight.Models
 		[JsonProperty] DialogEncounterLogModel[] dialogLogs = new DialogEncounterLogModel[0];
 		[JsonProperty] BustEncounterLogModel[] bustLogs = new BustEncounterLogModel[0];
 		[JsonProperty] ConversationEncounterLogModel[] conversationLogs = new ConversationEncounterLogModel[0];
+		[JsonProperty] ModuleTraitEncounterLogModel[] moduleTraitLogs = new ModuleTraitEncounterLogModel[0];
+		[JsonProperty] ModuleSwapEncounterLogModel[] moduleSwapLogs = new ModuleSwapEncounterLogModel[0];
 		#endregion
 
 		#region Derived Values
@@ -101,6 +103,8 @@ namespace LunraGames.SubLight.Models
 			var dialogList = new List<DialogEncounterLogModel>();
 			var bustList = new List<BustEncounterLogModel>();
 			var conversationList = new List<ConversationEncounterLogModel>();
+			var moduleTraitList = new List<ModuleTraitEncounterLogModel>();
+			var moduleSwapList = new List<ModuleSwapEncounterLogModel>();
 
 			foreach (var log in newLogs)
 			{
@@ -130,6 +134,12 @@ namespace LunraGames.SubLight.Models
 					case EncounterLogTypes.Conversation:
 						conversationList.Add(log as ConversationEncounterLogModel);
 						break;
+					case EncounterLogTypes.ModuleTrait:
+						moduleTraitList.Add(log as ModuleTraitEncounterLogModel);
+						break;
+					case EncounterLogTypes.ModuleSwap:
+						moduleSwapList.Add(log as ModuleSwapEncounterLogModel);
+						break;
 					default:
 						Debug.LogError("Unrecognized EncounterLogType: " + log.LogType);
 						break;
@@ -144,6 +154,8 @@ namespace LunraGames.SubLight.Models
 			dialogLogs = dialogList.ToArray();
 			bustLogs = bustList.ToArray();
 			conversationLogs = conversationList.ToArray();
+			moduleTraitLogs = moduleTraitList.ToArray();
+			moduleSwapLogs = moduleSwapList.ToArray();
 		}
 
 		EncounterLogModel[] OnGetLogs()
@@ -155,6 +167,8 @@ namespace LunraGames.SubLight.Models
 					           							 .Concat(dialogLogs)
 					           							 .Concat(bustLogs)
 					           							 .Concat(conversationLogs)
+														 .Concat(moduleTraitLogs)
+														 .Concat(moduleSwapLogs)
 														 .ToArray();
 		}
 		#endregion

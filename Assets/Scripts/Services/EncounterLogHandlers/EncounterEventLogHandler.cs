@@ -83,16 +83,16 @@ namespace LunraGames.SubLight
 				return;
 			}
 
-			var result = new EncounterEventHandlerModel(
+			var request = new EncounterEventHandlerModel(
 				logModel
 			);
-			result.Log.Value = logModel;
-			result.Events.Value = events.ToArray();
-			result.AlwaysHalting.Value = logModel.AlwaysHalting.Value;
-			result.HasHaltingEvents.Value = events.Any(e => e.IsHalting.Value);
-			result.HaltingDone.Value = done;
+			request.Log.Value = logModel;
+			request.Events.Value = events.ToArray();
+			request.AlwaysHalting.Value = logModel.AlwaysHalting.Value;
+			request.HasHaltingEvents.Value = events.Any(e => e.IsHalting.Value);
+			request.HaltingDone.Value = done;
 
-			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
+			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(request));
 		}
 	}
 }

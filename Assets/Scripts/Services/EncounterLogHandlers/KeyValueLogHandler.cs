@@ -416,18 +416,5 @@ namespace LunraGames.SubLight
 			if (result.IsNotSuccess) Debug.LogError("Setting KeyValue output returned error: " + result.Message);
 			next();
 		}
-
-		/*
-		void OnDone<T>(KeyValueResult<T> result, int total, ref int progress, Action done) where T : IConvertible
-		{
-			if (result.Status != RequestStatus.Success)
-			{
-				Debug.LogError("Setting " + result.TargetKey + " = " + result.Value + " returned with status: " + result.Status + " and error:\n" + result.Error);
-				Debug.LogWarning("Continuing after this failure may result in unpredictable behaviour.");
-			}
-			progress++;
-			if (total == progress) done();
-		}
-		*/
 	}
 }

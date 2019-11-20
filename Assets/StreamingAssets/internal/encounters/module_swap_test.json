@@ -1,0 +1,222 @@
+{
+  "orderWeight": 999,
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "TransitComplete",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [],
+    "moduleTraits": []
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "edges": [
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "c962eb28-ca2b-4521-b577-0b663d63b274",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "523aff77-d9c8-422e-9b8b-a5ebf4b09302",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "d2b6900e-04e9-4970-9f8a-d835766e2851",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "disable_default_ship_view"
+              }
+            },
+            "id": "5e4bae92-bca7-488b-be93-84c746079070"
+          }
+        ],
+        "beginning": true,
+        "logId": "019ccfa5-766d-493a-9363-72a7e788f390",
+        "fallbackLogId": "a2887bc4-0eee-4522-b0c7-f3602eb36670"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 20,
+                "lock_state": 10
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "3a127f28-ccc8-4f3d-b044-4cb5b19f12ac"
+          }
+        ],
+        "index": 1,
+        "logId": "a2887bc4-0eee-4522-b0c7-f3602eb36670",
+        "fallbackLogId": "7ff40b42-1843-4151-a6e7-0492828e148a"
+      },
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 10,
+                "lock_state": 20
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "489c1a48-92cb-44e4-b243-3a64651e2ddb"
+          }
+        ],
+        "index": 3,
+        "ending": true,
+        "logId": "7d694be2-6a9f-4728-88ef-f5fa34a4551d"
+      }
+    ],
+    "dialogLogs": [],
+    "bustLogs": [],
+    "conversationLogs": [],
+    "moduleTraitLogs": [],
+    "moduleSwapLogs": [
+      {
+        "style": "Derelict",
+        "edges": [
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "Propulsion"
+              ],
+              "PowerConsumption": {
+                "secondary": 1.0
+              },
+              "TransitVelocity": {
+                "primary": 0.01,
+                "secondary": 1.0
+              },
+              "RepairCost": {
+                "secondary": 1.0
+              },
+              "Tags": [
+                "some_test_tag"
+              ],
+              "ManufacturerIds": []
+            },
+            "traits": [
+              {
+                "ValidSeverities": [
+                  "Critical"
+                ],
+                "ValidTraitIds": [],
+                "ValidTraitFamilyIds": [
+                  "airlocks"
+                ]
+              }
+            ],
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "beb3e69b-2957-4d1f-96c3-9702e2219953"
+          },
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "PowerProduction",
+                "RationManagement",
+                "LifeSupport",
+                "LivingQuarters",
+                "Navigation"
+              ],
+              "PowerProduction": {
+                "secondary": 1.0
+              },
+              "PowerConsumption": {
+                "secondary": 1.0
+              },
+              "TransitRange": {
+                "primary": 0.9,
+                "secondary": 1.0
+              },
+              "RepairCost": {
+                "secondary": 1.0
+              },
+              "Tags": [],
+              "ManufacturerIds": []
+            },
+            "traits": [],
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 1,
+            "id": "066b42f9-b4b5-49fc-8e6a-f98eea9d9545"
+          }
+        ],
+        "index": 2,
+        "logId": "7ff40b42-1843-4151-a6e7-0492828e148a",
+        "fallbackLogId": "7d694be2-6a9f-4728-88ef-f5fa34a4551d"
+      }
+    ]
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-11-10T15:15:26.045188-08:00",
+  "modified": "2019-11-10T15:15:26.045188-08:00",
+  "id": "module_swap_test",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}

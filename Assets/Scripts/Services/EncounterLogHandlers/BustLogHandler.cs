@@ -19,13 +19,13 @@ namespace LunraGames.SubLight
 		{
 			var bustEvents = logModel.Edges.Value.Where(e => !e.Ignore.Value).OrderBy(e => e.Index.Value).ToArray();
 
-			var result = new BustHandlerModel(logModel);
+			var request = new BustHandlerModel(logModel);
 			// If there are any non-instant focuses this event is halting.
-			result.HasHaltingEvents.Value = bustEvents.Any(b => b.Operation.Value == BustEdgeModel.Operations.Focus && !b.FocusInfo.Value.Instant);
-			result.Entries.Value = bustEvents;
-			result.HaltingDone.Value = linearDone;
+			request.HasHaltingEvents.Value = bustEvents.Any(b => b.Operation.Value == BustEdgeModel.Operations.Focus && !b.FocusInfo.Value.Instant);
+			request.Entries.Value = bustEvents;
+			request.HaltingDone.Value = linearDone;
 
-			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
+			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(request));
 		}
 	}
 }

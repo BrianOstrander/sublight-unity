@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Linq;
 
-using UnityEngine;
-
 using LunraGames.SubLight.Models;
 
 namespace LunraGames.SubLight
 {
 	public class DialogLogHandler : EncounterLogHandler<DialogEncounterLogModel>
 	{
-		public override EncounterLogTypes LogType { get { return EncounterLogTypes.Dialog; } }
+		public override EncounterLogTypes LogType => EncounterLogTypes.Dialog;
 
 		public DialogLogHandler(EncounterLogHandlerConfiguration configuration) : base(configuration) { }
 
@@ -41,16 +39,10 @@ namespace LunraGames.SubLight
 			var successId = GetValidId(edge.SuccessLogId.Value, fallthroughId);
 			var failureId = GetValidId(edge.FailureLogId.Value, fallthroughId);
 			var cancelId = GetValidId(edge.CancelLogId.Value, fallthroughId);
+			
+			var request = new DialogHandlerModel(logModel);
 
-			Action successClick = () => done(successId);
-			Action failureClick = () => done(failureId);
-			Action cancelClick = () => done(cancelId);
-
-			var result = new DialogHandlerModel(
-				logModel
-			);
-
-			result.Dialog.Value = new DialogLogBlock(
+			request.Dialog.Value = new DialogLogBlock(
 				edge.Title.Value,
 				edge.Message.Value,
 				edge.DialogType.Value,
@@ -58,12 +50,12 @@ namespace LunraGames.SubLight
 				edge.SuccessText.Value,
 				edge.FailureText.Value,
 				edge.CancelText.Value,
-				successClick,
-				failureClick,
-				cancelClick
+				() => done(successId),
+				() => done(failureId),
+				() => done(cancelId)
 			);
 
-			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(result));
+			Configuration.Callbacks.EncounterRequest(EncounterRequest.Handle(request));
 		}
 
 		string GetValidId(string target, string fallback) { return string.IsNullOrEmpty(target) ? fallback : target; }

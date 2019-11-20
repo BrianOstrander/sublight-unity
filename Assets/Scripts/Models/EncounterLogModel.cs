@@ -44,9 +44,10 @@ namespace LunraGames.SubLight.Models
 		[JsonIgnore]
 		public abstract EncounterLogTypes LogType { get; }
 		[JsonIgnore]
-		public virtual string NextLog { get { return FallbackLogId.Value; } }
+		public virtual string NextLog => FallbackLogId.Value;
+
 		[JsonIgnore]
-		public virtual bool CanFallback { get { return true; } }
+		public virtual bool CanFallback => true;
 
 		/// <summary>
 		/// If this value returns true, not having a next log is an error,
@@ -54,15 +55,19 @@ namespace LunraGames.SubLight.Models
 		/// </summary>
 		/// <value><c>true</c> if requires next log; otherwise, <c>false</c>.</value>
 		[JsonIgnore]
-		public virtual bool RequiresFallbackLog { get { return true; } }
+		public virtual bool RequiresFallbackLog => true;
+
 		[JsonIgnore]
-		public virtual bool EditableDuration { get { return true; } }
+		public virtual bool EditableDuration => true;
+
 		[JsonIgnore]
-		public virtual float TotalDuration { get { return Duration.Value; } }
+		public virtual float TotalDuration => Duration.Value;
+
 		[JsonIgnore]
-		public bool HasNotes { get { return !string.IsNullOrEmpty(Notes.Value); } }
+		public bool HasNotes => !string.IsNullOrEmpty(Notes.Value);
+
 		[JsonIgnore]
-		public bool HasName { get { return !string.IsNullOrEmpty(Name.Value); } }
+		public bool HasName => !string.IsNullOrEmpty(Name.Value);
 
 		public EncounterLogModel()
 		{

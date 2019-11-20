@@ -16,5 +16,6 @@ namespace LunraGames.SubLight
 		public LanguageStringModel PowerConsumption;
 
 		public Dictionary<ModuleTraitSeverity, LanguageStringModel> Severities;
+		public Dictionary<ModuleTypes, LanguageStringModel> Types;
 	}
 }

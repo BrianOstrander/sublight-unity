@@ -5,7 +5,6 @@ using UnityEngine;
 
 using LunraGames.NumberDemon;
 using LunraGames.SubLight.Models;
-using Newtonsoft.Json;
 using UnityEditor;
 
 namespace LunraGames.SubLight
@@ -52,6 +51,7 @@ namespace LunraGames.SubLight
 				TransitRange = FloatRange.Zero,
 				TransitVelocity = FloatRange.Zero,
 				RepairCost = FloatRange.Zero,
+				Tags = new string[0],
 				ManufacturerIds = new string[0] 
 			};
 
@@ -71,6 +71,7 @@ namespace LunraGames.SubLight
 			/// </summary>
 			public FloatRange TransitVelocity;
 			public FloatRange RepairCost;
+			public string[] Tags;
 			public string[] ManufacturerIds;
 			
 			public override string ToString() => this.ToReadableJson();
@@ -101,17 +102,65 @@ namespace LunraGames.SubLight
 		[Serializable]
 		public struct TraitLimit
 		{
-			public ModuleTraitSeverity Severity;
-			public IntegerRange Count;
+			public static TraitLimit WithSeverities(params ModuleTraitSeverity[] validSeverities)
+			{
+				return new TraitLimit(validSeverities);
+			}
+			
+			public static TraitLimit WithTraitIds(params string[] validTraitIds)
+			{
+				return new TraitLimit(validTraitIds: validTraitIds);
+			}
+			
+			public static TraitLimit WithTraitFamilyIds(params string[] validTraitFamilyIds)
+			{
+				return new TraitLimit(validTraitFamilyIds: validTraitFamilyIds);
+			}
+			
+			/// <summary>
+			/// The valid severity for this limit, specifying Unknown indicates any is valid.
+			/// </summary>
+			public ModuleTraitSeverity[] ValidSeverities;
+			/// <summary>
+			/// Only traits with these ids are valid.
+			/// </summary>
+			public string[] ValidTraitIds;
+			/// <summary>
+			/// Only traits with these family ids are valid.
+			/// </summary>
+			public string[] ValidTraitFamilyIds;
+			/// <summary>
+			/// The order in which this is sorted if in a list of other entries.
+			/// </summary>
+			public int Order;
 			
 			public TraitLimit(
-				ModuleTraitSeverity severity,
-				int countMinimum = 1,
-				int countMaximum = 1
+				ModuleTraitSeverity[] validSeverities = null,
+				string[] validTraitIds = null,
+				string[] validTraitFamilyIds = null,
+				int order = 0
 			)
 			{
-				Severity = severity;
-				Count = new IntegerRange(countMinimum, countMaximum);
+				ValidSeverities = validSeverities ?? new ModuleTraitSeverity[0];
+				ValidTraitIds = validTraitIds ?? new string[0];
+				ValidTraitFamilyIds = validTraitFamilyIds ?? new string[0];
+				Order = order;
+			}
+		}
+
+		[Serializable]
+		public struct ModuleConstraintWithTraitLimits
+		{
+			public ModuleConstraint Constraint;
+			public TraitLimit[] Limits;
+
+			public ModuleConstraintWithTraitLimits(
+				ModuleConstraint constraint,
+				params TraitLimit[] limits
+			)
+			{
+				Constraint = constraint;
+				Limits = limits;
 			}
 		}
 
@@ -167,7 +216,7 @@ namespace LunraGames.SubLight
 			{
 				var error = "Loading all module traits failed with status: " + results.Status + " and error: " + results.Error;
 				Debug.LogError(error);
-				done(Result<IModuleService>.Failure(default, error));
+				done(Result<IModuleService>.Failure(error));
 				return;
 			}
 
@@ -210,9 +259,11 @@ namespace LunraGames.SubLight
 			result.Id.Value = Guid.NewGuid().ToString();
 			result.Type.Value = info.Type;
 			result.Name.Value = GetName(info);
+			result.Tags.Value = constraint.Tags ?? new string[0];
 			result.YearManufactured.Value = GetYearManufactured(info);
 			result.Description.Value = GetDescription(info);
-
+			result.Tags.Value = constraint.Tags;
+			
 			result.PowerConsumption.Value = random.GetNextFloat(
 				constraint.PowerConsumption.Primary,
 				constraint.PowerConsumption.Secondary
@@ -266,8 +317,8 @@ namespace LunraGames.SubLight
 						{
 							done(
 								ResultArray<ModuleModel>.Failure(
-									results.ToArray(),
-									nameof(GenerateModule) + " failed with status: " + result.Status + " and error: " + result.Error
+									nameof(GenerateModule) + " failed with status: " + result.Status + " and error: " + result.Error,
+									results.ToArray()
 								).Log()
 							);
 							return;
@@ -279,6 +330,17 @@ namespace LunraGames.SubLight
 			}
 		}
 
+		/// <summary>
+		/// Generates traits on the specified module.
+		/// </summary>
+		/// <remarks>
+		///	The order in which you specify trait limits determines the bias for selecting traits.
+		/// Ones earlier in the list are chosen first, which may exclude later ones. Undecided if this is always going to be the case.
+		/// </remarks>
+		/// <param name="module"></param>
+		/// <param name="done"></param>
+		/// <param name="traitLimits"></param>
+		/// <exception cref="ArgumentNullException"></exception>
 		public void GenerateTraits(
 			ModuleModel module,
 			Action<Result<Payloads.GenerateTraits>> done,
@@ -289,61 +351,27 @@ namespace LunraGames.SubLight
 			if (module == null) throw new ArgumentNullException(nameof(module));
 			if (done == null) throw new ArgumentNullException(nameof(done));
 
-			var traitConstraint = GetTraitConstraint(module);
-			
-			var remaining = new Dictionary<ModuleTraitSeverity, int>();
-			
-			var random = new Demon();
-			
-			foreach (var traitLimit in traitLimits)
-			{
-				var count = random.GetNextInteger(
-					traitLimit.Count.Primary,
-					traitLimit.Count.Secondary
-				);
-				
-				if (0 < count)
-				{
-					if (remaining.ContainsKey(traitLimit.Severity)) Debug.LogError("Module trait Severity \"" + traitLimit.Severity + "\" is specified multiple times, ignoring duplicates");
-					else remaining.Add(traitLimit.Severity, count);
-				}
-			}
-
 			OnGenerateTraits(
-				null,
 				module,
-				traitConstraint,
-				remaining,
+				GetTraitConstraint(module),
+				traitLimits.OrderBy(t => t.Order).ToList(),
 				new List<ModuleTraitModel>(), 
 				done
 			);
 		}
 		
 		void OnGenerateTraits(
-			ModuleTraitModel result,
 			ModuleModel module,
 			TraitConstraint traitConstraint,
-			Dictionary<ModuleTraitSeverity, int> remaining,
+			List<TraitLimit> remaining,
 			List<ModuleTraitModel> appended,
 			Action<Result<Payloads.GenerateTraits>> done
 		)
 		{
-			if (result != null)
-			{
-				AppendTraitToModule(result, module);
-				appended.Add(result);
-				AppendTraitToConstraint(result, ref traitConstraint);
-				remaining[result.Severity] = remaining[result.Severity] - 1;
-			}
-
-			var validSeverity = remaining.Where(kv => 0 < kv.Value).Select(kv => kv.Key);
-			
-			var nextTrait = validSeverity.None() ? null : Traits.Where(t => validSeverity.Contains(t.Severity.Value)).Where(t => IsTraitValid(t, traitConstraint)).Random();
-			
-			if (nextTrait == null)
+			if (remaining.None())
 			{
 				done(
-				Result<Payloads.GenerateTraits>.Success(
+					Result<Payloads.GenerateTraits>.Success(
 						new Payloads.GenerateTraits
 						{
 							Module = module,
@@ -351,16 +379,102 @@ namespace LunraGames.SubLight
 						}
 					)
 				);
-				return;	
+				return;
 			}
+
+			var next = remaining.First();
+			remaining.RemoveAt(0);
 			
+			var possibleTraits = Traits.AsEnumerable();
+
+			if (next.ValidTraitIds.Any()) possibleTraits = possibleTraits.Where(t => next.ValidTraitIds.Contains(t.Id.Value));
+			if (next.ValidTraitFamilyIds.Any()) possibleTraits = possibleTraits.Where(t => t.FamilyIds.Value.Any(f => next.ValidTraitFamilyIds.Contains(f)));
+			if (next.ValidSeverities.Any()) possibleTraits = possibleTraits.Where(t => next.ValidSeverities.Contains(t.Severity.Value));
+
+			possibleTraits = possibleTraits.Where(t => IsTraitValid(t, traitConstraint));
+
+			if (possibleTraits.Any())
+			{
+				var selectedTrait = possibleTraits.Random();
+				AppendTraitToModule(selectedTrait, module);
+				appended.Add(selectedTrait);
+				AppendTraitToConstraint(selectedTrait, ref traitConstraint);
+			}
+
 			OnGenerateTraits(
-				nextTrait,
 				module,
 				traitConstraint,
 				remaining,
 				appended,
 				done
+			);
+		}
+
+		public void GenerateModulesWithTraits(
+			ModuleConstraintWithTraitLimits[] constraintsWithTraitLimits,
+			Action<ResultArray<ModuleModel>> done
+		)
+		{
+			CheckInitialization();
+			if (constraintsWithTraitLimits == null) throw new ArgumentNullException(nameof(constraintsWithTraitLimits));
+			if (done == null) throw new ArgumentNullException(nameof(done));
+			
+			OnGenerateModulesWithTraits(
+				constraintsWithTraitLimits.ToList(),
+				new List<Result<ModuleModel>>(),
+				result => done(result.LogIfNotSuccess())
+			);
+		}
+
+		void OnGenerateModulesWithTraits(
+			List<ModuleConstraintWithTraitLimits> remaining,
+			List<Result<ModuleModel>> generated,
+			Action<ResultArray<ModuleModel>> done
+		)
+		{
+			if (remaining.None())
+			{
+				done(ResultArray<ModuleModel>.Success(generated.ToArray()));
+				return;
+			}
+
+			var next = remaining.First();
+			remaining.RemoveAt(0);
+			
+			GenerateModule(
+				next.Constraint,
+				generateModuleResult =>
+				{
+					switch (generateModuleResult.Status)
+					{
+						case RequestStatus.Success:
+							GenerateTraits(
+								generateModuleResult.Payload,
+								generateTraitsResult =>
+								{
+									switch (generateTraitsResult.Status)
+									{
+										case RequestStatus.Success:
+											generated.Add(Result<ModuleModel>.Success(generateTraitsResult.Payload.Module));
+											OnGenerateModulesWithTraits(
+												remaining,
+												generated,
+												done
+											);
+											break;
+										default:
+											done(ResultArray<ModuleModel>.Failure(generateTraitsResult.Error));
+											break;
+									}
+								},
+								next.Limits
+							);
+							break;
+						default:
+							done(ResultArray<ModuleModel>.Failure(generateModuleResult.Error));
+							break;
+					}
+				}
 			);
 		}
 		
@@ -390,7 +504,6 @@ namespace LunraGames.SubLight
 			{
 				done(
 					Result<Payloads.AppendTraits>.Failure(
-						default,
 						nameof(CanAppendTraits) + " failed with status: " + result.Status + " and error: " + result.Error
 					).Log()
 				);
@@ -433,7 +546,6 @@ namespace LunraGames.SubLight
 				{
 					done(
 						Result<Payloads.CanAppendTraits>.Failure(
-							default,
 							"No ModuleTrait with id \"" + id + "\" found"
 						).Log()
 					);
@@ -553,6 +665,11 @@ namespace LunraGames.SubLight
 			ModuleModel module,
 			Action<Result<ModuleService.Payloads.GenerateTraits>> done,
 			params ModuleService.TraitLimit[] traitLimits
+		);
+		
+		void GenerateModulesWithTraits(
+			ModuleService.ModuleConstraintWithTraitLimits[] constraintsWithTraitLimits,
+			Action<ResultArray<ModuleModel>> done
 		);
 
 		void AppendTraits(

@@ -396,26 +396,62 @@ namespace LunraGames.SubLight
 
 			static void InitializeShipPresenters(GameState state, Action done)
 			{
+				var browserLanguageBlock = new ModuleBrowserLanguageBlock
+				{
+					StatsTitle = LanguageStringModel.Override("Ark Stats"),
+					Velocity = LanguageStringModel.Override("Velocity"),
+					VelocityUnit = LanguageStringModel.Override("c"),
+					NavigationRange = LanguageStringModel.Override("Navigation Radius"),
+					NavigationRangeUnit = LanguageStringModel.Override("ly"),
+					YearManufactured = LanguageStringModel.Override("Year Manufactured"),
+					PowerProduction = LanguageStringModel.Override("Power Production"),
+					PowerConsumption = LanguageStringModel.Override("Power Consumption"),
+					Severities = new Dictionary<ModuleTraitSeverity, LanguageStringModel>
+					{
+						{ModuleTraitSeverity.Unknown, LanguageStringModel.Override("Unrecognized Severity")},
+						{ModuleTraitSeverity.Positive, LanguageStringModel.Override("Positive")},
+						{ModuleTraitSeverity.Neutral, LanguageStringModel.Override("Neutral")},
+						{ModuleTraitSeverity.Negative, LanguageStringModel.Override("Negative")},
+						{ModuleTraitSeverity.Critical, LanguageStringModel.Override("Critical")}
+					},
+					Types = new Dictionary<ModuleTypes, LanguageStringModel>
+					{
+						{ModuleTypes.Unknown, LanguageStringModel.Override("Unrecognized Module Type")},
+						{ModuleTypes.Propulsion, LanguageStringModel.Override("Propulsion")},
+						{ModuleTypes.PowerProduction, LanguageStringModel.Override("Power Production")},
+						{ModuleTypes.RationManagement, LanguageStringModel.Override("Ration Management")},
+						{ModuleTypes.LifeSupport, LanguageStringModel.Override("Life Support")},
+						{ModuleTypes.LivingQuarters, LanguageStringModel.Override("Living Quarters")},
+						{ModuleTypes.Navigation, LanguageStringModel.Override("Navigation")}
+					}
+				};
+				
 				new ModuleBrowserPresenter(
 					state.Payload.Game,
-					new ModuleBrowserLanguageBlock
+					browserLanguageBlock
+				);
+				
+				new ModuleSwapPresenter(
+					state.Payload.Game,
+					new ModuleSwapLanguageBlock
 					{
-						StatsTitle = LanguageStringModel.Override("Ark Stats"),
-						Velocity = LanguageStringModel.Override("Velocity"),
-						VelocityUnit = LanguageStringModel.Override("c"),
-						NavigationRange = LanguageStringModel.Override("Navigation Radius"),
-						NavigationRangeUnit = LanguageStringModel.Override("ly"),
-						YearManufactured = LanguageStringModel.Override("Year Manufactured"),
-						PowerProduction = LanguageStringModel.Override("Power Production"),
-						PowerConsumption = LanguageStringModel.Override("Power Consumption"),
-						Severities = new Dictionary<ModuleTraitSeverity, LanguageStringModel>
+						AvailableSourceTypeDefaults = new Dictionary<ModuleSwapEncounterLogModel.Styles, LanguageStringModel>
 						{
-							{ ModuleTraitSeverity.Unknown, LanguageStringModel.Override("Unrecognized Severity") },
-							{ ModuleTraitSeverity.Positive, LanguageStringModel.Override("Positive") },
-							{ ModuleTraitSeverity.Neutral, LanguageStringModel.Override("Neutral") },
-							{ ModuleTraitSeverity.Negative, LanguageStringModel.Override("Negative") },
-							{ ModuleTraitSeverity.Critical, LanguageStringModel.Override("Critical") }
-						}
+							{ModuleSwapEncounterLogModel.Styles.Unknown, LanguageStringModel.Override("Unrecognized Style")},
+							{ModuleSwapEncounterLogModel.Styles.Derelict, LanguageStringModel.Override("Derelict Ark")}
+						},
+						CurrentType = LanguageStringModel.Override("Your Ark"),
+						RemovedType = LanguageStringModel.Override("Discarded"),
+						Confirm = LanguageStringModel.Override("Confirm"),
+						Velocity = browserLanguageBlock.Velocity,
+						VelocityUnit = browserLanguageBlock.VelocityUnit,
+						NavigationRange = browserLanguageBlock.NavigationRange,
+						NavigationRangeUnit = browserLanguageBlock.NavigationRangeUnit,
+						YearManufactured = browserLanguageBlock.YearManufactured,
+						PowerProduction = browserLanguageBlock.PowerProduction,
+						PowerConsumption = browserLanguageBlock.PowerConsumption,
+						Severities = browserLanguageBlock.Severities,
+						Types = browserLanguageBlock.Types
 					}
 				);
 				

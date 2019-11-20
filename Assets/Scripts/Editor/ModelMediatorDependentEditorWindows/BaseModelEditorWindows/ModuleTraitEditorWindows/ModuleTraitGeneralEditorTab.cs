@@ -47,8 +47,8 @@ namespace LunraGames.SubLight
 					Color.red
 				);
 
-				model.CompatibleModuleTypes.Value = EditorGUILayoutExtensions.EnumArray(
-					new GUIContent("Compatible Modules", "All modules types this trait can be applied to. Leaving this empty will allow it to be added to any Module Type."),
+				model.CompatibleModuleTypes.Value = EditorGUILayoutExtensions.EnumButtonArray(
+					new GUIContent("Compatible Modules", "All modules types this trait can be applied to. Specifying none will allow it to be added to any Module Type."),
 					model.CompatibleModuleTypes.Value
 				);
 

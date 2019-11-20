@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -533,6 +533,12 @@ namespace LunraGames.SubLight
 				case EncounterLogTypes.Conversation:
 					result = NewEncounterLog<ConversationEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
 					break;
+				case EncounterLogTypes.ModuleTrait:
+					result = NewEncounterLog<ModuleTraitEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
+				case EncounterLogTypes.ModuleSwap:
+					result = NewEncounterLog<ModuleSwapEncounterLogModel>(infoModel, nextIndex, isBeginning).LogId.Value;
+					break;
 				default:
 					Debug.LogError("Unrecognized EncounterLogType: " + logType);
 					break;
@@ -590,7 +596,7 @@ namespace LunraGames.SubLight
 				isAlternate
 			);
 
-			GUILayout.BeginHorizontal();
+			GUILayout.BeginHorizontal(GUILayout.Height(26f));
 			{
 				var nameSourcePrefix = logsShowNameSource.Value ? (model.HasName ? ".Name:" : ".LogId:") : ":";
 				var header = "#" + (count + 1) + " | " + model.LogType + nameSourcePrefix + " " + (model.HasName ? ("<b>" + model.Name.Value + "</b>") : Window.Shorten(model.LogId.Value, 8));
@@ -706,9 +712,6 @@ namespace LunraGames.SubLight
 			}
 			GUILayout.EndHorizontal();
 
-			if (isDeleting && !isMoving) GUILayout.Space(9f);
-			else GUILayout.Space(8f);
-
 			if (isCollapsed) return deleted;
 
 			if (model.HasNotes) GUILayout.Label("Notes: " + model.Notes.Value);
@@ -749,6 +752,12 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterLogTypes.Conversation:
 					OnConversationLog(infoModel, model as ConversationEncounterLogModel);
+					break;
+				case EncounterLogTypes.ModuleTrait:
+					OnModuleTraitLog(infoModel, model as ModuleTraitEncounterLogModel);
+					break;
+				case EncounterLogTypes.ModuleSwap:
+					OnModuleSwapLog(infoModel, model as ModuleSwapEncounterLogModel);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EncounterLogType: " + model.LogType, MessageType.Error);
@@ -1464,7 +1473,7 @@ namespace LunraGames.SubLight
 		{
 			edge.Title.Value = EditorGUILayout.TextField("Title", edge.Title.Value);
 			edge.Header.Value = EditorGUILayout.TextField(new GUIContent("Header", "The section header, leave blank to indicate this is the introduction."), edge.Header.Value);
-			edge.Body.Value = EditorGUILayoutExtensions.TextAreaWrapped("Body", edge.Body.Value);
+			edge.Body.Value = EditorGUILayoutExtensions.TextAreaWrapped(new GUIContent("Body"), edge.Body.Value);
 			edge.Priority.Value = EditorGUILayout.IntField(new GUIContent("Priority", "Higher priority sections will replace lower priority sections with the same header."), edge.Priority.Value);
 			edge.OrderWeight.Value = EditorGUILayout.IntField(new GUIContent("Order Weight", "The order of this section in the article, lower weights appear first."), edge.OrderWeight.Value);
 		}
@@ -1556,9 +1565,6 @@ namespace LunraGames.SubLight
 					break;
 				case EncounterEvents.Types.Waypoint:
 					OnEncounterEventLogEdgeWaypoint(edge);
-					break;
-				case EncounterEvents.Types.ModuleTrait:
-					OnEncounterEventLogEdgeModuleTrait(edge);
 					break;
 				default:
 					EditorGUILayout.HelpBox("Unrecognized EventType: " + edge.EncounterEvent.Value, MessageType.Error);
@@ -1801,7 +1807,6 @@ namespace LunraGames.SubLight
 			EncounterEventEdgeModel edge
 		)
 		{
-
 			var waypointId = edge.KeyValues.GetString(EncounterEvents.Waypoint.StringKeys.WaypointId);
 			var waypointIdInvalid = string.IsNullOrEmpty(waypointId);
 
@@ -1827,76 +1832,6 @@ namespace LunraGames.SubLight
 			);
 		}
 		
-		void OnEncounterEventLogEdgeModuleTrait(
-			EncounterEventEdgeModel edge
-		)
-		{
-			EncounterEvents.ModuleTrait.Operations operation;
-			
-			edge.KeyValues.SetEnumeration(
-				EncounterEvents.ModuleTrait.EnumKeys.Operation,
-				operation = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
-					new GUIContent("Operation"),
-					"- Operation -",
-					edge.KeyValues.GetEnumeration<EncounterEvents.ModuleTrait.Operations>(EncounterEvents.ModuleTrait.EnumKeys.Operation),
-					Color.red
-				)
-			);
-
-			GUIContent operationIdLabel = null;
-			
-			switch (operation)
-			{
-				case EncounterEvents.ModuleTrait.Operations.Unknown: break;
-				case EncounterEvents.ModuleTrait.Operations.AppendByTraitId:
-				case EncounterEvents.ModuleTrait.Operations.RemoveByTraitId:
-					operationIdLabel = new GUIContent("Trait Id");
-					break;
-				case EncounterEvents.ModuleTrait.Operations.RemoveByFamilyId:
-					operationIdLabel = new GUIContent("Family Id");
-					break;
-				default:
-					EditorGUILayout.HelpBox("Unrecognized Operation: " + operation, MessageType.Error);
-					break;
-			}
-
-			if (operationIdLabel != null)
-			{
-				var operationIdIsInvalid = string.IsNullOrEmpty(edge.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId));
-				// TODO: Actually validate if operation id exists...
-				EditorGUILayoutExtensions.PushColorValidation(Color.red, operationIdIsInvalid);
-				{
-					edge.KeyValues.SetString(
-						EncounterEvents.ModuleTrait.StringKeys.OperationId,
-						EditorGUILayout.TextField(
-							operationIdLabel,
-							edge.KeyValues.GetString(EncounterEvents.ModuleTrait.StringKeys.OperationId)
-						)
-					);
-				}
-				EditorGUILayoutExtensions.PopColorValidation(operationIdIsInvalid);
-			}
-			
-			GUILayout.Label("Target Module Types (Select none to apply to all Module Types)");
-
-			EditorGUILayoutExtensions.PushIndent();
-			{
-				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
-				{
-					var moduleTypeKey = EncounterEvents.ModuleTrait.BooleanKeys.ModuleTypeIsValid(moduleType);
-
-					edge.KeyValues.SetBoolean(
-						moduleTypeKey,
-						EditorGUILayout.Toggle(
-							ObjectNames.NicifyVariableName(moduleType.ToString()),
-							edge.KeyValues.GetBoolean(moduleTypeKey)
-						)
-					);
-				}
-			}
-			EditorGUILayoutExtensions.PopIndent();
-		}
-
 		void OnEncounterEventLogEdgeNoModifications()
 		{
 			EditorGUILayout.HelpBox("No values to modify for this event.", MessageType.Info);
@@ -1950,7 +1885,7 @@ namespace LunraGames.SubLight
 			GUILayout.EndHorizontal();
 
 			edge.Title.Value = EditorGUILayout.TextField("Title", edge.Title.Value);
-			edge.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped("Message", edge.Message.Value);
+			edge.Message.Value = EditorGUILayoutExtensions.TextAreaWrapped(new GUIContent("Message"), edge.Message.Value);
 
 			switch (edge.DialogType.Value)
 			{
@@ -2524,6 +2459,355 @@ namespace LunraGames.SubLight
 		}
 		#endregion
 
+		#region Module Trait Logs
+		void OnModuleTraitLog(
+			EncounterInfoModel infoModel,
+			ModuleTraitEncounterLogModel model
+		)
+		{
+			OnEdgedLog<ModuleTraitEncounterLogModel, ModuleTraitEdgeModel>(
+				infoModel,
+				model,
+				OnModuleTraitLogEdge,
+				OnModuleTraitLogSpawnOptions
+			);
+		}
+		
+		void OnModuleTraitLogSpawnOptions(
+			EncounterInfoModel infoModel,
+			ModuleTraitEncounterLogModel model,
+			string prefix,
+			int index = int.MaxValue
+		)
+		{
+			var appendSelection = EditorGUILayoutExtensions.HelpfulEnumPopup(
+				GUIContent.none,
+				"- " + (string.IsNullOrEmpty(prefix) ? LogStrings.EdgeEntryAppendPrefix : prefix) + " a Module Entry -",
+				ModuleTraitEdgeModel.Operations.Unknown,
+				EnumExtensions.GetValues<ModuleTraitEdgeModel.Operations>(),
+				GUILayout.MaxWidth(LogFloats.AppendEntryWidthMaximum)
+			);
+
+			switch (appendSelection)
+			{
+				case ModuleTraitEdgeModel.Operations.Unknown: break;
+				default:
+					OnEdgedLogSpawn(model, edge => OnModuleTraitLogSpawn(appendSelection, edge), index);
+					break;
+			}
+		}
+
+		void OnModuleTraitLogSpawn(
+			ModuleTraitEdgeModel.Operations operation,
+			ModuleTraitEdgeModel edge
+		)
+		{
+			edge.Operation.Value = operation;
+		}
+		
+		void OnModuleTraitLogEdge(
+			EncounterInfoModel infoModel,
+			ModuleTraitEncounterLogModel model,
+			ModuleTraitEdgeModel edge	
+		)
+		{
+			edge.Operation.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Operation"), 
+				"- Operation -",
+				edge.Operation.Value,
+				Color.red
+			);
+
+			EditorModelMediator.Validation validation;
+
+			switch (edge.Operation.Value)
+			{
+				case ModuleTraitEdgeModel.Operations.AppendTraitByTraitId:
+				case ModuleTraitEdgeModel.Operations.RemoveTraitByTraitId:
+					validation = EditorModelMediator.Instance.IsValidModel<ModuleTraitModel>(edge.OperationId.Value);
+					break;
+				case ModuleTraitEdgeModel.Operations.RemoveTraitByTraitFamilyId:
+					validation = EditorModelMediator.Instance.IsValidModuleTraitFamilyId(edge.OperationId.Value);
+					break;
+				default:
+					validation = EditorModelMediator.DefaultValidations.CannotValidate;
+					break;
+			}
+			
+			EditorGUILayoutExtensions.PushColorValidation(validation);
+			{
+				edge.OperationId.Value = EditorGUILayout.TextField(
+					validation.GetLabel(edge.OperationIdName),
+					edge.OperationId.Value
+				);
+			}
+			EditorGUILayoutExtensions.PopColorValidation(validation);
+			
+			GUILayout.Label("Target Module Types (Select none to apply to all Module Types)");
+			
+			EditorGUILayoutExtensions.PushIndent();
+			{
+				foreach (var moduleType in EnumExtensions.GetValues(ModuleTypes.Unknown))
+				{
+					var isValidModule = edge.ValidModuleTypes.Value.Contains(moduleType);
+					var isValidModuleToggle = EditorGUILayout.Toggle(
+						ObjectNames.NicifyVariableName(moduleType.ToString()),
+						isValidModule
+					);
+
+					if (isValidModule != isValidModuleToggle)
+					{
+						if (isValidModuleToggle) edge.ValidModuleTypes.Value = edge.ValidModuleTypes.Value.Append(moduleType).ToArray();
+						else edge.ValidModuleTypes.Value = edge.ValidModuleTypes.Value.ExceptOne(moduleType).ToArray();
+					}
+				}
+			}
+			EditorGUILayoutExtensions.PopIndent();
+			
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent("Filtering", "Passing this filter is required to continue to run this key value logic."),
+				edge.Filtering
+			);
+		}
+		#endregion
+		
+		#region Module Swap Logs
+		void OnModuleSwapLog(
+			EncounterInfoModel infoModel,
+			ModuleSwapEncounterLogModel model
+		)
+		{
+			model.Style.Value = EditorGUILayoutExtensions.HelpfulEnumPopupValidation(
+				new GUIContent("Style"), 
+				"- Select Style -",
+				model.Style.Value,
+				Color.red
+			);
+
+			model.IsHaltingOnClose.Value = EditorGUILayout.Toggle(
+				new GUIContent(ObjectNames.NicifyVariableName(nameof(model.IsHaltingOnClose)), "If true the next encounter log model will trigger once close has been called on the swap view."),
+				model.IsHaltingOnClose.Value
+			);
+			
+			if (GUILayout.Button(new GUIContent("Append New Module Constraint"))) OnEdgedLogSpawn(model);
+			
+			OnEdgedLog<ModuleSwapEncounterLogModel, ModuleSwapEdgeModel>(infoModel, model, OnModuleSwapLogEdge);
+		}
+
+		void OnModuleSwapLogEdge(
+			EncounterInfoModel infoModel,
+			ModuleSwapEncounterLogModel model,
+			ModuleSwapEdgeModel edge	
+		)
+		{
+			var moduleConstraint = edge.ModuleConstraint.Value;
+
+			GUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.LabelField(
+					new GUIContent("Valid Module Types", "Specify none to allow any module type."),
+					GUILayout.Width(EditorGUILayoutExtensions.Constants.LabelWidth)
+				);
+				
+				var allModuleTypes = EnumExtensions.GetValues(ModuleTypes.Unknown);
+				foreach (var moduleType in allModuleTypes)
+				{
+					var buttonStyle = EditorStyles.miniButtonMid;
+					if (moduleType == allModuleTypes.First()) buttonStyle = EditorStyles.miniButtonLeft;
+					else if (moduleType == allModuleTypes.Last()) buttonStyle = EditorStyles.miniButtonRight;
+					
+					var isValidModule = moduleConstraint.ValidTypes.Contains(moduleType);
+					var isValidModuleToggle = GUILayout.Toggle(
+						isValidModule,
+						ObjectNames.NicifyVariableName(moduleType.ToString()),
+						buttonStyle
+					);
+
+					if (isValidModule != isValidModuleToggle)
+					{
+						if (isValidModuleToggle) moduleConstraint.ValidTypes = moduleConstraint.ValidTypes.Append(moduleType).ToArray();
+						else moduleConstraint.ValidTypes = moduleConstraint.ValidTypes.ExceptOne(moduleType).ToArray();
+					}
+				}
+			}
+			GUILayout.EndHorizontal();
+
+			bool CanBe(ModuleTypes moduleType) => moduleConstraint.ValidTypes.None() || moduleConstraint.ValidTypes.Contains(moduleType);
+
+			var canBePowerProduction = CanBe(ModuleTypes.PowerProduction);
+			var canBePowerConsumption = !(CanBe(ModuleTypes.PowerProduction) && moduleConstraint.ValidTypes.Length == 1);
+			var canBeTransitRange = CanBe(ModuleTypes.Navigation);
+			var canBeTransitVelocity = CanBe(ModuleTypes.Propulsion);
+
+			const string ModuleSwapRangeTooltip = "The random range for this value.";
+			
+			EditorGUILayoutExtensions.PushEnabled(canBePowerProduction);
+			{
+				moduleConstraint.PowerProduction = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.PowerProduction)), ModuleSwapRangeTooltip),
+					canBePowerProduction ? moduleConstraint.PowerProduction : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			EditorGUILayoutExtensions.PushEnabled(canBePowerConsumption);
+			{
+				moduleConstraint.PowerConsumption = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.PowerConsumption)), ModuleSwapRangeTooltip),
+					canBePowerConsumption ? moduleConstraint.PowerConsumption : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			EditorGUILayoutExtensions.PushEnabled(canBeTransitRange);
+			{
+				moduleConstraint.TransitRange = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.TransitRange)), ModuleSwapRangeTooltip),
+					canBeTransitRange ? moduleConstraint.TransitRange : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			EditorGUILayoutExtensions.PushEnabled(canBeTransitVelocity);
+			{
+				moduleConstraint.TransitVelocity = EditorGUILayoutExtensions.Vector2FieldCompact(
+					new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.TransitVelocity)), ModuleSwapRangeTooltip),
+					canBeTransitVelocity ? moduleConstraint.TransitVelocity : FloatRange.Zero
+				);
+			}
+			EditorGUILayoutExtensions.PopEnabled();
+
+			moduleConstraint.RepairCost = EditorGUILayoutExtensions.Vector2FieldCompact(
+				new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.RepairCost)), ModuleSwapRangeTooltip),
+				moduleConstraint.RepairCost
+			);
+
+			GUILayout.BeginVertical(EditorStyles.helpBox);
+			{
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.Label("Trait Generation");
+					GUILayout.FlexibleSpace();
+
+					void AddTraitGeneration(bool prepend)
+					{
+						var index = 0;
+						if (edge.Traits.Value.Any())
+						{
+							if (prepend) index = edge.Traits.Value.OrderBy(t => t.Order).First().Order - 1;
+							else index = edge.Traits.Value.OrderBy(t => t.Order).Last().Order + 1;
+						}
+
+						var newTraits = new List<ModuleService.TraitLimit>();
+						int newIndex = 0;
+						foreach (var trait in edge.Traits.Value.Append(new ModuleService.TraitLimit(order: index)).OrderBy(t => t.Order))
+						{
+							var reorderedTrait = trait;
+							reorderedTrait.Order = newIndex;
+							newTraits.Add(reorderedTrait);
+							newIndex++;
+						}
+
+						edge.Traits.Value = newTraits.ToArray();
+					}
+
+					if (GUILayout.Button(
+						"Prepend", EditorStyles.miniButtonLeft,
+						GUILayout.Width(90f)
+					)) AddTraitGeneration(true);
+					if (GUILayout.Button(
+						"Append", EditorStyles.miniButtonRight,
+						GUILayout.Width(90f)
+					)) AddTraitGeneration(false);
+				}
+				GUILayout.EndHorizontal();
+
+				// var isMoving = !Event.current.shift && Event.current.control;
+				var isDeleting = !Event.current.shift && Event.current.alt;
+
+				int? deletedIndex = null;
+				var isAlternate = false;
+				var normalBackgroundColor = Color.white;
+				var alternateBackgroundColor = Color.grey.NewV(0.5f);
+				
+				for (var i = 0; i < edge.Traits.Value.Length; i++)
+				{
+					var current = edge.Traits.Value[i];
+					
+					isAlternate = !isAlternate;
+					var currentColor = isAlternate ? alternateBackgroundColor : normalBackgroundColor;
+
+					EditorGUILayoutExtensions.BeginVertical(EditorStyles.helpBox, currentColor);
+					{
+						GUILayout.BeginHorizontal();
+						{
+							GUILayout.Label("#" + (i + 1));
+							if (isDeleting)
+							{
+								GUILayout.FlexibleSpace();
+								if (EditorGUILayoutExtensions.XButton(true)) deletedIndex = i;
+							}
+						}
+						GUILayout.EndHorizontal();
+						
+						current.ValidSeverities = EditorGUILayoutExtensions.EnumButtonArray(
+							new GUIContent(ObjectNames.NicifyVariableName(nameof(current.ValidSeverities)), "The severity of traits generated by this entry are constrained here. Specifying none allows any severity to be generated."),
+							current.ValidSeverities
+						);
+
+						// TODO: Validate trait ids
+						current.ValidTraitIds = EditorGUILayoutExtensions.StringArray(
+							new GUIContent(ObjectNames.NicifyVariableName(nameof(current.ValidTraitIds)), "Only trait ids specified by this list are generated. Specifying none allows any trait id to be generated."),
+							current.ValidTraitIds
+						);
+						
+						// TODO: Validate trait family ids
+						current.ValidTraitFamilyIds = EditorGUILayoutExtensions.StringArray(
+							new GUIContent(ObjectNames.NicifyVariableName(nameof(current.ValidTraitFamilyIds)), "Only trait family ids specified by this list are generated. Specifying none allows any trait family id to be generated."),
+							current.ValidTraitFamilyIds
+						);
+					}
+					EditorGUILayoutExtensions.EndVertical();
+					
+					edge.Traits.Value[i] = current;
+				}
+
+				if (deletedIndex.HasValue)
+				{
+					var newTraits = edge.Traits.Value.ToList();
+					newTraits.RemoveAt(deletedIndex.Value);
+					for (var i = 0; i < newTraits.Count; i++)
+					{
+						var current = newTraits[i];
+						current.Order = i;
+						newTraits[i] = current;
+					}
+					edge.Traits.Value = newTraits.ToArray();
+				}
+			}
+			GUILayout.EndVertical();
+
+			if (0 < moduleConstraint.ManufacturerIds.Length) EditorGUILayout.HelpBox("Validation of Manufacturer Ids not done!", MessageType.Error);
+			
+			moduleConstraint.ManufacturerIds = EditorGUILayoutExtensions.StringArray(
+				new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.ManufacturerIds))),
+				moduleConstraint.ManufacturerIds
+			);
+
+			moduleConstraint.Tags = EditorGUILayoutExtensions.StringArray(
+				new GUIContent(ObjectNames.NicifyVariableName(nameof(moduleConstraint.Tags)), "Tags can be filtered by and can be used to track modules across multiple encounters."),
+				moduleConstraint.Tags
+			);
+			
+			EditorGUILayoutValueFilter.Field(
+				new GUIContent(ObjectNames.NicifyVariableName(nameof(edge.Filtering)), "Passing this filter is required to continue to run this key value logic."),
+				edge.Filtering
+			);
+
+			edge.ModuleConstraint.Value = moduleConstraint;
+		}
+		#endregion
+		
 		#region Edged Logs
 		void OnEdgedLog<L, E>(
 			EncounterInfoModel infoModel,
@@ -2733,7 +3017,7 @@ namespace LunraGames.SubLight
 			var deleted = false;
 			indexDelta = 0;
 
-			GUILayout.BeginHorizontal();
+			GUILayout.BeginHorizontal(GUILayout.Height(18f));
 			{
 				EditorGUILayoutExtensions.PushEnabled(!edge.Ignore.Value);
 				{

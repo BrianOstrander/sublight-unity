@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace LunraGames.SubLight.Models
 {
@@ -17,7 +18,7 @@ namespace LunraGames.SubLight.Models
 			ModuleModel[] modules
 		)
 		{
-			Modules = modules ?? throw new ArgumentNullException(nameof(modules));
+			Modules = (modules ?? throw new ArgumentNullException(nameof(modules))).OrderBy(m => (int)m.Type.Value).ToArray();
 
 			TransitVelocity = 0f;
 			TransitRange = 0f;

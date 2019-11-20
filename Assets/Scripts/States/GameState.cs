@@ -848,10 +848,12 @@ namespace LunraGames.SubLight
 					// Any in the switch below should be handled by an existing presenter, or something...
 					switch (request.LogType)
 					{
-						case EncounterLogTypes.Dialog: break;
-						case EncounterLogTypes.Bust: break;
-						case EncounterLogTypes.Button: break;
-						case EncounterLogTypes.Conversation: break;
+						case EncounterLogTypes.Dialog:
+						case EncounterLogTypes.Bust:
+						case EncounterLogTypes.Button:
+						case EncounterLogTypes.Conversation:
+						case EncounterLogTypes.ModuleSwap:
+							break;
 						default:
 							Debug.LogError("Unrecognized EncounterRequest Handle model type: " + request.LogType);
 							break;

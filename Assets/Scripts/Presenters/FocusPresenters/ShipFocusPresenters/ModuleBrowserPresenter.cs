@@ -10,6 +10,17 @@ namespace LunraGames.SubLight.Presenters
 	{
 		GameModel model;
 		ModuleBrowserLanguageBlock language;
+
+		protected override bool CanShow()
+		{
+			switch (model.Context.EncounterState.Current.Value.State)
+			{
+				case EncounterStateModel.States.Processing:
+					return !model.Context.EncounterState.KeyValues.Get(KeyDefines.Encounter.DisableDefaultShipView);
+				default:
+					return true;
+			}
+		}
 		
 		public ModuleBrowserPresenter(
 			GameModel model,
@@ -18,7 +29,7 @@ namespace LunraGames.SubLight.Presenters
 		{
 			this.model = model;
 			this.language = language;
-			
+
 			model.Ship.Statistics.Changed += OnStatistics;
 		}
 
@@ -100,7 +111,7 @@ namespace LunraGames.SubLight.Presenters
 			View.Selected = entries.FirstOrDefault().Id;
 			View.Selection = OnSelection;
 		}
-		
+
 		#region Model Events
 		void OnStatistics(ShipStatistics shipStatistics)
 		{

@@ -7,16 +7,6 @@ namespace LunraGames.SubLight
 {
 	public static class KeyDefines
 	{
-		/// <summary>
-		/// Names of resources are shared across severale classes.
-		/// </summary>
-		public static class Resources
-		{
-			public const string Rations = "rations";
-			public const string Propellant = "propellant";
-			public const string Metallics = "metallics";
-		}
-
 		#region Defined Keys
 		public static readonly EncounterKeys Encounter = new EncounterKeys();
 		public static readonly GameKeys Game = new GameKeys();

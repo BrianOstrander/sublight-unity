@@ -10,6 +10,12 @@ namespace LunraGames.SubLight.Models
 		/// The procedurally generated name of this module seen by the player.
 		/// </summary>
 		[JsonIgnore] public readonly ListenerProperty<string> Name;
+
+		[JsonProperty] string[] tags = new string[0];
+		/// <summary>
+		/// Used by the encounter system to track modules between encounters.
+		/// </summary>
+		[JsonIgnore] public readonly ListenerProperty<string[]> Tags;
 		
 		[JsonProperty] string yearManufactured;
 		[JsonIgnore] public readonly ListenerProperty<string> YearManufactured;
@@ -56,6 +62,7 @@ namespace LunraGames.SubLight.Models
 		public ModuleModel()
 		{
 			Name = new ListenerProperty<string>(value => name = value, () => name);
+			Tags = new ListenerProperty<string[]>(value => tags = value, () => tags);
 			YearManufactured = new ListenerProperty<string>(value => yearManufactured = value, () => yearManufactured);
 			ManufacturerId = new ListenerProperty<string>(value => manufacturerId = value, () => manufacturerId);
 			Description = new ListenerProperty<string>(value => description = value, () => description);

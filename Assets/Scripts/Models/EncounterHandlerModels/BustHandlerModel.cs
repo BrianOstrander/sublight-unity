@@ -7,16 +7,13 @@ namespace LunraGames.SubLight.Models
 	public class BustHandlerModel : EncounterHandlerModel<BustEncounterLogModel>
 	{
 		[JsonProperty] BustEdgeModel[] entries;
+		[JsonIgnore] public readonly ListenerProperty<BustEdgeModel[]> Entries;
+		
 		[JsonProperty] bool hasHaltingEvents;
-
+		[JsonIgnore] public readonly ListenerProperty<bool> HasHaltingEvents;
+		
 		Action haltingDone;
-
-		[JsonIgnore]
-		public readonly ListenerProperty<BustEdgeModel[]> Entries;
-		[JsonIgnore]
-		public readonly ListenerProperty<bool> HasHaltingEvents;
-		[JsonIgnore]
-		public readonly ListenerProperty<Action> HaltingDone;
+		[JsonIgnore] public readonly ListenerProperty<Action> HaltingDone;
 
 		public BustHandlerModel(BustEncounterLogModel log) : base(log)
 		{
