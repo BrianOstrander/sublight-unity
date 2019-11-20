@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -774,6 +773,8 @@ namespace LunraGames.SubLight
 		#region KeyValue Logs
 		void OnKeyValueLog(EncounterInfoModel infoModel, KeyValueEncounterLogModel model)
 		{
+			GUILayout.Label("Key Value Operations are filtered as they are processed -- preceding operations may affect the filtering of following operations.");
+			
 			GUILayout.BeginHorizontal();
 			{
 				var selection = EditorGUILayoutExtensions.HelpfulEnumPopup(
@@ -813,7 +814,6 @@ namespace LunraGames.SubLight
 				EditorGUIExtensions.UnPauseChangeCheck();
 			}
 			GUILayout.EndHorizontal();
-
 
 			OnEdgedLog<KeyValueEncounterLogModel, KeyValueEdgeModel>(infoModel, model, OnKeyValueLogEdge);
 		}
@@ -898,7 +898,7 @@ namespace LunraGames.SubLight
 		}
 
 		void OnKeyValueLogEdgeEntryBeginFirstLine<T>(
-			KeyValueEdgeModel.BaseBlock<T> block
+			KeyValueEdgeModel.IBaseBlock<T> block
 		)
 			where T : IConvertible
 		{
@@ -964,7 +964,7 @@ namespace LunraGames.SubLight
 							() => block.Input0,
 							result => block.Input0 = result
 						);
-						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
+						GUILayout.Label(block.OperationLabelContent, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input1,
 							result => block.Input1 = result
@@ -1032,7 +1032,7 @@ namespace LunraGames.SubLight
 							() => block.Input0,
 							result => block.Input0 = result
 						);
-						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
+						GUILayout.Label(block.OperationLabelContent, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input1,
 							result => block.Input1 = result
@@ -1184,7 +1184,7 @@ namespace LunraGames.SubLight
 							() => block.Input0,
 							result => block.Input0 = result
 						);
-						GUILayout.Label(block.OperationReadable, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
+						GUILayout.Label(block.OperationLabelContent, SubLightEditorConfig.Instance.EncounterEditorLogKeyValueOperationLabels, GUILayout.Width(40f));
 						EditorGUILayoutKeyDefinition.Value(
 							() => block.Input1,
 							result => block.Input1 = result

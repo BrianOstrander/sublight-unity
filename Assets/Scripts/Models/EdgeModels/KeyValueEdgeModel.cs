@@ -8,16 +8,24 @@ namespace LunraGames.SubLight.Models
 {
 	public class KeyValueEdgeModel : EdgeModel
 	{
-		public interface BaseBlock<T>
+		/// <summary>
+		/// This is an interface to enforce compliance with required fields that should not be serialized as generic.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		public interface IBaseBlock<T>
 			where T : IConvertible
 		{
 			KeyValueAddress<T> Input0 { get; set; }
 
 			KeyValueAddress<T> Output { get; set; }
+			
+			string OperationReadable { get; }
+			string OperationTooltip { get; }
+			GUIContent OperationLabelContent { get; }
 		}
 
 		[Serializable]
-		public class BooleanBlock : BaseBlock<bool>
+		public class BooleanBlock : IBaseBlock<bool>
 		{
 			public enum Operations
 			{
@@ -30,19 +38,13 @@ namespace LunraGames.SubLight.Models
 				Random = 100
 			}
 
-			public static BooleanBlock Default
+			public static BooleanBlock Default => new BooleanBlock
 			{
-				get
-				{
-					return new BooleanBlock
-					{
-						Operation = Operations.Set,
-						Input0 = KeyValueAddress<bool>.Default,
-						Input1 = KeyValueAddress<bool>.Default,
-						Output = KeyValueAddress<bool>.Default
-					};
-				}
-			}
+				Operation = Operations.Set,
+				Input0 = KeyValueAddress<bool>.Default,
+				Input1 = KeyValueAddress<bool>.Default,
+				Output = KeyValueAddress<bool>.Default
+			};
 
 			public Operations Operation { get; set; }
 
@@ -52,11 +54,35 @@ namespace LunraGames.SubLight.Models
 			public KeyValueAddress<bool> Output { get; set; }
 
 			[JsonIgnore]
-			public string OperationReadable { get { return Operation.ToString().ToUpper(); } }
+			public string OperationReadable => Operation.ToString().ToUpper();
+
+			[JsonIgnore]
+			public string OperationTooltip
+			{
+				get
+				{
+					switch (Operation)
+					{
+						case Operations.Set:
+							return "Sets the value of the boolean.";
+						case Operations.And:
+						case Operations.Or:
+						case Operations.Xor:
+							return "Sets the value equal to the results of the boolean \"" + Operation + "\" operation.";
+						case Operations.Random:
+							return "Sets the value equal to a random boolean.";
+						default:
+							return "Unknown operation \"" + Operation + "\".";
+					}
+				}
+			}
+
+			[JsonIgnore]
+			public GUIContent OperationLabelContent => new GUIContent(OperationReadable, OperationTooltip);
 		}
 
 		[Serializable]
-		public class IntegerBlock : BaseBlock<int>
+		public class IntegerBlock : IBaseBlock<int>
 		{
 			public enum Operations
 			{
@@ -73,23 +99,17 @@ namespace LunraGames.SubLight.Models
 				Random = 200
 			}
 
-			public static IntegerBlock Default
+			public static IntegerBlock Default => new IntegerBlock
 			{
-				get
-				{
-					return new IntegerBlock
-					{
-						Operation = Operations.Set,
-						Input0 = KeyValueAddress<int>.Default,
-						Input1 = KeyValueAddress<int>.Default,
-						MinimumClampingEnabled = false,
-						MaximumClampingEnabled = false,
-						MinimumClamping = KeyValueAddress<int>.Default,
-						MaximumClamping = KeyValueAddress<int>.Default,
-						Output = KeyValueAddress<int>.Default
-					};
-				}
-			}
+				Operation = Operations.Set,
+				Input0 = KeyValueAddress<int>.Default,
+				Input1 = KeyValueAddress<int>.Default,
+				MinimumClampingEnabled = false,
+				MaximumClampingEnabled = false,
+				MinimumClamping = KeyValueAddress<int>.Default,
+				MaximumClamping = KeyValueAddress<int>.Default,
+				Output = KeyValueAddress<int>.Default
+			};
 
 			public Operations Operation { get; set; }
 
@@ -121,10 +141,37 @@ namespace LunraGames.SubLight.Models
 					return Operation.ToString().ToUpper();
 				}
 			}
+			
+			[JsonIgnore]
+			public string OperationTooltip
+			{
+				get
+				{
+					switch (Operation)
+					{
+						case Operations.Set:
+							return "Sets the value of the integer.";
+						case Operations.Add:
+						case Operations.Subtract:
+						case Operations.Multiply:
+						case Operations.Divide:
+						case Operations.Modulo:
+						case Operations.Clamp:
+							return "Sets the value equal to the results of the \"" + Operation + "\" operation.";
+						case Operations.Random:
+							return "Sets the value equal to a random integer between the inclusive minimum and the exclusive maximum.";
+						default:
+							return "Unknown operation \"" + Operation + "\".";
+					}
+				}
+			}
+			
+			[JsonIgnore]
+			public GUIContent OperationLabelContent => new GUIContent(OperationReadable, OperationTooltip);
 		}
 
 		[Serializable]
-		public class StringBlock : BaseBlock<string>
+		public class StringBlock : IBaseBlock<string>
 		{
 			public enum Operations
 			{
@@ -132,18 +179,12 @@ namespace LunraGames.SubLight.Models
 				Set = 10
 			}
 
-			public static StringBlock Default
+			public static StringBlock Default => new StringBlock
 			{
-				get
-				{
-					return new StringBlock
-					{
-						Operation = Operations.Set,
-						Input0 = KeyValueAddress<string>.Default,
-						Output = KeyValueAddress<string>.Default
-					};
-				}
-			}
+				Operation = Operations.Set,
+				Input0 = KeyValueAddress<string>.Default,
+				Output = KeyValueAddress<string>.Default
+			};
 
 			public Operations Operation { get; set; }
 
@@ -152,11 +193,29 @@ namespace LunraGames.SubLight.Models
 			public KeyValueAddress<string> Output { get; set; }
 
 			[JsonIgnore]
-			public string OperationReadable { get { return Operation.ToString().ToUpper(); } }
+			public string OperationReadable => Operation.ToString().ToUpper();
+		
+			[JsonIgnore]
+			public string OperationTooltip
+			{
+				get
+				{
+					switch (Operation)
+					{
+						case Operations.Set:
+							return "Sets the value of the string.";
+						default:
+							return "Unknown operation \"" + Operation + "\".";
+					}
+				}
+			}
+			
+			[JsonIgnore]
+			public GUIContent OperationLabelContent => new GUIContent(OperationReadable, OperationTooltip);
 		}
 
 		[Serializable]
-		public class FloatBlock : BaseBlock<float>
+		public class FloatBlock : IBaseBlock<float>
 		{
 			public enum Operations
 			{
@@ -177,23 +236,17 @@ namespace LunraGames.SubLight.Models
 				RandomNormal = 210
 			}
 
-			public static FloatBlock Default
+			public static FloatBlock Default => new FloatBlock
 			{
-				get
-				{
-					return new FloatBlock
-					{
-						Operation = Operations.Set,
-						Input0 = KeyValueAddress<float>.Default,
-						Input1 = KeyValueAddress<float>.Default,
-						MinimumClampingEnabled = false,
-						MaximumClampingEnabled = false,
-						MinimumClamping = KeyValueAddress<float>.Default,
-						MaximumClamping = KeyValueAddress<float>.Default,
-						Output = KeyValueAddress<float>.Default
-					};
-				}
-			}
+				Operation = Operations.Set,
+				Input0 = KeyValueAddress<float>.Default,
+				Input1 = KeyValueAddress<float>.Default,
+				MinimumClampingEnabled = false,
+				MaximumClampingEnabled = false,
+				MinimumClamping = KeyValueAddress<float>.Default,
+				MaximumClamping = KeyValueAddress<float>.Default,
+				Output = KeyValueAddress<float>.Default
+			};
 
 			public Operations Operation { get; set; }
 
@@ -225,10 +278,42 @@ namespace LunraGames.SubLight.Models
 					return Operation.ToString().ToUpper();
 				}
 			}
+			
+			[JsonIgnore]
+			public string OperationTooltip
+			{
+				get
+				{
+					switch (Operation)
+					{
+						case Operations.Set:
+							return "Sets the value of the float.";
+						case Operations.Add:
+						case Operations.Subtract:
+						case Operations.Multiply:
+						case Operations.Divide:
+						case Operations.Modulo:
+						case Operations.Clamp:
+						case Operations.Round:
+						case Operations.Floor:
+						case Operations.Ceiling:
+							return "Sets the value equal to the results of the \"" + Operation + "\" operation.";
+						case Operations.Random:
+							return "Sets the value equal to a random float between the inclusive minimum and the exclusive maximum.";
+						case Operations.RandomNormal:
+							return "Sets the value equal to a random float between the inclusive minimum 0.0f and the exclusive maximum 1.0f.";
+						default:
+							return "Unknown operation \"" + Operation + "\".";
+					}
+				}
+			}
+			
+			[JsonIgnore]
+			public GUIContent OperationLabelContent => new GUIContent(OperationReadable, OperationTooltip);
 		}
 
 		[JsonProperty] ValueFilterModel filtering = ValueFilterModel.Default();
-		[JsonIgnore] public ValueFilterModel Filtering { get { return filtering; } }
+		[JsonIgnore] public ValueFilterModel Filtering => filtering;
 
 		[JsonProperty] KeyValueTypes keyValueType;
 		[JsonIgnore] public readonly ListenerProperty<KeyValueTypes> KeyValueType;

@@ -675,6 +675,12 @@ namespace LunraGames.SubLight
 		protected void RegisterToolbar(ModelEditorTab<T, M> tab)
 		{
 			toolbars.Add(tab);
+
+			BeforeLoadSelection += tab.BeforeLoadSelection;
+			AfterLoadSelection += tab.AfterLoadSelection;
+			Deselect += tab.Deselect;
+			SettingsGui += tab.SettingsGui;
+			EditorUpdate += tab.EditorUpdate;
 		}
 
 		protected GUIContent GetTabStateLabel()

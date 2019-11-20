@@ -130,20 +130,22 @@ namespace LunraGames.NumberDemon
 			return (long)(value - UlongHalfValue);
 		}
 
-		public static bool NextBool { get { return Generator.NextBool; } }
-		public static int NextInteger { get { return Generator.NextInteger; } }
-		public static long NextLong { get { return Generator.NextLong; } }
+		public static bool NextBool => Generator.NextBool;
+		public static int NextInteger => Generator.NextInteger;
+		public static long NextLong => Generator.NextLong;
+
 		/// <summary>
-		/// Gets the next float value between 0.0f and 1.0f.
+		/// Gets the next float value between the inclusive minimum 0.0f and the exclusive maximum 1.0f.
 		/// </summary>
 		/// <value>The next float.</value>
-		public static float NextFloat { get { return Generator.NextFloat; } }
-		public static Color NextColor { get { return new Color(NextFloat, NextFloat, NextFloat); } }
+		public static float NextFloat => Generator.NextFloat;
+
+		public static Color NextColor => new Color(NextFloat, NextFloat, NextFloat);
 
 		public static byte[] GetNextBytes(int count) { return Generator.GetNextBytes(count); }
 
 		/// <summary>
-		/// Gets the next integer between the inclusive min and exclusive max.
+		/// Gets the next integer between the inclusive minimum and exclusive maximum.
 		/// </summary>
 		/// <returns>The next integer.</returns>
 		/// <param name="min">Min, included.</param>
@@ -151,7 +153,7 @@ namespace LunraGames.NumberDemon
 		public static int GetNextInteger(int min = 0, int max = int.MaxValue) { return Generator.GetNextInteger(min, max); }
 
 		/// <summary>
-		/// Gets the next float between the inclusive min and exclusive max.
+		/// Gets the next float between the inclusive minimum and exclusive maximum.
 		/// </summary>
 		/// <returns>The next float.</returns>
 		/// <param name="min">Min, included.</param>

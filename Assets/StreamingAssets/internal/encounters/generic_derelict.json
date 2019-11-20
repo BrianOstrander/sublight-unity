@@ -1,0 +1,930 @@
+{
+  "randomWeightMultiplier": 1.0,
+  "randomAppearance": 1.0,
+  "trigger": "TransitComplete",
+  "defaultEndLogId": "0deaad42-1e1b-43d9-b778-aa70571daf7a",
+  "filtering": {
+    "booleanKeyValues": [],
+    "integerKeyValues": [],
+    "stringKeyValues": [],
+    "floatKeyValues": [],
+    "enumerationKeyValues": [],
+    "encounterInteractions": [],
+    "moduleTraits": []
+  },
+  "logs": {
+    "keyValueLogs": [
+      {
+        "edges": [
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "b9a54fdd-733a-4e3d-a994-f46102a76ea6",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "4f8453a5-f254-44a6-bfbd-2fd30802e7c6",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "ff975d80-5047-4a15-92e8-ce5b69d0be91",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "disable_default_ship_view"
+              }
+            },
+            "id": "f3d50a7b-75cf-4da1-9308-09c6dd081a97"
+          },
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Random",
+              "Input0": {
+                "AddressId": "ef1c46ff-dcc2-4d92-8235-88c99a34e5a0",
+                "Source": "LocalValue"
+              },
+              "Input1": {
+                "AddressId": "30fc002a-fea8-4e6f-97bf-5f04828c3e69",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "4950d8ff-1f93-4f03-91b6-eae3d3f5e7e9",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_propulsion"
+              }
+            },
+            "index": 2,
+            "id": "25ff17cf-efe3-4ee1-822d-7a023c6b9a21"
+          },
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Random",
+              "Input0": {
+                "AddressId": "36e66fb2-7863-4956-b354-672cabe91128",
+                "Source": "LocalValue"
+              },
+              "Input1": {
+                "AddressId": "c533add3-9684-4141-8526-55c4a643e9d8",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "9708e833-3b54-4634-95a8-b518e84915fe",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_power_production"
+              }
+            },
+            "index": 3,
+            "id": "c0148e08-3723-43fb-8f96-fb14c0302b14"
+          },
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Random",
+              "Input0": {
+                "AddressId": "a1dec24a-6ea7-4b0c-aa35-5d2497b06f2f",
+                "Source": "LocalValue"
+              },
+              "Input1": {
+                "AddressId": "5ab46894-d935-468b-892c-9e1b24c8198a",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "ef3cd3f6-e7a2-4da9-9343-dc9291b09fbf",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_ration_management"
+              }
+            },
+            "index": 4,
+            "id": "3be6eaf3-4c49-41a4-aa28-9c9557faa60a"
+          },
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Random",
+              "Input0": {
+                "AddressId": "5f8923d5-90dc-42ff-a787-5a11d8d2c591",
+                "Source": "LocalValue"
+              },
+              "Input1": {
+                "AddressId": "a958d3dc-f675-4758-9127-61239529bbdf",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "ee0493b6-abea-483d-924c-4de09d322f12",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_life_support"
+              }
+            },
+            "index": 5,
+            "id": "c278a961-7791-45e2-8eaa-2a2c0dc136f7"
+          },
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Random",
+              "Input0": {
+                "AddressId": "ddd5dadf-5df9-4e0d-9acc-5b99be90aaf8",
+                "Source": "LocalValue"
+              },
+              "Input1": {
+                "AddressId": "2ba91492-177c-4f8c-8c0f-59818902be11",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "f0ac41ae-c31e-4794-a806-0d0e6f71628e",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_living_quarters"
+              }
+            },
+            "index": 6,
+            "id": "ea9c1e10-0093-4c49-8508-e2ecb5e8be3b"
+          },
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Random",
+              "Input0": {
+                "AddressId": "ebac55b8-9cbd-4488-b799-65fad3a3d4c3",
+                "Source": "LocalValue"
+              },
+              "Input1": {
+                "AddressId": "b527c408-5acd-42cb-89ce-35657a2b5563",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "d24c4620-49c0-484e-bbd3-c0e0842df7bf",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_navigation"
+              }
+            },
+            "index": 7,
+            "id": "0460ae4d-e248-4bc7-920c-d7de9862005a"
+          },
+          {
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Integer",
+            "integerValue": {
+              "Operation": "Random",
+              "Input0": {
+                "AddressId": "0684b4e1-4f70-4725-b273-e736a9af4b23",
+                "Source": "LocalValue"
+              },
+              "Input1": {
+                "AddressId": "0ddfaf76-f05c-458d-9a60-4c967091511f",
+                "Source": "LocalValue",
+                "LocalValue": 6
+              },
+              "MinimumClamping": {
+                "AddressId": "09eae24d-9027-4e48-b577-f7b40596b54c",
+                "Source": "LocalValue"
+              },
+              "MaximumClamping": {
+                "AddressId": "06b27497-53a6-4c03-bffe-0de73c673a94",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "b21e40c6-2bd2-43e5-bead-3037a02ffdc9",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_required"
+              }
+            },
+            "index": 1,
+            "id": "0d1c7372-f39e-4920-822e-c56951583e7c"
+          },
+          {
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [
+                {
+                  "operation": "Equals",
+                  "filterId": "f3f02cdb-5388-4e97-b4c4-54ae070ad46e",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "0be1b7e9-e2f0-4d14-8481-41d8e35f1295",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_required"
+                  },
+                  "Input1": {
+                    "AddressId": "a1378b91-4574-464e-8794-5af5d8b537a3",
+                    "Source": "LocalValue"
+                  }
+                }
+              ],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "9c62aec2-d4f5-4024-a6d1-5abf36c065f7",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "b139fac5-5745-4d52-b61f-10b22d900753",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "e3e2efd9-1bf4-4545-b0ba-4ccade2bff7a",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_propulsion"
+              }
+            },
+            "index": 8,
+            "id": "5d0af386-e097-4472-89e3-fb820799dff3"
+          },
+          {
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [
+                {
+                  "operation": "Equals",
+                  "filterId": "5fc32b76-058f-4cc8-a40b-186baa6d8093",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "7c252f53-2a73-4e90-8300-1a5f6ebf9c41",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_required"
+                  },
+                  "Input1": {
+                    "AddressId": "06f4161d-5270-48ae-b450-4e55b1e4fe8e",
+                    "Source": "LocalValue",
+                    "LocalValue": 1
+                  }
+                }
+              ],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "f23aff28-3690-4e06-b5f6-ee7b800784e6",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "3d05ae65-dbd0-41f1-9389-7e959b48a3d1",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "bc753721-a61f-4fc2-9592-0c9a8a95f2f3",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_power_production"
+              }
+            },
+            "index": 9,
+            "id": "e85f9e47-f319-4890-9f49-810338bc4493"
+          },
+          {
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [
+                {
+                  "operation": "Equals",
+                  "filterId": "55dad77b-c8ba-472a-a50c-423245bd4754",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "314d1483-4a3d-4ab2-a629-ea9473e8fe1a",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_required"
+                  },
+                  "Input1": {
+                    "AddressId": "b22f5ff7-d95d-4f29-9b7d-f82ea96a6c87",
+                    "Source": "LocalValue",
+                    "LocalValue": 2
+                  }
+                }
+              ],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "7055fff2-dced-417c-8625-d560dbde6c09",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "7a76db0e-6734-4774-9fc2-f648029a6185",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "50ecd6f5-c818-4d30-ae48-4fa65119763f",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_ration_management"
+              }
+            },
+            "index": 10,
+            "id": "787d1d24-7338-45e2-869e-f5e0fc5c8ff6"
+          },
+          {
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [
+                {
+                  "operation": "Equals",
+                  "filterId": "b232350f-d3b7-4079-9587-0e4866553c0d",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "d79f3b21-2cd3-4e9d-af23-03155da0d2b9",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_required"
+                  },
+                  "Input1": {
+                    "AddressId": "665d9309-aef4-4467-a240-c927517b933d",
+                    "Source": "LocalValue",
+                    "LocalValue": 3
+                  }
+                }
+              ],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "8199e65f-4e5f-4015-ba0a-d9dae50edc65",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "2eb7fdbb-b5d9-4822-bab1-e61f7b73898e",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "f6ff00ae-ccac-4465-9047-ada649e7eabb",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_life_support"
+              }
+            },
+            "index": 11,
+            "id": "ab3eaf72-44ac-4577-92ad-dc73e3143c2c"
+          },
+          {
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [
+                {
+                  "operation": "Equals",
+                  "filterId": "e04689f2-b3a4-4dd7-b0a5-ef0736bc5c78",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "14582583-f819-42ab-8c14-2c222c319e88",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_required"
+                  },
+                  "Input1": {
+                    "AddressId": "18441604-58c1-493d-99f2-da7ff68ea222",
+                    "Source": "LocalValue",
+                    "LocalValue": 4
+                  }
+                }
+              ],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "d3339cba-e713-41e6-813f-16587c6d4c8a",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "1689b387-b5c8-48e8-9e43-5c1e90bc25ed",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "738f3230-3ecf-4ad9-acc6-db82717bdd59",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_living_quarters"
+              }
+            },
+            "index": 12,
+            "id": "4d9a12fa-8e87-4ac0-afdd-3cafed1efed9"
+          },
+          {
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [],
+              "integerKeyValues": [
+                {
+                  "operation": "Equals",
+                  "filterId": "4a4fd9a6-c400-4d08-af20-d7e581aef3bb",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "ff3b6ed8-5334-4253-aeda-056ea202f9f3",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_required"
+                  },
+                  "Input1": {
+                    "AddressId": "adbcfee5-4f00-4385-a6f9-862ce0156809",
+                    "Source": "LocalValue",
+                    "LocalValue": 5
+                  }
+                }
+              ],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "keyValueType": "Boolean",
+            "booleanValue": {
+              "Operation": "Set",
+              "Input0": {
+                "AddressId": "82466c19-5a9b-41fe-9ae2-ae50b5d6e138",
+                "Source": "LocalValue",
+                "LocalValue": true
+              },
+              "Input1": {
+                "AddressId": "163168e9-c9a5-4dcc-9145-f5138883af0a",
+                "Source": "LocalValue"
+              },
+              "Output": {
+                "AddressId": "6ed56a70-3a67-4d91-b9ed-8a2dacbef525",
+                "Source": "KeyValue",
+                "ForeignTarget": "Encounter",
+                "ForeignKey": "generate_navigation"
+              }
+            },
+            "index": 13,
+            "id": "723b8ea6-fa1a-4b01-baf8-cb773137e6aa"
+          }
+        ],
+        "index": 2,
+        "logId": "a809a79f-8be3-4adf-b0f5-ff3833d283cf",
+        "fallbackLogId": "597ccad5-bb53-44d0-8d03-d503a68f70c0",
+        "name": "Begin Salvage"
+      }
+    ],
+    "switchLogs": [],
+    "buttonLogs": [],
+    "encyclopediaLogs": [],
+    "eventLogs": [
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 20,
+                "lock_state": 10
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "365dc30e-f620-48fa-ba0b-cac328fb55dc"
+          }
+        ],
+        "index": 3,
+        "logId": "597ccad5-bb53-44d0-8d03-d503a68f70c0",
+        "fallbackLogId": "8b5e33a4-ab3c-4d26-8b44-79e26928345c"
+      },
+      {
+        "edges": [
+          {
+            "encounterEvent": "ToolbarSelection",
+            "isHalting": true,
+            "keyValues": {
+              "booleans": {},
+              "integers": {
+                "selection": 10,
+                "lock_state": 20
+              },
+              "strings": {},
+              "floats": {}
+            },
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "d67a6105-f3fe-45b3-a632-23f49917f000"
+          }
+        ],
+        "index": 1,
+        "ending": true,
+        "logId": "7173bb0a-1dde-4819-8db7-a15fcd424fee",
+        "name": "Ending"
+      },
+      {
+        "edges": [],
+        "index": 5,
+        "ending": true,
+        "logId": "0deaad42-1e1b-43d9-b778-aa70571daf7a",
+        "name": "< End Encounter >"
+      }
+    ],
+    "dialogLogs": [
+      {
+        "edges": [
+          {
+            "title": "Derelict Ark",
+            "message": "Radio sweeps of this system have revealed a hulking derelict in orbit.",
+            "dialogType": "ConfirmDeny",
+            "dialogStyle": "Neutral",
+            "successLogId": "a809a79f-8be3-4adf-b0f5-ff3833d283cf",
+            "failureLogId": "7173bb0a-1dde-4819-8db7-a15fcd424fee",
+            "successText": "Approach",
+            "failureText": "Ignore",
+            "filtering": {
+              "booleanKeyValues": [],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "74874b22-7707-417c-9de3-5c86e09f8d45"
+          }
+        ],
+        "beginning": true,
+        "logId": "adcd423e-ae83-49bb-8748-dede126930f0"
+      }
+    ],
+    "bustLogs": [],
+    "conversationLogs": [],
+    "moduleTraitLogs": [],
+    "moduleSwapLogs": [
+      {
+        "style": "Derelict",
+        "edges": [
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "Propulsion"
+              ],
+              "Tags": [],
+              "ManufacturerIds": []
+            },
+            "traits": [],
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "filterId": "ccd9f718-5ed5-4892-b83b-9f4279bfbd36",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "b2209356-c8bc-4a16-bdcb-193f8987ffde",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_propulsion"
+                  },
+                  "Input1": {
+                    "AddressId": "5b0a4275-6a15-472e-acc8-a6147cd1b1ea",
+                    "Source": "LocalValue",
+                    "LocalValue": true
+                  }
+                }
+              ],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "id": "d750cff1-22c9-4003-be7b-781d7ab05850"
+          },
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "PowerProduction"
+              ],
+              "Tags": [],
+              "ManufacturerIds": []
+            },
+            "traits": [],
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "filterId": "d08c5fa2-163e-4b27-9dd2-82a6b20b8498",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "b02f2338-1842-4810-8493-cbae626969e5",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_power_production"
+                  },
+                  "Input1": {
+                    "AddressId": "50f6a859-66b5-4993-af84-365833b6dd7d",
+                    "Source": "LocalValue",
+                    "LocalValue": true
+                  }
+                }
+              ],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 1,
+            "id": "3fe58835-e663-4f62-b8c2-44e1a7388376"
+          },
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "RationManagement"
+              ],
+              "Tags": [],
+              "ManufacturerIds": []
+            },
+            "traits": [],
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "filterId": "f7544351-3815-4ae9-a35b-4dc4669010ce",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "58a16f02-2499-452a-a8a7-98bb772a9096",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_ration_management"
+                  },
+                  "Input1": {
+                    "AddressId": "e1b0d751-2683-4070-a5b7-d2137d744071",
+                    "Source": "LocalValue",
+                    "LocalValue": true
+                  }
+                }
+              ],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 2,
+            "id": "522973f2-2f6d-43eb-9a34-ea1f66baafc2"
+          },
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "LifeSupport"
+              ],
+              "Tags": [],
+              "ManufacturerIds": []
+            },
+            "traits": [],
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "filterId": "526eb4d2-e80a-4651-ad93-7b2ed15be822",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "cdfd1467-b437-4ba4-8b9f-c7c21262dffe",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_life_support"
+                  },
+                  "Input1": {
+                    "AddressId": "a5891556-51c2-4efb-b1a8-c496fba5d6a3",
+                    "Source": "LocalValue",
+                    "LocalValue": true
+                  }
+                }
+              ],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 3,
+            "id": "af966ed8-364b-48ea-8a32-d8d9a2897055"
+          },
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "LivingQuarters"
+              ],
+              "Tags": [],
+              "ManufacturerIds": []
+            },
+            "traits": [],
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "filterId": "40fc6412-20b3-45b3-b563-0a0a7ea16bee",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "6b79bf30-ea3d-4073-8571-5904a3d1485b",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_living_quarters"
+                  },
+                  "Input1": {
+                    "AddressId": "08953ca8-624c-4fe2-98bb-c34dc58789a0",
+                    "Source": "LocalValue",
+                    "LocalValue": true
+                  }
+                }
+              ],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 4,
+            "id": "a5505f42-20fc-4eec-8d67-3646d7ccf393"
+          },
+          {
+            "moduleConstraint": {
+              "ValidTypes": [
+                "Navigation"
+              ],
+              "Tags": [],
+              "ManufacturerIds": []
+            },
+            "traits": [],
+            "filtering": {
+              "showValues": true,
+              "booleanKeyValues": [
+                {
+                  "filterId": "616722d6-73ab-4f3f-95a5-fcae393eadb1",
+                  "group": "All",
+                  "Input0": {
+                    "AddressId": "42d84f89-a10a-4983-ad32-1ed8aef4eca3",
+                    "Source": "KeyValue",
+                    "ForeignTarget": "Encounter",
+                    "ForeignKey": "generate_navigation"
+                  },
+                  "Input1": {
+                    "AddressId": "feea2127-db74-4e40-9d6f-73b943fd8fa3",
+                    "Source": "LocalValue",
+                    "LocalValue": true
+                  }
+                }
+              ],
+              "integerKeyValues": [],
+              "stringKeyValues": [],
+              "floatKeyValues": [],
+              "enumerationKeyValues": [],
+              "encounterInteractions": [],
+              "moduleTraits": []
+            },
+            "index": 5,
+            "id": "f9948878-8cdf-4cf3-96d3-569826df1062"
+          }
+        ],
+        "index": 4,
+        "logId": "8b5e33a4-ab3c-4d26-8b44-79e26928345c",
+        "fallbackLogId": "7173bb0a-1dde-4819-8db7-a15fcd424fee"
+      }
+    ]
+  },
+  "version": 12,
+  "metaKeyValues": {},
+  "created": "2019-11-20T07:54:11.21155-08:00",
+  "modified": "2019-11-20T07:54:11.21155-08:00",
+  "id": "generic_derelict",
+  "SaveType": "EncounterInfo",
+  "SiblingBehaviour": "None"
+}
